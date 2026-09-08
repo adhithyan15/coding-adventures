@@ -2,6 +2,9 @@
 
 ## 2026-09-08
 
+- Export a themed Mosaic startup component with loading/error content and Retry,
+  preserving VisiCalc as the default project root.
+
 - Add shared Open/Save controls and a compact file-status toolbar in both themes.
   The standard Rust adapter owns snapshot validation and file-operation outcomes.
 

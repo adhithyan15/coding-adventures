@@ -57,8 +57,8 @@ The CLI has two modes — pick one:
 Legacy single-file mode (.mosaic):
     mosaic-compile --backend <BACKEND> [OPTIONS] <SOURCE>
 
-Three-file pipeline mode (.mil + .mll + .msl, UI23/UI24):
-    mosaic-compile --backend react --interface <I.mil> --layout <L.mll> --style <S.msl> [-o <OUT>]
+Pipeline mode (.mil + .mll, with optional .msl, UI23/UI24):
+    mosaic-compile --backend react --interface <I.mil> --layout <L.mll> [--style <S.msl>] [-o <OUT>]
 
 ARGUMENTS:
     SOURCE                   Path to the .mosaic source file (legacy mode only)
@@ -71,7 +71,7 @@ FLAGS:
     -c, --css <path>         CSS file to inline (html only)
         --interface <path>   .mil mosmodel interface file (pipeline mode)
         --layout <path>      .mll moslayout file (pipeline mode)
-        --style <path>       .msl mosstyle file (pipeline mode)
+        --style <path>       Optional .msl mosstyle file (pipeline mode)
     -h, --help               Show help
     -V, --version            Print version
 ```

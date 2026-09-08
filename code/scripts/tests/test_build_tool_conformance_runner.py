@@ -149,7 +149,8 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 141)
+        # Keep this pin in sync with every reviewed shared-corpus addition.
+        self.assertEqual(summary["case_count"], 146)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -2227,7 +2228,7 @@ class ResultValidationTests(unittest.TestCase):
         ]
         with self.assertRaises(runner.ConformanceError) as raised:
             runner.assert_result_matches(case, mismatch)
-        self.assertEqual(raised.exception.code, "RESULT_MISMATCH")
+        self.assertEqual(raised.exception.code, "RESULT_GRAPH_RESULT_INVALID")
 
         wrong_identity = copy.deepcopy(case["expected"])
         wrong_identity["case_id"] = "graph/not-this-case"
@@ -3284,6 +3285,59 @@ class PureDomainValidationTests(unittest.TestCase):
             runner._validate_known_edges(edges, names)
         self.assertEqual(raised.exception.code, "CASE_EDGE_CYCLE")
 
+    def test_graph_oracle_covers_shapes_and_stable_cycle_error(self) -> None:
+        expected_levels = {
+            "graph-isolated.json": [["python/isolated"]],
+            "graph-chain.json": [
+                ["python/base"],
+                ["python/middle"],
+                ["python/app"],
+            ],
+            "graph-multiple-components.json": [
+                ["python/alpha", "python/gamma", "python/isolated"],
+                ["python/beta", "python/delta"],
+            ],
+        }
+        for filename, levels in expected_levels.items():
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                self.assertEqual(
+                    runner._expected_graph(case["input"]["options"]),
+                    (case["expected"]["result"]["edges"], levels),
+                )
+
+        cycle = load_case("graph-cycle.json")
+        self.assertIsNone(runner._expected_graph(cycle["input"]["options"]))
+        runner.validate_case_document(cycle, **self._schema_args())
+
+        wide_names = [f"python/wide-{index}" for index in range(2000)]
+        wide_edges = [
+            [f"python/wide-{index}", f"python/wide-{index + 1}"]
+            for index in range(1999)
+        ]
+        wide_edges.append(["python/wide-1999", "python/wide-0"])
+        self.assertIsNone(
+            runner._expected_graph({"packages": wide_names, "edges": wide_edges})
+        )
+
+        dishonest = load_case("graph-isolated.json")
+        dishonest["expected"]["result"]["levels"] = []
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(dishonest, **self._schema_args())
+        self.assertEqual(raised.exception.code, "EXPECTED_GRAPH_RESULT_INVALID")
+
+    def test_diff_unknown_path_error_is_checked_by_the_independent_oracle(self) -> None:
+        case = load_case("diff-selection-unknown-error.json")
+        runner.validate_case_document(case, **self._schema_args())
+
+        dishonest = copy.deepcopy(case)
+        dishonest["expected"]["diagnostics"] = [
+            {"code": "DIFF_OTHER_ERROR", "severity": "error"}
+        ]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(dishonest, **self._schema_args())
+        self.assertEqual(raised.exception.code, "EXPECTED_DIFF_UNKNOWN_PATH_INVALID")
+
     def test_semantics_reject_unknown_references_and_bad_oracles(self) -> None:
         pure_schema = runner.load_document(FIXTURE_ROOT / "pure-domains.schema.json")
         schema_args = {
@@ -3551,7 +3605,8 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 141)
+        # This second pin covers the CLI machine-readable summary path.
+        self.assertEqual(summary["case_count"], 146)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
@@ -3606,7 +3661,10 @@ class CommandLineTests(unittest.TestCase):
                     ]
                 )
         self.assertEqual(exit_code, 1)
-        self.assertEqual(json.loads(stderr.getvalue())["code"], "RESULT_MISMATCH")
+        self.assertEqual(
+            json.loads(stderr.getvalue())["code"],
+            "RESULT_GRAPH_RESULT_INVALID",
+        )
 
     def test_pure_semantic_mismatch_is_a_conformance_exit(self) -> None:
         case_path = CASES_ROOT / "hashing-cache-hit.json"

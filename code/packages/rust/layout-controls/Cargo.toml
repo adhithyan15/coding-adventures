@@ -1,0 +1,8 @@
+[package]
+name = "layout-controls"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable form-control state, intrinsic sizing, and Layout IR metadata."
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }

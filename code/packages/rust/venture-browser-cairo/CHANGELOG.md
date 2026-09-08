@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Route Qt, Flutter, and Compose surface clicks through shared form-control
+  activation before link navigation.
+
 - Report native session startup errors to stderr before returning a null handle
   to Qt, Flutter, or Compose, so failing navigation can be diagnosed.
 

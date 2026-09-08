@@ -457,6 +457,15 @@ fn flatten(
         return;
     }
 
+    if display(node) == Some("inline-replaced") {
+        out.push(SourceItem::Atomic {
+            node: node.clone(),
+            wrappers: wrappers.to_vec(),
+            align: inherited_vertical_align(node, wrappers),
+        });
+        return;
+    }
+
     if matches!(node.content, Some(Content::Text(_))) {
         let key = *next_key;
         *next_key += 1;
@@ -471,10 +480,7 @@ fn flatten(
         return;
     }
 
-    if display(node) == Some("inline-replaced")
-        || node.content.is_some()
-        || node.children.is_empty()
-    {
+    if node.content.is_some() || node.children.is_empty() {
         out.push(SourceItem::Atomic {
             node: node.clone(),
             wrappers: wrappers.to_vec(),

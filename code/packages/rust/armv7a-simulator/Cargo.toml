@@ -1,0 +1,8 @@
+[package]
+name = "armv7a-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Complete ARMv7-A Thumb-2 functional simulator with typed transactional lifecycle"
+license = "MIT"
+
+[dependencies]

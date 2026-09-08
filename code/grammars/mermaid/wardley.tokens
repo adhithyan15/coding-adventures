@@ -1,0 +1,8 @@
+# @version 1
+# Mermaid 11.16.1 Wardley core grammar.
+case_sensitive: false
+skip:
+  COMMENT = /[ \t]*%%[^\r\n]*/
+NEWLINE = /\r?\n/
+HEADER = /wardley-beta/
+STATEMENT_LINE = /[ \t]*[^\r\n%][^\r\n]*/

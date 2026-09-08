@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Migrated `StorageMetadata` to the bounded RFC 8259 value model and made
+  construction reject non-finite or over-depth metadata consistently across
+  every backend.
 - Atomic `StoragePutInput::with_if_absent()` writes, including sequential and
   concurrent shared-backend conformance coverage.
 - `StorageRecordSummary` and `StorageSummaryPage` for body-free read-side

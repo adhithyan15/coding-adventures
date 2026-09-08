@@ -39,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 141-case bootstrap corpus covers every process-free v1 domain:
+The 146-case bootstrap corpus covers every process-free v1 domain:
 
 - validated CI gate selection with exact package intersection, path and
   globstar matching, explicit false verdicts, deterministic output names, and
@@ -63,12 +63,14 @@ The 141-case bootstrap corpus covers every process-free v1 domain:
   fixed-root Dune `libraries` fields, OCaml aliases, self-edge rejection,
   ambiguous-opam rejection, and comment or unrelated-field decoys,
   duplicate collapse, and nested-comment or XML-markup examples;
-- deterministic diamond graph levels;
+- deterministic isolated, chain, diamond, and disconnected graph levels plus
+  stable cycle rejection without a partial order;
 - the build-plan distinction between `affected_packages: null` and `[]`, plus
   atomic replacement of an existing destination by a second complete plan; and
 - fail-closed rejection of a future plan version;
-- conservative diff selection and prerequisite closure, including exact reverse
-  selection from a digest-pinned repository source-input boundary;
+- conservative diff selection and prerequisite closure, including both
+  unknown-path policies and exact reverse selection from a digest-pinned
+  repository source-input boundary;
 - framed SHA-256 hashing over the caller-supplied, deduplicated union of local
   and repository-boundary inputs, plus hit, miss, and corrupt-cache recovery;
 - case-sensitive source collection across the complete generated-artifact
@@ -135,7 +137,7 @@ The 141-case bootstrap corpus covers every process-free v1 domain:
 
 The outer envelope and build-plan payload use `schema.json`,
 `result.schema.json`, and `code/specs/schemas/build-plan-v1.schema.json`.
-The nine added decision domains additionally validate a closed
+The ten added decision domains additionally validate a closed
 `{domain,outcome,input,result}` projection against
 `pure-domains.schema.json`; generic JSON is never a fallback.
 

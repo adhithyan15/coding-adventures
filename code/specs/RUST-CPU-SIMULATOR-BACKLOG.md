@@ -4,7 +4,7 @@
 
 **Scope:** functional and gate-level Rust simulators for every CPU target in the
 07-series, followed by a complete cross-language port wave
-**Last reprioritized:** 2026-08-28
+**Last reprioritized:** 2026-08-31
 
 ## Definition of the matrix
 
@@ -85,16 +85,15 @@ according to the current prioritization run.
 | RCPU-035 / RCPU-036 | 1992 | PowerPC 601 | Complete: `powerpc601-simulator` | Complete: `powerpc601-gatelevel` |
 | RCPU-037 / RCPU-038 | 2003 | x86-64 (AMD64) | Complete: `x86-simulator` | Complete: `x86-64-gatelevel` |
 | RCPU-039 / RCPU-040 | 2004 | ARMv7 educational baseline (07b) | Complete: `arm-simulator` | Complete: `armv7-gatelevel` |
-| RCPU-041 / RCPU-042 | 2004 | ARMv7-A / Thumb-2 (07x) | Missing | Missing |
+| RCPU-041 / RCPU-042 | 2004 | ARMv7-A / Thumb-2 (07x) | Complete: `armv7a-simulator` | Missing |
 | RCPU-043 / RCPU-044 | 2010 | RISC-V RV32I (07a) | Audit: `riscv-simulator` | Missing |
 | RCPU-045 / RCPU-046 | 2010 | RISC-V RV64I + M | Missing | Missing |
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-041**, the ARMv7-A / Thumb-2 functional simulator.
-The educational ARMv7 functional/gate pair is complete; chronological work now
-advances to the distinct 07x architecture while earlier cells publish one at a
-time.
+Current selection: **RCPU-042**, the ARMv7-A / Thumb-2 gate-level simulator.
+The distinct 07x functional oracle is complete; chronological work now advances
+to its gate-level partner while earlier cells publish one at a time.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -562,6 +561,9 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-31 | RCPU-041 is complete. | Resolved; selects RCPU-042 by pair priority | `armv7a-simulator` now has exact 64 KiB wrapping state, coherent R15/PC, CPSR NZCV/T, the complete documented mixed-width Thumb-2 functional surface, structured encoders, typed atomic lifecycle, manual-correct ADD-from-SP behavior, all 417 Python common-surface full-state vectors, strict checks, normative Spec 07x completion text, and 92.08% package line coverage (616/669). |
+| 2026-08-31 | RCPU-041 differential construction found that Python routes the 16-bit `1010 1` ADD-from-SP form through its ADR handler and therefore adds aligned PC instead of SP. Spec 07x's load/store table only spells out the `1010 0` ADR form, while its decode prose and the architectural Thumb form distinguish PC and SP bases. | P0 correctness within RCPU-041 | Implement the architectural SP-relative form directly in Rust and cover it with a manual spec test; omit that defective encoding from the otherwise reproducible Python common-surface corpus. |
+| 2026-08-31 | RCPU-041 baseline audit found no Rust functional or gate package and no Rust encoder/backend consumer for the distinct Spec 07x Thumb-2 machine. The Python oracle passes 78 tests at 82.70% line coverage and covers the documented 16-bit integer, memory, stack, branch, high-register and selected 32-bit Thumb-2 surface, but retains legacy non-atomic SIM00 lifecycle: loads reset at origin zero and silently truncate, memory and fetch wrap at 64 KiB, unknown and unimplemented 16/32-bit encodings silently execute as NOPs, already-halted steps succeed, bounded exhaustion is indistinguishable from success, state has a separate authoritative PC while GPR R15 remains stale, and there is no checked restore/direct access, installed range, typed failure, transition-atomic step/run, complete trace/result, or reproducible full-state corpus. The standalone `uv` project also omits the local `simulator-protocol` source declaration and requires an explicitly wired audit environment. | P0, chronological functional completion, blocks RCPU-042 | Create `armv7a-simulator` with exact 64 KiB little-endian wrapping memory, 16x32-bit GPRs plus authoritative PC/CPSR/halt, the complete documented Python/spec instruction surface, public structured encoders, checked origin-aware loading and restore/direct access, typed fail-closed faults, transition-atomic step and bounded transactional run, full traces/results, a reproducible Python full-state corpus plus manual spec edges, strict checks, consumers, and at least 80% coverage. Preserve the Python oracle as the common-surface reference and record manual-correct divergences explicitly. |
 | 2026-08-31 | RCPU-040 is complete. | Resolved; selects RCPU-041 chronologically | `armv7-gatelevel` now has the exact 524,805-DFF topology, independent complete gate execution path, shared typed atomic lifecycle, every functional/spec edge, all 388 Python common-surface full-state vectors, normative Spec 07b2, strict checks, and 93.40% package line coverage (495/530). |
 | 2026-08-31 | RCPU-040 baseline audit found no Rust, Python, or other gate-level package for the educational Spec 07b ARMv7 lane and no normative 07b2 gate specification. The only ARM gate implementation is the much earlier, materially different ARM1/Spec 07j machine. RCPU-039 establishes 524,805 persistent architectural bits: 524,288 memory bits, 512 R0–R15 bits with PC stored once in R15, four NZCV bits, and one halt bit; installed origin/length remain validated lifecycle metadata. | P0, chronological gate completion | Create `armv7-gatelevel` and Spec 07b2 with exactly 524,805 clocked DFFs, repository-gate condition/decode/Boolean/ripple-add-sub/rotate/address networks, an independent complete Spec 07b execution path, the shared typed atomic functional lifecycle, all 388 Python common-surface vectors plus every manual functional/spec edge, strict checks, consumers, and at least 80% coverage. |
 | 2026-08-31 | RCPU-039 is complete. | Resolved; selects RCPU-040 by pair priority | `arm-simulator` now preserves the legacy wrapper while adding an exact checked 64 KiB functional machine, mirrored R15/PC, NZCV, the complete Spec 07b data-processing/memory/branch/condition/HLT surface, typed atomic lifecycle, structured encoders, 388 reproducible Python common-surface full-state vectors, direct spec suites, strict checks, and 90.15% package line coverage (714/792). |

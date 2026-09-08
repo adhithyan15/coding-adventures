@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Treat text-backed `inline-replaced` nodes atomically so reusable controls
+  retain intrinsic dimensions instead of collapsing to glyph width.
+
 - Preserve semantic wrapper margin, padding, border, and
   `box-decoration-break` slice/clone edges across line fragments, including
   edge-aware line fitting and vertical decoration extents.

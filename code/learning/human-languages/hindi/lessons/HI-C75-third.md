@@ -8,9 +8,9 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 3180
 chapter: 82
 type: word
-headword: "तीसरा"
-gloss: "third — the third word to end in -सरा, and the last one that will"
-romanization: "tīsrā"
+headword: "तीसरा / तीसरी"
+gloss: "third / feminine third — the third word to end in -सरा, and the last one that will"
+romanization: "tīsrā / tīsrī"
 concept_tag: HI-ORDINAL-THIRD
 prerequisites: [HI-C75-second, HI-C74-entrance, HI-A1F01-name-delayed, HI-C68-city, HI-C19-umr, HI-C25-din]
 sounds: []

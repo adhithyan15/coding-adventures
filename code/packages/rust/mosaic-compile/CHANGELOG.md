@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed - styles are optional in standalone pipeline mode
+
+Standalone pipeline compilation now accepts `--interface` and `--layout`
+without `--style`. The compiler supplies an empty local stylesheet while still
+composing styles from referenced packages, matching Mosaic package discovery's
+existing optional-`.msl` contract.
+
 ### Added - versioned package token palettes
 
 Package mode accepts `--token-palette <JSON>`. Schema-v1 palettes provide

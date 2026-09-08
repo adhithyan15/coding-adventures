@@ -31,12 +31,12 @@
 use std::sync::{Arc, Mutex};
 
 use coding_adventures_argon2id::{argon2id, Options as Argon2Options, VERSION as ARGON2_VERSION};
+use coding_adventures_bounded_json::{JsonNumber, JsonValue};
 use coding_adventures_chacha20_poly1305::{
     xchacha20_poly1305_aead_decrypt, xchacha20_poly1305_aead_encrypt,
 };
 use coding_adventures_csprng::{random_array, random_bytes};
 use coding_adventures_ct_compare::ct_eq;
-use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_zeroize::Zeroizing;
 use storage_core::{Revision, StorageBackend, StorageError, StorageListOptions, StoragePutInput};
 
@@ -1335,9 +1335,8 @@ fn validate_argon2_params(
 // ---------------------------------------------------------------------------
 // JSON metadata layout helpers.
 //
-// We use `JsonValue` directly instead of serde, because the crate tree does
-// not depend on serde — and storage-core's metadata field is typed as
-// JsonValue anyway.
+// We use the bounded `JsonValue` directly instead of serde; storage-core's
+// metadata field shares this exact repository-owned type.
 // ---------------------------------------------------------------------------
 
 #[derive(Debug, Clone)]

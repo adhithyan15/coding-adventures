@@ -95,6 +95,7 @@ PURE_DOMAINS = {
     "ci_gate_selection",
     "cli",
     "diff_selection",
+    "graph",
     "hashing_cache",
     "sharding",
     "source_collection",
@@ -2462,6 +2463,8 @@ def _validate_pure_case_semantics(
                         "CASE_CI_GATE_GLOB_UNSAFE",
                         f"unsafe CI gate glob {pattern!r}: {error}",
                     )
+    elif domain == "graph":
+        _expected_graph(options)
     elif domain == "diff_selection":
         packages = options["packages"]
         by_name = _package_index(packages)
@@ -2921,6 +2924,46 @@ def _expected_diff_selection(
                 closed.add(prerequisite)
                 pending.append(prerequisite)
     return changed, affected, closed - affected
+
+
+def _expected_graph(
+    options: dict[str, Any],
+) -> tuple[list[list[str]], list[list[str]]] | None:
+    package_names = set(options["packages"])
+    adjacency: dict[str, list[str]] = {name: [] for name in package_names}
+    indegree = dict.fromkeys(package_names, 0)
+    for prerequisite, dependent in options["edges"]:
+        if prerequisite == dependent:
+            raise ConformanceError(
+                "CASE_EDGE_SELF",
+                f"self dependency edge is forbidden: {prerequisite}",
+            )
+        if prerequisite not in package_names or dependent not in package_names:
+            raise ConformanceError(
+                "CASE_EDGE_UNKNOWN",
+                "dependency edge references an unknown package: "
+                f"{[prerequisite, dependent]}",
+            )
+        adjacency[prerequisite].append(dependent)
+        indegree[dependent] += 1
+
+    levels: list[list[str]] = []
+    ready = sorted(name for name, degree in indegree.items() if degree == 0)
+    visited = 0
+    while ready:
+        level = ready
+        levels.append(level)
+        next_ready: list[str] = []
+        for name in level:
+            visited += 1
+            for dependent in adjacency[name]:
+                indegree[dependent] -= 1
+                if indegree[dependent] == 0:
+                    next_ready.append(dependent)
+        ready = sorted(next_ready)
+    if visited != len(package_names):
+        return None
+    return sorted(options["edges"]), levels
 
 
 def _expected_hashes(
@@ -3776,6 +3819,25 @@ def _validate_pure_result_semantics(
             raise ConformanceError(
                 f"{prefix}_CI_GATE_SELECTION_MISMATCH",
                 "CI gate verdicts do not match the fail-open package/path oracle",
+            )
+    elif domain == "graph":
+        expected_graph = _expected_graph(options)
+        if expected_graph is None:
+            if outcome != "error" or payload or "GRAPH_CYCLE" not in diagnostic_codes:
+                raise ConformanceError(
+                    f"{prefix}_GRAPH_CYCLE_INVALID",
+                    "cyclic graph requires an empty result and stable error",
+                )
+            return
+        canonical_payload = canonicalize_result(result)["result"]
+        if (
+            outcome != "ok"
+            or (canonical_payload["edges"], canonical_payload["levels"])
+            != expected_graph
+        ):
+            raise ConformanceError(
+                f"{prefix}_GRAPH_RESULT_INVALID",
+                "graph result does not match the independent topology oracle",
             )
     elif domain == "diff_selection":
         expected_sets = _expected_diff_selection(

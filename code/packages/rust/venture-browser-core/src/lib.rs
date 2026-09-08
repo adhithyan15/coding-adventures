@@ -9,14 +9,15 @@ pub use browser_bookmarks::{
     Bookmark, BookmarkCatalog, BookmarkChange, BookmarkRepository, BookmarkRepositoryError,
     BookmarkUrl, MemoryBookmarkRepository,
 };
+pub use browser_form_controls::{BrowserControlModel, ControlEffect, ControlKey};
 pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
 use html_to_layout::{html_media_query_applies, HtmlAuthorStylesheet, HtmlStyleContext, HtmlTheme};
 use html_to_paint::{
-    decode_image_resource, hit_test_link, html_render_tree_to_paint_with_style_context,
-    resolve_scene_image_resources_incrementally, scene_image_resource_uris, FetchedImage,
-    HtmlImageResolver, HtmlImageResource, HtmlImageResourceError, HtmlPaintOutput,
-    HtmlPaintViewport, LinkRegion,
+    decode_image_resource, hit_test_control, hit_test_link,
+    html_render_tree_to_paint_with_style_context, resolve_scene_image_resources_incrementally,
+    scene_image_resource_uris, ControlRegion, FetchedImage, HtmlImageResolver, HtmlImageResource,
+    HtmlImageResourceError, HtmlPaintOutput, HtmlPaintViewport, LinkRegion,
 };
 use http1_client::HttpClient;
 use layout_ir::TextMeasurer;
@@ -712,6 +713,15 @@ impl BrowserViewport {
             .hit_test(&self.page.paint.links, viewport_x, viewport_y)
     }
 
+    pub fn hit_test_control(&self, viewport_x: f64, viewport_y: f64) -> Option<&ControlRegion> {
+        hit_test_control(
+            &self.page.paint.controls,
+            viewport_x,
+            viewport_y,
+            self.scroll.offset_y(),
+        )
+    }
+
     pub fn viewport_scene(&self) -> PaintScene {
         scrolled_viewport_scene(&self.page.paint.scene, &self.scroll)
     }
@@ -1113,6 +1123,7 @@ pub struct BrowserSession {
     visited_links: VisitedLinks,
     bookmarks: BookmarkCatalog,
     viewport: Option<BrowserViewport>,
+    controls: BrowserControlModel,
     viewport_height: f64,
     navigation_id: u64,
 }
@@ -1124,6 +1135,7 @@ impl BrowserSession {
             visited_links: VisitedLinks::new(),
             bookmarks: BookmarkCatalog::new(),
             viewport: None,
+            controls: BrowserControlModel::default(),
             viewport_height: finite_non_negative(viewport_height),
             navigation_id: 0,
         }
@@ -1247,6 +1259,104 @@ impl BrowserSession {
             .map(|link| link.url.as_str())
     }
 
+    pub fn controls(&self) -> &BrowserControlModel {
+        &self.controls
+    }
+
+    pub fn hovered_control_key(&self, viewport_x: f64, viewport_y: f64) -> Option<&str> {
+        self.viewport
+            .as_ref()?
+            .hit_test_control(viewport_x, viewport_y)
+            .map(|control| control.key.as_str())
+    }
+
+    pub fn activate_control<M, S, FM, R>(
+        &mut self,
+        viewport_x: f64,
+        viewport_y: f64,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let key = self
+            .hovered_control_key(viewport_x, viewport_y)?
+            .to_string();
+        let effect = self.controls.pointer_activate(&key)?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn focus_control<M, S, FM, R>(
+        &mut self,
+        reverse: bool,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.focus_next(reverse)?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_key_down<M, S, FM, R>(
+        &mut self,
+        key: ControlKey,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.key_down(key)?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_text_input<M, S, FM, R>(
+        &mut self,
+        text: &str,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.text_input(text)?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    fn reflow_controls<M, S, FM, R>(
+        &mut self,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<()>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let mut current = self.viewport.as_ref()?.page().clone();
+        self.controls.sync_render_tree(&mut current.render_tree);
+        let updated = pipeline.reflow_retained_with_visited(&current, &self.visited_links);
+        self.viewport
+            .as_mut()?
+            .reflow_page(updated, self.viewport_height);
+        Some(())
+    }
+
     /// Recompose the retained document for a new layout viewport without
     /// refetching or reparsing the page. Inline image resources continue to use
     /// the browser-owned fetch seam, and failures remain recoverable paint
@@ -1332,6 +1442,7 @@ impl BrowserSession {
         let cancelled = self.pending_subresource_requests();
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
+        let controls = BrowserControlModel::from_render_tree(&page.render_tree);
         history.replace_current(page.final_url.clone());
         if let Some(viewport) = self.viewport.as_mut() {
             viewport.replace_page(page);
@@ -1340,6 +1451,7 @@ impl BrowserSession {
         }
         self.history = history;
         self.visited_links = visited_links;
+        self.controls = controls;
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
         Ok(BrowserNavigationUpdate {
             viewport_changed: true,
@@ -3876,6 +3988,73 @@ mod tests {
                 url: "http://example.test/logo.gif".into(),
                 media_type: "image/gif".into(),
             })
+        );
+    }
+
+    #[test]
+    fn session_controls_share_pointer_keyboard_state_and_reflow() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<input id='q' value='go'><input id='off' disabled><input id='check' type='checkbox'>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(420.0, 160.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/", 160.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        let query = session.viewport().unwrap().page().paint.controls[0].clone();
+        assert_eq!(
+            session.activate_control(query.x + 1.0, query.y + 1.0, &pipeline),
+            Some(ControlEffect::Focused("control:0:id:q".into()))
+        );
+        assert!(matches!(
+            session.control_text_input("!", &pipeline),
+            Some(ControlEffect::ValueChanged { value, .. }) if value == "go!"
+        ));
+        assert_eq!(
+            session.focus_control(false, &pipeline),
+            Some(ControlEffect::Focused("control:2:id:check".into()))
+        );
+        assert_eq!(
+            session.control_key_down(ControlKey::Space, &pipeline),
+            Some(ControlEffect::CheckedChanged {
+                key: "control:2:id:check".into(),
+                checked: true,
+            })
+        );
+        assert_eq!(session.controls().controls()[0].value, "go!");
+        assert!(session.controls().controls()[2].checked);
+        let off =
+            positioned_by_id(&session.viewport().unwrap().page().paint.positioned, "off").unwrap();
+        assert!(
+            off.width > 0.0 && off.height > 0.0,
+            "disabled control geometry: {off:?}"
+        );
+        assert_eq!(
+            session
+                .viewport()
+                .unwrap()
+                .page()
+                .paint
+                .controls
+                .iter()
+                .map(|control| control.key.as_str())
+                .collect::<Vec<_>>(),
+            vec!["control:0:id:q", "control:1:id:off", "control:2:id:check"]
         );
     }
 

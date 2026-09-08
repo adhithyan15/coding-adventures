@@ -8,6 +8,40 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-059 contract (selected after #14601 merged)
+
+Main refreshed to `5778c35c3c`. PR #14601 merged as `af727bf81b` after
+all 46 checks completed successfully or skipped. VM-039 is complete across
+seven standard matrix backends. VM-059 remains first because the encoded CIL
+API must clearly distinguish its input refusal from the real CoreCLR proof.
+
+The simulator currently has no host callback registry: its `call` dispatcher
+uses the token ordinal as an internal method index without checking the table
+byte. The encoded lowerer rejects input builtins through a generic whitelist.
+This slice pins a deliberate, actionable compile-time refusal for `input_i64`,
+`input_str`, and `input_more`, before any artifact is returned. Public generator
+validation and the fallible lowerer must agree; textual `emit_il` must continue
+to accept the same input programs. No simulator input support is claimed.
+
+Acceptance: named input refusal tests through both public APIs, a textual
+emission control for each builtin, the package test suite and all-target Clippy.
+Document the distinction in README and changelog. No simulator runtime change.
+
+Validation: the new public-API regression first failed on the generic whitelist
+message, then passed for all three builtins with textual emission controls.
+The package suite passed 202 tests (103 unit, 95 integration, four doc tests);
+all-target Clippy with warnings denied passed. These are refusal/emission
+proofs, not an encoded input execution claim.
+
+
+Discovered **VM-060**, queued next: design table-aware simulator host-call
+resolution before adding input. Pin rejection of unbound MemberRef tokens
+rather than aliasing MethodDef ordinals; define explicit per-run shared reader,
+EOF/malformed-number behavior, string representation, and isolated callbacks.
+Then add bounded encoded input execution proofs. Existing emitted host tokens
+also need auditing; their presence alone is not simulator execution support.
+Reprioritize VM-060 against BEAM VM-040 after this refusal proof merges.
+
 ## VM-039d contract (selected after #14574 merged)
 
 Main is `2cc4f753e6`. Real CLR PR #14574 merged after all applicable final-head
@@ -1056,7 +1090,7 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | done (see PR below) | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
 | done (see PR below) | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |
 | done #14471 | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
-| selected (VM-039a first) | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
+| done #14601 | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
 | 10 | VM-040 | Inventory remaining BEAM cells separately for Twig strings, Twig records/closures, Nib scalars, BASIC f64/I/O, Oct u8/I/O, FLOW-MATIC and COBOL. Each family first gets a discriminating probe; split actual lowering defects before implementation. Brainfuck remains the explicit excluded tape design. |
 | 11 | VM-042 | Pin Brainfuck's intentional BEAM exclusion with a driver-level error assertion for mutable tape operations; distinguish supported frontend compilation from backend refusal. |
 | 12 | VM-041 | Isolate Twig captured/reassigned runtime-string lowering from existing source-local string metadata; add one captured-string value proof before wider dynamic-string expansion. |

@@ -549,6 +549,17 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
                     _ => None,
                 };
                 match name {
+                    // Textual CoreCLR input uses Console, but encoded artifacts
+                    // have no simulator host reader. Whitelisting a name alone
+                    // would not establish a callable MemberRef or shared stream.
+                    Some(n @ ("input_i64" | "input_str" | "input_more")) => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, builtin {:?}: encoded CIL \
+                             input requires a simulator host reader, which is not implemented; \
+                             use emit_il with real CoreCLR for portable input",
+                            func.name, n
+                        ));
+                    }
                     Some(n) if CALL_BUILTIN_SUPPORTED_NAMES.contains(&n) => {
                         // Accepted — lower.rs emits the corresponding
                         // `call <token>` to env.BFRuntime::<name>.

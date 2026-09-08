@@ -37,6 +37,7 @@ pub const REPLACED_FIXTURE_PATH: &str = "/replaced.html";
 pub const GENERATED_FIXTURE_PATH: &str = "/generated.html";
 pub const EFFECTS_FIXTURE_PATH: &str = "/effects.html";
 pub const BACKGROUNDS_FIXTURE_PATH: &str = "/backgrounds.html";
+pub const FORM_CONTROLS_FIXTURE_PATH: &str = "/form-controls.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -126,6 +127,20 @@ pub const EFFECTS_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="ef
 
 /// Multiple gradients, rounded clips, and independently styled border sides.
 pub const BACKGROUNDS_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="background-card" style="width:120px;height:60px;padding:8px;border-top:3px solid black;border-right:3px dashed red;border-bottom:3px dotted blue;border-left:3px double green;overflow:hidden;background-color:white;background-image:linear-gradient(90deg,red 0%,blue 100%),radial-gradient(white 0%,green 100%),url('http://venture.test/checker.gif');background-position:center,10px 20%,right bottom;background-size:cover,40px 30px,12px 12px;background-repeat:no-repeat,repeat-x,no-repeat;background-origin:padding-box,content-box,content-box;background-clip:border-box,padding-box,content-box;border-radius:18px 10px 6px 2px / 10px 8px 4px 2px"><span style="position:relative;left:-16px">Layered background</span></div></body></html>"#;
+
+/// Form controls crossing every shared formatting context and interaction state.
+pub const FORM_CONTROLS_FIXTURE_HTML: &str = r#"<!doctype html><html><body>
+<input id="normal-control" name="query" size="10" value="normal">
+<div style="display:flex"><input id="flex-control" size="10" placeholder="flex"></div>
+<div style="display:grid"><input id="grid-control" size="10" value="grid"></div>
+<table><tr><td><input id="table-control" size="10" value="table"></td></tr></table>
+<input id="float-control" size="10" value="float" style="float:left">
+<textarea id="notes-control" rows="3" cols="18">notes</textarea>
+<select id="select-control"><option>One</option><option selected>Two</option></select>
+<input id="check-control" type="checkbox" checked>
+<button id="disabled-control" disabled>Disabled</button>
+<input id="custom-control" value="custom" style="appearance:none;width:92px;min-width:80px;max-width:100px">
+</body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -527,6 +542,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let generated_url = format!("{origin}{GENERATED_FIXTURE_PATH}");
     let effects_url = format!("{origin}{EFFECTS_FIXTURE_PATH}");
     let backgrounds_url = format!("{origin}{BACKGROUNDS_FIXTURE_PATH}");
+    let form_controls_url = format!("{origin}{FORM_CONTROLS_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -617,6 +633,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             BACKGROUNDS_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == form_controls_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            FORM_CONTROLS_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -812,6 +834,26 @@ pub fn load_backgrounds_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{BACKGROUNDS_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_form_controls_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, 480.0, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!(
+        "{}{FORM_CONTROLS_FIXTURE_PATH}",
+        origin.trim_end_matches('/')
+    );
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1259,6 +1301,43 @@ mod tests {
         let capture = capture("http://venture.test").expect("capture fixture");
         capture.assert_valid();
         eprintln!("{}", capture.describe());
+    }
+
+    #[test]
+    fn form_controls_keep_intrinsics_across_layout_contexts_and_cairo() {
+        let page = load_form_controls_page("http://venture.test").expect("control fixture");
+        assert_eq!(page.paint.controls.len(), 10);
+        let widths = [
+            "normal-control",
+            "flex-control",
+            "grid-control",
+            "table-control",
+            "float-control",
+        ]
+        .map(|id| find_node(&page.paint.positioned, id).unwrap().0.width);
+        assert!(
+            widths
+                .windows(2)
+                .all(|pair| (pair[0] - pair[1]).abs() < 0.01),
+            "control widths differed by formatting context: {widths:?}"
+        );
+        assert_eq!(
+            page.paint
+                .controls
+                .iter()
+                .find(|control| control.key == "control:6:id:select-control")
+                .map(|control| control.kind.name()),
+            Some("select")
+        );
+        assert!(page
+            .paint
+            .controls
+            .iter()
+            .find(|control| control.key == "control:8:id:disabled-control")
+            .is_some_and(|control| control.disabled));
+        let pixels = paint_vm_cairo::render(&page.paint.scene).expect("control fixture cairo");
+        assert_eq!((pixels.width, pixels.height), (VIEWPORT_WIDTH as u32, 480));
+        assert!(pixels.data.iter().any(|channel| *channel != 0));
     }
 
     #[test]

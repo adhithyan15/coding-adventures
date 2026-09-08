@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add session-owned form-control focus, values, checked/selection state,
+  semantic keyboard/pointer transitions, hit testing, and retained reflow.
+
 - Reflow retained documents with decoded image intrinsic dimensions so async
   image completion updates layout as well as pixels.
 

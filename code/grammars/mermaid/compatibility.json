@@ -184,14 +184,14 @@
     {
       "id": "ishikawa",
       "headers": ["ishikawa", "ishikawa-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "causal",
       "smoke_source": "ishikawa-beta\nProblem\n  Cause"
     },
     {
       "id": "wardley",
       "headers": ["wardley-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "wardley",
       "smoke_source": "wardley-beta\ncomponent User [0.9, 0.5]"
     },

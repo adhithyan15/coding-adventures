@@ -435,6 +435,29 @@ and glyph runs, with native Metal-to-PNG validation. Exact area-proportional
 overlap optimization, theme-exact styling, configuration overrides, and
 interactive behavior remain unsupported at the partial level.
 
+### Ishikawa Native Slice
+
+The initial Mermaid 11.16.1 Ishikawa slice recognizes `ishikawa` and
+`ishikawa-beta`, takes the first content line as the effect, and preserves
+subsequent indentation as dedicated causal-tree IR. Deterministic alternating
+fishbone layout lowers through backend-neutral paths, a rounded effect box,
+and glyph runs, with native Metal-to-PNG validation. Exact upstream theme and
+configuration parity, adaptive collision avoidance for very wide or deeply
+nested trees, and interactive behavior remain unsupported at the partial
+level.
+
+### Wardley Native Slice
+
+The initial Mermaid 11.16.1 Wardley slice recognizes `wardley-beta` and parses
+titles, canvas sizes, custom evolution stages, anchors, components,
+visibility/evolution coordinates, validated dependency links, and evolution
+targets into dedicated strategic-map IR. Deterministic Cartesian mapping
+honors Wardley's `[visibility, evolution]` coordinate order and lowers through
+backend-neutral paths, ellipses, and glyph runs with native Metal-to-PNG
+validation. Pipelines, notes, annotations, accelerators/deaccelerators,
+advanced flow ports, decorators, label offsets, custom stage boundaries, and
+theme-exact rendering remain unsupported at the partial level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

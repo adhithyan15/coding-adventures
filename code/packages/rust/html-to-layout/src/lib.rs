@@ -8,12 +8,14 @@
 use std::cmp::Ordering;
 use std::collections::HashMap;
 
+use browser_form_controls::{control_key, project_control};
 use coding_adventures_css_parser::create_css_parser;
 use coding_adventures_html_parser::{BrowserRenderNode, BrowserRenderTree};
 use layout_backgrounds::{
     BackgroundBox, BackgroundColor, BackgroundLayer, BackgroundRepeat, BackgroundSize,
     BackgroundSource, BackgroundStyle, BoxEdges, CornerRadius, GradientStop, LengthPercent,
 };
+use layout_controls::{ControlAppearance, ControlKind};
 use layout_effects::{
     multiply, rotation, scale, translation, EffectBlendMode, EffectColor, EffectFilter,
     EffectStyle, OriginComponent, Transform2D, TransformOrigin, IDENTITY,
@@ -186,6 +188,7 @@ pub struct HtmlComputedStyle {
     pub box_decoration_break: BoxDecorationBreak,
     pub aspect_ratio: Option<f64>,
     pub object_fit: ImageFit,
+    pub appearance: ControlAppearance,
     pub float: FloatStyle,
     pub flex_container: FlexContainerStyle,
     pub flex_item: FlexItemStyle,
@@ -305,15 +308,17 @@ where
     let theme = &context.theme;
     let style = root_computed_style(context);
     let ancestors = Vec::new();
-    let mut counters = CounterContext::default();
-    let _root_counter_scope = counters.enter(&style.counter_reset, &style.counter_set);
-    counters.increment(&style.counter_increment);
+    let mut state = ConversionState::default();
+    let _root_counter_scope = state
+        .counters
+        .enter(&style.counter_reset, &style.counter_set);
+    state.counters.increment(&style.counter_increment);
     let children = convert_children(
         &render_tree.children,
         context,
         &style,
         &ancestors,
-        &mut counters,
+        &mut state,
         is_visited,
     );
 
@@ -346,13 +351,19 @@ where
     root
 }
 
+#[derive(Default)]
+struct ConversionState {
+    counters: CounterContext,
+    control_index: usize,
+}
+
 fn convert_node<F>(
     node: &BrowserRenderNode,
     context: &HtmlStyleContext,
     inherited: &HtmlComputedStyle,
     ancestors: &[&BrowserRenderNode],
     position: Option<NodePosition>,
-    counters: &mut CounterContext,
+    state: &mut ConversionState,
     is_visited: &F,
 ) -> Option<LayoutNode>
 where
@@ -360,21 +371,35 @@ where
 {
     let style = style_for_node(node, context, inherited, ancestors, position, is_visited);
     let display = style.display.as_deref().unwrap_or(&node.display);
-    if display == "none" || node.hidden {
+    if display == "none"
+        || node.hidden
+        || (node.role == "control" && node.control_type.as_deref() == Some("hidden"))
+    {
         return None;
     }
 
-    let counter_scope = counters.enter(&style.counter_reset, &style.counter_set);
-    counters.increment(&style.counter_increment);
+    let counter_scope = state
+        .counters
+        .enter(&style.counter_reset, &style.counter_set);
+    state.counters.increment(&style.counter_increment);
 
-    let supports_generated =
-        node.name.is_some() && !matches!(display, "inline-text" | "line-break" | "inline-replaced");
+    let supports_generated = node.name.is_some()
+        && node.role != "control"
+        && !matches!(display, "inline-text" | "line-break" | "inline-replaced");
     let mut generated = Vec::new();
     if supports_generated {
         if display == "list-item" {
-            counters.set("list-item", list_item_ordinal(node, ancestors));
+            state
+                .counters
+                .set("list-item", list_item_ordinal(node, ancestors));
             if let Some(marker) = marker_box(
-                node, context, &style, ancestors, position, counters, is_visited,
+                node,
+                context,
+                &style,
+                ancestors,
+                position,
+                &state.counters,
+                is_visited,
             ) {
                 generated.push(marker);
             }
@@ -387,7 +412,7 @@ where
             &style,
             ancestors,
             position,
-            counters,
+            &state.counters,
             is_visited,
         ) {
             generated.push(before);
@@ -396,16 +421,33 @@ where
 
     let mut next_ancestors = ancestors.to_vec();
     next_ancestors.push(node);
+    let control_key = (node.role == "control").then(|| {
+        let key = control_key(node, state.control_index);
+        state.control_index += 1;
+        key
+    });
     let mut layout = match display {
         "inline-text" => text_leaf(node.text.as_deref().unwrap_or_default(), &style),
         "line-break" => text_leaf("\n", &style),
         "inline-replaced" if node.role == "image" => image_leaf(node, &style, context),
-        _ => container_or_fallback(node, context, &style, &next_ancestors, counters, is_visited),
+        _ if node.role == "control" => {
+            control_leaf(node, &style, control_key.as_deref().unwrap_or("control"))
+        }
+        _ => container_or_fallback(
+            node,
+            context,
+            &style,
+            &next_ancestors,
+            state,
+            is_visited,
+        ),
     };
 
     if supports_generated {
         if display == "list-item" {
-            counters.set("list-item", list_item_ordinal(node, ancestors));
+            state
+                .counters
+                .set("list-item", list_item_ordinal(node, ancestors));
         }
         let after = pseudo_box(
             node,
@@ -415,7 +457,7 @@ where
             &style,
             ancestors,
             position,
-            counters,
+            &state.counters,
             is_visited,
         );
         if !generated.is_empty() || after.is_some() {
@@ -483,7 +525,7 @@ where
     layout
         .ext
         .insert("positioned".into(), positioned_ext(style.positioned));
-    counters.exit(counter_scope);
+    state.counters.exit(counter_scope);
     Some(layout)
 }
 
@@ -492,7 +534,7 @@ fn convert_children<F>(
     context: &HtmlStyleContext,
     inherited: &HtmlComputedStyle,
     ancestors: &[&BrowserRenderNode],
-    counters: &mut CounterContext,
+    state: &mut ConversionState,
     is_visited: &F,
 ) -> Vec<LayoutNode>
 where
@@ -511,7 +553,13 @@ where
                 }
             });
             convert_node(
-                node, context, inherited, ancestors, position, counters, is_visited,
+                node,
+                context,
+                inherited,
+                ancestors,
+                position,
+                state,
+                is_visited,
             )
         })
         .collect()
@@ -522,7 +570,7 @@ fn container_or_fallback<F>(
     context: &HtmlStyleContext,
     style: &HtmlComputedStyle,
     ancestors: &[&BrowserRenderNode],
-    counters: &mut CounterContext,
+    state: &mut ConversionState,
     is_visited: &F,
 ) -> LayoutNode
 where
@@ -533,7 +581,7 @@ where
         context,
         style,
         ancestors,
-        counters,
+        state,
         is_visited,
     );
 
@@ -766,6 +814,69 @@ fn image_leaf(
     layout
 }
 
+fn control_leaf(node: &BrowserRenderNode, style: &HtmlComputedStyle, key: &str) -> LayoutNode {
+    let mut state = project_control(node, key);
+    state.appearance = style.appearance;
+
+    let size = state.intrinsic_size(style.font.size);
+    let display = state.display_value();
+    let paint_value = if display.is_empty() {
+        "\u{200b}".to_string()
+    } else {
+        display
+    };
+    let mut layout = text_leaf(&paint_value, style)
+        .with_width(SizeValue::Fixed(size.width))
+        .with_height(SizeValue::Fixed(size.height));
+    layout
+        .ext
+        .insert(layout_controls::EXT_KEY.into(), state.to_ext());
+    layout
+}
+
+fn control_kind(node: &BrowserRenderNode) -> ControlKind {
+    match node.name.as_deref() {
+        Some("textarea") => ControlKind::TextArea,
+        Some("select") => ControlKind::Select,
+        Some("button") => ControlKind::Button,
+        _ => node
+            .control_type
+            .as_deref()
+            .and_then(ControlKind::parse)
+            .unwrap_or(ControlKind::Text),
+    }
+}
+
+fn apply_control_ua_defaults(style: &mut HtmlComputedStyle, node: &BrowserRenderNode) {
+    if node.role != "control" {
+        return;
+    }
+    style.background = Some(
+        if matches!(
+            control_kind(node),
+            ControlKind::Button | ControlKind::Select
+        ) {
+            rgb(224, 224, 224)
+        } else {
+            rgb(255, 255, 255)
+        },
+    );
+    style.border_width = edges_all(1.0);
+    style.border_color = [Some(rgb(96, 96, 96)); 4];
+    style.border_style = std::array::from_fn(|_| "solid".into());
+    if node.value.as_deref().unwrap_or_default().is_empty() && node.placeholder.is_some() {
+        style.color = rgb(112, 112, 112);
+    }
+    if node.control_focused {
+        style.border_width = edges_all(2.0);
+        style.border_color = [Some(rgb(0, 95, 204)); 4];
+    }
+    if node.disabled || node.aria_disabled.as_deref() == Some("true") {
+        style.color = rgb(112, 112, 112);
+        style.background = Some(rgb(235, 235, 235));
+    }
+}
+
 fn style_for_node<F>(
     node: &BrowserRenderNode,
     context: &HtmlStyleContext,
@@ -800,6 +911,7 @@ where
     style.box_decoration_break = BoxDecorationBreak::Slice;
     style.aspect_ratio = None;
     style.object_fit = ImageFit::Fill;
+    style.appearance = ControlAppearance::Auto;
     style.float = FloatStyle::default();
     style.flex_container = FlexContainerStyle::default();
     style.flex_item = FlexItemStyle::default();
@@ -838,6 +950,13 @@ where
         style.decoration = theme.link_decoration;
     }
     apply_author_cascade(&mut style, node, ancestors, position, context, is_visited);
+    if node.role == "control" && style.appearance == ControlAppearance::Auto {
+        // Native defaults sit below author declarations in the cascade. Reapply
+        // the author layer after adding them so appearance:none can expose an
+        // entirely author-painted control without erasing authored paint.
+        apply_control_ua_defaults(&mut style, node);
+        apply_author_cascade(&mut style, node, ancestors, position, context, is_visited);
+    }
     style
 }
 
@@ -965,6 +1084,7 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         box_decoration_break: BoxDecorationBreak::Slice,
         aspect_ratio: None,
         object_fit: ImageFit::Fill,
+        appearance: ControlAppearance::Auto,
         float: FloatStyle::default(),
         flex_container: FlexContainerStyle::default(),
         flex_item: FlexItemStyle::default(),
@@ -1269,6 +1389,13 @@ fn apply_declaration_winners(
                     Some("none") => ImageFit::None,
                     _ => ImageFit::Fill,
                 }
+            }
+            "appearance" => {
+                style.appearance = if value.first().is_some_and(|value| value == "none") {
+                    ControlAppearance::None
+                } else {
+                    ControlAppearance::Auto
+                };
             }
             "float" => {
                 style.float.side = match value.first().map(String::as_str) {
@@ -4744,6 +4871,49 @@ mod tests {
             return Some(text);
         }
         node.children.iter().find_map(first_text)
+    }
+
+    #[test]
+    fn form_controls_project_intrinsic_sizes_state_and_computed_appearance() {
+        let render = parse_browser_render_tree(
+            "<input id='query' name='q' value='hello' size='12'>\
+             <textarea rows='4' cols='30'>memo</textarea>\
+             <select><option>Short</option><option selected>Long option</option></select>\
+             <input type='checkbox' checked disabled>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["#query { appearance: none; width: 120px; min-width: 100px; max-width: 140px; }"],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let controls = collect_layout_controls(&layout);
+
+        assert_eq!(controls.len(), 4);
+        assert_eq!(controls[0].0.key, "control:0:id:query");
+        assert_eq!(controls[0].0.name.as_deref(), Some("q"));
+        assert_eq!(controls[0].0.appearance, ControlAppearance::None);
+        assert_eq!(controls[0].1.width, Some(SizeValue::Fixed(120.0)));
+        assert_eq!(controls[0].1.min_width, Some(100.0));
+        assert_eq!(controls[1].0.kind, ControlKind::TextArea);
+        assert_eq!((controls[1].0.columns, controls[1].0.rows), (30, 4));
+        assert_eq!(controls[2].0.display_value(), "Long option");
+        assert!(controls[3].0.checked && controls[3].0.disabled);
+    }
+
+    fn collect_layout_controls(
+        node: &LayoutNode,
+    ) -> Vec<(layout_controls::ControlState, &LayoutNode)> {
+        let mut values = Vec::new();
+        if let Some(control) = layout_controls::control_state(node) {
+            values.push((control, node));
+        }
+        for child in &node.children {
+            values.extend(collect_layout_controls(child));
+        }
+        values
     }
 
     fn all_text(node: &LayoutNode) -> Vec<&str> {

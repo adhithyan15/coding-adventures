@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Project form controls into the reusable `layout-controls` contract with
+  deterministic intrinsic sizes, CSS appearance, constraints, and state.
+
 ## [0.7.0]
 
 - Project multiple image and linear/radial gradient layers, per-layer

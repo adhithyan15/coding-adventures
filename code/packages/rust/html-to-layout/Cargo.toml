@@ -7,6 +7,7 @@ description = "Converts html-parser browser render trees into the shared Layout 
 [dependencies]
 coding-adventures-css-parser = { path = "../css-parser" }
 coding-adventures-html-parser = { path = "../html-parser" }
+browser-form-controls = { path = "../browser-form-controls" }
 layout-ir = { path = "../layout-ir" }
 layout-inline-box = { path = "../layout-inline-box" }
 layout-float = { path = "../layout-float" }
@@ -18,6 +19,7 @@ layout-replaced = { path = "../layout-replaced" }
 layout-generated = { path = "../layout-generated" }
 layout-effects = { path = "../layout-effects" }
 layout-backgrounds = { path = "../layout-backgrounds" }
+layout-controls = { path = "../layout-controls" }
 lexer = { path = "../lexer" }
 parser = { path = "../parser" }
 

@@ -11,6 +11,14 @@ Run `cargo test` here for source and manifest checks. The web consumer's
 real controls with the compiled Rust application. Generated artifacts are not
 committed. The fixture directory remains shared by Rust and browser tests.
 
+`VisiCalcStartup` is the package's second export: a shared loading/error surface
+with both themes and an error-only Retry control. `VisiCalc` remains the first
+export and the native project shell's default root. The web host owns pre-engine
+loading/retry state, disposes results from abandoned attempts, and focuses the
+workbook after successful retry. It renders startup status/error announcements
+without exposing low-level loader details. Full visual and text-scale acceptance
+remains #14273; React heading projection is tracked in #14610.
+
 The shared file toolbar exposes New workbook, Open and Save in both themes, with
 a compact Rust-owned status and polite announcements. The web host opts into
 protocol 2 and uses Mosaic's shared browser file executor directly from the

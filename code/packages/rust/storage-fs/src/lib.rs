@@ -129,9 +129,10 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+use coding_adventures_bounded_json::{
+    parse as json_parse, serialize as json_serialize, JsonNumber, JsonValue,
+};
 use coding_adventures_csprng::random_array;
-use coding_adventures_json_serializer::serialize as json_serialize;
-use coding_adventures_json_value::{parse as json_parse, JsonNumber, JsonValue};
 use std::collections::HashMap;
 use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};

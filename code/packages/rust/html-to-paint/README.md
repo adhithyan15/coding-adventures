@@ -9,7 +9,7 @@ BrowserRenderTree
   -> html-to-layout
   -> layout-block
   -> layout-to-paint
-  -> HtmlPaintOutput { positioned, links, scene }
+  -> HtmlPaintOutput { positioned, links, controls, scene }
   -> scene_image_resource_uris
   -> resolve_scene_image_resources_incrementally(browser_resolver)
   -> PaintScene with pending, decoded, or failed images
@@ -47,6 +47,9 @@ ancestor overflow shapes so elliptical clipped corners cannot receive hits.
 `hit_test_link` converts viewport coordinates using the current vertical scroll
 offset. The scene height is at least the viewport height and expands to the
 laid-out document height for scrolling.
+
+`controls` carries typed backend-neutral form hit regions. `hit_test_control`
+uses the same transformed, clipped, fixed-position coordinate policy as links.
 
 ```rust
 let target = hit_test_link(&output.links, mouse_x, mouse_y, scroll_y)

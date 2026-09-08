@@ -2,6 +2,9 @@
 
 ## 2026-09-08
 
+- Replace plain startup messages with the generated Mosaic loading/error screen.
+  Retry failed loads, dispose abandoned instances, and focus the recovered workbook.
+
 - Query the rendered cell matrix once per presentation-fixture step, preserving
   every assertion while avoiding repeated whole-grid scans on Windows CI.
 

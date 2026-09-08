@@ -1,0 +1,9 @@
+[package]
+name = "browser-form-controls"
+version = "0.1.0"
+edition = "2021"
+description = "Host-neutral browser form-control state and interaction semantics."
+
+[dependencies]
+coding-adventures-html-parser = { path = "../html-parser" }
+layout-controls = { path = "../layout-controls" }

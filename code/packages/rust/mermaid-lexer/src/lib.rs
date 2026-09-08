@@ -38,6 +38,8 @@ const EVENTMODELING_TOKEN_GRAMMAR_SOURCE: &str =
 const TREEMAP_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/treemap.tokens");
 const VENN_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/venn.tokens");
+const ISHIKAWA_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/ishikawa.tokens");
+const WARDLEY_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/wardley.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
 const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
@@ -132,6 +134,12 @@ pub fn create_mermaid_treemap_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_venn_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, VENN_TOKEN_GRAMMAR_SOURCE, "venn.tokens")
+}
+pub fn create_mermaid_ishikawa_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, ISHIKAWA_TOKEN_GRAMMAR_SOURCE, "ishikawa.tokens")
+}
+pub fn create_mermaid_wardley_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, WARDLEY_TOKEN_GRAMMAR_SOURCE, "wardley.tokens")
 }
 
 pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
@@ -392,6 +400,14 @@ pub fn try_tokenize_mermaid_treemap(source: &str) -> Result<Vec<Token>, String> 
 
 pub fn try_tokenize_mermaid_venn(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_venn_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+pub fn try_tokenize_mermaid_ishikawa(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_ishikawa_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+pub fn try_tokenize_mermaid_wardley(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_wardley_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
 }
 

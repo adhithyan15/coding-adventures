@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-08
+
+- Promoted graph into the closed process-free domain schema with explicit
+  4,096-package, 16,384-edge, and bounded result-level limits. Added an
+  independent iterative topology oracle, isolated-node, chain, disconnected-
+  component, and stable `GRAPH_CYCLE` cases without granting execution or host
+  authority.
+- Added the missing `unknown_path_policy: "error"` diff-selection case with an
+  empty result and stable `DIFF_UNKNOWN_PATH` diagnostic. The corpus now has
+  146 cases; both API and machine-readable CLI count pins enforce that total.
+
 ## 2026-09-05
 
 - Defined exact Windows corpus-root volume matching across legacy DWORD and
