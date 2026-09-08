@@ -5728,3 +5728,10 @@ on `ubuntu-latest` and `macos-latest`.
 - **Dartmouth BASIC and Oct stubs.** They surface
   `UnsupportedLanguage` errors with one-line guidance on what's needed
   to unblock each.
+
+### Encoded CLR call validation (VM-060a)
+
+The focused `mccarthy_encoded_clr_corpus_executes` conformance test executes
+all 19 McCarthy corpus programs in clr-simulator without external tools. It
+protects internal MethodDef call/return behavior while the simulator refuses
+unsupported call token tables. No host input execution is claimed.

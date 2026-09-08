@@ -552,3 +552,14 @@ fn mccarthy_is_uniform_across_every_backend() {
         exercised,
     );
 }
+
+/// Keep encoded MethodDef calls covered independently of external toolchains.
+#[test]
+fn mccarthy_encoded_clr_corpus_executes() {
+    assert!(!PROGRAMS.is_empty());
+    for (source, expected) in PROGRAMS {
+        let actual = run_clr(source).expect("encoded CLR corpus must execute");
+        assert_eq!(actual, *expected, "encoded CLR result for {source:?}");
+    }
+    eprintln!("McCarthy encoded CLR corpus: {} programs executed", PROGRAMS.len());
+}

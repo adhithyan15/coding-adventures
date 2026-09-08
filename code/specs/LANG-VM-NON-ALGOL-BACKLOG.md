@@ -28,6 +28,15 @@ Run simulator tests and Clippy plus relevant downstream CIL/McCarthy execution
 proofs. This slice does not implement host callbacks. VM-060b retains reader,
 string representation and callback ABI design before any input implementation.
 
+The red probe dispatched token 0x00000002 into internal method 1 and consumed
+its argument. With table validation, all 10 simulator tests pass, including
+five refused table bytes, valid same-row MethodDef execution and invalid rows.
+The focused encoded CLR corpus executes all 19 McCarthy programs with no skips.
+All-target Clippy for clr-simulator and lang-aot is required before publication.
+Cargo's twig-vm dependency tree contains no clr-simulator dependency; this
+change does not trigger the twig-vm dependency Miri rule.
+
+
 ## VM-059 contract (selected after #14601 merged)
 
 Main refreshed to `5778c35c3c`. PR #14601 merged as `af727bf81b` after

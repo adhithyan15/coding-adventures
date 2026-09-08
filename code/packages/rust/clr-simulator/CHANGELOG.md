@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — validate call token tables (VM-060a)
+
+Reject non-MethodDef call tokens before consuming arguments or changing frames.
+MemberRef and other table rows no longer alias internal methods by ordinal.
+Tests cover valid call/return, unsupported tables with unchanged state, and
+invalid MethodDef ordinals. Host callbacks remain unsupported.
+
 ## [0.5.0] — 2026-08-18 — `neg` opcode (0x65)
 
 The simulator had no dispatch case for the CIL `neg` opcode at all — any
