@@ -655,11 +655,7 @@ func TestLanguageSourceInputRegistryRejectsUnsafeSelectorsAndBounds(t *testing.T
 		t.Run(test.name, func(t *testing.T) {
 			registry := cloneLanguageSourceInputRegistry(t)
 			test.mutate(&registry)
-			encoded, err := json.Marshal(registry)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if _, err := decodeLanguageSourceInputRegistry(encoded); err == nil {
+			if err := validateLanguageSourceInputRegistry(registry); err == nil {
 				t.Fatal("malformed registry must fail closed")
 			}
 		})
@@ -668,6 +664,55 @@ func TestLanguageSourceInputRegistryRejectsUnsafeSelectorsAndBounds(t *testing.T
 	tooLarge := bytes.Repeat([]byte{' '}, maxLanguageSourceInputRegistryBytes+1)
 	if _, err := decodeLanguageSourceInputRegistry(tooLarge); err == nil {
 		t.Fatal("oversized registry must fail before decoding")
+	}
+}
+
+func TestLanguageSourceInputRegistryRejectsOverlapAndSensitivePaths(t *testing.T) {
+	registry := cloneLanguageSourceInputRegistry(t)
+	for index := range registry.Languages {
+		if registry.Languages[index].Language == "go" {
+			registry.Languages[index].ScopedInputs[0].Suffixes = []string{".go"}
+			break
+		}
+	}
+	if err := validateLanguageSourceInputRegistry(registry); err == nil {
+		t.Fatal("scoped selector overlapping a global suffix must fail closed")
+	}
+
+	registry = cloneLanguageSourceInputRegistry(t)
+	for index := range registry.Languages {
+		if registry.Languages[index].Language == "rust" {
+			registry.Languages[index].PackageExactInputs[0].Paths = []string{".env"}
+			break
+		}
+	}
+	if err := validateLanguageSourceInputRegistry(registry); err == nil {
+		t.Fatal("sensitive exact package path must fail closed")
+	}
+}
+
+func TestLanguageSourceInputRegistryAllowsBoundedFutureLaneAndNFCText(t *testing.T) {
+	registry := cloneLanguageSourceInputRegistry(t)
+	registry.Languages = append(registry.Languages, languageSourceInputSelectors{Language: "zz-future"})
+	if err := validateLanguageSourceInputRegistry(registry); err != nil {
+		t.Fatalf("bounded future lane rejected: %v", err)
+	}
+	if err := validateRegistryText("caf\u00e9"); err != nil {
+		t.Fatalf("NFC UTF-8 text rejected: %v", err)
+	}
+	if err := validateRegistryText("cafe\u0301"); err == nil {
+		t.Fatal("non-NFC text must fail closed")
+	}
+}
+
+func TestLanguageSourceInputRegistryRejectsDuplicateKeysAndDepth(t *testing.T) {
+	duplicate := []byte(`{"schema_version":1,"schema_version":1}`)
+	if _, err := decodeLanguageSourceInputRegistry(duplicate); err == nil {
+		t.Fatal("duplicate object keys must fail closed")
+	}
+	deep := []byte(strings.Repeat("[", maxLanguageSourceInputRegistryDepth+1) + strings.Repeat("]", maxLanguageSourceInputRegistryDepth+1))
+	if _, err := decodeLanguageSourceInputRegistry(deep); err == nil {
+		t.Fatal("over-deep registry must fail before typed decoding")
 	}
 }
 
@@ -736,7 +781,7 @@ func TestLanguageSourceInputRegistryGeneratorRoundTrip(t *testing.T) {
 	}
 
 	registry := cloneLanguageSourceInputRegistry(t)
-	registry.Languages[0].ScopedInputs[0].Reason += " reviewed"
+	registry.Languages[0].ScopedInputs[0].Reason += " reviewed A & B < C > D"
 	mutated, err := json.Marshal(registry)
 	if err != nil {
 		t.Fatal(err)
@@ -758,6 +803,13 @@ func TestLanguageSourceInputRegistryGeneratorRoundTrip(t *testing.T) {
 	match := digestPattern.FindSubmatch(mutatedGenerated)
 	if len(match) != 2 || string(match[1]) == languageSourceInputRegistryDigest {
 		t.Fatal("generator must derive a new digest from changed registry content")
+	}
+	goDigest, err := languageSourceInputRegistryDigestForJSON(mutated)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(match[1]) != goDigest {
+		t.Fatalf("generator and Go canonical digests differ: got %s, want %s", match[1], goDigest)
 	}
 }
 
