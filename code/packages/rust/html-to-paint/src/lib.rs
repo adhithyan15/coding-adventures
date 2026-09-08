@@ -9,6 +9,7 @@ use html_to_layout::{
 use image_codec_gif::decode_gif;
 use image_codec_jpeg::decode_jpeg;
 use layout_block::layout_block;
+use layout_effects::{multiply, transform_point, EffectStyle, Transform2D, IDENTITY};
 use layout_ir::{Constraints, Content, ExtValue, PositionedNode, TextMeasurer};
 use layout_positioned::{scroll_extent, PositionedStyle};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -18,7 +19,7 @@ use paint_instructions::{
 };
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 
 const HTML_IMAGE_ALT_METADATA: &str = "html.alt";
 
@@ -434,17 +435,30 @@ fn never_visited(_url: &str) -> bool {
 /// coordinates into absolute logical document coordinates.
 pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
     let mut regions = Vec::new();
-    let mut stack = vec![(root, 0.0, 0.0, None, false)];
+    let mut stack = vec![(root, 0.0, 0.0, None, false, IDENTITY)];
 
-    while let Some((node, parent_x, parent_y, inherited_clip, inherited_fixed)) = stack.pop() {
+    while let Some((
+        node,
+        parent_x,
+        parent_y,
+        inherited_clip,
+        inherited_fixed,
+        inherited_transform,
+    )) = stack.pop()
+    {
         let absolute_x = parent_x + node.x;
         let absolute_y = parent_y + node.y;
         let style = PositionedStyle::from_positioned(node);
+        let effects = EffectStyle::from_positioned(node);
+        let transform = effects
+            .resolved_transform(absolute_x, absolute_y, node.width, node.height, 1.0)
+            .map(|local| multiply(inherited_transform, local))
+            .unwrap_or(inherited_transform);
         let fixed = inherited_fixed || style.position == layout_positioned::Position::Fixed;
         if positioned_html_string(node, "role") == Some("link") {
             if let Some(url) = positioned_html_string(node, "href") {
                 let region = clipped_box(
-                    (absolute_x, absolute_y, node.width, node.height),
+                    transformed_box((absolute_x, absolute_y, node.width, node.height), transform),
                     inherited_clip,
                 );
                 if let Some((x, y, width, height)) = region.filter(|(x, y, width, height)| {
@@ -464,18 +478,44 @@ pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
 
         let child_clip = if style.clips_x() || style.clips_y() {
             clipped_box(
-                (absolute_x, absolute_y, node.width, node.height),
+                transformed_box((absolute_x, absolute_y, node.width, node.height), transform),
                 inherited_clip,
             )
         } else {
             inherited_clip
         };
         for child in node.children.iter().rev() {
-            stack.push((child, absolute_x, absolute_y, child_clip, fixed));
+            stack.push((child, absolute_x, absolute_y, child_clip, fixed, transform));
         }
     }
 
     regions
+}
+
+fn transformed_box(rect: (f64, f64, f64, f64), transform: Transform2D) -> (f64, f64, f64, f64) {
+    let corners = [
+        transform_point(transform, rect.0, rect.1),
+        transform_point(transform, rect.0 + rect.2, rect.1),
+        transform_point(transform, rect.0, rect.1 + rect.3),
+        transform_point(transform, rect.0 + rect.2, rect.1 + rect.3),
+    ];
+    let min_x = corners
+        .iter()
+        .map(|point| point.0)
+        .fold(f64::INFINITY, f64::min);
+    let max_x = corners
+        .iter()
+        .map(|point| point.0)
+        .fold(f64::NEG_INFINITY, f64::max);
+    let min_y = corners
+        .iter()
+        .map(|point| point.1)
+        .fold(f64::INFINITY, f64::min);
+    let max_y = corners
+        .iter()
+        .map(|point| point.1)
+        .fold(f64::NEG_INFINITY, f64::max);
+    (min_x, min_y, max_x - min_x, max_y - min_y)
 }
 
 /// Hit-test a viewport-space point against logical document link regions.
@@ -1197,6 +1237,32 @@ mod tests {
                 width: 20.0,
                 height: 10.0,
                 url: "https://example.test/visible".into(),
+                fixed: false,
+            }]
+        );
+    }
+
+    #[test]
+    fn extraction_transforms_link_regions_with_their_visual_boxes() {
+        let mut link = positioned_link(5.0, 7.0, 20.0, 10.0, "https://example.test/moved");
+        let effects = layout_effects::EffectStyle {
+            transform: layout_effects::translation(12.0, 4.0),
+            transform_origin: layout_effects::TransformOrigin {
+                x: layout_effects::OriginComponent::percent(0.0),
+                y: layout_effects::OriginComponent::percent(0.0),
+            },
+            ..layout_effects::EffectStyle::default()
+        };
+        link.ext.insert("effects".into(), effects.to_ext());
+
+        assert_eq!(
+            extract_link_regions(&link),
+            vec![LinkRegion {
+                x: 17.0,
+                y: 11.0,
+                width: 20.0,
+                height: 10.0,
+                url: "https://example.test/moved".into(),
                 fixed: false,
             }]
         );
