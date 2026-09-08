@@ -117,3 +117,35 @@ it("renders selected-cell results and an atomic polite announcement from Rust", 
     expect(summary!.textContent).toBe("E1, 42");
   } finally { await act(async () => root.unmount()); container.remove(); }
 });
+
+it.each(["light", "dark"] as const)("guides an empty workbook without replacing the editable grid (%s)", async colorScheme => {
+  const module = await loadMosaicModule(readFileSync("public/visicalc_mosaic_app.wasm"));
+  const host = module.create({ colorScheme });
+  const container = document.createElement("div"); document.body.append(container);
+  const root = createRoot(container);
+  const introduction = () => [...container.querySelectorAll("h2")].find(h => h.textContent === "Room for your next idea");
+  try {
+    await act(async () => root.render(<App load={async () => host} />));
+    expect(introduction()).toBeUndefined();
+    const newWorkbook = [...container.querySelectorAll("button")].find(b => b.textContent === "New workbook")!;
+    await act(async () => newWorkbook.click());
+    expect(introduction()).toBeDefined();
+    expect(container.textContent).toContain("a formula like =2+3");
+    const table = container.querySelector("table")!;
+    expect(table.querySelectorAll("thead th[scope='col']")).toHaveLength(26);
+    const field = container.querySelector<HTMLInputElement>('input[placeholder="Enter a value or formula"]')!;
+    const type = async (value: string) => act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(field, value);
+      field.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    await type("=2+3");
+    expect(introduction()).toBeDefined();
+    await act(async () => field.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })));
+    expect(introduction()).toBeUndefined();
+    expect(container.querySelector("table")).toBe(table);
+    expect(table.querySelector("tbody:not([data-mosaic-spacer]) td")?.textContent).toBe("5");
+    await type("");
+    await act(async () => field.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })));
+    expect(introduction()).toBeDefined();
+  } finally { await act(async () => root.unmount()); container.remove(); }
+});
