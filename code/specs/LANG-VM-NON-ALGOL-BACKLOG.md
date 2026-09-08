@@ -1475,3 +1475,34 @@ rerun of the seven existing columns is claimed. This proves ASCII integer
 printing only; byte truncation/encoding, BEAM input/EOF, and Brainfuck tape
 semantics still need separate probes before promotion. Reprioritize the remaining
 VM-040 families against VM-060b host input and VM-013 Intel 8008 after merge.
+
+## VM-040 COBOL BEAM output probe (selected after #14665 merged)
+
+PR #14665 merged as 9af6235015 after all 46 checks succeeded or skipped.
+Prioritize COBOL's first four output cases because they exercise the newly
+available character writer together with existing string and integer lowering.
+Probe literal DISPLAY, numeric MOVE, integer arithmetic and scaled-decimal ADD
+on real Erlang. Preserve exact stdout and hard failures after runtime detection.
+Only promote executed cells. If a defect appears, commit its bounded contract
+before production edits. Larger COBOL string operations, BEAM input/EOF,
+VM-060b host-reader ABI, and VM-013 machine semantics remain separate items.
+
+### VM-040 COBOL probe: integer arithmetic literal operands
+
+Literal DISPLAY and numeric MOVE execute successfully, but ADD 7 fails lowering
+with expected variable operand, got Int(7). Integer binary arithmetic currently
+requires register sources even though IIR permits integer immediates. Accept
+Var and Int operands directly in the existing gc_bif2 arithmetic source slots;
+retain explicit errors for unsupported operand kinds, source arity validation,
+and u4/u8 narrowing. Do not allocate scratch registers for immediate values.
+Rerun the four COBOL probes and add operation/operand regression coverage.
+
+### VM-040 initial COBOL validation
+
+All four selected COBOL programs passed on real Erlang and in fresh matrix
+processes with positive sentinels (rows 390-393). Fifteen arithmetic immediate
+executions passed, including negative operands and all five binary operations.
+All 12 Oct and 26 Nib BEAM programs passed again, along with 93 backend tests
+and all-target Clippy for iir-to-beam and lang-aot. No seven-column rerun is
+claimed. Remaining COBOL BEAM rows require further probes after this PR merges;
+only four of the 58 COBOL rows now declare BEAM, for 410 total declared cells.
