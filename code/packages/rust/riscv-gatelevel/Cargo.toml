@@ -1,0 +1,11 @@
+[package]
+name = "riscv-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "Exact 525,505-DFF gate-level RISC-V RV32I simulator"
+license = "MIT"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+riscv-simulator = { path = "../riscv-simulator" }
