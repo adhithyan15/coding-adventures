@@ -134,6 +134,38 @@ class OcamlCapabilityGateTest(unittest.TestCase):
         self.assertTrue(command[-2].endswith("bisect-a.coverage"))
         self.assertTrue(command[-1].endswith("bisect-b.coverage"))
 
+    def test_cobertura_diagnostics_report_uncovered_source_lines(self) -> None:
+        gate = load_coverage_gate()
+        with tempfile.TemporaryDirectory() as directory:
+            report = Path(directory) / "coverage.xml"
+            report.write_text(
+                '<coverage><packages><package><classes>'
+                '<class filename="src/library.ml"><lines>'
+                '<line number="10" hits="1"/><line number="11" hits="0"/>'
+                '<line number="19" hits="0"/>'
+                '</lines></class></classes></package></packages></coverage>',
+                encoding="utf-8",
+            )
+            self.assertEqual(gate.uncovered_lines(report, "src/library.ml"), [11, 19])
+
+    def test_cobertura_command_aggregates_every_process_file(self) -> None:
+        gate = load_coverage_gate()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "bisect-a.coverage").touch()
+            (root / "bisect-b.coverage").touch()
+            previous = Path.cwd()
+            try:
+                os.chdir(root)
+                command = gate.cobertura_command(
+                    "bisect*.coverage", ["src/library.ml"], root / "coverage.xml"
+                )
+            finally:
+                os.chdir(previous)
+        self.assertIn("cobertura", command)
+        self.assertTrue(command[-2].endswith("bisect-a.coverage"))
+        self.assertTrue(command[-1].endswith("bisect-b.coverage"))
+
     def test_ci_registry_routes_all_ocaml_analyzer_inputs(self) -> None:
         registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
         gate = registry["gates"]["contracts-capability-cage"]

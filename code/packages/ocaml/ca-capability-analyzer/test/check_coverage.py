@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import re
 import subprocess
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
@@ -41,11 +42,41 @@ def coverage_command(pattern: str, sources: list[str]) -> list[str]:
     return command
 
 
+def cobertura_command(pattern: str, sources: list[str], output: Path) -> list[str]:
+    coverage_files = sorted(Path.cwd().glob(pattern))
+    if not coverage_files:
+        raise ValueError(f"coverage glob matched no files: {pattern}")
+    command = ["opam", "exec", "--", "bisect-ppx-report", "cobertura", str(output)]
+    for source in sources:
+        command.extend(("--expect", source))
+    command.extend(str(path) for path in coverage_files)
+    return command
+
+
 def generate_summary(path: Path, pattern: str, sources: list[str]) -> None:
     command = coverage_command(pattern, sources)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as output:
         subprocess.run(command, check=True, stdout=output, text=True)
+
+
+def generate_cobertura(path: Path, pattern: str, sources: list[str]) -> None:
+    subprocess.run(cobertura_command(pattern, sources, path), check=True, text=True)
+
+
+def uncovered_lines(report: Path, source: str) -> list[int]:
+    normalized_source = source.replace("\\", "/")
+    root = ET.parse(report).getroot()
+    for entry in root.iter("class"):
+        filename = entry.attrib.get("filename", "").replace("\\", "/")
+        if normalized_source not in filename:
+            continue
+        return [
+            int(line.attrib["number"])
+            for line in entry.iter("line")
+            if int(line.attrib.get("hits", "0")) == 0
+        ]
+    raise ValueError(f"coverage XML has no class for {source}")
 
 
 def main() -> int:
@@ -55,11 +86,20 @@ def main() -> int:
     parser.add_argument("--source", required=True, action="append")
     parser.add_argument("--minimum", required=True, type=float)
     args = parser.parse_args()
+    cobertura = args.summary.with_suffix(".xml")
     if args.coverage_glob:
         generate_summary(args.summary, args.coverage_glob, args.source)
+        generate_cobertura(cobertura, args.coverage_glob, args.source)
     summary = args.summary.read_text(encoding="utf-8")
+    print(summary, end="" if summary.endswith("\n") else "\n")
     for source in args.source:
-        percentage = require_minimum(summary, source, args.minimum)
+        try:
+            percentage = require_minimum(summary, source, args.minimum)
+        except ValueError as error:
+            if cobertura.is_file() and "below required" in str(error):
+                missed = ",".join(str(line) for line in uncovered_lines(cobertura, source))
+                raise ValueError(f"{error}; uncovered source lines: {missed}") from error
+            raise
         print(f"{source}: {percentage:.2f}% (minimum {args.minimum:.2f}%)")
     return 0
 
