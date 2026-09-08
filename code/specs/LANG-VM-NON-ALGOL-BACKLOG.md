@@ -45,6 +45,13 @@ AOT refuses `main`; LLVM explicitly rejects `call_builtin "input_more"` as
 outside its whitelist. Prioritize the already scoped shared-runtime mapping
 repair before publishing the new matrix cells (rows 438–441).
 
+VM-039a local validation: all eight new cells (438–441 on NativeAot/LLVM)
+passed in fresh processes with positive sentinels, including a negative final
+field without newline. The production C ABI test passes repeated peeks before
+and after consumption and over empty input. The x86_64, AArch64 and LLVM
+package suites passed. These four rows declare only NativeAot and LLVM;
+WASM is next (VM-039b), not yet claimed by this proof.
+
 ## VM-038 implementation contract (selected after #14463 merged)
 
 Refreshed main is `7593f1253d`. VM-057, VM-047c and VM-049 have

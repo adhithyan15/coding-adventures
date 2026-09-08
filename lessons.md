@@ -7103,3 +7103,20 @@ failed before evaluating the program. Use an argument-preserving subprocess
 API for Erlang expressions. The Rust BEAM corpus runner passes a fixed eval
 argument through `Command`, uses a private working directory, and checks both
 process status and the complete integer output. All 21 programs passed.
+
+### 2026-09-07 — Validate rebuild exit before reusing test binaries
+
+The first LLVM input_more arm omitted its required Ok(()) result. The rebuild
+failed, and an existing matrix binary still reproduced the old backend refusal.
+Check the build exit and log before running a retained executable. The LLVM
+builtin dispatcher returns Result, so new successful arms must return Ok(()).
+PowerShell also does not support Bash brace-expanded path lists; pass explicit
+paths to rg when finding the native builtin tables.
+
+The next executable probe caught a missing state.env registration for the new
+LLVM result. Emitting SSA text alone is insufficient: register the destination
+just like input_i64 so the subsequent EOF comparison can resolve it.
+
+A guarded test insertion expected tool_ok, but this matrix uses clang_ok. The
+assertion prevented the edit; the following filter consequently ran zero tests.
+Require a positive test count as well as exit success for focused validation.

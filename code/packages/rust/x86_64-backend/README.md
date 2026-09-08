@@ -118,3 +118,7 @@ removes the need to reserve-per-call.
 - *System V Application Binary Interface, AMD64 Architecture Processor
   Supplement* — Matz et al.
 - Microsoft Docs: "x64 calling convention"
+
+FLOW-MATIC EOF support (VM-039a): `input_more()` uses a non-consuming stdio
+peek alongside `input_i64`. The native/LLVM input stream proof includes empty
+input and repeated EOF reads; this does not change existing integer parsing.

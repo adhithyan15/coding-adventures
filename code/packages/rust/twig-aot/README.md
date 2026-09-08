@@ -132,3 +132,7 @@ activates the MSVC developer environment and runs
 Without that flag, local hosts retain optional-toolchain skips. Of eight tests,
 five link and execute programs, one inspects the PE object, and two explicitly
 return early for the separately tracked precise-GC frame-walk gap (VM-031).
+
+FLOW-MATIC EOF support (VM-039a): `input_more()` uses a non-consuming stdio
+peek alongside `input_i64`. The native/LLVM input stream proof includes empty
+input and repeated EOF reads; this does not change existing integer parsing.
