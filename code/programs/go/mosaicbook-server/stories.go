@@ -97,6 +97,11 @@ type Component struct {
 	// references fail to resolve.
 	ManifestPath string `json:"-"`
 
+	// PackageSearchPath is the directory containing the owning package and its
+	// sibling dependency packages. Passing it explicitly keeps compiler
+	// resolution independent of MosaicBook's process working directory.
+	PackageSearchPath string `json:"-"`
+
 	// Stories is the list of story variants.  Always non-empty (at minimum the
 	// auto-generated "Default" story is present).
 	Stories []Story `json:"stories"`
@@ -218,15 +223,22 @@ func threeFileComponent(root, resolvedRoot, milPath, fileName string) (Component
 		}
 	}
 
+	manifestPath := findPackageManifest(dir, root, resolvedRoot)
+	packageSearchPath := ""
+	if manifestPath != "" {
+		packageSearchPath = filepath.Dir(filepath.Dir(manifestPath))
+	}
+
 	return Component{
-		ID:            id,
-		Title:         title,
-		InterfacePath: milPath,
-		LayoutPath:    layout,
-		StylePath:     style,
-		ManifestPath:  findPackageManifest(dir, root, resolvedRoot),
-		Stories:       stories,
-		StoriesError:  storiesError,
+		ID:                id,
+		Title:             title,
+		InterfacePath:     milPath,
+		LayoutPath:        layout,
+		StylePath:         style,
+		ManifestPath:      manifestPath,
+		PackageSearchPath: packageSearchPath,
+		Stories:           stories,
+		StoriesError:      storiesError,
 	}, true
 }
 
