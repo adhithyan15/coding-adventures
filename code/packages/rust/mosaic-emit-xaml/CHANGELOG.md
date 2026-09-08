@@ -1,5 +1,19 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — bind native XAML waveform line coordinates
+
+`Path kind: line` now accepts literal numbers, slot references, and numeric
+expressions for `x1`, `y1`, `x2`, and `y2`. Numeric index expressions such as
+the SPICE workbench's `segment[0]` generate `double` helpers; inside a typed
+`For` template those helpers are exposed as local row-view-model properties so
+WinUI's XAML compiler never has to resolve an `Owner.Helper(...)` binding.
+
+`circle` and `curve` coordinates intentionally remain literal-only. Their
+current lowering respectively needs derived margins and `Point` construction,
+which need a broader geometry-binding contract rather than an unsafe partial
+extension of line bindings. The new workbench acceptance test verifies all four
+adjacent-point segment coordinates through the actual package pipeline.
+
 ## [Unreleased] — activate UI49 one-of slot states (#14359)
 
 Mosstyle states owned by `.mil` `one-of` slots now activate from the generated
