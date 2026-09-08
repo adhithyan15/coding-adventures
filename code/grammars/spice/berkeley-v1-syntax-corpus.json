@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "suite": "berkeley-v1-syntax",
+  "cases": [
+    {
+      "id": "continued-resistor-card",
+      "outcome": "accepted",
+      "classification": "supported",
+      "deck": "* continued divider\nV1 in 0 DC 10\nR1 in mid\n+ 1k\nR2 mid 0 1k\n.op\n.end\n",
+      "expected": { "title": "continued divider", "elementCount": 3, "analysisKinds": ["op"] }
+    },
+    {
+      "id": "continuation-after-comment",
+      "outcome": "accepted",
+      "classification": "supported",
+      "deck": "V1 in 0 DC 1\n* comments do not terminate a logical card\n+ AC 1\nR1 in 0 1k\n.op\n.end\n",
+      "expected": { "elementCount": 2, "analysisKinds": ["op"] }
+    },
+    {
+      "id": "continued-model-card",
+      "outcome": "accepted",
+      "classification": "supported",
+      "deck": ".model Dfast D(IS=2e-14\n+ CJO=1.5e-12)\nV1 in 0 0.8\nR1 in out 1k\nD1 out 0 Dfast\n.op\n.end\n",
+      "expected": { "elementCount": 3, "analysisKinds": ["op"] }
+    },
+    {
+      "id": "case-insensitive-subckt-instance",
+      "outcome": "accepted",
+      "classification": "supported",
+      "deck": ".SUBCKT DIV IN OUT\nR1 IN OUT 1k\nR2 OUT 0 1k\n.ENDS div\nV1 in 0 dc 1\nX1 in out DIV\n.op\n.end\n",
+      "expected": { "elementCount": 3, "analysisKinds": ["op"] }
+    },
+    {
+      "id": "inline-comment-and-end-boundary",
+      "outcome": "accepted",
+      "classification": "supported",
+      "deck": "V1 in 0 1 ; source comment\nR1 in 0 1k\n.op\n.end\nRignored in 0 2k\n",
+      "expected": { "elementCount": 2, "analysisKinds": ["op"] }
+    },
+    {
+      "id": "orphan-continuation",
+      "outcome": "rejected",
+      "classification": "supported-diagnostic",
+      "deck": "+ 1k\nR1 in 0 1k\n.end\n"
+    },
+    {
+      "id": "unmatched-subckt-end",
+      "outcome": "rejected",
+      "classification": "supported-diagnostic",
+      "deck": ".ends stray\n.end\n"
+    },
+    {
+      "id": "nested-subckt",
+      "outcome": "rejected",
+      "classification": "deliberate-exclusion",
+      "deck": ".subckt outer a b\n.subckt inner a b\n.ends inner\n.ends outer\n.end\n"
+    },
+    {
+      "id": "mos-level-two-model",
+      "outcome": "rejected",
+      "classification": "deliberate-exclusion",
+      "deck": ".model Mfast NMOS(LEVEL=2 VTO=0.7)\n.end\n"
+    }
+  ]
+}
