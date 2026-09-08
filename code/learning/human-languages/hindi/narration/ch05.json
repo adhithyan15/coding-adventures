@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c5b85d24121992ff",
+  "sourceHash": "fnv1a64:649075b12b74693b",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -164,9 +164,9 @@
       "id": "HI-C05-rahna",
       "sequence": 410,
       "title": "रहना (rahnā) — \"to live, to stay\"",
-      "headword": "रहना / में",
-      "romanization": "rahnā / meṁ",
-      "gloss": "to live, to stay; में = in",
+      "headword": "रहना / रहता / में",
+      "romanization": "rahnā / rahtā / meṁ",
+      "gloss": "to live or stay / masculine present form / in",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
@@ -174,7 +174,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:43a5d7b76a85df46",
+      "sourceHash": "fnv1a64:35dad878405c2735",
       "notice": {
         "modality": "sight",
         "needs": [
