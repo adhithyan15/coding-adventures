@@ -118,7 +118,12 @@ The delivery order is:
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
-   provider configuration. Public native clients remain `none` + PKCE.
+   provider configuration. The storage-agnostic client-secret custody
+   prerequisite is shipped: create, one-closure access, atomic rotation, and
+   conditional deletion are all audit-bracketed with provider and trace while
+   secret ownership remains zeroizing. Binding `client_secret_basic` and
+   `client_secret_post` into token requests, plus a non-exporting signer for
+   `private_key_jwt`, remain next. Public native clients remain `none` + PKCE.
 7. **Device Authorization Grant:** RFC 8628 preparation and a caller-driven
    polling state machine with no internal sleep or network authority.
 8. **HTTPS transport:** provider-neutral request/response types over the
