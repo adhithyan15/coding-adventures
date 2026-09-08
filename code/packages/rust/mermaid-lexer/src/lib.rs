@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.70.0";
+pub const VERSION: &str = "0.71.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -32,6 +32,7 @@ const KANBAN_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/kanban.tokens");
 const ARCHITECTURE_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/architecture.tokens");
+const RADAR_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/radar.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
 const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
@@ -106,6 +107,10 @@ pub fn create_mermaid_kanban_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_architecture_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, ARCHITECTURE_TOKEN_GRAMMAR_SOURCE, "architecture.tokens")
+}
+
+pub fn create_mermaid_radar_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, RADAR_TOKEN_GRAMMAR_SOURCE, "radar.tokens")
 }
 
 pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
@@ -349,6 +354,11 @@ pub fn try_tokenize_mermaid_architecture(source: &str) -> Result<Vec<Token>, Str
     lexer.tokenize().map_err(|error| error.to_string())
 }
 
+pub fn try_tokenize_mermaid_radar(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_radar_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
 pub fn try_tokenize_mermaid_xychart(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_xychart_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
@@ -417,6 +427,17 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_radar_axes_and_curves_as_complete_statements() {
+        let tokens = try_tokenize_mermaid_radar(
+            "radar-beta\naxis speed[\"Speed\"], quality\ncurve product{80, 60}\n",
+        )
+        .unwrap();
+        let values = tokens.iter().map(|token| token.value.as_str()).collect::<Vec<_>>();
+        assert!(values.contains(&"axis speed[\"Speed\"], quality"));
+        assert!(values.contains(&"curve product{80, 60}"));
+    }
+
+    #[test]
     fn tokenizes_mindmap_indentation_and_shapes_as_complete_lines() {
         let tokens = try_tokenize_mermaid_mindmap(
             "mindmap\n  root((Native))\n    Parser[Grammar first]\n",
@@ -437,7 +458,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.70.0");
+        assert_eq!(VERSION, "0.71.0");
     }
 
     #[test]

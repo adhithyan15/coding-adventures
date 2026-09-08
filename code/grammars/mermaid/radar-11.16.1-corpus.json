@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "upstream": "mermaid@11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "Native partial slice: titles, accessibility metadata, labeled axes, positional curves, and axis-keyed curves.",
+  "fixtures": [
+    {
+      "id": "basic",
+      "source": "radar-beta\naxis A, B, C\ncurve x{1, 2, 3}"
+    },
+    {
+      "id": "labels-and-metadata",
+      "source": "radar-beta:\ntitle Restaurant Comparison\naccTitle: Comparison chart\naccDescr: Scores by category\naxis food[\"Food Quality\"], service[\"Service\"], price[\"Price\"]\ncurve a[\"Restaurant A\"]{4, 3, 2}"
+    },
+    {
+      "id": "detailed-entries",
+      "source": "radar-beta\naxis speed[\"Speed\"], quality[\"Quality\"], cost[\"Cost\"]\ncurve product{cost: 20, speed: 80, quality: 60}"
+    },
+    {
+      "id": "multiple-statements",
+      "source": "radar-beta\naxis A, B, C, D\ncurve first{1, 2, 3, 4}\ncurve second[\"Second\"]{4, 3, 2, 1}"
+    }
+  ]
+}

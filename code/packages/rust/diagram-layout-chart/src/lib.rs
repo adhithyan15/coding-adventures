@@ -9,6 +9,7 @@
 //!   * **XY** — bar and line series on categorical x-axis, numeric y-axis
 //!   * **Pie** — angular slices starting at 12 o'clock
 //!   * **Sankey** — left-to-right proportional bands
+//!   * **Radar** — radial axes with polygonal series
 
 use diagram_ir::{
     AxisKind, ChartDiagram, ChartKind, LayoutedChartDiagram, LayoutedChartItem, LegendEntry,
@@ -16,7 +17,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.16.0";
+pub const VERSION: &str = "0.17.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -112,6 +113,7 @@ pub fn layout_chart_diagram(diagram: &ChartDiagram, cw: f64, ch: f64) -> Layoute
         ChartKind::Pie => layout_pie(diagram, cw, ch),
         ChartKind::Sankey => layout_sankey(diagram, cw, ch),
         ChartKind::Quadrant => layout_quadrant(diagram, cw, ch),
+        ChartKind::Radar => layout_radar(diagram, cw, ch),
     }
 }
 
@@ -1372,6 +1374,132 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
     }
 }
 
+fn radar_point(cx: f64, cy: f64, radius: f64, index: usize, count: usize) -> Point {
+    let angle =
+        -std::f64::consts::FRAC_PI_2 + 2.0 * std::f64::consts::PI * index as f64 / count as f64;
+    Point {
+        x: cx + radius * angle.cos(),
+        y: cy + radius * angle.sin(),
+    }
+}
+
+fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
+    let categories = diagram
+        .x_axis
+        .as_ref()
+        .map(|axis| axis.categories.as_slice())
+        .unwrap_or(&[]);
+    let title_height = diagram.title.as_ref().map_or(0.0, |_| TITLE_H);
+    let legend_height = if diagram.series.is_empty() {
+        0.0
+    } else {
+        LEGEND_H
+    };
+    let cx = cw / 2.0;
+    let cy = title_height + (ch - title_height - legend_height) / 2.0;
+    let radius = ((cw.min(ch - title_height - legend_height) / 2.0) - 58.0).max(20.0);
+    let count = categories.len().max(1);
+    let mut items = Vec::new();
+
+    for tick in 1..=GRID_COUNT {
+        let tick_radius = radius * tick as f64 / GRID_COUNT as f64;
+        let mut points = (0..count)
+            .map(|index| radar_point(cx, cy, tick_radius, index, count))
+            .collect::<Vec<_>>();
+        if let Some(first) = points.first().cloned() {
+            points.push(first);
+        }
+        items.push(LayoutedChartItem::LinePath {
+            points,
+            color: "#d1d5db".into(),
+        });
+    }
+
+    for (index, label) in categories.iter().enumerate() {
+        let outer = radar_point(cx, cy, radius, index, count);
+        let label_point = radar_point(cx, cy, radius + 24.0, index, count);
+        items.push(LayoutedChartItem::GridLine {
+            x1: cx,
+            y1: cy,
+            x2: outer.x,
+            y2: outer.y,
+        });
+        items.push(LayoutedChartItem::DataLabel {
+            x: label_point.x,
+            y: label_point.y,
+            text: label.clone(),
+            font_size: Some(12.0),
+            color: Some("#374151".into()),
+        });
+    }
+
+    let max = diagram
+        .y_axis
+        .as_ref()
+        .map_or(1.0, |axis| axis.max)
+        .max(1.0);
+    for (series_index, plot) in diagram.series.iter().enumerate() {
+        let mut points = plot
+            .data
+            .iter()
+            .enumerate()
+            .map(|(index, point)| {
+                radar_point(
+                    cx,
+                    cy,
+                    radius * (point.value / max).clamp(0.0, 1.0),
+                    index,
+                    count,
+                )
+            })
+            .collect::<Vec<_>>();
+        if let Some(first) = points.first().cloned() {
+            points.push(first);
+        }
+        items.push(LayoutedChartItem::LinePath {
+            points,
+            color: SERIES_COLORS[series_index % SERIES_COLORS.len()].into(),
+        });
+    }
+
+    if !diagram.series.is_empty() {
+        items.push(LayoutedChartItem::Legend {
+            x: MARGIN,
+            y: ch - LEGEND_H,
+            entries: diagram
+                .series
+                .iter()
+                .enumerate()
+                .map(|(index, plot)| LegendEntry {
+                    color: SERIES_COLORS[index % SERIES_COLORS.len()].into(),
+                    label: plot
+                        .label
+                        .clone()
+                        .unwrap_or_else(|| format!("Series {}", index + 1)),
+                })
+                .collect(),
+            font_size: Some(12.0),
+        });
+    }
+
+    LayoutedChartDiagram {
+        width: cw,
+        height: ch,
+        background_color: None,
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        title_box: diagram
+            .title
+            .as_ref()
+            .map(|text| diagram_ir::LayoutedLabel {
+                x: cx,
+                y: MARGIN,
+                text: text.clone(),
+            }),
+        items,
+    }
+}
+
 // ── Tests ─────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
@@ -1441,7 +1569,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.16.0");
+        assert_eq!(crate::VERSION, "0.17.0");
     }
 
     #[test]

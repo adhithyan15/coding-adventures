@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.126.0";
+pub const VERSION: &str = "0.127.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -25,7 +25,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
     try_tokenize_mermaid_architecture, try_tokenize_mermaid_block, try_tokenize_mermaid_kanban,
     try_tokenize_mermaid_mindmap, try_tokenize_mermaid_packet, try_tokenize_mermaid_timeline,
-    try_tokenize_mermaid_xychart,
+    try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -57,6 +57,8 @@ const KANBAN_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/kanban.grammar");
 const ARCHITECTURE_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/architecture.grammar");
+const RADAR_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/radar.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -647,6 +649,7 @@ impl MermaidDiagramType {
                 | Self::Packet
                 | Self::Kanban
                 | Self::Architecture
+                | Self::Radar
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -796,6 +799,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Architecture => {
             parse_architecture(source).map(MermaidDiagram::Structural)
         }
+        MermaidDiagramType::Radar => parse_radar(source).map(MermaidDiagram::Chart),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -2589,6 +2593,230 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
     }
     None
 }
+
+// ── radar-beta parser ─────────────────────────────────────────────────────
+
+fn parse_radar_labeled_id(raw: &str, token: &Token) -> Result<(String, String), ParseError> {
+    let raw = raw.trim();
+    let (id, label) = if let Some(open) = raw.find('[') {
+        let close = raw
+            .rfind(']')
+            .ok_or_else(|| token_error(token, "unterminated radar label"))?;
+        if !raw[close + 1..].trim().is_empty() {
+            return Err(token_error(token, "unexpected text after radar label"));
+        }
+        (
+            raw[..open].trim(),
+            unquote_mermaid_string(raw[open + 1..close].trim()),
+        )
+    } else {
+        (raw, raw.to_string())
+    };
+    if id.is_empty()
+        || !id
+            .chars()
+            .all(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '_' | '-'))
+    {
+        return Err(token_error(
+            token,
+            format!("invalid radar identifier {id:?}"),
+        ));
+    }
+    Ok((id.to_string(), label))
+}
+
+fn parse_radar_number(raw: &str, token: &Token) -> Result<f64, ParseError> {
+    let value = raw
+        .trim()
+        .parse::<f64>()
+        .map_err(|_| token_error(token, format!("invalid radar value {raw:?}")))?;
+    if !value.is_finite() {
+        return Err(token_error(token, "radar values must be finite"));
+    }
+    Ok(value)
+}
+
+/// Parse the Mermaid 11.16.1 radar axes-and-curves subset into chart IR.
+pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_radar(&prepared).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(RADAR_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse radar.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message,
+            line: error.token.line,
+            col: error.token.column,
+        })?;
+
+    let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
+    let mut axis_ids = Vec::<String>::new();
+    let mut axis_labels = Vec::<String>::new();
+    let mut series = Vec::<ChartSeries>::new();
+
+    for token in &tokens {
+        match token_name(token) {
+            "TITLE_STATEMENT" => {
+                title = Some(unquote_mermaid_string(token.value["title".len()..].trim()));
+            }
+            "ACC_TITLE_STATEMENT" => {
+                accessibility_title = Some(xychart_metadata_value(token));
+            }
+            "ACC_DESCR_STATEMENT" => {
+                accessibility_description = Some(xychart_metadata_value(token));
+            }
+            "ACC_DESCR_BLOCK" => {
+                let open = token.value.find('{').expect("grammar requires '{'");
+                let close = token.value.rfind('}').expect("grammar requires '}'");
+                accessibility_description = Some(token.value[open + 1..close].trim().to_string());
+            }
+            "AXIS_STATEMENT" => {
+                for axis in token.value["axis".len()..].split(',') {
+                    let (id, label) = parse_radar_labeled_id(axis, token)?;
+                    if axis_ids.contains(&id) {
+                        return Err(token_error(token, format!("duplicate radar axis {id:?}")));
+                    }
+                    axis_ids.push(id);
+                    axis_labels.push(label);
+                }
+            }
+            "CURVE_STATEMENT" => {
+                if axis_ids.is_empty() {
+                    return Err(token_error(token, "radar curves require declared axes"));
+                }
+                let open = token.value.find('{').expect("grammar requires '{'");
+                let close = token.value.rfind('}').expect("grammar requires '}'");
+                let (id, label) =
+                    parse_radar_labeled_id(token.value["curve".len()..open].trim(), token)?;
+                let entries = token.value[open + 1..close]
+                    .split(',')
+                    .map(str::trim)
+                    .filter(|entry| !entry.is_empty())
+                    .collect::<Vec<_>>();
+                if entries.is_empty() {
+                    return Err(token_error(token, "radar curves require entries"));
+                }
+                let detailed = entries
+                    .iter()
+                    .any(|entry| entry.contains(':') || entry.split_whitespace().count() == 2);
+                let values = if detailed {
+                    let mut by_axis = HashMap::<String, f64>::new();
+                    for entry in entries {
+                        let parts = entry
+                            .split_once(':')
+                            .map(|(axis, value)| (axis.trim(), value.trim()))
+                            .or_else(|| {
+                                let mut parts = entry.split_whitespace();
+                                Some((parts.next()?, parts.next()?))
+                            })
+                            .ok_or_else(|| {
+                                token_error(token, "cannot mix positional and keyed radar entries")
+                            })?;
+                        if !axis_ids.iter().any(|axis| axis == parts.0) {
+                            return Err(token_error(
+                                token,
+                                format!("unknown radar axis {:?}", parts.0),
+                            ));
+                        }
+                        if by_axis
+                            .insert(parts.0.to_string(), parse_radar_number(parts.1, token)?)
+                            .is_some()
+                        {
+                            return Err(token_error(
+                                token,
+                                format!("duplicate radar entry for {:?}", parts.0),
+                            ));
+                        }
+                    }
+                    axis_ids
+                        .iter()
+                        .map(|axis| {
+                            by_axis.get(axis).copied().ok_or_else(|| {
+                                token_error(token, format!("missing radar entry for {axis:?}"))
+                            })
+                        })
+                        .collect::<Result<Vec<_>, _>>()?
+                } else {
+                    entries
+                        .iter()
+                        .map(|entry| parse_radar_number(entry, token))
+                        .collect::<Result<Vec<_>, _>>()?
+                };
+                if values.len() != axis_ids.len() {
+                    return Err(token_error(
+                        token,
+                        format!(
+                            "radar curve {id:?} has {} values for {} axes",
+                            values.len(),
+                            axis_ids.len()
+                        ),
+                    ));
+                }
+                series.push(ChartSeries {
+                    kind: SeriesKind::Line,
+                    label: Some(label),
+                    data: values
+                        .into_iter()
+                        .map(|value| ChartDataPoint { value, label: None })
+                        .collect(),
+                });
+            }
+            _ => {}
+        }
+    }
+
+    if axis_ids.is_empty() {
+        return Err(ParseError {
+            message: "radar diagrams require at least one axis".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+    let maximum = series
+        .iter()
+        .flat_map(|plot| plot.data.iter().map(|point| point.value))
+        .fold(0.0_f64, f64::max)
+        .max(1.0);
+    Ok(ChartDiagram {
+        title,
+        accessibility_title,
+        accessibility_description,
+        kind: ChartKind::Radar,
+        show_data: false,
+        x_axis: Some(Axis {
+            kind: AxisKind::Categorical,
+            title: None,
+            categories: axis_labels,
+            min: 0.0,
+            max: axis_ids.len() as f64,
+        }),
+        y_axis: Some(Axis {
+            kind: AxisKind::Numeric,
+            title: None,
+            categories: Vec::new(),
+            min: 0.0,
+            max: maximum,
+        }),
+        series,
+        slices: vec![],
+        sankey_nodes: vec![],
+        flows: vec![],
+        quadrant_labels: [None, None, None, None],
+        quadrant_points: vec![],
+        quadrant_config: QuadrantConfig::default(),
+        xy_config: XyChartConfig::default(),
+        orientation: ChartOrientation::Vertical,
+    })
+}
+
 
 // ── xychart-beta parser ───────────────────────────────────────────────────
 
@@ -10202,7 +10430,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.126.0");
+        assert_eq!(crate::VERSION, "0.127.0");
     }
 
     #[test]

@@ -156,7 +156,7 @@
     {
       "id": "radar",
       "headers": ["radar-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "chart",
       "smoke_source": "radar-beta\naxis A, B, C\ncurve x{1, 2, 3}"
     },
