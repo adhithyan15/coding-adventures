@@ -1,6 +1,6 @@
 # OCAML05 — Representative core packages
 
-Status: in progress
+Status: complete in PR #14393
 
 ## Purpose
 

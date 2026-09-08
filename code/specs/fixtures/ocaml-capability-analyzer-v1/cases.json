@@ -1,0 +1,83 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/fixtures/ocaml-capability-analyzer-v1/cases.schema.json",
+  "version": 1,
+  "cases": [
+    {
+      "id": "pure-computation",
+      "source_kind": "implementation",
+      "source": "let add left right = left + right\n",
+      "expected_capabilities": [],
+      "expected_banned": []
+    },
+    {
+      "id": "filesystem-qualified",
+      "source_kind": "implementation",
+      "source": "let load path = In_channel.open_bin path\nlet names path = Sys.read_directory path\nlet save path = Out_channel.open_text path\n",
+      "expected_capabilities": ["fs:list:*", "fs:read:*", "fs:write:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "unix-alias",
+      "source_kind": "implementation",
+      "source": "module U = Unix\nlet lookup host = U.gethostbyname host\nlet run () = U.create_process \"tool\" [|\"tool\"|] U.stdin U.stdout U.stderr\n",
+      "expected_capabilities": ["net:dns:*", "proc:exec:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "opened-unix",
+      "source_kind": "implementation",
+      "source": "open Unix\nlet pause () = sleepf 0.01\nlet now () = gettimeofday ()\n",
+      "expected_capabilities": ["time:read:*", "time:sleep:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "local-open-and-module",
+      "source_kind": "implementation",
+      "source": "let connect address =\n  let module U = Unix in\n  let open U in\n  let socket = socket PF_INET SOCK_STREAM 0 in\n  connect socket address\n",
+      "expected_capabilities": ["net:connect:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "shadowed-stdlib-name",
+      "source_kind": "implementation",
+      "source": "let print_endline value = String.length value\nlet size = print_endline \"quiet\"\n",
+      "expected_capabilities": [],
+      "expected_banned": []
+    },
+    {
+      "id": "process-environment-time",
+      "source_kind": "implementation",
+      "source": "let run () = Sys.command \"tool\"\nlet home () = Sys.getenv_opt \"HOME\"\nlet cpu () = Sys.time ()\nlet stop pid = Unix.kill pid Sys.sigterm\n",
+      "expected_capabilities": ["env:read:*", "proc:exec:*", "proc:signal:*", "time:read:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "standard-streams",
+      "source_kind": "implementation",
+      "source": "let echo () = print_endline (read_line ())\nlet warn text = Printf.eprintf \"%s\" text\n",
+      "expected_capabilities": ["stdin:read:*", "stdout:write:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "external-interface",
+      "source_kind": "interface",
+      "source": "external native_hash : bytes -> bytes = \"ca_native_hash\"\n",
+      "expected_capabilities": ["ffi:call:*"] ,
+      "expected_banned": ["external"]
+    },
+    {
+      "id": "native-loading",
+      "source_kind": "implementation",
+      "source": "let load path = Dynlink.loadfile_private path\n",
+      "expected_capabilities": ["ffi:load:*"] ,
+      "expected_banned": ["Dynlink.loadfile_private"]
+    },
+    {
+      "id": "unsafe-runtime",
+      "source_kind": "implementation",
+      "source": "let decode bytes = Marshal.from_bytes bytes 0\nlet coerce value = Obj.magic value\n",
+      "expected_capabilities": [],
+      "expected_banned": ["Marshal.from_bytes", "Obj.magic"]
+    }
+  ]
+}

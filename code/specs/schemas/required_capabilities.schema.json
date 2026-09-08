@@ -140,7 +140,7 @@
         },
         "language": {
           "type": "string",
-          "enum": ["python", "ruby", "go", "typescript", "rust", "elixir", "lua"],
+          "enum": ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "ocaml"],
           "description": "The language this exception applies to."
         },
         "justification": {
