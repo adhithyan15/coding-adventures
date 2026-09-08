@@ -83,7 +83,7 @@ according to the current prioritization run.
 | RCPU-031 / RCPU-032 | 1987 | SPARC V8 | Complete: `sparc-v8-simulator` | Complete: `sparc-v8-gatelevel` |
 | RCPU-033 / RCPU-034 | 1992 | DEC Alpha AXP 21064 | Complete: `alpha-axp-simulator` | Complete: `alpha-axp-gatelevel` |
 | RCPU-035 / RCPU-036 | 1992 | PowerPC 601 | Complete: `powerpc601-simulator` | Complete: `powerpc601-gatelevel` |
-| RCPU-037 / RCPU-038 | 2003 | x86-64 (AMD64) | Complete: `x86-simulator` | Missing |
+| RCPU-037 / RCPU-038 | 2003 | x86-64 (AMD64) | Complete: `x86-simulator` | Complete: `x86-64-gatelevel` |
 | RCPU-039 / RCPU-040 | 2004 | ARMv7 educational baseline (07b) | Audit: `arm-simulator` | Missing |
 | RCPU-041 / RCPU-042 | 2004 | ARMv7-A / Thumb-2 (07x) | Missing | Missing |
 | RCPU-043 / RCPU-044 | 2010 | RISC-V RV32I (07a) | Audit: `riscv-simulator` | Missing |
@@ -91,10 +91,10 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-038**, the x86-64 gate-level Rust simulator. The
-2026-08-31 prioritization run completed RCPU-037 with an exact functional
-machine and advances to its gate partner while completed earlier cells publish
-one at a time.
+Current selection: **RCPU-039**, the ARMv7 educational functional simulator
+audit. The 2026-08-31 prioritization run completed the x86-64 functional/gate
+pair and advances to the next chronological architecture while completed
+earlier cells publish one at a time.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -562,6 +562,8 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-31 | RCPU-038 is complete. | Resolved; selects RCPU-039 | `x86-64-gatelevel` now has the exact 525,382-DFF topology, an independent complete integer execution path, repository-gate arithmetic/flags/Boolean/barrel-shift/rotate/address/condition networks, fixed 64-round multiply and 128-round divide, the shared atomic lifecycle, all 262 Python full-state vectors, direct manual-correct CQO and fault suites, Spec 07w2, strict checks, and 87.13% package line coverage (711/816). |
+| 2026-08-31 | RCPU-038 has no Rust or Python gate-level package and no Spec 07w2. The completed functional oracle establishes 524,288 memory bits, 1,024 GPR bits, 64 RIP bits, five specified RFLAGS bits, and one HALT latch: exactly 525,382 persistent DFFs; installed-range fields remain validated lifecycle metadata. | P0, chronological gate completion | Create `x86-64-gatelevel` with the exact DFF topology, repository-gate decode/ALU/shift/rotate/multiply/divide/address/condition networks, its own complete instruction execution path, the shared atomic lifecycle, all 262 functional vectors plus manual-correct CQO and fault suites, Spec 07w2, strict checks, and at least 80% coverage. |
 | 2026-08-31 | RCPU-037 is complete. | Resolved; selects RCPU-038 | `x86-simulator` now has a separate exact 64 KiB wrapping functional machine, complete typed transactional lifecycle/traces/results, the full Spec 07w integer surface, seven lifecycle suites, 262 reproducible Python full-state vectors, preserved backend/SSE consumers, strict checks, and 89.28% line coverage (2,065/2,313). |
 | 2026-08-31 | RCPU-037 differential construction found Python/spec boundary defects. The documented flag state exposes only CF/PF/ZF/SF/OF while the backend-oriented Rust state also retained AF, so the normative functional boundary must mask AF. Python resets RSP to `0xFFF8` while the spec's divergence prose incorrectly said zero. More seriously, Python has no `CQO` (`REX.W 99`) handler: it silently treats the instruction as undefined and consumes the following byte, advancing RIP by three for `48 99 F4`. | P0 inside RCPU-037 | Match the documented five-flag state, correct reset prose to `0xFFF8`, keep the manual-correct Rust `CQO`, cover it with direct tests, record it as an oracle defect, and omit only that defective Python case from the otherwise reproducible full-state differential corpus. |
 | 2026-08-31 | RCPU-037 audit found that the existing `x86-simulator` is a backend-runtime lane rather than the complete Spec 07w functional oracle. Its 66 Rust tests execute current backend/SSE output, but state omits owned memory, halt, installed range, input position, and loader metadata; memory is caller-sized 1 MiB and strictly bounded instead of the normative wrapping 64 KiB machine; execution terminates through a private return sentinel rather than HLT; there is no public reset/load/restore/direct-access/complete trace or transactional checked lifecycle; and a late decode/execution/memory/host-call failure can retain earlier state mutations. Strict Clippy also fails on current stable. The Python oracle passes 97 tests at 84.45% line coverage over the broad Spec 07w integer surface, but uses legacy SIM00 lifecycle and has no reproducible full-state differential corpus. | P0, chronological functional completion, blocks RCPU-038 | Preserve the backend harness and SSE extensions as consumers while adding a distinct exact 64 KiB Spec 07w machine boundary, complete typed atomic lifecycle, the full Python integer decode surface, public structured encoding helpers where useful, reproducible full-state differentials, strict checks, consumers, and at least 80% Rust line coverage. Then build the DFF/gate partner as RCPU-038. |
