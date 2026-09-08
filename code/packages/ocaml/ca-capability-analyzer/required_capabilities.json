@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ocaml/ca-capability-analyzer",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads OCaml source files and the package capability manifest under review."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "*",
+      "justification": "Discovers regular OCaml source files beneath the selected package directory."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Prints deterministic findings and tool errors for developers and CI."
+    }
+  ],
+  "justification": "The analyzer reads and lists one selected package tree and prints its deterministic verdict; it writes no files, opens no network connections, and starts no processes."
+}
