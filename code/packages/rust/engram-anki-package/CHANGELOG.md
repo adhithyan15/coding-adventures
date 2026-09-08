@@ -2,6 +2,46 @@
 
 ## Unreleased
 
+### Fixed -- an imported `.apkg` could put cards in a deck it never declares (#14559)
+
+`v11_collection_to_engram_state` checks that a note references a note type the
+file declares -- "Anki note {id} references missing note type {id}" -- and did
+not do the equivalent for decks. `card.deck_id` went verbatim into **four**
+places: the `Note`, the `Card`, the `Session` synthesised from the card's review
+history, and the deck-options lookup that schedules it.
+
+The session is the worst of them, and the one this change first missed.
+`DeleteDeck` selects sessions by `session.deck_id` and reviews by their session
+id, so a session naming a deck that does not exist survives *every* deletion,
+permanently, with no other route to remove it -- one per distinct undeclared
+deck id in the file.
+
+Reproduced against a real V11 collection with one card pointed at an undeclared
+deck: the card and its note imported with that deck id while the state's decks
+were only `1` and `2`. Such a card is in no deck list, no queue and no stats,
+and `DeleteDeck`'s cascade never reaches it, so there is no way to find it again
+from inside the app.
+
+This matters more here than on the paths where the caller supplies its own whole
+collection, because `merge_anki_apkg` folds the file into the collection the
+user already has.
+
+**Remapped to the default deck, not rejected.** Erroring would fail the whole
+import over one row and cost someone their collection to avoid a misplaced card
+-- the opposite of the trade this stack makes elsewhere, where a cursor that
+will not parse costs a scroll position rather than the collection. The default
+deck is already where a note with no cards lands, so this applies an existing
+fallback to a case that was missing it. It is also the better outcome for a
+hostile file: a card visible in the default deck can be seen and deleted, and an
+invisible one cannot.
+
+`{{Deck}}` renders the deck the card is actually in, rather than the id the file
+named -- otherwise a remapped card's text read `999999` while the card sat in
+`Default`.
+
+Not addressed here: `merge_app_states` also permits orphans, and has a test
+asserting that as intended behaviour. That is a separate design question.
+
 
 ### Fixed — the Anki fixtures' scheduling state was still ours
 
