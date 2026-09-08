@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C38-biju",
+    "language": "gujarati",
+    "chapter": 42,
+    "sequence": 2150,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cc4edd88021f6395"
+  },
+  "findings": []
+}

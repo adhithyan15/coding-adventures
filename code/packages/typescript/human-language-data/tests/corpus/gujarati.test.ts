@@ -25,7 +25,10 @@ it("pins Gujarati lesson-content budgets", () =>
     // closing the joining column the A1 inventory measured at 0 of 11. The single
     // culture claim is that mataf karo both apologises AND stops a stranger, which
     // is why one phrase closes a courtesy function and a repair strategy at once.
-    lessons: 263,
+    // HL-C359: 263 -> 269. Chapter 42, the ordinal column, six lessons and
+    // eight atoms. No new idiom, sense or culture claim, so only the lesson
+    // total moves.
+    lessons: 269,
     idioms: 12,
     senses: 6,
     cultureClaims: 16,
@@ -180,6 +183,12 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["39", 5],
     ["40", 5],
     ["41", 5],
+    // HL-C359: chapter 42, "Which One in the Line". Five ordinals plus a
+    // payoff. It opens on FIFTH because Wiktionary's -mun entry names the five
+    // numbers the suffix does not build on, and the track's count stops at
+    // paanch -- so four of the five reachable ordinals are exceptions and one
+    // is the rule they are exceptions to.
+    ["42", 6],
   ]);
 });
 
@@ -748,9 +757,21 @@ it("closes Gujarati doorway R4 at position 134", () => {
   //        ~106, which is inside R4 rather than decorative.
   //   -3   pre-existing misses closed outright by the chapter-opening
   //        retrievals: chhe, hun and kem all reach their R4 for the first time.
+  // 364 -> 362. HL-C359's ordinal chapter, decomposed the same way against the
+  // corpus measured without chapters 42:
+  //    0   created by the tranche's OWN eight atoms. Each of the six lessons
+  //        recalls the previous lesson's ordinal, and the payoff services the
+  //        first lesson's R2; those are every window a 269-lesson track is long
+  //        enough to judge for atoms introduced at positions 263-267.
+  //   15   PRE-EXISTING (atom, window) slots that did not exist until the track
+  //        grew by six -- one R1, five R2, six R3, three R4 -- and all fifteen
+  //        are answered by name in the chapter's own warm-ups.
+  //   -2   pre-existing R4 misses closed outright: mahino and atyaare are said
+  //        and written again at distance ~80, the first time either has been
+  //        inside its fourth window.
   // The doorway assertion below is unchanged and still passes, which is the
   // property this test actually owns.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(364);
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(362);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),
@@ -925,6 +946,11 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C30-people-five-carryover",
     "GU-C30-people-five-listening",
     "GU-C30-people-five-speaking",
+    "GU-C38-biju-r1",
+    "GU-C38-chothu-r1",
+    "GU-C38-pahelu-r1",
+    "GU-C38-panchmu-r1",
+    "GU-C38-triju-r1",
     "GU-R03-doorway-three-r1-dictation",
     "GU-R03-doorway-three-r1-reading",
     "GU-R04-doorway-nine-r2-dictation",
@@ -1045,6 +1071,8 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-R30-people-five-r1-speaking",
     "GU-R30-people-five-r1-travel-r4",
     "GU-R30-people-five-r1-writing",
+    "GU-R38-first-to-fifth-agree",
+    "GU-R38-first-to-fifth-run",
     "GU-W01-aa-matra-observe-check",
     "GU-W01-ha-observe-check",
     "GU-W01-haa-delayed-copy-check",

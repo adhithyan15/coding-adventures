@@ -1,0 +1,7 @@
+{
+  "language": "gujarati",
+  "chapter": 42,
+  "output": "gujarati/book/chapters/ch42-ordinals.tex",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu"
+}

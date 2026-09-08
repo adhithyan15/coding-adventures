@@ -1,0 +1,25 @@
+{
+  "chapter": 42,
+  "title": "Which One in the Line",
+  "label": "ch:gu-ordinals",
+  "canDo": "I can say first to fifth in Gujarati, agree any of them with a masculine, feminine or neuter thing, and say which one of the five the language builds rather than hands down.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "GU-R38-first-to-fifth",
+    "kind": "production",
+    "summary": "Complete GU-R38-first-to-fifth and run pahelun to paanchmun, then say which one of the five you could have worked out.",
+    "assesses": [
+      "GU-LEX-PANCHMU",
+      "GU-GRAMMAR-ORDINAL-MU",
+      "GU-LEX-TRIJU",
+      "GU-LEX-BIJU",
+      "GU-GRAMMAR-ORDINAL-IJU",
+      "GU-LEX-CHOTHU",
+      "GU-LEX-PAHELU",
+      "GU-ETYMON-PAHELU-PRATHAMA"
+    ],
+    "note": "The chapter opens on FIFTH and closes on FIRST, because Wiktionary's own entry for the suffix -mun lists the numbers it does not build on -- ek, be, tran, chaar and six -- and the track's count reaches five. Four of the five reachable ordinals are therefore on the exception list and one is not, so the rule has to be visible before the exceptions can be read as exceptions. Between them the order runs by how much of the number survives: treejun keeps tra, chothun keeps cha, beejun keeps only the b that chapter 12 taught, pahelun keeps nothing."
+  }
+}
