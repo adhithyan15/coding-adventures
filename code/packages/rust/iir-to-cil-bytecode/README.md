@@ -246,3 +246,12 @@ iir-to-cil-bytecode   ← this crate
      ▼
 CLR simulator / PE packager
 ```
+
+### Portable input EOF on real CoreCLR
+
+The textual CIL emitter supports `input_more` using the same Console reader
+as numeric and string input. Peeks do not consume data; EOF returns zero.
+Numeric reads return zero at EOF or for malformed/out-of-range input, using
+Int32 or Int64 according to the destination. I/O exceptions propagate.
+Four FLOW-MATIC input/EOF cases execute through ilasm and dotnet in the LANG
+matrix. This proof does not extend the encoded CIL simulator input surface.

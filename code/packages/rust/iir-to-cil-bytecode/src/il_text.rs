@@ -885,13 +885,18 @@ fn emit_method(
         .unwrap_or(0);
     let _ = writeln!(il, "    .maxstack {}", 8usize.max(max_call_args + 2));
 
-    if !regs.local_tys.is_empty() {
-        let locals: Vec<String> = regs
-            .local_tys
-            .iter()
-            .enumerate()
-            .map(|(i, ty)| format!("{ty} V_{i}"))
-            .collect();
+    // TryParse writes through a managed address. Scratch locals keep this safe
+    // even when the IIR destination is an argument rather than a local slot.
+    let input_i32_slot = regs.local_tys.len();
+    let input_i64_slot = input_i32_slot + 1;
+    let mut local_tys = regs.local_tys.clone();
+    if f.instructions.iter().any(|i| i.op == "call_builtin"
+        && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "input_i64")) {
+        local_tys.extend(["int32", "int64"]);
+    }
+    if !local_tys.is_empty() {
+        let locals: Vec<String> = local_tys.iter().enumerate()
+            .map(|(i, ty)| format!("{ty} V_{i}")).collect();
         let _ = writeln!(il, "    .locals init ({})", locals.join(", "));
     }
 
@@ -1814,25 +1819,28 @@ fn emit_method(
                         );
                         store_var_from(il, &regs, dest, "int32")?;
                     }
-                    // `input_i64` — BASIC's `INPUT X`. Reads one line from stdin and
-                    // parses it as a signed integer, at the **destination's own
-                    // width**: `Int64::Parse` for an `int64` slot, `Int32::Parse`
-                    // for an `int32` one — the mirror of `print_i64`'s overload
-                    // choice, so a value that can be printed can also be read
-                    // back. Returns `0` on EOF or parse failure — the same
-                    // permissive-V1 contract as `__twig_input_i64` in the native
-                    // C runtime.
+                    // Peek the same TextReader that Console.ReadLine consumes.
+                    // EOF is -1; exceptions propagate rather than becoming EOF.
+                    "input_more" => {
+                        let _ = writeln!(il, "    call class [System.Runtime]System.IO.TextReader [System.Console]System.Console::get_In()");
+                        let _ = writeln!(il, "    callvirt instance int32 [System.Runtime]System.IO.TextReader::Peek()");
+                        let _ = writeln!(il, "    ldc.i4.m1\n    cgt");
+                        store_var_from(il, &regs, dest, "int32")?;
+                    }
+                    // Match the destination width and the permissive numeric
+                    // input contract: TryParse writes zero for null or invalid
+                    // input. Its success boolean is intentionally discarded.
                     "input_i64" => {
-                        let width = if regs.home(dest)?.ty == "int64" { "Int64" } else { "Int32" };
-                        let prim = if width == "Int64" { "int64" } else { "int32" };
-                        let _ = writeln!(
-                            il,
-                            "    call string [System.Console]System.Console::ReadLine()"
-                        );
-                        let _ = writeln!(
-                            il,
-                            "    call {prim} [System.Runtime]System.{width}::Parse(string)"
-                        );
+                        let wide = regs.home(dest)?.ty == "int64";
+                        let (width, prim, slot) = if wide {
+                            ("Int64", "int64", input_i64_slot)
+                        } else {
+                            ("Int32", "int32", input_i32_slot)
+                        };
+                        let _ = writeln!(il, "    call string [System.Console]System.Console::ReadLine()");
+                        let _ = writeln!(il, "    ldloca {slot}");
+                        let _ = writeln!(il, "    call bool [System.Runtime]System.{width}::TryParse(string, {prim}&)");
+                        let _ = writeln!(il, "    pop\n    ldloc {slot}");
                         store_var_from(il, &regs, dest, prim)?;
                     }
                     // `input_str` — BASIC's string `INPUT A$` (E4-dyn). Reads one
@@ -1841,9 +1849,9 @@ fn emit_method(
                     // already returns a `System.String`, which is exactly the CLR
                     // representation of a `str` local (`cil_local_type("str")`), so
                     // the result stores straight into the `str`-typed dest. Like
-                    // `input_i64` this assumes input is present (the V1 permissive
-                    // contract): at EOF `ReadLine` yields `null`, matching how the
-                    // numeric sibling relies on a well-formed line.
+                    // numeric input, this retains the host string representation:
+                    // at EOF ReadLine yields null. Numeric input instead maps
+                    // EOF to zero through TryParse.
                     "input_str" => {
                         let _ = writeln!(
                             il,

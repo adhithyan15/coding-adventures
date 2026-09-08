@@ -42,6 +42,21 @@ the destination width. Textual CLR is the matrix's real runtime path; encoded
 CIL currently lacks numeric/string input as well, so its input support remains
 explicitly outside this proof rather than claiming simulator parity.
 
+CLR validation: all four FLOW-MATIC cells (441–444) and five BASIC input
+cells (370–374) passed in real CoreCLR processes with execution sentinels.
+Numeric EOF and direct IIR repeated-peek tests passed, including mixed
+string/numeric input, blank/malformed fields, final input without newline,
+32-bit overflow-to-zero and a 64-bit value above the 32-bit range. All 201
+CIL backend tests including doctests and focused all-target Clippy passed.
+No full matrix rerun is claimed. VM/JIT remains next after merge.
+
+Discovered follow-up **VM-059**: encoded CIL's call_builtin dispatcher lacks
+input_i64, input_str and input_more. The real-CoreCLR textual path above does
+not imply support in clr-simulator. After the common VM/JIT EOF slice, define
+and prove simulator host input callbacks, or pin a documented clean refusal
+where the artifact contract cannot carry a host reader. This is a separate
+surface from the seven-column matrix and does not delay its real CLR proof.
+
 ## VM-039c implementation contract (selected after #14511 merged)
 
 Refreshed main is `53795b6fe5`. VM-039b merged after every applicable
