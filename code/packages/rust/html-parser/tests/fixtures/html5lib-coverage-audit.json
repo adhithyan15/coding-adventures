@@ -16,7 +16,7 @@
       "template.dat:124"
     ],
     "upstream_cases": 1952,
-    "upstream_revision": "863077959ca8c1a7ceecfbe2534b75d2527b9013",
+    "upstream_revision": "92054a74d0c6a1ed2e9024d71ebf2880f2af02e2",
     "upstream_source": "wpt/html/syntax/parsing/resources"
   }
 }
