@@ -27,7 +27,7 @@ refusal also does not imply the complete driver refuses that feature.
 | Dartmouth BASIC | 51 | 357 | Random differential suite and frontend JIT tests |
 | Oct | 12 | 84 | Frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025 |
-| FLOW-MATIC | 8 | 48 | Four output rows on seven columns; four input/EOF rows on native/LLVM/WASM/JVM/CLR; frontend JIT stream tests |
+| FLOW-MATIC | 8 | 56 | All output and input/EOF rows on seven standard columns; frontend JIT stream tests |
 | COBOL-60 | 58 | 406 | Much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
@@ -218,3 +218,9 @@ VM-039c CLR: four input/EOF rows and five BASIC input rows passed on real
 CoreCLR with execution sentinels. Direct IIR probes verify repeated peeks,
 mixed string/numeric reads, 32/64-bit widths and numeric EOF. Encoded CIL
 simulator input is not included; VM/JIT matrix EOF callbacks remain pending.
+
+VM-039d: all four input/EOF sources passed across the seven standard columns
+(28 executions, zero skips), plus ten BASIC VM/JIT input cells. A direct
+compiled JIT peek proof passed with a callback counter and failing fallback.
+The normal JIT matrix remains a tiered pipeline; it is not a claim that every
+source entry runs compiled. Encoded CIL input remains VM-059.

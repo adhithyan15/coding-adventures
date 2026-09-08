@@ -6424,10 +6424,10 @@ const PROGRAMS: &[Prog] = &[
     },
 
     // VM-039a: real stdin and EOF on the shared native/LLVM runtime.
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
 
 ];
 
@@ -8189,6 +8189,10 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     // as an i64. Mirrors `env.__input_i64` in the WASM column and `__twig_input_i64`
     // in the native/LLVM column. Returns 0 on empty/drained buffer (EOF semantics).
     let input = Arc::clone(&stdin_buf);
+    vm.builtins_mut().register("input_more", move |_args: &[Value]| {
+        Ok(Value::Int(peek_stdin(&input)))
+    });
+    let input = Arc::clone(&stdin_buf);
     vm.builtins_mut().register("input_i64", move |_args: &[Value]| {
         let mut buf = input.lock().expect("lang-matrix VM stdin buffer poisoned");
         let mut line = Vec::new();
@@ -8305,6 +8309,10 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         Ok(Value::Int(byte.map(i64::from).unwrap_or(0)))
     });
     let input = Arc::clone(&stdin_buf);
+    vm.builtins_mut().register("input_more", move |_args: &[Value]| {
+        Ok(Value::Int(peek_stdin(&input)))
+    });
+    let input = Arc::clone(&stdin_buf);
     vm.builtins_mut().register("input_i64", move |_args: &[Value]| {
         let mut buf = input.lock().expect("lang-matrix JIT stdin buffer poisoned");
         let mut line = Vec::new();
@@ -8341,6 +8349,10 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     backend.register_builtin("getchar", move |_args: &[Value]| {
         let byte = input.lock().expect("lang-matrix JIT stdin buffer poisoned").pop_front();
         Value::Int(byte.map(i64::from).unwrap_or(0))
+    });
+    let input = Arc::clone(&stdin_buf);
+    backend.register_builtin("input_more", move |_args: &[Value]| {
+        Value::Int(peek_stdin(&input))
     });
     let input = Arc::clone(&stdin_buf);
     backend.register_builtin("input_i64", move |_args: &[Value]| {
@@ -14061,4 +14073,58 @@ fn portable_text_stdout_clr_input_more_peek() {
         let result = run_clr_il(&p, &il, b"hello\n5\n4294967296\n\nbad\n-3", &ilasm);
         assert_cell(Clr, &p, result);
     }
+}
+
+/// Observe the shared input queue without removing bytes. Poisoning remains a
+/// hard harness failure rather than looking like an empty stream.
+fn peek_stdin(input: &std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>) -> i64 {
+    i64::from(!input.lock().expect("lang-matrix stdin buffer poisoned").is_empty())
+}
+
+#[test]
+fn portable_text_stdout_generic_input_more_peek() {
+    use std::sync::{Arc, Mutex};
+    use std::collections::VecDeque;
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+    use interpreter_ir::function::FunctionTypeStatus;
+    use vm_core::{core::VMCore, value::Value};
+    use jit_core::{core::JITCore, GenericCirJit};
+
+    let input = Arc::new(Mutex::new(VecDeque::from(b"5\nhello\n-3".to_vec())));
+    for line in ["5", "hello", "-3"] {
+        assert_eq!(peek_stdin(&input), 1);
+        assert_eq!(peek_stdin(&input), 1);
+        assert_eq!(drain_stdin_line(&input), line);
+    }
+    for _ in 0..2 { assert_eq!(peek_stdin(&input), 0); }
+
+    // Only the compiled callback may execute. A VM fallback is an explicit
+    // failure, and the callback counter proves both invocations happened.
+    let calls = Arc::new(Mutex::new(0));
+    let mut vm = VMCore::new();
+    vm.builtins_mut().register("input_more", |_| panic!("unexpected interpreter fallback"));
+    let backend = GenericCirJit::new();
+    let seen = Arc::clone(&calls);
+    let stream = Arc::clone(&input);
+    backend.register_builtin("input_more", move |_| {
+        *seen.lock().unwrap() += 1;
+        Value::Int(peek_stdin(&stream))
+    });
+    let errors = backend.error_handle();
+    let mut function = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("call_builtin", Some("a".into()), vec![Operand::Var("input_more".into())], "i64"),
+        IIRInstr::new("call_builtin", Some("b".into()), vec![Operand::Var("input_more".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+    ]);
+    function.type_status = FunctionTypeStatus::FullyTyped;
+    let mut module = IIRModule::new("peek", "test");
+    module.functions.push(function);
+    module.entry_point = Some("main".into());
+    let mut jit = JITCore::new(&mut vm, Box::new(backend));
+    assert!(jit.compile(&mut vm, &module, "main").unwrap(), "peek must compile");
+    assert!(jit.is_compiled("main"));
+    let result = jit.execute(&mut vm, &mut module, "main", &[]).expect("compiled peek");
+    assert_eq!(result.and_then(|v| v.as_i64()), Some(0));
+    assert_eq!(*calls.lock().unwrap(), 2);
+    assert!(errors.lock().unwrap().is_none());
 }
