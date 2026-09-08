@@ -16,20 +16,44 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[allow(missing_docs)]
 pub enum Reg {
-    Rax = 0, Rcx = 1, Rdx = 2, Rbx = 3,
-    Rsp = 4, Rbp = 5, Rsi = 6, Rdi = 7,
-    R8 = 8, R9 = 9, R10 = 10, R11 = 11,
-    R12 = 12, R13 = 13, R14 = 14, R15 = 15,
+    Rax = 0,
+    Rcx = 1,
+    Rdx = 2,
+    Rbx = 3,
+    Rsp = 4,
+    Rbp = 5,
+    Rsi = 6,
+    Rdi = 7,
+    R8 = 8,
+    R9 = 9,
+    R10 = 10,
+    R11 = 11,
+    R12 = 12,
+    R13 = 13,
+    R14 = 14,
+    R15 = 15,
 }
 
 impl Reg {
     /// Map a 0..=15 hardware register number to a [`Reg`].
     pub fn from_index(i: u8) -> Reg {
         match i & 0xF {
-            0 => Reg::Rax, 1 => Reg::Rcx, 2 => Reg::Rdx, 3 => Reg::Rbx,
-            4 => Reg::Rsp, 5 => Reg::Rbp, 6 => Reg::Rsi, 7 => Reg::Rdi,
-            8 => Reg::R8, 9 => Reg::R9, 10 => Reg::R10, 11 => Reg::R11,
-            12 => Reg::R12, 13 => Reg::R13, 14 => Reg::R14, _ => Reg::R15,
+            0 => Reg::Rax,
+            1 => Reg::Rcx,
+            2 => Reg::Rdx,
+            3 => Reg::Rbx,
+            4 => Reg::Rsp,
+            5 => Reg::Rbp,
+            6 => Reg::Rsi,
+            7 => Reg::Rdi,
+            8 => Reg::R8,
+            9 => Reg::R9,
+            10 => Reg::R10,
+            11 => Reg::R11,
+            12 => Reg::R12,
+            13 => Reg::R13,
+            14 => Reg::R14,
+            _ => Reg::R15,
         }
     }
 }
@@ -72,11 +96,15 @@ pub struct CpuState {
 impl CpuState {
     /// Read a register's full 64-bit value.
     #[inline]
-    pub fn get(&self, r: Reg) -> u64 { self.gpr[r as usize] }
+    pub fn get(&self, r: Reg) -> u64 {
+        self.gpr[r as usize]
+    }
 
     /// Write a register's full 64-bit value.
     #[inline]
-    pub fn set(&mut self, r: Reg, v: u64) { self.gpr[r as usize] = v; }
+    pub fn set(&mut self, r: Reg, v: u64) {
+        self.gpr[r as usize] = v;
+    }
 }
 
 #[cfg(test)]

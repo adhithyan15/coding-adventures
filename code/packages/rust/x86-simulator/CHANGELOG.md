@@ -1,5 +1,23 @@
 # Changelog — x86-simulator
 
+## 0.8.0 — 2026-08-31 — complete Spec 07w functional machine
+
+- Add a separate `X86FunctionalSimulator` boundary with exact owned 64 KiB
+  wrapping memory, complete register/flag/halt/program-range state, checked
+  direct access, typed atomic restore/load/step/run operations, bounded
+  execution results, and full before/after traces.
+- Complete the Python integer-oracle surface: immediate push, 32-bit MOV
+  zero-extension, ADC/SBB, MUL and three-operand IMUL, INC/DEC, MOVSX/MOVZX/
+  MOVSXD, XCHG, CMOVcc, BSF/BSR/BT/BSWAP, rotates and CL shifts, REP STOSD/Q,
+  LOOP/LOOPE/LOOPNE/JRCXZ, reverse ALU forms, and `RET imm16`.
+- Preserve the existing backend/SSE runtime as a consumer. Checked memory is
+  still used there; only the architectural lane uses normative wrapping memory.
+- Add seven lifecycle suites and 262 deterministic Python full-state vectors,
+  including atomic decode/truncation faults. Record the Python oracle's missing
+  `CQO` handler and retain the manual-correct Rust implementation under direct
+  tests. Mask AF at the Spec 07w boundary because the spec defines exactly
+  CF/PF/ZF/SF/OF.
+
 ## 0.7.7 — 2026-08-19 — host shim for `__twig_gc_write_barrier`
 
 Fixes a **latent** breakage: three LANG-FULL matrix cells

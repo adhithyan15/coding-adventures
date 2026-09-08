@@ -100,14 +100,18 @@ fn compile_to_x86_functions(lang: Language, src: &str) -> (Vec<X86Function>, Str
         };
         let inferred = infer_types(fn_);
         let cir = aot_specialise(fn_, Some(&inferred));
-        let (bytes, relocs) = compile_function_with_globals(&ctx, &cir, X86_64Abi::SysV, &global_slots)
-            .expect("x86_64-backend should compile the specialised CIR");
+        let (bytes, relocs) =
+            compile_function_with_globals(&ctx, &cir, X86_64Abi::SysV, &global_slots)
+                .expect("x86_64-backend should compile the specialised CIR");
         funcs.push(X86Function {
             name: fn_.name.clone(),
             bytes,
             relocs: relocs
                 .into_iter()
-                .map(|r| Reloc { patch_offset: r.patch_offset, symbol: r.symbol })
+                .map(|r| Reloc {
+                    patch_offset: r.patch_offset,
+                    symbol: r.symbol,
+                })
                 .collect(),
         });
     }
@@ -130,7 +134,8 @@ fn run_on_x86_sim(lang: Language, src: &str) -> i32 {
     let mut sim = builder
         .build(&entry)
         .expect("harness should lay out + link the matrix program");
-    sim.run().expect("x86_64 machine code should run to a clean ret")
+    sim.run()
+        .expect("x86_64 machine code should run to a clean ret")
 }
 
 /// Like [`run_on_x86_sim`] but also returns whatever the program printed via the
@@ -146,9 +151,10 @@ fn run_capturing_stdout(lang: Language, src: &str) -> (i32, String) {
     let mut sim = builder
         .build(&entry)
         .expect("harness should lay out + link the matrix program");
-    let code = sim.run().expect("x86_64 machine code should run to a clean ret");
-    let out = String::from_utf8(sim.stdout.clone())
-        .expect("captured stdout should be valid UTF-8");
+    let code = sim
+        .run()
+        .expect("x86_64 machine code should run to a clean ret");
+    let out = String::from_utf8(sim.stdout.clone()).expect("captured stdout should be valid UTF-8");
     (code, out)
 }
 
@@ -252,7 +258,10 @@ fn algol_static_array_runs_on_x86_sim() {
 /// ⇒ 42).  Exercises multiple typed registers in `main`.
 #[test]
 fn twig_define_runs_on_x86_sim() {
-    assert_eq!(run_on_x86_sim(Language::Twig, "(define x 40) (define y 2) (+ x y)"), 42);
+    assert_eq!(
+        run_on_x86_sim(Language::Twig, "(define x 40) (define y 2) (+ x y)"),
+        42
+    );
 }
 
 /// Nib — `u8` saturating-add wrap guard (`200 +? 100` clamps to 255 ⇒ exit 1).
@@ -373,7 +382,10 @@ fn algol_own_variable_runs_on_x86_sim() {
 /// runs it from real backend output).
 #[test]
 fn nib_unsigned_division_runs_on_x86_sim() {
-    assert_eq!(run_on_x86_sim(Language::Nib, "fn main() -> u8 { return 84 / 2; }"), 42);
+    assert_eq!(
+        run_on_x86_sim(Language::Nib, "fn main() -> u8 { return 84 / 2; }"),
+        42
+    );
 }
 
 /// ALGOL — **signed integer division** (`85 div 2` ⇒ exit 42).  ALGOL's `div`
@@ -435,7 +447,8 @@ fn run_with_stdin(lang: Language, src: &str, input: &[u8]) -> String {
     let mut sim = builder
         .build(&entry)
         .expect("harness should lay out + link the matrix program");
-    sim.run().expect("x86_64 machine code should run to a clean ret");
+    sim.run()
+        .expect("x86_64 machine code should run to a clean ret");
     String::from_utf8(sim.stdout.clone()).expect("stdout should be valid UTF-8")
 }
 
