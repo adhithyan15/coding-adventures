@@ -39,11 +39,11 @@ root.addEventListener("input", event => {
 });
 
 root.addEventListener("change", event => {
-  const target = closestEventTarget(event.target, "[data-on-toggle], [data-on-select]");
+  const target = closestEventTarget(event.target, "[data-on-toggle], [data-on-select], input[type=range][data-on-commit]");
   if (target === null || !root.contains(target)) {
     return;
   }
-  const emitName = target.dataset.onToggle ?? target.dataset.onSelect;
+  const emitName = target.dataset.onToggle ?? target.dataset.onSelect ?? target.dataset.onCommit;
   void dispatchMosaicEvent(emitName, target);
 });
 
