@@ -13489,11 +13489,11 @@ disjoint from all of these inventory and readiness findings.
 ### Go source-registry latest-main readiness packet
 
 Parallel audit continued through exact `origin/main`
-`b47d16146f7a7722f56f968674a31610ae9a5469` while the Go implementation was
+`f1d5a6134c6329fdaf6c41e83cbdb2b761b32818` while the Go implementation was
 validated. The collision-clean inventory now has 1,430 established-lane
-identities, 4,651 implementation slots, 1,470 all-reported identities, and
-1,203 Rust packages. The breadth bands are 175/265, 123/934, 177/2,230, and
-955/13,370; canonical collisions and unknown language buckets remain zero.
+identities, 4,652 implementation slots, 1,470 all-reported identities, and
+1,204 Rust packages. The breadth bands are 175/265, 123/934, 178/2,243, and
+954/13,356; canonical collisions and unknown language buckets remain zero.
 
 The refresh adds two Rust-only identities. `browser-form-submission` is owned
 by `browser-form-submission-portable-core-classification` behind the existing
@@ -13526,7 +13526,15 @@ recovery. Its tree-shape, reconstruction-order, marker-boundary, diagnostic,
 and resource-bound evidence stays with `html-frontend-portable-conformance`;
 rendering and browser-host authority remain out of scope.
 
-The state therefore has 788 unique owners: 212 merged, 575 pending, and exactly
+PR #14647 adds Rust beside Python for `riscv-rv64i-simulator`, moving that
+identity from the singleton band into the two-to-four band. A new exact
+two-lane owner covers the Spec 07y state, lifecycle, RV64I+M, transaction,
+trace, and 364-vector differential contract. PR #14642 is topology-neutral and
+extends the existing ALGOL IIR neutral owner with exact tracked-integer power
+evidence across seven execution paths. The French curriculum correction adds
+no package or runtime contract.
+
+The state therefore has 789 unique owners: 212 merged, 576 pending, and exactly
 one in progress, with 1,332 dependency edges, no duplicate ID, missing
 dependency, cycle, or merged-to-unfinished edge. The next three ready new
 owners by cross-lane leverage are the six-lane RV32I classifier, neutral
