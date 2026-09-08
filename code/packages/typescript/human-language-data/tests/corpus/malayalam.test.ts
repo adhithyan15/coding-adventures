@@ -1,6 +1,17 @@
 import { expect, it } from "vitest";
 import { measureContinuity } from "../../src/continuity.js";
-import { defaultCurriculumRoot, loadChapterPolicy, loadTrackLessons } from "../../src/loader.js";
+import {
+  defaultCurriculumRoot,
+  loadChapterPolicy,
+  loadEverything,
+  loadExamInventory,
+  loadTrackLessons,
+} from "../../src/loader.js";
+import {
+  formatExamCoverage,
+  measureExamCoverage,
+  trackIntroducedAtoms,
+} from "../../src/exam-inventory.js";
 import { measureRamp, readingOrder } from "../../src/ramp.js";
 import {
   expectLanguageContinuity,
@@ -94,3 +105,43 @@ it("gives Malayalam a complete pre-A1 writing runway", () => {
     "dictation-transcription",
   ]));
 });
+
+// ---------------------------------------------------------------------------
+// THE MALAYALAM A1 INVENTORY HAD NO ASSERTION IN THIS FILE -- the hole HL-C354
+// found in Telugu and Hindi and told the next reader to look for in the other
+// eighteen. Without these two tests the ordinal tranche could land its atoms,
+// wire ML-A1-NUM-05's probe, and leave a coverage number that nothing in the
+// track's own test file reads. Both halves were falsified before being kept: a
+// fabricated atom id in the probe fails the first, and nulling ML-A1-NUM-05's
+// probe fails the second.
+// ---------------------------------------------------------------------------
+it("probes only Malayalam atoms that EXIST, so a guessed id cannot under-report", () => {
+  const { lessons } = loadEverything();
+  const taught = trackIntroducedAtoms(lessons, "malayalam");
+  const unknown: string[] = [];
+  for (const point of loadExamInventory("malayalam", "A1").points) {
+    for (const atom of point.probe ?? []) if (!taught.has(atom)) unknown.push(`${point.id}:${atom}`);
+  }
+  expect(unknown).toEqual([]);
+}, 60_000);
+
+it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () => {
+  const { lessons } = loadEverything();
+  const coverage = measureExamCoverage(loadExamInventory("malayalam", "A1"), lessons);
+  expect(coverage.enumerated).toBe(243);
+  expect(coverage.covered).toBe(163);
+  expect(coverage.unmapped).toBe(80);
+  expect(coverage.partial).toBe(0);
+  // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
+  // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
+  // from one ending on cardinals chapter 7 already taught, and the tranche also
+  // closes the "ordering notion" the old note named as missing by teaching
+  // aadyam against the pinne the track already had.
+  expect(coverage.byCategory["Sankhya (numerals and quantity)"]!).toEqual({
+    enumerated: 9,
+    covered: 7,
+  });
+  expect(formatExamCoverage(coverage)).toContain(
+    "malayalam A1 (partial inventory): 163/243 points covered (67%)",
+  );
+}, 60_000);

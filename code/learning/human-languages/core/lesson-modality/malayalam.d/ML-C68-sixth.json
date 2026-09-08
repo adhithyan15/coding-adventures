@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C68-sixth",
+    "language": "malayalam",
+    "chapter": 68,
+    "sequence": 2290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b93f3fb46be58b1"
+  },
+  "findings": []
+}

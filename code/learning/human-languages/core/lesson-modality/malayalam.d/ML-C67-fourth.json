@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C67-fourth",
+    "language": "malayalam",
+    "chapter": 67,
+    "sequence": 2270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c572d378ee667acb"
+  },
+  "findings": []
+}
