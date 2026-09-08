@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C82-fourth",
+    "language": "tamil",
+    "chapter": 82,
+    "sequence": 3380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae750512c0aef201"
+  },
+  "findings": []
+}

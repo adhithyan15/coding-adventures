@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W38-u",
+    "language": "marwadi",
+    "chapter": 38,
+    "sequence": 3330,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9a5f2af87de62c50",
+    "detachableSegments": [
+      "Script — the fifth standing vowel"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

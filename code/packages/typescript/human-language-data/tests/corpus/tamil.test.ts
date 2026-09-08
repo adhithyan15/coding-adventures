@@ -1,6 +1,17 @@
 import { expect, it } from "vitest";
 import { measureContinuity } from "../../src/continuity.js";
-import { defaultCurriculumRoot, loadChapterPolicy, loadTrackLessons } from "../../src/loader.js";
+import {
+  defaultCurriculumRoot,
+  loadChapterPolicy,
+  loadEverything,
+  loadExamInventory,
+  loadTrackLessons,
+} from "../../src/loader.js";
+import {
+  formatExamCoverage,
+  measureExamCoverage,
+  trackIntroducedAtoms,
+} from "../../src/exam-inventory.js";
 import { measureRamp, readingOrder } from "../../src/ramp.js";
 import { measureScriptClosure } from "../../src/script-closure.js";
 import { expectLanguageContinuity, expectLanguageModality } from "./assert-language-corpus.js";
@@ -122,3 +133,41 @@ it("teaches short o by meaning, then retrieves it before Chapter 8 uses it", () 
     )
   )).toEqual([]);
 });
+
+// ---------------------------------------------------------------------------
+// THE TAMIL A1 INVENTORY HAD NO ASSERTION IN THIS FILE -- the hole HL-C354
+// found in Telugu and Hindi and told the next reader to look for in the other
+// eighteen. Without these two tests the ordinal tranche could land its atoms,
+// wire TA-A1-NUM-04's probe, and leave a coverage number that nothing in the
+// track's own test file reads. Both halves were falsified before being kept.
+// ---------------------------------------------------------------------------
+it("probes only Tamil atoms that EXIST, so a guessed id cannot under-report", () => {
+  const { lessons } = loadEverything();
+  const taught = trackIntroducedAtoms(lessons, "tamil");
+  const unknown: string[] = [];
+  for (const point of loadExamInventory("tamil", "A1").points) {
+    for (const atom of point.probe ?? []) if (!taught.has(atom)) unknown.push(`${point.id}:${atom}`);
+  }
+  expect(unknown).toEqual([]);
+}, 60_000);
+
+it("pins Tamil A1 coverage, and the ordinal point the tranche closed", () => {
+  const { lessons } = loadEverything();
+  const coverage = measureExamCoverage(loadExamInventory("tamil", "A1"), lessons);
+  expect(coverage.enumerated).toBe(262);
+  expect(coverage.covered).toBe(175);
+  expect(coverage.unmapped).toBe(87);
+  expect(coverage.partial).toBe(0);
+  // TA-A1-NUM-04's old note is what the tranche was built on: it recorded that
+  // `mutalil` was taught in chapter 62 as a DISCOURSE word and not as an
+  // ordinal. `mutalil` is `mutal` + the locative `-il`, so Tamil's one
+  // irregular ordinal was already in the learner's mouth, and the first lesson
+  // takes the word apart rather than teaching a new one.
+  expect(coverage.byCategory["Eṇṇuppeyar (numerals and quantity)"]!).toEqual({
+    enumerated: 8,
+    covered: 6,
+  });
+  expect(formatExamCoverage(coverage)).toContain(
+    "tamil A1 (partial inventory): 175/262 points covered (67%)",
+  );
+}, 60_000);

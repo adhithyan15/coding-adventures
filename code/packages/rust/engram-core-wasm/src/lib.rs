@@ -1042,6 +1042,7 @@ impl EngramSession {
         rebuilt_at: u64,
     ) -> String {
         catch_json(|| {
+            validate_filtered_deck_target(&self.state, deck_id)?;
             self.state = rebuild_core_filtered_deck(
                 &self.state,
                 deck_id,
@@ -1353,6 +1354,7 @@ impl EngramSession {
                     if selected_deck_context.is_empty() {
                         return Err("cannot rebuild filtered deck without a deck".to_string());
                     }
+                    validate_filtered_deck_target(&self.state, &selected_deck_context)?;
                     self.state = rebuild_core_filtered_deck(
                         &self.state,
                         &selected_deck_context,
@@ -4476,6 +4478,39 @@ fn note_editor_selected_field<'a>(
 ) -> Option<&'a BrowserSelectionField> {
     note_editor_selected_field_index(selection, editor)
         .and_then(|index| selection.fields.get(index))
+}
+
+/// Refuse to rebuild a filtered deck the collection does not contain.
+///
+/// Rebuilding *moves cards out of the decks they are in* and into the named
+/// one. Every other write of a deck id creates something in a bad place; this
+/// one takes existing content out of a good place, so it is the most damaging
+/// of the family and the only one that needs no crafted input to hurt: an
+/// empty search matches everything, so a single call with an id naming no deck
+/// relocated an entire collection and returned `ok: true`.
+///
+/// `EmptyFilteredDeck` already refuses to restore a card into a deck that is
+/// gone (`reducer.rs`), so the asymmetry was that emptying checked and
+/// rebuilding did not.
+///
+/// This layer exists to make the refusal *visible*, not to be the only one.
+/// `rebuild_filtered_deck_from_card_ids` refuses the same thing at the point of
+/// mutation, which is what covers `reduce(EngramCommand::RebuildFilteredDeck)`
+/// -- that path cannot report an error, since `reduce` returns `AppState`, so
+/// there it is a quiet no-op instead. Both call sites here check first, so a
+/// person gets a message rather than silence.
+///
+/// An earlier version of this comment claimed the reducer "cannot host this".
+/// That is true of `reduce`, and false of `rebuild_filtered_deck`, which lives
+/// in the same file and does return a `Result` -- the argument talked past the
+/// placement that actually closes the hole.
+fn validate_filtered_deck_target(state: &AppState, deck_id: &str) -> Result<(), String> {
+    if !state.decks.iter().any(|deck| deck.id == deck_id) {
+        return Err(format!(
+            "cannot rebuild filtered deck `{deck_id}`: no such deck"
+        ));
+    }
+    Ok(())
 }
 
 /// What an **empty** deck id means to a particular caller.
@@ -7835,6 +7870,124 @@ mod tests {
             restored.presentation_cursor(),
             PresentationCursor::default()
         );
+    }
+
+    /// Rebuilding into a deck that does not exist moves nothing.
+    ///
+    /// This is the most damaging member of the deck-id family, and the only one
+    /// that needs no crafted input: rebuilding *moves cards out of the decks
+    /// they are in*, and an empty search matches everything. One call with an
+    /// id naming no deck relocated the entire collection and returned
+    /// `ok: true` -- every card in no deck's queue or stats, and never reached
+    /// by `DeleteDeck`'s cascade.
+    #[test]
+    fn rebuilding_a_filtered_deck_that_does_not_exist_moves_no_cards() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+        let before: Vec<String> = session
+            .state()
+            .cards
+            .iter()
+            .map(|card| card.deck_id.clone())
+            .collect();
+        assert!(before.len() >= 2, "the fixture needs cards to move");
+
+        let reply: Value = serde_json::from_str(&session.rebuild_filtered_deck(
+            "deck-that-does-not-exist",
+            "",
+            50,
+            false,
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(reply["ok"], false, "expected refusal, got {reply}");
+        assert!(reply["error"]
+            .as_str()
+            .unwrap_or_default()
+            .contains("no such deck"));
+        // The assertion that matters: not merely that an error came back, but
+        // that no card moved. A guard that errored *after* mutating would pass
+        // the first check and still have wrecked the collection.
+        assert_eq!(
+            session
+                .state()
+                .cards
+                .iter()
+                .map(|card| card.deck_id.clone())
+                .collect::<Vec<_>>(),
+            before
+        );
+    }
+
+    /// The event route is guarded too, not just the facade method.
+    ///
+    /// Its own guard rejected an *empty* deck id and nothing else, so a
+    /// selected-deck context naming a deck that had since been deleted went
+    /// straight through.
+    #[test]
+    fn the_rebuild_event_also_refuses_a_deck_that_does_not_exist() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+        let before: Vec<String> = session
+            .state()
+            .cards
+            .iter()
+            .map(|card| card.deck_id.clone())
+            .collect();
+
+        let reply: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserRebuildFilteredDeck",
+            "deck-that-does-not-exist",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(reply["ok"], false, "expected refusal, got {reply}");
+        assert_eq!(
+            session
+                .state()
+                .cards
+                .iter()
+                .map(|card| card.deck_id.clone())
+                .collect::<Vec<_>>(),
+            before
+        );
+    }
+
+    /// A real deck still rebuilds, so the guard cannot pass by refusing all.
+    #[test]
+    fn rebuilding_a_real_filtered_deck_still_moves_cards() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+        let target = session.state().decks[0].id.clone();
+        let before: Vec<String> = session
+            .state()
+            .cards
+            .iter()
+            .map(|card| card.deck_id.clone())
+            .collect();
+
+        let reply: Value =
+            serde_json::from_str(&session.rebuild_filtered_deck(&target, "", 50, false, NOW))
+                .unwrap();
+        assert_eq!(reply["ok"], true, "a real deck must still rebuild: {reply}");
+
+        let after: Vec<String> = session
+            .state()
+            .cards
+            .iter()
+            .map(|card| card.deck_id.clone())
+            .collect();
+        assert!(
+            after.contains(&target),
+            "cards should have moved into the target deck"
+        );
+        assert_ne!(after, before, "the rebuild must actually do something");
+        // And nothing was stranded on the way.
+        assert!(after
+            .iter()
+            .all(|deck_id| { session.state().decks.iter().any(|deck| deck.id == *deck_id) }));
     }
 
     #[test]

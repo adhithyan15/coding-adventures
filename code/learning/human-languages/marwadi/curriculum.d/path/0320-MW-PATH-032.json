@@ -1,0 +1,16 @@
+{
+  "id": "MW-PATH-032",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "MW-C39-hear-koni",
+    "MW-C39-koni",
+    "MW-R39-refuse-price",
+    "MW-C39-refusal-four",
+    "MW-R39-script-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-046-REFUSAL"
+  ],
+  "after": []
+}

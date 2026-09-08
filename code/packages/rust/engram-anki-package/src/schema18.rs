@@ -45,9 +45,7 @@
 
 use serde_json::{json, Value};
 
-use crate::{
-    apkg_error, AnkiV11Deck, AnkiV11Field, AnkiV11NoteType, AnkiV11Template, ApkgError,
-};
+use crate::{apkg_error, AnkiV11Deck, AnkiV11Field, AnkiV11NoteType, AnkiV11Template, ApkgError};
 
 /// `NotetypeConfig.kind`: 0 (or absent) is a normal note type, 1 is cloze.
 ///
@@ -171,7 +169,11 @@ pub(crate) fn read_note_types(db: &[u8]) -> Result<Vec<AnkiV11NoteType>, ApkgErr
 
         let mut note_fields: Vec<AnkiV11Field> = fields
             .iter()
-            .filter(|row| int(row, 0, "fields.ntid").map(|v| v == *id).unwrap_or(false))
+            .filter(|row| {
+                int(row, 0, "fields.ntid")
+                    .map(|v| v == *id)
+                    .unwrap_or(false)
+            })
             .map(|row| {
                 Ok(AnkiV11Field {
                     ordinal: int(row, 1, "fields.ord")?,

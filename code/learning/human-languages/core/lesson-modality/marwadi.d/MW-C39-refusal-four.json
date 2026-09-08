@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C39-refusal-four",
+    "language": "marwadi",
+    "chapter": 39,
+    "sequence": 3400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8a6331ab849aab3"
+  },
+  "findings": []
+}

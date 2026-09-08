@@ -9,6 +9,12 @@ Four FLOW-MATIC matrix rows execute on real CoreCLR; direct regressions cover
 EOF, repeated peeks, mixed string/numeric input and 32/64-bit destinations.
 The encoded CIL simulator path still does not implement numeric/string input.
 
+## 0.294.0 — 2026-09-08 — path-independent ALGOL standard-function results
+
+The seven-backend ALGOL matrix now proves a pure built-in `abs` may map
+distinct conditional tracked real operands to one exact bounded power exponent
+without erasing the runtime selector.
+
 ## Unreleased — JVM input/EOF (VM-039c)
 
 Support `input_more` through `env.BasicRuntime.inputMore()J`, preserving the

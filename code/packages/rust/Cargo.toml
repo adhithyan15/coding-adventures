@@ -210,6 +210,7 @@ members = [
     "sparc-v8-simulator",
     "alpha-axp-simulator",
     "alpha-axp-gatelevel",
+    "powerpc601-simulator",
     "sparc-v8-encoder",
     "sparc-v8-backend",
     "interrupt-handler",

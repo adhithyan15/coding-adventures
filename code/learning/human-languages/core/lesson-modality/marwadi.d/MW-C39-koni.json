@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C39-koni",
+    "language": "marwadi",
+    "chapter": 39,
+    "sequence": 3380,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:eb6f01bba9b51d22"
+  },
+  "findings": []
+}

@@ -82,7 +82,7 @@ according to the current prioritization run.
 | RCPU-029 / RCPU-030 | 1985 | MIPS R2000 | Complete: `mips-r2000-simulator` | Complete: `mips-r2000-gatelevel` |
 | RCPU-031 / RCPU-032 | 1987 | SPARC V8 | Complete: `sparc-v8-simulator` | Complete: `sparc-v8-gatelevel` |
 | RCPU-033 / RCPU-034 | 1992 | DEC Alpha AXP 21064 | Complete: `alpha-axp-simulator` | Complete: `alpha-axp-gatelevel` |
-| RCPU-035 / RCPU-036 | 1992 | PowerPC 601 | Missing | Missing |
+| RCPU-035 / RCPU-036 | 1992 | PowerPC 601 | Complete: `powerpc601-simulator` | Missing |
 | RCPU-037 / RCPU-038 | 2003 | x86-64 (AMD64) | Audit: `x86-simulator` | Missing |
 | RCPU-039 / RCPU-040 | 2004 | ARMv7 educational baseline (07b) | Audit: `arm-simulator` | Missing |
 | RCPU-041 / RCPU-042 | 2004 | ARMv7-A / Thumb-2 (07x) | Missing | Missing |
@@ -91,9 +91,10 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-035**, the PowerPC 601 functional Rust
-implementation. The 2026-08-31 prioritization run closes the Alpha pair and
-advances chronologically while completed earlier cells publish one at a time.
+Current selection: **RCPU-036**, the PowerPC 601 gate-level Rust
+implementation. The 2026-08-31 prioritization run completed the PowerPC
+functional cell and keeps the architecture pair together while completed
+earlier cells publish one at a time.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -523,6 +524,18 @@ is 96.80% (726/750). Normative Spec 07s2 pins topology, gate boundaries,
 lifecycle, and conformance. Publication follows RCPU-033 and advances to
 RCPU-035, the PowerPC 601 functional implementation.
 
+RCPU-035 is complete locally atop RCPU-034. The new functional simulator owns
+the exact 64 KiB big-endian machine, all 32 GPRs, LR/CTR/XER/CR/CIA, halt, and
+installed-program range. It implements the complete Layer 07u integer decode
+surface, public structured encoders, validated restore and origin-aware load,
+checked direct access, typed atomic faults, complete traces/results, and
+transactional bounded runs. Six unit tests, four lifecycle/workload tests, and
+the aggregate 239-vector Python full-state differential pass. Strict format,
+Clippy, and rustdoc are green; total Rust line coverage is 89.83% (627/698).
+Spec 07u now pins the normative Rust completion boundary. No PowerPC Rust
+consumer existed. Publication follows RCPU-034 and advances to RCPU-036, the
+PowerPC 601 gate-level implementation.
+
 ## Cross-language wave
 
 After RCPU-050, freeze the Rust APIs and golden conformance vectors, then port
@@ -549,6 +562,8 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-31 | RCPU-035 differential audit found the Python oracle assigns zero to `divw`/`divwu` on a zero divisor even though the ISA result is architecturally undefined, making an execution appear successful and indistinguishable from a real zero quotient. | P0 correctness within RCPU-035 | Preserve Python differential coverage for every defined nonzero-divisor case; expose zero divisors as distinct typed, step-atomic signed/unsigned faults in Rust and cover both in lifecycle tests. |
+| 2026-08-31 | RCPU-035 has no Rust package or Rust encoder/backend consumer. Normative Spec 07u and the Python oracle cover the 32-bit big-endian PowerPC 601 integer subset with 137 passing tests at 98.11% line coverage, but expose only legacy SIM00 state: no installed-program range, restore, origin-aware loading, typed direct access/errors, complete before/after traces, or transactional runs. Oversized programs silently truncate, aligned loads/stores silently mask misaligned addresses, already-halted steps succeed as no-ops, unknown instructions return string error traces, and no reproducible full-state differential corpus exists. | P0, chronological functional oracle, blocks RCPU-036 | Port the complete specified/oracle surface in one `powerpc601-simulator` Rust crate with exact 64 KiB state, 32 GPRs plus LR/CTR/XER/CR/CIA, public structured encoders, typed atomic failures, complete lifecycle, exact big-endian access and PowerPC bit numbering, all branch/CR/XER edges, reproducible Python full-state vectors, strict checks, consumers, and at least 80% line coverage. |
 | 2026-08-31 | RCPU-034 has no Rust package or normative Spec 07s2. The Python gate oracle is broad (351 passing tests, 98.91% line coverage) but its 32 registers are host bit lists rather than sequential primitives, memory is a host `bytearray`, nPC and halt are host scalars, and it exposes only the legacy non-transactional SIM00 lifecycle inherited from the functional oracle. Its standalone `uv` project also omits local source declarations for all four repository dependencies, so the audit required an isolated test environment with explicit source paths. | Resolved by RCPU-034; selects RCPU-035 chronologically | Completed as `alpha-axp-gatelevel` with exactly 526,465 persistent DFFs, complete combinational decode and gate datapaths, the shared atomic lifecycle, all 624 full-state vectors, Spec 07s2, strict checks, and 96.80% Rust line coverage. Keep Python packaging enrollment as a P1 infrastructure follow-up rather than changing the oracle during the Rust wave. |
 | 2026-08-31 | RCPU-033 has no Rust package or Rust encoder/backend consumer. Normative Spec 07s and the Python oracle provide a broad 64-bit little-endian integer ISA baseline with 146 passing tests at 88.83% line coverage, but the oracle exposes only legacy SIM00 state: no installed-program range, restore, typed direct access, typed errors, complete atomic traces/results, or transactional runs. Invalid instructions, PAL calls, and alignment failures are converted into a mutated halt state; an already-halted step succeeds; loads cannot select an origin; and no reproducible full-state differential corpus exists. | Resolved by RCPU-033; selects RCPU-034 by pair priority | Completed as `alpha-axp-simulator` with the exact machine, public encoders, validated complete state, typed atomic lifecycle, 624-vector Python full-state differential, all 146 Python tests, strict checks, and 88.08% Rust line coverage. No Alpha Rust consumer existed. Build the DFF/gate partner next. |
 | 2026-08-31 | RCPU-032 baseline has 42 passing tests but only 59.60% package line coverage. All 526,185 persistent architectural bits (524,288 memory, 1,792 physical-register, PC/nPC, CWP/depth, PSR, Y, and halt) are host values and nPC is absent. The gate branch-condition table assigns most condition numbers to the wrong predicates; divide-cc is missing; divide-by-zero saturates instead of faulting; loads retain stale memory; misalignment is accepted; halted/illegal/faulting steps mutate PC or state; non-sentinel traps can halt; state/restore/complete traces/results and typed transactional load/step/run are absent; the differential corpus is absent; and strict formatting already fails. | Resolved by RCPU-032; selects RCPU-033 by chronological pair priority | Completed with the exact 526,185-DFF topology, shared functional lifecycle, fixed-round gate division, all 16 corrected Bicc predicates, atomic trap/fault handling, documented UDIVcc/SDIVcc paths, the complete 248-vector differential, normative Spec 07r2, strict checks, and 94.72% line coverage. |

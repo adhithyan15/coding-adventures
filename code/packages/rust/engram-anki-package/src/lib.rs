@@ -5,7 +5,7 @@
 //! honors modern package metadata, decodes zstd-compressed modern payloads, and
 //! resolves legacy JSON or modern protobuf media maps.
 
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt;
 
 mod schema18;
@@ -682,7 +682,6 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
         .collect()
 }
 
-
 fn media_matches_archive_name(media: &MediaFile, archive_name: &str) -> bool {
     media.archive_name == archive_name
         || media
@@ -958,11 +957,55 @@ pub fn v11_collection_to_engram_state(
         .map(|note_type| (note_type.id.clone(), note_type))
         .collect();
 
+    // A card may name a deck the file never declares.
+    //
+    // The note type gets checked a few lines below -- a note referencing a
+    // missing one is an error -- and the deck did not, so `card.deck_id` went
+    // straight into both the `Note` and the `Card`. The result is content in a
+    // deck that does not exist: absent from every deck list, queue and stats,
+    // and never reached by `DeleteDeck`'s cascade, so there is no way to find
+    // it again from inside the app.
+    //
+    // That matters here more than on the paths where the caller supplies its
+    // own whole collection, because `merge_anki_apkg` folds this file into the
+    // collection the user already has.
+    //
+    // Remapped rather than rejected, deliberately. Erroring would fail the
+    // whole import over one row and cost someone their collection to avoid a
+    // misplaced card -- the opposite of the trade made elsewhere here, where a
+    // cursor that will not parse costs a scroll position and not the
+    // collection. The default deck is where a note with no cards already
+    // lands, so this is the fallback that already exists, applied to a case
+    // that was missing it. It is also the better outcome for a hostile file:
+    // a card visible in the default deck can be seen and deleted, and an
+    // invisible one cannot.
+    let declared_deck_ids: HashSet<String> = decks.iter().map(|deck| deck.id.clone()).collect();
+    // The options map is keyed by the Anki i64 id, so resolution has to be
+    // available in both shapes. Same rule, one definition.
+    let declared_i64: HashSet<i64> = collection.decks.iter().map(|deck| deck.id).collect();
+    let default_deck_i64 = collection.decks.first().map(|deck| deck.id);
+    let resolved_deck_id_i64 = |deck_id: i64| -> i64 {
+        if declared_i64.contains(&deck_id) {
+            deck_id
+        } else {
+            default_deck_i64.unwrap_or(deck_id)
+        }
+    };
+
+    let resolve_deck_id = |deck_id: i64| -> String {
+        let candidate = deck_id.to_string();
+        if declared_deck_ids.contains(&candidate) {
+            candidate
+        } else {
+            default_deck_id.clone()
+        }
+    };
+
     let mut deck_by_note_id = BTreeMap::new();
     for card in &collection.cards {
         deck_by_note_id
             .entry(card.note_id)
-            .or_insert_with(|| card.deck_id.to_string());
+            .or_insert_with(|| resolve_deck_id(card.deck_id));
     }
 
     let mut notes = Vec::with_capacity(collection.notes.len());
@@ -994,6 +1037,9 @@ pub fn v11_collection_to_engram_state(
         .iter()
         .map(|deck| (deck.id, deck.name.clone()))
         .collect();
+    // The name a remapped card should render for `{{Deck}}`: the deck it was
+    // actually put in, not the id the file named.
+    let default_deck_name = default_deck_i64.and_then(|id| deck_names_by_id.get(&id));
 
     let mut cards = Vec::with_capacity(collection.cards.len());
     for card in &collection.cards {
@@ -1003,6 +1049,8 @@ pub fn v11_collection_to_engram_state(
             &note_types_by_id,
             &anki_note_types_by_id,
             &deck_names_by_id,
+            default_deck_name,
+            &resolve_deck_id(card.deck_id),
         )?);
     }
 
@@ -1032,15 +1080,28 @@ pub fn v11_collection_to_engram_state(
                 collection.metadata.created_at_days,
                 &marked_at_by_note_id,
                 &last_reviewed_at_by_card,
-                deck_options_by_deck_id.get(&card.deck_id).copied(),
+                // Keyed off the deck the card actually lands in. Keyed off
+                // the raw id, a remapped card was scheduled with global
+                // defaults while sitting in a deck that has a preset.
+                deck_options_by_deck_id
+                    .get(&resolved_deck_id_i64(card.deck_id))
+                    .copied(),
             )
         })
         .collect::<Vec<_>>();
 
+    // Resolved, like the note and the card built from this same row.
+    //
+    // This one is the reason the fix was incomplete the first time: it feeds
+    // `Session.deck_id` and, through `import_session_id`, `Review.session_id`.
+    // A session naming a deck the state does not have is worse than an orphaned
+    // card, because `DeleteDeck` selects sessions by `session.deck_id` and
+    // reviews by their session id -- so it survives every deletion, forever,
+    // with no other route to remove it.
     let deck_by_card_id: HashMap<i64, String> = collection
         .cards
         .iter()
-        .map(|card| (card.id, card.deck_id.to_string()))
+        .map(|card| (card.id, resolve_deck_id(card.deck_id)))
         .collect();
     let reviews = collection
         .reviews
@@ -1858,7 +1919,6 @@ const ANKI_V11_USER_VERSION: u32 = 11;
 /// keeps the same page geometry it had before the port.
 const V11_EXPORT_PAGE_SIZE: usize = 4096;
 
-
 /// One table's rows in the shape `sqlite_file`'s writer takes: `(rowid, columns)`.
 type ExportRows = Vec<(i64, Vec<SqlValue>)>;
 
@@ -1913,9 +1973,7 @@ fn v11_export_rows(
             ),
             SqlValue::Int(export_collection_i64(export, "version").unwrap_or(11_i64)),
             SqlValue::Int(export_collection_i64(export, "dirty").unwrap_or(0_i64)),
-            SqlValue::Int(
-                export_collection_i64(export, "updateSequenceNumber").unwrap_or(-1_i64),
-            ),
+            SqlValue::Int(export_collection_i64(export, "updateSequenceNumber").unwrap_or(-1_i64)),
             SqlValue::Int(export_collection_i64(export, "lastSync").unwrap_or(0_i64)),
             SqlValue::Text(config_json),
             SqlValue::Text(models_json),
@@ -2034,8 +2092,7 @@ fn v11_export_rows(
                 SqlValue::Int(card_id),
                 SqlValue::Int(source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64)),
                 SqlValue::Int(
-                    source_i64(source, "ease")
-                        .unwrap_or_else(|| rating_to_v11_ease(review.rating)),
+                    source_i64(source, "ease").unwrap_or_else(|| rating_to_v11_ease(review.rating)),
                 ),
                 SqlValue::Int(source_i64(source, "interval").unwrap_or_else(|| {
                     review
@@ -2063,9 +2120,10 @@ fn v11_export_rows(
                         .or_else(|| review.answer_time_ms.map(i64::from))
                         .unwrap_or_default(),
                 ),
-                SqlValue::Int(source_i64(source, "kind").unwrap_or_else(|| {
-                    review_kind(export, review, &review.card_id)
-                })),
+                SqlValue::Int(
+                    source_i64(source, "kind")
+                        .unwrap_or_else(|| review_kind(export, review, &review.card_id)),
+                ),
             ],
         ));
     }
@@ -3627,6 +3685,13 @@ fn map_v11_card(
     note_types_by_id: &HashMap<String, NoteType>,
     anki_note_types_by_id: &HashMap<i64, &AnkiV11NoteType>,
     deck_names_by_id: &HashMap<i64, String>,
+    default_deck_name: Option<&String>,
+    // Resolved by the caller against the decks the file actually declares, so
+    // a card naming an undeclared one lands somewhere reachable instead of in a
+    // deck that does not exist. Passed in rather than recomputed here because
+    // the note built from this same card was resolved the same way, and the two
+    // must not disagree about where the card lives.
+    deck_id: &str,
 ) -> Result<Card, ApkgError> {
     let note = notes_by_id.get(&card.note_id.to_string()).ok_or_else(|| {
         apkg_error(format!(
@@ -3657,6 +3722,7 @@ fn map_v11_card(
         template,
         card,
         deck_names_by_id,
+        default_deck_name,
     );
     let cloze_ordinal = if anki_note_type.kind == 1 {
         Some(i64_to_u32(card.ordinal.saturating_add(1)))
@@ -3686,7 +3752,7 @@ fn map_v11_card(
 
     Ok(Card {
         id: card.id.to_string(),
-        deck_id: card.deck_id.to_string(),
+        deck_id: deck_id.to_string(),
         front,
         back,
         created_at: anki_seconds_to_millis(card.modified_at),
@@ -3766,14 +3832,24 @@ fn insert_anki_special_template_values(
     template: &CardTemplate,
     card: &AnkiV11Card,
     deck_names_by_id: &HashMap<i64, String>,
+    default_deck_name: Option<&String>,
 ) {
     let render_deck_id = if card.original_deck_id != 0 {
         card.original_deck_id
     } else {
         card.deck_id
     };
+    // `{{Deck}}` should name the deck the card is IN. When the id names no
+    // declared deck the card was remapped to the default, so falling back to
+    // the raw id would print a deck the card does not belong to -- card text
+    // saying `999999` while the card sits in `Default`.
+    // `{{Deck}}` should name the deck the card is IN. An id naming no declared
+    // deck means the card was remapped to the default, so falling back to the
+    // raw id would print a deck the card does not belong to -- card text saying
+    // `999999` while the card sits in `Default`.
     let deck_name = deck_names_by_id
         .get(&render_deck_id)
+        .or(default_deck_name)
         .cloned()
         .unwrap_or_else(|| render_deck_id.to_string());
     field_values
@@ -5143,6 +5219,117 @@ CREATE TABLE graves (
 
         assert_eq!(collection.note_types[0].name, "Basic");
         assert_eq!(collection.notes[0].field_values, vec!["hola", "hello"]);
+    }
+
+    /// A card naming a deck the file never declares lands somewhere reachable.
+    ///
+    /// The note type is checked on this path -- a note referencing a missing
+    /// one is an error -- and the deck was not, so `card.deck_id` went straight
+    /// into both the `Note` and the `Card`. The result was content in a deck
+    /// that does not exist: absent from every deck list, queue and stats, and
+    /// never reached by `DeleteDeck`'s cascade, so unreachable from inside the
+    /// app. Through `merge_anki_apkg` that lands in the collection the user
+    /// already has.
+    #[test]
+    fn a_card_naming_an_undeclared_deck_is_remapped_rather_than_orphaned() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        assert!(
+            !collection.cards.is_empty(),
+            "the fixture must have a card to point at a missing deck"
+        );
+        let undeclared = 999_999;
+        assert!(
+            !collection.decks.iter().any(|deck| deck.id == undeclared),
+            "the fixture must not declare the deck this test calls undeclared"
+        );
+        collection.cards[0].deck_id = undeclared;
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        // Every record that names a deck, not just the two I thought of first.
+        //
+        // The first version of this walked `cards` and `notes` only, while its
+        // comment claimed to be "a property of the whole state". It was not:
+        // the state it inspected contained an orphaned `Session` the whole
+        // time, and the test passed. Sessions matter more than cards here --
+        // `DeleteDeck` selects sessions by `deck_id` and reviews by their
+        // session id, so an orphaned session survives every deletion with no
+        // other route to remove it.
+        let deck_ids: BTreeSet<&str> = state.decks.iter().map(|deck| deck.id.as_str()).collect();
+
+        let orphan_cards: Vec<&str> = state
+            .cards
+            .iter()
+            .filter(|card| !deck_ids.contains(card.deck_id.as_str()))
+            .map(|card| card.id.as_str())
+            .collect();
+        assert!(
+            orphan_cards.is_empty(),
+            "cards in a deck the collection does not contain: {orphan_cards:?}"
+        );
+
+        let orphan_notes: Vec<&str> = state
+            .notes
+            .iter()
+            .filter(|note| !deck_ids.contains(note.deck_id.as_str()))
+            .map(|note| note.id.as_str())
+            .collect();
+        assert!(
+            orphan_notes.is_empty(),
+            "notes in a deck the collection does not contain: {orphan_notes:?}"
+        );
+
+        let orphan_sessions: Vec<&str> = state
+            .sessions
+            .iter()
+            .filter(|session| !deck_ids.contains(session.deck_id.as_str()))
+            .map(|session| session.id.as_str())
+            .collect();
+        assert!(
+            orphan_sessions.is_empty(),
+            "sessions in a deck the collection does not contain: {orphan_sessions:?}"
+        );
+
+        // And every review must hang off a session that exists, or it is
+        // unreachable by the same argument one level down.
+        let session_ids: BTreeSet<&str> = state.sessions.iter().map(|s| s.id.as_str()).collect();
+        let dangling_reviews: Vec<&str> = state
+            .reviews
+            .iter()
+            .filter(|review| !session_ids.contains(review.session_id.as_str()))
+            .map(|review| review.id.as_str())
+            .collect();
+        assert!(
+            dangling_reviews.is_empty(),
+            "reviews naming a session the collection does not contain: {dangling_reviews:?}"
+        );
+        // Remapped, not dropped: the import must not quietly lose the card.
+        assert_eq!(state.cards.len(), collection.cards.len());
+    }
+
+    /// The remap does not disturb a collection whose decks are all declared.
+    ///
+    /// A guard that rewrote every deck id would satisfy the test above while
+    /// destroying every legitimate import, so the untouched case is pinned too.
+    #[test]
+    fn a_well_formed_collection_keeps_its_deck_assignments() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let expected: Vec<String> = collection
+            .cards
+            .iter()
+            .map(|card| card.deck_id.to_string())
+            .collect();
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        assert_eq!(
+            state
+                .cards
+                .iter()
+                .map(|card| card.deck_id.clone())
+                .collect::<Vec<_>>(),
+            expected
+        );
     }
 
     #[test]
@@ -7462,7 +7649,9 @@ CREATE TABLE graves (
             ),
             (
                 "incompressible, like media",
-                (0..96u32 * 1024).map(|i| (i.wrapping_mul(2654435761) >> 13) as u8).collect(),
+                (0..96u32 * 1024)
+                    .map(|i| (i.wrapping_mul(2654435761) >> 13) as u8)
+                    .collect(),
             ),
         ];
 

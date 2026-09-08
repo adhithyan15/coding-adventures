@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:504c85e1c8fc324e",
+  "lessonIds": [
+    "MW-W38-lla",
+    "MW-C38-hear-sola",
+    "MW-C38-sola",
+    "MW-W38-a",
+    "MW-C38-hear-satara",
+    "MW-C38-satara",
+    "MW-C38-hear-athara",
+    "MW-C38-athara",
+    "MW-W38-u",
+    "MW-C38-hear-ughanis",
+    "MW-C38-ughanis",
+    "MW-R38-count-twenty"
+  ],
+  "tex": "marwadi/book/chapters/ch38-teens-to-nineteen.tex"
+}

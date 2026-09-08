@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:a211af9d67bf4f5a",
+  "lessonIds": [
+    "MW-C39-hear-koni",
+    "MW-C39-koni",
+    "MW-R39-refuse-price",
+    "MW-C39-refusal-four",
+    "MW-R39-script-close"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch39.txt",
+  "json": "marwadi/narration/ch39.json",
+  "textHash": "fnv1a64:7f7be8e1a915f4aa",
+  "jsonHash": "fnv1a64:4724bd6ca1bb2818",
+  "findings": []
+}

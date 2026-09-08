@@ -1,0 +1,23 @@
+{
+  "chapter": 37,
+  "title": "Eleven to Fifteen",
+  "label": "ch:mw-teens-to-fifteen",
+  "canDo": "I can say and write eleven to fifteen in Marwadi, and name the one of them that does not rhyme with the rest.",
+  "payoff": {
+    "lesson": "MW-R37-count-fifteen",
+    "kind": "four-skill-function-map",
+    "summary": "The five teens heard singly out of order, read printed, written from dictation, and sorted by the ending that four of them share.",
+    "assesses": [
+      "MW-LEX-IGYAARA-01",
+      "MW-LEX-BAARA-01",
+      "MW-LEX-TERA-01",
+      "MW-LEX-CHAUDA-01",
+      "MW-LEX-PANDARA-01",
+      "MW-SCRIPT-IGYAARA-01",
+      "MW-SCRIPT-BAARA-01",
+      "MW-SCRIPT-TERA-01",
+      "MW-SCRIPT-CHAUDA-01",
+      "MW-SCRIPT-PANDARA-01"
+    ]
+  }
+}

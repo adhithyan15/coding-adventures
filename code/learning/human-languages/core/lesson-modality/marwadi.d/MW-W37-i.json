@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MW-W37-i",
+    "language": "marwadi",
+    "chapter": 37,
+    "sequence": 3130,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:08962f99e669298a",
+    "detachableSegments": [
+      "Script — the mark, standing on its own"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

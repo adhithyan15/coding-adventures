@@ -1,0 +1,35 @@
+{
+  "id": "MW-PATH-031",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "MW-W37-i",
+    "MW-C37-hear-igyaara",
+    "MW-C37-igyaara",
+    "MW-C37-hear-baara",
+    "MW-C37-baara",
+    "MW-C37-hear-tera",
+    "MW-C37-tera",
+    "MW-C37-hear-chauda",
+    "MW-C37-chauda",
+    "MW-C37-hear-pandara",
+    "MW-C37-pandara",
+    "MW-R37-count-fifteen",
+    "MW-W38-lla",
+    "MW-C38-hear-sola",
+    "MW-C38-sola",
+    "MW-W38-a",
+    "MW-C38-hear-satara",
+    "MW-C38-satara",
+    "MW-C38-hear-athara",
+    "MW-C38-athara",
+    "MW-W38-u",
+    "MW-C38-hear-ughanis",
+    "MW-C38-ughanis",
+    "MW-R38-count-twenty"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-045-TEENS"
+  ],
+  "after": []
+}

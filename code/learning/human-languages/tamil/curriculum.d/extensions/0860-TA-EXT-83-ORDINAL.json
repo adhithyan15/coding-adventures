@@ -1,0 +1,20 @@
+{
+  "id": "TA-EXT-83-ORDINAL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say sixth to eleventh in Tamil, make the ordinal of any number I know, and say a date with the ending a calendar uses.",
+  "prerequisites": [
+    "TA-EXT-82-ORDINAL"
+  ],
+  "lessons": [
+    "TA-C83-sixth",
+    "TA-C83-seventh",
+    "TA-C83-eighth",
+    "TA-C83-ninth",
+    "TA-C83-tenth",
+    "TA-C83-eleventh",
+    "TA-C83-date",
+    "TA-R83-ordinal-recall"
+  ]
+}

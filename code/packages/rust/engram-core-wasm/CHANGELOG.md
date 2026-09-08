@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+### Fixed -- rebuilding a filtered deck that does not exist emptied the collection (#14531)
+
+Rebuilding a filtered deck *moves cards out of the decks they are in* and into
+the named one, and neither route that does it checked that the named deck
+exists. The facade method had no deck guard at all; the event arm rejected an
+**empty** id and nothing else, so a selected deck that had since been deleted
+went straight through.
+
+This is the most damaging member of the deck-id family and the only one that
+needs no crafted input, because an empty search matches everything:
+
+    ok        = true
+    decks     = ["tamil-script", "hindi-devanagari", "kannada-script", "spanish-latin-roots"]
+    before    = ["tamil-script", "tamil-script", "hindi-devanagari", ...]
+    after     = ["deck-that-does-not-exist", ... x5]
+    MOVED     = 5 of 5
+
+Every card in the collection, out of its deck and into one that does not exist
+-- absent from every queue and stat, and never reached by `DeleteDeck`'s
+cascade, so unrecoverable from inside the app. It returned `ok: true`.
+
+The asymmetry was that **emptying** a filtered deck already refused to restore a
+card into a deck that is gone, while **rebuilding** did not. The two *rebuild*
+routes now share `validate_filtered_deck_target` -- emptying still needs no
+guard, since its restore loop only touches cards already carrying the named
+deck and skips any whose original deck is missing, so a phantom id there either
+no-ops or repairs an orphan.
+
+The tests assert that no card moved, not merely that an error came back: a guard
+that errored after mutating would satisfy the weaker check and still have
+wrecked the collection.
+
+The refusal is also enforced at the point of mutation, in `engram-core` -- see
+that crate's entry. This layer exists to make it *visible*.
+
 ### Added -- the presentation cursor survives snapshot/restore (#13646)
 
 `snapshot()` serialised `AppState` and nothing else, and `load_snapshot` reset

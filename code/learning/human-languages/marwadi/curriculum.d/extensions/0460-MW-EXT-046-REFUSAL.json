@@ -1,0 +1,17 @@
+{
+  "id": "MW-EXT-046-REFUSAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can refuse an offer in Marwadi and leave a bargain open.",
+  "prerequisites": [
+    "MW-EXT-045-TEENS"
+  ],
+  "lessons": [
+    "MW-C39-hear-koni",
+    "MW-C39-koni",
+    "MW-R39-refuse-price",
+    "MW-C39-refusal-four",
+    "MW-R39-script-close"
+  ]
+}
