@@ -1018,6 +1018,7 @@ pub fn run_netlist(text: &str) -> Result<Vec<AnalysisExecutionResult>, AnalysisE
 }
 
 pub const CLI_RESULT_SCHEMA_VERSION: u32 = 1;
+pub const CLI_INSPECTION_SCHEMA_VERSION: u32 = 1;
 pub const CLI_ERROR_CODE: &str = "SPICE_CLI_ERROR";
 
 pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
@@ -1043,6 +1044,28 @@ pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
             "analyses": analyses,
         }))
         .expect("CLI result envelope must serialize")
+    ))
+}
+
+pub fn inspect_netlist_json(text: &str) -> Result<String, NetlistParseError> {
+    let parsed = parse_netlist(text)?;
+    let analyses = build_analysis_plan(&parsed)
+        .into_iter()
+        .map(|step| {
+            serde_json::json!({
+                "index": step.index,
+                "kind": format!("{:?}", step.kind).to_ascii_lowercase(),
+            })
+        })
+        .collect::<Vec<_>>();
+    Ok(format!(
+        "{}\n",
+        serde_json::to_string(&serde_json::json!({
+            "schemaVersion": CLI_INSPECTION_SCHEMA_VERSION,
+            "title": parsed.title,
+            "analyses": analyses,
+        }))
+        .expect("CLI inspection envelope must serialize")
     ))
 }
 

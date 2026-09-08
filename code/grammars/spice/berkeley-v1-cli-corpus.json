@@ -8,6 +8,7 @@
       "expected": {
         "title": "Berkeley SPICE v1 CLI corpus",
         "analysisKinds": ["op", "dc", "ac", "tran", "tf"],
+        "analysisIndexes": [1, 2, 3, 4, 5],
         "recordCounts": [1, 2, 1, 1, 1]
       }
     }

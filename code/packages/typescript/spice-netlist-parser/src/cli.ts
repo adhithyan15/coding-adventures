@@ -3,9 +3,9 @@
 import { readFile } from "node:fs/promises";
 import { stdin, stderr, stdout } from "node:process";
 
-import { CLI_ERROR_CODE, runNetlistJson } from "./index.js";
+import { CLI_ERROR_CODE, inspectNetlistJson, runNetlistJson } from "./index.js";
 
-export const CLI_USAGE = "usage: spice-netlist-parser run --json <deck|- >\n";
+export const CLI_USAGE = "usage: spice-netlist-parser <inspect|run> --json <deck|- >\n";
 
 async function readStandardInput(): Promise<string> {
   let text = "";
@@ -16,14 +16,14 @@ async function readStandardInput(): Promise<string> {
 }
 
 export async function main(argv: readonly string[]): Promise<number> {
-  if (argv.length !== 3 || argv[0] !== "run" || argv[1] !== "--json") {
+  if (argv.length !== 3 || !["inspect", "run"].includes(argv[0]!) || argv[1] !== "--json") {
     stderr.write(CLI_USAGE);
     return 2;
   }
 
   try {
     const text = argv[2] === "-" ? await readStandardInput() : await readFile(argv[2]!, "utf8");
-    stdout.write(runNetlistJson(text));
+    stdout.write(argv[0] === "inspect" ? inspectNetlistJson(text) : runNetlistJson(text));
     return 0;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

@@ -31,6 +31,37 @@ fn cli_runs_a_deck_file_as_json() {
 }
 
 #[test]
+fn cli_inspects_the_complete_runnable_plan() {
+    let corpus_path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/spice/berkeley-v1-cli-corpus.json"
+    );
+    let corpus: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(corpus_path).unwrap()).unwrap();
+    let deck = corpus["cases"][0]["deck"].as_str().unwrap();
+    let path = env::temp_dir().join(format!(
+        "spice-netlist-parser-inspect-{}.cir",
+        process::id()
+    ));
+    fs::write(&path, deck).unwrap();
+
+    let output = Command::new(env!("CARGO_BIN_EXE_spice-netlist-parser"))
+        .args(["inspect", "--json", path.to_str().unwrap()])
+        .output()
+        .unwrap();
+    fs::remove_file(path).unwrap();
+
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let payload: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(payload["analyses"].as_array().unwrap().len(), 5);
+    assert_eq!(payload["analyses"][4]["kind"], "tf");
+}
+
+#[test]
 fn cli_reports_the_shared_stable_failure_code() {
     let corpus_path = concat!(
         env!("CARGO_MANIFEST_DIR"),

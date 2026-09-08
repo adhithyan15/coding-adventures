@@ -695,6 +695,7 @@ def run_netlist(text: str) -> list[AnalysisExecutionResult]:
 
 
 CLI_RESULT_SCHEMA_VERSION = 1
+CLI_INSPECTION_SCHEMA_VERSION = 1
 CLI_ERROR_CODE = "SPICE_CLI_ERROR"
 
 
@@ -713,6 +714,21 @@ def run_netlist_json(text: str) -> str:
                 "records": _cli_table_records(item.plan.analysis, item.table),
             }
             for index, item in enumerate(execution.executions)
+        ],
+    }
+    return json.dumps(payload, separators=(",", ":"), allow_nan=False, sort_keys=True) + "\n"
+
+
+def inspect_netlist_json(text: str) -> str:
+    """Return the cross-language CLI JSON inventory for a deck's runnable plan."""
+
+    parsed = parse_netlist(text)
+    payload = {
+        "schemaVersion": CLI_INSPECTION_SCHEMA_VERSION,
+        "title": parsed.title,
+        "analyses": [
+            {"index": step.index, "kind": step.kind}
+            for step in build_analysis_plan(parsed)
         ],
     }
     return json.dumps(payload, separators=(",", ":"), allow_nan=False, sort_keys=True) + "\n"

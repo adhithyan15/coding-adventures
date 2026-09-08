@@ -5085,7 +5085,7 @@ fn berkeley_app_facade_exports_package_manifest_json() {
     );
     assert_eq!(
         manifest.runnable_analysis_directives,
-        vec![".op", ".dc", ".ac", ".tran"]
+        vec![".op", ".dc", ".ac", ".tran", ".tf"]
     );
     assert!(manifest
         .artifact_capabilities
