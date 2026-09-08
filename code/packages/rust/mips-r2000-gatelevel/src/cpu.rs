@@ -17,7 +17,7 @@
 //!
 //! # Memory model
 //!
-//! 64 KB flat `Vec<u8>`, big-endian.  Words are 4-byte aligned.
+//! 64 KB flat D-flip-flop-backed memory, big-endian. Words are 4-byte aligned.
 //! Memory indexing (assembling bytes into words) uses Rust shifts/OR on
 //! raw byte values — this is *memory decoding*, not data-path computation,
 //! and is permitted by the gate-level constraint.
@@ -50,6 +50,8 @@ use crate::alu::{
 use crate::bits::{bits_to_u32, int_to_bits32, shl_32};
 use crate::decoder::{decode_instruction, InstrFormat};
 use crate::register_file::RegisterFile32;
+use crate::state::{clock_bit, DffMemory};
+use mips_r2000_simulator::{ExecutionResult, MipsError, MipsR2000Simulator, MipsState, StepTrace};
 
 /// Memory size in bytes: 64 KB.
 pub const MEM_SIZE: usize = 65536;
@@ -63,29 +65,21 @@ pub const HALT_OPCODE_WORD: u32 = 0x0000_000C;
 /// Address mask for the 64 KB memory space.
 const MEM_MASK: u32 = (MEM_SIZE as u32) - 1;
 
-/// Errors that can occur during MIPS R2000 execution.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum MipsError {
-    /// ADD/ADDI/SUB raised a signed overflow exception.
-    SignedOverflow(String),
-    /// Misaligned memory access.
-    Misalignment(String),
-    /// BREAK instruction encountered.
-    Break(u32),
-    /// Unknown opcode or funct.
-    UnknownOpcode(u32, u32),
-    /// Program does not fit in memory at the given origin.
-    InvalidLoad(String),
-}
+/// Exact persistent topology: 524,288 memory bits, 1,120 GPR/HI/LO/PC
+/// bits, and one halt bit.
+pub const FLIP_FLOP_COUNT: usize = MEM_SIZE * 8 + 35 * 32 + 1;
 
 /// The MIPS R2000 gate-level CPU.
 pub struct CpuMipsR2000 {
     /// Register file (32 GPRs + HI + LO + PC).
     pub rf: RegisterFile32,
     /// Flat 64 KB big-endian memory.
-    pub mem: Vec<u8>,
+    pub mem: DffMemory,
     /// True after SYSCALL (halt sentinel).
     pub halted: bool,
+    halt_q: u8,
+    loaded_origin: u32,
+    loaded_len: usize,
 }
 
 impl CpuMipsR2000 {
@@ -93,47 +87,167 @@ impl CpuMipsR2000 {
     pub fn new() -> Self {
         Self {
             rf: RegisterFile32::new(),
-            mem: vec![0u8; MEM_SIZE],
+            mem: DffMemory::new(MEM_SIZE),
             halted: false,
+            halt_q: 0,
+            loaded_origin: 0,
+            loaded_len: MEM_SIZE,
         }
     }
 
     /// Reset CPU to power-on state: zero all registers, clear memory.
     pub fn reset(&mut self) {
         self.rf = RegisterFile32::new();
-        self.mem.iter_mut().for_each(|b| *b = 0);
+        self.mem.clear();
         self.halted = false;
+        clock_bit(&mut self.halt_q, false);
+        self.loaded_origin = 0;
+        self.loaded_len = MEM_SIZE;
     }
 
     /// Load `program` bytes into memory at `origin`, then reset.
     ///
     /// Validates that the program fits before touching any CPU state; on
-    /// failure the CPU is left unchanged and `Err(MipsError::InvalidLoad)`
+    /// failure the CPU is left unchanged and a typed [`MipsError`]
     /// is returned so the caller can handle the error without a process abort.
     pub fn load(&mut self, program: &[u8], origin: u32) -> Result<(), MipsError> {
         let start = origin as usize;
         if start >= MEM_SIZE {
-            return Err(MipsError::InvalidLoad(format!(
-                "origin {:#010x} is outside the 64 KB memory range",
-                origin
-            )));
+            return Err(MipsError::ProgramOutOfRange {
+                origin,
+                length: program.len(),
+                memory_size: MEM_SIZE,
+            });
         }
         let available = MEM_SIZE - start;
         if program.len() > available {
-            return Err(MipsError::InvalidLoad(format!(
-                "program length {} exceeds available {} bytes at origin {:#06x}",
-                program.len(),
-                available,
-                origin
-            )));
+            return Err(MipsError::ProgramOutOfRange {
+                origin,
+                length: program.len(),
+                memory_size: MEM_SIZE,
+            });
         }
         // Validate first, mutate after: reset only on success so that a bad
         // origin/length call leaves the CPU in its previous state.
         self.reset();
-        let end = start + program.len();
-        self.mem[start..end].copy_from_slice(program);
+        self.mem.copy_from_slice(start, program);
         self.rf.write_pc(origin);
+        self.loaded_origin = origin;
+        self.loaded_len = program.len();
         Ok(())
+    }
+
+    /// Return every architectural and lifecycle field as an owned snapshot.
+    pub fn get_state(&self) -> MipsState {
+        MipsState {
+            pc: self.rf.read_pc(),
+            regs: std::array::from_fn(|index| self.rf.read_reg(index)),
+            hi: self.rf.read_hi(),
+            lo: self.rf.read_lo(),
+            memory: self.mem.snapshot(),
+            halted: self.halted,
+            loaded_origin: self.loaded_origin,
+            loaded_len: self.loaded_len,
+        }
+    }
+
+    /// Atomically restore a complete state after validating it against the
+    /// shared functional-machine contract.
+    pub fn restore(&mut self, state: &MipsState) -> Result<(), MipsError> {
+        let mut validator = MipsR2000Simulator::architectural();
+        validator.restore(state)?;
+
+        let mut rf = RegisterFile32::new();
+        for (index, value) in state.regs.iter().copied().enumerate() {
+            rf.write_reg(index, value);
+        }
+        rf.write_hi(state.hi);
+        rf.write_lo(state.lo);
+        rf.write_pc(state.pc);
+        self.rf = rf;
+        self.mem.restore_snapshot(&state.memory);
+        self.halted = state.halted;
+        clock_bit(&mut self.halt_q, state.halted);
+        self.loaded_origin = state.loaded_origin;
+        self.loaded_len = state.loaded_len;
+        Ok(())
+    }
+
+    /// Deterministically reset and install a program at address zero.
+    pub fn load_checked(&mut self, program: &[u8]) -> Result<(), MipsError> {
+        self.load_at_checked(program, 0)
+    }
+
+    /// Deterministically reset and install a program at an aligned origin.
+    pub fn load_at_checked(&mut self, program: &[u8], origin: u32) -> Result<(), MipsError> {
+        if origin & 3 != 0 {
+            return Err(MipsError::MisalignedProgram { origin });
+        }
+        self.load(program, origin)
+    }
+
+    /// Read a GPR with a typed bounds check.
+    pub fn read_register_checked(&self, index: usize) -> Result<u32, MipsError> {
+        if index >= 32 {
+            return Err(MipsError::InvalidRegister { index });
+        }
+        Ok(self.rf.read_reg(index))
+    }
+
+    /// Clock a GPR through its DFF bank; writes to R0 are discarded.
+    pub fn write_register_checked(&mut self, index: usize, value: u32) -> Result<(), MipsError> {
+        if index >= 32 {
+            return Err(MipsError::InvalidRegister { index });
+        }
+        self.rf.write_reg(index, value);
+        Ok(())
+    }
+
+    /// Read one byte with a typed direct bounds check.
+    pub fn read_byte_checked(&self, address: u32) -> Result<u8, MipsError> {
+        let index = address as usize;
+        if index >= MEM_SIZE {
+            return Err(MipsError::MemoryOutOfRange { address, width: 1 });
+        }
+        Ok(self.mem[index])
+    }
+
+    /// Clock one byte through its eight memory DFFs.
+    pub fn write_byte_checked(&mut self, address: u32, value: u8) -> Result<(), MipsError> {
+        let index = address as usize;
+        if index >= MEM_SIZE {
+            return Err(MipsError::MemoryOutOfRange { address, width: 1 });
+        }
+        self.mem.write(index, value);
+        Ok(())
+    }
+
+    /// Read one aligned big-endian word with typed bounds checks.
+    pub fn read_word_checked(&self, address: u32) -> Result<u32, MipsError> {
+        if address & 3 != 0 {
+            return Err(MipsError::MisalignedAccess { address, width: 4 });
+        }
+        if (address as usize)
+            .checked_add(4)
+            .is_none_or(|end| end > MEM_SIZE)
+        {
+            return Err(MipsError::MemoryOutOfRange { address, width: 4 });
+        }
+        self.load_word(address)
+    }
+
+    /// Clock one aligned big-endian word through its 32 memory DFFs.
+    pub fn write_word_checked(&mut self, address: u32, value: u32) -> Result<(), MipsError> {
+        if address & 3 != 0 {
+            return Err(MipsError::MisalignedAccess { address, width: 4 });
+        }
+        if (address as usize)
+            .checked_add(4)
+            .is_none_or(|end| end > MEM_SIZE)
+        {
+            return Err(MipsError::MemoryOutOfRange { address, width: 4 });
+        }
+        self.store_word(address, value)
     }
 
     /// Run the program for up to `max_steps` instructions.
@@ -159,7 +273,79 @@ impl CpuMipsR2000 {
         if self.halted {
             return Ok(());
         }
-        self.execute_one()
+        let result = self.execute_one();
+        clock_bit(&mut self.halt_q, self.halted);
+        result
+    }
+
+    /// Execute one instruction atomically and return the shared full-state trace.
+    pub fn step_checked(&mut self) -> Result<StepTrace, MipsError> {
+        if self.halted {
+            return Err(MipsError::Halted);
+        }
+        let before = self.get_state();
+        let mut oracle = MipsR2000Simulator::architectural();
+        oracle.restore(&before)?;
+        let expected = oracle.step_checked()?;
+        if let Err(error) = self.step() {
+            self.restore(&before)?;
+            return Err(error);
+        }
+        let after = self.get_state();
+        if after != expected.state_after {
+            self.restore(&before)?;
+            return Err(MipsError::InvalidState(format!(
+                "gate transition for {:#010x} diverged from the functional contract",
+                expected.raw
+            )));
+        }
+        Ok(StepTrace {
+            pc_before: before.pc,
+            pc_after: after.pc,
+            raw: expected.raw,
+            mnemonic: expected.mnemonic,
+            state_before: before,
+            state_after: after,
+        })
+    }
+
+    /// Execute already-loaded code transactionally for at most `max_steps`.
+    pub fn run_loaded_checked(&mut self, max_steps: usize) -> Result<ExecutionResult, MipsError> {
+        let original = self.get_state();
+        let mut traces = Vec::new();
+        while traces.len() < max_steps && !self.halted {
+            match self.step_checked() {
+                Ok(trace) => traces.push(trace),
+                Err(error) => {
+                    self.restore(&original)?;
+                    return Err(error);
+                }
+            }
+        }
+        Ok(ExecutionResult {
+            halted: self.halted,
+            steps: traces.len(),
+            pc: self.rf.read_pc() as i32,
+            final_state: self.get_state(),
+            traces,
+        })
+    }
+
+    /// Deterministically load and execute a program transactionally.
+    pub fn run_checked(
+        &mut self,
+        program: &[u8],
+        max_steps: usize,
+    ) -> Result<ExecutionResult, MipsError> {
+        let original = self.get_state();
+        self.load_checked(program)?;
+        match self.run_loaded_checked(max_steps) {
+            Ok(result) => Ok(result),
+            Err(error) => {
+                self.restore(&original)?;
+                Err(error)
+            }
+        }
     }
 
     // =========================================================================
@@ -191,11 +377,10 @@ impl CpuMipsR2000 {
 
     fn check_align(&self, addr: u32, size: u32) -> Result<(), MipsError> {
         if addr & (size - 1) != 0 {
-            return Err(MipsError::Misalignment(format!(
-                "Misaligned {} access at {:#06x}",
-                if size == 4 { "word" } else { "halfword" },
-                addr
-            )));
+            return Err(MipsError::MisalignedAccess {
+                address: addr,
+                width: size as usize,
+            });
         }
         Ok(())
     }
@@ -220,24 +405,24 @@ impl CpuMipsR2000 {
     }
 
     fn store_byte(&mut self, addr: u32, val: u8) {
-        self.mem[(addr & MEM_MASK) as usize] = val;
+        self.mem.write((addr & MEM_MASK) as usize, val);
     }
 
     fn store_half(&mut self, addr: u32, val: u16) -> Result<(), MipsError> {
         self.check_align(addr, 2)?;
         let a = (addr & MEM_MASK) as usize;
-        self.mem[a] = (val >> 8) as u8;
-        self.mem[a + 1] = val as u8;
+        self.mem.write(a, (val >> 8) as u8);
+        self.mem.write(a + 1, val as u8);
         Ok(())
     }
 
     fn store_word(&mut self, addr: u32, val: u32) -> Result<(), MipsError> {
         self.check_align(addr, 4)?;
         let a = (addr & MEM_MASK) as usize;
-        self.mem[a] = (val >> 24) as u8;
-        self.mem[a + 1] = (val >> 16) as u8;
-        self.mem[a + 2] = (val >> 8) as u8;
-        self.mem[a + 3] = val as u8;
+        self.mem.write(a, (val >> 24) as u8);
+        self.mem.write(a + 1, (val >> 16) as u8);
+        self.mem.write(a + 2, (val >> 8) as u8);
+        self.mem.write(a + 3, val as u8);
         Ok(())
     }
 
@@ -262,7 +447,7 @@ impl CpuMipsR2000 {
         let d = decode_instruction(iw);
 
         match d.format {
-            InstrFormat::R => self.exec_r_type(d),
+            InstrFormat::R => self.exec_r_type(d, iw),
             InstrFormat::J => {
                 if d.op == 2 {
                     self.exec_j(d.target26);
@@ -271,7 +456,7 @@ impl CpuMipsR2000 {
                 }
                 Ok(())
             }
-            InstrFormat::I => self.exec_i_type(d),
+            InstrFormat::I => self.exec_i_type(d, iw),
         }
     }
 
@@ -279,7 +464,11 @@ impl CpuMipsR2000 {
     // R-type dispatch
     // =========================================================================
 
-    fn exec_r_type(&mut self, d: crate::decoder::DecodedInstruction) -> Result<(), MipsError> {
+    fn exec_r_type(
+        &mut self,
+        d: crate::decoder::DecodedInstruction,
+        raw: u32,
+    ) -> Result<(), MipsError> {
         let rs = d.rs as usize;
         let rt = d.rt as usize;
         let rd = d.rd as usize;
@@ -343,7 +532,7 @@ impl CpuMipsR2000 {
             // ── BREAK ──────────────────────────────────────────────────────────
             0x0D => {
                 let pc_instr = self.rf.read_pc().wrapping_sub(4) & MEM_MASK;
-                return Err(MipsError::Break(pc_instr));
+                return Err(MipsError::Break { pc: pc_instr });
             }
 
             // ── HI/LO moves ────────────────────────────────────────────────────
@@ -397,10 +586,7 @@ impl CpuMipsR2000 {
                 // ADD rd, rs, rt (signed; trap on overflow)
                 let r = add32(rs_val, rt_val, 0);
                 if r.overflow != 0 {
-                    return Err(MipsError::SignedOverflow(format!(
-                        "ADD: {:#010x} + {:#010x}",
-                        rs_val, rt_val
-                    )));
+                    return Err(MipsError::SignedOverflow { mnemonic: "ADD" });
                 }
                 self.rf.write_reg(rd, r.result);
             }
@@ -412,10 +598,7 @@ impl CpuMipsR2000 {
                 // SUB rd, rs, rt (signed; trap on overflow)
                 let r = sub32(rs_val, rt_val);
                 if r.overflow != 0 {
-                    return Err(MipsError::SignedOverflow(format!(
-                        "SUB: {:#010x} - {:#010x}",
-                        rs_val, rt_val
-                    )));
+                    return Err(MipsError::SignedOverflow { mnemonic: "SUB" });
                 }
                 self.rf.write_reg(rd, r.result);
             }
@@ -446,7 +629,7 @@ impl CpuMipsR2000 {
 
             _ => {
                 let pc_instr = self.rf.read_pc().wrapping_sub(4) & MEM_MASK;
-                return Err(MipsError::UnknownOpcode(funct as u32, pc_instr));
+                return Err(MipsError::UnknownInstruction { raw, pc: pc_instr });
             }
         }
 
@@ -459,7 +642,7 @@ impl CpuMipsR2000 {
 
     fn exec_j(&mut self, target26: u32) {
         let pc_now = self.rf.read_pc(); // already past instruction
-        // Target = (pc_now & 0xF000_0000) | (target26 << 2)
+                                        // Target = (pc_now & 0xF000_0000) | (target26 << 2)
         let shifted = shl_32(target26, 2);
         let new_pc = ((pc_now & 0xF000_0000) | (shifted & 0x0FFF_FFFF)) & MEM_MASK;
         self.rf.write_pc(new_pc);
@@ -477,7 +660,11 @@ impl CpuMipsR2000 {
     // I-type dispatch
     // =========================================================================
 
-    fn exec_i_type(&mut self, d: crate::decoder::DecodedInstruction) -> Result<(), MipsError> {
+    fn exec_i_type(
+        &mut self,
+        d: crate::decoder::DecodedInstruction,
+        raw: u32,
+    ) -> Result<(), MipsError> {
         let rs = d.rs as usize;
         let rt = d.rt as usize;
         let imm = d.imm16;
@@ -541,10 +728,7 @@ impl CpuMipsR2000 {
                 let imm_u = imm as u32;
                 let r = add32(rs_val, imm_u, 0);
                 if r.overflow != 0 {
-                    return Err(MipsError::SignedOverflow(format!(
-                        "ADDI: {:#010x} + {}",
-                        rs_val, imm
-                    )));
+                    return Err(MipsError::SignedOverflow { mnemonic: "ADDI" });
                 }
                 self.rf.write_reg(rt, r.result);
             }
@@ -733,7 +917,7 @@ impl CpuMipsR2000 {
 
             _ => {
                 let pc_instr = self.rf.read_pc().wrapping_sub(4) & MEM_MASK;
-                return Err(MipsError::UnknownOpcode(op as u32, pc_instr));
+                return Err(MipsError::UnknownInstruction { raw, pc: pc_instr });
             }
         }
 
@@ -750,20 +934,17 @@ impl CpuMipsR2000 {
         let pc_now = self.rf.read_pc();
 
         match rt {
-            0x00 => {
+            0x00 if rs_negative != 0 => {
                 // BLTZ: branch if rs < 0
-                if rs_negative != 0 {
-                    let target = pc_now.wrapping_add((offset as u32).wrapping_mul(4)) & MEM_MASK;
-                    self.rf.write_pc(target);
-                }
+                let target = pc_now.wrapping_add((offset as u32).wrapping_mul(4)) & MEM_MASK;
+                self.rf.write_pc(target);
             }
-            0x01 => {
+            0x01 if rs_negative == 0 => {
                 // BGEZ: branch if rs >= 0
-                if rs_negative == 0 {
-                    let target = pc_now.wrapping_add((offset as u32).wrapping_mul(4)) & MEM_MASK;
-                    self.rf.write_pc(target);
-                }
+                let target = pc_now.wrapping_add((offset as u32).wrapping_mul(4)) & MEM_MASK;
+                self.rf.write_pc(target);
             }
+            0x00 | 0x01 => {}
             0x10 => {
                 // BLTZAL: $ra = pc_now; branch if rs < 0
                 self.rf.write_reg(REG_RA, pc_now);
@@ -817,7 +998,11 @@ mod tests {
 
     // R-type: op=0, rs, rt, rd, shamt, funct
     fn r_instr(rs: u8, rt: u8, rd: u8, shamt: u8, funct: u8) -> u32 {
-        ((rs as u32) << 21) | ((rt as u32) << 16) | ((rd as u32) << 11) | ((shamt as u32) << 6) | (funct as u32)
+        ((rs as u32) << 21)
+            | ((rt as u32) << 16)
+            | ((rd as u32) << 11)
+            | ((shamt as u32) << 6)
+            | (funct as u32)
     }
 
     // I-type: op, rs, rt, imm16
@@ -881,7 +1066,7 @@ mod tests {
         ]
         .concat();
         let result = cpu.execute(&prog, 0, 100);
-        assert!(matches!(result, Err(MipsError::SignedOverflow(_))));
+        assert!(matches!(result, Err(MipsError::SignedOverflow { .. })));
     }
 
     #[test]
@@ -898,7 +1083,7 @@ mod tests {
         ]
         .concat();
         let result = cpu.execute(&prog, 0, 100);
-        assert!(matches!(result, Err(MipsError::SignedOverflow(_))));
+        assert!(matches!(result, Err(MipsError::SignedOverflow { .. })));
     }
 
     // ── Shifts ───────────────────────────────────────────────────────────────
@@ -909,11 +1094,11 @@ mod tests {
         // $t0 = 8; SLL $t1,$t0,2 → 32; SRL $t2,$t0,1 → 4
         // $t3 = 0x8000_0000; SRA $t4, $t3, 1 → 0xC000_0000
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, 8)),                   // $t0 = 8
-            encode(r_instr(0, 8, 9, 2, 0x00)),                 // SLL $t1, $t0, 2
-            encode(r_instr(0, 8, 10, 1, 0x02)),                // SRL $t2, $t0, 1
-            encode(i_instr(0x0F, 0, 11, -0x8000i16)),          // LUI $t3, 0x8000
-            encode(r_instr(0, 11, 12, 1, 0x03)),               // SRA $t4, $t3, 1
+            encode(i_instr(0x09, 0, 8, 8)),           // $t0 = 8
+            encode(r_instr(0, 8, 9, 2, 0x00)),        // SLL $t1, $t0, 2
+            encode(r_instr(0, 8, 10, 1, 0x02)),       // SRL $t2, $t0, 1
+            encode(i_instr(0x0F, 0, 11, -0x8000i16)), // LUI $t3, 0x8000
+            encode(r_instr(0, 11, 12, 1, 0x03)),      // SRA $t4, $t3, 1
             halt(),
         ]
         .concat();
@@ -928,9 +1113,9 @@ mod tests {
         let mut cpu = CpuMipsR2000::new();
         // $t0=4 (shift), $t1=1; SLLV $t2,$t1,$t0 → 16
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, 4)),      // $t0 = 4 (shift amount)
-            encode(i_instr(0x09, 0, 9, 1)),       // $t1 = 1 (value)
-            encode(r_instr(8, 9, 10, 0, 0x04)),   // SLLV $t2, $t1, $t0
+            encode(i_instr(0x09, 0, 8, 4)),     // $t0 = 4 (shift amount)
+            encode(i_instr(0x09, 0, 9, 1)),     // $t1 = 1 (value)
+            encode(r_instr(8, 9, 10, 0, 0x04)), // SLLV $t2, $t1, $t0
             halt(),
         ]
         .concat();
@@ -977,8 +1162,8 @@ mod tests {
         let prog: Vec<u8> = [
             encode(i_instr(0x0F, 0, 8, -0x8000i16)), // LUI 0x8000
             encode(i_instr(0x09, 0, 9, 1)),
-            encode(r_instr(8, 9, 10, 0, 0x2A)),       // SLT
-            encode(r_instr(8, 9, 11, 0, 0x2B)),       // SLTU
+            encode(r_instr(8, 9, 10, 0, 0x2A)), // SLT
+            encode(r_instr(8, 9, 11, 0, 0x2B)), // SLTU
             halt(),
         ]
         .concat();
@@ -996,7 +1181,7 @@ mod tests {
         let prog: Vec<u8> = [
             encode(i_instr(0x09, 0, 8, 6)),
             encode(i_instr(0x09, 0, 9, 7)),
-            encode(r_instr(8, 9, 0, 0, 0x19)), // MULTU
+            encode(r_instr(8, 9, 0, 0, 0x19)),  // MULTU
             encode(r_instr(0, 0, 10, 0, 0x12)), // MFLO $t2
             encode(r_instr(0, 0, 11, 0, 0x10)), // MFHI $t3
             halt(),
@@ -1052,8 +1237,8 @@ mod tests {
         // $t0=0xDEAD; MTHI $t0; MFHI $t1 → 0xDEAD
         let prog: Vec<u8> = [
             encode(i_instr(0x09, 0, 8, 0x1234)),
-            encode(r_instr(8, 0, 0, 0, 0x11)),  // MTHI $t0
-            encode(r_instr(0, 0, 9, 0, 0x10)),  // MFHI $t1
+            encode(r_instr(8, 0, 0, 0, 0x11)), // MTHI $t0
+            encode(r_instr(0, 0, 9, 0, 0x10)), // MFHI $t1
             encode(i_instr(0x09, 0, 10, 0x5678)),
             encode(r_instr(10, 0, 0, 0, 0x13)), // MTLO
             encode(r_instr(0, 0, 11, 0, 0x12)), // MFLO
@@ -1076,13 +1261,13 @@ mod tests {
         // Layout: [ADDIU t0,5][ADDIU t1,5][BEQ t0,t1,+2][NOP][NOP][ADDIU t2,99][HALT]
         // Offset is in instructions past BEQ's PC+4 = 3*4=12, +2*4=8 → target=20
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, 5)),            // 0: $t0=5
-            encode(i_instr(0x09, 0, 9, 5)),            // 4: $t1=5
-            encode(i_instr(0x04, 8, 9, 2)),             // 8: BEQ $t0,$t1,+2 → PC=12+8=20
-            encode(0x0000_0000u32),                      // 12: NOP
-            encode(0x0000_0000u32),                      // 16: NOP
-            encode(i_instr(0x09, 0, 10, 99)),           // 20: $t2=99  ← skipped if taken?
-            halt(),                                      // 24: HALT
+            encode(i_instr(0x09, 0, 8, 5)),   // 0: $t0=5
+            encode(i_instr(0x09, 0, 9, 5)),   // 4: $t1=5
+            encode(i_instr(0x04, 8, 9, 2)),   // 8: BEQ $t0,$t1,+2 → PC=12+8=20
+            encode(0x0000_0000u32),           // 12: NOP
+            encode(0x0000_0000u32),           // 16: NOP
+            encode(i_instr(0x09, 0, 10, 99)), // 20: $t2=99  ← skipped if taken?
+            halt(),                           // 24: HALT
         ]
         .concat();
         // BEQ taken: PC after BEQ fetch=12, target=12+2*4=20, so exec 20 (ADDIU t2,99), then HALT
@@ -1093,7 +1278,7 @@ mod tests {
         // At addr 24: HALT
         cpu.execute(&prog, 0, 100).unwrap();
         assert_eq!(cpu.rf.read_reg(10), 99); // The ADDIU executes (BEQ target is the ADDIU)
-        // BEQ skips two NOPs at 12,16 and lands on ADDIU at 20 then HALT at 24
+                                             // BEQ skips two NOPs at 12,16 and lands on ADDIU at 20 then HALT at 24
     }
 
     #[test]
@@ -1103,8 +1288,8 @@ mod tests {
         let prog: Vec<u8> = [
             encode(i_instr(0x09, 0, 8, 5)),
             encode(i_instr(0x09, 0, 9, 5)),
-            encode(i_instr(0x05, 8, 9, 5)),   // BNE not taken
-            encode(i_instr(0x09, 0, 10, 1)),  // $t2=1 (should execute)
+            encode(i_instr(0x05, 8, 9, 5)),  // BNE not taken
+            encode(i_instr(0x09, 0, 10, 1)), // $t2=1 (should execute)
             halt(),
         ]
         .concat();
@@ -1118,11 +1303,11 @@ mod tests {
         // $t0=-1; BLEZ $t0,1 → taken (skip NOP, hit ADDIU t1,1, then HALT)
         // Then $t1=1 (after the skip)
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, -1i16)),   // 0: $t0=-1
-            encode(i_instr(0x06, 8, 0, 1)),        // 4: BLEZ $t0,+1 → target=8+4=12
-            encode(0x0000_0000u32),                 // 8: NOP (skipped)
-            encode(i_instr(0x09, 0, 9, 1)),        // 12: $t1=1 ← lands here
-            halt(),                                 // 16: HALT
+            encode(i_instr(0x09, 0, 8, -1i16)), // 0: $t0=-1
+            encode(i_instr(0x06, 8, 0, 1)),     // 4: BLEZ $t0,+1 → target=8+4=12
+            encode(0x0000_0000u32),             // 8: NOP (skipped)
+            encode(i_instr(0x09, 0, 9, 1)),     // 12: $t1=1 ← lands here
+            halt(),                             // 16: HALT
         ]
         .concat();
         cpu.execute(&prog, 0, 100).unwrap();
@@ -1134,10 +1319,10 @@ mod tests {
         let mut cpu = CpuMipsR2000::new();
         // $t0=1 (positive); BGEZ $t0,1 → taken (rs>=0)
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, 1)),        // $t0=1
-            encode(i_instr(0x01, 8, 0x01, 1)),     // BGEZ $t0,+1 → target=8+4=12
-            encode(0x0000_0000u32),                 // NOP (skipped)
-            encode(i_instr(0x09, 0, 9, 42)),        // $t1=42 ← lands here
+            encode(i_instr(0x09, 0, 8, 1)),    // $t0=1
+            encode(i_instr(0x01, 8, 0x01, 1)), // BGEZ $t0,+1 → target=8+4=12
+            encode(0x0000_0000u32),            // NOP (skipped)
+            encode(i_instr(0x09, 0, 9, 42)),   // $t1=42 ← lands here
             halt(),
         ]
         .concat();
@@ -1156,9 +1341,9 @@ mod tests {
         let halt_addr = 8u32;
         let prog: Vec<u8> = [
             encode(i_instr(0x09, 0, 8, halt_addr as i16)), // $t0=8
-            encode(r_instr(8, 0, 0, 0, 0x08)),              // JR $t0
-            encode(i_instr(0x09, 0, 9, 99)),                // ADDIU (skipped)
-            halt(),                                          // addr 12
+            encode(r_instr(8, 0, 0, 0, 0x08)),             // JR $t0
+            encode(i_instr(0x09, 0, 9, 99)),               // ADDIU (skipped)
+            halt(),                                        // addr 12
         ]
         .concat();
         // JR jumps to addr 8, but halt() is at addr 12... let me fix the layout.
@@ -1173,9 +1358,9 @@ mod tests {
         let halt_addr = 12u32;
         let prog: Vec<u8> = [
             encode(i_instr(0x09, 0, 8, halt_addr as i16)), // 0: $t0=12
-            encode(r_instr(8, 0, 0, 0, 0x08)),              // 4: JR $t0 → jump to 12
-            encode(i_instr(0x09, 0, 9, 99)),                // 8: ADDIU (skipped)
-            halt(),                                          // 12: HALT
+            encode(r_instr(8, 0, 0, 0, 0x08)),             // 4: JR $t0 → jump to 12
+            encode(i_instr(0x09, 0, 9, 99)),               // 8: ADDIU (skipped)
+            halt(),                                        // 12: HALT
         ]
         .concat();
         cpu.execute(&prog, 0, 100).unwrap();
@@ -1194,11 +1379,11 @@ mod tests {
         // 0x000C: JR $ra
         // 0x0010: HALT
         let prog: Vec<u8> = [
-            encode(j_instr(0x03, 2)),                // 0: JAL 2 (target26=2 → PC = 0|(2<<2) = 8)
-            halt(),                                  // 4: (shouldn't reach)
-            encode(i_instr(0x09, 0, 8, 42)),         // 8: $t0=42
-            encode(r_instr(31, 0, 0, 0, 0x08)),      // 12: JR $ra
-            halt(),                                  // 16: HALT (return point)
+            encode(j_instr(0x03, 2)),        // 0: JAL 2 (target26=2 → PC = 0|(2<<2) = 8)
+            halt(),                          // 4: (shouldn't reach)
+            encode(i_instr(0x09, 0, 8, 42)), // 8: $t0=42
+            encode(r_instr(31, 0, 0, 0, 0x08)), // 12: JR $ra
+            halt(),                          // 16: HALT (return point)
         ]
         .concat();
         cpu.execute(&prog, 0, 100).unwrap();
@@ -1231,8 +1416,8 @@ mod tests {
         // $t0=0xFF; ANDI $t1,$t0,0x0F → 0x0F; XORI $t2,$t0,0x55 → 0xAA
         let prog: Vec<u8> = [
             encode(i_instr(0x09, 0, 8, 0xFF)),
-            encode(i_instr(0x0C, 8, 9, 0x0F)),   // ANDI
-            encode(i_instr(0x0E, 8, 10, 0x55)),  // XORI
+            encode(i_instr(0x0C, 8, 9, 0x0F)),  // ANDI
+            encode(i_instr(0x0E, 8, 10, 0x55)), // XORI
             halt(),
         ]
         .concat();
@@ -1247,9 +1432,9 @@ mod tests {
         // $t0=-5 (0xFFFF_FFFB); SLTI $t1,$t0,0 → 1 (-5<0 signed)
         // SLTIU $t2,$t0,1 → 0 (0xFFFF_FFFB > 1 unsigned)
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, -5i16)),    // $t0=-5
-            encode(i_instr(0x0A, 8, 9, 0)),         // SLTI $t1,$t0,0 → 1
-            encode(i_instr(0x0B, 8, 10, 1)),        // SLTIU $t2,$t0,1 → 0
+            encode(i_instr(0x09, 0, 8, -5i16)), // $t0=-5
+            encode(i_instr(0x0A, 8, 9, 0)),     // SLTI $t1,$t0,0 → 1
+            encode(i_instr(0x0B, 8, 10, 1)),    // SLTIU $t2,$t0,1 → 0
             halt(),
         ]
         .concat();
@@ -1266,11 +1451,11 @@ mod tests {
         // Store 0xDEAD_BEEF to address 0x100; load it back
         // $t0 = 0x100 (base), $t1 = 0xDEAD_BEEF
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, 0x100)),        // $t0=0x100
-            encode(i_instr(0x0F, 0, 9, -0x2153i16)),   // LUI 0xDEAD
-            encode(i_instr(0x0D, 9, 9, -0x4111i16)),   // ORI 0xBEEF (zero-ext)
-            encode(i_instr(0x2B, 8, 9, 0)),             // SW $t1, 0($t0)
-            encode(i_instr(0x23, 8, 10, 0)),            // LW $t2, 0($t0)
+            encode(i_instr(0x09, 0, 8, 0x100)),      // $t0=0x100
+            encode(i_instr(0x0F, 0, 9, -0x2153i16)), // LUI 0xDEAD
+            encode(i_instr(0x0D, 9, 9, -0x4111i16)), // ORI 0xBEEF (zero-ext)
+            encode(i_instr(0x2B, 8, 9, 0)),          // SW $t1, 0($t0)
+            encode(i_instr(0x23, 8, 10, 0)),         // LW $t2, 0($t0)
             halt(),
         ]
         .concat();
@@ -1283,11 +1468,11 @@ mod tests {
         let mut cpu = CpuMipsR2000::new();
         // Store byte 0xFF to addr 0x200; LBU (zero-extend) and LB (sign-extend)
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, 0x200)),       // $t0=0x200
-            encode(i_instr(0x09, 0, 9, -1i16)),       // $t1=0xFF
-            encode(i_instr(0x28, 8, 9, 0)),            // SB $t1, 0($t0)
-            encode(i_instr(0x24, 8, 10, 0)),           // LBU → 0xFF (zero-ext)
-            encode(i_instr(0x20, 8, 11, 0)),           // LB  → 0xFFFF_FFFF (sign-ext)
+            encode(i_instr(0x09, 0, 8, 0x200)), // $t0=0x200
+            encode(i_instr(0x09, 0, 9, -1i16)), // $t1=0xFF
+            encode(i_instr(0x28, 8, 9, 0)),     // SB $t1, 0($t0)
+            encode(i_instr(0x24, 8, 10, 0)),    // LBU → 0xFF (zero-ext)
+            encode(i_instr(0x20, 8, 11, 0)),    // LB  → 0xFFFF_FFFF (sign-ext)
             halt(),
         ]
         .concat();
@@ -1301,12 +1486,12 @@ mod tests {
         let mut cpu = CpuMipsR2000::new();
         // Store 0x8001 as halfword; LHU and LH
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, 0x300)),       // $t0=0x300
-            encode(i_instr(0x0F, 0, 9, -0x7FFFi16)),  // LUI 0x8001... actually LUI 0x8001
-            encode(i_instr(0x09, 0, 9, -0x7FFFi16)),  // $t1=0x8001 via ADDIU
-            encode(i_instr(0x29, 8, 9, 0)),            // SH $t1, 0($t0)
-            encode(i_instr(0x25, 8, 10, 0)),           // LHU → 0x8001 (zero-ext)
-            encode(i_instr(0x21, 8, 11, 0)),           // LH  → 0xFFFF_8001 (sign-ext)
+            encode(i_instr(0x09, 0, 8, 0x300)),      // $t0=0x300
+            encode(i_instr(0x0F, 0, 9, -0x7FFFi16)), // LUI 0x8001... actually LUI 0x8001
+            encode(i_instr(0x09, 0, 9, -0x7FFFi16)), // $t1=0x8001 via ADDIU
+            encode(i_instr(0x29, 8, 9, 0)),          // SH $t1, 0($t0)
+            encode(i_instr(0x25, 8, 10, 0)),         // LHU → 0x8001 (zero-ext)
+            encode(i_instr(0x21, 8, 11, 0)),         // LH  → 0xFFFF_8001 (sign-ext)
             halt(),
         ]
         .concat();
@@ -1322,9 +1507,9 @@ mod tests {
         let mut cpu = CpuMipsR2000::new();
         // Try to write to R0 via ADDU $zero, $zero, $t0 (rd=0)
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, 99)),           // $t0=99
-            encode(r_instr(0, 8, 0, 0, 0x21)),         // ADDU $zero,$zero,$t0 (rd=0, discarded)
-            encode(r_instr(0, 0, 9, 0, 0x21)),         // ADDU $t1,$zero,$zero → 0
+            encode(i_instr(0x09, 0, 8, 99)),   // $t0=99
+            encode(r_instr(0, 8, 0, 0, 0x21)), // ADDU $zero,$zero,$t0 (rd=0, discarded)
+            encode(r_instr(0, 0, 9, 0, 0x21)), // ADDU $t1,$zero,$zero → 0
             halt(),
         ]
         .concat();
@@ -1341,11 +1526,11 @@ mod tests {
         // $t0=5 (>= 0); BGEZAL $t0, 1 → $ra = pc_after, branch taken
         // Layout: [ADDIU $t0,5][BGEZAL +1][NOP][ADDIU $t1,42][HALT]
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, 5)),          // 0: $t0=5
-            encode(i_instr(0x01, 8, 0x11, 1)),       // 4: BGEZAL $t0,+1 → target=8+4=12
-            encode(0x0000_0000u32),                   // 8: NOP (skipped)
-            encode(i_instr(0x09, 0, 9, 42)),          // 12: $t1=42
-            halt(),                                   // 16: HALT
+            encode(i_instr(0x09, 0, 8, 5)),    // 0: $t0=5
+            encode(i_instr(0x01, 8, 0x11, 1)), // 4: BGEZAL $t0,+1 → target=8+4=12
+            encode(0x0000_0000u32),            // 8: NOP (skipped)
+            encode(i_instr(0x09, 0, 9, 42)),   // 12: $t1=42
+            halt(),                            // 16: HALT
         ]
         .concat();
         cpu.execute(&prog, 0, 100).unwrap();
@@ -1363,16 +1548,16 @@ mod tests {
         // LWR $t1, 3($t0) (ea=0x403, byte_offset=3, load byte 3 → low byte)
         // Together LWL+LWR loads the word from an unaligned address
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, 0x400)),         // $t0=0x400
-            encode(i_instr(0x0F, 0, 9, 0x1234)),        // LUI $t1, 0x1234
-            encode(i_instr(0x0D, 9, 9, 0x5678)),        // ORI $t1, $t1, 0x5678
-            encode(i_instr(0x2B, 8, 9, 0)),              // SW $t1, 0($t0) → mem[0x400]=0x1234_5678
+            encode(i_instr(0x09, 0, 8, 0x400)),  // $t0=0x400
+            encode(i_instr(0x0F, 0, 9, 0x1234)), // LUI $t1, 0x1234
+            encode(i_instr(0x0D, 9, 9, 0x5678)), // ORI $t1, $t1, 0x5678
+            encode(i_instr(0x2B, 8, 9, 0)),      // SW $t1, 0($t0) → mem[0x400]=0x1234_5678
             // LWL byte_offset=1: loads mem bytes 0,1 (0x12,0x34) into high 2 bytes of $t2
             // $t2 initial=0; result = (0x1234_5678 & 0xFFFF_0000) | (0 & 0x0000_FFFF) = 0x1234_0000
-            encode(i_instr(0x22, 8, 10, 1)),             // LWL $t2, 1($t0) ea=0x401
+            encode(i_instr(0x22, 8, 10, 1)), // LWL $t2, 1($t0) ea=0x401
             // Now load LWR byte_offset=1: loads bytes 1,2,3 (0x34,0x56,0x78) into low 3 bytes
             // $t3 initial=0; result = (0 & 0xFF00_0000) | (0x1234_5678 & 0x00FF_FFFF) = 0x0034_5678
-            encode(i_instr(0x26, 8, 11, 1)),             // LWR $t3, 1($t0) ea=0x401
+            encode(i_instr(0x26, 8, 11, 1)), // LWR $t3, 1($t0) ea=0x401
             halt(),
         ]
         .concat();
@@ -1389,12 +1574,12 @@ mod tests {
         // Try to LW from address 0x101 (not 4-byte aligned)
         let prog: Vec<u8> = [
             encode(i_instr(0x09, 0, 8, 0x101)), // $t0=0x101
-            encode(i_instr(0x23, 8, 9, 0)),      // LW $t1, 0($t0) — misaligned
+            encode(i_instr(0x23, 8, 9, 0)),     // LW $t1, 0($t0) — misaligned
             halt(),
         ]
         .concat();
         let result = cpu.execute(&prog, 0, 100);
-        assert!(matches!(result, Err(MipsError::Misalignment(_))));
+        assert!(matches!(result, Err(MipsError::MisalignedAccess { .. })));
     }
 
     // ── NOP ──────────────────────────────────────────────────────────────────
@@ -1423,11 +1608,11 @@ mod tests {
         let mut cpu = CpuMipsR2000::new();
         // -10 / 3 = -3 remainder -1
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, -10i16)),   // $t0 = -10
-            encode(i_instr(0x09, 0, 9, 3)),         // $t1 = 3
-            encode(r_instr(8, 9, 0, 0, 0x1A)),      // DIV
-            encode(r_instr(0, 0, 10, 0, 0x12)),     // MFLO → quotient
-            encode(r_instr(0, 0, 11, 0, 0x10)),     // MFHI → remainder
+            encode(i_instr(0x09, 0, 8, -10i16)), // $t0 = -10
+            encode(i_instr(0x09, 0, 9, 3)),      // $t1 = 3
+            encode(r_instr(8, 9, 0, 0, 0x1A)),   // DIV
+            encode(r_instr(0, 0, 10, 0, 0x12)),  // MFLO → quotient
+            encode(r_instr(0, 0, 11, 0, 0x10)),  // MFHI → remainder
             halt(),
         ]
         .concat();
@@ -1447,7 +1632,7 @@ mod tests {
         ]
         .concat();
         let result = cpu.execute(&prog, 0, 100);
-        assert!(matches!(result, Err(MipsError::Break(_))));
+        assert!(matches!(result, Err(MipsError::Break { .. })));
     }
 
     // ── Iteration-count guard (multu large values) ────────────────────────────
@@ -1457,10 +1642,10 @@ mod tests {
         let mut cpu = CpuMipsR2000::new();
         // 0xFFFF_FFFF * 0xFFFF_FFFF = 0xFFFF_FFFE_0000_0001
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, -1i16)),     // $t0=0xFFFF_FFFF
-            encode(r_instr(8, 8, 0, 0, 0x19)),       // MULTU $t0,$t0
-            encode(r_instr(0, 0, 9, 0, 0x12)),       // MFLO
-            encode(r_instr(0, 0, 10, 0, 0x10)),      // MFHI
+            encode(i_instr(0x09, 0, 8, -1i16)), // $t0=0xFFFF_FFFF
+            encode(r_instr(8, 8, 0, 0, 0x19)),  // MULTU $t0,$t0
+            encode(r_instr(0, 0, 9, 0, 0x12)),  // MFLO
+            encode(r_instr(0, 0, 10, 0, 0x10)), // MFHI
             halt(),
         ]
         .concat();
@@ -1485,20 +1670,20 @@ mod tests {
         //   result: (0xDEAD_BEEF & 0xFFFF_0000) | (0x1234_5678 & 0x0000_FFFF)
         //         = 0xDEAD_0000 | 0x5678 = 0xDEAD_5678
         let prog: Vec<u8> = [
-            encode(i_instr(0x09, 0, 8, 0x500)),         // $t0=0x500
+            encode(i_instr(0x09, 0, 8, 0x500)), // $t0=0x500
             // Set mem[0x500]=0x1234_5678
-            encode(i_instr(0x0F, 0, 9, 0x1234)),        // LUI 0x1234
-            encode(i_instr(0x0D, 9, 9, 0x5678)),        // ORI 0x5678
-            encode(i_instr(0x2B, 8, 9, 0)),              // SW $t1, 0($t0)
+            encode(i_instr(0x0F, 0, 9, 0x1234)), // LUI 0x1234
+            encode(i_instr(0x0D, 9, 9, 0x5678)), // ORI 0x5678
+            encode(i_instr(0x2B, 8, 9, 0)),      // SW $t1, 0($t0)
             // Set $t1=0xDEAD_BEEF
-            encode(i_instr(0x0F, 0, 9, -0x2153i16)),    // LUI 0xDEAD
-            encode(i_instr(0x0D, 9, 9, -0x4111i16)),    // ORI 0xBEEF
+            encode(i_instr(0x0F, 0, 9, -0x2153i16)), // LUI 0xDEAD
+            encode(i_instr(0x0D, 9, 9, -0x4111i16)), // ORI 0xBEEF
             // SWL at ea=0x501, byte_offset=1: store high 2 bytes of $t1 into mem[0x500..0x501]
             // shift=(3-1)*8=16; mem keeps low 16 bits; rt provides high 16 bits
             // result = (0xDEAD_BEEF & 0xFFFF_0000) | (0x1234_5678 & 0x0000_FFFF)
             //        = 0xDEAD_0000 | 0x0000_5678 = 0xDEAD_5678
-            encode(i_instr(0x2A, 8, 9, 1)),              // SWL $t1, 1($t0)
-            encode(i_instr(0x23, 8, 10, 0)),             // LW $t2, 0($t0) → verify
+            encode(i_instr(0x2A, 8, 9, 1)),  // SWL $t1, 1($t0)
+            encode(i_instr(0x23, 8, 10, 0)), // LW $t2, 0($t0) → verify
             halt(),
         ]
         .concat();

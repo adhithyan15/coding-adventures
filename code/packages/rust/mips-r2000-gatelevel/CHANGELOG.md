@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.2.0] — 2026-08-28
+
+### Added
+
+- Exact 525,409-DFF persistent topology: 524,288 memory bits, 1,120 bits for
+  32 GPRs plus HI/LO/PC, and one halt latch. Simulator-owned register, memory,
+  PC, and halt writes clock through the sequential-gate primitive.
+- Shared `MipsState`, `MipsError`, `StepTrace`, and `ExecutionResult` contract
+  with complete snapshots, validated restore, typed direct access, checked
+  program loading, atomic one-step traces, and transactional bounded runs.
+- A reproducible 218-vector Python/functional full-state differential and seven
+  lifecycle tests covering topology, reset, DFF state restoration, typed
+  boundaries, halt, complete results, and rollback.
+
+### Changed
+
+- Gate execution now uses the functional package's typed error surface and
+  checks each successful complete transition against the functional contract.
+- Strict formatting, Clippy, and rustdoc are required completion gates.
+
 ## [0.1.0] — 2026-06-16
 
 Initial release: gate-level MIPS R2000 (1985) simulator in Rust.
