@@ -1,0 +1,15 @@
+[package]
+name = "coding_adventures_oauth_credential_sealed_store"
+version = "0.1.0"
+edition = "2021"
+description = "Encrypted vault-sealed-store adapter for OAuth credential custody"
+
+[dependencies]
+coding_adventures_oauth_credential_custody = { path = "../oauth-credential-custody" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_vault_sealed_store = { path = "../vault-sealed-store" }
+coding_adventures_zeroize = { path = "../zeroize" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+coding_adventures_oauth = { path = "../oauth" }

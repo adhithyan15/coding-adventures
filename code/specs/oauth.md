@@ -6,8 +6,9 @@ revocation request preparation, RFC 8414 metadata validation, and an audited
 literal-loopback callback host plus storage-agnostic audit-before-disclosure
 credential custody now compose through data-driven provider registration,
 expiry policy, injected transport, and compare-and-swap refresh orchestration;
-concrete transport, encrypted-store adapters, device flow, and provider data
-remain prioritized below.
+the custody contract has a bounded zeroizing encrypted-store adapter over any
+`vault-sealed-store` backend; concrete transport, device flow, and provider
+data remain prioritized below.
 
 ## Overview
 
@@ -107,8 +108,13 @@ The delivery order is:
    publication failure fails the operation closed. The broker registers any
    number of providers as validated data, applies caller-injected clock and
    expiry policy, audit-brackets its injected token transport, and rotates
-   credentials with the custody layer's exact revision. Concrete encrypted
-   storage and HTTPS authority remain separate adapters.
+   credentials with the custody layer's exact revision. The concrete
+   `oauth-credential-sealed-store` adapter maps provider/opaque-account keys to
+   bounded, versioned, zeroizing encrypted records over any
+   `vault-sealed-store` backend. Backend revision tokens are cryptographically
+   bound to fixed-size custody revisions while the exact backend token is used
+   for every atomic compare-and-swap or delete. HTTPS authority remains a
+   separate adapter.
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
@@ -129,8 +135,8 @@ graph: shared storage metadata uses the repository-owned bounded JSON value
 model, `storage-fs` parses and serializes through that primitive, and the legacy
 `json-value` facade re-exports the same types for source-compatible consumers.
 Metadata is rejected before backend dispatch when it is non-finite or exceeds
-the shared depth limit. This clears the JSON prerequisite for the concrete
-encrypted OAuth credential-store adapter. The
+the shared depth limit. This enabled the shipped concrete encrypted OAuth
+credential-store adapter. The
 cross-platform kernel-entropy prerequisite is shipped: `csprng` now reads
 `/dev/urandom` through safe standard-library I/O on Unix and confines Windows
 CNG FFI to one documented `BCryptGenRandom` call, with no normal dependencies.
@@ -143,12 +149,12 @@ Before the concrete HTTPS adapter, replace `tls-platform`'s `rustls` and
 path validation, hostname verification, and a reviewed trust-root source. This
 is prerequisite work, not permission to weaken HTTPS or certificate checks.
 
-The current slices intentionally stop before provider HTTPS transport and a
-concrete encrypted credential-store adapter. The loopback host owns only local
-TCP and injected browser authority; custody owns only audited secret lifecycle
-over an injected compare-and-swap contract; and the broker owns policy and
-sequencing without acquiring clock, network, or storage authority. The
-preceding slices remain complete boundaries, not provider-specific midpoints.
+The current slices intentionally stop before provider HTTPS transport. The
+loopback host owns only local TCP and injected browser authority; custody owns
+audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
+and the broker owns policy and sequencing without acquiring clock or network
+authority. The preceding slices remain complete boundaries, not
+provider-specific midpoints.
 
 ---
 
