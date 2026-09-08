@@ -2738,6 +2738,25 @@ impl Compiler {
         })
     }
 
+    /// Admit exact tracked real snapshots only for powers whose base contains
+    /// a pure standard-function result. The snapshot must be integral and fit
+    /// the existing bounded-unroll cap.
+    fn static_nonnegative_tracked_real_snapshot_power_chain(
+        &self,
+        nodes: &[&GrammarASTNode],
+    ) -> Option<u32> {
+        self.static_nonnegative_power_chain_with(nodes, &|node| {
+            if !self.exact_tracked_real_snapshot_operand(node) {
+                return None;
+            }
+            let value = self.static_tracked_exponent_real_value(node)?;
+            (value >= 0.0
+                && value <= MAX_POW_UNROLL_EXPONENT as f64
+                && value.fract() == 0.0)
+                .then_some(value as u32)
+        })
+    }
+
     /// Admit exact integral standard-function results over tracked real locals
     /// without admitting arbitrary tracked real exponent arithmetic. Every real
     /// dependency must occur beneath a pure built-in call, where the existing
@@ -2971,6 +2990,9 @@ impl Compiler {
             let exponent = literal_nonnegative_integral_arithmetic_power_chain(exponents)
                 .or_else(|| {
                     self.static_nonnegative_tracked_integer_expression_power_chain(exponents)
+                })
+                .or_else(|| {
+                    self.static_nonnegative_tracked_real_snapshot_power_chain(exponents)
                 });
             return self.exact_tracked_standard_function_operand(base)
                 && self.contains_pure_standard_function_call(base)
@@ -7750,6 +7772,14 @@ impl Compiler {
                     .flatten()
             })
             .or_else(|| {
+                (base.ty == ScalarType::Real
+                    && self.contains_pure_standard_function_call(base_node))
+                .then(|| {
+                    self.static_nonnegative_tracked_real_snapshot_power_chain(exponent_nodes)
+                })
+                .flatten()
+            })
+            .or_else(|| {
                 (base.ty == ScalarType::Real)
                     .then(|| {
                         self.static_nonnegative_tracked_real_standard_expression_power_chain(
@@ -11480,7 +11510,8 @@ mod tests {
     fn al4_path_independent_standard_result_literal_powers_fail_closed() {
         for source in [
             "begin integer power; real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) end",
-            "begin real power, gate, exponent, saved; power := 1.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) end",
+            "begin real power, gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) end",
+            "begin real power, gate, exponent, saved; power := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) end",
             "begin real exponent, saved; exponent := 2.0; saved := 6.0 ^ entier((exponent + 0.5) ^ 1) end",
         ] {
             let module = compile_source(source, "test")
@@ -11497,6 +11528,19 @@ mod tests {
             "test",
         )
         .expect("a tracked integer may bound a power around a path-independent built-in result");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
+    fn al4_path_independent_standard_results_compose_through_tracked_real_powers() {
+        let module = compile_source(
+            "begin real power, gate, exponent, saved; power := 1.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) + 6.0; gate := 1.0; power := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("an exact integral real snapshot may bound a power around a built-in result");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
         assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
