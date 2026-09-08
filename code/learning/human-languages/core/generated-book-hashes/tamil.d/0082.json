@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:80af20979bb8b62b",
+  "lessonIds": [
+    "TA-C82-first",
+    "TA-C82-second",
+    "TA-C82-first-full",
+    "TA-C82-third",
+    "TA-C82-fourth",
+    "TA-C82-fifth"
+  ],
+  "tex": "tamil/book/chapters/ch82-ordinals.tex"
+}

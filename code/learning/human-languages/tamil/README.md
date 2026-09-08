@@ -152,6 +152,25 @@ through.
   **0**, and it is meant to stay there, so a new word whose spelling would need a
   fifty-second shape is not a candidate.
 
+- **Chapters 82–83 — the ordinal column** ([`lessons/TA-C8{2,3}-*`](./lessons/)):
+  fourteen lessons closing `TA-A1-NUM-04` and taking A1 coverage to
+  **175/262 (67%)** with the numeral column at **6 of 8**. The point's own note
+  is what the tranche was built on: it recorded that **முதலில்** was taught as a
+  *discourse* word and not as an ordinal. **முதலில்** is **முதல்** + the locative
+  **-இல்**, so Tamil's one irregular ordinal had been in the learner's mouth for
+  twenty chapters, and the opening lesson takes the word apart rather than
+  teaching a new one. That is why this chapter can open on *first* where
+  Kannada's could not: the exception is the item the reader already owns.
+  **-ஆவது** then does every other number, and **முதலாவது** shows that even the
+  exception takes it — the stem is irregular, the ending is not. The last lesson
+  teaches the *second* ending, **-ஆம்**, which a **date** takes, with **தேதி**
+  against the Tamil month names the track already had.
+
+  The four-way family box is the one this corpus has been building toward:
+  Tamil kept **முதல்** meaning *first*, Kannada and Telugu built their ordinals
+  on it, and Malayalam kept the word and moved its sense to *from*. **None of the
+  four builds "first" on its own word for one.** In the book.
+
 ---
 
 ## For contributors

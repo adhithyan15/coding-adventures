@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:5d32427c7c2d9488",
+  "lessonIds": [
+    "TA-C82-first",
+    "TA-C82-second",
+    "TA-C82-first-full",
+    "TA-C82-third",
+    "TA-C82-fourth",
+    "TA-C82-fifth"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch82.txt",
+  "json": "tamil/narration/ch82.json",
+  "textHash": "fnv1a64:cafa438efde23ac7",
+  "jsonHash": "fnv1a64:324a63c3c1dfa178",
+  "findings": []
+}

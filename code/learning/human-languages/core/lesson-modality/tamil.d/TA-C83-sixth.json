@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C83-sixth",
+    "language": "tamil",
+    "chapter": 83,
+    "sequence": 3400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:854e1f113a2e8356"
+  },
+  "findings": []
+}

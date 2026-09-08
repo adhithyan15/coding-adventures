@@ -1,7 +1,9 @@
 {
   "segments": [
     "TA-PATH-014",
-    "TA-PATH-024"
+    "TA-PATH-024",
+    "TA-PATH-82-ORDINAL",
+    "TA-PATH-83-ORDINAL"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"

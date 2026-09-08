@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R83-ordinal-recall",
+    "language": "tamil",
+    "chapter": 83,
+    "sequence": 3470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:455fb7171ed4f1a0"
+  },
+  "findings": []
+}

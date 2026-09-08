@@ -1,0 +1,16 @@
+{
+  "id": "TA-EXT-82-ORDINAL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say first to fifth in Tamil, and make an ordinal from any number by adding -aavadhu.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C82-first",
+    "TA-C82-second",
+    "TA-C82-first-full",
+    "TA-C82-third",
+    "TA-C82-fourth",
+    "TA-C82-fifth"
+  ]
+}
