@@ -1,0 +1,18 @@
+{
+  "chapter": 84,
+  "title": "One and the Other",
+  "label": "ch:hi-one-and-the-other",
+  "canDo": "I can say one thing and the other with ek and dusra, and tell that apart from naming a thing's place in a line.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C77-practice",
+    "kind": "task",
+    "summary": "The ordinals and ek ... dusra worked on the same set, so the difference between naming a place and sorting two things is done rather than stated.",
+    "assesses": [
+      "HI-GRAMMAR-C77-ORDER-01",
+      "HI-TASK-C77-ORDER-02"
+    ]
+  }
+}

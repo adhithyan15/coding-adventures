@@ -1,0 +1,14 @@
+{
+  "id": "HI-EXT-76-ORDINAL",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can count in order all the way to tenth in Hindi, and say why chhatha is the one number the rule does not reach.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C76-sixth",
+    "HI-C76-seventh",
+    "HI-C76-eighth",
+    "HI-C76-ninth",
+    "HI-C76-tenth"
+  ]
+}

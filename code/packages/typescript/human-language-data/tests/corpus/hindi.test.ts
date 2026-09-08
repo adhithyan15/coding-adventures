@@ -1,5 +1,10 @@
 import { expect, it } from "vitest";
-import { loadTrackLessons } from "../../src/loader.js";
+import { loadEverything, loadExamInventory, loadTrackLessons } from "../../src/loader.js";
+import {
+  formatExamCoverage,
+  measureExamCoverage,
+  trackIntroducedAtoms,
+} from "../../src/exam-inventory.js";
 import { readingOrder } from "../../src/ramp.js";
 import { measureScriptClosure } from "../../src/script-closure.js";
 import {
@@ -16,7 +21,10 @@ it("pins Hindi lesson-content budgets", () =>
     // chapters (75-81), one new word each. Thirty-five were authored; kab and
     // kyon were cut, because #14113's joining tranche teaches both and a
     // headword introduced twice is a hard error. Re-measured against the tree.
-    lessons: 343,
+    //
+    // 343 -> 355: the ordinal tranche adds twelve lessons in three chapters
+    // (82-84), one new item each, closing HI-A1-NUM-04.
+    lessons: 355,
     idioms: 21,
     // +2: HI-C70-song declares gana's singing sense and HI-C73-drink declares
     // khana's eating sense, which is what covers HI-A1-V-26.
@@ -107,3 +115,45 @@ it("removes support gently from a known phrase to a no-model two-sentence purpos
   expect(markdown[5]).toContain("two meanings in the requested order");
   expect(markdown[5]).toContain("one **।** after each sentence");
 });
+
+// ---------------------------------------------------------------------------
+// THE HINDI A1 INVENTORY HAD NO COVERAGE ASSERTION, which is the failure mode
+// HL-C350's repairs were told to avoid: land the atoms, wire the probes, and
+// let a number nothing reads stay whatever it was. A stale pin that agrees
+// merges silently. Both tests below were falsified before being kept -- a
+// fabricated atom id fails the first, and nulling HI-A1-NUM-04's probe fails
+// the second.
+// ---------------------------------------------------------------------------
+it("probes only Hindi atoms that EXIST, so a guessed id cannot under-report", () => {
+  const { lessons } = loadEverything();
+  const taught = trackIntroducedAtoms(lessons, "hindi");
+  const unknown: string[] = [];
+  for (const point of loadExamInventory("hindi", "A1").points) {
+    for (const atom of point.probe ?? []) if (!taught.has(atom)) unknown.push(`${point.id}:${atom}`);
+  }
+  expect(unknown).toEqual([]);
+}, 60_000);
+
+it("pins Hindi A1 coverage, and the numeral column the ordinal tranche moved", () => {
+  const { lessons } = loadEverything();
+  const coverage = measureExamCoverage(loadExamInventory("hindi", "A1"), lessons);
+  expect(coverage.enumerated).toBe(282);
+  expect(coverage.covered).toBe(193);
+  expect(coverage.unmapped).toBe(89);
+  expect(coverage.partial).toBe(0);
+  // HL-C350 measured ordinals as the weakest single column in the corpus --
+  // twenty tracks enumerate an ordinal point and eighteen left it uncovered.
+  // HI-A1-NUM-04 is the one that moved here, and it is a COMPOUND point: the
+  // ordinals to tenth AND the distributive ek … dusra. Both halves are taught,
+  // and the second needed no new word, because dusra was taught with both its
+  // senses. The three that remain in this category are a different problem and
+  // stay named: NUM-03 (numerals above twenty), NUM-05 (the Devanagari digit
+  // shapes) and NUM-06 (measures).
+  expect(coverage.byCategory["Sankhya-vachak (quantifiers and numerals)"]!).toEqual({
+    enumerated: 7,
+    covered: 4,
+  });
+  expect(formatExamCoverage(coverage)).toContain(
+    "hindi A1 (partial inventory): 193/282 points covered (68%)",
+  );
+}, 60_000);

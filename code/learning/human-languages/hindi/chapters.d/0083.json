@@ -1,0 +1,21 @@
+{
+  "chapter": 83,
+  "title": "Sixth to Tenth",
+  "label": "ch:hi-ordinals-to-tenth",
+  "canDo": "I can count in order all the way to tenth in Hindi, and say why chhatha is the one number the rule does not reach.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C76-tenth",
+    "kind": "production",
+    "summary": "The tenth closes the series and carries the ending past ten, so there is no second list to learn.",
+    "assesses": [
+      "HI-LEX-C76-ORDINAL-01",
+      "HI-LEX-C76-ORDINAL-02",
+      "HI-LEX-C76-ORDINAL-03",
+      "HI-LEX-C76-ORDINAL-04",
+      "HI-LEX-C76-ORDINAL-05"
+    ]
+  }
+}

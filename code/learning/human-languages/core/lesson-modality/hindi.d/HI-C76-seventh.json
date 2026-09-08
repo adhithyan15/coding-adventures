@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C76-seventh",
+    "language": "hindi",
+    "chapter": 83,
+    "sequence": 3220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01af2c4f1a219792"
+  },
+  "findings": []
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 82,
+  "title": "First, Second, Third",
+  "label": "ch:hi-ordinals",
+  "canDo": "I can say first to fifth in Hindi with the right ending for the noun, and say why the first four have to be learned as words and the fifth does not.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C75-fifth",
+    "kind": "production",
+    "summary": "The fifth ordinal states the -van rule against the four irregular words that came before it.",
+    "assesses": [
+      "HI-LEX-C75-ORDINAL-01",
+      "HI-LEX-C75-ORDINAL-02",
+      "HI-LEX-C75-ORDINAL-03",
+      "HI-LEX-C75-ORDINAL-04",
+      "HI-LEX-C75-ORDINAL-05",
+      "HI-LEX-C75-ORDINAL-06",
+      "HI-GRAMMAR-C75-ORDINAL-07"
+    ]
+  }
+}

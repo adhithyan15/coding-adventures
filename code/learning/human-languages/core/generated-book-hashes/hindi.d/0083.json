@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:84eb4f98e7c79cb9",
+  "lessonIds": [
+    "HI-C76-sixth",
+    "HI-C76-seventh",
+    "HI-C76-eighth",
+    "HI-C76-ninth",
+    "HI-C76-tenth"
+  ],
+  "tex": "hindi/book/chapters/ch83-ordinals-to-tenth.tex"
+}

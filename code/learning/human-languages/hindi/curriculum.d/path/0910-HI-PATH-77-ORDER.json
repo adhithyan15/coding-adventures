@@ -1,0 +1,13 @@
+{
+  "id": "HI-PATH-77-ORDER",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "HI-C77-one-other",
+    "HI-C77-practice"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-77-ORDER"
+  ],
+  "after": []
+}
