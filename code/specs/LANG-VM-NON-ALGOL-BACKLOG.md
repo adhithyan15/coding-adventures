@@ -8,6 +8,50 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-039a implementation contract (selected after #14471 merged)
+
+Refreshed main is `1ff49866a8`. VM-038 merged with every applicable
+current-head check green, including both final CI gates. Reprioritization found
+no new lowering defect; portable FLOW-MATIC input/EOF remains next.
+
+Split VM-039 into bounded proofs: (a) native AOT and LLVM using their shared
+C input runtime, (b) WASM host import, (c) JVM and CLR runtime adapters,
+then (d) the complete seven-backend matrix and common VM/JIT callbacks.
+Each slice must preserve the existing frontend READ-ITEM lowering and report
+only its executed columns. BEAM remains the separate VM-040 inventory.
+
+The portable stream contains one signed integer field per input line.
+`input_more()` returns 1 when another field can be read and 0 at EOF, without
+consuming the next field. Repeated peeks must be stable. `input_i64()` retains
+its existing permissive parse/EOF behavior; this work does not redesign BASIC
+input parsing. At EOF before a READ-ITEM, existing fields remain unchanged.
+A partial multi-field record retains the frontend's current behavior: read
+available fields and obtain zero for missing trailing fields. Blank or malformed
+lines remain present fields parsed as zero. The bounded portable proof uses
+short valid decimal lines, including negative values and a final line without
+newline; extended encodings and long-line parsing remain separate work.
+
+First add a native/LLVM source probe using the existing canonical finite
+READ-ITEM / IF END OF DATA / MOVE / WRITE-ITEM / JUMP loop, plus empty input,
+multi-field ordering and repeated EOF reads. Record the unsupported builtin
+failure before adding `input_more` runtime mapping. Implement a non-consuming
+C stdio peek and the necessary native/LLVM symbol declarations/lowering only.
+Execute real processes with piped input and exact stdout assertions, retaining
+hard failure after tool detection. Add focused peek stability/EOF validation,
+run affected tests and Clippy, and obtain security review before a ready PR.
+
+VM-039a probe reproduced both missing paths before production edits: native
+AOT refuses `main`; LLVM explicitly rejects `call_builtin "input_more"` as
+outside its whitelist. Prioritize the already scoped shared-runtime mapping
+repair before publishing the new matrix cells (rows 438–441).
+
+VM-039a local validation: all eight new cells (438–441 on NativeAot/LLVM)
+passed in fresh processes with positive sentinels, including a negative final
+field without newline. The production C ABI test passes repeated peeks before
+and after consumption and over empty input. The x86_64, AArch64 and LLVM
+package suites passed. These four rows declare only NativeAot and LLVM;
+WASM is next (VM-039b), not yet claimed by this proof.
+
 ## VM-038 implementation contract (selected after #14463 merged)
 
 Refreshed main is `7593f1253d`. VM-057, VM-047c and VM-049 have
@@ -859,8 +903,8 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | done #14394 | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
 | done (see PR below) | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
 | done (see PR below) | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |
-| selected | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
-| 9 | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
+| done #14471 | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
+| selected (VM-039a first) | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
 | 10 | VM-040 | Inventory remaining BEAM cells separately for Twig strings, Twig records/closures, Nib scalars, BASIC f64/I/O, Oct u8/I/O, FLOW-MATIC and COBOL. Each family first gets a discriminating probe; split actual lowering defects before implementation. Brainfuck remains the explicit excluded tape design. |
 | 11 | VM-042 | Pin Brainfuck's intentional BEAM exclusion with a driver-level error assertion for mutable tape operations; distinguish supported frontend compilation from backend refusal. |
 | 12 | VM-041 | Isolate Twig captured/reassigned runtime-string lowering from existing source-local string metadata; add one captured-string value proof before wider dynamic-string expansion. |

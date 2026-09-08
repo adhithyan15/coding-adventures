@@ -1,6 +1,6 @@
 # LANG VM feature and backend coverage
 
-Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057 and VM-047c. This is an inventory of the implemented
+Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c and VM-039a. This is an inventory of the implemented
 frontend families and their executable proof boundaries, not a claim that the
 historical languages or every backend are complete. Follow-up IDs live in the
 [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md).
@@ -27,12 +27,12 @@ refusal also does not imply the complete driver refuses that feature.
 | Dartmouth BASIC | 51 | 357 | Random differential suite and frontend JIT tests |
 | Oct | 12 | 84 | Frontend JIT control-flow tests |
 | ALGOL 60 | 232 | 1624 | Separate owner; full-matrix CI exclusion remains VM-025 |
-| FLOW-MATIC | 4 | 28 | Frontend EOF/record-stream JIT tests |
+| FLOW-MATIC | 8 | 36 | Four output rows on seven columns; four input/EOF rows on native/LLVM; frontend JIT stream tests |
 | COBOL-60 | 58 | 406 | Much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
-| Macsyma | 0 | 0 | Dedicated 21-program capstone with seven runner lanes |
+| Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 206 programs and 1462 cells.
+The normal non-ALGOL capstone therefore declares 210 programs and 1470 cells.
 The zeroes for McCarthy and Macsyma mean dedicated coverage, not absent support.
 CLR-real is an additional runner lane for the same CLR backend in McCarthy's
 capstone, not a tenth universal backend.
@@ -196,3 +196,10 @@ VM-038: the full 21-program Macsyma corpus passed on real Erlang locally with
 zero skips. Every source also compiles unconditionally in `macsyma_beam_corpus`.
 Hosted execution is requested through BUILD's Elixir/setup-beam declaration;
 this does not extend the scalar proof to symbolic values (VM-048).
+
+VM-039a adds four FLOW-MATIC input/EOF rows (438–441), each declaring native
+AOT and LLVM only. All eight cells passed locally; a direct production C test
+also verifies stable non-consuming peeks. The corpus now has 442 programs,
+including eight FLOW-MATIC programs; these rows add eight declared cells, not
+28. WASM/JVM/CLR input adapters and the shared VM/JIT harness remain VM-039
+follow-ups. Existing frontend callbacks already prove VM/JIT record streams.

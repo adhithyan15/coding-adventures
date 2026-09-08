@@ -232,3 +232,7 @@ cargo test -p iir-to-llvm
 
 7 tests at v0.1.0 covering validator stub, output shape, config defaults,
 and error display.
+
+FLOW-MATIC EOF support (VM-039a): `input_more()` uses a non-consuming stdio
+peek alongside `input_i64`. The native/LLVM input stream proof includes empty
+input and repeated EOF reads; this does not change existing integer parsing.

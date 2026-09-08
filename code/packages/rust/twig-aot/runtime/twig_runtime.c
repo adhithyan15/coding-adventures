@@ -167,6 +167,16 @@ void __twig_print_string(const char *s, int64_t len) {
     }
 }
 
+/* Peek through the same stdio stream consumed by input_i64. ISO C guarantees
+ * one byte of pushback, so repeated peeks leave the next field intact. EOF is
+ * sticky until more input is supplied; no field value is synthesized here. */
+int64_t __twig_input_more(void) {
+    int c = fgetc(stdin);
+    if (c == EOF) return 0;
+    if (ungetc(c, stdin) == EOF) abort();
+    return 1;
+}
+
 /* __twig_input_i64 — read one line from stdin and parse a signed int64.
  *
  * Reads up to 63 bytes plus the terminating NUL into a stack buffer,

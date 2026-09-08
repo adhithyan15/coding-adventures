@@ -355,6 +355,7 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "putchar",
     "getchar",
     "input_i64",
+    "input_more",
     "input_str",
     "gc_live_bytes",
     "gc_set_auto_minor",
@@ -763,6 +764,7 @@ pub fn lower_iir_to_llvm(
     // BA-INPUT: BASIC's `INPUT X` lowers to `@__twig_input_i64()` from the AOT
     // runtime archive (reads a line, parses as int64_t; 0 on EOF/parse failure).
     let mut used_input_i64 = false;
+    let mut used_input_more = false;
     // E4-dyn: BASIC string `INPUT A$` lowers to `@__twig_input_str()` (reads a
     // line, returns an i64 handle to a `[i64 len][bytes]` heap block).
     let mut used_input_str = false;
@@ -889,6 +891,7 @@ pub fn lower_iir_to_llvm(
                         "putchar" => used_putchar = true,
                         "getchar" => used_getchar = true,
                         "input_i64" => used_input_i64 = true,
+                        "input_more" => used_input_more = true,
                         "input_str" => used_input_str = true,
                         "gc_live_bytes" => used_gc_live_bytes = true,
                         "gc_set_auto_minor" => used_gc_set_auto_minor = true,
@@ -944,7 +947,7 @@ pub fn lower_iir_to_llvm(
         out.push_str("declare double @pow(double, double)\n");
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
-        || used_input_i64 || used_input_str || used_str_concat || used_str_slice || used_str_eq || used_str_cmp || used_gc_alloc
+        || used_input_more || used_input_i64 || used_input_str || used_str_concat || used_str_slice || used_str_eq || used_str_cmp || used_gc_alloc
         || used_gc_alloc_pair || used_gc_live_bytes || used_write_barrier || used_gc_set_auto_minor
         || used_gc_collect_minor_precise || used_gc_kind_of {
         out.push('\n');
@@ -1059,6 +1062,9 @@ pub fn lower_iir_to_llvm(
         }
         if used_getchar {
             out.push_str("declare i32 @getchar()\n");
+        }
+        if used_input_more {
+            out.push_str("declare i64 @__twig_input_more()\n");
         }
         if used_input_i64 {
             // `@__twig_input_i64` is provided by `twig_runtime.c` in the AOT archive:
@@ -4233,6 +4239,13 @@ fn lower_call_builtin(
         // is already i64.
         //
         //   srcs = [Var("input_i64")], dest = v  →  %v = call i64 @__twig_input_i64()
+        // FLOW-MATIC asks about EOF without consuming the next field.
+        "input_more" => {
+            let dest = require_dest(instr, "input_more", state.fn_name)?.to_string();
+            out.push_str(&format!("  %{dest} = call i64 @__twig_input_more()\n"));
+            state.env.insert(dest.clone(), format!("%{dest}"));
+            Ok(())
+        }
         "input_i64" => {
             let dest = require_dest(instr, "input_i64", state.fn_name)?.to_string();
             out.push_str(&format!("  %{dest} = call i64 @__twig_input_i64()\n"));
