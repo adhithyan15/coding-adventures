@@ -8,10 +8,14 @@ component SpiceWorkbench {
   slot run-label : text ;
   slot diagnostics-label : text ;
   slot diagnostics : text ;
+  slot diagnostic-rows : list<text> ;
   slot analysis-label : text ;
   slot analysis-rows : list<list<text>> ;
   slot selected-analysis-label : text ;
   slot result-label : text ;
+  slot result-columns : list<text> ;
+  slot result-rows : list<list<text>> ;
+  slot raw-result-label : text ;
   slot result-text : text ;
 
   emit onNetlistChange ( value : text ) ;

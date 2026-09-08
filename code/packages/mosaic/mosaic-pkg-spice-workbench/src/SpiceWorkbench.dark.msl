@@ -13,10 +13,15 @@ style SpiceWorkbench {
   part inspect-button { background : "#283a51" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#476786" ; border-radius : 4 ; padding : 8 ; }
   part run-button { background : "#1f6f4a" ; color : "#e9fff3" ; border-width : 1 ; border-color : "#3fa36f" ; border-radius : 4 ; padding : 8 ; }
   part diagnostics { color : "#c7d7e8" ; }
+  part diagnostic-row { color : "#ffb4a8" ; font-family : "monospace" ; }
   part workbench-body { gap : 14 ; }
   part analyses { width : "30%" ; gap : 6 ; }
   part analysis-option { background : "#202a36" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 7 ; }
   part selected-analysis { color : "#8cc8ff" ; font-weight : bold ; }
   part results { width : "70%" ; gap : 6 ; }
+  part result-table { background : "#0d1117" ; border-width : 1 ; border-color : "#33465c" ; }
+  part result-header { background : "#202a36" ; color : "#d2e7ff" ; font-weight : bold ; padding : 6 ; }
+  part result-cell { color : "#b9d8f5" ; padding : 6 ; font-family : "monospace" ; }
+  part raw-result-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
   part result-output { min-height : 160 ; background : "#0d1117" ; color : "#b9d8f5" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 4 ; padding : 10 ; font-family : "monospace" ; white-space : "pre-wrap" ; }
 }

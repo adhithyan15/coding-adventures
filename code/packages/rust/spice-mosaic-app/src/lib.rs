@@ -4,14 +4,14 @@
 //! simulation remain in `spice-netlist-parser`, which keeps every host on the
 //! same Berkeley-v1 execution contract as the command-line interface.
 
-use std::{error::Error, fmt};
+use std::{collections::BTreeSet, error::Error, fmt};
 
 use mosaic_app_runtime::{
     Announcement, AppUpdate, ColorScheme, Event, MosaicApp, Politeness, Snapshot, StartContext,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use spice_netlist_parser::{inspect_netlist_json, run_netlist_json};
+use spice_netlist_parser::{inspect_netlist_json, parse_berkeley_app_deck, run_netlist_json};
 
 const SNAPSHOT_SCHEMA: &str = "spice-mosaic-app/state";
 const SNAPSHOT_VERSION: u32 = 1;
@@ -21,6 +21,12 @@ const DEFAULT_DECK: &str = "* Berkeley SPICE Mosaic workbench\nV1 in 0 DC 1 AC 1
 struct AnalysisRow {
     index: u64,
     kind: String,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+struct ResultTable {
+    columns: Vec<String>,
+    rows: Vec<Vec<String>>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -36,7 +42,9 @@ pub struct SpiceMosaicApp {
     deck: String,
     analyses: Vec<AnalysisRow>,
     selected_analysis_row: usize,
+    result_table: ResultTable,
     result_text: String,
+    diagnostic_rows: Vec<String>,
     diagnostics: String,
     mode: &'static str,
     dark: bool,
@@ -48,7 +56,9 @@ impl Default for SpiceMosaicApp {
             deck: DEFAULT_DECK.to_owned(),
             analyses: Vec::new(),
             selected_analysis_row: 0,
+            result_table: ResultTable::default(),
             result_text: String::new(),
+            diagnostic_rows: Vec::new(),
             diagnostics: "Edit a deck, then inspect its runnable analyses or run it.".to_owned(),
             mode: "Draft",
             dark: false,
@@ -103,6 +113,72 @@ fn analysis_rows(deck: &str) -> Result<(String, Vec<AnalysisRow>), SpiceMosaicEr
     Ok((inspection, analyses))
 }
 
+fn diagnostic_rows(deck: &str) -> Vec<String> {
+    parse_berkeley_app_deck(deck)
+        .diagnostics
+        .into_iter()
+        .map(|diagnostic| {
+            let severity = match diagnostic.severity {
+                spice_netlist_parser::BerkeleyDiagnosticSeverity::Error => "error",
+                spice_netlist_parser::BerkeleyDiagnosticSeverity::Warning => "warning",
+                spice_netlist_parser::BerkeleyDiagnosticSeverity::Note => "note",
+            };
+            let location = diagnostic.span.map_or_else(
+                || "deck".to_owned(),
+                |span| format!("line {}, column {}", span.start_line, span.start_column),
+            );
+            format!(
+                "[{severity}] {} at {location}: {}",
+                diagnostic.code, diagnostic.message
+            )
+        })
+        .collect()
+}
+
+fn result_cell(value: &Value) -> String {
+    value
+        .as_str()
+        .map(str::to_owned)
+        .unwrap_or_else(|| value.to_string())
+}
+
+fn selected_result_table(
+    result: &str,
+    selected_index: usize,
+) -> Result<ResultTable, SpiceMosaicError> {
+    let payload: Value =
+        serde_json::from_str(result).map_err(|error| invalid(error.to_string()))?;
+    let analyses = payload["analyses"]
+        .as_array()
+        .ok_or_else(|| invalid("result payload is missing analyses"))?;
+    let Some(analysis) = analyses.get(selected_index) else {
+        return Ok(ResultTable::default());
+    };
+    let records = analysis["records"]
+        .as_array()
+        .ok_or_else(|| invalid("result analysis is missing records"))?;
+    let columns = records
+        .iter()
+        .filter_map(Value::as_object)
+        .flat_map(|record| record.keys().cloned())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+    let rows = records
+        .iter()
+        .map(|record| {
+            let record = record
+                .as_object()
+                .ok_or_else(|| invalid("result record must be an object"))?;
+            Ok(columns
+                .iter()
+                .map(|column| record.get(column).map_or_else(String::new, result_cell))
+                .collect())
+        })
+        .collect::<Result<Vec<Vec<String>>, SpiceMosaicError>>()?;
+    Ok(ResultTable { columns, rows })
+}
+
 impl SpiceMosaicApp {
     fn update(&self) -> AppUpdate {
         let selected_label = self
@@ -120,12 +196,16 @@ impl SpiceMosaicApp {
             "run-label": "Run",
             "diagnostics-label": "Status",
             "diagnostics": self.diagnostics,
+            "diagnostic-rows": self.diagnostic_rows,
             "analysis-label": "Runnable analyses",
             "analysis-rows": self.analyses.iter().map(|analysis| vec![
                 format!(".{} (analysis {})", analysis.kind, analysis.index),
             ]).collect::<Vec<_>>(),
             "selected-analysis-label": selected_label,
-            "result-label": "Result JSON",
+            "result-label": "Selected result records",
+            "result-columns": self.result_table.columns,
+            "result-rows": self.result_table.rows,
+            "raw-result-label": "Raw result JSON",
             "result-text": self.result_text,
             "dark-theme": self.dark,
         }))
@@ -142,11 +222,14 @@ impl SpiceMosaicApp {
 
     fn inspect(&mut self) -> Result<AppUpdate, SpiceMosaicError> {
         let (inspection, analyses) = analysis_rows(&self.deck)?;
+        let diagnostic_rows = diagnostic_rows(&self.deck);
         self.selected_analysis_row = self
             .selected_analysis_row
             .min(analyses.len().saturating_sub(1));
         self.diagnostics = format!("Found {} runnable analyses.", analyses.len());
         self.result_text = inspection;
+        self.result_table = ResultTable::default();
+        self.diagnostic_rows = diagnostic_rows;
         self.analyses = analyses;
         self.mode = "Inspection";
         Ok(self.announced(self.diagnostics.clone()))
@@ -157,11 +240,16 @@ impl SpiceMosaicApp {
         // deck and visible result unchanged for a host retry.
         let (_, analyses) = analysis_rows(&self.deck)?;
         let result = run_netlist_json(&self.deck).map_err(|error| invalid(error.to_string()))?;
-        self.selected_analysis_row = self
+        let selected_analysis_row = self
             .selected_analysis_row
             .min(analyses.len().saturating_sub(1));
+        let result_table = selected_result_table(&result, selected_analysis_row)?;
+        let diagnostic_rows = diagnostic_rows(&self.deck);
+        self.selected_analysis_row = selected_analysis_row;
         self.diagnostics = format!("Executed {} analyses.", analyses.len());
         self.result_text = result;
+        self.result_table = result_table;
+        self.diagnostic_rows = diagnostic_rows;
         self.analyses = analyses;
         self.mode = "Results";
         Ok(self.announced(self.diagnostics.clone()))
@@ -191,7 +279,9 @@ impl MosaicApp for SpiceMosaicApp {
                 self.deck = deck.to_owned();
                 self.analyses.clear();
                 self.selected_analysis_row = 0;
+                self.result_table = ResultTable::default();
                 self.result_text.clear();
+                self.diagnostic_rows = diagnostic_rows(deck);
                 self.diagnostics = "Deck changed. Inspect before running.".to_owned();
                 self.mode = "Draft";
                 Ok(self.update())
@@ -206,7 +296,13 @@ impl MosaicApp for SpiceMosaicApp {
                 if index >= self.analyses.len() {
                     return Err(invalid("selectAnalysis index is out of range"));
                 }
+                let result_table = if self.mode == "Results" {
+                    selected_result_table(&self.result_text, index)?
+                } else {
+                    ResultTable::default()
+                };
                 self.selected_analysis_row = index;
+                self.result_table = result_table;
                 Ok(self.announced(format!("Selected .{} analysis.", self.analyses[index].kind)))
             }
             _ => Err(invalid(format!(
@@ -242,7 +338,9 @@ impl MosaicApp for SpiceMosaicApp {
         self.deck = saved.deck;
         self.analyses = analyses;
         self.selected_analysis_row = saved.selected_analysis_row;
+        self.result_table = ResultTable::default();
         self.result_text.clear();
+        self.diagnostic_rows = diagnostic_rows(&self.deck);
         self.diagnostics = "Workbench restored. Inspect or run the saved deck.".to_owned();
         self.mode = "Draft";
         Ok(self.announced(self.diagnostics.clone()))
@@ -291,6 +389,8 @@ mod tests {
         );
         let run = dispatch(&mut app, "onRun", json!({}));
         assert_eq!(run.props["mode-label"], "Results");
+        assert!(!run.props["result-columns"].as_array().unwrap().is_empty());
+        assert!(!run.props["result-rows"].as_array().unwrap().is_empty());
         assert!(run.props["result-text"]
             .as_str()
             .unwrap()
@@ -306,6 +406,24 @@ mod tests {
         let before = app.snapshot().unwrap();
         assert!(app.dispatch(Event::new(1, "inspect", json!({}))).is_err());
         assert_eq!(app.snapshot().unwrap(), before);
+    }
+
+    #[test]
+    fn deck_edits_expose_parser_diagnostics_with_source_spans() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let update = dispatch(&mut app, "netlistChange", json!({"value": "+ orphan\n"}));
+        let diagnostics = update.props["diagnostic-rows"].as_array().unwrap();
+        assert_eq!(diagnostics.len(), 1);
+        assert!(diagnostics[0]
+            .as_str()
+            .unwrap()
+            .contains("SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD"));
+        assert!(diagnostics[0]
+            .as_str()
+            .unwrap()
+            .contains("line 1, column 1"));
     }
 
     #[test]
