@@ -234,8 +234,8 @@ fn run(result: cli_builder::types::ParseResult) {
     //
     // The CLI supports two mutually exclusive modes:
     //   * Legacy: a single positional SOURCE file (a `.mosaic` document).
-    //   * Pipeline (UI23 / UI24): the three flags `--interface`, `--layout`,
-    //     `--style` pointing at `.mil`, `.mll`, `.msl` files respectively.
+    //   * Pipeline (UI23 / UI24): `--interface` and `--layout` point at `.mil`
+    //     and `.mll` files; `--style` may additionally point at an `.msl` file.
     //
     // We detect the mode here. If both are present we reject the invocation;
     // if neither is present we reject as well. This keeps the user honest about
@@ -293,15 +293,14 @@ fn run(result: cli_builder::types::ParseResult) {
     }
 
     if pipeline_any {
-        // Pipeline mode — all three flags are required together.
+        // Pipeline mode — interface and layout are required; style is optional.
         let interface = require_pipeline_flag("interface", interface_path);
         let layout = require_pipeline_flag("layout", layout_path);
-        let style = require_pipeline_flag("style", style_path);
         run_pipeline(
             backend,
             interface,
             layout,
-            style,
+            style_path,
             variant,
             output_path,
             emit_project,
@@ -320,7 +319,7 @@ fn run(result: cli_builder::types::ParseResult) {
     let source_path = source_path.unwrap_or_else(|| {
         eprintln!(
             "mosaic-compile: provide either a SOURCE file (legacy single-file \
-             mode) or all of --interface, --layout, --style (three-file \
+             mode) or both --interface and --layout (--style is optional in \
              pipeline mode); see --help"
         );
         process::exit(1);
@@ -453,7 +452,7 @@ fn run(result: cli_builder::types::ParseResult) {
 fn require_pipeline_flag<'a>(name: &str, value: Option<&'a str>) -> &'a str {
     value.unwrap_or_else(|| {
         eprintln!(
-            "mosaic-compile: --{name} is required in pipeline mode (with --interface --layout --style)"
+            "mosaic-compile: --{name} is required in pipeline mode (with --interface and --layout; --style is optional)"
         );
         process::exit(1);
     })
@@ -521,8 +520,8 @@ fn build_self_package_registry(
     }
 }
 
-/// Run the three-file pipeline path: compile `.mil`, `.mll`, `.msl` to a
-/// single output file using the new pipeline-aware backend emitter.
+/// Run the pipeline path: compile required `.mil` and `.mll` inputs plus an
+/// optional `.msl` stylesheet using the pipeline-aware backend emitter.
 ///
 /// Currently `--backend react` and `--backend xaml` are wired here; the
 /// other backends (swiftui, qt) will follow when they're added. The legacy
@@ -683,14 +682,14 @@ fn resolve_layout_path(layout_arg: &str, component_name: &str, variant: Option<&
 }
 
 // The pipeline entry point threads all CLI-derived inputs (backend selector, the
-// three source paths, output path, and emit flags) into one call; a struct would
+// source paths, output path, and emit flags) into one call; a struct would
 // only relocate the same set of independent CLI arguments.
 #[allow(clippy::too_many_arguments)]
 fn run_pipeline(
     backend: &str,
     interface_path: &str,
     layout_path: &str,
-    style_path: &str,
+    style_path: Option<&str>,
     variant: Option<&str>,
     output_path: Option<&str>,
     emit_project: bool,
@@ -780,8 +779,15 @@ fn run_pipeline(
     // layouts, rebuilds the resolved part map, and merges dependency styles
     // before any backend sees the component. Package and standalone builds
     // therefore consume identical composed IR.
-    let style_src = read_file_or_die(style_path);
     let component_name = mosmodel_out.component.component.clone();
+    // A Mosaic component's visual style is optional. Keep the composition and
+    // emitter contracts uniform by supplying an empty, correctly named style
+    // definition when the caller omits --style. Dependency styles can still be
+    // merged by the shared package-composition path below.
+    let style_src = style_path
+        .map(read_file_or_die)
+        .unwrap_or_else(|| format!("style {component_name} {{ }}"));
+    let style_label = style_path.unwrap_or("<implicit empty stylesheet>");
 
     // -- 3a-pre. The stylesheet must name the same component as the .mil ----
     //
@@ -797,15 +803,17 @@ fn run_pipeline(
     // dependency styles, so the error names what the author actually wrote.
     // A parse failure here is left alone — the real compile below reports it
     // with proper diagnostics.
-    if let Ok(raw_style) = mosstyle_compiler::compile(&style_src, None) {
-        if let Some(error) = style_component_name_error(
-            &raw_style.def.component_name,
-            &component_name,
-            interface_path,
-            style_path,
-        ) {
-            eprintln!("{error}");
-            process::exit(1);
+    if let Some(style_path) = style_path {
+        if let Ok(raw_style) = mosstyle_compiler::compile(&style_src, None) {
+            if let Some(error) = style_component_name_error(
+                &raw_style.def.component_name,
+                &component_name,
+                interface_path,
+                style_path,
+            ) {
+                eprintln!("{error}");
+                process::exit(1);
+            }
         }
     }
     let composed = compose_component_with_model(
@@ -846,7 +854,7 @@ fn run_pipeline(
                 None => String::new(),
             };
             eprintln!(
-                "mosaic-compile: warning: style part `{}` in {style_path} matches no part \
+                "mosaic-compile: warning: style part `{}` in {style_label} matches no part \
                  exported by component `{component}` — it will not be styled{hint}",
                 u.name
             );
