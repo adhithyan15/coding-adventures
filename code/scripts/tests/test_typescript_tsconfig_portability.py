@@ -445,7 +445,11 @@ console.log(prose, nested);
         # and access process only through globalThis, so the package no longer
         # requires ambient Node types in its compiler inputs.
         # +1: VisiCalc's interaction tests read the real WASM engine bundle.
-        self.assertEqual(summary.node_api_projects, 69)
+        # +1: spice-netlist-parser owns its executable CLI and bundles it with
+        # esbuild; the entrypoint reads a deck from stdin and writes canonical
+        # JSON to stdout, so its direct Node types are part of the package's
+        # portable compiler contract.
+        self.assertEqual(summary.node_api_projects, 70)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -458,7 +462,8 @@ console.log(prose, nested);
         # +1: forme-dev-server owns its runtime and test Node provider.
         # -1: see node_api_projects -- parser no longer needs a Node provider.
         # +1: VisiCalc owns the Node types used by its interaction tests.
-        self.assertEqual(summary.node_provider_projects, 69)
+        # +1: spice-netlist-parser owns the Node types used by its CLI bundle.
+        self.assertEqual(summary.node_provider_projects, 70)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
