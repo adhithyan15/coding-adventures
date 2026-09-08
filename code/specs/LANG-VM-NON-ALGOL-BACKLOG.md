@@ -8,6 +8,20 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 Nib BEAM probe (selected after #14632 merged)
+
+PR #14632 merged as `9b04b74cb8` after all 46 checks succeeded or skipped.
+Oct's twelve portable BEAM cells are complete. Reprioritize Nib next because
+its u8 arithmetic shares the newly proven lowering, while its u4/BCD cases
+provide discriminating checks for remaining width and representation gaps.
+
+Probe the existing Nib corpus on real Erlang, verifying row/source identity on
+fresh main. Return values must match without process-exit masking; preserve
+hard failures after runtime detection. Separate any failing u4, checked
+arithmetic, or storage operation into a committed bounded contract before
+backend edits. Promote only executed cells. Retain VM-028's broader Intel-4004
+fidelity audit and VM-060b's host input design as separate backlog work.
+
 ## VM-040 Oct BEAM probe (selected after #14621 merged)
 
 PR #14621 merged as `df39688c62` after all 46 checks succeeded or skipped.
@@ -1408,3 +1422,20 @@ before the additional width regression; that regression passed20op/type cases.
 Clippy for iir-to-beam and lang-aot alltargets passed. Remaining VM040families
 are Twig strings/records/closures, Nib, BASIC, FLOW-MATIC and COBOL; re-audit
 current declarations before selection. VM060b hostinput and VM0138008 remain.
+
+### VM-040 Nib implementation contract: four-bit result width
+
+The real-BEAM corpus reached Nib's ~15 u4 comparison and returned0 instead
+of1: complement was not narrowed to four bits. Extend the existing u8 result
+mask to select15 for u4 in all three arithmetic/unary/bitwise families; preserve
+u8mask255 and wider integers. Extend the op/type regression to u4. Rerun all26
+Nib programs including BCD storage, then promote only proven BEAM cells.
+
+### VM-040 Nib validation
+
+All26NibBEAM cells (rows49-74 at this revision) passed in fresh processes
+with positive sentinels and no skips. The dedicated26program corpus passed,
+and all12OctBEAM programs passed again after widening the mask selection.
+The backend suite passed93tests (18unit70integration5doc), including30op/type
+width cases. No full seven-standard-column rerun is claimed. Broader4004
+fidelity remains VM028; remaining BEAM families are reprioritized after merge.

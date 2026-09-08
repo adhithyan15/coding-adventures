@@ -872,7 +872,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn double(x: u8) -> u8 { return x + x; } fn main() -> u8 { return double(21); }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — multiplication (LANG-FULL N1). `*` lowers to the shared IIR `mul`; the
     // multiplicative level binds tighter than additive (so `2 + 3 * 4` is `2 + (3*4)`).
@@ -883,7 +883,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { return 6 * 7; }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — division (LANG-FULL N1). `/` lowers to the shared IIR `div`. `84 / 2` exits 42.
     Prog {
@@ -891,7 +891,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { return 84 / 2; }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — `for` loop (LANG-FULL N2). Desugars to the canonical counter loop; the range
     // `1 .. 6` is exclusive (`i = 1,2,3,4,5`), summing the loop variable into a local
@@ -905,7 +905,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u4 { let s: u4 = 0; for i: u4 in 1 .. 6 { s = s + i; } return s; }",
         expect: Expect::Exit(15),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — nested `for` loops (LANG-FULL N2). 3 × 2 = 6 body executions; proves distinct
     // loop labels and nested counter reassignment lower correctly on every backend.
@@ -915,7 +915,7 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u4 { let s: u4 = 0; \
                for i: u4 in 0 .. 3 { for j: u4 in 0 .. 2 { s = s + 1; } } return s; }",
         expect: Expect::Exit(6),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — reassigning a *function parameter* inside a loop (LLVM first-class fix).
     // `acc` is a parameter accumulated across the loop (`acc = acc + 6`, 7 times) → 42.
@@ -928,7 +928,7 @@ const PROGRAMS: &[Prog] = &[
         src: "fn run(acc: u8) -> u8 { for i: u8 in 0 .. 7 { acc = acc + 6; } return acc; } \
                fn main() -> u8 { return run(0); }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — bitwise AND / OR / XOR (LANG-FULL N3). `& | ^` lower to the shared IIR
     // `and`/`or`/`xor`. Executed on every backend: `12 & 10` = 0b1100 & 0b1010 = 0b1000 = 8.
@@ -937,7 +937,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { return 12 & 10; }",
         expect: Expect::Exit(8),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // `12 | 3` = 0b1100 | 0b0011 = 0b1111 = 15.
     Prog {
@@ -945,7 +945,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { return 12 | 3; }",
         expect: Expect::Exit(15),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // `6 ^ 5` = 0b110 ^ 0b101 = 0b011 = 3.
     Prog {
@@ -953,7 +953,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { return 6 ^ 5; }",
         expect: Expect::Exit(3),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — `&&` SHORT-CIRCUIT (LANG-FULL N4). The left `1 == 2` is false, so the right
     // operand `84 / 0 == 0` must NOT be evaluated — if it were, the division by zero would
@@ -964,7 +964,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { if 1 == 2 && 84 / 0 == 0 { return 9; } return 7; }",
         expect: Expect::Exit(7),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — `||` SHORT-CIRCUIT (LANG-FULL N4). The left `1 == 1` is true, so `84 / 0 == 0`
     // must NOT be evaluated. Returns 7 on every backend ⇒ the RHS was skipped.
@@ -973,7 +973,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { if 1 == 1 || 84 / 0 == 0 { return 7; } return 9; }",
         expect: Expect::Exit(7),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — `&&` true path: both sides true ⇒ the `if` is taken ⇒ 1.
     Prog {
@@ -981,7 +981,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { if 1 == 1 && 2 == 2 { return 1; } return 0; }",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — logical NOT (`!`, LANG-FULL N9). `1 == 2` is false, so
     // `!(1 == 2)` must be true and take the 42 branch. The old passthrough
@@ -991,7 +991,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { if !(1 == 2) { return 42; } return 0; }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — module-scoped `const` (LANG-FULL N5). A top-level `const N: u8 = 42;` is folded
     // to its literal at each use, so referencing it in `main` needs no runtime storage and
@@ -1001,7 +1001,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "const N: u8 = 42; fn main() -> u8 { return N; }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — multiple consts used in arithmetic: `30 + 12` = 42.
     Prog {
@@ -1009,7 +1009,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "const A: u8 = 30; const B: u8 = 12; fn main() -> u8 { return A + B; }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — u8 WRAP (LANG-FULL E2 / N6). `200u8 + 100u8` overflows the byte and must
     // wrap mod-256 to `44`. The exit code is itself `& 0xFF`, so a bare `return 200+100`
@@ -1025,7 +1025,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { let x: u8 = 200 + 100; if x == 44 { return 1; } return 0; }",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — u8 wrap is width-correct, not "any mask": `6 * 7 = 42` must stay 42 (it fits a
     // byte), proving the mask is mod-256 not a blanket truncation. `6` and `7` are typed
@@ -1037,7 +1037,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { return 6 * 7; }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — `+%` WRAPPING add (LANG-FULL N7). `200u8 +% 100` discards the carry →
     // `44`. The comparison (`x == 44`) distinguishes a wrapped 44 from an unwrapped
@@ -1048,7 +1048,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { let x: u8 = 200 +% 100; if x == 44 { return 1; } return 0; }",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — `+?` SATURATING add (LANG-FULL N7). `200u8 +? 100` clamps at the u8 max
     // → `255` (NOT 44, the wrapping result). `+?` lowers to a *wide* add + a clamp
@@ -1059,7 +1059,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { let x: u8 = 200 +? 100; if x == 255 { return 1; } return 0; }",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — `+?` saturating at the u4 max: `15u4 +? 1` clamps to `15` (the nibble
     // max), not the wrapping `0`.
@@ -1068,7 +1068,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u4 { let a: u4 = 15 +? 1; if a == 15 { return 1; } return 0; }",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — `+?` that does NOT overflow returns the plain sum (`3 +? 4 = 7`),
     // proving the clamp branch only fires on overflow.
@@ -1077,7 +1077,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { let x: u8 = 3 +? 4; if x == 7 { return 1; } return 0; }",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — bitwise NOT (`~`), u8 (LANG-FULL N3). `~0` flips all bits; masked to the
     // u8 width (the E2 value-mask) it is `255` (`-1 & 0xFF`), NOT the i64 all-ones.
@@ -1090,7 +1090,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u8 { let x: u8 = ~0; if x == 255 { return 1; } return 0; }",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — bitwise NOT (`~`), u4 (LANG-FULL N3). `~15` on a nibble: 15 = 0b1111, so
     // its complement masked to 4 bits is `0`. Proves the `not` mask is width-correct
@@ -1100,7 +1100,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn main() -> u4 { let x: u4 = ~15; if x == 0 { return 1; } return 0; }",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — module-scoped `static` globals (LANG-FULL N8). The counter starts
     // at 40, a separate function increments the same module global twice, and
@@ -1114,7 +1114,7 @@ const PROGRAMS: &[Prog] = &[
               fn bump(step: u8) -> u8 { counter = counter + step; return counter; } \
               fn main() -> u8 { let a: u8 = bump(1); let b: u8 = bump(1); return counter; }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — const/static expression folding (LANG-FULL N10). `BASE` folds
     // `6 * 7` at compile time, then the static initializer folds `BASE + 0`
@@ -1125,7 +1125,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "const BASE: u8 = 6 * 7; static counter: u8 = BASE + 0; fn main() -> u8 { return counter; }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — BCD storage (VM-012). `bcd` is a single decimal digit, so the
     // value must survive a module-static store/load without widening or
@@ -1136,7 +1136,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "static digit: bcd = 9; fn main() -> bcd { return digit; }",
         expect: Expect::Exit(9),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
@@ -14282,4 +14282,20 @@ fn portable_text_stdout_oct_beam_corpus() {
     }
     assert_eq!(executed, 12);
     eprintln!("Oct BEAM corpus: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_nib_beam_corpus() {
+    if !erl_ok() {
+        eprintln!("SKIP Nib BEAM corpus: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Nib) {
+        let result = run_beam(program).expect("detected erl must execute Nib");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 26);
+    eprintln!("Nib BEAM corpus: {executed} programs executed");
 }

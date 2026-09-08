@@ -22,7 +22,7 @@ refusal also does not imply the complete driver refuses that feature.
 | Frontend | Unified rows | Declared standard cells | Additional proof boundary |
 |---|---:|---:|---|
 | Twig | 49 | 343 | 20 BEAM cells; dedicated heap/closure tests |
-| Nib | 26 | 182 | Intel 4004 BCD simulator proof, separate from standard targets |
+| Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
 | Brainfuck | 6 | 42 | Dedicated WASM/JVM/CLR and JIT execution |
 | Dartmouth BASIC | 51 | 357 | Random differential suite and frontend JIT tests |
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
