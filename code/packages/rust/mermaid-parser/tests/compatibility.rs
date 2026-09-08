@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_event_modeling, parse_radar, parse_sequence_diagram, parse_timeline, parse_treemap, parse_xychart,
+    parse_event_modeling, parse_radar, parse_sequence_diagram, parse_timeline, parse_treemap, parse_venn, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -56,6 +56,19 @@ const TREEMAP_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/treemap-11.16.1-corpus.json"
 ));
+const VENN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/venn-11.16.1-corpus.json"));
+
+#[test]
+fn pinned_venn_subset_corpus_parses_to_set_ir() {
+    let corpus: Value = serde_json::from_str(VENN_CORPUS).expect("venn corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let diagram = parse_venn(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("venn fixture {name} failed: {error}"));
+        assert!(diagram.regions.iter().any(|region| region.sets.len() == 1));
+    }
+}
 
 #[test]
 fn pinned_treemap_subset_corpus_parses_to_hierarchy_ir() {
@@ -692,4 +705,20 @@ fn treemap_dispatches_to_hierarchy_ir() {
         }
         _ => panic!("treemap should lower to dedicated hierarchy IR"),
     }
+}
+
+#[test]
+fn venn_dispatches_to_dedicated_set_ir_and_validates_unions() {
+    let diagram = parse_any_mermaid("venn-beta\nset A[\"Alpha\"]:20\nset B\nunion A,B[\"AB\"]:3").expect("venn subset should parse");
+    match diagram {
+        mermaid_parser::MermaidDiagram::Venn(diagram) => {
+            assert_eq!(diagram.regions.len(), 3);
+            assert_eq!(diagram.regions[2].sets, ["A", "B"]);
+        }
+        _ => panic!("venn should lower to dedicated set IR"),
+    }
+    assert!(parse_venn("venn-beta\nset A\nunion A,Missing").is_err());
+    let styled = parse_venn("venn-beta\nset A\nstyle A fill:rgba(255, 0, 128, 0.5), stroke-width:3px").unwrap();
+    assert_eq!(styled.regions[0].style.fill.as_deref(), Some("rgba(255, 0, 128, 0.5)"));
+    assert_eq!(styled.regions[0].style.stroke_width, Some(3.0));
 }
