@@ -1416,7 +1416,12 @@ async function startApp() {
   // explicitly. Without it a missing bundle reaches WebAssembly.compile as an
   // HTML error page and surfaces as a CompileError, which reads like a corrupt
   // engine rather than a missing file.
-  const response = await fetch("/task_engine.wasm");
+  // Bundle-relative, not domain-absolute. "/task_engine.wasm" only resolves
+  // when the app is served from a domain root; published to a subdirectory
+  // (GitHub Pages serves this at /task-app/) it requests the wrong URL and
+  // 404s, while the file sits correctly inside the bundle. Same reasoning and
+  // same shape as Engram's host, which passes the relocatable-bundle check.
+  const response = await fetch("./task_engine.wasm");
   if (!response.ok) {
     throw new Error(
       `The scheduling engine could not be downloaded (HTTP ${response.status} ${response.statusText}).`,
