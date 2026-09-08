@@ -41,6 +41,13 @@ through `browser-form-submission`. Invalid forms retain bounded diagnostics;
 valid GET and URL-encoded POST plans use the same transactional load, history,
 visited-link, control-state, and subresource lifecycle as ordinary navigation.
 
+The session also owns editor presentation. It appends stable backend-neutral
+overlay groups for selection, caret, composition, and invalid feedback after
+every retained reflow; routes pointer placement and drag selection; exposes
+explicit copy/cut/paste methods; advances caret blink from deterministic host
+ticks; and returns an IME candidate rectangle without handing editing state to
+a native toolkit. Password selection never crosses the clipboard boundary.
+
 `NavigationHistory` is re-exported from the reusable `browser-navigation`
 package and implements the BR01 in-memory navigation model: navigate, Back,
 Forward, Home, Reload, and redirect replacement. The same package owns

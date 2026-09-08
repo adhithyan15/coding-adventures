@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Project retained editor state into backend-neutral caret, selection,
+  composition, validation, viewport-scroll, and IME candidate geometry.
+- Add scalar-safe pointer drag selection, explicit clipboard transfers with
+  password secrecy, and deterministic host-driven caret blink timing.
 - Keep the Flutter host's frame renderer private, matching its private return
   type and allowing generated Flutter projects to pass analysis.
 

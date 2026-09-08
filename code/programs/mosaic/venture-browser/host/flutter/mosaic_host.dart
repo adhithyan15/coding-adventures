@@ -27,6 +27,10 @@ typedef _ControlKeyNative = Uint8 Function(Pointer<Void>, Pointer<Char>, Uint8);
 typedef _ControlKeyDart = int Function(Pointer<Void>, Pointer<Char>, int);
 typedef _ControlTextNative = Uint8 Function(Pointer<Void>, Pointer<Char>);
 typedef _ControlTextDart = int Function(Pointer<Void>, Pointer<Char>);
+typedef _ControlClipboardNative = Pointer<Char> Function(Pointer<Void>);
+typedef _ControlClipboardDart = Pointer<Char> Function(Pointer<Void>);
+typedef _CaretTickNative = Uint8 Function(Pointer<Void>, Uint64);
+typedef _CaretTickDart = int Function(Pointer<Void>, int);
 typedef _MetricsNative =
     Uint8 Function(
       Pointer<Void>,
@@ -126,6 +130,21 @@ class _VentureBindings {
       controlText = library.lookupFunction<_ControlTextNative, _ControlTextDart>(
         'venture_browser_flutter_control_text',
       ),
+      controlCopy = library.lookupFunction<_ControlClipboardNative, _ControlClipboardDart>(
+        'venture_browser_flutter_control_copy',
+      ),
+      controlCut = library.lookupFunction<_ControlClipboardNative, _ControlClipboardDart>(
+        'venture_browser_flutter_control_cut',
+      ),
+      controlPaste = library.lookupFunction<_ControlTextNative, _ControlTextDart>(
+        'venture_browser_flutter_control_paste',
+      ),
+      caretTick = library.lookupFunction<_CaretTickNative, _CaretTickDart>(
+        'venture_browser_flutter_caret_tick',
+      ),
+      imeCandidateRect = library.lookupFunction<_ControlClipboardNative, _ControlClipboardDart>(
+        'venture_browser_flutter_ime_candidate_rect',
+      ),
       activateLink = library.lookupFunction<_PointNative, _PointDart>(
         'venture_browser_flutter_activate_link',
       ),
@@ -152,6 +171,11 @@ class _VentureBindings {
   final _ScalarDart scroll;
   final _ControlKeyDart controlKey;
   final _ControlTextDart controlText;
+  final _ControlClipboardDart controlCopy;
+  final _ControlClipboardDart controlCut;
+  final _ControlTextDart controlPaste;
+  final _CaretTickDart caretTick;
+  final _ControlClipboardDart imeCandidateRect;
   final _PointDart activateLink;
   final _PointDart updateHover;
   final _MetricsDart metrics;
