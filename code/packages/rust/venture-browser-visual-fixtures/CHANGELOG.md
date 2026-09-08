@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a deterministic form-control fixture spanning normal, flex, grid,
+  table, and float layout plus disabled, checked, select, and appearance state.
+
 - Extend the background fixture with rounded overflow descendants, exact image
   clips, and four independently styled border sides with elliptical joins.
 

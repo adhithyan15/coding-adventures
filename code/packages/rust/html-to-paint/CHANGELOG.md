@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Emit typed control hit regions with the same transforms, rounded overflow
+  clips, fixed positioning, and topmost hit policy as links.
+
 - Compose layout-effect transforms while extracting link regions so paint and
   hit testing share visual geometry; transformed regions use conservative
   axis-aligned bounds.

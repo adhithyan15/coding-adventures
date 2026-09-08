@@ -12,7 +12,7 @@ requested URL
   -> html-to-layout -> html-to-paint
   -> ordered BrowserSubresourceRequest effects
   -> incremental CSS/GIF/JPEG completions and repaint
-  -> BrowserPage { document, source, links, scene, stylesheet_resources, image_resources }
+  -> BrowserPage { document, source, links, controls, scene, stylesheet_resources, image_resources }
 ```
 
 `BrowserPagePipeline::load` uses the final fetched document URL as the base for
@@ -72,6 +72,11 @@ compatibility; native and web event loops use `begin_execute`, scheduler
 effects, and `complete_subresource`. Reflow,
 reload, Back, and Forward all project the retained state into blue/purple link
 styling without coupling browser history to HTML layout.
+
+`BrowserControlModel` owns focus, values, checked/radio state, select indexes,
+and disabled/read-only policy. Pointer and semantic keyboard input synchronize
+the retained render tree and reflow through the same backend-neutral page
+pipeline, so native surfaces never instantiate toolkit-specific controls.
 
 `BrowserChromeController` is the matching host-neutral reducer for the shared
 Mosaic `VentureChrome` package. It preserves address edits as a draft, maps

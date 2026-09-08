@@ -11,6 +11,7 @@ image-codec-gif = { path = "../image-codec-gif" }
 image-codec-jpeg = { path = "../image-codec-jpeg" }
 layout-block = { path = "../layout-block" }
 layout-backgrounds = { path = "../layout-backgrounds" }
+layout-controls = { path = "../layout-controls" }
 layout-effects = { path = "../layout-effects" }
 layout-positioned = { path = "../layout-positioned" }
 layout-ir = { path = "../layout-ir" }

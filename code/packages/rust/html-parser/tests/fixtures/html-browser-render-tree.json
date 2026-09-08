@@ -92,6 +92,7 @@
                 "display": "inline-replaced",
                 "role": "control",
                 "name": "select",
+                "control_name": "section",
                 "text": "Books Manuals",
                 "href": null,
                 "src": null,
@@ -198,7 +199,7 @@
             "autocomplete": "on",
             "children": [
               { "display": "inline", "role": "label", "name": "label", "text": "Query", "href": null, "src": null, "alt": null, "control_type": null, "label_for": "q", "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Query", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
-              { "display": "inline-replaced", "role": "control", "name": "input", "id": "q", "text": null, "href": null, "src": null, "alt": null, "control_type": "text", "labels": ["Query"], "accessible_name": "Query", "placeholder": "Search terms", "autocomplete": "search", "autocapitalize": "words", "enterkeyhint": "search", "dirname": "q.dir", "inputmode": "search", "pattern": "[A-Za-z ]+", "minlength": "2", "maxlength": "80", "size": "40", "list": "query-suggestions", "autofocus": true, "required": true, "value": null, "children": [] },
+              { "display": "inline-replaced", "role": "control", "name": "input", "id": "q", "control_name": "q", "text": null, "href": null, "src": null, "alt": null, "control_type": "text", "labels": ["Query"], "accessible_name": "Query", "placeholder": "Search terms", "autocomplete": "search", "autocapitalize": "words", "enterkeyhint": "search", "dirname": "q.dir", "inputmode": "search", "pattern": "[A-Za-z ]+", "minlength": "2", "maxlength": "80", "size": "40", "list": "query-suggestions", "autofocus": true, "required": true, "value": null, "children": [] },
               {
                 "display": "block",
                 "role": "form_group",
@@ -222,7 +223,7 @@
                     "control_type": null,
                     "children": [
                       { "display": "inline-text", "role": "text", "name": null, "text": "Fast", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
-                      { "display": "inline-replaced", "role": "control", "name": "input", "id": "fast", "text": null, "href": null, "src": null, "alt": null, "type_hint": "checkbox", "control_type": "checkbox", "labels": ["Fast"], "accessible_name": "Fast", "value": "on", "checked": true, "children": [] }
+                      { "display": "inline-replaced", "role": "control", "name": "input", "id": "fast", "control_name": "fast", "text": null, "href": null, "src": null, "alt": null, "type_hint": "checkbox", "control_type": "checkbox", "labels": ["Fast"], "accessible_name": "Fast", "value": "on", "checked": true, "children": [] }
                     ]
                   }
                 ]
@@ -232,6 +233,7 @@
                 "role": "control",
                 "name": "select",
                 "id": "kind",
+                "control_name": "kind",
                 "title": "Kind",
                 "text": "Books Manuals",
                 "href": null,
@@ -249,11 +251,11 @@
                 ]
               },
               { "display": "inline-replaced", "role": "control", "name": "button", "id": "go", "text": "Go", "href": null, "src": null, "alt": null, "type_hint": "submit", "control_type": "submit", "accessible_name": "Run search", "aria_label": "Run search", "form_action": "run.html", "form_enctype": "application/x-www-form-urlencoded", "form_method": "post", "form_target": "results", "form_novalidate": true, "children": [] },
-              { "display": "inline-replaced", "role": "control", "name": "input", "id": "upload", "text": null, "href": null, "src": null, "alt": null, "type_hint": "file", "control_type": "file", "accept": "image/png,image/jpeg", "capture": "environment", "value": null, "children": [] },
-              { "display": "inline-replaced", "role": "control", "name": "input", "id": "imageGo", "text": null, "href": null, "src": "buttons/search.png", "resolved_src": null, "alt": "Search image", "width": "32", "height": "16", "type_hint": "image", "control_type": "image", "value": null, "children": [] }
+              { "display": "inline-replaced", "role": "control", "name": "input", "id": "upload", "control_name": "upload", "text": null, "href": null, "src": null, "alt": null, "type_hint": "file", "control_type": "file", "accept": "image/png,image/jpeg", "capture": "environment", "value": null, "children": [] },
+              { "display": "inline-replaced", "role": "control", "name": "input", "id": "imageGo", "control_name": "image-go", "text": null, "href": null, "src": "buttons/search.png", "resolved_src": null, "alt": "Search image", "width": "32", "height": "16", "type_hint": "image", "control_type": "image", "value": null, "children": [] }
             ]
           },
-          { "display": "inline-replaced", "role": "control", "name": "input", "id": "external", "text": null, "href": null, "src": null, "alt": null, "control_type": "text", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "children": [] }
+          { "display": "inline-replaced", "role": "control", "name": "input", "id": "external", "control_name": "outside", "text": null, "href": null, "src": null, "alt": null, "control_type": "text", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "children": [] }
         ]
       }
     },
@@ -760,7 +762,7 @@
             { "display": "block", "role": "paragraph", "name": "p", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Extra", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
           ] },
           { "display": "block", "role": "dialog", "name": "dialog", "id": "dlg", "text": null, "href": null, "src": null, "alt": null, "accessible_name": "Dialog", "aria_label": "Dialog", "open": true, "disclosure_kind": "dialog", "control_type": null, "children": [{ "display": "block", "role": "paragraph", "name": "p", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Dialog copy", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }] },
-          { "display": "block", "role": "search", "name": "search", "id": "site-search", "text": null, "href": null, "src": null, "alt": null, "grouping_kind": "search", "control_type": null, "children": [{ "display": "block", "role": "form", "name": "form", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-replaced", "role": "control", "name": "input", "text": null, "href": null, "src": null, "alt": null, "control_type": "text", "value": null, "children": [] }] }] },
+          { "display": "block", "role": "search", "name": "search", "id": "site-search", "text": null, "href": null, "src": null, "alt": null, "grouping_kind": "search", "control_type": null, "children": [{ "display": "block", "role": "form", "name": "form", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-replaced", "role": "control", "name": "input", "control_name": "q", "text": null, "href": null, "src": null, "alt": null, "control_type": "text", "value": null, "children": [] }] }] },
           { "display": "block", "role": "contact", "name": "address", "id": "contact", "text": null, "href": null, "src": null, "alt": null, "grouping_kind": "contact", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Contact us", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
         ]
       }

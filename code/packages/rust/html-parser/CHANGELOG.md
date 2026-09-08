@@ -6,6 +6,8 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser content/render nodes retain control names, textarea rows/columns,
+  and mutable focus state for host-neutral form interaction and reflow.
 - Browser content and render nodes now retain the authored `style` attribute
   for the shared computed-style boundary without interpreting CSS in HTML
   parsing.

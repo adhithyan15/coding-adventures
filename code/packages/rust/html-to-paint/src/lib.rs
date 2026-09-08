@@ -10,6 +10,7 @@ use image_codec_gif::decode_gif;
 use image_codec_jpeg::decode_jpeg;
 use layout_backgrounds::{BackgroundStyle, Rect as BackgroundRect};
 use layout_block::layout_block;
+use layout_controls::{positioned_control_state, ControlKind};
 use layout_effects::{multiply, transform_point, EffectStyle, Transform2D, IDENTITY};
 use layout_ir::{Constraints, Content, ExtValue, PositionedNode, TextMeasurer};
 use layout_positioned::{scroll_extent, PositionedStyle};
@@ -199,11 +200,38 @@ impl LinkRegion {
     }
 }
 
+/// A host-neutral form-control hit region in logical document coordinates.
+#[derive(Clone, Debug, PartialEq)]
+pub struct ControlRegion {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub key: String,
+    pub kind: ControlKind,
+    pub disabled: bool,
+    pub fixed: bool,
+    pub clips: Vec<LinkClip>,
+}
+
+impl ControlRegion {
+    pub fn contains(&self, x: f64, y: f64) -> bool {
+        x.is_finite()
+            && y.is_finite()
+            && x >= self.x
+            && x < self.x + self.width
+            && y >= self.y
+            && y < self.y + self.height
+            && self.clips.iter().all(|clip| clip.contains(x, y))
+    }
+}
+
 /// Geometry, link hit regions, and paint output for a browser host.
 #[derive(Clone, Debug, PartialEq)]
 pub struct HtmlPaintOutput {
     pub positioned: PositionedNode,
     pub links: Vec<LinkRegion>,
+    pub controls: Vec<ControlRegion>,
     pub scene: PaintScene,
 }
 
@@ -440,11 +468,12 @@ where
     };
     let mut scene = layout_to_paint(&positioned, &options);
     annotate_html_image_metadata(&positioned, &mut scene);
-    let links = extract_link_regions(&positioned);
+    let (links, controls) = extract_interactive_regions(&positioned);
 
     HtmlPaintOutput {
         positioned,
         links,
+        controls,
         scene,
     }
 }
@@ -456,7 +485,17 @@ fn never_visited(_url: &str) -> bool {
 /// Extract resolved link rectangles while accumulating parent-relative layout
 /// coordinates into absolute logical document coordinates.
 pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
-    let mut regions = Vec::new();
+    extract_interactive_regions(root).0
+}
+
+/// Extract form controls using the same transforms and clips as link regions.
+pub fn extract_control_regions(root: &PositionedNode) -> Vec<ControlRegion> {
+    extract_interactive_regions(root).1
+}
+
+fn extract_interactive_regions(root: &PositionedNode) -> (Vec<LinkRegion>, Vec<ControlRegion>) {
+    let mut links = Vec::new();
+    let mut controls = Vec::new();
     let mut stack = vec![(root, 0.0, 0.0, None, Vec::new(), false, IDENTITY)];
 
     while let Some((
@@ -487,7 +526,7 @@ pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
                 if let Some((x, y, width, height)) = region.filter(|(x, y, width, height)| {
                     valid_link_box(*x, *y, *width, *height) && !url.is_empty()
                 }) {
-                    regions.push(LinkRegion {
+                    links.push(LinkRegion {
                         x,
                         y,
                         width,
@@ -497,6 +536,27 @@ pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
                         clips: inherited_clips.clone(),
                     });
                 }
+            }
+        }
+        if let Some(control) = positioned_control_state(node) {
+            let region = clipped_box(
+                transformed_box((absolute_x, absolute_y, node.width, node.height), transform),
+                inherited_clip,
+            );
+            if let Some((x, y, width, height)) = region.filter(|(x, y, width, height)| {
+                valid_link_box(*x, *y, *width, *height) && !control.key.is_empty()
+            }) {
+                controls.push(ControlRegion {
+                    x,
+                    y,
+                    width,
+                    height,
+                    key: control.key,
+                    kind: control.kind,
+                    disabled: control.disabled,
+                    fixed,
+                    clips: inherited_clips.clone(),
+                });
             }
         }
 
@@ -541,7 +601,7 @@ pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
         }
     }
 
-    regions
+    (links, controls)
 }
 
 fn invert_transform(transform: Transform2D) -> Option<Transform2D> {
@@ -648,6 +708,24 @@ pub fn hit_test_link(
     viewport_y: f64,
     scroll_y: f64,
 ) -> Option<&LinkRegion> {
+    let scroll_y = finite_non_negative(scroll_y);
+    regions.iter().rev().find(|region| {
+        let y = if region.fixed {
+            viewport_y
+        } else {
+            viewport_y + scroll_y
+        };
+        region.contains(viewport_x, y)
+    })
+}
+
+/// Hit-test a viewport-space point against form controls, topmost first.
+pub fn hit_test_control(
+    regions: &[ControlRegion],
+    viewport_x: f64,
+    viewport_y: f64,
+    scroll_y: f64,
+) -> Option<&ControlRegion> {
     let scroll_y = finite_non_negative(scroll_y);
     regions.iter().rev().find(|region| {
         let y = if region.fixed {
@@ -1713,6 +1791,35 @@ mod tests {
 
     fn positioned_html_string<'a>(node: &'a PositionedNode, key: &str) -> Option<&'a str> {
         super::positioned_html_string(node, key)
+    }
+
+    #[test]
+    fn form_controls_emit_clipped_hit_regions_and_ignore_disabled_activation() {
+        let render = parse_browser_render_tree(
+            "<div style='overflow:hidden;width:260px'>\
+             <input id='query' value='hello'><button disabled>Save</button></div>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(300.0, 120.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        assert_eq!(output.controls.len(), 2);
+        assert_eq!(output.controls[0].key, "control:0:id:query");
+        assert!(!output.controls[0].disabled);
+        assert!(output.controls[1].disabled);
+        let first = &output.controls[0];
+        assert_eq!(
+            hit_test_control(&output.controls, first.x + 1.0, first.y + 1.0, 0.0)
+                .map(|region| region.key.as_str()),
+            Some("control:0:id:query")
+        );
     }
 
     fn positioned_link(x: f64, y: f64, width: f64, height: f64, url: &str) -> PositionedNode {

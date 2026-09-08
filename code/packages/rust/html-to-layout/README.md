@@ -33,6 +33,9 @@ typed `inlineBox` decoration-break extension so shared line layout can build
 accurate slice/clone fragments.
 Decoded image dimensions and computed `aspect-ratio`/`object-fit` values enter
 the producer-neutral `replaced` contract rather than host-specific image code.
+Inputs, buttons, textareas, and selects enter the `layout-controls` contract
+with stable keys, intrinsic dimensions, computed `appearance`, and current
+state. Text-backed controls remain atomic in every formatting context.
 The optional visited callback receives only resolved URLs. It selects theme
 colors and inherited link decoration without exposing history or persistence
 policy to this producer adapter. `HtmlStyleContext` adds a host-neutral
