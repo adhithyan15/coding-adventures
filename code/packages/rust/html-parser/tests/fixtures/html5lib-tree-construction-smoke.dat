@@ -38222,7 +38222,7 @@ tbody
 |     <svg title>
 
 
-#source template.dat:112
+#source template.dat:127
 #data
 <!DOCTYPE HTML><template><tr><td>cell</td></tr>a</template>
 #errors
@@ -40356,7 +40356,7 @@ eof-in-math
 |         <option>
 |           "a"
 
-#source template.dat:109
+#source template.dat:116
 #data
 <template><form><input name="q"></form><div>second</div></template>
 #errors
@@ -42037,7 +42037,7 @@ there=1?>
 |       <script>
 |         "var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)"
 
-#source template.dat:46
+#source template.dat:52
 #data
 <table><template><tr><div></div></tr></template>
 #errors
@@ -42071,3 +42071,187 @@ eof in table
 |       <marquee>
 |       <table>
 |       <a>
+
+#source template.dat:44
+#data
+<head><template></template></head><p><frameset>
+#errors
+no doctype
+bad frameset
+eof in frameset
+#document
+| <html>
+|   <head>
+|     <template>
+|       content
+|   <frameset>
+
+#source template.dat:45
+#data
+<template>x</template><p><frameset>
+#errors
+no doctype
+bad frameset
+eof in frameset
+#document
+| <html>
+|   <head>
+|     <template>
+|       content
+|         "x"
+|   <frameset>
+
+#source template.dat:46
+#data
+<head></head><template></template><p><frameset>
+#errors
+no doctype
+bad template
+bad frameset
+eof in frameset
+#document
+| <html>
+|   <head>
+|     <template>
+|       content
+|   <frameset>
+
+#source template.dat:47
+#data
+<p><template></template><frameset>
+#errors
+no doctype
+bad frameset
+#document
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <template>
+|         content
+
+#source template.dat:48
+#data
+<p><template><frameset></template>
+#errors
+no doctype
+bad frameset
+#document
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <template>
+|         content
+
+#source template.dat:49
+#data
+<template></template>x<frameset>
+#errors
+no doctype
+bad frameset
+#document
+| <html>
+|   <head>
+|     <template>
+|       content
+|   <body>
+|     "x"
+
+#source template.dat:117
+#data
+<template><table><form></table></template>
+#errors
+no doctype
+unexpected form in table
+#document
+| <html>
+|   <head>
+|     <template>
+|       content
+|         <table>
+|           <form>
+|   <body>
+
+#source template.dat:118
+#data
+<table><form></table>
+#errors
+unexpected form in table
+#document-fragment
+template
+#document
+| <table>
+|   <form>
+
+#source template.dat:119
+#data
+<template><form><form><input></template>
+#errors
+no doctype
+#document
+| <html>
+|   <head>
+|     <template>
+|       content
+|         <form>
+|           <form>
+|             <input>
+|   <body>
+
+#source template.dat:120
+#data
+<form><form>
+#errors
+#document-fragment
+template
+#document
+| <form>
+|   <form>
+
+#source template.dat:121
+#data
+<template><form><template></template><form></template>
+#errors
+no doctype
+#document
+| <html>
+|   <head>
+|     <template>
+|       content
+|         <form>
+|           <template>
+|             content
+|           <form>
+|   <body>
+
+#source template.dat:122
+#data
+<template><template><form></template><form></template>
+#errors
+no doctype
+#document
+| <html>
+|   <head>
+|     <template>
+|       content
+|         <template>
+|           content
+|             <form>
+|         <form>
+|   <body>
+
+#source template.dat:123
+#data
+<form><template><form></template><form>
+#errors
+no doctype
+nested form ignored
+#document
+| <html>
+|   <head>
+|   <body>
+|     <form>
+|       <template>
+|         content
+|           <form>
