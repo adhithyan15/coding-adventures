@@ -871,6 +871,25 @@ fn rebuild_filtered_deck_from_card_ids(
     reschedule: bool,
     rebuilt_at: u64,
 ) -> AppState {
+    // A deck that does not exist is not a destination.
+    //
+    // This is the choke point: all three routes to this function pass through
+    // here -- the two `EngramSession` call sites, which check first and report a
+    // visible error, and `reduce(EngramCommand::RebuildFilteredDeck)`, which
+    // cannot report anything because `reduce` returns `AppState`. Guarding only
+    // the callers left the mutation itself willing to strand every card it
+    // touched, and this function is `pub`-reachable through
+    // `engram_core::rebuild_filtered_deck`, so the next consumer would have
+    // inherited the bug rather than the fix.
+    //
+    // Returning the state unchanged is not trading loud for silent: there is no
+    // channel to be loud on here, so the choice is between doing nothing and
+    // corrupting the collection. The callers that *can* speak still do -- their
+    // own check runs first, so a person gets the error and only a programmatic
+    // caller gets the quiet no-op.
+    if !state.decks.iter().any(|deck| deck.id == deck_id) {
+        return state.clone();
+    }
     let mut next = empty_filtered_deck(state, deck_id);
     upsert_filtered_deck_source(&mut next, deck_id, search, limit, reschedule, rebuilt_at);
 
@@ -3005,6 +3024,58 @@ mod tests {
         assert!(undone.reviews.is_empty());
         assert_eq!(undone.sessions[0].cards_reviewed, 0);
         assert_eq!(undone.sessions[0].cards_correct, 0);
+    }
+
+    /// A rebuild into a deck that does not exist changes nothing, at the point
+    /// of mutation rather than only at the callers.
+    ///
+    /// The two `EngramSession` routes check first and report a visible error,
+    /// which is the right place for a person to hear about it. This is the
+    /// other half: `reduce(EngramCommand::RebuildFilteredDeck)` cannot report
+    /// anything, and `rebuild_filtered_deck` is publicly re-exported, so a
+    /// consumer that never goes through the facade would otherwise inherit the
+    /// bug rather than the fix -- which is exactly how this family of defects
+    /// kept turning up one route at a time.
+    #[test]
+    fn rebuilding_into_a_deck_that_does_not_exist_changes_nothing() {
+        let mut due = card("due");
+        due.front = "hola".to_string();
+
+        let state = AppState {
+            decks: vec![Deck {
+                id: "deck".to_string(),
+                name: "Spanish".to_string(),
+                description: String::new(),
+                created_at: NOW,
+            }],
+            cards: vec![due],
+            card_progress: vec![progress("due")],
+            ..AppState::default()
+        };
+
+        // Through the `Result`-returning entry point...
+        let rebuilt = rebuild_filtered_deck(&state, "no-such-deck", "", 50, false, NOW).unwrap();
+        assert_eq!(rebuilt.cards, state.cards, "no card may move");
+        assert_eq!(
+            rebuilt.external_sources, state.external_sources,
+            "no filtered-deck source may be recorded for a deck that does not exist"
+        );
+
+        // ...and through `reduce`, which has no way to report an error and so
+        // must simply decline.
+        let reduced = reduce(
+            &state,
+            EngramCommand::RebuildFilteredDeck {
+                deck_id: "no-such-deck".to_string(),
+                search: String::new(),
+                limit: 50,
+                card_ids: vec!["due".to_string()],
+                reschedule: false,
+                rebuilt_at: NOW,
+            },
+        );
+        assert_eq!(reduced.cards, state.cards, "no card may move");
+        assert_eq!(reduced.external_sources, state.external_sources);
     }
 
     #[test]
