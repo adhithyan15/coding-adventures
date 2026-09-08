@@ -2914,7 +2914,8 @@ impl Compiler {
     /// A pure conditional may feed a standard function even when its branch
     /// values differ, provided the function maps every branch to the same
     /// exact result. Such a result may compose with finite literal arithmetic,
-    /// bounded literal powers, and exact tracked scalar snapshots before
+    /// bounded powers with literal or exact tracked-integer exponents, and
+    /// exact tracked scalar snapshots before
     /// feeding another built-in. The selector remains part of emitted IIR, and
     /// untracked values remain excluded.
     fn exact_tracked_standard_function_operand(&self, node: &GrammarASTNode) -> bool {
@@ -2967,9 +2968,13 @@ impl Compiler {
             let Some((base, exponents)) = operands.split_first() else {
                 return false;
             };
+            let exponent = literal_nonnegative_integral_arithmetic_power_chain(exponents)
+                .or_else(|| {
+                    self.static_nonnegative_tracked_integer_expression_power_chain(exponents)
+                });
             return self.exact_tracked_standard_function_operand(base)
                 && self.contains_pure_standard_function_call(base)
-                && literal_nonnegative_integral_arithmetic_power_chain(exponents).is_some()
+                && exponent.is_some()
                 && self.static_tracked_exponent_real_value(node).is_some();
         }
         sequence.len() >= 3
@@ -11474,7 +11479,8 @@ mod tests {
     #[test]
     fn al4_path_independent_standard_result_literal_powers_fail_closed() {
         for source in [
-            "begin integer power; real gate, exponent, saved; power := 1; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) end",
+            "begin integer power; real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) end",
+            "begin real power, gate, exponent, saved; power := 1.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) end",
             "begin real exponent, saved; exponent := 2.0; saved := 6.0 ^ entier((exponent + 0.5) ^ 1) end",
         ] {
             let module = compile_source(source, "test")
@@ -11482,6 +11488,19 @@ mod tests {
             let main = module.get_function("main").expect("has main");
             assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"), "{source}");
         }
+    }
+
+    #[test]
+    fn al4_path_independent_standard_results_compose_through_tracked_integer_powers() {
+        let module = compile_source(
+            "begin integer power; real gate, exponent, saved; power := 1; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) + 6.0; gate := 1.0; power := 9; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("a tracked integer may bound a power around a path-independent built-in result");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
     }
 
     #[test]

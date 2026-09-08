@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.246.0 — 2026-09-08 — tracked-integer powered standard results
+
+Exact tracked local integer snapshots may now provide the bounded exponent of
+a power around a path-independent pure built-in result. Uninitialized integer
+and tracked-real power operands continue to retain `f64_pow`.
+
 ## 0.245.0 — 2026-09-08 — powered path-independent standard results
 
 Path-independent pure built-in results may now form the base of a finite power
