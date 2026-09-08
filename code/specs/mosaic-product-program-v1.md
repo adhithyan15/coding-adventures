@@ -147,6 +147,40 @@ Engram-shaped to general.
 
 ---
 
+## 6.5 Showcasing every component — a standing requirement
+
+Two obligations that hold for the life of this program, not one-time tasks.
+
+**A documentation site with a landing page for every component, and a page per
+component** ([#14026](https://github.com/adhithyan15/coding-adventures/issues/14026)). Generated from the packages, never
+hand-written, and **republished as soon as a new component ships** — the same
+continuous shape as `deploy-task-app.yml`, which republishes Trestle on every
+merge that touches it. A hand-maintained catalog drifts the moment a component
+lands, and a stale catalog is worse than none: it looks authoritative and is
+wrong. Each page carries what the component is, the primitives it composes, its
+declared slots and their closed `one-of` value sets, the backends it lowers to
+with per-backend degradations, **its live web build running inline**, and links
+to its downloads.
+
+**A demo app per component, on every backend Mosaic supports**
+([#14015](https://github.com/adhithyan15/coding-adventures/issues/14015)). Not one bundled showcase per package, and not web-only:
+each component is shown in isolation, on every platform, because a component
+proven only inside a larger app has not been proven — §7's rule applied to
+what people can actually see and run.
+
+Both are **generated**. At roughly six artifacts per component across 23
+components today, hand-writing does not scale past a handful, and hand-written
+material drifts from the component the moment it changes. The release lane
+reuses the build tool's existing diff-based change detection so one component's
+change releases one component.
+
+Both depend on [#14459](https://github.com/adhithyan15/coding-adventures/issues/14459): a page or a demo showing every variant needs
+fixtures to actually reach the compiler. Until that lands they can show a
+component's default state only, which is worth shipping early and worth being
+honest about.
+
+---
+
 ## 7. What completion means, per product
 
 Unchanged from `mosaic-component-program-v1.md` §7 for components. Per product:
