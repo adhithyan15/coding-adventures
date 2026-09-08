@@ -1,0 +1,23 @@
+{
+  "chapter": 74,
+  "title": "Which One in the Line",
+  "label": "ch:ka-ordinals",
+  "canDo": "I can say first to fifth in Kannada, and make an ordinal from any number by dropping its final vowel and adding -aneya.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "KA-C74-fifth",
+    "kind": "production",
+    "summary": "The five said in order, with only modalaneya learned as a word and the other four built by the ending.",
+    "assesses": [
+      "KA-LEX-C74-ORDINAL-01",
+      "KA-GRAMMAR-C74-ORDINAL-02",
+      "KA-LEX-C74-ORDINAL-03",
+      "KA-LEX-C74-ORDINAL-04",
+      "KA-ETYMON-C74-ORDINAL-05",
+      "KA-LEX-C74-ORDINAL-06",
+      "KA-LEX-C74-ORDINAL-07"
+    ]
+  }
+}

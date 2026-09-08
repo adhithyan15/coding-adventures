@@ -1395,9 +1395,16 @@ describe("the committed Kannada A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(258);
-    expect(coverage.covered).toBe(193);
-    expect(coverage.unmapped).toBe(65);
+    expect(coverage.covered).toBe(194);
+    expect(coverage.unmapped).toBe(64);
     expect(coverage.partial).toBe(0);
+    // 193 -> 194: the HL-C354 ordinal tranche closed KA-A1-NUM-07 (chapters
+    // 74-75). It is the ONLY point that moved, and the numeral column below
+    // says so on its own line rather than leaving the total to speak for it.
+    expect(coverage.byCategory["Sankhye (numerals and quantity)"]!).toEqual({
+      enumerated: 8,
+      covered: 7,
+    });
     // WHAT THIS ASSERTION USED TO SAY, and why it changed. The inventory landed
     // reporting 167/258 and an EMPTY joining column: `mattu`, `athava`,
     // `aadare`, `eekendare` and the quotative `anta`/`endu` occurred ZERO times
@@ -1423,7 +1430,7 @@ describe("the committed Kannada A1 inventory", () => {
     expect(coverage.byCategory["Kriyaapada (the verb)"]!.covered).toBeGreaterThan(12);
     expect(coverage.byCategory["Padakosha (lexicon by domain)"]!.covered).toBeGreaterThan(45);
     expect(formatExamCoverage(coverage)).toContain(
-      "kannada A1 (partial inventory): 193/258 points covered (75%)",
+      "kannada A1 (partial inventory): 194/258 points covered (75%)",
     );
   }, 60_000);
 });

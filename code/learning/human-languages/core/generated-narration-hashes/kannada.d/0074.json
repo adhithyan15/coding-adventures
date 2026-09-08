@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:350dcadc14518282",
+  "lessonIds": [
+    "KA-C74-second",
+    "KA-C74-third",
+    "KA-C74-first",
+    "KA-C74-fourth",
+    "KA-C74-fifth"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch74.txt",
+  "json": "kannada/narration/ch74.json",
+  "textHash": "fnv1a64:331a469fb705d32c",
+  "jsonHash": "fnv1a64:01a44645bb9a2652",
+  "findings": []
+}

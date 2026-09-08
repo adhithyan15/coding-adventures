@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C74-fifth",
+    "language": "kannada",
+    "chapter": 74,
+    "sequence": 2580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:261229f011036850"
+  },
+  "findings": []
+}

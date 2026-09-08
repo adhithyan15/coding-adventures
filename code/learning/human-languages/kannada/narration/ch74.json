@@ -1,0 +1,873 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 74,
+  "title": "Which One in the Line",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:350dcadc14518282",
+  "lessons": [
+    {
+      "id": "KA-C74-second",
+      "sequence": 2540,
+      "title": "ಎರಡನೆಯ (eraḍaneya) — second, and why it comes before \"first\"",
+      "headword": "ಎರಡನೆಯ",
+      "romanization": "eraḍaneya",
+      "gloss": "second — and the ending that makes every other ordinal in the language",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:7cdc6884c91f7e68",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new set of number words starts here, so the recalls come first, at the four growing distances this book measures."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ondu hūvu, and say what the ondu is doing there — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ondu hūvu*, and say what the *ondu* is doing there — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tumbā — R2, the first real retrieval, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tumbā* — **R2**, the first real retrieval, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hēḷu — R3, durable, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hēḷu* — **R3**, durable, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say svalpa — R4, recognition at distance, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *svalpa* — **R4**, recognition at distance, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಎರಡನೆಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಎರಡನೆಯ (eraḍaneya) — \"second\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಒಂದು, ಎರಡು, ಮೂರು answer how many. This word answers which one in the line, and Kannada keeps a second set of words for that job."
+            },
+            {
+              "kind": "speech",
+              "text": "It goes straight in front of what it counts, and nothing on the noun changes: ಎರಡನೆಯ ದಿನ (eraḍaneya dina), the second day; ಎರಡನೆಯ ಬಾಗಿಲು (eraḍaneya bāgilu), the second door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending, and why the chapter opens on two",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at the word against the number it comes from:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "cardinal",
+                "ordinal"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "cardinal: ಎರಡು (eraḍu). ordinal: ಎರಡನೆಯ (eraḍaneya)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The final -ು goes, and -ಅನೆಯ (-aneya) goes on. That is the rule, and in Kannada it has no exceptions at all — every number you know already takes it."
+            },
+            {
+              "kind": "speech",
+              "text": "So the chapter does not open on one. It opens on two, because eraḍu is the first number that shows the ending working, and because the one word that will surprise you is first — which is not built on ಒಂದು at all. An exception is only worth looking at once you can see what it is an exception to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraḍu, then eraḍaneya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraḍu*, then *eraḍaneya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraḍaneya dina — the second day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraḍaneya dina* — the second day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraḍu is how many, eraḍaneya is which one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraḍu* is how many, *eraḍaneya* is which one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಎರಡನೆಯ (eraḍaneya) mean? (Second — which one in the line.) What did you do to ಎರಡು to get it? (Dropped the final -ು, added -ಅನೆಯ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C74-third",
+      "sequence": 2550,
+      "title": "ಮೂರನೆಯ (mūraneya) — third",
+      "headword": "ಮೂರನೆಯ",
+      "romanization": "mūraneya",
+      "gloss": "third — the rule working a second time, on the number nobody argued about",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b999a65a341addb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eraḍaneya, and say what you did to eraḍu to build it — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eraḍaneya*, and say what you did to *eraḍu* to build it — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ōdalu, and say what its ending means — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ōdalu*, and say what its ending means — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say anta, and say what job it does in a sentence — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *anta*, and say what job it does in a sentence — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say heccu — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *heccu* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೂರನೆಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೂರನೆಯ (mūraneya) — \"third\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You have already met the machine that made it. ಮೂರು loses its final -ು and takes -ಅನೆಯ:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "cardinal",
+                "ordinal"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "cardinal: ಎರಡು (eraḍu). ordinal: ಎರಡನೆಯ (eraḍaneya).",
+                "cardinal: ಮೂರು (mūru). ordinal: ಮೂರನೆಯ (mūraneya)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೂರನೆಯ ದಿನ (mūraneya dina), the third day. ಮೂರನೆಯ ಮರ (mūraneya mara), the third tree."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the second word and it needed nothing new. That is what an exceptionless ending buys you: from here on, a number you can say is a position you can say."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūru, then mūraneya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūru*, then *mūraneya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraḍaneya dina, mūraneya dina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraḍaneya dina, mūraneya dina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūraneya bāgilu — the third door",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūraneya bāgilu* — the third door]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the third day\". (ಮೂರನೆಯ (mūraneya) ದಿನ.) How many new pieces did this word need? (None — the same ending, on a number you already had.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C74-first",
+      "sequence": 2560,
+      "title": "ಮೊದಲನೆಯ (modalaneya) — first, and the one surprise in the set",
+      "headword": "ಮೊದಲನೆಯ",
+      "romanization": "modalaneya",
+      "gloss": "first — the regular ending on a stem that is not a number",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab961b656df903b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mūraneya — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mūraneya* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಟ, and say its sound — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಟ**, and say its sound — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read the sign ೇ, and say what it does to a letter — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read the sign **ೇ**, and say what it does to a letter — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kaḍime — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kaḍime* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೊದಲನೆಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೊದಲನೆಯ (modalaneya) — \"first\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is the one you already have. What is new is the word underneath it, because there is no ಒಂದು anywhere in modalaneya — and there was never going to be."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "cardinal",
+                "ordinal"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "cardinal: ಒಂದು (ondu). ordinal: ಮೊದಲನೆಯ (modalaneya).",
+                "cardinal: ಎರಡು (eraḍu). ordinal: ಎರಡನೆಯ (eraḍaneya).",
+                "cardinal: ಮೂರು (mūru). ordinal: ಮೂರನೆಯ (mūraneya)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೊದಲನೆಯ ದಿನ (modalaneya dina), the first day. ಮೊದಲನೆಯ ದಾರಿ (modalaneya dāri), the first road."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "cognates",
+          "title": "Across the family: ಮೊದಲು, \"a beginning\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Under it sits ಮೊದಲು (modalu), \"a beginning\" — so the word means \"of the beginning\", not \"one-th\"."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "\"one\"",
+                "\"first\" is built on"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "language: Kannada. \"one\": ondu. \"first\" is built on: ಮೊದಲು modalu, a beginning.",
+                "language: Tamil. \"one\": oṉṟu. \"first\" is built on: முதல் mudal, a beginning.",
+                "language: Telugu. \"one\": okaṭi. \"first\" is built on: మొదలు modalu, a beginning."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three sisters, three different words for one, and the same word for the start of a line. Counting and ordering were never the same idea in this family, and first is where the seam shows."
+            },
+            {
+              "kind": "speech",
+              "text": "Note what is and is not irregular here. The ending is perfectly regular — modalu drops its final -ು and takes -ಅನೆಯ exactly like eraḍu did. It is only the stem that is a surprise. Kannada asks you to learn one extra word, not one extra rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modalu, then modalaneya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modalu*, then *modalaneya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modalaneya, eraḍaneya, mūraneya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modalaneya, eraḍaneya, mūraneya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modalaneya dāri — the first road",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modalaneya dāri* — the first road]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What word is ಮೊದಲನೆಯ (modalaneya) built on? (ಮೊದಲು, a beginning — not ಒಂದು.) Is the ending irregular too? (No — only the stem is.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C74-fourth",
+      "sequence": 2570,
+      "title": "ನಾಲ್ಕನೆಯ (nālkaneya) — fourth",
+      "headword": "ನಾಲ್ಕನೆಯ",
+      "romanization": "nālkaneya",
+      "gloss": "fourth — the ending riding over a stacked consonant",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:deac50fa96a8714a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say modalaneya, and say what word it is built on — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *modalaneya*, and say what word it is built on — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nanage kannaḍa baruttade — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nanage kannaḍa baruttade* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ēkendare, and say what it introduces — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ēkendare*, and say what it introduces — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bēḍa — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bēḍa* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಾಲ್ಕನೆಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಲ್ಕನೆಯ (nālkaneya) — \"fourth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾಲ್ಕು was the first word in this book to carry a stacked consonant, the ಲ್ಕ riding under the line. The ending does not disturb it: the stack stays exactly where it was and -ಅನೆಯ is added after it."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "cardinal",
+                "ordinal"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "cardinal: ನಾಲ್ಕು (nālku). ordinal: ನಾಲ್ಕನೆಯ (nālkaneya)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾಲ್ಕನೆಯ ಕುರ್ಚಿ (nālkaneya kurci), the fourth chair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nālku, then nālkaneya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nālku*, then *nālkaneya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ನಾಲ್ಕನೆಯ (nālkaneya) and find the ಲ್ಕ stack still in place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at ನಾಲ್ಕನೆಯ and find the ಲ್ಕ stack still in place]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modalaneya, eraḍaneya, mūraneya, nālkaneya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modalaneya, eraḍaneya, mūraneya, nālkaneya*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the fourth chair\". (ನಾಲ್ಕನೆಯ (nālkaneya) ಕುರ್ಚಿ.) Did the stacked consonant change? (No — the ending goes on after it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C74-fifth",
+      "sequence": 2580,
+      "title": "ಐದನೆಯ (aidaneya) — fifth, and the five in a row",
+      "headword": "ಐದನೆಯ",
+      "romanization": "aidaneya",
+      "gloss": "fifth — and the first five said in order, with one word learned and four built",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:261229f011036850",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nālkaneya — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nālkaneya* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ondu hūvu — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ondu hūvu* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say adu nija anta yōcisuttēne — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *adu nija anta yōcisuttēne* — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aṣṭē — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aṣṭē* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಐದನೆಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಐದನೆಯ (aidaneya) — \"fifth\". ಐದು drops its -ು, takes -ಅನೆಯ, and the set is complete."
+            },
+            {
+              "kind": "speech",
+              "text": "ಐದನೆಯ ದಿನ (aidaneya dina), the fifth day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "cardinal",
+                "ordinal"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "1. cardinal: ಒಂದು ondu. ordinal: ಮೊದಲನೆಯ modalaneya.",
+                "2. cardinal: ಎರಡು eraḍu. ordinal: ಎರಡನೆಯ eraḍaneya.",
+                "3. cardinal: ಮೂರು mūru. ordinal: ಮೂರನೆಯ mūraneya.",
+                "4. cardinal: ನಾಲ್ಕು nālku. ordinal: ನಾಲ್ಕನೆಯ nālkaneya.",
+                "5. cardinal: ಐದು aidu. ordinal: ಐದನೆಯ aidaneya."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Count the work. Four of those five were built, from numbers you had learned when you learned to count and an ending you learned in one lesson. Exactly one, modalaneya, was a word to learn — and even it took the regular ending."
+            },
+            {
+              "kind": "speech",
+              "text": "English asks you to learn first, second, third before the pattern starts; Latin asks for ten separate words. Kannada asks for one, and it is not a number word at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modalaneya, eraḍaneya, mūraneya, nālkaneya, aidaneya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modalaneya, eraḍaneya, mūraneya, nālkaneya, aidaneya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aidaneya dina — the fifth day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aidaneya dina* — the fifth day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the five cardinals, then the five ordinals, and hear where they differ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the five cardinals, then the five ordinals, and hear where they differ]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say first to fifth. How many of the five were words you had to learn? (One — ಮೊದಲನೆಯ (modalaneya).) What made the other four? (The ending -ಅನೆಯ on numbers you already had.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

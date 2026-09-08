@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-74-ORDINAL",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "KA-C74-second",
+    "KA-C74-third",
+    "KA-C74-first",
+    "KA-C74-fourth",
+    "KA-C74-fifth"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-74-ORDINAL"
+  ],
+  "after": []
+}

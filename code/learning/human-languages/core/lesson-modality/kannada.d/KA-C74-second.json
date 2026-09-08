@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C74-second",
+    "language": "kannada",
+    "chapter": 74,
+    "sequence": 2540,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7cdc6884c91f7e68"
+  },
+  "findings": []
+}

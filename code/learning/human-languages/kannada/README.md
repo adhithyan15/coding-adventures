@@ -151,6 +151,37 @@ a stroke order sourced from a cited Wikimedia Commons animation, and says why it
 is the only one that does. Nineteen characters remain, and `HL-C311` in the
 backlog records which of them already have a source and which have none.
 
+## Chapters 74-75 — the ordinal column
+
+Thirteen lessons, one word each, closing `KA-A1-NUM-07` and taking A1 coverage to
+**194/258 (75%)** with the numeral column at **7 of 8**. Before this tranche the
+corpus contained no ordinal in any guise: Kannada's week is planet-named
+(*Sōmavāra*, *Maṅgaḷavāra*), so unlike Portuguese it had none hiding in the
+weekdays, and a search for *modal-*, *-neya* and *-nē* across 303 lessons
+returned zero hits.
+
+**The order is not numerical.** Kannada's ordinal ending **-ಅನೆಯ** has no
+exceptions; the only irregularity in the set is *which word* "first" is built on.
+So the rule leads and the exception lands third:
+
+- **74 Which One in the Line** — *eraḍaneya* teaches the ending, *mūraneya*
+  confirms it needs nothing new, *modalaneya* is the one surprise — and a
+  surprise about the **stem** only, since *modalu* "a beginning" takes the same
+  regular ending — then *nālkaneya*, *aidaneya*. The chapter payoff states the
+  arithmetic: four of five were built, one was learned.
+- **75 All the Way Up, and On a Sign** — sixth to tenth, then *hannondaneya* to
+  say the ending was never a fact about one-to-ten, then the everyday short
+  **-ಅನೇ**, then **೧ನೇ**: the digit with only its ending written. That last
+  lesson is what the ten Kannada digit lessons of chapters 9-18 had never been
+  cashed in for.
+
+*modalu*, Tamil *mudal* and Telugu *modalu* are one Dravidian word. Three sisters
+have three unrelated words for **one** and the same word for the start of a line.
+
+No new glyph was needed: a census of the 69 distinct Kannada characters the
+track's lessons already use — headwords **and** worked examples — covers every
+word in the tranche.
+
 ## Book / fonts
 
 The book compiles with XeLaTeX using the **vendored** Noto Sans Kannada font
