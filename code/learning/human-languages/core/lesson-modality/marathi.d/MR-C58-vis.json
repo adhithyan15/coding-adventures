@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C58-vis",
+    "language": "marathi",
+    "chapter": 58,
+    "sequence": 2370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfca5d4a9c1c63be"
+  },
+  "findings": []
+}

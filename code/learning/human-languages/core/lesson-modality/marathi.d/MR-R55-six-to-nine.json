@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R55-six-to-nine",
+    "language": "marathi",
+    "chapter": 55,
+    "sequence": 2240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eac2cbbd6f6ef1e2"
+  },
+  "findings": []
+}

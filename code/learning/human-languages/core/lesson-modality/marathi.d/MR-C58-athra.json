@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C58-athra",
+    "language": "marathi",
+    "chapter": 58,
+    "sequence": 2360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f2dd57ecc1bac9c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 57,
+  "title": "Thirteen to Sixteen",
+  "label": "ch:mr-thirteen-to-sixteen",
+  "canDo": "I can count to sixteen and take each teen apart into the unit at its front and the ten behind it.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "MR-R57-thirteen-to-sixteen",
+    "kind": "production",
+    "summary": "Complete MR-R57-thirteen-to-sixteen and take each teen apart, naming the unit at its front and the worn ten behind it.",
+    "assesses": [
+      "MR-LEX-TERA",
+      "MR-LEX-CHAUDA",
+      "MR-LEX-PANDHRA",
+      "MR-LEX-SOLA"
+    ],
+    "note": "Four teens in one chapter because the pattern is the same four times; the reader is learning one construction, not four words."
+  }
+}

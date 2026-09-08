@@ -1,7 +1,12 @@
 {
   "segments": [
     "MR-PATH-011",
-    "MR-PATH-039"
+    "MR-PATH-039",
+    "MR-PATH-058",
+    "MR-PATH-059",
+    "MR-PATH-060",
+    "MR-PATH-061",
+    "MR-PATH-062"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"

@@ -1,0 +1,16 @@
+{
+  "id": "MR-PATH-060",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "MR-C57-tera",
+    "MR-C57-chauda",
+    "MR-C57-pandhra",
+    "MR-C57-sola",
+    "MR-R57-thirteen-to-sixteen"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-073-THIRTEEN-TO-SIXTEEN"
+  ],
+  "after": []
+}

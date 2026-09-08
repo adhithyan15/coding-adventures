@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:9776a70a6d3529cf",
+  "lessonIds": [
+    "MR-C55-saha",
+    "MR-C55-saat",
+    "MR-C55-aath",
+    "MR-C55-nau",
+    "MR-R55-six-to-nine"
+  ],
+  "tex": "marathi/book/chapters/ch55-six-to-nine.tex"
+}

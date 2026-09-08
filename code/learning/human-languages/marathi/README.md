@@ -341,6 +341,17 @@ first-person can-do sentence and the lesson that pays it off.
   adjective, and finally **किती** in front of an adjective instead of a noun,
   which is the whole of the exclamative. A1 exam coverage 151/301 →
   **157/301**.
+- **Chapters 55–59 — the numbers** ([`lessons/MR-C55-*` … `MR-C59-*`](./lessons/)):
+  the count had stood at five since chapter 13. **55–58** take it to twenty, one
+  numeral per lesson, because Marathi's numerals are the Sanskrit ones worn down
+  and each has to be learned rather than derived — though every one still shows
+  the wear, so **अकरा** is *one-ten* with **एक** at the front and **दश** worn to
+  **-रा** at the back, and a reader who has seen that twice is learning one
+  construction rather than fifteen words. **वीस** comes before **एकोणीस** on
+  purpose: nineteen is built as *one less than twenty*. **59** spends the count —
+  **पैसे** and **रुपया**, and the first price this book can ask and answer. The
+  two vowel signs **ौ** and **ै** are placed where the words that need them are
+  rather than side by side. A1 exam coverage 157/301 → **161/301**.
 
 Chapters 9–12 **are** in the ledger with scored payoffs, and that is a change
 worth recording rather than quietly editing. This paragraph used to say the

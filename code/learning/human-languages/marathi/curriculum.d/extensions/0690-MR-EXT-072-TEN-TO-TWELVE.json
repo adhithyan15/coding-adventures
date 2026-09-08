@@ -1,0 +1,17 @@
+{
+  "id": "MR-EXT-072-TEN-TO-TWELVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can count to twelve and write the au vowel sign.",
+  "prerequisites": [
+    "MR-EXT-071-SIX-TO-NINE"
+  ],
+  "lessons": [
+    "MR-C56-daha",
+    "MR-C56-akra",
+    "MR-C56-bara",
+    "MR-W56-au-matra",
+    "MR-R56-ten-to-twelve"
+  ]
+}

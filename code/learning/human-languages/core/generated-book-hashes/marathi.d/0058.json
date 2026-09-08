@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:59e4b073052a4ba9",
+  "lessonIds": [
+    "MR-C58-satra",
+    "MR-C58-athra",
+    "MR-C58-vis",
+    "MR-C58-ekonis",
+    "MR-R58-seventeen-to-twenty"
+  ],
+  "tex": "marathi/book/chapters/ch58-seventeen-to-twenty.tex"
+}
