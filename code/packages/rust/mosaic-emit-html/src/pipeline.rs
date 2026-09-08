@@ -1680,6 +1680,14 @@ fn emit_html_tree(
         return Ok(out);
     }
 
+    // UI39 — real vector geometry for web hosts. Path is deliberately
+    // parameterized rather than accepting raw SVG path-data, so authored
+    // coordinate bindings remain part of the Mosaic layout contract.
+    if node.tag == "Path" {
+        out.push_str(&emit_path_html(node, indent, part_styles)?);
+        return Ok(out);
+    }
+
     // `Else` is consumed by its sibling `If`. Reaching it through the
     // tree walk means the moslayout-compiler accepted an orphan `Else`
     // (or a caller invoked `emit_html_tree` on one directly, e.g. in a
@@ -3371,6 +3379,100 @@ fn append_drag_flag(attrs: &mut String, node: &LayoutNode, prop: &str, attr: &st
         }
         _ => {}
     }
+}
+
+fn path_coordinate_html(node: &LayoutNode, prop_name: &str) -> Result<String, PipelineEmitError> {
+    match find_prop(node, prop_name) {
+        Some(LayoutPropValue::Number(value)) if value.is_finite() => Ok(value.to_string()),
+        Some(LayoutPropValue::SlotRef(slot)) => Ok(format!("{{{{{}}}}}", camel(slot))),
+        Some(LayoutPropValue::Expr(expression)) => {
+            Ok(format!("{{{{{}}}}}", expr_to_mustache_path(expression)))
+        }
+        Some(LayoutPropValue::Number(_)) => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path prop `{prop_name}:` must be a finite number"
+        ))),
+        _ => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path missing required numeric prop `{prop_name}:`"
+        ))),
+    }
+}
+
+fn css_value<'a>(style: &'a str, property: &str) -> Option<&'a str> {
+    style.split(';').find_map(|declaration| {
+        let (name, value) = declaration.trim().split_once(':')?;
+        (name.trim() == property).then_some(value.trim())
+    })
+}
+
+fn emit_path_html(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let style = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(String::as_str)
+        .unwrap_or("");
+    let fill = css_value(style, "background").unwrap_or("none");
+    let stroke = css_value(style, "border-color").unwrap_or("currentColor");
+    let stroke_width = css_value(style, "border-width").unwrap_or("1");
+    let common = format!(
+        " fill=\"{}\" stroke=\"{}\" stroke-width=\"{}\"",
+        escape_html_attr(fill),
+        escape_html_attr(stroke),
+        escape_html_attr(stroke_width),
+    );
+    let svg_open = format!(
+        "{pad}<svg aria-hidden=\"true\" focusable=\"false\" style=\"position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none\">"
+    );
+    let kind = match find_prop(node, "kind") {
+        Some(LayoutPropValue::Keyword(kind)) => kind.as_str(),
+        _ => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "Path missing required prop `kind:`".to_owned(),
+            ))
+        }
+    };
+
+    let geometry = match kind {
+        "circle" => format!(
+            "<circle cx=\"{}\" cy=\"{}\" r=\"{}\"{common}></circle>",
+            path_coordinate_html(node, "cx")?,
+            path_coordinate_html(node, "cy")?,
+            path_coordinate_html(node, "r")?,
+        ),
+        "line" => format!(
+            "<line x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\"{common}></line>",
+            path_coordinate_html(node, "x1")?,
+            path_coordinate_html(node, "y1")?,
+            path_coordinate_html(node, "x2")?,
+            path_coordinate_html(node, "y2")?,
+        ),
+        "curve" => format!(
+            "<path d=\"M {} {} Q {} {} {} {}\"{common}></path>",
+            path_coordinate_html(node, "x1")?,
+            path_coordinate_html(node, "y1")?,
+            path_coordinate_html(node, "cx")?,
+            path_coordinate_html(node, "cy")?,
+            path_coordinate_html(node, "x2")?,
+            path_coordinate_html(node, "y2")?,
+        ),
+        "arc" => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "Path kind `arc` is not yet supported by the HTML emitter".to_owned(),
+            ))
+        }
+        other => {
+            return Err(PipelineEmitError::UnknownPrimitive(format!(
+                "Path kind `{other}` is not a recognized shape kind (expected circle, line, curve, or arc)"
+            )))
+        }
+    };
+
+    Ok(format!("{svg_open}{geometry}</svg>\n"))
 }
 
 /// Shared helper: build the `style="..."` attribute for a node by

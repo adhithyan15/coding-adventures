@@ -15,7 +15,7 @@ use spice_netlist_parser::{inspect_netlist_json, parse_berkeley_app_deck, run_ne
 
 const SNAPSHOT_SCHEMA: &str = "spice-mosaic-app/state";
 const SNAPSHOT_VERSION: u32 = 1;
-const DEFAULT_DECK: &str = "* Berkeley SPICE Mosaic workbench\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\nC1 out 0 1u IC=0\n.options method=trap\n.op\n.dc V1 0 1 1\n.ac dec 1 1k 1k\n.tran 1m 1m\n.tf V(out) V1\n.save V(out)\n.end\n";
+const DEFAULT_DECK: &str = "* Berkeley SPICE Mosaic workbench\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\nC1 out 0 1u IC=0\n.options method=trap\n.op\n.dc V1 0 1 1\n.ac dec 1 1k 1k\n.tran 1m 3m\n.tf V(out) V1\n.save V(out)\n.end\n";
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 struct AnalysisRow {
@@ -27,6 +27,14 @@ struct AnalysisRow {
 struct ResultTable {
     columns: Vec<String>,
     rows: Vec<Vec<String>>,
+}
+
+#[derive(Clone, Debug, Default, PartialEq)]
+struct WaveformPlot {
+    labels: Vec<String>,
+    selected_label: String,
+    axis_label: String,
+    segments: Vec<[f64; 4]>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -43,6 +51,7 @@ pub struct SpiceMosaicApp {
     analyses: Vec<AnalysisRow>,
     selected_analysis_row: usize,
     result_table: ResultTable,
+    waveform_plot: WaveformPlot,
     result_text: String,
     diagnostic_rows: Vec<String>,
     diagnostics: String,
@@ -57,6 +66,7 @@ impl Default for SpiceMosaicApp {
             analyses: Vec::new(),
             selected_analysis_row: 0,
             result_table: ResultTable::default(),
+            waveform_plot: WaveformPlot::default(),
             result_text: String::new(),
             diagnostic_rows: Vec::new(),
             diagnostics: "Edit a deck, then inspect its runnable analyses or run it.".to_owned(),
@@ -179,6 +189,82 @@ fn selected_result_table(
     Ok(ResultTable { columns, rows })
 }
 
+fn normalize(value: f64, low: f64, high: f64, start: f64, end: f64) -> f64 {
+    if high <= low {
+        return (start + end) / 2.0;
+    }
+    start + ((value - low) / (high - low)) * (end - start)
+}
+
+fn waveform_plot(
+    deck: &str,
+    selected_analysis_row: usize,
+    selected_waveform_row: usize,
+) -> Result<WaveformPlot, SpiceMosaicError> {
+    let app = parse_berkeley_app_deck(deck);
+    let execution = app
+        .run_artifacts()
+        .map_err(|error| invalid(error.to_string()))?;
+    let Some(analysis) = execution.analyses.get(selected_analysis_row) else {
+        return Ok(WaveformPlot::default());
+    };
+    let labels = analysis
+        .waveform_series
+        .iter()
+        .map(|series| series.name.clone())
+        .collect::<Vec<_>>();
+    let Some(series) = analysis
+        .waveform_series
+        .get(selected_waveform_row.min(analysis.waveform_series.len().saturating_sub(1)))
+    else {
+        return Ok(WaveformPlot {
+            labels,
+            ..WaveformPlot::default()
+        });
+    };
+    let points = series
+        .points
+        .iter()
+        .filter(|point| point.x.is_finite() && point.y.is_finite())
+        .collect::<Vec<_>>();
+    let x_low = points
+        .iter()
+        .map(|point| point.x)
+        .fold(f64::INFINITY, f64::min);
+    let x_high = points
+        .iter()
+        .map(|point| point.x)
+        .fold(f64::NEG_INFINITY, f64::max);
+    let y_low = points
+        .iter()
+        .map(|point| point.y)
+        .fold(f64::INFINITY, f64::min);
+    let y_high = points
+        .iter()
+        .map(|point| point.y)
+        .fold(f64::NEG_INFINITY, f64::max);
+    let segments = points
+        .windows(2)
+        .map(|pair| {
+            let first = pair[0];
+            let second = pair[1];
+            [
+                normalize(first.x, x_low, x_high, 28.0, 344.0),
+                normalize(first.y, y_low, y_high, 188.0, 20.0),
+                normalize(second.x, x_low, x_high, 28.0, 344.0),
+                normalize(second.y, y_low, y_high, 188.0, 20.0),
+            ]
+        })
+        .collect();
+
+    Ok(WaveformPlot {
+        labels,
+        selected_label: series.name.clone(),
+        axis_label: format!("{} versus {}", series.y_column, series.x_column),
+        segments,
+    })
+}
+
 impl SpiceMosaicApp {
     fn update(&self) -> AppUpdate {
         let selected_label = self
@@ -205,6 +291,11 @@ impl SpiceMosaicApp {
             "result-label": "Selected result records",
             "result-columns": self.result_table.columns,
             "result-rows": self.result_table.rows,
+            "waveform-label": "Waveforms",
+            "waveform-rows": self.waveform_plot.labels,
+            "selected-waveform-label": self.waveform_plot.selected_label,
+            "waveform-axis-label": self.waveform_plot.axis_label,
+            "waveform-segments": self.waveform_plot.segments,
             "raw-result-label": "Raw result JSON",
             "result-text": self.result_text,
             "dark-theme": self.dark,
@@ -229,6 +320,7 @@ impl SpiceMosaicApp {
         self.diagnostics = format!("Found {} runnable analyses.", analyses.len());
         self.result_text = inspection;
         self.result_table = ResultTable::default();
+        self.waveform_plot = WaveformPlot::default();
         self.diagnostic_rows = diagnostic_rows;
         self.analyses = analyses;
         self.mode = "Inspection";
@@ -244,11 +336,13 @@ impl SpiceMosaicApp {
             .selected_analysis_row
             .min(analyses.len().saturating_sub(1));
         let result_table = selected_result_table(&result, selected_analysis_row)?;
+        let waveform_plot = waveform_plot(&self.deck, selected_analysis_row, 0)?;
         let diagnostic_rows = diagnostic_rows(&self.deck);
         self.selected_analysis_row = selected_analysis_row;
         self.diagnostics = format!("Executed {} analyses.", analyses.len());
         self.result_text = result;
         self.result_table = result_table;
+        self.waveform_plot = waveform_plot;
         self.diagnostic_rows = diagnostic_rows;
         self.analyses = analyses;
         self.mode = "Results";
@@ -280,6 +374,7 @@ impl MosaicApp for SpiceMosaicApp {
                 self.analyses.clear();
                 self.selected_analysis_row = 0;
                 self.result_table = ResultTable::default();
+                self.waveform_plot = WaveformPlot::default();
                 self.result_text.clear();
                 self.diagnostic_rows = diagnostic_rows(deck);
                 self.diagnostics = "Deck changed. Inspect before running.".to_owned();
@@ -301,9 +396,33 @@ impl MosaicApp for SpiceMosaicApp {
                 } else {
                     ResultTable::default()
                 };
+                let waveform_plot = if self.mode == "Results" {
+                    waveform_plot(&self.deck, index, 0)?
+                } else {
+                    WaveformPlot::default()
+                };
                 self.selected_analysis_row = index;
                 self.result_table = result_table;
+                self.waveform_plot = waveform_plot;
                 Ok(self.announced(format!("Selected .{} analysis.", self.analyses[index].kind)))
+            }
+            "selectWaveform" => {
+                if self.mode != "Results" {
+                    return Err(invalid("selectWaveform requires a completed run"));
+                }
+                let index = event.payload["index"]
+                    .as_u64()
+                    .ok_or_else(|| invalid("selectWaveform requires non-negative index"))?
+                    as usize;
+                let waveform_plot = waveform_plot(&self.deck, self.selected_analysis_row, index)?;
+                if index >= waveform_plot.labels.len() {
+                    return Err(invalid("selectWaveform index is out of range"));
+                }
+                self.waveform_plot = waveform_plot;
+                Ok(self.announced(format!(
+                    "Selected {} waveform.",
+                    self.waveform_plot.selected_label
+                )))
             }
             _ => Err(invalid(format!(
                 "unknown SPICE workbench event: {}",
@@ -339,6 +458,7 @@ impl MosaicApp for SpiceMosaicApp {
         self.analyses = analyses;
         self.selected_analysis_row = saved.selected_analysis_row;
         self.result_table = ResultTable::default();
+        self.waveform_plot = WaveformPlot::default();
         self.result_text.clear();
         self.diagnostic_rows = diagnostic_rows(&self.deck);
         self.diagnostics = "Workbench restored. Inspect or run the saved deck.".to_owned();
@@ -371,7 +491,7 @@ mod tests {
     }
 
     #[test]
-    fn editable_deck_inspects_runs_and_selects_an_analysis() {
+    fn editable_deck_inspects_runs_selects_an_analysis_and_projects_waveform_segments() {
         let mut app = SpiceMosaicApp::default();
         app.start(StartContext::new("en-US", Platform::Web))
             .unwrap();
@@ -382,10 +502,10 @@ mod tests {
             inspected.props["analysis-rows"].as_array().unwrap().len(),
             5
         );
-        let selected = dispatch(&mut app, "onSelectAnalysis", json!({"index": 4}));
+        let selected = dispatch(&mut app, "onSelectAnalysis", json!({"index": 3}));
         assert_eq!(
             selected.props["selected-analysis-label"],
-            ".tf (analysis 5)"
+            ".tran (analysis 4)"
         );
         let run = dispatch(&mut app, "onRun", json!({}));
         assert_eq!(run.props["mode-label"], "Results");
@@ -395,6 +515,24 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("schemaVersion"));
+        assert_eq!(run.props["waveform-rows"], json!(["V(out)"]));
+        assert_eq!(run.props["selected-waveform-label"], "V(out)");
+        assert_eq!(run.props["waveform-axis-label"], "V(out) versus Time");
+        let segments = run.props["waveform-segments"].as_array().unwrap();
+        assert!(!segments.is_empty());
+        assert!(segments.iter().all(|segment| {
+            segment.as_array().is_some_and(|values| {
+                values.len() == 4
+                    && values
+                        .iter()
+                        .all(|value| value.as_f64().is_some_and(f64::is_finite))
+            })
+        }));
+        let waveform = dispatch(&mut app, "onSelectWaveform", json!({"index": 0}));
+        assert!(waveform
+            .announcements
+            .iter()
+            .any(|announcement| announcement.message == "Selected V(out) waveform."));
     }
 
     #[test]

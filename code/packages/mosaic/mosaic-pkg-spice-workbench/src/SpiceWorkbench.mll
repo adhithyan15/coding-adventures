@@ -53,6 +53,32 @@ layout SpiceWorkbench {
             }
           }
         }
+        Column [ waveforms ] {
+          Text [ waveform-label ] ( content : slot: waveform-label )
+          Row [ waveform-options ] {
+            For ( each: slot: waveform-rows , as: waveform , index: waveform-index ) {
+              HostButton [ waveform-option ] (
+                label : ( waveform ) ,
+                onClick : emit: onSelectWaveform
+              )
+            }
+          }
+          Text [ selected-waveform ] ( content : slot: selected-waveform-label )
+          Text [ waveform-axis ] ( content : slot: waveform-axis-label )
+          Stack [ waveform-plot ] {
+            Path [ waveform-axis-x ] ( kind: line , x1: 28 , y1: 188 , x2: 344 , y2: 188 )
+            Path [ waveform-axis-y ] ( kind: line , x1: 28 , y1: 20 , x2: 28 , y2: 188 )
+            For ( each: slot: waveform-segments , as: segment , index: segment-index ) {
+              Path [ waveform-segment ] (
+                kind: line ,
+                x1: ( segment[0] ) ,
+                y1: ( segment[1] ) ,
+                x2: ( segment[2] ) ,
+                y2: ( segment[3] )
+              )
+            }
+          }
+        }
         Text [ raw-result-label ] ( content : slot: raw-result-label )
         Text [ result-output ] ( content : slot: result-text )
       }

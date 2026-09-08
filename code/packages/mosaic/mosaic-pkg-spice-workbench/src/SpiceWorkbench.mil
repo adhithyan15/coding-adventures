@@ -15,6 +15,11 @@ component SpiceWorkbench {
   slot result-label : text ;
   slot result-columns : list<text> ;
   slot result-rows : list<list<text>> ;
+  slot waveform-label : text ;
+  slot waveform-rows : list<text> ;
+  slot selected-waveform-label : text ;
+  slot waveform-axis-label : text ;
+  slot waveform-segments : list<list<number>> ;
   slot raw-result-label : text ;
   slot result-text : text ;
 
@@ -22,4 +27,5 @@ component SpiceWorkbench {
   emit onInspect ;
   emit onRun ;
   emit onSelectAnalysis ( index : number ) ;
+  emit onSelectWaveform ( index : number ) ;
 }
