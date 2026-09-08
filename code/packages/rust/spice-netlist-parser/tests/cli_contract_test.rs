@@ -1,6 +1,9 @@
 use std::fs;
 
-use spice_netlist_parser::{run_netlist_json, CLI_ERROR_CODE, CLI_RESULT_SCHEMA_VERSION};
+use spice_netlist_parser::{
+    inspect_netlist_json, run_netlist_json, CLI_ERROR_CODE, CLI_INSPECTION_SCHEMA_VERSION,
+    CLI_RESULT_SCHEMA_VERSION,
+};
 
 #[test]
 fn run_netlist_json_uses_the_shared_berkeley_cli_contract() {
@@ -31,6 +34,50 @@ fn run_netlist_json_uses_the_shared_berkeley_cli_contract() {
         .map(|analysis| analysis["records"].as_array().unwrap().len())
         .collect::<Vec<_>>();
     assert_eq!(record_counts, vec![1, 2, 1, 1, 1]);
+}
+
+#[test]
+fn inspection_api_exposes_the_complete_runnable_plan() {
+    let corpus_path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/spice/berkeley-v1-cli-corpus.json"
+    );
+    let corpus: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(corpus_path).unwrap()).unwrap();
+    let test_case = &corpus["cases"][0];
+    let payload: serde_json::Value =
+        serde_json::from_str(&inspect_netlist_json(test_case["deck"].as_str().unwrap()).unwrap())
+            .unwrap();
+
+    assert_eq!(payload["schemaVersion"], CLI_INSPECTION_SCHEMA_VERSION);
+    assert_eq!(
+        payload["analyses"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|analysis| analysis["index"].as_u64().unwrap())
+            .collect::<Vec<_>>(),
+        test_case["expected"]["analysisIndexes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|index| index.as_u64().unwrap())
+            .collect::<Vec<_>>()
+    );
+    assert_eq!(
+        payload["analyses"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|analysis| analysis["kind"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        test_case["expected"]["analysisKinds"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|kind| kind.as_str().unwrap())
+            .collect::<Vec<_>>()
+    );
 }
 
 #[test]

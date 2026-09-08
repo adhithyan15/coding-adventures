@@ -133,7 +133,7 @@ const BERKELEY_APP_COMMAND_TARGETS: &[&str] = &[
     "analysis-table",
     "analysis-waveform",
 ];
-const BERKELEY_APP_RUNNABLE_ANALYSIS_DIRECTIVES: &[&str] = &[".op", ".dc", ".ac", ".tran"];
+const BERKELEY_APP_RUNNABLE_ANALYSIS_DIRECTIVES: &[&str] = &[".op", ".dc", ".ac", ".tran", ".tf"];
 const BERKELEY_APP_ARTIFACT_ANALYSIS_DIRECTIVES: &[&str] =
     &[".op", ".dc", ".ac", ".tran", ".tf", ".sens", ".noise"];
 const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
