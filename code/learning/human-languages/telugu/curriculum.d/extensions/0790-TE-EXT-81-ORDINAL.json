@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-81-ORDINAL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say first to fifth in Telugu, and make an ordinal from any number by dropping its final vowel and adding -va.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C81-first",
+    "TE-C81-second",
+    "TE-C81-third",
+    "TE-C81-fourth",
+    "TE-C81-fifth"
+  ]
+}

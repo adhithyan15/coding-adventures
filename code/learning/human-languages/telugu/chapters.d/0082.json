@@ -1,0 +1,22 @@
+{
+  "chapter": 82,
+  "title": "Sixth to Eleventh",
+  "label": "ch:te-ordinals-to-tenth",
+  "canDo": "I can count in order all the way to tenth in Telugu and beyond it, because the ending that makes an ordinal does not stop at ten.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "TE-C82-eleventh",
+    "kind": "production",
+    "summary": "The ending taken past ten, which shows it was never a fact about the numbers one to ten but about numbers.",
+    "assesses": [
+      "TE-LEX-C82-ORDINAL-01",
+      "TE-LEX-C82-ORDINAL-02",
+      "TE-LEX-C82-ORDINAL-03",
+      "TE-LEX-C82-ORDINAL-04",
+      "TE-LEX-C82-ORDINAL-05",
+      "TE-GRAMMAR-C82-ORDINAL-06"
+    ]
+  }
+}

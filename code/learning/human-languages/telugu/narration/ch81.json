@@ -1,0 +1,886 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 81,
+  "title": "Counting in Order",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bf21901be859a69b",
+  "lessons": [
+    {
+      "id": "TE-C81-first",
+      "sequence": 2880,
+      "title": "మొదటి (modaṭi) — first",
+      "headword": "మొదటి",
+      "romanization": "modaṭi",
+      "gloss": "first — the one ordinal Telugu does not build from a number",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bded1786942f5bb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new kind of counting starts here, so the recalls come first, at the four growing distances this book measures."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śubhākāṅkṣalu — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śubhākāṅkṣalu* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say atanu — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *atanu* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say goḍḍali — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *goḍḍali* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say atta — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *atta* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say padakoṇḍu and iravai — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *padakoṇḍu and iravai* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kukka and pilli — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kukka and pilli* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మొదటి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మొదటి (modaṭi) — \"first\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఒకటి, రెండు, మూడు answer how many. This word answers which one in the line, and Telugu keeps a second set of words for that job."
+            },
+            {
+              "kind": "speech",
+              "text": "It goes straight in front of what it counts: మొదటి రోజు (modaṭi rōju), the first day; మొదటి పుస్తకం (modaṭi pustakaṁ), the first book. Nothing changes on the noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart - not built on ఒకటి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "There is no ఒకటి in మొదటి, and there was never going to be. It is built on మొదలు (modalu), \"a beginning\" — so modaṭi means \"of the beginning\", not \"one-th\". You will also meet the bare మొదట (modaṭa), \"at first\"."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth noticing because ఒకటి was already the maverick of the cardinals: Tamil says oṉṟu, Kannada ondu, Malayalam onnu, and Telugu alone says okaṭi. Now the number one turns out to be doubly on its own — the sisters do not share its cardinal, and Telugu does not build its ordinal on it either."
+            },
+            {
+              "kind": "speech",
+              "text": "From two upward it is a different story, and the next lesson is where the rule starts."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modaṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modaṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modaṭi rōju — the first day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modaṭi rōju* — the first day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okaṭi is how many, modaṭi is which one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okaṭi* is how many, *modaṭi* is which one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మొదటి (modaṭi) mean? (First — which one in the line.) What word is it built on? (మొదలు, a beginning — not ఒకటి.) Say \"the first day\". (మొదటి (modaṭi) రోజు.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C81-second",
+      "sequence": 2890,
+      "title": "రెండవ (reṇḍava) — second, and the swap behind all the rest",
+      "headword": "రెండవ",
+      "romanization": "reṇḍava",
+      "gloss": "second — and the one swap that makes every ordinal from here to the end",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfa93ebfc62c0bdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls before the second ordinal, at the four measured distances."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say modaṭi — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *modaṭi* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nannu — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nannu* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rampaṁ — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rampaṁ* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bāva — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bāva* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the letter e — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *the letter e* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pacca and pasupu — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pacca and pasupu* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రెండవ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రెండవ (reṇḍava) — \"second\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రెండవ రోజు (reṇḍava rōju) — the second day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: cardinal, minus its last vowel, plus -వ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say them together and you can hear the join: రెండు becomes రెండవ (reṇḍava)."
+            },
+            {
+              "kind": "speech",
+              "text": "Take the number you already have, take its final vowel off, and put -వ (-va) on the end. That is the whole of it, and it holds for every number from two upward. Nine ordinals for the price of one ending."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu is doing here what the last lesson said it would not do for one: modaṭi had no number to build on, and every ordinal from here does."
+            },
+            {
+              "kind": "speech",
+              "text": "In speech you will also hear రెండో (reṇḍō), the same word ending in a long ō instead of -వ. It is the everyday spoken form; -వ is what you will see written."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reṇḍava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reṇḍava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the swap — reṇḍu becomes reṇḍava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the swap — *reṇḍu* → *reṇḍava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reṇḍava rōju — the second day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reṇḍava rōju* — the second day]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How is an ordinal made from two upward? (Take the number, drop its final vowel, add -వ.) Say the second day. (రెండవ (reṇḍava) రోజు.) And what will you hear instead in speech? (రెండో.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C81-third",
+      "sequence": 2900,
+      "title": "మూడవ (mūḍava) — third",
+      "headword": "మూడవ",
+      "romanization": "mūḍava",
+      "gloss": "third — the swap on its second number",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bcc0883c62b45ff5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the third."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say reṇḍava — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *reṇḍava* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gāru — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gāru* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pāra — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pāra* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say maradalu — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *maradalu* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the letter ṇa — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *the letter ṇa* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the letter ja — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *the letter ja* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మూడవ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మూడవ (mūḍava) — \"third\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మూడు becomes మూడవ (mūḍava). The long ū stays long; only the ending changes."
+            },
+            {
+              "kind": "speech",
+              "text": "మూడవ వారం (mūḍava vāraṁ) — the third week."
+            },
+            {
+              "kind": "speech",
+              "text": "Two numbers in a row have now taken the same ending, which is what a rule looks like from inside: not a statement, but the second time you were not surprised. The spoken form is మూడో (mūḍō), exactly as reṇḍō was."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūḍava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūḍava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the swap — mūḍu becomes mūḍava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the swap — *mūḍu* → *mūḍava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūḍava vāraṁ — the third week",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūḍava vāraṁ* — the third week]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the third. (మూడవ (mūḍava).) What happened to the long ū? (Nothing — only the ending changed.) And the spoken form? (మూడో.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C81-fourth",
+      "sequence": 2910,
+      "title": "నాలుగవ (nālugava) — fourth",
+      "headword": "నాలుగవ",
+      "romanization": "nālugava",
+      "gloss": "fourth — the longest of the ten, and still the same ending",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa95fcfb32499607",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the fourth."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mūḍava — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mūḍava* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nāku kāvāli — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nāku kāvāli* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sutti — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sutti* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say alluḍu — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *alluḍu* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śubha rātri — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śubha rātri* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śubha sāyantram — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śubha sāyantram* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నాలుగవ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నాలుగవ (nālugava) — \"fourth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నాలుగు becomes నాలుగవ (nālugava). Four syllables, and the swap is the same one: the final u goes, -వ arrives."
+            },
+            {
+              "kind": "speech",
+              "text": "నాలుగవ సంవత్సరం (nālugava saṁvatsaraṁ) — the fourth year."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the longest of the ten and it is no harder than the shortest, which is the practical point of a regular ending. Once you can count, you can order."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nālugava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nālugava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the swap — nālugu becomes nālugava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the swap — *nālugu* → *nālugava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nālugava saṁvatsaraṁ — the fourth year",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nālugava saṁvatsaraṁ* — the fourth year]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the fourth. (నాలుగవ (nālugava).) What is the ending? (-వ, after the final vowel goes.) And say \"the fourth year\". (నాలుగవ (nālugava) సంవత్సరం.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C81-fifth",
+      "sequence": 2920,
+      "title": "ఐదవ (aidava) — fifth",
+      "headword": "ఐదవ",
+      "romanization": "aidava",
+      "gloss": "fifth — where the vowel that goes is a diphthong's tail",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43b4483c286f0e5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the fifth, which closes the chapter."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nālugava — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nālugava* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ani — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ani* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say karra — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *karra* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aṅgaḍi — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aṅgaḍi* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śubha madhyāhnam — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śubha madhyāhnam* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say when to use śubha madhyāhnam — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *when to use śubha madhyāhnam* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఐదవ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఐదవ (aidava) — \"fifth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఐదు becomes ఐదవ (aidava). The opening ఐ is untouched — it is a single letter in Telugu, not two — and only the final u is traded for -వ."
+            },
+            {
+              "kind": "speech",
+              "text": "ఐదవ రోజు (aidava rōju) — the fifth day."
+            },
+            {
+              "kind": "speech",
+              "text": "That is one to five in order. Say modaṭi, reṇḍava, mūḍava, nālugava, aidava, and notice that only the first one had to be learned as a word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aidava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aidava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the five in order — modaṭi, reṇḍava, mūḍava, nālugava, aidava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the five in order — *modaṭi, reṇḍava, mūḍava, nālugava, aidava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aidava rōju — the fifth day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aidava rōju* — the fifth day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the five in order. (Modaṭi, reṇḍava, mūḍava, nālugava, aidava.) How many of them had to be learned as separate words? (One — modaṭi.) And what did the other four need? (The number, and -వ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
