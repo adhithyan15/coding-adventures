@@ -1,0 +1,7 @@
+(executable
+ (name main)
+ (public_name coding-adventures-capability-analyzer)
+ (modes byte native)
+ (libraries coding_adventures_capability_analyzer)
+ (instrumentation
+  (backend bisect_ppx)))

@@ -1,0 +1,4 @@
+# @version 1
+
+document = { NEWLINE } HEADER { NEWLINE | statement } EOF ;
+statement = TITLE_STATEMENT | SET_STATEMENT | UNION_STATEMENT | TEXT_STATEMENT | STYLE_STATEMENT ;

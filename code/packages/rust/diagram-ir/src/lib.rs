@@ -1032,6 +1032,30 @@ pub struct LayoutedTreemapDiagram {
     pub nodes: Vec<LayoutedTreemapNode>,
 }
 
+// SET FAMILY
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct VennStyle {
+    pub fill: Option<String>, pub stroke: Option<String>, pub stroke_width: Option<f64>,
+    pub text_color: Option<String>, pub fill_opacity: Option<f64>,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct VennRegion { pub sets: Vec<String>, pub size: f64, pub label: Option<String>, pub style: VennStyle }
+#[derive(Clone, Debug, PartialEq)]
+pub struct VennText { pub sets: Vec<String>, pub id: String, pub label: Option<String>, pub style: VennStyle }
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct VennDiagram { pub title: Option<String>, pub regions: Vec<VennRegion>, pub texts: Vec<VennText> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedVennCircle {
+    pub id: String, pub label: String, pub cx: f64, pub cy: f64, pub radius: f64, pub style: VennStyle,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedVennLabel { pub text: String, pub x: f64, pub y: f64, pub style: VennStyle }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedVennDiagram {
+    pub width: f64, pub height: f64, pub title: Option<String>,
+    pub circles: Vec<LayoutedVennCircle>, pub labels: Vec<LayoutedVennLabel>,
+}
+
 // STRUCTURAL FAMILY
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralKind {

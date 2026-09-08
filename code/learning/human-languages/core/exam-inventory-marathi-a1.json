@@ -526,8 +526,20 @@
       "id": "MR-A1-QU-04",
       "category": "Quantifiers",
       "label": "ordinal numerals to tenth",
-      "probe": null,
-      "note": "Untaught; needed to read a floor number or a date on a notice.",
+      "probe": [
+        "MR-GRAMMAR-ORDINAL-SET",
+        "MR-LEX-PAHILA",
+        "MR-LEX-TISRA",
+        "MR-LEX-CHAUTHA",
+        "MR-LEX-PACHVA",
+        "MR-GRAMMAR-ORDINAL-VA",
+        "MR-LEX-SAHAVA",
+        "MR-LEX-SATVA",
+        "MR-LEX-AATHVA",
+        "MR-LEX-NAVVA",
+        "MR-LEX-DAHAVA"
+      ],
+      "note": "CLOSED by the ordinal tranche, chapters 60-61, one word a lesson, in the order Marathi's own construction dictates rather than in numerical order. The chapter opens on SECOND and teaches NO new word to do it: dusraa arrived in chapter 31 as the partner of ek in the ek ... dusraa frame, glossed there as 'the other, THE SECOND', with an etymology hook already saying it is don wearing an ordinal ending. FIRST arrives third, because pahilaa carries no ek at all and a word can only be seen to break a shape after the shape has been seen holding twice. The set splits at five: pahilaa, dusraa, tisraa, chauthaa are four inherited words in three different shapes and no rule joins them, while everything from paachvaa up is the cardinal plus -vaa. The ONE adjustment inside the built half is navvaa, which stands on the older nav rather than on the modern naU. NOT CLAIMED: the ordinals beyond tenth (the ending goes on working and the book stops listing at ten, which the last lesson says on the page), and the ORDINAL SENSE OF pahilaa AS AN ADVERB -- Molesworth records it, the lesson names it so the reader recognises it, and it is not drilled.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -2666,7 +2678,7 @@
       "category": "Spatial notions",
       "label": "order: first, next, before and after",
       "probe": null,
-      "note": "Untaught.",
+      "note": "Still untaught AS A POINT, and now for a narrower reason. Its FIRST is supplied: pahilaa is taught in chapter 60 and Molesworth's adverbial sense ('at first, in the beginning') is named there. What is still missing is the rest of the sequence -- next, before, after -- for which Marathi's aadhii, nantar and mag are taught nowhere in the track. The ordinal tranche deliberately did not invent them: this point wants ordering EXPONENTS, not more ordinals.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"

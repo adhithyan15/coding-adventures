@@ -85,7 +85,16 @@ it("pins Marathi lesson-content budgets", () =>
     // and culture claims stay at 5 / 4 / 7 for the sixth tranche running: a
     // numeral is none of the three, and the rupee's Sanskrit history is
     // etymology, which has its own strand.
-    lessons: 322,
+    //
+    // 322 -> 334: the ordinal tranche (chapters 60-61) adds twelve lessons --
+    // ten items and two reviews. RE-MEASURED against the tree. Idioms, senses
+    // and culture claims stay at 5 / 4 / 7 for the seventh tranche running.
+    // That is the assertion worth making about the ordinals: dusraa is
+    // re-opened in chapter 60 as a member of a set and NO sense atom is
+    // declared for it, because the lesson teaches a set rather than a new
+    // meaning of a word, and pahilaa's adverbial second life is named on the
+    // page and deliberately not declared as a sense the reader is drilled on.
+    lessons: 334,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -311,6 +320,15 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["57", 5],
     ["58", 5],
     ["59", 4],
+    // Chapters 60-61 are the ordinals, and they are two chapters rather than
+    // one because the set breaks in half. 60 carries the four Marathi
+    // INHERITED -- pahilaa, dusraa, tisraa, chauthaa, in three different shapes
+    // and joined by no rule -- and opens on SECOND, which costs no new word
+    // because dusraa has been in the reader's mouth since chapter 31. 61
+    // carries the five it BUILDS, every one of them the cardinal plus -vaa.
+    // Six lessons each: five words and the chapter's own retrieval payoff.
+    ["60", 6],
+    ["61", 6],
   ]);
 });
 

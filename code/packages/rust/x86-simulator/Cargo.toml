@@ -1,8 +1,8 @@
 [package]
 name = "x86-simulator"
-version = "0.7.7"
+version = "0.8.0"
 edition = "2021"
-description = "x86/x86-64 runtime simulator — decode + execute machine code, and run the x86_64-backend's emitted code locally (host-arch-independent)"
+description = "Complete Spec 07w x86-64 functional simulator plus the repository's host-independent backend runtime harness"
 
 [dependencies]
 x86_64-encoder = { path = "../x86_64-encoder" }

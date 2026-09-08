@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+### Fixed -- an imported template could name a deck the file never declares (#14532)
+
+The deck-resolution added for #14559 covered cards, notes and sessions. It did
+not cover the deck id a `CardTemplate` carries -- and that one *overrides* the
+note's deck when a card is generated.
+
+This one is latent rather than immediate, which is why the import looked clean:
+cards are mapped from the file's own card rows rather than generated, so nothing
+is wrong at import time. The bad id sits in the note type until it next
+materialises a card. Verified against `generate_cards_for_note`: a stored
+`Some("999999")` produces a card in `"999999"` even for a note in a real deck.
+
+An undeclared template deck is now dropped to `None`, which means "use the
+note's deck" -- the same place the card resolution already lands. A **declared**
+one is kept, since a per-template deck is a real Anki feature and a filter that
+discarded all of them would pass the first test while silently removing it.
+
 ### Fixed -- an imported `.apkg` could put cards in a deck it never declares (#14559)
 
 `v11_collection_to_engram_state` checks that a note references a note type the

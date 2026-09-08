@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:c7e4e5081e3ed196",
+  "lessonIds": [
+    "SA-C62-fifth",
+    "SA-C62-seventh",
+    "SA-C62-eighth",
+    "SA-C62-ninth",
+    "SA-C62-tenth",
+    "SA-R62-the-ending"
+  ],
+  "tex": "sanskrit/book/chapters/ch62-ordinals.tex"
+}

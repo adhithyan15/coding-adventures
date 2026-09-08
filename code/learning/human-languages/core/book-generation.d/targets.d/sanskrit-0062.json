@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 62,
+  "output": "sanskrit/book/chapters/ch62-ordinals.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "MR-PATH-064",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "MR-C61-sahava",
+    "MR-C61-satva",
+    "MR-C61-aathva",
+    "MR-C61-navva",
+    "MR-C61-dahava",
+    "MR-R61-sixth-to-tenth"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-077-ORDINALS-SIX-TO-TEN"
+  ],
+  "after": []
+}

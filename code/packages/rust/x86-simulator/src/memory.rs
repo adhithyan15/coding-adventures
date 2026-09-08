@@ -21,21 +21,55 @@ pub struct Memory {
     /// Next free heap offset (monotonic bump allocator for `__twig_alloc_bytes`).
     heap_next: u64,
     heap_end: u64,
+    wrapping: bool,
 }
 
 impl Memory {
     /// Create a `size`-byte address space with a heap window `[heap_base, heap_end)`.
     pub fn new(size: usize, heap_base: u64, heap_end: u64) -> Memory {
-        Memory { bytes: vec![0; size], heap_next: heap_base, heap_end }
+        Memory {
+            bytes: vec![0; size],
+            heap_next: heap_base,
+            heap_end,
+            wrapping: false,
+        }
+    }
+
+    /// Create a fixed-size architectural address space whose accesses wrap.
+    pub fn new_wrapping(size: usize) -> Memory {
+        Memory {
+            bytes: vec![0; size],
+            heap_next: 0,
+            heap_end: 0,
+            wrapping: true,
+        }
     }
 
     /// Total size in bytes.
-    pub fn size(&self) -> u64 { self.bytes.len() as u64 }
+    pub fn size(&self) -> u64 {
+        self.bytes.len() as u64
+    }
+
+    /// Return an immutable snapshot of every memory byte.
+    pub fn snapshot(&self) -> Vec<u8> {
+        self.bytes.clone()
+    }
+
+    /// Replace every memory byte without changing the address-space mode.
+    pub fn restore_bytes(&mut self, bytes: &[u8]) -> Result<(), Trap> {
+        if bytes.len() != self.bytes.len() {
+            return Err(Trap::MemoryFault(bytes.len() as u64));
+        }
+        self.bytes.copy_from_slice(bytes);
+        Ok(())
+    }
 
     /// Copy `data` to `addr` (used to load the code region). Panics only on a
     /// programming error in the harness (load past the end), not on guest input.
     pub fn write_block(&mut self, addr: u64, data: &[u8]) -> Result<(), Trap> {
-        let end = addr.checked_add(data.len() as u64).ok_or(Trap::MemoryFault(addr))?;
+        let end = addr
+            .checked_add(data.len() as u64)
+            .ok_or(Trap::MemoryFault(addr))?;
         if end > self.size() {
             return Err(Trap::MemoryFault(addr));
         }
@@ -53,6 +87,14 @@ impl Memory {
 
     /// Read a `width`-byte (1/2/4/8) little-endian value, zero-extended to u64.
     pub fn load(&self, addr: u64, width: u8) -> Result<u64, Trap> {
+        if self.wrapping {
+            let mut value = 0;
+            for byte in 0..width as usize {
+                let index = addr.wrapping_add(byte as u64) % self.size();
+                value |= u64::from(self.bytes[index as usize]) << (8 * byte);
+            }
+            return Ok(value);
+        }
         let i = self.check(addr, width as u64)?;
         let mut v = 0u64;
         for b in 0..width as usize {
@@ -63,6 +105,13 @@ impl Memory {
 
     /// Write the low `width` bytes of `val` little-endian to `addr`.
     pub fn store(&mut self, addr: u64, width: u8, val: u64) -> Result<(), Trap> {
+        if self.wrapping {
+            for byte in 0..width as usize {
+                let index = addr.wrapping_add(byte as u64) % self.size();
+                self.bytes[index as usize] = (val >> (8 * byte)) as u8;
+            }
+            return Ok(());
+        }
         let i = self.check(addr, width as u64)?;
         for b in 0..width as usize {
             self.bytes[i + b] = (val >> (8 * b)) as u8;

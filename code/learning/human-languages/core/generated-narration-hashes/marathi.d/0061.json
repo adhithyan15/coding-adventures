@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:ddcb7d2e756c879d",
+  "lessonIds": [
+    "MR-C61-sahava",
+    "MR-C61-satva",
+    "MR-C61-aathva",
+    "MR-C61-navva",
+    "MR-C61-dahava",
+    "MR-R61-sixth-to-tenth"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch61.txt",
+  "json": "marathi/narration/ch61.json",
+  "textHash": "fnv1a64:937ced08a85dc8be",
+  "jsonHash": "fnv1a64:98516d46e56a3710",
+  "findings": []
+}

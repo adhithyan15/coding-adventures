@@ -1594,6 +1594,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a path-independent built-in result may feed another pure
+    // built-in while retaining the runtime selector.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ entier(abs(if gate = 0.0 then exponent else -exponent)) + 6.0; gate := 1.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — equal branches of a pure runtime conditional may retain
     // bounded multiplication while the selector branch still lowers.
     Prog {
@@ -6406,10 +6415,10 @@ const PROGRAMS: &[Prog] = &[
     },
 
     // VM-039a: real stdin and EOF on the shared native/LLVM runtime.
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr] },
 
 ];
 
@@ -7979,11 +7988,17 @@ fn run_clr(p: &Prog) -> Option<RunResult> {
         Ok(il) => il,
         Err(e) => cell_failed("Clr", p, "source → textual CIL", format!("{e:?}")),
     };
+    Some(run_clr_il(p, &il, program_stdin(p), &ilasm))
+}
+
+/// Assemble and execute emitted IL on the real runtime; shared by source cells
+/// and direct IIR ABI regressions so neither can fall back to the simulator.
+fn run_clr_il(p: &Prog, il: &str, input: &[u8], ilasm: &std::path::Path) -> RunResult {
     let dir = tempfile::tempdir().expect("clr: create temp dir");
     let il_path = dir.path().join("Main.il");
-    std::fs::write(&il_path, &il).expect("clr: write Main.il");
+    std::fs::write(&il_path, il).expect("clr: write Main.il");
     let dll = dir.path().join("Main.dll");
-    let asm = Command::new(&ilasm)
+    let asm = Command::new(ilasm)
         .arg("-dll=false")
         .arg("-exe")
         .arg(format!("-output={}", dll.display()))
@@ -8014,12 +8029,12 @@ fn run_clr(p: &Prog) -> Option<RunResult> {
     // program's stdin to the `dotnet` process; empty for every other program.
     let mut dn = Command::new("dotnet");
     dn.arg(&dll);
-    let Some(out) = output_with_stdin(dn, program_stdin(p)) else {
+    let Some(out) = output_with_stdin(dn, input) else {
         cell_failed("Clr", p, "running `dotnet`", "could not spawn/collect");
     };
     if !out.status.success() {
         if matches!(&p.expect, Expect::Trap) {
-            return Some(RunResult::Trapped);
+            return RunResult::Trapped;
         }
         cell_failed(
             "Clr",
@@ -8061,7 +8076,7 @@ fn run_clr(p: &Prog) -> Option<RunResult> {
             format!("stdout {printed:?}\nstderr {}", err.trim()),
         );
     }
-    Some(RunResult::Completed { code, stdout: printed })
+    RunResult::Completed { code, stdout: printed }
 }
 
 /// VM runner: source → IIR (`compile_source_to_iir`) → the **generic register VM**
@@ -9438,6 +9453,32 @@ fn algol_path_independent_standard_function_results_run_on_every_available_stand
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the path-independent standard-function result did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_composed_path_independent_standard_function_results_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("entier(abs(if gate = 0.0 then exponent else -exponent))")
+        })
+        .expect("the composed path-independent standard-function result must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the composed path-independent standard-function result did not run"
             );
             continue;
         };
@@ -13912,5 +13953,78 @@ public class Peek {
             .expect("run JVM peek");
         assert!(out.status.success(), "JVM peek: {}", String::from_utf8_lossy(&out.stderr));
         assert_eq!(out.stdout, b"peek-ok");
+    }
+}
+
+/// Numeric EOF must honor the documented permissive zero result on real CoreCLR.
+#[test]
+fn portable_text_stdout_clr_numeric_eof() {
+    let p = Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 INPUT EOFVALUE\n20 PRINT EOFVALUE\n30 END\n",
+        expect: Expect::Stdout("0"),
+        backends: &[Clr],
+    };
+    assert!(program_stdin(&p).is_empty());
+    match run_clr(&p) {
+        Some(result) => assert_cell(Clr, &p, result),
+        None => {
+            assert!(!toolchain_available(Clr), "present CLR toolchain must execute");
+            eprintln!("SKIP CLR numeric EOF: dotnet or ilasm unavailable");
+        }
+    }
+}
+
+/// Exercise both integer destination widths and the shared reader on real CLR.
+#[test]
+fn portable_text_stdout_clr_input_more_peek() {
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+    if !dotnet_ok() { eprintln!("SKIP CLR peek: dotnet unavailable"); return; }
+    let Some(ilasm) = clr_support::find_ilasm() else {
+        eprintln!("SKIP CLR peek: ilasm unavailable"); return;
+    };
+    for ty in ["i32", "i64"] {
+        let mut instrs = Vec::new();
+        // Each numeric read is preceded by two peeks. The final two reads are
+        // at EOF, proving stability after consuming the final unterminated line.
+        for i in 0..7 {
+            for j in 0..2 {
+                let dest = format!("peek_{i}_{j}");
+                instrs.push(IIRInstr::new("call_builtin", Some(dest.clone()),
+                    vec![Operand::Var("input_more".into())], ty));
+                instrs.push(IIRInstr::new("call_builtin", None,
+                    vec![Operand::Var("print_i64".into()), Operand::Var(dest)], ty));
+            }
+            if i == 0 {
+                // Consume a string after peeking, before any numeric read.
+                instrs.push(IIRInstr::new("call_builtin", Some("text".into()),
+                    vec![Operand::Var("input_str".into())], "str"));
+                instrs.push(IIRInstr::new("str_len", Some("length".into()),
+                    vec![Operand::Var("text".into())], ty));
+                instrs.push(IIRInstr::new("call_builtin", None,
+                    vec![Operand::Var("print_i64".into()), Operand::Var("length".into())], ty));
+            }
+            let dest = format!("value_{i}");
+            instrs.push(IIRInstr::new("call_builtin", Some(dest.clone()),
+                vec![Operand::Var("input_i64".into())], ty));
+            instrs.push(IIRInstr::new("call_builtin", None,
+                vec![Operand::Var("print_i64".into()), Operand::Var(dest)], ty));
+        }
+        instrs.push(IIRInstr::new("const", Some("zero".into()), vec![Operand::Int(0)], "i32"));
+        instrs.push(IIRInstr::new("ret", None, vec![Operand::Var("zero".into())], "i32"));
+        let mut module = IIRModule::new("Main", "test");
+        module.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        module.entry_point = Some("main".into());
+        let il = iir_to_cil_bytecode::emit_il(&module, &iir_to_cil_bytecode::IIRClrConfig::new("Main")).unwrap();
+        let expected = if ty == "i64" {
+            "1\n1\n5\n5\n1\n1\n4294967296\n1\n1\n0\n1\n1\n0\n1\n1\n-3\n0\n0\n0\n0\n0\n0"
+        } else {
+            "1\n1\n5\n5\n1\n1\n0\n1\n1\n0\n1\n1\n0\n1\n1\n-3\n0\n0\n0\n0\n0\n0"
+        };
+        let p = Prog { lang: Language::FlowMatic, ext: "iir", src: "CLR direct IIR peek/width proof",
+            expect: Expect::Stdout(expected), backends: &[Clr] };
+        let result = run_clr_il(&p, &il, b"hello\n5\n4294967296\n\nbad\n-3", &ilasm);
+        assert_cell(Clr, &p, result);
     }
 }

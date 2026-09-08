@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C61-satva",
+    "language": "marathi",
+    "chapter": 61,
+    "sequence": 2510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e927d5f2a95f1ad"
+  },
+  "findings": []
+}

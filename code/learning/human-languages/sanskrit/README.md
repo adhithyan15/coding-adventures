@@ -93,6 +93,20 @@ seven pre-A1 spine nodes are now realized.
   stroke direction is not written down here yet. **48 of the 53 characters the
   track shows are now taught**; the remaining five are accounted for in backlog
   `HL-C241`.
+- **Chapters 62–63 — the ordinals** ([`lessons/SA-C62-*`](./lessons/),
+  [`lessons/SA-C63-*`](./lessons/)): first to tenth, one word a lesson, and NOT
+  in numerical order. **62** opens at *fifth*, because **-म** is the ending that
+  generalizes — it makes five, seven, eight, nine and ten with nothing else
+  changing — and it skips *sixth* on purpose. **63** works outward from that
+  hole: **षष्ठः** takes **-थ**, and stops being an oddity as soon as
+  **चतुर्थः** shows the same ending; **तृतीयः** and **द्वितीयः** take a third
+  ending, **-तीय**; and **प्रथमः** arrives last because it is not a numeral at
+  all — Macdonell records it as *pra-tama*, a superlative of **प्र**
+  "forward", exactly as English *first* is the superlative of *fore*. The
+  grouping is read off the dictionary rather than asserted: Macdonell prints the
+  join inside each of the ten headwords, and the chapter-63 payoff reproduces
+  that table with his page numbers. A1 exam coverage 141/164 → **142/164**, and
+  the Saṅkhyā column closes outright.
 
 ---
 

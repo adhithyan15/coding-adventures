@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C44-chautha",
+    "language": "punjabi",
+    "chapter": 44,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d87740e1f64069ba"
+  },
+  "findings": []
+}

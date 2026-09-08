@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-powerpc601-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed PowerPC 601 gate-level simulator"
+license = "MIT"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+arithmetic = { path = "../arithmetic" }
+powerpc601-simulator = { path = "../powerpc601-simulator" }

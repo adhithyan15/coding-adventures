@@ -132,6 +132,18 @@ book-only human validation remain explicit backlog.
   teaches echo reduplication, whose second half is not a word at all. In the
   book.
 
+- **Chapter 44 — the ordinals** ([`lessons/PA-C44-*`](./lessons/)): first to
+  fifth, one word a lesson, and not in numerical order. It opens on **ਦੂਜਾ**,
+  which still shows its **ਦ**, and puts **ਪਹਿਲਾ** fourth, because that is the one
+  ordinal with no letter of **ਇੱਕ** in it and an exception is only legible once
+  the shape it breaks has held three times. The finding is that **none of the
+  five is built**: Wiktionary derives all five whole from Sanskrit, so the seam
+  at five is not where Punjabi stopped inheriting but where the inheriting
+  stopped being visible — **ਪੰਜਵਾਂ** came down from *pañcama*, then looked like
+  **ਪੰਜ** plus an ending, and **-ਵਾਂ** became productive on that reading. It is
+  also the only one of the five endings you can hear, because it carries a nasal
+  the other four do not. A1 exam coverage 136/227 → **137/227**.
+
 Chapters 1–36 are in the book. Chapter 1 owns the first three Gurmukhi pieces
 and the complete pre-A1 writing runway for **ਹਾਂ**; Chapter 14 adds six more
 pieces and assembles **ਨਹੀਂ** and **ਨਮਸਤੇ** without using an untaught sign;

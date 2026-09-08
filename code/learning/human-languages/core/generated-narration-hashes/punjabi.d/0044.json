@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:21f914e051fe549c",
+  "lessonIds": [
+    "PA-C44-duja",
+    "PA-C44-tija",
+    "PA-C44-chautha",
+    "PA-C44-pahila",
+    "PA-C44-panjvan",
+    "PA-R44-first-to-fifth"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch44.txt",
+  "json": "punjabi/narration/ch44.json",
+  "textHash": "fnv1a64:e28b5132a8a1a542",
+  "jsonHash": "fnv1a64:dc9e449f944287dd",
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 63,
+  "title": "The Endings Before It",
+  "label": "ch:sa-ordinals-older-endings",
+  "canDo": "I can say all ten Sanskrit ordinals, sort them by which of three endings they take, and say why the word for first belongs to none of them.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "SA-R63-all-ten",
+    "kind": "production",
+    "summary": "Complete SA-R63-all-ten and run prathamaḥ to daśamaḥ, then group the ten by ending and name the one that belongs to no group.",
+    "assesses": [
+      "SA-LEX-C63-ORDINAL-01",
+      "SA-GRAMMAR-C63-ORDINAL-THA-02",
+      "SA-LEX-C63-ORDINAL-03",
+      "SA-LEX-C63-ORDINAL-04",
+      "SA-GRAMMAR-C63-ORDINAL-TIYA-05",
+      "SA-LEX-C63-ORDINAL-06",
+      "SA-LEX-C63-ORDINAL-07"
+    ],
+    "note": "The chapter works OUTWARD from the hole chapter 62 left rather than counting down. Sixth is strange until fourth makes it a pair; third is a third oddity until second makes it a pair; and prathamah can only be recognised as a different KIND of word once nine words of the same kind have gone past. Macdonell prints the join inside each headword, so the grouping is read off a dictionary rather than asserted."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C44-pahila",
+    "language": "punjabi",
+    "chapter": 44,
+    "sequence": 2550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4c57b41b4bf57c4"
+  },
+  "findings": []
+}

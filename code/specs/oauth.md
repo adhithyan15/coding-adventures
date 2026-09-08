@@ -125,11 +125,16 @@ The delivery order is:
    Connect discovery/JWKS/ID-token validation.
 
 Before the concrete encrypted credential-store adapter, remove the sealed
-store's remaining third-party JSON and OS-random shims: use the repository's
-bounded JSON primitive and implement the small cross-platform kernel-entropy
-boundary in-repo. OAuth production dependency graphs must contain only
-workspace-owned libraries; operating-system APIs and wire protocols are the
-lowest trusted boundary.
+store's remaining third-party JSON chain by migrating the shared storage
+metadata boundary to the repository's bounded JSON primitive. The prerequisite
+bounded compact serializer is now shipped alongside its depth-limited parser;
+the storage metadata type and consumers remain the next migration slice. The
+cross-platform kernel-entropy prerequisite is shipped: `csprng` now reads
+`/dev/urandom` through safe standard-library I/O on Unix and confines Windows
+CNG FFI to one documented `BCryptGenRandom` call, with no normal dependencies.
+OAuth production dependency graphs must contain only workspace-owned
+libraries; operating-system APIs and wire protocols are the lowest trusted
+boundary.
 
 Before the concrete HTTPS adapter, replace `tls-platform`'s `rustls` and
 `webpki-roots` dependency chain with repository-owned TLS, certificate parsing,

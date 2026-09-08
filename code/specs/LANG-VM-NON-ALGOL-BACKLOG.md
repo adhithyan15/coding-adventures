@@ -8,6 +8,55 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-039c CLR contract (selected after #14544 merged)
+
+Main is `a355f64a2a`. JVM PR #14544 merged after every applicable check
+passed on its final head. No newly confirmed defect outranks the remaining
+CLR input/EOF adapter. Preserve the four existing FLOW-MATIC sources, stdin
+and expected output; re-enumerate indices on this main before probing.
+
+First establish real CoreCLR execution and reproduce the missing input_more
+lowering. On this Windows host the framework ilasm at
+`C:/Windows/Microsoft.NET/Framework64/v4.0.30319/ilasm.exe`, added only to the
+process PATH, assembled the existing BASIC numeric-input cell for execution
+by real dotnet successfully. No NuGet ILAsm pack was found locally. This
+avoids changing tool detection before the adapter behavior is established.
+
+Implement non-consuming input_more through the same Console input reader as
+numeric/string reads, with stable repeated EOF. Inspect encoded and textual
+CIL paths. Probe numeric EOF independently: current textual ReadLine + Parse
+contradicts its zero-at-EOF comment; record the concrete failure and bounded
+repair contract before changing parsing. Preserve destination widths and
+zero-filled partial records, and propagate I/O failures. Add each CLR matrix
+column only after real execution; validate four source cases, stable peeks,
+existing BASIC input, backend tests and focused Clippy. Security review
+precedes a ready PR. VM/JIT callbacks remain the final VM-039 slice.
+
+CLR probes confirmed: row 441 refuses call_builtin input_more. The independent
+BASIC EOF test executes on real CoreCLR and throws ArgumentNullException in
+System.Int64.Parse. The bounded repair is now part of this slice: use the
+matching Int32/Int64.TryParse(string, out value), with dedicated scratch locals
+and a zero result on EOF/malformed/overflow input. Do not catch I/O exceptions.
+Implement input_more with Console.In.Peek() > -1, converting the boolean to
+the destination width. Textual CLR is the matrix's real runtime path; encoded
+CIL currently lacks numeric/string input as well, so its input support remains
+explicitly outside this proof rather than claiming simulator parity.
+
+CLR validation: all four FLOW-MATIC cells (441–444) and five BASIC input
+cells (370–374) passed in real CoreCLR processes with execution sentinels.
+Numeric EOF and direct IIR repeated-peek tests passed, including mixed
+string/numeric input, blank/malformed fields, final input without newline,
+32-bit overflow-to-zero and a 64-bit value above the 32-bit range. All 201
+CIL backend tests including doctests and focused all-target Clippy passed.
+No full matrix rerun is claimed. VM/JIT remains next after merge.
+
+Discovered follow-up **VM-059**: encoded CIL's call_builtin dispatcher lacks
+input_i64, input_str and input_more. The real-CoreCLR textual path above does
+not imply support in clr-simulator. After the common VM/JIT EOF slice, define
+and prove simulator host input callbacks, or pin a documented clean refusal
+where the artifact contract cannot carry a host reader. This is a separate
+surface from the seven-column matrix and does not delay its real CLR proof.
+
 ## VM-039c implementation contract (selected after #14511 merged)
 
 Refreshed main is `53795b6fe5`. VM-039b merged after every applicable

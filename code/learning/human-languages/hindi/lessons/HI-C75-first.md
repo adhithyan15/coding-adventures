@@ -8,9 +8,9 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 3160
 chapter: 82
 type: word
-headword: "पहला"
-gloss: "first — and the word for before that is the same word"
-romanization: "pahlā"
+headword: "पहला / पहली / पहले"
+gloss: "first / feminine first / before or earlier"
+romanization: "pahlā / pahlī / pahle"
 concept_tag: HI-ORDINAL-FIRST
 prerequisites: [HI-C74-late, HI-C74-open, HI-A1F01-name-select, HI-C68-country, HI-C18-ghanta, HI-C24-hara-pila]
 sounds: []
@@ -60,7 +60,7 @@ It agrees like any *-ā* adjective: **पहला दिन** (*pahlā din*), t
 ## The word, taken apart: no एक in it
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-There is no **एक** inside **पहला**. It comes down from Sanskrit **प्रथम**
+There is no **एक** inside **पहला** (*pahlā*). It comes down from Sanskrit **प्रथम**
 (*prathama*), a word that already meant "foremost" before Hindi existed, and the
 number was never part of it.
 
@@ -81,6 +81,6 @@ before another **is** putting it first.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C75-ORDINAL-01] -->
 
-[PAUSE 3s] Say "the first day". (**पहला दिन**.) What changes in *पहली किताब*, and why?
+[PAUSE 3s] Say "the first day". (**पहला** (*pahlā*) दिन.) What changes in *पहली किताब*, and why?
 (**The ending** — *kitāb* is feminine.) And what does **पहले** mean? (**Before,
 earlier** — the same word.)

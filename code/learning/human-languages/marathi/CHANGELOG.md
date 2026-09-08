@@ -1,5 +1,88 @@
 # Changelog
 
+## 2026-09-08 — The ordinals, first to tenth: 161 → 162 of 301 A1 points
+
+- **`MR-A1-QU-04` closes.** HL-C350 found ordinals the weakest single column in
+  the corpus; HL-C358 still listed Marathi's as open. Chapters 60–61 close it
+  with twelve lessons and eleven atoms. A1 coverage 161/301 (53%) →
+  **162/301 (54%)**; **Quantifiers 4/6 → 5/6**.
+- **The chapter opens on SECOND, and teaching it costs no new word.** **दुसरा**
+  arrived in chapter 31 as the partner **एक** needed in **एक … दुसरा**, glossed
+  there as *the other, **the second***, with an etymology hook already saying it
+  is **दोन** wearing an ordinal ending. The point's note said "Untaught"; what
+  it was really describing was a head start. So the first lesson introduces one
+  GRAMMAR atom — that Marathi keeps two sets of number words — and no lexical
+  atom at all, because there is no new word to claim.
+- **First arrives THIRD, and the reason is Kannada's reason in Marathi's
+  terms.** **दुसरा** shows **दोन** and **तिसरा** shows **तीन**; **पहिला** shows
+  no **एक** anywhere. A word can only be seen to BREAK a shape after the shape
+  has been seen holding, so *first* lands after two lessons of the number
+  staying visible rather than opening on a surprise nobody could yet read as
+  one.
+- **The set breaks in half at five, and the two halves are taught as two
+  chapters.**
+
+  | ch. | items | how they are made |
+  |---|---|---|
+  | 60 | **दुसरा · तिसरा · पहिला · चौथा · पाचवा** | four INHERITED words in three shapes, then the seam |
+  | 61 | **सहावा · सातवा · आठवा · नववा · दहावा** | the cardinal, whole, plus **-वा** |
+
+- **Four words, three shapes, and this book does not pretend they are a rule.**
+  **-सरा** is on **दुसरा** and **तिसरा** and on nothing else in the language;
+  **चौथा** takes **-था** (Molesworth: from Sanskrit **चतुर्थ**); **पहिला**
+  keeps nothing of **एक**. Chapter 60 says on the page that there are exactly
+  four of them and that they end.
+- **One adjustment in the built half, and it is at nine.** **नववा** is not
+  **नऊवा**: Wiktionary traces **नऊ** through Prakrit *nava* to Sanskrit
+  **नव**, and it is that older **नव** the ordinal stands on. Named as ONE
+  adjustment rather than dressed up as a second pattern.
+- **The seam is checkable rather than asserted, which is the tranche's best
+  evidence.** Molesworth's 1857 *Dictionary, Marathi and English* carries
+  **पहिला** (p. 497), **दुसरा** (p. 420), **तिसरा** (p. 381) and **चौथा**
+  (p. 296) as headwords — and returns NO RESULT for **सहावा**, **सातवा**,
+  **आठवा**, **नववा** or **दहावा**. The one place **पाचवा** appears at all it is
+  a different word entirely (a returning sickness). A dictionary lists what a
+  reader cannot derive, so the break this tranche draws between **चौथा** and
+  **पाचवा** was drawn in Marathi lexicography a century and a half ago. The
+  chapter-61 payoff prints that table.
+- **`reinforcementWindowMisses` 342 → 342, and every window unchanged:
+  R1 31, R2 93, R3 142, R4 76.** Decomposed rather than watched. Twelve more
+  lessons made **21** slots newly judgeable — R2 for 3 older atoms, R3 for 9 and
+  R4 for 9 — and each of the 21 was assigned, by window arithmetic, to the exact
+  new lesson that falls inside its window. All 21 are answered. The tranche's
+  own eleven atoms create **zero** debt: each lesson recalls the previous
+  lesson's ordinal (R1) and the ordinal five lessons back (R2), which is every
+  window the track is long enough to judge for them.
+- **The recall lines are in the PROSE, not only in the frontmatter.** HL-C358
+  recorded a tranche whose reinforcement report read all-zero while fifteen
+  lessons assessed atoms no page asked for. Every warm-up here names its four
+  recalls by word — *rupayā*, *vīs*, *sahā*, *kitī?* — and the declared
+  `assesses` list is exactly those four. Spot-checked block by block.
+- **The script cost nothing, and that was measured rather than assumed.** All
+  fifty Devanagari characters in the tranche — headwords and worked examples —
+  are already taught by Marathi's own writing lessons. `scriptClosureViolations`
+  0, `neverTaughtGlyphs` 0, unchanged. Three drafts DID reach for untaught
+  independent vowels (**ऐ**, **ओ**, **औ**, **ई**) to talk about signs the track
+  teaches only as मात्रा; all four were replaced with romanization.
+- **Two gates were answered by rewriting, not by raising a ceiling.** The
+  corpus-wide rule-statement ceiling took two hits — `MR-C61-navva` said "the
+  honest statement of the rule is…" and `MR-C61-dahava` said "the rule is the
+  part that keeps working" — and both were rewritten as observations rather than
+  absorbed, leaving the ceiling at 32. Two lessons also came out over the
+  computed 300-second maximum (343s and 301s) and were shortened, not
+  re-declared.
+- **Not claimed, and the inventory now says so.** Ordinals beyond tenth (the
+  ending keeps working and the book stops listing, which chapter 61's last
+  lesson says on the page); **पहिला** as an adverb (Molesworth records it, the
+  lesson names it so the reader recognises it, and it is not drilled); and
+  `MR-A1-NG3-06`, whose note no longer says "Untaught" but names what is
+  actually missing — **आधी**, **नंतर** and **मग** are taught nowhere, and that
+  point wants ordering EXPONENTS, not more ordinals.
+- **`atomsTaught` 310 → 321; `atomsNeverRevisited` 1; `scriptClosureViolations`
+  0; `neverTaughtGlyphs` 0; `forwardReferences` 4; `durationViolations` 0;
+  `atomLessonSpikes` 1; `atomChapterSpikes` 1** — every one re-measured against
+  the tree, none composed from a previous entry.
+
 ## 2026-09-07 — The numbers, six to twenty: 157 → 161 of 301 A1 points
 
 - **The count has stood at five since chapter 13.** Chapters 55–59 take it to

@@ -1,0 +1,17 @@
+{
+  "id": "SA-PATH-63-ORDINAL",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "SA-C63-sixth",
+    "SA-C63-fourth",
+    "SA-C63-third",
+    "SA-C63-second",
+    "SA-C63-first",
+    "SA-R63-all-ten"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-063-ORDINAL-OLDER"
+  ],
+  "after": []
+}

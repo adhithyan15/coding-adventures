@@ -90,10 +90,26 @@ model-card parameter, or a UI artifact is not a completion signal.
      actionable work is the post-Berkeley product track, beginning with a
      separately scoped CLI/API workflow and then the Mosaic UI surface.
 
-4. **Post-Berkeley product tracks** (not Berkeley completion blockers).
+4. **Post-Berkeley CLI/API analysis-inventory contract** (completed).
+   - Add one `spice-netlist-parser inspect --json <deck|->` contract across
+     Python, Rust, and TypeScript. It must return the complete runnable plan in
+     source-analysis order without simulating, so a shell, editor, or later UI
+     can discover what a deck will run before requesting numerical tables.
+   - Align the Rust Mosaic facade's published runnable-analysis inventory with
+     that same contract. Its execution, artifact, and editor-control paths
+     already support `.op`, `.dc`, `.ac`, `.tran`, and `.tf`; the stale manifest
+     advertised only four and therefore could cause hosts to hide a runnable
+     transfer-function card.
+   - This is an inventory/API phase, not a one-analysis change: shared CLI
+     fixtures must assert the whole runnable plan, including source indexes and
+     all five Berkeley v1 analysis kinds.
+   - Status: completed in the cross-language analysis-inventory slice. The
+     next actionable product phase is the Mosaic UI shell and host integration.
+
+5. **Post-Berkeley product tracks** (not Berkeley completion blockers).
    - ngspice and vendor-dialect compatibility, nested sweeps and raw-format
      interchange, advanced nonlinear convergence work, mixed-signal coupling,
-     and the Mosaic/LTspice-style UI move only after item 3 is green.
+     and the Mosaic/LTspice-style UI move only after item 4 is green.
    - Discovery: align the Rust Mosaic app facade's runnable-analysis inventory
      with parser-plan `.tf` execution during the UI/API phase. This is not a
      Berkeley corpus blocker because the cross-language parser plans already

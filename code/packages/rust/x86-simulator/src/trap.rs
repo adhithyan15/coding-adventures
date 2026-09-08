@@ -31,8 +31,9 @@ impl std::fmt::Display for Trap {
         match self {
             Trap::IllegalInstruction(a) => write!(f, "illegal instruction (ud2) at {a:#x}"),
             Trap::MemoryFault(a) => write!(f, "memory fault at {a:#x}"),
-            Trap::DecodeError { offset, opcode } =>
-                write!(f, "undecoded opcode {opcode:#04x} at {offset:#x}"),
+            Trap::DecodeError { offset, opcode } => {
+                write!(f, "undecoded opcode {opcode:#04x} at {offset:#x}")
+            }
             Trap::UnresolvedExternal(s) => write!(f, "unresolved external symbol {s:?}"),
             Trap::StepLimitExceeded => write!(f, "step limit exceeded"),
             Trap::DivideError(a) => write!(f, "divide error (#DE) at {a:#x}"),

@@ -1,0 +1,18 @@
+{
+  "id": "MR-EXT-076-ORDINALS-ONE-TO-FIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say first to fifth in Marathi and tell the inherited ordinals from the built ones.",
+  "prerequisites": [
+    "MR-EXT-075-WHAT-IT-COSTS"
+  ],
+  "lessons": [
+    "MR-C60-dusra-ordinal",
+    "MR-C60-tisra",
+    "MR-C60-pahila",
+    "MR-C60-chautha",
+    "MR-C60-pachva",
+    "MR-R60-first-to-fifth"
+  ]
+}

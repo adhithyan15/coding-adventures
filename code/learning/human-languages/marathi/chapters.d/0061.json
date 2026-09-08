@@ -1,0 +1,22 @@
+{
+  "chapter": 61,
+  "title": "The Rest Are Built",
+  "label": "ch:mr-ordinals-sixth-to-tenth",
+  "canDo": "I can build any ordinal from sixth upwards by putting -vaa on the number, and I know the one place between five and ten where the number underneath is an older form.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "MR-R61-sixth-to-tenth",
+    "kind": "production",
+    "summary": "Complete MR-R61-sixth-to-tenth and run pahilaa to dahaavaa, then name the one of the ten that bent the rule and how.",
+    "assesses": [
+      "MR-LEX-SAHAVA",
+      "MR-LEX-SATVA",
+      "MR-LEX-AATHVA",
+      "MR-LEX-NAVVA",
+      "MR-LEX-DAHAVA"
+    ],
+    "note": "Five ordinals, zero memorised. The chapter's evidence is checkable rather than asserted: Molesworth's 1857 dictionary carries pahilaa, duSraa, tiSraa and chauthaa as headwords and returns NO RESULT for sahaavaa, saatvaa, aaThvaa, navvaa or dahaavaa, because a dictionary records what a reader cannot derive."
+  }
+}

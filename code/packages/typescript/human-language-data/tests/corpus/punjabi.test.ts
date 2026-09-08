@@ -44,14 +44,22 @@ it("pins Punjabi lesson-content budgets", () =>
     // Sanskritic / Perso-Arabic pair rule, which the inventory said one lesson
     // would close and which this book has owed since it taught dhanvaad and
     // shukriya side by side in its first chapter.
-    lessons: 261,
+    //
+    // 261 -> 267: the ordinal tranche, chapter 44. Five ordinals one word a
+    // lesson plus the chapter's retrieval payoff, and seven atoms, because two
+    // of the six carry a naming atom for a SET or an ENDING beside the word
+    // that shows it. Re-measured against the tree. Idioms, senses and culture
+    // claims are unchanged at 6 / 3 / 9, and that is the claim worth making: an
+    // ordinal is none of the three, and the Sanskrit etymologies the tranche
+    // cites are etymology, which has its own strand.
+    lessons: 267,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 261-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 267-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -66,8 +74,8 @@ it("keeps Punjabi's 261-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(261);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 261 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(267);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 267 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

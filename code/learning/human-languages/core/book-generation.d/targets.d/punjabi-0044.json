@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 44,
+  "output": "punjabi/book/chapters/ch44-ordinals.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

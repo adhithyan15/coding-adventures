@@ -425,6 +425,16 @@ Metal-to-PNG validation. `classDef` declarations are grammar-accepted but their
 style bodies, D3 value formats, configuration overrides, and theme-exact color
 matching remain unsupported at the partial level.
 
+### Venn Native Slice
+
+The initial Mermaid 11.16.1 Venn slice parses declared sets, validated
+multi-set unions, labels, numeric sizes, attached text nodes, titles, and the
+documented fill, stroke, opacity, and text styling directives into dedicated
+set IR. Deterministic circle geometry lowers through backend-neutral ellipses
+and glyph runs, with native Metal-to-PNG validation. Exact area-proportional
+overlap optimization, theme-exact styling, configuration overrides, and
+interactive behavior remain unsupported at the partial level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

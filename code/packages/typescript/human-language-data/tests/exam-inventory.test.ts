@@ -884,6 +884,42 @@ describe("the committed Marathi A1 inventory", () => {
     }
   }, 60_000);
 
+  // The ordinal point, named rather than left to the aggregate. The 162/301
+  // total above would move if this probe were nulled, but it would move for a
+  // hundred other reasons too; this pins WHICH eleven atoms close the point and
+  // that every one of them is really taught. Both halves were falsified before
+  // this was kept: adding a fabricated id fails the "probes only atoms that
+  // EXIST" test above, and nulling the probe fails the coverage total.
+  it("closes MR-A1-QU-04 on eleven atoms, ten words and one rule", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "marathi");
+    const ordinals = inventory.points.find((point) => point.id === "MR-A1-QU-04");
+    expect(ordinals?.probe).toEqual([
+      // The set itself, taught on dusraa without a new word.
+      "MR-GRAMMAR-ORDINAL-SET",
+      // The four Marathi INHERITED. dusraa is absent on purpose: chapter 31
+      // already taught MR-LEX-DUSRA, and the tranche re-opens it rather than
+      // teaching it again, so claiming a new lexical atom for it would be a
+      // fabrication.
+      "MR-LEX-PAHILA",
+      "MR-LEX-TISRA",
+      "MR-LEX-CHAUTHA",
+      // The seam, and the rule that starts at it.
+      "MR-LEX-PACHVA",
+      "MR-GRAMMAR-ORDINAL-VA",
+      // The five it BUILDS.
+      "MR-LEX-SAHAVA",
+      "MR-LEX-SATVA",
+      "MR-LEX-AATHVA",
+      "MR-LEX-NAVVA",
+      "MR-LEX-DAHAVA",
+    ]);
+    for (const atom of ordinals?.probe ?? []) expect(taught.has(atom), atom).toBe(true);
+    // And the word the tranche does NOT re-teach is taught all the same, in the
+    // chapter the tranche points back to.
+    expect(taught.has("MR-LEX-DUSRA")).toBe(true);
+  }, 60_000);
+
   it("derives from the Spanish set TOTALLY, so nothing is dropped by accident", () => {
     // The property that makes a proxy auditable rather than a gesture. Every one
     // of Spanish's 273 points must be either (a) named by some Marathi point's
@@ -1112,11 +1148,20 @@ describe("the committed Marathi A1 inventory", () => {
     // 1/6 to 3/6, Existential notions 0/5 to 2/5, and Housing leaves the
     // empty-category list on its first lesson. Demonstratives, Temporal notions
     // and Shopping stay in it, which is the remaining work.
+    //
+    // 161 -> 162: the ordinal tranche (chapters 60-61) closes MR-A1-QU-04, the
+    // last vocabulary point in the Quantifiers column and the one HL-C350
+    // named as the weakest column in the corpus. ONE point for twelve lessons
+    // is a poor ratio and it is the honest one: ordinals unlock nothing else in
+    // this inventory, because MR-A1-NG3-06 wants ordering EXPONENTS -- aadhii,
+    // nantar, mag -- rather than more ordinals, and none of the three is taught
+    // anywhere in the track. Its note now says so rather than saying
+    // "Untaught".
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(161);
-    expect(coverage.unmapped).toBe(140);
+    expect(coverage.covered).toBe(162);
+    expect(coverage.unmapped).toBe(139);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1127,7 +1172,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 161/301 points covered (53%)",
+      "marathi A1 (partial inventory): 162/301 points covered (54%)",
     );
   }, 60_000);
 });
@@ -1707,8 +1752,12 @@ describe("the committed Punjabi A1 inventory", () => {
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(227);
     // 112 -> 136. Chapters 37-43 answer this file's own uncovered list.
-    expect(coverage.covered).toBe(136);
-    expect(coverage.unmapped).toBe(91);
+    // 136 -> 137: the ordinal tranche closes PA-A1-NUM-05 (chapter 44). One
+    // point for six lessons, and no more than one: ordinals unlock nothing else
+    // here, because the count still stops at panj -- PA-A1-NUM-02 and -03 are
+    // both open -- so nothing above fifth can be said at all.
+    expect(coverage.covered).toBe(137);
+    expect(coverage.unmapped).toBe(90);
     expect(coverage.partial).toBe(0);
     // THE HEADLINE, and it is the starkest of the three tracks measured in this
     // series. ZERO of eleven. Not one of `te`/`ate`, `jaan`, `par`/`lekin`,
@@ -1753,8 +1802,30 @@ describe("the committed Punjabi A1 inventory", () => {
     // Dravidian tracks lead on.
     expect(coverage.byCategory["Faram (filling in a form)"]!).toEqual({ enumerated: 10, covered: 9 });
     expect(coverage.byCategory["Sur (tone and pronunciation)"]!.covered).toBe(6);
+    // The ordinal point, named rather than left to the aggregate, so a nulled
+    // probe or a fabricated id is caught here and not only by the total. Both
+    // halves were falsified before this was kept.
+    const ordinals = inventory.points.find((point) => point.id === "PA-A1-NUM-05");
+    expect(ordinals?.probe).toEqual([
+      // Second first, because duujaa still shows its doo; the set named beside it.
+      "PA-LEX-DUJA-01",
+      "PA-GRAMMAR-ORDINAL-SET-01",
+      "PA-LEX-TIJA-01",
+      "PA-LEX-CHAUTHA-01",
+      // First arrives fourth: pahilaa keeps no letter of ikk.
+      "PA-LEX-PAHILA-01",
+      // And the seam, where an inherited word came to look like a sum.
+      "PA-LEX-PANJVAN-01",
+      "PA-GRAMMAR-ORDINAL-VAAN-01",
+    ]);
+    expect(
+      coverage.points.find((point) => point.id === "PA-A1-NUM-05")?.missingAtoms,
+    ).toEqual([]);
+    // And the point it does NOT close, which is why the ratio is one for six:
+    // the cardinals stop at five, so sixth upward cannot be said.
+    expect(coverage.points.find((point) => point.id === "PA-A1-NUM-02")?.covered).toBe(false);
     expect(formatExamCoverage(coverage)).toContain(
-      "punjabi A1 (partial inventory): 136/227 points covered (60%)",
+      "punjabi A1 (partial inventory): 137/227 points covered (60%)",
     );
   }, 60_000);
 });

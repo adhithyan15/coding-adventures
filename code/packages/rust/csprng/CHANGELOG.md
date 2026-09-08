@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Removed the third-party `getrandom` dependency.
+- Added a repository-owned platform boundary using `/dev/urandom` through
+  safe standard-library I/O on Unix and a single documented
+  `BCryptGenRandom` FFI call on Windows.
+- Preserved the public API, OS-only entropy policy, and fail-closed behavior.
+
 ## 0.1.0 — 2026-04-20
 
 - Initial release.
