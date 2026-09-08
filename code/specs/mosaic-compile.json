@@ -66,7 +66,7 @@
     {
       "id": "style",
       "long": "style",
-      "description": "Path to a .msl mosstyle file (three-file pipeline mode)",
+      "description": "Optional path to a .msl mosstyle file (pipeline mode). When omitted, the component is emitted with an empty local stylesheet while dependency styles are still composed.",
       "type": "string",
       "required": false
     },
@@ -87,7 +87,7 @@
     {
       "id": "package-manifest",
       "long": "package-manifest",
-      "description": "Optional path to a `mosaic-package.toml` that the current .mil/.mll/.msl belongs to. When set, the backend's component-reference resolver auto-registers every name in `[components].exports` so the .mll can reference sibling components from the same package (e.g. Field referencing Input).",
+      "description": "Optional path to a `mosaic-package.toml` that the current .mil/.mll and optional .msl belong to. When set, the backend's component-reference resolver auto-registers every name in `[components].exports` so the .mll can reference sibling components from the same package (e.g. Field referencing Input).",
       "type": "string",
       "required": false
     },
@@ -103,7 +103,7 @@
     {
       "id": "source",
       "name": "SOURCE",
-      "description": "Path to the .mosaic source file to compile (legacy single-file mode). Omit when using --interface/--layout/--style or the `pkg` subcommand.",
+      "description": "Path to the .mosaic source file to compile (legacy single-file mode). Omit when using --interface/--layout (with optional --style) or the `pkg` subcommand.",
       "type": "string",
       "required": false
     }
