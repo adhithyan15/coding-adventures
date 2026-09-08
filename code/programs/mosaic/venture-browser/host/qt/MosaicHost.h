@@ -48,6 +48,8 @@ public:
   bool resize(double width, double height);
   bool scroll(double deltaY);
   bool scrollCommand(const QByteArray &command);
+  bool controlKey(const QByteArray &key, bool shift);
+  bool controlText(const QByteArray &text);
   bool activateLink(double x, double y);
   bool updateHover(double x, double y);
   bool requestViewSource();
@@ -63,6 +65,8 @@ private:
   using HandleEventFn = char *(*)(void *, const char *, const char *);
   using ScrollFn = unsigned char (*)(void *, double);
   using ScrollCommandFn = unsigned char (*)(void *, const char *);
+  using ControlKeyFn = unsigned char (*)(void *, const char *, unsigned char);
+  using ControlTextFn = unsigned char (*)(void *, const char *);
   using ScrollMetricsFn = unsigned char (*)(void *, double *, double *, double *, double *);
   using PointFn = unsigned char (*)(void *, double, double);
   using ResizeFn = unsigned char (*)(void *, double, double);
@@ -91,6 +95,8 @@ private:
   HandleEventFn handleEvent_ = nullptr;
   ScrollFn scroll_ = nullptr;
   ScrollCommandFn scrollCommand_ = nullptr;
+  ControlKeyFn controlKey_ = nullptr;
+  ControlTextFn controlText_ = nullptr;
   ScrollMetricsFn scrollMetrics_ = nullptr;
   PointFn activateLink_ = nullptr;
   PointFn updateHover_ = nullptr;

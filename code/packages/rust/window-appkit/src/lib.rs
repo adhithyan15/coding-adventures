@@ -22,7 +22,7 @@ use std::ffi::{c_int, c_schar, c_ulong};
 use std::{
     cell::RefCell,
     collections::HashMap,
-    ffi::{c_void, CString},
+    ffi::{c_void, CStr, CString},
 };
 
 #[cfg(target_vendor = "apple")]
@@ -405,15 +405,13 @@ impl AppKitBackend {
         //      CAMetalLayer as the view's backing layer.
         let metal_layer = match surface {
             AppKitSurfaceChoice::View => None,
-            AppKitSurfaceChoice::MetalLayer => {
-                match attach_metal_layer(view) {
-                    Ok(layer) => Some(layer as usize),
-                    Err(e) => {
-                        release(window);
-                        return Err(e);
-                    }
+            AppKitSurfaceChoice::MetalLayer => match attach_metal_layer(view) {
+                Ok(layer) => Some(layer as usize),
+                Err(e) => {
+                    release(window);
+                    return Err(e);
                 }
-            }
+            },
         };
 
         Ok(AppKitWindow {
@@ -573,6 +571,19 @@ extern "C" fn key_up(view: Id, _sel: Sel, event: Id) {
 fn dispatch_key_event(view: Id, event: Id, state: ElementState) {
     let key_code = unsafe { msg_usize!(event, "keyCode") };
     let modifier_flags = unsafe { msg_usize!(event, "modifierFlags") };
+    let characters = if state == ElementState::Pressed {
+        let value = unsafe { msg_usize!(event, "characters") as Id };
+        let utf8 = unsafe { msg_usize!(value, "UTF8String") as *const std::ffi::c_char };
+        (!utf8.is_null())
+            .then(|| {
+                unsafe { CStr::from_ptr(utf8) }
+                    .to_string_lossy()
+                    .into_owned()
+            })
+            .filter(|text| !text.is_empty())
+    } else {
+        None
+    };
     EVENT_HANDLERS.with(|handlers| {
         let mut handlers = handlers.borrow_mut();
         if let Some(entry) = handlers.get_mut(&(view as usize)) {
@@ -580,6 +591,11 @@ fn dispatch_key_event(view: Id, event: Id, state: ElementState) {
                 normalized_key_event(entry.window_id, key_code, modifier_flags, state)
             {
                 (entry.callback)(event);
+            } else if let Some(text) = characters {
+                (entry.callback)(WindowEvent::TextInput {
+                    window_id: entry.window_id,
+                    text,
+                });
             }
         }
     });
@@ -691,9 +707,7 @@ fn finite_or_zero(value: f64) -> f64 {
 /// the view (and, transitively, the layer).
 #[cfg(target_vendor = "apple")]
 unsafe fn attach_metal_layer(view: Id) -> Result<Id, WindowError> {
-    use objc_bridge::{
-        msg, MTLCreateSystemDefaultDevice, MTL_PIXEL_FORMAT_BGRA8_UNORM,
-    };
+    use objc_bridge::{msg, MTLCreateSystemDefaultDevice, MTL_PIXEL_FORMAT_BGRA8_UNORM};
 
     let layer_class = class("CAMetalLayer");
     if layer_class.is_null() {
@@ -763,10 +777,7 @@ impl WindowBackend for AppKitBackend {
         self.backend_name()
     }
 
-    fn create_window(
-        &mut self,
-        attributes: WindowAttributes,
-    ) -> Result<Self::Window, WindowError> {
+    fn create_window(&mut self, attributes: WindowAttributes) -> Result<Self::Window, WindowError> {
         let surface = self.validate_attributes(&attributes)?;
 
         #[cfg(target_vendor = "apple")]
@@ -896,9 +907,7 @@ mod tests {
         let err = backend.validate_attributes(&attributes).unwrap_err();
         assert_eq!(
             err,
-            WindowError::UnsupportedConfiguration(
-                "AppKit windows must use MountTarget::Native"
-            )
+            WindowError::UnsupportedConfiguration("AppKit windows must use MountTarget::Native")
         );
     }
 

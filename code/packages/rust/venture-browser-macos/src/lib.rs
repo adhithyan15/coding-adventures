@@ -17,7 +17,7 @@ use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BrowserLoadError, BrowserNavigation, BrowserNavigationUpdate, BrowserPagePipeline,
     BrowserResourceFetcher, BrowserScrollCommand, BrowserSession, BrowserSubresourceCompletion,
-    BrowserSubresourceUpdate,
+    BrowserSubresourceUpdate, ControlKey,
 };
 use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, WindowEvent};
 
@@ -246,8 +246,23 @@ fn run_with_termination(
         let mut pointer_position = None;
         move |event| {
             let mut session = session.borrow_mut();
-            let mut should_repaint = scroll_session(&mut session, &event)
-                || keyboard_scroll_session(&mut session, &event);
+            let mut should_repaint = match control_input_session(
+                &mut session,
+                &event,
+                DEFAULT_WINDOW_WIDTH,
+                DEFAULT_WINDOW_HEIGHT,
+                &HttpBrowserFetcher::default(),
+            ) {
+                Ok(changed) => changed,
+                Err(error) => {
+                    eprintln!("venture-browser-macos: form input failed: {error}");
+                    false
+                }
+            };
+            if !should_repaint {
+                should_repaint = scroll_session(&mut session, &event)
+                    || keyboard_scroll_session(&mut session, &event);
+            }
             if let Some(navigation) = navigation_shortcut(&event) {
                 match navigate_session(
                     &mut session,
@@ -321,6 +336,70 @@ fn run_with_termination(
     }
     backend.run()?;
     Ok(())
+}
+
+/// Route normalized native keyboard and text events into retained controls.
+/// Editing policy stays in `BrowserSession`; this adapter only translates
+/// window key identities and supplies the current page pipeline.
+pub fn control_input_session<F>(
+    session: &mut BrowserSession,
+    event: &WindowEvent,
+    width: f64,
+    height: f64,
+    fetcher: &F,
+) -> Result<bool, BrowserLoadError>
+where
+    F: BrowserResourceFetcher,
+{
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    match event {
+        WindowEvent::TextInput { text, .. } => {
+            Ok(session.control_text_input(text, &pipeline).is_some())
+        }
+        WindowEvent::Key {
+            key: Key::Named(NamedKey::Tab),
+            state: ElementState::Pressed,
+            modifiers,
+            ..
+        } if !modifiers.control && !modifiers.alt && !modifiers.meta => {
+            Ok(session.focus_control(modifiers.shift, &pipeline).is_some())
+        }
+        WindowEvent::Key {
+            key: Key::Named(key),
+            state: ElementState::Pressed,
+            modifiers,
+            ..
+        } if !modifiers.control && !modifiers.alt && !modifiers.meta => {
+            let key = match key {
+                NamedKey::Backspace => ControlKey::Backspace,
+                NamedKey::ArrowLeft => ControlKey::ArrowLeft,
+                NamedKey::ArrowRight => ControlKey::ArrowRight,
+                NamedKey::ArrowUp => ControlKey::ArrowUp,
+                NamedKey::ArrowDown => ControlKey::ArrowDown,
+                NamedKey::Home => ControlKey::Home,
+                NamedKey::End => ControlKey::End,
+                NamedKey::Enter => ControlKey::Enter,
+                NamedKey::Space => ControlKey::Space,
+                _ => return Ok(false),
+            };
+            Ok(session
+                .control_key_down_with_shift_and_submit(key, modifiers.shift, &pipeline, fetcher)?
+                .is_some())
+        }
+        _ => Ok(false),
+    }
 }
 
 /// Apply a normalized scroll event to the current browser viewport.
@@ -604,6 +683,60 @@ impl MacBrowserHost {
         })
     }
 
+    pub fn control_key_down(
+        &mut self,
+        key: ControlKey,
+        shift: bool,
+    ) -> Result<bool, BrowserLoadError> {
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        let changed = self
+            .controller
+            .session_mut()
+            .control_key_down_with_shift_and_submit(key, shift, &pipeline, &self.fetcher)?
+            .is_some();
+        if changed {
+            self.controller.synchronize_session_state();
+        }
+        Ok(changed)
+    }
+
+    pub fn control_text_input(&mut self, text: &str) -> bool {
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        let changed = self
+            .controller
+            .session_mut()
+            .control_text_input(text, &pipeline)
+            .is_some();
+        if changed {
+            self.controller.synchronize_session_state();
+        }
+        changed
+    }
+
     pub fn update_hover(&mut self, x: f64, y: f64) -> bool {
         self.controller.update_hover(x, y)
     }
@@ -849,6 +982,39 @@ mod mosaic_ffi {
     }
 
     #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_control_key(
+        host: *mut MacBrowserHost,
+        name: *const c_char,
+        shift: u8,
+    ) -> u8 {
+        let Some(key) = string_arg(name).as_deref().and_then(ControlKey::from_name) else {
+            return 0;
+        };
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .and_then(|host| host.control_key_down(key, shift != 0).ok())
+                .unwrap_or(false) as u8
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_control_text(
+        host: *mut MacBrowserHost,
+        text: *const c_char,
+    ) -> u8 {
+        let Some(text) = string_arg(text) else {
+            return 0;
+        };
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .map(|host| host.control_text_input(&text) as u8)
+                .unwrap_or(0)
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
     pub unsafe extern "C" fn venture_browser_macos_activate_link(
         host: *mut MacBrowserHost,
         x: f64,
@@ -1022,6 +1188,60 @@ mod tests {
             window_title(Some("  "), "http://info.cern.ch/"),
             "Venture — http://info.cern.ch/"
         );
+    }
+
+    #[cfg(target_vendor = "apple")]
+    #[test]
+    fn normalized_native_events_drive_retained_form_editing() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html; charset=utf-8".into()),
+                b"<input id='q' value='venture'><button>Go</button>".to_vec(),
+            ))
+        };
+        let mut session = load_initial_session("http://example.test/", 320.0, 180.0, &fetcher)
+            .expect("form fixture loads");
+        let key_event = |key, shift| WindowEvent::Key {
+            window_id: WindowId(1),
+            key: Key::Named(key),
+            state: ElementState::Pressed,
+            modifiers: ModifiersState {
+                shift,
+                ..ModifiersState::default()
+            },
+            text: None,
+        };
+
+        assert!(control_input_session(
+            &mut session,
+            &key_event(NamedKey::Tab, false),
+            320.0,
+            180.0,
+            &fetcher,
+        )
+        .unwrap());
+        assert!(control_input_session(
+            &mut session,
+            &key_event(NamedKey::Home, false),
+            320.0,
+            180.0,
+            &fetcher,
+        )
+        .unwrap());
+        assert!(control_input_session(
+            &mut session,
+            &WindowEvent::TextInput {
+                window_id: WindowId(1),
+                text: "native-".into(),
+            },
+            320.0,
+            180.0,
+            &fetcher,
+        )
+        .unwrap());
+        assert_eq!(session.controls().controls()[0].value, "native-venture");
     }
 
     #[cfg(target_vendor = "apple")]

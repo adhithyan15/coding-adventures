@@ -50,6 +50,24 @@ QByteArray keyCommand(QKeyEvent *event)
   }
 }
 
+QByteArray controlKey(QKeyEvent *event)
+{
+  switch (event->key()) {
+  case Qt::Key_Backspace: return "backspace";
+  case Qt::Key_Delete: return "delete";
+  case Qt::Key_Left: return "arrow-left";
+  case Qt::Key_Right: return "arrow-right";
+  case Qt::Key_Up: return "arrow-up";
+  case Qt::Key_Down: return "arrow-down";
+  case Qt::Key_Home: return "home";
+  case Qt::Key_End: return "end";
+  case Qt::Key_Return:
+  case Qt::Key_Enter: return "enter";
+  case Qt::Key_Space: return "space";
+  default: return {};
+  }
+}
+
 bool sendKey(QObject *control, int key)
 {
   auto *item = qobject_cast<QQuickItem *>(control);
@@ -149,6 +167,22 @@ void VentureContentSurface::keyPressEvent(QKeyEvent *event)
   if (host_ && event->key() == Qt::Key_U
       && event->modifiers() == Qt::ControlModifier
       && host_->requestViewSource()) {
+    event->accept();
+    return;
+  }
+  const QByteArray control = controlKey(event);
+  if (host_ && !control.isEmpty()
+      && host_->controlKey(control, event->modifiers().testFlag(Qt::ShiftModifier))) {
+    update();
+    event->accept();
+    return;
+  }
+  if (host_ && !event->text().isEmpty()
+      && event->modifiers().testFlag(Qt::ControlModifier) == false
+      && event->modifiers().testFlag(Qt::AltModifier) == false
+      && event->modifiers().testFlag(Qt::MetaModifier) == false
+      && host_->controlText(event->text().toUtf8())) {
+    update();
     event->accept();
     return;
   }
@@ -264,6 +298,17 @@ bool MosaicHost::scrollCommand(const QByteArray &command)
   return browser_ && scrollCommand_ && scrollCommand_(browser_, command.constData()) != 0;
 }
 
+bool MosaicHost::controlKey(const QByteArray &key, bool shift)
+{
+  return browser_ && controlKey_
+    && controlKey_(browser_, key.constData(), shift ? 1 : 0) != 0;
+}
+
+bool MosaicHost::controlText(const QByteArray &text)
+{
+  return browser_ && controlText_ && controlText_(browser_, text.constData()) != 0;
+}
+
 bool MosaicHost::activateLink(double x, double y)
 {
   return browser_ && activateLink_ && activateLink_(browser_, x, y) != 0;
@@ -301,6 +346,8 @@ bool MosaicHost::loadBridge()
   RESOLVE(handleEvent_, "handle_event");
   RESOLVE(scroll_, "scroll");
   RESOLVE(scrollCommand_, "scroll_command");
+  RESOLVE(controlKey_, "control_key");
+  RESOLVE(controlText_, "control_text");
   RESOLVE(scrollMetrics_, "scroll_metrics");
   RESOLVE(activateLink_, "activate_link");
   RESOLVE(updateHover_, "update_hover");
@@ -310,7 +357,8 @@ bool MosaicHost::loadBridge()
 #undef RESOLVE
 
   if (!new_ || !free_ || !applyProps_ || !handleEvent_ || !scroll_
-      || !scrollCommand_ || !scrollMetrics_ || !activateLink_ || !updateHover_
+      || !scrollCommand_ || !controlKey_ || !controlText_ || !scrollMetrics_
+      || !activateLink_ || !updateHover_
       || !resize_ || !render_ || !stringFree_) {
     library_.unload();
     return false;

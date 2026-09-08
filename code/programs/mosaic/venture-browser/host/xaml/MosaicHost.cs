@@ -874,6 +874,7 @@ public static class MosaicHost
             IsTabStop = true;
             SizeChanged += OnSizeChanged;
             KeyDown += OnKeyDown;
+            CharacterReceived += OnCharacterReceived;
             PointerPressed += OnPointerPressed;
             PointerMoved += OnPointerMoved;
             PointerExited += OnPointerExited;
@@ -974,6 +975,16 @@ public static class MosaicHost
                 & CoreVirtualKeyStates.Down) != 0;
             if (HandleKey(e.Key, e.KeyStatus.IsMenuKeyDown, control, shift, out _))
             {
+                e.Handled = true;
+            }
+        }
+
+        private void OnCharacterReceived(UIElement sender, CharacterReceivedRoutedEventArgs e)
+        {
+            if (e.Character >= 0x20 && e.Character != 0x7f
+                && Native.ControlText(browser, char.ConvertFromUtf32((int)e.Character)) != 0)
+            {
+                Refresh();
                 e.Handled = true;
             }
         }
@@ -1159,6 +1170,28 @@ public static class MosaicHost
                 }
             }
 
+            var controlKey = key switch
+            {
+                VirtualKey.Back => "backspace",
+                VirtualKey.Delete => "delete",
+                VirtualKey.Left => "arrow-left",
+                VirtualKey.Right => "arrow-right",
+                VirtualKey.Up => "arrow-up",
+                VirtualKey.Down => "arrow-down",
+                VirtualKey.Home => "home",
+                VirtualKey.End => "end",
+                VirtualKey.Enter => "enter",
+                VirtualKey.Space => "space",
+                _ => null,
+            };
+            if (!controlKeyDown && !menuKeyDown && controlKey is not null
+                && Native.ControlKey(browser, controlKey, shift ? (byte)1 : (byte)0) != 0)
+            {
+                changed = true;
+                Refresh();
+                return true;
+            }
+
             var command = key switch
             {
                 VirtualKey.Up => "line-up",
@@ -1278,6 +1311,19 @@ public static class MosaicHost
         internal static extern byte ScrollCommand(
             IntPtr browser,
             [MarshalAs(UnmanagedType.LPUTF8Str)] string command);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_control_key",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern byte ControlKey(
+            IntPtr browser,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string key,
+            byte shift);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_control_text",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern byte ControlText(
+            IntPtr browser,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string text);
 
         [DllImport(Library, EntryPoint = "venture_browser_windows_activate_link",
             CallingConvention = CallingConvention.Cdecl)]

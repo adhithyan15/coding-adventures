@@ -14,7 +14,7 @@ use venture_browser_core::{
     BrowserFetchRequest, BrowserFetchResponse, BrowserHostController, BrowserHostEventOutcome,
     BrowserLoadError, BrowserNavigation, BrowserNavigationUpdate, BrowserPagePipeline,
     BrowserResourceFetcher, BrowserScrollCommand, BrowserScrollMetrics, BrowserSession,
-    BrowserSubresourceCompletion, BrowserSubresourceUpdate, HttpBrowserFetcher,
+    BrowserSubresourceCompletion, BrowserSubresourceUpdate, ControlKey, HttpBrowserFetcher,
     MemoryBookmarkRepository,
 };
 
@@ -79,6 +79,52 @@ where
     Ok(session
         .activate_control_and_submit(x, y, &pipeline, fetcher)?
         .is_some())
+}
+
+fn route_control_key<F>(
+    session: &mut BrowserSession,
+    key: ControlKey,
+    shift: bool,
+    width: f64,
+    height: f64,
+    fetcher: &F,
+) -> Result<bool, BrowserLoadError>
+where
+    F: BrowserResourceFetcher,
+{
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    Ok(session
+        .control_key_down_with_shift_and_submit(key, shift, &pipeline, fetcher)?
+        .is_some())
+}
+
+fn route_control_text(session: &mut BrowserSession, text: &str, width: f64, height: f64) -> bool {
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    session.control_text_input(text, &pipeline).is_some()
 }
 
 struct OwnedFetcher(Box<dyn BrowserResourceFetcher>);
@@ -214,6 +260,34 @@ impl WindowsBrowserHost {
         self.controller.activate_link(x, y, |session, navigation| {
             execute_navigation(session, navigation, width, height, fetcher)
         })
+    }
+
+    pub fn control_key_down(
+        &mut self,
+        key: ControlKey,
+        shift: bool,
+    ) -> Result<bool, BrowserLoadError> {
+        let changed = route_control_key(
+            self.controller.session_mut(),
+            key,
+            shift,
+            self.width,
+            self.height,
+            &self.fetcher,
+        )?;
+        if changed {
+            self.controller.synchronize_session_state();
+        }
+        Ok(changed)
+    }
+
+    pub fn control_text_input(&mut self, text: &str) -> bool {
+        let changed =
+            route_control_text(self.controller.session_mut(), text, self.width, self.height);
+        if changed {
+            self.controller.synchronize_session_state();
+        }
+        changed
     }
 
     pub fn update_hover(&mut self, x: f64, y: f64) -> bool {
@@ -479,6 +553,39 @@ mod ffi {
     }
 
     #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_control_key(
+        host: *mut WindowsBrowserHost,
+        name: *const c_char,
+        shift: u8,
+    ) -> u8 {
+        let Some(key) = string_arg(name).as_deref().and_then(ControlKey::from_name) else {
+            return 0;
+        };
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .and_then(|host| host.control_key_down(key, shift != 0).ok())
+                .unwrap_or(false) as u8
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_control_text(
+        host: *mut WindowsBrowserHost,
+        text: *const c_char,
+    ) -> u8 {
+        let Some(text) = string_arg(text) else {
+            return 0;
+        };
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .map(|host| host.control_text_input(&text) as u8)
+                .unwrap_or(0)
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
     pub unsafe extern "C" fn venture_browser_windows_activate_link(
         host: *mut WindowsBrowserHost,
         x: f64,
@@ -737,6 +844,42 @@ mod tests {
         assert!(host.scroll_command(BrowserScrollCommand::DocumentEnd));
         assert!(host.scroll_command(BrowserScrollCommand::DocumentStart));
         assert!(!host.scroll_command(BrowserScrollCommand::DocumentStart));
+    }
+
+    #[test]
+    fn native_control_input_routes_through_retained_editor_state() {
+        let fetcher = |url: &str| match url {
+            "http://example.test/" => Ok(page(
+                url,
+                "Controls",
+                "<input id='q' value='venture'><button>Go</button>",
+            )),
+            _ => Err(format!("unexpected URL {url}")),
+        };
+        let mut host = WindowsBrowserHost::new_with_fetcher(
+            "http://example.test/",
+            320.0,
+            180.0,
+            Box::new(fetcher),
+        )
+        .expect("initial page loads");
+        let input = host
+            .controller
+            .session()
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .controls[0]
+            .clone();
+
+        assert!(host.activate_link(input.x + 1.0, input.y + 1.0).unwrap());
+        assert!(host.control_key_down(ControlKey::Home, false).unwrap());
+        assert!(host.control_text_input("native-"));
+        assert_eq!(
+            host.controller.session().controls().controls()[0].value,
+            "native-venture"
+        );
     }
 
     #[test]

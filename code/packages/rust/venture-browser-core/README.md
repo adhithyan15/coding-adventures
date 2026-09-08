@@ -79,9 +79,12 @@ reload, Back, and Forward all project the retained state into blue/purple link
 styling without coupling browser history to HTML layout.
 
 `BrowserControlModel` owns focus, values, checked/radio state, select indexes,
-and disabled/read-only policy. Pointer and semantic keyboard input synchronize
-the retained render tree and reflow through the same backend-neutral page
-pipeline, so native surfaces never instantiate toolkit-specific controls.
+character-indexed selection/caret state, composition text, validation feedback,
+and disabled/read-only policy. Pointer, keyboard, text, and IME input
+synchronize the retained render tree and reflow through the same
+backend-neutral page pipeline. Failed validation focuses the first invalid
+control and projects `aria-invalid` plus accessible diagnostics, so native
+surfaces never instantiate toolkit-specific controls or own editing policy.
 
 `BrowserChromeController` is the matching host-neutral reducer for the shared
 Mosaic `VentureChrome` package. It preserves address edits as a draft, maps

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add UTF-8-safe selection and range editing, caret navigation, composition
+  state, multiline editing, password-safe display projection, and reusable
+  invalid-control focus/accessibility metadata.
 - Retain form ownership, submitter overrides, validation constraints, and
   initial control state for host-neutral submission and reset planning.
 
