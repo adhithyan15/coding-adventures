@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C23-huati",
+    "language": "chinese",
+    "chapter": 23,
+    "sequence": 2240,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2a7d19c5c4603e8d"
+  },
+  "findings": []
+}

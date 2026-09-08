@@ -1,0 +1,16 @@
+{
+  "id": "ZH-PATH-027",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "lessons": [
+    "ZH-W28-xi",
+    "ZH-W28-huan",
+    "ZH-C28-xihuan",
+    "ZH-C28-xihuan-shenme",
+    "ZH-C28-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "ZH-EXT-062-XIHUAN"
+  ]
+}

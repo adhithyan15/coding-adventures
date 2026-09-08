@@ -1,0 +1,19 @@
+{
+  "chapter": 25,
+  "title": "Le — Finished, and Changed",
+  "label": "ch:zh-le",
+  "canDo": "I can say that an action is finished, that a situation has changed, and explain why neither of those is a tense.",
+  "payoff": {
+    "lesson": "ZH-C25-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Two strokes — fewer than any character in the book but 一 and 二 — and with them the first sentences in this track that are not happening now.",
+    "assesses": [
+      "ZH-SCRIPT-LE-01",
+      "ZH-LEX-LE-01",
+      "ZH-GRAMMAR-LE-COMPLETION-01",
+      "ZH-GRAMMAR-LE-CHANGED-STATE-01",
+      "ZH-GRAMMAR-ASPECT-01",
+      "ZH-PERFORMANCE-LE-FOUR-SKILL-01"
+    ]
+  }
+}

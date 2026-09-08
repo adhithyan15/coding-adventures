@@ -108,7 +108,13 @@ describe("corpus snapshot", () => {
     // failure that `omits`/`segments` drift produces — and no total would show it.
     expect(report.summary.universallyMissing).toEqual([]);
 
-    expect(report.summary.tracksWithNoCoreVerb).toBe(3);
+    // 3 -> 2. Chinese leaves the list. Its verbs were all under namespaced
+    // ZH-* tags that this cross-language join cannot see, and the 有, 了 and
+    // 喜欢 chapters put three CANONICAL core-verb tags on the board —
+    // VERB-HAVE, VERB-PAST and VERB-LIKE-LOVE — for four characters between
+    // them. This is the join working: a total of taught verbs would not have
+    // moved, because the track already taught 看, 是 and 上学.
+    expect(report.summary.tracksWithNoCoreVerb).toBe(2);
     expect(report.summary.universallyMissing).toHaveLength(0);
     // 38 -> 39 -> 40. The 39 was Marathi's pre-A1 verb tranche (chapters 22-25),
     // which put ten more CANONICAL core-verb tags on the board -- GIVE, DRINK,
@@ -227,10 +233,17 @@ describe("corpus snapshot", () => {
     // layer shipped. Every one is now taught by TWENTY of the 22 tracks, across Romance,
     // Germanic, Italic, Indo-Aryan, Iranian, Slavic, Semitic and Dravidian.
     //
-    // Chinese and Japanese are the two exceptions and must stay exceptions until they
-    // have somewhere to put a verb: both are genuinely still at chapter 1. Excluding them
-    // is the honest reading, not a gap — which is why this asserts 20 and not 22.
-    const EIGHT = [
+    // Chinese and Japanese were the two exceptions, and the reason given was that
+    // both were "genuinely still at chapter 1" with nowhere to put a verb. That
+    // stopped being true of Chinese: it now runs to chapter 28, and the 喜欢
+    // chapter teaches liking as a PLAIN TRANSITIVE VERB — the liker is the
+    // subject, no inversion — which is a canonical VERB-LIKE-LOVE and not a
+    // namespaced ZH-* tag this join cannot see. So seven of the eight stay at
+    // twenty and VERB-LIKE-LOVE is twenty-one.
+    //
+    // Japanese stays out of all eight, and that exclusion is still the honest
+    // reading rather than a gap.
+    const SEVEN = [
       "VERB-THINK",
       "VERB-UNDERSTAND",
       "VERB-READ",
@@ -238,14 +251,17 @@ describe("corpus snapshot", () => {
       "VERB-TAKE",
       "VERB-ASK",
       "VERB-HELP",
-      "VERB-LIKE-LOVE",
     ];
-    for (const verb of EIGHT) {
+    for (const verb of SEVEN) {
       const teaching = report.tracks.filter((track) => track.covered.includes(verb));
-      expect(teaching).toHaveLength(20);
-      expect(teaching.map((t) => t.language)).not.toContain("chinese");
-      expect(teaching.map((t) => t.language)).not.toContain("japanese");
+      expect(teaching, verb).toHaveLength(20);
+      expect(teaching.map((t) => t.language), verb).not.toContain("chinese");
+      expect(teaching.map((t) => t.language), verb).not.toContain("japanese");
     }
+    const liking = report.tracks.filter((track) => track.covered.includes("VERB-LIKE-LOVE"));
+    expect(liking).toHaveLength(21);
+    expect(liking.map((t) => t.language)).toContain("chinese");
+    expect(liking.map((t) => t.language)).not.toContain("japanese");
     // None of the eight is in the universally-missing list any more, and every other
     // canonical verb still is.
     for (const verb of latin.covered) {

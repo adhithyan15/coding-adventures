@@ -1,0 +1,943 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 23,
+  "title": "De — The Hinge",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:bd9a7d8cdeb091f6",
+  "lessons": [
+    {
+      "id": "ZH-W23-de",
+      "sequence": 2210,
+      "title": "的 (de) — eight strokes for the commonest character there is",
+      "headword": "的",
+      "romanization": "de",
+      "gloss": "的 — white on the left, a ladle on the right, and the commonest character in written Chinese",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4dee0c2bf5f8b8b5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — a box on the left, a hook on the right",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a box on the left, a hook on the right and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter. Six retrievals, then the pen."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Zhōngguó rén — shū — kàn — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Zhōngguó rén — shū — kàn* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kàn — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kàn* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kànshū — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kànshū* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kàn — kànjiàn — hǎokàn — shū — kànshū — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kàn — kànjiàn — hǎokàn — shū — kànshū* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zì — hànzì — hànyǔ — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zì — hànzì — hànyǔ* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhōngxué — zhōngxuésheng — tóngxué — shàngxué — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhōngxué — zhōngxuésheng — tóngxué — shàngxué* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a box on the left, a hook on the right",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "的 (de)."
+            },
+            {
+              "kind": "speech",
+              "text": "Eight strokes, in two halves. The left half is 白 bái, \"white\"; the right half is 勺 sháo, a ladle. Finish the whole left half before the right one starts — the rule every two-part character in this book has followed."
+            },
+            {
+              "kind": "speech",
+              "text": "The left half, 白, five strokes:"
+            },
+            {
+              "kind": "speech",
+              "text": "a short piě falling to the left, at the top."
+            },
+            {
+              "kind": "speech",
+              "text": "the shù down the left side of the box."
+            },
+            {
+              "kind": "speech",
+              "text": "the héngzhé across the top and down the right side, without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "the héng inside the box."
+            },
+            {
+              "kind": "speech",
+              "text": "the héng that closes its floor."
+            },
+            {
+              "kind": "speech",
+              "text": "That box is built exactly as 百's was, and for the same reason: outside before inside, and the floor last."
+            },
+            {
+              "kind": "speech",
+              "text": "The right half, 勺, three strokes:"
+            },
+            {
+              "kind": "speech",
+              "text": "a piě falling to the left from the top."
+            },
+            {
+              "kind": "speech",
+              "text": "a long héngzhégōu down the right side, hooking left at the base."
+            },
+            {
+              "kind": "speech",
+              "text": "a single diǎn dot, placed last, inside the enclosure."
+            },
+            {
+              "kind": "speech",
+              "text": "The dot goes in last. Enclose, then fill. That is why it is stroke eight and not stroke six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "的 (de) — 白 first, all five, then 勺's three",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 的 — 白 first, all five, then 勺's three]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and check the dot came last",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and check the dot came last]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes does 的 (de) have, and how do they split? (Eight — five for 白, three for 勺.) Which stroke is the dot? (The last one — enclose, then fill.) Which character built its box the same way? (百.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 的 (de), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C23-de",
+      "sequence": 2220,
+      "title": "的 (de) — whose it is",
+      "headword": "的",
+      "romanization": "de",
+      "gloss": "de — the particle that puts an owner in front of what is owned, and carries no tone",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a01f9b908f22923",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, and the character is already under your pen."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say de — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *de* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǒ shì — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǒ shì* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ma — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ma* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ma — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ma* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhōngwén — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhōngwén* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shàngxué — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shàngxué* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "的 is said de — and that is the whole of it. No tone at all."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the third toneless word in this book, after 吗 and the 上 of 早上, and like them it is said light, short and low, leaning on the word in front of it. Do not give it a falling tone because it looks like a full character. It is a hinge, not a word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: owner + 的 + owned",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "owner + 的 (de) + the thing owned."
+            },
+            {
+              "kind": "speech",
+              "text": "我的书 wǒ de shū — my book 我的名字 wǒ de míngzi — my name 你的书 nǐ de shū — your book."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the entire Mandarin possessive. Look at what is NOT there:"
+            },
+            {
+              "kind": "speech",
+              "text": "No agreement. 的 (de) never changes for the owner, the thing, or how many."
+            },
+            {
+              "kind": "speech",
+              "text": "No separate word for \"mine\". English needs my and mine; Spanish needs mi, mío, mía, míos, mías. Mandarin has 的 (de)."
+            },
+            {
+              "kind": "speech",
+              "text": "No difference between one owner and several. The same 的 (de) does both."
+            },
+            {
+              "kind": "speech",
+              "text": "You have had 我 since the chapter that taught you to say who you are, and it has had nothing to own until now."
+            },
+            {
+              "kind": "speech",
+              "text": "One habit worth learning early: with family and with very close things, Mandarin drops 的 (de) — a speaker says 我家, not 我的家. The closer the tie, the likelier the 的 (de) falls away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de shū — 我的书",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de shū* — 我的书]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de míngzi — 我的名字",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de míngzi* — 我的名字]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ de shū — 你的书",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ de shū* — 你的书]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What tone does 的 carry? (None.) What is the order? (Owner, 的, thing owned.) And what does 的 do when the owner is plural? (Nothing — it never changes.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C23-de-mingci",
+      "sequence": 2230,
+      "title": "看书的人 (kàn shū de rén) — the one who reads",
+      "headword": "看书的人",
+      "romanization": "kàn shū de rén",
+      "gloss": "的 again, and this time the whole clause in front of it describes the noun after it",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1eb5bded2e0dcf29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, and the same character doing a bigger job."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say de — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *de* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shū — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shū* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ma — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ma* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nǐ hǎo ma — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nǐ hǎo ma* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wén — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wén* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shàngxué — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shàngxué* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: put the description in front",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "的 does not only join an owner to a thing. Put a whole clause in front of it and that clause describes the noun that follows."
+            },
+            {
+              "kind": "speech",
+              "text": "看书的人 kàn shū de rén — the person who reads books 看书的学生 — the student who reads books 我看的书 wǒ kàn de shū — the book I read."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the Mandarin order against the English. English says the person who reads books: noun first, description trailing after it. Mandarin says reads-books 的 person: description first, noun last, always."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the single most important thing in this lesson, and it is not a word to learn — it is a direction to turn round. Everything that describes a noun in Mandarin goes in front of it, however long it gets, and 的 is the hinge that holds it there. English has one construction like this and it is short — a well-read person — and Mandarin uses that shape for all of them."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice that the 的 is the same 的 as the last lesson's, unchanged and toneless. Mandarin does not have one word for the possessive and another for the relative. It has this one hinge, and what goes in front of it decides which job it is doing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kàn shū de rén — 看书的人",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kàn shū de rén* — 看书的人]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ kàn de shū — 我看的书",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ kàn de shū* — 我看的书]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "看书的学生",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 看书的学生]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does a Mandarin description go? (In front of the noun, always.) Which word holds it there? (的.) Is it a different 的 from 我的书? (No — one hinge, two jobs.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C23-huati",
+      "sequence": 2240,
+      "title": "汉语 — 我看书 (Hànyǔ, wǒ kàn shū): topic first, comment after",
+      "headword": "汉语 — 我看书",
+      "romanization": "Hànyǔ, wǒ kàn shū",
+      "gloss": "the shape Mandarin prefers: name what you are talking about first, then say something about it",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2a7d19c5c4603e8d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four in, and this one names the shape the whole language prefers."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kàn shū de rén — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kàn shū de rén* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Zhōngguó rén — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Zhōngguó rén* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nǐ hǎo ma — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nǐ hǎo ma* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shì ma — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shì ma* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wén — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wén* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tóngxué — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tóngxué* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the topic comes first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mandarin puts the thing being talked about first, and then says something about it. The first slot is the TOPIC, not necessarily the subject."
+            },
+            {
+              "kind": "speech",
+              "text": "汉语 — 我看书 Hànyǔ, wǒ kàn shū — Chinese? I read it. 书 — 我看 shū, wǒ kàn — Books, I read. 我 — 中国人 wǒ, Zhōngguó rén — Me, I'm Chinese."
+            },
+            {
+              "kind": "speech",
+              "text": "(Chinese writes a comma at that seam. This book has not taught a single punctuation mark — its own inventory reports the column empty — so the seam is printed here as a dash rather than smuggled in.)"
+            },
+            {
+              "kind": "speech",
+              "text": "In each of those the first word is not doing the verb. It is the subject under discussion, and the rest of the sentence is the remark about it."
+            },
+            {
+              "kind": "speech",
+              "text": "English can do this and treats it as informal — me, I'd rather walk; that book, I've read. Mandarin does it constantly and treats it as ordinary. It is why so much beginner Mandarin built on an English template sounds stiff: the learner keeps the doer in front when a Mandarin speaker would have put the topic there."
+            },
+            {
+              "kind": "speech",
+              "text": "A useful consequence. Once the topic is set, everything afterwards can leave it out. A Mandarin speaker will not repeat 书 in the second half of shū, wǒ kàn — and will not supply a pronoun for it either. Where English needs it, Mandarin needs nothing, because the topic is still standing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "汉语 — 我看书 (Hànyǔ, wǒ kàn shū)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 汉语 — 我看书]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "书 — 我看",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 书 — 我看]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我 — 中国人",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我 — 中国人]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What goes in the first slot of a Mandarin sentence? (The topic — what is being talked about.) Must it be the one doing the verb? (No.) What does the second half do about repeating it? (Nothing — it leaves it out.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C23-practice",
+      "sequence": 2250,
+      "title": "我的书 — 看书的人 (wǒ de shū — kàn shū de rén)",
+      "headword": "我的书 — 看书的人",
+      "romanization": "wǒ de shū — kàn shū de rén",
+      "gloss": "one character, three jobs: the possessive, the description in front, and the topic that starts a sentence",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20d629d7694b2036",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes on one character and the four skills."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Hànyǔ, wǒ kàn shū — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Hànyǔ, wǒ kàn shū* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Zhōngguó rén — shū — kàn — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Zhōngguó rén — shū — kàn* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shì ma — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shì ma* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hǎo bu hǎo — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hǎo bu hǎo* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wén — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wén* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tóng — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tóng* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built — the hinge",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One character, eight strokes, no tone — and with it:"
+            },
+            {
+              "kind": "speech",
+              "text": "我的书 — whose something is, with no agreement anywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "看书的人 (kàn shū de rén) — a description standing in FRONT of what it describes."
+            },
+            {
+              "kind": "speech",
+              "text": "汉语 — 我看书 (Hànyǔ, wǒ kàn shū) — a topic first, and a comment after it."
+            },
+            {
+              "kind": "speech",
+              "text": "The third of those needed no character at all: it is an order, not a word. It is in this chapter because 的 is what makes the first slot worth filling."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Wǒ de shū. Kàn shū de rén. Hànyǔ, wǒ kàn shū."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Say whose the book is, then say who the reader is."
+            },
+            {
+              "kind": "speech",
+              "text": "Read. 我的名字 — 看书的学生 — 书 — 我看."
+            },
+            {
+              "kind": "speech",
+              "text": "Write. 的 (de) — 白 first, then 勺, and the dot last."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我的书 — 我的名字 — 你的书",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我的书 — 我的名字 — 你的书]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "看书的人 (kàn shū de rén) — 看书的学生",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 看书的人 — 看书的学生]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "的 (de)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 的]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the three jobs this chapter gave 的 and its slot. (Possession; a description in front of its noun; and the topic that opens a sentence.) Which one cost no character? (The topic — it is an order, not a word.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C28-practice",
+    "language": "chinese",
+    "chapter": 28,
+    "sequence": 2500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c9fa1c43759f56c"
+  },
+  "findings": []
+}

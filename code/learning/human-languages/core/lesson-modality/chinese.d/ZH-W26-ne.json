@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W26-ne",
+    "language": "chinese",
+    "chapter": 26,
+    "sequence": 2360,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2b5e1573db960edc",
+    "detachableSegments": [
+      "Script — the same mouth, a different right half"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

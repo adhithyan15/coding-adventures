@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C22-bubian",
+    "language": "chinese",
+    "chapter": 22,
+    "sequence": 2160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:454b9bc401c3c42c"
+  },
+  "findings": []
+}

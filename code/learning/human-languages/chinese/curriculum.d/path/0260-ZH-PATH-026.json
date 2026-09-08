@@ -1,0 +1,16 @@
+{
+  "id": "ZH-PATH-026",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "ZH-W27-sui",
+    "ZH-C27-sui",
+    "ZH-W27-he",
+    "ZH-C27-he",
+    "ZH-C27-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "ZH-EXT-061-AGE-AND"
+  ]
+}

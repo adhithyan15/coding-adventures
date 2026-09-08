@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:e46a596dcffd42d5",
+  "lessonIds": [
+    "ZH-W23-de",
+    "ZH-C23-de",
+    "ZH-C23-de-mingci",
+    "ZH-C23-huati",
+    "ZH-C23-practice"
+  ],
+  "tex": "chinese/book/chapters/ch23-de.tex"
+}

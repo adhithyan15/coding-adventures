@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W24-ge",
+    "language": "chinese",
+    "chapter": 24,
+    "sequence": 2280,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e3a467edb75af16d",
+    "detachableSegments": [
+      "Script — 人, and a line under it"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

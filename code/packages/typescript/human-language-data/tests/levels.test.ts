@@ -273,6 +273,11 @@ describe("corpus level summary", () => {
     ).toEqual([
       "arabic",
       "bengali",
+      // Chinese joins the list with the 了 and 呢/对 chapters: an aspect particle
+      // realizing SPINE-TALK-ABOUT-PAST and a follow-up particle on
+      // SPINE-NEGATE-AND-ASK, which are the two A2 grammar nodes this track had
+      // never reached. Both are one character each.
+      "chinese",
       "french",
       "german",
       "gujarati",

@@ -1,0 +1,15 @@
+{
+  "id": "ZH-EXT-062-XIHUAN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "lexis",
+  "canDo": "I can write 喜 and 欢, say 我喜欢 with an ordinary object, and ask 你喜欢什么 with the question word left where the answer goes.",
+  "prerequisites": [],
+  "lessons": [
+    "ZH-W28-xi",
+    "ZH-W28-huan",
+    "ZH-C28-xihuan",
+    "ZH-C28-xihuan-shenme",
+    "ZH-C28-practice"
+  ]
+}

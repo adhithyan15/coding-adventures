@@ -20,6 +20,19 @@ const simpleStroke = (label: string, path: Point[]): Stroke => ({
   segments: [{ label, path }],
 });
 
+const compactPath = (encodedCoordinates: string): Point[] => {
+  const coordinates = encodedCoordinates.split(" ").map(Number);
+  if (coordinates.length % 2 !== 0) {
+    throw new Error("compactPath expects x/y pairs");
+  }
+
+  const path: Point[] = [];
+  for (let index = 0; index < coordinates.length; index += 2) {
+    path.push({ x: coordinates[index]!, y: coordinates[index + 1]! });
+  }
+  return path;
+};
+
 export const entries: DuctusEntry[] = [
   // Hanzi Writer Data's ordered medians draw 人 with the left-falling stroke
   // first, then restart at the central junction for the right-falling stroke.
@@ -35,20 +48,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the left-falling piě stroke from the upper centre",
-              path: [
-                { x: 500, y: 810 },
-                { x: 500, y: 740 },
-                { x: 490, y: 650 },
-                { x: 470, y: 555 },
-                { x: 445, y: 465 },
-                { x: 410, y: 375 },
-                { x: 365, y: 285 },
-                { x: 310, y: 200 },
-                { x: 245, y: 120 },
-                { x: 175, y: 55 },
-                { x: 105, y: 5 },
-                { x: 65, y: -25 },
-              ],
+              path: compactPath(
+                "500 810 500 740 490 650 470 555 445 465 410 375 365 285 310 200 245 120 175 55 105 5 65 -25",
+              ),
             },
           ],
         },
@@ -57,18 +59,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the right-falling nà stroke from the junction",
-              path: [
-                { x: 500, y: 690 },
-                { x: 515, y: 620 },
-                { x: 535, y: 535 },
-                { x: 565, y: 445 },
-                { x: 605, y: 355 },
-                { x: 655, y: 265 },
-                { x: 715, y: 180 },
-                { x: 785, y: 105 },
-                { x: 860, y: 45 },
-                { x: 925, y: 0 },
-              ],
+              path: compactPath(
+                "500 690 515 620 535 535 565 445 605 355 655 265 715 180 785 105 860 45 925 0",
+              ),
             },
           ],
         },
@@ -91,23 +84,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "draw the left-falling piě stroke from upper right to lower left",
-              path: [
-                { x: 440, y: 820 },
-                { x: 430, y: 790 },
-                { x: 415, y: 755 },
-                { x: 395, y: 720 },
-                { x: 375, y: 680 },
-                { x: 350, y: 640 },
-                { x: 325, y: 600 },
-                { x: 295, y: 560 },
-                { x: 265, y: 520 },
-                { x: 230, y: 475 },
-                { x: 195, y: 435 },
-                { x: 160, y: 395 },
-                { x: 125, y: 360 },
-                { x: 95, y: 330 },
-                { x: 75, y: 305 },
-              ],
+              path: compactPath(
+                "440 820 430 790 415 755 395 720 375 680 350 640 325 600 295 560 265 520 230 475 195 435 160 395 125 360 95 330 75 305",
+              ),
             },
           ],
         },
@@ -116,18 +95,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the vertical shù stroke from the junction to the baseline",
-              path: [
-                { x: 310, y: 590 },
-                { x: 310, y: 550 },
-                { x: 310, y: 500 },
-                { x: 310, y: 440 },
-                { x: 310, y: 370 },
-                { x: 310, y: 295 },
-                { x: 310, y: 220 },
-                { x: 310, y: 140 },
-                { x: 310, y: 60 },
-                { x: 310, y: -50 },
-              ],
+              path: compactPath(
+                "310 590 310 550 310 500 310 440 310 370 310 295 310 220 310 140 310 60 310 -50",
+              ),
             },
           ],
         },
@@ -148,17 +118,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the left vertical shù stroke from top to bottom",
-              path: [
-                { x: 166, y: 700 },
-                { x: 166, y: 620 },
-                { x: 166, y: 530 },
-                { x: 166, y: 440 },
-                { x: 166, y: 350 },
-                { x: 166, y: 260 },
-                { x: 166, y: 170 },
-                { x: 166, y: 80 },
-                { x: 166, y: -35 },
-              ],
+              path: compactPath(
+                "166 700 166 620 166 530 166 440 166 350 166 260 166 170 166 80 166 -35",
+              ),
             },
           ],
         },
@@ -166,31 +128,16 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the top bar from left to right",
-              path: [
-                { x: 166, y: 700 },
-                { x: 260, y: 700 },
-                { x: 360, y: 700 },
-                { x: 470, y: 700 },
-                { x: 580, y: 700 },
-                { x: 690, y: 700 },
-                { x: 785, y: 700 },
-                { x: 835, y: 700 },
-              ],
+              path: compactPath(
+                "166 700 260 700 360 700 470 700 580 700 690 700 785 700 835 700",
+              ),
             },
             {
               label:
                 "turn the corner without lifting and descend the right side",
-              path: [
-                { x: 835, y: 700 },
-                { x: 835, y: 610 },
-                { x: 835, y: 520 },
-                { x: 835, y: 430 },
-                { x: 835, y: 340 },
-                { x: 835, y: 250 },
-                { x: 835, y: 160 },
-                { x: 835, y: 70 },
-                { x: 835, y: -30 },
-              ],
+              path: compactPath(
+                "835 700 835 610 835 520 835 430 835 340 835 250 835 160 835 70 835 -30",
+              ),
             },
           ],
         },
@@ -198,16 +145,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then close the bottom from left to right",
-              path: [
-                { x: 166, y: 70 },
-                { x: 260, y: 70 },
-                { x: 360, y: 70 },
-                { x: 470, y: 70 },
-                { x: 580, y: 70 },
-                { x: 690, y: 70 },
-                { x: 785, y: 70 },
-                { x: 835, y: 70 },
-              ],
+              path: compactPath(
+                "166 70 260 70 360 70 470 70 580 70 690 70 785 70 835 70",
+              ),
             },
           ],
         },
@@ -229,31 +169,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the first piědiǎn stroke down and left",
-              path: [
-                { x: 460, y: 840 },
-                { x: 440, y: 790 },
-                { x: 415, y: 720 },
-                { x: 390, y: 650 },
-                { x: 365, y: 580 },
-                { x: 340, y: 510 },
-                { x: 310, y: 440 },
-                { x: 285, y: 375 },
-                { x: 255, y: 320 },
-                { x: 220, y: 275 },
-              ],
+              path: compactPath(
+                "460 840 440 790 415 720 390 650 365 580 340 510 310 440 285 375 255 320 220 275",
+              ),
             },
             {
               label: "turn without lifting and sweep down to the lower right",
-              path: [
-                { x: 220, y: 275 },
-                { x: 300, y: 265 },
-                { x: 400, y: 220 },
-                { x: 500, y: 175 },
-                { x: 600, y: 125 },
-                { x: 700, y: 75 },
-                { x: 800, y: 20 },
-                { x: 890, y: -35 },
-              ],
+              path: compactPath(
+                "220 275 300 265 400 220 500 175 600 125 700 75 800 20 890 -35",
+              ),
             },
           ],
         },
@@ -262,20 +186,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the left-falling piě stroke from upper right to lower left",
-              path: [
-                { x: 717, y: 550 },
-                { x: 700, y: 490 },
-                { x: 680, y: 430 },
-                { x: 650, y: 360 },
-                { x: 615, y: 295 },
-                { x: 570, y: 235 },
-                { x: 520, y: 180 },
-                { x: 460, y: 125 },
-                { x: 390, y: 75 },
-                { x: 310, y: 30 },
-                { x: 220, y: -10 },
-                { x: 130, y: -45 },
-              ],
+              path: compactPath(
+                "717 550 700 490 680 430 650 360 615 295 570 235 520 180 460 125 390 75 310 30 220 -10 130 -45",
+              ),
             },
           ],
         },
@@ -284,17 +197,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the middle horizontal héng from left to right",
-              path: [
-                { x: 70, y: 561 },
-                { x: 180, y: 561 },
-                { x: 300, y: 561 },
-                { x: 420, y: 561 },
-                { x: 540, y: 561 },
-                { x: 660, y: 561 },
-                { x: 780, y: 561 },
-                { x: 890, y: 561 },
-                { x: 940, y: 561 },
-              ],
+              path: compactPath(
+                "70 561 180 561 300 561 420 561 540 561 660 561 780 561 890 561 940 561",
+              ),
             },
           ],
         },
@@ -315,28 +220,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the top horizontal héng from left to right",
-              path: [
-                { x: 160, y: 735 },
-                { x: 250, y: 735 },
-                { x: 350, y: 735 },
-                { x: 450, y: 735 },
-                { x: 550, y: 735 },
-                { x: 650, y: 735 },
-                { x: 740, y: 735 },
-                { x: 790, y: 735 },
-              ],
+              path: compactPath(
+                "160 735 250 735 350 735 450 735 550 735 650 735 740 735 790 735",
+              ),
             },
             {
               label: "turn without lifting and sweep down-left",
-              path: [
-                { x: 790, y: 735 },
-                { x: 750, y: 680 },
-                { x: 700, y: 640 },
-                { x: 650, y: 600 },
-                { x: 600, y: 565 },
-                { x: 550, y: 535 },
-                { x: 490, y: 515 },
-              ],
+              path: compactPath(
+                "790 735 750 680 700 640 650 600 600 565 550 535 490 515",
+              ),
             },
           ],
         },
@@ -344,27 +236,13 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend the central vertical",
-              path: [
-                { x: 504, y: 530 },
-                { x: 504, y: 460 },
-                { x: 504, y: 380 },
-                { x: 504, y: 300 },
-                { x: 504, y: 220 },
-                { x: 504, y: 140 },
-                { x: 504, y: 70 },
-                { x: 500, y: 20 },
-                { x: 500, y: -35 },
-              ],
+              path: compactPath(
+                "504 530 504 460 504 380 504 300 504 220 504 140 504 70 500 20 500 -35",
+              ),
             },
             {
               label: "hook left at the base without lifting",
-              path: [
-                { x: 500, y: -35 },
-                { x: 450, y: -40 },
-                { x: 390, y: -40 },
-                { x: 330, y: -35 },
-                { x: 285, y: -20 },
-              ],
+              path: compactPath("500 -35 450 -40 390 -40 330 -35 285 -20"),
             },
           ],
         },
@@ -373,17 +251,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the middle horizontal héng from left to right",
-              path: [
-                { x: 60, y: 357 },
-                { x: 170, y: 357 },
-                { x: 290, y: 357 },
-                { x: 410, y: 357 },
-                { x: 530, y: 357 },
-                { x: 650, y: 357 },
-                { x: 770, y: 357 },
-                { x: 890, y: 357 },
-                { x: 945, y: 357 },
-              ],
+              path: compactPath(
+                "60 357 170 357 290 357 410 357 530 357 650 357 770 357 890 357 945 357",
+              ),
             },
           ],
         },
@@ -403,16 +273,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "descend the left vertical shù from top to bottom",
-              path: [
-                { x: 214, y: 735 },
-                { x: 214, y: 630 },
-                { x: 214, y: 520 },
-                { x: 214, y: 410 },
-                { x: 214, y: 300 },
-                { x: 214, y: 190 },
-                { x: 214, y: 80 },
-                { x: 214, y: 0 },
-              ],
+              path: compactPath(
+                "214 735 214 630 214 520 214 410 214 300 214 190 214 80 214 0",
+              ),
             },
           ],
         },
@@ -421,28 +284,15 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the top horizontal héng from left to right",
-              path: [
-                { x: 214, y: 735 },
-                { x: 310, y: 735 },
-                { x: 410, y: 735 },
-                { x: 510, y: 735 },
-                { x: 610, y: 735 },
-                { x: 710, y: 735 },
-                { x: 792, y: 735 },
-              ],
+              path: compactPath(
+                "214 735 310 735 410 735 510 735 610 735 710 735 792 735",
+              ),
             },
             {
               label: "turn without lifting and descend the right side",
-              path: [
-                { x: 792, y: 735 },
-                { x: 792, y: 630 },
-                { x: 792, y: 520 },
-                { x: 792, y: 410 },
-                { x: 792, y: 300 },
-                { x: 792, y: 190 },
-                { x: 792, y: 80 },
-                { x: 792, y: 0 },
-              ],
+              path: compactPath(
+                "792 735 792 630 792 520 792 410 792 300 792 190 792 80 792 0",
+              ),
             },
           ],
         },
@@ -451,15 +301,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the middle horizontal héng from left to right",
-              path: [
-                { x: 214, y: 389 },
-                { x: 310, y: 389 },
-                { x: 410, y: 389 },
-                { x: 510, y: 389 },
-                { x: 610, y: 389 },
-                { x: 710, y: 389 },
-                { x: 792, y: 389 },
-              ],
+              path: compactPath(
+                "214 389 310 389 410 389 510 389 610 389 710 389 792 389",
+              ),
             },
           ],
         },
@@ -468,15 +312,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then close the bottom horizontal héng from left to right",
-              path: [
-                { x: 214, y: 33 },
-                { x: 310, y: 33 },
-                { x: 410, y: 33 },
-                { x: 510, y: 33 },
-                { x: 610, y: 33 },
-                { x: 710, y: 33 },
-                { x: 792, y: 33 },
-              ],
+              path: compactPath(
+                "214 33 310 33 410 33 510 33 610 33 710 33 792 33",
+              ),
             },
           ],
         },
@@ -496,13 +334,7 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the top dot down and right",
-              path: [
-                { x: 150, y: 780 },
-                { x: 180, y: 755 },
-                { x: 215, y: 720 },
-                { x: 250, y: 685 },
-                { x: 290, y: 645 },
-              ],
+              path: compactPath("150 780 180 755 215 720 250 685 290 645"),
             },
           ],
         },
@@ -510,37 +342,19 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the short horizontal from left to right",
-              path: [
-                { x: 60, y: 492 },
-                { x: 110, y: 492 },
-                { x: 160, y: 492 },
-                { x: 210, y: 492 },
-                { x: 255, y: 492 },
-                { x: 293, y: 492 },
-              ],
+              path: compactPath(
+                "60 492 110 492 160 492 210 492 255 492 293 492",
+              ),
             },
             {
               label: "turn without lifting and descend the vertical",
-              path: [
-                { x: 293, y: 492 },
-                { x: 293, y: 410 },
-                { x: 293, y: 320 },
-                { x: 293, y: 230 },
-                { x: 293, y: 140 },
-                { x: 293, y: 60 },
-                { x: 293, y: 20 },
-              ],
+              path: compactPath(
+                "293 492 293 410 293 320 293 230 293 140 293 60 293 20",
+              ),
             },
             {
               label: "turn without lifting and rise to the upper right",
-              path: [
-                { x: 293, y: 20 },
-                { x: 330, y: 35 },
-                { x: 370, y: 60 },
-                { x: 410, y: 85 },
-                { x: 445, y: 110 },
-                { x: 475, y: 140 },
-              ],
+              path: compactPath("293 20 330 35 370 60 410 85 445 110 475 140"),
             },
           ],
         },
@@ -561,14 +375,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the upper dot down and right",
-              path: [
-                { x: 155, y: 785 },
-                { x: 195, y: 770 },
-                { x: 235, y: 745 },
-                { x: 275, y: 720 },
-                { x: 315, y: 695 },
-                { x: 350, y: 675 },
-              ],
+              path: compactPath(
+                "155 785 195 770 235 745 275 720 315 695 350 675",
+              ),
             },
           ],
         },
@@ -576,14 +385,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the middle dot down and right",
-              path: [
-                { x: 72, y: 515 },
-                { x: 110, y: 505 },
-                { x: 150, y: 485 },
-                { x: 190, y: 465 },
-                { x: 230, y: 445 },
-                { x: 270, y: 420 },
-              ],
+              path: compactPath(
+                "72 515 110 505 150 485 190 465 230 445 270 420",
+              ),
             },
           ],
         },
@@ -592,24 +396,14 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then begin the bottom stroke with a slight rise left",
-              path: [
-                { x: 158, y: -58 },
-                { x: 150, y: -32 },
-                { x: 155, y: 0 },
-              ],
+              path: compactPath("158 -58 150 -32 155 0"),
             },
             {
               label:
                 "continue without lifting in a long rise to the upper right",
-              path: [
-                { x: 155, y: 0 },
-                { x: 185, y: 45 },
-                { x: 220, y: 95 },
-                { x: 255, y: 145 },
-                { x: 290, y: 195 },
-                { x: 325, y: 245 },
-                { x: 360, y: 295 },
-              ],
+              path: compactPath(
+                "155 0 185 45 220 95 255 145 290 195 325 245 360 295",
+              ),
             },
           ],
         },
@@ -630,14 +424,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the top dot down and right",
-              path: [
-                { x: 440, y: 805 },
-                { x: 455, y: 790 },
-                { x: 470, y: 770 },
-                { x: 485, y: 750 },
-                { x: 500, y: 730 },
-                { x: 515, y: 715 },
-              ],
+              path: compactPath(
+                "440 805 455 790 470 770 485 750 500 730 515 715",
+              ),
             },
           ],
         },
@@ -645,14 +434,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the left-side stroke down and left",
-              path: [
-                { x: 150, y: 660 },
-                { x: 145, y: 625 },
-                { x: 138, y: 585 },
-                { x: 130, y: 545 },
-                { x: 122, y: 505 },
-                { x: 112, y: 475 },
-              ],
+              path: compactPath(
+                "150 660 145 625 138 585 130 545 122 505 112 475",
+              ),
             },
           ],
         },
@@ -660,27 +444,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the horizontal roof from left to right",
-              path: [
-                { x: 150, y: 646 },
-                { x: 250, y: 646 },
-                { x: 360, y: 646 },
-                { x: 470, y: 646 },
-                { x: 580, y: 646 },
-                { x: 690, y: 646 },
-                { x: 790, y: 646 },
-                { x: 875, y: 646 },
-              ],
+              path: compactPath(
+                "150 646 250 646 360 646 470 646 580 646 690 646 790 646 875 646",
+              ),
             },
             {
               label: "hook down and left without lifting",
-              path: [
-                { x: 875, y: 646 },
-                { x: 880, y: 620 },
-                { x: 875, y: 585 },
-                { x: 865, y: 545 },
-                { x: 850, y: 505 },
-                { x: 833, y: 475 },
-              ],
+              path: compactPath(
+                "875 646 880 620 875 585 865 545 850 505 833 475",
+              ),
             },
           ],
         },
@@ -701,18 +473,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the left-falling stroke of the person radical",
-              path: [
-                { x: 300, y: 810 },
-                { x: 285, y: 760 },
-                { x: 265, y: 705 },
-                { x: 240, y: 650 },
-                { x: 210, y: 595 },
-                { x: 175, y: 540 },
-                { x: 140, y: 495 },
-                { x: 105, y: 455 },
-                { x: 70, y: 425 },
-                { x: 45, y: 410 },
-              ],
+              path: compactPath(
+                "300 810 285 760 265 705 240 650 210 595 175 540 140 495 105 455 70 425 45 410",
+              ),
             },
           ],
         },
@@ -721,16 +484,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then descend the vertical stroke of the person radical",
-              path: [
-                { x: 196, y: 605 },
-                { x: 196, y: 520 },
-                { x: 196, y: 430 },
-                { x: 196, y: 340 },
-                { x: 196, y: 250 },
-                { x: 196, y: 160 },
-                { x: 196, y: 70 },
-                { x: 196, y: -50 },
-              ],
+              path: compactPath(
+                "196 605 196 520 196 430 196 340 196 250 196 160 196 70 196 -50",
+              ),
             },
           ],
         },
@@ -738,17 +494,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the upper-right left-falling stroke",
-              path: [
-                { x: 500, y: 810 },
-                { x: 490, y: 765 },
-                { x: 475, y: 715 },
-                { x: 455, y: 660 },
-                { x: 430, y: 605 },
-                { x: 405, y: 550 },
-                { x: 375, y: 500 },
-                { x: 345, y: 455 },
-                { x: 325, y: 435 },
-              ],
+              path: compactPath(
+                "500 810 490 765 475 715 455 660 430 605 405 550 375 500 345 455 325 435",
+              ),
             },
           ],
         },
@@ -756,24 +504,13 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the upper horizontal from left to right",
-              path: [
-                { x: 450, y: 612 },
-                { x: 530, y: 612 },
-                { x: 620, y: 612 },
-                { x: 710, y: 612 },
-                { x: 800, y: 612 },
-                { x: 890, y: 612 },
-              ],
+              path: compactPath(
+                "450 612 530 612 620 612 710 612 800 612 890 612",
+              ),
             },
             {
               label: "hook down and left without lifting",
-              path: [
-                { x: 890, y: 612 },
-                { x: 900, y: 580 },
-                { x: 900, y: 540 },
-                { x: 895, y: 500 },
-                { x: 885, y: 465 },
-              ],
+              path: compactPath("890 612 900 580 900 540 895 500 885 465"),
             },
           ],
         },
@@ -781,26 +518,13 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend the central vertical",
-              path: [
-                { x: 649, y: 590 },
-                { x: 649, y: 500 },
-                { x: 649, y: 400 },
-                { x: 649, y: 300 },
-                { x: 649, y: 200 },
-                { x: 649, y: 100 },
-                { x: 649, y: 15 },
-                { x: 645, y: -30 },
-              ],
+              path: compactPath(
+                "649 590 649 500 649 400 649 300 649 200 649 100 649 15 645 -30",
+              ),
             },
             {
               label: "hook left at the base without lifting",
-              path: [
-                { x: 645, y: -30 },
-                { x: 615, y: -40 },
-                { x: 580, y: -42 },
-                { x: 545, y: -40 },
-                { x: 515, y: -30 },
-              ],
+              path: compactPath("645 -30 615 -40 580 -42 545 -40 515 -30"),
             },
           ],
         },
@@ -808,15 +532,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the lower-left dot down and left",
-              path: [
-                { x: 485, y: 380 },
-                { x: 470, y: 330 },
-                { x: 450, y: 275 },
-                { x: 425, y: 220 },
-                { x: 400, y: 165 },
-                { x: 370, y: 110 },
-                { x: 345, y: 80 },
-              ],
+              path: compactPath(
+                "485 380 470 330 450 275 425 220 400 165 370 110 345 80",
+              ),
             },
           ],
         },
@@ -824,15 +542,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the lower-right dot down and right",
-              path: [
-                { x: 790, y: 380 },
-                { x: 815, y: 335 },
-                { x: 840, y: 285 },
-                { x: 865, y: 235 },
-                { x: 885, y: 185 },
-                { x: 900, y: 135 },
-                { x: 915, y: 90 },
-              ],
+              path: compactPath(
+                "790 380 815 335 840 285 865 235 885 185 900 135 915 90",
+              ),
             },
           ],
         },
@@ -853,29 +565,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw 女's first bent stroke down and left",
-              path: [
-                { x: 218, y: 820 },
-                { x: 205, y: 750 },
-                { x: 190, y: 675 },
-                { x: 175, y: 600 },
-                { x: 155, y: 520 },
-                { x: 135, y: 440 },
-                { x: 120, y: 365 },
-                { x: 100, y: 320 },
-                { x: 82, y: 300 },
-              ],
+              path: compactPath(
+                "218 820 205 750 190 675 175 600 155 520 135 440 120 365 100 320 82 300",
+              ),
             },
             {
               label: "turn without lifting and sweep right",
-              path: [
-                { x: 82, y: 300 },
-                { x: 145, y: 270 },
-                { x: 205, y: 225 },
-                { x: 265, y: 175 },
-                { x: 325, y: 120 },
-                { x: 375, y: 70 },
-                { x: 410, y: 40 },
-              ],
+              path: compactPath(
+                "82 300 145 270 205 225 265 175 325 120 375 70 410 40",
+              ),
             },
           ],
         },
@@ -883,18 +581,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 女's left-falling stroke",
-              path: [
-                { x: 390, y: 620 },
-                { x: 380, y: 550 },
-                { x: 365, y: 475 },
-                { x: 345, y: 395 },
-                { x: 320, y: 310 },
-                { x: 290, y: 225 },
-                { x: 255, y: 150 },
-                { x: 215, y: 80 },
-                { x: 165, y: 20 },
-                { x: 95, y: -45 },
-              ],
+              path: compactPath(
+                "390 620 380 550 365 475 345 395 320 310 290 225 255 150 215 80 165 20 95 -45",
+              ),
             },
           ],
         },
@@ -902,15 +591,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 女's horizontal stroke left to right",
-              path: [
-                { x: 45, y: 600 },
-                { x: 100, y: 600 },
-                { x: 160, y: 600 },
-                { x: 220, y: 600 },
-                { x: 280, y: 600 },
-                { x: 335, y: 600 },
-                { x: 370, y: 600 },
-              ],
+              path: compactPath(
+                "45 600 100 600 160 600 220 600 280 600 335 600 370 600",
+              ),
             },
           ],
         },
@@ -918,26 +601,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 子's top horizontal left to right",
-              path: [
-                { x: 485, y: 730 },
-                { x: 555, y: 730 },
-                { x: 630, y: 730 },
-                { x: 705, y: 730 },
-                { x: 780, y: 730 },
-                { x: 850, y: 730 },
-              ],
+              path: compactPath(
+                "485 730 555 730 630 730 705 730 780 730 850 730",
+              ),
             },
             {
               label: "turn without lifting and sweep down-left",
-              path: [
-                { x: 850, y: 730 },
-                { x: 840, y: 700 },
-                { x: 820, y: 665 },
-                { x: 790, y: 625 },
-                { x: 755, y: 585 },
-                { x: 715, y: 545 },
-                { x: 680, y: 520 },
-              ],
+              path: compactPath(
+                "850 730 840 700 820 665 790 625 755 585 715 545 680 520",
+              ),
             },
           ],
         },
@@ -945,26 +617,13 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend 子's vertical stroke",
-              path: [
-                { x: 700, y: 520 },
-                { x: 700, y: 440 },
-                { x: 700, y: 350 },
-                { x: 700, y: 260 },
-                { x: 700, y: 170 },
-                { x: 700, y: 80 },
-                { x: 700, y: 15 },
-                { x: 695, y: -25 },
-              ],
+              path: compactPath(
+                "700 520 700 440 700 350 700 260 700 170 700 80 700 15 695 -25",
+              ),
             },
             {
               label: "hook left at the base without lifting",
-              path: [
-                { x: 695, y: -25 },
-                { x: 665, y: -35 },
-                { x: 625, y: -40 },
-                { x: 585, y: -38 },
-                { x: 545, y: -25 },
-              ],
+              path: compactPath("695 -25 665 -35 625 -40 585 -38 545 -25"),
             },
           ],
         },
@@ -972,15 +631,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 子's middle horizontal left to right",
-              path: [
-                { x: 440, y: 380 },
-                { x: 520, y: 380 },
-                { x: 610, y: 380 },
-                { x: 700, y: 380 },
-                { x: 790, y: 380 },
-                { x: 880, y: 380 },
-                { x: 950, y: 380 },
-              ],
+              path: compactPath(
+                "440 380 520 380 610 380 700 380 790 380 880 380 950 380",
+              ),
             },
           ],
         },
@@ -1001,14 +654,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the short upper-left falling stroke",
-              path: [
-                { x: 450, y: 800 },
-                { x: 390, y: 785 },
-                { x: 325, y: 770 },
-                { x: 255, y: 755 },
-                { x: 185, y: 740 },
-                { x: 105, y: 720 },
-              ],
+              path: compactPath(
+                "450 800 390 785 325 770 255 755 185 740 105 720",
+              ),
             },
           ],
         },
@@ -1016,17 +664,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the upper horizontal left to right",
-              path: [
-                { x: 65, y: 510 },
-                { x: 180, y: 510 },
-                { x: 300, y: 510 },
-                { x: 420, y: 510 },
-                { x: 540, y: 510 },
-                { x: 660, y: 510 },
-                { x: 780, y: 510 },
-                { x: 900, y: 510 },
-                { x: 940, y: 510 },
-              ],
+              path: compactPath(
+                "65 510 180 510 300 510 420 510 540 510 660 510 780 510 900 510 940 510",
+              ),
             },
           ],
         },
@@ -1034,27 +674,13 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend the vertical stroke",
-              path: [
-                { x: 307, y: 720 },
-                { x: 307, y: 620 },
-                { x: 307, y: 520 },
-                { x: 307, y: 420 },
-                { x: 307, y: 320 },
-                { x: 307, y: 220 },
-                { x: 307, y: 120 },
-                { x: 307, y: 20 },
-                { x: 302, y: -25 },
-              ],
+              path: compactPath(
+                "307 720 307 620 307 520 307 420 307 320 307 220 307 120 307 20 302 -25",
+              ),
             },
             {
               label: "hook left at the base without lifting",
-              path: [
-                { x: 302, y: -25 },
-                { x: 275, y: -35 },
-                { x: 235, y: -40 },
-                { x: 195, y: -38 },
-                { x: 155, y: -25 },
-              ],
+              path: compactPath("302 -25 275 -35 235 -40 195 -38 155 -25"),
             },
           ],
         },
@@ -1062,15 +688,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the lower rising stroke",
-              path: [
-                { x: 55, y: 215 },
-                { x: 120, y: 230 },
-                { x: 190, y: 245 },
-                { x: 265, y: 262 },
-                { x: 340, y: 280 },
-                { x: 415, y: 298 },
-                { x: 490, y: 315 },
-              ],
+              path: compactPath(
+                "55 215 120 230 190 245 265 262 340 280 415 298 490 315",
+              ),
             },
           ],
         },
@@ -1078,29 +698,13 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the long curved slash down and right",
-              path: [
-                { x: 600, y: 810 },
-                { x: 600, y: 700 },
-                { x: 605, y: 590 },
-                { x: 615, y: 480 },
-                { x: 635, y: 365 },
-                { x: 660, y: 255 },
-                { x: 700, y: 150 },
-                { x: 750, y: 65 },
-                { x: 805, y: 5 },
-                { x: 850, y: -35 },
-                { x: 875, y: -45 },
-              ],
+              path: compactPath(
+                "600 810 600 700 605 590 615 480 635 365 660 255 700 150 750 65 805 5 850 -35 875 -45",
+              ),
             },
             {
               label: "hook upward on the right without lifting",
-              path: [
-                { x: 875, y: -45 },
-                { x: 895, y: 5 },
-                { x: 905, y: 55 },
-                { x: 915, y: 105 },
-                { x: 925, y: 145 },
-              ],
+              path: compactPath("875 -45 895 5 905 55 915 105 925 145"),
             },
           ],
         },
@@ -1108,16 +712,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the separate rising slash up and left",
-              path: [
-                { x: 850, y: 390 },
-                { x: 815, y: 325 },
-                { x: 770, y: 260 },
-                { x: 720, y: 200 },
-                { x: 660, y: 140 },
-                { x: 595, y: 85 },
-                { x: 525, y: 35 },
-                { x: 455, y: -5 },
-              ],
+              path: compactPath(
+                "850 390 815 325 770 260 720 200 660 140 595 85 525 35 455 -5",
+              ),
             },
           ],
         },
@@ -1125,14 +722,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then place the upper-right dot down and right",
-              path: [
-                { x: 755, y: 785 },
-                { x: 785, y: 755 },
-                { x: 815, y: 720 },
-                { x: 845, y: 685 },
-                { x: 875, y: 650 },
-                { x: 895, y: 625 },
-              ],
+              path: compactPath(
+                "755 785 785 755 815 720 845 685 875 650 895 625",
+              ),
             },
           ],
         },
@@ -1153,14 +745,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw 日's left vertical",
-              path: [
-                { x: 200, y: 770 },
-                { x: 200, y: 710 },
-                { x: 200, y: 650 },
-                { x: 200, y: 590 },
-                { x: 200, y: 530 },
-                { x: 200, y: 490 },
-              ],
+              path: compactPath(
+                "200 770 200 710 200 650 200 590 200 530 200 490",
+              ),
             },
           ],
         },
@@ -1168,26 +755,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 日's top horizontal",
-              path: [
-                { x: 200, y: 760 },
-                { x: 300, y: 760 },
-                { x: 400, y: 760 },
-                { x: 500, y: 760 },
-                { x: 600, y: 760 },
-                { x: 700, y: 760 },
-                { x: 795, y: 760 },
-              ],
+              path: compactPath(
+                "200 760 300 760 400 760 500 760 600 760 700 760 795 760",
+              ),
             },
             {
               label: "turn down the right side without lifting",
-              path: [
-                { x: 795, y: 760 },
-                { x: 795, y: 700 },
-                { x: 795, y: 640 },
-                { x: 795, y: 580 },
-                { x: 795, y: 520 },
-                { x: 795, y: 490 },
-              ],
+              path: compactPath(
+                "795 760 795 700 795 640 795 580 795 520 795 490",
+              ),
             },
           ],
         },
@@ -1195,15 +771,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 日's inner horizontal",
-              path: [
-                { x: 235, y: 634 },
-                { x: 330, y: 634 },
-                { x: 430, y: 634 },
-                { x: 530, y: 634 },
-                { x: 630, y: 634 },
-                { x: 730, y: 634 },
-                { x: 760, y: 634 },
-              ],
+              path: compactPath(
+                "235 634 330 634 430 634 530 634 630 634 730 634 760 634",
+              ),
             },
           ],
         },
@@ -1211,15 +781,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then close 日 with the bottom horizontal",
-              path: [
-                { x: 235, y: 500 },
-                { x: 330, y: 500 },
-                { x: 430, y: 500 },
-                { x: 530, y: 500 },
-                { x: 630, y: 500 },
-                { x: 730, y: 500 },
-                { x: 760, y: 500 },
-              ],
+              path: compactPath(
+                "235 500 330 500 430 500 530 500 630 500 730 500 760 500",
+              ),
             },
           ],
         },
@@ -1227,17 +791,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the wide middle horizontal",
-              path: [
-                { x: 65, y: 365 },
-                { x: 180, y: 365 },
-                { x: 300, y: 365 },
-                { x: 420, y: 365 },
-                { x: 540, y: 365 },
-                { x: 660, y: 365 },
-                { x: 780, y: 365 },
-                { x: 900, y: 365 },
-                { x: 940, y: 365 },
-              ],
+              path: compactPath(
+                "65 365 180 365 300 365 420 365 540 365 660 365 780 365 900 365 940 365",
+              ),
             },
           ],
         },
@@ -1245,15 +801,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend the central vertical",
-              path: [
-                { x: 508, y: 350 },
-                { x: 508, y: 300 },
-                { x: 508, y: 245 },
-                { x: 508, y: 190 },
-                { x: 508, y: 130 },
-                { x: 508, y: 70 },
-                { x: 508, y: 10 },
-              ],
+              path: compactPath(
+                "508 350 508 300 508 245 508 190 508 130 508 70 508 10",
+              ),
             },
           ],
         },
@@ -1261,14 +811,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the short lower-right horizontal",
-              path: [
-                { x: 510, y: 185 },
-                { x: 580, y: 185 },
-                { x: 650, y: 185 },
-                { x: 720, y: 185 },
-                { x: 790, y: 185 },
-                { x: 850, y: 185 },
-              ],
+              path: compactPath(
+                "510 185 580 185 650 185 720 185 790 185 850 185",
+              ),
             },
           ],
         },
@@ -1276,16 +821,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the lower-left falling stroke",
-              path: [
-                { x: 265, y: 280 },
-                { x: 250, y: 230 },
-                { x: 230, y: 180 },
-                { x: 205, y: 130 },
-                { x: 175, y: 85 },
-                { x: 140, y: 45 },
-                { x: 100, y: 10 },
-                { x: 60, y: -25 },
-              ],
+              path: compactPath(
+                "265 280 250 230 230 180 205 130 175 85 140 45 100 10 60 -25",
+              ),
             },
           ],
         },
@@ -1293,19 +831,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the long finishing stroke down and right",
-              path: [
-                { x: 245, y: 180 },
-                { x: 280, y: 140 },
-                { x: 320, y: 105 },
-                { x: 370, y: 65 },
-                { x: 430, y: 25 },
-                { x: 500, y: -5 },
-                { x: 580, y: -25 },
-                { x: 670, y: -25 },
-                { x: 760, y: -25 },
-                { x: 850, y: -25 },
-                { x: 920, y: -20 },
-              ],
+              path: compactPath(
+                "245 180 280 140 320 105 370 65 430 25 500 -5 580 -25 670 -25 760 -25 850 -25 920 -20",
+              ),
             },
           ],
         },
@@ -1326,16 +854,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the top horizontal left-to-right",
-              path: [
-                { x: 85, y: 730 },
-                { x: 200, y: 730 },
-                { x: 320, y: 730 },
-                { x: 440, y: 730 },
-                { x: 560, y: 730 },
-                { x: 680, y: 730 },
-                { x: 800, y: 730 },
-                { x: 915, y: 730 },
-              ],
+              path: compactPath(
+                "85 730 200 730 320 730 440 730 560 730 680 730 800 730 915 730",
+              ),
             },
           ],
         },
@@ -1343,17 +864,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the long stroke down-left",
-              path: [
-                { x: 545, y: 710 },
-                { x: 525, y: 650 },
-                { x: 490, y: 590 },
-                { x: 440, y: 525 },
-                { x: 380, y: 460 },
-                { x: 315, y: 395 },
-                { x: 245, y: 330 },
-                { x: 175, y: 275 },
-                { x: 105, y: 225 },
-              ],
+              path: compactPath(
+                "545 710 525 650 490 590 440 525 380 460 315 395 245 330 175 275 105 225",
+              ),
             },
           ],
         },
@@ -1361,17 +874,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend the central vertical",
-              path: [
-                { x: 500, y: 550 },
-                { x: 500, y: 475 },
-                { x: 500, y: 400 },
-                { x: 500, y: 325 },
-                { x: 500, y: 250 },
-                { x: 500, y: 175 },
-                { x: 500, y: 100 },
-                { x: 500, y: 20 },
-                { x: 500, y: -55 },
-              ],
+              path: compactPath(
+                "500 550 500 475 500 400 500 325 500 250 500 175 500 100 500 20 500 -55",
+              ),
             },
           ],
         },
@@ -1379,15 +884,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the separate right-falling dot",
-              path: [
-                { x: 610, y: 470 },
-                { x: 660, y: 430 },
-                { x: 715, y: 390 },
-                { x: 770, y: 350 },
-                { x: 825, y: 305 },
-                { x: 875, y: 260 },
-                { x: 920, y: 220 },
-              ],
+              path: compactPath(
+                "610 470 660 430 715 390 770 350 825 305 875 260 920 220",
+              ),
             },
           ],
         },
@@ -1408,16 +907,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw 夕's upper left-falling stroke",
-              path: [
-                { x: 445, y: 820 },
-                { x: 420, y: 775 },
-                { x: 385, y: 730 },
-                { x: 340, y: 685 },
-                { x: 285, y: 640 },
-                { x: 225, y: 600 },
-                { x: 165, y: 560 },
-                { x: 105, y: 525 },
-              ],
+              path: compactPath(
+                "445 820 420 775 385 730 340 685 285 640 225 600 165 560 105 525",
+              ),
             },
           ],
         },
@@ -1425,29 +917,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 夕's horizontal",
-              path: [
-                { x: 350, y: 705 },
-                { x: 440, y: 705 },
-                { x: 530, y: 705 },
-                { x: 620, y: 705 },
-                { x: 710, y: 705 },
-                { x: 775, y: 705 },
-              ],
+              path: compactPath(
+                "350 705 440 705 530 705 620 705 710 705 775 705",
+              ),
             },
             {
               label: "continue down-left without lifting",
-              path: [
-                { x: 775, y: 705 },
-                { x: 745, y: 650 },
-                { x: 700, y: 590 },
-                { x: 640, y: 530 },
-                { x: 570, y: 470 },
-                { x: 490, y: 415 },
-                { x: 400, y: 360 },
-                { x: 305, y: 315 },
-                { x: 205, y: 275 },
-                { x: 110, y: 240 },
-              ],
+              path: compactPath(
+                "775 705 745 650 700 590 640 530 570 470 490 415 400 360 305 315 205 275 110 240",
+              ),
             },
           ],
         },
@@ -1455,14 +933,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then place 夕's inner down-right dot",
-              path: [
-                { x: 300, y: 540 },
-                { x: 330, y: 515 },
-                { x: 365, y: 490 },
-                { x: 400, y: 460 },
-                { x: 435, y: 430 },
-                { x: 470, y: 400 },
-              ],
+              path: compactPath(
+                "300 540 330 515 365 490 400 460 435 430 470 400",
+              ),
             },
           ],
         },
@@ -1470,15 +943,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend 口's left side",
-              path: [
-                { x: 290, y: 305 },
-                { x: 290, y: 245 },
-                { x: 290, y: 185 },
-                { x: 290, y: 125 },
-                { x: 290, y: 65 },
-                { x: 290, y: 5 },
-                { x: 290, y: -50 },
-              ],
+              path: compactPath(
+                "290 305 290 245 290 185 290 125 290 65 290 5 290 -50",
+              ),
             },
           ],
         },
@@ -1486,27 +953,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 口's top horizontal",
-              path: [
-                { x: 300, y: 305 },
-                { x: 385, y: 305 },
-                { x: 470, y: 305 },
-                { x: 555, y: 305 },
-                { x: 640, y: 305 },
-                { x: 725, y: 305 },
-                { x: 810, y: 305 },
-              ],
+              path: compactPath(
+                "300 305 385 305 470 305 555 305 640 305 725 305 810 305",
+              ),
             },
             {
               label: "turn down the right side without lifting",
-              path: [
-                { x: 810, y: 305 },
-                { x: 810, y: 245 },
-                { x: 810, y: 185 },
-                { x: 810, y: 125 },
-                { x: 810, y: 65 },
-                { x: 810, y: 5 },
-                { x: 810, y: -50 },
-              ],
+              path: compactPath(
+                "810 305 810 245 810 185 810 125 810 65 810 5 810 -50",
+              ),
             },
           ],
         },
@@ -1514,15 +969,7 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then close 口 with the bottom horizontal",
-              path: [
-                { x: 300, y: 5 },
-                { x: 385, y: 5 },
-                { x: 470, y: 5 },
-                { x: 555, y: 5 },
-                { x: 640, y: 5 },
-                { x: 725, y: 5 },
-                { x: 800, y: 5 },
-              ],
+              path: compactPath("300 5 385 5 470 5 555 5 640 5 725 5 800 5"),
             },
           ],
         },
@@ -1543,13 +990,7 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw 宀's top dot down-right",
-              path: [
-                { x: 455, y: 825 },
-                { x: 475, y: 800 },
-                { x: 495, y: 775 },
-                { x: 520, y: 750 },
-                { x: 545, y: 725 },
-              ],
+              path: compactPath("455 825 475 800 495 775 520 750 545 725"),
             },
           ],
         },
@@ -1557,13 +998,7 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 宀's left-side stroke down-left",
-              path: [
-                { x: 125, y: 690 },
-                { x: 120, y: 650 },
-                { x: 115, y: 610 },
-                { x: 105, y: 570 },
-                { x: 95, y: 535 },
-              ],
+              path: compactPath("125 690 120 650 115 610 105 570 95 535"),
             },
           ],
         },
@@ -1571,26 +1006,13 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 宀's horizontal roof",
-              path: [
-                { x: 140, y: 700 },
-                { x: 250, y: 700 },
-                { x: 360, y: 700 },
-                { x: 470, y: 700 },
-                { x: 580, y: 700 },
-                { x: 690, y: 700 },
-                { x: 800, y: 700 },
-                { x: 880, y: 700 },
-              ],
+              path: compactPath(
+                "140 700 250 700 360 700 470 700 580 700 690 700 800 700 880 700",
+              ),
             },
             {
               label: "hook down-left without lifting",
-              path: [
-                { x: 880, y: 700 },
-                { x: 875, y: 660 },
-                { x: 865, y: 620 },
-                { x: 855, y: 580 },
-                { x: 850, y: 545 },
-              ],
+              path: compactPath("880 700 875 660 865 620 855 580 850 545"),
             },
           ],
         },
@@ -1598,27 +1020,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 子's top horizontal",
-              path: [
-                { x: 260, y: 515 },
-                { x: 345, y: 515 },
-                { x: 430, y: 515 },
-                { x: 515, y: 515 },
-                { x: 600, y: 515 },
-                { x: 685, y: 515 },
-                { x: 735, y: 515 },
-              ],
+              path: compactPath(
+                "260 515 345 515 430 515 515 515 600 515 685 515 735 515",
+              ),
             },
             {
               label: "turn down-left without lifting",
-              path: [
-                { x: 735, y: 515 },
-                { x: 700, y: 480 },
-                { x: 660, y: 445 },
-                { x: 615, y: 410 },
-                { x: 570, y: 380 },
-                { x: 525, y: 350 },
-                { x: 490, y: 330 },
-              ],
+              path: compactPath(
+                "735 515 700 480 660 445 615 410 570 380 525 350 490 330",
+              ),
             },
           ],
         },
@@ -1626,26 +1036,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend 子's vertical",
-              path: [
-                { x: 500, y: 350 },
-                { x: 500, y: 290 },
-                { x: 500, y: 230 },
-                { x: 500, y: 170 },
-                { x: 500, y: 110 },
-                { x: 500, y: 50 },
-                { x: 500, y: 5 },
-              ],
+              path: compactPath(
+                "500 350 500 290 500 230 500 170 500 110 500 50 500 5",
+              ),
             },
             {
               label: "hook left without lifting",
-              path: [
-                { x: 500, y: 5 },
-                { x: 480, y: -20 },
-                { x: 450, y: -35 },
-                { x: 410, y: -40 },
-                { x: 365, y: -40 },
-                { x: 325, y: -35 },
-              ],
+              path: compactPath(
+                "500 5 480 -20 450 -35 410 -40 365 -40 325 -35",
+              ),
             },
           ],
         },
@@ -1653,16 +1052,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 子's middle horizontal",
-              path: [
-                { x: 85, y: 265 },
-                { x: 200, y: 265 },
-                { x: 315, y: 265 },
-                { x: 430, y: 265 },
-                { x: 545, y: 265 },
-                { x: 660, y: 265 },
-                { x: 775, y: 265 },
-                { x: 900, y: 265 },
-              ],
+              path: compactPath(
+                "85 265 200 265 315 265 430 265 545 265 660 265 775 265 900 265",
+              ),
             },
           ],
         },
@@ -1683,13 +1075,7 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw 讠's top dot down-right",
-              path: [
-                { x: 90, y: 780 },
-                { x: 120, y: 755 },
-                { x: 150, y: 725 },
-                { x: 185, y: 690 },
-                { x: 225, y: 650 },
-              ],
+              path: compactPath("90 780 120 755 150 725 185 690 225 650"),
             },
           ],
         },
@@ -1697,35 +1083,17 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 讠's short horizontal",
-              path: [
-                { x: 50, y: 490 },
-                { x: 85, y: 490 },
-                { x: 120, y: 490 },
-                { x: 155, y: 490 },
-                { x: 195, y: 490 },
-              ],
+              path: compactPath("50 490 85 490 120 490 155 490 195 490"),
             },
             {
               label: "turn down without lifting",
-              path: [
-                { x: 195, y: 490 },
-                { x: 195, y: 400 },
-                { x: 195, y: 300 },
-                { x: 195, y: 200 },
-                { x: 195, y: 100 },
-                { x: 195, y: 10 },
-              ],
+              path: compactPath(
+                "195 490 195 400 195 300 195 200 195 100 195 10",
+              ),
             },
             {
               label: "turn and finish rising up-right without lifting",
-              path: [
-                { x: 195, y: 10 },
-                { x: 225, y: 25 },
-                { x: 255, y: 50 },
-                { x: 285, y: 80 },
-                { x: 315, y: 115 },
-                { x: 335, y: 145 },
-              ],
+              path: compactPath("195 10 225 25 255 50 285 80 315 115 335 145"),
             },
           ],
         },
@@ -1733,13 +1101,7 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 身's upper falling stroke",
-              path: [
-                { x: 505, y: 825 },
-                { x: 500, y: 790 },
-                { x: 485, y: 755 },
-                { x: 465, y: 720 },
-                { x: 440, y: 685 },
-              ],
+              path: compactPath("505 825 500 790 485 755 465 720 440 685"),
             },
           ],
         },
@@ -1747,14 +1109,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend 身's left side",
-              path: [
-                { x: 375, y: 680 },
-                { x: 375, y: 600 },
-                { x: 375, y: 520 },
-                { x: 375, y: 440 },
-                { x: 375, y: 360 },
-                { x: 375, y: 285 },
-              ],
+              path: compactPath(
+                "375 680 375 600 375 520 375 440 375 360 375 285",
+              ),
             },
           ],
         },
@@ -1762,35 +1119,17 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 身's top horizontal",
-              path: [
-                { x: 405, y: 695 },
-                { x: 450, y: 695 },
-                { x: 495, y: 695 },
-                { x: 540, y: 695 },
-                { x: 580, y: 695 },
-              ],
+              path: compactPath("405 695 450 695 495 695 540 695 580 695"),
             },
             {
               label: "turn and descend 身's right side without lifting",
-              path: [
-                { x: 580, y: 695 },
-                { x: 580, y: 575 },
-                { x: 580, y: 455 },
-                { x: 580, y: 335 },
-                { x: 580, y: 215 },
-                { x: 580, y: 95 },
-                { x: 580, y: 10 },
-              ],
+              path: compactPath(
+                "580 695 580 575 580 455 580 335 580 215 580 95 580 10",
+              ),
             },
             {
               label: "hook left at the base without lifting",
-              path: [
-                { x: 580, y: 10 },
-                { x: 565, y: -10 },
-                { x: 540, y: -25 },
-                { x: 510, y: -35 },
-                { x: 475, y: -35 },
-              ],
+              path: compactPath("580 10 565 -10 540 -25 510 -35 475 -35"),
             },
           ],
         },
@@ -1798,14 +1137,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 身's upper inner horizontal",
-              path: [
-                { x: 390, y: 565 },
-                { x: 430, y: 565 },
-                { x: 470, y: 565 },
-                { x: 510, y: 565 },
-                { x: 550, y: 565 },
-                { x: 580, y: 565 },
-              ],
+              path: compactPath(
+                "390 565 430 565 470 565 510 565 550 565 580 565",
+              ),
             },
           ],
         },
@@ -1813,14 +1147,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 身's lower inner horizontal",
-              path: [
-                { x: 390, y: 430 },
-                { x: 430, y: 430 },
-                { x: 470, y: 430 },
-                { x: 510, y: 430 },
-                { x: 550, y: 430 },
-                { x: 580, y: 430 },
-              ],
+              path: compactPath(
+                "390 430 430 430 470 430 510 430 550 430 580 430",
+              ),
             },
           ],
         },
@@ -1828,14 +1157,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 身's wide lower horizontal",
-              path: [
-                { x: 290, y: 285 },
-                { x: 350, y: 285 },
-                { x: 410, y: 285 },
-                { x: 470, y: 285 },
-                { x: 530, y: 285 },
-                { x: 585, y: 285 },
-              ],
+              path: compactPath(
+                "290 285 350 285 410 285 470 285 530 285 585 285",
+              ),
             },
           ],
         },
@@ -1843,15 +1167,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 身's lower falling stroke down-left",
-              path: [
-                { x: 535, y: 270 },
-                { x: 510, y: 220 },
-                { x: 480, y: 170 },
-                { x: 440, y: 120 },
-                { x: 395, y: 75 },
-                { x: 345, y: 30 },
-                { x: 295, y: -10 },
-              ],
+              path: compactPath(
+                "535 270 510 220 480 170 440 120 395 75 345 30 295 -10",
+              ),
             },
           ],
         },
@@ -1859,15 +1177,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 寸's horizontal",
-              path: [
-                { x: 650, y: 585 },
-                { x: 700, y: 585 },
-                { x: 750, y: 585 },
-                { x: 800, y: 585 },
-                { x: 850, y: 585 },
-                { x: 900, y: 585 },
-                { x: 950, y: 585 },
-              ],
+              path: compactPath(
+                "650 585 700 585 750 585 800 585 850 585 900 585 950 585",
+              ),
             },
           ],
         },
@@ -1875,27 +1187,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend 寸's vertical",
-              path: [
-                { x: 855, y: 825 },
-                { x: 855, y: 700 },
-                { x: 855, y: 575 },
-                { x: 855, y: 450 },
-                { x: 855, y: 325 },
-                { x: 855, y: 200 },
-                { x: 855, y: 75 },
-                { x: 855, y: 5 },
-              ],
+              path: compactPath(
+                "855 825 855 700 855 575 855 450 855 325 855 200 855 75 855 5",
+              ),
             },
             {
               label: "hook left at the base without lifting",
-              path: [
-                { x: 855, y: 5 },
-                { x: 840, y: -15 },
-                { x: 815, y: -30 },
-                { x: 785, y: -40 },
-                { x: 750, y: -40 },
-                { x: 720, y: -35 },
-              ],
+              path: compactPath(
+                "855 5 840 -15 815 -30 785 -40 750 -40 720 -35",
+              ),
             },
           ],
         },
@@ -1903,13 +1203,7 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then place 寸's dot down-right",
-              path: [
-                { x: 680, y: 430 },
-                { x: 700, y: 390 },
-                { x: 720, y: 350 },
-                { x: 740, y: 310 },
-                { x: 760, y: 270 },
-              ],
+              path: compactPath("680 430 700 390 720 350 740 310 760 270"),
             },
           ],
         },
@@ -1930,13 +1224,7 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw 讠's top dot down-right",
-              path: [
-                { x: 135, y: 780 },
-                { x: 165, y: 750 },
-                { x: 195, y: 715 },
-                { x: 225, y: 680 },
-                { x: 255, y: 650 },
-              ],
+              path: compactPath("135 780 165 750 195 715 225 680 255 650"),
             },
           ],
         },
@@ -1944,36 +1232,19 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 讠's short horizontal",
-              path: [
-                { x: 45, y: 490 },
-                { x: 80, y: 490 },
-                { x: 120, y: 490 },
-                { x: 160, y: 490 },
-                { x: 200, y: 490 },
-                { x: 235, y: 490 },
-              ],
+              path: compactPath(
+                "45 490 80 490 120 490 160 490 200 490 235 490",
+              ),
             },
             {
               label: "turn down without lifting",
-              path: [
-                { x: 235, y: 490 },
-                { x: 235, y: 400 },
-                { x: 235, y: 300 },
-                { x: 235, y: 200 },
-                { x: 235, y: 100 },
-                { x: 235, y: 10 },
-              ],
+              path: compactPath(
+                "235 490 235 400 235 300 235 200 235 100 235 10",
+              ),
             },
             {
               label: "turn and finish rising up-right without lifting",
-              path: [
-                { x: 235, y: 10 },
-                { x: 265, y: 25 },
-                { x: 295, y: 50 },
-                { x: 330, y: 80 },
-                { x: 360, y: 110 },
-                { x: 390, y: 145 },
-              ],
+              path: compactPath("235 10 265 25 295 50 330 80 360 110 390 145"),
             },
           ],
         },
@@ -1981,15 +1252,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 青's top horizontal",
-              path: [
-                { x: 385, y: 735 },
-                { x: 475, y: 735 },
-                { x: 565, y: 735 },
-                { x: 655, y: 735 },
-                { x: 745, y: 735 },
-                { x: 835, y: 735 },
-                { x: 925, y: 735 },
-              ],
+              path: compactPath(
+                "385 735 475 735 565 735 655 735 745 735 835 735 925 735",
+              ),
             },
           ],
         },
@@ -1997,15 +1262,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 青's second horizontal",
-              path: [
-                { x: 410, y: 610 },
-                { x: 490, y: 610 },
-                { x: 570, y: 610 },
-                { x: 650, y: 610 },
-                { x: 730, y: 610 },
-                { x: 810, y: 610 },
-                { x: 895, y: 610 },
-              ],
+              path: compactPath(
+                "410 610 490 610 570 610 650 610 730 610 810 610 895 610",
+              ),
             },
           ],
         },
@@ -2013,14 +1272,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend 青's upper vertical",
-              path: [
-                { x: 650, y: 835 },
-                { x: 650, y: 765 },
-                { x: 650, y: 695 },
-                { x: 650, y: 625 },
-                { x: 650, y: 555 },
-                { x: 650, y: 485 },
-              ],
+              path: compactPath(
+                "650 835 650 765 650 695 650 625 650 555 650 485",
+              ),
             },
           ],
         },
@@ -2028,15 +1282,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 青's wide middle horizontal",
-              path: [
-                { x: 355, y: 485 },
-                { x: 455, y: 485 },
-                { x: 555, y: 485 },
-                { x: 655, y: 485 },
-                { x: 755, y: 485 },
-                { x: 855, y: 485 },
-                { x: 955, y: 485 },
-              ],
+              path: compactPath(
+                "355 485 455 485 555 485 655 485 755 485 855 485 955 485",
+              ),
             },
           ],
         },
@@ -2044,15 +1292,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend 青's lower left side",
-              path: [
-                { x: 460, y: 370 },
-                { x: 460, y: 295 },
-                { x: 460, y: 220 },
-                { x: 460, y: 145 },
-                { x: 460, y: 70 },
-                { x: 460, y: -5 },
-                { x: 460, y: -70 },
-              ],
+              path: compactPath(
+                "460 370 460 295 460 220 460 145 460 70 460 -5 460 -70",
+              ),
             },
           ],
         },
@@ -2060,37 +1302,19 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 青's lower top horizontal",
-              path: [
-                { x: 490, y: 370 },
-                { x: 550, y: 370 },
-                { x: 610, y: 370 },
-                { x: 670, y: 370 },
-                { x: 730, y: 370 },
-                { x: 790, y: 370 },
-                { x: 845, y: 370 },
-              ],
+              path: compactPath(
+                "490 370 550 370 610 370 670 370 730 370 790 370 845 370",
+              ),
             },
             {
               label: "turn and descend the right side without lifting",
-              path: [
-                { x: 845, y: 370 },
-                { x: 845, y: 295 },
-                { x: 845, y: 220 },
-                { x: 845, y: 145 },
-                { x: 845, y: 70 },
-                { x: 845, y: 5 },
-              ],
+              path: compactPath("845 370 845 295 845 220 845 145 845 70 845 5"),
             },
             {
               label: "hook left at the base without lifting",
-              path: [
-                { x: 845, y: 5 },
-                { x: 830, y: -15 },
-                { x: 805, y: -30 },
-                { x: 775, y: -40 },
-                { x: 740, y: -40 },
-                { x: 705, y: -35 },
-              ],
+              path: compactPath(
+                "845 5 830 -15 805 -30 775 -40 740 -40 705 -35",
+              ),
             },
           ],
         },
@@ -2098,15 +1322,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 青's upper inner horizontal",
-              path: [
-                { x: 480, y: 235 },
-                { x: 540, y: 235 },
-                { x: 600, y: 235 },
-                { x: 660, y: 235 },
-                { x: 720, y: 235 },
-                { x: 780, y: 235 },
-                { x: 825, y: 235 },
-              ],
+              path: compactPath(
+                "480 235 540 235 600 235 660 235 720 235 780 235 825 235",
+              ),
             },
           ],
         },
@@ -2114,15 +1332,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 青's lower inner horizontal",
-              path: [
-                { x: 480, y: 100 },
-                { x: 540, y: 100 },
-                { x: 600, y: 100 },
-                { x: 660, y: 100 },
-                { x: 720, y: 100 },
-                { x: 780, y: 100 },
-                { x: 825, y: 100 },
-              ],
+              path: compactPath(
+                "480 100 540 100 600 100 660 100 720 100 780 100 825 100",
+              ),
             },
           ],
         },
@@ -2142,15 +1354,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the top horizontal left-to-right",
-              path: [
-                { x: 80, y: 745 },
-                { x: 220, y: 745 },
-                { x: 360, y: 745 },
-                { x: 500, y: 745 },
-                { x: 640, y: 745 },
-                { x: 780, y: 745 },
-                { x: 920, y: 745 },
-              ],
+              path: compactPath(
+                "80 745 220 745 360 745 500 745 640 745 780 745 920 745",
+              ),
             },
           ],
         },
@@ -2158,15 +1364,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend the left side",
-              path: [
-                { x: 195, y: 575 },
-                { x: 195, y: 475 },
-                { x: 195, y: 375 },
-                { x: 195, y: 275 },
-                { x: 195, y: 175 },
-                { x: 195, y: 75 },
-                { x: 195, y: -70 },
-              ],
+              path: compactPath(
+                "195 575 195 475 195 375 195 275 195 175 195 75 195 -70",
+              ),
             },
           ],
         },
@@ -2174,38 +1374,21 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the frame's top horizontal",
-              path: [
-                { x: 225, y: 575 },
-                { x: 315, y: 575 },
-                { x: 405, y: 575 },
-                { x: 495, y: 575 },
-                { x: 585, y: 575 },
-                { x: 675, y: 575 },
-                { x: 800, y: 575 },
-              ],
+              path: compactPath(
+                "225 575 315 575 405 575 495 575 585 575 675 575 800 575",
+              ),
             },
             {
               label: "turn and descend the right side without lifting",
-              path: [
-                { x: 800, y: 575 },
-                { x: 800, y: 475 },
-                { x: 800, y: 375 },
-                { x: 800, y: 275 },
-                { x: 800, y: 175 },
-                { x: 800, y: 75 },
-                { x: 800, y: 10 },
-              ],
+              path: compactPath(
+                "800 575 800 475 800 375 800 275 800 175 800 75 800 10",
+              ),
             },
             {
               label: "hook left at the base without lifting",
-              path: [
-                { x: 800, y: 10 },
-                { x: 785, y: -10 },
-                { x: 760, y: -25 },
-                { x: 730, y: -35 },
-                { x: 695, y: -35 },
-                { x: 655, y: -30 },
-              ],
+              path: compactPath(
+                "800 10 785 -10 760 -25 730 -35 695 -35 655 -30",
+              ),
             },
           ],
         },
@@ -2213,15 +1396,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend the central vertical",
-              path: [
-                { x: 495, y: 755 },
-                { x: 495, y: 665 },
-                { x: 495, y: 575 },
-                { x: 495, y: 485 },
-                { x: 495, y: 395 },
-                { x: 495, y: 305 },
-                { x: 495, y: 205 },
-              ],
+              path: compactPath(
+                "495 755 495 665 495 575 495 485 495 395 495 305 495 205",
+              ),
             },
           ],
         },
@@ -2229,15 +1406,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the inner horizontal",
-              path: [
-                { x: 210, y: 390 },
-                { x: 310, y: 390 },
-                { x: 410, y: 390 },
-                { x: 510, y: 390 },
-                { x: 610, y: 390 },
-                { x: 710, y: 390 },
-                { x: 790, y: 390 },
-              ],
+              path: compactPath(
+                "210 390 310 390 410 390 510 390 610 390 710 390 790 390",
+              ),
             },
           ],
         },
@@ -2245,15 +1416,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then close with the long bottom horizontal",
-              path: [
-                { x: 45, y: 195 },
-                { x: 195, y: 195 },
-                { x: 345, y: 195 },
-                { x: 495, y: 195 },
-                { x: 645, y: 195 },
-                { x: 795, y: 195 },
-                { x: 955, y: 195 },
-              ],
+              path: compactPath(
+                "45 195 195 195 345 195 495 195 645 195 795 195 955 195",
+              ),
             },
           ],
         },
@@ -2273,15 +1438,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "descend the frame's left side",
-              path: [
-                { x: 215, y: 755 },
-                { x: 215, y: 670 },
-                { x: 215, y: 585 },
-                { x: 215, y: 500 },
-                { x: 215, y: 415 },
-                { x: 215, y: 330 },
-                { x: 215, y: 235 },
-              ],
+              path: compactPath(
+                "215 755 215 670 215 585 215 500 215 415 215 330 215 235",
+              ),
             },
           ],
         },
@@ -2289,27 +1448,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the frame's top horizontal",
-              path: [
-                { x: 220, y: 745 },
-                { x: 310, y: 745 },
-                { x: 400, y: 745 },
-                { x: 490, y: 745 },
-                { x: 580, y: 745 },
-                { x: 670, y: 745 },
-                { x: 780, y: 745 },
-              ],
+              path: compactPath(
+                "220 745 310 745 400 745 490 745 580 745 670 745 780 745",
+              ),
             },
             {
               label: "turn and descend the right side without lifting",
-              path: [
-                { x: 780, y: 745 },
-                { x: 780, y: 660 },
-                { x: 780, y: 575 },
-                { x: 780, y: 490 },
-                { x: 780, y: 405 },
-                { x: 780, y: 320 },
-                { x: 780, y: 235 },
-              ],
+              path: compactPath(
+                "780 745 780 660 780 575 780 490 780 405 780 320 780 235",
+              ),
             },
           ],
         },
@@ -2317,19 +1464,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the inner left-falling leg",
-              path: [
-                { x: 490, y: 600 },
-                { x: 490, y: 520 },
-                { x: 485, y: 430 },
-                { x: 475, y: 340 },
-                { x: 450, y: 250 },
-                { x: 420, y: 170 },
-                { x: 380, y: 100 },
-                { x: 325, y: 45 },
-                { x: 260, y: 0 },
-                { x: 180, y: -40 },
-                { x: 90, y: -65 },
-              ],
+              path: compactPath(
+                "490 600 490 520 485 430 475 340 450 250 420 170 380 100 325 45 260 0 180 -40 90 -65",
+              ),
             },
           ],
         },
@@ -2337,38 +1474,21 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend the second leg",
-              path: [
-                { x: 555, y: 285 },
-                { x: 555, y: 235 },
-                { x: 555, y: 185 },
-                { x: 555, y: 135 },
-                { x: 555, y: 85 },
-                { x: 555, y: 55 },
-              ],
+              path: compactPath(
+                "555 285 555 235 555 185 555 135 555 85 555 55",
+              ),
             },
             {
               label: "bend right along the base without lifting",
-              path: [
-                { x: 555, y: 55 },
-                { x: 570, y: 20 },
-                { x: 610, y: -10 },
-                { x: 665, y: -20 },
-                { x: 725, y: -20 },
-                { x: 785, y: -15 },
-                { x: 835, y: 5 },
-                { x: 885, y: 40 },
-              ],
+              path: compactPath(
+                "555 55 570 20 610 -10 665 -20 725 -20 785 -15 835 5 885 40",
+              ),
             },
             {
               label: "finish with an upward hook without lifting",
-              path: [
-                { x: 885, y: 40 },
-                { x: 895, y: 70 },
-                { x: 905, y: 100 },
-                { x: 915, y: 125 },
-                { x: 925, y: 145 },
-                { x: 930, y: 150 },
-              ],
+              path: compactPath(
+                "885 40 895 70 905 100 915 125 925 145 930 150",
+              ),
             },
           ],
         },
@@ -2389,17 +1509,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "draw 亻's left-falling stroke from the upper centre down-left",
-              path: [
-                { x: 280, y: 810 },
-                { x: 265, y: 760 },
-                { x: 245, y: 700 },
-                { x: 220, y: 640 },
-                { x: 190, y: 580 },
-                { x: 155, y: 525 },
-                { x: 120, y: 480 },
-                { x: 85, y: 450 },
-                { x: 50, y: 430 },
-              ],
+              path: compactPath(
+                "280 810 265 760 245 700 220 640 190 580 155 525 120 480 85 450 50 430",
+              ),
             },
           ],
         },
@@ -2407,15 +1519,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend 亻's vertical stroke to the baseline",
-              path: [
-                { x: 225, y: 590 },
-                { x: 225, y: 480 },
-                { x: 225, y: 370 },
-                { x: 225, y: 260 },
-                { x: 225, y: 150 },
-                { x: 225, y: 40 },
-                { x: 225, y: -65 },
-              ],
+              path: compactPath(
+                "225 590 225 480 225 370 225 260 225 150 225 40 225 -65",
+              ),
             },
           ],
         },
@@ -2423,15 +1529,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 十's horizontal stroke left-to-right",
-              path: [
-                { x: 340, y: 457 },
-                { x: 440, y: 457 },
-                { x: 540, y: 457 },
-                { x: 640, y: 457 },
-                { x: 740, y: 457 },
-                { x: 840, y: 457 },
-                { x: 940, y: 457 },
-              ],
+              path: compactPath(
+                "340 457 440 457 540 457 640 457 740 457 840 457 940 457",
+              ),
             },
           ],
         },
@@ -2440,16 +1540,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then descend 十's vertical stroke through the horizontal",
-              path: [
-                { x: 646, y: 810 },
-                { x: 646, y: 680 },
-                { x: 646, y: 550 },
-                { x: 646, y: 420 },
-                { x: 646, y: 290 },
-                { x: 646, y: 160 },
-                { x: 646, y: 30 },
-                { x: 646, y: -65 },
-              ],
+              path: compactPath(
+                "646 810 646 680 646 550 646 420 646 290 646 160 646 30 646 -65",
+              ),
             },
           ],
         },
@@ -2469,18 +1562,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the upper left-falling stroke down-left",
-              path: [
-                { x: 475, y: 805 },
-                { x: 455, y: 755 },
-                { x: 420, y: 700 },
-                { x: 375, y: 640 },
-                { x: 325, y: 580 },
-                { x: 270, y: 520 },
-                { x: 215, y: 470 },
-                { x: 165, y: 430 },
-                { x: 120, y: 400 },
-                { x: 75, y: 410 },
-              ],
+              path: compactPath(
+                "475 805 455 755 420 700 375 640 325 580 270 520 215 470 165 430 120 400 75 410",
+              ),
             },
           ],
         },
@@ -2488,30 +1572,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the second left-falling stroke down-left",
-              path: [
-                { x: 650, y: 580 },
-                { x: 620, y: 520 },
-                { x: 575, y: 450 },
-                { x: 520, y: 375 },
-                { x: 455, y: 300 },
-                { x: 390, y: 225 },
-                { x: 325, y: 155 },
-                { x: 260, y: 95 },
-                { x: 205, y: 50 },
-                { x: 175, y: 30 },
-              ],
+              path: compactPath(
+                "650 580 620 520 575 450 520 375 455 300 390 225 325 155 260 95 205 50 175 30",
+              ),
             },
             {
               label: "turn and sweep right along the base without lifting",
-              path: [
-                { x: 175, y: 30 },
-                { x: 270, y: 35 },
-                { x: 380, y: 45 },
-                { x: 490, y: 55 },
-                { x: 600, y: 70 },
-                { x: 705, y: 85 },
-                { x: 805, y: 105 },
-              ],
+              path: compactPath(
+                "175 30 270 35 380 45 490 55 600 70 705 85 805 105",
+              ),
             },
           ],
         },
@@ -2519,15 +1588,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then place the final dot down-right",
-              path: [
-                { x: 670, y: 295 },
-                { x: 715, y: 245 },
-                { x: 760, y: 185 },
-                { x: 805, y: 125 },
-                { x: 845, y: 65 },
-                { x: 885, y: 5 },
-                { x: 905, y: -30 },
-              ],
+              path: compactPath(
+                "670 295 715 245 760 185 805 125 845 65 885 5 905 -30",
+              ),
             },
           ],
         },
@@ -2547,14 +1610,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "descend 日's left side from the upper left",
-              path: [
-                { x: 189, y: 759 },
-                { x: 189, y: 690 },
-                { x: 189, y: 620 },
-                { x: 189, y: 550 },
-                { x: 189, y: 480 },
-                { x: 189, y: 412 },
-              ],
+              path: compactPath(
+                "189 759 189 690 189 620 189 550 189 480 189 412",
+              ),
             },
           ],
         },
@@ -2562,26 +1620,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 日's top horizontal left-to-right",
-              path: [
-                { x: 189, y: 759 },
-                { x: 290, y: 759 },
-                { x: 395, y: 759 },
-                { x: 500, y: 759 },
-                { x: 605, y: 759 },
-                { x: 710, y: 759 },
-                { x: 806, y: 759 },
-              ],
+              path: compactPath(
+                "189 759 290 759 395 759 500 759 605 759 710 759 806 759",
+              ),
             },
             {
               label: "turn without lifting and descend 日's right side",
-              path: [
-                { x: 806, y: 759 },
-                { x: 806, y: 690 },
-                { x: 806, y: 620 },
-                { x: 806, y: 550 },
-                { x: 806, y: 480 },
-                { x: 806, y: 412 },
-              ],
+              path: compactPath(
+                "806 759 806 690 806 620 806 550 806 480 806 412",
+              ),
             },
           ],
         },
@@ -2589,15 +1636,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 日's middle horizontal left-to-right",
-              path: [
-                { x: 189, y: 587 },
-                { x: 290, y: 587 },
-                { x: 395, y: 587 },
-                { x: 500, y: 587 },
-                { x: 605, y: 587 },
-                { x: 710, y: 587 },
-                { x: 806, y: 587 },
-              ],
+              path: compactPath(
+                "189 587 290 587 395 587 500 587 605 587 710 587 806 587",
+              ),
             },
           ],
         },
@@ -2606,15 +1647,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then close 日 with its bottom horizontal left-to-right",
-              path: [
-                { x: 189, y: 412 },
-                { x: 290, y: 412 },
-                { x: 395, y: 412 },
-                { x: 500, y: 412 },
-                { x: 605, y: 412 },
-                { x: 710, y: 412 },
-                { x: 806, y: 412 },
-              ],
+              path: compactPath(
+                "189 412 290 412 395 412 500 412 605 412 710 412 806 412",
+              ),
             },
           ],
         },
@@ -2622,15 +1657,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw 十's horizontal left-to-right",
-              path: [
-                { x: 60, y: 193 },
-                { x: 190, y: 193 },
-                { x: 345, y: 193 },
-                { x: 500, y: 193 },
-                { x: 655, y: 193 },
-                { x: 810, y: 193 },
-                { x: 944, y: 193 },
-              ],
+              path: compactPath(
+                "60 193 190 193 345 193 500 193 655 193 810 193 944 193",
+              ),
             },
           ],
         },
@@ -2638,14 +1667,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend 十's vertical through the horizontal",
-              path: [
-                { x: 496, y: 389 },
-                { x: 496, y: 310 },
-                { x: 496, y: 230 },
-                { x: 496, y: 150 },
-                { x: 496, y: 70 },
-                { x: 496, y: -65 },
-              ],
+              path: compactPath(
+                "496 389 496 310 496 230 496 150 496 70 496 -65",
+              ),
             },
           ],
         },
@@ -2665,15 +1689,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "descend the central vertical from top to bottom",
-              path: [
-                { x: 466, y: 810 },
-                { x: 466, y: 680 },
-                { x: 466, y: 550 },
-                { x: 466, y: 420 },
-                { x: 466, y: 290 },
-                { x: 466, y: 160 },
-                { x: 466, y: 20 },
-              ],
+              path: compactPath(
+                "466 810 466 680 466 550 466 420 466 290 466 160 466 20",
+              ),
             },
           ],
         },
@@ -2682,14 +1700,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the short middle horizontal left-to-right",
-              path: [
-                { x: 470, y: 478 },
-                { x: 550, y: 478 },
-                { x: 630, y: 478 },
-                { x: 710, y: 478 },
-                { x: 790, y: 478 },
-                { x: 868, y: 478 },
-              ],
+              path: compactPath(
+                "470 478 550 478 630 478 710 478 790 478 868 478",
+              ),
             },
           ],
         },
@@ -2697,15 +1710,7 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the long base horizontal left-to-right",
-              path: [
-                { x: 65, y: 5 },
-                { x: 210, y: 5 },
-                { x: 355, y: 5 },
-                { x: 500, y: 5 },
-                { x: 645, y: 5 },
-                { x: 790, y: 5 },
-                { x: 936, y: 5 },
-              ],
+              path: compactPath("65 5 210 5 355 5 500 5 645 5 790 5 936 5"),
             },
           ],
         },
@@ -2724,37 +1729,15 @@ export const entries: DuctusEntry[] = [
       strokes: [
         simpleStroke(
           "draw the short left-falling piě stroke from the upper centre down-left",
-          [
-            { x: 296, y: 752 },
-            { x: 296, y: 376 },
-            { x: 288, y: 368 },
-            { x: 288, y: 312 },
-            { x: 280, y: 304 },
-            { x: 272, y: 232 },
-            { x: 264, y: 224 },
-            { x: 248, y: 160 },
-            { x: 208, y: 88 },
-            { x: 160, y: 32 },
-          ],
+          compactPath(
+            "296 752 296 376 288 368 288 312 280 304 272 232 264 224 248 160 208 88 160 32",
+          ),
         ),
         simpleStroke(
           "lift, then draw the vertical shù stroke down from the upper right, bend it right along the baseline, and hook upward without lifting",
-          [
-            { x: 664, y: 736 },
-            { x: 664, y: 64 },
-            { x: 672, y: 56 },
-            { x: 672, y: 0 },
-            { x: 680, y: -16 },
-            { x: 704, y: -32 },
-            { x: 872, y: -32 },
-            { x: 888, y: -24 },
-            { x: 912, y: 8 },
-            { x: 912, y: 40 },
-            { x: 920, y: 48 },
-            { x: 920, y: 160 },
-            { x: 904, y: 176 },
-            { x: 904, y: 192 },
-          ],
+          compactPath(
+            "664 736 664 64 672 56 672 0 680 -16 704 -32 872 -32 888 -24 912 8 912 40 920 48 920 160 904 176 904 192",
+          ),
         ),
       ],
       source: chineseCharacterSource("儿"),
@@ -2766,171 +1749,59 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "家",
       strokes: [
-        simpleStroke("draw the top dot down and right", [
-          { x: 432, y: 824 },
-          { x: 456, y: 808 },
-          { x: 480, y: 808 },
-          { x: 488, y: 792 },
-          { x: 488, y: 768 },
-          { x: 496, y: 760 },
-        ]),
-        simpleStroke("lift, then draw the left-side roof dot down and left", [
-          { x: 224, y: 712 },
-          { x: 128, y: 712 },
-          { x: 120, y: 704 },
-          { x: 120, y: 576 },
-        ]),
+        simpleStroke(
+          "draw the top dot down and right",
+          compactPath("432 824 456 808 480 808 488 792 488 768 496 760"),
+        ),
+        simpleStroke(
+          "lift, then draw the left-side roof dot down and left",
+          compactPath("224 712 128 712 120 704 120 576"),
+        ),
         simpleStroke(
           "lift, then draw the horizontal roof left-to-right and hook down-left without lifting",
-          [
-            { x: 264, y: 712 },
-            { x: 488, y: 712 },
-            { x: 496, y: 720 },
-            { x: 512, y: 720 },
-            { x: 520, y: 712 },
-            { x: 872, y: 712 },
-            { x: 880, y: 704 },
-            { x: 880, y: 616 },
-          ],
+          compactPath(
+            "264 712 488 712 496 720 512 720 520 712 872 712 880 704 880 616",
+          ),
         ),
         simpleStroke(
           "lift, then draw the upper horizontal of the lower body from left to right",
-          [
-            { x: 248, y: 552 },
-            { x: 456, y: 552 },
-            { x: 464, y: 544 },
-            { x: 488, y: 544 },
-            { x: 496, y: 552 },
-            { x: 640, y: 552 },
-          ],
+          compactPath("248 552 456 552 464 544 488 544 496 552 640 552"),
         ),
-        simpleStroke("lift, then draw its left-falling stroke", [
-          { x: 456, y: 504 },
-          { x: 448, y: 496 },
-          { x: 448, y: 480 },
-          { x: 424, y: 456 },
-          { x: 376, y: 448 },
-          { x: 304, y: 408 },
-          { x: 288, y: 408 },
-          { x: 264, y: 392 },
-          { x: 248, y: 392 },
-          { x: 240, y: 384 },
-          { x: 224, y: 384 },
-          { x: 192, y: 368 },
-          { x: 168, y: 368 },
-          { x: 160, y: 360 },
-          { x: 112, y: 360 },
-        ]),
+        simpleStroke(
+          "lift, then draw its left-falling stroke",
+          compactPath(
+            "456 504 448 496 448 480 424 456 376 448 304 408 288 408 264 392 248 392 240 384 224 384 192 368 168 368 160 360 112 360",
+          ),
+        ),
         simpleStroke(
           "lift, then descend the centre and curve to a hook at the base without lifting",
-          [
-            { x: 416, y: 456 },
-            { x: 432, y: 464 },
-            { x: 448, y: 448 },
-            { x: 448, y: 440 },
-            { x: 472, y: 416 },
-            { x: 488, y: 384 },
-            { x: 488, y: 368 },
-            { x: 504, y: 352 },
-            { x: 512, y: 352 },
-            { x: 528, y: 328 },
-            { x: 536, y: 296 },
-            { x: 552, y: 280 },
-            { x: 552, y: 224 },
-            { x: 560, y: 216 },
-            { x: 560, y: 184 },
-            { x: 568, y: 176 },
-            { x: 568, y: 96 },
-            { x: 560, y: 88 },
-            { x: 552, y: 32 },
-            { x: 512, y: -24 },
-            { x: 480, y: -40 },
-            { x: 456, y: -48 },
-            { x: 392, y: -48 },
-            { x: 360, y: -24 },
-          ],
+          compactPath(
+            "416 456 432 464 448 448 448 440 472 416 488 384 488 368 504 352 512 352 528 328 536 296 552 280 552 224 560 216 560 184 568 176 568 96 560 88 552 32 512 -24 480 -40 456 -48 392 -48 360 -24",
+          ),
         ),
         simpleStroke(
           "lift, then add the short left-falling stroke beside the centre",
-          [
-            { x: 456, y: 432 },
-            { x: 472, y: 416 },
-            { x: 488, y: 384 },
-            { x: 488, y: 368 },
-            { x: 496, y: 360 },
-            { x: 480, y: 344 },
-            { x: 448, y: 336 },
-            { x: 392, y: 296 },
-            { x: 264, y: 232 },
-            { x: 248, y: 232 },
-            { x: 232, y: 216 },
-            { x: 216, y: 216 },
-            { x: 208, y: 208 },
-            { x: 192, y: 208 },
-            { x: 160, y: 192 },
-            { x: 136, y: 192 },
-          ],
+          compactPath(
+            "456 432 472 416 488 384 488 368 496 360 480 344 448 336 392 296 264 232 248 232 232 216 216 216 208 208 192 208 160 192 136 192",
+          ),
         ),
-        simpleStroke("lift, then add the longer left-falling stroke below it", [
-          { x: 512, y: 344 },
-          { x: 528, y: 328 },
-          { x: 528, y: 312 },
-          { x: 552, y: 272 },
-          { x: 552, y: 224 },
-          { x: 536, y: 208 },
-          { x: 520, y: 208 },
-          { x: 488, y: 192 },
-          { x: 472, y: 176 },
-          { x: 464, y: 176 },
-          { x: 424, y: 144 },
-          { x: 400, y: 136 },
-          { x: 384, y: 120 },
-          { x: 288, y: 72 },
-          { x: 272, y: 72 },
-          { x: 216, y: 40 },
-          { x: 200, y: 40 },
-          { x: 192, y: 32 },
-          { x: 176, y: 32 },
-          { x: 144, y: 16 },
-          { x: 96, y: 16 },
-        ]),
-        simpleStroke("lift, then add the lower left-falling stroke", [
-          { x: 832, y: 432 },
-          { x: 792, y: 432 },
-          { x: 776, y: 416 },
-          { x: 768, y: 416 },
-          { x: 736, y: 384 },
-          { x: 680, y: 352 },
-          { x: 664, y: 320 },
-          { x: 648, y: 304 },
-          { x: 624, y: 304 },
-          { x: 616, y: 296 },
-          { x: 552, y: 280 },
-          { x: 536, y: 296 },
-          { x: 528, y: 328 },
-        ]),
+        simpleStroke(
+          "lift, then add the longer left-falling stroke below it",
+          compactPath(
+            "512 344 528 328 528 312 552 272 552 224 536 208 520 208 488 192 472 176 464 176 424 144 400 136 384 120 288 72 272 72 216 40 200 40 192 32 176 32 144 16 96 16",
+          ),
+        ),
+        simpleStroke(
+          "lift, then add the lower left-falling stroke",
+          compactPath(
+            "832 432 792 432 776 416 768 416 736 384 680 352 664 320 648 304 624 304 616 296 552 280 536 296 528 328",
+          ),
+        ),
         simpleStroke(
           "lift, then finish with the long right-falling nà stroke",
-          [
-            { x: 528, y: 328 },
-            { x: 528, y: 312 },
-            { x: 552, y: 280 },
-            { x: 568, y: 288 },
-            { x: 592, y: 288 },
-            { x: 624, y: 304 },
-            { x: 648, y: 304 },
-            { x: 656, y: 312 },
-            { x: 672, y: 296 },
-            { x: 672, y: 280 },
-            { x: 720, y: 184 },
-            { x: 760, y: 136 },
-            { x: 760, y: 128 },
-            { x: 832, y: 56 },
-            { x: 840, y: 56 },
-            { x: 888, y: 16 },
-            { x: 928, y: 16 },
-            { x: 936, y: 24 },
-          ],
+          compactPath(
+            "528 328 528 312 552 280 568 288 592 288 624 304 648 304 656 312 672 296 672 280 720 184 760 136 760 128 832 56 840 56 888 16 928 16 936 24",
+          ),
         ),
       ],
       source: chineseCharacterSource("家"),
@@ -2942,65 +1813,21 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "大",
       strokes: [
-        simpleStroke("draw the horizontal héng stroke from left to right", [
-          { x: 104, y: 512 },
-          { x: 472, y: 512 },
-          { x: 488, y: 496 },
-          { x: 504, y: 496 },
-          { x: 520, y: 512 },
-          { x: 896, y: 512 },
-        ]),
+        simpleStroke(
+          "draw the horizontal héng stroke from left to right",
+          compactPath("104 512 472 512 488 496 504 496 520 512 896 512"),
+        ),
         simpleStroke(
           "lift, then start above the bar and draw the left-falling piě stroke through it",
-          [
-            { x: 496, y: 792 },
-            { x: 496, y: 624 },
-            { x: 488, y: 616 },
-            { x: 488, y: 536 },
-            { x: 472, y: 512 },
-            { x: 496, y: 488 },
-            { x: 496, y: 472 },
-            { x: 464, y: 440 },
-            { x: 456, y: 424 },
-            { x: 448, y: 376 },
-            { x: 440, y: 368 },
-            { x: 432, y: 328 },
-            { x: 416, y: 304 },
-            { x: 416, y: 288 },
-            { x: 352, y: 176 },
-            { x: 320, y: 144 },
-            { x: 320, y: 136 },
-            { x: 232, y: 48 },
-            { x: 224, y: 48 },
-            { x: 200, y: 24 },
-            { x: 168, y: 8 },
-          ],
+          compactPath(
+            "496 792 496 624 488 616 488 536 472 512 496 488 496 472 464 440 456 424 448 376 440 368 432 328 416 304 416 288 352 176 320 144 320 136 232 48 224 48 200 24 168 8",
+          ),
         ),
         simpleStroke(
           "lift, return near the crossing, and draw the long right-falling nà stroke",
-          [
-            { x: 464, y: 432 },
-            { x: 464, y: 440 },
-            { x: 496, y: 472 },
-            { x: 536, y: 432 },
-            { x: 552, y: 400 },
-            { x: 552, y: 384 },
-            { x: 576, y: 344 },
-            { x: 576, y: 328 },
-            { x: 616, y: 248 },
-            { x: 632, y: 232 },
-            { x: 640, y: 208 },
-            { x: 696, y: 144 },
-            { x: 696, y: 136 },
-            { x: 800, y: 32 },
-            { x: 808, y: 32 },
-            { x: 832, y: 8 },
-            { x: 856, y: 0 },
-            { x: 880, y: -24 },
-            { x: 896, y: -16 },
-            { x: 920, y: -16 },
-            { x: 928, y: -8 },
-          ],
+          compactPath(
+            "464 432 464 440 496 472 536 432 552 400 552 384 576 344 576 328 616 248 632 232 640 208 696 144 696 136 800 32 808 32 832 8 856 0 880 -24 896 -16 920 -16 928 -8",
+          ),
         ),
       ],
       source: chineseCharacterSource("大"),
@@ -3014,39 +1841,20 @@ export const entries: DuctusEntry[] = [
       strokes: [
         simpleStroke(
           "draw the centre vertical shù stroke downward and hook left without lifting",
-          [
-            { x: 504, y: 776 },
-            { x: 504, y: 48 },
-            { x: 496, y: 40 },
-            { x: 496, y: -8 },
-            { x: 488, y: -24 },
-            { x: 464, y: -40 },
-            { x: 384, y: -40 },
-          ],
+          compactPath("504 776 504 48 496 40 496 -8 488 -24 464 -40 384 -40"),
         ),
-        simpleStroke("lift, then draw the short left-falling piě stroke", [
-          { x: 224, y: 496 },
-          { x: 216, y: 488 },
-          { x: 216, y: 472 },
-          { x: 200, y: 440 },
-          { x: 200, y: 416 },
-          { x: 192, y: 408 },
-          { x: 184, y: 368 },
-          { x: 96, y: 192 },
-        ]),
-        simpleStroke("lift, then draw the right dot downward", [
-          { x: 776, y: 520 },
-          { x: 792, y: 488 },
-          { x: 808, y: 472 },
-          { x: 824, y: 440 },
-          { x: 824, y: 424 },
-          { x: 864, y: 352 },
-          { x: 864, y: 336 },
-          { x: 880, y: 312 },
-          { x: 888, y: 272 },
-          { x: 904, y: 248 },
-          { x: 920, y: 184 },
-        ]),
+        simpleStroke(
+          "lift, then draw the short left-falling piě stroke",
+          compactPath(
+            "224 496 216 488 216 472 200 440 200 416 192 408 184 368 96 192",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw the right dot downward",
+          compactPath(
+            "776 520 792 488 808 472 824 440 824 424 864 352 864 336 880 312 888 272 904 248 920 184",
+          ),
+        ),
       ],
       source: chineseCharacterSource("小"),
     },
@@ -3057,47 +1865,23 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "中",
       strokes: [
-        simpleStroke("draw the left vertical shù stroke from top to bottom", [
-          { x: 152, y: 616 },
-          { x: 152, y: 520 },
-          { x: 152, y: 424 },
-          { x: 152, y: 328 },
-          { x: 152, y: 232 },
-        ]),
+        simpleStroke(
+          "draw the left vertical shù stroke from top to bottom",
+          compactPath("152 616 152 520 152 424 152 328 152 232"),
+        ),
         simpleStroke(
           "lift, then draw the top horizontal left-to-right and turn down the right side without lifting",
-          [
-            { x: 132, y: 624 },
-            { x: 320, y: 624 },
-            { x: 504, y: 624 },
-            { x: 688, y: 624 },
-            { x: 864, y: 624 },
-            { x: 864, y: 520 },
-            { x: 864, y: 416 },
-            { x: 864, y: 312 },
-            { x: 864, y: 220 },
-          ],
+          compactPath(
+            "132 624 320 624 504 624 688 624 864 624 864 520 864 416 864 312 864 220",
+          ),
         ),
         simpleStroke(
           "lift, then close the box with the bottom horizontal héng stroke left-to-right",
-          [
-            { x: 152, y: 284 },
-            { x: 320, y: 284 },
-            { x: 488, y: 284 },
-            { x: 656, y: 284 },
-            { x: 824, y: 284 },
-          ],
+          compactPath("152 284 320 284 488 284 656 284 824 284"),
         ),
         simpleStroke(
           "lift, then draw the central vertical shù stroke from top through the box to the base",
-          [
-            { x: 496, y: 824 },
-            { x: 496, y: 640 },
-            { x: 496, y: 456 },
-            { x: 496, y: 272 },
-            { x: 496, y: 88 },
-            { x: 496, y: -48 },
-          ],
+          compactPath("496 824 496 640 496 456 496 272 496 88 496 -48"),
         ),
       ],
       source: chineseCharacterSource("中"),
@@ -3111,71 +1895,31 @@ export const entries: DuctusEntry[] = [
       strokes: [
         simpleStroke(
           "draw the outer left vertical shù stroke from top to bottom",
-          [
-            { x: 152, y: 744 },
-            { x: 152, y: 584 },
-            { x: 152, y: 424 },
-            { x: 152, y: 264 },
-            { x: 152, y: 104 },
-            { x: 152, y: -32 },
-          ],
+          compactPath("152 744 152 584 152 424 152 264 152 104 152 -32"),
         ),
         simpleStroke(
           "lift, then draw the outer top horizontal and turn down the right side without lifting",
-          [
-            { x: 124, y: 752 },
-            { x: 312, y: 752 },
-            { x: 500, y: 752 },
-            { x: 688, y: 752 },
-            { x: 877, y: 752 },
-            { x: 877, y: 584 },
-            { x: 877, y: 416 },
-            { x: 877, y: 248 },
-            { x: 877, y: 48 },
-            { x: 870, y: -16 },
-            { x: 840, y: -38 },
-            { x: 780, y: -45 },
-            { x: 720, y: -42 },
-          ],
+          compactPath(
+            "124 752 312 752 500 752 688 752 877 752 877 584 877 416 877 248 877 48 870 -16 840 -38 780 -45 720 -42",
+          ),
         ),
         simpleStroke(
           "lift, then draw the short inner horizontal héng stroke left-to-right",
-          [
-            { x: 280, y: 580 },
-            { x: 392, y: 580 },
-            { x: 504, y: 580 },
-            { x: 616, y: 580 },
-            { x: 720, y: 580 },
-          ],
+          compactPath("280 580 392 580 504 580 616 580 720 580"),
         ),
-        simpleStroke("lift, then draw 口's left vertical", [
-          { x: 336, y: 408 },
-          { x: 336, y: 312 },
-          { x: 336, y: 216 },
-          { x: 336, y: 120 },
-        ]),
+        simpleStroke(
+          "lift, then draw 口's left vertical",
+          compactPath("336 408 336 312 336 216 336 120"),
+        ),
         simpleStroke(
           "lift, then draw 口's top horizontal and turn down its right side without lifting",
-          [
-            { x: 352, y: 408 },
-            { x: 432, y: 408 },
-            { x: 512, y: 408 },
-            { x: 592, y: 408 },
-            { x: 672, y: 408 },
-            { x: 672, y: 312 },
-            { x: 672, y: 216 },
-            { x: 672, y: 136 },
-          ],
+          compactPath(
+            "352 408 432 408 512 408 592 408 672 408 672 312 672 216 672 136",
+          ),
         ),
         simpleStroke(
           "lift, then close 口 with its bottom horizontal left-to-right",
-          [
-            { x: 336, y: 152 },
-            { x: 420, y: 152 },
-            { x: 504, y: 152 },
-            { x: 588, y: 152 },
-            { x: 672, y: 152 },
-          ],
+          compactPath("336 152 420 152 504 152 588 152 672 152"),
         ),
       ],
       source: chineseCharacterSource("同"),
@@ -3187,81 +1931,41 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "学",
       strokes: [
-        simpleStroke("draw the centre top dot downward", [
-          { x: 232, y: 768 },
-          { x: 232, y: 760 },
-          { x: 272, y: 704 },
-          { x: 272, y: 648 },
-          { x: 280, y: 640 },
-          { x: 384, y: 640 },
-        ]),
-        simpleStroke("lift, then draw the left top dot downward", [
-          { x: 448, y: 816 },
-          { x: 464, y: 816 },
-          { x: 496, y: 776 },
-          { x: 520, y: 728 },
-          { x: 520, y: 688 },
-        ]),
-        simpleStroke("lift, then draw the right top stroke down-left", [
-          { x: 768, y: 744 },
-          { x: 768, y: 736 },
-          { x: 744, y: 712 },
-          { x: 736, y: 656 },
-          { x: 720, y: 640 },
-          { x: 592, y: 640 },
-        ]),
-        simpleStroke("lift, then draw the left dot of the cover", [
-          { x: 236, y: 466 },
-          { x: 264, y: 464 },
-        ]),
+        simpleStroke(
+          "draw the centre top dot downward",
+          compactPath("232 768 232 760 272 704 272 648 280 640 384 640"),
+        ),
+        simpleStroke(
+          "lift, then draw the left top dot downward",
+          compactPath("448 816 464 816 496 776 520 728 520 688"),
+        ),
+        simpleStroke(
+          "lift, then draw the right top stroke down-left",
+          compactPath("768 744 768 736 744 712 736 656 720 640 592 640"),
+        ),
+        simpleStroke(
+          "lift, then draw the left dot of the cover",
+          compactPath("236 466 264 464"),
+        ),
         simpleStroke(
           "lift, then draw the horizontal cover and hook downward without lifting",
-          [
-            { x: 112, y: 568 },
-            { x: 112, y: 632 },
-            { x: 120, y: 640 },
-            { x: 872, y: 640 },
-            { x: 888, y: 624 },
-            { x: 888, y: 512 },
-          ],
+          compactPath("112 568 112 632 120 640 872 640 888 624 888 512"),
         ),
         simpleStroke(
           "lift, then draw 子's top horizontal and turn down-left without lifting",
-          [
-            { x: 336, y: 464 },
-            { x: 656, y: 464 },
-            { x: 664, y: 456 },
-            { x: 664, y: 440 },
-            { x: 656, y: 432 },
-            { x: 656, y: 416 },
-            { x: 640, y: 400 },
-            { x: 504, y: 328 },
-          ],
+          compactPath(
+            "336 464 656 464 664 456 664 440 656 432 656 416 640 400 504 328",
+          ),
         ),
         simpleStroke(
           "lift, then draw 子's vertical and hook left without lifting",
-          [
-            { x: 504, y: 328 },
-            { x: 496, y: 312 },
-            { x: 496, y: 248 },
-            { x: 504, y: 240 },
-            { x: 496, y: 232 },
-            { x: 496, y: 0 },
-            { x: 488, y: -8 },
-            { x: 488, y: -24 },
-            { x: 456, y: -40 },
-            { x: 352, y: -40 },
-          ],
+          compactPath(
+            "504 328 496 312 496 248 504 240 496 232 496 0 488 -8 488 -24 456 -40 352 -40",
+          ),
         ),
         simpleStroke(
           "lift, then draw 子's bottom horizontal from left to right",
-          [
-            { x: 96, y: 240 },
-            { x: 488, y: 240 },
-            { x: 496, y: 248 },
-            { x: 504, y: 240 },
-            { x: 896, y: 240 },
-          ],
+          compactPath("96 240 488 240 496 248 504 240 896 240"),
         ),
       ],
       source: chineseCharacterSource("学"),
@@ -3273,56 +1977,30 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "生",
       strokes: [
-        simpleStroke("draw the short upper left-falling piě stroke", [
-          { x: 288, y: 792 },
-          { x: 256, y: 760 },
-          { x: 240, y: 696 },
-          { x: 224, y: 672 },
-          { x: 224, y: 632 },
-          { x: 216, y: 624 },
-          { x: 208, y: 600 },
-          { x: 192, y: 568 },
-          { x: 176, y: 536 },
-          { x: 152, y: 504 },
-          { x: 134, y: 480 },
-        ]),
-        simpleStroke("lift, then draw the upper horizontal héng stroke", [
-          { x: 320, y: 608 },
-          { x: 488, y: 608 },
-          { x: 496, y: 600 },
-          { x: 504, y: 608 },
-          { x: 856, y: 608 },
-        ]),
+        simpleStroke(
+          "draw the short upper left-falling piě stroke",
+          compactPath(
+            "288 792 256 760 240 696 224 672 224 632 216 624 208 600 192 568 176 536 152 504 134 480",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw the upper horizontal héng stroke",
+          compactPath("320 608 488 608 496 600 504 608 856 608"),
+        ),
         simpleStroke(
           "lift, then draw the shorter middle horizontal héng stroke",
-          [
-            { x: 168, y: 312 },
-            { x: 488, y: 312 },
-            { x: 496, y: 304 },
-            { x: 504, y: 312 },
-            { x: 824, y: 312 },
-          ],
+          compactPath("168 312 488 312 496 304 504 312 824 312"),
         ),
         simpleStroke(
           "lift, then draw the vertical shù stroke through the two bars",
-          [
-            { x: 496, y: 792 },
-            { x: 496, y: 616 },
-            { x: 504, y: 608 },
-            { x: 496, y: 600 },
-            { x: 496, y: 320 },
-            { x: 504, y: 312 },
-            { x: 496, y: 304 },
-            { x: 496, y: 96 },
-          ],
+          compactPath(
+            "496 792 496 616 504 608 496 600 496 320 504 312 496 304 496 96",
+          ),
         ),
-        simpleStroke("lift, then draw the long bottom horizontal héng stroke", [
-          { x: 144, y: -16 },
-          { x: 488, y: -16 },
-          { x: 496, y: -8 },
-          { x: 504, y: -16 },
-          { x: 904, y: -16 },
-        ]),
+        simpleStroke(
+          "lift, then draw the long bottom horizontal héng stroke",
+          compactPath("144 -16 488 -16 496 -8 504 -16 904 -16"),
+        ),
       ],
       source: chineseCharacterSource("生"),
     },
@@ -3342,21 +2020,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "draw the horizontal héng stroke straight across the middle, left to right",
-              path: [
-                { x: 52, y: 390 },
-                { x: 127, y: 390 },
-                { x: 202, y: 390 },
-                { x: 277, y: 390 },
-                { x: 352, y: 390 },
-                { x: 427, y: 390 },
-                { x: 502, y: 390 },
-                { x: 577, y: 390 },
-                { x: 652, y: 390 },
-                { x: 727, y: 390 },
-                { x: 802, y: 390 },
-                { x: 877, y: 390 },
-                { x: 952, y: 390 },
-              ],
+              path: compactPath(
+                "52 390 127 390 202 390 277 390 352 390 427 390 502 390 577 390 652 390 727 390 802 390 877 390 952 390",
+              ),
             },
           ],
         },
@@ -3378,21 +2044,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "draw the upper, shorter horizontal héng stroke from left to right",
-              path: [
-                { x: 152, y: 656 },
-                { x: 210, y: 656 },
-                { x: 268, y: 656 },
-                { x: 326, y: 656 },
-                { x: 384, y: 656 },
-                { x: 442, y: 656 },
-                { x: 500, y: 656 },
-                { x: 558, y: 656 },
-                { x: 616, y: 656 },
-                { x: 674, y: 656 },
-                { x: 732, y: 656 },
-                { x: 790, y: 656 },
-                { x: 848, y: 656 },
-              ],
+              path: compactPath(
+                "152 656 210 656 268 656 326 656 384 656 442 656 500 656 558 656 616 656 674 656 732 656 790 656 848 656",
+              ),
             },
           ],
         },
@@ -3401,21 +2055,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the lower, longer horizontal héng stroke from left to right",
-              path: [
-                { x: 66, y: 62 },
-                { x: 139, y: 61 },
-                { x: 211, y: 62 },
-                { x: 284, y: 61 },
-                { x: 356, y: 62 },
-                { x: 429, y: 61 },
-                { x: 501, y: 62 },
-                { x: 574, y: 61 },
-                { x: 646, y: 62 },
-                { x: 719, y: 61 },
-                { x: 791, y: 62 },
-                { x: 864, y: 61 },
-                { x: 936, y: 62 },
-              ],
+              path: compactPath(
+                "66 62 139 61 211 62 284 61 356 62 429 61 501 62 574 61 646 62 719 61 791 62 864 61 936 62",
+              ),
             },
           ],
         },
@@ -3436,21 +2078,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the top horizontal héng stroke from left to right",
-              path: [
-                { x: 172, y: 704 },
-                { x: 224, y: 705 },
-                { x: 276, y: 704 },
-                { x: 329, y: 705 },
-                { x: 381, y: 704 },
-                { x: 433, y: 705 },
-                { x: 485, y: 704 },
-                { x: 537, y: 705 },
-                { x: 589, y: 704 },
-                { x: 642, y: 705 },
-                { x: 694, y: 704 },
-                { x: 746, y: 705 },
-                { x: 798, y: 704 },
-              ],
+              path: compactPath(
+                "172 704 224 705 276 704 329 705 381 704 433 705 485 704 537 705 589 704 642 705 694 704 746 705 798 704",
+              ),
             },
           ],
         },
@@ -3459,21 +2089,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the middle horizontal héng stroke, the shortest of the three",
-              path: [
-                { x: 212, y: 378 },
-                { x: 258, y: 378 },
-                { x: 303, y: 378 },
-                { x: 349, y: 378 },
-                { x: 394, y: 378 },
-                { x: 440, y: 378 },
-                { x: 485, y: 378 },
-                { x: 531, y: 378 },
-                { x: 576, y: 378 },
-                { x: 622, y: 378 },
-                { x: 667, y: 378 },
-                { x: 713, y: 378 },
-                { x: 758, y: 378 },
-              ],
+              path: compactPath(
+                "212 378 258 378 303 378 349 378 394 378 440 378 485 378 531 378 576 378 622 378 667 378 713 378 758 378",
+              ),
             },
           ],
         },
@@ -3482,21 +2100,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the bottom horizontal héng stroke, the longest of the three",
-              path: [
-                { x: 74, y: 31 },
-                { x: 145, y: 30 },
-                { x: 216, y: 31 },
-                { x: 287, y: 30 },
-                { x: 358, y: 31 },
-                { x: 429, y: 30 },
-                { x: 500, y: 31 },
-                { x: 571, y: 30 },
-                { x: 642, y: 31 },
-                { x: 713, y: 30 },
-                { x: 784, y: 31 },
-                { x: 855, y: 30 },
-                { x: 926, y: 31 },
-              ],
+              path: compactPath(
+                "74 31 145 30 216 31 287 30 358 31 429 30 500 31 571 30 642 31 713 30 784 31 855 30 926 31",
+              ),
             },
           ],
         },
@@ -3518,21 +2124,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the left vertical shù stroke from top to bottom",
-              path: [
-                { x: 135, y: 690 },
-                { x: 126, y: 629 },
-                { x: 125, y: 568 },
-                { x: 126, y: 508 },
-                { x: 125, y: 447 },
-                { x: 126, y: 386 },
-                { x: 125, y: 325 },
-                { x: 126, y: 264 },
-                { x: 125, y: 203 },
-                { x: 126, y: 143 },
-                { x: 134, y: 82 },
-                { x: 125, y: 21 },
-                { x: 126, y: -40 },
-              ],
+              path: compactPath(
+                "135 690 126 629 125 568 126 508 125 447 126 386 125 325 126 264 125 203 126 143 134 82 125 21 126 -40",
+              ),
             },
           ],
         },
@@ -3541,39 +2135,15 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the horizontal-turning héngzhé stroke across the top",
-              path: [
-                { x: 100, y: 706 },
-                { x: 164, y: 717 },
-                { x: 229, y: 716 },
-                { x: 293, y: 717 },
-                { x: 357, y: 707 },
-                { x: 421, y: 702 },
-                { x: 486, y: 717 },
-                { x: 550, y: 716 },
-                { x: 614, y: 707 },
-                { x: 678, y: 716 },
-                { x: 743, y: 717 },
-                { x: 807, y: 716 },
-                { x: 871, y: 707 },
-              ],
+              path: compactPath(
+                "100 706 164 717 229 716 293 717 357 707 421 702 486 717 550 716 614 707 678 716 743 717 807 716 871 707",
+              ),
             },
             {
               label: "and down the right side without lifting",
-              path: [
-                { x: 871, y: 707 },
-                { x: 870, y: 630 },
-                { x: 870, y: 570 },
-                { x: 870, y: 510 },
-                { x: 870, y: 450 },
-                { x: 870, y: 390 },
-                { x: 870, y: 330 },
-                { x: 870, y: 270 },
-                { x: 870, y: 210 },
-                { x: 870, y: 150 },
-                { x: 862, y: 90 },
-                { x: 858, y: 30 },
-                { x: 870, y: -30 },
-              ],
+              path: compactPath(
+                "871 707 870 630 870 570 870 510 870 450 870 390 870 330 870 270 870 210 870 150 862 90 858 30 870 -30",
+              ),
             },
           ],
         },
@@ -3581,21 +2151,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the short inner left-falling piě stroke",
-              path: [
-                { x: 388, y: 670 },
-                { x: 386, y: 630 },
-                { x: 385, y: 591 },
-                { x: 383, y: 551 },
-                { x: 379, y: 512 },
-                { x: 375, y: 472 },
-                { x: 368, y: 433 },
-                { x: 358, y: 393 },
-                { x: 344, y: 353 },
-                { x: 328, y: 314 },
-                { x: 308, y: 274 },
-                { x: 281, y: 235 },
-                { x: 241, y: 195 },
-              ],
+              path: compactPath(
+                "388 670 386 630 385 591 383 551 379 512 375 472 368 433 358 393 344 353 328 314 308 274 281 235 241 195",
+              ),
             },
           ],
         },
@@ -3603,39 +2161,15 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then draw the inner stroke down",
-              path: [
-                { x: 600, y: 670 },
-                { x: 600, y: 643 },
-                { x: 600, y: 615 },
-                { x: 600, y: 588 },
-                { x: 600, y: 560 },
-                { x: 600, y: 533 },
-                { x: 600, y: 505 },
-                { x: 600, y: 478 },
-                { x: 600, y: 450 },
-                { x: 600, y: 423 },
-                { x: 600, y: 395 },
-                { x: 600, y: 368 },
-                { x: 602, y: 340 },
-              ],
+              path: compactPath(
+                "600 670 600 643 600 615 600 588 600 560 600 533 600 505 600 478 600 450 600 423 600 395 600 368 602 340",
+              ),
             },
             {
               label: "and turning up to the right at its foot",
-              path: [
-                { x: 602, y: 340 },
-                { x: 618, y: 312 },
-                { x: 635, y: 312 },
-                { x: 652, y: 290 },
-                { x: 669, y: 289 },
-                { x: 686, y: 288 },
-                { x: 703, y: 289 },
-                { x: 720, y: 288 },
-                { x: 737, y: 289 },
-                { x: 754, y: 288 },
-                { x: 771, y: 289 },
-                { x: 788, y: 290 },
-                { x: 805, y: 292 },
-              ],
+              path: compactPath(
+                "602 340 618 312 635 312 652 290 669 289 686 288 703 289 720 288 737 289 754 288 771 289 788 290 805 292",
+              ),
             },
           ],
         },
@@ -3644,21 +2178,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then close the bottom with a horizontal héng stroke from left to right",
-              path: [
-                { x: 175, y: 65 },
-                { x: 229, y: 65 },
-                { x: 283, y: 65 },
-                { x: 337, y: 65 },
-                { x: 391, y: 65 },
-                { x: 445, y: 65 },
-                { x: 499, y: 65 },
-                { x: 553, y: 65 },
-                { x: 607, y: 65 },
-                { x: 661, y: 65 },
-                { x: 715, y: 65 },
-                { x: 769, y: 65 },
-                { x: 823, y: 65 },
-              ],
+              path: compactPath(
+                "175 65 229 65 283 65 337 65 391 65 445 65 499 65 553 65 607 65 661 65 715 65 769 65 823 65",
+              ),
             },
           ],
         },
@@ -3681,21 +2203,9 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "draw the top horizontal héng stroke from left to right",
-              path: [
-                { x: 130, y: 706 },
-                { x: 191, y: 706 },
-                { x: 253, y: 706 },
-                { x: 314, y: 706 },
-                { x: 375, y: 706 },
-                { x: 436, y: 697 },
-                { x: 498, y: 705 },
-                { x: 559, y: 705 },
-                { x: 620, y: 705 },
-                { x: 681, y: 705 },
-                { x: 743, y: 705 },
-                { x: 804, y: 705 },
-                { x: 865, y: 705 },
-              ],
+              path: compactPath(
+                "130 706 191 706 253 706 314 706 375 706 436 697 498 705 559 705 620 705 681 705 743 705 804 705 865 705",
+              ),
             },
           ],
         },
@@ -3704,21 +2214,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the shù stroke descending from the top bar, leaning left",
-              path: [
-                { x: 446, y: 665 },
-                { x: 440, y: 615 },
-                { x: 432, y: 564 },
-                { x: 425, y: 514 },
-                { x: 416, y: 463 },
-                { x: 416, y: 413 },
-                { x: 400, y: 363 },
-                { x: 391, y: 312 },
-                { x: 382, y: 262 },
-                { x: 373, y: 211 },
-                { x: 365, y: 161 },
-                { x: 355, y: 110 },
-                { x: 345, y: 60 },
-              ],
+              path: compactPath(
+                "446 665 440 615 432 564 425 514 416 463 416 413 400 363 391 312 382 262 373 211 365 161 355 110 345 60",
+              ),
             },
           ],
         },
@@ -3727,39 +2225,15 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the horizontal-turning héngzhé stroke across to the right",
-              path: [
-                { x: 190, y: 414 },
-                { x: 235, y: 414 },
-                { x: 281, y: 414 },
-                { x: 326, y: 414 },
-                { x: 372, y: 405 },
-                { x: 417, y: 405 },
-                { x: 463, y: 414 },
-                { x: 508, y: 414 },
-                { x: 553, y: 414 },
-                { x: 599, y: 414 },
-                { x: 644, y: 414 },
-                { x: 690, y: 414 },
-                { x: 735, y: 406 },
-              ],
+              path: compactPath(
+                "190 414 235 414 281 414 326 414 372 405 417 405 463 414 508 414 553 414 599 414 644 414 690 414 735 406",
+              ),
             },
             {
               label: "and then down",
-              path: [
-                { x: 735, y: 406 },
-                { x: 724, y: 390 },
-                { x: 733, y: 360 },
-                { x: 730, y: 330 },
-                { x: 727, y: 300 },
-                { x: 725, y: 270 },
-                { x: 723, y: 240 },
-                { x: 720, y: 210 },
-                { x: 716, y: 180 },
-                { x: 714, y: 150 },
-                { x: 710, y: 120 },
-                { x: 708, y: 90 },
-                { x: 704, y: 60 },
-              ],
+              path: compactPath(
+                "735 406 724 390 733 360 730 330 727 300 725 270 723 240 720 210 716 180 714 150 710 120 708 90 704 60",
+              ),
             },
           ],
         },
@@ -3768,21 +2242,9 @@ export const entries: DuctusEntry[] = [
             {
               label:
                 "lift, then draw the long bottom horizontal héng stroke, the widest in the character",
-              path: [
-                { x: 62, y: 12 },
-                { x: 135, y: 12 },
-                { x: 208, y: 12 },
-                { x: 281, y: 12 },
-                { x: 354, y: 21 },
-                { x: 427, y: 11 },
-                { x: 500, y: 11 },
-                { x: 573, y: 11 },
-                { x: 646, y: 11 },
-                { x: 719, y: 20 },
-                { x: 792, y: 12 },
-                { x: 865, y: 12 },
-                { x: 938, y: 12 },
-              ],
+              path: compactPath(
+                "62 12 135 12 208 12 281 12 354 21 427 11 500 11 573 11 646 11 719 20 792 12 865 12 938 12",
+              ),
             },
           ],
         },
@@ -3799,53 +2261,28 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "汉",
       strokes: [
-        simpleStroke("draw the upper water dot down and right", [
-          { x: 115, y: 790 },
-          { x: 190, y: 750 },
-          { x: 265, y: 700 },
-        ]),
-        simpleStroke("lift, then draw the middle water dot down and right", [
-          { x: 75, y: 520 },
-          { x: 150, y: 480 },
-          { x: 225, y: 430 },
-        ]),
+        simpleStroke(
+          "draw the upper water dot down and right",
+          compactPath("115 790 190 750 265 700"),
+        ),
+        simpleStroke(
+          "lift, then draw the middle water dot down and right",
+          compactPath("75 520 150 480 225 430"),
+        ),
         simpleStroke(
           "lift, then draw the lower water stroke rising up and right",
-          [
-            { x: 100, y: 0 },
-            { x: 130, y: 60 },
-            { x: 165, y: 125 },
-            { x: 205, y: 200 },
-            { x: 250, y: 275 },
-          ],
+          compactPath("100 0 130 60 165 125 205 200 250 275"),
         ),
         simpleStroke(
           "lift, draw the upper-right horizontal, then turn and sweep down-left without lifting",
-          [
-            { x: 360, y: 735 },
-            { x: 550, y: 735 },
-            { x: 750, y: 735 },
-            { x: 860, y: 725 },
-            { x: 845, y: 620 },
-            { x: 810, y: 500 },
-            { x: 760, y: 390 },
-            { x: 695, y: 285 },
-            { x: 610, y: 185 },
-            { x: 560, y: 110 },
-            { x: 490, y: 55 },
-            { x: 400, y: 5 },
-            { x: 315, y: -20 },
-          ],
+          compactPath(
+            "360 735 550 735 750 735 860 725 845 620 810 500 760 390 695 285 610 185 560 110 490 55 400 5 315 -20",
+          ),
         ),
-        simpleStroke("lift, then draw the long right-falling stroke", [
-          { x: 415, y: 700 },
-          { x: 470, y: 500 },
-          { x: 540, y: 350 },
-          { x: 620, y: 220 },
-          { x: 700, y: 130 },
-          { x: 820, y: 35 },
-          { x: 940, y: -20 },
-        ]),
+        simpleStroke(
+          "lift, then draw the long right-falling stroke",
+          compactPath("415 700 470 500 540 350 620 220 700 130 820 35 940 -20"),
+        ),
       ],
       source: chineseCharacterSource("汉"),
     },
@@ -3856,85 +2293,47 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "语",
       strokes: [
-        simpleStroke("draw the speech-radical dot down and right", [
-          { x: 125, y: 780 },
-          { x: 185, y: 735 },
-          { x: 250, y: 675 },
-        ]),
+        simpleStroke(
+          "draw the speech-radical dot down and right",
+          compactPath("125 780 185 735 250 675"),
+        ),
         simpleStroke(
           "lift, draw the speech-radical turn, and finish rising up-right without lifting",
-          [
-            { x: 50, y: 490 },
-            { x: 100, y: 490 },
-            { x: 160, y: 490 },
-            { x: 220, y: 490 },
-            { x: 220, y: 430 },
-            { x: 220, y: 350 },
-            { x: 220, y: 250 },
-            { x: 220, y: 130 },
-            { x: 250, y: 80 },
-            { x: 345, y: 145 },
-          ],
+          compactPath(
+            "50 490 100 490 160 490 220 490 220 430 220 350 220 250 220 130 250 80 345 145",
+          ),
         ),
-        simpleStroke("lift, then draw 五's top horizontal left to right", [
-          { x: 355, y: 775 },
-          { x: 490, y: 775 },
-          { x: 625, y: 775 },
-          { x: 760, y: 775 },
-          { x: 920, y: 775 },
-        ]),
-        simpleStroke("lift, then draw 五's descending second stroke", [
-          { x: 600, y: 740 },
-          { x: 585, y: 650 },
-          { x: 555, y: 520 },
-          { x: 520, y: 400 },
-        ]),
-        simpleStroke("lift, then draw 五's horizontal-turning third stroke", [
-          { x: 390, y: 590 },
-          { x: 500, y: 590 },
-          { x: 620, y: 590 },
-          { x: 740, y: 590 },
-          { x: 820, y: 585 },
-          { x: 810, y: 500 },
-          { x: 790, y: 400 },
-        ]),
+        simpleStroke(
+          "lift, then draw 五's top horizontal left to right",
+          compactPath("355 775 490 775 625 775 760 775 920 775"),
+        ),
+        simpleStroke(
+          "lift, then draw 五's descending second stroke",
+          compactPath("600 740 585 650 555 520 520 400"),
+        ),
+        simpleStroke(
+          "lift, then draw 五's horizontal-turning third stroke",
+          compactPath(
+            "390 590 500 590 620 590 740 590 820 585 810 500 790 400",
+          ),
+        ),
         simpleStroke(
           "lift, then draw 五's long bottom horizontal left to right",
-          [
-            { x: 320, y: 395 },
-            { x: 440, y: 395 },
-            { x: 560, y: 395 },
-            { x: 700, y: 395 },
-            { x: 830, y: 395 },
-            { x: 950, y: 395 },
-          ],
+          compactPath("320 395 440 395 560 395 700 395 830 395 950 395"),
         ),
-        simpleStroke("lift, then draw 口's left vertical", [
-          { x: 440, y: 260 },
-          { x: 440, y: 100 },
-          { x: 440, y: -50 },
-        ]),
+        simpleStroke(
+          "lift, then draw 口's left vertical",
+          compactPath("440 260 440 100 440 -50"),
+        ),
         simpleStroke(
           "lift, then draw 口's top and turn down the right side without lifting",
-          [
-            { x: 440, y: 260 },
-            { x: 520, y: 260 },
-            { x: 650, y: 260 },
-            { x: 760, y: 260 },
-            { x: 850, y: 260 },
-            { x: 850, y: 100 },
-            { x: 850, y: -45 },
-          ],
+          compactPath(
+            "440 260 520 260 650 260 760 260 850 260 850 100 850 -45",
+          ),
         ),
         simpleStroke(
           "lift, then close 口 along the bottom from left to right",
-          [
-            { x: 440, y: -5 },
-            { x: 540, y: -5 },
-            { x: 650, y: -5 },
-            { x: 750, y: -5 },
-            { x: 850, y: -5 },
-          ],
+          compactPath("440 -5 540 -5 650 -5 750 -5 850 -5"),
         ),
       ],
       source: chineseCharacterSource("语"),
@@ -3946,44 +2345,23 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "文",
       strokes: [
-        simpleStroke("draw the top dot down and right", [
-          { x: 440, y: 820 },
-          { x: 470, y: 770 },
-          { x: 510, y: 700 },
-        ]),
-        simpleStroke("lift, then draw the horizontal stroke left to right", [
-          { x: 50, y: 625 },
-          { x: 230, y: 625 },
-          { x: 400, y: 625 },
-          { x: 570, y: 625 },
-          { x: 750, y: 625 },
-          { x: 950, y: 625 },
-        ]),
-        simpleStroke("lift, then draw the long left-falling stroke", [
-          { x: 250, y: 600 },
-          { x: 275, y: 520 },
-          { x: 315, y: 440 },
-          { x: 360, y: 370 },
-          { x: 415, y: 300 },
-          { x: 475, y: 235 },
-          { x: 500, y: 190 },
-          { x: 430, y: 130 },
-          { x: 345, y: 80 },
-          { x: 250, y: 45 },
-          { x: 150, y: 15 },
-          { x: 60, y: -5 },
-        ]),
+        simpleStroke(
+          "draw the top dot down and right",
+          compactPath("440 820 470 770 510 700"),
+        ),
+        simpleStroke(
+          "lift, then draw the horizontal stroke left to right",
+          compactPath("50 625 230 625 400 625 570 625 750 625 950 625"),
+        ),
+        simpleStroke(
+          "lift, then draw the long left-falling stroke",
+          compactPath(
+            "250 600 275 520 315 440 360 370 415 300 475 235 500 190 430 130 345 80 250 45 150 15 60 -5",
+          ),
+        ),
         simpleStroke(
           "lift, return near the centre, and draw the long right-falling stroke",
-          [
-            { x: 750, y: 600 },
-            { x: 700, y: 470 },
-            { x: 625, y: 340 },
-            { x: 520, y: 205 },
-            { x: 650, y: 105 },
-            { x: 790, y: 40 },
-            { x: 940, y: -5 },
-          ],
+          compactPath("750 600 700 470 625 340 520 205 650 105 790 40 940 -5"),
         ),
       ],
       source: chineseCharacterSource("文"),
@@ -3995,76 +2373,39 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "国",
       strokes: [
-        simpleStroke("draw the outer left vertical from top to bottom", [
-          { x: 125, y: 780 },
-          { x: 125, y: 620 },
-          { x: 125, y: 460 },
-          { x: 125, y: 300 },
-          { x: 125, y: 140 },
-          { x: 125, y: -45 },
-        ]),
+        simpleStroke(
+          "draw the outer left vertical from top to bottom",
+          compactPath("125 780 125 620 125 460 125 300 125 140 125 -45"),
+        ),
         simpleStroke(
           "lift, then draw the outer top and turn down the right side without lifting",
-          [
-            { x: 125, y: 780 },
-            { x: 250, y: 780 },
-            { x: 380, y: 780 },
-            { x: 510, y: 780 },
-            { x: 640, y: 780 },
-            { x: 760, y: 780 },
-            { x: 875, y: 780 },
-            { x: 875, y: 620 },
-            { x: 875, y: 460 },
-            { x: 875, y: 300 },
-            { x: 875, y: 140 },
-            { x: 875, y: -45 },
-          ],
+          compactPath(
+            "125 780 250 780 380 780 510 780 640 780 760 780 875 780 875 620 875 460 875 300 875 140 875 -45",
+          ),
         ),
-        simpleStroke("lift, then draw 玉's top horizontal left to right", [
-          { x: 240, y: 610 },
-          { x: 340, y: 610 },
-          { x: 445, y: 610 },
-          { x: 550, y: 610 },
-          { x: 650, y: 610 },
-          { x: 755, y: 610 },
-        ]),
-        simpleStroke("lift, then draw 玉's middle horizontal left to right", [
-          { x: 270, y: 405 },
-          { x: 420, y: 405 },
-          { x: 575, y: 405 },
-          { x: 730, y: 405 },
-        ]),
+        simpleStroke(
+          "lift, then draw 玉's top horizontal left to right",
+          compactPath("240 610 340 610 445 610 550 610 650 610 755 610"),
+        ),
+        simpleStroke(
+          "lift, then draw 玉's middle horizontal left to right",
+          compactPath("270 405 420 405 575 405 730 405"),
+        ),
         simpleStroke(
           "lift, then draw 玉's central vertical from top to bottom",
-          [
-            { x: 495, y: 600 },
-            { x: 495, y: 500 },
-            { x: 495, y: 400 },
-            { x: 495, y: 290 },
-            { x: 495, y: 180 },
-          ],
+          compactPath("495 600 495 500 495 400 495 290 495 180"),
         ),
-        simpleStroke("lift, then draw 玉's bottom horizontal left to right", [
-          { x: 230, y: 180 },
-          { x: 365, y: 180 },
-          { x: 500, y: 180 },
-          { x: 640, y: 180 },
-          { x: 775, y: 180 },
-        ]),
-        simpleStroke("lift, then add 玉's short dot down and right", [
-          { x: 625, y: 330 },
-          { x: 665, y: 290 },
-          { x: 705, y: 250 },
-        ]),
+        simpleStroke(
+          "lift, then draw 玉's bottom horizontal left to right",
+          compactPath("230 180 365 180 500 180 640 180 775 180"),
+        ),
+        simpleStroke(
+          "lift, then add 玉's short dot down and right",
+          compactPath("625 330 665 290 705 250"),
+        ),
         simpleStroke(
           "lift, then close the outer frame along the bottom left to right",
-          [
-            { x: 125, y: 10 },
-            { x: 310, y: 10 },
-            { x: 500, y: 10 },
-            { x: 690, y: 10 },
-            { x: 875, y: 10 },
-          ],
+          compactPath("125 10 310 10 500 10 690 10 875 10"),
         ),
       ],
       source: chineseCharacterSource("国"),
@@ -4076,94 +2417,47 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "看",
       strokes: [
-        simpleStroke("draw the short top left-falling stroke", [
-          { x: 830, y: 805 },
-          { x: 750, y: 790 },
-          { x: 650, y: 780 },
-          { x: 525, y: 768 },
-          { x: 400, y: 760 },
-          { x: 275, y: 755 },
-          { x: 135, y: 755 },
-        ]),
-        simpleStroke("lift, then draw the upper horizontal left to right", [
-          { x: 140, y: 632 },
-          { x: 300, y: 632 },
-          { x: 500, y: 632 },
-          { x: 700, y: 632 },
-          { x: 875, y: 632 },
-        ]),
-        simpleStroke("lift, then draw the next horizontal left to right", [
-          { x: 70, y: 496 },
-          { x: 250, y: 496 },
-          { x: 500, y: 496 },
-          { x: 750, y: 496 },
-          { x: 930, y: 496 },
-        ]),
+        simpleStroke(
+          "draw the short top left-falling stroke",
+          compactPath(
+            "830 805 750 790 650 780 525 768 400 760 275 755 135 755",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw the upper horizontal left to right",
+          compactPath("140 632 300 632 500 632 700 632 875 632"),
+        ),
+        simpleStroke(
+          "lift, then draw the next horizontal left to right",
+          compactPath("70 496 250 496 500 496 750 496 930 496"),
+        ),
         simpleStroke(
           "lift, then draw the long left-falling stroke toward the lower component",
-          [
-            { x: 455, y: 750 },
-            { x: 425, y: 660 },
-            { x: 390, y: 570 },
-            { x: 350, y: 485 },
-            { x: 300, y: 400 },
-            { x: 240, y: 325 },
-            { x: 175, y: 260 },
-            { x: 110, y: 215 },
-            { x: 50, y: 180 },
-          ],
+          compactPath(
+            "455 750 425 660 390 570 350 485 300 400 240 325 175 260 110 215 50 180",
+          ),
         ),
-        simpleStroke("lift, then draw 目's left vertical from top to bottom", [
-          { x: 296, y: 365 },
-          { x: 296, y: 280 },
-          { x: 296, y: 190 },
-          { x: 296, y: 100 },
-          { x: 296, y: 10 },
-          { x: 296, y: -60 },
-        ]),
+        simpleStroke(
+          "lift, then draw 目's left vertical from top to bottom",
+          compactPath("296 365 296 280 296 190 296 100 296 10 296 -60"),
+        ),
         simpleStroke(
           "lift, draw 目's top horizontal, then turn down the right side without lifting",
-          [
-            { x: 296, y: 365 },
-            { x: 420, y: 365 },
-            { x: 550, y: 365 },
-            { x: 680, y: 365 },
-            { x: 805, y: 365 },
-            { x: 805, y: 275 },
-            { x: 805, y: 180 },
-            { x: 805, y: 85 },
-            { x: 805, y: -50 },
-          ],
+          compactPath(
+            "296 365 420 365 550 365 680 365 805 365 805 275 805 180 805 85 805 -50",
+          ),
         ),
         simpleStroke(
           "lift, then draw 目's first inner horizontal left to right",
-          [
-            { x: 315, y: 240 },
-            { x: 430, y: 240 },
-            { x: 550, y: 240 },
-            { x: 675, y: 240 },
-            { x: 790, y: 240 },
-          ],
+          compactPath("315 240 430 240 550 240 675 240 790 240"),
         ),
         simpleStroke(
           "lift, then draw 目's second inner horizontal left to right",
-          [
-            { x: 315, y: 118 },
-            { x: 430, y: 118 },
-            { x: 550, y: 118 },
-            { x: 675, y: 118 },
-            { x: 790, y: 118 },
-          ],
+          compactPath("315 118 430 118 550 118 675 118 790 118"),
         ),
         simpleStroke(
           "lift, then close 目 with its bottom horizontal left to right",
-          [
-            { x: 310, y: -12 },
-            { x: 430, y: -12 },
-            { x: 550, y: -12 },
-            { x: 675, y: -12 },
-            { x: 790, y: -12 },
-          ],
+          compactPath("310 -12 430 -12 550 -12 675 -12 790 -12"),
         ),
       ],
       source: chineseCharacterSource("看"),
@@ -4177,53 +2471,24 @@ export const entries: DuctusEntry[] = [
       strokes: [
         simpleStroke(
           "draw the short upper horizontal, then fold down without lifting",
-          [
-            { x: 140, y: 630 },
-            { x: 280, y: 630 },
-            { x: 440, y: 630 },
-            { x: 600, y: 630 },
-            { x: 760, y: 630 },
-            { x: 760, y: 540 },
-            { x: 760, y: 450 },
-            { x: 760, y: 365 },
-          ],
+          compactPath(
+            "140 630 280 630 440 630 600 630 760 630 760 540 760 450 760 365",
+          ),
         ),
         simpleStroke(
           "lift, draw the second horizontal, then fold down and finish with the hook without lifting",
-          [
-            { x: 70, y: 360 },
-            { x: 250, y: 360 },
-            { x: 470, y: 360 },
-            { x: 700, y: 360 },
-            { x: 900, y: 360 },
-            { x: 905, y: 280 },
-            { x: 900, y: 200 },
-            { x: 890, y: 125 },
-            { x: 870, y: 75 },
-            { x: 835, y: 55 },
-            { x: 785, y: 52 },
-            { x: 720, y: 55 },
-            { x: 650, y: 60 },
-          ],
+          compactPath(
+            "70 360 250 360 470 360 700 360 900 360 905 280 900 200 890 125 870 75 835 55 785 52 720 55 650 60",
+          ),
         ),
         simpleStroke(
           "lift, then draw the long central upright from top to bottom",
-          [
-            { x: 456, y: 820 },
-            { x: 456, y: 650 },
-            { x: 456, y: 475 },
-            { x: 456, y: 300 },
-            { x: 456, y: 120 },
-            { x: 456, y: -60 },
-          ],
+          compactPath("456 820 456 650 456 475 456 300 456 120 456 -60"),
         ),
-        simpleStroke("lift, then add the small upper-right dot", [
-          { x: 740, y: 780 },
-          { x: 790, y: 745 },
-          { x: 840, y: 710 },
-          { x: 900, y: 665 },
-          { x: 925, y: 645 },
-        ]),
+        simpleStroke(
+          "lift, then add the small upper-right dot",
+          compactPath("740 780 790 745 840 710 900 665 925 645"),
+        ),
       ],
       source: chineseCharacterSource("书"),
     },
@@ -4244,68 +2509,36 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "吗",
       strokes: [
-        simpleStroke("draw 口's left vertical shù stroke from top to bottom", [
-          { x: 110, y: 730 },
-          { x: 110, y: 610 },
-          { x: 110, y: 480 },
-          { x: 110, y: 350 },
-          { x: 110, y: 230 },
-          { x: 110, y: 120 },
-        ]),
+        simpleStroke(
+          "draw 口's left vertical shù stroke from top to bottom",
+          compactPath("110 730 110 610 110 480 110 350 110 230 110 120"),
+        ),
         {
           segments: [
             {
               label: "lift, then draw 口's top bar from left to right",
-              path: [
-                { x: 100, y: 705 },
-                { x: 155, y: 705 },
-                { x: 210, y: 705 },
-                { x: 260, y: 705 },
-                { x: 300, y: 705 },
-              ],
+              path: compactPath("100 705 155 705 210 705 260 705 300 705"),
             },
             {
               label:
                 "turn the corner without lifting and descend 口's right side",
-              path: [
-                { x: 300, y: 705 },
-                { x: 300, y: 585 },
-                { x: 300, y: 465 },
-                { x: 300, y: 340 },
-                { x: 300, y: 215 },
-              ],
+              path: compactPath("300 705 300 585 300 465 300 340 300 215"),
             },
           ],
         },
-        simpleStroke("lift, then close 口's bottom from left to right", [
-          { x: 100, y: 220 },
-          { x: 155, y: 220 },
-          { x: 210, y: 220 },
-          { x: 260, y: 220 },
-          { x: 300, y: 220 },
-        ]),
+        simpleStroke(
+          "lift, then close 口's bottom from left to right",
+          compactPath("100 220 155 220 210 220 260 220 300 220"),
+        ),
         {
           segments: [
             {
               label: "lift, then draw 马's top horizontal from left to right",
-              path: [
-                { x: 440, y: 750 },
-                { x: 530, y: 750 },
-                { x: 620, y: 750 },
-                { x: 715, y: 750 },
-                { x: 800, y: 750 },
-              ],
+              path: compactPath("440 750 530 750 620 750 715 750 800 750"),
             },
             {
-              label:
-                "turn the corner without lifting and descend to the right",
-              path: [
-                { x: 800, y: 750 },
-                { x: 800, y: 665 },
-                { x: 800, y: 580 },
-                { x: 800, y: 500 },
-                { x: 800, y: 430 },
-              ],
+              label: "turn the corner without lifting and descend to the right",
+              path: compactPath("800 750 800 665 800 580 800 500 800 430"),
             },
           ],
         },
@@ -4313,55 +2546,26 @@ export const entries: DuctusEntry[] = [
           segments: [
             {
               label: "lift, then descend 马's inner vertical",
-              path: [
-                { x: 500, y: 630 },
-                { x: 500, y: 555 },
-                { x: 500, y: 480 },
-                { x: 500, y: 400 },
-              ],
+              path: compactPath("500 630 500 555 500 480 500 400"),
             },
             {
               label: "turn without lifting and cross to the right",
-              path: [
-                { x: 500, y: 400 },
-                { x: 600, y: 375 },
-                { x: 700, y: 372 },
-                { x: 800, y: 370 },
-                { x: 880, y: 370 },
-              ],
+              path: compactPath("500 400 600 375 700 372 800 370 880 370"),
             },
             {
               label: "turn again without lifting and descend the right side",
-              path: [
-                { x: 880, y: 370 },
-                { x: 880, y: 290 },
-                { x: 875, y: 210 },
-                { x: 868, y: 130 },
-                { x: 858, y: 60 },
-                { x: 845, y: 5 },
-              ],
+              path: compactPath("880 370 880 290 875 210 868 130 858 60 845 5"),
             },
             {
               label:
                 "finish with the hook, which turns back below the baseline",
-              path: [
-                { x: 845, y: 5 },
-                { x: 820, y: -20 },
-                { x: 770, y: -30 },
-                { x: 710, y: -32 },
-              ],
+              path: compactPath("845 5 820 -20 770 -30 710 -32"),
             },
           ],
         },
         simpleStroke(
           "lift, then draw 马's wide finishing horizontal from left to right",
-          [
-            { x: 420, y: 170 },
-            { x: 510, y: 170 },
-            { x: 600, y: 170 },
-            { x: 690, y: 170 },
-            { x: 770, y: 170 },
-          ],
+          compactPath("420 170 510 170 600 170 690 170 770 170"),
         ),
       ],
       source: chineseCharacterSource("吗"),
@@ -4377,33 +2581,22 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "六",
       strokes: [
-        simpleStroke("draw the short top dot down and to the right", [
-          { x: 445, y: 800 },
-          { x: 470, y: 750 },
-          { x: 510, y: 690 },
-          { x: 545, y: 635 },
-        ]),
-        simpleStroke("lift, then draw the long horizontal left to right", [
-          { x: 75, y: 536 },
-          { x: 250, y: 536 },
-          { x: 500, y: 536 },
-          { x: 750, y: 536 },
-          { x: 930, y: 536 },
-        ]),
-        simpleStroke("lift, then draw the left-falling leg", [
-          { x: 335, y: 350 },
-          { x: 300, y: 275 },
-          { x: 255, y: 190 },
-          { x: 200, y: 105 },
-          { x: 125, y: -30 },
-        ]),
-        simpleStroke("lift, then draw the right-falling leg", [
-          { x: 640, y: 350 },
-          { x: 700, y: 260 },
-          { x: 770, y: 160 },
-          { x: 835, y: 65 },
-          { x: 900, y: -30 },
-        ]),
+        simpleStroke(
+          "draw the short top dot down and to the right",
+          compactPath("445 800 470 750 510 690 545 635"),
+        ),
+        simpleStroke(
+          "lift, then draw the long horizontal left to right",
+          compactPath("75 536 250 536 500 536 750 536 930 536"),
+        ),
+        simpleStroke(
+          "lift, then draw the left-falling leg",
+          compactPath("335 350 300 275 255 190 200 105 125 -30"),
+        ),
+        simpleStroke(
+          "lift, then draw the right-falling leg",
+          compactPath("640 350 700 260 770 160 835 65 900 -30"),
+        ),
       ],
       source: chineseCharacterSource("六"),
     },
@@ -4414,27 +2607,15 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "七",
       strokes: [
-        simpleStroke("draw the rising horizontal from left to right", [
-          { x: 65, y: 405 },
-          { x: 250, y: 435 },
-          { x: 500, y: 475 },
-          { x: 750, y: 515 },
-          { x: 935, y: 545 },
-        ]),
+        simpleStroke(
+          "draw the rising horizontal from left to right",
+          compactPath("65 405 250 435 500 475 750 515 935 545"),
+        ),
         simpleStroke(
           "lift, descend, bend right along the foot and hook upward",
-          [
-            { x: 380, y: 790 },
-            { x: 380, y: 500 },
-            { x: 380, y: 150 },
-            { x: 390, y: 65 },
-            { x: 450, y: 0 },
-            { x: 600, y: -8 },
-            { x: 760, y: -8 },
-            { x: 820, y: 25 },
-            { x: 850, y: 100 },
-            { x: 870, y: 170 },
-          ],
+          compactPath(
+            "380 790 380 500 380 150 390 65 450 0 600 -8 760 -8 820 25 850 100 870 170",
+          ),
         ),
       ],
       source: chineseCharacterSource("七"),
@@ -4446,22 +2627,14 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "八",
       strokes: [
-        simpleStroke("draw the left-falling stroke", [
-          { x: 345, y: 720 },
-          { x: 325, y: 560 },
-          { x: 290, y: 390 },
-          { x: 240, y: 220 },
-          { x: 175, y: 80 },
-          { x: 90, y: -30 },
-        ]),
-        simpleStroke("lift, then draw the separate right-falling stroke", [
-          { x: 625, y: 735 },
-          { x: 645, y: 585 },
-          { x: 680, y: 420 },
-          { x: 730, y: 260 },
-          { x: 805, y: 115 },
-          { x: 915, y: -30 },
-        ]),
+        simpleStroke(
+          "draw the left-falling stroke",
+          compactPath("345 720 325 560 290 390 240 220 175 80 90 -30"),
+        ),
+        simpleStroke(
+          "lift, then draw the separate right-falling stroke",
+          compactPath("625 735 645 585 680 420 730 260 805 115 915 -30"),
+        ),
       ],
       source: chineseCharacterSource("八"),
     },
@@ -4472,31 +2645,15 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "九",
       strokes: [
-        simpleStroke("draw the long left-falling stroke", [
-          { x: 390, y: 800 },
-          { x: 390, y: 620 },
-          { x: 375, y: 440 },
-          { x: 335, y: 275 },
-          { x: 260, y: 125 },
-          { x: 100, y: -30 },
-        ]),
+        simpleStroke(
+          "draw the long left-falling stroke",
+          compactPath("390 800 390 620 375 440 335 275 260 125 100 -30"),
+        ),
         simpleStroke(
           "lift, cross right, turn downward and hook left at the foot",
-          [
-            { x: 95, y: 546 },
-            { x: 300, y: 546 },
-            { x: 520, y: 546 },
-            { x: 690, y: 546 },
-            { x: 690, y: 380 },
-            { x: 690, y: 160 },
-            { x: 690, y: 45 },
-            { x: 720, y: 0 },
-            { x: 800, y: -28 },
-            { x: 875, y: -28 },
-            { x: 920, y: 15 },
-            { x: 940, y: 80 },
-            { x: 945, y: 120 },
-          ],
+          compactPath(
+            "95 546 300 546 520 546 690 546 690 380 690 160 690 45 720 0 800 -28 875 -28 920 15 940 80 945 120",
+          ),
         ),
       ],
       source: chineseCharacterSource("九"),
@@ -4508,20 +2665,14 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "十",
       strokes: [
-        simpleStroke("draw the horizontal from left to right", [
-          { x: 70, y: 427 },
-          { x: 300, y: 427 },
-          { x: 500, y: 427 },
-          { x: 700, y: 427 },
-          { x: 935, y: 427 },
-        ]),
-        simpleStroke("lift, then draw the crossing vertical top to bottom", [
-          { x: 501, y: 820 },
-          { x: 501, y: 600 },
-          { x: 501, y: 350 },
-          { x: 501, y: 100 },
-          { x: 501, y: -60 },
-        ]),
+        simpleStroke(
+          "draw the horizontal from left to right",
+          compactPath("70 427 300 427 500 427 700 427 935 427"),
+        ),
+        simpleStroke(
+          "lift, then draw the crossing vertical top to bottom",
+          compactPath("501 820 501 600 501 350 501 100 501 -60"),
+        ),
       ],
       source: chineseCharacterSource("十"),
     },
@@ -4532,51 +2683,421 @@ export const entries: DuctusEntry[] = [
       script: "chinese",
       glyph: "百",
       strokes: [
-        simpleStroke("draw the top horizontal from left to right", [
-          { x: 80, y: 749 },
-          { x: 300, y: 749 },
-          { x: 500, y: 749 },
-          { x: 700, y: 749 },
-          { x: 920, y: 749 },
-        ]),
-        simpleStroke("lift, then draw the short left-falling stroke", [
-          { x: 490, y: 730 },
-          { x: 480, y: 655 },
-          { x: 455, y: 575 },
-          { x: 430, y: 530 },
-        ]),
-        simpleStroke("lift, then draw the box's left vertical", [
-          { x: 215, y: 530 },
-          { x: 215, y: 350 },
-          { x: 215, y: 150 },
-          { x: 215, y: -60 },
-        ]),
+        simpleStroke(
+          "draw the top horizontal from left to right",
+          compactPath("80 749 300 749 500 749 700 749 920 749"),
+        ),
+        simpleStroke(
+          "lift, then draw the short left-falling stroke",
+          compactPath("490 730 480 655 455 575 430 530"),
+        ),
+        simpleStroke(
+          "lift, then draw the box's left vertical",
+          compactPath("215 530 215 350 215 150 215 -60"),
+        ),
         simpleStroke(
           "lift, then draw the box's top and turn down its right side",
-          [
-            { x: 220, y: 528 },
-            { x: 400, y: 528 },
-            { x: 600, y: 528 },
-            { x: 800, y: 528 },
-            { x: 798, y: 350 },
-            { x: 798, y: 150 },
-            { x: 798, y: -50 },
-          ],
+          compactPath(
+            "220 528 400 528 600 528 800 528 798 350 798 150 798 -50",
+          ),
         ),
-        simpleStroke("lift, then draw the inner horizontal", [
-          { x: 245, y: 275 },
-          { x: 420, y: 275 },
-          { x: 600, y: 275 },
-          { x: 770, y: 275 },
-        ]),
-        simpleStroke("lift, then close the box with the bottom horizontal", [
-          { x: 245, y: 19 },
-          { x: 420, y: 19 },
-          { x: 600, y: 19 },
-          { x: 770, y: 19 },
-        ]),
+        simpleStroke(
+          "lift, then draw the inner horizontal",
+          compactPath("245 275 420 275 600 275 770 275"),
+        ),
+        simpleStroke(
+          "lift, then close the box with the bottom horizontal",
+          compactPath("245 19 420 19 600 19 770 19"),
+        ),
       ],
       source: chineseCharacterSource("百"),
+    },
+  ],
+  // Store dense CJK path coordinates as x/y pairs. This keeps the lazy
+  // handwriting bundle compact without reducing any authored geometry.
+  // Hanzi Writer Data's ordered medians are fitted to the vendored Noto
+  // Sans SC outline without changing stroke order, direction or pen lifts.
+  [
+    "chinese:的",
+    {
+      script: "chinese",
+      glyph: "的",
+      strokes: [
+        simpleStroke(
+          "draw the short left-falling stroke above 白",
+          compactPath("256 812 252 740 220 644 120 632"),
+        ),
+        simpleStroke(
+          "lift, then draw the left side of 白",
+          compactPath("120 636 120 -28"),
+        ),
+        simpleStroke(
+          "lift, then draw 白's joined top and right side",
+          compactPath("120 620 140 644 400 632 400 40"),
+        ),
+        simpleStroke(
+          "lift, then draw 白's inner horizontal",
+          compactPath("120 360 400 360"),
+        ),
+        simpleStroke(
+          "lift, then close 白 with its bottom horizontal",
+          compactPath("120 40 400 40"),
+        ),
+        simpleStroke(
+          "lift, then draw 勺's left-falling stroke",
+          compactPath("624 800 576 644 524 540"),
+        ),
+        simpleStroke(
+          "lift, then draw 勺's long hooked enclosure",
+          compactPath("608 648 892 636 880 40 840 0 640 0"),
+        ),
+        simpleStroke(
+          "lift, then place the final dot inside 勺",
+          compactPath("620 380 680 320 720 260"),
+        ),
+      ],
+      source: chineseCharacterSource("的"),
+    },
+  ],
+  // Hanzi Writer Data's ordered medians are fitted to the vendored Noto
+  // Sans SC outline without changing stroke order, direction or pen lifts.
+  [
+    "chinese:有",
+    {
+      script: "chinese",
+      glyph: "有",
+      strokes: [
+        simpleStroke(
+          "draw the top horizontal from left to right",
+          compactPath("100 672 352 668 752 672 900 672"),
+        ),
+        simpleStroke(
+          "lift, then draw the long left-falling stroke",
+          compactPath("416 796 376 672 348 648 264 444 80 300 60 304"),
+        ),
+        simpleStroke(
+          "lift, then draw 月's left side",
+          compactPath(
+            "316 488 288 476 304 320 312 320 292 296 296 148 292 -40",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw 月's joined top, right side and hook",
+          compactPath(
+            "348 488 748 488 784 472 772 320 664 320 784 308 772 148 668 148 784 136 764 -32 620 -32 612 -24",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw 月's upper inner horizontal",
+          compactPath("352 320 556 320"),
+        ),
+        simpleStroke(
+          "lift, then draw 月's lower inner horizontal",
+          compactPath("340 148 556 148"),
+        ),
+      ],
+      source: chineseCharacterSource("有"),
+    },
+  ],
+  // Hanzi Writer Data's ordered medians are fitted to the vendored Noto
+  // Sans SC outline without changing stroke order, direction or pen lifts.
+  [
+    "chinese:个",
+    {
+      script: "chinese",
+      glyph: "个",
+      strokes: [
+        simpleStroke(
+          "draw the left-falling stroke of 人",
+          compactPath("516 788 496 740 204 488 88 436"),
+        ),
+        simpleStroke(
+          "lift, then draw the right-falling stroke of 人",
+          compactPath("544 712 804 488 920 436 960 444"),
+        ),
+        simpleStroke(
+          "lift, then draw the central vertical",
+          compactPath("496 504 496 -60"),
+        ),
+      ],
+      source: chineseCharacterSource("个"),
+    },
+  ],
+  // Hanzi Writer Data's ordered medians are fitted to the vendored Noto
+  // Sans SC outline without changing stroke order, direction or pen lifts.
+  [
+    "chinese:了",
+    {
+      script: "chinese",
+      glyph: "了",
+      strokes: [
+        simpleStroke(
+          "draw the upper horizontal and turn downward",
+          compactPath("112 724 632 724 788 712 732 624 536 492"),
+        ),
+        simpleStroke(
+          "lift, then draw the long vertical and finish with a left hook",
+          compactPath("516 480 500 160 500 -44 420 -60 300 -48"),
+        ),
+      ],
+      source: chineseCharacterSource("了"),
+    },
+  ],
+  // Hanzi Writer Data's ordered medians are fitted to the vendored Noto
+  // Sans SC outline without changing stroke order, direction or pen lifts.
+  [
+    "chinese:呢",
+    {
+      script: "chinese",
+      glyph: "呢",
+      strokes: [
+        simpleStroke("draw 口's left side", compactPath("104 632 104 308")),
+        simpleStroke(
+          "lift, then draw 口's joined top and right side",
+          compactPath("104 596 116 708 292 696 292 440"),
+        ),
+        simpleStroke(
+          "lift, then close 口 with its bottom horizontal",
+          compactPath("104 368 104 380 116 200 292 212 292 408"),
+        ),
+        simpleStroke(
+          "lift, then draw 尸's turning top stroke",
+          compactPath("532 760 876 748 864 548 756 548"),
+        ),
+        simpleStroke(
+          "lift, then draw 尸's inner horizontal",
+          compactPath("512 548 832 548"),
+        ),
+        simpleStroke(
+          "lift, then draw 尸's long left-falling stroke",
+          compactPath(
+            "448 760 480 760 444 744 456 548 472 548 444 532 420 168 340 -16",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw 匕's left-falling stroke",
+          compactPath("872 364 600 224 600 208"),
+        ),
+        simpleStroke(
+          "lift, then draw 匕's hooked vertical",
+          compactPath("600 408 604 8 652 -32 884 -24 912 88 896 120"),
+        ),
+      ],
+      source: chineseCharacterSource("呢"),
+    },
+  ],
+  // Hanzi Writer Data's ordered medians are fitted to the vendored Noto
+  // Sans SC outline without changing stroke order, direction or pen lifts.
+  [
+    "chinese:对",
+    {
+      script: "chinese",
+      glyph: "对",
+      strokes: [
+        simpleStroke(
+          "draw 又's turning left-falling stroke",
+          compactPath("136 668 412 656 344 332 320 280 268 172 104 -20 76 -16"),
+        ),
+        simpleStroke(
+          "lift, then draw 又's right-falling stroke",
+          compactPath("144 452 320 300 324 304 332 236 416 156 440 120"),
+        ),
+        simpleStroke(
+          "lift, then draw 寸's horizontal",
+          compactPath("520 560 920 560"),
+        ),
+        simpleStroke(
+          "lift, then draw 寸's hooked vertical",
+          compactPath("800 800 812 560 800 168 784 -28 644 -28 624 -12"),
+        ),
+        simpleStroke(
+          "lift, then place 寸's final dot",
+          compactPath("552 376 628 232"),
+        ),
+      ],
+      source: chineseCharacterSource("对"),
+    },
+  ],
+  // Hanzi Writer Data's ordered medians are fitted to the vendored Noto
+  // Sans SC outline without changing stroke order, direction or pen lifts.
+  [
+    "chinese:岁",
+    {
+      script: "chinese",
+      glyph: "岁",
+      strokes: [
+        simpleStroke(
+          "draw 山's centre vertical",
+          compactPath("500 804 500 620"),
+        ),
+        simpleStroke(
+          "lift, then draw 山's joined left side and base",
+          compactPath("176 732 188 592 564 592 736 592"),
+        ),
+        simpleStroke(
+          "lift, then draw 山's right vertical",
+          compactPath("836 752 824 592 768 592"),
+        ),
+        simpleStroke(
+          "lift, then draw 夕's left-falling stroke",
+          compactPath("408 556 360 420 148 296"),
+        ),
+        simpleStroke(
+          "lift, then draw 夕's turning hooked stroke",
+          compactPath(
+            "392 412 700 412 668 412 780 400 720 264 544 116 500 120 500 124 488 76 164 -40",
+          ),
+        ),
+        simpleStroke(
+          "lift, then place 夕's inner dot",
+          compactPath(
+            "260 360 360 420 760 412 776 376 672 212 532 112 496 128 340 260 320 264 412 216 424 204",
+          ),
+        ),
+      ],
+      source: chineseCharacterSource("岁"),
+    },
+  ],
+  // Hanzi Writer Data's ordered medians are fitted to the vendored Noto
+  // Sans SC outline without changing stroke order, direction or pen lifts.
+  [
+    "chinese:和",
+    {
+      script: "chinese",
+      glyph: "和",
+      strokes: [
+        simpleStroke(
+          "draw 禾's short top left-falling stroke",
+          compactPath("476 776 344 764 104 724 100 724"),
+        ),
+        simpleStroke(
+          "lift, then draw 禾's horizontal",
+          compactPath("84 508 456 508"),
+        ),
+        simpleStroke(
+          "lift, then draw 禾's central vertical",
+          compactPath("284 696 288 508 272 408 292 396 284 4 284 -40"),
+        ),
+        simpleStroke(
+          "lift, then draw 禾's left-falling stroke",
+          compactPath("272 480 260 400 200 336 72 104 68 92"),
+        ),
+        simpleStroke(
+          "lift, then draw 禾's right-falling dot",
+          compactPath("352 368 444 256"),
+        ),
+        simpleStroke(
+          "lift, then draw 口's left side",
+          compactPath("564 484 564 124"),
+        ),
+        simpleStroke(
+          "lift, then draw 口's joined top and right side",
+          compactPath("564 444 576 708 864 696 864 344 864 280"),
+        ),
+        simpleStroke(
+          "lift, then close 口 with its bottom horizontal",
+          compactPath("564 196 564 216 576 80 864 92 864 240"),
+        ),
+      ],
+      source: chineseCharacterSource("和"),
+    },
+  ],
+  // Hanzi Writer Data's ordered medians are fitted to the vendored Noto
+  // Sans SC outline without changing stroke order, direction or pen lifts.
+  [
+    "chinese:喜",
+    {
+      script: "chinese",
+      glyph: "喜",
+      strokes: [
+        simpleStroke(
+          "draw 士's top horizontal",
+          compactPath("84 740 496 736 852 740"),
+        ),
+        simpleStroke(
+          "lift, then draw 士's central vertical",
+          compactPath("496 800 508 740 520 740 496 720 496 640"),
+        ),
+        simpleStroke(
+          "lift, then draw 士's lower horizontal",
+          compactPath("164 612 848 612"),
+        ),
+        simpleStroke(
+          "lift, then draw the upper 口's left side",
+          compactPath("272 512 316 512 232 500 244 380 364 380"),
+        ),
+        simpleStroke(
+          "lift, then draw the upper 口's joined top and right side",
+          compactPath("352 512 728 512 688 512"),
+        ),
+        simpleStroke(
+          "lift, then close the upper 口",
+          compactPath("384 380 756 380 768 424"),
+        ),
+        simpleStroke(
+          "lift, then draw the left dot below the upper 口",
+          compactPath("288 380 324 364 348 248 384 248"),
+        ),
+        simpleStroke(
+          "lift, then draw the right dot below the upper 口",
+          compactPath("672 380 700 380 640 248 616 248"),
+        ),
+        simpleStroke(
+          "lift, then draw the wide central horizontal",
+          compactPath("76 248 476 248 876 248 916 248"),
+        ),
+        simpleStroke(
+          "lift, then draw the lower 口's left side",
+          compactPath("272 132 320 132 216 120 228 -24 376 -24"),
+        ),
+        simpleStroke(
+          "lift, then draw the lower 口's joined top and right side",
+          compactPath("344 132 744 132 788 112 776 -24 696 -24"),
+        ),
+        simpleStroke(
+          "lift, then close the lower 口",
+          compactPath("392 -24 788 -16"),
+        ),
+      ],
+      source: chineseCharacterSource("喜"),
+    },
+  ],
+  // Hanzi Writer Data's ordered medians are fitted to the vendored Noto
+  // Sans SC outline without changing stroke order, direction or pen lifts.
+  [
+    "chinese:欢",
+    {
+      script: "chinese",
+      glyph: "欢",
+      strokes: [
+        simpleStroke(
+          "draw 又's turning left-falling stroke",
+          compactPath(
+            "108 536 264 336 308 376 384 676 236 692 220 692 384 680 304 360 272 300 260 248 120 76",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw 又's right-falling stroke",
+          compactPath("160 460 272 328 284 340 284 252 360 140"),
+        ),
+        simpleStroke(
+          "lift, then draw 欠's short top left-falling stroke",
+          compactPath("576 800 524 580 480 480"),
+        ),
+        simpleStroke(
+          "lift, then draw 欠's turning horizontal hook",
+          compactPath("540 628 576 652 896 640 872 536"),
+        ),
+        simpleStroke(
+          "lift, then draw 欠's long left-falling stroke",
+          compactPath("664 520 656 292 528 64 400 -32 376 -32"),
+        ),
+        simpleStroke(
+          "lift, then draw 欠's final right-falling stroke",
+          compactPath("668 324 828 40 924 -24 956 -16"),
+        ),
+      ],
+      source: chineseCharacterSource("欢"),
     },
   ],
 ];

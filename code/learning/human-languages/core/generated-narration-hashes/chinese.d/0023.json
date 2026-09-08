@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:bd9a7d8cdeb091f6",
+  "lessonIds": [
+    "ZH-W23-de",
+    "ZH-C23-de",
+    "ZH-C23-de-mingci",
+    "ZH-C23-huati",
+    "ZH-C23-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "chinese/narration/ch23.txt",
+  "json": "chinese/narration/ch23.json",
+  "textHash": "fnv1a64:bff3ebc5af6cfabc",
+  "jsonHash": "fnv1a64:6733469512c35f2a",
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W27-he",
+    "language": "chinese",
+    "chapter": 27,
+    "sequence": 2430,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:02d9ae60cf8e956f",
+    "detachableSegments": [
+      "Script — 禾 first, then 口"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

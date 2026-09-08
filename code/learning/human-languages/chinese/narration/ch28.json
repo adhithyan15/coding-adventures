@@ -1,0 +1,932 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 28,
+  "title": "Xihuan — What You Like",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:0fb3ab82a7b82534",
+  "lessons": [
+    {
+      "id": "ZH-W28-xi",
+      "sequence": 2460,
+      "title": "喜 (xǐ) — twelve strokes, stacked in four bands",
+      "headword": "喜",
+      "romanization": "xǐ",
+      "gloss": "喜 — twelve strokes in four bands, and two of them are the mouth you have written since the fourth chapter",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:26bb24524beec77f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — read it downwards, in four bands",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — read it downwards, in four bands and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and its first character is the tallest in the book."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǒ shíbā suì — nǐ hé wǒ — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǒ shíbā suì — nǐ hé wǒ* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say suì — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *suì* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yǒu — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yǒu* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hǎokàn — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hǎokàn* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say míngzi — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *míngzi* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — read it downwards, in four bands",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "喜 (xǐ)."
+            },
+            {
+              "kind": "speech",
+              "text": "Twelve strokes — more than any character you have written. Do not count them. Read the character downwards in four bands, and every band is a shape you already know."
+            },
+            {
+              "kind": "speech",
+              "text": "Band one — 士, three strokes. A long héng across the top, a shù down through it, a shorter héng beneath. That is 十 with a longer bar on top."
+            },
+            {
+              "kind": "speech",
+              "text": "Band two — 口, three strokes. Left side, joined top-and-right, closing floor. The same mouth as always."
+            },
+            {
+              "kind": "speech",
+              "text": "Band three — two short strokes, a small pair leaning apart under the 口."
+            },
+            {
+              "kind": "speech",
+              "text": "Band four — one long héng, then 口 again. Stroke 9 is the widest stroke in the character, running edge to edge, and it carries everything above it. Then the lower 口, in its usual three."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 3 + 2 + 1 + 3 = twelve."
+            },
+            {
+              "kind": "speech",
+              "text": "Top before bottom, all the way down. Two 口, and both of them are written the way you have written 口 since 吗."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "士 — 口 — the small pair — the long bar — 口",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 士 — 口 — the small pair — the long bar — 口]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "喜 (xǐ), all twelve, downwards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 喜, all twelve, downwards]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again and count the bands, not the strokes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again and count the bands, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes does 喜 (xǐ) have? (Twelve.) How many bands? (Four.) How many of them are 口? (Two — the middle band and the last.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 喜 (xǐ), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W28-huan",
+      "sequence": 2470,
+      "title": "欢 (huān) — six strokes, and two of them are already yours",
+      "headword": "欢",
+      "romanization": "huān",
+      "gloss": "欢 — the same 又 that opens 对, and 欠 on the right",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6e9de8ad2aa53bb9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — 又 again, then 欠",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — 又 again, then 欠 and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, and this one is short by comparison."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xǐ — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xǐ* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say suì — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *suì* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yǒu — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yǒu* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hǎokàn — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hǎokàn* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zì — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zì* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 又 again, then 欠",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "欢 (huān)."
+            },
+            {
+              "kind": "speech",
+              "text": "Six strokes, and the first two are ones you wrote one chapter ago."
+            },
+            {
+              "kind": "speech",
+              "text": "The left half is 又, the hand:"
+            },
+            {
+              "kind": "speech",
+              "text": "the héngpiě — a short flat start that turns and falls to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "the nà, crossing it and falling to the lower right."
+            },
+            {
+              "kind": "speech",
+              "text": "That is exactly how 对 begins. Same pair, same order, same place in the square."
+            },
+            {
+              "kind": "speech",
+              "text": "The right half is 欠 qiàn, a person with an open mouth:"
+            },
+            {
+              "kind": "speech",
+              "text": "a short piě at the top, falling left."
+            },
+            {
+              "kind": "speech",
+              "text": "the hénggōu — a horizontal that hooks down at its end."
+            },
+            {
+              "kind": "speech",
+              "text": "the long piě, falling from under the hook to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "the nà, falling to the lower right and reaching furthest of all."
+            },
+            {
+              "kind": "speech",
+              "text": "Strokes 5 and 6 are the character's legs, and they must both reach out. Cramped, 欢 (huān) looks like something else; spread, it is unmistakable."
+            },
+            {
+              "kind": "speech",
+              "text": "After 喜 (xǐ)'s twelve, six will feel like nothing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "又 — the two strokes that also open 对",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 又 — the two strokes that also open 对]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "欢 (huān), all six",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 欢, all six]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write 对 and 欢 (huān) side by side and check the left halves match",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write 对 and 欢 side by side and check the left halves match]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes does 欢 (huān) have? (Six.) Which character shares its left half? (对.) Which two strokes are the legs? (The fifth and sixth — both must reach out.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 欢 (huān), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C28-xihuan",
+      "sequence": 2480,
+      "title": "喜欢 (xǐhuan) — what you like",
+      "headword": "喜欢",
+      "romanization": "xǐhuan",
+      "gloss": "xǐhuan — 'to like', an ordinary verb with an ordinary object, and no inversion anywhere",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f2a16ed5bab6c85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two characters in, and now they say something."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say huān — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *huān* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hé — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hé* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gè — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gè* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kàn — kànjiàn — hǎokàn — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kàn — kànjiàn — hǎokàn* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say míng — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *míng* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "喜欢 is xǐhuan — third tone, then nothing."
+            },
+            {
+              "kind": "speech",
+              "text": "喜 is third tone, the dip. 欢 is first tone on its own — but inside this word it loses its tone altogether and goes light: xǐ-huan, not xǐ-huān. That is the same thing 早上 does to 上, and 名字 to 字."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it once slowly and once at speed: xǐ huan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the liker is the subject, and that is all",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "person + 喜欢 (xǐhuan) + the thing liked."
+            },
+            {
+              "kind": "speech",
+              "text": "我喜欢看书 wǒ xǐhuan kàn shū — I like reading. 我喜欢中国 — I like China. 你喜欢汉语吗 — do you like Chinese?"
+            },
+            {
+              "kind": "speech",
+              "text": "That is an ordinary sentence with an ordinary verb and an ordinary object, and saying so is the point. Spanish and Italian make a beginner turn the sentence round: Spanish says me gusta el libro — \"the book pleases me\" — and Italian says mi piace, with the liker in an object slot and the thing liked as the subject. Learners spend weeks on it."
+            },
+            {
+              "kind": "speech",
+              "text": "Mandarin asks nothing of you here. The person who likes goes in front, the verb does not change, and the thing liked follows. It is the same shape as 我看书."
+            },
+            {
+              "kind": "speech",
+              "text": "And 不 works on it normally, which 有 did not:"
+            },
+            {
+              "kind": "speech",
+              "text": "我不喜欢看书 — I don't like reading."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xǐhuan — 喜欢, and let 欢 (huān) go light",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xǐhuan* — 喜欢, and let 欢 go light]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我喜欢看书 (wǒ xǐhuan kàn shū)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我喜欢看书]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我不喜欢看书",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我不喜欢看书]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What tones does 喜欢 (xǐhuan) carry? (Third, then none — 欢 (huān) goes light.) Who goes in front of it? (The person who likes — no inversion.) Does 不 negate it normally? (Yes — 我不喜欢.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C28-xihuan-shenme",
+      "sequence": 2490,
+      "title": "你喜欢什么 (nǐ xǐhuan shénme) — what do you like?",
+      "headword": "你喜欢什么",
+      "romanization": "nǐ xǐhuan shénme",
+      "gloss": "asking what somebody likes, out of four words the book already had",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8adb4a9fe2010ec4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four in, and this lesson joins two chapters that never met."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xǐhuan — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xǐhuan* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hé — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hé* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gè — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gè* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shū — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shū* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǒ — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǒ* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the question, and where 什么 sits",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "你喜欢什么 nǐ xǐhuan shénme — what do you like?"
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, and all of them were already in the book except 喜欢 (xǐhuan)."
+            },
+            {
+              "kind": "speech",
+              "text": "Now look at where 什么 is. It is at the END, in exactly the slot the answer would occupy:"
+            },
+            {
+              "kind": "speech",
+              "text": "— 你喜欢什么 (nǐ xǐhuan shénme) — what do you like? — 我喜欢书 — I like books."
+            },
+            {
+              "kind": "speech",
+              "text": "Mandarin does not move a question word. English hauls what to the front and reshuffles everything behind it — you like what becomes what do you like, with a do invented on the way. Mandarin leaves 什么 exactly where the answer goes and changes nothing else. Question and answer have the same shape, word for word."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why no 吗 is needed here. 吗 makes a yes-or-no question; a sentence that already contains 什么 is a question, and adding 吗 would be wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "你喜欢汉语吗 — do you like Chinese? (yes or no) 你喜欢什么 (nǐ xǐhuan shénme) — what do you like? (name it)."
+            },
+            {
+              "kind": "speech",
+              "text": "And the whole exchange, with the particle from the last chapter:"
+            },
+            {
+              "kind": "speech",
+              "text": "— 你喜欢什么 (nǐ xǐhuan shénme) — 我喜欢看书你呢."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你喜欢什么 (nǐ xǐhuan shénme)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你喜欢什么]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我喜欢看书你呢",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我喜欢看书你呢]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你喜欢汉语吗 — and hear why this one needs 吗",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你喜欢汉语吗 — and hear why this one needs 吗]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does 什么 stand? (Where the answer goes — at the end.) Does Mandarin move it to the front? (No — nothing moves.) Why is there no 吗? (A sentence with 什么 in it is already a question.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C28-practice",
+      "sequence": 2500,
+      "title": "我喜欢看书 (wǒ xǐhuan kàn shū)",
+      "headword": "我喜欢看书",
+      "romanization": "wǒ xǐhuan kàn shū",
+      "gloss": "eighteen strokes, one verb, and a liking frame that asks the reader to turn nothing round",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c9fa1c43759f56c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last chapter of the tranche closes here."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nǐ xǐhuan shénme — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nǐ xǐhuan shénme* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǒ shíbā suì — nǐ hé wǒ — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǒ shíbā suì — nǐ hé wǒ* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǒ yǒu yí ge míngzi — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǒ yǒu yí ge míngzi* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shū — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shū* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǒ — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǒ* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built — liking, said plainly",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two characters, eighteen strokes, one verb — and with it a whole area of talk this book could not enter:"
+            },
+            {
+              "kind": "speech",
+              "text": "我喜欢看书 (wǒ xǐhuan kàn shū) — I like reading. 我不喜欢看书 — I don't. 你喜欢什么 (nǐ xǐhuan shénme) — what do you like? 你喜欢汉语吗 — do you like Chinese?"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing there is inverted, nothing agrees, nothing moves. The liker is the subject; the thing liked is the object; 什么 stands where the answer stands. Spanish and Italian both make you turn that round; Mandarin does not."
+            },
+            {
+              "kind": "speech",
+              "text": "And now the whole tranche can be said in one breath, because every piece of it is yours:"
+            },
+            {
+              "kind": "speech",
+              "text": "我是中国人 — 我十八岁 — 我有一个名字 — 我喜欢看书 (wǒ xǐhuan kàn shū) — 你呢."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Wǒ xǐhuan kàn shū. Nǐ xǐhuan shénme?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Say what you like; ask what the other person likes; hand it back with 你呢."
+            },
+            {
+              "kind": "speech",
+              "text": "Read. 我喜欢看书 (wǒ xǐhuan kàn shū) — 你喜欢什么 (nǐ xǐhuan shénme)."
+            },
+            {
+              "kind": "speech",
+              "text": "Write. 喜 (xǐ) — four bands, twelve strokes. 欢 (huān) — 又, then 欠."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我喜欢看书 (wǒ xǐhuan kàn shū) 我不喜欢看书",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我喜欢看书 我不喜欢看书]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你喜欢什么 (nǐ xǐhuan shénme) — 我喜欢书你呢",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你喜欢什么 — 我喜欢书你呢]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "喜 (xǐ) 欢 (huān)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 喜 欢]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I like reading.\" (我喜欢看书 (wǒ xǐhuan kàn shū).) Where does 什么 go in the question? (At the end, where the answer goes.) And what does Mandarin ask you to turn round here? (Nothing at all.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:ebff2da925b56c9b",
+  "lessonIds": [
+    "ZH-W27-sui",
+    "ZH-C27-sui",
+    "ZH-W27-he",
+    "ZH-C27-he",
+    "ZH-C27-practice"
+  ],
+  "tex": "chinese/book/chapters/ch27-sui-he.tex"
+}

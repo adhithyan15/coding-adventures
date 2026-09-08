@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C26-ne",
+    "language": "chinese",
+    "chapter": 26,
+    "sequence": 2370,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:397041f319545237"
+  },
+  "findings": []
+}

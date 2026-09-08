@@ -1,0 +1,20 @@
+{
+  "chapter": 24,
+  "title": "Have, and Count",
+  "label": "ch:zh-you-ge",
+  "canDo": "I can say what I have, say that there is something, and put a number against a noun with a measure word between them.",
+  "payoff": {
+    "lesson": "ZH-C24-practice",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Nine strokes across two characters give the numerals something to count at last, and 个 is three strokes of which two are 人.",
+    "assesses": [
+      "ZH-SCRIPT-YOU-01",
+      "ZH-LEX-YOU-01",
+      "ZH-GRAMMAR-YOU-EXISTENCE-01",
+      "ZH-SCRIPT-GE-01",
+      "ZH-LEX-GE-01",
+      "ZH-GRAMMAR-MEASURE-WORD-01",
+      "ZH-PERFORMANCE-HAVE-COUNT-01"
+    ]
+  }
+}

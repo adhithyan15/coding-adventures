@@ -1,0 +1,15 @@
+{
+  "id": "ZH-EXT-059-LE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can write 了, put it behind a verb for completion and at the end of a sentence for a changed state, and say what aspect is.",
+  "prerequisites": [],
+  "lessons": [
+    "ZH-W25-le",
+    "ZH-C25-le-dongci",
+    "ZH-C25-le-juwei",
+    "ZH-C25-ti",
+    "ZH-C25-practice"
+  ]
+}

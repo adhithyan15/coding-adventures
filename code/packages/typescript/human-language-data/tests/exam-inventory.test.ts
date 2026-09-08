@@ -2950,93 +2950,153 @@ describe("the committed Chinese A1 inventory", () => {
     }
   });
 
-  it("reports a PARTICLE-shaped gap, an empty joining column, and a strong tone column", () => {
+  it("reports the tranche that broke the particle gap and the joining zero", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(191);
-    // 70 -> 73: HL-C350's numeral tranche (chapters 20-21) closes ZH-A1-NUM-01,
+    // 70 -> 73: HL-C350's numeral tranche (chapters 20-21) closed ZH-A1-NUM-01,
     // ZH-A1-NUM-02 and ZH-A1-AB-02.
-    expect(coverage.covered).toBe(73);
-    expect(coverage.unmapped).toBe(118);
+    // 73 -> 98: the grammar tranche of chapters 22-28. TEN CHARACTERS, and five
+    // of the twenty-five points cost no character at all.
+    expect(coverage.covered).toBe(98);
+    expect(coverage.unmapped).toBe(93);
     expect(coverage.partial).toBe(0);
+
     // THE HEADLINE WHEN THIS FILE WAS WRITTEN, and it was not a vocabulary gap.
     // Mandarin carries almost all of its grammar in a handful of toneless
     // particles, and NOT ONE was taught: de, le, ma, ne, ba, guo and zhe each
-    // returned zero occurrences across the 175 lesson files, in characters and
-    // in tone-marked pinyin. A Mandarin course with no particles has taught
-    // vocabulary and script and has not yet taught grammar, which is why the
-    // sentence columns read as they do.
+    // returned zero occurrences across the 175 lesson files then in the track.
     //
-    // 0/4 -> 1/4. Chapter 19 teaches 吗, the first particle in the track and
-    // the first character this corpus has added for a GRAMMATICAL word rather
-    // than a lexical one. A class point is not answered by one member, so
-    // PART-04 stays open — but the sentence above is no longer quite true.
-    expect(coverage.byCategory["Zhuci - the particles"]!).toEqual({ enumerated: 4, covered: 1 });
-    // Seventh track running with an empty joining column, and the second
-    // outside South Asia. `he` ("and") is zero — every raw pinyin match is
-    // inside `heng` or `shenme`.
-    //
-    // STILL 0/8 after the asking tranche, and the reason is now measured rather
-    // than assumed. Every one of the nine joining words needs at least one
-    // character the track does not teach, and a character here is not cheap: it
-    // costs a five-lesson cycle, a source-verified stroke record, a ductus path
-    // checked against the vendored font outline, and a regeneration of the
-    // subset font. Russian closed thirteen joining devices in one 35-lesson
-    // tranche because all thirteen were spelled in letters it already taught;
-    // Chinese cannot borrow that shape. The reason is written into J-08's note
-    // so a future tranche budgets for it instead of rediscovering it.
-    expect(coverage.byCategory["Lianjie - joining two clauses"]!).toEqual({ enumerated: 8, covered: 0 });
-    // The sentence column the particle bought outright: both of Mandarin's
-    // polar questions are now taught, and the second cost no character at all.
-    expect(coverage.byCategory["Danju - the simple sentence"]!).toEqual({ enumerated: 4, covered: 3 });
+    // 0/4 -> 1/4 -> 3/4. 吗 arrived with the asking chapter; 的 and 了 and 呢
+    // arrive here. Four of the seven particles are now taught, and the two that
+    // carry the most grammar between them — 的 and 了 — cost eight strokes and
+    // two. PART-04 stays open because a CLASS point is not answered by four of
+    // seven, and its note now names guo and zhe as what is left.
+    expect(coverage.byCategory["Zhuci - the particles"]!).toEqual({ enumerated: 4, covered: 3 });
+
+    // THE JOINING COLUMN COMES OFF ZERO. It had been flat in seven tracks
+    // running, and J-08's note had already done the work of saying why and
+    // which word was cheapest: every one of the nine joining words needs a
+    // character the track does not teach, a character here costs a writing
+    // lesson and a reading lesson and a source-verified stroke record and a
+    // regeneration of the subset font, and `he` is the cheapest of the nine.
+    // This tranche spent that budget. 和 is eight strokes, three of which are
+    // 口, and it is a phono-semantic compound whose sounding half IS hé.
+    expect(coverage.byCategory["Lianjie - joining two clauses"]!).toEqual({ enumerated: 8, covered: 1 });
+
+    // FOUR COLUMNS CLOSE OUTRIGHT, and two of them were columns of one that no
+    // lesson had ever said out loud: Mandarin has no article, and possession is
+    // one particle between owner and owned.
+    expect(coverage.byCategory["Guanci - the article"]!).toEqual({ enumerated: 1, covered: 1 });
+    expect(coverage.byCategory["Lingshu - possession"]!).toEqual({ enumerated: 1, covered: 1 });
+    expect(coverage.byCategory["Dongci - the verb, which does not inflect"]!).toEqual({
+      enumerated: 7,
+      covered: 7,
+    });
+    expect(coverage.byCategory["Ti - aspect, which is what Mandarin has instead of tense"]!).toEqual({
+      enumerated: 2,
+      covered: 2,
+    });
+    expect(coverage.byCategory["Danju - the simple sentence"]!).toEqual({ enumerated: 4, covered: 4 });
+
     // The column the proxy has NO point for anywhere, and the corpus's best
-    // work: tone is lexical (chapter 1), the five contours, third-tone sandhi
-    // taught on the first word in the book, and bu sandhi taught on the
-    // commonest bu there is. What is missing is tone across a phrase.
+    // work: tone is lexical, the five contours, third-tone sandhi taught on the
+    // first word in the book, and bu sandhi on the commonest bu there is. What
+    // is missing is tone across a phrase, and this tranche did not touch it.
     expect(coverage.byCategory["Shengdiao - tone, for which the proxy has no column at all"]!).toEqual({
       enumerated: 5,
       covered: 4,
     });
-    // The fifth skill this track's own alignment names, measured and empty.
+    // The fifth skill this track's own alignment names, measured and still
+    // empty: no lesson in the track declares `mediation` in `modes`.
     expect(coverage.byCategory["Fanyi - translation and mediation"]!).toEqual({ enumerated: 2, covered: 0 });
-    // And the surprise. Education is the strongest specific-notion field
-    // measured in any track in this sitting — three institutions and four kinds
-    // of student built productively out of four characters — while food and
-    // drink is five Spanish points and not one word, in a language whose
-    // learners eat on day one.
-    expect(coverage.byCategory["Jiaoyu - education"]!.covered).toBe(3);
+    // UNTOUCHED, AND DELIBERATELY. Food and drink is a Spanish point and not one
+    // Mandarin word, in a language whose learners eat on day one; punctuation is
+    // seven points and not one mark taught in 244 lessons — which is why this
+    // tranche writes no 。 and no ，either, and prints a dash at a seam where
+    // Chinese writes a comma rather than smuggling one in.
     expect(coverage.byCategory["Yinshi - food and drink"]!).toEqual({ enumerated: 1, covered: 0 });
-    // THE COLUMN THAT WAS HALF DONE. yi, er, san, si and wu were taught in
-    // chapter 3, each with its own character and its own writing lesson, and
-    // liu, qi, ba, jiu and shi were absent for seventeen chapters -- a track
-    // that could name a family and a school and could not give an age. The
-    // tranche costs five characters and TWELVE strokes between them.
+    expect(coverage.byCategory["Biaodian - punctuation"]!).toEqual({ enumerated: 7, covered: 0 });
+    // The numeral work of the previous tranche, unchanged by this one — and the
+    // assertions that say so are kept rather than replaced by the sentence,
+    // because "unchanged" is a claim a test should hold rather than a comment.
     expect(coverage.byCategory["Shuci - numerals and quantity"]!)
       .toEqual({ enumerated: 5, covered: 2 });
-    // The decimal structure is probed as a RULE and two worked examples, not as
-    // eighty-nine lexical atoms, because that is what Mandarin actually asks of
-    // a learner: shi yi is ten-one and er shi is two-ten, and the order is the
-    // whole grammar. Ten words reach ninety-nine.
+    expect(coverage.byCategory["Suoxie - abbreviations and symbols"]!)
+      .toEqual({ enumerated: 2, covered: 1 });
+    // Education is still the strongest specific-notion field measured in any
+    // track in this series — three institutions and four kinds of student built
+    // productively out of four characters.
+    expect(coverage.byCategory["Jiaoyu - education"]!.covered).toBe(3);
+    // The decimal structure stays probed as a RULE and two worked examples, not
+    // as eighty-nine lexical atoms, because that is what Mandarin asks of a
+    // learner: shi yi is ten-one and er shi is two-ten, and the order is the
+    // whole grammar.
     const zhDecimal = inventory.points.find((point) => point.id === "ZH-A1-NUM-02")!;
     expect(zhDecimal.probe).toContain("ZH-GRAMMAR-DECIMAL-TEENS");
     expect(zhDecimal.probe).toContain("ZH-GRAMMAR-DECIMAL-TENS");
     expect(zhDecimal.probe).not.toContain("ZH-LEX-SHISAN");
-    // The cardinals are probed at BOTH doors, because this track splits a
-    // character's sound from its hand and a probe naming only the LEX atom
-    // would report a number the reader cannot write.
+    // The cardinals stay probed at BOTH doors, because this track splits a
+    // character's sound from its hand and a probe naming only the LEX atom would
+    // report a number the reader cannot write.
     const zhCardinals = inventory.points.find((point) => point.id === "ZH-A1-NUM-01")!;
     for (const digit of ["LIU", "QI", "BA", "JIU", "SHI"]) {
       expect(zhCardinals.probe, digit).toContain(`ZH-LEX-NUM-${digit}`);
       expect(zhCardinals.probe, digit).toContain(`ZH-SCRIPT-NUM-${digit}`);
     }
-    // And the digits: a price tag prints 5, not the character, so a reader with
-    // the character and not the digit still cannot read a price.
-    expect(coverage.byCategory["Suoxie - abbreviations and symbols"]!)
-      .toEqual({ enumerated: 2, covered: 1 });
     expect(formatExamCoverage(coverage)).toContain(
-      "chinese A1 (partial inventory): 73/191 points covered (38%)",
+      "chinese A1 (partial inventory): 98/191 points covered (51%)",
     );
   }, 60_000);
+
+  it("closes five points with NO NEW CHARACTER, which is what a character costs here", () => {
+    // A character in this track is the expensive unit — a writing lesson, a
+    // reading lesson, a source-verified stroke record in data/scripts/chinese.json
+    // and a regeneration of the vendored subset font — so the points that need
+    // none are worth naming as a set rather than leaving inside a total.
+    //
+    // Three of the five are things the reader must STOP doing, which is why no
+    // lesson had ever said them: an absence leaves no word to teach. The fourth
+    // is a join between two things the track already had and never let meet, and
+    // the fifth is a word ORDER.
+    const free: Record<string, string> = {
+      "ZH-A1-V-02": "ZH-GRAMMAR-VERB-INVARIANT-01",
+      "ZH-A1-NP-03": "ZH-GRAMMAR-NO-AGREEMENT-01",
+      "ZH-A1-VP-03": "ZH-GRAMMAR-NO-COMPLEMENT-AGREEMENT-01",
+      "ZH-A1-ART-01": "ZH-GRAMMAR-NO-ARTICLE-01",
+      "ZH-A1-ADJ-02": "ZH-LEX-ZHONGGUOREN-01",
+      "ZH-A1-S-04": "ZH-GRAMMAR-TOPIC-COMMENT-01",
+    };
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "chinese");
+    for (const [pointId, atom] of Object.entries(free)) {
+      const point = inventory.points.find((candidate) => candidate.id === pointId)!;
+      expect(point.probe, pointId).toContain(atom);
+      expect(taught.has(atom), atom).toBe(true);
+      // None of them is probed with a SCRIPT atom, because none of them needed a
+      // character. That is the mechanical form of the claim.
+      for (const probed of point.probe ?? []) {
+        expect(probed.startsWith("ZH-SCRIPT-"), `${pointId} probes a script atom`).toBe(false);
+      }
+    }
+  }, 60_000);
+
+  it("records the numeral blocker that had already lifted before this tranche looked", () => {
+    // ZH-A1-NG5-04's note read "blocked on the numerals", and the numeral
+    // tranche of chapters 20-21 had already lifted that block. Only 岁 was
+    // missing. Pinned rather than merely fixed, because a note that decays into
+    // agreement is indistinguishable from real debt and gets a lesson written
+    // for a gap that is no longer there.
+    const age = inventory.points.find((point) => point.id === "ZH-A1-NG5-04")!;
+    expect(age.probe).toContain("ZH-LEX-SUI-01");
+    expect(age.note).toMatch(/THE OLD NOTE'S BLOCKER IS GONE/);
+    // And the point it unlocked in turn: name, nationality and age, where the
+    // nationality half cost no character either.
+    const personal = inventory.points.find((point) => point.id === "ZH-A1-F1-03")!;
+    expect(personal.probe).toContain("ZH-LEX-ZHONGGUOREN-01");
+    expect(personal.probe).toContain("ZH-GRAMMAR-AGE-NO-VERB-01");
+  });
+
 });

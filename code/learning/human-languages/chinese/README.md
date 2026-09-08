@@ -108,6 +108,22 @@ seconds, past the five-minute contract. HL08's rule is to split, not to waive, s
 the material became its own lesson and `pronunciation` joined the exempt lesson
 types beside `grammar` and `etymology`.
 
+## What the track covers
+
+Chapters 1–21 build the greeting and self-introduction characters, the family and
+school compounds, the language and country words, the reading verbs, the question
+particle 吗, and the numerals from one to ninety-nine.
+
+**Chapters 22–28** are a grammar tranche chosen by *points-per-character* against
+[`core/exam-inventory-chinese-a1.json`](../core/exam-inventory-chinese-a1.json),
+because a character in this track is the expensive unit: it needs a writing lesson,
+a reading lesson, a source-verified stroke record in `data/scripts/chinese.json`,
+and a regeneration of the subset font. Ten characters buy twenty-five exam points,
+and a further five points cost **no character at all** — chapter 22 states the four
+things Mandarin does not do (no verb endings, no agreement, no article, no separate
+nationality word) and joins 中国 to 人. The ten are 的, 有, 个, 了, 呢, 对, 岁, 和 and
+喜欢. Exam coverage goes **73/191 to 98/191**.
+
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) records the original authored-and-planned path

@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 22,
+  "output": "chinese/book/chapters/ch22-no-endings.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

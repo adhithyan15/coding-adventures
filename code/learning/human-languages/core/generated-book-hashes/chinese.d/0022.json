@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:ff60453940e72b0e",
+  "lessonIds": [
+    "ZH-C22-bubian",
+    "ZH-C22-buyizhi",
+    "ZH-C22-wuguanci",
+    "ZH-C22-zhongguoren",
+    "ZH-C22-practice"
+  ],
+  "tex": "chinese/book/chapters/ch22-no-endings.tex"
+}

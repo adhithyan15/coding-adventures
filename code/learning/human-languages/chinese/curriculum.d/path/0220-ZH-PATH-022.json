@@ -1,0 +1,16 @@
+{
+  "id": "ZH-PATH-022",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ZH-W23-de",
+    "ZH-C23-de",
+    "ZH-C23-de-mingci",
+    "ZH-C23-huati",
+    "ZH-C23-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "ZH-EXT-057-DE"
+  ]
+}

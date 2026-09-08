@@ -1,7 +1,8 @@
 {
-  "segments": [],
+  "segments": [
+    "ZH-PATH-023"
+  ],
   "omits": [
-    "VERB-HAVE",
     "VERB-CAN"
   ],
   "relocates": {}

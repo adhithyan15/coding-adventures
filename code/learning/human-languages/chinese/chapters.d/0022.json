@@ -1,0 +1,20 @@
+{
+  "chapter": 22,
+  "title": "The Grammar That Is Not There",
+  "label": "ch:zh-no-endings",
+  "canDo": "I can state the four things Mandarin does not do — no verb endings, no agreement, no article, no separate nationality word — and name where somebody is from.",
+  "payoff": {
+    "lesson": "ZH-C22-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Four facts about Mandarin's shape and one join, and the whole chapter adds not a single character: three of the four are things a reader must stop doing, and the fourth puts 中国 and 人 together for the first time.",
+    "assesses": [
+      "ZH-GRAMMAR-VERB-INVARIANT-01",
+      "ZH-GRAMMAR-NO-AGREEMENT-01",
+      "ZH-GRAMMAR-NO-COMPLEMENT-AGREEMENT-01",
+      "ZH-GRAMMAR-NO-ARTICLE-01",
+      "ZH-LEX-ZHONGGUOREN-01",
+      "ZH-GRAMMAR-COUNTRY-PLUS-REN-01",
+      "ZH-PERFORMANCE-NO-ENDINGS-01"
+    ]
+  }
+}

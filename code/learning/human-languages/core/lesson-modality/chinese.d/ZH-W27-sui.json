@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W27-sui",
+    "language": "chinese",
+    "chapter": 27,
+    "sequence": 2410,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:161fca68f2cdaad0",
+    "detachableSegments": [
+      "Script — a mountain, then an evening"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -174,18 +174,22 @@ describe("stroke ownership migration baseline", () => {
       // independently written hiragana — の, ひ, ふ, ほ, む and や. Keys move
       // 361 -> 367 and Japanese 17 -> 23; Tamil and both shared-identity values
       // remain unchanged.
+      //
+      // Measured for HL-C366: the Chinese particles and joining lessons add
+      // ten source-verified glyphs. Keys move 367 -> 377 and Chinese 50 -> 60;
+      // Tamil and both shared-identity values remain unchanged.
     }).toEqual({
-      keys: 367,
+      keys: 377,
       keyHash:
-        "dc25c8807749091bceadcb28e56b2669f1b48fde2c13452ed4a227686226d3bc",
+        "0d104030d4004205af40424784ccb0dd995ce006da5fce551ddda546292d117e",
       nonTamilDataHash:
-        "19c7e6f1cc3c129adf6b041454e4aca87df4c9cae7eff291bcf55ad7b20cd8aa",
+        "8842454d6b247a6941927ba010b781a422d129b17c128da8747ebaf74f39e133",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
       counts: {
         arabic: 32,
-        chinese: 50,
+        chinese: 60,
         cyrillic: 33,
         devanagari: 44,
         gujarati: 44,

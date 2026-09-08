@@ -1,0 +1,15 @@
+{
+  "id": "ZH-EXT-058-HAVE-COUNT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can write 有 and 个, use 有 for both having and existing, and count things with 个.",
+  "prerequisites": [],
+  "lessons": [
+    "ZH-W24-you",
+    "ZH-C24-you",
+    "ZH-W24-ge",
+    "ZH-C24-ge",
+    "ZH-C24-practice"
+  ]
+}
