@@ -2,7 +2,7 @@
   "cli_builder_spec_version": "1.0",
   "name": "mosaic-compile",
   "display_name": "Mosaic Compile",
-  "description": "Compile a .mosaic component file to a target output format.\n\nReads the unified .mosaic file format (interface + layout + style in one file)\nand emits to the specified backend.\n\nAlso supports a `pkg` subcommand for compiling an entire Mosaic component\npackage (a directory with mosaic-package.toml + src/) per UI29 §4.3.",
+  "description": "Compile a .mosaic component file to a target output format.\n\nReads the unified .mosaic file format (interface + layout + style in one file)\nand emits to the specified backend.\n\nAlso supports a `pkg` subcommand for compiling an entire Mosaic component\npackage (a directory with mosaic-package.toml + src/) per UI29 \u00a74.3.",
   "version": "0.1.0",
   "parsing_mode": "gnu",
   "builtin_flags": {
@@ -27,10 +27,17 @@
       "required": false
     },
     {
+      "id": "describe",
+      "long": "describe",
+      "description": "Print the component's declared surface as JSON (name, slots with types and one-of value sets, emits) and exit. Requires --interface.",
+      "type": "boolean",
+      "required": false
+    },
+    {
       "id": "fixtures",
       "long": "fixtures",
       "short": "f",
-      "description": "Path to a JSON fixture file providing slot values (for --backend html)",
+      "description": "Path to a JSON object of slot values. Applied by the html backend in both legacy single-file and three-file pipeline modes.",
       "type": "string",
       "required": false
     },
@@ -66,7 +73,7 @@
     {
       "id": "variant",
       "long": "variant",
-      "description": "UI30 layout variant name (e.g. desktop, touch, tablet, tv, print). Only meaningful when --layout points at a directory — resolves <Component>.<variant>.mll inside. Falls back to bare <Component>.mll if the variant file isn't found. Omitting --variant is equivalent to --variant default (= bare <Component>.mll). Ignored with a warning when --layout points at a file.",
+      "description": "UI30 layout variant name (e.g. desktop, touch, tablet, tv, print). Only meaningful when --layout points at a directory \u2014 resolves <Component>.<variant>.mll inside. Falls back to bare <Component>.mll if the variant file isn't found. Omitting --variant is equivalent to --variant default (= bare <Component>.mll). Ignored with a warning when --layout points at a file.",
       "type": "string",
       "required": false
     },
@@ -87,7 +94,7 @@
     {
       "id": "package-search-path",
       "long": "package-search-path",
-      "description": "UI34 — colon-separated list of directories to search for mosaic-package.toml manifests. Used by the package-reference resolver to locate packages named in `pkg::P::C` references. Defaults to `code/packages/` relative to the current working directory; set this when invoking mosaic-compile from a different root.",
+      "description": "UI34 \u2014 colon-separated list of directories to search for mosaic-package.toml manifests. Used by the package-reference resolver to locate packages named in `pkg::P::C` references. Defaults to `code/packages/` relative to the current working directory; set this when invoking mosaic-compile from a different root.",
       "type": "string",
       "required": false
     }
@@ -105,7 +112,7 @@
     {
       "id": "pkg",
       "name": "pkg",
-      "description": "Compile every component in a Mosaic package to a per-backend artifact tree (UI29 §4.3).",
+      "description": "Compile every component in a Mosaic package to a per-backend artifact tree (UI29 \u00a74.3).",
       "flags": [
         {
           "id": "backend",
@@ -133,7 +140,7 @@
         {
           "id": "theme",
           "long": "theme",
-          "description": "Theme selector for style resolution, e.g. 'light' or 'dark'. Reads each component's <Component>.<theme>.msl (falling back to the bare <Component>.msl). Omitted → theme-agnostic (historical dark default). The style analogue of --variant.",
+          "description": "Theme selector for style resolution, e.g. 'light' or 'dark'. Reads each component's <Component>.<theme>.msl (falling back to the bare <Component>.msl). Omitted \u2192 theme-agnostic (historical dark default). The style analogue of --variant.",
           "type": "string",
           "required": false
         },
@@ -149,7 +156,10 @@
           "long": "profile",
           "description": "Build policy: 'permissive' emits artifacts plus mosaic-degradations.json; 'native-complete' rejects known native degradations before emitting application artifacts",
           "type": "enum",
-          "enum_values": ["permissive", "native-complete"],
+          "enum_values": [
+            "permissive",
+            "native-complete"
+          ],
           "required": false
         },
         {
