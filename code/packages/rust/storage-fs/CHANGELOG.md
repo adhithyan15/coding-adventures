@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Replaced the legacy JSON parser and serializer chain for persisted record
+  metadata with the repository-owned bounded RFC 8259 primitive.
+
 ### Fixed
 
 - **`put`'s parent-directory `fsync` failure is no longer discarded (backlog

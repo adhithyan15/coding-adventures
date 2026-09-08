@@ -54,8 +54,10 @@
 //! This matches the behavior of Python's `json.loads`, Ruby's `JSON.parse`,
 //! and Go's `json.Unmarshal` with `json.Number`.
 
-use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use lexer::token::TokenType;
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
+
+pub use coding_adventures_bounded_json::{JsonNumber, JsonValue};
 
 // ===========================================================================
 // Error type
@@ -89,99 +91,6 @@ impl std::fmt::Display for JsonValueError {
 }
 
 impl std::error::Error for JsonValueError {}
-
-// ===========================================================================
-// JsonNumber — integer or floating-point
-// ===========================================================================
-
-/// A JSON number, which can be either an integer or a floating-point value.
-///
-/// JSON itself makes no distinction between integers and floats — both are
-/// just "numbers." However, most programming languages do distinguish them,
-/// and users expect `42` to be an integer and `3.14` to be a float.
-///
-/// # Decision rule
-///
-/// The original JSON text determines which variant we use:
-///
-/// | JSON text | Has `.` or `e`/`E`? | Variant |
-/// |-----------|---------------------|---------|
-/// | `42`      | No                  | `Integer(42)` |
-/// | `-17`     | No                  | `Integer(-17)` |
-/// | `3.14`    | Yes (`.`)           | `Float(3.14)` |
-/// | `1e10`    | Yes (`e`)           | `Float(1e10)` |
-/// | `2.5E-3`  | Yes (`.` and `E`)   | `Float(0.0025)` |
-#[derive(Debug, Clone, PartialEq)]
-pub enum JsonNumber {
-    /// A whole number with no decimal point or exponent.
-    /// Range: i64::MIN to i64::MAX.
-    Integer(i64),
-
-    /// A number with a decimal point and/or exponent.
-    /// Stored as IEEE 754 double-precision.
-    Float(f64),
-}
-
-// ===========================================================================
-// JsonValue — the six JSON types
-// ===========================================================================
-
-/// A typed representation of a JSON value.
-///
-/// JSON has exactly six value types, and `JsonValue` mirrors them one-to-one:
-///
-/// | JSON type | Rust representation |
-/// |-----------|---------------------|
-/// | object    | `Vec<(String, JsonValue)>` — ordered key-value pairs |
-/// | array     | `Vec<JsonValue>` — ordered sequence |
-/// | string    | `String` |
-/// | number    | `JsonNumber` (integer or float) |
-/// | boolean   | `bool` |
-/// | null      | unit (no data) |
-///
-/// # Why `Vec<(String, JsonValue)>` for objects?
-///
-/// RFC 8259 says JSON objects are "unordered collections of name/value pairs,"
-/// but practically, insertion order matters for:
-/// - Human readability (config files, API responses)
-/// - Round-trip fidelity (parse then serialize should preserve order)
-/// - Deterministic output (tests, diffs)
-///
-/// A `Vec` of pairs preserves insertion order. If you need key lookup, iterate
-/// and find — JSON objects are typically small enough that linear search is fine.
-#[derive(Debug, Clone, PartialEq)]
-pub enum JsonValue {
-    /// A JSON object: `{"key": value, ...}`.
-    ///
-    /// Stored as an ordered list of (key, value) pairs. Keys are strings,
-    /// values are recursively `JsonValue`. Duplicate keys are preserved
-    /// (though the spec discourages them).
-    Object(Vec<(String, JsonValue)>),
-
-    /// A JSON array: `[value, ...]`.
-    ///
-    /// Stored as an ordered list of values. Array elements can be any
-    /// JSON type, including mixed types: `[1, "two", true, null]`.
-    Array(Vec<JsonValue>),
-
-    /// A JSON string: `"hello"`.
-    ///
-    /// The string value has already been unescaped by the lexer — escape
-    /// sequences like `\n`, `\t`, `\"`, `\\`, and `\uXXXX` have been
-    /// converted to their actual characters.
-    String(String),
-
-    /// A JSON number: `42` or `3.14`.
-    ///
-    /// See [`JsonNumber`] for the integer/float distinction.
-    Number(JsonNumber),
-
-    /// A JSON boolean: `true` or `false`.
-    Bool(bool),
-
-    /// A JSON null value.
-    Null,
-}
 
 // ===========================================================================
 // Core conversion: AST --> JsonValue

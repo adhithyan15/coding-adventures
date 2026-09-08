@@ -35,7 +35,7 @@ It is deliberately more structured than the existing CAS `BlobStore` trait:
 ## Example
 
 ```rust
-use coding_adventures_json_value::JsonValue;
+use coding_adventures_bounded_json::JsonValue;
 use storage_core::{
     Revision, StorageBackend, StorageListOptions, StoragePutInput,
 };
@@ -119,6 +119,11 @@ metadata, content-family, timestamp, and key-boundary facts for store health
 views that do not need bodies.
 `StorageLease::summary_at()` and `StorageLeaseInventorySummary` provide the same
 compact read-side shape for advisory lease status and expiry windows.
+
+Metadata uses the repository-owned `bounded-json` value model. Construction
+rejects non-object roots, non-finite numbers, and values beyond the shared depth
+limit before any backend sees them, so in-memory and persistent adapters enforce
+the same wire-safe contract.
 
 ## Development
 
