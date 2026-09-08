@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Describe selected values, blank cells, formula results/errors, commits and
+  cancellations through standard polite announcements. Keep typing and viewport
+  changes quiet and expose the same committed-cell summary to generated hosts.
+
 - Clamp relative viewport shifts without retargeting selection or pending edits.
 
 - Derive absolute row labels alongside the rendered window without adding a

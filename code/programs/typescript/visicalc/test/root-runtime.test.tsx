@@ -88,3 +88,32 @@ it("owns worksheet shortcuts only with table focus and restores focus after cell
     await key(table, "ArrowDown"); expect(host.update.props["cell-address"]).toBe("A2");
   } finally { await act(async () => root.unmount()); container.remove(); vi.unstubAllGlobals(); }
 });
+
+
+it("renders selected-cell results and an atomic polite announcement from Rust", async () => {
+  const module = await loadMosaicModule(readFileSync("public/visicalc_mosaic_app.wasm"));
+  const host = module.create({ colorScheme: "light" });
+  const container = document.createElement("div"); document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => { root.render(<App load={async () => host} />); });
+    const status = container.querySelector('[role="status"]')!;
+    expect(status.getAttribute("aria-live")).toBe("polite");
+    expect(status.getAttribute("aria-atomic")).toBe("true");
+    const cell = container.querySelectorAll('tbody:not([data-mosaic-spacer]) tr')[0].querySelectorAll('td')[4];
+    await act(async () => { (cell.firstElementChild as HTMLElement).click(); });
+    expect(status.textContent).toBe("E1, 38, formula =SUM(A1:D1)");
+    const summary = [...container.querySelectorAll('span')].find(node => node.textContent === status.textContent);
+    expect(summary).toBeDefined();
+    expect((summary as HTMLElement).style.textOverflow).toBe("ellipsis");
+    const input = container.querySelector<HTMLInputElement>('input[placeholder="Enter a value or formula"]')!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(input, "42");
+      input.dispatchEvent(new Event("input", {bubbles:true}));
+    });
+    expect(status.textContent).toBe("");
+    await act(async () => { input.dispatchEvent(new KeyboardEvent("keydown", {key:"Enter",bubbles:true})); });
+    expect(status.textContent).toBe("Updated E1, 42");
+    expect(summary!.textContent).toBe("E1, 42");
+  } finally { await act(async () => root.unmount()); container.remove(); }
+});
