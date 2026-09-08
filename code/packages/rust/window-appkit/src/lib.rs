@@ -405,13 +405,15 @@ impl AppKitBackend {
         //      CAMetalLayer as the view's backing layer.
         let metal_layer = match surface {
             AppKitSurfaceChoice::View => None,
-            AppKitSurfaceChoice::MetalLayer => match attach_metal_layer(view) {
-                Ok(layer) => Some(layer as usize),
-                Err(e) => {
-                    release(window);
-                    return Err(e);
+            AppKitSurfaceChoice::MetalLayer => {
+                match attach_metal_layer(view) {
+                    Ok(layer) => Some(layer as usize),
+                    Err(e) => {
+                        release(window);
+                        return Err(e);
+                    }
                 }
-            },
+            }
         };
 
         Ok(AppKitWindow {
@@ -707,7 +709,9 @@ fn finite_or_zero(value: f64) -> f64 {
 /// the view (and, transitively, the layer).
 #[cfg(target_vendor = "apple")]
 unsafe fn attach_metal_layer(view: Id) -> Result<Id, WindowError> {
-    use objc_bridge::{msg, MTLCreateSystemDefaultDevice, MTL_PIXEL_FORMAT_BGRA8_UNORM};
+    use objc_bridge::{
+        msg, MTLCreateSystemDefaultDevice, MTL_PIXEL_FORMAT_BGRA8_UNORM,
+    };
 
     let layer_class = class("CAMetalLayer");
     if layer_class.is_null() {
@@ -777,7 +781,10 @@ impl WindowBackend for AppKitBackend {
         self.backend_name()
     }
 
-    fn create_window(&mut self, attributes: WindowAttributes) -> Result<Self::Window, WindowError> {
+    fn create_window(
+        &mut self,
+        attributes: WindowAttributes,
+    ) -> Result<Self::Window, WindowError> {
         let surface = self.validate_attributes(&attributes)?;
 
         #[cfg(target_vendor = "apple")]
@@ -907,7 +914,9 @@ mod tests {
         let err = backend.validate_attributes(&attributes).unwrap_err();
         assert_eq!(
             err,
-            WindowError::UnsupportedConfiguration("AppKit windows must use MountTarget::Native")
+            WindowError::UnsupportedConfiguration(
+                "AppKit windows must use MountTarget::Native"
+            )
         );
     }
 

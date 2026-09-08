@@ -522,11 +522,17 @@ class _VentureContentSurfaceState extends State<VentureContentSurface> {
       LogicalKeyboardKey.space => 'space',
       _ => null,
     };
-    if (key != null && widget.host.controlKey(key, shift: HardwareKeyboard.instance.isShiftPressed)) {
+    if (key != null &&
+        widget.host.controlKey(
+          key,
+          shift: HardwareKeyboard.instance.isShiftPressed,
+        )) {
       return KeyEventResult.handled;
     }
     final character = event.character;
-    if (character != null && character.isNotEmpty && widget.host.controlText(character)) {
+    if (character != null &&
+        character.isNotEmpty &&
+        widget.host.controlText(character)) {
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;
