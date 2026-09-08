@@ -9113,6 +9113,7 @@ impl HtmlParser {
         let Some(index) = self.open_list_item_in_scope_index() else {
             return false;
         };
+        self.capture_formatting_above(index);
         self.open_elements.truncate(index);
         true
     }
@@ -13170,29 +13171,43 @@ fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
     matches!(
         name,
         "a" | "applet"
+            | "area"
             | "b"
+            | "big"
             | "br"
             | "button"
             | "code"
+            | "embed"
+            | "em"
+            | "font"
             | "i"
             | "img"
             | "input"
+            | "keygen"
             | "math"
             | "marquee"
             | "menuitem"
             | "nobr"
             | "noscript"
             | "object"
+            | "optgroup"
             | "option"
             | "ruby"
+            | "s"
             | "select"
+            | "small"
             | "span"
+            | "strike"
+            | "strong"
             | "style"
             | "svg"
+            | "tt"
             | "title"
+            | "u"
             | "wbr"
             | "xmp"
-    )
+    ) || (!starts_block_preserving_active_formatting(name)
+        && !starts_preserving_active_formatting_without_reconstruction(name))
 }
 
 fn starts_block_preserving_active_formatting(name: &str) -> bool {
@@ -13239,6 +13254,7 @@ fn starts_block_preserving_active_formatting(name: &str) -> bool {
             | "search"
             | "section"
             | "summary"
+            | "table"
             | "tbody"
             | "td"
             | "tfoot"
@@ -13255,16 +13271,28 @@ fn starts_preserving_active_formatting_without_reconstruction(name: &str) -> boo
         "base"
             | "basefont"
             | "bgsound"
+            | "body"
+            | "frame"
+            | "frameset"
+            | "head"
+            | "html"
             | "iframe"
             | "link"
             | "meta"
             | "noembed"
             | "noframes"
+            | "param"
+            | "rb"
+            | "rp"
+            | "rt"
+            | "rtc"
             | "script"
+            | "source"
             | "style"
             | "template"
             | "textarea"
             | "title"
+            | "track"
     )
 }
 
@@ -34262,10 +34290,16 @@ mod tests {
         assert_eq!(list.children.len(), 2);
         let first_item = element(&list.children[0]);
         assert_eq!(first_item.name, "li");
-        let strong = element(&first_item.children[0]);
+        let first_emphasis = element(&first_item.children[0]);
+        assert_eq!(first_emphasis.name, "em");
+        let strong = element(&first_emphasis.children[0]);
         assert_eq!(strong.name, "strong");
         assert_eq!(strong.children, vec![Node::text("A")]);
-        assert_eq!(element(&list.children[1]).children, vec![Node::text("B")]);
+        let second_emphasis = element(&element(&list.children[1]).children[0]);
+        assert_eq!(second_emphasis.name, "em");
+        let second_strong = element(&second_emphasis.children[0]);
+        assert_eq!(second_strong.name, "strong");
+        assert_eq!(second_strong.children, vec![Node::text("B")]);
 
         let definitions = element(&body.children[3]);
         assert_eq!(definitions.name, "dl");
@@ -37297,6 +37331,507 @@ mod tests {
         .unwrap();
         assert_eq!(element(&fragment[1]).name, "b");
         assert_eq!(element(&element(&fragment[1]).children[0]).name, "select");
+    }
+
+    #[test]
+    fn body_void_starts_reconstruct_pending_formatting_before_insertion() {
+        for tag in ["area", "embed", "keygen"] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<div><i class=carry>A</div><{tag} id=after>B"
+            );
+            let document = parse_html(&source).unwrap();
+            let body = body(&document);
+            let reconstructed = element(&body.children[1]);
+            assert_eq!(reconstructed.name, "i", "{tag}");
+            assert_eq!(reconstructed.attribute("class"), Some("carry"), "{tag}");
+            assert_eq!(element(&reconstructed.children[0]).name, tag, "{tag}");
+            assert_eq!(reconstructed.children[1], Node::text("B"), "{tag}");
+            assert!(source.len() > source.chars().count());
+        }
+
+        let fragment = parse_html_fragment_for_context(
+            "<div><b>A</div><area id=after>B",
+            "body",
+        )
+        .unwrap();
+        let reconstructed = element(&fragment[1]);
+        assert_eq!(reconstructed.name, "b");
+        assert_eq!(element(&reconstructed.children[0]).name, "area");
+        assert_eq!(reconstructed.children[1], Node::text("B"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "embed".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ]);
+        let reconstructed = element(&body(&direct_document).children[1]);
+        assert_eq!(reconstructed.name, "i");
+        assert_eq!(element(&reconstructed.children[0]).name, "embed");
+        assert_eq!(reconstructed.children[1], Node::text("B"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn formatting_starts_reconstruct_pending_formatting_before_insertion() {
+        for tag in ["big", "em", "font", "s", "small", "strike", "strong", "tt", "u"] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<div><b class=carry>A</div><{tag} id=after>B"
+            );
+            let document = parse_html(&source).unwrap();
+            let body = body(&document);
+            let reconstructed = element(&body.children[1]);
+            assert_eq!(reconstructed.name, "b", "{tag}");
+            assert_eq!(reconstructed.attribute("class"), Some("carry"), "{tag}");
+            assert_eq!(element(&reconstructed.children[0]).name, tag, "{tag}");
+            assert_eq!(element(&reconstructed.children[0]).children, vec![Node::text("B")], "{tag}");
+            assert!(source.len() > source.chars().count());
+        }
+
+        let fragment = parse_html_fragment_for_context(
+            "<div><i>A</div><strong id=after>B",
+            "body",
+        )
+        .unwrap();
+        let reconstructed = element(&fragment[1]);
+        assert_eq!(reconstructed.name, "i");
+        assert_eq!(element(&reconstructed.children[0]).name, "strong");
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "em".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ]);
+        let reconstructed = element(&body(&direct_document).children[1]);
+        assert_eq!(reconstructed.name, "b");
+        assert_eq!(element(&reconstructed.children[0]).name, "em");
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn media_void_starts_preserve_pending_formatting_for_following_text() {
+        for tag in ["param", "source", "track"] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<div><b class=carry>A</div><{tag} id=after>B"
+            );
+            let document = parse_html(&source).unwrap();
+            let body = body(&document);
+            assert_eq!(element(&body.children[1]).name, tag, "{tag}");
+            let reconstructed = element(&body.children[2]);
+            assert_eq!(reconstructed.name, "b", "{tag}");
+            assert_eq!(reconstructed.attribute("class"), Some("carry"), "{tag}");
+            assert_eq!(reconstructed.children, vec![Node::text("B")], "{tag}");
+            assert!(source.len() > source.chars().count());
+        }
+
+        let fragment = parse_html_fragment_for_context(
+            "<div><i>A</div><source id=after>B",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(element(&fragment[1]).name, "source");
+        assert_eq!(element(&fragment[2]).name, "i");
+        assert_eq!(element(&fragment[2]).children, vec![Node::text("B")]);
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "track".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ]);
+        let direct_body = body(&direct_document);
+        assert_eq!(element(&direct_body.children[1]).name, "track");
+        assert_eq!(element(&direct_body.children[2]).name, "b");
+        assert_eq!(element(&direct_body.children[2]).children, vec![Node::text("B")]);
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn optgroup_start_reconstructs_pending_formatting_before_insertion() {
+        let source = "<!doctype html><!--é-->\r\n<div><b class=carry>A</div><optgroup id=after>B";
+        let document = parse_html(source).unwrap();
+        let document_body = body(&document);
+        let reconstructed = element(&document_body.children[1]);
+        assert_eq!(reconstructed.name, "b");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(element(&reconstructed.children[0]).name, "optgroup");
+        assert_eq!(element(&reconstructed.children[0]).children, vec![Node::text("B")]);
+        assert!(source.len() > source.chars().count());
+
+        let fragment = parse_html_fragment_for_context(
+            "<div><i>A</div><optgroup id=after>B",
+            "body",
+        )
+        .unwrap();
+        let reconstructed = element(&fragment[1]);
+        assert_eq!(reconstructed.name, "i");
+        assert_eq!(element(&reconstructed.children[0]).name, "optgroup");
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "optgroup".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ]);
+        let reconstructed = element(&body(&direct_document).children[1]);
+        assert_eq!(reconstructed.name, "b");
+        assert_eq!(element(&reconstructed.children[0]).name, "optgroup");
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn recovered_html_and_body_starts_preserve_pending_formatting() {
+        for (tag, attribute_name) in [("html", "lang"), ("body", "class")] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<div><b class=carry>A</div><{tag} {attribute_name}=merged>B"
+            );
+            let document = parse_html(&source).unwrap();
+            let document_body = body(&document);
+            let reconstructed = element(&document_body.children[1]);
+            assert_eq!(reconstructed.name, "b", "{tag}");
+            assert_eq!(reconstructed.children, vec![Node::text("B")], "{tag}");
+            if tag == "html" {
+                assert_eq!(html(&document).attribute(attribute_name), Some("merged"));
+            } else {
+                assert_eq!(document_body.attribute(attribute_name), Some("merged"));
+            }
+            assert!(source.len() > source.chars().count());
+        }
+
+        let mut direct = HtmlParser::new();
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "body".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(element(&body(&direct_document).children[1]).name, "i");
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-body-start-tag")
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn any_other_start_reconstructs_pending_formatting_before_insertion() {
+        for tag in ["mark", "canvas", "x-widget", "unknown"] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<div><b class=carry>A</div><{tag} id=after>B"
+            );
+            let document = parse_html(&source).unwrap();
+            let document_body = body(&document);
+            let reconstructed = element(&document_body.children[1]);
+            assert_eq!(reconstructed.name, "b", "{tag}");
+            assert_eq!(reconstructed.attribute("class"), Some("carry"), "{tag}");
+            assert_eq!(element(&reconstructed.children[0]).name, tag, "{tag}");
+            assert_eq!(element(&reconstructed.children[0]).children, vec![Node::text("B")], "{tag}");
+            assert!(source.len() > source.chars().count());
+        }
+
+        let fragment = parse_html_fragment_for_context(
+            "<div><i>A</div><mark id=after>B",
+            "body",
+        )
+        .unwrap();
+        let reconstructed = element(&fragment[1]);
+        assert_eq!(reconstructed.name, "i");
+        assert_eq!(element(&reconstructed.children[0]).name, "mark");
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "x-widget".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ]);
+        let reconstructed = element(&body(&direct_document).children[1]);
+        assert_eq!(reconstructed.name, "b");
+        assert_eq!(element(&reconstructed.children[0]).name, "x-widget");
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn ignored_shell_starts_preserve_pending_formatting() {
+        for tag in ["head", "frame", "frameset"] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<div><b class=carry>A</div><{tag} id=ignored>B"
+            );
+            let document = parse_html(&source).unwrap();
+            let document_body = body(&document);
+            let reconstructed = element(&document_body.children[1]);
+            assert_eq!(reconstructed.name, "b", "{tag}");
+            assert_eq!(reconstructed.children, vec![Node::text("B")], "{tag}");
+            assert!(find_element_by_id(&document.children, "ignored").is_none(), "{tag}");
+            assert!(source.len() > source.chars().count());
+        }
+
+        let mut direct = HtmlParser::new();
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "frame".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(element(&body(&direct_document).children[1]).name, "b");
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-frame-start-tag")
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn table_start_preserves_pending_formatting_for_following_text() {
+        let source = "<!doctype html><!--é-->\r\n<div><b class=carry>A</div><table id=after></table>B";
+        let document = parse_html(source).unwrap();
+        let document_body = body(&document);
+        assert_eq!(element(&document_body.children[1]).name, "table");
+        let reconstructed = element(&document_body.children[2]);
+        assert_eq!(reconstructed.name, "b");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(reconstructed.children, vec![Node::text("B")]);
+        assert!(source.len() > source.chars().count());
+
+        let fragment = parse_html_fragment_for_context(
+            "<div><i>A</div><table id=after></table>B",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(element(&fragment[1]).name, "table");
+        assert_eq!(element(&fragment[2]).name, "i");
+        assert_eq!(element(&fragment[2]).children, vec![Node::text("B")]);
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "table".to_string(),
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ]);
+        let direct_body = body(&direct_document);
+        assert_eq!(element(&direct_body.children[1]).name, "table");
+        assert_eq!(element(&direct_body.children[2]).name, "b");
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn ruby_annotation_starts_preserve_pending_formatting_for_their_text() {
+        for tag in ["rb", "rtc", "rp", "rt"] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<div><b class=carry>A</div><{tag} id=after>B"
+            );
+            let document = parse_html(&source).unwrap();
+            let annotation = find_element_by_id(&document.children, "after").unwrap();
+            assert_eq!(annotation.name, tag, "{tag}");
+            let reconstructed = element(&annotation.children[0]);
+            assert_eq!(reconstructed.name, "b", "{tag}");
+            assert_eq!(reconstructed.attribute("class"), Some("carry"), "{tag}");
+            assert_eq!(reconstructed.children, vec![Node::text("B")], "{tag}");
+            assert!(source.len() > source.chars().count());
+        }
+
+        let fragment = parse_html_fragment_for_context(
+            "<div><i>A</div><rt id=after>B",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(element(&fragment[1]).name, "rt");
+        assert_eq!(element(&element(&fragment[1]).children[0]).name, "i");
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "rp".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ]);
+        let annotation = find_first_element_in_nodes(&direct_document.children, "rp").unwrap();
+        assert_eq!(element(&annotation.children[0]).name, "b");
+        assert_eq!(element(&annotation.children[0]).children, vec![Node::text("B")]);
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
