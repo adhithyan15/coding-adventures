@@ -242,22 +242,13 @@ describe("the chapter-owned real book-generation ledger", () => {
     const tracks = loadLanguageRegistry(root).languages.length;
     // Genuinely fixed shapes — these do not move when a chapter is authored.
     expect(readdirSync(join(directory, "script-sets.d"))).toHaveLength(8);
-    // A RATCHET in the opposite direction from the handwritten one below, and
-    // for the same reason. Seventeen tracks still ship a HAND-WRITTEN
-    // `appendix-pronunciation.tex`; retiring them lands as several PRs, and a
-    // literal here would be the single line every one of them edits, so every
-    // pair would conflict. As a floor it costs nothing: a retirement PR raises
-    // the count and passes untouched.
-    //
-    // The ceiling is not arbitrary. Every registered track has exactly one
-    // pronunciation reference — `book-cli.test.ts` asserts the book inputs it —
-    // so one per track is the end state, and a count above that means a
-    // duplicate owner rather than progress. When the last hand-written one is
-    // retired this collapses to `toHaveLength(tracks)`, as the handwritten
-    // ratchet below already has.
-    const references = readdirSync(join(directory, "reference-appendices.d"));
-    expect(references.length).toBeGreaterThanOrEqual(6);
-    expect(references.length).toBeLessThanOrEqual(tracks);
+    // Was a floor with a registry-derived ceiling while the seventeen
+    // hand-written references were retired a group at a time. The retirement is
+    // complete, so this is tightened once, as that comment always said it would
+    // be: one reference per registered track, every one of them generated.
+    // `shard-cli.ts` makes the same statement against the files on disk, so a
+    // hand-written appendix cannot satisfy this by being absent from the ledger.
+    expect(readdirSync(join(directory, "reference-appendices.d"))).toHaveLength(tracks);
     // One per registered track, derived from the registry rather than retyped.
     expect(readdirSync(join(directory, "glossaries.d"))).toHaveLength(tracks);
     expect(readdirSync(join(directory, "answer-keys.d"))).toHaveLength(tracks);

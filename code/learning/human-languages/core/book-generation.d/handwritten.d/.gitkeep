@@ -3,6 +3,14 @@ holds no records. It holds none: every chapter of every book in this corpus is
 generated from lesson markdown, so there are no hand-written chapters left to
 own. Git cannot track an empty directory, so this file holds it open.
 
+Read "chapter" strictly. This section covers NUMBERED chapters, and for a while
+that was not the same as "everything a book prints as a chapter": seventeen
+tracks still had a hand-written `appendix-pronunciation.tex`, which is a
+`\chapter*` on the page and was in no owner section at all, so this file read
+true while it was not the whole truth. Those are generated now too, from
+`<track>/pronunciation-reference.md` via `reference-appendices.d`, and
+`shard-cli.ts` fails if any registered track's reference is not.
+
 readStrictDirectory() in book-generation-shards.ts filters this filename out of
 the listing. Do not rename it, and delete it only when this section has a real
 record again.
