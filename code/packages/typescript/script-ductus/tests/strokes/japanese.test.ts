@@ -26,6 +26,8 @@ const JAPANESE_SMALL_TSU = DUCTUS[ductusKey("japanese", "っ")];
 const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
 const JAPANESE_WA = DUCTUS[ductusKey("japanese", "わ")];
 const JAPANESE_YU = DUCTUS[ductusKey("japanese", "ゆ")];
+const JAPANESE_SMALL_YU = DUCTUS[ductusKey("japanese", "ゅ")];
+const JAPANESE_RO = DUCTUS[ductusKey("japanese", "ろ")];
 const JAPANESE_YO = DUCTUS[ductusKey("japanese", "よ")];
 const JAPANESE_ME = DUCTUS[ductusKey("japanese", "め")];
 const JAPANESE_TSU = DUCTUS[ductusKey("japanese", "つ")];
@@ -280,6 +282,53 @@ describe("handwriting ductus", () => {
     );
     expect(JAPANESE_YU.source.citation).toMatch(
       /Sirgazil.*ゆ.*30 frames.*3\.0 seconds/i,
+    );
+  });
+
+  it("Japanese small ゅ scales ゆ's two-run movement to its own glyph", () => {
+    expect(penLifts(JAPANESE_SMALL_YU)).toBe(1);
+    expect(JAPANESE_SMALL_YU.strokes).toHaveLength(2);
+    expect(
+      JAPANESE_SMALL_YU.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "descend through the small left stem and turn up across the high shoulder",
+        "continue clockwise around the small broad loop",
+        "curve left to the small inner finish",
+      ],
+      [
+        "descend through the center of the small loop",
+        "curve down and left to the small finish",
+      ],
+    ]);
+    expect(JAPANESE_SMALL_YU.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%86_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_SMALL_YU.source.citation).toMatch(
+      /Sirgazil.*ゆ.*30 frames.*U\+3085 HIRAGANA LETTER SMALL YU/i,
+    );
+    expect(JAPANESE_SMALL_YU.source.variation).toMatch(
+      /two pen-down runs.*one lift.*U\+3085.*small yu.*scaling.*explicit.*independent handwriting evidence/i,
+    );
+  });
+
+  it("Japanese ろ keeps its shoulder, diagonal, and belly in one run", () => {
+    expect(penLifts(JAPANESE_RO)).toBe(0);
+    expect(JAPANESE_RO.strokes).toHaveLength(1);
+    expect(
+      JAPANESE_RO.strokes[0].segments.map((segment) => segment.label),
+    ).toEqual([
+      "draw the short high shoulder rightward",
+      "turn and descend the long diagonal down and left",
+      "swing clockwise around the broad belly and finish with a short left tail",
+    ]);
+    expect(JAPANESE_RO.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%8D_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_RO.source.citation).toMatch(
+      /Sirgazil.*ろ.*26 frames.*2\.6 seconds/i,
     );
   });
 

@@ -159,16 +159,16 @@ describe("stroke ownership migration baseline", () => {
       counts: Object.fromEntries(
         Object.entries(counts).sort(([a], [b]) => a.localeCompare(b)),
       ),
-      // Measured, not reasoned: the source-verified numeral tranche adds 六,
-      // 七, 八, 九, 十 and 百, so it moves keys 353 -> 359, the ordered key hash,
-      // the non-Tamil data hash, and Chinese 44 -> 50. Tamil is untouched,
-      // which is why its own count and the shared-identity hashes do not move.
+      // Measured, not reasoned: Japanese cardinal closure adds source-verified
+      // small yu and ro, so it moves keys 359 -> 361, the ordered key hash, the
+      // non-Tamil data hash, and Japanese 15 -> 17. Tamil is untouched, which
+      // is why its own count and the shared-identity hashes do not move.
     }).toEqual({
-      keys: 359,
+      keys: 361,
       keyHash:
-        "9441944f3f0ef47669be959a09c07d7779f15d537afafb4d8dcf3751ae97b4da",
+        "d9db33e7f25748d0d95ccad07ae36a2f2dc24bd5a8250eaa3bad0b643da3d177",
       nonTamilDataHash:
-        "0fe0f170e553ee974953386120f625d3aac1a3ec73d9cfaca0ba9357a215ab9b",
+        "e3945e1b936858bd4d96e4c8b00b8925ed326d0b1a544b379e624a5db08b084f",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -179,7 +179,7 @@ describe("stroke ownership migration baseline", () => {
         devanagari: 44,
         gujarati: 44,
         hebrew: 22,
-        japanese: 15,
+        japanese: 17,
         kannada: 13,
         malayalam: 13,
         "perso-arabic": 24,

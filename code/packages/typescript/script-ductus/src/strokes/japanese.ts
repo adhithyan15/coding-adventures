@@ -889,6 +889,162 @@ export const entries: DuctusEntry[] = [
         .strokeOrderSource!,
     },
   ],
+  // Sirgazil's 30-frame ゆ animation supplies the two-run movement. Unicode
+  // identifies U+3085 as small yu; these medians preserve that movement while
+  // fitting it explicitly to the bundled smaller Noto Sans JP glyph.
+  [
+    "japanese:ゅ",
+    {
+      script: "japanese",
+      glyph: "ゅ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "descend through the small left stem and turn up across the high shoulder",
+              path: [
+                { x: 254, y: 547 },
+                { x: 250, y: 486 },
+                { x: 243, y: 421 },
+                { x: 237, y: 356 },
+                { x: 233, y: 290 },
+                { x: 235, y: 217 },
+                { x: 245, y: 148 },
+                { x: 254, y: 87 },
+                { x: 258, y: 156 },
+                { x: 267, y: 225 },
+                { x: 284, y: 286 },
+                { x: 309, y: 347 },
+                { x: 365, y: 404 },
+                { x: 433, y: 445 },
+              ],
+            },
+            {
+              label: "continue clockwise around the small broad loop",
+              path: [
+                { x: 433, y: 445 },
+                { x: 509, y: 474 },
+                { x: 595, y: 478 },
+                { x: 680, y: 458 },
+                { x: 752, y: 417 },
+                { x: 803, y: 360 },
+                { x: 818, y: 290 },
+                { x: 811, y: 225 },
+                { x: 782, y: 168 },
+                { x: 727, y: 123 },
+                { x: 659, y: 94 },
+                { x: 591, y: 82 },
+              ],
+            },
+            {
+              label: "curve left to the small inner finish",
+              path: [
+                { x: 591, y: 82 },
+                { x: 535, y: 95 },
+                { x: 484, y: 119 },
+                { x: 435, y: 152 },
+                { x: 403, y: 193 },
+                { x: 378, y: 225 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "descend through the center of the small loop",
+              path: [
+                { x: 552, y: 613 },
+                { x: 561, y: 539 },
+                { x: 569, y: 466 },
+                { x: 577, y: 393 },
+                { x: 582, y: 319 },
+                { x: 576, y: 241 },
+                { x: 559, y: 168 },
+                { x: 524, y: 95 },
+              ],
+            },
+            {
+              label: "curve down and left to the small finish",
+              path: [
+                { x: 524, y: 95 },
+                { x: 494, y: 34 },
+                { x: 456, y: -15 },
+                { x: 416, y: -69 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "ゅ")!
+        .strokeOrderSource!,
+    },
+  ],
+  // Sirgazil's 26-frame animation writes ろ in one uninterrupted run: a short
+  // high shoulder, a long down-left diagonal, then a broad clockwise belly
+  // ending in a short left tail. These medians preserve that zero-lift order
+  // while fitting the bundled Noto Sans JP print outline.
+  [
+    "japanese:ろ",
+    {
+      script: "japanese",
+      glyph: "ろ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the short high shoulder rightward",
+              path: [
+                { x: 235, y: 688 },
+                { x: 335, y: 690 },
+                { x: 445, y: 694 },
+                { x: 555, y: 698 },
+                { x: 650, y: 700 },
+              ],
+            },
+            {
+              label: "turn and descend the long diagonal down and left",
+              path: [
+                { x: 650, y: 700 },
+                { x: 610, y: 635 },
+                { x: 545, y: 570 },
+                { x: 475, y: 505 },
+                { x: 405, y: 445 },
+                { x: 340, y: 385 },
+                { x: 280, y: 325 },
+                { x: 220, y: 270 },
+              ],
+            },
+            {
+              label:
+                "swing clockwise around the broad belly and finish with a short left tail",
+              path: [
+                { x: 220, y: 270 },
+                { x: 285, y: 325 },
+                { x: 365, y: 370 },
+                { x: 455, y: 400 },
+                { x: 555, y: 415 },
+                { x: 650, y: 400 },
+                { x: 730, y: 360 },
+                { x: 785, y: 300 },
+                { x: 810, y: 230 },
+                { x: 795, y: 165 },
+                { x: 750, y: 110 },
+                { x: 680, y: 70 },
+                { x: 595, y: 42 },
+                { x: 500, y: 20 },
+                { x: 405, y: 10 },
+                { x: 325, y: 12 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "ろ")!
+        .strokeOrderSource!,
+    },
+  ],
   // Sirgazil's corrected 26-frame animation writes よ with a short
   // left-to-right upper bar, then one continuous stem and clockwise lower
   // loop. These medians preserve that one-lift order in the bundled Noto Sans
