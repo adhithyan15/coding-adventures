@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Retained RFC 8414 `token_endpoint_auth_signing_alg_values_supported` as
+  immutable provider data, require it when JWT client authentication is
+  advertised, and reject the unsecured `none` algorithm without inventing
+  defaults.
 - Retained and exposed each prepared request's exact non-secret client ID and
   trace for the audit-gated client-secret authentication adapter; revocation
   requests now retain the same caller trace as exchange and refresh requests.
