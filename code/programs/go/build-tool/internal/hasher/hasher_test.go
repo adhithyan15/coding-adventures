@@ -689,6 +689,70 @@ func TestLanguageSourceInputRegistryRejectsOverlapAndSensitivePaths(t *testing.T
 	if err := validateLanguageSourceInputRegistry(registry); err == nil {
 		t.Fatal("sensitive exact package path must fail closed")
 	}
+
+	tests := []struct {
+		name   string
+		mutate func(*languageSourceInputRegistryDocument)
+	}{
+		{
+			name: "root exact path enters generated component",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				registry.Languages[0].RootExactRelativePaths = []string{"build/input"}
+			},
+		},
+		{
+			name: "root and package exact paths prefix collide",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				for index := range registry.Languages {
+					if len(registry.Languages[index].PackageExactInputs) > 0 {
+						registry.Languages[index].RootExactRelativePaths = []string{"foo"}
+						registry.Languages[index].PackageExactInputs[0].Paths = []string{"foo/bar"}
+						return
+					}
+				}
+			},
+		},
+		{
+			name: "scoped basename and suffix overlap",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				for index := range registry.Languages {
+					if len(registry.Languages[index].ScopedInputs) > 0 {
+						registry.Languages[index].ScopedInputs[0].Suffixes = []string{".html"}
+						registry.Languages[index].ScopedInputs[0].ExactBasenames = []string{"index.html"}
+						return
+					}
+				}
+			},
+		},
+		{
+			name: "case-folded root scoped and global selectors overlap",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				for index := range registry.Languages {
+					if registry.Languages[index].Language == "go" {
+						registry.Languages[index].ScopedInputs = append(registry.Languages[index].ScopedInputs, scopedSourceInput{
+							ID:             "root-go-mod-overlap",
+							Role:           "resource",
+							Scope:          "root",
+							ExactBasenames: []string{"GO.MOD"},
+							Decision:       "include",
+							Owner:          "build-tool parity",
+							Reason:         "prove full case-fold overlap rejection",
+						})
+						return
+					}
+				}
+			},
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			registry := cloneLanguageSourceInputRegistry(t)
+			test.mutate(&registry)
+			if err := validateLanguageSourceInputRegistry(registry); err == nil {
+				t.Fatal("overlapping registry selectors must fail closed")
+			}
+		})
+	}
 }
 
 func TestLanguageSourceInputRegistryAllowsBoundedFutureLaneAndNFCText(t *testing.T) {
@@ -758,10 +822,8 @@ func TestPackageExactInputsRequireCanonicalDiscoveredPath(t *testing.T) {
 
 func TestLanguageSourceInputRegistryGeneratorRoundTrip(t *testing.T) {
 	commandName := "pwsh"
-	if runtime.GOOS == "windows" {
-		if _, err := exec.LookPath(commandName); err != nil {
-			commandName = "powershell"
-		}
+	if _, err := exec.LookPath(commandName); err != nil {
+		t.Fatalf("registry generator requires PowerShell Core (pwsh): %v", err)
 	}
 	output := filepath.Join(t.TempDir(), "language_source_input_registry_generated.go")
 	command := exec.Command(commandName, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", filepath.Join("..", "..", "tools", "generate-language-source-input-registry.ps1"), "-OutputPath", output)

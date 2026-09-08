@@ -205,6 +205,11 @@ func validateLanguageSourceInputRegistry(registry languageSourceInputRegistryDoc
 		selectorCount += len(language.RecursiveSuffixes) + len(language.RecursiveExactBasenames) +
 			len(language.RootExactBasenames) + len(language.RootVariableSuffixes) +
 			len(language.RootExactRelativePaths)
+		for _, path := range language.RootExactRelativePaths {
+			if registryPathEntersGeneratedComponent(path, registry.UniversalInputs.GeneratedDirectoryComponents) {
+				return fmt.Errorf("invalid language source-input registry")
+			}
+		}
 		for _, group := range language.CaseAliasGroups {
 			selectorCount += len(group)
 		}
@@ -547,6 +552,16 @@ func validateRegistrySelectorOverlaps(universal universalSourceInputs, language 
 		role := "scoped:" + scoped.ID
 		add(role, scoped.Scope, scoped.PathPrefix, "suffix", scoped.Suffixes)
 		add(role, scoped.Scope, scoped.PathPrefix, "basename", scoped.ExactBasenames)
+		for _, basename := range scoped.ExactBasenames {
+			for _, suffix := range scoped.Suffixes {
+				if registryMatchersOverlap(
+					registryMatcher{kind: "basename", value: basename},
+					registryMatcher{kind: "suffix", value: suffix},
+				) {
+					return fmt.Errorf("overlap %s %s with %s", role, basename, suffix)
+				}
+			}
+		}
 	}
 	for index, left := range matchers {
 		for _, right := range matchers[index+1:] {
@@ -580,6 +595,15 @@ func validateRegistrySelectorOverlaps(universal universalSourceInputs, language 
 			for _, right := range exact.Paths[index+1:] {
 				if registryPathsPrefixCollide(left, right) {
 					return fmt.Errorf("invalid language source-input registry")
+				}
+			}
+		}
+	}
+	for _, rootPath := range language.RootExactRelativePaths {
+		for _, exact := range language.PackageExactInputs {
+			for _, packagePath := range exact.Paths {
+				if registryPathsPrefixCollide(rootPath, packagePath) {
+					return fmt.Errorf("root path %s overlaps package exact %s", rootPath, packagePath)
 				}
 			}
 		}
@@ -620,6 +644,10 @@ func registryScopesOverlap(left, right registryMatcher) bool {
 func registryMatchersOverlap(left, right registryMatcher) bool {
 	leftValue := left.value
 	rightValue := right.value
+	if strings.HasPrefix(left.role, "scoped:") || strings.HasPrefix(right.role, "scoped:") {
+		leftValue = registryFold(leftValue)
+		rightValue = registryFold(rightValue)
+	}
 	if left.kind == "basename" && right.kind == "basename" {
 		return leftValue == rightValue
 	}

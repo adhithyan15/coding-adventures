@@ -6,6 +6,7 @@ require (
 	github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph v0.0.0
 	github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar v0.0.0
 	github.com/adhithyan15/coding-adventures/code/packages/go/starlark-interpreter v0.0.0-00010101000000-000000000000
+	golang.org/x/text v0.41.0
 )
 
 require (
@@ -18,7 +19,6 @@ require (
 	github.com/adhithyan15/coding-adventures/code/packages/go/starlark-vm v0.0.0 // indirect
 	github.com/adhithyan15/coding-adventures/code/packages/go/state-machine v0.0.0 // indirect
 	github.com/adhithyan15/coding-adventures/code/packages/go/virtual-machine v0.0.0 // indirect
-	golang.org/x/text v0.41.0 // indirect
 )
 
 replace (

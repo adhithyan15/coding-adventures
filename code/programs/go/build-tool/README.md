@@ -31,6 +31,10 @@ Regenerate the embedded projection deterministically from the repository root:
 pwsh code/programs/go/build-tool/tools/generate-language-source-input-registry.ps1
 ```
 
+The generator requires PowerShell Core (`pwsh`); Windows PowerShell 5.1 is not
+supported because it does not provide the strict JSON APIs used to reject
+duplicate keys before generation.
+
 Package digests use hashing v1. Included files sort by normalized
 repository-relative forward-slash UTF-8 path. Each path and its exact raw file
 bytes are framed with unsigned 64-bit big-endian byte lengths before one
