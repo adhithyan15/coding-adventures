@@ -106,6 +106,12 @@ type Component struct {
 	// auto-generated "Default" story is present).
 	Stories []Story `json:"stories"`
 
+	// StoriesPath is the absolute path to the explicitly authored sibling
+	// stories file. It stays empty when discovery synthesized the development
+	// server's convenient Default story. The CI checker uses that distinction
+	// to reject components that nobody has deliberately covered.
+	StoriesPath string `json:"-"`
+
 	// StoriesError describes why a sibling stories file was not used, when one
 	// exists but could not be read or parsed.  Empty when there was no file at
 	// all, or when the file loaded cleanly.
@@ -201,11 +207,13 @@ func threeFileComponent(root, resolvedRoot, milPath, fileName string) (Component
 	title := componentTitleFromBase(base)
 	stories := []Story{{Name: "Default", Fixtures: map[string]interface{}{}}}
 	storiesError := ""
+	componentStoriesPath := ""
 
 	storiesPath := filepath.Join(dir, base+".stories.json")
 	// Same containment check as the other siblings: a stories file is read
 	// from disk, so it gets the symlink-escape treatment too.
 	if isRegularFileWithin(resolvedRoot, storiesPath) {
+		componentStoriesPath = storiesPath
 		loaded, overrideTitle, err := loadStoriesFile(storiesPath)
 		switch {
 		case err != nil:
@@ -238,6 +246,7 @@ func threeFileComponent(root, resolvedRoot, milPath, fileName string) (Component
 		ManifestPath:      manifestPath,
 		PackageSearchPath: packageSearchPath,
 		Stories:           stories,
+		StoriesPath:       componentStoriesPath,
 		StoriesError:      storiesError,
 	}, true
 }
@@ -436,21 +445,35 @@ func discoverComponents(root string) ([]Component, error) {
 
 		// Look for a sibling .stories.json file (same base name, same dir).
 		storiesPath := strings.TrimSuffix(path, ".mosaic") + ".stories.json"
+		componentStoriesPath := ""
+		if isRegularFileWithin(resolvedRoot, storiesPath) {
+			componentStoriesPath = storiesPath
+		}
 		stories, overrideTitle, err := loadStoriesFile(storiesPath)
+		storiesError := ""
 		if err != nil || len(stories) == 0 {
 			// No stories file, a parse error, or a file declaring none → use a
 			// single Default story so the component still appears.
 			stories = []Story{{Name: "Default", Fixtures: map[string]interface{}{}}}
+			if componentStoriesPath != "" {
+				if err != nil {
+					storiesError = err.Error()
+				} else {
+					storiesError = "stories file contains no stories"
+				}
+			}
 		}
 		if overrideTitle != "" {
 			title = overrideTitle
 		}
 
 		components = append(components, Component{
-			ID:         id,
-			Title:      title,
-			SourcePath: rel,
-			Stories:    stories,
+			ID:           id,
+			Title:        title,
+			SourcePath:   rel,
+			Stories:      stories,
+			StoriesPath:  componentStoriesPath,
+			StoriesError: storiesError,
 		})
 		return nil
 	})

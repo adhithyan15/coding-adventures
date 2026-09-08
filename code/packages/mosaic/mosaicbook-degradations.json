@@ -1,0 +1,32 @@
+{
+  "degradations": [
+    {
+      "component": "mosaic-pkg-spice-workbench/src/SpiceWorkbench",
+      "story": "Default",
+      "backend": "webcomponent",
+      "errorContains": "primitive 'Path' is not yet supported by the pipeline Web Components emitter",
+      "issue": 14686
+    },
+    {
+      "component": "mosaic-std-foundation/src/Surface",
+      "story": "Default",
+      "backend": "html",
+      "errorContains": "primitive '$mosaic-child-slot' is not yet supported",
+      "issue": 14685
+    },
+    {
+      "component": "mosaic-std-foundation/src/Surface",
+      "story": "Default",
+      "backend": "webcomponent",
+      "errorContains": "primitive '$mosaic-child-slot' is not yet supported",
+      "issue": 14685
+    },
+    {
+      "component": "mosaic-std-foundation/src/Surface",
+      "story": "Default",
+      "backend": "react",
+      "errorContains": "primitive '$mosaic-child-slot' is not yet supported",
+      "issue": 14685
+    }
+  ]
+}

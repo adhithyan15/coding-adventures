@@ -12,11 +12,14 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"runtime"
+	"time"
 )
 
 func main() {
@@ -34,6 +37,10 @@ func main() {
 	//             Defaults to "mosaic-compile" so it can be found on PATH after
 	//             a normal `go install` of the compiler.
 	compiler := flag.String("compiler", "mosaic-compile", "Path to mosaic-compile binary")
+	check := flag.Bool("check", false, "Compile every explicit story for all browser backends, then exit")
+	checkWorkers := flag.Int("check-workers", runtime.NumCPU(), "Maximum concurrent compiler processes in --check mode")
+	checkTimeout := flag.Duration("check-timeout", 10*time.Minute, "Overall deadline for --check mode")
+	checkDegradations := flag.String("check-degradations", "", "JSON file of issue-linked expected story compile degradations")
 
 	flag.Parse()
 
@@ -42,6 +49,24 @@ func main() {
 	absRoot := *root
 	if abs, err := os.Getwd(); err == nil && absRoot == "." {
 		absRoot = abs
+	}
+
+	if *check {
+		ctx, cancel := context.WithTimeout(context.Background(), *checkTimeout)
+		defer cancel()
+		srv := &Server{root: absRoot, compilerPath: *compiler}
+		summary, err := srv.checkStories(ctx, *checkWorkers, *checkDegradations)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf(
+			"MosaicBook story check passed: %d components, %d stories, %d compilations, %d recorded degradations\n",
+			summary.Components,
+			summary.Stories,
+			summary.Compilations,
+			summary.RecordedDegradations,
+		)
+		return
 	}
 
 	// Build the central server value.  newServer registers all HTTP routes on

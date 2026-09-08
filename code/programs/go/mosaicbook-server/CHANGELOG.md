@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added
+
+- Add a bounded `--check` mode and a path-filtered GitHub Actions gate that
+  rejects missing or invalid story files and compiles every explicit story
+  through the three browser emitters (#14012). Known isolation gaps must be
+  issue-linked in a checked-in degradation file, and stale entries fail.
+
 ### Fixed
 
 - Pass each discovered package collection to `mosaic-compile` through

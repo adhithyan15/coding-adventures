@@ -67,13 +67,37 @@ go build -o mosaicbook-server .
 
 Then open `http://localhost:7331` in your browser.
 
+For the non-interactive CI gate, compile every explicit story through the three
+browser emitters and exit:
+
+```bash
+./mosaicbook-server \
+  --check \
+  --root ../../../packages/mosaic \
+  --compiler ../../../packages/rust/target/release/mosaic-compile \
+  --check-degradations ../../../packages/mosaic/mosaicbook-degradations.json \
+  --check-workers 4 \
+  --check-timeout 10m
+```
+
+Check mode rejects an empty catalogue, a renderable component without a
+`.stories.json` file, an invalid story file or fixture, and any unexpected
+emitter compile failure. Known isolation gaps live in the issue-linked
+degradation file; a stale exception also fails. The timeout and worker limit
+bound the per-PR cost. Native previews and snapshot diffs remain tracked by
+#14013 and are not claimed by this browser-source gate.
+
 ### Flags
 
-| Flag         | Default          | Description                                     |
-| ------------ | ---------------- | ----------------------------------------------- |
-| `--port`     | `7331`           | TCP port to listen on                           |
-| `--root`     | `.` (cwd)        | Directory to scan for Mosaic components        |
-| `--compiler` | `mosaic-compile` | Path (or name on PATH) to the compiler binary   |
+| Flag                   | Default          | Description                                     |
+| ---------------------- | ---------------- | ----------------------------------------------- |
+| `--port`          | `7331`           | TCP port to listen on                           |
+| `--root`          | `.` (cwd)        | Directory to scan for Mosaic components        |
+| `--compiler`      | `mosaic-compile` | Path (or name on PATH) to the compiler binary   |
+| `--check`         | `false`          | Validate the story catalogue and exit           |
+| `--check-workers` | CPU count        | Maximum concurrent compiler processes           |
+| `--check-timeout` | `10m`            | Overall deadline for check mode                  |
+| `--check-degradations` | empty            | Issue-linked expected-degradation JSON           |
 
 ### Security
 
