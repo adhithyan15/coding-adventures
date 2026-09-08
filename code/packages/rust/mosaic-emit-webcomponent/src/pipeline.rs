@@ -1130,6 +1130,7 @@ fn emit_html_tree(
         // other host primitives).
         "HostCheckbox" => return Ok(emit_host_checkbox(node, part_styles)),
         "HostRadio" => return Ok(emit_host_radio(node, part_styles)),
+        "HostSlider" => return Ok(emit_host_slider(node, part_styles)),
 
         // UI29-4 — `HostLink` → `<a href onclick>` with the same
         // `target="_blank"` + `rel="noopener noreferrer"` security
@@ -2301,6 +2302,60 @@ fn emit_host_number_input(node: &LayoutNode, part_styles: &HashMap<String, Strin
             attrs.push_str(&format!(
                 r#" onchange="this.getRootNode().host.dispatch({{type:'{type_field}',value:event.target.valueAsNumber}})""#
             ));
+        }
+    }
+
+    attrs.push_str(" />");
+    attrs
+}
+
+/// Lower `HostSlider` to a native `<input type="range">`.
+/// `input` provides continuous changes while `change` marks the committed
+/// pointer/keyboard edit, and both carry the DOM's numeric value.
+fn emit_host_slider(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
+    let mut attrs = String::from(r#"<input type="range""#);
+    attrs.push_str(&build_style_attr(node, "", part_styles));
+
+    for prop in ["value", "min", "max", "step"] {
+        if let Some(slot) = find_slot_ref(node, prop) {
+            let camel = to_camel_case_first_lower(slot);
+            if is_safe_identifier(&camel) {
+                attrs.push_str(&format!(r#" {prop}="${{escapeHtmlAttribute({camel})}}""#));
+            }
+        } else if let Some(value) = find_number(node, prop) {
+            attrs.push_str(&format!(r#" {prop}="{value}""#));
+        }
+    }
+
+    if let Some(slot) = find_slot_ref(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#"${{{camel} ? " disabled" : ""}}"#));
+        }
+    } else if find_keyword(node, "disabled") == Some("true") {
+        attrs.push_str(" disabled");
+    }
+
+    if let Some(label) = find_string(node, "a11y-label") {
+        attrs.push_str(&format!(
+            r#" aria-label="{}""#,
+            escape_html_attribute(label)
+        ));
+    } else if let Some(slot) = find_slot_ref(node, "a11y-label") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#" aria-label="${{escapeHtmlAttribute({camel})}}""#));
+        }
+    }
+
+    for (prop, dom_event) in [("onChange", "oninput"), ("onCommit", "onchange")] {
+        if let Some(emit_name) = find_emit_ref(node, prop) {
+            let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            if is_safe_identifier(&type_field) {
+                attrs.push_str(&format!(
+                    r#" {dom_event}="this.getRootNode().host.dispatch({{type:'{type_field}',value:event.target.valueAsNumber}})""#
+                ));
+            }
         }
     }
 
@@ -6175,6 +6230,64 @@ mod tests {
             "expected dispatch with valueAsNumber, got:\n{}",
             r.output
         );
+    }
+
+    #[test]
+    fn host_slider_preserves_range_bindings_accessibility_and_event_payloads() {
+        let m = component(
+            "X",
+            vec![],
+            vec![
+                emit_decl(
+                    "onAdjust",
+                    vec![EmitParam {
+                        name: "value".into(),
+                        r#type: EmitPayloadType::Number,
+                    }],
+                ),
+                emit_decl(
+                    "onCommit",
+                    vec![EmitParam {
+                        name: "value".into(),
+                        r#type: EmitPayloadType::Number,
+                    }],
+                ),
+            ],
+        );
+        let prop = |name: &str, value: LayoutPropValue| LayoutProp {
+            name: name.into(),
+            value,
+        };
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostSlider",
+                vec![
+                    prop("value", LayoutPropValue::SlotRef("current-value".into())),
+                    prop("min", LayoutPropValue::Number(0.0)),
+                    prop("max", LayoutPropValue::SlotRef("maximum-value".into())),
+                    prop("step", LayoutPropValue::Number(5.0)),
+                    prop("disabled", LayoutPropValue::SlotRef("is-disabled".into())),
+                    prop("a11y-label", LayoutPropValue::String("Volume".into())),
+                    prop("onChange", LayoutPropValue::EmitRef("onAdjust".into())),
+                    prop("onCommit", LayoutPropValue::EmitRef("onCommit".into())),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        for expected in [
+            r#"type="range""#,
+            r#"value="${escapeHtmlAttribute(currentValue)}""#,
+            r#"min="0""#,
+            r#"max="${escapeHtmlAttribute(maximumValue)}""#,
+            r#"step="5""#,
+            r#"${isDisabled ? " disabled" : ""}"#,
+            r#"aria-label="Volume""#,
+            "oninput=\"this.getRootNode().host.dispatch({type:'adjust',value:event.target.valueAsNumber})\"",
+            "onchange=\"this.getRootNode().host.dispatch({type:'commit',value:event.target.valueAsNumber})\"",
+        ] {
+            assert!(out.contains(expected), "missing {expected}:\n{out}");
+        }
     }
 
     // =================================================================

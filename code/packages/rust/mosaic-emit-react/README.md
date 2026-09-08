@@ -35,6 +35,7 @@ MosaicVM  (drives MosaicRenderer callbacks)
 | `Stack`  | `<div style={{ position:'relative' }}>`                  |
 | `Icon`   | `<span className="icon">`                                |
 | `Grid`   | `<table>` with `.map()` header and row rendering         |
+| `HostSlider` | native `<input type="range">` with numeric change/commit dispatch |
 
 ## Slot → prop mapping
 

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added - native browser HostSlider
+
+`HostSlider` now lowers to `<input type="range">`, preserving literal and
+slot-backed bounds, value, disabled state, accessible label, and hydration
+markers for continuous change and commit events.
+
 ### Fixed - lower compatibility Input nodes
 
 The pipeline HTML emitter now lowers the legacy `Input` surface, including its

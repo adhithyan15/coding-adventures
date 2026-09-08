@@ -1051,6 +1051,10 @@ fn emit_jsx_tree(
         return emit_host_radio_jsx(node, indent, part_styles);
     }
 
+    if node.tag == "HostSlider" {
+        return emit_host_slider_jsx(node, indent, part_styles);
+    }
+
     // UI29-4 — `HostLink` lowers to `<a href={...} target rel
     // onClick>`. The dedicated emitter is needed because:
     //   1. `target="_blank"` MUST be paired with `rel="noopener
@@ -3693,6 +3697,75 @@ fn emit_host_number_input_jsx(
     Ok(format!("{pad}<input{attrs} />\n"))
 }
 
+/// Lower `HostSlider` to React's native range input. React's `onChange`
+/// tracks live movement; pointer, key, and blur completion routes preserve
+/// the portable `onCommit(value: number)` contract.
+fn emit_host_slider_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::from(" type=\"range\"");
+
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|name| part_styles.get(name).map(String::as_str))
+        .unwrap_or("");
+    if !part_style_str.is_empty() {
+        attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
+    }
+
+    for prop_name in ["value", "min", "max", "step"] {
+        if let Some(slot) = find_slot_ref_prop(node, prop_name) {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            attrs.push_str(&format!(" {prop_name}={{{camel}}}"));
+        } else if let Some(value) = find_number_prop(node, prop_name) {
+            attrs.push_str(&format!(" {prop_name}={{{value}}}"));
+        }
+    }
+
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" disabled={{{camel}}}"));
+    } else if let Some(value) = find_keyword_prop(node, "disabled") {
+        if value == "true" || value == "false" {
+            attrs.push_str(&format!(" disabled={{{value}}}"));
+        }
+    }
+
+    if let Some(label) = find_string_prop(node, "a11y-label") {
+        attrs.push_str(&jsx_string_attr("aria-label", label));
+    } else if let Some(slot) = find_slot_ref_prop(node, "a11y-label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" aria-label={{{camel}}}"));
+    }
+
+    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&type_field)?;
+        attrs.push_str(&format!(
+            " onChange={{e => dispatch({{ type: \"{type_field}\", value: e.currentTarget.valueAsNumber }})}}"
+        ));
+    }
+
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&type_field)?;
+        let handler = format!(
+            "{{e => dispatch({{ type: \"{type_field}\", value: e.currentTarget.valueAsNumber }})}}"
+        );
+        attrs.push_str(&format!(
+            " onPointerUp={handler} onKeyUp={handler} onBlur={handler}"
+        ));
+    }
+
+    Ok(format!("{pad}<input{attrs} />\n"))
+}
 // =====================================================================
 // HostTable primitive (UI29 §2.1)
 // =====================================================================
@@ -10250,6 +10323,52 @@ mod tests {
             ),
             "expected onChange with e.target.valueAsNumber payload, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn host_slider_preserves_range_bindings_accessibility_and_event_payloads() {
+        let m = component(
+            "X",
+            vec![],
+            vec![
+                emit("onAdjust", vec![param("value", EmitPayloadType::Number)]),
+                emit("onCommit", vec![param("value", EmitPayloadType::Number)]),
+            ],
+        );
+        let l = LayoutDef {
+            component_name: "X".into(),
+            root: LayoutNode {
+                tag: "HostSlider".into(),
+                part_name: None,
+                props: vec![
+                    slot_ref_prop("value", "current-value"),
+                    number_prop("min", 0.0),
+                    slot_ref_prop("max", "maximum-value"),
+                    number_prop("step", 5.0),
+                    slot_ref_prop("disabled", "is-disabled"),
+                    string_prop("a11y-label", "Volume"),
+                    emit_ref_prop("onChange", "onAdjust"),
+                    emit_ref_prop("onCommit", "onCommit"),
+                ],
+                children: vec![],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        for expected in [
+            "type=\"range\"",
+            "value={currentValue}",
+            "min={0}",
+            "max={maximumValue}",
+            "step={5}",
+            "disabled={isDisabled}",
+            "aria-label=\"Volume\"",
+            "onChange={e => dispatch({ type: \"adjust\", value: e.currentTarget.valueAsNumber })}",
+            "onPointerUp={e => dispatch({ type: \"commit\", value: e.currentTarget.valueAsNumber })}",
+            "onKeyUp={e => dispatch({ type: \"commit\", value: e.currentTarget.valueAsNumber })}",
+            "onBlur={e => dispatch({ type: \"commit\", value: e.currentTarget.valueAsNumber })}",
+        ] {
+            assert!(out.contains(expected), "missing {expected}:\n{out}");
+        }
     }
 
     // -----------------------------------------------------------------
