@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed - load manifest palettes in standalone browser compilation
+
+Standalone HTML, Web Component, and React compilation now loads the owning
+package's manifest-declared token palette before composing styles. Palette
+paths resolve from the manifest directory and use the package builder's
+existing containment and backend-selection checks.
+
 ### Fixed - compose same-package references for browser backends
 
 Standalone pipeline builds with `--package-manifest` now qualify and inline
