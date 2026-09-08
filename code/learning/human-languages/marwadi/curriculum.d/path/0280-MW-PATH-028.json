@@ -1,0 +1,22 @@
+{
+  "id": "MW-PATH-028",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-C34-hear-bees",
+    "MW-C34-bees",
+    "MW-C34-hear-so",
+    "MW-C34-so",
+    "MW-C34-hear-price-number",
+    "MW-C34-price-number",
+    "MW-C34-hear-counter-offer",
+    "MW-C34-counter-offer",
+    "MW-R34-round-recall",
+    "MW-C34-numbered-price",
+    "MW-R34-script-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-042-NUMBERED-PRICE"
+  ],
+  "after": []
+}

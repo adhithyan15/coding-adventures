@@ -1,7 +1,8 @@
 {
-  "segments": [],
-  "omits": [
-    "NUMBER-ONE-TO-FIVE"
+  "segments": [
+    "MW-PATH-026",
+    "MW-PATH-027"
   ],
+  "omits": [],
   "relocates": {}
 }

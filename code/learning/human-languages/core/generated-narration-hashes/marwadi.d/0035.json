@@ -1,0 +1,24 @@
+{
+  "language": "marwadi",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:592e16f84d728dc6",
+  "lessonIds": [
+    "MW-W35-digits-zero-one-two",
+    "MW-C35-read-ten-ticket",
+    "MW-W35-digits-three-four-five",
+    "MW-C35-read-five-ticket",
+    "MW-W35-digits-six-seven-eight",
+    "MW-C35-read-eight-ticket",
+    "MW-W35-digit-nine",
+    "MW-C35-read-ticket",
+    "MW-C35-ticket-four",
+    "MW-R35-script-close"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 0,
+  "text": "marwadi/narration/ch35.txt",
+  "json": "marwadi/narration/ch35.json",
+  "textHash": "fnv1a64:ea158fd9b5d0ecbc",
+  "jsonHash": "fnv1a64:cfac7d9dd22454e6",
+  "findings": []
+}

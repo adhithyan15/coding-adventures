@@ -1,0 +1,14 @@
+{
+  "chapter": 36,
+  "title": "One Exchange, Two Figures",
+  "label": "ch:mw-numbered-exchange",
+  "canDo": "I can run a six-turn counter exchange in which both sides name an amount, at a shop, a food stall, and a rickshaw.",
+  "payoff": {
+    "lesson": "MW-C36-numbered-exchange",
+    "kind": "four-skill-function-map",
+    "summary": "The twelve numbers and ten figures are retrieved at a distance, run over the shopping, food, and transport words in turn, and the five-turn exchange of chapter 31 is then re-run with the seller's figure and the buyer's offer in it.",
+    "assesses": [
+      "MW-PERFORMANCE-NUMBERED-EXCHANGE-FOUR-SKILL-01"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 35,
+  "title": "The Ten Digit Signs",
+  "label": "ch:mw-digits",
+  "canDo": "I can read a price written in Devanagari figures and write one from dictation.",
+  "payoff": {
+    "lesson": "MW-C35-ticket-four",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Ten digit signs arrive three at a time, each set cashed against the words it writes, and the four that a Latin eye reads wrongly are drilled apart from the six that it guesses correctly.",
+    "assesses": [
+      "MW-SCRIPT-DIGIT-ZERO-01",
+      "MW-SCRIPT-DIGIT-ONE-01",
+      "MW-SCRIPT-DIGIT-TWO-01",
+      "MW-SCRIPT-DIGIT-THREE-01",
+      "MW-SCRIPT-DIGIT-FOUR-01",
+      "MW-SCRIPT-DIGIT-FIVE-01",
+      "MW-SCRIPT-DIGIT-SIX-01",
+      "MW-SCRIPT-DIGIT-SEVEN-01",
+      "MW-SCRIPT-DIGIT-EIGHT-01",
+      "MW-SCRIPT-DIGIT-NINE-01",
+      "MW-PERFORMANCE-DIGIT-TICKET-FOUR-SKILL-01"
+    ]
+  }
+}

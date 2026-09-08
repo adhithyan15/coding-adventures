@@ -1,0 +1,22 @@
+{
+  "chapter": 34,
+  "title": "Twenty, A Hundred, And A Price With A Figure In It",
+  "label": "ch:mw-numbered-price",
+  "canDo": "I can understand the amount a seller names and answer it with a figure of my own.",
+  "payoff": {
+    "lesson": "MW-C34-numbered-price",
+    "kind": "four-skill-function-map",
+    "summary": "The round amounts a stall names are taught, the price question of chapter 27 finally gets an answer, and an old verb takes a figure to become a counter-offer.",
+    "assesses": [
+      "MW-LEX-BEES-01",
+      "MW-SCRIPT-BEES-01",
+      "MW-LEX-SO-01",
+      "MW-SCRIPT-SO-01",
+      "MW-LEX-PRICE-NUMBER-01",
+      "MW-SCRIPT-PRICE-NUMBER-01",
+      "MW-LEX-COUNTER-OFFER-01",
+      "MW-SCRIPT-COUNTER-OFFER-01",
+      "MW-PERFORMANCE-NUMBERED-PRICE-FOUR-SKILL-01"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W35-digits-six-seven-eight",
+    "language": "marwadi",
+    "chapter": 35,
+    "sequence": 3000,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a463ab62b4d9112f",
+    "detachableSegments": [
+      "Script — the last three of the traps"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C32-hear-teen",
+    "language": "marwadi",
+    "chapter": 32,
+    "sequence": 2630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3fe832739422030"
+  },
+  "findings": []
+}

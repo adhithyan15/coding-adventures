@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C35-read-ten-ticket",
+    "language": "marwadi",
+    "chapter": 35,
+    "sequence": 2970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80af623c1f4a8d7e"
+  },
+  "findings": []
+}

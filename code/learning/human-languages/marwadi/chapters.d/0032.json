@@ -1,0 +1,25 @@
+{
+  "chapter": 32,
+  "title": "Counting To Five, And The One New Sign",
+  "label": "ch:mw-count-five",
+  "canDo": "I can hear, say, read, and write the numbers one to five, after learning only ए.",
+  "payoff": {
+    "lesson": "MW-C32-count-five",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "One new letter is isolated, then five numbers are built on signs the hand already had, and all five pass separately in listening, speaking, reading, and writing.",
+    "assesses": [
+      "MW-SCRIPT-E-01",
+      "MW-LEX-EK-01",
+      "MW-SCRIPT-EK-01",
+      "MW-LEX-DO-TWO-01",
+      "MW-SCRIPT-DO-TWO-01",
+      "MW-LEX-TEEN-01",
+      "MW-SCRIPT-TEEN-01",
+      "MW-LEX-CHAAR-01",
+      "MW-SCRIPT-CHAAR-01",
+      "MW-LEX-PAANCH-01",
+      "MW-SCRIPT-PAANCH-01",
+      "MW-PERFORMANCE-COUNT-FIVE-FOUR-SKILL-01"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:13fa3e2bab7a6343",
+  "lessonIds": [
+    "MW-R36-count-at-distance",
+    "MW-R36-shopping-numbered",
+    "MW-R36-food-numbered",
+    "MW-R36-transport-numbered",
+    "MW-R36-letters-close",
+    "MW-C36-numbered-exchange",
+    "MW-R36-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch36-numbered-exchange.tex"
+}
