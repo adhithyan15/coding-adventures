@@ -458,6 +458,18 @@ validation. Pipelines, notes, annotations, accelerators/deaccelerators,
 advanced flow ports, decorators, label offsets, custom stage boundaries, and
 theme-exact rendering remain unsupported at the partial level.
 
+### Cynefin Native Slice
+
+The initial Mermaid 11.16.1 Cynefin slice recognizes `cynefin-beta` and its
+colon-terminated form, then parses the five fixed domains, quoted domain
+items, titles, and labeled cross-domain transitions into dedicated domain-map
+IR. Self-loop transitions are discarded to match upstream semantics. Fixed
+semantic quadrant and center-ellipse layout lowers through backend-neutral
+rectangles, ellipses, paths, and glyph runs with native Metal-to-PNG
+validation. Theme/config overrides, organic seeded boundary waviness, exact
+cliff styling, transition arrowheads, accessibility directives, and overflow
+badges remain unsupported at the partial level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

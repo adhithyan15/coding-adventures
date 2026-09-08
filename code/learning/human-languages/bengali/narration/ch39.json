@@ -1,0 +1,2056 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 39,
+  "title": "Ten Shapes, and Two That Lie",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:2fefd3eaff04c1a4",
+  "lessons": [
+    {
+      "id": "BN-W07-digit-zero",
+      "sequence": 2010,
+      "title": "০ (digit zero) — the Bengali zero",
+      "headword": "০",
+      "romanization": "digit zero",
+      "gloss": "the Bengali zero — the same ring, in the same place, meaning the same thing",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8b2f0e4b5b9b3690",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say fourth — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *fourth* — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say they — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *they* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read কালো off the page — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **কালো** off the page — **R4**, eighty lessons back]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sixty script lessons have taught you letters. Reading কালো is reading letters. Every one of the twelve lessons ahead of you puts something on the page that is not a letter at all, and this book has never done that before."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "০ (digit zero)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the Bengali digit zero."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it beside the zero you already read: 0. A ring, closed, standing on the line, meaning none. Bengali writes it the same way, and means the same thing."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a coincidence and it is worth knowing before the other nine arrive. Wikipedia describes the Bengali numerals as a variety of the Hindu–Arabic numeral system — the same system as the digits on your keyboard, not a rival one. They are positional, they are read left to right, and ০ (digit zero) does the same job at the end of a number as 0 does at the end of 10."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no Bengali WORD for zero in this book yet. Today it is a shape you can read."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "০ (digit zero)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ০]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the five numbers you can already count — ek, dui, tin, chār, pā̃ch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the five numbers you can already count — *ek, dui, tin, chār, pā̃ch*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-zero-read",
+              "prompt": "What number is written here: ০ (digit zero)",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-ZERO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "zero",
+                "0",
+                "none",
+                "shunyo"
+              ],
+              "feedback": {
+                "correct": "Same ring, same value.",
+                "incorrect": "Compare it with the 0 you already read."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is ০ (digit zero)? (Zero.) Is it a letter? (No — the first thing in this book that is not.) Which system do the Bengali digits belong to? (The same one as 0–9.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Bengali chart; Wikipedia: Bengali–Assamese numerals."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W07-digit-two",
+      "sequence": 2020,
+      "title": "২ (digit two) — the Bengali two",
+      "headword": "২",
+      "romanization": "digit two",
+      "gloss": "the Bengali two — the second shape that arrives already half known",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d93499f1432a6ac0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ০ (digit zero) — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **০** — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say first — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *first* — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say our — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *our* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read সাদা off the page — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **সাদা** off the page — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "২ (digit two)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the Bengali digit two, and you can say it: দুই."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it beside 2. The top curls the other way and the foot is a diagonal rather than a bar, but the gross shape is the same — a turn at the top, a stroke running down to the right. Nobody would call ২ (digit two) a two from nothing; anybody who already reads 2 can be told once and keep it."
+            },
+            {
+              "kind": "speech",
+              "text": "So the count of shapes that cost you almost nothing now stands at two, and both of them mean exactly what the shape you already know means. Remember that. It stops being true in this chapter, and the place where it stops is the whole point of the chapter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "২ (digit two)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ২]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "দুই, then read ২ (digit two) and ২০",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **দুই**, then read **২** and **২০**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-two-read",
+              "prompt": "Read this aloud, digit by digit: ২০",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-TWO-01",
+                "BN-SCRIPT-DIGIT-ZERO-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "two, zero — twenty",
+                "20",
+                "dui shunyo",
+                "two zero"
+              ],
+              "feedback": {
+                "correct": "Positional, exactly like 20.",
+                "incorrect": "Read the left digit, then the right one."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is ২ (digit two)? (Two — দুই.) What is ২০? (Twenty.) How many shapes so far have meant the same as the shape you already knew? (Both of them.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W07-digit-three",
+      "sequence": 2030,
+      "title": "৩ (digit three) — the Bengali three",
+      "headword": "৩",
+      "romanization": "digit three",
+      "gloss": "the Bengali three — a letter you know, with one stroke taken off it",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:cd38e44f75871756",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ২ (digit two) — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **২** — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ঞ and say where it is made — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ঞ** and say where it is made — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write the long ী sign — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write the long **ী** sign — **R4**, eighty lessons back]"
+            },
+            {
+              "kind": "speech",
+              "text": "ী hangs on a letter and cannot stand alone. A digit is the opposite: it stands alone and hangs on nothing. Keep that difference in front of you, because this one looks like a letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "৩ (digit three)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the Bengali digit three, and you can say it: তিন."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put it beside a letter you have had since the opening chapters:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "shape"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the digit three. shape: ৩.",
+                "the letter o. shape: ও."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "They are the same rounded body. ও carries a stroke down its right-hand side; ৩ (digit three) does not, and that is the entire difference between a number and a letter here."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the only digit in the chapter that collides with a Bengali letter you have been taught, and the fix is one stroke wide: if it has the tail on the right, it is a letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "৩ (digit three)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ৩]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "তিন, then read ৩ (digit three), then read ও",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **তিন**, then read **৩**, then read **ও**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "৩০ and ২৩",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ৩০ and ২৩]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-three-vs-o",
+              "prompt": "One of these is a number and one is a letter. Which is which: ৩ (digit three) ও",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-THREE-01",
+                "BN-SCRIPT-O-INDEP-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "the first is the digit three; the second is the letter o",
+                "three, then o",
+                "digit then letter"
+              ],
+              "feedback": {
+                "correct": "The right-hand stroke is the letter.",
+                "incorrect": "Look only at the right-hand side of each shape."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What tells ও from ৩ (digit three)? (The stroke on the right.) What is ২৩? (Twenty-three.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W07-digit-one",
+      "sequence": 2040,
+      "title": "১ (digit one) — the Bengali one",
+      "headword": "১",
+      "romanization": "digit one",
+      "gloss": "the Bengali one — the first shape in the chapter that brings nothing with it",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:833da1cf25e134db",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ৩ (digit three), and say what tells it from ও — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **৩**, and say what tells it from **ও** — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say fifth, and the cardinal hiding inside it — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *fifth*, and the cardinal hiding inside it — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "put -কে on a pronoun — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: put **-কে** on a pronoun — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read নীল off the page — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **নীল** off the page — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "১ (digit one)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the Bengali digit one, and you can say it: এক."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing helps you here. 1 is a bare stroke; ১ (digit one) is a curl that starts high, comes down and hooks back to the right at the foot. There is no shape you already own to hang it on, and no letter it can be confused with."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth naming rather than hiding: ০ (digit zero), ২ (digit two) and ৩ (digit three) each arrived carrying something. This one is simply learned, and so are the two after it."
+            },
+            {
+              "kind": "speech",
+              "text": "Read ১০ — one, then zero. Ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "১ (digit one)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ১]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "এক, then read ১ (digit one), ১০, ১৩",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **এক**, then read **১**, **১০**, **১৩**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-one-read",
+              "prompt": "Read this number: ১০৩",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-ONE-01",
+                "BN-SCRIPT-DIGIT-ZERO-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "one zero three — a hundred and three",
+                "103",
+                "103."
+              ],
+              "feedback": {
+                "correct": "Three digits, read left to right, exactly as you would read 103.",
+                "incorrect": "Take the digits one at a time from the left."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is ১ (digit one)? (One — এক.) What did it bring with it that the first three digits did? (Nothing.) What is ১০? (Ten.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W07-digit-five",
+      "sequence": 2050,
+      "title": "৫ (digit five) — the Bengali five",
+      "headword": "৫",
+      "romanization": "digit five",
+      "gloss": "the Bengali five — and the difference between reading a number and reading its name",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f09d35a1426a577e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ১ (digit one) — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **১** — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say me, the object form — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *me*, the object form — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read তিন off the page — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **তিন** off the page — **R4**, eighty lessons back]"
+            },
+            {
+              "kind": "speech",
+              "text": "That last recall is the one this chapter exists for. তিন is the word three, spelled with three letters, and you have been able to read it for eighty lessons. ৩ (digit three) is the digit 3, and until two lessons ago you could not read it at all. A book can print either one, and they are not the same object."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "৫ (digit five)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the Bengali digit five, and you can say it: পাঁচ."
+            },
+            {
+              "kind": "speech",
+              "text": "Another one that brings nothing: a hooked stroke over an open bowl, like a C with a lid. 5 will not help you and no Bengali letter you know is close to it."
+            },
+            {
+              "kind": "speech",
+              "text": "You can now read every number written out of ০ (digit zero) ১ (digit one) ২ (digit two) ৩ (digit three) ৫ (digit five), which is most of a page number and all of a small count."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "৫ (digit five)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ৫]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "পাঁচ, then read ৫ (digit five), ৫০, ১৫",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **পাঁচ**, then read **৫**, **৫০**, **১৫**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of these is a word and which is a digit — তিন, ৩ (digit three)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of these is a word and which is a digit — **তিন**, **৩**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-five-read",
+              "prompt": "Read this number: ৫১০",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-FIVE-01",
+                "BN-SCRIPT-DIGIT-ONE-01",
+                "BN-SCRIPT-DIGIT-ZERO-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "five one zero — five hundred and ten",
+                "510"
+              ],
+              "feedback": {
+                "correct": "Read left to right, like any number.",
+                "incorrect": "One digit at a time, starting on the left."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is ৫ (digit five)? (Five — পাঁচ.) What is the difference between তিন and ৩ (digit three)? (One is the word, the other is the digit.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W07-digit-six",
+      "sequence": 2060,
+      "title": "৬ (digit six) — the Bengali six",
+      "headword": "৬",
+      "romanization": "digit six",
+      "gloss": "the Bengali six — the first number in this book you can read but cannot yet say",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:80bdf3f550bc0578",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ৫ (digit five) — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **৫** — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say you, as the one it happens to — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *you*, as the one it happens to — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read এক off the page — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **এক** off the page — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "৬ (digit six)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the Bengali digit six: a bowl at the foot with a tail rising away to the right. 6 does not help — its loop is at the bottom left and its stem comes down from above, which is nearly the reverse."
+            },
+            {
+              "kind": "speech",
+              "text": "And here your count runs out. This book has taught you এক to পাঁচ and no further, so you can now read a number you have no Bengali word for. That is a real gap and it is worth stating plainly rather than covering: from here to the end of the chapter you are learning to READ four numbers you cannot yet SAY. The words are a separate piece of work."
+            },
+            {
+              "kind": "speech",
+              "text": "Reading is still worth having on its own. A page number, a price and a date are all read far more often than they are said aloud."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "৬ (digit six)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ৬]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the five numbers you CAN say, then stop where the book stops",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the five numbers you CAN say, then stop where the book stops]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-six-read",
+              "prompt": "Read this number: ৬১",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-SIX-01",
+                "BN-SCRIPT-DIGIT-ONE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "six one — sixty-one",
+                "61"
+              ],
+              "feedback": {
+                "correct": "Read, not said — and that is enough for now.",
+                "incorrect": "Left digit first."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is ৬ (digit six)? (Six.) Can you say it in Bengali yet? (No — the count in this book stops at পাঁচ.) Does that stop you reading it? (No.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W07-digit-eight",
+      "sequence": 2070,
+      "title": "৮ (digit eight) — the Bengali eight",
+      "headword": "৮",
+      "romanization": "digit eight",
+      "gloss": "the Bengali eight — which looks nothing like an 8, and that turns out to matter",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8ae96e115d4c071d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ৬ (digit six) — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **৬** — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask who? — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask *who?* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say and read কাপড় — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say and read **কাপড়** — **R4**, eighty lessons back]"
+            },
+            {
+              "kind": "speech",
+              "text": "কাপড় is the first thing this book taught you that has a price on it. Hold on to it; you will read a price before this chapter ends."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "৮ (digit eight)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the Bengali digit eight: an upright stroke with a single small bowl at the bottom right — much closer to a lower-case b than to anything numeric."
+            },
+            {
+              "kind": "speech",
+              "text": "Look hard at it and notice what it is not. It has one bowl. 8 has two, stacked. Whatever the two-loop shape means in Bengali, it does not mean eight — and something has to mean it, because the shape exists."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the next lesson, and it is the one place in this chapter where the digits you already read will tell you a lie."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "৮ (digit eight)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ৮]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many bowls ৮ (digit eight) has, and how many 8 has",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many bowls **৮** has, and how many **8** has]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-eight-read",
+              "prompt": "Read this number: ৮০",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-EIGHT-01",
+                "BN-SCRIPT-DIGIT-ZERO-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "eight zero — eighty",
+                "80"
+              ],
+              "feedback": {
+                "correct": "One bowl, not two.",
+                "incorrect": "The upright with a single bowl is eight."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is ৮ (digit eight)? (Eight.) How many bowls does it have? (One.) What does the two-bowl shape mean in Bengali? (Not eight — and you are about to find out what.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W07-digit-four",
+      "sequence": 2080,
+      "title": "৪ (digit four) — the Bengali four",
+      "headword": "৪",
+      "romanization": "digit four",
+      "gloss": "the Bengali four — the shape of an 8, and it means four",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6dbcaeaf93f5269b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ৮ (digit eight), and say how many bowls it has — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **৮**, and say how many bowls it has — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say and read জামা — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say and read **জামা** — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "৪ (digit four)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the Bengali digit four, and you can say it: চার."
+            },
+            {
+              "kind": "speech",
+              "text": "It is two loops, stacked. It is the shape of an 8."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "shape",
+                "in the digits you already read",
+                "in Bengali"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "shape: two stacked loops. in the digits you already read: eight. in Bengali: four.",
+                "shape: upright with one bowl. in the digits you already read: nothing. in Bengali: eight."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read the top row again. Every reflex you have says eight, and it is wrong by four every single time — on a price, on a bus number, on a year."
+            },
+            {
+              "kind": "speech",
+              "text": "The first three digits of this chapter arrived meaning exactly what their shape already meant to you. This one arrives meaning something else, and it is not a near miss: ৪ (digit four) and 8 are the same drawing."
+            },
+            {
+              "kind": "speech",
+              "text": "The defence is the lesson before this one. If you are unsure, ask how many bowls: two bowls is four; one bowl is eight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "৪ (digit four)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ৪]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "চার, then read ৪ (digit four), ৪৮, ৮৪",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **চার**, then read **৪**, **৪৮**, **৮৪**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-four-trap",
+              "prompt": "Read these two in order, and do not trust your eye: ৪ (digit four) ৮ (digit eight)",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-FOUR-01",
+                "BN-SCRIPT-DIGIT-EIGHT-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "four, then eight",
+                "4 8",
+                "4, 8",
+                "four eight"
+              ],
+              "feedback": {
+                "correct": "Two bowls first, one bowl second.",
+                "incorrect": "Count the bowls. Two is four; one is eight."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-four-number",
+              "prompt": "Read this number: ৪২",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-FOUR-01",
+                "BN-SCRIPT-DIGIT-TWO-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "four two — forty-two",
+                "42"
+              ],
+              "feedback": {
+                "correct": "Not eighty-two.",
+                "incorrect": "The first shape is four, however much it looks like an eight."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is ৪ (digit four)? (Four — চার.) What does your eye want it to be? (Eight.) Which question settles it? (How many bowls?)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Bengali chart; Wiktionary: ৪ (digit four)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W07-digit-nine",
+      "sequence": 2090,
+      "title": "৯ (digit nine) — the Bengali nine",
+      "headword": "৯",
+      "romanization": "digit nine",
+      "gloss": "the Bengali nine — which looks nothing like a 9, and the same trap is about to spring again",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5eb2fbdf3d7352b2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ৪ (digit four), and say what your eye wants it to be — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **৪**, and say what your eye wants it to be — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write থ — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **থ** — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sari, shāṛi — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sari*, *shāṛi* — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "৯ (digit nine)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the Bengali digit nine: a small closed body with a tail sweeping up and away to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "Once again, look at what it is not. 9 is a ring with a straight stem dropping below it. ৯ (digit nine) has no dropped stem at all; its tail goes the other way, upward."
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen this pattern one lesson ago. The Bengali digit for eight did not take the 8 shape, and the 8 shape turned out to belong to four. The Bengali digit for nine does not take the 9 shape either — so ask the same question. Something takes it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "৯ (digit nine)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ৯]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which way the tail of ৯ (digit nine) goes, and which way the stem of 9 goes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which way the tail of **৯** goes, and which way the stem of **9** goes]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-nine-read",
+              "prompt": "Read these two in order: ৯ (digit nine) ৪ (digit four)",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-NINE-01",
+                "BN-SCRIPT-DIGIT-FOUR-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "nine, then four",
+                "9 4",
+                "9, 4",
+                "nine four"
+              ],
+              "feedback": {
+                "correct": "Tail up is nine; two bowls is four.",
+                "incorrect": "Neither of them is what its shape suggests in the digits you grew up with."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is ৯ (digit nine)? (Nine.) Does it look like 9? (No — the tail goes up, not down.) Which two Bengali digits have now refused the shape you expected? (Eight and nine.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W07-digit-seven",
+      "sequence": 2100,
+      "title": "৭ (digit seven) — the Bengali seven",
+      "headword": "৭",
+      "romanization": "digit seven",
+      "gloss": "the Bengali seven — the shape of a 9, and it means seven",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4af6de6dfa6563e9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ৯ (digit nine), and say which way its tail goes — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **৯**, and say which way its tail goes — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say here — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *here* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say glasses, choshma — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *glasses*, *choshma* — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "৭ (digit seven)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the Bengali digit seven, and it is the shape of a 9: a closed body at the top with a straight stem dropping from its right side."
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter's second false friend, and the last shape in the set:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "shape",
+                "in the digits you already read",
+                "in Bengali"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "shape: two stacked loops. in the digits you already read: eight. in Bengali: four.",
+                "shape: body with a dropped stem. in the digits you already read: nine. in Bengali: seven."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both lies run the same way. In each case the Bengali digit for that value — ৮ (digit eight) for eight, ৯ (digit nine) for nine — took a different shape, leaving the familiar one standing empty; and in each case a smaller number moved into it."
+            },
+            {
+              "kind": "speech",
+              "text": "Two out of ten shapes will actively mislead you. The other eight will not. That ratio is worth carrying, because it is the reason to slow down on exactly two shapes rather than to distrust the whole page."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "৭ (digit seven)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ৭]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two shapes that lie, and what each one really means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two shapes that lie, and what each one really means]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-seven-trap",
+              "prompt": "Read these two in order: ৭ (digit seven) ৯ (digit nine)",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-SEVEN-01",
+                "BN-SCRIPT-DIGIT-NINE-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "seven, then nine",
+                "7 9",
+                "7, 9",
+                "seven nine"
+              ],
+              "feedback": {
+                "correct": "Dropped stem is seven; tail up is nine.",
+                "incorrect": "The one that looks like a 9 is seven."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-seven-number",
+              "prompt": "Read this number: ৭৪",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-SEVEN-01",
+                "BN-SCRIPT-DIGIT-FOUR-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "seven four — seventy-four",
+                "74"
+              ],
+              "feedback": {
+                "correct": "Neither digit is what it looks like, and you got both.",
+                "incorrect": "Ninety-eight is what the shapes suggest. Neither of them is right."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is ৭ (digit seven)? (Seven.) What does the shape say? (Nine.) How many of the ten shapes mislead? (Two.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W07-digit-false-friends",
+      "sequence": 2110,
+      "title": "The two that lie, and the eight that do not",
+      "headword": "৪ ৭",
+      "romanization": "the two that lie",
+      "gloss": "which shapes you may trust and which two you may not — both edges of one rule",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6c7e91efce157200",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ৭ (digit seven), and say what the shape claims — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **৭**, and say what the shape claims — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say there — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *there* — **R3**, twenty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ten shapes are in your hand. Here they are in order:"
+            },
+            {
+              "kind": "speech",
+              "text": "০ (digit zero) ১ (digit one) ২ (digit two) ৩ (digit three) ৪ (digit four) ৫ (digit five) ৬ (digit six) ৭ (digit seven) ৮ (digit eight) ৯ (digit nine) (the ten digits)."
+            },
+            {
+              "kind": "speech",
+              "text": "A rule with an edge at each end, and both edges matter:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the band",
+                "what it means for you"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the band: where the shapes AGREE. what it means for you: ০ (digit zero) is a 0 and means zero. ২ (digit two) is close to a 2 and means two. Trust these.",
+                "the band: where they are simply NEW. what it means for you: ১ (digit one) ৩ (digit three) ৫ (digit five) ৬ (digit six) ৮ (digit eight) ৯ (digit nine) carry no Western digit's shape at all, so there is nothing to be misled by. ৩ (digit three) is the one to watch against a letter, not against a digit: ও is the same body with a stroke down its right side.",
+                "the band: where they LIE. what it means for you: ৪ (digit four) is drawn as an 8 and means four. ৭ (digit seven) is drawn as a 9 and means seven. Nowhere else."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two of ten. Say them as a pair and they stay a pair: the eight is a four, the nine is a seven — and in both cases the Bengali digit that really means eight or nine is a shape you would never mistake for anything."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole rule. Eight shapes ask you to learn them; two ask you to un-learn something first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two that lie, then the eight that do not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two that lie, then the eight that do not]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-false-friends-name",
+              "prompt": "Name the only two Bengali digits whose shape belongs to a different Western digit, and say what each really means.",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-FALSE-FRIENDS-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "the 8-shape is four; the 9-shape is seven",
+                "four and seven",
+                "4 looks like 8, 7 looks like 9"
+              ],
+              "feedback": {
+                "correct": "Two, and only two.",
+                "incorrect": "Not the whole set — name the pair."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W07-digit-false-friends-run",
+              "prompt": "Read all ten in order: ০ (digit zero) ১ (digit one) ২ (digit two) ৩ (digit three) ৪ (digit four) ৫ (digit five) ৬ (digit six) ৭ (digit seven) ৮ (digit eight) ৯ (digit nine) (the ten digits)",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-FALSE-FRIENDS-01",
+                "BN-SCRIPT-DIGIT-ZERO-01",
+                "BN-SCRIPT-DIGIT-ONE-01",
+                "BN-SCRIPT-DIGIT-TWO-01",
+                "BN-SCRIPT-DIGIT-THREE-01",
+                "BN-SCRIPT-DIGIT-FIVE-01",
+                "BN-SCRIPT-DIGIT-SIX-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "zero one two three four five six seven eight nine",
+                "0 1 2 3 4 5 6 7 8 9"
+              ],
+              "feedback": {
+                "correct": "Ten shapes, and you did not stumble on the two that lie.",
+                "incorrect": "Slow down at the fifth and the eighth of the row."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two shapes mislead? (The 8-shape, which is four; the 9-shape, which is seven.) Which digit is confusable with a letter rather than with a digit? (৩ (digit three), against ও.) How many of the ten are safe? (Eight.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R28-read-a-number",
+      "sequence": 2120,
+      "title": "Reading a number off a page",
+      "headword": "০ ১ ২ ৩ ৪ ৫ ৬ ৭ ৮ ৯",
+      "romanization": "the ten digits",
+      "gloss": "reading a price, a year and a page number — the first numbers this book has let you take off a page",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:be1e915c8587b828",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two recalls, then the reading."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "name the two shapes that lie — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: name the two shapes that lie — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask where? — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask *where?* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new arrives here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "কাপড়, then read a price beside it — ৮০",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **কাপড়**, then read a price beside it — **৮০**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "কোথায়?, then read a house number — ৩৪",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **কোথায়?**, then read a house number — **৩৪**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-R28-read-a-number-price",
+              "prompt": "A shirt has a tag on it. The tag says ১৫০ and the label says জামা. What is on sale and for how much?",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-ONE-01",
+                "BN-SCRIPT-DIGIT-FIVE-01",
+                "BN-SCRIPT-DIGIT-ZERO-01",
+                "BN-LEX-C15-JAMA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "a shirt (jama), 150",
+                "shirt, 150",
+                "jama 150"
+              ],
+              "feedback": {
+                "correct": "A word from chapter fifteen and a number from this one, and the tag is readable.",
+                "incorrect": "Read the label first, then the three digits left to right."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-R28-read-a-number-year",
+              "prompt": "Read this year: ২০২৬",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-TWO-01",
+                "BN-SCRIPT-DIGIT-ZERO-01",
+                "BN-SCRIPT-DIGIT-SIX-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "2026",
+                "two zero two six",
+                "2026."
+              ],
+              "feedback": {
+                "correct": "Four digits, left to right, exactly as you would read 2026.",
+                "incorrect": "None of these four is one of the two that lie."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-R28-read-a-number-trap",
+              "prompt": "Read this page number without hesitating: ৪৭৮৯",
+              "assesses": [
+                "BN-SCRIPT-DIGIT-FALSE-FRIENDS-01",
+                "BN-SCRIPT-DIGIT-FOUR-01",
+                "BN-SCRIPT-DIGIT-SEVEN-01",
+                "BN-SCRIPT-DIGIT-EIGHT-01",
+                "BN-SCRIPT-DIGIT-NINE-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "4789",
+                "four seven eight nine"
+              ],
+              "feedback": {
+                "correct": "All four of the difficult shapes in one string, and none of them fooled you.",
+                "incorrect": "Two bowls is four; a dropped stem is seven; one bowl is eight; a tail going up is nine."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sixty script lessons taught you letters, and one of them, long ago, taught you to read তিন. That was the word. Until this chapter you could not read ৩ (digit three), and so you could not read a price, a date, a clock face or a page number — the things a reader meets far more often than they meet a sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Ten shapes closed that. Eight of them were simply learned; ০ (digit zero) and ২ (digit two) cost almost nothing because the Bengali digits and the digits on your keyboard are one system rather than two; and two of them — ৪ (digit four) and ৭ (digit seven) — had to be taken away from a reflex before they could be given to you."
+            },
+            {
+              "kind": "speech",
+              "text": "What this chapter did not do is teach you to SAY six, seven, eight, nine or zero. Those words are not in this book yet. You can read every number on the page and speak the first five of them, and the gap between those two abilities is now the most useful thing left undone in this column."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ৪৭. (Forty-seven — not ninety-eight.) Which numbers can you now read? (All of them.) Which can you say? (One to five.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

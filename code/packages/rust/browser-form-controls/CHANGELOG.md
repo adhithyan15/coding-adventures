@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Retain form ownership, submitter overrides, validation constraints, and
+  initial control state for host-neutral submission and reset planning.
+
 ## 0.1.0
 
 - Added deterministic control discovery and stable keys.

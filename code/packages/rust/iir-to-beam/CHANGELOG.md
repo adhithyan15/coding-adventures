@@ -333,3 +333,14 @@ instructions:
 - 45 integration tests in `tests/test_backend.rs` covering validation, lowering,
   instruction emission, register allocation, export table, multi-function modules,
   call sequences, and comparison synthesis.
+
+### Oct on BEAM (VM-040)
+
+All twelve portable Oct matrix programs now execute on real BEAM, bringing
+Oct to 96 declared cells across eight backends. Integer output lowers
+print_i64 to erlang:display/1; u8 arithmetic, unary and bitwise results are
+masked to eight bits. Wider integer behavior is unchanged. The matrix BEAM
+runner now preserves program stdout separately from the return marker, using
+the same outer-whitespace convention as the other text process runners.
+Coverage includes complement, wrapping, short circuit, globals and loops/calls.
+This does not implement Intel-8008 input, carry arithmetic or rotations.

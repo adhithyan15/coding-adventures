@@ -1,0 +1,28 @@
+{
+  "chapter": 39,
+  "title": "Ten Shapes, and Two That Lie",
+  "label": "ch:bn-digits",
+  "canDo": "I can read any number written in Bengali digits off a page -- a price, a year, a house number -- and I know exactly which two of the ten shapes my own reading will get wrong.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "BN-R28-read-a-number",
+    "kind": "production",
+    "summary": "Complete BN-R28-read-a-number: read a price off a shirt tag, read a year, and read a page number made of all four difficult shapes without hesitating.",
+    "assesses": [
+      "BN-SCRIPT-DIGIT-ZERO-01",
+      "BN-SCRIPT-DIGIT-TWO-01",
+      "BN-SCRIPT-DIGIT-THREE-01",
+      "BN-SCRIPT-DIGIT-ONE-01",
+      "BN-SCRIPT-DIGIT-FIVE-01",
+      "BN-SCRIPT-DIGIT-SIX-01",
+      "BN-SCRIPT-DIGIT-EIGHT-01",
+      "BN-SCRIPT-DIGIT-FOUR-01",
+      "BN-SCRIPT-DIGIT-NINE-01",
+      "BN-SCRIPT-DIGIT-SEVEN-01",
+      "BN-SCRIPT-DIGIT-FALSE-FRIENDS-01"
+    ],
+    "note": "The digits have no citable stroke order -- HL-C212 found Commons carries animations for every Bengali VOWEL and none for any consonant, and the same search finds nothing at all for the digits -- so every lesson here teaches the SHAPE against something the reader already holds, cites the Unicode Bengali chart, and CLAIMS NO PEN PATH, exactly as BN-W05-tha and BN-W06-nya do. The order is by what the reader can bring: the two shapes that agree with the Western digit of the same value (zero, two), then the one that collides with a TAUGHT LETTER (three against o), then the three that carry nothing (one, five, six), then the two false-friend PAIRS, each trap taught immediately after the Bengali digit whose value its shape suggests -- eight then four, nine then seven. The rule lesson ships both edges: eight shapes may be trusted, two may not."
+  }
+}

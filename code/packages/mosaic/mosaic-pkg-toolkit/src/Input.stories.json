@@ -1,0 +1,25 @@
+{
+  "stories": [
+    {
+      "name": "Size sm",
+      "fixtures": {
+        "value": "Size sm",
+        "size": "sm"
+      }
+    },
+    {
+      "name": "Size md",
+      "fixtures": {
+        "value": "Size md",
+        "size": "md"
+      }
+    },
+    {
+      "name": "Size lg",
+      "fixtures": {
+        "value": "Size lg",
+        "size": "lg"
+      }
+    }
+  ]
+}

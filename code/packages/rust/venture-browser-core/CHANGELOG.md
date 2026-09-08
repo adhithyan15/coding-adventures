@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add shared constraint validation, successful-control serialization,
+  submit/reset and implicit Enter activation, transactional GET/URL-encoded
+  POST navigation, history integration, and bounded form diagnostics.
+
 - Add session-owned form-control focus, values, checked/selection state,
   semantic keyboard/pointer transitions, hit testing, and retained reflow.
 
