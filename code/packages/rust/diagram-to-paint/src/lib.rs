@@ -33,7 +33,7 @@ use std::collections::HashMap;
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
-    LayoutedTreemapDiagram, LayoutedVennDiagram,
+    LayoutedIshikawaDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
@@ -194,6 +194,40 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         text_children.push(text_node(&label.text, label.x - 70.0, label.y - 12.0, 140.0, 26.0, options.label_font.clone(),
             label.style.text_color.as_deref().map(css_to_color).unwrap_or(Color { r: 15, g: 23, b: 42, a: 255 })));
     }
+    let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+        id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
+        width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
+        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
+    });
+    instructions.extend(text_scene.instructions);
+    PaintScene { width: diagram.width, height: diagram.height,
+        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
+        instructions, id: None, metadata: None }
+}
+
+/// Lower Ishikawa fishbone geometry into backend-neutral paths, a rect, and glyph runs.
+pub fn diagram_to_paint_ishikawa<S, M, R>(diagram: &LayoutedIshikawaDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
+where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
+    let stroke = "#334155".to_string();
+    let mut instructions = vec![PaintInstruction::Path(line_path(
+        &[diagram.spine_from.clone(), diagram.spine_to.clone()], &stroke, 3.0,
+    ))];
+    let mut text_children = Vec::new();
+    for bone in &diagram.bones {
+        instructions.push(PaintInstruction::Path(line_path(
+            &[bone.from.clone(), bone.to.clone()], &stroke, if bone.depth == 1 { 2.5 } else { 1.5 },
+        )));
+        text_children.push(text_node(&bone.label, bone.label_position.x - 55.0, bone.label_position.y - 10.0,
+            110.0, 24.0, options.label_font.clone(), Color { r: 30, g: 41, b: 59, a: 255 }));
+    }
+    instructions.push(PaintInstruction::Rect(PaintRect {
+        base: PaintBase::default(), x: diagram.effect_x, y: diagram.effect_y, width: diagram.effect_width,
+        height: diagram.effect_height, fill: Some("#fef3c7".into()), stroke: Some("#92400e".into()),
+        stroke_width: Some(2.0), corner_radius: Some(8.0), stroke_dash: None, stroke_dash_offset: None,
+    }));
+    text_children.push(text_node(&diagram.effect, diagram.effect_x + 8.0, diagram.effect_y + 8.0,
+        diagram.effect_width - 16.0, diagram.effect_height - 16.0, options.title_font.clone(),
+        Color { r: 120, g: 53, b: 15, a: 255 }));
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
         id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
         width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
@@ -5000,6 +5034,22 @@ mod tests {
         };
         let scene = diagram_to_paint_venn(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+    }
+
+    #[test]
+    fn ishikawa_lowers_to_backend_neutral_paths_rect_and_glyphs() {
+        let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedIshikawaDiagram { width: 600.0, height: 360.0, effect: "Delay".into(),
+            effect_x: 430.0, effect_y: 150.0, effect_width: 150.0, effect_height: 60.0,
+            spine_from: Point { x: 30.0, y: 180.0 }, spine_to: Point { x: 430.0, y: 180.0 },
+            bones: vec![diagram_ir::LayoutedIshikawaBone { from: Point { x: 100.0, y: 80.0 },
+                to: Point { x: 180.0, y: 180.0 }, label: "People".into(),
+                label_position: Point { x: 100.0, y: 68.0 }, depth: 1 }], };
+        let scene = diagram_to_paint_ishikawa(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
     }
 

@@ -1,0 +1,8 @@
+# @version 1
+# Mermaid 11.16.1 Ishikawa indentation grammar.
+case_sensitive: false
+skip:
+  COMMENT = /[ \t]*%%[^\r\n]*/
+NEWLINE = /\r?\n/
+HEADER = /ishikawa(?:-beta)?/
+NODE_LINE = /[ \t]*[^\r\n%][^\r\n]*/
