@@ -307,8 +307,22 @@
       "id": "TE-A1-NUM-04",
       "category": "Sankhyalu (numerals and quantity)",
       "label": "ordinal numerals to tenth",
-      "probe": null,
-      "derivedFrom": "ES:A1-Q-02, ES:A1-NG3-06"
+      "probe": [
+        "TE-LEX-C81-ORDINAL-01",
+        "TE-LEX-C81-ORDINAL-02",
+        "TE-GRAMMAR-C81-ORDINAL-03",
+        "TE-LEX-C81-ORDINAL-04",
+        "TE-LEX-C81-ORDINAL-05",
+        "TE-LEX-C81-ORDINAL-06",
+        "TE-LEX-C82-ORDINAL-01",
+        "TE-LEX-C82-ORDINAL-02",
+        "TE-LEX-C82-ORDINAL-03",
+        "TE-LEX-C82-ORDINAL-04",
+        "TE-LEX-C82-ORDINAL-05",
+        "TE-GRAMMAR-C82-ORDINAL-06"
+      ],
+      "derivedFrom": "ES:A1-Q-02, ES:A1-NG3-06",
+      "note": "CLOSED by the ordinal tranche. Telugu's ordinals are the cheapest in the corpus to teach and the tranche is shaped to say why: ONE word is irregular (modati, built on modalu 'a beginning' and not on okati at all) and every other ordinal is the cardinal with its final vowel dropped and -va added. So the second lesson is the rule and the remaining nine are the rule working, including past ten (padakondu gives padakondava). Every word in the tranche was checked against the union of Telugu glyphs the track has already shown, headwords AND worked examples: the only character that failed was the independent long o of the spoken -o variant, which is written around rather than shipped untaught. NOT taught: the ordinal used as a noun with -di beyond one mention, and the written digit-plus-va form."
     },
     {
       "id": "TE-A1-NUM-05",

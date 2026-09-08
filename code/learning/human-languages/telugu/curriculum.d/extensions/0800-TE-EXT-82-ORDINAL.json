@@ -1,0 +1,16 @@
+{
+  "id": "TE-EXT-82-ORDINAL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can count in order all the way to tenth in Telugu and beyond it, because the ending that makes an ordinal does not stop at ten.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C82-sixth",
+    "TE-C82-seventh",
+    "TE-C82-eighth",
+    "TE-C82-ninth",
+    "TE-C82-tenth",
+    "TE-C82-eleventh"
+  ]
+}

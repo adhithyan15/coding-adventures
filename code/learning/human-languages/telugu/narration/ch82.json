@@ -1,0 +1,1065 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 82,
+  "title": "Sixth to Eleventh",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fd10fa22a23c0861",
+  "lessons": [
+    {
+      "id": "TE-C82-sixth",
+      "sequence": 2930,
+      "title": "ఆరవ (ārava) — sixth",
+      "headword": "ఆరవ",
+      "romanization": "ārava",
+      "gloss": "sixth — the shortest of the ten",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a83e59350ad89661",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls open the chapter, at the four measured distances."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aidava — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aidava* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say modaṭi — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *modaṭi* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say veḷḷavaccu — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *veḷḷavaccu* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eluka — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eluka* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ḍabbu — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ḍabbu* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say arthaṁ cēsukō — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *arthaṁ cēsukō* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the letter tha — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *the letter tha* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆరవ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆరవ (ārava) — \"sixth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆరు becomes ఆరవ (ārava), and this is the shortest ordinal in the ten: three syllables, two of them the number itself."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆరవ రోజు (ārava rōju) — the sixth day."
+            },
+            {
+              "kind": "speech",
+              "text": "The numbers six to ten were the ones the first numbers lesson called Telugu's wandering half, the place where it drifts furthest from Tamil and Kannada. The ordinal ending does not care. Whatever shape the cardinal arrived in, -వ goes on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the swap — āru becomes ārava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the swap — *āru* → *ārava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārava rōju — the sixth day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārava rōju* — the sixth day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the sixth. (ఆరవ (ārava).) What was traded for the ending? (The final u of ఆరు.) And does the ending change for the wandering half of the numbers? (No — it is the same -వ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C82-seventh",
+      "sequence": 2940,
+      "title": "ఏడవ (ēḍava) — seventh",
+      "headword": "ఏడవ",
+      "romanization": "ēḍava",
+      "gloss": "seventh — a long vowel that stays long",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05f8acf5eaea304e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the seventh."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ārava — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ārava* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say reṇḍava — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *reṇḍava* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lōpaliki raṇḍi — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lōpaliki raṇḍi* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kappa — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kappa* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dhara — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dhara* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sahāyaṁ cēyu — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sahāyaṁ cēyu* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nāku telugu iṣṭaṁ — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nāku telugu iṣṭaṁ* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఏడవ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఏడవ (ēḍava) — \"seventh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఏడు becomes ఏడవ (ēḍava). Hold the ē long — the letter ఏ is the long one, and its short partner ఎ is a different letter and a different word."
+            },
+            {
+              "kind": "speech",
+              "text": "ఏడవ వారం (ēḍava vāraṁ) — the seventh week."
+            },
+            {
+              "kind": "speech",
+              "text": "Seven weeks is a useful thing to be able to say and a good place to hear that the ordinal is doing work no cardinal can do: ఏడు వారం would be seven weeks, a quantity. ఏడవ (ēḍava) వారం is the seventh one, a position."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēḍava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēḍava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the swap — ēḍu becomes ēḍava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the swap — *ēḍu* → *ēḍava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēḍu vāraṁ is seven weeks; ēḍava vāraṁ is the seventh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēḍu vāraṁ* is seven weeks; *ēḍava vāraṁ* is the seventh]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the seventh. (ఏడవ (ēḍava).) Which vowel opens it, the long or the short one? (The long ఏ.) And what is the difference between ఏడు వారం and ఏడవ (ēḍava) వారం? (Seven weeks against the seventh week.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C82-eighth",
+      "sequence": 2950,
+      "title": "ఎనిమిదవ (enimidava) — eighth",
+      "headword": "ఎనిమిదవ",
+      "romanization": "enimidava",
+      "gloss": "eighth — where the vowel that goes is an i, not a u",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ff4edb50496f287",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the eighth."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ēḍava — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ēḍava* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mūḍava — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mūḍava* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śubhākāṅkṣalu — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śubhākāṅkṣalu* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dōma — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dōma* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tūkaṁ — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tūkaṁ* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dayacēsi ṭī — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dayacēsi ṭī* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the vowel sign ṛ — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *the vowel sign ṛ* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎనిమిదవ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎనిమిదవ (enimidava) — \"eighth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఎనిమిది becomes ఎనిమిదవ (enimidava), and here the vowel that goes is an i, not a u. Every ordinal so far has traded a final u; this one and the next trade a final i, because that is what their cardinals happen to end in."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is the useful way to hold the rule: it is not \"drop the u\", it is drop whatever vowel is at the end. The ending does not know which vowel it replaced."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the short ఎ at the front, against the long ఏ of the last lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enimidava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enimidava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the swap — enimidi becomes enimidava, an i this time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the swap — *enimidi* → *enimidava*, an *i* this time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "short ఎ here, long ఏ in ēḍava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: short *ఎ* here, long *ఏ* in *ēḍava*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the eighth. (ఎనిమిదవ (enimidava).) Which vowel came off this time? (An i, not a u.) And how is the rule best held? (Drop whatever final vowel is there.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C82-ninth",
+      "sequence": 2960,
+      "title": "తొమ్మిదవ (tommidava) — ninth",
+      "headword": "తొమ్మిదవ",
+      "romanization": "tommidava",
+      "gloss": "ninth — the doubled consonant survives the swap",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14a29bc0e1eaa470",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the ninth."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say enimidava — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *enimidava* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nālugava — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nālugava* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say uḍuta — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *uḍuta* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bēraṁ — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bēraṁ* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say idi — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *idi* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say adi — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *adi* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తొమ్మిదవ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తొమ్మిదవ (tommidava) — \"ninth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తొమ్మిది becomes తొమ్మిదవ (tommidava). The doubled మ్మ in the middle is held, exactly as it is in the cardinal — the ending is added at the far end of the word and touches nothing on its way."
+            },
+            {
+              "kind": "speech",
+              "text": "తొమ్మిదవ రోజు (tommidava rōju) — the ninth day."
+            },
+            {
+              "kind": "speech",
+              "text": "Second i-ending in a row, and the same trade. One more and the ten are closed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tommidava — hold the mm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tommidava* — hold the *mm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the swap — tommidi becomes tommidava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the swap — *tommidi* → *tommidava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tommidava rōju — the ninth day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tommidava rōju* — the ninth day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the ninth. (తొమ్మిదవ (tommidava).) What happens to the doubled mm? (Nothing — it is held, as in the cardinal.) And which vowel came off? (The final i.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C82-tenth",
+      "sequence": 2970,
+      "title": "పదవ (padava) — tenth",
+      "headword": "పదవ",
+      "romanization": "padava",
+      "gloss": "tenth — the ten closed, and the shortest swap of all",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3852a66588de905",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the tenth, which closes the series."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tommidava — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tommidava* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aidava — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aidava* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sālīḍu — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sālīḍu* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tīpi — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tīpi* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say akkaḍa — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *akkaḍa* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say evaru — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *evaru* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పదవ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పదవ (padava) — \"tenth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పది becomes పదవ (padava). Two syllables become three, and the trade is the same one you have now made nine times."
+            },
+            {
+              "kind": "speech",
+              "text": "పదవ సంవత్సరం (padava saṁvatsaraṁ) — the tenth year."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the ten. Say them in order — modaṭi, reṇḍava, mūḍava, nālugava, aidava, ārava, ēḍava, enimidava, tommidava, padava — and count what you actually had to learn: one word and one ending. Latin needed ten separate words for the same stretch, and English still does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ten in order, modaṭi to padava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ten in order, *modaṭi* to *padava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padava saṁvatsaraṁ — the tenth year",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padava saṁvatsaraṁ* — the tenth year]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the ten in order. (Modaṭi through padava.) How much had to be learned as separate words? (One — modaṭi.) And say \"the tenth year\". (పదవ సంవత్సరం.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C82-eleventh",
+      "sequence": 2980,
+      "title": "పదకొండవ (padakoṇḍava) — the ending does not stop at ten",
+      "headword": "పదకొండవ",
+      "romanization": "padakoṇḍava",
+      "gloss": "eleventh — and the ending does not stop at ten",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa156723cfa4834d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, and then the last thing the chapter has to give."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say padava — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *padava* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ārava — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ārava* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say māma — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *māma* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pulupu — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pulupu* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ekkaḍa — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ekkaḍa* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the i- / a- / e- pattern — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *the i- / a- / e- pattern* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: every number you have, and every one you meet",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పదకొండవ (padakoṇḍava) — \"eleventh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పదకొండు becomes పదకొండవ (padakoṇḍava). Nothing new: the same final vowel goes, the same -వ arrives."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the point of this last lesson. The ending was never a fact about the numbers one to ten; it is a fact about numbers. Take any Telugu number you know and it works:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "number",
+                "ordinal"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "number: పదకొండు (11). ordinal: పదకొండవ (padakoṇḍava).",
+                "number: ఇరవై (20). ordinal: ఇరవయ్యవ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So there is no second list to learn above ten, and no list to learn below it either except the single word మొదటి. One irregular word, one ending, and every position on the number line is sayable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padakoṇḍava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padakoṇḍava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the swap on a bigger number — padakoṇḍu becomes padakoṇḍava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the swap on a bigger number — *padakoṇḍu* → *padakoṇḍava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modaṭi is the only word; -va is the rest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modaṭi* is the only word; *-va* is the rest]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the eleventh. (పదకొండవ (padakoṇḍava).) How many separate ordinal words does Telugu have to be learned? (One — modaṭi.) And what makes all the others? (The number, minus its final vowel, plus -వ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

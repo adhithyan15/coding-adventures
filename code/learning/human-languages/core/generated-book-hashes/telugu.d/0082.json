@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:18801fbd2287c2c9",
+  "lessonIds": [
+    "TE-C82-sixth",
+    "TE-C82-seventh",
+    "TE-C82-eighth",
+    "TE-C82-ninth",
+    "TE-C82-tenth",
+    "TE-C82-eleventh"
+  ],
+  "tex": "telugu/book/chapters/ch82-ordinals-to-tenth.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:fd10fa22a23c0861",
+  "lessonIds": [
+    "TE-C82-sixth",
+    "TE-C82-seventh",
+    "TE-C82-eighth",
+    "TE-C82-ninth",
+    "TE-C82-tenth",
+    "TE-C82-eleventh"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch82.txt",
+  "json": "telugu/narration/ch82.json",
+  "textHash": "fnv1a64:0702815901b3f675",
+  "jsonHash": "fnv1a64:b07c6f2127e4bc11",
+  "findings": []
+}

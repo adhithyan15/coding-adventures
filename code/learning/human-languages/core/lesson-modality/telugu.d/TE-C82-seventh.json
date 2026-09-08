@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C82-seventh",
+    "language": "telugu",
+    "chapter": 82,
+    "sequence": 2940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05f8acf5eaea304e"
+  },
+  "findings": []
+}
