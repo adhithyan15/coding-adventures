@@ -1012,16 +1012,19 @@ describe("pronunciation reference coverage", () => {
     }
   });
 
-  it("generates and byte-gates the five references that were missing", () => {
+  // Was a list of the five references that had been missing. A literal list is
+  // the wrong instrument once the answer is "all of them": it passes while
+  // eighteen other tracks ship hand-written LaTeX, which is exactly what
+  // happened for months. Derived from the registry, it says the thing that
+  // matters — no book has a pronunciation reference the generator does not own.
+  it("generates and byte-gates every registered track's reference", () => {
+    const registry = JSON.parse(
+      readFileSync(join(root, "core", "languages.json"), "utf8"),
+    ) as { languages: Array<{ id: string }> };
     const outputs = realBookOutputs;
-    for (const language of [
-      "chinese",
-      "japanese",
-      "persian",
-      "russian",
-      "urdu",
-    ]) {
-      const relative = `${language}/book/chapters/appendix-pronunciation.tex`;
+    expect(registry.languages.length).toBeGreaterThan(0);
+    for (const { id } of registry.languages) {
+      const relative = `${id}/book/chapters/appendix-pronunciation.tex`;
       expect(outputs.get(relative), relative).toMatch(/^% GENERATED FILE\./);
     }
   });

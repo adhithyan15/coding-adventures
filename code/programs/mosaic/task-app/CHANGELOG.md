@@ -8,6 +8,33 @@ Entries below ship in the next product release. `task-app-v0.1.0` published on
 2026-08-31; everything added after that tag accumulates here until the next
 version is cut and this heading is replaced with it.
 
+### Fixed - the web bundle was not actually relocatable (#13832 follow-up)
+
+`boot()` fetched `/task_engine.wasm` from the domain root. The bundle only
+worked when served from a domain root: published to a subdirectory it requested
+the wrong URL and 404'd while the file sat correctly inside the bundle.
+
+`code/scripts/verify_relocatable_bundle.py` catches exactly this and had never
+been run against Trestle -- only Engram, whose host already uses the
+bundle-relative `"./engram_engine.wasm"`. Trestle now matches, and the check
+runs on every deploy.
+
+Worth noting the failure mode was already legible rather than silent: the
+startup states from #13695 turn the 404 into "Trestle could not start" with the
+HTTP status, instead of the indefinite blank page it would have been.
+
+### Added - continuous web deploy to GitHub Pages (#14415)
+
+Every merge touching Trestle now publishes the current web build to the
+`task-app/` subdirectory of GitHub Pages. `task-app-v0.1.0` shipped on
+2026-08-31 and twenty changelog entries have landed since with nothing
+published in between, so the only way to see the current app was to build it
+locally.
+
+This is not a release -- `release-task-app.yml` still owns versioned,
+downloadable, multi-platform artifacts. This is the always-current view, so the
+app's evolution is visible between releases.
+
 ### Fixed - Flutter release bundles include the Rust runtime (#14249)
 
 The generated Flutter build hook now stages TaskApp's prebuilt Rust runtime

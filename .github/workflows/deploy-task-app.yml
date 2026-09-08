@@ -1,0 +1,122 @@
+# Publish Trestle (task-app) to GitHub Pages on every merge that touches it.
+#
+# Why this exists
+# ---------------
+# Trestle shipped `task-app-v0.1.0` as downloadable artifacts and has had
+# twenty changelog entries land since, with nothing published in between. The
+# only way to see the current app was to build it locally. That makes the app's
+# evolution invisible between releases, which is exactly backwards for a
+# product being rebuilt incrementally on the Mosaic component tree (#14415).
+#
+# This deploys the *current* web build of the app, continuously. It is not a
+# release: `release-task-app.yml` still owns versioned, downloadable,
+# multi-platform artifacts. This is the always-current view.
+#
+# The bundle is relocatable (`base: "./"` in the host's vite.config.ts, from
+# #13832), which is what makes serving from a `/task-app/` subdirectory work at
+# all. A change there would break this page without touching a line of Trestle,
+# so the emitter is in the path filter below for the same reason Engram lists it.
+name: Deploy TaskApp
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/mosaic/task-app/**"
+      - "code/packages/rust/task-core/**"
+      - "code/packages/rust/task-wasm/**"
+      - "code/packages/rust/task-mosaic-app/**"
+      - "code/packages/mosaic/mosaic-pkg-**"
+      - "code/packages/rust/mosaic-emit-react/**"
+      - ".github/workflows/deploy-task-app.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-task-app
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    name: Build the Mosaic web app and publish it
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      # `mosaic-compile` links `cairo-sys-rs` through the paint backend, and the
+      # runner has no system cairo. Without it the emit step fails with
+      # "Package cairo was not found in the pkg-config search path", which
+      # reads as a Trestle problem and is not one.
+      #
+      # The vendor repositories preinstalled in the runner image are dropped
+      # first: they are unused here, and `apt-get update` exits non-zero if ANY
+      # configured repository fails, so an unrelated packages.microsoft.com
+      # outage would fail this build (#13982).
+      - name: Install Linux build dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo rm -f /etc/apt/sources.list.d/microsoft*.list \
+                     /etc/apt/sources.list.d/azure-cli.list || true
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev
+
+      - name: Build the production web bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Emits both themes' TaskApp.tsx into the committed web host and
+          # builds the wasm engine beside them.
+          code/programs/mosaic/task-app/scripts/build-web.sh
+          cd code/programs/mosaic/task-app/host/web
+          npm install
+          npm run build
+
+      - name: Verify the bundle works when served from a subdirectory
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Pages serves this from /task-app/, not from the root. A bundle with
+          # absolute asset paths loads fine locally and 404s in production --
+          # which is how a wrong Vite `base` reached a release (#13832). Check
+          # it here rather than discovering it on the deployed page.
+          python3 code/scripts/verify_relocatable_bundle.py \
+            code/programs/mosaic/task-app/host/web/dist
+
+      - name: Stage the bundle for publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf public-task-app
+          cp -R code/programs/mosaic/task-app/host/web/dist public-task-app
+          # Stops Pages' Jekyll pass from dropping files whose names begin with
+          # an underscore. Vite emits none today, but a build that started to
+          # would fail silently and only in production.
+          touch public-task-app/.nojekyll
+          ls -la public-task-app
+
+      # `keep_files: true` matches every other deploy workflow here, and the
+      # reason is load-bearing: eighteen of them publish into the SAME
+      # `gh-pages` branch under different `destination_dir`s, and
+      # `deploy-root.yml` targets `.`. Turning it off for a clean swap risks
+      # removing the sibling sites.
+      - name: Deploy to GitHub Pages (task-app/ subdirectory)
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: public-task-app
+          destination_dir: task-app
+          keep_files: true
