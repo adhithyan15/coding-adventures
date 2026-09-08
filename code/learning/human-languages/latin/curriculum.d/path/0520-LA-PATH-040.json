@@ -1,0 +1,16 @@
+{
+  "id": "LA-PATH-040",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "LA-C56-sextus",
+    "LA-C56-septimus",
+    "LA-C56-octavus",
+    "LA-C56-nonus",
+    "LA-C56-decimus"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "LA-EXT-056-ORDINAL-TO-TENTH"
+  ]
+}

@@ -1,4 +1,6 @@
+import json
 from math import isclose
+from pathlib import Path
 
 import pytest
 from mosfet_models import Level1Model, MosfetType
@@ -98,6 +100,7 @@ C1 out 0 1u IC=0
 .dc V1 0 1 0.5
 .ac dec 1 1k 1k
 .tran 1m 1m
+.tf V(out) V1
 .end
 """
     parsed = parse_netlist(deck)
@@ -109,10 +112,11 @@ C1 out 0 1u IC=0
         (2, "dc"),
         (3, "ac"),
         (4, "tran"),
+        (5, "tf"),
     ]
 
     results = parsed.run_analysis_plan()
-    assert [result.kind for result in results] == ["op", "dc", "ac", "tran"]
+    assert [result.kind for result in results] == ["op", "dc", "ac", "tran", "tf"]
     assert isclose(results[0].result.node_voltages["out"], 0.5, abs_tol=1e-9)
     assert len(results[1].result.points) == 3
     assert isclose(results[1].result.points[-1].node_voltages["out"], 0.5, abs_tol=1e-9)
@@ -120,8 +124,55 @@ C1 out 0 1u IC=0
     assert abs(results[2].result.points[0].node_voltages["out"]) > 0.0
     assert results[3].result.method == "trap"
     assert results[3].result.points[-1].node_voltages["out"] > 0.0
+    assert isclose(results[4].result.transfer_ratio, 0.5, abs_tol=1e-9)
 
-    assert len(run_netlist(deck)) == 4
+    assert len(run_netlist(deck)) == 5
+
+
+def test_runs_shared_berkeley_v1_core_corpus() -> None:
+    corpus_path = (
+        Path(__file__).resolve().parents[4]
+        / "grammars/spice/berkeley-v1-op-corpus.json"
+    )
+    corpus = json.loads(corpus_path.read_text(encoding="utf-8"))
+
+    assert corpus["schemaVersion"] == 1
+    assert corpus["suite"] == "berkeley-v1-core"
+    assert [case["analysis"] for case in corpus["cases"]] == [
+        "op",
+        "op",
+        "op",
+        "op",
+        "ac",
+        "ac",
+        "ac",
+        "ac",
+        "tran",
+        "tran",
+        "tran",
+        "tran",
+        "dc",
+        "tf",
+    ]
+
+    for case in corpus["cases"]:
+        results = parse_netlist(case["deck"]).run_analysis_plan()
+        assert [result.kind for result in results] == [case["analysis"]], case["id"]
+        result = results[0].result
+        if case["sample"] == "op-node":
+            value = result.node_voltages[case["probe"]]
+        elif case["sample"] == "dc-final-node":
+            value = result.points[-1].node_voltages[case["probe"]]
+        elif case["sample"] == "ac-first-magnitude":
+            value = abs(result.points[0].node_voltages[case["probe"]])
+        elif case["sample"] == "tran-final-node":
+            value = result.points[-1].node_voltages[case["probe"]]
+        elif case["sample"] == "tf-ratio":
+            value = result.transfer_ratio
+        else:
+            raise AssertionError(f"{case['id']}: unknown corpus sample {case['sample']!r}")
+        expected = case["expected"]
+        assert expected["min"] <= value <= expected["max"], case["id"]
 
 
 def test_parse_reactive_elements_and_analysis_cards() -> None:

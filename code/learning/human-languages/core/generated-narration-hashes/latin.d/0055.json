@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:fc84c94883ff08d4",
+  "lessonIds": [
+    "LA-C55-primus",
+    "LA-C55-secundus",
+    "LA-C55-tertius",
+    "LA-C55-quartus",
+    "LA-C55-quintus"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "latin/narration/ch55.txt",
+  "json": "latin/narration/ch55.json",
+  "textHash": "fnv1a64:f78d510414938a1f",
+  "jsonHash": "fnv1a64:d32ecf2c28879549",
+  "findings": []
+}

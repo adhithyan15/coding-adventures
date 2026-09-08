@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:f4f9b5b4c82ebb3a",
+  "lessonIds": [
+    "LA-C55-primus",
+    "LA-C55-secundus",
+    "LA-C55-tertius",
+    "LA-C55-quartus",
+    "LA-C55-quintus"
+  ],
+  "tex": "latin/book/chapters/ch55-ordinales.tex"
+}

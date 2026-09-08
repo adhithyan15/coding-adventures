@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:8ec721f317505a9d",
+  "lessonIds": [
+    "LA-C56-sextus",
+    "LA-C56-septimus",
+    "LA-C56-octavus",
+    "LA-C56-nonus",
+    "LA-C56-decimus"
+  ],
+  "tex": "latin/book/chapters/ch56-ordinales-ad-decimum.tex"
+}
