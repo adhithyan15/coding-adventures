@@ -32,19 +32,26 @@
       "id": "A1-N-01",
       "category": "Das Nomen",
       "label": "nouns are capitalised, always",
-      "probe": null
+      "probe": [
+        "GE-GRAMMAR-GROSSSCHREIBUNG-01",
+        "GE-GRAMMAR-CAPITAL-IS-PART-OF-SPEECH-02"
+      ]
     },
     {
       "id": "A1-N-02",
       "category": "Das Nomen",
       "label": "three genders, not predictable from meaning",
-      "probe": null
+      "probe": [
+        "GE-LEX-DER-DIE-DAS-02",
+        "GE-ETYMON-ARTIKEL-03"
+      ]
     },
     {
       "id": "A1-N-03",
       "category": "Das Nomen",
       "label": "the five plural patterns (-e, -er, -n/-en, -s, zero)",
-      "probe": null
+      "probe": null,
+      "note": "Partly owned and deliberately not probed. Chapter 1 teaches that every plural takes die, chapter 22 teaches die Jahre, and the -e-with-umlaut break has its own atom. No lesson names the five patterns as a set, so a probe would claim more than the corpus teaches."
     },
     {
       "id": "A1-N-04",
@@ -74,55 +81,75 @@
       "id": "A1-ART-01",
       "category": "Der Artikel",
       "label": "definite der / die / das",
-      "probe": null
+      "probe": [
+        "GE-LEX-DER-DIE-DAS-02"
+      ]
     },
     {
       "id": "A1-ART-02",
       "category": "Der Artikel",
       "label": "indefinite ein / eine",
-      "probe": null
+      "probe": [
+        "GE-LEX-EIN-EINE-01"
+      ]
     },
     {
       "id": "A1-ART-03",
       "category": "Der Artikel",
       "label": "negative kein / keine",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. kein has no atom, which also blocks A1-NEG-02 -- the same two words close both points."
     },
     {
       "id": "A1-ART-04",
       "category": "Der Artikel",
       "label": "nominative and accusative forms",
-      "probe": null
+      "probe": null,
+      "note": "Explicitly deferred by the corpus. GE-C14-einen teaches einen and says on the page: 'Take this one as a word for now, not as a system. The system behind it -- German's cases -- gets a chapter of its own later.' That chapter has not been written; den has no atom."
     },
     {
       "id": "A1-ART-05",
       "category": "Der Artikel",
       "label": "dative forms after common prepositions",
-      "probe": null
+      "probe": null,
+      "note": "The dative is named (GE-GRAMMAR-DATIVE-01, on mir) but only on pronouns. No article form and no preposition governs it yet."
     },
     {
       "id": "A1-PRO-01",
       "category": "Das Pronomen",
       "label": "personal pronouns in the nominative",
-      "probe": null
+      "probe": [
+        "GE-LEX-ICH-02",
+        "GE-LEX-DU-SIE-02",
+        "GE-LEX-ER-01",
+        "GE-LEX-SIE-SHE-02",
+        "GE-LEX-ES-01",
+        "GE-LEX-WIR-01",
+        "GE-LEX-IHR-01"
+      ]
     },
     {
       "id": "A1-PRO-02",
       "category": "Das Pronomen",
       "label": "personal pronouns in the accusative",
-      "probe": null
+      "probe": null,
+      "note": "One seventh owned: mich, from chapter 3. dich, ihn, uns and euch have no atoms."
     },
     {
       "id": "A1-PRO-03",
       "category": "Das Pronomen",
       "label": "du / ihr / Sie as a register choice",
-      "probe": null
+      "probe": [
+        "GE-LEX-DU-SIE-02",
+        "GE-LEX-IHR-01"
+      ]
     },
     {
       "id": "A1-PRO-04",
       "category": "Das Pronomen",
       "label": "possessives mein, dein, sein, ihr",
-      "probe": null
+      "probe": null,
+      "note": "mein is owned inside the phrase mein Name ist. dein, sein and ihr have no atoms, and the ending family they share with ein and kein is unstated."
     },
     {
       "id": "A1-PRO-05",
@@ -136,13 +163,15 @@
       "id": "A1-ADJ-01",
       "category": "Das Adjektiv",
       "label": "predicative adjectives do not inflect",
-      "probe": null
+      "probe": null,
+      "note": "Shown and never named. gut stands uninflected after ist throughout the track and guten Tag inflects in front of a noun, so both halves of the contrast are on the page; no lesson states that the predicative form does not move."
     },
     {
       "id": "A1-ADJ-02",
       "category": "Das Adjektiv",
       "label": "attributive adjective endings after the definite article",
-      "probe": null
+      "probe": null,
+      "note": "The two adjective-ending atoms the track owns (guten Tag, gute Nacht) are ACCUSATIVE endings after a frozen ein-phrase, not the definite-article paradigm this point asks for. Probing them would be a mis-claim."
     },
     {
       "id": "A1-ADJ-03",
@@ -164,19 +193,38 @@
       "id": "A1-V-01",
       "category": "Das Verb",
       "label": "present tense of sein",
-      "probe": null
+      "probe": [
+        "GE-GRAMMAR-SEIN-ICH-BIN-01",
+        "GE-GRAMMAR-SEIN-DU-BIST-01",
+        "GE-GRAMMAR-SEIN-ER-IST-01",
+        "GE-GRAMMAR-SEIN-WIR-SIND-01",
+        "GE-GRAMMAR-SEIN-IHR-SEID-01",
+        "GE-GRAMMAR-SEIN-SIE-SIND-01"
+      ]
     },
     {
       "id": "A1-V-02",
       "category": "Das Verb",
       "label": "present tense of haben",
-      "probe": null
+      "probe": [
+        "GE-LEX-HABEN-01",
+        "GE-GRAMMAR-HABEN-REGULAR-01",
+        "GE-GRAMMAR-HABEN-DU-HAST-01",
+        "GE-GRAMMAR-HABEN-ER-HAT-01"
+      ]
     },
     {
       "id": "A1-V-03",
       "category": "Das Verb",
       "label": "regular present-tense endings",
-      "probe": null
+      "probe": [
+        "GE-GRAMMAR-VERB-STEM-01",
+        "GE-GRAMMAR-VERB-ENDINGS-01",
+        "GE-GRAMMAR-WEAK-SINGULAR-02",
+        "GE-GRAMMAR-THIRD-PERSON-T-03",
+        "GE-GRAMMAR-WIR-EN-02",
+        "GE-GRAMMAR-IHR-T-02"
+      ]
     },
     {
       "id": "A1-V-04",
@@ -198,55 +246,71 @@
       "id": "A1-V-06",
       "category": "Das Verb",
       "label": "modal verbs koennen, muessen, moechten",
-      "probe": null
+      "probe": null,
+      "note": "Untaught in the present. konnte, the preterite of koennen, is owned from the simple-past chapter, so the track can say what it could do and not what it can do."
     },
     {
       "id": "A1-V-07",
       "category": "Das Verb",
       "label": "the imperative for instructions",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. Every verb in the track appears with a subject in front of it."
     },
     {
       "id": "A1-V-08",
       "category": "Das Verb",
       "label": "Perfekt with haben",
-      "probe": null
+      "probe": [
+        "GE-GRAMMAR-PERFEKT-HABEN-01",
+        "GE-GRAMMAR-PERFEKT-ICH-01",
+        "GE-GRAMMAR-PERFEKT-DU-01",
+        "GE-GRAMMAR-PERFEKT-ER-01",
+        "GE-GRAMMAR-PERFEKT-WIR-01"
+      ]
     },
     {
       "id": "A1-V-09",
       "category": "Das Verb",
       "label": "Perfekt with sein",
-      "probe": null
+      "probe": [
+        "GE-GRAMMAR-PERFEKT-SEIN-01",
+        "GE-GRAMMAR-PERFEKT-SEIN-AUSNAHMEN-01"
+      ]
     },
     {
       "id": "A1-V-10",
       "category": "Das Verb",
       "label": "the past participle in ge- ... -t / -en",
-      "probe": null
+      "probe": null,
+      "note": "Half owned. The weak participle ge- ... -t has an atom and four instances; the strong -en participle is USED (gegangen, in the sein-perfect chapter) and never named, so a probe naming it would resolve against nothing."
     },
     {
       "id": "A1-V-11",
       "category": "Das Verb",
       "label": "es gibt for existence",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. es is owned as a pronoun and as the weather subject; the existential es gibt is not."
     },
     {
       "id": "A1-V-12",
       "category": "Das Verb",
       "label": "reflexive verbs with sich",
-      "probe": null
+      "probe": null,
+      "note": "mich appears reflexively inside freut mich, a frozen phrase, and sich has no atom."
     },
     {
       "id": "A1-NEG-01",
       "category": "Die Negation",
       "label": "nicht and where it stands",
-      "probe": null
+      "probe": null,
+      "note": "Half owned. nicht has a word atom and an etymology atom since chapter 3; where it stands in the sentence is nowhere stated."
     },
     {
       "id": "A1-NEG-02",
       "category": "Die Negation",
       "label": "kein for negating a noun",
-      "probe": null
+      "probe": null,
+      "note": "Untaught -- the same kein gap as A1-ART-03."
     },
     {
       "id": "A1-NEG-03",
@@ -260,67 +324,78 @@
       "id": "A1-FR-01",
       "category": "Die Frage",
       "label": "yes/no questions by inversion",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. Verb-second is owned, and every question the track shows is a W-question, where verb-second and inversion look identical. The polar question, where the verb moves to first place, is never shown."
     },
     {
       "id": "A1-FR-02",
       "category": "Die Frage",
       "label": "W-questions: wer, was, wo, wann, wie, warum",
-      "probe": null
+      "probe": null,
+      "note": "Three of six owned: was, wo, wie, each with its own lesson. wer, wann and warum have no atoms."
     },
     {
       "id": "A1-FR-03",
       "category": "Die Frage",
       "label": "wie viel / wie viele",
-      "probe": null
+      "probe": null,
+      "note": "Untaught."
     },
     {
       "id": "A1-FR-04",
       "category": "Die Frage",
       "label": "welcher as an interrogative determiner",
-      "probe": null
+      "probe": null,
+      "note": "Untaught."
     },
     {
       "id": "A1-PRAEP-01",
       "category": "Die Praeposition",
       "label": "accusative: fuer, ohne, durch, gegen, um",
-      "probe": null
+      "probe": null,
+      "note": "Untaught as a class. um appears inside es ist ein Uhr and is not taught as a preposition."
     },
     {
       "id": "A1-PRAEP-02",
       "category": "Die Praeposition",
       "label": "dative: mit, nach, bei, seit, von, zu, aus",
-      "probe": null
+      "probe": null,
+      "note": "Untaught as a class, and blocked behind A1-ART-05: the dative article has to exist before a dative preposition can be shown governing one."
     },
     {
       "id": "A1-PRAEP-03",
       "category": "Die Praeposition",
       "label": "two-way prepositions in and auf",
-      "probe": null
+      "probe": null,
+      "note": "in and auf are both owned as words, from chapters 5 and 4. What is missing is the two-way rule that makes them choose a case."
     },
     {
       "id": "A1-PRAEP-04",
       "category": "Die Praeposition",
       "label": "time: am, im, um",
-      "probe": null
+      "probe": null,
+      "note": "Untaught."
     },
     {
       "id": "A1-ADV-01",
       "category": "Das Adverb",
       "label": "time: heute, morgen, gestern, jetzt, immer, oft",
-      "probe": null
+      "probe": null,
+      "note": "Two of six owned: morgen (tomorrow, with its capital-splitting contrast against Morgen) and gestern. heute, jetzt, immer and oft have no atoms."
     },
     {
       "id": "A1-ADV-02",
       "category": "Das Adverb",
       "label": "place: hier, dort, links, rechts",
-      "probe": null
+      "probe": null,
+      "note": "Untaught."
     },
     {
       "id": "A1-ADV-03",
       "category": "Das Adverb",
       "label": "degree: sehr, ein bisschen, zu",
-      "probe": null
+      "probe": null,
+      "note": "One of three owned: sehr, from chapter 3."
     },
     {
       "id": "A1-ADV-04",
@@ -334,7 +409,9 @@
       "id": "A1-SATZ-01",
       "category": "Der Satz",
       "label": "the conjugated verb stands second",
-      "probe": null
+      "probe": [
+        "GE-GRAMMAR-VERB-SECOND-02"
+      ]
     },
     {
       "id": "A1-SATZ-02",
@@ -348,25 +425,33 @@
       "id": "A1-SATZ-03",
       "category": "Der Satz",
       "label": "coordination with und, oder, aber, denn",
-      "probe": null
+      "probe": null,
+      "note": "One of four owned: und, from chapter 3. oder, aber and denn have no atoms."
     },
     {
       "id": "A1-SATZ-04",
       "category": "Der Satz",
       "label": "weil and the verb-final clause",
-      "probe": null
+      "probe": null,
+      "note": "Untaught, and it is the track's only verb-final construction -- SPINE-SAY-WHY records CONNECTIVE-BECAUSE as an omission for the same reason."
     },
     {
       "id": "A1-SATZ-05",
       "category": "Der Satz",
       "label": "introducing oneself and others",
-      "probe": null
+      "probe": null,
+      "note": "Introducing ONESELF is fully owned: ich heisse, mein Name ist, freut mich, wie heissen Sie. Introducing somebody else is not -- das ist has no atom."
     },
     {
       "id": "A1-AUS-01",
       "category": "Aussprache und Orthografie",
       "label": "the umlauts ae, oe, ue",
-      "probe": null
+      "probe": [
+        "GE-SOUND-UMLAUT-AE-02",
+        "GE-SOUND-UMLAUT-OE-01",
+        "GE-SOUND-FUENF-UE-01",
+        "GE-GRAMMAR-UMLAUT-FRONTING-01"
+      ]
     },
     {
       "id": "A1-AUS-02",
@@ -404,13 +489,22 @@
       "id": "A1-AUS-06",
       "category": "Aussprache und Orthografie",
       "label": "word stress on the stem",
-      "probe": null
+      "probe": null,
+      "note": "Shown repeatedly and never named. Four lessons say where the stress falls in one word (kaffee-stress is a registered sound tag); no lesson generalises it to the stem."
     },
     {
       "id": "A1-LEX-01",
       "category": "Grundwortschatz",
       "label": "greetings and farewells",
-      "probe": null
+      "probe": [
+        "GE-LEX-HALLO-01",
+        "GE-LEX-GUTEN-TAG-01",
+        "GE-LEX-GUTEN-MORGEN-01",
+        "GE-LEX-GUTEN-ABEND-01",
+        "GE-LEX-GUTE-NACHT-01",
+        "GE-LEX-AUF-WIEDERSEHEN-01",
+        "GE-LEX-TSCHUESS-01"
+      ]
     },
     {
       "id": "A1-LEX-02",
@@ -462,19 +556,45 @@
       "id": "A1-LEX-07",
       "category": "Grundwortschatz",
       "label": "numbers 0-100",
-      "probe": null
+      "probe": null,
+      "note": "One to twenty owned outright, with the digit-plus-zehn rule and zwanzig's etymology. null, the -zig tens and the einundzwanzig order are untaught, so the top four fifths of the range cannot be said."
     },
     {
       "id": "A1-LEX-08",
       "category": "Grundwortschatz",
       "label": "days, months, seasons",
-      "probe": null
+      "probe": [
+        "GE-LEX-MONTAG-01",
+        "GE-LEX-DIENSTAG-01",
+        "GE-LEX-MITTWOCH-01",
+        "GE-LEX-DONNERSTAG-01",
+        "GE-LEX-FREITAG-01",
+        "GE-LEX-SAMSTAG-01",
+        "GE-LEX-SONNTAG-01",
+        "GE-LEX-JANUAR-01",
+        "GE-LEX-FEBRUAR-01",
+        "GE-LEX-MAERZ-01",
+        "GE-LEX-APRIL-01",
+        "GE-LEX-MAI-01",
+        "GE-LEX-JUNI-01",
+        "GE-LEX-JULI-01",
+        "GE-LEX-AUGUST-01",
+        "GE-LEX-SEPTEMBER-01",
+        "GE-LEX-OKTOBER-01",
+        "GE-LEX-NOVEMBER-01",
+        "GE-LEX-DEZEMBER-01",
+        "GE-LEX-FRUEHLING-01",
+        "GE-LEX-SOMMER-01",
+        "GE-LEX-HERBST-01",
+        "GE-LEX-WINTER-01"
+      ]
     },
     {
       "id": "A1-LEX-09",
       "category": "Grundwortschatz",
       "label": "telling the time",
-      "probe": null
+      "probe": null,
+      "note": "Partly owned: es ist ... Uhr, Stunde, Mittag, Mitternacht, Zeit, frueh, spaet. halb, Viertel and the vor/nach split are untaught, so only whole hours can be told."
     },
     {
       "id": "A1-LEX-10",
@@ -488,13 +608,29 @@
       "id": "A1-LEX-11",
       "category": "Grundwortschatz",
       "label": "countries, nationalities, languages",
-      "probe": null
+      "probe": null,
+      "note": "One word owned: Deutsch, as the language in ich lerne Deutsch. No country, no nationality."
     },
     {
       "id": "A1-LEX-12",
       "category": "Grundwortschatz",
       "label": "everyday verbs",
-      "probe": null
+      "probe": [
+        "GE-LEX-GEHEN-01",
+        "GE-LEX-KOMMEN-01",
+        "GE-LEX-MACHEN-01",
+        "GE-LEX-SAGEN-01",
+        "GE-LEX-SEHEN-01",
+        "GE-LEX-LESEN-07",
+        "GE-LEX-SCHREIBEN-10",
+        "GE-LEX-NEHMEN-02",
+        "GE-LEX-FRAGEN-05",
+        "GE-LEX-HELFEN-07",
+        "GE-LEX-HOEREN-09",
+        "GE-LEX-SCHLAFEN-06",
+        "GE-LEX-WOHNEN-01",
+        "GE-LEX-LERNEN-01"
+      ]
     }
   ]
 }
