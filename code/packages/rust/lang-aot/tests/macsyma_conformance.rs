@@ -3,14 +3,14 @@
 //! Macsyma's Wave 1 (`macsyma-iir-compiler` + `macsyma-vm`) proved the v0
 //! integer-arithmetic/assignment/unevaluated-symbolic-`Apply` value model on the
 //! VM interpreter only. This suite is the Wave 4 capstone: the **same** source,
-//! compiled through five independent code generators, the VM interpreter, and
+//! compiled through six independent code generators, the VM interpreter, and
 //! the universal JIT, computes the same number.
 //! Structurally this is `conformance.rs`'s McCarthy W16 capstone, retargeted —
 //! `Language::McCarthyLisp` → `Language::Macsyma`, `mccarthy_lisp_vm::run` →
 //! `macsyma_vm::run` — scoped to the five backends `macsyma-iir-vm.md` §6 Wave 4
 //! names (NativeAOT arm64/x86_64, LLVM, WASM, JVM, CLR), plus the universal JIT.
-//! This suite does not yet exercise Macsyma on BEAM. Other frontends have
-//! selected BEAM proofs; this omission is a Macsyma coverage gap (VM-038).
+//! VM-038 adds actual Erlang execution of the same integer corpus on BEAM.
+//! Symbolic-result representation remains outside this scalar proof.
 //!
 //! ## The one genuine risk this suite is built to catch
 //!
@@ -32,7 +32,7 @@
 //! conformance suite now uses the same host coverage (VM-036).
 
 use lang_aot::{
-    compile_source_to_cil_artifact, compile_source_to_iir, compile_source_to_jvm_class,
+    compile_source_to_beam, compile_source_to_cil_artifact, compile_source_to_iir, compile_source_to_jvm_class,
     compile_source_to_llvm_with_target, compile_source_to_wasm, run_macsyma_on_jit,
     Language,
 };
@@ -324,6 +324,50 @@ fn run_jvm(src: &str) -> Option<i64> {
     }
 }
 
+// BEAM keeps native Erlang integers, so stdout carries the complete signed
+// value rather than an eight-bit process status. The eval expression is fixed;
+// source text is compiled into a private temporary module, never interpolated.
+fn run_beam(src: &str) -> Option<i64> {
+    if !tool_ok("erl", "-version") {
+        return None;
+    }
+    let bytes = compile_source_to_beam(Language::Macsyma, src, "macsyma_conf")
+        .unwrap_or_else(|e| backend_failed("BEAM", src, "source → BEAM", format!("{e:?}")));
+    let dir = tmp_dir("beam");
+    std::fs::write(dir.path().join("macsyma_conf.beam"), bytes).expect("write BEAM module");
+    let out = std::process::Command::new("erl")
+        .current_dir(dir.path())
+        .args(["-noshell", "-pa"]).arg(dir.path())
+        .args(["-eval", "io:format(\"~w~n\",[macsyma_conf:main()]),halt(0)."])
+        .output().expect("spawn detected Erlang runtime");
+    if !out.status.success() {
+        backend_failed("BEAM", src, "Erlang execution", format!(
+            "exit {:?}\nstdout: {}\nstderr: {}", out.status.code(),
+            String::from_utf8_lossy(&out.stdout), String::from_utf8_lossy(&out.stderr)));
+    }
+    Some(String::from_utf8_lossy(&out.stdout).trim().parse::<i64>()
+        .unwrap_or_else(|e| backend_failed("BEAM", src, "parse integer result", e)))
+}
+
+/// Emission remains checked even on hosts without Erlang. The execution half
+/// explicitly reports its tool skip; no compiler error is allowed to hide there.
+#[test]
+fn macsyma_beam_corpus() {
+    let available = tool_ok("erl", "-version");
+    for (src, expected) in PROGRAMS {
+        compile_source_to_beam(Language::Macsyma, src, "macsyma_conf")
+            .unwrap_or_else(|e| backend_failed("BEAM", src, "corpus emission", format!("{e:?}")));
+        if available {
+            assert_eq!(run_beam(src), Some(*expected), "BEAM disagreement for {src:?}");
+        }
+    }
+    if available {
+        eprintln!("Macsyma BEAM: {} programs executed, zero skips", PROGRAMS.len());
+    } else {
+        eprintln!("Macsyma BEAM: {} programs compiled; execution SKIP: erl absent", PROGRAMS.len());
+    }
+}
+
 // ── Backend 6: LLVM via `clang` + the shared C runtime. Gated on `clang`. ──
 fn run_llvm(src: &str) -> Option<i64> {
     if !tool_ok("clang", "--version") {
@@ -418,6 +462,7 @@ fn run_native(src: &str) -> Option<i64> {
 fn macsyma_is_uniform_across_every_backend() {
     #[allow(clippy::type_complexity)]
     let backends: &[(&str, fn(&str) -> Option<i64>)] = &[
+        ("BEAM", run_beam),
         ("VM", run_vm),
         ("JIT", run_jit),
         ("WASM", run_wasm),
@@ -451,6 +496,7 @@ fn macsyma_is_uniform_across_every_backend() {
     // backend silently vanishing from `exercised` (rather than failing loudly)
     // let a real LLVM-link regression hide for a while.
     let gated: &[(&str, bool)] = &[
+        ("BEAM", tool_ok("erl", "-version")),
         ("JVM", tool_ok("java", "-version")),
         ("LLVM", tool_ok("clang", "--version")),
         ("native-AOT", native_linker_ok()),
