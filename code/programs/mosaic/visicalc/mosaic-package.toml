@@ -5,7 +5,7 @@ description = "A Mosaic spreadsheet powered by the shared Rust VisiCalc applicat
 license = "MIT"
 
 [components]
-exports = ["VisiCalc"]
+exports = ["VisiCalc", "VisiCalcStartup"]
 
 [dependencies]
 mosaic-pkg-grid = "0.2.0"

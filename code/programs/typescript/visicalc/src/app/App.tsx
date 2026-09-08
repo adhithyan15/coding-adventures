@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ComponentProps, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { VisiCalc as Light } from "../components/light/react/VisiCalc";
 import { VisiCalc as Dark, type VisiCalcEvent } from "../components/dark/react/VisiCalc";
+import { VisiCalcStartup as StartupLight } from "../components/light/react/VisiCalcStartup";
+import { VisiCalcStartup as StartupDark } from "../components/dark/react/VisiCalcStartup";
 import { loadMosaicModule, type MosaicHost, type MosaicUpdate } from "../../../../../packages/rust/mosaic-app-wasm/js/mosaic-host.mjs";
 import { createBrowserFileEffects, type MosaicFileEffects } from "../../../../../packages/rust/mosaic-app-wasm/js/mosaic-file-effects.mjs";
 
@@ -15,12 +17,16 @@ export async function loadApplication(): Promise<MosaicHost> {
 export function App({ load = loadApplication }: { load?: () => Promise<MosaicHost> }) {
   const host = useRef<MosaicHost | null>(null);
   const files = useRef<MosaicFileEffects | null>(null);
+  const surface = useRef<HTMLDivElement | null>(null);
   const [update, setUpdate] = useState<MosaicUpdate | null>(null);
   const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let live = true;
     let owned: MosaicHost | null = null;
-    load().then(app => {
+    setError("");
+    setUpdate(null);
+    Promise.resolve().then(load).then(app => {
       owned = app;
       if (!live) { app.dispose(); return; }
       host.current = app;
@@ -28,7 +34,11 @@ export function App({ load = loadApplication }: { load?: () => Promise<MosaicHos
       setUpdate(app.update);
     }).catch(reason => { if (live) setError(String(reason)); });
     return () => { live = false; files.current?.dispose(); files.current = null; owned?.dispose(); host.current = null; };
-  }, [load]);
+  }, [load, attempt]);
+  const started = update !== null;
+  useEffect(() => {
+    if (started && attempt > 0) surface.current?.querySelector<HTMLTableElement>('table[tabindex="0"]')?.focus();
+  }, [started, attempt]);
   const render = (next: MosaicUpdate, app: MosaicHost) => {
     if (host.current !== app) return;
     setUpdate(next);
@@ -69,11 +79,18 @@ export function App({ load = loadApplication }: { load?: () => Promise<MosaicHos
       send("editStart", { row, col }); send("formulaChange", { value: event.key }); event.preventDefault();
     }
   };
-  if (!update) return <div role="status">{error || "Opening workbook…"}</div>;
+  if (!update) {
+    const Startup = window.matchMedia?.("(prefers-color-scheme: dark)").matches ? StartupDark : StartupLight;
+    return <section role={error ? "alert" : "status"}>
+      <Startup heading={error ? "Your workbook couldn’t open" : "Opening your workbook"}
+        message={error ? "VisiCalc couldn’t start. Check your connection and try again." : "Making space for your numbers, notes and next big idea."}
+        canRetry={!!error} dispatch={() => setAttempt(value => value + 1)} />
+    </section>;
+  }
   const props = Object.fromEntries(Object.entries(update.props).map(([name, value]) => [name.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase()), value])) as Omit<ComponentProps<typeof Light>, "dispatch">;
   const View = update.props["dark-theme"] ? Dark : Light;
   const dispatch = ({ type, ...payload }: VisiCalcEvent) => send(type, payload);
-  return <div onKeyDown={key}>
+  return <div ref={surface} onKeyDown={key}>
     <View {...props} dispatch={dispatch} />
     {error && <div role="alert">{error}</div>}
     <div role="status" aria-live="polite" aria-atomic="true" style={{ position: "absolute", top: 0, left: 0, width: 1, height: 1, overflow: "hidden", clipPath: "inset(50%)", whiteSpace: "nowrap" }}>{update.announcements.map(item => item.message).join(". ")}</div>
