@@ -273,7 +273,19 @@ let test_manifest_schema_boundaries () =
   in
   let parsed = unwrap (parse_manifest (manifest ("[" ^ all_taxonomy_pairs ^ "]") "")) in
   Alcotest.(check int) "all taxonomy arms" 19
-    (List.length parsed.capabilities)
+    (List.length parsed.capabilities);
+  let digit_package =
+    unwrap
+      (parse_manifest
+         {|{
+           "$schema": "../../../../../capability-schema.json",
+           "version": 1,
+           "package": "ocaml/9a_b-c",
+           "capabilities": [],
+           "justification": "Exercises every permitted package-name character class."
+         }|})
+  in
+  Alcotest.(check string) "digit package" "ocaml/9a_b-c" digit_package.package
 
 let test_manifest_duplicate_capability () =
   let document =
@@ -511,7 +523,13 @@ let test_extended_source_resolution () =
     [ "net:connect:*" ] [];
   check "marshal closures"
     "open Marshal\nlet flag = Closures\nlet flag2 = Marshal.Closures\n"
-    [] [ "Marshal.Closures" ]
+    [] [ "Marshal.Closures" ];
+  check "first-class sensitive references"
+    "let magic = Obj.magic\nlet decode = Marshal.from_reviewed\n"
+    [] [ "Obj.magic" ];
+  check "top-level evaluation and non-identifier callee"
+    "Sys.getenv \"TOP_LEVEL\"\nlet _ = ((fun f -> f) Sys.getenv) \"HOME\"\n"
+    [ "env:read:*" ] []
 
 let test_extended_ast_walks () =
   let accepted =

@@ -14,6 +14,11 @@ let () =
   Arg.parse options
     (fun argument -> raise (Arg.Bad ("unexpected argument: " ^ argument)))
     usage;
-  exit
-    (run ~dir:!dir ~verbose:!verbose ~stdout:(output_string stdout)
-       ~stderr:(output_string stderr))
+  let exit_code =
+    run ~dir:!dir ~verbose:!verbose ~stdout:(output_string stdout)
+      ~stderr:(output_string stderr)
+  in
+  (* [exit] cannot return to Bisect's post-expression probe. Keep the real
+     command path measured and exclude only that structurally unreachable
+     probe. *)
+  (exit exit_code [@coverage off])
