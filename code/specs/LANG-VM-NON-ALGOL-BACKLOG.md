@@ -24,6 +24,15 @@ contract before editing the backend. Validate all newly promoted Oct BEAM
 cells and relevant backend regression suites, then update coverage/docs.
 This does not claim the unimplemented Intel-8008 intrinsic semantics (VM-013).
 
+### VM-040 Oct implementation contract: integer output
+
+The real BEAM probe passed the initial void control-flow row, then refused
+`fn main() { out(1, 200); }` at validation: print_i64 is outside the predicate
+builtin set. Add print_i64 as an output builtin (no result) using the existing
+erlang:display/1 integer output sequence, with its argument at srcs[1].
+Preserve the predicate lowering and existing io_out path. Then rerun all twelve
+Oct programs before declaring BEAM coverage; record further failures separately.
+
 ## VM-060a contract (selected after #14613 merged)
 
 PR #14613 merged as `4462675c52` after 46 completed successful/skipped checks.
