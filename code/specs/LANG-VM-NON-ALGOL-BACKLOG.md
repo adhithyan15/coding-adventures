@@ -23,6 +23,13 @@ record and prioritize its repair before changing production code. Validate
 focused execution, the existing conformance suite and Clippy; inspect hosted
 tool availability so local proof is distinguished from hosted coverage.
 
+VM-038 probe: all 21 programs execute on the installed Erlang runtime with
+zero skips and correct signed results; no production lowering repair is needed.
+Hosted setup-beam is gated by `needs_elixir`, but `lang-aot/BUILD` declares
+only dotnet. Add the supported `# needs-toolchain: elixir` declaration so a
+LANG-only PR requests Erlang, matching the existing dotnet declaration pattern.
+This is a test-toolchain dependency, not a new language runtime dependency.
+
 ## VM-049 implementation contract (selected after #14449 merged)
 
 Refreshed main is `df33215f43` (VM-047c merged as `db77422ad1`). No new
