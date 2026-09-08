@@ -739,7 +739,8 @@ def pe_imported_libraries(binary: bytes) -> list[str]:
 # list would be a maintenance trap that fails closed on a newer runner.
 WINDOWS_SYSTEM_DLLS = frozenset(
     {
-        "advapi32.dll", "bcrypt.dll", "combase.dll", "comdlg32.dll", "crypt32.dll",
+        "advapi32.dll", "bcrypt.dll", "bcryptprimitives.dll", "combase.dll",
+        "comdlg32.dll", "crypt32.dll",
         "d3d11.dll", "d3d12.dll", "d3d9.dll", "dbghelp.dll", "dwmapi.dll",
         "dxgi.dll", "gdi32.dll", "gdiplus.dll", "imm32.dll", "iphlpapi.dll",
         "kernel32.dll", "kernelbase.dll", "mf.dll", "mfplat.dll", "mfreadwrite.dll",
