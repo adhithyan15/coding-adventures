@@ -15,14 +15,14 @@
     "number": 14659,
     "url": "https://github.com/adhithyan15/coding-adventures/pull/14659",
     "branch": "codex/build-tool-go-language-source-registry-20260908",
-    "implementation_revision": "2ceba3d23ea9c819e879ab10f16b1c5e2f38b8f1",
+    "implementation_revision": "fc7a40369c29a4e6a400a089f683755558ad857b",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-08T18:45:31Z",
+    "observed_at": "2026-09-08T19:00:40Z",
     "pr_number": 14659,
     "status": "checks-pending",
-    "notes": "Both CI builds failed at HASH_PACKAGE_FAILED for unknown/blog. Actual logs showed the strict registry adopter could not hash the repository-owned code/sites packages. The focused repair maps only canonical code/sites/<name> roots to the existing TypeScript source-input profile while retaining their unknown/* graph identities, adds exact path/input regressions, and classifies the separate authored Markdown/SVG registry gap. After a conflict-free rebase across 21 new main commits, the full Go suite, race, vet, module verification, tidy-diff, trimpath build, 24 schema tests, 80 neutral runner tests, state DAG, diff hygiene, and a real 5,172-package all-language dry plan pass. The rebased repair was force-pushed with the exact captured lease for prior remote head 1d9778d0d70a9fc6cc7ce52f2ed08ab35b391ec3; replacement checks are pending and auto-merge remains disabled until they are terminal and acceptable and mergeability is clean."
+    "notes": "Both replacement CI builds passed detection but remained queued for package execution. Go CodeQL analysis completed, and its aggregate check reported two high allocation-overflow findings in registry-digest framing. Production and the independent test oracle now stream the domain, fixed-width length, and canonical payload into SHA-256 without a combined-size allocation. Focused and full Go tests, race, vet, module verification, tidy-diff, and diff hygiene pass. The smallest repair was pushed to the same branch; replacement checks are pending and auto-merge remains disabled until they are terminal and acceptable and mergeability is clean."
   },
   "last_inventory": {
     "revision": "668e551588ebf183e4f7c2835e47ebeed9d37230",
@@ -980,6 +980,8 @@
       "publication_notes": "Opened ready-for-review PR #14659 after a normal first push from exact origin/main 668e551588ebf183e4f7c2835e47ebeed9d37230. Immediately before publication the target remote branch and prior PR were absent, all 13 changed paths had zero exact overlap across 14 open PRs, local corpus, Go, race, vet, coverage, generator, build-file, parity, state-DAG, security, and diff gates passed, and independent review issued SHIP. GitHub checks are pending and auto-merge remains disabled.",
       "ci_repair_revision": "2ceba3d23ea9c819e879ab10f16b1c5e2f38b8f1",
       "ci_repair_notes": "The two failed CI builds both stopped before package execution with HASH_PACKAGE_FAILED for unknown/blog. The repair preserves legacy unknown/* graph identities while recognizing only canonical code/sites roots as TypeScript source-input profiles and hashing their real code/sites repository paths. The merged neutral registry and digest remain byte-identical; authored site Markdown/SVG coverage is classified under a separate dependent owner. After the conflict-free rebase onto b6888ebfdd218b58807599f0dfa685efa30bd77d, the full Go suite, hasher race suite, vet, module verification, tidy-diff, trimpath build, 24 schema tests, 80 neutral runner tests, 5,172-package all-language dry plan, state DAG, and diff checks pass.",
+      "codeql_repair_revision": "fc7a40369c29a4e6a400a089f683755558ad857b",
+      "codeql_repair_notes": "The aggregate CodeQL result exposed two high-severity size-overflow findings even though the Go analysis workflow itself succeeded. Both findings came from allocating domain-length-payload framing in one slice. Production and its independent digest oracle now hash the same domain-separated framing incrementally with an eight-byte big-endian length, eliminating size-addition overflow without changing the registry digest. Focused and full Go tests, the hasher race suite, vet, module verification, tidy-diff, and diff hygiene pass.",
       "notes": "Production Go currently owns 14 source-language entries, 14 metadata-language entries, and a 26-name generated-component registry, but the neutral registry adds reviewed Rust companions and package resources for hybrid lanes. Replace the engine-local maps with an exact complete projection and prove no missing or undeclared-extra selector."
     },
     {
@@ -989,7 +991,7 @@
       "depends_on": ["build-tool-go-language-source-input-registry-adoption"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered from PR #14659's failed full-repository CI run. The repository's two code/sites packages retain legacy unknown/* graph identities but are TypeScript build surfaces. The focused PR repair safely maps those canonical roots to the already-reviewed TypeScript hashing profile; however, the merged neutral registry does not yet classify the blog's authored data/*.md posts and data/assets/*.svg input. Evolve the neutral registry and digest, refresh every already-adopted engine projection, add exact site fixtures, and prove other TypeScript data directories are not widened accidentally. This is a separate dependent contract change because mutating the registry inside the Go adoption PR would invalidate Haskell, Swift, and .NET digest pins and mix cross-engine work into the CI repair."
+      "notes": "Discovered from PR #14659's failed full-repository CI run and expanded by a parallel exact-input audit. The repository's two code/sites packages retain legacy unknown/* graph identities but are TypeScript build surfaces. The focused PR repair safely maps those canonical roots to the already-reviewed TypeScript hashing profile. The merged neutral registry still omits 13 tracked build inputs: three blog Markdown posts, their three persisted-identity JSON sidecars, one SVG and its sidecar, landing-page index.landing and its sidecar, og.jpg and its sidecar, and root landing.css. Both site configs enable persisted identities, and the landing renderer reads landing.css directly. Evolve the neutral registry and digest, refresh every already-adopted engine projection, add exact site fixtures, and prove unrelated TypeScript data directories cannot be widened. This remains a separate dependent contract change because mutating the registry inside the Go adoption PR would invalidate Haskell, Swift, and .NET digest pins and mix cross-engine work into the CI repair."
     },
     {
       "id": "build-tool-go-native-source-snapshot-stability-hardening",
