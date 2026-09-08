@@ -61,7 +61,7 @@ use crate::registers::RegisterWindowFile;
 /// PSR (Processor Status Register) condition-code bits this simulator
 /// tracks.  `cwp` lives on [`RegisterWindowFile`] instead, since it
 /// governs register addressing rather than condition evaluation.
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct Psr {
     pub n: bool,
     pub z: bool,
@@ -94,29 +94,29 @@ fn operand2(d: &DecodeResult, regs: &RegisterWindowFile) -> u32 {
 // ===========================================================================
 
 fn read_word_be(mem: &Memory, addr: usize) -> u32 {
-    let b0 = mem.read_byte(addr) as u32;
-    let b1 = mem.read_byte(addr + 1) as u32;
-    let b2 = mem.read_byte(addr + 2) as u32;
-    let b3 = mem.read_byte(addr + 3) as u32;
+    let b0 = mem.read_byte(addr % mem.size()) as u32;
+    let b1 = mem.read_byte((addr + 1) % mem.size()) as u32;
+    let b2 = mem.read_byte((addr + 2) % mem.size()) as u32;
+    let b3 = mem.read_byte((addr + 3) % mem.size()) as u32;
     (b0 << 24) | (b1 << 16) | (b2 << 8) | b3
 }
 
 fn write_word_be(mem: &mut Memory, addr: usize, value: u32) {
-    mem.write_byte(addr, (value >> 24) as u8);
-    mem.write_byte(addr + 1, (value >> 16) as u8);
-    mem.write_byte(addr + 2, (value >> 8) as u8);
-    mem.write_byte(addr + 3, value as u8);
+    mem.write_byte(addr % mem.size(), (value >> 24) as u8);
+    mem.write_byte((addr + 1) % mem.size(), (value >> 16) as u8);
+    mem.write_byte((addr + 2) % mem.size(), (value >> 8) as u8);
+    mem.write_byte((addr + 3) % mem.size(), value as u8);
 }
 
 fn read_half_be(mem: &Memory, addr: usize) -> u16 {
-    let hi = mem.read_byte(addr) as u16;
-    let lo = mem.read_byte(addr + 1) as u16;
+    let hi = mem.read_byte(addr % mem.size()) as u16;
+    let lo = mem.read_byte((addr + 1) % mem.size()) as u16;
     (hi << 8) | lo
 }
 
 fn write_half_be(mem: &mut Memory, addr: usize, value: u16) {
-    mem.write_byte(addr, (value >> 8) as u8);
-    mem.write_byte(addr + 1, value as u8);
+    mem.write_byte(addr % mem.size(), (value >> 8) as u8);
+    mem.write_byte((addr + 1) % mem.size(), value as u8);
 }
 
 /// Fetch one big-endian 32-bit instruction word from memory at `addr`.
@@ -152,6 +152,15 @@ fn update_cc_logic(result: u32) -> Psr {
         n: (result >> 31) & 1 != 0,
         z: result == 0,
         v: false,
+        c: false,
+    }
+}
+
+fn update_cc_divide(result: u32, overflow: bool) -> Psr {
+    Psr {
+        n: (result >> 31) & 1 != 0,
+        z: result == 0,
+        v: overflow,
         c: false,
     }
 }
@@ -292,11 +301,23 @@ pub fn execute(
 
         // ── Logic family ──────────────────────────────────────────────
         "and" | "andcc" => {
-            logic_op(decoded, regs, psr, |a, b| a & b, decoded.mnemonic == "andcc");
+            logic_op(
+                decoded,
+                regs,
+                psr,
+                |a, b| a & b,
+                decoded.mnemonic == "andcc",
+            );
             seq
         }
         "andn" | "andncc" => {
-            logic_op(decoded, regs, psr, |a, b| a & !b, decoded.mnemonic == "andncc");
+            logic_op(
+                decoded,
+                regs,
+                psr,
+                |a, b| a & !b,
+                decoded.mnemonic == "andncc",
+            );
             seq
         }
         "or" | "orcc" => {
@@ -304,15 +325,33 @@ pub fn execute(
             seq
         }
         "orn" | "orncc" => {
-            logic_op(decoded, regs, psr, |a, b| a | !b, decoded.mnemonic == "orncc");
+            logic_op(
+                decoded,
+                regs,
+                psr,
+                |a, b| a | !b,
+                decoded.mnemonic == "orncc",
+            );
             seq
         }
         "xor" | "xorcc" => {
-            logic_op(decoded, regs, psr, |a, b| a ^ b, decoded.mnemonic == "xorcc");
+            logic_op(
+                decoded,
+                regs,
+                psr,
+                |a, b| a ^ b,
+                decoded.mnemonic == "xorcc",
+            );
             seq
         }
         "xnor" | "xnorcc" => {
-            logic_op(decoded, regs, psr, |a, b| !(a ^ b), decoded.mnemonic == "xnorcc");
+            logic_op(
+                decoded,
+                regs,
+                psr,
+                |a, b| !(a ^ b),
+                decoded.mnemonic == "xnorcc",
+            );
             seq
         }
 
@@ -365,10 +404,11 @@ pub fn execute(
                 return fault;
             }
             let dividend = (u64::from(*y) << 32) | u64::from(a);
-            let q = (dividend / u64::from(src)).min(u64::from(u32::MAX));
-            let result = q as u32;
+            let quotient = dividend / u64::from(src);
+            let overflow = quotient > u64::from(u32::MAX);
+            let result = quotient.min(u64::from(u32::MAX)) as u32;
             if decoded.mnemonic == "udivcc" {
-                *psr = update_cc_logic(result);
+                *psr = update_cc_divide(result, overflow);
             }
             write_rd(decoded, regs, result);
             seq
@@ -380,11 +420,13 @@ pub fn execute(
             }
             let dividend = (i64::from(*y as i32) << 32) | i64::from(a);
             let divisor = src as i32 as i64;
-            let mut q = dividend / divisor; // truncates toward zero, matching SPARC/Rust `/`
-            q = q.clamp(i64::from(i32::MIN), i64::from(i32::MAX));
-            let result = q as i32 as u32;
+            // The unique host-overflow pair (i64::MIN / -1) is also a SPARC
+            // quotient overflow and therefore saturates positive.
+            let quotient = dividend.checked_div(divisor).unwrap_or(i64::MAX);
+            let overflow = quotient > i64::from(i32::MAX) || quotient < i64::from(i32::MIN);
+            let result = quotient.clamp(i64::from(i32::MIN), i64::from(i32::MAX)) as i32 as u32;
             if decoded.mnemonic == "sdivcc" {
-                *psr = update_cc_logic(result);
+                *psr = update_cc_divide(result, overflow);
             }
             write_rd(decoded, regs, result);
             seq
@@ -501,10 +543,15 @@ fn logic_op(
     write_rd(d, regs, result);
 }
 
-fn exec_load(d: &DecodeResult, regs: &mut RegisterWindowFile, mem: &Memory, seq: ExecuteResult) -> ExecuteResult {
+fn exec_load(
+    d: &DecodeResult,
+    regs: &mut RegisterWindowFile,
+    mem: &Memory,
+    seq: ExecuteResult,
+) -> ExecuteResult {
     let rd = get_field(d, "rd") as u32;
     let (base, off) = ab(d, regs);
-    let ea = base.wrapping_add(off) as usize;
+    let ea = base.wrapping_add(off) as usize % mem.size();
 
     let result = match d.mnemonic.as_str() {
         "ld" => read_word_be(mem, ea),
@@ -524,10 +571,15 @@ fn exec_load(d: &DecodeResult, regs: &mut RegisterWindowFile, mem: &Memory, seq:
     seq
 }
 
-fn exec_store(d: &DecodeResult, regs: &RegisterWindowFile, mem: &mut Memory, seq: ExecuteResult) -> ExecuteResult {
+fn exec_store(
+    d: &DecodeResult,
+    regs: &RegisterWindowFile,
+    mem: &mut Memory,
+    seq: ExecuteResult,
+) -> ExecuteResult {
     let rd = get_field(d, "rd") as u32;
     let (base, off) = ab(d, regs);
-    let ea = base.wrapping_add(off) as usize;
+    let ea = base.wrapping_add(off) as usize % mem.size();
     let val = regs.read(rd);
 
     match d.mnemonic.as_str() {
