@@ -8502,7 +8502,29 @@ impl HtmlParser {
             }
             if is_formatting_element(name)
                 && !blocked_by_formatting_marker
-                && self.adopt_formatting_end_tag_across_div(index, true)
+                && self.adopt_formatting_end_tag_across_block(index, true, |name| name == "div")
+            {
+                return;
+            }
+            if is_formatting_element(name)
+                && !blocked_by_formatting_marker
+                && self.adopt_formatting_end_tag_across_block(
+                    index,
+                    false,
+                    is_non_div_adoption_special_block,
+                )
+            {
+                return;
+            }
+            if is_formatting_element(name)
+                && !blocked_by_formatting_marker
+                && self.adopt_formatting_end_tag_across_nested_special_blocks(index)
+            {
+                return;
+            }
+            if is_formatting_element(name)
+                && !blocked_by_formatting_marker
+                && self.adopt_formatting_end_tag_across_list_container(index)
             {
                 return;
             }
@@ -8526,6 +8548,9 @@ impl HtmlParser {
                     )
                     .at_emission(self.current_token_emission_position),
                 );
+            }
+            if blocked_by_formatting_marker {
+                return;
             }
             if special_scope_blocks_end_tag(name)
                 && self.has_special_element_above(index)
@@ -8991,7 +9016,11 @@ impl HtmlParser {
                 self.report_repeated_nobr_start_if_in_scope();
                 if let Some(index) = self.open_html_element_in_scope_index("nobr") {
                     if !self.current_element_is("nobr")
-                        && self.adopt_formatting_end_tag_across_div(index, false)
+                        && self.adopt_formatting_end_tag_across_block(
+                            index,
+                            false,
+                            |name| name == "div",
+                        )
                     {
                         self.close_open_element_silently("nobr");
                         return false;
@@ -9295,7 +9324,7 @@ impl HtmlParser {
 
         self.adopt_formatting_end_tag_across_paragraph(index)
             || self.adopt_formatting_end_tag_across_nested_paragraph(index)
-            || self.adopt_formatting_end_tag_across_div(index, false)
+            || self.adopt_formatting_end_tag_across_block(index, false, |name| name == "div")
     }
 
     fn adopt_b_end_tag_across_cite_div(&mut self) -> bool {
@@ -9915,10 +9944,11 @@ impl HtmlParser {
         true
     }
 
-    fn adopt_formatting_end_tag_across_div(
+    fn adopt_formatting_end_tag_across_block(
         &mut self,
         formatting_index: usize,
         report_repeated_iteration: bool,
+        is_target_block: fn(&str) -> bool,
     ) -> bool {
         let Some(formatting_path) = self.open_elements.get(formatting_index).cloned() else {
             return false;
@@ -9945,7 +9975,7 @@ impl HtmlParser {
             .enumerate()
             .skip(formatting_index + 1)
             .find(|(_, path)| {
-                element_at_path(&self.document, path).is_some_and(|name| name == "div")
+                element_at_path(&self.document, path).is_some_and(is_target_block)
             })
             .map(|(index, path)| (index, path.clone()))
         else {
@@ -9985,7 +10015,9 @@ impl HtmlParser {
             .skip(formatting_index + 1)
             .rfind(|path| {
                 path.starts_with(&first_div_path)
-                    && element_at_path(&self.document, path).is_some_and(|name| name == "div")
+                    && element_at_path(&self.document, path).is_some_and(|name| {
+                        matches!(name, "div" | "p") || is_non_div_adoption_special_block(name)
+                    })
             })
             .cloned()
             .unwrap_or_else(|| first_div_path.clone());
@@ -10065,10 +10097,10 @@ impl HtmlParser {
             moved_div_path.push(0);
         }
         self.open_elements.push(moved_div_path.clone());
-        if let Some(boundary_child_index) =
+        if let Some(_boundary_child_index) =
             boundary_child_index.filter(|_| relative_div_path.is_empty())
         {
-            moved_div_path.push(usize::from(boundary_child_index > 0));
+            moved_div_path.push(1);
             self.open_elements.push(moved_div_path.clone());
         }
         for _ in &relative_div_path[..adoption_path_len] {
@@ -10116,7 +10148,9 @@ impl HtmlParser {
             .find(|path| {
                 path.starts_with(&formatting_path)
                     && element_at_path(&self.document, path).is_some_and(|name| {
-                        is_paragraph_boundary_element(name) && !matches!(name, "div" | "p")
+                        (is_paragraph_boundary_element(name) && !matches!(name, "div" | "p"))
+                            || is_heading_element(name)
+                            || matches!(name, "dd" | "dt" | "li")
                     })
             })
             .cloned()
@@ -10184,6 +10218,202 @@ impl HtmlParser {
             moved_path.push(0);
         }
         self.open_elements.push(moved_path);
+        true
+    }
+
+    fn adopt_formatting_end_tag_across_nested_special_blocks(
+        &mut self,
+        formatting_index: usize,
+    ) -> bool {
+        let Some(formatting_path) = self.open_elements.get(formatting_index).cloned() else {
+            return false;
+        };
+        let Some(formatting_element) = element_ref_at_path(&self.document, &formatting_path) else {
+            return false;
+        };
+        let formatting_name = formatting_element.name.clone();
+        let formatting_attributes = formatting_element.attributes.clone();
+        let is_nested_boundary = |name: &str| {
+            (is_paragraph_boundary_element(name) && name != "p")
+                || is_heading_element(name)
+                || matches!(name, "dd" | "dt" | "li")
+        };
+
+        let Some((outer_index, outer_path)) = self
+            .open_elements
+            .iter()
+            .enumerate()
+            .skip(formatting_index + 1)
+            .find(|(_, path)| {
+                path.starts_with(&formatting_path)
+                    && path.len() == formatting_path.len() + 1
+                    && element_at_path(&self.document, path).is_some_and(is_nested_boundary)
+            })
+            .map(|(index, path)| (index, path.clone()))
+        else {
+            return false;
+        };
+        let Some(&outer_child_index) = outer_path.last() else {
+            return false;
+        };
+        if formatting_element.children[..outer_child_index]
+            .iter()
+            .any(|child| {
+                matches!(child, Node::Element(element) if is_adoption_agency_element(&element.name))
+            })
+        {
+            return false;
+        }
+
+        let Some(inner_path) = self
+            .open_elements
+            .iter()
+            .skip(outer_index + 1)
+            .rfind(|path| {
+                path.starts_with(&outer_path)
+                    && path.len() > outer_path.len()
+                    && (outer_path.len() + 1..=path.len()).all(|depth| {
+                        element_at_path(&self.document, &path[..depth])
+                            .is_some_and(is_nested_boundary)
+                    })
+            })
+            .cloned()
+        else {
+            return false;
+        };
+        let relative_inner_path = inner_path[outer_path.len()..].to_vec();
+
+        let Some(mut outer) = remove_node_at_path(&mut self.document.children, &outer_path) else {
+            return false;
+        };
+        wrap_formatting_along_path(
+            &mut outer,
+            &relative_inner_path,
+            &formatting_name,
+            &formatting_attributes,
+        );
+
+        let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
+        else {
+            return false;
+        };
+        let Some(parent_children) =
+            children_at_path_mut(&mut self.document.children, formatting_parent_path)
+        else {
+            return false;
+        };
+        let insert_index = formatting_child_index + 1;
+        if insert_index > parent_children.len() {
+            return false;
+        }
+        parent_children.insert(insert_index, outer);
+
+        self.truncate_open_elements(formatting_index);
+        let mut inserted_path = formatting_parent_path.to_vec();
+        inserted_path.push(insert_index);
+        self.open_elements.push(inserted_path.clone());
+        for child_index in relative_inner_path {
+            inserted_path.push(child_index + 1);
+            self.open_elements.push(inserted_path.clone());
+        }
+        true
+    }
+
+    fn adopt_formatting_end_tag_across_list_container(
+        &mut self,
+        formatting_index: usize,
+    ) -> bool {
+        let Some(formatting_path) = self.open_elements.get(formatting_index).cloned() else {
+            return false;
+        };
+        let Some(formatting_element) = element_ref_at_path(&self.document, &formatting_path) else {
+            return false;
+        };
+        let formatting_name = formatting_element.name.clone();
+        let formatting_attributes = formatting_element.attributes.clone();
+
+        let Some((container_index, container_path, container_name)) = self
+            .open_elements
+            .iter()
+            .enumerate()
+            .skip(formatting_index + 1)
+            .find_map(|(index, path)| {
+                let name = element_at_path(&self.document, path)?;
+                (path.starts_with(&formatting_path)
+                    && path.len() == formatting_path.len() + 1
+                    && matches!(name, "dl" | "ol" | "ul"))
+                .then(|| (index, path.clone(), name.to_string()))
+            })
+        else {
+            return false;
+        };
+        let Some(item_path) = self
+            .open_elements
+            .iter()
+            .skip(container_index + 1)
+            .rfind(|path| {
+                if !path.starts_with(&container_path) || path.len() <= container_path.len() {
+                    return false;
+                }
+                let mut parent_name = container_name.as_str();
+                for depth in container_path.len() + 1..=path.len() {
+                    let Some(name) = element_at_path(&self.document, &path[..depth]) else {
+                        return false;
+                    };
+                    let valid_step = match parent_name {
+                        "dl" => matches!(name, "dd" | "dt"),
+                        "ol" | "ul" => name == "li",
+                        "dd" | "dt" | "li" => matches!(name, "dl" | "ol" | "ul"),
+                        _ => false,
+                    };
+                    if !valid_step {
+                        return false;
+                    }
+                    parent_name = name;
+                }
+                matches!(parent_name, "dd" | "dt" | "li")
+            })
+            .cloned()
+        else {
+            return false;
+        };
+
+        let relative_item_path = &item_path[container_path.len()..];
+        let Some(mut container) =
+            remove_node_at_path(&mut self.document.children, &container_path)
+        else {
+            return false;
+        };
+        wrap_formatting_along_path(
+            &mut container,
+            relative_item_path,
+            &formatting_name,
+            &formatting_attributes,
+        );
+
+        let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
+        else {
+            return false;
+        };
+        let Some(formatting_parent_children) =
+            children_at_path_mut(&mut self.document.children, formatting_parent_path)
+        else {
+            return false;
+        };
+        let insert_index = formatting_child_index + 1;
+        if insert_index > formatting_parent_children.len() {
+            return false;
+        }
+        formatting_parent_children.insert(insert_index, container);
+
+        self.truncate_open_elements(formatting_index);
+        let mut moved_path = formatting_parent_path.to_vec();
+        moved_path.push(insert_index);
+        self.open_elements.push(moved_path.clone());
+        for child_index in relative_item_path {
+            moved_path.push(child_index + 1);
+            self.open_elements.push(moved_path.clone());
+        }
         true
     }
 
@@ -12081,9 +12311,11 @@ fn seed_formatting_around_boundary_child(
     else {
         return;
     };
-    boundary_element.children.insert(
-        0,
-        Node::element(formatting_name.to_string(), formatting_attributes.to_vec()),
+    wrap_element_children_in_formatting(
+        boundary_element,
+        formatting_name,
+        formatting_attributes,
+        true,
     );
 }
 
@@ -13619,6 +13851,12 @@ fn is_paragraph_boundary_element(name: &str) -> bool {
     ];
 
     PARAGRAPH_BOUNDARY_ELEMENTS.contains(&name)
+}
+
+fn is_non_div_adoption_special_block(name: &str) -> bool {
+    (is_paragraph_boundary_element(name) && !matches!(name, "div" | "p"))
+        || is_heading_element(name)
+        || matches!(name, "dd" | "dt" | "li")
 }
 
 fn preserves_initial_line_feed(name: &str) -> bool {
@@ -37414,6 +37652,778 @@ mod tests {
         let block = find_first_element_in_nodes(&direct_document.children, "figure").unwrap();
         assert_eq!(element(&block.children[0]).name, "u");
         assert_eq!(block.children[1], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn formatting_end_across_heading_closes_the_reconstructed_formatting() {
+        let source =
+            "<!doctype html><!--é-->\r\n<em class=carry>A<h1 id=block>B</em>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        let original = element(&document_body.children[0]);
+        assert_eq!(original.name, "em");
+        assert_eq!(original.children, vec![Node::text("A")]);
+        let block = find_element_by_id(&output.document.children, "block").unwrap();
+        let reconstructed = element(&block.children[0]);
+        assert_eq!(reconstructed.name, "em");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(reconstructed.children, vec![Node::text("B")]);
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(source.len() > source.chars().count());
+
+        for tag in ["h1", "h2", "h3", "h4", "h5", "h6"] {
+            let source = format!("<!doctype html><strong>A<{tag} id=block>B</strong>C");
+            let document = parse_html(&source).unwrap();
+            let block = find_element_by_id(&document.children, "block").unwrap();
+            assert_eq!(element(&block.children[0]).name, "strong", "{tag}");
+            assert_eq!(block.children[1], Node::text("C"), "{tag}");
+        }
+
+        let control = parse_html("<!doctype html><em>A</em><h1 id=block>BC").unwrap();
+        let block = find_element_by_id(&control.children, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
+
+        let fragment = parse_html_fragment_for_context(
+            "<u>A<h2 id=block>B</u>C",
+            "body",
+        )
+        .unwrap();
+        let block = find_element_by_id(&fragment, "block").unwrap();
+        assert_eq!(element(&block.children[0]).name, "u");
+        assert_eq!(block.children[1], Node::text("C"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "h3".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "i".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ]);
+        let block = find_first_element_in_nodes(&direct_document.children, "h3").unwrap();
+        assert_eq!(element(&block.children[0]).name, "i");
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn formatting_end_across_orphan_list_item_closes_reconstructed_formatting() {
+        let source =
+            "<!doctype html><!--é-->\r\n<em class=carry>A<li id=block>B</em>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        let original = element(&document_body.children[0]);
+        assert_eq!(original.name, "em");
+        assert_eq!(original.children, vec![Node::text("A")]);
+        let block = find_element_by_id(&output.document.children, "block").unwrap();
+        let reconstructed = element(&block.children[0]);
+        assert_eq!(reconstructed.name, "em");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(reconstructed.children, vec![Node::text("B")]);
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(source.len() > source.chars().count());
+
+        for tag in ["li", "dt", "dd"] {
+            let source = format!("<!doctype html><strong>A<{tag} id=block>B</strong>C");
+            let document = parse_html(&source).unwrap();
+            let block = find_element_by_id(&document.children, "block").unwrap();
+            assert_eq!(element(&block.children[0]).name, "strong", "{tag}");
+            assert_eq!(block.children[1], Node::text("C"), "{tag}");
+        }
+
+        let control = parse_html("<!doctype html><em>A</em><li id=block>BC").unwrap();
+        let block = find_element_by_id(&control.children, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
+
+        let fragment =
+            parse_html_fragment_for_context("<u>A<dt id=block>B</u>C", "body").unwrap();
+        let block = find_element_by_id(&fragment, "block").unwrap();
+        assert_eq!(element(&block.children[0]).name, "u");
+        assert_eq!(block.children[1], Node::text("C"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "dd".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "i".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ]);
+        let block = find_first_element_in_nodes(&direct_document.children, "dd").unwrap();
+        assert_eq!(element(&block.children[0]).name, "i");
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn formatting_end_across_list_container_reconstructs_inside_the_item() {
+        let source =
+            "<!doctype html><!--é-->\r\n<em class=carry>A<ol><li id=block>B</em>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        let original = element(&document_body.children[0]);
+        assert_eq!(original.name, "em");
+        assert_eq!(original.children, vec![Node::text("A")]);
+        let list = element(&document_body.children[1]);
+        assert_eq!(list.name, "ol");
+        let empty_clone = element(&list.children[0]);
+        assert_eq!(empty_clone.name, "em");
+        assert_eq!(empty_clone.attribute("class"), Some("carry"));
+        assert!(empty_clone.children.is_empty());
+        let block = find_element_by_id(&output.document.children, "block").unwrap();
+        let reconstructed = element(&block.children[0]);
+        assert_eq!(reconstructed.name, "em");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(reconstructed.children, vec![Node::text("B")]);
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(source.len() > source.chars().count());
+
+        for (container, item) in [("ol", "li"), ("ul", "li"), ("dl", "dt"), ("dl", "dd")]
+        {
+            let source = format!(
+                "<!doctype html><strong>A<{container}><{item} id=block>B</strong>C"
+            );
+            let document = parse_html(&source).unwrap();
+            let block = find_element_by_id(&document.children, "block").unwrap();
+            assert_eq!(element(&block.children[0]).name, "strong", "{container}/{item}");
+            assert_eq!(block.children[1], Node::text("C"), "{container}/{item}");
+        }
+
+        let control =
+            parse_html("<!doctype html><em>A</em><ol><li id=block>BC").unwrap();
+        let block = find_element_by_id(&control.children, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
+
+        let fragment = parse_html_fragment_for_context(
+            "<u>A<ul><li id=block>B</u>C",
+            "body",
+        )
+        .unwrap();
+        let block = find_element_by_id(&fragment, "block").unwrap();
+        assert_eq!(element(&block.children[0]).name, "u");
+        assert_eq!(block.children[1], Node::text("C"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "dl".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "dt".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "i".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ]);
+        let block = find_first_element_in_nodes(&direct_document.children, "dt").unwrap();
+        assert_eq!(element(&block.children[0]).name, "i");
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn formatting_end_across_nested_lists_reconstructs_at_each_level() {
+        let source = "<!doctype html><!--é-->\r\n<em class=carry>A<ul><li><ol><li id=block>B</em>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        assert_eq!(element(&document_body.children[0]).children, vec![Node::text("A")]);
+        let outer_list = element(&document_body.children[1]);
+        assert_eq!(outer_list.name, "ul");
+        assert!(element(&outer_list.children[0]).children.is_empty());
+        let outer_item = element(&outer_list.children[1]);
+        assert_eq!(outer_item.name, "li");
+        assert!(element(&outer_item.children[0]).children.is_empty());
+        let inner_list = element(&outer_item.children[1]);
+        assert_eq!(inner_list.name, "ol");
+        assert!(element(&inner_list.children[0]).children.is_empty());
+        let block = find_element_by_id(&output.document.children, "block").unwrap();
+        let reconstructed = element(&block.children[0]);
+        assert_eq!(reconstructed.name, "em");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(reconstructed.children, vec![Node::text("B")]);
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(source.len() > source.chars().count());
+
+        for source in [
+            "<!doctype html><strong>A<dl><dt><ul><li id=block>B</strong>C",
+            "<!doctype html><strong>A<ol><li><dl><dd id=block>B</strong>C",
+        ] {
+            let document = parse_html(source).unwrap();
+            let block = find_element_by_id(&document.children, "block").unwrap();
+            assert_eq!(element(&block.children[0]).name, "strong");
+            assert_eq!(block.children[1], Node::text("C"));
+        }
+
+        let control = parse_html(
+            "<!doctype html><em>A</em><ul><li><ol><li id=block>BC",
+        )
+        .unwrap();
+        let block = find_element_by_id(&control.children, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
+
+        let fragment = parse_html_fragment_for_context(
+            "<u>A<dl><dd><ul><li id=block>B</u>C",
+            "body",
+        )
+        .unwrap();
+        let block = find_element_by_id(&fragment, "block").unwrap();
+        assert_eq!(element(&block.children[0]).name, "u");
+        assert_eq!(block.children[1], Node::text("C"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "ul".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "li".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "ol".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "li".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "i".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ]);
+        let block = find_first_element_in_nodes(&direct_document.children, "ol").unwrap();
+        let inner_item = find_first_element_in_nodes(&block.children, "li").unwrap();
+        assert_eq!(element(&inner_item.children[0]).name, "i");
+        assert_eq!(inner_item.children[1], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn formatting_end_across_nested_special_blocks_reconstructs_at_each_level() {
+        let source = "<!doctype html><!--é-->\r\n<em class=carry>A<section><article id=block>B</em>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        assert_eq!(element(&document_body.children[0]).children, vec![Node::text("A")]);
+        let outer = element(&document_body.children[1]);
+        assert_eq!(outer.name, "section");
+        let empty_clone = element(&outer.children[0]);
+        assert_eq!(empty_clone.name, "em");
+        assert_eq!(empty_clone.attribute("class"), Some("carry"));
+        assert!(empty_clone.children.is_empty());
+        let block = find_element_by_id(&output.document.children, "block").unwrap();
+        let reconstructed = element(&block.children[0]);
+        assert_eq!(reconstructed.name, "em");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(reconstructed.children, vec![Node::text("B")]);
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(source.len() > source.chars().count());
+
+        for (outer, inner) in [
+            ("section", "article"),
+            ("figure", "figcaption"),
+            ("main", "h2"),
+        ] {
+            let source = format!(
+                "<!doctype html><strong>A<{outer}><{inner} id=block>B</strong>C"
+            );
+            let document = parse_html(&source).unwrap();
+            let block = find_element_by_id(&document.children, "block").unwrap();
+            assert_eq!(element(&block.children[0]).name, "strong", "{outer}/{inner}");
+            assert_eq!(block.children[1], Node::text("C"), "{outer}/{inner}");
+        }
+
+        let control =
+            parse_html("<!doctype html><em>A</em><section><article id=block>BC").unwrap();
+        let block = find_element_by_id(&control.children, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
+
+        let fragment = parse_html_fragment_for_context(
+            "<u>A<nav><aside id=block>B</u>C",
+            "body",
+        )
+        .unwrap();
+        let block = find_element_by_id(&fragment, "block").unwrap();
+        assert_eq!(element(&block.children[0]).name, "u");
+        assert_eq!(block.children[1], Node::text("C"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "section".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "article".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "i".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ]);
+        let block = find_first_element_in_nodes(&direct_document.children, "article").unwrap();
+        assert_eq!(element(&block.children[0]).name, "i");
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn formatting_end_across_mixed_div_special_chain_reconstructs_at_each_level() {
+        let source =
+            "<!doctype html><!--é-->\r\n<em class=carry>A<div><section id=block>B</em>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        assert_eq!(element(&document_body.children[0]).children, vec![Node::text("A")]);
+        let outer = element(&document_body.children[1]);
+        assert_eq!(outer.name, "div");
+        let empty_clone = element(&outer.children[0]);
+        assert_eq!(empty_clone.name, "em");
+        assert_eq!(empty_clone.attribute("class"), Some("carry"));
+        assert!(empty_clone.children.is_empty());
+        let block = find_element_by_id(&output.document.children, "block").unwrap();
+        let reconstructed = element(&block.children[0]);
+        assert_eq!(reconstructed.name, "em");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(reconstructed.children, vec![Node::text("B")]);
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(source.len() > source.chars().count());
+
+        for source in [
+            "<!doctype html><strong>A<section><div id=block>B</strong>C",
+            "<!doctype html><strong>A<div><ul><li id=block>B</strong>C",
+            "<!doctype html><strong>A<ul><li><div id=block>B</strong>C",
+        ] {
+            let document = parse_html(source).unwrap();
+            let block = find_element_by_id(&document.children, "block").unwrap();
+            assert_eq!(element(&block.children[0]).name, "strong");
+            assert_eq!(block.children[1], Node::text("C"));
+        }
+
+        let control = parse_html("<!doctype html><em>A</em><div><section id=block>BC").unwrap();
+        let block = find_element_by_id(&control.children, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
+
+        let fragment =
+            parse_html_fragment_for_context("<u>A<nav><div id=block>B</u>C", "body").unwrap();
+        let block = find_element_by_id(&fragment, "block").unwrap();
+        assert_eq!(element(&block.children[0]).name, "u");
+        assert_eq!(block.children[1], Node::text("C"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "section".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "i".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ]);
+        let block = find_first_element_in_nodes(&direct_document.children, "section").unwrap();
+        assert_eq!(element(&block.children[0]).name, "i");
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn formatting_end_across_special_paragraph_chain_reconstructs_inside_paragraph() {
+        let source =
+            "<!doctype html><!--é-->\r\n<em class=carry>A<section><p id=block>B</em>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        assert_eq!(element(&document_body.children[0]).children, vec![Node::text("A")]);
+        let section = element(&document_body.children[1]);
+        let empty_clone = element(&section.children[0]);
+        assert_eq!(empty_clone.name, "em");
+        assert_eq!(empty_clone.attribute("class"), Some("carry"));
+        assert!(empty_clone.children.is_empty());
+        let block = find_element_by_id(&output.document.children, "block").unwrap();
+        let reconstructed = element(&block.children[0]);
+        assert_eq!(reconstructed.name, "em");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(reconstructed.children, vec![Node::text("B")]);
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(source.len() > source.chars().count());
+
+        for source in [
+            "<!doctype html><strong>A<div><p id=block>B</strong>C",
+            "<!doctype html><strong>A<section><div><p id=block>B</strong>C",
+            "<!doctype html><strong>A<ul><li><article><p id=block>B</strong>C",
+        ] {
+            let document = parse_html(source).unwrap();
+            let block = find_element_by_id(&document.children, "block").unwrap();
+            assert_eq!(element(&block.children[0]).name, "strong");
+            assert_eq!(block.children[1], Node::text("C"));
+        }
+
+        let control = parse_html("<!doctype html><em>A</em><section><p id=block>BC").unwrap();
+        let block = find_element_by_id(&control.children, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
+
+        let fragment =
+            parse_html_fragment_for_context("<u>A<nav><p id=block>B</u>C", "body").unwrap();
+        let block = find_element_by_id(&fragment, "block").unwrap();
+        assert_eq!(element(&block.children[0]).name, "u");
+        assert_eq!(block.children[1], Node::text("C"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "section".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "i".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ]);
+        let block = find_first_element_in_nodes(&direct_document.children, "p").unwrap();
+        assert_eq!(element(&block.children[0]).name, "i");
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn formatting_end_across_mixed_special_list_chain_reconstructs_at_each_level() {
+        let source = "<!doctype html><!--é-->\r\n<em class=carry>A<section><ul><li id=block>B</em>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        assert_eq!(element(&document_body.children[0]).children, vec![Node::text("A")]);
+        let section = element(&document_body.children[1]);
+        assert_eq!(section.name, "section");
+        assert!(element(&section.children[0]).children.is_empty());
+        let list = element(&section.children[1]);
+        assert_eq!(list.name, "ul");
+        assert!(element(&list.children[0]).children.is_empty());
+        let block = find_element_by_id(&output.document.children, "block").unwrap();
+        let reconstructed = element(&block.children[0]);
+        assert_eq!(reconstructed.name, "em");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(reconstructed.children, vec![Node::text("B")]);
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(source.len() > source.chars().count());
+
+        for source in [
+            "<!doctype html><strong>A<main><dl><dt id=block>B</strong>C",
+            "<!doctype html><strong>A<ol><li><article id=block>B</strong>C",
+        ] {
+            let document = parse_html(source).unwrap();
+            let block = find_element_by_id(&document.children, "block").unwrap();
+            assert_eq!(element(&block.children[0]).name, "strong");
+            assert_eq!(block.children[1], Node::text("C"));
+        }
+
+        let control =
+            parse_html("<!doctype html><em>A</em><section><ul><li id=block>BC").unwrap();
+        let block = find_element_by_id(&control.children, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
+
+        let fragment = parse_html_fragment_for_context(
+            "<u>A<nav><ol><li id=block>B</u>C",
+            "body",
+        )
+        .unwrap();
+        let block = find_element_by_id(&fragment, "block").unwrap();
+        assert_eq!(element(&block.children[0]).name, "u");
+        assert_eq!(block.children[1], Node::text("C"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "section".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "ul".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "li".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "i".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ]);
+        let block = find_first_element_in_nodes(&direct_document.children, "li").unwrap();
+        assert_eq!(element(&block.children[0]).name, "i");
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn formatting_end_across_wrapped_special_chain_clones_inner_formatting() {
+        let source = "<!doctype html><!--é-->\r\n<b class=outer><i class=inner>A<section><article id=block>B</b>C</i>D";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        let original_bold = element(&document_body.children[0]);
+        assert_eq!(original_bold.name, "b");
+        assert_eq!(element(&original_bold.children[0]).children, vec![Node::text("A")]);
+        let displaced_italic = element(&document_body.children[1]);
+        assert_eq!(displaced_italic.name, "i");
+        assert_eq!(displaced_italic.attribute("class"), Some("inner"));
+        assert!(displaced_italic.children.is_empty());
+        let section = element(&document_body.children[2]);
+        let section_italic = element(&section.children[0]);
+        assert_eq!(section_italic.name, "i");
+        assert!(element(&section_italic.children[0]).children.is_empty());
+        let block = find_element_by_id(&output.document.children, "block").unwrap();
+        let block_italic = element(&block.children[0]);
+        let reconstructed_bold = element(&block_italic.children[0]);
+        assert_eq!(reconstructed_bold.name, "b");
+        assert_eq!(reconstructed_bold.attribute("class"), Some("outer"));
+        assert_eq!(reconstructed_bold.children, vec![Node::text("B")]);
+        assert_eq!(block_italic.children[1], Node::text("C"));
+        assert_eq!(block.children[1], Node::text("D"));
+        assert!(source.len() > source.chars().count());
+
+        let control =
+            parse_html("<!doctype html><b><i>A</i></b><section><article id=block>BCD").unwrap();
+        let block = find_element_by_id(&control.children, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BCD")]);
+
+        let fragment = parse_html_fragment_for_context(
+            "<strong><u>A<nav><aside id=block>B</strong>C</u>D",
+            "body",
+        )
+        .unwrap();
+        let block = find_element_by_id(&fragment, "block").unwrap();
+        let underline = element(&block.children[0]);
+        assert_eq!(element(&underline.children[0]).name, "strong");
+        assert_eq!(underline.children[1], Node::text("C"));
+        assert_eq!(block.children[1], Node::text("D"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "section".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "article".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "b".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::EndTag {
+                name: "i".to_string(),
+            },
+            Token::Text("D".to_string()),
+            Token::Eof,
+        ]);
+        let block = find_first_element_in_nodes(&direct_document.children, "article").unwrap();
+        let italic = element(&block.children[0]);
+        assert_eq!(element(&italic.children[0]).name, "b");
+        assert_eq!(italic.children[1], Node::text("C"));
+        assert_eq!(block.children[1], Node::text("D"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn formatting_end_before_active_marker_is_ignored() {
+        let source =
+            "<!doctype html><!--é-->\r\n<em class=carry>A<object id=block>B</em>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        let formatting = element(&document_body.children[0]);
+        assert_eq!(formatting.name, "em");
+        assert_eq!(formatting.attribute("class"), Some("carry"));
+        let block = find_element_by_id(&output.document.children, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
+        assert!(source.len() > source.chars().count());
+
+        for marker in ["applet", "marquee", "object"] {
+            let source =
+                format!("<!doctype html><strong>A<{marker} id=block>B</strong>C");
+            let document = parse_html(&source).unwrap();
+            let block = find_element_by_id(&document.children, "block").unwrap();
+            assert_eq!(block.children, vec![Node::text("BC")], "{marker}");
+        }
+
+        let control =
+            parse_html("<!doctype html><em>A</em><object id=block>BC").unwrap();
+        let block = find_element_by_id(&control.children, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
+
+        let fragment = parse_html_fragment_for_context(
+            "<u>A<object id=block>B</u>C",
+            "body",
+        )
+        .unwrap();
+        let block = find_element_by_id(&fragment, "block").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "object".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "i".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ]);
+        let block = find_first_element_in_nodes(&direct_document.children, "object").unwrap();
+        assert_eq!(block.children, vec![Node::text("BC")]);
         assert!(direct
             .diagnostics()
             .iter()
