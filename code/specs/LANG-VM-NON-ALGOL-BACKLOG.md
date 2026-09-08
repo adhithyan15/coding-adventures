@@ -40,6 +40,11 @@ Execute real processes with piped input and exact stdout assertions, retaining
 hard failure after tool detection. Add focused peek stability/EOF validation,
 run affected tests and Clippy, and obtain security review before a ready PR.
 
+VM-039a probe reproduced both missing paths before production edits: native
+AOT refuses `main`; LLVM explicitly rejects `call_builtin "input_more"` as
+outside its whitelist. Prioritize the already scoped shared-runtime mapping
+repair before publishing the new matrix cells (rows 438–441).
+
 ## VM-038 implementation contract (selected after #14463 merged)
 
 Refreshed main is `7593f1253d`. VM-057, VM-047c and VM-049 have
