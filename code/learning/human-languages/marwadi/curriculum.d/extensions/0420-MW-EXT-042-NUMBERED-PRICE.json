@@ -1,0 +1,23 @@
+{
+  "id": "MW-EXT-042-NUMBERED-PRICE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can understand a price a seller names and answer it with a counter-offer that names a figure.",
+  "prerequisites": [
+    "MW-EXT-041-COUNT-TEN"
+  ],
+  "lessons": [
+    "MW-C34-hear-bees",
+    "MW-C34-bees",
+    "MW-C34-hear-so",
+    "MW-C34-so",
+    "MW-C34-hear-price-number",
+    "MW-C34-price-number",
+    "MW-C34-hear-counter-offer",
+    "MW-C34-counter-offer",
+    "MW-R34-round-recall",
+    "MW-C34-numbered-price",
+    "MW-R34-script-close"
+  ]
+}

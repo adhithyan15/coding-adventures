@@ -1,0 +1,18 @@
+{
+  "id": "MW-PATH-030",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-R36-count-at-distance",
+    "MW-R36-shopping-numbered",
+    "MW-R36-food-numbered",
+    "MW-R36-transport-numbered",
+    "MW-R36-letters-close",
+    "MW-C36-numbered-exchange",
+    "MW-R36-script-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-044-NUMBERED-EXCHANGE"
+  ],
+  "after": []
+}

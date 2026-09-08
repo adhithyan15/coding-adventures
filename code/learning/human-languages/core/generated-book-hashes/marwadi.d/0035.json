@@ -1,0 +1,18 @@
+{
+  "language": "marwadi",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:0ab5b210b2e77834",
+  "lessonIds": [
+    "MW-W35-digits-zero-one-two",
+    "MW-C35-read-ten-ticket",
+    "MW-W35-digits-three-four-five",
+    "MW-C35-read-five-ticket",
+    "MW-W35-digits-six-seven-eight",
+    "MW-C35-read-eight-ticket",
+    "MW-W35-digit-nine",
+    "MW-C35-read-ticket",
+    "MW-C35-ticket-four",
+    "MW-R35-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch35-digits.tex"
+}

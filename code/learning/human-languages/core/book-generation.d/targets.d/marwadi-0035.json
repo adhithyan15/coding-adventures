@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 35,
+  "output": "marwadi/book/chapters/ch35-digits.tex",
+  "scriptSet": "marwadi-main"
+}

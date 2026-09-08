@@ -304,7 +304,14 @@ describe("corpus level summary", () => {
       // track still holds twenty-five lessons and can say hello and count to five. The
       // metric is honest about what it measures and misleading about what it implies,
       // which is worth writing down here rather than celebrating in a changelog.
-    ).toEqual(["japanese", "marwadi"]);
+      //
+      // HL-C350: marwadi leaves it for exactly the same reason and with exactly the
+      // same caveat. Chapters 32-33 teach one to ten and realize
+      // SPINE-COUNT-ONE-TO-FIVE, so `reach` moves to A1 on the strength of TWO
+      // chapters out of thirty-six. Everything else the track holds is still pre-A1,
+      // `attained` has not moved, and the number below is the one that means
+      // something. One node realized is not a level reached.
+    ).toEqual(["japanese"]);
   });
 
   it("can already build a ramp-to-A1 edition from the canonical corpus", () => {

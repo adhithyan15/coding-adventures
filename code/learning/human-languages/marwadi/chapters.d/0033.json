@@ -1,0 +1,24 @@
+{
+  "chapter": 33,
+  "title": "Six To Ten",
+  "label": "ch:mw-count-ten",
+  "canDo": "I can hear, say, read, and write every number from one to ten, in any order.",
+  "payoff": {
+    "lesson": "MW-C33-count-ten",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Five more numbers arrive with no new sign at all, and the whole run of ten is then scored shuffled in each of the four skills.",
+    "assesses": [
+      "MW-LEX-CHHA-SIX-01",
+      "MW-SCRIPT-CHHA-SIX-01",
+      "MW-LEX-SAAT-01",
+      "MW-SCRIPT-SAAT-01",
+      "MW-LEX-AATH-01",
+      "MW-SCRIPT-AATH-01",
+      "MW-LEX-NO-NINE-01",
+      "MW-SCRIPT-NO-NINE-01",
+      "MW-LEX-DAS-01",
+      "MW-SCRIPT-DAS-01",
+      "MW-PERFORMANCE-COUNT-TEN-FOUR-SKILL-01"
+    ]
+  }
+}

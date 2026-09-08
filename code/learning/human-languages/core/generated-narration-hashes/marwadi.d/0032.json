@@ -1,0 +1,28 @@
+{
+  "language": "marwadi",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:f5cf558d084f5116",
+  "lessonIds": [
+    "MW-W32-e",
+    "MW-C32-hear-ek",
+    "MW-C32-ek",
+    "MW-C32-hear-do-two",
+    "MW-C32-do-two",
+    "MW-C32-hear-teen",
+    "MW-C32-teen",
+    "MW-C32-hear-chaar",
+    "MW-C32-chaar",
+    "MW-C32-hear-paanch",
+    "MW-C32-paanch",
+    "MW-R32-count-recall",
+    "MW-C32-count-five",
+    "MW-R32-script-close"
+  ],
+  "voiceLessons": 9,
+  "drivablePrefix": 0,
+  "text": "marwadi/narration/ch32.txt",
+  "json": "marwadi/narration/ch32.json",
+  "textHash": "fnv1a64:a3beca238c34a192",
+  "jsonHash": "fnv1a64:d0b18758ad653b99",
+  "findings": []
+}

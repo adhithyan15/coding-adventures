@@ -9,10 +9,15 @@
 // Bengali, Arabic and Urdu already live apart for exactly this reason.
 //
 // WHAT THIS SUITE HAS TO GUARD THAT THE OTHERS DO NOT
-// This track's whole curriculum is a market transaction and it teaches no
-// numeral. That is the kind of finding a coverage percentage buries — the point
-// is one of 197 — so it gets a test of its own, and so does the fact that a
-// bargaining course has no word for "no".
+// This track's whole curriculum is a market transaction and for 257 lessons it
+// taught no numeral. That is the kind of finding a coverage percentage buries —
+// the point is one of 197 — so it got a test of its own, and so did the fact
+// that a bargaining course has no word for "no".
+//
+// HL-C350 closed the numeral half (chapters 32–36) and the assertions below now
+// pin the CLOSURE rather than the absence, in both directions: the probe must
+// name real atoms, and the coverage count must move by exactly the two points
+// that were closed. The polarity finding is untouched and still red.
 // ---------------------------------------------------------------------------
 import { describe, expect, it } from "vitest";
 import { loadEverything, loadExamInventory } from "../src/loader.js";
@@ -102,7 +107,7 @@ describe("the committed Marwadi A1 inventory", () => {
 
   it("records the exam-levels caveat as STALE rather than deferring to it", () => {
     // The caveat says the mapping "does not claim that the current starter
-    // chapter reaches it". The track has 257 lessons across 31 chapters, an
+    // chapter reaches it". The track has 312 lessons across 36 chapters, an
     // assessment spec, task shapes, and 25 four-skill scored practice atoms.
     // A caveat that has been overtaken is recorded as overtaken — the same
     // treatment a sibling track's OVERSTATED caveat got, in the other direction.
@@ -136,11 +141,11 @@ describe("the committed Marwadi A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(197);
-    expect(coverage.covered).toBe(74);
-    expect(coverage.unmapped).toBe(123);
+    expect(coverage.covered).toBe(76);
+    expect(coverage.unmapped).toBe(121);
     expect(coverage.partial).toBe(0);
     // FLAT ZERO. `ar`, `ane`, `aur` (and), `pan`, `par` (but), `ke` (that),
-    // `jad` (when) all return ZERO occurrences in 257 files. A learner with
+    // `jad` (when) all return ZERO occurrences in 312 files. A learner with
     // twelve kinship words and seven foods cannot say "bread and tea".
     expect(coverage.byCategory["Yojak (joining and subordination)"]!).toEqual({
       enumerated: 11,
@@ -154,26 +159,58 @@ describe("the committed Marwadi A1 inventory", () => {
       covered: 4,
     });
     expect(formatExamCoverage(coverage)).toContain(
-      "marwadi A1 (partial inventory): 74/197 points covered (38%)",
+      "marwadi A1 (partial inventory): 76/197 points covered (39%)",
     );
   }, 60_000);
 
-  it("keeps the findings a percentage would bury: no numeral, and no word for no", () => {
-    // (1) A MARKET COURSE WITH NO NUMBERS. Chapters 26–31 teach "how much is
-    //     this?", "how much altogether?", "this is very expensive", "make it a
-    //     little cheaper", "what final price will you give?" and "take the
-    //     money" — and not one numeral. ek, do, teen, chaar, paanch all return
-    //     zero (the raw matches for `do` are the imperative verb "give").
+  it("keeps the findings a percentage would bury: the numerals that closed, and no word for no", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "marwadi");
+    // (1) THE MARKET COURSE THAT HAD NO NUMBERS. Chapters 26–31 teach "how much
+    //     is this?", "how much altogether?", "this is very expensive", "make it
+    //     a little cheaper", "what final price will you give?" and "take the
+    //     money", and for 257 lessons not one numeral stood behind any of them:
+    //     ek, do, teen, chaar and paanch returned zero (the raw matches for `do`
+    //     were the imperative verb "give"). HL-C350's chapters 32–36 teach
+    //     twelve cardinals, so this point is now CLOSED — and the assertion is
+    //     the closure itself, atom by atom, rather than a boolean.
     const numerals = inventory.points.find((point) => point.id === "MW-A1-Q-01")!;
-    expect(numerals.probe).toBeNull();
-    expect(numerals.note).toMatch(/THE HEADLINE OF THIS FILE/);
+    expect(numerals.probe).not.toBeNull();
     expect(numerals.derivedFrom).toEqual(["A1-Q-01", "A1-NG2-01", "A1-NE16-01"]);
-    // …and the Devanagari digits are missing from the script column too, so it
-    // is the same hole seen from both sides.
-    expect(inventory.points.find((point) => point.id === "MW-A1-LIP-13")!.probe).toBeNull();
-    // (2) POLARITY. `haan saa` gets a four-skill performance lesson in chapter 3
-    //     and there is NO negator at all, so a bargaining course cannot decline,
-    //     refuse, disagree or correct.
+    for (const numeral of ["EK", "DO-TWO", "TEEN", "CHAAR", "PAANCH", "CHHA-SIX",
+      "SAAT", "AATH", "NO-NINE", "DAS", "BEES", "SO"]) {
+      // BOTH doors, because this track splits a word by skill and a probe that
+      // named only the LEX atom would report a number the hand cannot write.
+      expect(numerals.probe, numeral).toContain(`MW-LEX-${numeral}-01`);
+      expect(numerals.probe, numeral).toContain(`MW-SCRIPT-${numeral}-01`);
+      expect(taught.has(`MW-LEX-${numeral}-01`), numeral).toBe(true);
+      expect(taught.has(`MW-SCRIPT-${numeral}-01`), numeral).toBe(true);
+    }
+    // The note must keep BOTH halves: what was missing, and what is still
+    // missing. Eleven to nineteen wait on four independent vowels and one
+    // consonant, which is a script debt and not a numeral one.
+    expect(numerals.note).toMatch(/CLOSED BY HL-C350/);
+    expect(numerals.note).toMatch(/NOT CLOSED, DELIBERATELY: the numbers between ten and twenty/);
+    // …and the digits, the same hole seen from the script side, closed with it.
+    const digits = inventory.points.find((point) => point.id === "MW-A1-LIP-13")!;
+    expect(digits.probe).not.toBeNull();
+    for (const digit of ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
+      "SEVEN", "EIGHT", "NINE"]) {
+      expect(digits.probe, digit).toContain(`MW-SCRIPT-DIGIT-${digit}-01`);
+      expect(taught.has(`MW-SCRIPT-DIGIT-${digit}-01`), digit).toBe(true);
+    }
+    // (1b) ORDINALS did NOT close, and the note has to say which KIND of gap it
+    //      is: pahlo/dujo/tijo/chautho need no untaught sign, so this is a
+    //      sourcing gap, not a script one. A note that said only "absent" would
+    //      send the next tranche looking for the wrong thing.
+    const ordinals = inventory.points.find((point) => point.id === "MW-A1-Q-02")!;
+    expect(ordinals.probe).toBeNull();
+    expect(ordinals.note).toMatch(/no citable Marwari-specific source/);
+    expect(ordinals.note).toMatch(/not a script debt/);
+    // (2) POLARITY, untouched by HL-C350 and still red. `haan saa` gets a
+    //     four-skill performance lesson in chapter 3 and there is NO negator at
+    //     all, so a bargaining course still cannot decline, refuse or disagree —
+    //     which now matters more, not less, since it can name a price.
     const polarity = inventory.points.find((point) => point.id === "MW-A1-ADV-05")!;
     expect(polarity.probe).toBeNull();
     expect(inventory.points.find((point) => point.id === "MW-A1-F4-09")!.probe).toBeNull();
@@ -182,7 +219,7 @@ describe("the committed Marwadi A1 inventory", () => {
     const repair = inventory.points.find((point) => point.id === "MW-A1-F2-15")!;
     expect(repair.probe).toBeNull();
     expect(repair.note).toMatch(/THE REPAIR COLUMN, CHECKED SEPARATELY, AND THERE IS NOTHING/);
-  });
+  }, 60_000);
 
   it("records what this track does differently, since the numbers do not show it", () => {
     // Marwadi is one of only two tracks with zero reinforcement-window misses in

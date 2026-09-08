@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W32-e",
+    "language": "marwadi",
+    "chapter": 32,
+    "sequence": 2580,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:57fb8951f48eb980",
+    "detachableSegments": [
+      "Script — the standing vowel"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

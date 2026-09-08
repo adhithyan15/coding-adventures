@@ -1,0 +1,22 @@
+{
+  "id": "MW-EXT-043-DIGITS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can read a price written in the ten Devanagari digits and write one from dictation.",
+  "prerequisites": [
+    "MW-EXT-042-NUMBERED-PRICE"
+  ],
+  "lessons": [
+    "MW-W35-digits-zero-one-two",
+    "MW-C35-read-ten-ticket",
+    "MW-W35-digits-three-four-five",
+    "MW-C35-read-five-ticket",
+    "MW-W35-digits-six-seven-eight",
+    "MW-C35-read-eight-ticket",
+    "MW-W35-digit-nine",
+    "MW-C35-read-ticket",
+    "MW-C35-ticket-four",
+    "MW-R35-script-close"
+  ]
+}

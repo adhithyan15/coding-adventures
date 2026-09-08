@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C33-no-nine",
+    "language": "marwadi",
+    "chapter": 33,
+    "sequence": 2790,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:baf6a269a536c41e"
+  },
+  "findings": []
+}

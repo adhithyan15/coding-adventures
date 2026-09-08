@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 34,
+  "output": "marwadi/book/chapters/ch34-numbered-price.tex",
+  "scriptSet": "marwadi-main"
+}

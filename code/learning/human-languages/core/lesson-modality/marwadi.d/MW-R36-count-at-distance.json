@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R36-count-at-distance",
+    "language": "marwadi",
+    "chapter": 36,
+    "sequence": 3060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:164e03603a8d4dbd"
+  },
+  "findings": []
+}

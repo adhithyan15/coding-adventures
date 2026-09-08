@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W35-digits-zero-one-two",
+    "language": "marwadi",
+    "chapter": 35,
+    "sequence": 2960,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5647d72aaa96a580",
+    "detachableSegments": [
+      "Script — the first three figures"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
