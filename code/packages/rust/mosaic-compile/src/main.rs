@@ -1075,8 +1075,14 @@ fn run_pipeline(
                         _ => relative.to_string(),
                     }
                 };
-                let flat: [(String, &str); 2] = [
+                // Same defect the webcomponent arm had: index.html loads
+                // `<script type="module" src="./main.js">` and main.js was built and
+                // never written, so an emitted html project 404'd on its own entry point
+                // and never hydrated its {{slot}} markers. Missed on the first pass
+                // because only the webcomponent arm was checked.
+                let flat: [(String, &str); 3] = [
                     (side_file_path("index.html"), &proj.index_html),
+                    (side_file_path("main.js"), &proj.main_js),
                     (side_file_path("README.md"), &proj.readme),
                 ];
                 for (path, src) in &flat {
