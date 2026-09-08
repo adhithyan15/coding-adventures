@@ -31,6 +31,12 @@ const JAPANESE_ME = DUCTUS[ductusKey("japanese", "め")];
 const JAPANESE_TSU = DUCTUS[ductusKey("japanese", "つ")];
 const JAPANESE_RO = DUCTUS[ductusKey("japanese", "ろ")];
 const JAPANESE_SMALL_YU = DUCTUS[ductusKey("japanese", "ゅ")];
+const JAPANESE_NO = DUCTUS[ductusKey("japanese", "の")];
+const JAPANESE_HI = DUCTUS[ductusKey("japanese", "ひ")];
+const JAPANESE_FU = DUCTUS[ductusKey("japanese", "ふ")];
+const JAPANESE_HO = DUCTUS[ductusKey("japanese", "ほ")];
+const JAPANESE_MU = DUCTUS[ductusKey("japanese", "む")];
+const JAPANESE_YA = DUCTUS[ductusKey("japanese", "や")];
 
 const OWNER_SCRIPTS = new Set(["japanese"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -422,5 +428,36 @@ describe("handwriting ductus", () => {
     const right = (points: Point[]) => Math.max(...points.map((p) => p.x));
     expect(top(smallPoints)).toBeLessThan(top(yuPoints));
     expect(right(smallPoints)).toBeLessThan(right(yuPoints));
+  });
+
+  it("Japanese counter hiragana preserve the cited stroke and lift counts", () => {
+    expect([
+      [JAPANESE_NO.glyph, JAPANESE_NO.strokes.length, penLifts(JAPANESE_NO)],
+      [JAPANESE_HI.glyph, JAPANESE_HI.strokes.length, penLifts(JAPANESE_HI)],
+      [JAPANESE_FU.glyph, JAPANESE_FU.strokes.length, penLifts(JAPANESE_FU)],
+      [JAPANESE_HO.glyph, JAPANESE_HO.strokes.length, penLifts(JAPANESE_HO)],
+      [JAPANESE_MU.glyph, JAPANESE_MU.strokes.length, penLifts(JAPANESE_MU)],
+      [JAPANESE_YA.glyph, JAPANESE_YA.strokes.length, penLifts(JAPANESE_YA)],
+    ]).toEqual([
+      ["の", 1, 0],
+      ["ひ", 1, 0],
+      ["ふ", 4, 3],
+      ["ほ", 4, 3],
+      ["む", 3, 2],
+      ["や", 3, 2],
+    ]);
+    for (const letter of [
+      JAPANESE_NO,
+      JAPANESE_HI,
+      JAPANESE_FU,
+      JAPANESE_HO,
+      JAPANESE_MU,
+      JAPANESE_YA,
+    ]) {
+      expect(letter.source.url).toContain(
+        "commons.wikimedia.org/wiki/File:Hiragana_",
+      );
+      expect(letter.source.citation).toMatch(/Sirgazil.*frames.*seconds/i);
+    }
   });
 });

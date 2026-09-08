@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C16-hitotsu",
+    "language": "japanese",
+    "chapter": 16,
+    "sequence": 1330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31a2b55b8759618e"
+  },
+  "findings": []
+}

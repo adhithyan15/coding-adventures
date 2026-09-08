@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 18,
+  "output": "japanese/book/chapters/ch18-counters.tex",
+  "scriptSet": "japanese-main"
+}

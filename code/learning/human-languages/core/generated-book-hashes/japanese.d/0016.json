@@ -1,0 +1,16 @@
+{
+  "language": "japanese",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:1707b93b89eb20b1",
+  "lessonIds": [
+    "JA-W16-hi",
+    "JA-C16-hitotsu",
+    "JA-W16-fu",
+    "JA-C16-futatsu",
+    "JA-C16-mittsu",
+    "JA-C16-yottsu",
+    "JA-C16-itsutsu",
+    "JA-R16-first-five-things"
+  ],
+  "tex": "japanese/book/chapters/ch16-native-count-one-to-five.tex"
+}
