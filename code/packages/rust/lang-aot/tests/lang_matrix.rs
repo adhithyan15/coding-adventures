@@ -5111,7 +5111,7 @@ const PROGRAMS: &[Prog] = &[
         src: "(0) OUTPUT REPORT FILE-C .\n\
                (1) MOVE TOTAL (C) TO TOTAL (C) ; WRITE-ITEM FILE-C ; STOP .",
         expect: Expect::Stdout("0"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // VM-037: fields begin at zero. Distinct record widths make a wrong
     // branch observable without an infinite-loop failure path.
@@ -5123,7 +5123,7 @@ const PROGRAMS: &[Prog] = &[
               (2) WRITE-ITEM FILE-A ; STOP .\n\
               (4) WRITE-ITEM FILE-C ; STOP .",
         expect: Expect::Stdout("0"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Both strict inequalities are false for equal fields. OTHERWISE must
     // jump over the one-field wrong path to the two-field result.
@@ -5135,7 +5135,7 @@ const PROGRAMS: &[Prog] = &[
               (2) WRITE-ITEM FILE-C ; STOP .\n\
               (4) WRITE-ITEM FILE-A ; STOP .",
         expect: Expect::Stdout("0 0"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Each jump skips a terminating two-field output path. The correct chain
     // visits two separated one-field writes; neither jump can be ignored.
@@ -5148,7 +5148,7 @@ const PROGRAMS: &[Prog] = &[
               (3) WRITE-ITEM FILE-A ; STOP .\n\
               (4) WRITE-ITEM FILE-C ; STOP .",
         expect: Expect::Stdout("0\n0"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — literal `DISPLAY` (PL09 step 4, the `cobol-iir-compiler` minimal
     // slice). A four-division program whose PROCEDURE DIVISION `DISPLAY`s a string
@@ -14298,4 +14298,55 @@ fn portable_text_stdout_nib_beam_corpus() {
     }
     assert_eq!(executed, 26);
     eprintln!("Nib BEAM corpus: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_flow_matic_beam_output() {
+    if !erl_ok() {
+        eprintln!("SKIP FLOW-MATIC BEAM output: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p|
+        p.lang == Language::FlowMatic && !p.src.contains("READ-ITEM")) {
+        let result = run_beam(program).expect("detected erl must execute FLOW-MATIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("FLOW-MATIC BEAM output: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_beam_putchar_preserves_loop_state() {
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+    if !erl_ok() { return; }
+    let mut module = IIRModule::new("putchar_loop", "test");
+    module.entry_point = Some("main".into());
+    module.add_or_replace(IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("ch".into()), vec![Operand::Int(65)], "i64"),
+        IIRInstr::new("const", Some("count".into()), vec![Operand::Int(200)], "i64"),
+        IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("const", Some("zero".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("answer".into()), vec![Operand::Int(42)], "i64"),
+        IIRInstr::new("label", None, vec![Operand::Var("loop".into())], "void"),
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("putchar".into()), Operand::Var("ch".into())], "void"),
+        IIRInstr::new("sub", Some("count".into()),
+            vec![Operand::Var("count".into()), Operand::Var("one".into())], "i64"),
+        IIRInstr::new("cmp_gt", Some("more".into()),
+            vec![Operand::Var("count".into()), Operand::Var("zero".into())], "bool"),
+        IIRInstr::new("jmp_if_true", None,
+            vec![Operand::Var("more".into()), Operand::Var("loop".into())], "void"),
+        IIRInstr::new("ret", None, vec![Operand::Var("answer".into())], "i64"),
+    ]));
+    let beam = iir_to_beam::lower_iir_to_beam(&module,
+        &iir_to_beam::IIRBeamConfig::new("putchar_loop")).unwrap();
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("putchar_loop.beam"), iir_to_beam::encode_beam(&beam)).unwrap();
+    let out = Command::new("erl").arg("-noshell").arg("-pa").arg(dir.path())
+        .arg("-eval").arg(r#"io:format("<<R>>~w<</R>>",[putchar_loop:main()]),halt(0)."#)
+        .output().unwrap();
+    assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
+    assert_eq!(String::from_utf8_lossy(&out.stdout), format!("{}<<R>>42<</R>>", "A".repeat(200)));
 }

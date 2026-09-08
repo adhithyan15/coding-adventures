@@ -1462,3 +1462,16 @@ reserving two heap words and treating this builtin as an imported-call site
 for existing live-register spill/restore analysis. It has one value operand
 and no result. Validate actual recursive integer printing/control flow; input
 and Brainfuck tape parity remain outside this change.
+
+### VM-040 FLOW-MATIC output validation
+
+The four output/control-flow programs passed on real Erlang and in four fresh
+single-cell processes (rows 386-389), each with its positive execution sentinel.
+A separate 200-character loop preserved live state and returned 42. All 93
+backend tests (18 unit, 70 integration, 5 doc) and Clippy for both affected
+packages with all targets passed. FLOW-MATIC now declares 60 cells: four output
+programs across eight backends and four input programs across seven. No full
+rerun of the seven existing columns is claimed. This proves ASCII integer
+printing only; byte truncation/encoding, BEAM input/EOF, and Brainfuck tape
+semantics still need separate probes before promotion. Reprioritize the remaining
+VM-040 families against VM-060b host input and VM-013 Intel 8008 after merge.
