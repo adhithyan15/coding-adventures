@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9d37927533d05aa1",
+  "sourceHash": "fnv1a64:d766f068c0c1c0a4",
   "lessons": [
     {
       "id": "HI-C04-phir",
@@ -547,16 +547,16 @@
       "id": "HI-C04-chalta-hun",
       "sequence": 380,
       "title": "चलता हूँ (chaltā hūṁ) — \"I'll be off\"",
-      "headword": "चलता हूँ",
-      "romanization": "chaltā hūṁ",
-      "gloss": "I'll be off (lit. \"I go\"), gendered",
+      "headword": "चलता हूँ / चलती हूँ / चलना",
+      "romanization": "chaltā hūṁ / chaltī hūṁ / chalnā",
+      "gloss": "I'll be off (masculine / feminine) / to move, walk, or go",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:215125685087407a",
+      "sourceHash": "fnv1a64:93fde095e319ccfd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "चलता हूँ (chaltā hūṁ) literally means \"I go / I move,\" used the way English says \"I'll be off / I'll get going.\" The verb is चलना (chalnā, \"to move, walk, go\"), from Sanskrit चल् (cal-, \"to move, stir\") — the root behind cal (\"move!\"), calan (\"circulation\"), and cañcal (\"restless\"). Like Bengali āshi (\"I come\") and Marathi yeto, Hindi prefers to leave by saying \"I'm moving,\" never a blunt \"I'm leaving.\""
+              "text": "The phrase चलता हूँ, chaltā hūṁ, literally means \"I go / I move,\" used the way English says \"I'll be off / I'll get going.\" The verb is चलना (chalnā, \"to move, walk, go\"), from Sanskrit चल् (cal-, \"to move, stir\") — the root behind cal (\"move!\"), calan (\"circulation\"), and cañcal (\"restless\"). Like Bengali āshi (\"I come\") and Marathi yeto, Hindi prefers to leave by saying \"I'm moving,\" never a blunt \"I'm leaving.\""
             }
           ]
         },

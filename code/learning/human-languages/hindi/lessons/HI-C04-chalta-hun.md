@@ -8,9 +8,9 @@ sequence: 380
 spine_node: SPINE-TAKE-LEAVE
 chapter: 4
 type: phrase
-headword: चलता हूँ
-gloss: I'll be off (lit. "I go"), gendered
-romanization: "chaltā hūṁ"
+headword: चलता हूँ / चलती हूँ / चलना
+gloss: I'll be off (masculine / feminine) / to move, walk, or go
+romanization: "chaltā hūṁ / chaltī hūṁ / chalnā"
 concept_tag: FAREWELL-CASUAL
 prerequisites: [HI-C03-hun, HI-C03-main]
 sounds: [matra-a]
@@ -48,8 +48,9 @@ verb changes for a man or a woman speaking.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01, HI-CONCEPT-C04-CHALTAHUN-01] -->
 
-**चलता हूँ** literally means "**I go / I move**," used the way English says "I'll
-be off / I'll get going." The verb is **चलना** (*chalnā*, "to move, walk, go"),
+The phrase **चलता हूँ**, *chaltā hūṁ*, literally means "**I go / I move**," used
+the way English says "I'll be off / I'll get going." The verb is **चलना**
+(*chalnā*, "to move, walk, go"),
 from Sanskrit **चल्** (*cal-*, "to move, stir") — the root behind *cal* ("move!"),
 *calan* ("circulation"), and *cañcal* ("restless"). Like Bengali *āshi* ("I
 come") and Marathi *yeto*, Hindi prefers to leave by saying "I'm **moving**,"
