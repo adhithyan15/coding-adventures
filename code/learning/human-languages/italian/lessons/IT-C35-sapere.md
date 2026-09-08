@@ -68,7 +68,7 @@ meaning **can, know how to**:
 > **So parlare italiano.** — I can speak Italian. *(I have learnt how)*
 > **Sai leggere?** — Can you read?
 
-No *per* and no *to*: just **sapere** and the plain infinitive. *So parlare* says
+No *per* and no *to*: use **sapere** with the plain infinitive. *So parlare* says
 what *parlo* does not — that you learnt it.
 
 **Sapere** is Latin **sapere**, "to taste." A person of good taste became a

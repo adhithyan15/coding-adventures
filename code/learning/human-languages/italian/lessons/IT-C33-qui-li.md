@@ -59,7 +59,7 @@ Two ways, matching the two ways of pointing:
 | **questo** — this, near me | **qui** — here |
 | **quello** — that, away | **lì** — there |
 
-Italian also has **qua** and **là**, which mean the same and are used just as
+Italian also has **qua** and **là**, which mean the same and are used equally
 often; *qui/lì* are slightly more precise and *qua/là* slightly vaguer, and no
 Italian will notice which you pick.
 

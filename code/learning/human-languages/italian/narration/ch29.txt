@@ -191,7 +191,7 @@ It behaves as any describing word does and changes its ending with what it descr
 Grammar lens: the turn it does at the end of a sentence.
 Italian has no separate machinery for the little question English tacks on the end — isn't it? doesn't he? aren't you? Italian says one word for all of them:
 Parli italiano, vero? — You speak Italian, don't you? Marco abita a Roma, vero? — Marco lives in Rome, doesn't he?
-It asks the other person to confirm what you have just said, and the answer it expects is sì. Its opposite number is no?, which is blunter and expects the same sì: Parli italiano, no?
+It asks the other person to confirm what you said a moment ago, and the answer it expects is sì. Its opposite number is no?, which is blunter and expects the same sì: Parli italiano, no?
 English speakers find this restful. Vero? keeps one shape for every sentence.
 
 Guided Practice.

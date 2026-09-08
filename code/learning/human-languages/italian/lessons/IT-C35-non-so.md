@@ -67,7 +67,7 @@ Every one of those question words is Chapters 31 and 32's, and *non so* is what
 lets you use them about yourself rather than only to ask.
 
 **Three — scepticism.** A bare, slow **Non so …** with the sentence left hanging
-is how an Italian expresses doubt about what has just been said. It is the
+is how an Italian expresses doubt about the previous statement. It is the
 politest disagreement in the language, and it is a great deal gentler than *non
 sono d'accordo*.
 

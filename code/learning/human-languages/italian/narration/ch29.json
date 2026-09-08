@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Yes and No",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:308f52430f2a0273",
+  "sourceHash": "fnv1a64:a20b2988ad532ea1",
   "lessons": [
     {
       "id": "IT-C29-si",
@@ -726,7 +726,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6fcd190c0daa66a2",
+      "sourceHash": "fnv1a64:c0bd16fa89bb31c8",
       "notice": null,
       "blocks": [
         {
@@ -821,7 +821,7 @@
             },
             {
               "kind": "speech",
-              "text": "It asks the other person to confirm what you have just said, and the answer it expects is sì. Its opposite number is no?, which is blunter and expects the same sì: Parli italiano, no?"
+              "text": "It asks the other person to confirm what you said a moment ago, and the answer it expects is sì. Its opposite number is no?, which is blunter and expects the same sì: Parli italiano, no?"
             },
             {
               "kind": "speech",

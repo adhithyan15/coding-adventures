@@ -62,7 +62,7 @@ Use the two in order:
 
 *Prego?* asks for a repeat. *Non capisco* tells the other person that repeating
 it the same way will not help, so they will slow down or choose different words.
-An Italian speaker who hears only *Prego?* will simply say the same sentence
+An Italian speaker who hears only *Prego?* will likely say the same sentence
 again, at the same speed.
 
 A slower and gentler version, for when you have caught some of it:

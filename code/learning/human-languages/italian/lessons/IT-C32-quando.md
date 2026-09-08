@@ -75,7 +75,7 @@ shortened, and nothing else happened to it in two thousand years.
 That is rarer than it sounds. Almost every word in this book has been reshaped on
 its way from Latin: *quaerere* became *chiedere*, *causa* became *cosa*, *nōn*
 split into *no* and *non*, *magis* became *ma*, *oculum* became *occhio*.
-*Quandō* simply stayed. Spanish *cuando*, Portuguese *quando* and Romanian *când*
+*Quandō* stayed almost unchanged. Spanish *cuando*, Portuguese *quando* and Romanian *când*
 kept it too.
 
 Note the *qu-* here does **not** become *chi-*. That change happened before a

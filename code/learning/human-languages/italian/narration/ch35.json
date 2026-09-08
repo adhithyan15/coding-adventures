@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Knowing, and How Much",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bcb5e64642648a50",
+  "sourceHash": "fnv1a64:4c1cae735139f1fc",
   "lessons": [
     {
       "id": "IT-C35-sapere",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1160512300da7aa3",
+      "sourceHash": "fnv1a64:47aff1a80dbbc13b",
       "notice": null,
       "blocks": [
         {
@@ -123,7 +123,7 @@
             },
             {
               "kind": "speech",
-              "text": "No per and no to: just sapere and the plain infinitive. So parlare says what parlo does not — that you learnt it."
+              "text": "No per and no to: use sapere with the plain infinitive. So parlare says what parlo does not — that you learnt it."
             },
             {
               "kind": "speech",
@@ -224,7 +224,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:515cc9594e176c8f",
+      "sourceHash": "fnv1a64:9067919b333a091f",
       "notice": null,
       "blocks": [
         {
@@ -315,7 +315,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three — scepticism. A bare, slow Non so … with the sentence left hanging is how an Italian expresses doubt about what has just been said. It is the politest disagreement in the language, and it is a great deal gentler than non sono d'accordo."
+              "text": "Three — scepticism. A bare, slow Non so … with the sentence left hanging is how an Italian expresses doubt about the previous statement. It is the politest disagreement in the language, and it is a great deal gentler than non sono d'accordo."
             },
             {
               "kind": "speech",

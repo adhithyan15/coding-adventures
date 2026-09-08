@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Not",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:07c38760ca34c00d",
+  "sourceHash": "fnv1a64:18b50a7c0d025e92",
   "lessons": [
     {
       "id": "IT-C30-non",
@@ -219,7 +219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d8842a11c19e5be",
+      "sourceHash": "fnv1a64:cc439845a457f296",
       "notice": null,
       "blocks": [
         {
@@ -307,7 +307,7 @@
             },
             {
               "kind": "speech",
-              "text": "Prego? asks for a repeat. Non capisco tells the other person that repeating it the same way will not help, so they will slow down or choose different words. An Italian speaker who hears only Prego? will simply say the same sentence again, at the same speed."
+              "text": "Prego? asks for a repeat. Non capisco tells the other person that repeating it the same way will not help, so they will slow down or choose different words. An Italian speaker who hears only Prego? will likely say the same sentence again, at the same speed."
             },
             {
               "kind": "speech",
@@ -404,7 +404,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70ab6645f9f10586",
+      "sourceHash": "fnv1a64:9828e43122a484d8",
       "notice": null,
       "blocks": [
         {
@@ -484,7 +484,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that first Italian sentence again and count the negatives. There are three: non, and né, and né. English allows only one and calls a second one an error. Italian requires them all, and a sentence with né and no non is simply wrong:"
+              "text": "Read that first Italian sentence again and count the negatives. There are three: non, and né, and né. English allows only one and calls a second one an error. Italian requires them all, and a sentence with né and no non is does not work in Italian:"
             },
             {
               "kind": "speech",

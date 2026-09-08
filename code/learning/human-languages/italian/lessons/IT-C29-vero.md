@@ -61,7 +61,7 @@ end — *isn't it? doesn't he? aren't you?* Italian says one word for all of the
 > **Parli italiano, vero?** — You speak Italian, don't you?
 > **Marco abita a Roma, vero?** — Marco lives in Rome, doesn't he?
 
-It asks the other person to confirm what you have just said, and the answer it
+It asks the other person to confirm what you said a moment ago, and the answer it
 expects is **sì**. Its opposite number is **no?**, which is blunter and expects
 the same *sì*: *Parli italiano, no?*
 

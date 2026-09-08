@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "But, Or, Why",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:52d6d7f92d18d04b",
+  "sourceHash": "fnv1a64:6b8c594b67e77a7c",
   "lessons": [
     {
       "id": "IT-C32-ma",
@@ -585,7 +585,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3ec6a5765b66961",
+      "sourceHash": "fnv1a64:66ff6494b2584ff5",
       "notice": null,
       "blocks": [
         {
@@ -696,7 +696,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is rarer than it sounds. Almost every word in this book has been reshaped on its way from Latin: quaerere became chiedere, causa became cosa, nōn split into no and non, magis became ma, oculum became occhio. Quandō simply stayed. Spanish cuando, Portuguese quando and Romanian când kept it too."
+              "text": "That is rarer than it sounds. Almost every word in this book has been reshaped on its way from Latin: quaerere became chiedere, causa became cosa, nōn split into no and non, magis became ma, oculum became occhio. Quandō stayed almost unchanged. Spanish cuando, Portuguese quando and Romanian când kept it too."
             },
             {
               "kind": "speech",

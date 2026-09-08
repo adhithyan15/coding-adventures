@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "This and That",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:719beadb717f8931",
+  "sourceHash": "fnv1a64:0f2da8061d632963",
   "lessons": [
     {
       "id": "IT-C33-questo",
@@ -718,7 +718,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fb820d35d4e93e6",
+      "sourceHash": "fnv1a64:02df60d1c985561c",
       "notice": null,
       "blocks": [
         {
@@ -806,7 +806,7 @@
             },
             {
               "kind": "speech",
-              "text": "Italian also has qua and là, which mean the same and are used just as often; qui/lì are slightly more precise and qua/là slightly vaguer, and no Italian will notice which you pick."
+              "text": "Italian also has qua and là, which mean the same and are used equally often; qui/lì are slightly more precise and qua/là slightly vaguer, and no Italian will notice which you pick."
             }
           ]
         },
