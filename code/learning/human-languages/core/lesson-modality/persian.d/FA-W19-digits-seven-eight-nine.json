@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "FA-W19-digits-seven-eight-nine",
+    "language": "persian",
+    "chapter": 19,
+    "sequence": 900,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ff2f4384c369fe16",
+    "detachableSegments": [
+      "Script — the shapes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -23,7 +23,14 @@ const corpus = defaultCurriculumRoot();
 
 const CONFIGS = [
   { language: "japanese", script: "japanese", letters: 49, marks: 3 },
-  { language: "persian", script: "perso-arabic", letters: 24, marks: 1 },
+  // 24 -> 26: HL-C350 adds ج and ص as RECOGNITION-ONLY owners. panj (five) and
+  // sad (a hundred) need them in a headword, and `uncoveredGlyphs` is a
+  // headword check, so the numerals could not be taught without them. Both
+  // carry an empty strokeOrder on purpose: this inventory records
+  // Persian-scoped provenance and the only timestamped demonstrations on hand
+  // are the separately sourced Arabic ones, which its own entries say must not
+  // be borrowed. They enter closure when a Persian-scoped citation exists.
+  { language: "persian", script: "perso-arabic", letters: 26, marks: 1 },
   { language: "tamil", script: "tamil", letters: 29, marks: 9 },
   { language: "urdu", script: "urdu-nastaliq", letters: 31, marks: 2 },
 ] as const;

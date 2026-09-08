@@ -1,0 +1,124 @@
+Persian, chapter 19: The Ten Persian Digits.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 5.
+۰ ۱ (sefr yek) — two digits, and a direction that reverses.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes, and the direction and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Which way does a Persian line run? Say yek.
+
+Script — the shapes, and the direction.
+۰ — sefr, zero ۱ — yek, one.
+Persian has its own ten digit signs, and every price ticket, telephone number and page number in Iran is written in them. A reader who can say yek and cannot read ۱ still cannot read a price.
+۰ is a dot, not a ring. Fix that first, because a European eye reads a dot as a decimal point — and Persian's nine is the ring.
+Now the part no earlier chapter has had to say: numbers run left to right, inside a line that runs right to left. Ten is ۱۰ — one, then zero, in the European order — while the words around it move the other way. The page changes direction at the number and changes back after it.
+
+Guided Practice.
+[once you have stopped driving — write: ۰ — a dot; ۱ — a stroke]
+[your turn — read: ۱۰ — dah, ten, left to right]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Sources: Unicode Arabic chart; Omniglot, Numbers in Persian.
+[question — say your answer, then pause 12 seconds]
+A Persian line runs right to left. Which way do the digits inside it run?
+
+
+Lesson 2 of 5.
+۲ ۳ (do se) — one tooth apart.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ۰ and ۱, then read ۱۰.
+
+Script — the shapes.
+۲ — do, two ۳ — se, three.
+۳ is ۲ with one more tooth. That is the whole difference, and it is small enough that the two have to be written as a pair rather than one at a time — say do and se aloud as the hand makes them and the shapes stop competing.
+
+Guided Practice.
+[once you have stopped driving — write: ۲, then ۳ beside it]
+[your turn — read: ۱۲, ۱۳, ۲۳, left to right]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Sources: Unicode Arabic chart; Omniglot, Numbers in Persian.
+[question — say your answer, then pause 12 seconds]
+Write the Persian digit for three, then the digit for two.
+
+
+Lesson 3 of 5.
+۴ ۵ ۶ (chahâr panj shesh) — the three Persian keeps for itself.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ۲ and ۳, and say which has the extra tooth.
+
+Script — the shapes.
+۴ — chahâr, four ۵ — panj, five ۶ — shesh, six.
+These three are the reason this chapter exists as more than a list.
+Seven of the ten digits are drawn the same way in Persian and in Arabic. ۴, ۵ and ۶ are not: Arabic writes those three with quite different shapes. A reader who picked up the digits from an Arabic book will read an Iranian price wrongly at exactly these three places and nowhere else.
+If you drill three of the ten harder than the rest, drill these.
+
+Guided Practice.
+[once you have stopped driving — write: ۴, ۵, ۶, saying chahâr, panj, shesh]
+[your turn — read: ۱۴, ۱۵, ۱۶, left to right]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Sources: Unicode Arabic chart; Omniglot, Numbers in Persian.
+[question — say your answer, then pause 14 seconds]
+Write the three Persian digits that Arabic draws differently.
+
+
+Lesson 4 of 5.
+۷ ۸ ۹ (haft hasht noh) — a mirror pair, and the ring.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ۴, ۵, ۶ — the three Arabic draws differently.
+
+Script — the shapes.
+۷ — haft, seven ۸ — hasht, eight ۹ — noh, nine.
+۷ and ۸ are mirror images of each other, one opening upward and one downward. Write them as a pair, every time, and the mirror stops being a problem — the same trick that worked on ۲ and ۳.
+۹ is a ring with a tail, and this is where a dot-shaped zero pays off. Had ۰ been a ring too, the page would carry two rings and no way to separate them.
+Ten signs, four lessons. The set is closed.
+
+Guided Practice.
+[once you have stopped driving — write: ۷ and ۸ as a pair, then ۹]
+[your turn — run: ۰ ۱ (sefr yek) ۲ ۳ (do se) ۴ ۵ ۶ (chahâr panj shesh) ۷ ۸ ۹ (haft hasht noh) (the ten Persian digits) once, slowly]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Sources: Unicode Arabic chart; Omniglot, Numbers in Persian.
+[question — say your answer, then pause 12 seconds]
+Which two Persian digits are mirror images of each other?
+
+
+Lesson 5 of 5.
+Payoff — reading the figures.
+
+Warm-up.
+[pause 2 seconds]
+Count one to twenty, then say which way digits run inside a Persian line.
+
+Guided Practice.
+Read all ten signs shuffled and say each as a Persian word.
+Read ۱۰, ۱۱, ۲۰ and ۱۰۰ and say each — dah, yâzdah, bist, sad.
+Hear ten amounts named and write each in Persian figures.
+Write the ten signs from dictation, out of order, and check ۴, ۵ and ۶ against the models rather than against memory.
+Say what a reader can now do that could not be done four chapters ago: read a price, a page number and a telephone number off an Iranian page.
+
+Wrap-up Recall.
+Sources: Unicode Arabic chart; Omniglot, Numbers in Persian.
+[question — say your answer, then pause 14 seconds]
+Write a hundred in Persian figures.

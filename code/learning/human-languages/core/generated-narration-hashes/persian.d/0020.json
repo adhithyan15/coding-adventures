@@ -1,0 +1,18 @@
+{
+  "language": "persian",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:1afc21fef49acb7c",
+  "lessonIds": [
+    "FA-C20-avval",
+    "FA-C20-dovvom-sevvom",
+    "FA-C20-chaharom",
+    "FA-C20-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "persian/narration/ch20.txt",
+  "json": "persian/narration/ch20.json",
+  "textHash": "fnv1a64:a218328b20074ae0",
+  "jsonHash": "fnv1a64:2446f0f523e37d9f",
+  "findings": []
+}

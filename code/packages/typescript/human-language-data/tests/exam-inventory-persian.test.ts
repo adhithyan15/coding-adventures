@@ -136,8 +136,8 @@ describe("the committed Persian A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(180);
-    expect(coverage.covered).toBe(71);
-    expect(coverage.unmapped).toBe(109);
+    expect(coverage.covered).toBe(74);
+    expect(coverage.unmapped).toBe(106);
     expect(coverage.partial).toBe(0);
     // FLAT ZERO, the twelfth in this series. Every match for و in 71 files is
     // the LETTER vav being discussed — its shape in the chapter 15 writing
@@ -152,12 +152,51 @@ describe("the committed Persian A1 inventory", () => {
     expect(coverage.byCategory["Eshare (pointing)"]!).toEqual({ enumerated: 1, covered: 0 });
     // The script column is the track's strength, and the ezafe column is where
     // it does something no Romance proxy point could have asked for.
-    expect(coverage.byCategory["Khatt (script and orthography)"]!).toEqual({ enumerated: 12, covered: 9 });
+    // 9 -> 10: HL-C350 closes FA-A1-KH-11, the Persian digits.
+    expect(coverage.byCategory["Khatt (script and orthography)"]!).toEqual({ enumerated: 12, covered: 10 });
     expect(coverage.byCategory["Ezafe (the linker Spanish has no counterpart for)"]!)
       .toEqual({ enumerated: 3, covered: 2 });
     expect(formatExamCoverage(coverage)).toContain(
-      "persian A1 (partial inventory): 71/180 points covered (39%)",
+      "persian A1 (partial inventory): 74/180 points covered (41%)",
     );
+  }, 60_000);
+
+  it("keeps the numeral column CLOSED, and says what each closure cost", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "persian");
+    // THE COLUMN THAT WAS FLAT ZERO. yek, do, se and chahar returned no
+    // occurrences in 71 files, so a learner could give no age, no price, no
+    // telephone number and no time. HL-C350's chapters 16-20 close it, and the
+    // assertions below pin HOW rather than merely THAT.
+    const cardinals = inventory.points.find((point) => point.id === "FA-A1-Q-01")!;
+    expect(cardinals.probe).not.toBeNull();
+    for (const c of ["YEK", "DO", "SE", "CHAHAR", "PANJ", "SHESH", "HAFT", "HASHT", "NOH", "DAH"]) {
+      expect(cardinals.probe, c).toContain(`FA-LEX-${c}`);
+      expect(taught.has(`FA-LEX-${c}`), c).toBe(true);
+    }
+    // The teens are probed as a RULE and three worked examples, not as nine
+    // lexical atoms, because that is what the track teaches: Persian puts the
+    // unit in front of dah. A probe naming nine words would claim six lessons
+    // that do not exist.
+    expect(cardinals.probe).toContain("FA-GRAMMAR-TEENS-DAH");
+    expect(taught.has("FA-GRAMMAR-TEENS-DAH")).toBe(true);
+    expect(cardinals.probe).not.toContain("FA-LEX-CHAHARDAH");
+    // The digits close from the script side, and the DIRECTION rule is probed
+    // with them: a reader who knows the ten shapes and reads them right-to-left
+    // reads every two-digit price backwards.
+    const digits = inventory.points.find((point) => point.id === "FA-A1-KH-11")!;
+    expect(digits.probe).toContain("FA-SCRIPT-DIGITS-LTR");
+    for (const d of ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]) {
+      expect(digits.probe, d).toContain(`FA-SCRIPT-DIGIT-${d}`);
+      expect(taught.has(`FA-SCRIPT-DIGIT-${d}`), d).toBe(true);
+    }
+    // ORDINALS, the weakest column in the whole corpus -- twenty tracks
+    // enumerate one and eighteen leave it uncovered. Persian's cost ONE ending,
+    // so the probe names the suffix rather than a list of forms.
+    const ordinals = inventory.points.find((point) => point.id === "FA-A1-Q-02")!;
+    expect(ordinals.probe).toContain("FA-MORPH-ORDINAL-OM");
+    expect(taught.has("FA-MORPH-ORDINAL-OM")).toBe(true);
+    expect(ordinals.note).toMatch(/it cost one ending/);
   }, 60_000);
 
   it("keeps the finding that governs every other number in the file", () => {

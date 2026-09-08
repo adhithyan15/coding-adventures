@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 18,
+  "output": "persian/book/chapters/ch18-teens.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

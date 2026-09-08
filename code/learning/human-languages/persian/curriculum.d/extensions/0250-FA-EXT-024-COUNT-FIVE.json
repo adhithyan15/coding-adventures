@@ -1,0 +1,16 @@
+{
+  "id": "FA-EXT-024-COUNT-FIVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say and recognise the Persian numbers one to five and name the English cousin of each.",
+  "prerequisites": [],
+  "lessons": [
+    "FA-C16-yek",
+    "FA-C16-do",
+    "FA-C16-se",
+    "FA-C16-chahar",
+    "FA-C16-panj",
+    "FA-C16-practice"
+  ]
+}

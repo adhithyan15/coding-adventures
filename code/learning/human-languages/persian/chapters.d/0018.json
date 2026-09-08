@@ -1,0 +1,21 @@
+{
+  "chapter": 18,
+  "title": "The Teens Are a Rule, Not Nine Words",
+  "label": "ch:fa-teens",
+  "canDo": "I can build any number from eleven to nineteen by putting a unit in front of dah, say twenty and a hundred, and write the tenth letter of this book.",
+  "payoff": {
+    "lesson": "FA-C18-practice",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Three teens taught and six built from the rule, then the two round amounts a price actually names — and the one letter a hundred needs that no lesson yet teaches the hand to make.",
+    "assesses": [
+      "FA-LEX-YAZDAH",
+      "FA-GRAMMAR-TEENS-DAH",
+      "FA-LEX-SIZDAH",
+      "FA-LEX-PANZDAH",
+      "FA-LEX-BIST",
+      "FA-LEX-SAD",
+      "FA-ETYMON-SAD",
+      "FA-PERFORMANCE-COUNT-TWENTY"
+    ]
+  }
+}

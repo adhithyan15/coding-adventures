@@ -1,0 +1,17 @@
+{
+  "id": "FA-EXT-026-TEENS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can build any number from eleven to nineteen from a unit and dah, and say twenty and a hundred.",
+  "prerequisites": [
+    "FA-EXT-025-COUNT-TEN"
+  ],
+  "lessons": [
+    "FA-C18-yazdah",
+    "FA-C18-sizdah",
+    "FA-C18-panzdah",
+    "FA-C18-bist-sad",
+    "FA-C18-practice"
+  ]
+}

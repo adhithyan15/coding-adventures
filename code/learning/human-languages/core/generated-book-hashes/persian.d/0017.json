@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:969ce221c918be73",
+  "lessonIds": [
+    "FA-C17-shesh",
+    "FA-C17-haft",
+    "FA-C17-hasht",
+    "FA-C17-noh",
+    "FA-C17-dah",
+    "FA-C17-practice"
+  ],
+  "tex": "persian/book/chapters/ch17-count-ten.tex"
+}

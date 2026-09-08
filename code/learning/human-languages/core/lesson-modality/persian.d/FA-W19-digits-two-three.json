@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "FA-W19-digits-two-three",
+    "language": "persian",
+    "chapter": 19,
+    "sequence": 880,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f032d3970965bdad",
+    "detachableSegments": [
+      "Script — the shapes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 20,
+  "output": "persian/book/chapters/ch20-ordinals.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

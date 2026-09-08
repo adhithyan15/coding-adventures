@@ -1,0 +1,24 @@
+{
+  "chapter": 16,
+  "title": "One to Five, and the Words English Already Says",
+  "label": "ch:fa-count-five",
+  "canDo": "I can say, hear and recognise the Persian numbers one to five, write the one of them made only of letters I have been taught, and name the English cousin of each.",
+  "payoff": {
+    "lesson": "FA-C16-practice",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Five numbers, five Indo-European roots and five everyday English cousins — retrieved shuffled rather than recited, with the one writable form written.",
+    "assesses": [
+      "FA-LEX-YEK",
+      "FA-ETYMON-YEK",
+      "FA-LEX-DO",
+      "FA-ETYMON-DO",
+      "FA-LEX-SE",
+      "FA-ETYMON-SE",
+      "FA-LEX-CHAHAR",
+      "FA-ETYMON-CHAHAR",
+      "FA-LEX-PANJ",
+      "FA-ETYMON-PANJ",
+      "FA-PERFORMANCE-COUNT-FIVE"
+    ]
+  }
+}

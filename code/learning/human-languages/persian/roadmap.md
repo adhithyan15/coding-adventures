@@ -107,6 +107,23 @@ English inherited as **choose**.
 - one noun at a time with ezafe reuse;
 - Persian additions **پ چ ژ گ** introduced only when a word needs them.
 
+## Numbers (Chapters 16–20, HL-C350)
+
+The track taught no numeral at all for 71 lessons. It now counts to twenty,
+reads and writes the ten Persian digits, and builds any ordinal from one ending.
+The teens are a rule rather than nine words, and the digits are grouped by the
+three things that actually trip a reader: the direction reversing inside the
+line, **۴ ۵ ۶** differing from their Arabic shapes, and the **۷/۸** mirror.
+
+What the numbers still wait on is the script rather than the vocabulary.
+**سه**, **نه**, **اول** and **سوم** are the only four of the tranche's words the
+hand can make; every other numeral is exposure, met by eye with its
+romanization, because the alphabet chapter taught nine letters and Persian has
+thirty-two. **ص**, which **صد** needs, and **ج**, which **پنج** needs, are in
+the inventory for recognition only — their stroke orders wait on a
+Persian-scoped, timestamped citation rather than on authoring time. The next
+script chapter is what turns the count from readable into writable.
+
 ## Part II onward *(sketch)*
 
 Build through everyday location, possession, food, time, family, and routine.

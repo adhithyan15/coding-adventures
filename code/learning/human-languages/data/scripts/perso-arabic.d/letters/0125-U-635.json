@@ -1,0 +1,17 @@
+{
+  "glyph": "ص",
+  "sound": "s",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ص",
+    "initial": "صـ",
+    "medial": "ـصـ",
+    "final": "ـص"
+  },
+  "components": [
+    "wide oval body",
+    "trailing bowl"
+  ],
+  "strokeOrder": [],
+  "notes": "Recognition only for now: the number sad, a hundred, needs it and no Persian lesson yet teaches the hand to make it. Persian says it exactly as it says س; the letter came along with the Arabic words that carry it. Its stroke order is deliberately left empty rather than borrowed from the separately sourced Arabic saad, because this inventory records Persian-scoped provenance."
+}

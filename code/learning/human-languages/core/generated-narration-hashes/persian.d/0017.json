@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:6deecce58af6d0d5",
+  "lessonIds": [
+    "FA-C17-shesh",
+    "FA-C17-haft",
+    "FA-C17-hasht",
+    "FA-C17-noh",
+    "FA-C17-dah",
+    "FA-C17-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "persian/narration/ch17.txt",
+  "json": "persian/narration/ch17.json",
+  "textHash": "fnv1a64:301c221165384130",
+  "jsonHash": "fnv1a64:b2a3edd15a45a209",
+  "findings": []
+}

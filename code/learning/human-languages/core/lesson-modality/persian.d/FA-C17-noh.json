@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C17-noh",
+    "language": "persian",
+    "chapter": 17,
+    "sequence": 790,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d3457e0c517e7bba"
+  },
+  "findings": []
+}
