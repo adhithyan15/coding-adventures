@@ -2738,6 +2738,91 @@ impl Compiler {
         })
     }
 
+    /// Admit exact integral standard-function results over tracked real locals
+    /// without admitting arbitrary tracked real exponent arithmetic. Every real
+    /// dependency must occur beneath a pure built-in call, where the existing
+    /// static evaluator proves an exact finite result.
+    fn static_nonnegative_tracked_real_standard_expression_power_chain(
+        &self,
+        nodes: &[&GrammarASTNode],
+    ) -> Option<u32> {
+        self.static_nonnegative_power_chain_with(nodes, &|node| {
+            let dependencies = self.tracked_integer_expression_dependencies(node)?;
+            if dependencies.is_empty()
+                || !self.exact_tracked_integral_exponent_expression(node)
+                || !self.real_dependencies_are_standard_function_operands(node, false)
+            {
+                return None;
+            }
+            let mut saw_real_dependency = false;
+            for name in dependencies {
+                let binding = self.require_var(&name).ok()?;
+                if binding.is_global
+                    || binding.array.is_some()
+                    || self.active_by_name_binding(&name).is_some()
+                {
+                    return None;
+                }
+                match binding.ty {
+                    ScalarType::Integer if self.static_integer_slots.contains_key(&binding.slot) => {}
+                    ScalarType::Real if self.static_real_slots.contains_key(&binding.slot) => {
+                        saw_real_dependency = true;
+                    }
+                    _ => return None,
+                }
+            }
+            if !saw_real_dependency {
+                return None;
+            }
+            let value = self.static_real_arithmetic_value_with_widen(node, true)?;
+            (value >= 0.0
+                && value <= MAX_POW_UNROLL_EXPONENT as f64
+                && value.fract() == 0.0)
+                .then_some(value as u32)
+        })
+    }
+
+    fn real_dependencies_are_standard_function_operands(
+        &self,
+        node: &GrammarASTNode,
+        inside_standard_function: bool,
+    ) -> bool {
+        let call_name = (node.rule_name == "proc_call")
+            .then(|| {
+                direct_tokens(node)
+                    .into_iter()
+                    .find(|token| token.effective_type_name() == "NAME")
+                    .map(|token| token.value.clone())
+            })
+            .flatten();
+        let inside_standard_function = if let Some(name) = &call_name {
+            let target = self.resolve_procedure_identity(name);
+            if self.proc_sigs.contains_key(&target) || !is_supported_standard_function(&target) {
+                return false;
+            }
+            true
+        } else {
+            inside_standard_function
+        };
+        if direct_tokens(node)
+            .into_iter()
+            .filter(|token| {
+                token.effective_type_name() == "NAME"
+                    && call_name.as_deref() != Some(token.value.as_str())
+            })
+            .any(|token| {
+                self.require_var(&token.value)
+                    .is_ok_and(|binding| binding.ty == ScalarType::Real)
+                    && !inside_standard_function
+            })
+        {
+            return false;
+        }
+        direct_nodes(node).into_iter().all(|child| {
+            self.real_dependencies_are_standard_function_operands(child, inside_standard_function)
+        })
+    }
+
     /// Recognize the existing exact integer exponent language plus built-in
     /// `sqrt` and canonical transcendental functions over exact tracked integer
     /// arithmetic. Integral real-function forms may compose through checked
@@ -7486,6 +7571,15 @@ impl Compiler {
                         )
                     })
                     .flatten()
+            })
+            .or_else(|| {
+                (base.ty == ScalarType::Real)
+                    .then(|| {
+                        self.static_nonnegative_tracked_real_standard_expression_power_chain(
+                            exponent_nodes,
+                        )
+                    })
+                    .flatten()
             });
         if let Some(k) = exponent {
             // A conditional exponent may have a path-independent static value,
@@ -10955,6 +11049,51 @@ mod tests {
         ] {
             let module = compile_source(source, "test")
                 .expect("unsafe tracked real functions must retain runtime power lowering");
+            let main = module.get_function("main").expect("has main");
+            assert!(
+                main.instructions.iter().any(|instr| instr.op == "f64_pow"),
+                "{source}"
+            );
+            if source.contains("real procedure cos") {
+                assert!(main.instructions.iter().any(|instr| instr.op == "call"));
+            }
+        }
+    }
+
+    #[test]
+    fn al4_tracked_real_standard_function_exponents_unroll_real_powers() {
+        for (initial, exponent_expression) in [
+            ("-2.0", "abs(exponent)"),
+            ("2.75", "entier(exponent)"),
+            ("4.0", "sqrt(exponent)"),
+            ("0.0", "cos(exponent) + 1"),
+            ("1.0", "ln(exponent) + 2"),
+        ] {
+            let source = format!(
+                "begin real exponent, saved; exponent := {initial}; saved := 6.0 ^ ({exponent_expression}) + 6.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end"
+            );
+            let module = compile_source(&source, "test")
+                .expect("an exact built-in over a tracked real may provide an exponent");
+            let main = module.get_function("main").expect("has main");
+            assert!(
+                main.instructions.iter().all(|instr| instr.op != "f64_pow"),
+                "{exponent_expression} retained f64_pow"
+            );
+            assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+        }
+    }
+
+    #[test]
+    fn al4_tracked_real_standard_function_exponents_fail_closed() {
+        for source in [
+            "begin real exponent, saved; exponent := 2.0; saved := 6.0 ^ exponent end",
+            "begin real exponent, saved; exponent := 1.0; saved := 6.0 ^ (exponent + cos(0)) end",
+            "begin real exponent, saved; exponent := 1.0; saved := 6.0 ^ (cos(exponent) + 1) end",
+            "begin real exponent, saved; exponent := 0.0; saved := 6.0 ^ (cos(exponent) + 64) end",
+            "begin real procedure cos(x); value x; real x; cos := 1.0; real exponent, saved; exponent := 0.0; saved := 6.0 ^ (cos(exponent) + 1) end",
+        ] {
+            let module = compile_source(source, "test")
+                .expect("unsafe tracked real standard functions must retain runtime power");
             let main = module.get_function("main").expect("has main");
             assert!(
                 main.instructions.iter().any(|instr| instr.op == "f64_pow"),
