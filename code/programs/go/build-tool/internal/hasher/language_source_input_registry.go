@@ -14,12 +14,17 @@ import (
 	"unicode/utf8"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/unicode/norm"
 )
 
 const (
 	maxLanguageSourceInputRegistryBytes = 1 << 20
+	maxLanguageSourceInputRegistryDepth = 64
 	maxLanguageSourceInputTextBytes     = 4096
 )
+
+var registryCaseFolder = cases.Fold()
 
 var windowsReservedBasenames = map[string]bool{
 	"aux": true, "con": true, "nul": true, "prn": true,
@@ -90,6 +95,9 @@ func decodeLanguageSourceInputRegistry(data []byte) (languageSourceInputRegistry
 	if len(data) == 0 || len(data) > maxLanguageSourceInputRegistryBytes {
 		return languageSourceInputRegistryDocument{}, fmt.Errorf("invalid language source-input registry")
 	}
+	if err := validateLanguageSourceInputJSONShape(data); err != nil {
+		return languageSourceInputRegistryDocument{}, err
+	}
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.DisallowUnknownFields()
 	var registry languageSourceInputRegistryDocument
@@ -110,7 +118,7 @@ func decodeLanguageSourceInputRegistry(data []byte) (languageSourceInputRegistry
 }
 
 func validateLanguageSourceInputRegistry(registry languageSourceInputRegistryDocument) error {
-	if registry.SchemaVersion != 1 || len(registry.Languages) != 23 || len(registry.Languages) > 32 ||
+	if registry.SchemaVersion != 1 || len(registry.Languages) < 23 || len(registry.Languages) > 32 ||
 		len(registry.UniversalInputs.BuildFilenames) > 256 ||
 		len(registry.UniversalInputs.GeneratedDirectoryComponents) > 256 ||
 		len(registry.UniversalInputs.RootExactBasenames) > 256 {
@@ -167,7 +175,7 @@ func validateLanguageSourceInputRegistry(registry languageSourceInputRegistryDoc
 				return err
 			}
 			for _, value := range values {
-				identity := strings.ToLower(value)
+				identity := registryFold(value)
 				if prior, ok := roleByIdentity[identity]; ok && prior != role {
 					return fmt.Errorf("invalid language source-input registry")
 				}
@@ -214,7 +222,7 @@ func validateLanguageSourceInputRegistry(registry languageSourceInputRegistryDoc
 			previousPackageID = exact.ID
 			seenPackageRoots[rootIdentity] = true
 			for _, path := range exact.Paths {
-				if registryPathEntersGeneratedComponent(path, registry.UniversalInputs.GeneratedDirectoryComponents) {
+				if registryPathEntersGeneratedComponent(path, registry.UniversalInputs.GeneratedDirectoryComponents) || registrySensitivePath(exact.PackageRoot+"/"+path) {
 					return fmt.Errorf("invalid language source-input registry")
 				}
 			}
@@ -239,6 +247,9 @@ func validateLanguageSourceInputRegistry(registry languageSourceInputRegistryDoc
 			previousScopedID = scoped.ID
 			selectorCount += len(scoped.Suffixes) + len(scoped.ExactBasenames)
 		}
+		if err := validateRegistrySelectorOverlaps(registry.UniversalInputs, language); err != nil {
+			return fmt.Errorf("invalid language source-input registry for %s: %w", language.Language, err)
+		}
 	}
 	if selectorCount > 4096 {
 		return fmt.Errorf("invalid language source-input registry")
@@ -251,10 +262,13 @@ func languageSourceInputRegistryDigestForJSON(data []byte) (string, error) {
 	if err := json.Unmarshal(data, &document); err != nil {
 		return "", err
 	}
-	canonical, err := json.Marshal(document)
-	if err != nil {
+	var encoded bytes.Buffer
+	encoder := json.NewEncoder(&encoded)
+	encoder.SetEscapeHTML(false)
+	if err := encoder.Encode(document); err != nil {
 		return "", err
 	}
+	canonical := bytes.TrimSuffix(encoded.Bytes(), []byte{'\n'})
 	domain := []byte("coding-adventures/build-tool-language-source-input-registry/v1\x00")
 	framed := make([]byte, len(domain)+8+len(canonical))
 	copy(framed, domain)
@@ -262,6 +276,68 @@ func languageSourceInputRegistryDigestForJSON(data []byte) (string, error) {
 	copy(framed[len(domain)+8:], canonical)
 	digest := sha256.Sum256(framed)
 	return hex.EncodeToString(digest[:]), nil
+}
+
+type registryJSONFrame struct {
+	object       bool
+	expectingKey bool
+	keys         map[string]bool
+}
+
+func validateLanguageSourceInputJSONShape(data []byte) error {
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.UseNumber()
+	stack := make([]registryJSONFrame, 0, 8)
+	markValueComplete := func() {
+		if len(stack) > 0 && stack[len(stack)-1].object && !stack[len(stack)-1].expectingKey {
+			stack[len(stack)-1].expectingKey = true
+		}
+	}
+	for {
+		token, err := decoder.Token()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return fmt.Errorf("invalid language source-input registry")
+		}
+		if delimiter, ok := token.(json.Delim); ok {
+			switch delimiter {
+			case '{':
+				stack = append(stack, registryJSONFrame{object: true, expectingKey: true, keys: make(map[string]bool)})
+			case '[':
+				stack = append(stack, registryJSONFrame{})
+			case '}', ']':
+				if len(stack) == 0 {
+					return fmt.Errorf("invalid language source-input registry")
+				}
+				frame := stack[len(stack)-1]
+				if delimiter == '}' && (!frame.object || !frame.expectingKey) || delimiter == ']' && frame.object {
+					return fmt.Errorf("invalid language source-input registry")
+				}
+				stack = stack[:len(stack)-1]
+				markValueComplete()
+			}
+			if len(stack) > maxLanguageSourceInputRegistryDepth {
+				return fmt.Errorf("invalid language source-input registry")
+			}
+			continue
+		}
+		if len(stack) > 0 && stack[len(stack)-1].object && stack[len(stack)-1].expectingKey {
+			key, ok := token.(string)
+			if !ok || stack[len(stack)-1].keys[key] {
+				return fmt.Errorf("invalid language source-input registry")
+			}
+			stack[len(stack)-1].keys[key] = true
+			stack[len(stack)-1].expectingKey = false
+			continue
+		}
+		markValueComplete()
+	}
+	if len(stack) != 0 {
+		return fmt.Errorf("invalid language source-input registry")
+	}
+	return nil
 }
 
 func validateCanonicalRegistrySelectors(values []string, kind string) error {
@@ -297,13 +373,13 @@ func validateRegistryAliasGroups(groups [][]string) (map[string]map[string]bool,
 			return nil, fmt.Errorf("invalid language source-input registry")
 		}
 		previous = string(encoded)
-		identity := strings.ToLower(group[0])
+		identity := registryFold(group[0])
 		if result[identity] != nil {
 			return nil, fmt.Errorf("invalid language source-input registry")
 		}
 		aliases := make(map[string]bool, len(group))
 		for index, value := range group {
-			if validateRegistryBasename(value) != nil || strings.ToLower(value) != identity || aliases[value] || (index > 0 && group[index-1] >= value) {
+			if validateRegistryBasename(value) != nil || registryFold(value) != identity || aliases[value] || (index > 0 && group[index-1] >= value) {
 				return nil, fmt.Errorf("invalid language source-input registry")
 			}
 			aliases[value] = true
@@ -317,8 +393,11 @@ func validateRegistryText(value string) error {
 	if value == "" || len(value) > maxLanguageSourceInputTextBytes || !utf8.ValidString(value) {
 		return fmt.Errorf("invalid language source-input registry")
 	}
+	if !norm.NFC.IsNormalString(value) {
+		return fmt.Errorf("invalid language source-input registry")
+	}
 	for _, character := range value {
-		if character > unicode.MaxASCII || unicode.IsControl(character) || unicode.In(character, unicode.Cf, unicode.Co, unicode.Cs) {
+		if unicode.IsControl(character) || unicode.In(character, unicode.Cf, unicode.Co, unicode.Cs) {
 			return fmt.Errorf("invalid language source-input registry")
 		}
 	}
@@ -387,6 +466,176 @@ func isRegistryIdentifier(value string) bool {
 
 func isRegistryDescription(value string) bool {
 	return validateRegistryText(value) == nil
+}
+
+func registryFold(value string) string {
+	return registryCaseFolder.String(norm.NFC.String(value))
+}
+
+func registrySensitivePath(path string) bool {
+	components := strings.Split(registryFold(path), "/")
+	basename := components[len(components)-1]
+	blockedNames := map[string]bool{
+		".env": true, ".envrc": true, ".git-credentials": true, ".netrc": true, ".npmrc": true, ".pypirc": true,
+		"credentials": true, "credentials.json": true, "credentials.toml": true, "id_ed25519": true, "id_rsa": true,
+		"key.properties": true, "local.properties": true, "secrets.json": true, "secrets.toml": true, "signing.properties": true,
+	}
+	blockedComponents := map[string]bool{
+		".aws": true, ".azure": true, ".env": true, ".gnupg": true, ".ssh": true, "credentials": true,
+		"local": true, "secrets": true, "signing": true, "token": true,
+	}
+	if blockedNames[basename] || strings.HasPrefix(basename, ".env.") {
+		return true
+	}
+	for _, component := range components {
+		if blockedComponents[component] {
+			return true
+		}
+	}
+	for _, suffix := range []string{".jks", ".key", ".keystore", ".p12", ".pem", ".pfx"} {
+		if strings.HasSuffix(basename, suffix) {
+			return true
+		}
+	}
+	for _, word := range []string{"credential", "password", "private-key", "private_key", "secret", "signing", "token"} {
+		if registryDelimitedWord(basename, word) {
+			return true
+		}
+	}
+	return registryDelimitedWord(basename, "local")
+}
+
+func registryDelimitedWord(value, word string) bool {
+	for start := 0; ; {
+		index := strings.Index(value[start:], word)
+		if index < 0 {
+			return false
+		}
+		index += start
+		leftOK := index == 0 || strings.ContainsRune("._-", rune(value[index-1]))
+		end := index + len(word)
+		rightOK := end == len(value) || strings.ContainsRune("._-", rune(value[end]))
+		if leftOK && rightOK {
+			return true
+		}
+		start = index + 1
+	}
+}
+
+type registryMatcher struct {
+	role, scope, prefix, kind, value string
+}
+
+func validateRegistrySelectorOverlaps(universal universalSourceInputs, language languageSourceInputSelectors) error {
+	matchers := make([]registryMatcher, 0)
+	add := func(role, scope, prefix, kind string, values []string) {
+		for _, value := range values {
+			matchers = append(matchers, registryMatcher{role: role, scope: scope, prefix: prefix, kind: kind, value: value})
+		}
+	}
+	add("universal_build", "any", "", "basename", universal.BuildFilenames)
+	add("universal_root", "root", "", "basename", universal.RootExactBasenames)
+	add("recursive_suffixes", "any", "", "suffix", language.RecursiveSuffixes)
+	add("recursive_basenames", "any", "", "basename", language.RecursiveExactBasenames)
+	add("root_basenames", "root", "", "basename", language.RootExactBasenames)
+	add("root_suffixes", "root", "", "suffix", language.RootVariableSuffixes)
+	for _, path := range language.RootExactRelativePaths {
+		parts := strings.Split(path, "/")
+		matchers = append(matchers, registryMatcher{role: "root_paths", scope: "exact", prefix: path, kind: "basename", value: parts[len(parts)-1]})
+	}
+	for _, scoped := range language.ScopedInputs {
+		role := "scoped:" + scoped.ID
+		add(role, scoped.Scope, scoped.PathPrefix, "suffix", scoped.Suffixes)
+		add(role, scoped.Scope, scoped.PathPrefix, "basename", scoped.ExactBasenames)
+	}
+	for index, left := range matchers {
+		for _, right := range matchers[index+1:] {
+			if left.role != right.role && registryScopesOverlap(left, right) && registryMatchersOverlap(left, right) {
+				return fmt.Errorf("overlap %s %s with %s %s", left.role, left.value, right.role, right.value)
+			}
+		}
+	}
+	for _, exact := range language.PackageExactInputs {
+		for _, path := range exact.Paths {
+			parts := strings.Split(path, "/")
+			candidate := registryMatcher{scope: "exact", prefix: path, kind: "basename", value: parts[len(parts)-1]}
+			for _, matcher := range matchers {
+				if registryScopesOverlap(candidate, matcher) && registryMatchersOverlap(candidate, matcher) {
+					return fmt.Errorf("package exact %s overlaps %s %s", path, matcher.role, matcher.value)
+				}
+			}
+		}
+	}
+	for _, paths := range [][]string{language.RootExactRelativePaths} {
+		for index, left := range paths {
+			for _, right := range paths[index+1:] {
+				if registryPathsPrefixCollide(left, right) {
+					return fmt.Errorf("invalid language source-input registry")
+				}
+			}
+		}
+	}
+	for _, exact := range language.PackageExactInputs {
+		for index, left := range exact.Paths {
+			for _, right := range exact.Paths[index+1:] {
+				if registryPathsPrefixCollide(left, right) {
+					return fmt.Errorf("invalid language source-input registry")
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func registryScopesOverlap(left, right registryMatcher) bool {
+	pathInScope := func(path string, matcher registryMatcher) bool {
+		pathFolded := registryFold(path)
+		prefix := registryFold(matcher.prefix)
+		switch matcher.scope {
+		case "any":
+			return true
+		case "root":
+			return !strings.Contains(path, "/")
+		case "subtree":
+			return strings.HasPrefix(pathFolded, prefix+"/")
+		default:
+			return pathFolded == prefix
+		}
+	}
+	if left.scope == "exact" {
+		return pathInScope(left.prefix, right)
+	}
+	if right.scope == "exact" {
+		return pathInScope(right.prefix, left)
+	}
+	if left.scope == "any" || right.scope == "any" || left.scope == "root" && right.scope == "root" {
+		return true
+	}
+	if left.scope == "root" || right.scope == "root" {
+		return false
+	}
+	return registryPathsPrefixCollide(left.prefix, right.prefix)
+}
+
+func registryMatchersOverlap(left, right registryMatcher) bool {
+	leftValue := left.value
+	rightValue := right.value
+	if left.kind == "basename" && right.kind == "basename" {
+		return leftValue == rightValue
+	}
+	if left.kind == "suffix" && right.kind == "suffix" {
+		return strings.HasSuffix(leftValue, rightValue) || strings.HasSuffix(rightValue, leftValue)
+	}
+	if left.kind == "basename" {
+		return strings.HasSuffix(leftValue, rightValue)
+	}
+	return strings.HasSuffix(rightValue, leftValue)
+}
+
+func registryPathsPrefixCollide(left, right string) bool {
+	left = registryFold(left)
+	right = registryFold(right)
+	return left == right || strings.HasPrefix(left, right+"/") || strings.HasPrefix(right, left+"/")
 }
 
 func indexLanguageSourceInputRegistry(registry languageSourceInputRegistryDocument) map[string]languageSourceInputSelectors {

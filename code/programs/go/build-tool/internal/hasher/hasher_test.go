@@ -811,6 +811,28 @@ func TestLanguageSourceInputRegistryGeneratorRoundTrip(t *testing.T) {
 	if string(match[1]) != goDigest {
 		t.Fatalf("generator and Go canonical digests differ: got %s, want %s", match[1], goDigest)
 	}
+
+	for _, malformed := range []struct {
+		name    string
+		content []byte
+	}{
+		{name: "oversized", content: bytes.Repeat([]byte{' '}, maxLanguageSourceInputRegistryBytes+1)},
+		{name: "too deep", content: []byte(strings.Repeat("[", maxLanguageSourceInputRegistryDepth+1) + strings.Repeat("]", maxLanguageSourceInputRegistryDepth+1))},
+		{name: "invalid UTF-8", content: []byte{0xff}},
+		{name: "duplicate key", content: []byte(`{"schema_version":1,"schema_version":1}`)},
+	} {
+		t.Run(malformed.name, func(t *testing.T) {
+			input := filepath.Join(t.TempDir(), "registry.json")
+			if err := os.WriteFile(input, malformed.content, 0o644); err != nil {
+				t.Fatal(err)
+			}
+			output := filepath.Join(t.TempDir(), "generated.go")
+			command := exec.Command(commandName, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", filepath.Join("..", "..", "tools", "generate-language-source-input-registry.ps1"), "-RegistryPath", input, "-OutputPath", output)
+			if combined, err := command.CombinedOutput(); err == nil {
+				t.Fatalf("generator accepted malformed registry: %s", combined)
+			}
+		})
+	}
 }
 
 func TestRepositoryRelativePackagePath(t *testing.T) {

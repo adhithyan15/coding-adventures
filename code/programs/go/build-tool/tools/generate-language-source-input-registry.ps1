@@ -13,7 +13,67 @@ if (-not $OutputPath) {
     $OutputPath = Join-Path $packageRoot "internal/hasher/language_source_input_registry_generated.go"
 }
 
-$registry = Get-Content -LiteralPath $RegistryPath -Raw
+$registryBytes = [System.IO.File]::ReadAllBytes($RegistryPath)
+if ($registryBytes.Length -eq 0 -or $registryBytes.Length -gt 1MB) {
+    throw "language source-input registry exceeds the byte limit"
+}
+$registry = [System.Text.UTF8Encoding]::new($false, $true).GetString($registryBytes)
+$depth = 0
+$inString = $false
+$escaped = $false
+foreach ($character in $registry.ToCharArray()) {
+    if ($inString) {
+        if ($escaped) {
+            $escaped = $false
+        } elseif ($character -eq '\') {
+            $escaped = $true
+        } elseif ($character -eq '"') {
+            $inString = $false
+        }
+        continue
+    }
+    if ($character -eq '"') {
+        $inString = $true
+    } elseif ($character -eq '{' -or $character -eq '[') {
+        $depth += 1
+        if ($depth -gt 64) {
+            throw "language source-input registry exceeds the depth limit"
+        }
+    } elseif ($character -eq '}' -or $character -eq ']') {
+        $depth -= 1
+        if ($depth -lt 0) {
+            throw "language source-input registry is unbalanced"
+        }
+    }
+}
+if ($inString -or $depth -ne 0) {
+    throw "language source-input registry is unbalanced"
+}
+
+function Assert-NoDuplicateJsonKeys {
+    param([System.Text.Json.JsonElement]$Element)
+
+    if ($Element.ValueKind -eq [System.Text.Json.JsonValueKind]::Object) {
+        $keys = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+        foreach ($property in $Element.EnumerateObject()) {
+            if (-not $keys.Add($property.Name)) {
+                throw "language source-input registry contains a duplicate object key"
+            }
+            Assert-NoDuplicateJsonKeys $property.Value
+        }
+    } elseif ($Element.ValueKind -eq [System.Text.Json.JsonValueKind]::Array) {
+        foreach ($item in $Element.EnumerateArray()) {
+            Assert-NoDuplicateJsonKeys $item
+        }
+    }
+}
+
+$jsonDocument = [System.Text.Json.JsonDocument]::Parse($registry)
+try {
+    Assert-NoDuplicateJsonKeys $jsonDocument.RootElement
+} finally {
+    $jsonDocument.Dispose()
+}
 $parsedRegistry = $registry | ConvertFrom-Json
 if ($registry.Contains('`')) {
     throw "language source-input registry cannot contain a Go raw-string delimiter"
