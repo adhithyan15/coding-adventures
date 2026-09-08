@@ -41,10 +41,7 @@
           "python/pkg-c"
         ]
       ]
-    },
-    "arguments": [],
-    "environment": {},
-    "changed_paths": []
+    }
   },
   "expected": {
     "schema_version": 1,

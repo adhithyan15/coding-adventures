@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "graph/isolated",
+  "domain": "graph",
+  "summary": "An isolated package forms a complete deterministic graph level.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["graph"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "graph",
+    "options": {
+      "packages": ["python/isolated"],
+      "edges": []
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "graph/isolated",
+    "domain": "graph",
+    "outcome": "ok",
+    "result": {
+      "edges": [],
+      "levels": [["python/isolated"]]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}
