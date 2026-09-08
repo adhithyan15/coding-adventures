@@ -1506,3 +1506,13 @@ All 12 Oct and 26 Nib BEAM programs passed again, along with 93 backend tests
 and all-target Clippy for iir-to-beam and lang-aot. No seven-column rerun is
 claimed. Remaining COBOL BEAM rows require further probes after this PR merges;
 only four of the 58 COBOL rows now declare BEAM, for 410 total declared cells.
+
+## VM-040 COBOL control and rounding probe (after #14670)
+
+PR #14670 merged as 55f803c1ee after all 46 checks succeeded or skipped.
+Prioritize the next four COBOL cases: IF/ELSE, rounded division, PERFORM TIMES,
+and COMPUTE precedence. They reuse the newly proven literal arithmetic while
+exercising comparisons, loop state and rounding. Probe real Erlang before any
+coverage promotion. Preserve hard errors and exact stdout. Commit a separate
+contract before backend changes if a defect appears. Larger strings and host
+input remain behind this bounded proof; retain VM-060b and VM-013 separately.
