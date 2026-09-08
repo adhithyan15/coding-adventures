@@ -1,0 +1,46 @@
+{
+  "stories": [
+    {
+      "name": "Size sm",
+      "fixtures": {
+        "size": "sm",
+        "variant": "primary"
+      }
+    },
+    {
+      "name": "Size md",
+      "fixtures": {
+        "size": "md",
+        "variant": "primary"
+      }
+    },
+    {
+      "name": "Size lg",
+      "fixtures": {
+        "size": "lg",
+        "variant": "primary"
+      }
+    },
+    {
+      "name": "Primary",
+      "fixtures": {
+        "size": "md",
+        "variant": "primary"
+      }
+    },
+    {
+      "name": "Danger",
+      "fixtures": {
+        "size": "md",
+        "variant": "danger"
+      }
+    },
+    {
+      "name": "Success",
+      "fixtures": {
+        "size": "md",
+        "variant": "success"
+      }
+    }
+  ]
+}

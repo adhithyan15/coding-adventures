@@ -45,7 +45,11 @@ code,.pill { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:
 .pill { background:var(--code); border:1px solid var(--line); border-radius:5px;
         padding:1px 6px; margin-right:4px; display:inline-block; }
 iframe.preview { background:var(--card); border:1px solid var(--line); border-radius:10px;
-           width:100%; height:190px; display:block; }
+           width:100%; height:150px; display:block; }
+.gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+.shot { margin:0; }
+.shot figcaption { font-size:12px; color:var(--muted); text-transform:uppercase;
+                   letter-spacing:.06em; margin:0 0 6px; font-weight:600; }
 .preview > * { max-width:100%; }
 .note { color:var(--muted); font-size:13px; margin:8px 0 0; }
 .err { background:var(--code); border:1px solid var(--line); border-radius:8px;
@@ -84,7 +88,19 @@ var pageTmpl = template.Must(template.New("page").Parse(`<!doctype html>
     module script, which a scripts-only sandbox blocks, and the frame renders
     empty. The content is this repository's own compiler output from its own
     sources, generated in the same build -- not third-party or user input. */}}
-{{if .PreviewPath}}<iframe class="preview" src="{{.PreviewPath}}" title="{{.Name}} preview"
+{{if .Previews}}
+<div class="gallery">
+{{range .Previews}}<figure class="shot">
+<figcaption>{{.Name}}</figcaption>
+{{if .Path}}<iframe class="preview" src="{{.Path}}" title="{{.Name}}" loading="lazy"
+ sandbox="allow-scripts allow-same-origin"></iframe>
+{{else}}<div class="err">{{.Err}}</div>{{end}}
+</figure>{{end}}
+</div>
+<p class="note">One frame per story, each the real emitted html project running its own runtime.
+Stories live beside the component in <code>{{.Name}}.stories.json</code> — the same file MosaicBook
+reads, so the dev server and this site cannot disagree.</p>
+{{else if .PreviewPath}}<iframe class="preview" src="{{.PreviewPath}}" title="{{.Name}} preview"
  loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
 <p class="note">The real emitted html project, running its own runtime — not a screenshot and not a
 re-render. Slot values are samples: the first legal member of each <code>one-of</code> axis, and the
