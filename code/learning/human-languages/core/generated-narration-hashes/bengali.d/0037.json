@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:02885a90457bacd3",
+  "lessonIds": [
+    "BN-W05-tha",
+    "BN-C26-ekhane",
+    "BN-C26-okhane",
+    "BN-C26-kothay",
+    "BN-R26-here-there-where"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch37.txt",
+  "json": "bengali/narration/ch37.json",
+  "textHash": "fnv1a64:2a8085e2e440ca4f",
+  "jsonHash": "fnv1a64:ad53f39ee93c4b78",
+  "findings": []
+}

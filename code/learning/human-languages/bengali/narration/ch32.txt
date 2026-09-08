@@ -1,0 +1,197 @@
+Bengali, chapter 32: Pointing at Things.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+এই (ei) — this.
+
+Warm-up.
+[pause 2 seconds]
+Say the shirt, then a shirt, then another shirt.
+[your turn — recall: two chapters back, the word that opens a clause about a moment — jôkhon]
+[pause 8 seconds for the answer]
+
+You'll want to know: এই.
+এই জামা — ei jāmā — this shirt.
+এই চা — ei chā — this tea.
+Thirty-one chapters, and nothing in the room could be pointed at. টা says the one we both mean; it does not say this one, here, the one I am looking at. That is a different job and it needs a different word.
+এই (ei) goes in front of the noun — the opposite end from the classifier, and worth noticing, because those two are about to appear in the same phrase.
+
+Grammar Lens: the near head.
+Bengali builds a family of pointing words on one frame with three heads, and you met the frame in chapter thirty:
+[a table of 3 rows, read aloud]
+head: এ-. means: near — this. you have seen it in: এই (ei).
+head: ও-. means: far — that. you have seen it in: the next lesson.
+head: ক-. means: asking — which, where. you have seen it in: কেমন, কখন.
+So এই (ei) is not a word to be memorised on its own. It is one square of a grid, and the rest of the grid arrives over the next six lessons.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ei jāmā — this shirt]
+[pause 8 seconds for the answer]
+[your turn — say: ei chā — this tea]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — ekṭā jāmā, then ei jāmā]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: এই (ei)]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which end of the noun does এই (ei) go on? (The front — unlike the classifier.) What does it say that টা does not? (Here, near me — it points.) And which head of the pointing frame is it? (এ-, the near one.)
+Source: Unicode Bengali chart.
+
+
+Lesson 2 of 5.
+ওই (oi) — that.
+
+Warm-up.
+[pause 2 seconds]
+Say this shirt. Then write ও.
+
+You'll want to know: ওই.
+ওই জামা — oi jāmā — that shirt.
+এই লাল, ওই কালো — ei lāl, oi kālo — this one red, that one black.
+Swap the head and you have crossed the room. এ- is here; ও- is there. That is the whole system: Bengali has two distances, not three. Spanish insists on este, ese and aquel; Bengali stops at two and lets context do the rest.
+
+Grammar Lens: one letter, two jobs.
+You have met ও before, in chapter twenty-eight, as the joiner meaning also. It is the same letter and it is not an accident: a word that means that one over there and a word that means and that too are the same gesture, pointing away from the speaker.
+Told apart by where it sits:
+ও alone, between two things — also, and.
+ওই (oi) in front of a noun — that.
+You will meet a third job for it two chapters from now, when it turns into a person — and it is still the same gesture.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: oi jāmā — that shirt]
+[pause 8 seconds for the answer]
+[your turn — say: the pair, pointing twice — ei jāmā, oi jāmā]
+[pause 8 seconds for the answer]
+[your turn — say: ei lāl, oi kālo]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: এই (ei) ওই (oi)]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many distances does Bengali point to? (Two — here and there.) What is the only difference between এই (ei) and ওই? (The head — near against far.) And what else does ও do, on its own? (Also, and.)
+Source: Unicode Bengali chart.
+
+
+Lesson 3 of 5.
+এই জামাটা (ei jāmāṭā) — this shirt, the one here.
+
+Warm-up.
+[pause 2 seconds]
+Say this shirt, then that shirt, then the shirt.
+
+You'll want to know: both ends at once.
+এই জামাটা — ei jāmāṭā — this shirt (the one here, and we both know which).
+ওই কাপড়টা — oi kāpôṛṭā — that cloth.
+English cannot do this. The this shirt is not English, because the and this are fighting over one slot in front of the noun and only one of them can win. In Bengali they are nowhere near each other:
+এই (ei) + জামা + টা, pointer, noun, classifier.
+Front and back. No competition, so no choice to make — and a Bengali speaker uses both far more often than an English speaker would expect, because leaving the classifier off sounds unfinished.
+
+Grammar Lens: the fixed order.
+Once a number and an adjective join in, the order still does not move:
+[a table of 4 rows, read aloud]
+slot: first. what goes there: pointer. example: এই (ei).
+slot: second. what goes there: number. example: একটা.
+slot: third. what goes there: adjective. example: লাল.
+slot: last. what goes there: noun + classifier. example: জামাটা.
+Everything before the noun is in a fixed queue, and the only thing that ever attaches to the noun itself is the classifier at the back. Bengali will keep adding suffixes at that back end for the rest of this book, always one at a time, always in order.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ei jāmāṭā]
+[pause 8 seconds for the answer]
+[your turn — say: oi kāpôṛṭā]
+[pause 8 seconds for the answer]
+[your turn — say: both ends, then the front alone — ei jāmāṭā, then ei jāmā]
+[pause 8 seconds for the answer]
+[your turn — say: the long queue — ei lāl jāmāṭā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Can a pointer and a classifier appear in the same phrase? (Yes — they sit at opposite ends.) Why can English not do the same? (Its the and its this want the same slot.) And which of the two attaches to the noun itself? (The classifier, at the back.)
+Source: Unicode Bengali chart.
+
+
+Lesson 4 of 5.
+এটা (eṭā) — this one.
+
+Warm-up.
+[pause 2 seconds]
+Say this shirt, with both ends. Then say the question from chapter two that asks somebody their name.
+
+You'll want to know: এটা.
+এটা কী? — eṭā ki? — what is this?
+এটা জল — eṭā jôl — this is water.
+Take the noun out of এই জামাটা (ei jāmāṭā) and keep the two ends. What is left — এ and টা — is এটা (eṭā), and it means this thing, standing on its own as the subject of a sentence.
+Chapter two taught কী as the question word inside what is your name, and then gave you nothing else to ask it about. এটা (eṭā) is the missing half. Between them they make the first question a learner of any language actually uses, and it has been out of reach for thirty-one chapters.
+The far one works the same way: ওটা — oṭā — that one.
+
+Grammar Lens: no verb in the middle.
+Notice what is not in এটা (eṭā) জল. There is no is. Bengali joins a subject to what it is by putting the two side by side and stopping, exactly as chapter twenty-seven showed when it taught you to deny such a sentence with নয়:
+এটা (eṭā) জল — this is water.
+এটা (eṭā) জল নয় — this is not water.
+So the sentence and its denial both arrive at once, because the denier was already taught and had nothing to deny.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: eṭā ki?]
+[pause 8 seconds for the answer]
+[your turn — say: eṭā jôl, then eṭā chā]
+[pause 8 seconds for the answer]
+[your turn — say: the denial — eṭā jôl nôy]
+[pause 8 seconds for the answer]
+[your turn — say: the far one — oṭā ki?]
+[pause 8 seconds for the answer]
+[your turn — say: with a noun and without — ei jāmāṭā, then eṭā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two pieces is এটা (eṭā) made of? (এ-, the near head, and the classifier.) Is there a word for is in এটা (eṭā) জল? (No — the two halves sit side by side.) And which word denies it? (নয়.)
+Source: Unicode Bengali chart.
+
+
+Lesson 5 of 5.
+Pointing at things — two distances, two ends of the phrase, and the first question a learner ever asks.
+
+Warm-up.
+[pause 4 seconds]
+How many distances does Bengali point to, and what is the only piece that changes between them? Then say this one and that one with no noun at all.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ei jāmāṭā, then oi jāmāṭā]
+[pause 8 seconds for the answer]
+[your turn — say: eṭā ki? — and answer it]
+[pause 8 seconds for the answer]
+[your turn — say: the denial — eṭā chā nôy]
+[pause 8 seconds for the answer]
+[your turn — recall: from the chapter before, the ending that means the — -ṭā]
+[pause 8 seconds for the answer]
+
+Guided Practice: the distant band — the room, pointed at.
+[pause 4 seconds]
+Two chapters ago none of this could be said. Take the whole book's nouns and point at them, near and far, cold.
+[your turn — say: the drinks, near then far — ei chāṭā, oi chāṭā; ei jôlṭā, oi dudhṭā]
+[pause 8 seconds for the answer]
+[your turn — say: the wardrobe with a colour in the queue — ei lāl jāmāṭā, oi kālo kāpôṛṭā, ei nīl jāmāṭā]
+[pause 8 seconds for the answer]
+[your turn — say: the family, respectfully and at a distance — ei bhāiṭi, oi bônṭi]
+[pause 8 seconds for the answer]
+[your turn — say: one and then another — ekṭā chā, ārekṭā chā]
+[pause 8 seconds for the answer]
+[your turn — say: asking about each, then denying the answer — eṭā ki? … eṭā jôl nôy]
+[pause 8 seconds for the answer]
+[your turn — say: the face — ei mukhṭā]
+[pause 8 seconds for the answer]
+[your turn — say: the other job of the far head, from chapter twenty-eight — ও meaning also]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 4 seconds]
+Which end of the phrase does the pointer sit on, and which end does the classifier sit on? (Front and back.) Can both appear at once? (Yes — and a Bengali speaker usually uses both.) What is এটা (eṭā) made of? (The near head and the classifier, with no noun.) And which letter, taught one chapter ago, is inside every one of these? (ট.)
+Source: Unicode Bengali chart.

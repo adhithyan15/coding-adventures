@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:44857e40524038cb",
+  "lessonIds": [
+    "BN-C22-animacy",
+    "BN-C22-ra",
+    "BN-C22-gulo",
+    "BN-C22-adj-order",
+    "BN-R22-more-than-one"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "bengali/narration/ch33.txt",
+  "json": "bengali/narration/ch33.json",
+  "textHash": "fnv1a64:ac4a6e2225627405",
+  "jsonHash": "fnv1a64:cc1b7e1be99abe54",
+  "findings": []
+}

@@ -1,0 +1,920 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 37,
+  "title": "Here, There, and Where",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:02885a90457bacd3",
+  "lessons": [
+    {
+      "id": "BN-W05-tha",
+      "sequence": 1890,
+      "title": "থ (thô) — the breathy dental",
+      "headword": "থ",
+      "romanization": "thô",
+      "gloss": "the breathy dental — the last letter standing between this book and the question a learner is asked first",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:836d39fc45aa96c4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ত, খ and ধ. Say what খ has that ক has not."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the ending that marks the person a thing is done to — -ke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the ending that marks the person a thing is done to — *-ke*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "থ (thô)."
+            },
+            {
+              "kind": "speech",
+              "text": "Six chapters ago you filled in the fourth corner of a square. This is a different square, and it has been three-quarters full for even longer."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "plain",
+                "with breath"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "voice off. plain: ত tô. with breath: থ thô.",
+                "voice on. plain: দ dô. with breath: ধ dhô."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "All four are made in the same place: the tongue flat on the back of the top front teeth. What separates them is the two switches — the voice, and the puff of breath you learned to hear when খ arrived beside ক."
+            },
+            {
+              "kind": "speech",
+              "text": "থ (thô) is the puff on the voiceless one. Hold a hand in front of your mouth: for ত the air barely moves, for থ (thô) it pushes."
+            },
+            {
+              "kind": "speech",
+              "text": "And it is not the th of English this or thin. That sound does not exist in Bengali. থ (thô) is a t with breath after it, nothing more."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "থ (thô)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: থ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ত then থ (thô) — same place, breath added",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ত** then **থ** — same place, breath added]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole square — ত থ (thô) দ ধ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole square — **ত থ দ ধ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "থা",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: থা]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ট থ (thô) — the two letters this book waited longest for",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ট থ — the two letters this book waited longest for]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where is থ (thô) made? (On the teeth, like ত.) What is added? (Breath.) Is it the English th? (No — that sound is not in Bengali.) And which letter is its voiced partner? (ধ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C26-ekhane",
+      "sequence": 1900,
+      "title": "এখানে (ekhāne) — here",
+      "headword": "এখানে",
+      "romanization": "ekhāne",
+      "gloss": "here — the near head again, this time on a frame that means place, so that something can at last be put somewhere",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63ceb1b7c18fb7ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write থ (thô). Then say this shirt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: এখানে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চা এখানে — chā ekhāne — the tea is here."
+            },
+            {
+              "kind": "speech",
+              "text": "সে এখানে — she ekhāne — he is here."
+            },
+            {
+              "kind": "speech",
+              "text": "Thirty-six chapters, and nothing in this book has had a place. Things could be named, pointed at, counted, owned and acted upon, and not one of them could be said to be anywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "এখানে (ekhāne) takes the near head এ- you have owned since chapter thirty-two and puts it on a frame that means place. And as with এটা জল, there is no verb in the middle: the thing, then where it is, and stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the grid, now in three dimensions",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "head",
+                "frame",
+                "word"
+              ],
+              "columns": 3,
+              "rowCount": 9,
+              "utterances": [
+                "head: এ- near. frame: thing. word: এটা.",
+                "head: এ- near. frame: person. word: এ.",
+                "head: এ- near. frame: place. word: এখানে (ekhāne).",
+                "head: ও- far. frame: thing. word: ওটা.",
+                "head: ও- far. frame: person. word: ও.",
+                "head: ও- far. frame: place. word: next lesson.",
+                "head: ক- asking. frame: thing. word: কী.",
+                "head: ক- asking. frame: person. word: কে.",
+                "head: ক- asking. frame: place. word: the lesson after."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Nine cells, three heads, three frames. You have met seven of the nine, and the last two arrive in the next two lessons — which is the whole reason the pointing chapter was worth its five lessons."
+            },
+            {
+              "kind": "speech",
+              "text": "And the denial is already yours: চা এখানে (ekhāne) নেই — the tea is not here — using the নেই of chapter twenty-seven, which denies existence rather than identity."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chā ekhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chā ekhāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "she ekhāne, then āmi ekhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *she ekhāne*, then *āmi ekhāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the denial — chā ekhāne nei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the denial — *chā ekhāne nei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with the classifier — chāṭā ekhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with the classifier — *chāṭā ekhāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the near head on all three frames — eṭā, e, ekhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the near head on all three frames — *eṭā*, *e*, *ekhāne*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which head is inside এখানে (ekhāne)? (এ-, the near one.) Is there a word for is in চা এখানে (ekhāne)? (No.) And which word denies it? (নেই — the one that denies existence.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C26-okhane",
+      "sequence": 1910,
+      "title": "ওখানে (okhāne) — there",
+      "headword": "ওখানে",
+      "romanization": "okhāne",
+      "gloss": "there — the far head on the place frame, and a word the reader can predict before being shown it",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5af94265f5b23934",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the tea is here. Then say that shirt. Now guess this lesson's word before you read it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ওখানে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সে ওখানে — she okhāne — he is there."
+            },
+            {
+              "kind": "speech",
+              "text": "If you guessed it, that is the lesson. Swap the head and cross the room, exactly as এই became ওই five chapters ago. The frame does not change; only the first letter does."
+            },
+            {
+              "kind": "speech",
+              "text": "এখানে (ekhāne) — here, where I am."
+            },
+            {
+              "kind": "speech",
+              "text": "ওখানে (okhāne) — there, where I am not."
+            },
+            {
+              "kind": "speech",
+              "text": "Two places, as there were two distances. Bengali does not add a third."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: eight of nine",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "head",
+                "frame",
+                "word"
+              ],
+              "columns": 3,
+              "rowCount": 7,
+              "utterances": [
+                "head: এ- near. frame: place. word: এখানে (ekhāne).",
+                "head: ও- far. frame: place. word: ওখানে (okhāne).",
+                "head: এ- near. frame: thing. word: এটা.",
+                "head: ও- far. frame: thing. word: ওটা.",
+                "head: ক- asking. frame: thing. word: কী.",
+                "head: ক- asking. frame: person. word: কে.",
+                "head: ক- asking. frame: place. word: one cell left."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Eight cells filled. The ninth is the next lesson, and it is the question an A1 examiner asks in the first minute of a speaking test."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "she okhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *she okhāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — āmi ekhāne, she okhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *āmi ekhāne*, *she okhāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the denial — she okhāne nei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the denial — *she okhāne nei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a whole group over there — bôndhurā okhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a whole group over there — *bôndhurā okhāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the far head on all three frames — oṭā, o, okhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the far head on all three frames — *oṭā*, *o*, *okhāne*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the only difference between এখানে (ekhāne) and ওখানে (okhāne)? (The head — near against far.) How many places does Bengali distinguish? (Two.) And which cell of the grid is still empty? (The asking one, for place.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C26-kothay",
+      "sequence": 1920,
+      "title": "কোথায় (kothāy) — where?",
+      "headword": "কোথায়",
+      "romanization": "kothāy",
+      "gloss": "where? — the ninth cell of the grid, and the question an A1 candidate is asked in the first minute of a speaking test",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5e81624ac1cf5ce3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say here and there. Then ask who?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কোথায়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তুমি কোথায়? — tumi kothāy? — where are you?"
+            },
+            {
+              "kind": "speech",
+              "text": "জামাটা কোথায়? — jāmāṭā kothāy? — where is the shirt?"
+            },
+            {
+              "kind": "speech",
+              "text": "The ninth cell, and the grid is closed:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "head",
+                "frame",
+                "word"
+              ],
+              "columns": 3,
+              "rowCount": 9,
+              "utterances": [
+                "head: এ- near. frame: thing. word: এটা.",
+                "head: এ- near. frame: person. word: এ.",
+                "head: এ- near. frame: place. word: এখানে (ekhāne).",
+                "head: ও- far. frame: thing. word: ওটা.",
+                "head: ও- far. frame: person. word: ও.",
+                "head: ও- far. frame: place. word: ওখানে (okhāne).",
+                "head: ক- asking. frame: thing. word: কী.",
+                "head: ক- asking. frame: person. word: কে.",
+                "head: ক- asking. frame: place. word: কোথায় (kothāy)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three heads, three frames, nine words — and you were shown the first head six chapters ago and have been filling the table in ever since."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the question and its answer are the same shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ask down the bottom row and answer up the two rows above it:"
+            },
+            {
+              "kind": "speech",
+              "text": "তুমি কোথায় (kothāy)? — আমি এখানে (ekhāne)."
+            },
+            {
+              "kind": "speech",
+              "text": "এটা কী? — এটা চা."
+            },
+            {
+              "kind": "speech",
+              "text": "The same ক- opens কখন, which chapter thirty showed you inside a table of three heads without ever making it a word you could use. The grid was there before the words were."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the spelling: কোথায় (kothāy) ends in য়, the dotted য, and it is a glide, not a j."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumi kothāy? — and answer — āmi ekhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumi kothāy?* — and answer — *āmi ekhāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmāṭā kothāy? — and answer — jāmāṭā okhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmāṭā kothāy?* — and answer — *jāmāṭā okhāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three questions of the bottom row — eṭā ki?, ke?, kothāy?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three questions of the bottom row — *eṭā ki?*, *ke?*, *kothāy?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which head opens কোথায় (kothāy)? (ক-, the asking one.) Which two words answer it? (এখানে (ekhāne) and ওখানে (okhāne).) And what letter does it end in? (য়, the dotted one — a glide.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R26-here-there-where",
+      "sequence": 1930,
+      "title": "Here, there, and where",
+      "headword": "এখানে · ওখানে · কোথায়",
+      "romanization": "ekhāne · okhāne · kothāy",
+      "gloss": "nine cells, three heads, and seven chapters of grammar that all turn out to have been one idea",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99139cd4da56c324",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three heads and three frames make nine words. Say the whole grid out loud, one row at a time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "থ (thô), then ট",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: থ, then ট]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumi kothāy? — āmi ekhāne — she okhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumi kothāy?* — *āmi ekhāne* — *she okhāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the denial — chā ekhāne nei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the denial — *chā ekhāne nei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the ending that marks the one a thing is done to — -ke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the ending that marks the one a thing is done to — *-ke*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — the whole tranche, cold",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Seven chapters ago this book could not write the letter ট, could not say the or a, could not make a plural, could not name a third person, could not mark who a thing was done to, and could not put anything anywhere. Run all of it, cold, from memory."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the classifier and its two doors — jāmāṭā, ekṭā jāmā, ārekṭā jāmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the classifier and its two doors — *jāmāṭā*, *ekṭā jāmā*, *ārekṭā jāmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pointing pair, and both ends at once — ei jāmāṭā, oi jāmāṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pointing pair, and both ends at once — *ei jāmāṭā*, *oi jāmāṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question that decides the plural — is it জীব or জিনিস?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question that decides the plural — is it **জীব** or **জিনিস**?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two plurals — bhāirā, bônerā; jāmāgulo, nākgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two plurals — *bhāirā*, *bônerā*; *jāmāgulo*, *nākgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an adjective that never changes — shôbuj jāmā, shôbuj jāmāgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an adjective that never changes — *shôbuj jāmā*, *shôbuj jāmāgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six persons — āmi, āmrā, tumi, tomrā, she, tārā — and the careful ones, āpni, tini",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six persons — *āmi, āmrā, tumi, tomrā, she, tārā* — and the careful ones, *āpni, tini*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whose — āmār, tār, āmāder, tāder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whose — *āmār*, *tār*, *āmāder*, *tāder*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to whom — āmāke, tomāke, tāke, bhāike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to whom — *āmāke*, *tomāke*, *tāke*, *bhāike*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three questions — eṭā ki?, ke?, kothāy?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three questions — *eṭā ki?*, *ke?*, *kothāy?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "and where things are — bhātṭā ekhāne, chāṭā okhāne, āmāder pôribār ekhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: and where things are — *bhātṭā ekhāne*, *chāṭā okhāne*, *āmāder pôribār ekhāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the longest phrase this book can now build — āmāder ei shôbuj jāmāṭā okhāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the longest phrase this book can now build — *āmāder ei shôbuj jāmāṭā okhāne*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the three heads? (এ- near, ও- far, ক- asking.) What are the three frames? (Thing, person, place.) One question chose the plural, the classifier and the object ending — what was it? (Is the noun alive?) And which two letters had to be taught before any of these seven chapters could be written? (ট and থ (thô).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

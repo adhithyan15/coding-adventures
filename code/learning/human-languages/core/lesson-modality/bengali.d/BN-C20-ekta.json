@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C20-ekta",
+    "language": "bengali",
+    "chapter": 31,
+    "sequence": 1610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c48c44a90987571"
+  },
+  "findings": []
+}

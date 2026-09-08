@@ -2,7 +2,10 @@
   "segments": [
     "BN-PATH-003",
     "BN-PATH-024",
-    "BN-PATH-026"
+    "BN-PATH-026",
+    "BN-PATH-031",
+    "BN-PATH-032",
+    "BN-PATH-033"
   ],
   "omits": [
     "RESPONSE-YES",

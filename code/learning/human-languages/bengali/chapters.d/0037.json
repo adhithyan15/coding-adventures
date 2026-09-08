@@ -1,0 +1,21 @@
+{
+  "chapter": 37,
+  "title": "Here, There, and Where",
+  "label": "ch:bn-here-there-and-where",
+  "canDo": "I can say something is here or there, ask where it is, and deny that it is anywhere at all.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "BN-R26-here-there-where",
+    "kind": "speaking",
+    "summary": "The nine-cell grid closes: three heads — near, far, asking — across three frames — thing, person, place. The last cell is কোথায়, the question an A1 candidate is asked in the first minute of a speaking test, and answering it needs the letter থ.",
+    "assesses": [
+      "BN-LEX-C26-EKHANE-01",
+      "BN-LEX-C26-OKHANE-01",
+      "BN-LEX-C26-KOTHAY-01",
+      "BN-SCRIPT-THA-01"
+    ],
+    "note": "এখানে and কোথায় both returned zero matches across 139 lessons, and কোথায় additionally could not be printed: থ was shown in the corpus and taught nowhere."
+  }
+}

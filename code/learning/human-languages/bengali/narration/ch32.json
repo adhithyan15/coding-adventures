@@ -1,0 +1,841 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 32,
+  "title": "Pointing at Things",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:aa582bde5e86f70c",
+  "lessons": [
+    {
+      "id": "BN-C21-ei",
+      "sequence": 1640,
+      "title": "এই (ei) — this",
+      "headword": "এই",
+      "romanization": "ei",
+      "gloss": "this — the near half of the pair a learner needs before anything in the room can be referred to",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd5201433ef6cf87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the shirt, then a shirt, then another shirt."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the word that opens a clause about a moment — jôkhon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the word that opens a clause about a moment — *jôkhon*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: এই",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "এই জামা — ei jāmā — this shirt."
+            },
+            {
+              "kind": "speech",
+              "text": "এই চা — ei chā — this tea."
+            },
+            {
+              "kind": "speech",
+              "text": "Thirty-one chapters, and nothing in the room could be pointed at. টা says the one we both mean; it does not say this one, here, the one I am looking at. That is a different job and it needs a different word."
+            },
+            {
+              "kind": "speech",
+              "text": "এই (ei) goes in front of the noun — the opposite end from the classifier, and worth noticing, because those two are about to appear in the same phrase."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the near head",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bengali builds a family of pointing words on one frame with three heads, and you met the frame in chapter thirty:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "head",
+                "means",
+                "you have seen it in"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "head: এ-. means: near — this. you have seen it in: এই (ei).",
+                "head: ও-. means: far — that. you have seen it in: the next lesson.",
+                "head: ক-. means: asking — which, where. you have seen it in: কেমন, কখন."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So এই (ei) is not a word to be memorised on its own. It is one square of a grid, and the rest of the grid arrives over the next six lessons."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei jāmā — this shirt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei jāmā* — this shirt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei chā — this tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei chā* — this tea]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — ekṭā jāmā, then ei jāmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — *ekṭā jāmā*, then *ei jāmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "এই (ei)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: এই]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which end of the noun does এই (ei) go on? (The front — unlike the classifier.) What does it say that টা does not? (Here, near me — it points.) And which head of the pointing frame is it? (এ-, the near one.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C21-oi",
+      "sequence": 1650,
+      "title": "ওই (oi) — that",
+      "headword": "ওই",
+      "romanization": "oi",
+      "gloss": "that — the far half, and the letter ও doing a second job it has been quietly holding since chapter seventeen",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25f13b884a055d48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this shirt. Then write ও."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ওই",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ওই জামা — oi jāmā — that shirt."
+            },
+            {
+              "kind": "speech",
+              "text": "এই লাল, ওই কালো — ei lāl, oi kālo — this one red, that one black."
+            },
+            {
+              "kind": "speech",
+              "text": "Swap the head and you have crossed the room. এ- is here; ও- is there. That is the whole system: Bengali has two distances, not three. Spanish insists on este, ese and aquel; Bengali stops at two and lets context do the rest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one letter, two jobs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have met ও before, in chapter twenty-eight, as the joiner meaning also. It is the same letter and it is not an accident: a word that means that one over there and a word that means and that too are the same gesture, pointing away from the speaker."
+            },
+            {
+              "kind": "speech",
+              "text": "Told apart by where it sits:"
+            },
+            {
+              "kind": "speech",
+              "text": "ও alone, between two things — also, and."
+            },
+            {
+              "kind": "speech",
+              "text": "ওই (oi) in front of a noun — that."
+            },
+            {
+              "kind": "speech",
+              "text": "You will meet a third job for it two chapters from now, when it turns into a person — and it is still the same gesture."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oi jāmā — that shirt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oi jāmā* — that shirt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair, pointing twice — ei jāmā, oi jāmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair, pointing twice — *ei jāmā*, *oi jāmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei lāl, oi kālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei lāl, oi kālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "এই (ei) ওই (oi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: এই ওই]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many distances does Bengali point to? (Two — here and there.) What is the only difference between এই (ei) and ওই? (The head — near against far.) And what else does ও do, on its own? (Also, and.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C21-dem-order",
+      "sequence": 1660,
+      "title": "এই জামাটা (ei jāmāṭā) — this shirt, the one here",
+      "headword": "এই জামাটা",
+      "romanization": "ei jāmāṭā",
+      "gloss": "this shirt, definitely — the demonstrator at the front and the classifier at the back, in the same phrase, which English will not let you do",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e949308e4c7a540",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this shirt, then that shirt, then the shirt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: both ends at once",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "এই জামাটা — ei jāmāṭā — this shirt (the one here, and we both know which)."
+            },
+            {
+              "kind": "speech",
+              "text": "ওই কাপড়টা — oi kāpôṛṭā — that cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "English cannot do this. The this shirt is not English, because the and this are fighting over one slot in front of the noun and only one of them can win. In Bengali they are nowhere near each other:"
+            },
+            {
+              "kind": "speech",
+              "text": "এই (ei) + জামা + টা, pointer, noun, classifier."
+            },
+            {
+              "kind": "speech",
+              "text": "Front and back. No competition, so no choice to make — and a Bengali speaker uses both far more often than an English speaker would expect, because leaving the classifier off sounds unfinished."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the fixed order",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Once a number and an adjective join in, the order still does not move:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "slot",
+                "what goes there",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "slot: first. what goes there: pointer. example: এই (ei).",
+                "slot: second. what goes there: number. example: একটা.",
+                "slot: third. what goes there: adjective. example: লাল.",
+                "slot: last. what goes there: noun + classifier. example: জামাটা."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Everything before the noun is in a fixed queue, and the only thing that ever attaches to the noun itself is the classifier at the back. Bengali will keep adding suffixes at that back end for the rest of this book, always one at a time, always in order."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei jāmāṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei jāmāṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oi kāpôṛṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oi kāpôṛṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both ends, then the front alone — ei jāmāṭā, then ei jāmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both ends, then the front alone — *ei jāmāṭā*, then *ei jāmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the long queue — ei lāl jāmāṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the long queue — *ei lāl jāmāṭā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Can a pointer and a classifier appear in the same phrase? (Yes — they sit at opposite ends.) Why can English not do the same? (Its the and its this want the same slot.) And which of the two attaches to the noun itself? (The classifier, at the back.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C21-eta",
+      "sequence": 1670,
+      "title": "এটা (eṭā) — this one",
+      "headword": "এটা",
+      "romanization": "eṭā",
+      "gloss": "this one, this thing — the pointer standing alone as a subject, which finally makes the commonest beginner sentence in any language sayable",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa4b0bdd71e072a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this shirt, with both ends. Then say the question from chapter two that asks somebody their name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: এটা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "এটা কী? — eṭā ki? — what is this?"
+            },
+            {
+              "kind": "speech",
+              "text": "এটা জল — eṭā jôl — this is water."
+            },
+            {
+              "kind": "speech",
+              "text": "Take the noun out of এই জামাটা (ei jāmāṭā) and keep the two ends. What is left — এ and টা — is এটা (eṭā), and it means this thing, standing on its own as the subject of a sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter two taught কী as the question word inside what is your name, and then gave you nothing else to ask it about. এটা (eṭā) is the missing half. Between them they make the first question a learner of any language actually uses, and it has been out of reach for thirty-one chapters."
+            },
+            {
+              "kind": "speech",
+              "text": "The far one works the same way: ওটা — oṭā — that one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: no verb in the middle",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Notice what is not in এটা (eṭā) জল. There is no is. Bengali joins a subject to what it is by putting the two side by side and stopping, exactly as chapter twenty-seven showed when it taught you to deny such a sentence with নয়:"
+            },
+            {
+              "kind": "speech",
+              "text": "এটা (eṭā) জল — this is water."
+            },
+            {
+              "kind": "speech",
+              "text": "এটা (eṭā) জল নয় — this is not water."
+            },
+            {
+              "kind": "speech",
+              "text": "So the sentence and its denial both arrive at once, because the denier was already taught and had nothing to deny."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṭā ki?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṭā ki?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṭā jôl, then eṭā chā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṭā jôl*, then *eṭā chā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the denial — eṭā jôl nôy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the denial — *eṭā jôl nôy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the far one — oṭā ki?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the far one — *oṭā ki?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with a noun and without — ei jāmāṭā, then eṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with a noun and without — *ei jāmāṭā*, then *eṭā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two pieces is এটা (eṭā) made of? (এ-, the near head, and the classifier.) Is there a word for is in এটা (eṭā) জল? (No — the two halves sit side by side.) And which word denies it? (নয়.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R21-pointing",
+      "sequence": 1680,
+      "title": "Pointing at things",
+      "headword": "এই · ওই · এটা",
+      "romanization": "ei · oi · eṭā",
+      "gloss": "two distances, two ends of the phrase, and the first question a learner ever asks",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87a89fd98eb2112e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many distances does Bengali point to, and what is the only piece that changes between them? Then say this one and that one with no noun at all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei jāmāṭā, then oi jāmāṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei jāmāṭā*, then *oi jāmāṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṭā ki? — and answer it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṭā ki?* — and answer it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the denial — eṭā chā nôy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the denial — *eṭā chā nôy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "from the chapter before, the ending that means the — -ṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: from the chapter before, the ending that means *the* — *-ṭā*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — the room, pointed at",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two chapters ago none of this could be said. Take the whole book's nouns and point at them, near and far, cold."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the drinks, near then far — ei chāṭā, oi chāṭā; ei jôlṭā, oi dudhṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the drinks, near then far — *ei chāṭā*, *oi chāṭā*; *ei jôlṭā*, *oi dudhṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the wardrobe with a colour in the queue — ei lāl jāmāṭā, oi kālo kāpôṛṭā, ei nīl jāmāṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the wardrobe with a colour in the queue — *ei lāl jāmāṭā*, *oi kālo kāpôṛṭā*, *ei nīl jāmāṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family, respectfully and at a distance — ei bhāiṭi, oi bônṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family, respectfully and at a distance — *ei bhāiṭi*, *oi bônṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one and then another — ekṭā chā, ārekṭā chā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one and then another — *ekṭā chā, ārekṭā chā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asking about each, then denying the answer — eṭā ki? … eṭā jôl nôy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: asking about each, then denying the answer — *eṭā ki?* … *eṭā jôl nôy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the face — ei mukhṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the face — *ei mukhṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the other job of the far head, from chapter twenty-eight — ও meaning also",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the other job of the far head, from chapter twenty-eight — **ও** meaning *also*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which end of the phrase does the pointer sit on, and which end does the classifier sit on? (Front and back.) Can both appear at once? (Yes — and a Bengali speaker usually uses both.) What is এটা (eṭā) made of? (The near head and the classifier, with no noun.) And which letter, taught one chapter ago, is inside every one of these? (ট.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

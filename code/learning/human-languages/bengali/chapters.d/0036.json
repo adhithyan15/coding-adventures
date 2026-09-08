@@ -1,0 +1,21 @@
+{
+  "chapter": 36,
+  "title": "The One It Happens To",
+  "label": "ch:bn-the-one-it-happens-to",
+  "canDo": "I can mark the person a thing is done to, say me, you and him as objects, and ask who?",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-R25-the-one-it-happens-to",
+    "kind": "speaking",
+    "summary": "The object ending goes on living nouns only — the animacy question paying for the third time — and fills the slot in chapter nine's dative frame, which had been taught with nothing to put in it for twenty-seven chapters.",
+    "assesses": [
+      "BN-GRAMMAR-C25-OBJECT-KE-01",
+      "BN-LEX-C25-AMAKE-01",
+      "BN-LEX-C25-TOMAKE-01",
+      "BN-LEX-C25-KE-WHO-01"
+    ],
+    "note": "The dative frame of BN-C09-bhalo-laga was taught with no filler: good sticks to me, with no word for me. This chapter supplies it."
+  }
+}

@@ -40,7 +40,7 @@ verb that builds a hundred others.
 <!-- hl-knowledge: introduces=[BN-CONCEPT-C05-KAJKORA-01]; assesses=[BN-CONCEPT-C05-BOLA-01] -->
 
 **কাজ** (*kāj*, "work"): **কা** (*kā*) + **জ** (*j*). **করা** (*kôrā*, "do"): **ক**
-(*kô*) + **রা** (*rā*).
+(*kô*) + রা (*rā*).
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01] -->

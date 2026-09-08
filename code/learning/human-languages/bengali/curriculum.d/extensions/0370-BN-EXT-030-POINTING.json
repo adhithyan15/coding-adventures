@@ -1,0 +1,17 @@
+{
+  "id": "BN-EXT-030-POINTING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can point at what is near me and what is not, use a pointer and a classifier in one phrase, and ask what is this?",
+  "prerequisites": [
+    "BN-EXT-029-CLASSIFIER"
+  ],
+  "lessons": [
+    "BN-C21-ei",
+    "BN-C21-oi",
+    "BN-C21-dem-order",
+    "BN-C21-eta",
+    "BN-R21-pointing"
+  ]
+}

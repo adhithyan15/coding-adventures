@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C24-tara",
+    "language": "bengali",
+    "chapter": 35,
+    "sequence": 1810,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:53646218cc7bec9b"
+  },
+  "findings": []
+}

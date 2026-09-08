@@ -1,7 +1,8 @@
 {
-  "segments": [],
-  "omits": [
-    "GRAMMAR-THE"
+  "segments": [
+    "BN-PATH-028",
+    "BN-PATH-029"
   ],
+  "omits": [],
   "relocates": {}
 }

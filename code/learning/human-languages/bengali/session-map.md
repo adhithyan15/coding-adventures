@@ -209,10 +209,53 @@ that waits until something has come between.
 | 156 | abar-bolben | আবার বলবেন | no new words at all — chapters seven, eleven and twenty-two |
 | 157 | dhire | ধীরে | *steady* before *slow*, and doubled the way Bengali doubles adverbs |
 | 158 | R — lost and found | | the two sentences a lost learner needs |
+| 159 | tta | ট | the fourth corner of a square whose other three the book already owned |
+| 160 | tta-classifier | টা | the ending Bengali has instead of the word *the* |
+| 161 | ekta | একটা | the only way a Bengali number may touch a noun |
+| 162 | arekta | আরেকটা | আর + এক + টা, with the *and* still audible inside it |
+| 163 | R — one and another | | sixty nouns become pickable-out for the first time |
+| 164 | ei | এই | the near head, and one square of a grid the rest of the tranche fills |
+| 165 | oi | ওই | two distances where Spanish insists on three |
+| 166 | dem-order | এই …টা | both ends of the phrase at once, which English cannot do |
+| 167 | eta | এটা | the near head plus the classifier, with the noun taken out |
+| 168 | R — pointing | | *what is this?*, thirty-two chapters late |
+| 169 | animacy | জীব / জিনিস | Spanish asks about gender; Bengali asks something you can see |
+| 170 | ra | রা | the living plural, and Bengali does not insist on marking number |
+| 171 | gulo | গুলো | plural AND definite, which is why it never sits beside টা |
+| 172 | adj-order | লাল জামা | in front, and it never agrees with anything |
+| 173 | R — more than one | | one question, two endings, every noun in the book |
+| 174 | she | সে | one word for *he* and *she*, and the first person talked ABOUT |
+| 175 | tini | তিনি | the third-person rung of the ladder আপনি stands on |
+| 176 | o-pron | ও | the third job of one syllable — also, that, and him |
+| 177 | tar | তার | the -র of আমার and তোমার, on a stem you met last lesson |
+| 178 | R — somebody else | | six persons, where the book had two |
+| 179 | amra | আমরা | আমি plus the plural of a living noun, because that is what a pronoun is |
+| 180 | tomra | তোমরা | four words where modern English has one |
+| 181 | tara | তারা | no irregular plural pronoun exists in Bengali |
+| 182 | amader | আমাদের | -রা steps aside: the back slot holds ONE suffix |
+| 183 | R — all of us | | the possessive column full for the first time |
+| 184 | ke-suffix | -কে | the animacy question paying for the third time |
+| 185 | amake | আমাকে | chapter sixteen's dative frame, filled at last |
+| 186 | tomake | তোমাকে | three stems, three endings, nine words, nothing irregular |
+| 187 | ke-who | কে | spelled like the ending and unrelated to it |
+| 188 | R — the one it happens to | | four endings competing for one slot |
+| 189 | tha | থ | the puff on the voiceless dental, and not the English *th* |
+| 190 | ekhane | এখানে | the near head on a frame that means place |
+| 191 | okhane | ওখানে | the reader is asked to predict it before it is shown |
+| 192 | kothay | কোথায় | the ninth cell, and the first question an examiner asks |
+| 193 | R — here, there, where | | three heads, three frames, seven chapters |
 
 ## Next
 
-Chapters 17–18 still need session-map entries. On the script side, the next
-tranche starts at **য**, **়**, **ও**, **গ** and **ছ** — the five untaught
-glyphs the corpus shows most often — each with a word already glossed and
-waiting: হ্যাঁ, কাপড়, হওয়া, লাগা, আছি.
+Chapters 17–18 still need session-map entries. On the script side the corpus is
+down to **nine** never-taught glyphs (ং ঃ ঙ ঝ ঞ ফ শ ষ ূ), and the two that block
+open exam points are **ণ** (কারণ, ADV-08) and **অ** (অনেক, Q-05) — অ being an
+independent vowel, it is also the only one of the pair with a citable
+stroke-order animation on Commons (HL-C212).
+
+The largest single cluster left is the **numerals**: they stop at পাঁচ, not one
+of the ten Bengali digits is taught anywhere in sixty-two script lessons, and
+six points wait on them — Q-01, Q-03, Q-04, Q-06, FUN-25 (an age) and FUN-26 (a
+telephone number). After that, the locative *-e / -te* and the postpositions
+সঙ্গে / জন্য / থেকে, which are three more points now that -কে has shown the
+reader what a case ending is.

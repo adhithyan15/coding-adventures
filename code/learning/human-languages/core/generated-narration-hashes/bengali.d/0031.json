@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:8a746e3f78778b4a",
+  "lessonIds": [
+    "BN-W05-tta",
+    "BN-C20-tta-classifier",
+    "BN-C20-ekta",
+    "BN-C20-arekta",
+    "BN-R20-one-and-another"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch31.txt",
+  "json": "bengali/narration/ch31.json",
+  "textHash": "fnv1a64:076fc41ff1d08ba6",
+  "jsonHash": "fnv1a64:4272d6f6f6e283ae",
+  "findings": []
+}

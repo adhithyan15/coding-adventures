@@ -1,0 +1,21 @@
+{
+  "chapter": 31,
+  "title": "The Letter in the Way",
+  "label": "ch:bn-the-letter-in-the-way",
+  "canDo": "I can say the shirt, a shirt and another shirt — because the letter ট finally exists and the classifier that does the work of the exists with it.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R20-one-and-another",
+    "kind": "production",
+    "summary": "Sixty nouns taught across chapters ten to fifteen — a pantry, a family, a face and a wardrobe — become pickable-out for the first time: the shirt, a shirt, another shirt, and the polite form for people.",
+    "assesses": [
+      "BN-GRAMMAR-C20-CLASSIFIER-01",
+      "BN-GRAMMAR-C20-EKTA-01",
+      "BN-LEX-C20-AREKTA-01",
+      "BN-SCRIPT-TTA-01"
+    ],
+    "note": "ট was shown in no lesson and taught in none, and six exam points sat behind it. The chapter opens by teaching the letter, then spends four lessons on what the letter unlocks."
+  }
+}

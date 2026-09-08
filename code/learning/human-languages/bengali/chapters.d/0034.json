@@ -1,0 +1,21 @@
+{
+  "chapter": 34,
+  "title": "Somebody Else",
+  "label": "ch:bn-somebody-else",
+  "canDo": "I can talk about a third person, choose the respectful form when I should, sort them by how far away they are, and say what is theirs.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-R23-somebody-else",
+    "kind": "speaking",
+    "summary": "The third person arrives — graded for respect on the same ladder as তুমি and আপনি, and sorted by distance on the same heads as এই and ওই — and with it the possessive column reaches its third of six cells.",
+    "assesses": [
+      "BN-LEX-C23-SHE-01",
+      "BN-LEX-C23-TINI-01",
+      "BN-LEX-C23-O-PRON-01",
+      "BN-GRAMMAR-C23-TAR-01"
+    ],
+    "note": "There was no third-person pronoun anywhere in the corpus, so every sentence a learner could build was about themselves or their listener and nobody could be talked about."
+  }
+}

@@ -130,7 +130,7 @@ describe("the committed Bengali A1 inventory", () => {
     }
   });
 
-  it("reports a FULL negation column, no demonstrative at all, and a script 11 glyphs short", () => {
+  it("reports THREE full columns, a closed deixis grid, and a script two glyphs shorter", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(244);
@@ -140,20 +140,26 @@ describe("the committed Bengali A1 inventory", () => {
     // না that negates a verb is the না inside কেননা and the না doubled in
     // না … না, so three points ride on one word the track taught in chapter one
     // and never used again.
-    expect(coverage.covered).toBe(121);
-    expect(coverage.unmapped).toBe(123);
+    //
+    // 121 -> 138: the pointing tranche (chapters 31-37). Twenty-eight items
+    // closed seventeen points, and this ratio comes from a LETTER. ট was shown
+    // in the corpus and taught nowhere, and six points sat behind it: the
+    // classifier, the indefinite, the distributive pair, the demonstrative
+    // stacking rule and এটা. Teaching one consonant unblocked a whole grammar.
+    expect(coverage.covered).toBe(138);
+    expect(coverage.unmapped).toBe(106);
     expect(coverage.partial).toBe(0);
     // The headline was an EMPTY joining column: আর and এবং ("and"), কিন্তু
     // ("but"), কারণ ("because"), যে ("that") and যখন ("when") all returned ZERO
     // occurrences in 139 files, and the ONE covered point was covered by
     // accident -- দয়া করে teaches the conjunctive participle because "please"
-    // happens to be built out of one. Eight of eleven now stand on lessons.
-    // The three that do not each name a blocker rather than an omission: the
-    // classifier for JOIN-05, the third-person pronoun for JOIN-07, and the
-    // purpose suffix for JOIN-10.
+    // happens to be built out of one. 8 -> 9: JOIN-05 named the classifier as
+    // its blocker and the classifier now exists, so একটা … আরেকটা stands on a
+    // lesson. The two that remain still name blockers rather than omissions:
+    // the purpose suffix for JOIN-10, and the যে … সে correlative for JOIN-07.
     expect(coverage.byCategory["Shomuchchoy (joining and subordination)"]!).toEqual({
       enumerated: 11,
-      covered: 8,
+      covered: 9,
     });
     // Negation goes from 1/5 to 5/5 -- the first column in this track to close
     // completely. "I do not understand" is now sayable, and it is sayable in
@@ -162,26 +168,49 @@ describe("the committed Bengali A1 inventory", () => {
       enumerated: 5,
       covered: 5,
     });
-    // Nothing can be pointed at: এই and ওই both return zero matches.
+    // THE HEADLINE, and a flat zero closing to a full column. এই and ওই both
+    // returned zero matches across 139 files; both are now taught, they stack
+    // with the classifier at the opposite end of the phrase, and এটা stands
+    // alone as a subject so that এটা কী? -- the commonest beginner sentence in
+    // any language -- is sayable for the first time in thirty-two chapters.
     expect(coverage.byCategory["Nirdeshak (demonstratives and deixis)"]!).toEqual({
       enumerated: 3,
-      covered: 0,
+      covered: 3,
+    });
+    // Two more columns close completely alongside it, and neither was aimed at.
+    // Definiteness closes because the classifier IS the definite article
+    // Bengali has not got; possession closes because a third-person pronoun and
+    // a plural one both take the same -র the track already owned.
+    expect(coverage.byCategory["Nirdeshok (definiteness, and the article Bengali has not got)"]!).toEqual({
+      enumerated: 3,
+      covered: 3,
+    });
+    expect(coverage.byCategory["Odhikar (possession)"]!).toEqual({
+      enumerated: 3,
+      covered: 3,
+    });
+    // The pronoun column, one point off full: only the reflexive নিজে is left.
+    expect(coverage.byCategory["Shorbonam (pronouns)"]!).toEqual({
+      enumerated: 8,
+      covered: 7,
     });
     // The script column is this track's strength AND carries its hardest gap.
-    // measureScriptClosure reports 34 glyphs taught of 45 shown, 11 never
-    // taught, 21 violations, and headwordsWithoutRomanization exactly 0 — all
-    // four unchanged by the nineteen lessons of chapters 27-30, which were
-    // written against the taught glyph set rather than against the language: বা,
-    // আর, কিন্তু, কেননা, যে and যখন need no sign the track has not taught, while
-    // কারণ, এবং and একটা do and are named in romanization instead — and
-    // separately, no Bengali ductus data exists anywhere in the repository, so
-    // stroke order cannot be taught at all (HL-C212).
+    // measureScriptClosure now reports 36 glyphs taught of 45 shown, NINE never
+    // taught, 21 violations, and headwordsWithoutRomanization exactly 0. The
+    // violation count and the romanization count are unchanged by the
+    // thirty-five lessons of chapters 31-37; the never-taught count FELL by two,
+    // because this tranche needed ট and থ and could not write itself without
+    // them. Both are consonants, and Commons holds a stroke-order animation for
+    // every Bengali independent vowel and for no consonant at all (HL-C212), so
+    // both are taught the way the corpus's other consonant lessons are: place
+    // of articulation, the square they complete, and a Unicode chart citation.
+    // No pen path is claimed, because none can be sourced.
     expect(coverage.byCategory["Lipi (script and orthography)"]!).toEqual({
       enumerated: 16,
       covered: 8,
     });
     expect(formatExamCoverage(coverage)).toContain(
-      "bengali A1 (partial inventory): 121/244 points covered (50%)",
+      "bengali A1 (partial inventory): 138/244 points covered (57%)",
     );
   }, 60_000);
 });

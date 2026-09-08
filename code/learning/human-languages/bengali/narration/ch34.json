@@ -1,0 +1,871 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 34,
+  "title": "Somebody Else",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:24a2fc738e64a884",
+  "lessons": [
+    {
+      "id": "BN-C23-she",
+      "sequence": 1740,
+      "title": "সে (she) — he, she",
+      "headword": "সে",
+      "romanization": "she",
+      "gloss": "he, she — one word for both, and the first time in this book that anybody can be talked about rather than talked to",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:50e994eaedfb3372",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I. Say the two words for you, and say which one is for somebody you are careful with."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the word that points at something near — ei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the word that points at something near — *ei*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সে ভালো — she bhālo — he is well, or she is well."
+            },
+            {
+              "kind": "speech",
+              "text": "Thirty-three chapters, and every sentence this book can build has been about আমি or তুমি. Somebody is either speaking or being spoken to. Nobody has ever been talked about."
+            },
+            {
+              "kind": "speech",
+              "text": "সে is the word that changes that, and it does two things at once that English needs two words for. It is he and it is she, and Bengali will not tell you which. Sex is not marked on a Bengali pronoun at all — not here, not anywhere."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the third row of a table you already half know",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "plain",
+                "careful"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: I. plain: আমি. careful: —.",
+                "person: you. plain: তুমি. careful: আপনি.",
+                "person: he, she. plain: সে. careful: next lesson."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter two taught you that Bengali grades you for respect. It grades the third person the same way, on the same ladder, and the careful form arrives in the next lesson. What the table shows is that সে (she) is the plain one: it is what you use of a child, a friend, a younger sibling — and what you must not use of somebody's grandmother."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "she bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *she bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three persons in a row — āmi, tumi, she",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three persons in a row — *āmi*, *tumi*, *she*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pointing and then naming — ei bhāiṭi … she bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pointing and then naming — *ei bhāiṭi* … *she bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it covers both — she for a brother, she for a sister",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it covers both — *she* for a brother, *she* for a sister]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does সে mean he or she? (Both — Bengali does not mark it.) Which rung of the respect ladder is it on? (The plain one, like তুমি.) And what could this book not do before this word? (Talk about anybody who was not speaking or being spoken to.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C23-tini",
+      "sequence": 1750,
+      "title": "তিনি (tini) — he, she, respectfully",
+      "headword": "তিনি",
+      "romanization": "tini",
+      "gloss": "he, she, respectfully — the third-person rung of the same ladder আপনি stands on, and not optional",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:47b5eae22da8c076",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say he is well with the plain pronoun. Then say the careful word for you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তিনি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তিনি ভালো — tini bhālo — he is well, said of somebody you respect."
+            },
+            {
+              "kind": "speech",
+              "text": "The table from the last lesson is now complete:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "plain",
+                "careful"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: I. plain: আমি. careful: —.",
+                "person: you. plain: তুমি. careful: আপনি.",
+                "person: he, she. plain: সে. careful: তিনি (tini)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two rungs in the second person, two rungs in the third, and the choice is made the same way both times: age, standing, and how well you know them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the cost of getting it wrong",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is not a nicety a learner can put off. Bengali offers no neutral pronoun to hide behind: every time you mention a third person you have to pick a rung, and picking the low one about somebody's elder is a real discourtesy — the kind you would then be apologising for with dukkhito."
+            },
+            {
+              "kind": "speech",
+              "text": "The safe habit while you are learning: তিনি (tini) for anybody older than you or unknown to you, সে (she) for children and for friends your own age. Over-politeness is heard as slightly formal. Under-politeness is heard as rude."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice too that তিনি (tini) and আপনি share their ending. The careful rung is built the same way on both rows, which is one shape to learn rather than two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tini bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tini bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two rungs, back to back — she bhālo, tini bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two rungs, back to back — *she bhālo*, *tini bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four pronouns — tumi, āpni, she, tini",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four pronouns — *tumi*, *āpni*, *she*, *tini*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "of an elder brother, carefully — ei bhāiṭi … tini bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: of an elder brother, carefully — *ei bhāiṭi* … *tini bhālo*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which second-person word does তিনি (tini) match? (আপনি — same rung, same ending.) Can a Bengali speaker avoid the choice? (No — there is no neutral third-person pronoun.) And which one do you use of somebody older than you? (তিনি (tini).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C23-o-pron",
+      "sequence": 1760,
+      "title": "ও (o) — him, her, the one standing there",
+      "headword": "ও",
+      "romanization": "o",
+      "gloss": "him, her, the one standing there — the third job of a letter that has already been a joiner and a pointer",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6cd7d44e62564911",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say that shirt. Then say what ও does when it stands between two things."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ও as a person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ও ভালো — o bhālo — he is well — said of somebody standing right there."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter thirty-two promised this letter a third job, and here it is. ও on its own, in front of a verb, is a person: the one nearby, the one you could gesture at."
+            },
+            {
+              "kind": "speech",
+              "text": "Three jobs, one syllable, and they are told apart by position:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "where it sits",
+                "what it is"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "where it sits: between two things. what it is: also, and.",
+                "where it sits: in front of a noun, as ওই. what it is: that.",
+                "where it sits: standing alone as a subject. what it is: him, her."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: near, there, and away",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bengali's third person is not one word but a small set sorted by how far away the person is, exactly the way its pointing words are:"
+            },
+            {
+              "kind": "speech",
+              "text": "এ — this one, right here."
+            },
+            {
+              "kind": "speech",
+              "text": "ও — that one, over there."
+            },
+            {
+              "kind": "speech",
+              "text": "সে (she) — him, her, away from us both, or not present at all."
+            },
+            {
+              "kind": "speech",
+              "text": "They are all the plain rung. তিনি (tini) is the careful rung for all three distances at once, which is why it has no near-and-far partners."
+            },
+            {
+              "kind": "speech",
+              "text": "So the pointing system you built two chapters ago was never only about shirts. It sorts people too, and that is why এই and ওই were worth a whole chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three distances — e, o, she",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three distances — *e*, *o*, *she*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three jobs of one syllable — bhāi o bôn; oi jāmā; o bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three jobs of one syllable — *bhāi o bôn*; *oi jāmā*; *o bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the careful rung, which covers all three — tini bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the careful rung, which covers all three — *tini bhālo*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the three jobs of ও, and what tells them apart? (Also, that, him or her — told apart by where it sits.) Which of the plain third-person words is for somebody not present? (সে (she).) And how many careful forms are there? (One — তিনি (tini) covers every distance.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C23-tar",
+      "sequence": 1770,
+      "title": "তার (tār) — his, her",
+      "headword": "তার",
+      "romanization": "tār",
+      "gloss": "his, her — সে wearing the same ending আমার and তোমার wear, which makes possession regular for the first time",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9661005c3988b7ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say my. Then say he is well."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তার ভাই — tār bhāi — his brother, or her brother."
+            },
+            {
+              "kind": "speech",
+              "text": "তার জামাটা — tār jāmāṭā — his shirt (that one)."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter two taught আমার and তোমার and left it there, so possession has been available for exactly two people out of everybody in the world. তার (tār) is the third, and it is built the way the other two are:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "pronoun",
+                "possessive"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: I. pronoun: আমি. possessive: আমার.",
+                "person: you. pronoun: তুমি. possessive: তোমার.",
+                "person: he, she. pronoun: সে. possessive: তার (tār)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "An -র on the end, every time. That is not a coincidence to be memorised: it is a case ending, the same kind of stuck-on piece as the classifier, and it is the second of several you will meet."
+            },
+            {
+              "kind": "speech",
+              "text": "The careful form follows the same rule from তিনি (tini): তাঁর — tā̃r — with the moon-dot you learned in chapter five sitting over the vowel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: order does not change",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A possessive takes the front slot, in front of everything, and the noun keeps its own ending at the back exactly as before:"
+            },
+            {
+              "kind": "speech",
+              "text": "তার লাল জামাটা — tār lāl jāmāṭā — his red shirt."
+            },
+            {
+              "kind": "speech",
+              "text": "Front to back: whose, then what kind, then the thing with its ending. Nothing you learned about the queue has changed; one more slot has been filled at its head."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tār bhāi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tār bhāi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three possessives in a row — āmār, tomār, tār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three possessives in a row — *āmār*, *tomār*, *tār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the careful one — tā̃r bhāi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the careful one — *tā̃r bhāi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the full queue — tār lāl jāmāṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the full queue — *tār lāl jāmāṭā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What ending turns a Bengali pronoun into a possessive? (-র.) Which pronoun is তার (tār) built on? (সে (she).) And where in the phrase does a possessive stand? (At the front, before everything.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R23-somebody-else",
+      "sequence": 1780,
+      "title": "Somebody else",
+      "headword": "সে · তিনি · ও · তার",
+      "romanization": "she · tini · o · tār",
+      "gloss": "the third person arrives, graded for respect and sorted by distance — and a whole book of sentences stops being about only two people",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:060888b6ba229725",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three plain third-person words arrived in this chapter, sorted by distance, and one careful word that covers all three. Name them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "she bhālo, tini bhālo, o bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *she bhālo*, *tini bhālo*, *o bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tār bhāi, then the careful tā̃r bhāi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tār bhāi*, then the careful *tā̃r bhāi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "and the denial — she bhālo nôy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: and the denial — *she bhālo nôy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the ending that pluralises a living noun — -rā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the ending that pluralises a living noun — *-rā*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — the whole family, talked about",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until this chapter every sentence in this book was about the speaker or the listener. The family of chapter twenty-one has been sitting in the book for a hundred lessons and could never once be the subject of a sentence. Take them cold."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six persons in order — āmi, tumi, āpni, she, tini, o",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six persons in order — *āmi*, *tumi*, *āpni*, *she*, *tini*, *o*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three possessives — āmār, tomār, tār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three possessives — *āmār*, *tomār*, *tār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a brother, pointed at and then talked about — ei bhāiṭi … tini bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a brother, pointed at and then talked about — *ei bhāiṭi* … *tini bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a friend, plainly — oi bôndhuṭā … she bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a friend, plainly — *oi bôndhuṭā* … *she bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whose face — tār mukhṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whose face — *tār mukhṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "his family, and his brothers — tār pôribārṭā, tār bhāirā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: his family, and his brothers — *tār pôribārṭā*, *tār bhāirā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whose shirt, with everything in the queue — tār lāl jāmāṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whose shirt, with everything in the queue — *tār lāl jāmāṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three jobs of one syllable, once more — bhāi o bôn; oi jāmā; o bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three jobs of one syllable, once more — *bhāi o bôn*; *oi jāmā*; *o bhālo*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does Bengali mark he against she? (No.) How many rungs of respect does the third person have? (Two — সে and তিনি (tini).) What sorts এ, ও and সে from each other? (How far away the person is.) And what ending makes a possessive? (-র.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

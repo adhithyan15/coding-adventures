@@ -179,15 +179,37 @@ a gated reading course.
   sixteen chapters for → যখন … তখন, the correlative pair Bengali completes
   and English does not → আবার বলবেন (*say it again*), assembled out of three
   things already in the book → ধীরে (*slowly*) → review. **Authored.**
+- **Ch. 31 — The Letter in the Way**: ট, the fourth corner of the dental /
+  retroflex square → টা, the classifier Bengali has instead of an article →
+  একটা, the only way a number may touch a noun → আরেকটা → review.
+  **Authored.** Empties SPINE-DEFINITE-REFERENCE's omission ledger.
+- **Ch. 32 — Pointing at Things**: এই → ওই → the stacking rule, pointer at the
+  front and classifier at the back → এটা, which with chapter three's কী makes
+  *what is this?* sayable → review. **Authored.**
+- **Ch. 33 — More Than One**: the জীব / জিনিস split, taught first because it
+  governs the two lessons after it → রা → গুলো → the adjective stands in front
+  and never agrees → review. **Authored.**
+- **Ch. 34 — Somebody Else**: সে → তিনি, the third-person rung of the ladder
+  আপনি stands on → ও, the third job of a syllable that has been a joiner and a
+  pointer → তার → review. **Authored.**
+- **Ch. 35 — All of Us**: আমরা → তোমরা → তারা, every one of them its singular
+  plus chapter thirty-three's রা → আমাদের, where the back slot proves to hold
+  one suffix at a time → review. **Authored.**
+- **Ch. 36 — The One It Happens To**: -কে on living nouns only → আমাকে, which
+  fills the dative frame of chapter sixteen → তোমাকে → কে? standing alone,
+  told from the ending only by where it sits → review. **Authored.**
+- **Ch. 37 — Here, There, and Where**: থ → এখানে → ওখানে, predictable before it
+  is shown → কোথায়, the ninth cell of the grid → review. **Authored.**
+  Empties SPINE-ASK-LOCATION's omission ledger.
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 20 | The script strand's fifth tranche: **য**, **়**, **ও**, **গ**, **ছ** — the five untaught glyphs the corpus shows most often, each with a word already glossed and waiting (হ্যাঁ, কাপড়, হওয়া, লাগা, আছি) |
-| 21 | Postpositions (*-e, -te, -r, -ke*); numbers 6–10 |
-| 31 | The demonstratives এই / ওই and এটা — the whole Nirdeshak column is 0/3, and এটা needs ট, so this is a script lesson before it is a vocabulary one |
-| 32 | The third person (সে / তিনি / ও) — the largest single hole left in the pronoun column, and the blocker under যে … সে |
+| 21 | The locative *-e / -te* and the postpositions সঙ্গে / জন্য / থেকে — KAR-03, KAR-04 and KAR-05, with the object case -কে already taught in chapter 36 |
+| 38 | Numerals six to twenty AND the ten Bengali digits — Q-01, Q-03, Q-04, Q-06, FUN-25 and FUN-26 all wait on them, and not one digit is taught anywhere in the sixty-two script lessons |
+| 39 | ণ and অ as letter lessons, which unblock কারণ (ADV-08) and অনেক (Q-05) |
 | 22+ | Verb tenses (the past and future of these fourteen verbs) — always tracing the sound-shift back to Sanskrit |
 
 Structural work, filed as **HL-C194** in `BACKLOG.d/`: the script strand sits
