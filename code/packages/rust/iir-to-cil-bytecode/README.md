@@ -255,3 +255,15 @@ Numeric reads return zero at EOF or for malformed/out-of-range input, using
 Int32 or Int64 according to the destination. I/O exceptions propagate.
 Four FLOW-MATIC input/EOF cases execute through ilasm and dotnet in the LANG
 matrix. This proof does not extend the encoded CIL simulator input surface.
+
+### Encoded input refusal (VM-059)
+
+`IIRClrCodeGenerator::validate` and `lower_iir_to_cil` explicitly refuse
+`input_i64`, `input_str`, and `input_more` before returning an encoded artifact.
+The diagnostic identifies the missing simulator host reader and directs callers
+to `emit_il` with real CoreCLR. The simulator currently dispatches calls to
+internal methods; it has no host callback registry or shared input reader.
+Adding a name to the encoded whitelist cannot supply that infrastructure.
+VM-060 tracks table-aware host resolution and the input execution contract.
+A regression checks all three refusals through both public APIs and confirms
+that textual emission still accepts the same programs.

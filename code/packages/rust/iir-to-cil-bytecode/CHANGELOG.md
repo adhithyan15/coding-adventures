@@ -1,5 +1,13 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — explicit encoded input refusal (VM-059)
+
+Encoded validation now explains that input_i64/input_str/input_more require
+an unimplemented simulator host reader and points to real-CoreCLR emit_il.
+Regression coverage pins public validator/lowerer agreement before artifact
+creation and preserves textual emission for each builtin. No simulator input
+support is added; VM-060 tracks the required host-call infrastructure.
+
 ## Unreleased — real CLR input/EOF (VM-039c)
 
 Textual CIL now lowers input_more through Console.In.Peek without consuming

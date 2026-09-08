@@ -7180,3 +7180,10 @@ VM entry execution. Eager compilation there installs handlers for subsequent
 calls; it does not directly execute the entry binary. For a compiled-entry
 proof use compile(), assert is_compiled(), then execute(), with a callback
 counter and an interpreter callback that fails if selected.
+
+### 2026-09-08 — Keep refusal probes independent of artifact Debug
+
+An encoded CIL refusal test tried formatting the entire Result, but its success
+artifact does not implement Debug. Match Err and Ok separately so diagnostics
+only require the error's Display implementation. Run Cargo from the Rust
+workspace (or supply a manifest); the repository root has no Cargo.toml.
