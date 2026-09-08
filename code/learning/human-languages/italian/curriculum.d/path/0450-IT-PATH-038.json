@@ -1,0 +1,16 @@
+{
+  "id": "IT-PATH-038",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "IT-C34-mio-tuo-suo",
+    "IT-C34-nostro-vostro",
+    "IT-C34-il-mio-nome",
+    "IT-C34-signore-signora",
+    "IT-C34-per-me"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "IT-EXT-038-POSSESSIVI"
+  ]
+}

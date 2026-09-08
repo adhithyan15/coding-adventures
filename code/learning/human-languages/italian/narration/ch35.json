@@ -1,0 +1,974 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 35,
+  "title": "Knowing, and How Much",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bcb5e64642648a50",
+  "lessons": [
+    {
+      "id": "IT-C35-sapere",
+      "sequence": 1330,
+      "title": "sapere — to know, and to know how",
+      "headword": "sapere",
+      "romanization": "sapere",
+      "gloss": "to know a fact, and to know how — the verb behind homo sapiens, and it started out meaning to taste",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1160512300da7aa3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter. Five retrievals, then a verb this book has gone without."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say per me, a te — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *per me, a te* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mio, tuo, suo — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mio, tuo, suo* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say che — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *che* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say essere — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *essere* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the verb, and its irregular first person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sapere — to know (a fact), and to know how (to do something)."
+            },
+            {
+              "kind": "speech",
+              "text": "It is irregular, and the three singular forms are the ones to have:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "so, I know.",
+                "sai, you know.",
+                "sa, he / she knows."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So is the shortest verb form in the language. The plurals are sappiamo, sapete, sanno."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar lens: sapere plus an infinitive",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put an infinitive straight after it and sapere stops meaning know and starts meaning can, know how to:"
+            },
+            {
+              "kind": "speech",
+              "text": "So parlare italiano. — I can speak Italian. (I have learnt how) Sai leggere? — Can you read?"
+            },
+            {
+              "kind": "speech",
+              "text": "No per and no to: just sapere and the plain infinitive. So parlare says what parlo does not — that you learnt it."
+            },
+            {
+              "kind": "speech",
+              "text": "Sapere is Latin sapere, \"to taste.\" A person of good taste became a person of good judgement, and judgement became knowledge — English savour, insipid, and homo sapiens, the tasting animal."
+            },
+            {
+              "kind": "speech",
+              "text": "And now the line English does not draw. Italian has a second verb for knowing, and you already have it: the incontrare lesson gave you conoscere as incontrare's partner, traced it to Latin cognōscere, and put it in the past. It was never set against sapere, because sapere did not exist in this book. Here is the line:"
+            },
+            {
+              "kind": "speech",
+              "text": "sapere — a fact, or how to do something: so parlare italiano conoscere — a person you have met: conosco Marco."
+            },
+            {
+              "kind": "speech",
+              "text": "So Marco is wrong. Spanish draws the same line with saber and conocer, French with savoir and connaître. English is the odd one out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "so, sai, sa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *so, sai, sa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "So parlare italiano.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *So parlare italiano.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sai leggere?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sai leggere?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Conosco Marco.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Conosco Marco.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the io form of sapere? (So.) What does sapere plus an infinitive mean? (To know how — so parlare.) And which verb takes a person instead? (Conoscere, which the incontrare lesson already gave you.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C35-non-so",
+      "sequence": 1340,
+      "title": "non so — I don't know",
+      "headword": "non so",
+      "romanization": "non so",
+      "gloss": "I don't know — two words, both of them already yours, and the most useful sentence after non capisco",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:515cc9594e176c8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, and the verb that made this possible."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sapere — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sapere* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nostro, vostro — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nostro, vostro* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say penso che — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *penso che* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say essere becomes stato — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *essere → stato* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: three things at once",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Non so. — I don't know."
+            },
+            {
+              "kind": "speech",
+              "text": "This lesson introduces no new word. Non is the negation chapter's, so is one lesson back, and the rule that non goes immediately before the verb does the rest. It is worth its own lesson because those two syllables do three different jobs."
+            },
+            {
+              "kind": "speech",
+              "text": "One — plain ignorance. Somebody asks you something you do not know:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Chi è? — Non so."
+            },
+            {
+              "kind": "speech",
+              "text": "Two — hedging. Put it in front of a question word and it becomes a way of declining to commit:"
+            },
+            {
+              "kind": "speech",
+              "text": "Non so quando. — I don't know when. Non so perché. — I don't know why. Non so chi è. — I don't know who it is."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of those question words is Chapters 31 and 32's, and non so is what lets you use them about yourself rather than only to ask."
+            },
+            {
+              "kind": "speech",
+              "text": "Three — scepticism. A bare, slow Non so … with the sentence left hanging is how an Italian expresses doubt about what has just been said. It is the politest disagreement in the language, and it is a great deal gentler than non sono d'accordo."
+            },
+            {
+              "kind": "speech",
+              "text": "The pair to hold together is the pair a beginner needs hourly:"
+            },
+            {
+              "kind": "speech",
+              "text": "Non capisco. — I didn't follow you. Non so. — I followed you, and I have no answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non so.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non so.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non so quando.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non so quando.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non so perché.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non so perché.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non so chi è.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non so chi è.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I don't know.\" (Non so.) Say \"I don't know why.\" (Non so perché.) What is the difference between non so and non capisco? (Non capisco means I did not follow; non so means I followed and have no answer.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C35-oggi-ieri",
+      "sequence": 1350,
+      "title": "oggi, ieri — today and yesterday",
+      "headword": "oggi, ieri",
+      "romanization": "oggi, ieri",
+      "gloss": "today and yesterday — the two thirds of the time set this book was missing, with domani already in hand",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c6ea7528e26f9e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two lessons in, and the throw back reaches the going verb."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say non so — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *non so* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il mio nome — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il mio nome* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chi — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chi* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say andare — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *andare* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the set, completed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "oggi — today, ieri — yesterday, domani — tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "You have had domani for a long time and only as the second half of a farewell, a domani — \"until tomorrow.\" It was two thirds of a set with the other two thirds missing, so a learner asked when something happened had one word and it pointed forward."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the set works, and it works with the two pasts this book already taught:"
+            },
+            {
+              "kind": "speech",
+              "text": "Oggi lavoro a Roma. — Today I'm working in Rome. Ieri ho lavorato a Milano. — Yesterday I worked in Milan. Domani prendo un caffè."
+            },
+            {
+              "kind": "speech",
+              "text": "Oggi and ieri go where any adverb of time goes: at the front for emphasis, or after the verb. Both are invariable — they never change their ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: on this day",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Oggi is Latin hodiē, and hodiē is itself two words squashed together: hōc diē, \"on this day.\" The diē in it is diēs, \"day\" — the very word behind giorno, which the first chapter traced through diurnum. So oggi and giorno share a root, and oggi is literally this-day."
+            },
+            {
+              "kind": "speech",
+              "text": "Every Romance language did the same and hid the seam differently: Spanish hoy, French aujourd'hui (which is au jour d'hui, \"on the day of today\", with hui being hodiē worn to two letters and then reinforced all over again), Portuguese hoje."
+            },
+            {
+              "kind": "speech",
+              "text": "Ieri is Latin herī, and it is the same word as the first half of English yesterday — Old English ġeostran, from the same ancient root. The word for yesterday has meant yesterday, with barely a change, for as long as anything can be traced."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oggi, ieri, domani",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oggi, ieri, domani*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Oggi lavoro a Roma.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Oggi lavoro a Roma.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ieri ho lavorato a Milano.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ieri ho lavorato a Milano.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the three. (Oggi, ieri, domani.) Which of them did this book already have, and where? (Domani, inside the farewell a domani.) What is oggi made of? (Hōc diē, \"on this day\" — the same diēs as giorno.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C35-molto-poco",
+      "sequence": 1360,
+      "title": "molto, poco — a lot and a little",
+      "headword": "molto, poco",
+      "romanization": "molto, poco",
+      "gloss": "much and little — and the un po' this book said out loud among the first -are verbs and never glossed",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d25e111a22abe4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four in, and this one unfreezes two things you have been carrying."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say oggi, ieri — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *oggi, ieri* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say signore, signora — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *signore, signora* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say che cosa — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *che cosa* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sono andato — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sono andato* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: two jobs each",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "molto — much, many, a lot, very, poco — little, few, not much."
+            },
+            {
+              "kind": "speech",
+              "text": "Each of them does two jobs, and the jobs behave differently."
+            },
+            {
+              "kind": "speech",
+              "text": "In front of a describing word they mean very and not very, and they do not change:"
+            },
+            {
+              "kind": "speech",
+              "text": "Il caffè è molto buono. — The coffee is very good. Il tè è poco buono. — The tea isn't very good."
+            },
+            {
+              "kind": "speech",
+              "text": "In front of a noun they mean a lot of and not much, and they agree with it like any describing word:"
+            },
+            {
+              "kind": "speech",
+              "text": "molto caffè, molta acqua, molti amici, molte persone poco zucchero, poche persone."
+            },
+            {
+              "kind": "speech",
+              "text": "Before an adjective, frozen; before a noun, agreeing."
+            },
+            {
+              "kind": "speech",
+              "text": "Molto has never had a lesson. Where an Italian uses it most is the courtesy molto piacere, \"much pleasure\" — the fuller form of the piacere you say while shaking hands, and the first job above, doing its work inside a phrase nobody takes apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: un po' is the tail of poco",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The parlo un po' dialogue said Sì, parlo un po' — \"yes, I speak a little\" — and that un po' was never glossed. Here is what it is."
+            },
+            {
+              "kind": "speech",
+              "text": "Po' is poco with its last syllable cut off and an apostrophe left to mark the cut. Not an accent — an apostrophe, and it is compulsory, because un po without it is not a word."
+            },
+            {
+              "kind": "speech",
+              "text": "un po' — a little, a bit un po' di zucchero — a little sugar Parlo un po' d'italiano."
+            },
+            {
+              "kind": "speech",
+              "text": "Un po' is softer than poco. Poco is faintly negative — poco zucchero is less than you wanted — while un po' is neutral and friendly, which is why that speaker chose it about their own Italian."
+            },
+            {
+              "kind": "speech",
+              "text": "Molto is Latin multus (English multiple); poco is Latin paucus (paucity)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "molto, poco",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *molto, poco*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Il caffè è molto buono.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Il caffè è molto buono.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "molti amici, molte persone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *molti amici, molte persone*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un po' di zucchero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un po' di zucchero*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When does molto change its ending? (Before a noun — molti amici. Before an adjective it is frozen.) What is un po'? (Poco with its tail cut off — and the mark is an apostrophe, not an accent.) Where had you already heard it? (The parlo un po' dialogue.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C35-abbastanza",
+      "sequence": 1370,
+      "title": "abbastanza — enough, and quite",
+      "headword": "abbastanza",
+      "romanization": "abbastanza",
+      "gloss": "enough — the middle of the scale, and the basta everybody already knows",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a5e73214e15bfd7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of the tranche, and it completes a set of three."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say molto, poco — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *molto, poco* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say per me, a te — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *per me, a te* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Che buono! — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Che buono!* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say la testa — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *la testa* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the middle of the scale",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "abbastanza — enough, and also quite, fairly."
+            },
+            {
+              "kind": "speech",
+              "text": "It never changes its ending, whatever it stands in front of. That makes it the easiest of the three and the one to reach for when you are unsure:"
+            },
+            {
+              "kind": "speech",
+              "text": "abbastanza caffè — enough coffee abbastanza persone — enough people Il caffè è abbastanza buono. — The coffee is quite good."
+            },
+            {
+              "kind": "speech",
+              "text": "The three words now make a scale, and it is the scale an A1 conversation runs on:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "molto, a lot / very.",
+                "abbastanza, enough / quite.",
+                "poco, un po', not much / a little."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And it answers a question you have been able to ask since the wellbeing chapter without being able to answer it in the middle: Come stai? — Abbastanza bene."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: it is basta",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Abbastanza is a + bastanza, built on the verb bastare, \"to be enough, to suffice.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You know its third person singular already, even if you have never seen it in Italian, because English borrowed it whole: basta! — \"that's enough!\" It is one of a handful of Italian words that travelled into other languages unchanged, alongside ciao and piano."
+            },
+            {
+              "kind": "speech",
+              "text": "So abbastanza is, literally, \"to sufficiency.\" And basta is the same verb with nothing added: basta così — that's enough like that — which uses così one more time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abbastanza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abbastanza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abbastanza caffè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abbastanza caffè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Il caffè è abbastanza buono.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Il caffè è abbastanza buono.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Abbastanza bene.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Abbastanza bene.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"enough\"? (Abbastanza.) Does it change its ending? (No — never.) Which verb is it built on? (Bastare — the basta! English borrowed.) Answer Come stai? from the middle of the scale. (Abbastanza bene.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

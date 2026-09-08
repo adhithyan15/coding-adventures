@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:735f8d9ec5fb71cb",
+  "lessonIds": [
+    "IT-C34-mio-tuo-suo",
+    "IT-C34-nostro-vostro",
+    "IT-C34-il-mio-nome",
+    "IT-C34-signore-signora",
+    "IT-C34-per-me"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "italian/narration/ch34.txt",
+  "json": "italian/narration/ch34.json",
+  "textHash": "fnv1a64:45b73af84e53f433",
+  "jsonHash": "fnv1a64:8252d9b13260791a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:719beadb717f8931",
+  "lessonIds": [
+    "IT-C33-questo",
+    "IT-C33-quello",
+    "IT-C33-questo-caffe",
+    "IT-C33-questo-e",
+    "IT-C33-qui-li"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "italian/narration/ch33.txt",
+  "json": "italian/narration/ch33.json",
+  "textHash": "fnv1a64:2d04665f222ddabc",
+  "jsonHash": "fnv1a64:afffe940cb8858c4",
+  "findings": []
+}

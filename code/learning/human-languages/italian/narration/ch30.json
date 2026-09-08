@@ -1,0 +1,982 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 30,
+  "title": "Not",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:07c38760ca34c00d",
+  "lessons": [
+    {
+      "id": "IT-C30-non",
+      "sequence": 1080,
+      "title": "non — the word that turns a sentence over",
+      "headword": "non",
+      "romanization": "non",
+      "gloss": "not — the word this book has carried inside one frozen phrase for twenty-eight chapters and never used",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e79b18abb386dd5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and the word it opens with has been quietly present since the wellbeing chapter."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vero? — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vero?* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sì — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sì* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ottenere — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ottenere* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rispondere — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rispondere* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say parlare — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *parlare* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the rule, in one line",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "non goes immediately before the verb. That is the whole rule."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything you have been taught to say can now be said the other way round:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "you had",
+                "you now also have"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "you had: Parlo italiano. you now also have: Non parlo italiano. — I don't speak Italian.",
+                "you had: Prendo il caffè. you now also have: Non prendo il caffè. — I'm not having the coffee.",
+                "you had: Abito a Roma. you now also have: Non abito a Roma.",
+                "you had: Ho venti anni. you now also have: Non ho venti anni.",
+                "you had: Sono d'accordo. you now also have: Non sono d'accordo. — I don't agree."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That last one matters. Until this line, this book could agree — d'accordo, one lesson ago — and could not disagree with anything at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Italian does not need a helper verb the way English does. English has to borrow do (I speak becomes I do not speak). Italian puts one small word in front of the verb it already had, and stops."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: the phrase the wellbeing chapter promised to come back to",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Non is Latin nōn — the same Latin word as the no of the last lesson but one. Stressed, it became no and learned to stand alone. Unstressed, it became non and learned to lean on a verb. Neither can do the other's job."
+            },
+            {
+              "kind": "speech",
+              "text": "The non c'è male lesson gave it to you as a single frozen lump and said, in as many words, that its negation and its c'è would come back later on their own ramps. This is the first half of that promise. The second half is four lessons away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "non",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *non*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non parlo italiano.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non parlo italiano.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non prendo il caffè.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non prendo il caffè.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non sono d'accordo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non sono d'accordo.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does non go? (Immediately before the verb.) Say \"I don't agree.\" (Non sono d'accordo.) Which Latin word is behind both no and non? (Nōn — one word split by stress.) And which frozen phrase from the wellbeing chapter has been carrying non all along? (Non c'è male.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C30-non-capisco",
+      "sequence": 1090,
+      "title": "non capisco — saying you have not followed",
+      "headword": "non capisco",
+      "romanization": "non capisco",
+      "gloss": "I don't understand — the half of the repair kit this book has been missing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d8842a11c19e5be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, one chapter back, and two long throws."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say non — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *non* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say no — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *no* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il caffè — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il caffè* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il tè — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il tè* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say abitare — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *abitare* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the two things to say when you are lost",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Capisco. — I understand. Non capisco. — I don't understand."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves were already in the building. The capire lesson taught the verb and gave capisco first in its paradigm. The last lesson gave you non. Nothing new is being learnt here except the fact that you may now put them together — and that this is the single most useful sentence a beginner owns."
+            },
+            {
+              "kind": "speech",
+              "text": "The prego? lesson taught you the rising Prego? that asks somebody to say it again. Use the two in order:"
+            },
+            {
+              "kind": "speech",
+              "text": "Non capisco. Prego? — I don't understand. Say it again?"
+            },
+            {
+              "kind": "speech",
+              "text": "Prego? asks for a repeat. Non capisco tells the other person that repeating it the same way will not help, so they will slow down or choose different words. An Italian speaker who hears only Prego? will simply say the same sentence again, at the same speed."
+            },
+            {
+              "kind": "speech",
+              "text": "A slower and gentler version, for when you have caught some of it:"
+            },
+            {
+              "kind": "speech",
+              "text": "Non capisco bene. — I don't quite understand."
+            },
+            {
+              "kind": "speech",
+              "text": "Bene is the wellbeing chapter's, doing new work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Capisco.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Capisco.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non capisco.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non capisco.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non capisco. Prego?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non capisco. Prego?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non capisco bene.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non capisco bene.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I don't understand.\" (Non capisco.) Which chapter gave you capisco? (The capire lesson.) Why say non capisco rather than only prego? (Prego? asks for a repeat; non capisco asks for a different sentence.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C30-ne",
+      "sequence": 1100,
+      "title": "né … né — neither one nor the other",
+      "headword": "né … né",
+      "romanization": "né … né",
+      "gloss": "neither … nor — the negative pair, and it needs the non you learnt two lessons ago",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70ab6645f9f10586",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three lessons of this chapter behind you already."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say non capisco — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *non capisco* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sì, grazie / no, grazie — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sì, grazie / no, grazie* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il latte — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il latte* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lo zucchero — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lo zucchero* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lavorare — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lavorare* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the pair, and the doubled negative",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "né … né — neither … nor."
+            },
+            {
+              "kind": "speech",
+              "text": "Non prendo né caffè né tè. — I'll have neither coffee nor tea. Non ho né fratelli né sorelle. — I have neither brothers nor sisters."
+            },
+            {
+              "kind": "speech",
+              "text": "Read that first Italian sentence again and count the negatives. There are three: non, and né, and né. English allows only one and calls a second one an error. Italian requires them all, and a sentence with né and no non is simply wrong:"
+            },
+            {
+              "kind": "speech",
+              "text": "Wrong: Prendo né caffè né tè. Right: Non prendo né caffè né tè."
+            },
+            {
+              "kind": "speech",
+              "text": "This is why né comes after non in this book rather than before it. Without non there is nothing for it to stand beside."
+            },
+            {
+              "kind": "speech",
+              "text": "The accent is doing the same job it did on sì: it separates né from ne, a different unstressed word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "né … né",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *né … né*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non prendo né caffè né tè.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non prendo né caffè né tè.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non ho né fratelli né sorelle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non ho né fratelli né sorelle.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Italian say \"neither … nor\"? (Né … né.) How many negatives does Non prendo né caffè né tè contain? (Three — and Italian wants all three.) What happens if you drop the non? (The sentence is wrong — né cannot stand without it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C30-anche",
+      "sequence": 1110,
+      "title": "anche — me too, and me neither",
+      "headword": "anche / neanche",
+      "romanization": "anche / neanche",
+      "gloss": "too, also — and its negative twin, which is built out of the word you learnt one lesson ago",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4dc490d51be82146",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The fourth word of the chapter, and the one that finally explains a line you heard among the first -are verbs."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say né … né — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *né … né* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say d'accordo — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *d'accordo* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say l'amico, l'amica — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *l'amico, l'amica* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say la famiglia — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *la famiglia* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Parlo italiano — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Parlo italiano* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "anche — also, too, as well."
+            },
+            {
+              "kind": "speech",
+              "text": "It goes in front of whatever it adds:"
+            },
+            {
+              "kind": "speech",
+              "text": "Prendo il caffè. Prendo anche il latte. — I'm having coffee. I'm also having milk. Anche Marco abita a Roma. — Marco lives in Rome too."
+            },
+            {
+              "kind": "speech",
+              "text": "And on its own, agreeing with somebody:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Parlo un po' d'italiano. — Anch'io. — Me too."
+            },
+            {
+              "kind": "speech",
+              "text": "You have heard anch'io already. It is in the parlo un po' dialogue, said once and never explained, because that chapter was busy with verb endings. It is anche."
+            },
+            {
+              "kind": "speech",
+              "text": "io, with the vowel elided — the same elision as l'acqua and d'accordo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: né + anche",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "neanche — neither, not … either, not even."
+            },
+            {
+              "kind": "speech",
+              "text": "It is né + anche, welded into one word, and you were given the first half one lesson ago. Because it carries a né, it keeps the non rule with it:"
+            },
+            {
+              "kind": "speech",
+              "text": "Non prendo neanche il tè. — I'm not having tea either."
+            },
+            {
+              "kind": "speech",
+              "text": "Standing alone, answering somebody, the non has nowhere to sit and drops away:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Non capisco. — Neanch'io. — Me neither."
+            },
+            {
+              "kind": "speech",
+              "text": "So the pair to learn is anch'io / neanch'io — me too and me neither — which between them answer most of what anybody says to you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Anch'io.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Anch'io.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neanche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neanche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Neanch'io.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Neanch'io.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non prendo neanche il tè.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non prendo neanche il tè.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does anche mean? (Also, too.) Which two words is neanche made of? (Né + anche.) Say \"me too\" and \"me neither\". (Anch'io — neanch'io.) Where in this book had you already heard anch'io? (In the parlo un po' dialogue, where it was never glossed.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C30-ce",
+      "sequence": 1120,
+      "title": "c'è, ci sono — there is, there are",
+      "headword": "c'è / ci sono",
+      "romanization": "c'è / ci sono",
+      "gloss": "there is, there are — the second half of the promise the non-c'è-male lesson made",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee643c4a57f99630",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes by taking apart a phrase you were given twenty-eight chapters ago."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say anche / neanche — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *anche / neanche* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vero? — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vero?* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il nome — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il nome* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say la persona — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *la persona* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say (practice) — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *(practice)* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the two forms",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "c'è — there is (one thing) ci sono — there are (more than one)."
+            },
+            {
+              "kind": "speech",
+              "text": "C'è un caffè. — There is a coffee. Ci sono due amici. — There are two friends."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is essere, which its own lesson gave you: è is its third person singular and sono its third person plural. All that is new is the little ci in front, and the apostrophe when ci meets è."
+            },
+            {
+              "kind": "speech",
+              "text": "Italian chooses between them by counting what follows, exactly as English does with is and are. What Italian does not do is what English does with there: English uses the same word for the place (over there) and for the construction (there is). Italian keeps them apart — the place words are the next chapter's."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: non c'è male, at last",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The wellbeing chapter taught you non c'è male as a single unbroken lump, and its lesson said outright that the negation and the c'è inside it belonged to later lessons. Both have now arrived, so the lump comes apart:"
+            },
+            {
+              "kind": "speech",
+              "text": "non — not (four lessons ago) c'è — there is (this lesson) male — badly, ill (the wellbeing chapter)."
+            },
+            {
+              "kind": "speech",
+              "text": "Non c'è male is, word for word, \"there isn't any bad.\" It is not a special idiom for \"not bad\"; it is an ordinary Italian sentence that you were handed early because you needed an answer before you could build one. You can now build it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "c'è",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *c'è*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ci sono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ci sono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "C'è un caffè.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *C'è un caffè.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ci sono due amici.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ci sono due amici.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non c'è male.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non c'è male.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"there is\"? (C'è.) And \"there are\"? (Ci sono.) Take non c'è male apart. (Non + c'è + male — \"there isn't any bad\".) Which lesson promised you this? (The non c'è male lesson.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

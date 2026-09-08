@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:e3c29e109805da79",
+  "sourceHash": "fnv1a64:294d2f7f1566778c",
   "lessons": [
     {
       "id": "IT-C02-prego",
@@ -1130,7 +1130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24d4953fcd5030b0",
+      "sourceHash": "fnv1a64:509585f6844ea7ce",
       "notice": null,
       "blocks": [
         {
@@ -1202,7 +1202,7 @@
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "(Molto) bene, grazie means (very) well, thanks.",
+                "Bene, grazie means well, thanks.",
                 "Così così means so-so."
               ]
             },

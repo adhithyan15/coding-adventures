@@ -1,0 +1,933 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 31,
+  "title": "Che",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:86c222a1b29a6a3d",
+  "lessons": [
+    {
+      "id": "IT-C31-che",
+      "sequence": 1130,
+      "title": "che — the word that joins two sentences into one",
+      "headword": "che",
+      "romanization": "che",
+      "gloss": "that, which, who — the commonest word in Italian, and one this book has never once used",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:927ea1a8db49d91e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and its first word is the one Italian uses most."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say c'è / ci sono — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *c'è / ci sono* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say non — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *non* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il cuore — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il cuore* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say l'occhio — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *l'occhio* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say uno, due, tre, quattro, cinque — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *uno, due, tre, quattro, cinque* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: one word, joining",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "che — that, which, who, whom."
+            },
+            {
+              "kind": "speech",
+              "text": "So far every Italian sentence in this book has been a single clause. Che staples two of them together, and it does not care what kind of thing it points back at:"
+            },
+            {
+              "kind": "speech",
+              "text": "l'amico che parla italiano — the friend who speaks Italian il caffè che prendo — the coffee that I'm having la persona che aspetto — the person whom I'm waiting for."
+            },
+            {
+              "kind": "speech",
+              "text": "English picks a different word each time — who for people, that or which for things, whom when it is the object. Italian uses che for all of them, never changes it, and never leaves it out. English can say the coffee I'm having; Italian cannot drop the che."
+            },
+            {
+              "kind": "speech",
+              "text": "One thing worth noticing in those three examples: che is the subject of parla in the first and the object of prendo in the second and third. The word is the same either way. You do not have to decide which it is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart, and the spelling you already paid for",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Che is what is left of Latin quid and quem after they fell together. Latin distinguished them by case; Italian gave that up and kept one invariable word."
+            },
+            {
+              "kind": "speech",
+              "text": "The spelling has been explained to you twice already without che itself appearing. The piacere lesson taught that c goes soft before e and i. The mi chiamo lesson then said that the h in chi \"is there precisely to keep it hard.\" That is exactly what the h is doing here: che is keh, not cheh, because the h blocks the softening. You have had that explanation since your third chapter, and this is the word it was for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *che*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'amico che parla italiano",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'amico che parla italiano*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il caffè che prendo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il caffè che prendo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la persona che aspetto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la persona che aspetto*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which English words does che cover? (Who, whom, that, which — all of them.) Does it change? (No — never.) Why is it said keh? (The h keeps the c hard before e — the mi chiamo rule.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C31-penso-che",
+      "sequence": 1140,
+      "title": "penso che — having an opinion out loud",
+      "headword": "penso che",
+      "romanization": "penso che",
+      "gloss": "I think that — the verb of opinion was taught long ago and nothing was ever allowed to follow it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3400c21d9f3b9cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, and the word that unlocks this one."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say che — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *che* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say non capisco — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *non capisco* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say l'orecchio — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *l'orecchio* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say la bocca — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *la bocca* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sei, sette, otto, nove, dieci — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sei, sette, otto, nove, dieci* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the opinion frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The pensare lesson gave you the verb \"to think\" and its io form penso. It gave you no way to say what you think. Here it is:"
+            },
+            {
+              "kind": "speech",
+              "text": "Penso che … — I think that …"
+            },
+            {
+              "kind": "speech",
+              "text": "Penso che Marco parla italiano. — I think Marco speaks Italian. Penso che il caffè è buono. — I think the coffee is good. Non penso che è vero. — I don't think it's true."
+            },
+            {
+              "kind": "speech",
+              "text": "The che is the same invariable word as one lesson ago, doing its other job: there it hooked a clause onto a noun, and here it hooks a whole clause onto a verb. Italian will not let you leave it out. English drops it freely — I think he speaks Italian — and Italian never does."
+            },
+            {
+              "kind": "speech",
+              "text": "A note for later, said now so it is not a surprise. Careful written Italian puts the verb after penso che into a different set of endings called the congiuntivo: penso che Marco parli italiano. Spoken Italian uses the plain present constantly, and everything above is ordinary speech. You will be understood. The congiuntivo is a whole chapter of its own and it is not this one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Penso che …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Penso che …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Penso che il caffè è buono.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Penso che il caffè è buono.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Non penso che è vero.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Non penso che è vero.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think that Marco speaks Italian.\" (Penso che Marco parla italiano.) May you drop the che, as English drops that? (No.) Which chapter gave you penso? (The pensare lesson.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C31-chi",
+      "sequence": 1150,
+      "title": "chi — who?",
+      "headword": "chi",
+      "romanization": "chi",
+      "gloss": "who — the question this book could not ask",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:590da8e0033c8c82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three lessons of the chapter behind you."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say penso che — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *penso che* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say né … né — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *né … né* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il naso — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il naso* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lo stomaco — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lo stomaco* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lunedì, martedì, mercoledì, giovedì, venerdì — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lunedì, martedì, mercoledì, giovedì, venerdì* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chi? — who?"
+            },
+            {
+              "kind": "speech",
+              "text": "Chi è?, Chi parla italiano?, Chi aspetti?"
+            },
+            {
+              "kind": "speech",
+              "text": "Until this line, this book could ask how somebody was, what they were called and how many years they had, and it could not ask who anybody was. Chi è? is also what an Italian says through a closed door."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep chi and che apart by their jobs: chi asks about people and only about people. Che joins clauses, and — next lesson — asks about things."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: a sound change you already own",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chi is Latin quī, \"who\". The chiedere lesson taught you the sound change that produced it: Latin qu- before a stressed front vowel went to Italian chi-. That lesson used it on quaerere becomes chiedere. It works the same way here."
+            },
+            {
+              "kind": "speech",
+              "text": "So the ch is hard for the same reason it is hard in che and in mi chiamo, and the word is kee."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chi?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chi?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chi è?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chi è?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chi parla italiano?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chi parla italiano?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you ask \"who?\" (Chi.) Which lesson already taught you the qu- becomes chi- change? (The chiedere lesson.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C31-che-cosa",
+      "sequence": 1160,
+      "title": "che cosa — what?",
+      "headword": "che cosa",
+      "romanization": "che cosa",
+      "gloss": "what — the question word, and the thing-word that came out of a Roman courtroom",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70ecc54f65ac2821",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The fourth of the chapter's five, with a long throw back to the weekdays."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chi — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chi* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say anche / neanche — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *anche / neanche* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say la gola — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *la gola* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say primo / prima — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *primo / prima* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sabato, domenica — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sabato, domenica* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: three ways to ask the same question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "che cosa? — what?"
+            },
+            {
+              "kind": "speech",
+              "text": "Italian will let you say it three ways, and all three are ordinary:"
+            },
+            {
+              "kind": "speech",
+              "text": "Che cosa prendi, Cosa prendi, Che prendi."
+            },
+            {
+              "kind": "speech",
+              "text": "Che cosa is the full form, cosa is commonest in the north, che in the centre and south. Learn che cosa and you will be understood everywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "Che cosa è? — what is it, set against Chi è?, who is it."
+            },
+            {
+              "kind": "speech",
+              "text": "And the third member of the question set now comes unwelded. The age lesson gave you Quanti anni hai? as one lump; the quanti in it is a word, quanto, \"how much, how many\", agreeing with what it counts — quanti anni, quante persone. It is not glued to ages."
+            },
+            {
+              "kind": "speech",
+              "text": "So: chi for people, che cosa for things, quanto for amounts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: a thing is a court case",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cosa is Latin causa — \"a legal case, a matter at issue.\" Roman lawyers used it constantly for the matter in hand, and it drifted from the matter to any matter to, at last, thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Every western Romance language took that road: Italian cosa, Spanish cosa, French chose, Portuguese coisa — all of them a Roman courtroom word. The same causa came into English unworn, through law, as cause."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "che cosa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *che cosa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Che cosa prendi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Che cosa prendi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quanti anni, quante persone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quanti anni, quante persone*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the word for \"what\". (Che cosa.) Name the Latin word behind cosa. (Causa, a court case.) And gloss the quanti of quanti anni. (How much, how many.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C31-che-buono",
+      "sequence": 1170,
+      "title": "Che buono! — the exclamation",
+      "headword": "Che buono!",
+      "romanization": "Che buono!",
+      "gloss": "how good! — the third job of che, and it needs no word you do not already have",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:109dc2176fc84deb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter's last lesson, and it introduces no new word at all."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say che cosa — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *che cosa* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say c'è / ci sono — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *c'è / ci sono* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say secondo / seconda — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *secondo / seconda* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say terzo / terza — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *terzo / terza* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ora — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ora* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: che, for the third time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put che in front of a describing word and it stops joining and starts exclaiming:"
+            },
+            {
+              "kind": "speech",
+              "text": "Che buono! — How good!"
+            },
+            {
+              "kind": "speech",
+              "text": "and with a noun instead:"
+            },
+            {
+              "kind": "speech",
+              "text": "Che caffè! — What a coffee!"
+            },
+            {
+              "kind": "speech",
+              "text": "There is no verb, and none is wanted. It is the whole utterance."
+            },
+            {
+              "kind": "speech",
+              "text": "This lesson introduces no new word. Che was three lessons ago; buono has been yours since the first chapter. What that chapter never did was let you say buono about anything: it lived inside buongiorno, buonasera and buonanotte, welded to a time of day."
+            },
+            {
+              "kind": "speech",
+              "text": "You can also put a noun after it: Che caffè! — what a coffee!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar lens: an adjective after essere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The exclamation is the loud way. Here is the quiet one, and it is the ordinary Italian sentence pattern this book has gone its whole length without using:"
+            },
+            {
+              "kind": "speech",
+              "text": "subject + essere + describing word."
+            },
+            {
+              "kind": "speech",
+              "text": "Il caffè è buono., Il vino è rosso., L'acqua è buona."
+            },
+            {
+              "kind": "speech",
+              "text": "Every piece of that was separately taught and never joined: essere, buono, the four colours, and the drinks. Until this line, il caffè è nero was unsayable although both halves had been on the page for a hundred lessons."
+            },
+            {
+              "kind": "speech",
+              "text": "The describing word agrees with what it describes, exactly as primo / prima did: il caffè è buono, l'acqua è buona, i caffè sono buoni."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Che buono!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Che buono!*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Il caffè è buono.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Il caffè è buono.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Il vino è rosso.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Il vino è rosso.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Che caffè!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Che caffè!*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"how good!\"? (Che buono!) Which two words is it made of, and when did you get them? (Che, three lessons ago; buono, the first chapter.) Say \"the coffee is good\" as a plain sentence. (Il caffè è buono.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

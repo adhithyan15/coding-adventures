@@ -250,7 +250,10 @@
       "id": "IT-A1-ADJ-03",
       "category": "L'aggettivo (the adjective)",
       "label": "the adjective used predicatively: il caffe e buono",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-BUONO-PREDICATO-03",
+        "IT-LEX-ESSERE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -259,7 +262,7 @@
       "derivedFrom": [
         "A1-ADJ-01"
       ],
-      "note": "Nothing in the corpus puts an adjective after a copula. essere is taught (chapter 16) and four colour words are taught (chapter 13), and no lesson joins them: il caffe e nero is unsayable although both halves are present."
+      "note": "The predicative frame, also with no new word: subject + essere + adjective. essere was chapter 16's and the four colours were chapter 13's, and no lesson had ever joined them, so il caffè è nero was unsayable although both halves had been on the page for a hundred lessons."
     },
     {
       "id": "IT-A1-ADJ-04",
@@ -411,7 +414,10 @@
       "id": "IT-A1-DEM-01",
       "category": "I dimostrativi (pointing)",
       "label": "the demonstrative forms: questo and quello",
-      "probe": null,
+      "probe": [
+        "IT-LEX-QUESTO-02",
+        "IT-LEX-QUELLO-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -420,13 +426,16 @@
       "derivedFrom": [
         "A1-DEM-01"
       ],
-      "note": "Neither word appears anywhere in 93 files. This is a whole column, not a gap in one."
+      "note": "questo and quello, both. Neither word appeared anywhere in the track before this tranche; it was a whole column, not a gap in one."
     },
     {
       "id": "IT-A1-DEM-02",
       "category": "I dimostrativi (pointing)",
       "label": "spatial deixis, restated to Italian's two-way near/far",
-      "probe": null,
+      "probe": [
+        "IT-LEX-QUELLO-02",
+        "IT-ETYMON-QUELLO-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -435,13 +444,15 @@
       "derivedFrom": [
         "A1-DEM-02"
       ],
-      "note": "The Spanish point is a three-way este/ese/aquel. Italian is two-way, so the demand is restated rather than transferred, and it is still empty: nothing in the corpus points at anything."
+      "note": "The two-way system, stated as two-way and contrasted with the Spanish three-way the proxy point describes, so a learner arriving from Spanish has one distinction to forget rather than one to learn."
     },
     {
       "id": "IT-A1-DEM-03",
       "category": "I dimostrativi (pointing)",
       "label": "position: prenominal, and incompatible with the article",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-QUESTO-CAFFE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -450,13 +461,16 @@
       "derivedFrom": [
         "A1-DEM-03"
       ],
-      "note": "Unreachable while IT-A1-DEM-01 is empty; enumerated separately because it is a separate thing to know and will need its own lesson."
+      "note": "Prenominal, and incompatible with the article -- questo caffè, never questo il caffè. No new word; and the point is worth its own lesson because it is the only place in the track where an article the reader was taught to store with every noun has to be taken back out. The possessive lesson three lessons later is the exact opposite rule and says so."
     },
     {
       "id": "IT-A1-POS-01",
       "category": "I possessivi (possession)",
       "label": "possessives for one possessor: mio, tuo, suo",
-      "probe": null,
+      "probe": [
+        "IT-LEX-MIO-TUO-SUO-02",
+        "IT-ETYMON-MIO-TUO-SUO-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -465,13 +479,16 @@
       "derivedFrom": [
         "A1-POS-01"
       ],
-      "note": "Absent. mi chiamo teaches the reflexive mi, which is not a possessive, and no lesson says my anything. A learner can give their name and cannot say my name."
+      "note": "mio, tuo, suo with all four endings, and the correction the old note asked for: the mi of mi chiamo is the reflexive myself, not a possessive. The lesson states the rule English speakers get wrong for years -- suo agrees with the thing owned and tells you nothing about the owner's sex."
     },
     {
       "id": "IT-A1-POS-02",
       "category": "I possessivi (possession)",
       "label": "possessives for several possessors: nostro, vostro",
-      "probe": null,
+      "probe": [
+        "IT-LEX-NOSTRO-VOSTRO-02",
+        "IT-NOTICE-NOSTRO-VOSTRO-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -480,13 +497,16 @@
       "derivedFrom": [
         "A1-POS-02"
       ],
-      "note": "Absent."
+      "note": "nostro and vostro -- and vostro was ALREADY IN THE READER'S MOUTH. The first lesson of the track traces ciao to the Venetian s-ciào vostro and glosses that vostro as `your`, and never names it as a word one could use. This lesson spends it. loro is given beside them as the invariable one, and credited to the essere table that already prints it."
     },
     {
       "id": "IT-A1-POS-03",
       "category": "I possessivi (possession)",
       "label": "the rule Spanish does not have: the Italian possessive keeps its article",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-IL-MIO-NOME-02",
+        "IT-NOTICE-IL-MIO-NOME-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -495,7 +515,7 @@
       "derivedFrom": [
         "A1-POS-03"
       ],
-      "note": "Spanish says mi hermano and Italian says il mio fratello (with the well-known kinship exception mio fratello). The Spanish point is about the possessive standing prenominally and never alone; the Italian demand behind it is the article, and neither is taught."
+      "note": "The article the Italian possessive keeps, which is the whole of what this point is about, AND the kinship exception that takes it back -- mio fratello, i miei fratelli, il loro fratello, with all three conditions named. No new word: the article is chapter 1's, nome is chapter 23's, mio is two lessons back."
     },
     {
       "id": "IT-A1-Q-01",
@@ -581,7 +601,10 @@
       "id": "IT-A1-Q-05",
       "category": "I quantificatori (quantity and number)",
       "label": "poco and molto, agreeing with what they quantify",
-      "probe": null,
+      "probe": [
+        "IT-LEX-MOLTO-POCO-02",
+        "IT-GRAMMAR-MOLTO-POCO-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -590,13 +613,16 @@
       "derivedFrom": [
         "A1-Q-03"
       ],
-      "note": "un po' is used once, in chapter 5's Si, parlo un po'; it is the only quantifier in the corpus and it is never glossed. poco and molto as agreeing quantifiers are absent."
+      "note": "molto and poco in both their jobs, with the rule that separates them: frozen before an adjective, agreeing before a noun. Before this tranche molto occurred three times in the track and every one was the fixed courtesy molto piacere; two of those three previews were removed from their lessons in the same commit, since this is the lesson that owns the word."
     },
     {
       "id": "IT-A1-Q-06",
       "category": "I quantificatori (quantity and number)",
       "label": "abbastanza",
-      "probe": null,
+      "probe": [
+        "IT-LEX-ABBASTANZA-02",
+        "IT-ETYMON-ABBASTANZA-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -605,7 +631,7 @@
       "derivedFrom": [
         "A1-Q-04"
       ],
-      "note": "Absent."
+      "note": "abbastanza, invariable, and the middle of a three-step scale the lesson lays out. It also gives Come stai? -- a question from chapter 2 -- its middle answer, abbastanza bene."
     },
     {
       "id": "IT-A1-PRON-01",
@@ -628,7 +654,9 @@
       "id": "IT-A1-PRON-02",
       "category": "Il pronome (pronouns)",
       "label": "subject pronouns, plural: noi, voi, loro",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-ESSERE-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -637,7 +665,7 @@
       "derivedFrom": [
         "A1-PRON-01"
       ],
-      "note": "The -iamo/-ate/-ano endings are given in chapter 5 and listed again in that chapter's summary, so the learner can conjugate all six persons; the three plural PRONOUNS are never named. The paradigm has a hole exactly where emphasis and contrast would need one."
+      "note": "COVERED ALL ALONG, AND THE OLD NOTE WAS WRONG. It said the three plural pronouns are never named. They are: the essere lesson prints noi siamo / voi siete / loro sono and then tells the reader to KEEP loro where io sono and loro sono would collide, which is naming a pronoun and giving the condition for using it. andare, parlare and capire print the same set. This point was re-probed rather than authored against, and the tranche spent the lesson slot elsewhere."
     },
     {
       "id": "IT-A1-PRON-03",
@@ -710,7 +738,10 @@
       "id": "IT-A1-PRON-07",
       "category": "Il pronome (pronouns)",
       "label": "the relative che with an overt antecedent",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-CHE-02",
+        "IT-ETYMON-CHE-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -719,13 +750,17 @@
       "derivedFrom": [
         "A1-PRON-05"
       ],
-      "note": "che returns exactly ONE case-insensitive match in 93 files, and it is the syllable CHE inside the pronunciation respelling pya-CHE-re. The word does not occur in the corpus in any of its jobs."
+      "note": "che, which returned exactly one case-insensitive match in the whole track before this tranche and it was the syllable CHE inside a pronunciation respelling. The lesson also collects a debt: chapter 3 taught twice that the h keeps c hard before e and i, once in piacere and once in mi chiamo, and che is the word that rule was for."
     },
     {
       "id": "IT-A1-PRON-08",
       "category": "Il pronome (pronouns)",
       "label": "interrogative pronouns: chi, che cosa, quanto",
-      "probe": null,
+      "probe": [
+        "IT-LEX-CHI-02",
+        "IT-LEX-CHE-COSA-02",
+        "IT-NOTICE-CHE-COSA-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -734,13 +769,15 @@
       "derivedFrom": [
         "A1-PRON-06"
       ],
-      "note": "quanti is present, but only welded into the fixed age question Quanti anni hai?, and chi and che cosa are absent. A candidate can ask how old somebody is and cannot ask who or what."
+      "note": "chi, che cosa AND quanto. The first two are new; the third is unwelded rather than taught, because quanti was already in the track glued into the fixed age question Quanti anni hai? and the che cosa lesson takes it out and gives it its own meaning."
     },
     {
       "id": "IT-A1-PRON-09",
       "category": "Il pronome (pronouns)",
       "label": "exclamative che with an adjective or adverb",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-CHE-BUONO-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -749,13 +786,16 @@
       "derivedFrom": [
         "A1-PRON-07"
       ],
-      "note": "Absent; see IT-A1-PRON-07 for the word itself."
+      "note": "Che buono! -- and this point is closed WITH NO NEW WORD. che is four lessons old by then and buono has been in the track since its first chapter, welded inside buongiorno, buonasera and buonanotte and never once said about anything."
     },
     {
       "id": "IT-A1-PRON-10",
       "category": "Il pronome (pronouns)",
       "label": "stressed pronouns after a preposition: me, te, lui",
-      "probe": null,
+      "probe": [
+        "IT-LEX-PER-ME-02",
+        "IT-GRAMMAR-PER-ME-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -764,13 +804,16 @@
       "derivedFrom": [
         "A1-PRON-08"
       ],
-      "note": "E tu? and E Lei? hand the turn back with a SUBJECT pronoun, which is what Italian actually says there, so the corpus is right and the point is still empty: no preposition in the corpus takes a pronoun after it."
+      "note": "me, te, lui, lei after a preposition -- the second pronoun set, which no preposition in the track had ever had after it. The lesson also gives A me piace against the mi piace of chapter 19 and says what the difference buys: Italian shouts a pronoun by swapping sets, not by raising the voice."
     },
     {
       "id": "IT-A1-ADV-01",
       "category": "L'avverbio (adverbs)",
       "label": "place deictics: qui and li",
-      "probe": null,
+      "probe": [
+        "IT-LEX-QUI-LI-02",
+        "IT-ETYMON-QUI-LI-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -779,13 +822,17 @@
       "derivedFrom": [
         "A1-ADV-01"
       ],
-      "note": "Absent."
+      "note": "qui and lì, with qua and là named beside them. The etymology closes a thread three lessons long: ille gave the track its article in chapter 1, quello two lessons earlier, and now lì."
     },
     {
       "id": "IT-A1-ADV-02",
       "category": "L'avverbio (adverbs)",
       "label": "time deictics: oggi, ieri, domani",
-      "probe": null,
+      "probe": [
+        "IT-LEX-OGGI-IERI-02",
+        "IT-ETYMON-OGGI-IERI-03",
+        "IT-SOUND-A-DOMANI-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -794,13 +841,16 @@
       "derivedFrom": [
         "A1-ADV-02"
       ],
-      "note": "domani is taught, and only as the second half of the farewell a domani. oggi and ieri return zero occurrences in 93 files. Two thirds of a three-way set missing is not a partial pass: a candidate asked when something happened has one word and it points forward."
+      "note": "oggi and ieri, joined to the domani the track already had and had only ever used as the second half of the farewell a domani. The set now works with the two pasts the track teaches: Oggi lavoro a Roma, ieri ho lavorato a Milano."
     },
     {
       "id": "IT-A1-ADV-03",
       "category": "L'avverbio (adverbs)",
       "label": "quantity adverbs: poco, molto, abbastanza",
-      "probe": null,
+      "probe": [
+        "IT-LEX-MOLTO-POCO-02",
+        "IT-LEX-ABBASTANZA-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -809,7 +859,7 @@
       "derivedFrom": [
         "A1-ADV-03"
       ],
-      "note": "See IT-A1-Q-05. un po' is the only one on the page and it is unglossed."
+      "note": "All three quantity adverbs, which is what the point names."
     },
     {
       "id": "IT-A1-ADV-04",
@@ -833,7 +883,11 @@
       "id": "IT-A1-ADV-05",
       "category": "L'avverbio (adverbs)",
       "label": "polarity: si and no",
-      "probe": null,
+      "probe": [
+        "IT-LEX-SI-02",
+        "IT-LEX-NO-02",
+        "IT-ETYMON-NO-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -842,13 +896,16 @@
       "derivedFrom": [
         "A1-ADV-05"
       ],
-      "note": "si is taught, inside chapter 5's Si, parlo un po'. no is never taught as an Italian word: every match in 93 files is the English no in a lesson's own prose. A candidate can agree and cannot decline, which is the same shortfall the negation point reports from the other side."
+      "note": "Both halves now, and the pair is taught as a pair. sì had been said out loud in chapter 5's dialogue since the track began and never given a line of its own; no was never an Italian word here at all. The no lesson also gives the split that makes the next point reachable: Latin nōn became a STRESSED no that stands alone and an UNSTRESSED non that leans on a verb."
     },
     {
       "id": "IT-A1-ADV-06",
       "category": "L'avverbio (adverbs)",
       "label": "connective adverbs: anche and neanche",
-      "probe": null,
+      "probe": [
+        "IT-LEX-ANCHE-02",
+        "IT-GRAMMAR-ANCHE-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -857,7 +914,7 @@
       "derivedFrom": [
         "A1-ADV-06"
       ],
-      "note": "Anch'io appears once, in chapter 5's dialogue, unglossed and never named. It is the only agreement move in the corpus and a learner cannot be expected to have taken it from there."
+      "note": "anche and neanche, and neanche is taught as what it transparently is -- né + anche -- so the previous lesson has already paid for half of this one. anch'io / neanch'io is given as the pair, because between them they answer most of what anybody says to you."
     },
     {
       "id": "IT-A1-ADV-07",
@@ -882,7 +939,10 @@
       "id": "IT-A1-ADV-08",
       "category": "L'avverbio (adverbs)",
       "label": "perche: the one word that both asks and answers",
-      "probe": null,
+      "probe": [
+        "IT-LEX-PERCHE-02",
+        "IT-ETYMON-PERCHE-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -891,7 +951,7 @@
       "derivedFrom": [
         "A1-ADV-08"
       ],
-      "note": "Spanish splits por que from porque and spends an A1 point on the difference. Italian writes one word for both jobs, which is a smaller demand, and the corpus meets neither half: perche returns zero occurrences in 93 files."
+      "note": "perché, both jobs, in one lesson -- because that is what Italian does. The Spanish point spends itself on the por qué / porque split; the Italian demand behind it is that there is no split, and the lesson's worked exchange opens question and answer with the identical word."
     },
     {
       "id": "IT-A1-V-01",
@@ -1278,7 +1338,9 @@
       "id": "IT-A1-SN-04",
       "category": "Il sintagma nominale (the noun phrase)",
       "label": "the vocative",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-SIGNORE-SIGNORA-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1287,7 +1349,7 @@
       "derivedFrom": [
         "A1-SN-04"
       ],
-      "note": "No lesson addresses a named person. The practice dialogues open with a bare greeting and never with Marco, buongiorno."
+      "note": "The vocative, and no new word is needed for it: Marco, buongiorno. Every practice exchange in the track opens with a bare greeting and never with a name, which is backwards, since it is the friend whose name you know. The lesson gives the two things Italian does not do here -- no article and no preposition."
     },
     {
       "id": "IT-A1-SV-01",
@@ -1414,7 +1476,10 @@
       "id": "IT-A1-OS-02",
       "category": "La frase semplice (the simple sentence)",
       "label": "the negative declarative, with non",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-NON-02",
+        "IT-ETYMON-NON-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1423,7 +1488,7 @@
       "derivedFrom": [
         "A1-OS-01"
       ],
-      "note": "THE TRACK'S MOST CONSEQUENTIAL GAP, and it is deliberate rather than accidental. non occurs in 2 of 93 files, both times inside the frozen answer non c'e male, and that lesson says in as many words that the pieces behind it -- negation and the c'e construction -- belong to later lessons. The later lessons have not been written. So a learner with three verb classes, two past tenses and the piacere frame cannot deny a single one of them: non capisco, non parlo italiano and non mi piace are all unsayable. Checked separately from coverage, as the brief for this series requires."
+      "note": "THE TRACK'S MOST CONSEQUENTIAL GAP, CLOSED, AND IT WAS ONE WORD. non goes immediately before the verb and Italian needs no helper the way English needs `do`. The lesson works the rule on five sentences the track had already taught and could only say one way round, and it pays the debt the non c'è male lesson booked in chapter 2 by name."
     },
     {
       "id": "IT-A1-OS-03",
@@ -1465,7 +1530,10 @@
       "id": "IT-A1-OS-05",
       "category": "La frase semplice (the simple sentence)",
       "label": "impersonal existence: c'e and ci sono",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-CE-02",
+        "IT-NOTICE-CE-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1474,7 +1542,7 @@
       "derivedFrom": [
         "A1-OS-04"
       ],
-      "note": "c'e is present in the corpus exactly once, inside non c'e male, and is explicitly deferred by that lesson. Nothing in the track can say there is."
+      "note": "c'è and ci sono, and the lesson is where non c'è male finally comes apart. The chapter 2 lesson that taught that phrase said in as many words that its negation and its c'è belonged to later lessons; this tranche pays both, four lessons apart, and the second one quotes the deferral."
     },
     {
       "id": "IT-A1-OS-06",
@@ -1533,7 +1601,10 @@
       "id": "IT-A1-CJ-02",
       "category": "Congiunzione e subordinazione (joining and subordination)",
       "label": "negative coordination with ne",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-NE-02",
+        "IT-GRAMMAR-NON-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1542,13 +1613,16 @@
       "derivedFrom": [
         "A1-CO-02"
       ],
-      "note": "Absent, and unreachable anyway while IT-A1-OS-02 reports no negation at all."
+      "note": "né … né, with the doubled negative stated as the requirement it is: Non prendo né caffè né tè carries three negatives and Italian wants all three. Ordered after non deliberately, because né cannot stand without it."
     },
     {
       "id": "IT-A1-CJ-03",
       "category": "Congiunzione e subordinazione (joining and subordination)",
       "label": "disjunctive coordination with o",
-      "probe": null,
+      "probe": [
+        "IT-LEX-O-02",
+        "IT-ETYMON-O-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1557,13 +1631,16 @@
       "derivedFrom": [
         "A1-CO-03"
       ],
-      "note": "Every raw match for o in 93 files was read in context and every one is a letter named in a pronunciation note or a vowel in an etymology. The word is not in the corpus. It takes IT-A1-F3-02 (offering alternatives) with it."
+      "note": "o. Every raw match for it in the track before this tranche was a letter named in a pronunciation note or a vowel in an etymology."
     },
     {
       "id": "IT-A1-CJ-04",
       "category": "Congiunzione e subordinazione (joining and subordination)",
       "label": "adversative coordination with ma",
-      "probe": null,
+      "probe": [
+        "IT-LEX-MA-02",
+        "IT-ETYMON-MA-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1572,7 +1649,7 @@
       "derivedFrom": [
         "A1-CO-04"
       ],
-      "note": "ma returns one match in 93 files and it is inside the Latin de mane behind domani. A learner can say two things and never set one against the other."
+      "note": "ma, whose only previous match in the track was inside the Latin de mane behind domani. Its etymology spends a word the reader owns: Latin had two words for MORE, and Italian kept plūs as the più of a più tardi and turned magis into but."
     },
     {
       "id": "IT-A1-CJ-05",
@@ -1623,7 +1700,10 @@
       "id": "IT-A1-CJ-08",
       "category": "Congiunzione e subordinazione (joining and subordination)",
       "label": "finite clause as direct object, with penso che",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-PENSO-CHE-02",
+        "IT-SOUND-PENSARE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1632,13 +1712,15 @@
       "derivedFrom": [
         "A1-SUB-03"
       ],
-      "note": "pensare has a lesson of its own in chapter 18 and nothing is ever put after it. The verb of opinion is present and opinion is not sayable."
+      "note": "penso che. pensare had a lesson of its own in chapter 18 and nothing was ever put after it; che, one lesson earlier, is the thing that goes after it. The lesson names the congiuntivo, says spoken Italian uses the plain present constantly, and does not teach it."
     },
     {
       "id": "IT-A1-CJ-09",
       "category": "Congiunzione e subordinazione (joining and subordination)",
       "label": "restrictive relative clause with an expressed antecedent",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-CHE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1647,13 +1729,15 @@
       "derivedFrom": [
         "A1-SUB-04"
       ],
-      "note": "Absent; see IT-A1-PRON-07 for che itself."
+      "note": "Restrictive relative with an expressed antecedent: l'amico che parla italiano."
     },
     {
       "id": "IT-A1-CJ-10",
       "category": "Congiunzione e subordinazione (joining and subordination)",
       "label": "che as relative subject and as relative object",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-CHE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1662,13 +1746,15 @@
       "derivedFrom": [
         "A1-SUB-05"
       ],
-      "note": "Absent."
+      "note": "Subject and object both, and the lesson makes the point that Italian does not ask you to tell them apart -- che is the same word in l'amico che parla and il caffè che prendo, where English picks who against that and may drop the word entirely."
     },
     {
       "id": "IT-A1-CJ-11",
       "category": "Congiunzione e subordinazione (joining and subordination)",
       "label": "causal clauses with perche",
-      "probe": null,
+      "probe": [
+        "IT-LEX-PERCHE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1677,13 +1763,15 @@
       "derivedFrom": [
         "A1-SUB-06"
       ],
-      "note": "Absent. The track explains a great deal about why Italian words are shaped as they are and never gives the learner the word for because."
+      "note": "Causal clauses. The track had spent its whole length explaining why Italian words are shaped as they are and had no way to let a learner say because."
     },
     {
       "id": "IT-A1-CJ-12",
       "category": "Congiunzione e subordinazione (joining and subordination)",
       "label": "purpose clauses with per plus an infinitive",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-PER-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1692,13 +1780,16 @@
       "derivedFrom": [
         "A1-SUB-07"
       ],
-      "note": "Absent."
+      "note": "per + infinitive, and NO NEW WORD: per arrived one lesson earlier inside perché, and every infinitive in the examples was taught between chapters 5 and 20. What is new is the infinitive doing a job -- it had been the track's citation form since chapter 5 and had never appeared inside a sentence."
     },
     {
       "id": "IT-A1-CJ-13",
       "category": "Congiunzione e subordinazione (joining and subordination)",
       "label": "simultaneity with quando",
-      "probe": null,
+      "probe": [
+        "IT-LEX-QUANDO-02",
+        "IT-ETYMON-QUANDO-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1707,7 +1798,7 @@
       "derivedFrom": [
         "A1-SUB-08"
       ],
-      "note": "quando returns zero occurrences in 93 files."
+      "note": "quando, which returned zero occurrences before this tranche. Taught in both its jobs, and the etymology is the rarest kind in this track: quandō changed almost not at all in two thousand years, which the lesson contrasts with the five reshaped words the reader already holds."
     },
     {
       "id": "IT-A1-F1-01",
@@ -1767,7 +1858,11 @@
       "id": "IT-A1-F1-04",
       "category": "Funzioni: dare e chiedere informazioni",
       "label": "ask for confirmation with a tag question",
-      "probe": null,
+      "probe": [
+        "IT-LEX-VERO-02",
+        "IT-GRAMMAR-VERO-03",
+        "IT-LEX-NO-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1776,13 +1871,16 @@
       "derivedFrom": [
         "A1-F1-04"
       ],
-      "note": "vero? and no? are both absent."
+      "note": "vero? and no? both, which is what this point asked for. The vero lesson gives the one shape that answers every English tag -- isn't it, doesn't he, aren't you -- and says which answer it expects."
     },
     {
       "id": "IT-A1-F1-05",
       "category": "Funzioni: dare e chiedere informazioni",
       "label": "confirm or deny the previous statement",
-      "probe": null,
+      "probe": [
+        "IT-LEX-SI-02",
+        "IT-LEX-NO-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1791,7 +1889,7 @@
       "derivedFrom": [
         "A1-F1-05"
       ],
-      "note": "Half of it is there: si, from chapter 5. The denial is not, for the reason IT-A1-OS-02 and IT-A1-ADV-05 give from two directions."
+      "note": "Confirming and denying, both. The denial half was the one the whole track lacked."
     },
     {
       "id": "IT-A1-F2-01",
@@ -1815,7 +1913,9 @@
       "id": "IT-A1-F2-02",
       "category": "Funzioni: opinioni, atteggiamenti e conoscenza",
       "label": "give an opinion with penso che",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-PENSO-CHE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1825,7 +1925,7 @@
         "A1-F2-02",
         "A1-F2-11"
       ],
-      "note": "See IT-A1-CJ-08: the verb is taught and nothing may follow it."
+      "note": "Giving an opinion, with the frame the proxy point names."
     },
     {
       "id": "IT-A1-F2-03",
@@ -1880,7 +1980,10 @@
       "id": "IT-A1-F2-06",
       "category": "Funzioni: opinioni, atteggiamenti e conoscenza",
       "label": "express agreement",
-      "probe": null,
+      "probe": [
+        "IT-LEX-DACCORDO-02",
+        "IT-LEX-ANCHE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1889,13 +1992,16 @@
       "derivedFrom": [
         "A1-F2-06"
       ],
-      "note": "Anch'io in chapter 5's dialogue is the only agreement move in the corpus and it is unglossed; d'accordo is absent."
+      "note": "d'accordo, plus anche/anch'io. Anch'io had been in chapter 5's dialogue unglossed since the track began and is now named; d'accordo is new, and its etymology spends the cuore the body chapter already taught -- ad + cor, cordis, bringing two hearts together."
     },
     {
       "id": "IT-A1-F2-07",
       "category": "Funzioni: opinioni, atteggiamenti e conoscenza",
       "label": "express disagreement",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-NON-02",
+        "IT-LEX-DACCORDO-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1904,13 +2010,15 @@
       "derivedFrom": [
         "A1-F2-07"
       ],
-      "note": "Absent, and structurally out of reach: disagreeing needs either no or a negated verb and the track has neither."
+      "note": "Non sono d'accordo. Both halves are new in this tranche and the negation lesson works this sentence explicitly, because until it the track could agree and had no way to disagree with anything."
     },
     {
       "id": "IT-A1-F2-08",
       "category": "Funzioni: opinioni, atteggiamenti e conoscenza",
       "label": "show scepticism with non so",
-      "probe": null,
+      "probe": [
+        "IT-PRAGMATIC-NON-SO-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1919,13 +2027,15 @@
       "derivedFrom": [
         "A1-F2-08"
       ],
-      "note": "Needs both a negator and sapere, and the track has neither."
+      "note": "Non so, and the lesson treats the slow hanging Non so … as the politest disagreement in the language. No new word: non is two chapters old and so is one lesson old."
     },
     {
       "id": "IT-A1-F2-09",
       "category": "Funzioni: opinioni, atteggiamenti e conoscenza",
       "label": "offer a counter-argument with ma",
-      "probe": null,
+      "probe": [
+        "IT-LEX-MA-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1934,7 +2044,7 @@
       "derivedFrom": [
         "A1-F2-09"
       ],
-      "note": "See IT-A1-CJ-04."
+      "note": "Offering a counter-argument. The lesson also gives the bare sentence-initial Ma …, which is nearer English `well …` than `but`."
     },
     {
       "id": "IT-A1-F2-10",
@@ -1987,7 +2097,11 @@
       "id": "IT-A1-F2-13",
       "category": "Funzioni: opinioni, atteggiamenti e conoscenza",
       "label": "express knowledge, with sapere or conoscere",
-      "probe": null,
+      "probe": [
+        "IT-LEX-SAPERE-02",
+        "IT-LEX-INCONTRARE-02",
+        "IT-NOTICE-INCONTRARE-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -1996,13 +2110,16 @@
       "derivedFrom": [
         "A1-F2-14"
       ],
-      "note": "Italian splits knowing a fact from knowing a person, which is a demand Spanish makes in the same shape. Neither verb is taught. conoscere is on the page once, inside the fixed courtesy piacere di conoscerti."
+      "note": "SAPERE WAS THE ONLY MISSING HALF, AND THE OLD NOTE WAS WRONG ABOUT THE OTHER. It said neither verb is taught and that conoscere is on the page once inside a fixed courtesy. In fact the incontrare lesson teaches conoscere as incontrare's partner -- incontrare is the event, conoscere the acquaintance -- gives its etymology from cognōscere, and puts it in the past. Only sapere was absent, and the sapere lesson is where the two are finally set against each other."
     },
     {
       "id": "IT-A1-F2-14",
       "category": "Funzioni: opinioni, atteggiamenti e conoscenza",
       "label": "express ignorance of something",
-      "probe": null,
+      "probe": [
+        "IT-PRAGMATIC-NON-SO-02",
+        "IT-LEX-PERCHE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -2011,7 +2128,7 @@
       "derivedFrom": [
         "A1-F2-15"
       ],
-      "note": "Absent; needs the negator too."
+      "note": "Ignorance, including the hedge that puts a question word after it -- Non so quando, Non so perché, Non so chi è. Those question words are the joining chapters', and non so is what lets a learner use them about themselves rather than only to ask."
     },
     {
       "id": "IT-A1-F2-15",
@@ -2051,7 +2168,10 @@
       "id": "IT-A1-F2-17",
       "category": "Funzioni: opinioni, atteggiamenti e conoscenza",
       "label": "say that you have understood, and that you have not",
-      "probe": null,
+      "probe": [
+        "IT-PRAGMATIC-NON-CAPISCO-02",
+        "IT-LEX-CAPIRE-02"
+      ],
       "anchorIds": [
         "CEFR-CV",
         "IT-CORPUS",
@@ -2059,7 +2179,7 @@
       ],
       "derivedFrom": [],
       "italianSpecific": true,
-      "note": "THE REPAIR COLUMN, HALF OF IT. capire is taught in chapter 18 with capisco given first in the paradigm, so a learner can say I understand. Non capisco is unsayable, because the track has no negator at all (IT-A1-OS-02). Enumerated as one point rather than two because a candidate who can only ever claim to have understood is worse off than one who can do neither. The proxy has no A1 slot for this and CEFR's A1 descriptors do."
+      "note": "THE REPAIR COLUMN, CLOSED. capire and capisco were taught in chapter 18 and non arrived one lesson before this one, so the lesson invents nothing; what it adds is the ORDER -- Non capisco. Prego? -- and the reason for it, which is that Prego? alone gets the same sentence at the same speed."
     },
     {
       "id": "IT-A1-F3-01",
@@ -2082,7 +2202,11 @@
       "id": "IT-A1-F3-02",
       "category": "Funzioni: gusti, desideri e sentimenti",
       "label": "ask about a preference by offering alternatives",
-      "probe": null,
+      "probe": [
+        "IT-LEX-O-02",
+        "IT-LEX-CAFFE-02",
+        "IT-LEX-TE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -2091,7 +2215,7 @@
       "derivedFrom": [
         "A1-F3-02"
       ],
-      "note": "Needs o, which IT-A1-CJ-03 reports absent."
+      "note": "Asking about a preference by offering alternatives -- Caffè o tè? Both nouns were already taught; only the single letter between them was missing. NOT the same as expressing one: IT-A1-F3-03 (preferisco) stays uncovered and is named there."
     },
     {
       "id": "IT-A1-F3-03",
@@ -2286,7 +2410,10 @@
       "id": "IT-A1-F4-09",
       "category": "Funzioni: influire sull'interlocutore",
       "label": "accept a proposal, offer or invitation",
-      "probe": null,
+      "probe": [
+        "IT-PRAGMATIC-SI-NO-GRAZIE-02",
+        "IT-PRAGMATIC-GRAZIE-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -2295,13 +2422,16 @@
       "derivedFrom": [
         "A1-F4-08"
       ],
-      "note": "grazie could do this and is never presented as doing it; si is taught only as the answer to a question about ability."
+      "note": "Sì, grazie -- and the lesson names the trap: Italian uses grazie for BOTH accepting and declining, where English swaps please for thank you, so a bare grazie at an Italian table is heard as a refusal."
     },
     {
       "id": "IT-A1-F4-10",
       "category": "Funzioni: influire sull'interlocutore",
       "label": "decline a proposal, offer or invitation",
-      "probe": null,
+      "probe": [
+        "IT-PRAGMATIC-SI-NO-GRAZIE-02",
+        "IT-LEX-NO-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -2310,7 +2440,7 @@
       "derivedFrom": [
         "A1-F4-09"
       ],
-      "note": "Unreachable for the same reason as IT-A1-F4-06."
+      "note": "No, grazie. Same lesson as IT-A1-F4-09; enumerated apart because a candidate who can only accept is not at parity with one who can also decline."
     },
     {
       "id": "IT-A1-F5-01",
@@ -2369,7 +2499,9 @@
       "id": "IT-A1-F5-04",
       "category": "Funzioni: relazioni sociali",
       "label": "address somebody by name or title",
-      "probe": null,
+      "probe": [
+        "IT-LEX-SIGNORE-SIGNORA-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -2378,7 +2510,7 @@
       "derivedFrom": [
         "A1-F5-03"
       ],
-      "note": "signore, signora and dottore are all absent. The Lei form is taught (IT-A1-REG-01) and there is nothing to put after it, which is an odd shape: the track teaches formality and not the words formality is normally carried in."
+      "note": "signore, signora and signorina, with il signor Rossi and the reason for the missing -e. The track taught the formal Lei and the come sta / come stai contrast and had nothing to put after either. dottore, ingegnere and the rest of the Italian title habit are still absent."
     },
     {
       "id": "IT-A1-F5-05",
@@ -2401,7 +2533,10 @@
       "id": "IT-A1-F5-06",
       "category": "Funzioni: relazioni sociali",
       "label": "introduce a third person",
-      "probe": null,
+      "probe": [
+        "IT-PRAGMATIC-QUESTO-E-02",
+        "IT-LEX-QUESTO-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -2410,7 +2545,7 @@
       "derivedFrom": [
         "A1-F5-04"
       ],
-      "note": "Absent. questo e ... would need a demonstrative and IT-A1-DEM-01 reports none."
+      "note": "Questo è Marco. Chapter 3 taught the whole of introducing YOURSELF and left the third person out, because a third-person introduction needs a pointing word and the track had none."
     },
     {
       "id": "IT-A1-F5-07",
@@ -2776,7 +2911,9 @@
       "id": "IT-A1-NG-08",
       "category": "Nozioni generali (general notions)",
       "label": "degree: molto, un po'",
-      "probe": null,
+      "probe": [
+        "IT-GRAMMAR-MOLTO-POCO-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -2785,7 +2922,7 @@
       "derivedFrom": [
         "A1-NG2-03"
       ],
-      "note": "un po' is the only degree expression in the corpus and no lesson names it."
+      "note": "Degree, molto and un po' -- and un po' is UNWELDED rather than taught. Chapter 5's dialogue said Sì, parlo un po' and never glossed it; this lesson says what it is (poco with its last syllable cut off, marked by an apostrophe and not an accent) and why a speaker reaches for it rather than poco."
     },
     {
       "id": "IT-A1-NG-09",
@@ -3141,7 +3278,10 @@
       "id": "IT-A1-NG-30",
       "category": "Nozioni generali (general notions)",
       "label": "conformity: d'accordo",
-      "probe": null,
+      "probe": [
+        "IT-LEX-DACCORDO-02",
+        "IT-ETYMON-DACCORDO-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -3150,7 +3290,7 @@
       "derivedFrom": [
         "A1-NG6-06"
       ],
-      "note": "Absent; see IT-A1-F2-06."
+      "note": "Conformity, in the word Italians actually use for it."
     },
     {
       "id": "IT-A1-NG-31",
@@ -3186,7 +3326,10 @@
       "id": "IT-A1-NG-33",
       "category": "Nozioni generali (general notions)",
       "label": "capacity and competence, with sapere",
-      "probe": null,
+      "probe": [
+        "IT-LEX-SAPERE-02",
+        "IT-GRAMMAR-SAPERE-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -3195,7 +3338,7 @@
       "derivedFrom": [
         "A1-NG6-09"
       ],
-      "note": "sapere is absent; the ability question the track does reach (Parli italiano?) uses the plain present of the activity verb instead, which is why IT-A1-F2-15 is covered and this is not."
+      "note": "sapere plus an infinitive, which is how Italian says CAN in the learnt-how sense. The ability question the track already reached (Parli italiano?) uses the plain present of the activity verb; so parlare says what parlo cannot, that you learnt it."
     },
     {
       "id": "IT-A1-NG-34",

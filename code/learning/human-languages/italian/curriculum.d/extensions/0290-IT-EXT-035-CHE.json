@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-035-CHE",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can use che as a relative and as a complementizer, ask chi and che cosa, exclaim with che, and put a describing word after essere.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C31-che",
+    "IT-C31-penso-che",
+    "IT-C31-chi",
+    "IT-C31-che-cosa",
+    "IT-C31-che-buono"
+  ]
+}

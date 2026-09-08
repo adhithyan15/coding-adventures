@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:de2a8a037f0e6bc6",
+  "lessonIds": [
+    "IT-C30-non",
+    "IT-C30-non-capisco",
+    "IT-C30-ne",
+    "IT-C30-anche",
+    "IT-C30-ce"
+  ],
+  "tex": "italian/book/chapters/ch30-non.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:07c38760ca34c00d",
+  "lessonIds": [
+    "IT-C30-non",
+    "IT-C30-non-capisco",
+    "IT-C30-ne",
+    "IT-C30-anche",
+    "IT-C30-ce"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch30.txt",
+  "json": "italian/narration/ch30.json",
+  "textHash": "fnv1a64:9d5eff092583dfa6",
+  "jsonHash": "fnv1a64:884e13e28c6b9e8e",
+  "findings": []
+}

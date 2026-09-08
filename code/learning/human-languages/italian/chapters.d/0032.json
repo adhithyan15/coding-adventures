@@ -1,0 +1,25 @@
+{
+  "chapter": 32,
+  "title": "But, Or, Why",
+  "label": "ch:it-unire",
+  "canDo": "I can set one statement against another, offer a choice, ask why and answer because, say when, and say what something is for.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "IT-C32-per",
+    "kind": "task",
+    "summary": "The chapter's last lesson gives the infinitive its first job in a sentence. Since Chapter 5 it has been this book's dictionary form and nothing else; per plus the plain infinitive puts it to work and introduces no new word.",
+    "assesses": [
+      "IT-LEX-MA-02",
+      "IT-ETYMON-MA-03",
+      "IT-LEX-O-02",
+      "IT-ETYMON-O-03",
+      "IT-LEX-PERCHE-02",
+      "IT-ETYMON-PERCHE-03",
+      "IT-LEX-QUANDO-02",
+      "IT-ETYMON-QUANDO-03",
+      "IT-GRAMMAR-PER-02"
+    ]
+  }
+}

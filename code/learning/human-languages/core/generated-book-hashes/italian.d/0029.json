@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:b3160f4ad56aa62d",
+  "lessonIds": [
+    "IT-C29-si",
+    "IT-C29-no",
+    "IT-C29-si-no-grazie",
+    "IT-C29-daccordo",
+    "IT-C29-vero"
+  ],
+  "tex": "italian/book/chapters/ch29-si-e-no.tex"
+}

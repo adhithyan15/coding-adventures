@@ -1,10 +1,9 @@
 {
-  "segments": [],
+  "segments": [
+    "IT-PATH-033"
+  ],
   "omits": [
-    "RESPONSE-YES",
-    "RESPONSE-NO",
-    "RESPONSE-YESNO",
-    "RESPONSE-OKAY"
+    "RESPONSE-YESNO"
   ],
   "relocates": {}
 }

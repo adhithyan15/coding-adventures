@@ -1,0 +1,16 @@
+{
+  "id": "IT-PATH-037",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "IT-C33-questo",
+    "IT-C33-quello",
+    "IT-C33-questo-caffe",
+    "IT-C33-questo-e",
+    "IT-C33-qui-li"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "IT-EXT-037-DIMOSTRATIVI"
+  ]
+}

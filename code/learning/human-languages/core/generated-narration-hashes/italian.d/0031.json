@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:86c222a1b29a6a3d",
+  "lessonIds": [
+    "IT-C31-che",
+    "IT-C31-penso-che",
+    "IT-C31-chi",
+    "IT-C31-che-cosa",
+    "IT-C31-che-buono"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch31.txt",
+  "json": "italian/narration/ch31.json",
+  "textHash": "fnv1a64:82a3567772300e2c",
+  "jsonHash": "fnv1a64:8e591a12a9b28aa9",
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-039-SAPERE",
+  "stage": "A2",
+  "kind": "required",
+  "canDo": "I can use sapere against the conoscere I already had, say non so, name oggi and ieri beside domani, and use molto, poco, un po' and abbastanza.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C35-sapere",
+    "IT-C35-non-so",
+    "IT-C35-oggi-ieri",
+    "IT-C35-molto-poco",
+    "IT-C35-abbastanza"
+  ]
+}

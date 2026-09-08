@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:bcb5e64642648a50",
+  "lessonIds": [
+    "IT-C35-sapere",
+    "IT-C35-non-so",
+    "IT-C35-oggi-ieri",
+    "IT-C35-molto-poco",
+    "IT-C35-abbastanza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch35.txt",
+  "json": "italian/narration/ch35.json",
+  "textHash": "fnv1a64:6ffab167688bc3e4",
+  "jsonHash": "fnv1a64:a73d4491c40bf5c2",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:52d6d7f92d18d04b",
+  "lessonIds": [
+    "IT-C32-ma",
+    "IT-C32-o",
+    "IT-C32-perche",
+    "IT-C32-quando",
+    "IT-C32-per"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch32.txt",
+  "json": "italian/narration/ch32.json",
+  "textHash": "fnv1a64:53193bc0312573db",
+  "jsonHash": "fnv1a64:9fded9caac374ff1",
+  "findings": []
+}
