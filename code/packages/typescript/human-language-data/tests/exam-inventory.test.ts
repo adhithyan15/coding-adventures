@@ -1707,8 +1707,12 @@ describe("the committed Punjabi A1 inventory", () => {
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(227);
     // 112 -> 136. Chapters 37-43 answer this file's own uncovered list.
-    expect(coverage.covered).toBe(136);
-    expect(coverage.unmapped).toBe(91);
+    // 136 -> 137: the ordinal tranche closes PA-A1-NUM-05 (chapter 44). One
+    // point for six lessons, and no more than one: ordinals unlock nothing else
+    // here, because the count still stops at panj -- PA-A1-NUM-02 and -03 are
+    // both open -- so nothing above fifth can be said at all.
+    expect(coverage.covered).toBe(137);
+    expect(coverage.unmapped).toBe(90);
     expect(coverage.partial).toBe(0);
     // THE HEADLINE, and it is the starkest of the three tracks measured in this
     // series. ZERO of eleven. Not one of `te`/`ate`, `jaan`, `par`/`lekin`,
@@ -1753,8 +1757,30 @@ describe("the committed Punjabi A1 inventory", () => {
     // Dravidian tracks lead on.
     expect(coverage.byCategory["Faram (filling in a form)"]!).toEqual({ enumerated: 10, covered: 9 });
     expect(coverage.byCategory["Sur (tone and pronunciation)"]!.covered).toBe(6);
+    // The ordinal point, named rather than left to the aggregate, so a nulled
+    // probe or a fabricated id is caught here and not only by the total. Both
+    // halves were falsified before this was kept.
+    const ordinals = inventory.points.find((point) => point.id === "PA-A1-NUM-05");
+    expect(ordinals?.probe).toEqual([
+      // Second first, because duujaa still shows its doo; the set named beside it.
+      "PA-LEX-DUJA-01",
+      "PA-GRAMMAR-ORDINAL-SET-01",
+      "PA-LEX-TIJA-01",
+      "PA-LEX-CHAUTHA-01",
+      // First arrives fourth: pahilaa keeps no letter of ikk.
+      "PA-LEX-PAHILA-01",
+      // And the seam, where an inherited word came to look like a sum.
+      "PA-LEX-PANJVAN-01",
+      "PA-GRAMMAR-ORDINAL-VAAN-01",
+    ]);
+    expect(
+      coverage.points.find((point) => point.id === "PA-A1-NUM-05")?.missingAtoms,
+    ).toEqual([]);
+    // And the point it does NOT close, which is why the ratio is one for six:
+    // the cardinals stop at five, so sixth upward cannot be said.
+    expect(coverage.points.find((point) => point.id === "PA-A1-NUM-02")?.covered).toBe(false);
     expect(formatExamCoverage(coverage)).toContain(
-      "punjabi A1 (partial inventory): 136/227 points covered (60%)",
+      "punjabi A1 (partial inventory): 137/227 points covered (60%)",
     );
   }, 60_000);
 });

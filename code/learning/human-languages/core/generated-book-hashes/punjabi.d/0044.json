@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:580db4c4c7a1a8ae",
+  "lessonIds": [
+    "PA-C44-duja",
+    "PA-C44-tija",
+    "PA-C44-chautha",
+    "PA-C44-pahila",
+    "PA-C44-panjvan",
+    "PA-R44-first-to-fifth"
+  ],
+  "tex": "punjabi/book/chapters/ch44-ordinals.tex"
+}

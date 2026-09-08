@@ -1,0 +1,18 @@
+{
+  "id": "PA-EXT-066-ORDINALS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say first to fifth in Punjabi and name the one ordinal ending that still works on a new number.",
+  "prerequisites": [
+    "PA-EXT-065-QUESTIONS"
+  ],
+  "lessons": [
+    "PA-C44-duja",
+    "PA-C44-tija",
+    "PA-C44-chautha",
+    "PA-C44-pahila",
+    "PA-C44-panjvan",
+    "PA-R44-first-to-fifth"
+  ]
+}
