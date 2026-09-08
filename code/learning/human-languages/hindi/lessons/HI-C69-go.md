@@ -8,9 +8,9 @@ spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 2920
 chapter: 76
 type: word
-headword: "जाना"
-gloss: "to go"
-romanization: "jānā"
+headword: "जाना / जाता"
+gloss: "to go / masculine present form"
+romanization: "jānā / jātā"
 concept_tag: VERB-GO
 prerequisites: [HI-C69-ticket]
 sounds: []
@@ -48,16 +48,16 @@ Sanskrit या (*yā-*), "to go", is the root; Hindi turned the initial *y-* in
 every Hindi doing word carries when you name it plain.
 
 You already own three that end the same way: **बोलना**, **देखना**, **सुनना**. The
-ending is the pattern, not a coincidence, and जाना now joins them.
+ending is the pattern, not a coincidence, and **जाना**, *jānā*, now joins them.
 
-जाना is the one doing word a traveller cannot do without. **मैं स्टेशन जाता हूँ**
+**जाना**, *jānā*, is the one doing word a traveller cannot do without. **मैं स्टेशन जाता हूँ**
 uses the same shape as **मैं हिंदी बोलता हूँ**, which you have been saying since
 the early chapters — the same frame, a different word inside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Five: गाड़ी, रेल, स्टेशन, टिकट, जाना. A way to travel and a way to say you are
+Five: गाड़ी, रेल, स्टेशन, टिकट, **जाना**, *jānā*. A way to travel and a way to say you are
 going.
 
 ## Guided Practice
@@ -66,10 +66,10 @@ going.
 [PAUSE 1s]
 - [YOU SAY: *jānā*]
 - [YOU SAY: *maiṁ sṭeshan jātā hūṁ*]
-- [YOU WRITE: टिकट and then जाना, both from memory]
+- [YOU WRITE: टिकट and then **जाना**, *jānā*, both from memory]
 - [YOU SAY: all five in order]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C69-GOING-03, HI-LEX-C69-GOING-05] -->
 
-[PAUSE 3s] What does जाना mean? ("to go".) Say that you go to the station.
+[PAUSE 3s] What does **जाना**, *jānā*, mean? ("to go".) Say that you go to the station.
