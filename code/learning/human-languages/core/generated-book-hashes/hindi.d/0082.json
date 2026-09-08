@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:b9a9054591dbd661",
+  "lessonIds": [
+    "HI-C75-first",
+    "HI-C75-second",
+    "HI-C75-third",
+    "HI-C75-fourth",
+    "HI-C75-fifth"
+  ],
+  "tex": "hindi/book/chapters/ch82-ordinals.tex"
+}

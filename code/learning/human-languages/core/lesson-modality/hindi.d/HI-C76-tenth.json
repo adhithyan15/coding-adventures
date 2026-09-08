@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C76-tenth",
+    "language": "hindi",
+    "chapter": 83,
+    "sequence": 3250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:291959f1e67b8ae7"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "HI-EXT-75-ORDINAL",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can say first to fifth in Hindi with the right ending for the noun, and say why the first four have to be learned as words and the fifth does not.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C75-first",
+    "HI-C75-second",
+    "HI-C75-third",
+    "HI-C75-fourth",
+    "HI-C75-fifth"
+  ]
+}

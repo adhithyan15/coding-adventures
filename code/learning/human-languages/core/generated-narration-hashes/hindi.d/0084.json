@@ -1,0 +1,16 @@
+{
+  "language": "hindi",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:448beb808225c2d7",
+  "lessonIds": [
+    "HI-C77-one-other",
+    "HI-C77-practice"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch84.txt",
+  "json": "hindi/narration/ch84.json",
+  "textHash": "fnv1a64:2dcc90a4a9ba9c68",
+  "jsonHash": "fnv1a64:d1664dce5cd33dd5",
+  "findings": []
+}

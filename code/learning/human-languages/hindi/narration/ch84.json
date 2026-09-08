@@ -1,0 +1,357 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 84,
+  "title": "One and the Other",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:448beb808225c2d7",
+  "lessons": [
+    {
+      "id": "HI-C77-one-other",
+      "sequence": 3260,
+      "title": "एक … दूसरा (ek … dūsrā) — one and the other",
+      "headword": "एक … दूसरा",
+      "romanization": "ek … dūsrā",
+      "gloss": "one... the other — two words you already have, used together",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f39694711a17a7f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls open the chapter's last stretch, at the four measured distances."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dasvā̃ — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dasvā̃* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chaṭhā — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chaṭhā* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jab … tab … — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jab … tab …* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say -kar — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *-kar* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kuttā — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kuttā* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say when to say śubh sandhyā — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *when to say śubh sandhyā* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one, and the other",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एक … दूसरा (ek … dūsrā) — \"one … the other\". एक किताब नई है, दूसरी पुरानी। — One book is new, the other old. एक आदमी यहाँ है, दूसरा वहाँ। — One man is here, the other there."
+            },
+            {
+              "kind": "speech",
+              "text": "The second ordinal lesson said to hold both senses of दूसरा together, and this is why. Hindi needs no third word to say \"one … the other\": it puts एक in the first half and दूसरा in the second, and the second sense of dūsrā does the rest."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves agree with what they name, so a feminine noun gives एक … दूसरी."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a thing worth having. Sorting two of anything — two books, two men, two roads — needs this and nothing else."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek … dūsrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek … dūsrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek kitāb merī hai, dūsrī uskī — one book is mine, the other is his",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek kitāb merī hai, dūsrī uskī* — one book is mine, the other is his]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek ādmī andar thā, dūsrā bāhar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek ādmī andar thā, dūsrā bāhar*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Hindi say \"one … the other\"? (एक … दूसरा (ek … dūsrā) — no third word.) Which sense of dūsrā is doing the work? (Other, not second.) And what changes for a feminine noun? (दूसरी.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C77-practice",
+      "sequence": 3270,
+      "title": "Putting things in order — the ordinals and एक … दूसरा (ek … dūsrā) together",
+      "headword": "पहला, दूसरा, तीसरा …",
+      "romanization": "pahlā, dūsrā, tīsrā …",
+      "gloss": "putting things in order — the ordinals and the distributive on the same set",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e38343fb9908f92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, and then the work of the last three chapters: everything in one place."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ek … dūsrā — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ek … dūsrā* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sātvā̃ — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sātvā̃* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say saknā — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *saknā* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kyā …? — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kyā …?* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say billī — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *billī* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śubh dopahar — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śubh dopahar* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: two ways of ordering",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have ten ordinals, an ending that makes the rest, and एक … दूसरा (ek … dūsrā). They do two different jobs, and the difference is easiest to feel on one small set."
+            },
+            {
+              "kind": "speech",
+              "text": "Three books on a shelf:"
+            },
+            {
+              "kind": "speech",
+              "text": "पहली किताब, दूसरी किताब, तीसरी किताब — the first, second and third. Each one is named by where it sits, and the naming works however many there are."
+            },
+            {
+              "kind": "speech",
+              "text": "एक किताब नई है, दूसरी पुरानी। — One is new, the other old. Nothing is numbered; two things are sorted against each other, and this only works when there are two."
+            },
+            {
+              "kind": "speech",
+              "text": "So: पहले the first, and after it the second. Say the three books in order, then say the two-book version, and you have used both systems on the same shelf."
+            },
+            {
+              "kind": "speech",
+              "text": "पहला दिन, दूसरा दिन, तीसरा दिन — and if you can say those, you can say the fortieth, because the ending does not stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three books — pahlī, dūsrī, tīsrī kitāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three books — *pahlī, dūsrī, tīsrī kitāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two books — ek kitāb merī hai, dūsrī uskī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two books — *ek kitāb merī hai, dūsrī uskī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahlā din, dūsrā din, tīsrā din",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahlā din, dūsrā din, tīsrā din*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does an ordinal name? (Where a thing sits in a line.) What does ek … dūsrā do instead? (Sorts two things against each other.) And how many things does that second one work for? (Two.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
