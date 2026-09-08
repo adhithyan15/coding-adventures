@@ -934,6 +934,7 @@ impl EngramSession {
             // Unlike the reducer, `dispatch` CAN report the error: it is inside
             // `catch_json`, so a `Err` becomes `{"ok": false, "error": ...}`
             // rather than a silently dropped note.
+            validate_command_deck_reference(&self.state, &command)?;
             if let FacadeCommand::UpsertNote { note, .. } = &command {
                 validate_note_target(
                     &self.state,
@@ -4480,6 +4481,70 @@ fn note_editor_selected_field<'a>(
         .and_then(|index| selection.fields.get(index))
 }
 
+/// Refuse a raw command that points at a deck the collection does not contain.
+///
+/// `dispatch` is the unmediated command surface: the crate README documents it,
+/// the web host declares it, and `eg_dispatch` exports it to every native
+/// shell. Commands arrive as data and go straight to `reduce`, which returns
+/// `AppState` and so cannot refuse anything.
+///
+/// This match is deliberately **exhaustive over the variants that carry a deck
+/// id**, not a list of the ones known to be broken. Every previous fix in this
+/// family patched the routes someone had already found, and each time there was
+/// another; enumerating the surface is what stops that. A new variant carrying
+/// a deck id will not compile past this without a decision being made about it.
+fn validate_command_deck_reference(
+    state: &AppState,
+    command: &FacadeCommand,
+) -> Result<(), String> {
+    let deck_id = match command {
+        // These CREATE state that names a deck. An id naming nothing leaves a
+        // record no deck list can reach.
+        FacadeCommand::CreateCard { deck_id, .. } => Some(deck_id),
+        // A session is the worst of them: `DeleteDeck` selects sessions by
+        // `deck_id`, so one naming a deck that does not exist outlives every
+        // deletion with no other way to remove it.
+        FacadeCommand::StartSession { deck_id, .. } => Some(deck_id),
+        // NOT guarded, and the distinction is the point: `setDeckOptions`
+        // creates *configuration*, not content. A preset for a deck that does
+        // not exist is inert -- options are read while scheduling that deck's
+        // cards, and a deck with no existence has none -- so nothing behaves
+        // wrongly because of it.
+        //
+        // Such a preset is permanent, but not for the reason it first looks
+        // like: `DeleteDeck` *does* filter `deck_options` by `deck_id`. It
+        // simply never runs for a deck that was never created, so there is no
+        // deletion to complete. Making the cascade "more complete" would fix
+        // nothing.
+        //
+        // Refusing the write here would be a behaviour change on a documented
+        // command that callers may reasonably issue before creating the deck --
+        // an existing test pins that permissive behaviour. The cost of being
+        // wrong in that direction is a host that cannot configure a deck; the
+        // cost of leaving it is a few hundred bytes nothing reads.
+        FacadeCommand::SetDeckOptions { .. } => None,
+
+        // Safe no-ops on a missing deck, listed rather than omitted so the
+        // reasoning is on the record: `UpdateDeck` mutates only a deck it
+        // finds, and `DeleteDeck` removes only what matches. Rejecting them
+        // would turn a harmless no-op into an error for a caller that
+        // reasonably deletes twice.
+        FacadeCommand::UpdateDeck { .. } | FacadeCommand::DeleteDeck { .. } => None,
+
+        // Everything else carries no deck id. `UpsertNote` is checked
+        // separately, by `validate_note_target`, because it has a note type to
+        // check as well and an inherit rule this one does not share.
+        _ => None,
+    };
+
+    match deck_id {
+        Some(deck_id) if !state.decks.iter().any(|deck| deck.id == *deck_id) => Err(format!(
+            "command names deck `{deck_id}`, which the collection does not contain"
+        )),
+        _ => Ok(()),
+    }
+}
+
 /// Refuse to rebuild a filtered deck the collection does not contain.
 ///
 /// Rebuilding *moves cards out of the decks they are in* and into the named
@@ -7870,6 +7935,173 @@ mod tests {
             restored.presentation_cursor(),
             PresentationCursor::default()
         );
+    }
+
+    /// `createCard` and `startSession` refuse a deck the collection lacks.
+    ///
+    /// Both reach `reduce` raw through `dispatch`, which is a documented public
+    /// surface -- the README describes it, the web host declares it, and
+    /// `eg_dispatch` exports it to every native shell. `reduce` returns
+    /// `AppState` and cannot refuse anything, so the check has to be here.
+    #[test]
+    fn dispatch_refuses_content_commands_naming_a_deck_that_does_not_exist() {
+        for (label, command) in [
+            (
+                "createCard",
+                r#"{
+                    "type": "createCard",
+                    "id": "card-1",
+                    "deckId": "deck-that-does-not-exist",
+                    "front": "hola",
+                    "back": "hello",
+                    "createdAt": 1700000000000
+                }"#,
+            ),
+            (
+                "startSession",
+                r#"{
+                    "type": "startSession",
+                    "sessionId": "session-1",
+                    "deckId": "deck-that-does-not-exist",
+                    "queue": [],
+                    "startedAt": 1700000000000
+                }"#,
+            ),
+        ] {
+            let mut session = EngramSession::new();
+            session.load_snapshot(DEMO_SNAPSHOT_JSON);
+            let cards_before = session.state().cards.len();
+            let sessions_before = session.state().sessions.len();
+
+            let reply: Value = serde_json::from_str(&session.dispatch(command)).unwrap();
+            assert_eq!(reply["ok"], false, "{label} should be refused: {reply}");
+            assert!(reply["error"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("does not contain"));
+            assert_eq!(
+                session.state().cards.len(),
+                cards_before,
+                "{label} wrote a card"
+            );
+            assert_eq!(
+                session.state().sessions.len(),
+                sessions_before,
+                "{label} wrote a session"
+            );
+        }
+    }
+
+    /// A session naming a missing deck would outlive every deletion.
+    ///
+    /// `DeleteDeck` selects sessions by `deck_id`, so one that names a deck
+    /// which never existed can never be selected and never be removed. That is
+    /// what makes this worse than an orphaned card, which at least disappears
+    /// with its deck -- and it is the same shape as the importer bug fixed in
+    /// #14559.
+    #[test]
+    fn a_session_naming_a_missing_deck_would_be_undeletable_so_it_is_refused() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+        let real_deck = session.state().decks[0].id.clone();
+
+        let refused: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "ghost",
+                "deckId": "deck-that-does-not-exist",
+                "queue": [],
+                "startedAt": 1700000000000
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(refused["ok"], false);
+
+        // Deleting every real deck must leave nothing behind, which is only
+        // true because the ghost session was never written.
+        for deck in session.state().decks.clone() {
+            session.dispatch(&format!(
+                r#"{{"type":"deleteDeck","deckId":"{}"}}"#,
+                deck.id
+            ));
+        }
+        assert!(
+            session.state().sessions.is_empty(),
+            "a session survived deleting every deck: {:?}",
+            session.state().sessions
+        );
+        let _ = real_deck;
+    }
+
+    /// Deck lifecycle commands tolerate a deck that is not there.
+    ///
+    /// Deliberately exempt from the deck check, and pinned here because the
+    /// choice is a judgement rather than an oversight: `UpdateDeck` mutates
+    /// only a deck it finds and `DeleteDeck` removes only what matches, so
+    /// neither can create a dangling reference. Refusing them would turn a
+    /// harmless no-op into an error for a caller that deletes twice -- which a
+    /// retry, or two hosts acting on the same collection, will do.
+    ///
+    /// Without this test, widening the guard to cover them passed everything.
+    #[test]
+    fn deck_lifecycle_commands_tolerate_a_deck_that_does_not_exist() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+        let decks_before = session.state().decks.len();
+
+        for command in [
+            r#"{"type":"deleteDeck","deckId":"deck-that-does-not-exist"}"#,
+            r#"{
+                "type": "updateDeck",
+                "deckId": "deck-that-does-not-exist",
+                "name": "Renamed",
+                "description": ""
+            }"#,
+        ] {
+            let reply: Value = serde_json::from_str(&session.dispatch(command)).unwrap();
+            assert_eq!(
+                reply["ok"], true,
+                "a deck lifecycle command must tolerate a missing deck: {reply}"
+            );
+        }
+        assert_eq!(session.state().decks.len(), decks_before);
+
+        // And deleting the same real deck twice is not an error either.
+        let deck = session.state().decks[0].id.clone();
+        for _ in 0..2 {
+            let reply: Value = serde_json::from_str(
+                &session.dispatch(&format!(r#"{{"type":"deleteDeck","deckId":"{deck}"}}"#)),
+            )
+            .unwrap();
+            assert_eq!(
+                reply["ok"], true,
+                "deleting twice must be tolerated: {reply}"
+            );
+        }
+        assert_eq!(session.state().decks.len(), decks_before - 1);
+    }
+
+    /// Commands that name a real deck still work.
+    #[test]
+    fn dispatch_still_accepts_content_commands_naming_a_real_deck() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+        let deck = session.state().decks[0].id.clone();
+        let before = session.state().cards.len();
+
+        let reply: Value = serde_json::from_str(&session.dispatch(&format!(
+            r#"{{
+                "type": "createCard",
+                "id": "card-new",
+                "deckId": "{deck}",
+                "front": "hola",
+                "back": "hello",
+                "createdAt": 1700000000000
+            }}"#
+        )))
+        .unwrap();
+        assert_eq!(reply["ok"], true, "a real deck must be accepted: {reply}");
+        assert_eq!(session.state().cards.len(), before + 1);
     }
 
     /// Rebuilding into a deck that does not exist moves nothing.
