@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.298.0 — 2026-09-08 — tracked reals in ALGOL standard-result arithmetic
+
+The seven-backend ALGOL matrix now proves a finite tracked local real snapshot
+may join arithmetic around a path-independent pure built-in result.
+
 ## 0.297.0 — 2026-09-08 — tracked integers in ALGOL standard-result arithmetic
 
 The seven-backend ALGOL matrix now proves an exact tracked integer snapshot may
