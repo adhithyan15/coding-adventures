@@ -29,7 +29,7 @@ mod apple {
     use dot_parser::parse_to_diagram;
     use layout_ir::font_spec;
     use mermaid_parser::{
-        parse_block, parse_c4_diagram, parse_er_diagram, parse_gantt, parse_gitgraph, parse_journey, parse_kanban, parse_packet, parse_pie,
+        parse_architecture, parse_block, parse_c4_diagram, parse_er_diagram, parse_gantt, parse_gitgraph, parse_journey, parse_kanban, parse_packet, parse_pie,
         parse_mindmap, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
         parse_sequence_diagram, parse_state_diagram, parse_timeline,
         parse_to_diagram as parse_mermaid_to_diagram, parse_xychart,
@@ -1523,6 +1523,36 @@ line "Target" [35, 50, 68, 82]"##,
             metadata["accessibility.description"],
             "Requirement graph rendered through Metal"
         );
+    }
+
+    #[test]
+    fn render_mermaid_architecture_to_png() {
+        let diagram = parse_architecture(
+            "architecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice db(database)[Database] in platform\napi:R --> L:db",
+        )
+        .expect("Mermaid architecture parse failed");
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.groups.len(), 1);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 248, g: 250, b: 252, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_architecture_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
     }
 
     #[test]

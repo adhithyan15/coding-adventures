@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.99.0
+
+- Add Architecture as a structural diagram family discriminator.
+
 ## 0.98.0
 
 - Add typed Kanban board/card semantic IR and resolved board geometry.

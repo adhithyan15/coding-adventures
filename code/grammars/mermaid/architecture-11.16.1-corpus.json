@@ -1,0 +1,14 @@
+{
+  "upstream": "mermaid@11.16.1",
+  "commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "fixtures": [
+    {
+      "id": "services-and-edge",
+      "source": "architecture-beta\nservice api(server)[API]\nservice db(database)[Database]\napi:R --> L:db"
+    },
+    {
+      "id": "group-containment",
+      "source": "architecture-beta\ngroup cloud(cloud)[Platform]\nservice api(server)[API] in cloud\nservice db(database)[Database] in cloud\napi:B -- T:db"
+    }
+  ]
+}
