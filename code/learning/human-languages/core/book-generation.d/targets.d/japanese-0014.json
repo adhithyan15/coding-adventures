@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 14,
+  "output": "japanese/book/chapters/ch14-numbers-one-to-five.tex",
+  "scriptSet": "japanese-main"
+}

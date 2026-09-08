@@ -26,12 +26,20 @@ summarises them instead of maintaining a second 100-row ordering by hand.
 | **S57-S68** | 10 | 12 | ask for slower speech, confirm understanding, and write five new signs |
 | **S69-S80** | 11 | 12 | learn seven body words with four prepared signs and a no-guessing body map |
 | **S81-S100** | 12 | 20 | add seven body words while interleaving twelve foundation, repair, script, and body reviews |
+| **S101-S117** | 13 | 17 | learn nine immediate-family words through one new kana, with the four skills scored separately |
+| **S118-S123** | 14 | 6 | say and write one to five, on no new sign at all, and name the number whose native reading stands beside its borrowed one |
+| **S124-S131** | 15 | 8 | say and write one to ten, build any number to ninety-nine out of those ten words, and buy the two signs the run costs |
 
-The current ledger therefore contains 100 sessions across twelve chapters. Its
-47 writing lessons teach all 47 target-script glyphs that the book currently
-shows in load-bearing text. The 35 lexical lessons are 28 words plus seven
-phrases; reading, listening/speaking, mixed-practice, and retrieval lessons are
-counted separately so practice volume is never mistaken for vocabulary volume.
+The current ledger contains **131 sessions across fifteen chapters**. That is a
+correction as well as an addition: the three lines above chapter 14 were absent
+and this file still read 100 sessions across twelve chapters while the corpus
+held 117 across thirteen.
+
+Its **59 writing lessons teach all 59 target-script glyphs** that the book shows
+in load-bearing text — 57 before chapter 15, plus **ろ** and **ゅ**, the only two
+signs the whole count from one to ten needed. Reading, listening/speaking,
+mixed-practice, and retrieval lessons are counted separately so practice volume
+is never mistaken for vocabulary volume.
 
 ## Script-before-decoding rule
 
@@ -39,8 +47,12 @@ A sign becomes load-bearing only after a writing lesson has isolated its shape,
 sound or reading, and a small hand action. A useful spoken expression may arrive
 first in romanization. The learner then observes and traces its new forms, copies
 with support, recalls without the model, and only afterward decodes or writes the
-whole expression. The current script-closure measurement is 47 shown, 47 taught,
-zero never taught, and zero violations.
+whole expression. The current script-closure measurement is 59 shown, 59
+taught, zero never taught, and zero violations. Chapters 14-15 held that line by
+NOT printing the nine kanji they could not teach: the numerals are written in
+hiragana throughout, and **五** is the only one of the ten the reader can write
+the way Japanese writes it, because chapter 5 already taught it as a component of
+**語**.
 
 ## Review rule
 

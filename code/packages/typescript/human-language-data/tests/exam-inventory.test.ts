@@ -2438,9 +2438,51 @@ describe("the committed Japanese A1 inventory", () => {
     // Fourteen body words and nine family words, and no word for "I".
     expect(coverage.byCategory["Daimeishi - pronouns, and the fact that Japanese avoids them"]!.covered).toBe(0);
     expect(coverage.byCategory["Karada - the body"]!.covered).toBe(2);
+    // UNCHANGED at 66 by HL-C360, and that is the finding rather than an
+    // oversight: chapters 14-15 taught ten cardinals and moved NO total,
+    // because JA-A1-NUM-01 and JA-A1-NG2-01 were already ticked -- one on a
+    // single numeral inside a phrase, the other on the vague half of counting.
+    // The tranche deepened two ticks instead of adding one. A coverage total
+    // cannot see that, which is why the named pin below exists.
     expect(formatExamCoverage(coverage)).toContain(
       "japanese A1 (partial inventory): 66/179 points covered (37%)",
     );
+  }, 60_000);
+
+  // The cardinal point, named rather than left to the aggregate, because the
+  // aggregate did not move. Both halves were falsified before this was kept: a
+  // fabricated id fails the "probes only atoms that EXIST" test above, and
+  // nulling the probe drops the total to 65 and fails the assertion above.
+  it("closes JA-A1-NUM-01 on all ten cardinals, not on one inside a phrase", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "japanese");
+    const cardinals = inventory.points.find((point) => point.id === "JA-A1-NUM-01");
+    expect(cardinals?.probe).toEqual([
+      // The ten, in numerical order here and in NO other order in the book: the
+      // chapters teach ichi, go, ni, san, yon, then nana, hachi, ku, roku, juu.
+      "JA-LEX-ICHI",
+      "JA-LEX-NI",
+      "JA-LEX-SAN",
+      "JA-LEX-YON",
+      "JA-LEX-GO",
+      "JA-LEX-ROKU",
+      "JA-LEX-NANA",
+      "JA-LEX-HACHI",
+      "JA-LEX-KU",
+      "JA-LEX-JUU",
+      // What carries the point past ten: a numeral before juu multiplies it and
+      // one after it is added, so ten words reach ninety-nine.
+      "JA-GRAMMAR-JUU-COMPOUND",
+      // The seam the counters will run along, opened at four and held at seven.
+      "JA-GRAMMAR-KUN-IN-THE-COUNT",
+    ]);
+    for (const atom of cardinals?.probe ?? []) expect(taught.has(atom), atom).toBe(true);
+    // The numeral the old tick rested on is still taught, in the chapter-9
+    // phrase the cardinal lesson takes apart.
+    expect(taught.has("JA-LEX-ICHIDO")).toBe(true);
+    // And the counters are still absent, which is what blocks the ordinals.
+    expect(inventory.points.find((point) => point.id === "JA-A1-NUM-02")?.probe).toBeNull();
+    expect(inventory.points.find((point) => point.id === "JA-A1-NUM-03")?.probe).toBeNull();
   }, 60_000);
 });
 

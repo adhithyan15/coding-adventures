@@ -1,0 +1,21 @@
+{
+  "glyph": "ゅ",
+  "sound": "small yu, which joins to the preceding sign and makes one mora with it",
+  "role": "hiragana",
+  "components": [
+    "a small ゆ-shaped left stem and broad loop",
+    "a small central descending stroke"
+  ],
+  "strokeOrder": [
+    "descend through the left stem, turn up and right across the high shoulder, then continue clockwise around the broad loop and curve left to the inner finish",
+    "lift, begin high above the loop, descend through its center, and curve down and left to the finish"
+  ],
+  "strokeOrderNote": "Sirgazil's 30-frame ゆ animation supplies the two-run order; Unicode names U+3085 HIRAGANA LETTER SMALL YU, so the same movement is fitted to its smaller bundled glyph, exactly as U+3063 small tsu is fitted from つ.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%86_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana ゆ stroke order animation.gif, hiragana ゆ, 30 frames, 3.0 seconds (Wikimedia Commons, 1 October 2009); the Unicode Standard names U+3085 HIRAGANA LETTER SMALL YU, alias small yu",
+    "variation": "The CC0 animation draws full-size ゆ in two pen-down runs with one lift: the left stem, high shoulder and clockwise loop first, then a restart above the loop descending through its center. Unicode separately identifies U+3085 as small yu. This learner path therefore preserves the source's two-run movement while scaling and fitting it to the bundled Noto Sans JP small ゅ outline; the cited animation demonstrates ゆ rather than a separately animated ゅ, so the size adaptation is explicit rather than presented as independent handwriting evidence."
+  },
+  "notes": "A yōon sign: it does not take a beat of its own but fuses with the sign before it, so じ + ゅ is one mora ju, as in じゅう, ten. Contrast っ, which is a beat of closure rather than a fusion."
+}

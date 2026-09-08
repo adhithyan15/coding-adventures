@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:a913f6c23f085f7e",
+  "lessonIds": [
+    "JA-C14-ichi",
+    "JA-C14-go",
+    "JA-C14-ni",
+    "JA-C14-san",
+    "JA-C14-yon",
+    "JA-R14-one-to-five"
+  ],
+  "tex": "japanese/book/chapters/ch14-numbers-one-to-five.tex"
+}

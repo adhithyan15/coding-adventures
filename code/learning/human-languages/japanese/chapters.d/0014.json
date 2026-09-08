@@ -1,0 +1,23 @@
+{
+  "chapter": 14,
+  "title": "Five Numbers, No New Signs",
+  "label": "ch:ja-numbers-one-to-five",
+  "canDo": "I can say and write one to five in Japanese, and I can say which number has a native word standing beside its borrowed reading.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "JA-R14-one-to-five",
+    "kind": "production",
+    "summary": "Run ichi to go in order, then name the two of the five that were already yours and say where you had met each.",
+    "assesses": [
+      "JA-LEX-ICHI",
+      "JA-LEX-GO",
+      "JA-LEX-NI",
+      "JA-LEX-SAN",
+      "JA-LEX-YON",
+      "JA-GRAMMAR-KUN-IN-THE-COUNT"
+    ],
+    "note": "JA-A1-NUM-01 was ticked on ONE numeral, and that one was inside a phrase. The chapter opens on ichi and go rather than on ichi and ni because both were already in the reader's hands and neither costs a sign: ichi has been said since chapter 9 inside mou ichido, whose lesson states that ichi is one, and go is the kanji 五, whose chapter-5 script lesson says on the page that the sign means five on its own and then asks for nothing but its sound. yon lands last because the on'yomi/kun'yomi seam is only legible once the run exists."
+  }
+}
