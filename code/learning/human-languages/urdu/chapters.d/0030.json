@@ -1,0 +1,18 @@
+{
+  "chapter": 30,
+  "title": "Twenty, a Hundred, and the Nine Words That Are Not Here",
+  "label": "ch:ur-round-amounts",
+  "canDo": "I can count aloud, say twenty and a hundred, and say why Urdu's eleven to nineteen are nine separate words rather than a rule.",
+  "payoff": {
+    "lesson": "UR-C30-practice",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "The two round amounts a price actually names, the pair a noisy counter confuses, and an explicit account of what the teens cost and why they wait.",
+    "assesses": [
+      "UR-LEX-BEES",
+      "UR-GRAMMAR-TEENS-IRREGULAR",
+      "UR-LEX-SAU",
+      "UR-ETYMON-SAU-HUNDRED-PIE",
+      "UR-PERFORMANCE-COUNT-ALOUD"
+    ]
+  }
+}

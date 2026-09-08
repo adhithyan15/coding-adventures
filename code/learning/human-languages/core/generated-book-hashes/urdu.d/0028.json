@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:2c20bb78c579896e",
+  "lessonIds": [
+    "UR-C28-ek",
+    "UR-C28-do",
+    "UR-C28-teen",
+    "UR-C28-char",
+    "UR-C28-panch",
+    "UR-C28-practice"
+  ],
+  "tex": "urdu/book/chapters/ch28-count-five.tex"
+}

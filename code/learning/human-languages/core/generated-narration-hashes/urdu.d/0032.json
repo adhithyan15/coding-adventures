@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:b03227c11e984466",
+  "lessonIds": [
+    "UR-C32-pehla",
+    "UR-C32-dusra-tisra",
+    "UR-C32-chautha",
+    "UR-C32-practice",
+    "UR-R32-close"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch32.txt",
+  "json": "urdu/narration/ch32.json",
+  "textHash": "fnv1a64:dee7de6cb9d3b808",
+  "jsonHash": "fnv1a64:7ab665fa9b4724f2",
+  "findings": []
+}

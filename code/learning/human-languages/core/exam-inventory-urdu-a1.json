@@ -490,7 +490,24 @@
       "id": "UR-A1-Q-01",
       "category": "Adad (numerals and quantity)",
       "label": "cardinal numerals",
-      "probe": null,
+      "probe": [
+        "UR-LEX-EK",
+        "UR-LEX-DO",
+        "UR-LEX-TEEN",
+        "UR-LEX-CHAR",
+        "UR-LEX-PANCH",
+        "UR-LEX-CHHE",
+        "UR-LEX-SAAT",
+        "UR-LEX-AATH",
+        "UR-LEX-NAU",
+        "UR-LEX-DAS",
+        "UR-LEX-BEES",
+        "UR-LEX-SAU",
+        "UR-GRAMMAR-TEENS-IRREGULAR",
+        "UR-PERFORMANCE-COUNT-FIVE",
+        "UR-PERFORMANCE-COUNT-TEN",
+        "UR-PERFORMANCE-COUNT-ALOUD"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -502,13 +519,26 @@
         "A1-NE16-01"
       ],
       "urduSpecific": false,
-      "note": "NOT ONE NUMERAL IS TAUGHT. ایک and دو both return zero occurrences as words — the two raw matches for دو are inside دوست — so this track cannot count to one. Bengali reaches five and Arabic reaches twenty; Urdu has no number at all. An A1 candidate is asked their age, a price and a telephone number, and none of the three is reachable. This is the single largest lexical gap in any of the three inventories in this series."
+      "note": "CLOSED BY HL-C350, and the note it replaces is the finding: NOT ONE NUMERAL WAS TAUGHT. ek and do both returned zero as words -- the two raw matches for do were inside dost -- so the track could not count to one, and an A1 candidate's age, price and telephone number were all out of reach. Chapters 28-30 teach twelve cardinals: ek, do, tin, chaar, paanch, chhe, saat, aath, nau, das, bees, sau. IT COST NO NEW LETTER: every sign in all twelve was already on the page, which is why this was the largest lexical gap in the file and one of the cheapest to close. TWO THINGS THE PROBE SAYS DELIBERATELY. It names UR-GRAMMAR-TEENS-IRREGULAR, because eleven to nineteen are NOT here and the reason is a fact about Urdu rather than a shortage of pages: gyaarah, baarah, terah, chaudah, pandrah, solah, satrah, athaarah, unnis wear the ten down differently in almost every one, so they are nine words rather than one rule -- unlike Persian, whose teens are a unit in front of dah and which this same campaign closed in a single chapter. And it names the counting PERFORMANCE atoms, because UR-A1-FUN-53 asks the candidate to count ALOUD, which is a different act from recognising a number on a page."
     },
     {
       "id": "UR-A1-Q-02",
       "category": "Adad (numerals and quantity)",
       "label": "the Urdu digits ۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ as written shapes",
-      "probe": null,
+      "probe": [
+        "UR-SCRIPT-DIGIT-ZERO",
+        "UR-SCRIPT-DIGIT-ONE",
+        "UR-SCRIPT-DIGIT-TWO",
+        "UR-SCRIPT-DIGIT-THREE",
+        "UR-SCRIPT-DIGIT-FOUR",
+        "UR-SCRIPT-DIGIT-FIVE",
+        "UR-SCRIPT-DIGIT-SIX",
+        "UR-SCRIPT-DIGIT-SEVEN",
+        "UR-SCRIPT-DIGIT-EIGHT",
+        "UR-SCRIPT-DIGIT-NINE",
+        "UR-SCRIPT-DIGITS-LTR",
+        "UR-PERFORMANCE-DIGITS-READ"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -518,13 +548,21 @@
         "A1-O1-06"
       ],
       "urduSpecific": false,
-      "note": "Zero of ten taught, and Urdu uses shapes that differ from the Arabic ones for four and six even though both scripts share an alphabet — a fact the corpus's own cross-script comparisons would make cheap to teach."
+      "note": "CLOSED BY HL-C350, and the note it replaces predicted the shape of the fix: Urdu draws four, five and six differently from Arabic even though the two scripts share an alphabet, and 'the corpus's own cross-script comparisons would make that cheap to teach'. Chapter 31 does exactly that. Ten signs across four writing lessons, grouped by what actually trips a reader rather than by counting order: the reversed DIRECTION (a number runs left to right inside a right-to-left line, which no earlier chapter of this track has had to say, and which is probed here alongside the shapes because a reader who knows the ten and reads them right-to-left reads every two-digit price backwards); the one-tooth pair 2/3; the three Arabic draws differently; and the 7/8 mirror. Zero is a dot and nine is the ring."
     },
     {
       "id": "UR-A1-Q-03",
       "category": "Adad (numerals and quantity)",
       "label": "ordinal numerals: پہلا, دوسرا",
-      "probe": null,
+      "probe": [
+        "UR-LEX-PEHLA",
+        "UR-LEX-DUSRA",
+        "UR-LEX-TISRA",
+        "UR-LEX-CHAUTHA",
+        "UR-MORPH-ORDINAL-RA",
+        "UR-MORPH-ORDINAL-VAN",
+        "UR-PERFORMANCE-ORDINALS"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -535,7 +573,7 @@
         "A1-NG3-06"
       ],
       "urduSpecific": false,
-      "note": "Untaught, and downstream of UR-A1-Q-01."
+      "note": "CLOSED BY HL-C350. Three irregular forms at the bottom of the series -- pehla, which is not built from ek at all, then duusra and tiisra, where the number comes back with a -ra ending -- and one ending, -vaan, for everything above four. So twelve cardinals and one suffix are twelve ordinals. The break at 'first' is set against the same break in English, where first and second sit outside third and fourth. Recorded because ordinals are the weakest column in the whole corpus: twenty tracks enumerate one and eighteen leave it uncovered."
     },
     {
       "id": "UR-A1-Q-04",
@@ -3229,7 +3267,10 @@
       "id": "UR-A1-FUN-53",
       "category": "Kaam (communicative functions)",
       "label": "count aloud",
-      "probe": null,
+      "probe": [
+        "UR-PERFORMANCE-COUNT-ALOUD",
+        "UR-PERFORMANCE-COUNT-TEN"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -3240,7 +3281,7 @@
         "A1-NG2-01"
       ],
       "urduSpecific": false,
-      "note": "Untaught — see UR-A1-Q-01. Not one number exists."
+      "note": "CLOSED BY HL-C350, and probed on the PERFORMANCE atoms rather than the words. Counting aloud is a different act from recognising a number on a page: UR-C29-practice and UR-C30-practice both score it as a separate skill, one to ten unaided and then the round amounts above it."
     },
     {
       "id": "UR-A1-FUN-54",

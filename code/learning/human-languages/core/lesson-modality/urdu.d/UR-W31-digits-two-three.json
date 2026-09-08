@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "UR-W31-digits-two-three",
+    "language": "urdu",
+    "chapter": 31,
+    "sequence": 1630,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ad4a065561bd4b98",
+    "detachableSegments": [
+      "Script — the shapes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

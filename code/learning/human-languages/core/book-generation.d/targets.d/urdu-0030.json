@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 30,
+  "output": "urdu/book/chapters/ch30-round-amounts.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

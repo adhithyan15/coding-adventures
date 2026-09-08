@@ -1,0 +1,125 @@
+Urdu, chapter 31: The Ten Urdu Digits.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 5.
+۰ ۱ (sifr ek) — two digits, and a direction that reverses.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes, and the direction and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Which way does an Urdu line run? Count aloud to ten.
+
+Script — the shapes, and the direction.
+۰ — sifr, zero ۱ — ek, one.
+Urdu has its own ten digit signs, and a price ticket, a bus number, a page number and a telephone number in Pakistan are written in them. A reader who can say ek and cannot read ۱ still cannot read a price.
+۰ is a dot, not a ring. Fix that first: a European eye reads a dot as a decimal point, and Urdu's nine is the ring.
+Now the part no earlier chapter of this book has had to say. Numbers run left to right, inside a line that runs right to left. Ten is ۱۰ — one, then zero, in the order English uses — while the words on either side of it move the other way. The page changes direction at the number and changes back after it.
+
+Guided Practice.
+[once you have stopped driving — write: ۰ — a dot; ۱ — a stroke]
+[your turn — read: ۱۰ — das, ten, left to right]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Sources: Unicode Arabic chart; Omniglot, Numbers in Urdu.
+[question — say your answer, then pause 12 seconds]
+An Urdu line runs right to left. Which way do the digits inside it run?
+
+
+Lesson 2 of 5.
+۲ ۳ (do tīn) — one tooth apart.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ۰ and ۱, then read ۱۰.
+
+Script — the shapes.
+۲ — do, two ۳ — tīn, three.
+۳ is ۲ with one more tooth, and that is the whole difference. It is small enough that the two have to be written as a pair rather than one at a time: say do and tīn aloud as the hand makes them, and the shapes stop competing.
+
+Guided Practice.
+[once you have stopped driving — write: ۲, then ۳ beside it]
+[your turn — read: ۱۲, ۱۳, ۲۳, left to right]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Sources: Unicode Arabic chart; Omniglot, Numbers in Urdu.
+[question — say your answer, then pause 12 seconds]
+Write the Urdu digit for three, then the digit for two.
+
+
+Lesson 3 of 5.
+۴ ۵ ۶ (chār pānch chhe) — the three Urdu keeps for itself.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ۲ and ۳, and say which has the extra tooth.
+
+Script — the shapes.
+۴ — chār, four ۵ — pānch, five ۶ — chhe, six.
+These three are why this chapter exists as more than a list.
+Urdu and Arabic share an alphabet, letter for letter, and a reader of this book has spent twenty-five chapters on that shared inheritance. The digits are where the sharing stops. Seven of the ten are drawn the same way in both; ۴, ۵ and ۶ are not, and Arabic writes those three with quite different shapes.
+So a reader who picked the digits up from an Arabic book will misread a Pakistani price ticket at exactly these three places and nowhere else. If you drill three of the ten harder than the rest, drill these.
+
+Guided Practice.
+[once you have stopped driving — write: ۴, ۵, ۶, saying chār, pānch, chhe]
+[your turn — read: ۱۴, ۱۵, ۱۶, left to right]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Sources: Unicode Arabic chart; Omniglot, Numbers in Urdu.
+[question — say your answer, then pause 14 seconds]
+Write the three Urdu digits that Arabic draws differently.
+
+
+Lesson 4 of 5.
+۷ ۸ ۹ (sāt āṭh nau) — a mirror pair, and the ring.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ۴, ۵, ۶ — the three Arabic draws differently.
+
+Script — the shapes.
+۷ — sāt, seven ۸ — āṭh, eight ۹ — nau, nine.
+۷ and ۸ are mirror images of each other, one opening upward and one downward. Write them as a pair, every time, and the mirror stops being a problem — the same trick that worked on ۲ and ۳.
+۹ is a ring with a tail, and this is where a dot-shaped zero earns its keep. Had ۰ been a ring too, the page would carry two rings and no way to separate them.
+Ten signs, four lessons, and the set is closed.
+
+Guided Practice.
+[once you have stopped driving — write: ۷ and ۸ as a pair, then ۹]
+[your turn — run: ۰ ۱ (sifr ek) ۲ ۳ (do tīn) ۴ ۵ ۶ (chār pānch chhe) ۷ ۸ ۹ (sāt āṭh nau) (the ten Urdu digits) once, slowly]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Sources: Unicode Arabic chart; Omniglot, Numbers in Urdu.
+[question — say your answer, then pause 12 seconds]
+Which two Urdu digits are mirror images of each other?
+
+
+Lesson 5 of 5.
+Payoff — reading the figures.
+
+Warm-up.
+[pause 2 seconds]
+Count aloud to ten, then say which way digits run inside an Urdu line.
+
+Guided Practice.
+Read all ten signs shuffled and say each as an Urdu word.
+Read ۱۰, ۲۰ and ۱۰۰ and say each — das, bīs, sau.
+Hear ten amounts named and write each in Urdu figures.
+Write the ten signs from dictation, out of order, checking ۴, ۵ and ۶ against the models rather than against memory.
+Read a seven-figure telephone number aloud, one digit at a time.
+An A1 examiner asks for an age, a price and a telephone number. All three are now reachable. What is not: ۱۱ to ۱۹, whose words are nine irregular forms rather than a rule, so the figure can be read and its name cannot yet be said.
+
+Wrap-up Recall.
+Sources: Unicode Arabic chart; Omniglot, Numbers in Urdu.
+[question — say your answer, then pause 16 seconds]
+Write a hundred in Urdu figures, and say its name.

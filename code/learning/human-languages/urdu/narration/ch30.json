@@ -1,0 +1,378 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 30,
+  "title": "Twenty, a Hundred, and the Nine Words That Are Not Here",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:aae8c6c7ee3f58e8",
+  "lessons": [
+    {
+      "id": "UR-C30-bees",
+      "sequence": 1590,
+      "title": "بیس (bīs) — twenty, and the nine words that are not in this chapter",
+      "headword": "بیس",
+      "romanization": "bīs",
+      "gloss": "twenty — the top of what this book can count to, and why the teens are not here",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7052a53d3500a93b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to ten, then say ten on its own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بیس — bīs — twenty."
+            },
+            {
+              "kind": "speech",
+              "text": "بیس (bīs) goes back through Sanskrit vimshati to the Indo-European word for twenty, the same word behind Latin vīgintī and, through it, English vigesimal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what is NOT here, and why",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Eleven to nineteen are missing from this book on purpose, and the reason is a fact about Urdu rather than a shortage of pages."
+            },
+            {
+              "kind": "speech",
+              "text": "Some languages build their teens. Persian, next door, puts a unit in front of its word for ten and stops: yâz-dah, si-dah, chahâr-dah — nine numbers from one rule."
+            },
+            {
+              "kind": "speech",
+              "text": "Urdu does not. gyārah, bārah, terah, chaudah, pandrah, solah, satrah, aṭhārah, unnīs — the ten is worn down differently in almost every one, and the unit with it. They are nine words, not one pattern, and the same is true of every number up to ninety-nine."
+            },
+            {
+              "kind": "speech",
+              "text": "So they belong to a tranche of their own rather than to this one, and saying so is more useful than pretending a rule exists. What this book gives you instead is the frame the teens will hang on: ek to das below, bīs above."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīs — twenty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **bīs** — twenty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "bīs from Sanskrit vimshati from wikmtih becomes Latin vīgintī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **bīs** ← Sanskrit *vimshati* ← \\**wikmtih* → Latin **vīgintī**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY WHY",
+              "instruction": "Urdu's teens are nine words, not one rule",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY WHY: Urdu's teens are nine words, not one rule]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: بیس (bīs); Omniglot, Numbers in Urdu."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C30-bees-teens",
+              "prompt": "Can you build the Urdu for fourteen from chaar and das, the way Persian builds its teens?",
+              "assesses": [
+                "UR-GRAMMAR-TEENS-IRREGULAR"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "no",
+                "no, they are irregular",
+                "no — urdu's teens are separate words",
+                "no, each is its own word"
+              ],
+              "feedback": {
+                "correct": "Nine separate words. That is why they are not in this chapter.",
+                "incorrect": "No. Urdu's teens are nine irregular words rather than one pattern."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C30-sau",
+      "sequence": 1600,
+      "title": "سو (sau) — a hundred",
+      "headword": "سو",
+      "romanization": "sau",
+      "gloss": "a hundred — two letters, and the largest number in the book",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da628e6d0b00ad29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say bīs, then nau, then the other word نو can spell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سو — sau — a hundred."
+            },
+            {
+              "kind": "speech",
+              "text": "Two letters: the س that opens seven and the و that closes nine. The largest number in this book is the shortest word in it."
+            },
+            {
+              "kind": "speech",
+              "text": "Say نو and سو (sau) one after the other. One consonant apart, and a hundred apart in value — which is exactly where a price is misheard at a busy counter, so drill them as a pair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — centum, hundred, sau",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سو (sau) continues Sanskrit śata, from Indo-European kmtom, \"hundred.\" Latin centum, Greek hekatón and English hundred are the same word. Anybody who has read a per cent has met its cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sau — a hundred",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **sau** — a hundred]"
+            },
+            {
+              "kind": "prompt",
+              "action": "PAIR",
+              "instruction": "nau and sau — one consonant, a hundredfold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU PAIR: **nau** and **sau** — one consonant, a hundredfold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "das, bīs, sau — the three round amounts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **das, bīs, sau** — the three round amounts]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: سو (sau); Omniglot, Numbers in Urdu."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C30-sau-pair",
+              "prompt": "Say nine and a hundred one after the other.",
+              "assesses": [
+                "UR-LEX-SAU",
+                "UR-LEX-NAU"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "nau sau",
+                "nau, sau"
+              ],
+              "feedback": {
+                "correct": "One consonant apart, and a hundredfold apart.",
+                "incorrect": "nau, sau."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C30-practice",
+      "sequence": 1610,
+      "title": "Payoff — counting aloud, and the three round amounts",
+      "headword": "دس بیس سو",
+      "romanization": "das bīs sau",
+      "gloss": "payoff — count aloud, and name the three amounts a price actually uses",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c52cc45c334d6c4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to ten, then say why eleven to nineteen are not in this book yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four skills, scored separately."
+            },
+            {
+              "kind": "speech",
+              "text": "Count aloud one to ten without a model, then say bīs and sau."
+            },
+            {
+              "kind": "speech",
+              "text": "Listening. Hear twelve amounts named singly and out of order and write each down in figures of your own language."
+            },
+            {
+              "kind": "speech",
+              "text": "Reading. Read the twelve printed shuffled and say each."
+            },
+            {
+              "kind": "speech",
+              "text": "Writing. Write all twelve from dictation, shuffled."
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the three amounts a shop is likeliest to name — das, bīs, sau — and the pair a noisy counter confuses: nau and sau."
+            },
+            {
+              "kind": "speech",
+              "text": "An A1 examiner asks a candidate their age, the price of something and a telephone number. Before this slice none of the three was reachable in this book. Two of them are now, and the third waits on the digits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Urdu."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C30-practice-aloud",
+              "prompt": "Count aloud one to ten, then say twenty and a hundred.",
+              "assesses": [
+                "UR-PERFORMANCE-COUNT-ALOUD"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "ek do tīn chār pānch chhe sāt āṭh nau das, bīs, sau",
+                "ek do tin char panch chhe saat aath nau das bis sau",
+                "ek, do, tīn, chār, pānch, chhe, sāt, āṭh, nau, das, bīs, sau"
+              ],
+              "feedback": {
+                "correct": "Twelve amounts, and the book can hear a price at last.",
+                "incorrect": "One to ten, then bīs and sau."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

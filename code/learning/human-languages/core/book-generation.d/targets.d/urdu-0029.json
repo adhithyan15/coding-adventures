@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 29,
+  "output": "urdu/book/chapters/ch29-count-ten.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

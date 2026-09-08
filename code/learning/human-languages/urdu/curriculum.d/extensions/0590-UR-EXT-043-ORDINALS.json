@@ -1,0 +1,17 @@
+{
+  "id": "UR-EXT-043-ORDINALS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can build the ordinal of any number I can count to.",
+  "prerequisites": [
+    "UR-EXT-042-DIGITS"
+  ],
+  "lessons": [
+    "UR-C32-pehla",
+    "UR-C32-dusra-tisra",
+    "UR-C32-chautha",
+    "UR-C32-practice",
+    "UR-R32-close"
+  ]
+}

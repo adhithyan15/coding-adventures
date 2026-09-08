@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C30-sau",
+    "language": "urdu",
+    "chapter": 30,
+    "sequence": 1600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da628e6d0b00ad29"
+  },
+  "findings": []
+}

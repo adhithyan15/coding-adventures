@@ -138,7 +138,7 @@ describe("the committed Urdu A1 inventory", () => {
     }
   });
 
-  it("reports FOUR full columns, a numeral column still at ZERO, and a flattering script closure that is not one", () => {
+  it("reports FOUR full columns, a numeral column now CLOSED, and a flattering script closure that is not one", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(234);
@@ -157,8 +157,10 @@ describe("the committed Urdu A1 inventory", () => {
     // above", and it is taught first, as a rule, before any postposition that
     // needs it. Four postposition points, both demonstrative points and the
     // third-person possessive all stand on it.
-    expect(coverage.covered).toBe(130);
-    expect(coverage.unmapped).toBe(104);
+    // 130 -> 134: HL-C350's numeral tranche (chapters 28-32) closes UR-A1-Q-01,
+    // UR-A1-Q-02, UR-A1-Q-03 and UR-A1-FUN-53.
+    expect(coverage.covered).toBe(134);
+    expect(coverage.unmapped).toBe(100);
     expect(coverage.partial).toBe(0);
     // THE PAYOFF, and the column the oblique was worth. Every postposition point
     // in the file now stands on a lesson, including UR-A1-PST-05 itself.
@@ -189,14 +191,33 @@ describe("the committed Urdu A1 inventory", () => {
       enumerated: 9,
       covered: 8,
     });
-    // THE HEADLINE. Not one numeral is taught: ایک and دو both return zero
-    // occurrences as words (the two raw matches for دو are inside دوست), and
-    // there is no digit, no ordinal and no quantifier. Bengali reaches five and
-    // Arabic reaches twenty; this track cannot count to one.
+    // THE HEADLINE, AND ITS CLOSURE. For 134 lessons not one numeral was
+    // taught: ایک and دو both returned zero occurrences as words (the two raw
+    // matches for دو are inside دوست), and there was no digit and no ordinal.
+    // HL-C350's chapters 28-32 close three of the five, AT NO NEW LETTER —
+    // every sign in all twelve number words was already on the page. The two
+    // that remain are quantifiers and measures, neither downstream of a number.
     expect(coverage.byCategory["Adad (numerals and quantity)"]!).toEqual({
       enumerated: 5,
-      covered: 0,
+      covered: 3,
     });
+    // The teens are NOT taught, and the probe says so out loud rather than
+    // quietly listing nine atoms that do not exist. Urdu's گیارہ … انیس are
+    // nine irregular words, not a rule — the opposite of Persian, whose teens
+    // this same campaign closed in one chapter because they are a unit in
+    // front of dah.
+    const cardinals = inventory.points.find((point) => point.id === "UR-A1-Q-01")!;
+    expect(cardinals.probe).toContain("UR-GRAMMAR-TEENS-IRREGULAR");
+    expect(cardinals.probe).not.toContain("UR-LEX-CHAUDAH");
+    expect(cardinals.note).toMatch(/nine words rather than one rule/);
+    expect(cardinals.note).toMatch(/IT COST NO NEW LETTER/);
+    // Counting ALOUD is probed on the performance atoms, because it is a
+    // different act from recognising a number on a page.
+    const aloud = inventory.points.find((point) => point.id === "UR-A1-FUN-53")!;
+    expect(aloud.probe).toContain("UR-PERFORMANCE-COUNT-ALOUD");
+    // And the digits carry the DIRECTION rule with them.
+    const digits = inventory.points.find((point) => point.id === "UR-A1-Q-02")!;
+    expect(digits.probe).toContain("UR-SCRIPT-DIGITS-LTR");
     // اور ("and") returned ZERO occurrences in Urdu script and appeared exactly
     // once in the whole corpus — romanised, inside a chapter-15 production
     // prompt that asked the learner to SAY a word the book never taught. That
@@ -236,7 +257,7 @@ describe("the committed Urdu A1 inventory", () => {
     expect(coverage.byCategory["Tarz-e-kalam (register, and the Perso-Arabic layer the caveat names)"]!)
       .toEqual({ enumerated: 6, covered: 4 });
     expect(formatExamCoverage(coverage)).toContain(
-      "urdu A1 (partial inventory): 130/234 points covered (56%)",
+      "urdu A1 (partial inventory): 134/234 points covered (57%)",
     );
   }, 60_000);
 });

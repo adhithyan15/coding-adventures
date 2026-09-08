@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:3777302df9c62c80",
+  "lessonIds": [
+    "UR-W31-digits-zero-one",
+    "UR-W31-digits-two-three",
+    "UR-W31-digits-four-five-six",
+    "UR-W31-digits-seven-eight-nine",
+    "UR-C31-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "urdu/narration/ch31.txt",
+  "json": "urdu/narration/ch31.json",
+  "textHash": "fnv1a64:8e146e270bcc75b9",
+  "jsonHash": "fnv1a64:a9ba19810faedf0f",
+  "findings": []
+}

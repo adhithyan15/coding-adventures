@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "UR-W31-digits-zero-one",
+    "language": "urdu",
+    "chapter": 31,
+    "sequence": 1620,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:081dfad4fdc8de4e",
+    "detachableSegments": [
+      "Script — the shapes, and the direction"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

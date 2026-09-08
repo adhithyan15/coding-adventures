@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 32,
+  "output": "urdu/book/chapters/ch32-ordinals.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

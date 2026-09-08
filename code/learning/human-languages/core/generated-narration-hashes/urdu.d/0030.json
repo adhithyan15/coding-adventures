@@ -1,0 +1,17 @@
+{
+  "language": "urdu",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:aae8c6c7ee3f58e8",
+  "lessonIds": [
+    "UR-C30-bees",
+    "UR-C30-sau",
+    "UR-C30-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "urdu/narration/ch30.txt",
+  "json": "urdu/narration/ch30.json",
+  "textHash": "fnv1a64:454a52a45f2efa9a",
+  "jsonHash": "fnv1a64:cd7c2698e86fef93",
+  "findings": []
+}

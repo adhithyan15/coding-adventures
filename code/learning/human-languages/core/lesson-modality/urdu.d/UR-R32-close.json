@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R32-close",
+    "language": "urdu",
+    "chapter": 32,
+    "sequence": 1710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c84cf95894c80cc"
+  },
+  "findings": []
+}

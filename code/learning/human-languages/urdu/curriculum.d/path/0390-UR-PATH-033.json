@@ -1,0 +1,16 @@
+{
+  "id": "UR-PATH-033",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "UR-C32-pehla",
+    "UR-C32-dusra-tisra",
+    "UR-C32-chautha",
+    "UR-C32-practice",
+    "UR-R32-close"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "UR-EXT-043-ORDINALS"
+  ]
+}

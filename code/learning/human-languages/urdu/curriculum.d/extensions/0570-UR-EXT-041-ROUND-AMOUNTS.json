@@ -1,0 +1,15 @@
+{
+  "id": "UR-EXT-041-ROUND-AMOUNTS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say twenty and a hundred, and say why the teens are nine words rather than a rule.",
+  "prerequisites": [
+    "UR-EXT-040-COUNT-TEN"
+  ],
+  "lessons": [
+    "UR-C30-bees",
+    "UR-C30-sau",
+    "UR-C30-practice"
+  ]
+}

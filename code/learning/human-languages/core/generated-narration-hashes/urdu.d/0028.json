@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:1f693d35f1b07554",
+  "lessonIds": [
+    "UR-C28-ek",
+    "UR-C28-do",
+    "UR-C28-teen",
+    "UR-C28-char",
+    "UR-C28-panch",
+    "UR-C28-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch28.txt",
+  "json": "urdu/narration/ch28.json",
+  "textHash": "fnv1a64:013f6c10c2973e38",
+  "jsonHash": "fnv1a64:90139409ccd0adf4",
+  "findings": []
+}
