@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add protocol-2 workbook file requests and transactional Open completion. Preserve
+  edits on failure/cancellation and require applying edits before Save. Report
+  unsupported legacy hosts explicitly; keep pending file IDs out of snapshots.
+
 - Describe selected values, blank cells, formula results/errors, commits and
   cancellations through standard polite announcements. Keep typing and viewport
   changes quiet and expose the same committed-cell summary to generated hosts.

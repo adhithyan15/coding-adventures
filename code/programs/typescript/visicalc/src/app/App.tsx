@@ -2,17 +2,19 @@ import { useEffect, useRef, useState, type ComponentProps, type KeyboardEvent as
 import { VisiCalc as Light } from "../components/light/react/VisiCalc";
 import { VisiCalc as Dark, type VisiCalcEvent } from "../components/dark/react/VisiCalc";
 import { loadMosaicModule, type MosaicHost, type MosaicUpdate } from "../../../../../packages/rust/mosaic-app-wasm/js/mosaic-host.mjs";
+import { createBrowserFileEffects, type MosaicFileEffects } from "../../../../../packages/rust/mosaic-app-wasm/js/mosaic-file-effects.mjs";
 
 export async function loadApplication(): Promise<MosaicHost> {
   const response = await fetch("/visicalc_mosaic_app.wasm");
   if (!response.ok) throw new Error(`Could not load VisiCalc (${response.status})`);
   const module = await loadMosaicModule(await response.arrayBuffer());
-  return module.create({ colorScheme: window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light" });
+  return module.create({ protocolVersion: 2, colorScheme: window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light" });
 }
 
 // The host translates browser input into semantic events; Rust owns all state.
 export function App({ load = loadApplication }: { load?: () => Promise<MosaicHost> }) {
   const host = useRef<MosaicHost | null>(null);
+  const files = useRef<MosaicFileEffects | null>(null);
   const [update, setUpdate] = useState<MosaicUpdate | null>(null);
   const [error, setError] = useState("");
   useEffect(() => {
@@ -22,13 +24,25 @@ export function App({ load = loadApplication }: { load?: () => Promise<MosaicHos
       owned = app;
       if (!live) { app.dispose(); return; }
       host.current = app;
+      files.current = app.update.protocolVersion === 2 ? createBrowserFileEffects(app) : null;
       setUpdate(app.update);
     }).catch(reason => { if (live) setError(String(reason)); });
-    return () => { live = false; owned?.dispose(); host.current = null; };
+    return () => { live = false; files.current?.dispose(); files.current = null; owned?.dispose(); host.current = null; };
   }, [load]);
+  const render = (next: MosaicUpdate, app: MosaicHost) => {
+    if (host.current !== app) return;
+    setUpdate(next);
+    for (const effect of next.effects) {
+      // Start the picker now, within dispatch's originating user gesture.
+      // Waiting for a React effect would lose browser activation.
+      void files.current?.run(effect).then(completed => {
+        if (completed && host.current === app) render(completed, app);
+      }).catch(reason => { if (host.current === app) setError(String(reason)); });
+    }
+  };
   const send = (name: string, payload: Record<string, unknown> = {}) => {
     if (!host.current) return;
-    try { setUpdate(host.current.dispatch(name, payload)); setError(""); }
+    try { render(host.current.dispatch(name, payload), host.current); setError(""); }
     catch (reason) { setError(String(reason)); }
   };
   const key = (event: ReactKeyboardEvent<HTMLDivElement>) => {

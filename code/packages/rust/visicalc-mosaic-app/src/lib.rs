@@ -4,7 +4,8 @@
 //! raw-cell coercion and workbook serialization stay in `spreadsheet-core`.
 
 use mosaic_app_runtime::{
-    Announcement, AppUpdate, ColorScheme, Event, MosaicApp, Politeness, Snapshot, StartContext,
+    Announcement, AppUpdate, ColorScheme, Delivery, Effect, EffectCompletionError, EffectId,
+    EffectResult, Event, MosaicApp, Politeness, Snapshot, StartContext, EFFECT_PROTOCOL_VERSION,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -15,6 +16,7 @@ const ROWS: u32 = 100;
 const COLS: u32 = 26;
 const SNAPSHOT_SCHEMA: &str = "visicalc-mosaic-app/state";
 const SNAPSHOT_VERSION: u32 = 1;
+const MAX_FILE_BYTES: usize = 16 * 1024 * 1024;
 const SEED: &str = include_str!("../../../../programs/mosaic/visicalc/fixtures/budget-v1.json");
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -80,6 +82,10 @@ pub struct VisiCalcMosaicApp {
     workbook: Workbook,
     cursor: Cursor,
     edit: Option<Edit>,
+    protocol_version: u32,
+    next_effect_id: EffectId,
+    pending_file: Option<(EffectId, bool)>, // true for Save, false for Open
+    file_status: String,
 }
 
 impl Default for VisiCalcMosaicApp {
@@ -98,6 +104,10 @@ impl Default for VisiCalcMosaicApp {
             workbook,
             cursor: Cursor::default(),
             edit: None,
+            protocol_version: 1,
+            next_effect_id: 0,
+            pending_file: None,
+            file_status: "Not saved yet".into(),
         }
     }
 }
@@ -145,9 +155,16 @@ impl VisiCalcMosaicApp {
 
     fn describe_cell(&self, row: u32, col: u32) -> String {
         let address = CellAddress::new(row + 1, col + 1).to_a1();
-        let window = self.workbook.get_display_window(SheetId(0), row + 1, col + 1, row + 1, col + 1)
+        let window = self
+            .workbook
+            .get_display_window(SheetId(0), row + 1, col + 1, row + 1, col + 1)
             .expect("valid selected cell");
-        let value = window.cells.first().map(String::as_str).filter(|value| !value.is_empty()).unwrap_or("blank");
+        let value = window
+            .cells
+            .first()
+            .map(String::as_str)
+            .filter(|value| !value.is_empty())
+            .unwrap_or("blank");
         let source = self.source(row, col);
         if source.starts_with('=') {
             format!("{address}, {value}, formula {source}")
@@ -192,7 +209,8 @@ impl VisiCalcMosaicApp {
             })
             .unwrap_or((-1, -1, ""));
         AppUpdate::new(json!({
-            "cell-address": address, "formula": formula, "read-only": false,
+            "cell-address": address, "formula": formula, "read-only": self.pending_file.is_some(),
+            "file-status": self.file_status,
             "selection-summary": self.describe_cell(cursor.row, cursor.col),
             "selected-row": cursor.row, "selected-col": cursor.col,
             "grid-selected-row": i64::from(cursor.row) - i64::from(cursor.offset),
@@ -216,6 +234,71 @@ impl VisiCalcMosaicApp {
         });
         update
     }
+
+    fn file_message(&mut self, message: impl Into<String>) -> AppUpdate {
+        self.file_status = message.into();
+        self.announced(&self.file_status)
+    }
+
+    fn request_file(&mut self, saving: bool) -> Result<AppUpdate, VisiCalcError> {
+        if self.protocol_version != EFFECT_PROTOCOL_VERSION {
+            return Ok(self.file_message("Open and Save are unavailable in this host."));
+        }
+        if saving && self.edit.is_some() {
+            return Ok(self.file_message("Press Enter to apply this edit before saving."));
+        }
+        let mut payload = json!({"mimeType": "application/json", "extension": ".visicalc"});
+        if saving {
+            // Capture the settled checkpoint before registering Await. The host
+            // never needs to call standalone snapshot while a write is pending.
+            let bytes = serde_json::to_vec(&self.snapshot()?.expect("VisiCalc snapshot"))
+                .map_err(|error| invalid(error.to_string()))?;
+            if bytes.len() > MAX_FILE_BYTES {
+                return Ok(self.file_message("This workbook exceeds the 16 MiB file limit."));
+            }
+            payload["bytes"] =
+                coding_adventures_base64::encode(&bytes, &coding_adventures_base64::STANDARD)
+                    .into();
+            payload["suggestedName"] = "Workbook.visicalc".into();
+        }
+        let id = self
+            .next_effect_id
+            .checked_add(1)
+            .filter(|id| *id <= 9_007_199_254_740_991)
+            .ok_or_else(|| invalid("file operation identifiers exhausted"))?;
+        self.next_effect_id = id;
+        self.pending_file = Some((id, saving));
+        let mut update = self.file_message(if saving {
+            "Choose where to save your workbook…"
+        } else {
+            "Choose a VisiCalc workbook…"
+        });
+        update.effects.push(Effect {
+            id,
+            delivery: Delivery::Await,
+            kind: if saving { "file.save" } else { "file.open" }.into(),
+            payload,
+        });
+        Ok(update)
+    }
+
+    fn open_file(&mut self, payload: &Value) -> Result<(), VisiCalcError> {
+        let encoded = payload
+            .get("bytes")
+            .and_then(Value::as_str)
+            .filter(|bytes| bytes.len() <= MAX_FILE_BYTES.div_ceil(3) * 4)
+            .ok_or_else(|| invalid("missing or oversized file bytes"))?;
+        let bytes = coding_adventures_base64::decode(encoded, &coding_adventures_base64::STANDARD)
+            .map_err(|error| invalid(error.to_string()))?;
+        if bytes.len() > MAX_FILE_BYTES {
+            return Err(invalid("file too large"));
+        }
+        let snapshot: Snapshot =
+            serde_json::from_slice(&bytes).map_err(|error| invalid(error.to_string()))?;
+        // restore validates a temporary workbook/cursor before replacing either.
+        self.restore(snapshot)?;
+        Ok(())
+    }
 }
 
 impl MosaicApp for VisiCalcMosaicApp {
@@ -224,13 +307,16 @@ impl MosaicApp for VisiCalcMosaicApp {
     fn start(&mut self, context: StartContext) -> Result<AppUpdate, Self::Error> {
         // Restore first: an invalid snapshot must not even change appearance.
         if let Some(snapshot) = context.restored_snapshot {
-            return self.restore(snapshot);
+            self.restore(snapshot)?;
+            self.protocol_version = context.protocol_version;
+            return Ok(self.update());
         }
         if !context.text_scale.is_finite() || context.text_scale <= 0.0 {
             return Err(invalid("invalid text scale"));
         }
         self.cursor.dark = context.color_scheme == ColorScheme::Dark;
         self.cursor.text_scale = context.text_scale;
+        self.protocol_version = context.protocol_version;
         Ok(self.update())
     }
 
@@ -238,7 +324,17 @@ impl MosaicApp for VisiCalcMosaicApp {
         if !event.payload.is_object() {
             return Err(invalid("event payload must be an object"));
         }
+        if self.pending_file.is_some()
+            && !matches!(
+                name(&event.name).as_str(),
+                "scroll" | "viewportShift" | "viewportRows" | "resizeViewport"
+            )
+        {
+            return Ok(self.announced("Finish the current file operation first."));
+        }
         match name(&event.name).as_str() {
+            "openWorkbook" => self.request_file(false),
+            "saveWorkbook" => self.request_file(true),
             "navigate" | "gridNavigate" | "editStart" => {
                 let row = if name(&event.name) == "gridNavigate" {
                     index(&event, "row", self.cursor.size)? + self.cursor.offset
@@ -260,7 +356,11 @@ impl MosaicApp for VisiCalcMosaicApp {
                     None
                 };
                 let description = self.describe_cell(row, col);
-                Ok(self.announced(if self.edit.is_some() { format!("Editing {description}") } else { description }))
+                Ok(self.announced(if self.edit.is_some() {
+                    format!("Editing {description}")
+                } else {
+                    description
+                }))
             }
             "formulaChange" => {
                 let value = event
@@ -278,6 +378,7 @@ impl MosaicApp for VisiCalcMosaicApp {
             }
             "commit" | "editCommit" => {
                 if let Some(edit) = self.edit.take() {
+                    self.file_status = "Changes not saved".into();
                     self.workbook.set_raw(
                         SheetId(0),
                         CellAddress::new(edit.row + 1, edit.col + 1),
@@ -290,8 +391,13 @@ impl MosaicApp for VisiCalcMosaicApp {
                     }
                     let updated = self.describe_cell(edit.row, edit.col);
                     let message = if (self.cursor.row, self.cursor.col) != (edit.row, edit.col) {
-                        format!("Updated {updated}. Selected {}", self.describe_cell(self.cursor.row, self.cursor.col))
-                    } else { format!("Updated {updated}") };
+                        format!(
+                            "Updated {updated}. Selected {}",
+                            self.describe_cell(self.cursor.row, self.cursor.col)
+                        )
+                    } else {
+                        format!("Updated {updated}")
+                    };
                     Ok(self.announced(message))
                 } else {
                     Ok(self.update())
@@ -299,8 +405,13 @@ impl MosaicApp for VisiCalcMosaicApp {
             }
             "cancel" | "editCancel" => {
                 if self.edit.take().is_some() {
-                    Ok(self.announced(format!("Edit cancelled. {}", self.describe_cell(self.cursor.row, self.cursor.col))))
-                } else { Ok(self.update()) }
+                    Ok(self.announced(format!(
+                        "Edit cancelled. {}",
+                        self.describe_cell(self.cursor.row, self.cursor.col)
+                    )))
+                } else {
+                    Ok(self.update())
+                }
             }
             "scroll" => {
                 let offset = index(&event, "offset", ROWS - self.cursor.size + 1)?;
@@ -308,15 +419,25 @@ impl MosaicApp for VisiCalcMosaicApp {
                 Ok(self.update())
             }
             "viewportShift" => {
-                let rows = event.payload.get("rows").and_then(Value::as_i64)
-                    .filter(|rows| *rows != 0).ok_or_else(|| invalid("viewport shift must be a nonzero integer"))?;
-                self.cursor.offset = i64::from(self.cursor.offset).saturating_add(rows)
-                    .clamp(0, i64::from(ROWS - self.cursor.size)) as u32;
+                let rows = event
+                    .payload
+                    .get("rows")
+                    .and_then(Value::as_i64)
+                    .filter(|rows| *rows != 0)
+                    .ok_or_else(|| invalid("viewport shift must be a nonzero integer"))?;
+                self.cursor.offset = i64::from(self.cursor.offset)
+                    .saturating_add(rows)
+                    .clamp(0, i64::from(ROWS - self.cursor.size))
+                    as u32;
                 Ok(self.update())
             }
             "viewportRows" => {
-                let rows = event.payload.get("rows").and_then(Value::as_u64)
-                    .filter(|rows| *rows > 0).ok_or_else(|| invalid("capacity must be a positive integer"))?;
+                let rows = event
+                    .payload
+                    .get("rows")
+                    .and_then(Value::as_u64)
+                    .filter(|rows| *rows > 0)
+                    .ok_or_else(|| invalid("capacity must be a positive integer"))?;
                 self.cursor.size = rows.min(ROWS as u64) as u32;
                 self.cursor.reveal();
                 Ok(self.update())
@@ -338,6 +459,7 @@ impl MosaicApp for VisiCalcMosaicApp {
                 self.cursor.col = 0;
                 self.cursor.offset = 0;
                 self.edit = None;
+                self.file_status = "New workbook · not saved".into();
                 Ok(self.announced(format!("New workbook. {}", self.describe_cell(0, 0))))
             }
             _ => Err(invalid(format!("unknown VisiCalc event: {}", event.name))),
@@ -357,6 +479,52 @@ impl MosaicApp for VisiCalcMosaicApp {
         }))
     }
 
+    fn complete_effect(
+        &mut self,
+        id: EffectId,
+        result: EffectResult,
+    ) -> Result<AppUpdate, EffectCompletionError<Self::Error>> {
+        let Some((pending_id, saving)) = self.pending_file else {
+            return Err(invalid("no pending file operation").into());
+        };
+        if id != pending_id {
+            return Err(invalid("incorrect file operation").into());
+        }
+        let message = match result {
+            EffectResult::Cancelled(_) => {
+                "File operation cancelled. Your workbook is unchanged.".to_string()
+            }
+            EffectResult::Failed(error) => format!(
+                "Could not {}: {}",
+                if saving { "save" } else { "open" },
+                error.message.chars().take(220).collect::<String>()
+            ),
+            EffectResult::Ok(payload) if saving => {
+                let file = payload
+                    .get("name")
+                    .and_then(Value::as_str)
+                    .unwrap_or("workbook");
+                format!("Saved {}", file.chars().take(120).collect::<String>())
+            }
+            EffectResult::Ok(payload) => {
+                if self.open_file(&payload).is_ok() {
+                    let file = payload
+                        .get("name")
+                        .and_then(Value::as_str)
+                        .unwrap_or("workbook");
+                    format!("Opened {}", file.chars().take(120).collect::<String>())
+                } else {
+                    "Could not open this file. Choose a VisiCalc workbook; your work is unchanged."
+                        .into()
+                }
+            }
+        };
+        // Invalid file content is an accepted terminal operation with an error
+        // view, not an eternally pending protocol completion.
+        self.pending_file = None;
+        Ok(self.file_message(message))
+    }
+
     fn restore(&mut self, snapshot: Snapshot) -> Result<AppUpdate, Self::Error> {
         if snapshot.schema != SNAPSHOT_SCHEMA || snapshot.version != SNAPSHOT_VERSION {
             return Err(invalid("unsupported VisiCalc snapshot"));
@@ -374,7 +542,10 @@ impl MosaicApp for VisiCalcMosaicApp {
         self.workbook = workbook;
         self.cursor = saved.cursor;
         self.edit = None;
-        Ok(self.announced(format!("Workbook restored. {}", self.describe_cell(self.cursor.row, self.cursor.col))))
+        Ok(self.announced(format!(
+            "Workbook restored. {}",
+            self.describe_cell(self.cursor.row, self.cursor.col)
+        )))
     }
 }
 
@@ -387,6 +558,124 @@ mod tests {
 
     fn dispatch(app: &mut VisiCalcMosaicApp, event: &str, payload: Value) -> AppUpdate {
         app.dispatch(Event::new(1, event, payload)).unwrap()
+    }
+
+    fn file_app() -> MosaicRuntime<VisiCalcMosaicApp> {
+        let mut runtime = MosaicRuntime::new(VisiCalcMosaicApp::default());
+        runtime
+            .start(StartContext {
+                protocol_version: 2,
+                ..StartContext::new("en", Platform::Web)
+            })
+            .unwrap();
+        runtime
+    }
+
+    fn send(
+        runtime: &mut MosaicRuntime<VisiCalcMosaicApp>,
+        event: &str,
+        payload: Value,
+    ) -> mosaic_app_runtime::Update {
+        let mut event = Event::new(runtime.next_sequence().unwrap(), event, payload);
+        event.protocol_version = 2;
+        runtime.dispatch(event).unwrap()
+    }
+
+    #[test]
+    fn files_round_trip_committed_formulas_into_a_fresh_application() {
+        let mut original = file_app();
+        send(&mut original, "formulaChange", json!({"value": "20"}));
+        let blocked = send(&mut original, "saveWorkbook", json!({}));
+        assert!(blocked.effects.is_empty());
+        assert!(blocked.props["file-status"]
+            .as_str()
+            .unwrap()
+            .contains("Press Enter"));
+        send(&mut original, "commit", json!({}));
+        let saving = send(&mut original, "saveWorkbook", json!({}));
+        assert_eq!(saving.effects[0].kind, "file.save");
+        assert!(original.snapshot().is_err());
+        send(&mut original, "newWorkbook", json!({}));
+        let saved = original
+            .complete_effect(
+                saving.effects[0].id,
+                EffectResult::Ok(json!({"name":"Budget.visicalc"})),
+            )
+            .unwrap();
+        assert_eq!(saved.props["formula"], "20");
+        assert_eq!(saved.props["file-status"], "Saved Budget.visicalc");
+        let mut fresh = file_app();
+        send(&mut fresh, "newWorkbook", json!({}));
+        let opening = send(&mut fresh, "openWorkbook", json!({}));
+        let opened = fresh
+            .complete_effect(
+                opening.effects[0].id,
+                EffectResult::Ok(json!({
+                    "name":"Budget.visicalc", "bytes":saving.effects[0].payload["bytes"]
+                })),
+            )
+            .unwrap();
+        assert_eq!(opened.props["formula"], "20");
+        assert_eq!(opened.props["viewport-rows"][4][4], "174");
+        assert_eq!(opened.props["editing"], false);
+        assert!(fresh.snapshot().is_ok());
+    }
+
+    #[test]
+    fn cancelled_failed_and_malformed_open_preserve_workbook_and_pending_edit() {
+        use mosaic_app_runtime::{EffectFailure, EmptyOutcome};
+        let mut runtime = file_app();
+        send(
+            &mut runtime,
+            "formulaChange",
+            json!({"value":"uncommitted"}),
+        );
+        let checkpoint = runtime.snapshot().unwrap();
+        let mut wrong_version = checkpoint.clone().unwrap();
+        wrong_version.version = 99;
+        let malformed = [
+            json!({"bytes":"???"}),
+            json!({"bytes":"e30="}),
+            json!({
+                "bytes":coding_adventures_base64::encode(&serde_json::to_vec(&wrong_version).unwrap(), &coding_adventures_base64::STANDARD)
+            }),
+        ];
+        let mut results = vec![
+            EffectResult::Cancelled(EmptyOutcome {}),
+            EffectResult::Failed(EffectFailure {
+                message: "permission denied".into(),
+            }),
+        ];
+        results.extend(malformed.into_iter().map(EffectResult::Ok));
+        for result in results {
+            let request = send(&mut runtime, "openWorkbook", json!({}));
+            let update = runtime
+                .complete_effect(request.effects[0].id, result)
+                .unwrap();
+            assert_eq!(update.props["formula"], "uncommitted");
+            assert_eq!(update.props["editing"], true);
+            assert_eq!(runtime.snapshot().unwrap(), checkpoint);
+            assert!(runtime.pending_effects().is_empty());
+        }
+    }
+
+    #[test]
+    fn legacy_native_host_reports_unavailable_without_emitting_await() {
+        let mut runtime = MosaicRuntime::new(VisiCalcMosaicApp::default());
+        runtime
+            .start(StartContext::new("en", Platform::Windows))
+            .unwrap();
+        for (index, event) in ["openWorkbook", "saveWorkbook"].into_iter().enumerate() {
+            let update = runtime
+                .dispatch(Event::new(index as u64 + 1, event, json!({})))
+                .unwrap();
+            assert!(update.effects.is_empty());
+            assert_eq!(
+                update.props["file-status"],
+                "Open and Save are unavailable in this host."
+            );
+            assert!(runtime.snapshot().is_ok());
+        }
     }
 
     #[test]
@@ -602,7 +891,9 @@ mod tests {
         assert_eq!(clicked.props["cell-address"], "Z71");
         let before = app.snapshot().unwrap();
         for rows in [json!(0), json!(1.5), json!("3")] {
-            assert!(app.dispatch(Event::new(1, "viewportShift", json!({"rows":rows}))).is_err());
+            assert!(app
+                .dispatch(Event::new(1, "viewportShift", json!({"rows":rows})))
+                .is_err());
             assert_eq!(app.snapshot().unwrap(), before);
         }
     }
@@ -620,7 +911,9 @@ mod tests {
         assert_eq!(big.props["cell-address"], "Z100");
         let before = app.snapshot().unwrap();
         for rows in [json!(0), json!(-1), json!(1.5), json!("10")] {
-            assert!(app.dispatch(Event::new(1, "viewportRows", json!({"rows":rows}))).is_err());
+            assert!(app
+                .dispatch(Event::new(1, "viewportRows", json!({"rows":rows})))
+                .is_err());
             assert_eq!(app.snapshot().unwrap(), before);
         }
     }
@@ -630,28 +923,50 @@ mod tests {
         let mut app = VisiCalcMosaicApp::default();
         assert_eq!(app.update().props["selection-summary"], "A1, 15");
         let formula = dispatch(&mut app, "navigate", json!({"row":0,"col":4}));
-        assert_eq!(formula.announcements[0].message, "E1, 38, formula =SUM(A1:D1)");
+        assert_eq!(
+            formula.announcements[0].message,
+            "E1, 38, formula =SUM(A1:D1)"
+        );
         let scrolled = dispatch(&mut app, "viewportShift", json!({"rows":70}));
         assert!(scrolled.announcements.is_empty());
-        assert_eq!(scrolled.props["selection-summary"], formula.props["selection-summary"]);
+        assert_eq!(
+            scrolled.props["selection-summary"],
+            formula.props["selection-summary"]
+        );
         let typing = dispatch(&mut app, "formulaChange", json!({"value":"=1/0"}));
         assert!(typing.announcements.is_empty());
         let error = dispatch(&mut app, "commit", json!({}));
-        assert_eq!(error.announcements[0].message, "Updated E1, #DIV/0!, formula =1/0");
+        assert_eq!(
+            error.announcements[0].message,
+            "Updated E1, #DIV/0!, formula =1/0"
+        );
         let editing = dispatch(&mut app, "editStart", json!({"row":0,"col":4}));
-        assert!(editing.announcements[0].message.starts_with("Editing E1, #DIV/0!"));
+        assert!(editing.announcements[0]
+            .message
+            .starts_with("Editing E1, #DIV/0!"));
         dispatch(&mut app, "formulaChange", json!({"value":"42"}));
         let committed = dispatch(&mut app, "editCommit", json!({}));
-        assert_eq!(committed.announcements[0].message, "Updated E1, 42. Selected E2, 51, formula =SUM(A2:D2)");
+        assert_eq!(
+            committed.announcements[0].message,
+            "Updated E1, 42. Selected E2, 51, formula =SUM(A2:D2)"
+        );
         dispatch(&mut app, "formulaChange", json!({"value":"99"}));
         let cancelled = dispatch(&mut app, "cancel", json!({}));
-        assert_eq!(cancelled.announcements[0].message, "Edit cancelled. E2, 51, formula =SUM(A2:D2)");
-        assert!(dispatch(&mut app, "cancel", json!({})).announcements.is_empty());
+        assert_eq!(
+            cancelled.announcements[0].message,
+            "Edit cancelled. E2, 51, formula =SUM(A2:D2)"
+        );
+        assert!(dispatch(&mut app, "cancel", json!({}))
+            .announcements
+            .is_empty());
         let saved = app.snapshot().unwrap().unwrap();
         let empty = dispatch(&mut app, "newWorkbook", json!({}));
         assert_eq!(empty.announcements[0].message, "New workbook. A1, blank");
         let restored = app.restore(saved).unwrap();
-        assert_eq!(restored.announcements[0].message, "Workbook restored. E2, 51, formula =SUM(A2:D2)");
+        assert_eq!(
+            restored.announcements[0].message,
+            "Workbook restored. E2, 51, formula =SUM(A2:D2)"
+        );
     }
 
     #[test]
@@ -668,7 +983,10 @@ mod tests {
             .unwrap();
         assert_eq!(update.revision, 2);
         assert_eq!(update.props["formula"], "=SUM(A1:D1)");
-        assert_eq!(update.announcements[0].message, "E1, 38, formula =SUM(A1:D1)");
+        assert_eq!(
+            update.announcements[0].message,
+            "E1, 38, formula =SUM(A1:D1)"
+        );
     }
 
     #[test]
