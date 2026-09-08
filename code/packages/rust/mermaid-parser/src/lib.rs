@@ -2667,8 +2667,10 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                 let entity = fields[3];
                 let namespace = entity.rsplit_once('.').map(|(prefix, _)| prefix.to_string());
                 let mut source_frames = fields[4..]
-                    .chunks_exact(2)
-                    .map(|pair| pair[1].to_string())
+                    .iter()
+                    .skip(1)
+                    .step_by(2)
+                    .map(|source| (*source).to_string())
                     .collect::<Vec<_>>();
                 if source_frames.is_empty() && !reset {
                     if let Some(previous) = &previous_id {
