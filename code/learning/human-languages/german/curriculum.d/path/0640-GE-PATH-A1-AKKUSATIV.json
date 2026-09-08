@@ -1,0 +1,17 @@
+{
+  "id": "GE-PATH-A1-AKKUSATIV",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "GE-C34-welcher",
+    "GE-C34-wie-viel",
+    "GE-C34-den",
+    "GE-C34-praedikativ",
+    "GE-C34-es-gibt",
+    "GE-R34-welchen"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-A1-AKKUSATIV"
+  ],
+  "after": []
+}

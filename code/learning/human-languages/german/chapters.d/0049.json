@@ -1,0 +1,23 @@
+{
+  "chapter": 49,
+  "title": "Mine, Yours, His, Hers",
+  "label": "ch:ge-possessiv",
+  "canDo": "I can say whose something is with all four possessives, and introduce somebody who is not me.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "GE-R36-wer-ist-das",
+    "kind": "production",
+    "summary": "Every person and every object the book owns is claimed and then done something to. The four possessives cost their first two letters and nothing else, because they wear the endings ein bought, kein banked and den confirmed -- six words, one ending set, and the reader had already paid for it three times.",
+    "assesses": [
+      "GE-LEX-MEIN-01",
+      "GE-GRAMMAR-EIN-WOERTER-01",
+      "GE-LEX-DEIN-01",
+      "GE-LEX-SEIN-HIS-01",
+      "GE-LEX-IHR-HER-01",
+      "GE-LEX-DAS-IST-01"
+    ],
+    "note": "mein was inside mein Name ist as an unanalysed block from the reader's first introduction; the chapter pulls it out rather than teaching it again. das ist closes the half of A1-SATZ-05 the track was missing -- introducing oneself was fully owned and introducing anybody else was not."
+  }
+}

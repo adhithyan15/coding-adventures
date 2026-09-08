@@ -1,0 +1,1057 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 46,
+  "title": "When the Verb Steps to the Front",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:553c49d406b28943",
+  "lessons": [
+    {
+      "id": "GE-C33-ja-nein-frage",
+      "sequence": 1120,
+      "title": "Wohnst du in Berlin? — the question that has no question word",
+      "headword": "Wohnst du in Berlin?",
+      "romanization": "Wohnst du in Berlin?",
+      "gloss": "the question with no question word — the verb steps out of slot two into slot one, which is what English did before it invented \"do\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8129626be57e1f2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have owned ja, nein and doch since the yes-and-no chapter, and you have never been shown the question they answer. Say the three first, then read on."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the two negatives and what each cancels — kein for a noun, nicht for the rest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the two negatives and what each cancels — *kein* for a noun, *nicht* for the rest]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb moves to the front",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To ask something answerable with ja or nein, take the statement and put the verb first."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing else changes. No extra word, no rising list of rules:"
+            },
+            {
+              "kind": "speech",
+              "text": "Du wohnst in Berlin. becomes Wohnst du in Berlin?, Er hat einen Bruder. becomes Hat er einen Bruder?"
+            },
+            {
+              "kind": "speech",
+              "text": "The verb has stood in slot two for the whole book. Move it one place left and the sentence becomes a question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English used to do this and stopped. \"Speak you German\" is ordinary Elizabethan word order. Somewhere after Shakespeare, English stopped moving its verbs and built a machine instead — the do in do you speak German, which means nothing at all. German never built it, because it never lost the habit. The German question is the older one; the English do is the innovation."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the statement, then flip it."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Du wohnst in Berlin.\" becomes \"Wohnst du in Berlin?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Du wohnst in Berlin.\" → \"Wohnst du in Berlin?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Er hat einen Bruder.\" becomes \"Hat er einen Bruder?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Er hat einen Bruder.\" → \"Hat er einen Bruder?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three drinks, asked for — \"Hast du Kaffee, Tee, Milch?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three drinks, asked for — \"Hast du Kaffee, Tee, Milch?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer with last chapter's negative — \"Nein, ich habe keinen Kaffee.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer with last chapter's negative — \"Nein, ich habe keinen Kaffee.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contradiction — a negative question, answered \"Doch!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contradiction — a negative question, answered \"Doch!\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Wohnst du in Berlin? — Ja. / Nein.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What turns a German statement into a yes-or-no question? (The verb moves to first place.) What did English build when it stopped? (The empty do.) Which answer-word contradicts a negative question? (Doch.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C33-imperativ",
+      "sequence": 1130,
+      "title": "Komm! — the sentence with no subject at all",
+      "headword": "Komm!",
+      "romanization": "Komm!",
+      "gloss": "the command — the bare stem, with the pronoun German otherwise insists on dropped entirely",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3fe8405ba0f99b2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Take kommen and strip the -en off it. What is left is the stem, komm-, and it is about to be a whole sentence on its own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the stem, alone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To tell one person you are on du terms with to do something, say the stem and nothing else."
+            },
+            {
+              "kind": "speech",
+              "text": "Komm! — \"Come!\", Geh! — \"Go!\", Sag! — \"Say!\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two things are missing, and both matter. There is no ending — this is the one shape of a German verb that wears none. And there is no pronoun, in a language that has spent forty chapters insisting the subject slot be filled."
+            },
+            {
+              "kind": "speech",
+              "text": "A command is the single place German lets that slot stay empty, because the person addressed is standing right there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The bare stem is the oldest shape a verb has anywhere in this family. English kept it too — come, go, say, open, listen — which is why an English command and a German one line up word for word and syllable for syllable:"
+            },
+            {
+              "kind": "speech",
+              "text": "Hör! — Hear!, Sieh! — See!, Lies! — Read!, Schreib! — Write!"
+            },
+            {
+              "kind": "speech",
+              "text": "Two of those hide something you already know: the vowel of sehen and lesen breaks in the du form, and the command takes the broken vowel with it. Sieh and lies, not seh and les."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Find the stem before you say the command."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kommen becomes \"Komm!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: kommen → \"Komm!\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gehen becomes \"Geh!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gehen → \"Geh!\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagen becomes \"Sag!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sagen → \"Sag!\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair that opens and closes — \"Öffne!\" and \"Schließ!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair that opens and closes — \"Öffne!\" and \"Schließ!\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that hears — \"Hör!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that hears — \"Hör!\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two with a broken vowel — \"Lies!\" and \"Sieh!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two with a broken vowel — \"Lies!\" and \"Sieh!\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Komm! Geh! Hör!\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What shape is a German command? (The bare stem — no ending.) What does it leave out that German otherwise demands? (The pronoun.) Both this and a yes-or-no question begin with the verb — so what tells them apart? (The question has a subject after the verb; the command has none.) Next: the six question words, and the letter they all begin with."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C33-wer",
+      "sequence": 1140,
+      "title": "wer — \"who,\" and the letter the whole family shares",
+      "headword": "wer",
+      "romanization": "wer",
+      "gloss": "who — and the W that every German question word begins with, against the WH that every English one begins with",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:063c71748e7cfb72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already own three question words — was, wo, wie. Say them, and notice what all three start with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wer — \"who.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Said vair: the w is a v, as it has been since wie and wir, and the e is long."
+            },
+            {
+              "kind": "speech",
+              "text": "Wer ist das? — \"Who is that?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take care with one trap. German wer means who; German wo means where, and an English eye reads it as who. The two swap appearances across the languages, and only practice fixes it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: one letter, six words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wer is Latin quis and English who, from Proto-Indo-European kʷis. Grimm's law turned kʷ into Germanic hw; English wrote hw and flipped it to wh; German wore the h off. That one step lines the two languages up letter for letter:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "wer means who.",
+                "was means what.",
+                "wo means where.",
+                "wann means when.",
+                "warum means why."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Five of those six you can now predict rather than memorise, and the sixth breaks the pattern in both languages at once: German wie against English how, where English lost the w instead of the h."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"wer\" — vair, and \"Wer ist das?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"wer\" — *vair*, and \"Wer ist das?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the trap, both ways — \"wer\" is who, \"wo\" is where",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the trap, both ways — \"wer\" is *who*, \"wo\" is *where*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "about the people you know — \"Wer ist der Freund? Wer ist die Freundin?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: about the people you know — \"Wer ist der Freund? Wer ist die Freundin?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Wer ist die Mutter? Wer ist der Vater?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Wer ist die Mutter? Wer ist der Vater?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the command from the last lesson, then the question — \"Sag!\" then \"Wer ist das?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the command from the last lesson, then the question — \"Sag!\" then \"Wer ist das?\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Wer ist das?\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does wer mean, and what is the trap? (Who — and wo, which looks like it, means where.) Which Latin word is its cousin? (Quis.) What sound law turns English wh- into German w-? (Grimm's law, which made kʷ into hw; English kept the h, German dropped it.) Next: the fifth W."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C33-wann",
+      "sequence": 1150,
+      "title": "wann — \"when,\" and the question the calendar was waiting for",
+      "headword": "wann",
+      "romanization": "wann",
+      "gloss": "when — the fourth W, and the first question this book can ask about the clock and the calendar it already owns",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5dbec45048ed9ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Predict this one before you read it. English when begins wh-. What must the German be?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wann",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wann — \"when.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Said vann, with a short flat a and the v-sound on the front. The double nn keeps the vowel short, which is the same spelling habit you met in Mann and kann."
+            },
+            {
+              "kind": "speech",
+              "text": "Wann ist das? — \"When is that?\""
+            },
+            {
+              "kind": "speech",
+              "text": "The clock chapter gave you Es ist ein Uhr and no way to ask for it. Now you have one:"
+            },
+            {
+              "kind": "speech",
+              "text": "Wann? — Um ein Uhr."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wann and English when are one word, on the same kʷ- root that gave wer and who. So the second row of the table is filled in by the rule rather than by memory, and the vocabulary this book spent five chapters on is suddenly askable:"
+            },
+            {
+              "kind": "speech",
+              "text": "Wann? — Am Montag., Wann? — Im Januar., Wann? — Im Dezember."
+            },
+            {
+              "kind": "speech",
+              "text": "Seven weekdays, twelve months and four seasons have been sitting in your head with no question attached to them. One word attaches all twenty-three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"wann\" — vann, short a",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"wann\" — *vann*, short *a*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Wann ist das?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Wann ist das?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two weekdays as answers — \"Am Montag\", \"Am Samstag\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two weekdays as answers — \"Am Montag\", \"Am Samstag\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the day the sun owns — \"Am Sonntag\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the day the sun owns — \"Am Sonntag\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two months — \"Im Januar\", \"Im Dezember\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two months — \"Im Januar\", \"Im Dezember\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four seasons — \"im Frühling, im Sommer, im Herbst, im Winter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four seasons — \"im Frühling, im Sommer, im Herbst, im Winter\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Wann? — Am Montag.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"when\" in German and name the English word it is. (Wann; when.) Which root does it share with wer? (kʷ-.) Answer wann with a weekday and with a month. (Am Montag. Im Januar.) Which season is English harvest? (Herbst.) Next: the sixth W, and the two words hiding inside it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C33-warum",
+      "sequence": 1160,
+      "title": "warum — \"why,\" and the two words welded inside it",
+      "headword": "warum",
+      "romanization": "warum",
+      "gloss": "why — two old words fused into one, \"about what\", the same build as English wherefore",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e509daf9e643045e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Five W-words are yours: wer, was, wo, wann, wie. Say all five, then take the sixth."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the negative for a der-word you do not have — keinen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the negative for a *der*-word you do not have — *keinen*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: warum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "warum — \"why.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Said va-ROOM, and the stress is on the second syllable — which is unusual enough to be worth marking, because almost every German word you have met so far leans on its first."
+            },
+            {
+              "kind": "speech",
+              "text": "Warum? — \"Why?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Warum lernst du Deutsch? — \"Why are you learning German?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: about + what",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "warum is two words that stopped being two. The first half, war-, is an old shape of was; the second, -um, is the ordinary German um, \"about\". About what."
+            },
+            {
+              "kind": "speech",
+              "text": "English built its own why-word the identical way and it is still readable: wherefore is where plus for, \"for what\". Shakespeare's \"wherefore art thou Romeo\" is not asking where Romeo is. It is asking why."
+            },
+            {
+              "kind": "speech",
+              "text": "So both languages fused a question word to a small preposition, and both ended up with a why that once meant about what or for what. German's fusion went further and hid the seam; English's is still visible, which is why wherefore looks quaint and warum looks like a single word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"warum\" — va-ROOM, stress on the second half",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"warum\" — *va-ROOM*, stress on the second half]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pieces, then the word — \"war … um … warum\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pieces, then the word — \"war … um … warum\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Warum lernst du Deutsch?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Warum lernst du Deutsch?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole set, in one breath — \"wer, was, wo, wann, warum, wie\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole set, in one breath — \"wer, was, wo, wann, warum, wie\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask about the drink — \"Warum Tee?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask about the drink — \"Warum Tee?\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Warum lernst du Deutsch?\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which syllable of warum is stressed? (The second — va-ROOM.) What two words are welded inside it? (An old was and um, \"about\".) Which English word was built the same way? (Wherefore — where plus for.) Say all six W-words. Next: the chapter, run cold."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R33-frag-mich",
+      "sequence": 1170,
+      "title": "Frag mich! — the chapter, run cold",
+      "headword": "Frag mich!",
+      "romanization": "Frag mich!",
+      "gloss": "six question words, one polar question and one command, run over everything the book owns",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79466e46f8943dee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two sentence shapes put the verb first, and they mean different things. Name both. Then say the six W-words in one breath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: ask about the people and the clock",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Wer ist das?\" about each — \"der Bruder, die Schwester, die Mutter, der Vater\", and the four Latin cousins they keep: frater, soror, mater, pater",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Wer ist das?\" about each — \"der Bruder, die Schwester, die Mutter, der Vater\", and the four Latin cousins they keep: *frater, soror, mater, pater*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Wann?\" answered by the clock — \"Um ein Uhr\", and the Latin word inside Uhr: hora",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Wann?\" answered by the clock — \"Um ein Uhr\", and the Latin word inside *Uhr*: *hora*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — flip every statement you own",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every statement in this book can now be a question. Take the verb and move it left."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Du wohnst in Berlin.\" becomes \"Wohnst du in Berlin?\"; \"Du lernst Deutsch.\" becomes \"Lernst du Deutsch?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Du wohnst in Berlin.\" → \"Wohnst du in Berlin?\"; \"Du lernst Deutsch.\" → \"Lernst du Deutsch?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six things to eat and drink, asked for — \"Hast du Kaffee, Tee, Milch, Brot, Wasser, Wein?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six things to eat and drink, asked for — \"Hast du Kaffee, Tee, Milch, Brot, Wasser, Wein?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two animals, then last chapter's answer — \"Hast du einen Hund?\" \"Nein, ich habe keinen Hund.\" \"Hast du eine Katze?\" \"Nein, ich habe keine Katze.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two animals, then last chapter's answer — \"Hast du einen Hund?\" \"Nein, ich habe keinen Hund.\" \"Hast du eine Katze?\" \"Nein, ich habe keine Katze.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of those words German bought and which it always had — Kaffee and Tee came from far away, Milch and Brot did not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of those words German bought and which it always had — *Kaffee* and *Tee* came from far away, *Milch* and *Brot* did not]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: commands",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Strip the -en, then say it."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Komm! Geh! Sag!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Komm! Geh! Sag!\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Hör! Öffne! Schließ!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Hör! Öffne! Schließ!\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Schreib!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Schreib!\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two whose vowel breaks — \"Lies! Sieh!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two whose vowel breaks — \"Lies! Sieh!\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What turns a statement into a yes-or-no question? (The verb moves to first place.) What does a command leave out? (The pronoun.) Which sound law lines German w- up with English wh-? (Grimm's.) And which of the six W-words is two words welded together? (Warum — an old was plus um.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

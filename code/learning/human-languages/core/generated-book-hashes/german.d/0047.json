@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:cbd4c28b560f109d",
+  "lessonIds": [
+    "GE-C34-welcher",
+    "GE-C34-wie-viel",
+    "GE-C34-den",
+    "GE-C34-praedikativ",
+    "GE-C34-es-gibt",
+    "GE-R34-welchen"
+  ],
+  "tex": "german/book/chapters/ch47-akkusativ.tex"
+}

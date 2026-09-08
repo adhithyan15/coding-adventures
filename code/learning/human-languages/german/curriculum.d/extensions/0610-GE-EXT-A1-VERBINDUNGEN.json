@@ -1,0 +1,18 @@
+{
+  "id": "GE-EXT-A1-VERBINDUNGEN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can coordinate two clauses with und, oder, aber, sondern and denn, and subordinate one with weil, sending the verb to the end.",
+  "prerequisites": [
+    "GE-EXT-A1-AKKUSATIV"
+  ],
+  "lessons": [
+    "GE-C35-oder",
+    "GE-C35-aber",
+    "GE-C35-sondern",
+    "GE-C35-denn",
+    "GE-C35-weil",
+    "GE-R35-zwei-gedanken"
+  ]
+}
