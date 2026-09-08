@@ -45,3 +45,12 @@ sim.load(&prog, 16);
 sim.run(100);
 assert_eq!(sim.stack[0], Some(4));
 ```
+
+### Call token tables
+
+Internal calls accept MethodDef tokens (`0x06` table) with valid one-based
+method ordinals. Other tables, including MemberRef (`0x0A`), panic with an
+explicit unsupported-table diagnostic before consuming arguments or changing
+call frames. A MemberRef row cannot alias the internal method at the same row.
+This follows the simulator's existing invalid-bytecode panic convention;
+host-call resolution and input readers are not implemented.

@@ -8,6 +8,35 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-060a contract (selected after #14613 merged)
+
+PR #14613 merged as `4462675c52` after 46 completed successful/skipped checks.
+VM-059's explicit refusal proof is complete. Prioritize VM-060a before BEAM:
+the simulator ignores a call token's table byte, so a MemberRef can dispatch
+to an unrelated internal method with the same ordinal. This is an observable
+wrong-method execution bug independent of input support.
+
+Accept only MethodDef (`0x06`) call tokens. Reject other table bytes before
+popping arguments, saving a frame, or changing the current method/PC. Preserve
+the simulator's existing panic-based invalid-bytecode convention with an
+explicit unsupported-token diagnostic. Regression uses a real internal method
+at the same ordinal: a valid MethodDef must execute it, whereas MemberRef and
+other table bytes must refuse without changing execution state. Test zero and
+out-of-range MethodDef ordinals using existing invalid-token errors.
+
+Run simulator tests and Clippy plus relevant downstream CIL/McCarthy execution
+proofs. This slice does not implement host callbacks. VM-060b retains reader,
+string representation and callback ABI design before any input implementation.
+
+The red probe dispatched token 0x00000002 into internal method 1 and consumed
+its argument. With table validation, all 10 simulator tests pass, including
+five refused table bytes, valid same-row MethodDef execution and invalid rows.
+The focused encoded CLR corpus executes all 19 McCarthy programs with no skips.
+All-target Clippy for clr-simulator and lang-aot is required before publication.
+Cargo's twig-vm dependency tree contains no clr-simulator dependency; this
+change does not trigger the twig-vm dependency Miri rule.
+
+
 ## VM-059 contract (selected after #14601 merged)
 
 Main refreshed to `5778c35c3c`. PR #14601 merged as `af727bf81b` after

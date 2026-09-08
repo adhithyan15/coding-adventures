@@ -575,3 +575,10 @@ bytes remain and 0 at EOF, without consuming input. The four FLOW-MATIC
 input/EOF programs cover all seven standard columns. The JIT matrix uses its
 normal interpreter/compiled pipeline; a separate direct test explicitly
 compiles and executes the peek callback to prove the compiled path too.
+
+### Encoded CLR call validation (VM-060a)
+
+The focused `mccarthy_encoded_clr_corpus_executes` conformance test executes
+all 19 McCarthy corpus programs in clr-simulator without external tools. It
+protects internal MethodDef call/return behavior while the simulator refuses
+unsupported call token tables. No host input execution is claimed.

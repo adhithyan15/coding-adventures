@@ -7187,3 +7187,10 @@ An encoded CIL refusal test tried formatting the entire Result, but its success
 artifact does not implement Debug. Match Err and Ok separately so diagnostics
 only require the error's Display implementation. Run Cargo from the Rust
 workspace (or supply a manifest); the repository root has no Cargo.toml.
+
+### 2026-09-08 — Keep inspection paths relative to the actual working directory
+
+A source inspection repeated the repository-relative prefix while already in
+the Rust workspace, producing a doubled path. Use workspace-relative paths
+there. Python's Windows console also rejected non-CP1252 source characters;
+use PowerShell Get-Content or explicitly UTF-8 output when displaying source.

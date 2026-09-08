@@ -497,6 +497,13 @@ impl CLRSimulator {
                 self.bytecode[pc + 1], self.bytecode[pc + 2],
                 self.bytecode[pc + 3], self.bytecode[pc + 4],
             ]);
+            // A metadata row is meaningful only inside its table. MemberRef
+            // row 2 is not MethodDef row 2; without host resolution we must
+            // refuse it before consuming arguments or changing call frames.
+            assert!(
+                token >> 24 == 0x06,
+                "call: unsupported call token table in 0x{token:08X}; only MethodDef (0x06) is supported"
+            );
             // MethodDef tables are 0x06 in the high byte; ordinal is 1-based.
             let ordinal = (token & 0x00FF_FFFF) as usize;
             assert!(ordinal >= 1, "call: invalid MethodDef token 0x{token:08X}");
@@ -846,4 +853,70 @@ mod tests {
         sim.halted = true;
         sim.step();
     }
+    // Both tokens use row 2. Only MethodDef may enter the internal callee.
+    fn call_probe(token: u32) -> CLRSimulator {
+        let body = assemble_clr(&[
+            vec![OP_CALL], token.to_le_bytes().to_vec(), vec![OP_RET],
+        ]);
+        let mut sim = CLRSimulator::new();
+        sim.load_program(vec![
+            MethodCode { body, num_locals: 1, num_args: 0 },
+            MethodCode {
+                body: assemble_clr(&[vec![OP_LDARG_0], encode_ldc_i4(1), vec![OP_ADD, OP_RET]]),
+                num_locals: 0, num_args: 1,
+            },
+        ], 0);
+        sim.stack.push(Some(Value::Int(41)));
+        sim.locals[0] = Some(Value::Int(7));
+        sim
+    }
+
+    #[test]
+    fn methoddef_call_executes_and_returns() {
+        let mut sim = call_probe(0x0600_0002);
+        sim.run(20);
+        assert!(sim.halted);
+        assert_eq!(sim.stack, vec![Some(Value::Int(42))]);
+        assert_eq!(sim.locals, vec![Some(Value::Int(7))]);
+        assert!(sim.frames.is_empty());
+        assert_eq!(sim.cur_method, 0);
+    }
+
+    #[test]
+    fn non_methoddef_call_refuses_before_state_change() {
+        for table in [0x00_u32, 0x04, 0x0A, 0x2B, 0xFF] {
+            let token = (table << 24) | 2;
+            let mut sim = call_probe(token);
+            let original_body = sim.bytecode.clone();
+            let failure = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| sim.step()))
+                .expect_err("non-MethodDef token must not enter the same-row internal method");
+            let message = failure.downcast_ref::<String>().map(String::as_str)
+                .or_else(|| failure.downcast_ref::<&str>().copied()).unwrap_or("");
+            assert!(message.contains("unsupported call token table"), "{message}");
+            assert_eq!(sim.pc, 0);
+            assert_eq!(sim.cur_method, 0);
+            assert_eq!(sim.bytecode, original_body);
+            assert_eq!(sim.stack, vec![Some(Value::Int(41))]);
+            assert_eq!(sim.locals, vec![Some(Value::Int(7))]);
+            assert!(sim.args.is_empty());
+            assert!(sim.frames.is_empty());
+            assert!(!sim.halted);
+        }
+    }
+
+    #[test]
+    fn invalid_methoddef_ordinals_remain_errors() {
+        for (token, expected) in [(0x0600_0000, "invalid MethodDef token"),
+                                   (0x0600_0003, "no method for token")] {
+            let mut sim = call_probe(token);
+            let failure = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| sim.step()))
+                .expect_err("invalid ordinal must refuse");
+            let message = failure.downcast_ref::<String>().map(String::as_str)
+                .or_else(|| failure.downcast_ref::<&str>().copied()).unwrap_or("");
+            assert!(message.contains(expected), "{message}");
+            assert_eq!(sim.stack, vec![Some(Value::Int(41))]);
+            assert!(sim.frames.is_empty());
+        }
+    }
+
 }
