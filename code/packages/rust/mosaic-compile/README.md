@@ -85,6 +85,10 @@ component and merges its MSL defaults before the consumer's own styles. This is
 the same composition path used by package mode, so reusable controls keep their
 authored appearance in every backend.
 
+Passing `--package-manifest <mosaic-package.toml>` also resolves bare component
+names listed as sibling exports in that manifest. Names that are neither kernel
+primitives nor declared package exports remain explicit compilation errors.
+
 Package mode compiles a Mosaic package directory that contains
 `mosaic-package.toml` plus `src/*.mil`, `src/*.mll`, and optional `src/*.msl`
 files:

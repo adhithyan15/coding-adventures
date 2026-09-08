@@ -1119,7 +1119,7 @@ fn emit_html_tree(
     // -----------------------------------------------------------------
     match node.tag.as_str() {
         "HostSurface" => return Ok(emit_host_surface(node, part_styles)),
-        "HostInput" => return Ok(emit_host_input(node, part_styles)),
+        "HostInput" | "Input" => return Ok(emit_host_input(node, part_styles)),
         "HostButton" => return Ok(emit_host_button(node, ctx, part_styles)),
         "HostDialog" => return emit_host_dialog(node, ctx, part_styles),
 
@@ -1609,8 +1609,7 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
     }
 }
 
-/// Lower a `HostInput` node to an `<input type="text" …>` tag inside
-/// the shadow DOM.
+/// Lower a `HostInput` or compatibility `Input` node inside the shadow DOM.
 ///
 /// The wiring follows the React backend's HostInput surface but adapts
 /// to inline-attribute event handlers and template-literal value
@@ -1627,7 +1626,13 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
 /// because in the shadow DOM `this` inside an inline handler is the
 /// element where the handler is declared, not the Custom Element.
 fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
-    let mut attrs = String::from(r#"<input type="text""#);
+    let multiline = node.tag == "Input" && find_keyword(node, "multiline") == Some("true");
+    let mut attrs = if multiline {
+        String::from("<textarea")
+    } else {
+        String::from(r#"<input type="text""#)
+    };
+    let mut textarea_value = String::new();
     attrs.push_str(&build_style_attr(node, "", part_styles));
 
     if let Some(prop) = node.props.iter().find(|prop| prop.name == "a11y-label") {
@@ -1655,7 +1660,17 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
     if let Some(slot) = find_slot_ref(node, "value") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            attrs.push_str(&format!(r#" value="${{escapeHtmlAttribute({camel})}}""#));
+            if multiline {
+                textarea_value.push_str(&format!("${{escapeHtml({camel})}}"));
+            } else {
+                attrs.push_str(&format!(r#" value="${{escapeHtmlAttribute({camel})}}""#));
+            }
+        }
+    } else if let Some(value) = find_string(node, "value") {
+        if multiline {
+            textarea_value.push_str(&escape_html_text(value));
+        } else {
+            attrs.push_str(&format!(r#" value="{}""#, escape_html_attribute(value)));
         }
     }
 
@@ -1683,6 +1698,11 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
     }
     if find_keyword(node, "auto-focus") == Some("true") {
         attrs.push_str(" autofocus");
+    }
+    if node.tag == "Input" {
+        if let Some(value) = find_number(node, "max-length") {
+            attrs.push_str(&format!(r#" maxlength="{value}""#));
+        }
     }
 
     // onchange — wraps `event.target.value` into the dispatch payload.
@@ -1719,7 +1739,13 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
         attrs.push_str(&format!(r#" onkeydown="{body}""#));
     }
 
-    attrs.push_str(" />");
+    if multiline {
+        attrs.push('>');
+        attrs.push_str(&textarea_value);
+        attrs.push_str("</textarea>");
+    } else {
+        attrs.push_str(" />");
+    }
     attrs
 }
 

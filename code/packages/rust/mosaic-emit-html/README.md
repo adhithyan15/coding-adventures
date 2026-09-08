@@ -130,6 +130,7 @@ static snapshot.
 | Stack                | `<div style="position:relative">`                     |
 | Icon                 | `<span class="icon">`                                 |
 | Grid                 | `<table>` with fixture-driven `<thead>`/`<tbody>`     |
+| Input (compatibility)| `<input type="text">` or `<textarea>`                 |
 | HostInput (UI29)     | `<input type="text" value="{{value}}">`               |
 | HostButton (UI29)    | `<button>{{label}}</button>`                          |
 | HostScroll (UI29)    | `<div style="overflow:auto">`                         |
@@ -144,7 +145,7 @@ their event names as neutral `data-*` markers so a downstream hydrator can
 attach listeners without parsing Mosaic source files:
 
 - `HostButton` with `onClick` or `onTap` emits `data-on-click`.
-- `HostInput` with `onChange`, `onCommit`, or `onCancel` emits
+- `Input` or `HostInput` with `onChange`, `onCommit`, or `onCancel` emits
   `data-on-change`, `data-on-commit`, or `data-on-cancel`.
 
 ### The `If` / `For` static-HTML compromise
