@@ -4218,15 +4218,78 @@ pub struct GcArray {
 pub enum GcObject {
     Struct(GcStruct),
     Array(GcArray),
+    /// W39 slice 3 (`any.convert_extern`; `code/specs/
+    /// W39-wasm-gc-ref-eq-cast-br-on-cast.md`): the result of converting an
+    /// `externref` to `anyref`. This engine's `WasmValue::Ref(Option<u32>)`
+    /// carries no runtime "which hierarchy" tag at all, so a raw externref
+    /// handle and a real `gc_heap` struct/array index are otherwise
+    /// numerically indistinguishable -- `ref.test`/`ref.cast`'s own
+    /// dynamic check (`ref_matches_abstract_heap_type`) needs SOME real
+    /// signal to correctly answer "is this any-typed value an `eqref`
+    /// instance" (no -- an extern-origin value is never `eq`, only ever
+    /// `any`) versus "is a genuine struct/array `eqref` instance" (yes).
+    /// Boxing it here, rather than passing the raw handle through
+    /// unchanged, gives that signal for free via ordinary pattern
+    /// matching. Wraps the ORIGINAL externref's own raw identity as a
+    /// `WasmValue::Ref` (`None` for a converted null never reaches this
+    /// variant at all -- see `any.convert_extern`'s own runtime handler,
+    /// which passes a null straight through without allocating) so
+    /// `extern.convert_any` can recover it byte-for-byte on a round trip
+    /// rather than nesting a second box around an already-boxed value.
+    ///
+    /// SECURITY (caught by review, not shipped-then-fixed): an earlier
+    /// revision stored a bare `u32` here instead of a `WasmValue`, on the
+    /// theory that a raw externref identity is "never a real `gc_heap`
+    /// reference" so has nothing to trace. That reasoning only holds for
+    /// a WELL-TYPED program; this crate's own validator does NOT reject
+    /// `any.convert_extern` applied to an operand whose static type isn't
+    /// genuinely `externref` (matching its own established looseness for
+    /// this whole GC instruction family -- see `wasm-validator`'s `0x1A |
+    /// 0x1B` arm). A module that fed a REAL struct/array `gc_heap` handle
+    /// into `any.convert_extern` would have that handle boxed with `&[]`
+    /// children, making the mark-sweep collector treat the original
+    /// object as unreachable and reclaim it while this box still encoded
+    /// its (now stale) index -- a real object-identity confusion, not
+    /// just a wrong-answer bug (a later `extern.convert_any` round trip,
+    /// or a subsequent `struct.new` reusing the freed slot, could read a
+    /// DIFFERENT live object under the original one's identity). Storing
+    /// the full `WasmValue` and tracing it via `children()` below closes
+    /// this: a genuinely opaque raw handle traces to nothing (`mark`'s
+    /// own bounds check already no-ops on an out-of-range index, so this
+    /// costs nothing for the common, well-typed case), while a real
+    /// `gc_heap` reference stays correctly reachable for as long as this
+    /// box itself is.
+    ExternOrigin(WasmValue),
+    /// W39 slice 3 (`extern.convert_any`): the mirror image of
+    /// [`Self::ExternOrigin`] above -- the result of converting an
+    /// `anyref` (an i31 payload, a struct/array reference, or an
+    /// ALREADY-`ExternOrigin`-boxed value from a previous `any.
+    /// convert_extern`) to `externref`. Reads back as `extern`/`externref`
+    /// UNCONDITIONALLY regardless of what it originally was (see that
+    /// same dynamic-check function's `Func | Extern` arm) -- exactly the
+    /// real spec's own rule that a converted value's original GC-side
+    /// identity becomes unobservable except by converting back. Wraps the
+    /// original `WasmValue` (an `I32` i31 payload, or a `Ref` pointing at
+    /// a struct/array/`ExternOrigin`) so `any.convert_extern` can recover
+    /// it exactly on a round trip.
+    AnyOrigin(WasmValue),
 }
 
 impl GcObject {
     /// This object's own child references, for the mark phase's root walk
     /// — a struct's fields or an array's elements, uniformly.
+    /// `ExternOrigin`/`AnyOrigin` each wrap exactly one `WasmValue` that
+    /// MAY itself be a live `gc_heap` reference (see `ExternOrigin`'s own
+    /// doc comment for why tracing it, rather than treating it as opaque,
+    /// is security-relevant, not just tidiness) -- `std::slice::from_ref`
+    /// exposes it as a one-element slice with no extra allocation, the
+    /// same uniform shape `push_roots_from_values` already expects.
     fn children(&self) -> &[WasmValue] {
         match self {
             GcObject::Struct(s) => &s.fields,
             GcObject::Array(a) => &a.elements,
+            GcObject::ExternOrigin(v) => std::slice::from_ref(v),
+            GcObject::AnyOrigin(v) => std::slice::from_ref(v),
         }
     }
 }
@@ -5737,32 +5800,51 @@ impl AbstractHeapType {
 // test is `i31_matches_abstract_heap_type` below, called directly from the
 // `0x14`-`0x17` opcode handler instead of from here.
 //
-// OPEN LIMITATION (documented, matches this spec's own explicitly-flagged
-// open sub-question): this engine's `GcObject` enum has no distinct
-// externref-carrying variant, so `Func`/`Extern` both fall back to "not a
-// live `gc_heap` object" as their only available positive signal — the
-// vendored corpus never tests a func-shaped value against `externref` or
-// vice versa (each hierarchy has its own dedicated table), so this
-// heuristic is never asked to make that real distinction in practice, but
-// it WOULD misclassify a dangling/stale `gc_heap` handle as func-shaped
-// rather than as "matches nothing" — a pre-existing representational gap,
-// not a new one this function introduces, left for whichever future slice
-// finally traces externref's own runtime representation end-to-end.
+// RESOLVED (W39 slice 3: `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`):
+// this function's own previous revision (W39 slice 2) flagged an "open
+// limitation" here -- this engine's `GcObject` enum had no distinct
+// externref-carrying variant, so `Func`/`Extern` fell back to a blunt "not
+// a live `gc_heap` object" heuristic. That heuristic breaks the moment
+// `any.convert_extern`/`extern.convert_any` are wired (slice 3's own real
+// corpus target `ref_test.wast` exercises exactly this: an `any.convert_
+// extern`'d value must match `any` but NOT `eq`, and an `extern.convert_
+// any`'d value must match `extern` UNCONDITIONALLY regardless of what it
+// originally was) -- resolved by giving `GcObject` two new variants,
+// `ExternOrigin`/`AnyOrigin` (see their own doc comments), that the arms
+// below now recognize directly instead of guessing from `gc_heap`
+// occupancy alone.
 fn ref_matches_abstract_heap_type(ctx: &WasmExecutionContext, tag: AbstractHeapType, payload: u32) -> bool {
-    let is_gc_object = ctx.gc_heap.get(payload as usize).and_then(|slot| slot.as_ref()).is_some();
+    let obj = ctx.gc_heap.get(payload as usize).and_then(|slot| slot.as_ref());
     match tag {
-        AbstractHeapType::Struct => matches!(ctx.gc_heap.get(payload as usize).and_then(|slot| slot.as_ref()), Some(GcObject::Struct(_))),
-        AbstractHeapType::Array => matches!(ctx.gc_heap.get(payload as usize).and_then(|slot| slot.as_ref()), Some(GcObject::Array(_))),
-        // `eq`/`any`: the `eq` hierarchy (and its `any` supertype, as far as
-        // this engine's non-func/extern values go) covers i31/struct/array
-        // — a non-null `Ref` payload reaching here is therefore a match iff
-        // it's a live struct/array object. (i31's own contribution to "eq
-        // covers i31" is handled entirely by `i31_matches_abstract_heap_
-        // type`, never by this function, since a live i31 value never
-        // reaches here as a `Ref` payload — see this function's own doc
-        // comment.)
-        AbstractHeapType::Eq | AbstractHeapType::Any => is_gc_object,
-        AbstractHeapType::Func | AbstractHeapType::Extern => !is_gc_object,
+        AbstractHeapType::Struct => matches!(obj, Some(GcObject::Struct(_))),
+        AbstractHeapType::Array => matches!(obj, Some(GcObject::Array(_))),
+        // `eq`: struct/array only. Deliberately narrower than `any` just
+        // below by exactly one case -- `ExternOrigin` (an `any.convert_
+        // extern`'d value) is a real `anyref` instance but, per the real
+        // spec's own hierarchy, never an `eqref` one (i31's own
+        // contribution to "eq covers i31" is handled entirely by
+        // `i31_matches_abstract_heap_type`, never by this function, since a
+        // live i31 value never reaches here as a `Ref` payload — see this
+        // function's own doc comment).
+        AbstractHeapType::Eq => matches!(obj, Some(GcObject::Struct(_)) | Some(GcObject::Array(_))),
+        // `any`: struct/array (same as `eq`) PLUS `ExternOrigin` -- an
+        // extern-origin value IS a real, distinct `anyref` instance once
+        // `any.convert_extern` has run (W39 slice 3).
+        AbstractHeapType::Any => matches!(obj, Some(GcObject::Struct(_)) | Some(GcObject::Array(_)) | Some(GcObject::ExternOrigin(_))),
+        // `func`/`extern`: the exact complement of `any`'s own test just
+        // above, PLUS `AnyOrigin` (an `extern.convert_any`'d value reads
+        // back as `extern`/`externref` UNCONDITIONALLY, regardless of what
+        // it originally was -- the mirror image of `ExternOrigin` reading
+        // as `any` above). A payload with no `gc_heap` entry at all (a raw,
+        // never-converted externref/funcref handle, or a dangling/stale
+        // handle) also matches here, same as the pre-W39-slice-3 fallback
+        // -- this repo's own corpus never tests a func-shaped value
+        // against `externref` or vice versa (each hierarchy has its own
+        // dedicated table), so this shared arm is never asked to
+        // distinguish those two cases from each other in practice.
+        AbstractHeapType::Func | AbstractHeapType::Extern => {
+            !matches!(obj, Some(GcObject::Struct(_)) | Some(GcObject::Array(_)) | Some(GcObject::ExternOrigin(_)))
+        }
         // A live i31 value is never carried as a `Ref` payload at all (see
         // `i31_matches_abstract_heap_type`, this function's own sibling,
         // for the real i31-vs-abstract-tag check) — so a genuine `Ref`
@@ -5939,6 +6021,11 @@ fn ref_matches_concrete_type(ctx: &WasmExecutionContext, type_idx: u32, payload:
         match ctx.gc_heap.get(payload as usize).and_then(|slot| slot.as_ref()) {
             Some(GcObject::Struct(s)) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, &ctx.canonical_types, s.type_idx, type_idx),
             Some(GcObject::Array(a)) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, &ctx.canonical_types, a.type_idx, type_idx),
+            // W39 slice 3: `ExternOrigin`/`AnyOrigin` (an `any.convert_
+            // extern`/`extern.convert_any`'d value) is never a genuine
+            // instance of ANY concrete struct/array type -- same safe
+            // `false` default as a dangling handle below.
+            Some(GcObject::ExternOrigin(_)) | Some(GcObject::AnyOrigin(_)) => false,
             None => false,
         }
     }
@@ -7122,6 +7209,105 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                     return Err(VMError::GenericError("cast failure".into()));
                 }
                 push_wasm(vm, value);
+            }
+
+            // `any.convert_extern` (0x1A) / `extern.convert_any` (0x1B)
+            // (W39 slice 3: `code/specs/
+            // W39-wasm-gc-ref-eq-cast-br-on-cast.md`) -- the externref <->
+            // anyref bridge. Real spec validation rule: `any.convert_
+            // extern` is `[(ref null1? extern)] -> [(ref null2? any)]`
+            // for any `null1?` that equals `null2?` (`extern.convert_any`
+            // is the mirror image) -- an IDENTITY-PRESERVING,
+            // nullability-preserving reinterpretation: null converts to
+            // null unchanged, and converting back and forth twice
+            // recovers the exact original value.
+            //
+            // A LITERAL pop-then-push-unchanged (this repo's first-cut
+            // implementation) is WRONG here, not just simplistically
+            // conservative: `ref.test`/`ref.cast`'s own dynamic check
+            // (`ref_matches_abstract_heap_type`) infers a value's runtime
+            // "kind" from its representation SHAPE (an `I32` reads as
+            // i31; a `Ref` pointing at a live `gc_heap` slot reads as
+            // struct/array/eq/any per that slot's own `GcObject` variant)
+            // -- a converted value must therefore actually change shape
+            // enough for THAT check to answer correctly post-conversion
+            // (real corpus proof: `ref_test.wast`'s own "Abstract Types"
+            // module requires an `any.convert_extern`'d value to match
+            // `any` but NOT `eq`, and an `extern.convert_any`'d value to
+            // match `extern` UNCONDITIONALLY even when its origin was an
+            // i31/struct/array). `GcObject::ExternOrigin`/`AnyOrigin`
+            // (this crate's own new W39 slice 3 variants -- see their doc
+            // comments) exist exactly to carry that "kind" signal. A
+            // round trip through BOTH conversions unwraps back to the
+            // exact original value instead of nesting a second box,
+            // preserving identity exactly as the spec requires.
+            0x1A => {
+                let value = pop_wasm(vm)?;
+                let converted = match value {
+                    WasmValue::Ref(None) => WasmValue::Ref(None),
+                    WasmValue::Ref(Some(h)) => match ctx.gc_heap.get(h as usize).and_then(|slot| slot.as_ref()) {
+                        // Round trip: this externref value itself came
+                        // from an earlier `extern.convert_any` -- recover
+                        // the original anyref value byte-for-byte rather
+                        // than nesting a second box.
+                        Some(GcObject::AnyOrigin(orig)) => *orig,
+                        // A genuinely extern-origin reference (a raw host
+                        // handle from `ref.extern`/an import, or already
+                        // `ExternOrigin`-boxed) -- box it so the dynamic
+                        // check above can read it back as `any` but never
+                        // `eq`/`i31`/`struct`/`array`. Boxes the full
+                        // `WasmValue`, not the bare `h`, so `children()`
+                        // traces it -- see `GcObject::ExternOrigin`'s own
+                        // doc comment for why (a security-review finding:
+                        // an out-of-spec module handing a REAL struct/
+                        // array handle to this instruction, which this
+                        // crate's own loose validator doesn't reject,
+                        // must not let the mark-sweep collector reclaim
+                        // that still-referenced object out from under
+                        // this box).
+                        _ => WasmValue::Ref(Some(gc::alloc(ctx, GcObject::ExternOrigin(value))?)),
+                    },
+                    // A well-typed program's `any.convert_extern` operand
+                    // is always `externref`-typed (`Ref`, per `wasm-types`
+                    // -- never `I32`/`I64`/`F32`/`F64`/`V128`), so this arm
+                    // is unreachable in practice; pass through defensively
+                    // rather than trapping on a shape this instruction was
+                    // never supposed to see.
+                    other => other,
+                };
+                push_wasm(vm, converted);
+            }
+            0x1B => {
+                let value = pop_wasm(vm)?;
+                let converted = match value {
+                    WasmValue::Ref(None) => WasmValue::Ref(None),
+                    WasmValue::Ref(Some(h)) => match ctx.gc_heap.get(h as usize).and_then(|slot| slot.as_ref()) {
+                        // Round trip: this anyref value itself came from
+                        // an earlier `any.convert_extern` -- recover the
+                        // original externref identity exactly rather than
+                        // nesting a second box.
+                        Some(GcObject::ExternOrigin(raw)) => *raw,
+                        // A genuine struct/array reference (or an already
+                        // `AnyOrigin`-boxed value): box it so the dynamic
+                        // check above reads it back as `extern`/
+                        // `externref` unconditionally.
+                        _ => WasmValue::Ref(Some(gc::alloc(ctx, GcObject::AnyOrigin(value))?)),
+                    },
+                    // A plain i31 payload (`I32`) -- box it the same way,
+                    // so a subsequent `ref.test (ref extern)`/`externref`
+                    // against the converted value reads it back as
+                    // extern-shaped instead of falling into the i31-
+                    // specific dynamic-check arm (which never recognizes
+                    // `Func`/`Extern` tags at all -- see `i31_matches_
+                    // abstract_heap_type`).
+                    WasmValue::I32(_) => WasmValue::Ref(Some(gc::alloc(ctx, GcObject::AnyOrigin(value))?)),
+                    // `extern.convert_any`'s operand is always `anyref`-
+                    // typed in a well-typed program (`I32`/`Ref` only, per
+                    // the two arms above) -- pass through defensively for
+                    // any other shape rather than trapping.
+                    other => other,
+                };
+                push_wasm(vm, converted);
             }
 
             other => {
@@ -17160,6 +17346,196 @@ mod tests {
         let mut engine = gc_engine(code, vec![ValueType::Anyref], vec![0]);
         let err = engine.call_function(0, &[]).unwrap_err();
         assert!(format!("{err:?}").contains("cast failure"), "expected a cast failure trap, got {err:?}");
+    }
+
+    // ── W39 slice 3 (`code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`):
+    // `any.convert_extern` (0xFB 0x1A) / `extern.convert_any` (0xFB 0x1B) --
+    // the externref <-> anyref bridge. Each test below exercises exactly
+    // one of this spec's own "Verification plan" cases: a non-null
+    // externref converted to anyref (matches `any`, never `eq`), a null
+    // externref converted to anyref (stays null), the mirror-image
+    // `extern.convert_any` case (an i31/struct value converted to
+    // externref matches `extern`/`externref` UNCONDITIONALLY, regardless
+    // of what it originally was), and a full round trip through BOTH
+    // conversions recovering the exact original value.
+
+    #[test]
+    fn test_any_convert_extern_non_null_matches_any_not_eq() {
+        // A non-null externref parameter (a raw host handle, exactly like
+        // the real corpus's own `(ref.extern n)` script literal) converted
+        // via `any.convert_extern` must read back as `anyref` (1) but NOT
+        // `eqref` (0) -- proving the conversion actually produces a real,
+        // distinct anyref instance rather than either a no-op pass-through
+        // (which would misread it as whatever `gc_heap[777]` coincidentally
+        // holds) or a value indistinguishable from a genuine struct/array.
+        let func_type = FuncType { params: vec![ValueType::Externref], results: vec![ValueType::I32] };
+        let code = vec![
+            0x20, 0x00, // local.get 0 ($x, externref)
+            0xFB, 0x1A, // any.convert_extern
+            0x21, 0x01, // local.set 1
+            0x20, 0x01, 0xFB, 0x15, 0x6E, // local.get 1; ref.test null anyref
+            0x20, 0x01, 0xFB, 0x15, 0x6D, // local.get 1; ref.test null eqref
+            0x6A, // i32.add
+            0x0B,
+        ];
+        let body = FunctionBody { locals: vec![ValueType::Anyref], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let result = engine.call_function(0, &[WasmValue::Ref(Some(777))]).unwrap();
+        assert_eq!(result, vec![WasmValue::I32(1)], "any.convert_extern's output must match anyref (contributing 1) but not eqref (contributing 0)");
+    }
+
+    #[test]
+    fn test_any_convert_extern_null_stays_null() {
+        // `any.convert_extern (ref.null extern)` must produce the null
+        // anyref, not a boxed "null externref" object -- real spec rule:
+        // null converts to null unchanged, no allocation at all.
+        let code = vec![
+            0xD0, 0x6F, // ref.null extern
+            0xFB, 0x1A, // any.convert_extern
+            0xD1, // ref.is_null
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "any.convert_extern(null) must stay null");
+    }
+
+    #[test]
+    fn test_extern_convert_any_i31_matches_extern_unconditionally() {
+        // `extern.convert_any` on an i31 value must read back as `extern`/
+        // `externref` UNCONDITIONALLY -- a plain i31 payload (`WasmValue::
+        // I32`) never reaches `ref_matches_abstract_heap_type`'s `Func`/
+        // `Extern` arm at all on its own (see `i31_matches_abstract_heap_
+        // type`, which never recognizes those two tags), so this proves
+        // the conversion genuinely changes the value's runtime SHAPE
+        // (boxing it as `GcObject::AnyOrigin`), not just its static type.
+        let code = vec![
+            0x41, 5, 0xFB, 0x1C, // i32.const 5; ref.i31
+            0xFB, 0x1B, // extern.convert_any
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, 0xFB, 0x15, 0x6F, // local.get 0; ref.test null externref
+            0x20, 0x00, 0xFB, 0x15, 0x6E, // local.get 0; ref.test null anyref
+            0x6A, // i32.add
+            0x0B,
+        ];
+        let body = FunctionBody { locals: vec![ValueType::Externref], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![FuncType { params: vec![], results: vec![ValueType::I32] }],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(1)],
+            "extern.convert_any's output must match externref (contributing 1) but not anyref (contributing 0)"
+        );
+    }
+
+    #[test]
+    fn test_extern_convert_any_struct_matches_extern_unconditionally() {
+        // Same rule, exercised against a real struct.new'd value instead
+        // of an i31 -- proves the `GcObject::AnyOrigin` box overrides
+        // `ref_matches_abstract_heap_type`'s own `Struct`/`Eq`/`Any` arms
+        // for a value that WOULD otherwise read as a genuine struct.
+        let code = vec![
+            0xFB, 0x00, 0x00, // struct.new 0 (0 fields)
+            0xFB, 0x1B, // extern.convert_any
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, 0xFB, 0x15, 0x6F, // local.get 0; ref.test null externref
+            0x20, 0x00, 0xFB, 0x15, 0x6B, // local.get 0; ref.test null structref
+            0x6A, // i32.add
+            0x0B,
+        ];
+        let body = FunctionBody { locals: vec![ValueType::Externref], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![FuncType { params: vec![], results: vec![ValueType::I32] }],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_struct_field_counts(vec![0]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(1)],
+            "extern.convert_any(struct) must match externref (contributing 1) but not structref (contributing 0)"
+        );
+    }
+
+    #[test]
+    fn test_extern_convert_any_null_stays_null() {
+        let code = vec![
+            0xD0, 0x0F, // ref.null (anyref)
+            0xFB, 0x1B, // extern.convert_any
+            0xD1, // ref.is_null
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "extern.convert_any(null) must stay null");
+    }
+
+    #[test]
+    fn test_convert_extern_any_round_trip_preserves_identity() {
+        // `extern.convert_any(any.convert_extern(x))` must recover the
+        // EXACT original externref value `x` -- the real spec's own
+        // "identity-preserving" rule, verified by round-tripping a raw
+        // host handle through BOTH conversions and reading the result back
+        // out via a table (the only way to observe a `Ref`'s raw payload
+        // from outside `wasm-execution` itself) rather than nesting a
+        // second, distinguishable box around an already-converted value.
+        let func_type = FuncType { params: vec![ValueType::Externref], results: vec![ValueType::Externref] };
+        let code = vec![
+            0x20, 0x00, // local.get 0 ($x)
+            0xFB, 0x1A, // any.convert_extern
+            0xFB, 0x1B, // extern.convert_any
+            0x0B,
+        ];
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let result = engine.call_function(0, &[WasmValue::Ref(Some(4242))]).unwrap();
+        assert_eq!(result, vec![WasmValue::Ref(Some(4242))], "round-tripping through any.convert_extern then extern.convert_any must recover the exact original externref identity");
+    }
+
+    #[test]
+    fn test_convert_any_extern_round_trip_preserves_identity() {
+        // The mirror image: `any.convert_extern(extern.convert_any(y))`
+        // must recover the exact original anyref value `y` -- here, a
+        // live struct handle, proving the round trip doesn't just work
+        // for the simpler i31/null cases.
+        let code = vec![
+            0xFB, 0x00, 0x00, // struct.new 0 (0 fields) -- some handle h
+            0xFB, 0x1B, // extern.convert_any
+            0xFB, 0x1A, // any.convert_extern
+            0xFB, 0x14, 0x00, // ref.test $LispyPair (type 0) -- must still be 1
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(1)],
+            "round-tripping a struct through extern.convert_any then any.convert_extern must recover the exact original struct identity"
+        );
     }
 
     // ── W33 fourth slice: struct.new_default / struct.get_s / struct.get_u ──
