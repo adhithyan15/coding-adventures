@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Apply optional `PaintClip` paths through native Cairo save/clip/restore
+  semantics, with pixel acceptance beyond conservative clip bounds.
+
 ## 0.1.0
 
 - Added native Linux/BSD Cairo image-surface rendering through `cairo-rs`.

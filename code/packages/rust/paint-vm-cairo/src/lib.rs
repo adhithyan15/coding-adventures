@@ -616,8 +616,49 @@ mod native_cairo {
         opacity: f64,
         gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
-        if path
-            .commands
+        append_path(cr, &path.commands)?;
+
+        cr.set_fill_rule(
+            match path.fill_rule.as_ref().unwrap_or(&PaintFillRule::NonZero) {
+                PaintFillRule::NonZero => CairoFillRule::Winding,
+                PaintFillRule::EvenOdd => CairoFillRule::EvenOdd,
+            },
+        );
+
+        if let Some(fill) = &path.fill {
+            set_paint_source(cr, fill, opacity, gradients)?;
+            if path.stroke.is_some() {
+                cr.fill_preserve().map_err(cairo_error)?;
+            } else {
+                cr.fill().map_err(cairo_error)?;
+            }
+        }
+        if let Some(stroke) = &path.stroke {
+            apply_stroke(
+                cr,
+                path.stroke_width,
+                path.stroke_cap.as_ref(),
+                path.stroke_dash.as_deref(),
+                path.stroke_dash_offset,
+            );
+            if let Some(join) = &path.stroke_join {
+                cr.set_line_join(match join {
+                    StrokeJoin::Miter => LineJoin::Miter,
+                    StrokeJoin::Round => LineJoin::Round,
+                    StrokeJoin::Bevel => LineJoin::Bevel,
+                });
+            }
+            set_paint_source(cr, stroke, opacity, gradients)?;
+            cr.stroke().map_err(cairo_error)?;
+        } else {
+            cr.new_path();
+        }
+
+        Ok(())
+    }
+
+    fn append_path(cr: &Context, commands: &[PathCommand]) -> Result<(), PaintRenderError> {
+        if commands
             .iter()
             .any(|command| matches!(command, PathCommand::ArcTo { .. }))
         {
@@ -629,7 +670,7 @@ mod native_cairo {
         cr.new_path();
         let mut first = None::<(f64, f64)>;
         let mut cursor = None::<(f64, f64)>;
-        for command in &path.commands {
+        for command in commands {
             match *command {
                 PathCommand::MoveTo { x, y } => {
                     first = Some((x, y));
@@ -670,43 +711,6 @@ mod native_cairo {
                 PathCommand::ArcTo { .. } => unreachable!("ArcTo rejected before path lowering"),
             }
         }
-
-        cr.set_fill_rule(
-            match path.fill_rule.as_ref().unwrap_or(&PaintFillRule::NonZero) {
-                PaintFillRule::NonZero => CairoFillRule::Winding,
-                PaintFillRule::EvenOdd => CairoFillRule::EvenOdd,
-            },
-        );
-
-        if let Some(fill) = &path.fill {
-            set_paint_source(cr, fill, opacity, gradients)?;
-            if path.stroke.is_some() {
-                cr.fill_preserve().map_err(cairo_error)?;
-            } else {
-                cr.fill().map_err(cairo_error)?;
-            }
-        }
-        if let Some(stroke) = &path.stroke {
-            apply_stroke(
-                cr,
-                path.stroke_width,
-                path.stroke_cap.as_ref(),
-                path.stroke_dash.as_deref(),
-                path.stroke_dash_offset,
-            );
-            if let Some(join) = &path.stroke_join {
-                cr.set_line_join(match join {
-                    StrokeJoin::Miter => LineJoin::Miter,
-                    StrokeJoin::Round => LineJoin::Round,
-                    StrokeJoin::Bevel => LineJoin::Bevel,
-                });
-            }
-            set_paint_source(cr, stroke, opacity, gradients)?;
-            cr.stroke().map_err(cairo_error)?;
-        } else {
-            cr.new_path();
-        }
-
         Ok(())
     }
 
@@ -820,7 +824,11 @@ mod native_cairo {
         gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         cr.save().map_err(cairo_error)?;
-        cr.rectangle(clip.x, clip.y, clip.width, clip.height);
+        if let Some(path) = &clip.path {
+            append_path(cr, path)?;
+        } else {
+            cr.rectangle(clip.x, clip.y, clip.width, clip.height);
+        }
         cr.clip();
         for child in &clip.children {
             render_instruction(cr, child, opacity, gradients)?;
@@ -1847,7 +1855,7 @@ mod tests {
     use super::*;
     use paint_instructions::{
         GradientKind, GradientStop, PaintBase, PaintClip, PaintGradient, PaintGroup,
-        PaintInstruction, PaintRect, PaintText, TextAlign,
+        PaintInstruction, PaintRect, PaintText, PathCommand, TextAlign,
     };
     use paint_vm_runtime::{
         PaintBackendPreference, PaintBackendRegistry, PaintFeature, PaintRenderOptions,
@@ -1921,10 +1929,17 @@ mod tests {
         let mut scene = transparent_scene(6.0, 6.0);
         scene.instructions.push(PaintInstruction::Clip(PaintClip {
             base: PaintBase::default(),
-            x: 2.0,
-            y: 2.0,
-            width: 2.0,
-            height: 2.0,
+            x: 0.0,
+            y: 0.0,
+            width: 6.0,
+            height: 6.0,
+            path: Some(vec![
+                PathCommand::MoveTo { x: 2.0, y: 2.0 },
+                PathCommand::LineTo { x: 4.0, y: 2.0 },
+                PathCommand::LineTo { x: 4.0, y: 4.0 },
+                PathCommand::LineTo { x: 2.0, y: 4.0 },
+                PathCommand::Close,
+            ]),
             children: vec![PaintInstruction::Rect(PaintRect::filled(
                 0.0, 0.0, 6.0, 6.0, "#00ff00",
             ))],
@@ -1955,7 +1970,9 @@ mod tests {
 
         assert!(pixels
             .data
-            .as_chunks::<4>().0.iter()
+            .as_chunks::<4>()
+            .0
+            .iter()
             .any(|pixel| pixel[2] > pixel[0] && pixel[2] > pixel[1] && pixel[3] > 0));
     }
 
@@ -2174,6 +2191,11 @@ mod tests {
                 },
             )
             .expect("degraded text opt-in should render");
-        assert!(pixels.data.as_chunks::<4>().0.iter().any(|pixel| pixel[3] != 0));
+        assert!(pixels
+            .data
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .any(|pixel| pixel[3] != 0));
     }
 }

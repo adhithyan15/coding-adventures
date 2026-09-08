@@ -8,6 +8,7 @@ use html_to_layout::{
 };
 use image_codec_gif::decode_gif;
 use image_codec_jpeg::decode_jpeg;
+use layout_backgrounds::{BackgroundStyle, Rect as BackgroundRect};
 use layout_block::layout_block;
 use layout_effects::{multiply, transform_point, EffectStyle, Transform2D, IDENTITY};
 use layout_ir::{Constraints, Content, ExtValue, PositionedNode, TextMeasurer};
@@ -150,6 +151,24 @@ impl HtmlPaintViewport {
     }
 }
 
+/// A transformed overflow clip carried into link hit testing.
+#[derive(Clone, Debug, PartialEq)]
+pub struct LinkClip {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub corners: [(f64, f64); 4],
+    pub inverse_transform: Transform2D,
+}
+
+impl LinkClip {
+    fn contains(&self, x: f64, y: f64) -> bool {
+        let (x, y) = transform_point(self.inverse_transform, x, y);
+        rounded_rect_contains(x, y, self.x, self.y, self.width, self.height, self.corners)
+    }
+}
+
 /// A clickable link rectangle in logical document-content coordinates.
 #[derive(Clone, Debug, PartialEq)]
 pub struct LinkRegion {
@@ -160,6 +179,8 @@ pub struct LinkRegion {
     pub url: String,
     /// Fixed regions stay in viewport coordinates and ignore document scroll.
     pub fixed: bool,
+    /// Ancestor overflow clips, including transformed elliptical corners.
+    pub clips: Vec<LinkClip>,
 }
 
 impl LinkRegion {
@@ -174,6 +195,7 @@ impl LinkRegion {
             && x < self.x + self.width
             && y >= self.y
             && y < self.y + self.height
+            && self.clips.iter().all(|clip| clip.contains(x, y))
     }
 }
 
@@ -435,13 +457,14 @@ fn never_visited(_url: &str) -> bool {
 /// coordinates into absolute logical document coordinates.
 pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
     let mut regions = Vec::new();
-    let mut stack = vec![(root, 0.0, 0.0, None, false, IDENTITY)];
+    let mut stack = vec![(root, 0.0, 0.0, None, Vec::new(), false, IDENTITY)];
 
     while let Some((
         node,
         parent_x,
         parent_y,
         inherited_clip,
+        inherited_clips,
         inherited_fixed,
         inherited_transform,
     )) = stack.pop()
@@ -471,12 +494,14 @@ pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
                         height,
                         url: url.to_string(),
                         fixed,
+                        clips: inherited_clips.clone(),
                     });
                 }
             }
         }
 
-        let child_clip = if style.clips_x() || style.clips_y() {
+        let clips_children = style.clips_x() || style.clips_y();
+        let child_clip = if clips_children {
             clipped_box(
                 transformed_box((absolute_x, absolute_y, node.width, node.height), transform),
                 inherited_clip,
@@ -484,12 +509,106 @@ pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
         } else {
             inherited_clip
         };
+        let mut child_clips = inherited_clips;
+        if clips_children {
+            if let Some(inverse_transform) = invert_transform(transform) {
+                let backgrounds = BackgroundStyle::from_positioned(node);
+                child_clips.push(LinkClip {
+                    x: absolute_x,
+                    y: absolute_y,
+                    width: node.width,
+                    height: node.height,
+                    corners: backgrounds.resolved_corners(BackgroundRect {
+                        x: absolute_x,
+                        y: absolute_y,
+                        width: node.width,
+                        height: node.height,
+                    }),
+                    inverse_transform,
+                });
+            }
+        }
         for child in node.children.iter().rev() {
-            stack.push((child, absolute_x, absolute_y, child_clip, fixed, transform));
+            stack.push((
+                child,
+                absolute_x,
+                absolute_y,
+                child_clip,
+                child_clips.clone(),
+                fixed,
+                transform,
+            ));
         }
     }
 
     regions
+}
+
+fn invert_transform(transform: Transform2D) -> Option<Transform2D> {
+    let [a, b, c, d, e, f] = transform;
+    let determinant = a * d - b * c;
+    if !determinant.is_finite() || determinant.abs() <= f64::EPSILON {
+        return None;
+    }
+    Some([
+        d / determinant,
+        -b / determinant,
+        -c / determinant,
+        a / determinant,
+        (c * f - d * e) / determinant,
+        (b * e - a * f) / determinant,
+    ])
+}
+
+#[allow(clippy::too_many_arguments)]
+fn rounded_rect_contains(
+    point_x: f64,
+    point_y: f64,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    corners: [(f64, f64); 4],
+) -> bool {
+    if point_x < x || point_x >= x + width || point_y < y || point_y >= y + height {
+        return false;
+    }
+    let right = x + width;
+    let bottom = y + height;
+    let tests = [
+        (
+            x + corners[0].0,
+            y + corners[0].1,
+            corners[0],
+            point_x < x + corners[0].0 && point_y < y + corners[0].1,
+        ),
+        (
+            right - corners[1].0,
+            y + corners[1].1,
+            corners[1],
+            point_x >= right - corners[1].0 && point_y < y + corners[1].1,
+        ),
+        (
+            right - corners[2].0,
+            bottom - corners[2].1,
+            corners[2],
+            point_x >= right - corners[2].0 && point_y >= bottom - corners[2].1,
+        ),
+        (
+            x + corners[3].0,
+            bottom - corners[3].1,
+            corners[3],
+            point_x < x + corners[3].0 && point_y >= bottom - corners[3].1,
+        ),
+    ];
+    tests
+        .into_iter()
+        .all(|(center_x, center_y, (rx, ry), applies)| {
+            !applies
+                || rx <= 0.0
+                || ry <= 0.0
+                || ((point_x - center_x) / rx).powi(2) + ((point_y - center_y) / ry).powi(2) <= 1.0
+        })
 }
 
 fn transformed_box(rect: (f64, f64, f64, f64), transform: Transform2D) -> (f64, f64, f64, f64) {
@@ -843,6 +962,7 @@ fn mosaic_broken_image_fallback(image: &PaintImage) -> PaintInstruction {
         y: image.y,
         width,
         height,
+        path: None,
         children,
     })
 }
@@ -1238,6 +1358,7 @@ mod tests {
                 height: 10.0,
                 url: "https://example.test/visible".into(),
                 fixed: false,
+                clips: Vec::new(),
             }]
         );
     }
@@ -1264,6 +1385,7 @@ mod tests {
                 height: 10.0,
                 url: "https://example.test/moved".into(),
                 fixed: false,
+                clips: Vec::new(),
             }]
         );
     }
@@ -1277,6 +1399,7 @@ mod tests {
             height: 12.0,
             url: "https://example.test/next".into(),
             fixed: false,
+            clips: Vec::new(),
         };
 
         assert_eq!(
@@ -1295,6 +1418,43 @@ mod tests {
             hit_test_link(std::slice::from_ref(&region), f64::NAN, 20.0, 60.0),
             None
         );
+    }
+
+    #[test]
+    fn rounded_overflow_clip_excludes_link_corner_hits() {
+        let link = positioned_link(0.0, 0.0, 100.0, 80.0, "https://example.test/rounded");
+        let mut root = PositionedNode {
+            x: 10.0,
+            y: 20.0,
+            width: 100.0,
+            height: 80.0,
+            id: None,
+            content: None,
+            children: vec![link],
+            ext: Default::default(),
+        };
+        root.ext.insert(
+            "positioned".into(),
+            layout_positioned::PositionedStyle {
+                overflow_x: layout_positioned::Overflow::Hidden,
+                overflow_y: layout_positioned::Overflow::Hidden,
+                ..Default::default()
+            }
+            .to_ext(),
+        );
+        let backgrounds = layout_backgrounds::BackgroundStyle {
+            corners: [layout_backgrounds::CornerRadius {
+                x: layout_backgrounds::LengthPercent::length(20.0),
+                y: layout_backgrounds::LengthPercent::length(20.0),
+            }; 4],
+            ..Default::default()
+        };
+        root.ext.insert("backgrounds".into(), backgrounds.to_ext());
+
+        let regions = extract_link_regions(&root);
+        assert_eq!(regions.len(), 1);
+        assert!(!regions[0].contains(10.0, 20.0));
+        assert!(regions[0].contains(30.0, 40.0));
     }
 
     #[test]

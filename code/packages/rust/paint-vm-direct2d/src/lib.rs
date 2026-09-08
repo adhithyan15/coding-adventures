@@ -2093,6 +2093,7 @@ mod tests {
             y: 25.0,
             width: 50.0,
             height: 50.0,
+            path: None,
             children: vec![PaintInstruction::Rect(PaintRect::filled(
                 0.0, 0.0, 100.0, 100.0, "#ff0000",
             ))],

@@ -3404,6 +3404,7 @@ mod tests {
             y: 3.0,
             width: 2.0,
             height: 3.0,
+            path: None,
             children: vec![isolated_layer(
                 vec![PaintInstruction::Rect(PaintRect::filled(
                     4.0, 4.0, 1.0, 1.0, "#000000",
@@ -3525,6 +3526,7 @@ mod tests {
                 y: 1.0,
                 width: 4.0,
                 height: 4.0,
+                path: None,
                 children: vec![image],
             })],
             transform: Some([1.0, 0.0, 0.0, 1.0, 4.0, 2.0]),

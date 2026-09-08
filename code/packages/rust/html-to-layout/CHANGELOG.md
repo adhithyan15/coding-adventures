@@ -27,6 +27,10 @@
 
 ## Unreleased
 
+- Expand one-to-four-value border width/color/style shorthands and retain
+  per-side `none`, `hidden`, `solid`, `dashed`, `dotted`, and `double` styles
+  in shared paint metadata.
+
 - Project computed position, inset, z-index, and overflow values into the
   reusable `layout-positioned` extension contract.
 

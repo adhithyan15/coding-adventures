@@ -1,5 +1,10 @@
 # Changelog — @coding-adventures/paint-vm-svg
 
+## Unreleased
+
+- Emit optional exact `PaintClip.path` commands as SVG `<clipPath><path>`
+  geometry while preserving rectangular clips as the default.
+
 ## [0.1.1] — 2026-05-04
 
 ### Added

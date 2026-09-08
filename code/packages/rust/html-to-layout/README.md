@@ -52,8 +52,8 @@ isolation into the producer-neutral `layout-effects` contract. Syntax remains
 at this CSS adapter boundary; shared layout, paint, and hit testing consume
 only typed metadata.
 Multiple image and linear/radial gradient backgrounds, per-layer position,
-size, repeat, origin and clip, plus four elliptical corner pairs map into the
-producer-neutral `layout-backgrounds` contract.
+size, repeat, origin and clip, four elliptical corner pairs, and per-side
+border styles map into producer-neutral layout and paint contracts.
 Table display roles and HTML span/section metadata map to a typed table
 contract alongside computed layout mode, border model/spacing, caption side,
 and cell vertical alignment.

@@ -563,14 +563,11 @@ pub struct PaintLine {
 
 // ─── PaintClip ────────────────────────────────────────────────────────────────
 
-/// Rectangular clip mask for child instructions.
+/// Rectangular or path clip mask for child instructions.
 ///
 /// Children are rendered clipped to the given rectangle. Pixels outside the
-/// clip rect are not drawn. The clip affects only the `children` — instructions
+/// clip shape are not drawn. The clip affects only the `children` — instructions
 /// outside `PaintClip` are unaffected.
-///
-/// This is currently a rectangular clip. Arbitrary path clipping is deferred
-/// to `PaintMask` (P2D08).
 #[derive(Clone, Debug, PartialEq)]
 pub struct PaintClip {
     pub base: PaintBase,
@@ -578,6 +575,9 @@ pub struct PaintClip {
     pub y: f64,
     pub width: f64,
     pub height: f64,
+    /// Optional closed path replacing the rectangular clip. The rectangle remains
+    /// the conservative bounds used by backends for culling and scissoring.
+    pub path: Option<Vec<PathCommand>>,
     pub children: Vec<PaintInstruction>,
 }
 

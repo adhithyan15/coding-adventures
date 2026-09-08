@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Venture rounded clipping and border geometry
+
+- Added exact path clips with conservative bounds across the shared paint IR,
+  Cairo, Skia, Canvas, and SVG, with explicit rectangular degradation
+  diagnostics in GPU plans.
+- Added normalized elliptical overflow/background clips, clip-aware link hit
+  testing, and joined per-side solid, dashed, dotted, and double border paint.
+
 ### Haskell build-tool portable source hashing
 
 - Embedded the complete checked 23-language source-input registry, including
