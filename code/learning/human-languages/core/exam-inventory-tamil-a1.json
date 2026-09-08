@@ -674,7 +674,25 @@
       "id": "TA-A1-NUM-04",
       "category": "Eṇṇuppeyar (numerals and quantity)",
       "label": "the ordinals: mudal, iraṇḍāvadu",
-      "probe": null,
+      "probe": [
+        "TA-LEX-C82-ORDINAL-01",
+        "TA-ETYMON-C82-ORDINAL-02",
+        "TA-LEX-C82-ORDINAL-03",
+        "TA-GRAMMAR-C82-ORDINAL-04",
+        "TA-LEX-C82-ORDINAL-05",
+        "TA-LEX-C82-ORDINAL-06",
+        "TA-LEX-C82-ORDINAL-07",
+        "TA-LEX-C82-ORDINAL-08",
+        "TA-LEX-C83-ORDINAL-01",
+        "TA-LEX-C83-ORDINAL-02",
+        "TA-LEX-C83-ORDINAL-03",
+        "TA-LEX-C83-ORDINAL-04",
+        "TA-LEX-C83-ORDINAL-05",
+        "TA-LEX-C83-ORDINAL-06",
+        "TA-GRAMMAR-C83-ORDINAL-07",
+        "TA-GRAMMAR-C83-ORDINAL-08",
+        "TA-LEX-C83-ORDINAL-09"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -685,7 +703,7 @@
         "A1-NG2-01",
         "A1-NG3-06"
       ],
-      "note": "mutalil ('first of all') is taught in chapter 62 as a discourse word, not as an ordinal, and no other ordinal exists."
+      "note": "CLOSED by the ordinal tranche, chapters 82-83, and the old note was the reason the tranche found what it found: mutalil WAS in the corpus, taught in chapter 62 as a discourse word, and mutalil is mutal plus the locative -il. So Tamil's one irregular ordinal was ALREADY IN THE LEARNER'S MOUTH, and the first lesson does not teach a word -- it takes muthalil apart and names what was inside it. That is why this track's ordinals open on FIRST where Kannada's could not: the exception is the one item the reader already owned. The second lesson gives the ending -aavadhu and the third shows that muthal takes it too (muthalaavadhu), so the exception is the STEM and not the rule. Eleventh is taught to show the ending was never a fact about one-to-ten. NOT the same ending as a date: -aam is taught separately in the last lesson with thaedhi, the day-number, against the Tamil month names chapter 16 already gave -- so 'Chithirai irandaam thaedhi' is now sayable. Every glyph in every word of the tranche was already in the track's own 52-character census, headwords AND worked examples, so script was never the blocker. NOT claimed: that -aavadhu and -aam are freely interchangeable; the source states -aam for dates and that is all this tranche teaches about it."
     },
     {
       "id": "TA-A1-NUM-05",

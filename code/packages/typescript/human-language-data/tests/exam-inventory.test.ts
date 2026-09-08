@@ -1267,8 +1267,17 @@ describe("the committed Tamil A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(262);
-    expect(coverage.covered).toBe(174);
-    expect(coverage.unmapped).toBe(88);
+    expect(coverage.covered).toBe(175);
+    expect(coverage.unmapped).toBe(87);
+    // 174 -> 175: the HL-C354 ordinal tranche closed TA-A1-NUM-04 (chapters
+    // 82-83). It is the ONLY point that moved, and the numeral column below
+    // says so on its own line rather than leaving the total to speak for it.
+    // The two still open in that column are TA-A1-NUM-03 (above twenty) and
+    // TA-A1-NUM-07 (measures); neither is ordinal work.
+    expect(coverage.byCategory["Eṇṇuppeyar (numerals and quantity)"]!).toEqual({
+      enumerated: 8,
+      covered: 6,
+    });
     // Zero partials is a property of the "existing atoms only" rule, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1282,7 +1291,7 @@ describe("the committed Tamil A1 inventory", () => {
     expect(coverage.byCategory["Vinaiccol (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Tamiḻ eḻuttu (script and orthography)"]!.covered).toBeGreaterThan(5);
     expect(formatExamCoverage(coverage)).toContain(
-      "tamil A1 (partial inventory): 174/262 points covered (66%)",
+      "tamil A1 (partial inventory): 175/262 points covered (67%)",
     );
   }, 60_000);
 });

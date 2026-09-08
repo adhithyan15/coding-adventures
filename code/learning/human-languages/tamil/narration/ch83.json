@@ -1,0 +1,1165 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 83,
+  "title": "All the Way Up, and On a Calendar",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:78aff62ee5914a09",
+  "lessons": [
+    {
+      "id": "TA-C83-sixth",
+      "sequence": 3400,
+      "title": "ஆறாவது (āṟāvadu) — sixth",
+      "headword": "ஆறாவது",
+      "romanization": "āṟāvadu",
+      "gloss": "sixth — the ending working on a number you already count with",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:854e1f113a2e8356",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aindāvadu — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aindāvadu* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iraṇḍāvadu — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iraṇḍāvadu* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "give a reason with ēṉeṉṟāl — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: give a reason with *ēṉeṉṟāl* — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆறாவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆறாவது (āṟāvadu) — \"sixth\". ஆறு (āṟu) takes -ஆவது, and nothing else changes."
+            },
+            {
+              "kind": "speech",
+              "text": "Six to ten were a separate lesson from one to five when you learned to count, because the words themselves had to be learned. For ordering they are not a separate anything: the same ending, on the next number."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṟu, then āṟāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṟu*, then *āṟāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ordinal before this one, then āṟāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ordinal before this one, then *āṟāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṟāvadu nāḷ — the sixth day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṟāvadu nāḷ* — the sixth day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Did the ending change above five? (No.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: learntamil.com, Ordinal Numbers / Dates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C83-seventh",
+      "sequence": 3410,
+      "title": "ஏழாவது (ēḻāvadu) — seventh",
+      "headword": "ஏழாவது",
+      "romanization": "ēḻāvadu",
+      "gloss": "seventh — the ending working on a number you already count with",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39065f033eefcc3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āṟāvadu — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āṟāvadu* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mutalāvadu — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mutalāvadu* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ஏன் — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ஏன்** — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say saṭṭai — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *saṭṭai* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஏழாவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏழாவது (ēḻāvadu) — \"seventh\". ஏழு (ēḻu) takes -ஆவது, and nothing else changes."
+            },
+            {
+              "kind": "speech",
+              "text": "ஏழு carries the curled ḻ, the sound in the name Tamiḻ itself and the one this language shares with Malayalam while Kannada and Telugu hardened it away. Adding the ending does not soften it: ஏழாவது (ēḻāvadu), tongue still curled."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēḻu, then ēḻāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēḻu*, then *ēḻāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ordinal before this one, then ēḻāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ordinal before this one, then *ēḻāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēḻāvadu nāḷ — the seventh day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēḻāvadu nāḷ* — the seventh day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happens to the ழ when the ending goes on? (Nothing.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: learntamil.com, Ordinal Numbers / Dates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C83-eighth",
+      "sequence": 3420,
+      "title": "எட்டாவது (eṭṭāvadu) — eighth",
+      "headword": "எட்டாவது",
+      "romanization": "eṭṭāvadu",
+      "gloss": "eighth — the ending working on a number you already count with",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3af469fcbfa86e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ēḻāvadu — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ēḻāvadu* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mūṉṟāvadu — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mūṉṟāvadu* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say adaṉāl — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *adaṉāl* — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vēṭṭi — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vēṭṭi* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எட்டாவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எட்டாவது (eṭṭāvadu) — \"eighth\". எட்டு (eṭṭu) takes -ஆவது, and nothing else changes."
+            },
+            {
+              "kind": "speech",
+              "text": "எட்டு has the doubled retroflex ṭṭ. The ending lands after all of it, so the doubling is untouched: எட்டாவது (eṭṭāvadu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṭṭu, then eṭṭāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṭṭu*, then *eṭṭāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ordinal before this one, then eṭṭāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ordinal before this one, then *eṭṭāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṭṭāvadu nāḷ — the eighth day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṭṭāvadu nāḷ* — the eighth day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Did the doubled ட்ட change? (No.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: learntamil.com, Ordinal Numbers / Dates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C83-ninth",
+      "sequence": 3430,
+      "title": "ஒன்பதாவது (oṉpadāvadu) — ninth",
+      "headword": "ஒன்பதாவது",
+      "romanization": "oṉpadāvadu",
+      "gloss": "ninth — the ending working on a number you already count with",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d020cc37f179dc89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eṭṭāvadu — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eṭṭāvadu* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nāṉkāvadu — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nāṉkāvadu* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say why you are doing something with -kkāga — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say why you are doing something with *-kkāga* — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read சட்டை — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **சட்டை** — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒன்பதாவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒன்பதாவது (oṉpadāvadu) — \"ninth\". ஒன்பது (oṉpadu) takes -ஆவது, and nothing else changes."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒன்பது was already a built word when you learned it: an old ஒன், one, in front of பது, ten — one short of ten. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṉpadu, then oṉpadāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṉpadu*, then *oṉpadāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ordinal before this one, then oṉpadāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ordinal before this one, then *oṉpadāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṉpadāvadu nāḷ — the ninth day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṉpadāvadu nāḷ* — the ninth day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two numbers are inside ஒன்பது? (One and ten — nine is one short of ten.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: learntamil.com, Ordinal Numbers / Dates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C83-tenth",
+      "sequence": 3440,
+      "title": "பத்தாவது (pattāvadu) — tenth",
+      "headword": "பத்தாவது",
+      "romanization": "pattāvadu",
+      "gloss": "tenth — the ending working on a number you already count with",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7048b3de3bed413",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say oṉpadāvadu — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *oṉpadāvadu* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aindāvadu — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aindāvadu* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask eppōdu? — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask *eppōdu?* — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say puḍavai — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *puḍavai* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பத்தாவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பத்தாவது (pattāvadu) — \"tenth\". பத்து (pattu) takes -ஆவது, and nothing else changes."
+            },
+            {
+              "kind": "speech",
+              "text": "பத்தாவது நாள் (pattāvadu nāḷ), the tenth day, and the ten are done."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pattu, then pattāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pattu*, then *pattāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ordinal before this one, then pattāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ordinal before this one, then *pattāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pattāvadu nāḷ — the tenth day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pattāvadu nāḷ* — the tenth day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count the ordinals from one to ten. How many of them were words you had to learn? (None — ten of them were built by one ending on numbers you already count with, and முதல் you already had.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: learntamil.com, Ordinal Numbers / Dates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C83-eleventh",
+      "sequence": 3450,
+      "title": "பதினொன்றாவது (patiṉoṉṟāvadu) — eleventh, and the edge that is not there",
+      "headword": "பதினொன்றாவது",
+      "romanization": "patiṉoṉṟāvadu",
+      "gloss": "eleventh — proof the ending was never a fact about one to ten",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0776f9ac834235d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pattāvadu — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pattāvadu* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āṟāvadu — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āṟāvadu* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say appōdu — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *appōdu* — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say seruppu — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *seruppu* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பதினொன்றாவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதினொன்றாவது (patiṉoṉṟāvadu) — \"eleventh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பதினொன்று was itself a built word: patiṉ-, the joining shape of ten, with oṉṟu welded on. Now the ordinal ending goes on top of that, and the result is a word of three parts, none of which had to be learned as a whole."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending is a fact about numbers, not about ten",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Most books stop an ordinal chapter at tenth, and a learner reasonably concludes that those ten words were the set. In Tamil there is no set. -ஆவது attaches to a number, so every number you learn from here on arrives with its ordinal already made: இருபது gives இருபதாவது (irupadāvadu), twentieth, without a lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why this book taught the ending in the second lesson of the previous chapter rather than after ten examples. The examples were never the content."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patiṉoṉṟu, then patiṉoṉṟāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patiṉoṉṟu*, then *patiṉoṉṟāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pattāvadu, patiṉoṉṟāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pattāvadu, patiṉoṉṟāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "take irupadu and make its ordinal yourself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: take *irupadu* and make its ordinal yourself]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Do you need a lesson for twentieth? (No — the ending goes on any number.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: learntamil.com, Ordinal Numbers / Dates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C83-date",
+      "sequence": 3460,
+      "title": "தேதி (tēdi) — the date, and the ending a calendar uses",
+      "headword": "தேதி",
+      "romanization": "tēdi",
+      "gloss": "a date — and the second ordinal ending, the one a calendar uses",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b35c6d6ddf7e3e47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say patiṉoṉṟāvadu, and say why irupadāvadu needs no lesson — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *patiṉoṉṟāvadu*, and say why *irupadāvadu* needs no lesson — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ēḻāvadu — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ēḻāvadu* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read எப்போது — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **எப்போது** — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say toppi — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *toppi* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தேதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேதி (tēdi) — \"a date\", the day-number on a calendar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a second ending, for one job",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil has a second ordinal ending, and it is not a free alternative to the first: -ஆம் (-ām) is what a date takes."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "said of a place in a line",
+                "said of a date"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "said of a place in a line: இரண்டாவது iraṇḍāvadu. said of a date: இரண்டாம் தேதி iraṇḍām tēdi.",
+                "said of a place in a line: மூன்றாவது mūṉṟāvadu. said of a date: மூன்றாம் தேதி mūṉṟām tēdi."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same number, same job in the world, two endings — and the calendar keeps the older, shorter one."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have the months. சித்திரை இரண்டாம் தேதி (Chithirai iraṇḍām tēdi) is the second of Chithirai, and that is a date you can now write down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraṇḍāvadu, then iraṇḍām tēdi, and say which one is the date",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraṇḍāvadu*, then *iraṇḍām tēdi*, and say which one is the date]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chithirai iraṇḍām tēdi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chithirai iraṇḍām tēdi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "today's day-number with the ending a calendar uses",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: today's day-number with the ending a calendar uses]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending does a date take, -ஆவது or -ஆம்? (-ஆம்.) Say \"the third of the month\". (மூன்றாம் தேதி (tēdi).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: learntamil.com, Ordinal Numbers / Dates; Omniglot, Tamil numbers."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R83-ordinal-recall",
+      "sequence": 3470,
+      "title": "The ordinals, at a distance",
+      "headword": "முதல் — இரண்டாவது — பதினொன்றாவது — இரண்டாம் தேதி",
+      "romanization": "mutal — iraṇḍāvadu — patiṉoṉṟāvadu — iraṇḍām tēdi",
+      "gloss": "the whole set, retrieved with no chapter to give the answer away",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:455fb7171ed4f1a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iraṇḍām tēdi, and say which ending a date takes — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iraṇḍām tēdi*, and say which ending a date takes — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eṭṭāvadu — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eṭṭāvadu* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "build a when-clause with -um pōdu — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: build a when-clause with *-um pōdu* — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kaḍai — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kaḍai* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Eleven ordinals, two endings and one word that was never new. Run it four ways."
+            },
+            {
+              "kind": "speech",
+              "text": "Say first to eleventh straight through, once slowly and once fast."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear six of them out of order; say each back and say the one above it."
+            },
+            {
+              "kind": "speech",
+              "text": "Take three numbers you were not taught an ordinal for and make theirs."
+            },
+            {
+              "kind": "speech",
+              "text": "Say three dates with the month names you already have, using the ending a calendar takes rather than the ordinary one."
+            },
+            {
+              "kind": "speech",
+              "text": "Then answer aloud: which of the eleven is not built by the ending on its own number, what is it built on instead, and where in this book did you first say it?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word for first was already inside a word you knew? (முதல், inside முதலில்.) Which ending does a date take? (-ஆம்.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: learntamil.com, Ordinal Numbers / Dates; Omniglot, Tamil numbers."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,25 @@
+{
+  "chapter": 83,
+  "title": "All the Way Up, and On a Calendar",
+  "label": "ch:ta-ordinals-to-eleventh",
+  "canDo": "I can say sixth to eleventh in Tamil, make the ordinal of any number I know, and say a date with the ending a calendar uses.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "TA-R83-ordinal-recall",
+    "kind": "four-skill-function-map",
+    "summary": "Eleven ordinals and two endings retrieved out of order, with three ordinals made for numbers no lesson taught and three dates said with the calendar ending.",
+    "assesses": [
+      "TA-LEX-C83-ORDINAL-01",
+      "TA-LEX-C83-ORDINAL-02",
+      "TA-LEX-C83-ORDINAL-03",
+      "TA-LEX-C83-ORDINAL-04",
+      "TA-LEX-C83-ORDINAL-05",
+      "TA-LEX-C83-ORDINAL-06",
+      "TA-GRAMMAR-C83-ORDINAL-07",
+      "TA-GRAMMAR-C83-ORDINAL-08",
+      "TA-LEX-C83-ORDINAL-09"
+    ]
+  }
+}

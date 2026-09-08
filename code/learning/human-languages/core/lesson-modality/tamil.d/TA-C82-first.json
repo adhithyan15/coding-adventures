@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C82-first",
+    "language": "tamil",
+    "chapter": 82,
+    "sequence": 3340,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0a620c5d3a9bbbca"
+  },
+  "findings": []
+}

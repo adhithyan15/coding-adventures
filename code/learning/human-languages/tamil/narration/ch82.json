@@ -1,0 +1,986 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 82,
+  "title": "Which One in the Line",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:5d32427c7c2d9488",
+  "lessons": [
+    {
+      "id": "TA-C82-first",
+      "sequence": 3340,
+      "title": "முதல் (mutal) — first, and you have had it all along",
+      "headword": "முதல்",
+      "romanization": "mutal",
+      "gloss": "first — the one word in the set you already had, hidden inside the word for first of all",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:0a620c5d3a9bbbca",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new kind of number word starts here, so the recalls come first, at the four growing distances this book measures."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eṉṟu and then its spoken -ṉṉu — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eṉṟu* and then its spoken *-ṉṉu* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say oṉṟu … maṟṟadu — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *oṉṟu … maṟṟadu* — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "offer a choice with alladu — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: offer a choice with *alladu* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kīḻē — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kīḻē* — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முதல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதல் (mutal) — \"first\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You already know this word. Look at முதலில் (mutalil), \"first of all\", which this book already taught as a way of putting one thing before another:"
+            },
+            {
+              "kind": "speech",
+              "text": "முதல் (mutal) + இல் becomes முதலில்."
+            },
+            {
+              "kind": "speech",
+              "text": "இல் is the ending that means \"in\" or \"at\". Take it off and what is left is முதல் (mutal), first — and it was standing there in your mouth the whole time, carrying the meaning, without ever being named."
+            },
+            {
+              "kind": "speech",
+              "text": "முதல் நாள் (mutal nāḷ), the first day. முதல் பாதை (mutal pātai), the first road."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "cognates",
+          "title": "Across the family: the word four languages built on",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதல் (mutal) is one of the oldest words in this family, and its sisters did four different things with it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "what it did with mutal",
+                "its word for \"first\""
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "language: Tamil. what it did with mutal: kept the meaning outright. its word for \"first\": முதல் mutal.",
+                "language: Kannada. what it did with mutal: built an ordinal on it. its word for \"first\": ಮೊದಲನೆಯ modalaneya.",
+                "language: Telugu. what it did with mutal: built an ordinal on it. its word for \"first\": మొదటి modaṭi.",
+                "language: Malayalam. what it did with mutal: kept the word, changed the sense to \"from\". its word for \"first\": uses ഒന്നാം onnāṁ instead."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "None of the four builds \"first\" on its own word for one, and three of them build it on this word. Tamil is where it still simply means first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutalil, then take the -il off and say mutal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutalil*, then take the *-il* off and say *mutal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutal nāḷ — the first day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutal nāḷ* — the first day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṉṟu is how many, mutal is which one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṉṟu* is how many, *mutal* is which one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What word is inside முதலில்? (முதல் (mutal) — first.) Is it built on ஒன்று? (No — and neither is Kannada's or Telugu's.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: learntamil.com, Ordinal Numbers / Dates; Omniglot, Tamil numbers."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C82-second",
+      "sequence": 3350,
+      "title": "இரண்டாவது (iraṇḍāvadu) — second",
+      "headword": "இரண்டாவது",
+      "romanization": "iraṇḍāvadu",
+      "gloss": "second — and the ending that makes every other ordinal in the language",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a33d5cef89009613",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mutal, and say what word it came out of — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mutal*, and say what word it came out of — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read மற்றது — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **மற்றது** — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sol — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sol* — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read மேலே — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **மேலே** — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இரண்டாவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இரண்டாவது (iraṇḍāvadu) — \"second\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இரண்டு answers how many. இரண்டாவது (iraṇḍāvadu) answers which one in the line."
+            },
+            {
+              "kind": "speech",
+              "text": "இரண்டாவது நாள் (iraṇḍāvadu nāḷ), the second day. இரண்டாவது கதவு (iraṇḍāvadu kadavu), the second door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one ending, and one word that does not take it",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "cardinal",
+                "ordinal"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "cardinal: இரண்டு (iraṇḍu). ordinal: இரண்டாவது (iraṇḍāvadu)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Add -ஆவது (-āvadu) to a number and you have its ordinal. That is the rule, and it works on every number Tamil has."
+            },
+            {
+              "kind": "speech",
+              "text": "There is exactly one exception in the whole set, and you met it last lesson: you do not say oṉṟāvadu for first. Tamil reaches for முதல் (mutal) instead."
+            },
+            {
+              "kind": "speech",
+              "text": "So the one word a learner would have to memorise here is the one word this book did not have to teach you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraṇḍu, then iraṇḍāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraṇḍu*, then *iraṇḍāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutal, then iraṇḍāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutal*, then *iraṇḍāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraṇḍāvadu kadavu — the second door",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraṇḍāvadu kadavu* — the second door]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do you add to a number to make its ordinal? (-ஆவது.) Which number refuses it? (One — that one is முதல் (mutal).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: learntamil.com, Ordinal Numbers / Dates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C82-first-full",
+      "sequence": 3360,
+      "title": "முதலாவது (mutalāvadu) — first, taking the ending after all",
+      "headword": "முதலாவது",
+      "romanization": "mutalāvadu",
+      "gloss": "first, with the ending on it — the exception is the stem, not the rule",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d475b2465c13aba2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iraṇḍāvadu, and say what you added to iraṇḍu — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iraṇḍāvadu*, and say what you added to *iraṇḍu* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask vilai evvaḷavu? — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask *vilai evvaḷavu?* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "use eṉṟu to report what somebody said — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: use *eṉṟu* to report what somebody said — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say uḷḷē — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *uḷḷē* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முதலாவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதலாவது (mutalāvadu) — \"first\", said the long way."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what happened:"
+            },
+            {
+              "kind": "speech",
+              "text": "முதல் + ஆவது becomes முதலாவது (mutalāvadu)."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is the same ending. முதல் (mutal) takes -ஆவது exactly as இரண்டு did. So the exception is narrower than it looked a lesson ago: first does not refuse -ஆவது at all. It simply takes it on முதல் (mutal) rather than on ஒன்று."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem is the exception. The ending is not."
+            },
+            {
+              "kind": "speech",
+              "text": "Both forms are current: முதல் நாள் and முதலாவது (mutalāvadu) நாள் are both the first day, and முதல் is the shorter and commoner of the two in front of a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutal, then mutalāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutal*, then *mutalāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutalāvadu, iraṇḍāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutalāvadu, iraṇḍāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which part of mutalāvadu is the same as in iraṇḍāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which part of *mutalāvadu* is the same as in *iraṇḍāvadu*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which part of முதலாவது (mutalāvadu) is irregular, the stem or the ending? (The stem — the ending is the ordinary one.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: learntamil.com, Ordinal Numbers / Dates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C82-third",
+      "sequence": 3370,
+      "title": "மூன்றாவது (mūṉṟāvadu) — third",
+      "headword": "மூன்றாவது",
+      "romanization": "mūṉṟāvadu",
+      "gloss": "third — the ending working on a number you already count with",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9df439d33ca594a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mutalāvadu, and say which part of it is irregular — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mutalāvadu*, and say which part of it is irregular — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āṉāl, then its spoken āṉā — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āṉāl*, then its spoken *āṉā* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read சொல் — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **சொல்** — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say veḷiyē — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *veḷiyē* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மூன்றாவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மூன்றாவது (mūṉṟāvadu) — \"third\". மூன்று (mūṉṟu) takes -ஆவது, and nothing else changes."
+            },
+            {
+              "kind": "speech",
+              "text": "Three is the number the Dravidian family never quarrelled over — Tamil mūṉṟu, Malayalam mūnnŭ, Kannada mūru, Telugu mūḍu, all keeping the long ū at the front. The ordinal keeps it too, because the ending only touches the end of the word."
+            },
+            {
+              "kind": "speech",
+              "text": "மூன்றாவது கதவு (mūṉṟāvadu kadavu), the third door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūṉṟu, then mūṉṟāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūṉṟu*, then *mūṉṟāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ordinal before this one, then mūṉṟāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ordinal before this one, then *mūṉṟāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūṉṟāvadu nāḷ — the third day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūṉṟāvadu nāḷ* — the third day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the first three in order. (முதல் (mutal), இரண்டாவது (iraṇḍāvadu), மூன்றாவது (mūṉṟāvadu).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: learntamil.com, Ordinal Numbers / Dates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C82-fourth",
+      "sequence": 3380,
+      "title": "நான்காவது (nāṉkāvadu) — fourth",
+      "headword": "நான்காவது",
+      "romanization": "nāṉkāvadu",
+      "gloss": "fourth — the ending working on a number you already count with",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae750512c0aef201",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mūṉṟāvadu — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mūṉṟāvadu* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eṉṟu and its spoken -ṉṉu — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eṉṟu* and its spoken *-ṉṉu* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say what you think, with … eṉṟu niṉaikkiṟēṉ — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say what you think, with *… eṉṟu niṉaikkiṟēṉ* — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say valadu — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *valadu* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நான்காவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான்காவது (nāṉkāvadu) — \"fourth\". நான்கு (nāṉku) takes -ஆவது, and nothing else changes."
+            },
+            {
+              "kind": "speech",
+              "text": "நான்காவது நாற்காலி (nāṉkāvadu nāṟkāli), the fourth chair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṉku, then nāṉkāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṉku*, then *nāṉkāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ordinal before this one, then nāṉkāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ordinal before this one, then *nāṉkāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṉkāvadu nāḷ — the fourth day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṉkāvadu nāḷ* — the fourth day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the fourth, then the third. (நான்காவது (nāṉkāvadu), மூன்றாவது (mūṉṟāvadu).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: learntamil.com, Ordinal Numbers / Dates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C82-fifth",
+      "sequence": 3390,
+      "title": "ஐந்தாவது (aindāvadu) — fifth",
+      "headword": "ஐந்தாவது",
+      "romanization": "aindāvadu",
+      "gloss": "fifth — the ending working on a number you already count with",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6c825492728b064",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nāṉkāvadu — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nāṉkāvadu* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mutal, and say what word it came out of — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mutal*, and say what word it came out of — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask ēṉ? — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask *ēṉ?* — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iḍadu — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iḍadu* — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஐந்தாவது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஐந்தாவது (aindāvadu) — \"fifth\". ஐந்து (aindu) takes -ஆவது, and nothing else changes."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the first five. Count the work: four of them were built from numbers you already count with, and the fifth — முதல் — was a word you had been saying since you learned mutalil, without knowing it was a number word."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing in this chapter was a word you had to learn."
+            },
+            {
+              "kind": "speech",
+              "text": "இடது பக்கம் முதல் (mutal) பாதை is now sayable in its useful half: முதல் (mutal) பாதை, the first road, with இடது for which side of the street."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aindu, then aindāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aindu*, then *aindāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ordinal before this one, then aindāvadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ordinal before this one, then *aindāvadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aindāvadu nāḷ — the fifth day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aindāvadu nāḷ* — the fifth day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say first to fifth. (முதல் (mutal), இரண்டாவது (iraṇḍāvadu), மூன்றாவது (mūṉṟāvadu), நான்காவது (nāṉkāvadu), ஐந்தாவது (aindāvadu).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: learntamil.com, Ordinal Numbers / Dates."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
