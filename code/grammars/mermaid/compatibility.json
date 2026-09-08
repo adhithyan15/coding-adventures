@@ -169,8 +169,8 @@
     },
     {
       "id": "treemap",
-      "headers": ["treemap"],
-      "status": "detected",
+      "headers": ["treemap", "treemap-beta"],
+      "status": "partial",
       "ir": "hierarchy",
       "smoke_source": "treemap\n\"Root\"\n  \"Child\": 10"
     },
