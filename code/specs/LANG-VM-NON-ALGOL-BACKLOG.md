@@ -1453,3 +1453,12 @@ and all12OctBEAM programs passed again after widening the mask selection.
 The backend suite passed93tests (18unit70integration5doc), including30op/type
 width cases. No full seven-standard-column rerun is claimed. Broader4004
 fidelity remains VM028; remaining BEAM families are reprioritized after merge.
+
+### VM-040 FLOW-MATIC output implementation contract
+
+The first real probe refuses putchar in main and the generated integer-printer
+helpers. Add putchar by building one character list and calling io:put_chars/1,
+reserving two heap words and treating this builtin as an imported-call site
+for existing live-register spill/restore analysis. It has one value operand
+and no result. Validate actual recursive integer printing/control flow; input
+and Brainfuck tape parity remain outside this change.
