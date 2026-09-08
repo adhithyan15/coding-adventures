@@ -12,34 +12,34 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 14615,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/14615",
-    "branch": "codex/build-tool-neutral-graph-diff-corpus",
-    "implementation_revision": "b90320f5b189748c1457bacc598392de8de8ed99",
+    "number": 14659,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/14659",
+    "branch": "codex/build-tool-go-language-source-registry-20260908",
+    "implementation_revision": "fc7a40369c29a4e6a400a089f683755558ad857b",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-08T12:45:41Z",
-    "pr_number": 14615,
+    "observed_at": "2026-09-08T19:00:40Z",
+    "pr_number": 14659,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR #14615 opened from implementation revision b90320f5b189748c1457bacc598392de8de8ed99. GitHub reports MERGEABLE with no merge conflict; the initial CI, CodeQL, and human-language detection checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable."
+    "notes": "Both replacement CI builds passed detection but remained queued for package execution. Go CodeQL analysis completed, and its aggregate check reported two high allocation-overflow findings in registry-digest framing. Production and the independent test oracle now stream the domain, fixed-width length, and canonical payload into SHA-256 without a combined-size allocation. Focused and full Go tests, race, vet, module verification, tidy-diff, and diff hygiene pass. The smallest repair was pushed to the same branch; replacement checks are pending and auto-merge remains disabled until they are terminal and acceptable and mergeability is clean."
   },
   "last_inventory": {
-    "revision": "5778c35c3c83c65f2a4f0eebc99e778cd15b70b4",
+    "revision": "668e551588ebf183e4f7c2835e47ebeed9d37230",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1422,
-    "implementation_package_slots": 4642,
-    "all_reported_identities": 1461,
+    "implementation_identities": 1430,
+    "implementation_package_slots": 4652,
+    "all_reported_identities": 1470,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
-    "two_to_four_packages": 176,
-    "two_to_four_missing_slots": 2217,
-    "singleton_packages": 948,
-    "singleton_missing_slots": 13272,
-    "rust_singletons": 763,
+    "two_to_four_packages": 178,
+    "two_to_four_missing_slots": 2243,
+    "singleton_packages": 954,
+    "singleton_missing_slots": 13356,
+    "rust_singletons": 771,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -962,11 +962,36 @@
     {
       "id": "build-tool-go-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Go build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-go-portable-source-hashing-conformance"],
+      "branch": "codex/build-tool-go-language-source-registry-20260908",
+      "pr_number": 14659,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14659",
+      "selected_at": "2026-09-08T13:27:07Z",
+      "selection_revision": "a94930658181ef406fac9b49c72356d692b7e09d",
+      "selection_notes": "Selected only after PR #14615 completed every reported check and merged through guarded squash auto-merge. Before implementation, the fresh branch advanced through seven non-overlapping ARMv7-A, bounded-JSON storage, VisiCalc, HTML parser, Mermaid Wardley, browser form-control, and ALGOL result-composition merges to exact origin/main a94930658181ef406fac9b49c72356d692b7e09d. The collision-checked schema-3 inventory there has 15 established lanes, 1,424 implementation identities, 4,645 implementation slots, 1,463 all-reported identities, bands 175/265, 123/934, 177/2,230, and 949/13,286, 765 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The new Rust `armv7a-simulator` slot joins the existing Python identity under an exact two-lane classification owner; the new Rust-only `browser-form-controls` and `layout-controls` identities are registered under exact dependency-shaped portable-core owners before source implementation. The Mermaid Wardley slice adds no identity but is registered under a neutral pipeline owner and blocked established-lane umbrella so semantic work cannot hide behind stable topology counts. Parallel audits found this Go owner ready behind four merged prerequisites, free of live implementation-path overlap, and highest leverage among eligible bounded items with 24 unfinished descendants through native snapshot stability, dependency hashing, repository-boundary diff/digest, the Go oracle, all-language build tools, and OCaml promotion. The work starts in a fresh clean worktree and branch from exact live main; Dart and JVM process-free graph/diff cores are preserved as the next ready parallel-audited alternatives.",
+      "implementation_revision": "b15bbc9f83",
+      "rebase_notes": "The completed implementation rebased conflict-free through exact origin/main 668e551588ebf183e4f7c2835e47ebeed9d37230. Parallel read-only audits classified all intervening browser submission, checked RV32I, RISC-V gate-level, RV64I, Oct BEAM, Mermaid Cynefin, OAuth client-secret custody, Mosaic palette, SPICE workbench, HTML recovery, and ALGOL deltas into exact dependency-shaped owners or existing-owner notes. The German, French, and final Hindi curriculum merges are package- and build-tool-topology neutral. The exact-main schema-3 inventory has 15 established lanes, 1,430 implementation identities, 4,652 implementation slots, 1,470 all-reported identities, 1,204 Rust packages, bands 175/265, 123/934, 178/2,243, and 954/13,356, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The 789-owner/1,332-edge graph is unique, dependency-complete, acyclic, and has no merged-to-unfinished edge at 212 merged, 576 pending, and exactly this owner in progress.",
+      "validation_revision": "89db83c0d0e7114de9da62dde71201b6e31598df",
+      "validation_notes": "The exact neutral corpus validates 146 cases and 285 files across 23 registry languages with digest f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70; the 80-test neutral runner passes. The full Go build-tool suite, race suite, vet, mod verify, and tidy-diff pass. Coverage is 80.3% overall and 86.1% in the changed hasher package. The PowerShell Core generator is byte-stable and its bounded strict-UTF8, duplicate-key, depth, canonical-digest, NFC, full-casefold, generated-path, sensitive-path, exact-root, prefix, and overlap mutations pass. A trimpath binary performs the Go-language diff dry run over 307 packages and reports the expected 13 affected prerequisite and dependent packages. Ten package-parity reporter tests, seven capability-taxonomy tests, ten OCaml capability-gate tests, state JSON/DAG validation, dependency checks, and diff checks pass. The branch report has zero canonical collisions and zero unknown language buckets.",
+      "final_review_revision": "89db83c0d0e7114de9da62dde71201b6e31598df",
+      "final_review_notes": "Independent read-only security review issued SHIP after targeted fixes for package-root authority, generated and sensitive paths, cross-list prefix collisions, scoped exact/suffix redundancy, package-exact full-casefold matching, bounded strict JSON, generator digest agreement, and direct dependency metadata. A final exact-base audit proved all seven approved registry blobs byte-identical after rebasing to b47d16146f and found zero overlap with intervening main changes. Independent inventory audits reconciled every new identity and semantic delta, produced the next-three readiness ranking, and confirmed the final counts and collision-free topology.",
+      "publication_revision": "dda8f9e3e39561a575681d6aafaa62f695adbae8",
+      "publication_notes": "Opened ready-for-review PR #14659 after a normal first push from exact origin/main 668e551588ebf183e4f7c2835e47ebeed9d37230. Immediately before publication the target remote branch and prior PR were absent, all 13 changed paths had zero exact overlap across 14 open PRs, local corpus, Go, race, vet, coverage, generator, build-file, parity, state-DAG, security, and diff gates passed, and independent review issued SHIP. GitHub checks are pending and auto-merge remains disabled.",
+      "ci_repair_revision": "2ceba3d23ea9c819e879ab10f16b1c5e2f38b8f1",
+      "ci_repair_notes": "The two failed CI builds both stopped before package execution with HASH_PACKAGE_FAILED for unknown/blog. The repair preserves legacy unknown/* graph identities while recognizing only canonical code/sites roots as TypeScript source-input profiles and hashing their real code/sites repository paths. The merged neutral registry and digest remain byte-identical; authored site Markdown/SVG coverage is classified under a separate dependent owner. After the conflict-free rebase onto b6888ebfdd218b58807599f0dfa685efa30bd77d, the full Go suite, hasher race suite, vet, module verification, tidy-diff, trimpath build, 24 schema tests, 80 neutral runner tests, 5,172-package all-language dry plan, state DAG, and diff checks pass.",
+      "codeql_repair_revision": "fc7a40369c29a4e6a400a089f683755558ad857b",
+      "codeql_repair_notes": "The aggregate CodeQL result exposed two high-severity size-overflow findings even though the Go analysis workflow itself succeeded. Both findings came from allocating domain-length-payload framing in one slice. Production and its independent digest oracle now hash the same domain-separated framing incrementally with an eight-byte big-endian length, eliminating size-addition overflow without changing the registry digest. Focused and full Go tests, the hasher race suite, vet, module verification, tidy-diff, and diff hygiene pass.",
+      "notes": "Production Go currently owns 14 source-language entries, 14 metadata-language entries, and a 26-name generated-component registry, but the neutral registry adds reviewed Rust companions and package resources for hybrid lanes. Replace the engine-local maps with an exact complete projection and prove no missing or undeclared-extra selector."
+    },
+    {
+      "id": "build-tool-site-authored-resource-source-input-extension",
+      "title": "Extend the neutral source-input registry for authored site resources",
+      "status": "pending",
+      "depends_on": ["build-tool-go-language-source-input-registry-adoption"],
       "branch": null,
       "pr_number": null,
-      "notes": "Production Go currently owns 14 source-language entries, 14 metadata-language entries, and a 26-name generated-component registry, but the neutral registry adds reviewed Rust companions and package resources for hybrid lanes. Replace the engine-local maps with an exact complete projection and prove no missing or undeclared-extra selector."
+      "notes": "Discovered from PR #14659's failed full-repository CI run and expanded by a parallel exact-input audit. The repository's two code/sites packages retain legacy unknown/* graph identities but are TypeScript build surfaces. The focused PR repair safely maps those canonical roots to the already-reviewed TypeScript hashing profile. The merged neutral registry still omits 13 tracked build inputs: three blog Markdown posts, their three persisted-identity JSON sidecars, one SVG and its sidecar, landing-page index.landing and its sidecar, og.jpg and its sidecar, and root landing.css. Both site configs enable persisted identities, and the landing renderer reads landing.css directly. Evolve the neutral registry and digest, refresh every already-adopted engine projection, add exact site fixtures, and prove unrelated TypeScript data directories cannot be widened. This remains a separate dependent contract change because mutating the registry inside the Go adoption PR would invalidate Haskell, Swift, and .NET digest pins and mix cross-engine work into the CI repair."
     },
     {
       "id": "build-tool-go-native-source-snapshot-stability-hardening",
@@ -1729,13 +1754,17 @@
     {
       "id": "build-tool-neutral-graph-diff-corpus-completion",
       "title": "Complete the language-neutral build-tool graph and diff corpus",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-neutral-graph-diff-corpus",
       "pr_number": 14615,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14615",
       "opened_at": "2026-09-08T12:45:41Z",
       "opened_revision": "b90320f5b189748c1457bacc598392de8de8ed99",
+      "merged_head_revision": "26436208e66cebe63baaf6fba9232b145bcc55d3",
+      "merged_at": "2026-09-08T13:27:07Z",
+      "merge_revision": "3afe6de3678f56b3a39c10b040aff9d7fa74a13a",
+      "merge_notes": "All reported checks completed acceptably, including both duplicate Ubuntu build and repository-metadata runs, both final CI gates, CodeQL detection, and the human-language gate. GitHub reported exact head 26436208e66cebe63baaf6fba9232b145bcc55d3 clean and mergeable; guarded squash auto-merge merged it as 3afe6de3678f56b3a39c10b040aff9d7fa74a13a without a plain manual merge command.",
       "publication_notes": "Published ready for review with the complete specification-first, red-test, shared-corpus, Go oracle, build-tool dry-plan, collision, state-DAG, lint/security-baseline, and independent exact-final-diff security validation summary. Initial GitHub checks are pending; no auto-merge action has been taken.",
       "selected_at": "2026-09-08T11:24:00Z",
       "selection_revision": "d4f83c934d6898bf5d55d844c88f5988142a5309",
@@ -1767,10 +1796,28 @@
       "notes": "Discovered during the pure-domain security review. Replace exit-decision-only coverage with bounded argv parsing, typed parse results, reserved-flag/path rejection, and adversarial shell/env/@file tokens without dispatch or host reads."
     },
     {
+      "id": "build-tool-haskell-cli-parser-adoption",
+      "title": "Consume the closed CLI parser corpus in the Haskell build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-cli-parser-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact lane leaf materialized by the post-#14615 build-tool audit. Exercise every inert CLI argv case through the native Haskell parser with bounded arguments and UTF-8 bytes, strict portable paths and Git refs, stable diagnostics, and parse-before-dispatch behavior without adding execution authority."
+    },
+    {
+      "id": "build-tool-swift-cli-parser-adoption",
+      "title": "Consume the closed CLI parser corpus in the Swift build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-cli-parser-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact lane leaf materialized by the post-#14615 build-tool audit. Exercise every inert CLI argv case through the native Swift parser with bounded arguments and Unicode scalars/UTF-8 bytes, strict portable paths and Git refs, stable diagnostics, and parse-before-dispatch behavior without adding execution authority."
+    },
+    {
       "id": "build-tool-cli-parser-remaining-engines",
       "title": "Consume the closed CLI parser contract in every supported build tool",
       "status": "pending",
-      "depends_on": ["build-tool-go-oracle", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "depends_on": ["build-tool-go-oracle", "build-tool-haskell-cli-parser-adoption", "build-tool-swift-cli-parser-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the exact post-#12584 implementation audit. The neutral corpus and Python reference runner cover bounded argv parsing, typed defaults, stable diagnostics, strict portable paths and Git refs, and parse-before-dispatch precedence, but no native build-tool engine consumes the new CLI cases. After the canonical Go oracle lands, decompose the extant C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript engines into independent children and route later Dart, JVM, and OCaml engines through the same inert parser contract. Do not infer implementation coverage from schema or reference-runner coverage."
@@ -1798,10 +1845,28 @@
       "notes": "Discovered during the pure-domain security review. Cover fuel, recursion, aggregate allocations, range/value sizes, load depth/count/cycles, and print/trace limits before any native evaluator claims final Starlark conformance."
     },
     {
+      "id": "build-tool-haskell-starlark-metering-adoption",
+      "title": "Consume the Starlark metering corpus in the Haskell build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-starlark-metering-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact lane leaf materialized by the post-#14615 build-tool audit. Run the native Haskell evaluator through every fuel, recursion, allocation, range, scalar, module, load-depth, cycle, and combined-output ceiling with stable failures and no host execution."
+    },
+    {
+      "id": "build-tool-swift-starlark-metering-adoption",
+      "title": "Consume the Starlark metering corpus in the Swift build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-starlark-metering-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact lane leaf materialized by the post-#14615 build-tool audit. Run the native Swift evaluator through every fuel, recursion, allocation, range, scalar, module, load-depth, cycle, and combined-output ceiling with stable failures and no host execution."
+    },
+    {
       "id": "build-tool-starlark-metering-remaining-engines",
       "title": "Make every supported build-tool engine consume the Starlark metering contract",
       "status": "pending",
-      "depends_on": ["build-tool-go-oracle", "build-tool-rust-starlark-evaluator-safety-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "depends_on": ["build-tool-go-oracle", "build-tool-rust-starlark-evaluator-safety-conformance", "build-tool-haskell-starlark-metering-adoption", "build-tool-swift-starlark-metering-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the exact post-#12562 implementation audit. The neutral corpus and Python reference runner now cover fuel, recursion, aggregate allocation, range and scalar bounds, module count, load depth and cycles, and combined print/trace output, but no native build-tool engine consumes those cases yet. Rust's explicit evaluator-safety child was registered early because its declared-source metadata owner would otherwise activate a traversal-prone, incompletely metered evaluator; that child advances but does not complete this aggregate. After the canonical Go oracle lands, decompose the remaining C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Swift, and TypeScript engines into independent children and route later Dart and JVM engines through the same process-free evaluator contract. Do not infer final Starlark conformance from schema or reference-runner coverage."
@@ -1823,10 +1888,28 @@
       "notes": "Implemented the closed nine-check validation contract in dependency order: governing spec, schema and six language-neutral positive/adversarial cases, independent Python semantic oracles and dishonesty rejection, then fixture README/changelog and loop metadata. The snapshot derives build presence, local and transitive standalone prerequisites, Starlark sources/dependencies, package-root identity, manifest uniqueness, toolchain support, path safety, and Lua Windows sibling parity without workspace, Git, process, or network access. Local validation passes the 75-case corpus, 18 schema tests, 48 runner tests at 88% branch-aware runner coverage, all 121 downstream execution/authority/backend tests with expected platform skips, execution-contract validation, Ruff error-class lint and formatting, compileall, Bandit, Go build-tool tests at 78.3% aggregate coverage plus vet/trimpath build and the 5,070-package BUILD-file plan, the collision-free schema-3 parity report plus 10 reporter tests, seven capability taxonomy tests, five Haskell capability tests, and 46 OCaml lock tests with two expected skips. Strict MyPy remains non-gating for this legacy runner and reports 11 baseline errors only in unchanged lines. The branch rebased cleanly onto exact main 2bf4896ee63c359e6f04c57cdc9da6a14fcf84b2; the post-rebase inventory retains the same counts with zero collisions or unknown buckets."
     },
     {
+      "id": "build-tool-haskell-validation-oracle-adoption",
+      "title": "Consume the validation-oracle corpus in the Haskell build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-validation-oracle-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact lane leaf materialized by the post-#14615 build-tool audit. Execute every closed validation case through the native Haskell engine and prove its normalized diagnostics and result envelope agree with the independent neutral oracle."
+    },
+    {
+      "id": "build-tool-swift-validation-oracle-adoption",
+      "title": "Consume the validation-oracle corpus in the Swift build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-validation-oracle-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact lane leaf materialized by the post-#14615 build-tool audit. Execute every closed validation case through the native Swift engine and prove its normalized diagnostics and result envelope agree with the independent neutral oracle."
+    },
+    {
       "id": "build-tool-validation-oracle-remaining-engines",
       "title": "Make every supported build-tool engine consume the validation-oracle contract",
       "status": "pending",
-      "depends_on": ["build-tool-go-oracle", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "depends_on": ["build-tool-go-oracle", "build-tool-haskell-validation-oracle-adoption", "build-tool-swift-validation-oracle-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the exact post-#12577 implementation audit. The neutral corpus and independent Python reference runner now cover all nine validation checks, but no native build-tool engine consumes the new case IDs. After the canonical Go oracle lands, decompose the extant C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript engines into independently reviewable children and route future Dart and JVM engines through the same process-free validation contract. Do not infer engine parity from schema, fixture, or reference-runner coverage."
@@ -2594,11 +2677,33 @@
       "notes": "Deliver one independent engine per PR; explicitly review the shared C#/F# engine exception. The exact-main audit after PR #13490 discovered that PR #13366's new Dune generated-output decoy makes the unchanged Ruby identity-registry fixture emit ocaml/decoy because Ruby discovery does not yet prune the exact case-sensitive _build component. The selected Ruby declaration-engine tranche must apply the bounded discovery/test repair needed to restore its canonical package suite; keep the separately owned Ruby hashing exclusion out of scope."
     },
     {
+      "id": "build-tool-haskell-neutral-adapter-closure",
+      "title": "Close Haskell native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-haskell-extra-ci-toolchain-declaration-conformance", "build-tool-haskell-dune-build-discovery-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-haskell-orphan-crate-validation-conformance", "build-tool-haskell-tracked-artifact-validation-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-cli-parser-adoption", "build-tool-haskell-starlark-metering-adoption", "build-tool-haskell-validation-oracle-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal Haskell build-tool lane gate materialized by the post-#14615 audit. After every native correctness child lands, add a real adapter and run the entire versioned neutral corpus, including the completed graph/diff cases, through the Haskell front door with no undeclared expected failures. Keep this owner selection-blocked until the native retained-handle snapshot design and all listed children are complete."
+    },
+    {
+      "id": "build-tool-swift-neutral-adapter-closure",
+      "title": "Close Swift native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-swift-extra-ci-toolchain-declaration-conformance", "build-tool-swift-dune-build-discovery-exclusion", "build-tool-swift-windows-test-front-failure-propagation", "build-tool-swift-language-source-input-registry-adoption", "build-tool-swift-repository-source-input-boundary-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-swift-dist-newstyle-discovery-exclusion", "build-tool-swift-rockspec-utf8-conformance", "build-tool-swift-windows-absolute-file-options", "build-tool-swift-language-identity-registry", "build-tool-swift-orphan-crate-validation-conformance", "build-tool-swift-tracked-artifact-validation-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-swift-cli-parser-adoption", "build-tool-swift-starlark-metering-adoption", "build-tool-swift-validation-oracle-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal Swift build-tool lane gate materialized by the post-#14615 audit. After every native correctness child lands, add a real adapter and run the entire versioned neutral corpus, including the completed graph/diff cases, through the Swift front door with no undeclared expected failures. Keep this owner selection-blocked until all listed snapshot, path, hashing, registry, fixture, and validator children are complete."
+    },
+    {
       "id": "build-tool-all-language-adapter-ci-closure",
       "title": "Close the all-language build-tool adapter and CI denominator",
       "status": "pending",
       "depends_on": [
         "build-tool-existing-remediation",
+        "build-tool-haskell-neutral-adapter-closure",
+        "build-tool-swift-neutral-adapter-closure",
         "build-tool-jvm-current-contract-conformance",
         "build-tool-dart-current-contract-conformance",
         "ocaml-build-tool-current-contract-conformance",
@@ -2617,6 +2722,7 @@
       "status": "pending",
       "depends_on": [
         "build-tool-pure-domain-corpus",
+        "build-tool-jvm-process-free-graph-diff-core",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening",
         "build-tool-tracked-artifact-unicode-version-contract",
@@ -2943,7 +3049,37 @@
       "depends_on": ["haskell-scaffold-capability-schema"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the Haskell manifest backfill. Absence remains an effective zero-capability legacy profile, but several Haskell directories without explicit manifests perform filesystem, process, environment, console, FFI, or network operations. Inventory all 203 packages and three programs, add truthful nonempty manifests where required, and obtain the capability-approval evidence required by the security contract."
+      "notes": "Discovered during the Haskell manifest backfill and corrected by the post-#14615 exact-root audit. Absence remains an effective zero-capability legacy profile, but several Haskell directories without explicit manifests perform filesystem, process, environment, console, FFI, or network operations. Inventory all 204 packages and four programs; only 18 package and two program manifests currently exist, leaving 186 package roots plus build-tool and scaffold-generator without explicit manifests. Add truthful nonempty manifests where required and obtain the capability-approval evidence required by the security contract."
+    },
+    {
+      "id": "swift-capability-policy-audit",
+      "title": "Audit effective capability profiles across every Swift package and program",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14615 Swift lane audit. Inventory all 162 packages and 12 programs: 114 package and three program manifests exist, while 48 packages and nine programs lack explicit profiles. Classify pure versus host-native authority, add truthful manifests, and require the repository's approval evidence for every nonempty capability declaration. Keep this audit selection-blocked until the native/platform-specific roots and approval plan are reviewed."
+    },
+    {
+      "id": "mosaic-flux-swiftui-platform-runtime-classification",
+      "title": "Classify the SwiftUI Mosaic Flux runtime and applicable-lane contract",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["swift-capability-policy-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered as an unowned Swift singleton after PR #14615. `mosaic-flux-swiftui` is an Apple-platform runtime rather than a portable all-language package and currently writes to stdout. Record its exact UI/runtime contract, platform applicability, capability profile, CI hosts, and reviewed exceptions before treating the singleton as complete or expanding it."
+    },
+    {
+      "id": "paint-vm-direct2d-native-swift-platform-wrapper-classification",
+      "title": "Classify the Swift Direct2D native wrapper and metadata boundary",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["swift-capability-policy-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered as an unowned Swift singleton after PR #14615. `PaintVmDirect2DNative` is a Windows Direct2D C-ABI wrapper, not presumptively portable, and lacks README, changelog, and capability metadata. Define its native boundary, applicable hosts and lanes, truthful FFI/display capabilities, documentation, and reviewed exception before any completion claim."
     },
     {
       "id": "haskell-scaffold-convention-reconciliation",
@@ -2992,12 +3128,40 @@
     },
     {
       "id": "haskell-high-consensus-tail",
-      "title": "Close Haskell event-loop and brotli",
+      "title": "Close the remaining Haskell high-consensus tail",
       "status": "pending",
-      "depends_on": ["haskell-http1", "haskell-scaffold-capability-schema"],
+      "selection_blocked": true,
+      "depends_on": ["haskell-http1", "haskell-scaffold-capability-schema", "event-loop-haskell-lane-parity", "brotli-haskell-lane-parity", "ct-compare-haskell-lane-parity", "image-codec-png-haskell-lane-parity"],
       "branch": null,
       "pr_number": null,
-      "notes": "Keep the event loop generic and portable; use byte-exact Brotli conformance vectors."
+      "notes": "Selection-blocked completion umbrella corrected by the post-#14615 lane audit. Event-loop, Brotli, ct-compare, and image-codec-png are independent children and must not be bundled into one implementation PR. The reporter shows four structural Haskell gaps, while the separately owned FNT00 repair/reconciliation records that the counted generic font-parser wrapper is not yet semantic portable-package parity. Do not mark this umbrella complete until every exact child and the FNT00 reconciliation are resolved."
+    },
+    {
+      "id": "event-loop-haskell-lane-parity",
+      "title": "Implement the portable event-loop contract in Haskell",
+      "status": "pending",
+      "depends_on": ["haskell-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Split from the stale Haskell tail umbrella after the post-#14615 audit. Implement the existing generic authority-free event-loop contract as its own Haskell package tranche, preserving injected host readiness and clock boundaries rather than absorbing unrelated Brotli, ct-compare, PNG, or native reactor work."
+    },
+    {
+      "id": "brotli-language-neutral-conformance",
+      "title": "Repair and fixture the bounded portable Brotli contract",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14615 Haskell tail audit. CMP06 currently lacks malformed-input behavior and explicit output/resource ceilings. Define a closed byte-exact neutral corpus, stable errors, malformed-stream rejection, and bounded decompression before any new lane claims conformance."
+    },
+    {
+      "id": "brotli-haskell-lane-parity",
+      "title": "Implement bounded Brotli conformance in Haskell",
+      "status": "pending",
+      "depends_on": ["brotli-language-neutral-conformance", "haskell-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the repaired CMP06 neutral corpus through a pure Haskell implementation with explicit resource ceilings, stable malformed-input failures, empty capabilities, and package-native coverage. Keep it separate from event-loop and the remaining Haskell tail children."
     },
     {
       "id": "java-kotlin-high-consensus",
@@ -3143,7 +3307,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Review the AppKit, CoreText, Metal, filesystem, and process authority of the macOS host against the shared Venture portable bridge; record a reviewed native-source exception for irreducible shell behavior."
+      "notes": "Review the AppKit, CoreText, Metal, filesystem, and process authority of the macOS host against the shared Venture portable bridge; record a reviewed native-source exception for irreducible shell behavior. PR #14630 adds shared BrowserFetchRequest, submit/reset/implicit-Enter routing, bounded diagnostics, session synchronization, and transactional navigation as portable bridge evidence; AppKit, CoreText, Metal, and native host lifetimes remain native authority."
     },
     {
       "id": "smart-home-automation-runtime-portable-conformance",
@@ -3231,10 +3395,11 @@
       "id": "chief-channel-crypto-portable-conformance",
       "title": "Classify and fixture the portable Chief channel cryptography core",
       "status": "pending",
+      "selection_blocked": true,
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean ec53a3f9 inventory after PR #9609 added Rust-only chief-of-staff-channel-crypto. Define language-neutral vectors for the versioned bounded grant/message wire records, stable storage keys, framed authenticated headers, digest/signature inputs, epoch transition rules, retry/conflict handling, and sequence reservation/recovery. Expand deterministic codecs and cryptographic behavior only where each lane has suitable constant-time primitives; keep OS CSPRNG access, key custody, durable sequence persistence, storage, and actor routing behind injected or native authority boundaries, with reviewed exceptions where a safe implementation is unavailable."
+      "notes": "Selection-blocked pending historical lifecycle reconciliation. PRs implementing the D18F message and D18P channel fixture families have already landed, so this owner must first map those completed surfaces and remaining cryptographic gaps before any status transition or duplicate implementation. The original scope defines language-neutral vectors for versioned bounded grant/message wire records, stable storage keys, framed authenticated headers, digest/signature inputs, epoch transition rules, retry/conflict handling, and sequence reservation/recovery. Expand deterministic codecs and cryptographic behavior only where each lane has suitable constant-time primitives; keep OS CSPRNG access, key custody, durable sequence persistence, storage, and actor routing behind injected or native authority boundaries, with reviewed exceptions where a safe implementation is unavailable."
     },
     {
       "id": "chief-channel-store-portable-conformance",
@@ -3306,7 +3471,7 @@
       "depends_on": ["venture-browser-windows-portable-bridge-and-native-host"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean ec53a3f9 inventory after PR #9615 added Rust-only venture-browser-qt. Reconcile its deterministic BrowserHostController projection, Mosaic event decoding, input normalization, and C-ABI state/error contract with venture-browser-core and the Windows/macOS bridge owners, using shared language-neutral fixtures where portable. Classify Cairo rasterization, Qt Quick/QML registration, dynamic-library loading, C++ adapter code, native pointer and buffer lifetimes, CMake/Qt discovery, and live application launch as native-source or wrapper behavior with direct platform tests rather than all-language gaps. The collision-clean 481a30c3 inventory adds venture-browser-cairo under this same owner: it centralizes the backend-neutral native session and Cairo RGBA renderer behind unsafe Qt, Flutter, and Compose C ABIs, while reusable controller, event, navigation, scrolling, hover, link, and projection behavior remains owned by venture-browser-core fixtures."
+      "notes": "Discovered in the collision-clean ec53a3f9 inventory after PR #9615 added Rust-only venture-browser-qt. Reconcile its deterministic BrowserHostController projection, Mosaic event decoding, input normalization, and C-ABI state/error contract with venture-browser-core and the Windows/macOS bridge owners, using shared language-neutral fixtures where portable. Classify Cairo rasterization, Qt Quick/QML registration, dynamic-library loading, C++ adapter code, native pointer and buffer lifetimes, CMake/Qt discovery, and live application launch as native-source or wrapper behavior with direct platform tests rather than all-language gaps. The collision-clean 481a30c3 inventory adds venture-browser-cairo under this same owner: it centralizes the backend-neutral native session and Cairo RGBA renderer behind unsafe Qt, Flutter, and Compose C ABIs, while reusable controller, event, navigation, scrolling, hover, link, and projection behavior remains owned by venture-browser-core fixtures. PR #14630 adds the common Cairo host's shared form POST-request boundary and session synchronization as portable bridge evidence; Cairo, Qt, FFI, and pointer lifetimes remain native."
     },
     {
       "id": "smart-home-camera-media-security-boundary-hardening",
@@ -3418,7 +3583,7 @@
       "depends_on": ["capability-schema-category-action-constraints"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the Shelly dependency audit and reconfirmed by the WLED integration. tcp-client and http1-client declare empty capability profiles despite concrete DNS/TCP calls, while udp-client and smart-home-discovery lack manifests despite socket and discovery authority. Inventory the executable library and harness boundaries, split pure parsers/planners from native I/O where necessary, and add truthful minimum runtime/test profiles without claiming Layer 5 approval. This shared substrate item has leverage across Shelly, WLED, and other local-network integrations."
+      "notes": "Discovered during the Shelly dependency audit and reconfirmed by the WLED integration. tcp-client and http1-client declare empty capability profiles despite concrete DNS/TCP calls, while udp-client and smart-home-discovery lack manifests despite socket and discovery authority. Inventory the executable library and harness boundaries, split pure parsers/planners from native I/O where necessary, and add truthful minimum runtime/test profiles without claiming Layer 5 approval. This shared substrate item has leverage across Shelly, WLED, and other local-network integrations. PR #14630 extends http1-client beyond GET to application/x-www-form-urlencoded POST through the same concrete DNS/TCP authority while its capability profile remains empty."
     },
     {
       "id": "smart-home-wled-host-security-hardening",
@@ -3467,7 +3632,7 @@
       "depends_on": ["rust-network-substrate-capability-truthfulness"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the joint Shelly/WLED dependency audit. Both integrations duplicate DNS resolution, connect timeouts, TCP read/write, HTTP/1.1 request encoding, bounded response reads, chunked decoding, and error projection while smart-home-local-http is correctly a pure request planner and http1-client is GET-only. Add a separate native executor with retained origin/address policy, shared byte/time/output ceilings, redacted typed failures, truthful capability profiles, and POST support; migrate Shelly and WLED only after their security owners define pairing, authorization, and transactional semantics."
+      "notes": "Discovered in the joint Shelly/WLED dependency audit. Both integrations duplicate DNS resolution, connect timeouts, TCP read/write, HTTP/1.1 request encoding, bounded response reads, chunked decoding, and error projection while smart-home-local-http is correctly a pure request planner. PR #14630 means http1-client now supports GET plus application/x-www-form-urlencoded POST only; arbitrary request bodies, retained origin/address policy, chunked handling, shared execution ceilings, redacted typed failures, and truthful capability profiles remain unclosed. Add a separate native executor and migrate Shelly and WLED only after their security owners define pairing, authorization, and transactional semantics."
     },
     {
       "id": "dart-current-14-of-15-matrix-family",
@@ -3488,7 +3653,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered after origin/main advanced to c2b5a3d8 with Rust-only venture-browser-windows. Its session/chrome/status orchestration, navigation and link activation, JSON projection, and Mosaic event decoding are deterministic and substantially duplicate venture-browser-macos, so move them into venture-browser-core or a fixture-driven shared bridge core before assessing any cross-lane gaps. Keep the Direct2D renderer, WinUI XAML adapter, C ABI, native text shaping, Windows DLL, and platform acceptance build as the native-source shell. Add and review the currently missing capability metadata for default HTTP fetching and native-library authority, then enforce Windows ABI, generated-project, panic-containment, pointer-lifetime, and pixel-buffer tests."
+      "notes": "Discovered after origin/main advanced to c2b5a3d8 with Rust-only venture-browser-windows. Its session/chrome/status orchestration, navigation and link activation, JSON projection, and Mosaic event decoding are deterministic and substantially duplicate venture-browser-macos, so move them into venture-browser-core or a fixture-driven shared bridge core before assessing any cross-lane gaps. Keep the Direct2D renderer, WinUI XAML adapter, C ABI, native text shaping, Windows DLL, and platform acceptance build as the native-source shell. Add and review the currently missing capability metadata for default HTTP fetching and native-library authority, then enforce Windows ABI, generated-project, panic-containment, pointer-lifetime, and pixel-buffer tests. PR #14630 adds shared BrowserFetchRequest, submit/reset/implicit-Enter routing, bounded diagnostics, session synchronization, and transactional navigation as portable bridge behavior; WinUI, Direct2D, C ABI, and native resource lifetimes remain native."
     },
     {
       "id": "smart-home-dashboard-core-portable-conformance",
@@ -4111,6 +4276,24 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered with browser-bookmarks after merged PR #13264 added the separately named Rust-only browser-bookmarks-file adapter. Classify its bounded versioned JSON format and crash-safe atomic-replace behavior separately from the portable catalog core; define neutral serialization and failure fixtures where host-independent, then identify applicable desktop lanes for owner-only temporary files, fsync, directory sync, symlink rejection, native profile paths, and VENTURE_BOOKMARKS_PATH handling. Record reviewed not-applicable exceptions where a lane cannot provide the required filesystem guarantees rather than weakening them."
+    },
+    {
+      "id": "layout-controls-portable-core-classification",
+      "title": "Classify and fixture the portable layout-controls core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14615 refresh after merged PR #14602 added the Rust-only layout-controls identity. The package is explicitly backend-neutral and deterministic: it owns form-control state, intrinsic sizing, Layout IR metadata, bounded diagnostics, and CSS dimension precedence with only the Rust Cargo build capability. Define a neutral UI53 fixture corpus for control kinds, intrinsic and explicit dimensions, stable keys, selection and checked state, password masking metadata, malformed extensions, and finite bounds; then expand the portable core across applicable established lanes or record narrowly reviewed exceptions. Keep HTML parsing, CSS cascade, paint, hit testing, fonts, devices, host toolkits, and native event authority outside this owner."
+    },
+    {
+      "id": "browser-form-controls-portable-core-classification",
+      "title": "Classify and fixture portable browser form-control interactions",
+      "status": "pending",
+      "depends_on": ["layout-controls-portable-core-classification", "html-frontend-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered with layout-controls after merged PR #14602 added the separately named Rust-only browser-form-controls identity. The package is host-neutral and deterministic over retained browser trees: it owns control discovery, focus, value, selection, checked state, disabled/read-only/required semantics, and semantic keyboard/pointer transitions before reflow. Define neutral UI53 fixtures for stable preorder-and-ID keys, duplicate IDs, mutation refusal, text and selection editing, checkbox/radio behavior, malformed controls, and bounded transitions; then roll the portable state machine across applicable established lanes or record narrowly reviewed exceptions. Depend on the layout-controls contract and keep window systems, paint backends, native toolkits, filesystem, network, credentials, and direct host input authority outside this owner. PR #14630 adds form association plus initial value, checked, and selected baselines and form-scoped reset/query; retain association/reset fixtures here while submission policy belongs to the dependent UI54 owner."
     },
     {
       "id": "ibm704-simulator-two-lane-classification",
@@ -4784,6 +4967,7 @@
       "depends_on": ["state-machine-tokenizer-and-markup-portable-conformance"],
       "branch": null,
       "pr_number": null,
+      "classification_notes": "PR #14643 extends deterministic adoption-agency recovery across headings, non-div special and paragraph blocks, orphan and nested list items and containers, mixed div/special/list chains, wrapped inner formatting clones, and active-formatting marker boundaries. Include tree shape, reconstruction order, ignored-across-marker behavior, stable diagnostics, and resource bounds in the neutral HTML corpus; DOM presentation, CSS/layout/paint, browser hosts, files, network, and native rendering remain outside.",
       "notes": "Discovered during the collision-checked 1c5ed9c1e9 pre-publication audit after merged PR #10258 extended the existing Rust html-parser without adding a package identity. The empty-capability frontend is deterministic over html-lexer and dom-core but had no explicit parity owner. Merged PRs #10262, #10268, #10273, #10278, #10283, #10291, and #10295 expand exact post-head, table hidden-input, head-content, select, template-text, fostered-formatting, and seeded fragment-context recovery diagnostics without adding identities. Merged PR #10302 extends the tokenizer/markup seam with exact script end-tag EOF diagnostics and remains owned here through the explicit state-machine tokenizer dependency; merged PR #10311 adds exact plaintext insertion diagnostics without adding an identity. Later merged slices add generic fostered starts, fostered list items and images, generic and center table ends, EOF table recovery, mismatched template ends, template colgroup starts, and template-column text diagnostics without new identities. Merged PR #12735 adds exact recovered `</br>` diagnostic positions inside the same existing Rust frontend and is further corpus evidence for this owner, not a new identity. Merged PR #12760 adds positioned table-only start-tag diagnostics for repeated tags, Unicode/CRLF offsets, fragments, and table/template/foreign-content exclusions; retain that deterministic source-position evidence here. Merged PR #12772 adds exact rejected-frameset start-tag positions across normal, Unicode, CRLF, fragment, template, and foreign-content cases; keep that source-position evidence in this same portable owner. Merged PRs #12828 and #12833 add positioned table-character and implied-row diagnostics, including Unicode and CRLF offsets; retain that deterministic recovery evidence here. Merged PR #12856 adds exact nested-anchor start diagnostics and recovery positions inside the same existing Rust frontend; retain those source-position and reconstruction cases here. Merged PR #12946 adds exact unmatched landmark end-tag positions across normal, Unicode, CRLF, template, fragment, and foreign-content contexts; retain that deterministic recovery evidence here. Merged PR #12951 adds token-emission positions for unmatched address, blockquote, and center end tags across normal, Unicode/CRLF, fragment, matched, truncated, direct-token, and foreign-content cases; retain that recovery evidence here. Define language-neutral fixtures and established-lane implementations for tokenizer handoff, tree construction and recovery, exact stable diagnostics, document and fragment projections, html5lib conformance, hostile-input handling, and explicit resource bounds. Rendering, networking, and browser-host authority remain outside this portable contract."
     },
     {
@@ -4811,7 +4995,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-checked 6e0a40b7a6 inventory after merged PR #10250 added Rust mosaic-app-runtime as an authority-free deterministic state-machine identity without a capability manifest. Define language-neutral fixtures and established-lane implementations for protocol-version gating, startup cardinality, exact event-sequence and revision progression, overflow rejection, transactional no-advance failures, snapshot and restore behavior, effects, accessibility announcements, and stable errors. Native and web host transport remain outside this portable core."
+      "notes": "Discovered in the collision-checked 6e0a40b7a6 inventory after merged PR #10250 added Rust mosaic-app-runtime as an authority-free deterministic state-machine identity without a capability manifest. Define language-neutral fixtures and established-lane implementations for protocol-version gating, startup cardinality, exact event-sequence and revision progression, overflow rejection, transactional no-advance failures, snapshot and restore behavior, effects, accessibility announcements, and stable errors. Native and web host transport remain outside this portable core. PR #14594 provides a real SPICE domain adapter proving versioned bounded snapshot/restore and retry without sequence consumption; retain that as consumer evidence without adding a reverse dependency."
     },
     {
       "id": "mosaic-app-capi-wrapper-native-abi-review",
@@ -4991,6 +5175,7 @@
       "status": "pending",
       "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review"],
       "branch": null,
+      "classification_notes": "Merged PR #14620 makes the Engram XAML payload relocatable through static CRT selection, copied DLL discovery, and bcryptprimitives placement; retain that Windows packaging and launch evidence in this native ABI owner.",
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Discovered in the collision-clean d2dbd94aeb inventory after merged PR #13674 added Rust-only engram-mosaic-app. The Engram-specific cdylib/rlib adapter maps the compiled EngramApp MIL surface of 254 props and 88 events plus a selected-deck cursor to EngramSession, supplies production SystemTime, provides versioned snapshots, and exports the fixed mosaic-app-capi ABI for generated Qt, Flutter, Compose, SwiftUI, and XAML hosts. Review complete slot/event and envelope-name coverage, payload mapping, transactional failures, snapshot schema/version and byte bounds, stable payload-free errors, dynamic-library symbols, returned-buffer/lifetime/panic containment through the existing Mosaic ABI owners, truthful time:read:* capability metadata, and real platform packaging/launch evidence. Before claiming a standard runtime lane, resolve or explicitly retain PR #13686's report that Engram host assets replace generated MosaicHost.cpp/.h. Protocol-v1 effect completion remains with the portable runtime, C ABI, and generated-binding owners, while the existing bespoke file-picker, sidecar, and import/export authority is explicitly owned by engram-native-host-import-export-authority-review. Keep the bespoke engram-capi adapters until the generic contract supports completion. Do not manufacture fifteen implementations of this application-specific native adapter. This wrapper/native-authority item is excluded from autonomous parity selection."
@@ -6051,7 +6236,7 @@
       "status": "pending",
       "depends_on": [],
       "branch": null,
-      "classification_notes": "Open PR #12956 adds sourced Persian shin as a body-first zero-lift run followed by three freehand dots across curriculum, human-language-data, script-ductus, and Language Ladder; retain that authored-data provenance and geometry evidence in this existing owner.",
+      "classification_notes": "Open PR #12956 adds sourced Persian shin as a body-first zero-lift run followed by three freehand dots across curriculum, human-language-data, script-ductus, and Language Ladder; retain that authored-data provenance and geometry evidence in this existing owner. Merged PR #14616 adds source-verified Japanese ro and small-yu stroke evidence across the same authored-data boundary; retain its provenance, movement order, and cross-consumer consistency here.",
       "pr_number": null,
       "notes": "Discovered in the collision-clean post-#11334 inventory after external PR #11224 added the TypeScript script-ductus singleton. Extract the HL11/package contract and closed fixtures for bounded TrueType cmap/glyf parsing, the authored stroke schema and provenance, fraction-on-ink/meeting/coverage invariants, the filmstrip tree, stable hostile-font errors, and XML name/escaping safety. Add explicit empty capability metadata. Treat the canonical curriculum JSON and citations as one shared data authority; lane ports must consume it rather than duplicating or ad-libbing culturally authored claims. Merged PR #12722 adds sourced Malayalam short-e authored strokes and package/catalog consumption; retain that additional provenance evidence inside this neutral-data owner. Merged PR #12746 adds sourced Tamil independent short-e authored data with two runs and six connected movements plus the independent-vowel versus dependent-sign distinction; keep that provenance and geometry evidence in the same shared-data owner. Merged PRs #12733 and #12770 add authored Chinese vocabulary-cluster ductus and Persian pe geometry plus curriculum evidence; retain those culturally authored data and provenance additions here without creating per-script parity owners. Merged PR #12938 adds sourced Kannada independent i as one zero-lift, four-movement path with a middle-stem retrace plus curriculum, human-language-data, and Language Ladder consumption; retain the citation, pen-lift count, movement ordering, outline fit, and cross-consumer consistency in this shared authored-data owner. Merged PR #12944 adds sourced Malayalam chillu LL as a one-run bowl-and-right-stem form with cross-consumer curriculum, human-language-data, script-ductus, and Language Ladder checks; retain its provenance, stroke order, outline fit, and shared-data consistency here. Merged PR #12949 adds sourced Malayalam chillu RR as one zero-lift, three-movement arch, loop, inner-return, and above-line-hook run with curriculum, human-language-data, script-ductus, and Language Ladder checks; retain its citation, animation-derived order, outline fit, and cross-consumer consistency in this same shared authored-data owner."
     },
@@ -7987,6 +8172,25 @@
       "notes": "Discovered after merged PR #12686 made single-instance initialization idempotent but explicitly documented that deleting the highest surviving record lets a fresh backend reuse an issued revision, and that multiple backend instances sharing one root remain uncoordinated. Merged PR #12728 closes the narrower Unix parent-directory fsync error-propagation and delete-fsync subrequirement, with Windows explicitly remaining a safe-stdlib no-op, but does not add a durable monotone floor, cross-process coordination, crash or rollback design, no-follow containment review, two-instance uniqueness evidence, or truthful native filesystem and clock capability review. The README and STR01 also still overclaim restart-safe monotonicity while the source documents revision reuse after deleting the high-water record. Reconcile those remaining contract and authority gaps with a reviewed durable monotone floor or epoch design, crash and rollback behavior, cross-process locking, no-follow/path containment, atomic publication, restart and two-instance tests, and truthful native filesystem/clock authority. This host-authority work is excluded from autonomous portable selection."
     },
     {
+      "id": "mermaid-wardley-map-language-neutral-conformance",
+      "title": "Fixture the portable Mermaid Wardley map pipeline",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14619 extended the existing Rust mermaid-lexer, mermaid-parser, diagram-ir, diagram-layout-geometric, and diagram-to-paint slots with the first Mermaid 11.16.1 Wardley slice without adding an implementation identity. Define a language-neutral contract and adversarial fixture corpus for wardley-beta detection, titles, positive canvas sizes, custom evolution stages, anchors and components, quoted labels, validated links and evolve targets, visibility and evolution coordinate order, stable IDs and diagnostics, deterministic Cartesian geometry, paint projection, finite numeric behavior, malformed inputs, duplicate and unknown references, and explicit resource ceilings. Preserve the pinned 11.16.1 corpus and documented partial-slice exclusions; keep native Metal or PNG capture, fonts, devices, themes, pipelines, notes, annotations, accelerators, ports, decorators, and interactive behavior outside this portable contract. Existing sequence, XY, Gantt, block, packet, and Kanban owners are family-specific and do not cover Wardley."
+    },
+    {
+      "id": "mermaid-wardley-map-established-lane-parity",
+      "title": "Bring Mermaid Wardley maps to every applicable established lane",
+      "status": "pending",
+      "depends_on": ["mermaid-wardley-map-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for established-lane Wardley detection, parsing, strategic-map IR, deterministic geometry, and paint consumers after the neutral Wardley contract closes. Decompose into dependency-shaped lane and prerequisite children before delivery; do not infer parity from the Rust reference or manufacture native rendering hosts in every lane."
+    },
+    {
       "id": "mermaid-xy-chart-portable-conformance",
       "title": "Fixture the portable Mermaid XY chart pipeline",
       "status": "pending",
@@ -8117,7 +8321,7 @@
       "status": "pending",
       "depends_on": [],
       "branch": null,
-      "classification_notes": "Open PR #12955 extends this existing neutral and dependent applicable-lane family with addition of negative real zero as an exact finite-real selector identity while positive-zero addition and negative-zero subtraction remain conservative.",
+      "classification_notes": "Merged PR #12955 extends this existing neutral and dependent applicable-lane family with addition of negative real zero as an exact finite-real selector identity while positive-zero addition and negative-zero subtraction remain conservative. Merged PR #14642 extends AL4 path-independent standard-result arithmetic to bounded powers whose exponent is an exact initialized tracked local integer across Native AOT, LLVM, Wasm, JVM, CLR, VM, and JIT while preserving the runtime selector and avoiding f64_pow; uninitialized integer and tracked-real exponents remain fail-closed or runtime.",
       "pr_number": null,
       "notes": "Discovered in the post-#12819 commit audit after the Rust algol-iir-compiler added bounded selector identity semantics and seven-backend results without an exact portable owner. Merged PR #12831 extends that same bounded contract to complete integer and real literal exponent chains that evaluate to positive one while dynamic, real-valued, zero, and non-unit exponents fail closed. Merged PR #12851 adds signed integer/real neutral selector writes and keeps non-unit signed forms fail-closed. Merged PR #12927 adds static mixed integer/real comparison folding with finite binary64-exact widening, and merged PR #12939 extends that checked widening to integer snapshots assigned into real scalar targets, including transitive while dependencies while overflow and inexact values fail closed. Merged PR #12950 recognizes subtraction of positive numeric zero, including grouped and left-associative chains, as an exact finite-real selector identity while keeping addition of positive zero and subtraction of negative real zero conservative because they can change the negative-zero sign bit. Merged PR #13352 adds signed tracked real-exponent unrolling across the existing Rust compiler and lang-aot proof surfaces and remains owned here. Retain those canonical identity, widening, subtraction, and rejection cases here. Pin accepted and rejected programs, the ten-level selector bound, identity-chain behavior, power-one and signed-neutral selector writes, exact mixed numeric comparisons and real-target snapshots, fail-closed counterexamples, and canonical IIR/runtime results independently of the existing generic singleton-classification umbrella."
     },
@@ -8244,17 +8448,45 @@
       "depends_on": ["oauth-wire-codecs-refresh-revocation-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-checked 2516389f inventory after merged PR #13682 added the Rust-only oauth-credential-custody identity. Define language-neutral fixtures and established-lane implementations for bounded opaque account and provider keys, metadata and scope validation, zeroizing credential records, audit-before-access and durable-success-before-release ordering, one-shot access and refresh disclosure, exact-revision compare-and-swap rotation and delete, omitted-refresh retention, redacted stable errors, and injected storage/audit failures. Keep filesystem, Vault, database, network, browser, clock, entropy, provider registration, durable audit transport, and concrete credential-store authority injected or native."
+      "notes": "Discovered in the collision-checked 2516389f inventory after merged PR #13682 added the Rust-only oauth-credential-custody identity. Define language-neutral fixtures and established-lane implementations for bounded opaque account and provider keys, metadata and scope validation, zeroizing credential records, audit-before-access and durable-success-before-release ordering, one-shot access and refresh disclosure, exact-revision compare-and-swap rotation and delete, omitted-refresh retention, redacted stable errors, and injected storage/audit failures. Keep filesystem, Vault, database, network, browser, clock, entropy, provider registration, durable audit transport, and concrete credential-store authority injected or native. PR #14638 adds a distinct confidential-client shared-secret owner; this access-token and refresh-token record contract remains separate."
+    },
+    {
+      "id": "oauth-client-secret-custody-portable-conformance",
+      "title": "Fixture and port audit-first OAuth client-secret custody",
+      "status": "pending",
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14638 inventory after the Rust-only oauth-client-secret-custody identity appeared. Define neutral fixtures and applicable-lane implementations for exact provider plus opaque 32-byte reference keys, 1..65,536-byte non-control secrets, wipe-on-drop and one-closure disclosure semantics, create/load/CAS-rotate/conditional-delete, opaque revisions, attempt-before-effect and durable-result-before-return or disclosure audit ordering, fail-closed audit/store failures, closed redacted errors and debug output, concurrency and poison behavior, and explicit resource bounds. Keep filesystem, Vault, database, encryption and key custody, durable audit transport, clocks, entropy, and network behind injected hosts. Managed runtimes may require a narrow reviewed zeroization exception."
+    },
+    {
+      "id": "oauth-credential-sealed-store-portable-conformance",
+      "title": "Fixture and port OAuth credential sealed-store composition",
+      "status": "pending",
+      "depends_on": ["oauth-credential-custody-portable-conformance", "vault-sealed-store-portable-core-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14624 inventory after the Rust-only oauth-credential-sealed-store identity appeared. Define language-neutral fixtures and established-lane implementations for fixed namespace and key derivation, a bounded versioned zeroizing envelope, SHA-256 revision binding, exact compare-and-swap and delete recovery, corruption and stable redacted error mapping, and deterministic injected-backend semantics. Keep entropy, cryptography, plaintext and key custody, filesystem, Vault, database, and host storage effects outside this portable composition."
+    },
+    {
+      "id": "oauth-credential-sealed-store-native-authority-review",
+      "title": "Review OAuth credential sealed-store native authority",
+      "status": "pending",
+      "depends_on": ["oauth-credential-sealed-store-portable-conformance", "vault-sealed-store-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Review the concrete Rust SealedStore composition and its transitive os_random declaration after the portable contract is extracted. Require truthful entropy, cryptography, plaintext and key custody, zeroization, backend-effect, failure-redaction, and platform evidence. This credential and native-storage authority item is excluded from autonomous selection."
     },
     {
       "id": "oauth-credential-broker-vault-custody-and-scope",
       "title": "Review OAuth credential-broker, vault custody, and authorized scope",
       "status": "pending",
-      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-host-authority-review", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-credential-custody-portable-conformance"],
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-host-authority-review", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-credential-custody-portable-conformance", "oauth-client-secret-custody-portable-conformance", "oauth-credential-sealed-store-native-authority-review"],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Review client-secret, refresh-token, and access-token custody; vault references and leases; durable storage; rotation and revocation execution; authorized scope policy; redaction; broker grants; and operator approval. Scope-string syntax is never authorization. This credential and host-security surface is excluded from autonomous parity selection."
+      "notes": "Review client-secret, refresh-token, and access-token custody; vault references and leases; durable storage; rotation and revocation execution; authorized scope policy; redaction; broker grants; and operator approval. Scope-string syntax is never authorization. This credential and host-security surface is excluded from autonomous parity selection. PR #14638 supplies the storage-agnostic portable client-secret primitive; concrete Vault/database/encryption/audit durability, authorization policy, client_secret_basic and client_secret_post request binding, and private-key-JWT non-exporting signing remain here or in later host/auth owners."
     },
     {
       "id": "text-flow-portable-conformance",
@@ -8782,13 +9014,31 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "The exact-main audit found 93 Java/Kotlin/Dart high-consensus identities and 50 Swift high-consensus identities without exact package owners. The post-#14519 audit now owns the SHA-512, barcode-layout/facade/symbology, and HMAC/HKDF/PBKDF2 Java/Kotlin/Dart fronts below; continue decomposing the remainder. Point2d still requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion."
+      "notes": "The exact-main audit found 93 Java/Kotlin/Dart high-consensus identities and 50 Swift high-consensus identities without exact package owners. The post-#14519 audit owns the SHA-512, barcode-layout/facade/symbology, and HMAC/HKDF/PBKDF2 Java/Kotlin/Dart fronts; the post-#14615 audit materializes `swift-hash-functions-lane-parity` as the first dependency-shaped Swift child, leaving 49 non-CT Swift identities under this classifier until decomposed. Continue splitting exact package children before implementation. Point2d still requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion."
+    },
+    {
+      "id": "swift-hash-functions-lane-parity",
+      "title": "Implement the portable hash-functions package in Swift",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "First exact Swift high-consensus child materialized by the post-#14615 lane audit. Implement the existing deterministic hash-functions contract with package-native tests, empty capabilities, and no host authority. This dependency-shaped root unlocks later Swift bloom-filter, hash-map, and hyperloglog children; hyperloglog then unlocks the in-memory-data-store engine and facade. The remaining 49 non-CT Swift high-consensus gaps stay owned by the selection-blocked classifier until decomposed into exact children."
+    },
+    {
+      "id": "build-tool-jvm-process-free-graph-diff-core",
+      "title": "Implement Java and Kotlin build-tool graph and diff-selection cores",
+      "status": "pending",
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14615 all-language build-tool audit. Implement separate idiomatic Java and Kotlin process-free cores over the same closed graph/diff fixtures, with deterministic bounded topology and closure behavior, stable GRAPH_CYCLE and DIFF_UNKNOWN_PATH errors, strict portable globs, and no filesystem, Git, process, environment, network, credential, or execution authority. This bounded owner prevents both JVM lanes from waiting on the larger sandbox/execution chain and becomes a prerequisite of the full JVM build tools."
     },
     {
       "id": "build-tool-dart-process-free-graph-diff-core",
       "title": "Implement Dart build-tool graph and diff-selection cores",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#14519 all-language build-tool audit. Implement only the process-free graph and diff-selection domains against the closed neutral corpus, with deterministic topology, cycle errors, closures, unknown-path policies, bounded inputs, and no filesystem, Git, process, environment, network, or credential authority. This bounded core becomes a prerequisite of the full Dart build tool rather than claiming a complete adapter."
@@ -8998,7 +9248,126 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#14599 semantic audit after merged PR #14599 completed a checked ARMv7 functional lane inside the existing six-lane `arm-simulator` identity without changing package inventory topology. Reconcile the Elixir, Go, Python, Ruby, Rust, and TypeScript legacy MOV, ADD, SUB, and HLT wrapper surface with Rust's completed Spec 07b lane: exact 64 KiB little-endian memory, R0-R15 with mirrored PC/R15, NZCV flags, all condition predicates, data-processing, LDR/STR, B/BL, origin-aware checked load, restore, direct access, typed atomic failures, complete traces, and the 388-vector Python common-surface differential. Define a bounded language-neutral functional-simulator corpus, stable errors, resource ceilings, and dependency-shaped applicable-lane rollout; preserve all six truthful empty capability profiles and reconcile the Rust Cargo 0.1.0 versus changelog 0.2.0 metadata mismatch. Keep the separately named Python-only `armv7a-simulator` identity outside this owner, keep each legacy wrapper's `cpu-simulator` dependency distinct from the self-contained functional contract, and exclude host devices, files, processes, environment, network, clocks, native execution, unsupported Thumb/VFP/NEON/system-call behavior, and unconstrained trace growth."
+      "notes": "Discovered by the post-#14599 semantic audit after merged PR #14599 completed a checked ARMv7 functional lane inside the existing six-lane `arm-simulator` identity without changing package inventory topology. Reconcile the Elixir, Go, Python, Ruby, Rust, and TypeScript legacy MOV, ADD, SUB, and HLT wrapper surface with Rust's completed Spec 07b lane: exact 64 KiB little-endian memory, R0-R15 with mirrored PC/R15, NZCV flags, all condition predicates, data-processing, LDR/STR, B/BL, origin-aware checked load, restore, direct access, typed atomic failures, complete traces, and the 388-vector Python common-surface differential. Define a bounded language-neutral functional-simulator corpus, stable errors, resource ceilings, and dependency-shaped applicable-lane rollout; preserve all six truthful empty capability profiles and reconcile the Rust Cargo 0.1.0 versus changelog 0.2.0 metadata mismatch. Keep the separately named two-lane Python/Rust `armv7a-simulator` identity under its own post-#14614 owner, keep each legacy wrapper's `cpu-simulator` dependency distinct from the self-contained functional contract, and exclude host devices, files, processes, environment, network, clocks, native execution, unsupported Thumb/VFP/NEON/system-call behavior, and unconstrained trace growth."
+    },
+    {
+      "id": "armv7a-simulator-two-lane-classification",
+      "title": "Classify ARMv7-A Thumb-2 simulator parity across Python and Rust",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the exact-main inventory after merged PR #14614 added Rust beside Python for the `armv7a-simulator` identity. Reconcile both lanes against Spec 07x: exact 64 KiB wrapping memory, register/CPSR state, checked atomic load/restore/step/run semantics, bounded traces, 16/32-bit encodings, stable typed failures, and the Python differential oracle. Add the Rust package's missing explicit empty capability profile and classify applicable-lane expansion or reviewed exceptions separately from the legacy six-lane `arm-simulator` owner."
+    },
+    {
+      "id": "armv7a-gatelevel-singleton-classification",
+      "title": "Classify ARMv7-A Thumb-2 gate-level simulator portability",
+      "status": "pending",
+      "depends_on": ["armv7a-simulator-two-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14624 inventory after the Rust-only armv7a-gatelevel identity appeared. Classify its exact 524,833-DFF topology, shared checked lifecycle, bounded deterministic traces and failures, and 417-vector functional differential against Spec 07x2. Define a language-neutral gate-level corpus and applicable-lane rollout or narrow reviewed resource exceptions, and add the missing truthful explicit empty capability profile. Keep native execution, files, processes, environment, network, clocks, devices, and unconstrained traces outside this owner."
+    },
+    {
+      "id": "clr-simulator-call-token-table-conformance",
+      "title": "Define portable CLR call-token table conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the semantic delta audit after merged PR #14621 hardened Rust CLR call dispatch without changing inventory topology. Define a neutral MethodDef token corpus for exact high-byte table validation, one-based ordinals, MemberRef and non-0x06 rejection before argument, frame, or state mutation, invalid ordinals, bounded calls, and stable diagnostics. Reconcile all eight established CLR simulator lanes and retain C/C++ emerging evidence; their current low-24-bit masking must not alias a same-row MemberRef into MethodDef."
+    },
+    {
+      "id": "mosaic-browser-package-composition-portable-conformance",
+      "title": "Define portable Mosaic browser package composition",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14624 semantic audit of existing Rust Mosaic compiler and emitter identities. Define bounded language-neutral fixtures for declared same-package export qualification and inlining, unknown PascalCase refusal, compatible Input single-line and multiline lowering, value, placeholder, max-length, read-only, accessibility, and event behavior, and consistent HTML, WebComponent, and React artifacts. Keep browsers, files, processes, network, clocks, native rendering, and package installation outside this deterministic composition contract. PR #14640 adds 41 story fixtures covering all one-of axes for Badge, Alert, Button, Spinner, Input, and Toast and exposes missing disabled Button treatment; retain those stories as browser-emitter and disabled-semantics evidence while Go gallery/process/filesystem mechanics remain tooling scope. PR #14637 adds manifest-declared token-palette selection, backend-specific precedence, unresolved-token behavior, same-package composition, and consistent HTML, WebComponent, and React artifact evidence; manifest-relative file loading and CLI subprocess/temp-directory work remain host tooling. PR #14594 proves legacy portable Input(multiline: true) lowers to textarea with controlled value, placeholder, readonly/max-length, and neutral onChange/onCommit/onCancel hydration markers; HostInput intentionally remains single-line."
+    },
+    {
+      "id": "browser-form-submission-portable-core-classification",
+      "title": "Classify and fixture portable browser form submission",
+      "status": "pending",
+      "depends_on": ["browser-form-controls-portable-core-classification", "html-frontend-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14630 inventory after the Rust-only browser-form-submission identity appeared. Own UI54 form association, submit/reset/implicit-Enter activation, successful-control document ordering and filtering, text-line normalization, required/radio/email/length/pattern/numeric validation, the first 32 typed diagnostics, UTF-8 urlencoded GET/POST plans, 1,024-entry and 1 MiB bounds, stable errors, and applicable-lane rollout. Keep transactional session/history/fetch behavior and native UI hosts outside this deterministic owner."
+    },
+    {
+      "id": "riscv-simulator-six-lane-classification",
+      "title": "Classify checked RV32I simulator parity across six lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the semantic audit after PR #14629 completed the normative checked Rust RV32I implementation beside Elixir, Go, Python, Ruby, and TypeScript. Reconcile exact 64 KiB little-endian memory, 32 registers with x0, PC, five machine CSRs, lifecycle and install metadata, checked load/restore/direct access, typed decode/alignment/range/lifecycle/CSR faults, atomic failed steps, transactional failed or budgeted runs, complete traces, and the 256-vector Python oracle. Preserve Rust RV32M and compiler-host compatibility separately. The Rust riscv-gatelevel identity is owned by the dependent gate-level classifier and may consume this functional corpus."
+    },
+    {
+      "id": "riscv-rv64i-simulator-two-lane-classification",
+      "title": "Classify RV64I simulator parity across Python and Rust",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the exact-main inventory after merged PR #14647 added Rust beside Python for the riscv-rv64i-simulator identity. Reconcile both lanes against Spec 07y: 64 KiB little-endian memory, 32 64-bit registers with x0 enforced, 64-bit PC, halt and installed-range state, complete RV64I+M instruction and decode semantics, checked origin-aware load/restore/direct access, alignment/range/malformed-decode/lifecycle faults, atomic failed steps, transactional bounded runs, complete traces, and the reproducible 364-vector Python full-state differential. Add the Rust package's missing explicit empty capability profile and classify applicable-lane expansion or narrow reviewed exceptions. Keep compressed, atomic, floating-point, privileged, CSR, MMU, interrupt, device, and the separately planned but absent RCPU-046 gate-level identity outside."
+    },
+    {
+      "id": "riscv-gatelevel-singleton-classification",
+      "title": "Classify the Rust-only RISC-V gate-level simulator",
+      "status": "pending",
+      "depends_on": ["riscv-simulator-six-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14641 inventory after the Rust-only riscv-gatelevel identity appeared. Classify its exact 525,505-DFF topology, strict RV32I plus five-CSR and MRET decode, repository-gate Boolean/decode/ripple arithmetic/compare/barrel-shift/address/branch/CSR/trap networks, shared checked state and typed faults, atomic steps, transactional bounded runs, stable bounded traces, exact resource ceilings, and the 256-vector Python plus functional-Rust differential. Define an applicable-lane rollout or narrow reviewed resource/toolchain exception and add the absent truthful explicit empty capability profile. Keep RV32M, compiler host services, native execution, files, processes, network, clocks, devices, analog timing, physical caches/MMUs/pins, and transistor placement outside."
+    },
+    {
+      "id": "oct-eight-backend-language-neutral-conformance",
+      "title": "Define language-neutral Oct conformance across eight backends",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the semantic audit after PR #14632 completed Oct output and byte operations on BEAM without changing package topology. Freeze the 12-program, eight-backend, 96-cell contract: stdout is separate from return value, print_i64 maps to erlang:display/1, and u8 arithmetic, unary, and bitwise operations wrap or mask without changing wider integers. Fixture complement, wrapping, short-circuiting, globals, loops, calls, and matrix drift. Intel 8008 input, carry arithmetic, and rotations remain outside VM-040."
+    },
+    {
+      "id": "mermaid-cynefin-language-neutral-conformance",
+      "title": "Define language-neutral Mermaid Cynefin conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the semantic audit after PR #14631 added the Cynefin slice without changing package topology. Own cynefin-beta and colon headers, titles, the fixed five domains, quoted ordered items, labeled cross-domain transitions, self-loop discard, stable diagnostics, fixed semantic quadrants and center ellipse, deterministic paint projection, hostile and bounded cases, and the pinned Mermaid 11.16.1 corpus. Theme overrides, organic seeded waviness, exact cliff styling, arrowheads, accessibility directives, overflow badges, and Metal-to-PNG native validation remain reviewed exclusions."
+    },
+    {
+      "id": "mermaid-cynefin-established-lane-parity",
+      "title": "Roll Mermaid Cynefin through applicable established lanes",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["mermaid-cynefin-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "After the neutral Cynefin contract is frozen, implement the agreed subset in every applicable established Mermaid lane or record narrow reviewed exceptions. This semantic expansion uses existing Mermaid and diagram identities rather than manufacturing a new package identity."
+    },
+    {
+      "id": "spice-mosaic-workbench-portable-conformance",
+      "title": "Define portable SPICE Mosaic workbench conformance",
+      "status": "pending",
+      "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-browser-package-composition-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14594 inventory after the established Rust spice-mosaic-app and authored Mosaic mosaic-pkg-spice-workbench identities appeared. Fixture the authority-free state core and authored UI together: editable deck, complete .op/.dc/.ac/.tran/.tf analysis rows, inspect/run/select transitions, stable props/diagnostics/raw-result projection, rejected-event no-mutation and retry, versioned bounded snapshot/restore, dark-mode and startup behavior, and exact MIL slot/event correspondence. Delegate parser and engine semantics to canonical spice-netlist-parser. Require the currently absent truthful empty capability profile for the pure Rust core. Raw JSON output and documented later product features remain reviewed first-slice exclusions."
+    },
+    {
+      "id": "spice-mosaic-app-native-abi-review",
+      "title": "Review SPICE Mosaic app native ABI and WASM hosts",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["spice-mosaic-workbench-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-wasm-rust-and-javascript-host-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "After the portable workbench contract is explicit, review the cdylib C ABI and WASM exports, handles and buffers, panic containment, target builds, generated hosts, and wrapper applicability without manufacturing fifteen copies of the ABI shell. Native toolchains, generated hosts, and ABI resource lifetimes remain host-specific authority."
     },
     {
       "id": "armv7-gatelevel-singleton-classification",

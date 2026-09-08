@@ -764,6 +764,27 @@ to the selected language, requires a package-name component, and applies the
 candidate ceiling during incremental immediate-child enumeration before
 bounded sorting.
 
+The Go build tool keeps its own generated, typed, immutable projection beside
+the production hasher. The generator consumes the checked neutral JSON and
+emits both the complete registry value and its pinned domain-separated digest;
+production source collection never locates or decodes the repository fixture.
+Tests decode the checked registry and compare every universal selector,
+language entry, scoped rule, package-exact rule, case-alias group, owner, and
+reason with the generated projection. They also rerun the generator and require
+byte-for-byte equality with the checked Go source, so an edited fixture cannot
+leave a stale production selector behind.
+
+The Go collector resolves all seven roles from that projection. Universal
+BUILD names remain recursive; universal and language root basenames plus
+variable manifest suffixes remain root-only; fixed relative and exact-package
+paths apply in both modes; recursive and scoped selectors apply only in
+extension mode. Exact-package selection derives and validates a canonical
+`code/packages|programs/<lane>/<name...>` root from the discovered package path
+and requires the encoded lane to equal the requested language. Unknown
+languages fail before the package root is inspected or walked. Generated-tree
+pruning remains exact and case-sensitive, and neither a declared glob nor a
+package-specific selector can reopen a pruned directory or inert link boundary.
+
 Swift and the shared C#/F# engine complete this package-local projection with
 the repository-relative boundary registry, tracked-regular-file evidence, and
 an exact reverse diff index. Their native readers remain responsible for

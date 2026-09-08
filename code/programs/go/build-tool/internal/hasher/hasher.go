@@ -47,98 +47,7 @@ import (
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
-	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
 )
-
-// sourceExtensions maps languages to the file extensions that matter for
-// change detection. If any file with these extensions changes, the package
-// needs rebuilding.
-var sourceExtensions = map[string]map[string]bool{
-	"python":     {".py": true, ".toml": true, ".cfg": true},
-	"ruby":       {".rb": true, ".gemspec": true},
-	"go":         {".go": true},
-	"typescript": {".ts": true, ".tsx": true, ".json": true},
-	"rust":       {".rs": true, ".toml": true},
-	"elixir":     {".ex": true, ".exs": true},
-	"dart":       {".dart": true, ".yaml": true},
-	"starlark":   {".star": true},
-	"perl":       {".pl": true, ".pm": true, ".t": true, ".xs": true},
-	"haskell":    {".hs": true, ".cabal": true},
-	"ocaml":      {".ml": true, ".mli": true, ".opam": true},
-	"java":       {".java": true},
-	"kotlin":     {".kt": true, ".kts": true},
-	// .cs and .fs are C# and F# source files. .csproj and .fsproj are the
-	// project manifests — equivalent to Cargo.toml or go.mod. Changes to
-	// any of these should invalidate the build cache and trigger a rebuild.
-	"dotnet": {".cs": true, ".fs": true, ".csproj": true, ".fsproj": true},
-}
-
-// specialFilenames maps languages to filenames that should always be
-// included regardless of their extension.
-var specialFilenames = map[string]map[string]bool{
-	"python":     {},
-	"ruby":       {"Gemfile": true, "Rakefile": true},
-	"go":         {"go.mod": true, "go.sum": true},
-	"typescript": {"package.json": true, "tsconfig.json": true, "vitest.config.ts": true},
-	"rust":       {"Cargo.toml": true, "Cargo.lock": true},
-	"elixir":     {"mix.exs": true, "mix.lock": true},
-	"dart":       {"pubspec.yaml": true, "pubspec.lock": true, "analysis_options.yaml": true},
-	"starlark":   {},
-	"perl":       {"Makefile.PL": true, "Build.PL": true, "cpanfile": true, "MANIFEST": true, "META.json": true, "META.yml": true},
-	"haskell":    {},
-	"ocaml":      {"dune": true, "dune-project": true, ".ocamlformat": true},
-	"java":       {"settings.gradle.kts": true, "build.gradle.kts": true},
-	"kotlin":     {"settings.gradle.kts": true, "build.gradle.kts": true},
-	// global.json pins the .NET SDK version — a change here should trigger
-	// a rebuild even if no source files changed. NuGet.Config controls the
-	// package feed sources (case-insensitive filename on Windows, so both
-	// variants are tracked).
-	"dotnet": {"global.json": true, "NuGet.Config": true, "nuget.config": true},
-}
-
-var buildFilenames = map[string]bool{
-	"BUILD":               true,
-	"BUILD_mac":           true,
-	"BUILD_linux":         true,
-	"BUILD_windows":       true,
-	"BUILD_mac_and_linux": true,
-}
-
-// generatedDirectoryComponents is the shared, case-sensitive v1 registry.
-// Matching is by an exact normalized path component, so authored directories
-// such as _Build and _build-example remain source candidates.
-var generatedDirectoryComponents = map[string]bool{
-	".build":        true,
-	".cargo":        true,
-	".claude":       true,
-	".dart_tool":    true,
-	".git":          true,
-	".gradle":       true,
-	".hg":           true,
-	".mypy_cache":   true,
-	".pytest_cache": true,
-	".ruff_cache":   true,
-	".stack-work":   true,
-	".svn":          true,
-	".tox":          true,
-	".venv":         true,
-	"Pods":          true,
-	"__pycache__":   true,
-	"_build":        true,
-	"build":         true,
-	"cover":         true,
-	"deps":          true,
-	"dist":          true,
-	"dist-newstyle": true,
-	"gradle-build":  true,
-	"node_modules":  true,
-	"target":        true,
-	"vendor":        true,
-}
-
-var declaredManifestExtensions = map[string]map[string]bool{
-	"ocaml": {".opam": true},
-}
 
 // collectSourceFiles walks the package directory and returns all source
 // files relevant to the package's language. Files are sorted by their
@@ -155,24 +64,7 @@ func collectSourceFiles(pkg discovery.Package) []string {
 }
 
 func collectSourceFilesChecked(pkg discovery.Package) ([]string, error) {
-	extensions := sourceExtensions[pkg.Language]
-	specials := specialFilenames[pkg.Language]
-	files := make([]string, 0)
-
-	err := walkSourceFiles(pkg.Path, func(path string, entry os.DirEntry) error {
-		name := entry.Name()
-		if buildFilenames[name] || extensions[filepath.Ext(name)] || specials[name] {
-			files = append(files, path)
-		}
-		return nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	if err := sortPortablePaths(files, pkg.Path); err != nil {
-		return nil, err
-	}
-	return files, nil
+	return collectSourceInputsChecked(pkg, false)
 }
 
 // resolveDeclaredSrcs converts the declared source patterns from a Starlark
@@ -187,29 +79,43 @@ func resolveDeclaredSrcs(pkg discovery.Package) []string {
 }
 
 func resolveDeclaredSrcsChecked(pkg discovery.Package) ([]string, error) {
-	files := make([]string, 0)
-	specials := specialFilenames[pkg.Language]
-	manifestExtensions := declaredManifestExtensions[pkg.Language]
+	return collectSourceInputsChecked(pkg, true)
+}
 
-	err := walkSourceFiles(pkg.Path, func(path string, entry os.DirEntry) error {
-		name := entry.Name()
-		rel, err := portableRelativePath(pkg.Path, path)
+func collectSourceInputsChecked(pkg discovery.Package, declaredMode bool) ([]string, error) {
+	sourceLanguage, packageRoot, err := sourceInputProfile(pkg)
+	if err != nil {
+		return nil, fmt.Errorf("repository package identity is invalid")
+	}
+	language, ok := languageSourceInputRegistryByName[sourceLanguage]
+	if !ok {
+		return nil, fmt.Errorf("unsupported source language")
+	}
+	if packageRoot != "" {
+		parts := strings.Split(packageRoot, "/")
+		languageRoot := len(parts) >= 4 && parts[0] == "code" &&
+			(parts[1] == "packages" || parts[1] == "programs") && parts[2] == sourceLanguage
+		siteRoot := len(parts) == 3 && parts[0] == "code" && parts[1] == "sites" && sourceLanguage == "typescript"
+		if !languageRoot && !siteRoot {
+			return nil, fmt.Errorf("repository package identity is invalid")
+		}
+	}
+
+	files := make([]string, 0)
+	err = walkSourceFiles(pkg.Path, func(path string, entry os.DirEntry) error {
+		relativePath, err := portableRelativePath(pkg.Path, path)
 		if err != nil {
 			return err
 		}
-		include := buildFilenames[name] || specials[name]
-		if !include && filepath.Dir(path) == filepath.Clean(pkg.Path) && manifestExtensions[filepath.Ext(name)] {
-			include = true
-		}
-		if !include {
-			for _, pattern := range pkg.DeclaredSrcs {
-				if globmatch.MatchPath(pattern, rel) {
-					include = true
-					break
-				}
-			}
-		}
-		if include {
+		if matchesSourceInput(
+			language,
+			packageRoot,
+			relativePath,
+			entry.Name(),
+			!strings.Contains(relativePath, "/"),
+			declaredMode,
+			pkg.DeclaredSrcs,
+		) {
 			files = append(files, path)
 		}
 		return nil
@@ -221,6 +127,27 @@ func resolveDeclaredSrcsChecked(pkg discovery.Package) ([]string, error) {
 		return nil, err
 	}
 	return files, nil
+}
+
+// sourceInputProfile maps repository-owned site packages to the TypeScript
+// source-input contract without changing their legacy unknown/* graph identity.
+// Arbitrary unknown packages remain unsupported and fail before traversal.
+func sourceInputProfile(pkg discovery.Package) (string, string, error) {
+	packageRoot, found, err := canonicalRepositoryPackagePath(pkg.Path)
+	if err != nil {
+		return "", "", err
+	}
+	if found {
+		parts := strings.Split(packageRoot, "/")
+		if len(parts) == 3 && parts[0] == "code" && parts[1] == "sites" {
+			if pkg.Language != "unknown" {
+				return "", "", fmt.Errorf("site package language is invalid")
+			}
+			return "typescript", packageRoot, nil
+		}
+	}
+	packageRoot, err = exactPackageSourceRoot(pkg)
+	return pkg.Language, packageRoot, err
 }
 
 // walkSourceFiles enumerates only regular lexical descendants of root. It
@@ -245,7 +172,7 @@ func walkSourceFiles(root string, visit func(string, os.DirEntry) error) error {
 		}
 		linked := info.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(info)
 		if entry.IsDir() {
-			if linked || generatedDirectoryComponents[entry.Name()] {
+			if linked || containsString(languageSourceInputRegistry.UniversalInputs.GeneratedDirectoryComponents, entry.Name()) {
 				return filepath.SkipDir
 			}
 			return nil
@@ -306,20 +233,8 @@ func sortPortablePaths(files []string, root string) error {
 }
 
 func repositoryRelativePackagePath(pkg discovery.Package) (string, error) {
-	normalized := filepath.ToSlash(filepath.Clean(pkg.Path))
-	parts := strings.Split(normalized, "/")
-	canonicalStart := -1
-	for index := 0; index+1 < len(parts); index++ {
-		if parts[index] == "code" && (parts[index+1] == "packages" || parts[index+1] == "programs") {
-			canonicalStart = index
-		}
-	}
-	if canonicalStart >= 0 {
-		candidate := strings.Join(parts[canonicalStart:], "/")
-		if err := validateRepositoryPath(candidate); err != nil {
-			return "", err
-		}
-		return candidate, nil
+	if candidate, found, err := canonicalRepositoryPackagePath(pkg.Path); err != nil || found {
+		return candidate, err
 	}
 
 	identity := strings.Split(pkg.Name, "/")
@@ -335,6 +250,37 @@ func repositoryRelativePackagePath(pkg discovery.Package) (string, error) {
 		return "", err
 	}
 	return candidate, nil
+}
+
+func exactPackageSourceRoot(pkg discovery.Package) (string, error) {
+	candidate, found, err := canonicalRepositoryPackagePath(pkg.Path)
+	if err != nil || !found {
+		return candidate, err
+	}
+	parts := strings.Split(candidate, "/")
+	if len(parts) < 4 || (parts[1] != "packages" && parts[1] != "programs") || parts[2] != pkg.Language {
+		return "", fmt.Errorf("canonical package path does not match language")
+	}
+	return candidate, nil
+}
+
+func canonicalRepositoryPackagePath(packagePath string) (string, bool, error) {
+	normalized := filepath.ToSlash(filepath.Clean(packagePath))
+	parts := strings.Split(normalized, "/")
+	canonicalStart := -1
+	for index := 0; index+1 < len(parts); index++ {
+		if parts[index] == "code" && (parts[index+1] == "packages" || parts[index+1] == "programs" || parts[index+1] == "sites") {
+			canonicalStart = index
+		}
+	}
+	if canonicalStart >= 0 {
+		candidate := strings.Join(parts[canonicalStart:], "/")
+		if err := validateRepositoryPath(candidate); err != nil {
+			return "", false, err
+		}
+		return candidate, true, nil
+	}
+	return "", false, nil
 }
 
 func validateRepositoryPath(path string) error {

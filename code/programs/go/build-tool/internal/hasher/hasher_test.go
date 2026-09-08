@@ -1,13 +1,17 @@
 package hasher
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"reflect"
+	"regexp"
 	"runtime"
 	"sort"
 	"strings"
@@ -20,9 +24,12 @@ import (
 type sourceCollectionFixture struct {
 	Input struct {
 		Options struct {
-			Mode         string   `json:"mode"`
-			DeclaredSrcs []string `json:"declared_srcs"`
-			Candidates   []struct {
+			Language       string   `json:"language"`
+			PackageRoot    string   `json:"package_root"`
+			Mode           string   `json:"mode"`
+			RegistrySHA256 string   `json:"registry_sha256"`
+			DeclaredSrcs   []string `json:"declared_srcs"`
+			Candidates     []struct {
 				Path       string `json:"path"`
 				Kind       string `json:"kind"`
 				ContentHex string `json:"content_hex"`
@@ -79,7 +86,10 @@ func readJSONFixture[T any](t *testing.T, name string) T {
 
 func materializeSourceFixture(t *testing.T, fixture sourceCollectionFixture) string {
 	t.Helper()
-	root := t.TempDir()
+	root := filepath.Join(t.TempDir(), filepath.FromSlash(fixture.Input.Options.PackageRoot))
+	if err := os.MkdirAll(root, 0o755); err != nil {
+		t.Fatal(err)
+	}
 	linkTargets := map[string]string{}
 	for _, candidate := range fixture.Input.Options.Candidates {
 		if candidate.Kind == "symlink" || candidate.Kind == "reparse_point" {
@@ -408,14 +418,19 @@ func TestNeutralSourceCollectionFixtures(t *testing.T) {
 	for _, name := range []string{
 		"source-collection-extension.json",
 		"source-collection-declared.json",
+		"source-collection-registry-roles.json",
+		"source-collection-engram-wasm-exact-inputs.json",
 	} {
 		t.Run(name, func(t *testing.T) {
 			fixture := readJSONFixture[sourceCollectionFixture](t, name)
+			if fixture.Input.Options.RegistrySHA256 != languageSourceInputRegistryDigest {
+				t.Fatalf("fixture registry digest %q does not match production %q", fixture.Input.Options.RegistrySHA256, languageSourceInputRegistryDigest)
+			}
 			root := materializeSourceFixture(t, fixture)
 			pkg := discovery.Package{
-				Name:         "ocaml/demo",
+				Name:         fixture.Input.Options.Language + "/demo",
 				Path:         root,
-				Language:     "ocaml",
+				Language:     fixture.Input.Options.Language,
 				DeclaredSrcs: fixture.Input.Options.DeclaredSrcs,
 			}
 
@@ -452,7 +467,7 @@ func TestCollectSourceFilesIncludesOnlyExactBuildFronts(t *testing.T) {
 	}
 	root := makeFixture(t, tree)
 	pkgPath := filepath.Join(root, "pkg")
-	got := relativePaths(t, pkgPath, collectSourceFiles(discovery.Package{Name: "go/demo", Path: pkgPath}))
+	got := relativePaths(t, pkgPath, collectSourceFiles(discovery.Package{Name: "go/demo", Path: pkgPath, Language: "go"}))
 	want := []string{"BUILD", "BUILD_linux", "BUILD_mac", "BUILD_mac_and_linux", "BUILD_windows"}
 	if strings.Join(got, "\n") != strings.Join(want, "\n") {
 		t.Fatalf("BUILD-front mismatch: got %v, want %v", got, want)
@@ -522,33 +537,375 @@ func TestCollectorsRejectPackageRootLink(t *testing.T) {
 }
 
 func TestCollectSourceFilesEmpty(t *testing.T) {
-	root := t.TempDir()
-	pkg := discovery.Package{
-		Name:     "unknown/empty",
-		Path:     root,
-		Language: "unknown",
-	}
-
-	files := collectSourceFiles(pkg)
-	if len(files) != 0 {
-		t.Fatalf("expected 0 files, got %d", len(files))
+	for _, root := range []string{t.TempDir(), filepath.Join(t.TempDir(), "missing")} {
+		pkg := discovery.Package{Name: "unknown/empty", Path: root, Language: "unknown"}
+		if _, err := collectSourceFilesChecked(pkg); err == nil || err.Error() != "unsupported source language" {
+			t.Fatalf("unknown language must fail before walking %q: %v", root, err)
+		}
 	}
 }
 
 func TestGeneratedDirectoryRegistryIsExactAndComplete(t *testing.T) {
-	want := []string{
-		".build", ".cargo", ".claude", ".dart_tool", ".git", ".gradle", ".hg",
-		".mypy_cache", ".pytest_cache", ".ruff_cache", ".stack-work", ".svn", ".tox",
-		".venv", "Pods", "__pycache__", "_build", "build", "cover", "deps", "dist",
-		"dist-newstyle", "gradle-build", "node_modules", "target", "vendor",
-	}
-	got := make([]string, 0, len(generatedDirectoryComponents))
-	for component := range generatedDirectoryComponents {
-		got = append(got, component)
-	}
+	want := append([]string(nil), languageSourceInputRegistry.UniversalInputs.GeneratedDirectoryComponents...)
+	got := append([]string(nil), generatedDirectoryComponents()...)
+	sort.Strings(want)
 	sort.Strings(got)
 	if strings.Join(got, "\n") != strings.Join(want, "\n") {
 		t.Fatalf("generated-directory registry mismatch: got %v, want %v", got, want)
+	}
+}
+
+func TestProductionLanguageSourceInputRegistryExactlyMatchesNeutralRegistry(t *testing.T) {
+	contents, err := os.ReadFile(filepath.Clean(filepath.Join(fixturePath(t, "unused"), "..", "..", "language-source-input-registry.json")))
+	if err != nil {
+		t.Fatal(err)
+	}
+	checked, err := decodeLanguageSourceInputRegistry(contents)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(checked, languageSourceInputRegistry) {
+		t.Fatal("generated production registry differs from checked neutral registry")
+	}
+	var canonical any
+	if err := json.Unmarshal(contents, &canonical); err != nil {
+		t.Fatal(err)
+	}
+	canonicalBytes, err := json.Marshal(canonical)
+	if err != nil {
+		t.Fatal(err)
+	}
+	digest := sha256.New()
+	_, _ = digest.Write([]byte("coding-adventures/build-tool-language-source-input-registry/v1\x00"))
+	var length [8]byte
+	binary.BigEndian.PutUint64(length[:], uint64(len(canonicalBytes)))
+	_, _ = digest.Write(length[:])
+	_, _ = digest.Write(canonicalBytes)
+	if got := hex.EncodeToString(digest.Sum(nil)); got != languageSourceInputRegistryDigest {
+		t.Fatalf("registry digest mismatch: got %s, want %s", got, languageSourceInputRegistryDigest)
+	}
+	if len(checked.Languages) != 23 {
+		t.Fatalf("expected 23 languages, got %d", len(checked.Languages))
+	}
+	seen := make(map[string]bool, len(checked.Languages))
+	for _, language := range checked.Languages {
+		if seen[language.Language] {
+			t.Fatalf("duplicate language %q", language.Language)
+		}
+		seen[language.Language] = true
+	}
+	missing := checked
+	missing.UniversalInputs.RootExactBasenames = nil
+	if reflect.DeepEqual(missing, languageSourceInputRegistry) {
+		t.Fatal("missing selector must not equal production")
+	}
+	extra := checked
+	extra.UniversalInputs.RootExactBasenames = append(append([]string(nil), checked.UniversalInputs.RootExactBasenames...), "undeclared.extra")
+	if reflect.DeepEqual(extra, languageSourceInputRegistry) {
+		t.Fatal("undeclared selector must not equal production")
+	}
+}
+
+func cloneLanguageSourceInputRegistry(t *testing.T) languageSourceInputRegistryDocument {
+	t.Helper()
+	encoded, err := json.Marshal(languageSourceInputRegistry)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var clone languageSourceInputRegistryDocument
+	if err := json.Unmarshal(encoded, &clone); err != nil {
+		t.Fatal(err)
+	}
+	return clone
+}
+
+func TestLanguageSourceInputRegistryRejectsUnsafeSelectorsAndBounds(t *testing.T) {
+	tests := []struct {
+		name   string
+		mutate func(*languageSourceInputRegistryDocument)
+	}{
+		{
+			name: "empty suffix",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				registry.Languages[0].RecursiveSuffixes[0] = ""
+			},
+		},
+		{
+			name: "unsafe relative path",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				registry.Languages[0].RootExactRelativePaths = []string{"../secret"}
+			},
+		},
+		{
+			name: "duplicate cross role selector",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				registry.Languages[0].RootExactBasenames = []string{registry.Languages[0].RecursiveExactBasenames[0]}
+			},
+		},
+		{
+			name: "oversized universal role",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				registry.UniversalInputs.RootExactBasenames = make([]string, 257)
+				for index := range registry.UniversalInputs.RootExactBasenames {
+					registry.UniversalInputs.RootExactBasenames[index] = fmt.Sprintf("input-%03d", index)
+				}
+			},
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			registry := cloneLanguageSourceInputRegistry(t)
+			test.mutate(&registry)
+			if err := validateLanguageSourceInputRegistry(registry); err == nil {
+				t.Fatal("malformed registry must fail closed")
+			}
+		})
+	}
+
+	tooLarge := bytes.Repeat([]byte{' '}, maxLanguageSourceInputRegistryBytes+1)
+	if _, err := decodeLanguageSourceInputRegistry(tooLarge); err == nil {
+		t.Fatal("oversized registry must fail before decoding")
+	}
+}
+
+func TestLanguageSourceInputRegistryRejectsOverlapAndSensitivePaths(t *testing.T) {
+	registry := cloneLanguageSourceInputRegistry(t)
+	for index := range registry.Languages {
+		if registry.Languages[index].Language == "go" {
+			registry.Languages[index].ScopedInputs[0].Suffixes = []string{".go"}
+			break
+		}
+	}
+	if err := validateLanguageSourceInputRegistry(registry); err == nil {
+		t.Fatal("scoped selector overlapping a global suffix must fail closed")
+	}
+
+	registry = cloneLanguageSourceInputRegistry(t)
+	for index := range registry.Languages {
+		if registry.Languages[index].Language == "rust" {
+			registry.Languages[index].PackageExactInputs[0].Paths = []string{".env"}
+			break
+		}
+	}
+	if err := validateLanguageSourceInputRegistry(registry); err == nil {
+		t.Fatal("sensitive exact package path must fail closed")
+	}
+
+	tests := []struct {
+		name   string
+		mutate func(*languageSourceInputRegistryDocument)
+	}{
+		{
+			name: "root exact path enters generated component",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				registry.Languages[0].RootExactRelativePaths = []string{"build/input"}
+			},
+		},
+		{
+			name: "root and package exact paths prefix collide",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				for index := range registry.Languages {
+					if len(registry.Languages[index].PackageExactInputs) > 0 {
+						registry.Languages[index].RootExactRelativePaths = []string{"foo"}
+						registry.Languages[index].PackageExactInputs[0].Paths = []string{"foo/bar"}
+						return
+					}
+				}
+			},
+		},
+		{
+			name: "package exact basename and global suffix case-fold overlap",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				for index := range registry.Languages {
+					if registry.Languages[index].Language == "rust" {
+						registry.Languages[index].PackageExactInputs[0].Paths = []string{"foo.RS"}
+						return
+					}
+				}
+			},
+		},
+		{
+			name: "scoped basename and suffix overlap",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				for index := range registry.Languages {
+					if len(registry.Languages[index].ScopedInputs) > 0 {
+						registry.Languages[index].ScopedInputs[0].Suffixes = []string{".html"}
+						registry.Languages[index].ScopedInputs[0].ExactBasenames = []string{"index.html"}
+						return
+					}
+				}
+			},
+		},
+		{
+			name: "case-folded root scoped and global selectors overlap",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				for index := range registry.Languages {
+					if registry.Languages[index].Language == "go" {
+						registry.Languages[index].ScopedInputs = append(registry.Languages[index].ScopedInputs, scopedSourceInput{
+							ID:             "root-go-mod-overlap",
+							Role:           "resource",
+							Scope:          "root",
+							ExactBasenames: []string{"GO.MOD"},
+							Decision:       "include",
+							Owner:          "build-tool parity",
+							Reason:         "prove full case-fold overlap rejection",
+						})
+						return
+					}
+				}
+			},
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			registry := cloneLanguageSourceInputRegistry(t)
+			test.mutate(&registry)
+			if err := validateLanguageSourceInputRegistry(registry); err == nil {
+				t.Fatal("overlapping registry selectors must fail closed")
+			}
+		})
+	}
+}
+
+func TestLanguageSourceInputRegistryAllowsBoundedFutureLaneAndNFCText(t *testing.T) {
+	registry := cloneLanguageSourceInputRegistry(t)
+	registry.Languages = append(registry.Languages, languageSourceInputSelectors{Language: "zz-future"})
+	if err := validateLanguageSourceInputRegistry(registry); err != nil {
+		t.Fatalf("bounded future lane rejected: %v", err)
+	}
+	if err := validateRegistryText("caf\u00e9"); err != nil {
+		t.Fatalf("NFC UTF-8 text rejected: %v", err)
+	}
+	if err := validateRegistryText("cafe\u0301"); err == nil {
+		t.Fatal("non-NFC text must fail closed")
+	}
+}
+
+func TestLanguageSourceInputRegistryRejectsDuplicateKeysAndDepth(t *testing.T) {
+	duplicate := []byte(`{"schema_version":1,"schema_version":1}`)
+	if _, err := decodeLanguageSourceInputRegistry(duplicate); err == nil {
+		t.Fatal("duplicate object keys must fail closed")
+	}
+	deep := []byte(strings.Repeat("[", maxLanguageSourceInputRegistryDepth+1) + strings.Repeat("]", maxLanguageSourceInputRegistryDepth+1))
+	if _, err := decodeLanguageSourceInputRegistry(deep); err == nil {
+		t.Fatal("over-deep registry must fail before typed decoding")
+	}
+}
+
+func TestPackageExactInputsDoNotWidenToSiblingRoots(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "code", "packages", "rust", "not-engram-wasm")
+	for _, relative := range []string{"BUILD", "js/engram-mosaic-host-wasm.mjs", "js/smoke.mjs", "pkg/engram_engine.wasm"} {
+		path := filepath.Join(root, filepath.FromSlash(relative))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("source\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "rust/not-engram-wasm", Path: root, Language: "rust"}
+	got := relativePaths(t, root, collectSourceFiles(pkg))
+	want := []string{"BUILD"}
+	if strings.Join(got, "\n") != strings.Join(want, "\n") {
+		t.Fatalf("package-exact inputs widened to sibling: got %v, want %v", got, want)
+	}
+}
+
+func TestPackageExactInputsRequireCanonicalDiscoveredPath(t *testing.T) {
+	root := t.TempDir()
+	for _, relative := range []string{"BUILD", "js/smoke.mjs"} {
+		path := filepath.Join(root, filepath.FromSlash(relative))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("source\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "rust/engram-wasm", Path: root, Language: "rust"}
+	got, err := collectSourceFilesChecked(pkg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if paths := relativePaths(t, root, got); strings.Join(paths, "\n") != "BUILD" {
+		t.Fatalf("caller-supplied identity activated exact package inputs: %v", paths)
+	}
+}
+
+func TestLanguageSourceInputRegistryGeneratorRoundTrip(t *testing.T) {
+	commandName := "pwsh"
+	if _, err := exec.LookPath(commandName); err != nil {
+		t.Fatalf("registry generator requires PowerShell Core (pwsh): %v", err)
+	}
+	output := filepath.Join(t.TempDir(), "language_source_input_registry_generated.go")
+	command := exec.Command(commandName, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", filepath.Join("..", "..", "tools", "generate-language-source-input-registry.ps1"), "-OutputPath", output)
+	if combined, err := command.CombinedOutput(); err != nil {
+		t.Fatalf("registry generator failed: %v: %s", err, combined)
+	}
+	generated, err := os.ReadFile(output)
+	if err != nil {
+		t.Fatal(err)
+	}
+	checked, err := os.ReadFile("language_source_input_registry_generated.go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(generated) != string(checked) {
+		t.Fatal("generated registry source is stale")
+	}
+
+	registry := cloneLanguageSourceInputRegistry(t)
+	registry.Languages[0].ScopedInputs[0].Reason += " reviewed A & B < C > D"
+	mutated, err := json.Marshal(registry)
+	if err != nil {
+		t.Fatal(err)
+	}
+	registryPath := filepath.Join(t.TempDir(), "registry.json")
+	if err := os.WriteFile(registryPath, mutated, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	mutatedOutput := filepath.Join(t.TempDir(), "generated.go")
+	command = exec.Command(commandName, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", filepath.Join("..", "..", "tools", "generate-language-source-input-registry.ps1"), "-RegistryPath", registryPath, "-OutputPath", mutatedOutput)
+	if combined, err := command.CombinedOutput(); err != nil {
+		t.Fatalf("registry generator failed for valid mutation: %v: %s", err, combined)
+	}
+	mutatedGenerated, err := os.ReadFile(mutatedOutput)
+	if err != nil {
+		t.Fatal(err)
+	}
+	digestPattern := regexp.MustCompile(`languageSourceInputRegistryDigest = "([0-9a-f]{64})"`)
+	match := digestPattern.FindSubmatch(mutatedGenerated)
+	if len(match) != 2 || string(match[1]) == languageSourceInputRegistryDigest {
+		t.Fatal("generator must derive a new digest from changed registry content")
+	}
+	goDigest, err := languageSourceInputRegistryDigestForJSON(mutated)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(match[1]) != goDigest {
+		t.Fatalf("generator and Go canonical digests differ: got %s, want %s", match[1], goDigest)
+	}
+
+	for _, malformed := range []struct {
+		name    string
+		content []byte
+	}{
+		{name: "oversized", content: bytes.Repeat([]byte{' '}, maxLanguageSourceInputRegistryBytes+1)},
+		{name: "too deep", content: []byte(strings.Repeat("[", maxLanguageSourceInputRegistryDepth+1) + strings.Repeat("]", maxLanguageSourceInputRegistryDepth+1))},
+		{name: "invalid UTF-8", content: []byte{0xff}},
+		{name: "duplicate key", content: []byte(`{"schema_version":1,"schema_version":1}`)},
+	} {
+		t.Run(malformed.name, func(t *testing.T) {
+			input := filepath.Join(t.TempDir(), "registry.json")
+			if err := os.WriteFile(input, malformed.content, 0o644); err != nil {
+				t.Fatal(err)
+			}
+			output := filepath.Join(t.TempDir(), "generated.go")
+			command := exec.Command(commandName, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", filepath.Join("..", "..", "tools", "generate-language-source-input-registry.ps1"), "-RegistryPath", input, "-OutputPath", output)
+			if combined, err := command.CombinedOutput(); err == nil {
+				t.Fatalf("generator accepted malformed registry: %s", combined)
+			}
+		})
 	}
 }
 
@@ -559,6 +916,14 @@ func TestRepositoryRelativePackagePath(t *testing.T) {
 	}
 	if got, err := repositoryRelativePackagePath(canonical); err != nil || got != "code/programs/go/demo" {
 		t.Fatalf("canonical program path: got %q, err %v", got, err)
+	}
+	site := discovery.Package{
+		Name:     "unknown/blog",
+		Path:     filepath.Join(t.TempDir(), "code", "sites", "blog"),
+		Language: "unknown",
+	}
+	if got, err := repositoryRelativePackagePath(site); err != nil || got != "code/sites/blog" {
+		t.Fatalf("canonical site path: got %q, err %v", got, err)
 	}
 	for _, tc := range []struct {
 		name string
@@ -574,6 +939,28 @@ func TestRepositoryRelativePackagePath(t *testing.T) {
 	}
 	if _, err := repositoryRelativePackagePath(discovery.Package{Name: "invalid", Path: t.TempDir()}); err == nil {
 		t.Fatal("invalid package identity must fail closed")
+	}
+}
+
+func TestTypeScriptSiteSourceInputs(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "code", "sites", "blog")
+	for _, relative := range []string{"BUILD", "forme.config.ts", "package.json", "data/post.md", "data/diagram.svg", "dist/generated.js"} {
+		path := filepath.Join(root, filepath.FromSlash(relative))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("source\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "unknown/blog", Path: root, Language: "unknown"}
+	got, err := collectSourceFilesChecked(pkg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"BUILD", "forme.config.ts", "package.json"}
+	if paths := relativePaths(t, root, got); strings.Join(paths, "\n") != strings.Join(want, "\n") {
+		t.Fatalf("site source inputs: got %v, want %v", paths, want)
 	}
 }
 
@@ -632,6 +1019,7 @@ func TestHashPackageMatchesHashingV1Oracle(t *testing.T) {
 	pkg := discovery.Package{
 		Name:         fixture.Input.Options.Package,
 		Path:         pkgPath,
+		Language:     strings.Split(fixture.Input.Options.Package, "/")[0],
 		DeclaredSrcs: []string{"src/data.bin"},
 	}
 	if got := mustHashPackage(t, pkg); got != fixture.Expected.Result.PackageDigest {
@@ -649,7 +1037,7 @@ func TestHashPackageFramesRepositoryPathAndRawContent(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(pkgPath, "src", "\U0001f600.bin"), contents, 0o644); err != nil {
 		t.Fatal(err)
 	}
-	pkg := discovery.Package{Name: "go/demo", Path: pkgPath, DeclaredSrcs: []string{"src/*.bin"}}
+	pkg := discovery.Package{Name: "go/demo", Path: pkgPath, Language: "go", DeclaredSrcs: []string{"src/*.bin"}}
 	want := hashingV1Digest(t, map[string][]byte{"code/packages/go/demo/src/\U0001f600.bin": contents})
 	if got := mustHashPackage(t, pkg); got != want {
 		t.Fatalf("raw package frame mismatch: got %s, want %s", got, want)
@@ -673,7 +1061,7 @@ func TestHashPackageFramesAndSortsMultipleFilesByUTF8Bytes(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	pkg := discovery.Package{Name: "go/demo", Path: pkgPath, DeclaredSrcs: []string{"src/*.bin"}}
+	pkg := discovery.Package{Name: "go/demo", Path: pkgPath, Language: "go", DeclaredSrcs: []string{"src/*.bin"}}
 	want := hashingV1Digest(t, map[string][]byte{
 		"code/packages/go/demo/src/\U0001f600.bin": files["src/\U0001f600.bin"],
 		"code/packages/go/demo/src/\ue000.bin":     files["src/\ue000.bin"],
@@ -723,9 +1111,9 @@ func TestHashPackageChangesOnModification(t *testing.T) {
 func TestHashPackageEmptyPackage(t *testing.T) {
 	root := t.TempDir()
 	pkg := discovery.Package{
-		Name:     "unknown/empty",
+		Name:     "go/empty",
 		Path:     root,
-		Language: "unknown",
+		Language: "go",
 	}
 
 	hash := mustHashPackage(t, pkg)

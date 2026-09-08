@@ -6,6 +6,10 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Site packages under `code/sites` now use the canonical TypeScript source-input
+  profile for hashing while retaining their legacy `unknown/*` build-graph
+  identities.
+
 - The pure CI gate evaluator now consumes all seven shared language-neutral
   `ci_gate_selection` fixtures, pinning package/path matches, globstar behavior,
   complete false verdicts, output names, and every fail-open escape for future
@@ -46,6 +50,15 @@ All notable changes to the Go build tool will be documented in this file.
   the D18F manifest — exactly the drift that job exists to catch.
 
 ### Fixed
+
+- **Source selection now consumes the complete generated language registry.**
+  The Go hasher replaces its partial engine-local maps with a deterministic
+  embedded projection of all 23 languages and seven selector roles. Unknown
+  languages fail before filesystem inspection; root, scoped, and exact-package
+  rules retain their neutral scope; generated components are pruned before all
+  matching; and exact Engram WASM resources cannot widen to sibling packages.
+  Strict projection, digest, fixture, and generator-roundtrip tests detect both
+  missing and undeclared selectors without any runtime fixture dependency.
 
 - **Source collection and package digests now match portable hashing v1.**
   Extension and declared-source modes share the exact case-sensitive
