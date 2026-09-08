@@ -13235,6 +13235,53 @@ four above-95% coverage runs, installed consumer examples, the 50-test lock
 suite with two expected Windows symlink skips, repository lock validation, Go
 build-tool test/vet/build, state-DAG, and diff hygiene checks are acceptable.
 
+### Post-PR #14393 reconciliation and OCaml analyzer selection
+
+PR #14393 reached a terminal acceptable final head after one macOS locked-
+fixture job lost hosted-runner communication. The exact failed job was rerun;
+its OCaml setup, reviewed lock installation, package fixtures, coverage upload,
+and cleanup all passed. GitHub then reported `MERGEABLE`/`CLEAN` with zero
+pending or failed checks. Guarded squash auto-merge was enabled and merged the
+reviewed head at `2026-09-08T01:38:33Z` as
+`f05c7b88f38e772255cd565cd83868b2a984f56f`, without a plain manual merge
+command.
+
+The collision-checked schema-3 inventory on that exact merged main now has 15
+established lanes, 1,415 implementation identities, 4,631 implementation
+slots, and 1,454 all-reported identities. The breadth bands are 175 packages
+with 265 missing slots, 123/934, 172/2,165, and 945/13,230. Rust has 756
+singletons; OCaml remains emerging with its four representative packages;
+canonical collisions and unknown language buckets remain zero.
+
+Two Rust-only identities landed after the previous inventory and are now
+registered before new work was selected. `base64` is a dependency-free,
+deterministic RFC 4648 codec, so
+`base64-language-neutral-conformance-and-portable-parity` owns a strict shared
+corpus and established-lane rollout. `vault-import-keepass` combines a
+deterministic password-plus-bytes KDBX4 transform with secret-handling and host
+ceremony boundaries, so
+`vault-import-keepass-portable-core-classification-and-conformance` first owns
+the independent format, mapping, error, and resource-limit fixtures plus the
+applicability decision; filesystem access, terminal password capture, keyfiles,
+hardware tokens, and native custody remain outside its portable core.
+
+The reconciled state therefore contains 727 owners: 210 merged, 516 pending,
+and exactly one in progress. `ocaml-capability-analyzer` is selected on fresh
+branch `codex/ocaml-capability-analyzer` from the exact merge above. Its two
+prerequisites are merged, it gates both the native OCaml build-tool path and
+lane promotion, and prior parallel audits already fixed its compiler-libs AST,
+taxonomy, schema, fixture, CI, and validation boundaries. Broader host-security
+and native-sandbox owners have larger raw descendant counts but remain outside
+this parity loop's selectable delivery classes. Package-specific three-
+platform execution and native build-tool execution stay in their existing
+separate owners.
+
+Before implementation began, `origin/main` advanced through unrelated PR
+#14469 to `15691ed6ccc94548e9b51febf08be0cfd3547642`. The selected branch was
+rebased without conflict onto that exact revision. A fresh collision-checked
+inventory produced the same counts and no new identity, collision, unknown
+bucket, or parity owner, so the OCaml analyzer remains the selected tranche.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
