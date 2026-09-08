@@ -1,0 +1,94 @@
+# Publish the Mosaic component documentation site.
+#
+# The site must republish AS SOON AS a component ships (#14026), so this runs
+# on every merge that touches a Mosaic package, the compiler, or the emitters
+# the previews are built with. A hand-maintained catalog drifts the moment a
+# component lands, and a stale catalog is worse than none.
+name: Deploy Mosaic docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/packages/mosaic/**"
+      - "code/packages/rust/mosaic-compile/**"
+      - "code/packages/rust/mosaic-emit-html/**"
+      - "code/packages/rust/mosmodel-compiler/**"
+      - "code/packages/rust/moslayout-compiler/**"
+      - "code/packages/rust/mosstyle-compiler/**"
+      - "code/programs/go/mosaic-docs/**"
+      - ".github/workflows/deploy-mosaic-docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-mosaic-docs
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    name: Generate the component site and publish it
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+
+      # mosaic-compile links cairo-sys-rs through the paint backend. The
+      # runner's preinstalled vendor repositories are dropped first: they are
+      # unused here, and apt-get update exits non-zero if ANY configured
+      # repository fails, so an unrelated packages.microsoft.com outage would
+      # fail this deploy (#13982).
+      - name: Install Linux build dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo rm -f /etc/apt/sources.list.d/microsoft*.list \
+                     /etc/apt/sources.list.d/azure-cli.list || true
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev
+
+      - name: Build mosaic-compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo build --release --manifest-path code/packages/rust/mosaic-compile/Cargo.toml
+
+      - name: Generate the site
+        shell: bash
+        run: |
+          set -euo pipefail
+          COMPILER="$PWD/code/packages/rust/target/release/mosaic-compile"
+          cd code/programs/go/mosaic-docs
+          go run . --root ../../../.. --out "$GITHUB_WORKSPACE/public-mosaic" \
+            --compiler "$COMPILER"
+
+      - name: Fail if the site came out empty
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The generator already exits non-zero on zero components, but an
+          # empty output directory would publish a blank site over a working
+          # one, which is worse than not publishing.
+          test -s public-mosaic/index.html
+          echo "pages: $(find public-mosaic -name '*.html' | wc -l)"
+
+      # keep_files: true matches every other deploy workflow here: nineteen of
+      # them publish into the SAME gh-pages branch under different
+      # destination_dirs, and deploy-root.yml targets `.`.
+      - name: Deploy to GitHub Pages (mosaic/ subdirectory)
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: public-mosaic
+          destination_dir: mosaic
+          keep_files: true

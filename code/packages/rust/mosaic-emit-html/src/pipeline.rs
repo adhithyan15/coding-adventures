@@ -361,7 +361,7 @@ pub fn from_pipeline_with_options(
     };
 
     let project = if options.emit_project {
-        Some(build_html_project_files(interface, &component.output))
+        Some(build_html_project_files(interface, &component.output, &options.slot_values))
     } else {
         None
     };
@@ -380,11 +380,15 @@ pub fn from_pipeline_with_options(
 /// attrs"). The component name lands in `<title>` content and in
 /// a `data-component="X"` attribute; both positions are safe for
 /// the upstream-validated ASCII-identifier shape.
-fn build_html_project_files(interface: &MosmodelComponent, fragment: &str) -> ProjectFiles {
+fn build_html_project_files(
+    interface: &MosmodelComponent,
+    fragment: &str,
+    slot_values: &HashMap<String, String>,
+) -> ProjectFiles {
     let component_name = &interface.component;
     ProjectFiles {
         index_html: build_index_html(component_name, fragment),
-        main_js: build_main_js(component_name, &interface.slots, &interface.emits),
+        main_js: build_main_js(component_name, &interface.slots, &interface.emits, slot_values),
         readme: build_html_readme(component_name),
     }
 }
@@ -428,9 +432,14 @@ fn build_index_html(component_name: &str, fragment: &str) -> String {
     shell
 }
 
-fn build_main_js(component_name: &str, slots: &[SlotDecl], emits: &[EmitDecl]) -> String {
+fn build_main_js(
+    component_name: &str,
+    slots: &[SlotDecl],
+    emits: &[EmitDecl],
+    slot_values: &HashMap<String, String>,
+) -> String {
     let component_name_json = serde_json::to_string(component_name).unwrap();
-    let fallback_props_json = build_fallback_props_json(slots);
+    let fallback_props_json = build_fallback_props_json(slots, slot_values);
     let emit_payloads_json = build_emit_payloads_json(emits);
     HTML_RUNTIME_TEMPLATE
         .replace("__BANNER_JS__", BANNER_JS)
@@ -439,12 +448,46 @@ fn build_main_js(component_name: &str, slots: &[SlotDecl], emits: &[EmitDecl]) -
         .replace("__EMIT_PAYLOADS_JSON__", &emit_payloads_json)
 }
 
-fn build_fallback_props_json(slots: &[SlotDecl]) -> String {
+fn build_fallback_props_json(
+    slots: &[SlotDecl],
+    slot_values: &HashMap<String, String>,
+) -> String {
     let mut props = serde_json::Map::new();
     for slot in slots {
-        props.insert(camel(&slot.name), sample_json_value_for_slot(slot));
+        // A fixture wins over the generated sample. The project's runtime
+        // hydrates `{{slot}}` markers from these props, so without this a
+        // story's values styled the component correctly and then displayed
+        // "Sample Label" in it (#14459).
+        let value = match slot_values.get(&slot.name) {
+            Some(fixture) => json_value_for_fixture(&slot.r#type, fixture),
+            None => sample_json_value_for_slot(slot),
+        };
+        props.insert(camel(&slot.name), value);
     }
     serde_json::to_string_pretty(&serde_json::Value::Object(props)).unwrap()
+}
+
+/// Render a fixture value as JSON of the slot's declared type.
+///
+/// The props object is consumed by the project's runtime, so a `bool` slot
+/// carrying the string "true" would hydrate as a string. A value that does not
+/// parse for its type stays a string rather than becoming wrong JSON;
+/// rejecting it belongs to fixture validation (#14435).
+fn json_value_for_fixture(slot_type: &SlotType, value: &str) -> serde_json::Value {
+    match slot_type {
+        SlotType::Number => match value.parse::<f64>() {
+            Ok(n) => serde_json::Number::from_f64(n)
+                .map(serde_json::Value::Number)
+                .unwrap_or_else(|| serde_json::Value::String(value.to_string())),
+            Err(_) => serde_json::Value::String(value.to_string()),
+        },
+        SlotType::Bool => match value {
+            "true" => serde_json::Value::Bool(true),
+            "false" => serde_json::Value::Bool(false),
+            _ => serde_json::Value::String(value.to_string()),
+        },
+        _ => serde_json::Value::String(value.to_string()),
+    }
 }
 
 fn sample_json_value_for_slot(slot: &SlotDecl) -> serde_json::Value {
