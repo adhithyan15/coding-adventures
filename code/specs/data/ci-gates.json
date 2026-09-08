@@ -328,21 +328,26 @@
     },
     "contracts-capability-cage": {
       "scope": "step",
-      "description": "Capability taxonomy plus the Go and Rust capability-cage suites.",
+      "description": "Capability taxonomy plus the Go, Rust, and OCaml capability enforcement suites.",
       "packages": [
         "go/programs/capability-cage-generator",
         "go/ca-capability-analyzer",
         "go/capability-cage",
+        "ocaml/ca-capability-analyzer",
         "rust/capability-cage"
       ],
       "paths": [
         "code/specs/fixtures/capability-security-v1/**",
+        "code/specs/fixtures/ocaml-capability-analyzer-v1/**",
+        "code/specs/OCAML06-capability-analyzer.md",
         "code/specs/schemas/capability_taxonomy.schema.json",
         "code/specs/schemas/required_capabilities.schema.json",
         "code/specs/schemas/agent_manifest.schema.json",
         "code/scripts/tests/test_capability_taxonomy.py",
+        "code/scripts/tests/test_ocaml_capability_gate.py",
         "code/packages/go/capability-cage/**",
         "code/packages/go/ca-capability-analyzer/**",
+        "code/packages/ocaml/ca-capability-analyzer/**",
         "code/packages/rust/capability-cage/**",
         "code/programs/go/capability-cage-generator/**"
       ]
