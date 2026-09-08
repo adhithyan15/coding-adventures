@@ -1097,6 +1097,13 @@ fn emit_jsx_tree(
         );
     }
 
+    // UI39 — web hosts lower parameterized Path geometry to real SVG rather
+    // than dropping the shape. Expressions stay live inside For bodies, which
+    // is what lets a host render data-derived line segments.
+    if node.tag == "Path" {
+        return emit_path_jsx(node, indent, part_styles);
+    }
+
     if node.tag == "HostTooltip" {
         return emit_host_tooltip_jsx(
             node,
@@ -4864,6 +4871,116 @@ fn find_expr_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> 
         }
         None
     })
+}
+
+fn path_coordinate_expression(
+    node: &LayoutNode,
+    prop_name: &str,
+) -> Result<String, PipelineEmitError> {
+    match node
+        .props
+        .iter()
+        .find(|prop| prop.name == prop_name)
+        .map(|prop| &prop.value)
+    {
+        Some(LayoutPropValue::Number(value)) if value.is_finite() => Ok(value.to_string()),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let slot = to_camel_case_first_lower(slot.as_str());
+            validate_slot_or_field_name(&slot).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(slot)
+        }
+        Some(LayoutPropValue::Expr(expression)) => Ok(expression.clone()),
+        Some(LayoutPropValue::Number(_)) => Err(PipelineEmitError::UnsafeSlotName(format!(
+            "Path prop `{prop_name}:` must be a finite number"
+        ))),
+        _ => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path missing required numeric prop `{prop_name}:`"
+        ))),
+    }
+}
+
+fn react_style_property<'a>(style: &'a str, property: &str) -> Option<&'a str> {
+    style.split(',').find_map(|declaration| {
+        let (name, value) = declaration.trim().split_once(':')?;
+        (name.trim() == property).then_some(value.trim())
+    })
+}
+
+fn path_paint_jsx(part_style: &str) -> (String, String, String) {
+    let fill = react_style_property(part_style, "background")
+        .map(|value| format!("{{{value}}}"))
+        .unwrap_or_else(|| "\"none\"".to_owned());
+    let stroke = react_style_property(part_style, "borderColor")
+        .map(|value| format!("{{{value}}}"))
+        .unwrap_or_else(|| "\"currentColor\"".to_owned());
+    let stroke_width = react_style_property(part_style, "borderWidth")
+        .map(|value| format!("{{{value}}}"))
+        .unwrap_or_else(|| "{1}".to_owned());
+    (fill, stroke, stroke_width)
+}
+
+fn emit_path_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let part_style = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(String::as_str)
+        .unwrap_or("");
+    let (fill, stroke, stroke_width) = path_paint_jsx(part_style);
+    let kind = find_keyword_prop(node, "kind").ok_or_else(|| {
+        PipelineEmitError::UnknownPrimitive("Path missing required prop `kind:`".to_owned())
+    })?;
+    let geometry = match kind {
+        "circle" => format!(
+            "<circle cx={{{}}} cy={{{}}} r={{{}}} fill={} stroke={} strokeWidth={} />",
+            path_coordinate_expression(node, "cx")?,
+            path_coordinate_expression(node, "cy")?,
+            path_coordinate_expression(node, "r")?,
+            fill,
+            stroke,
+            stroke_width,
+        ),
+        "line" => format!(
+            "<line x1={{{}}} y1={{{}}} x2={{{}}} y2={{{}}} fill={} stroke={} strokeWidth={} />",
+            path_coordinate_expression(node, "x1")?,
+            path_coordinate_expression(node, "y1")?,
+            path_coordinate_expression(node, "x2")?,
+            path_coordinate_expression(node, "y2")?,
+            fill,
+            stroke,
+            stroke_width,
+        ),
+        "curve" => format!(
+            "<path d={{[\"M\", {}, {}, \"Q\", {}, {}, {}, {}].join(\" \")}} fill={} stroke={} strokeWidth={} />",
+            path_coordinate_expression(node, "x1")?,
+            path_coordinate_expression(node, "y1")?,
+            path_coordinate_expression(node, "cx")?,
+            path_coordinate_expression(node, "cy")?,
+            path_coordinate_expression(node, "x2")?,
+            path_coordinate_expression(node, "y2")?,
+            fill,
+            stroke,
+            stroke_width,
+        ),
+        "arc" => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "Path kind `arc` is not yet supported by the React emitter".to_owned(),
+            ))
+        }
+        other => {
+            return Err(PipelineEmitError::UnknownPrimitive(format!(
+                "Path kind `{other}` is not a recognized shape kind (expected circle, line, curve, or arc)"
+            )))
+        }
+    };
+    Ok(format!(
+        "{pad}<svg aria-hidden=\"true\" focusable=\"false\" style={{{{ position: \"absolute\", inset: 0, width: \"100%\", height: \"100%\", overflow: \"visible\", pointerEvents: \"none\" }}}}>\n{pad}  {geometry}\n{pad}</svg>\n"
+    ))
 }
 
 fn jsx_string_attr(name: &str, value: &str) -> String {
