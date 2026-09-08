@@ -1496,9 +1496,8 @@ let discover_sources root =
                   in
                   let normalized_child = normalize_relative child_relative in
                   let allow_bisect =
-                    Filename.basename root = "ca-capability-analyzer"
-                    && List.mem normalized_child
-                         [ "bin/dune"; "src/dune"; "test/dune" ]
+                    List.mem normalized_child
+                      [ "bin/dune"; "src/dune"; "test/dune" ]
                   in
                   let unsupported =
                     unsafe_dune_construct ~allow_bisect contents

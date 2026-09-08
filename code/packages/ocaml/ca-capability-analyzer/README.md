@@ -85,6 +85,9 @@ taxonomy, declaration matching, dual FFI opt-in, hard bans, deterministic
 recursive discovery, first-class sensitive references, constrained includes,
 CLI entrypoint arguments and exits, and fail-closed parse, generated-source,
 Dune include/workspace/preprocessor, attribute, and extension handling.
+The exact `bisect_ppx` coverage stanza is accepted only in package-local
+`src/dune`, `bin/dune`, and `test/dune` files; root-level instrumentation and
+all other instrumentation backends remain rejected.
 
 ```bash
 opam exec -- dune build @fmt

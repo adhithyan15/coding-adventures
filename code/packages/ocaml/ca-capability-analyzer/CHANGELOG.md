@@ -24,3 +24,5 @@ All notable changes to this package are recorded here.
 - Coverage and subprocess tests for the public CLI entrypoint, strict
   `$schema` typing, wrapped-sensitive-module rejection, and fail-closed Dune
   include, workspace, copy, generator, and preprocessor detection.
+- Exact package-local `bisect_ppx` coverage support across reviewed OCaml
+  packages while root-level and alternate instrumentation remain fail-closed.

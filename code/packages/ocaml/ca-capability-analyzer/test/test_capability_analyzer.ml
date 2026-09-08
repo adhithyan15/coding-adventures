@@ -820,7 +820,7 @@ let test_manifest_identity_and_kind () =
 
 let test_directory_safe_inputs_and_exclusions () =
   with_temp_directory (fun root ->
-      let directory = Filename.concat root "ca-capability-analyzer" in
+      let directory = Filename.concat root "reviewed-package" in
       Unix.mkdir directory 0o700;
       let src = Filename.concat directory "src" in
       Unix.mkdir src 0o700;
@@ -853,6 +853,64 @@ let test_directory_safe_inputs_and_exclusions () =
          | Error _ -> ()
          | Ok _ -> Alcotest.fail "symlinked source was accepted"
        with Unix.Unix_error _ -> ()))
+
+let test_directory_instrumentation_boundaries () =
+  with_temp_directory (fun root ->
+      let directory = Filename.concat root "reviewed-package" in
+      Unix.mkdir directory 0o700;
+      write_file (Filename.concat directory "input.ml") "let value = 1\n";
+      let exact = "(instrumentation (backend bisect_ppx))\n" in
+      let dune_paths = [ "src/dune"; "bin/dune"; "test/dune" ] in
+      List.iter
+        (fun relative ->
+          let parent = Filename.dirname (Filename.concat directory relative) in
+          Unix.mkdir parent 0o700;
+          write_file (Filename.concat directory relative) exact)
+        dune_paths;
+      let expect_clean label =
+        match analyze_directory directory with
+        | Ok result when passed result -> ()
+        | Ok _ -> Alcotest.failf "%s produced capability violations" label
+        | Error message -> Alcotest.failf "%s: %s" label message
+      in
+      let expect_instrumentation_error label =
+        match analyze_directory directory with
+        | Error message when contains_substring message "instrumentation" -> ()
+        | Error message -> Alcotest.failf "%s: unexpected error: %s" label message
+        | Ok _ -> Alcotest.failf "%s was accepted" label
+      in
+      let reject_in relative contents label =
+        let path = Filename.concat directory relative in
+        write_file path contents;
+        expect_instrumentation_error label;
+        write_file path exact
+      in
+      expect_clean "exact package-local instrumentation";
+      write_file
+        (Filename.concat directory "src/dune")
+        "(instrumentation (; reviewed coverage\n backend bisect_ppx))\n";
+      expect_clean "comment-separated exact instrumentation";
+      write_file (Filename.concat directory "src/dune") exact;
+      reject_in "src/dune" "(instrumentation (backend unsafe_ppx))\n"
+        "alternate src backend";
+      reject_in "bin/dune"
+        "(instrumentation (backend bisect_ppx) (unexpected field))\n"
+        "compound bin instrumentation";
+      reject_in "test/dune" "(instrumentation (backend \"bisect_ppx\"))\n"
+        "quoted test backend";
+      reject_in "test/dune"
+        "(instrumentation (backend \"bisect\\x5fppx\"))\n"
+        "escaped test backend";
+      let root_dune = Filename.concat directory "dune" in
+      write_file root_dune exact;
+      expect_instrumentation_error "root instrumentation";
+      Sys.remove root_dune;
+      let nested = Filename.concat directory "nested" in
+      Unix.mkdir nested 0o700;
+      let nested_src = Filename.concat nested "src" in
+      Unix.mkdir nested_src 0o700;
+      write_file (Filename.concat nested_src "dune") exact;
+      expect_instrumentation_error "nested instrumentation")
 
 let test_directory_depth_limit () =
   with_temp_directory (fun root ->
@@ -1035,6 +1093,8 @@ let () =
             test_manifest_identity_and_kind;
           Alcotest.test_case "safe inputs and exclusions" `Quick
             test_directory_safe_inputs_and_exclusions;
+          Alcotest.test_case "instrumentation boundaries" `Quick
+            test_directory_instrumentation_boundaries;
           Alcotest.test_case "directory depth limit" `Quick
             test_directory_depth_limit;
           Alcotest.test_case "manifest and generated boundaries" `Quick
