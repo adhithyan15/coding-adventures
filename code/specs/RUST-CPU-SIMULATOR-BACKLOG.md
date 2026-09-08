@@ -84,16 +84,17 @@ according to the current prioritization run.
 | RCPU-033 / RCPU-034 | 1992 | DEC Alpha AXP 21064 | Complete: `alpha-axp-simulator` | Complete: `alpha-axp-gatelevel` |
 | RCPU-035 / RCPU-036 | 1992 | PowerPC 601 | Complete: `powerpc601-simulator` | Complete: `powerpc601-gatelevel` |
 | RCPU-037 / RCPU-038 | 2003 | x86-64 (AMD64) | Complete: `x86-simulator` | Complete: `x86-64-gatelevel` |
-| RCPU-039 / RCPU-040 | 2004 | ARMv7 educational baseline (07b) | Complete: `arm-simulator` | Missing |
+| RCPU-039 / RCPU-040 | 2004 | ARMv7 educational baseline (07b) | Complete: `arm-simulator` | Complete: `armv7-gatelevel` |
 | RCPU-041 / RCPU-042 | 2004 | ARMv7-A / Thumb-2 (07x) | Missing | Missing |
 | RCPU-043 / RCPU-044 | 2010 | RISC-V RV32I (07a) | Audit: `riscv-simulator` | Missing |
 | RCPU-045 / RCPU-046 | 2010 | RISC-V RV64I + M | Missing | Missing |
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-040**, the ARMv7 educational gate-level simulator.
-RCPU-039 completed the documented Spec 07b functional surface and advances to
-its dependency partner while completed earlier cells publish one at a time.
+Current selection: **RCPU-041**, the ARMv7-A / Thumb-2 functional simulator.
+The educational ARMv7 functional/gate pair is complete; chronological work now
+advances to the distinct 07x architecture while earlier cells publish one at a
+time.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -561,6 +562,8 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-31 | RCPU-040 is complete. | Resolved; selects RCPU-041 chronologically | `armv7-gatelevel` now has the exact 524,805-DFF topology, independent complete gate execution path, shared typed atomic lifecycle, every functional/spec edge, all 388 Python common-surface full-state vectors, normative Spec 07b2, strict checks, and 93.40% package line coverage (495/530). |
+| 2026-08-31 | RCPU-040 baseline audit found no Rust, Python, or other gate-level package for the educational Spec 07b ARMv7 lane and no normative 07b2 gate specification. The only ARM gate implementation is the much earlier, materially different ARM1/Spec 07j machine. RCPU-039 establishes 524,805 persistent architectural bits: 524,288 memory bits, 512 R0–R15 bits with PC stored once in R15, four NZCV bits, and one halt bit; installed origin/length remain validated lifecycle metadata. | P0, chronological gate completion | Create `armv7-gatelevel` and Spec 07b2 with exactly 524,805 clocked DFFs, repository-gate condition/decode/Boolean/ripple-add-sub/rotate/address networks, an independent complete Spec 07b execution path, the shared typed atomic functional lifecycle, all 388 Python common-surface vectors plus every manual functional/spec edge, strict checks, consumers, and at least 80% coverage. |
 | 2026-08-31 | RCPU-039 is complete. | Resolved; selects RCPU-040 by pair priority | `arm-simulator` now preserves the legacy wrapper while adding an exact checked 64 KiB functional machine, mirrored R15/PC, NZCV, the complete Spec 07b data-processing/memory/branch/condition/HLT surface, typed atomic lifecycle, structured encoders, 388 reproducible Python common-surface full-state vectors, direct spec suites, strict checks, and 90.15% package line coverage (714/792). |
 | 2026-08-31 | RCPU-039 baseline audit found that `arm-simulator` has only MOV-immediate, register ADD/SUB, and a custom HLT, with three Rust tests. It ignores every condition field, the S bit and NZCV, silently advances unknown opcodes, accepts caller-sized legacy CPU memory, and has no exact state restore, origin-aware loader, typed failures, transition-atomic step, bounded transactional run, or full traces/results. Strict Clippy passes but strict rustdoc fails on the unescaped `[31:28]` text. The 30-test Python package adds immutable snapshots and protocol-shaped results but executes the same three-opcode surface, reports constant-false flags, and retains the non-atomic legacy lifecycle. Spec 07b additionally requires CMP, AND, ORR, LDR, STR, B, BEQ/BNE and conditional execution. | P0, chronological functional completion, blocks RCPU-040 | Preserve the legacy wrapper for consumers while building an exact 64 KiB checked functional machine with 16x32-bit registers, PC and NZCV state; implement the complete documented data-processing, memory, branch, condition, and HLT surface; fail closed on malformed/unknown/truncated/alignment/range faults; add structured encoders, complete lifecycle suites, a reproducible Python full-state corpus plus spec-only manual vectors, strict checks, consumers, and at least 80% coverage. |
 | 2026-08-31 | RCPU-038 is complete. | Resolved; selects RCPU-039 | `x86-64-gatelevel` now has the exact 525,382-DFF topology, an independent complete integer execution path, repository-gate arithmetic/flags/Boolean/barrel-shift/rotate/address/condition networks, fixed 64-round multiply and 128-round divide, the shared atomic lifecycle, all 262 Python full-state vectors, direct manual-correct CQO and fault suites, Spec 07w2, strict checks, and 87.13% package line coverage (711/816). |

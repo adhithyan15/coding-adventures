@@ -7172,3 +7172,11 @@ Every Windows front is executed one line at a time by `cmd /C`; use the
 established `set VAR=value&& command` and `for %f in (...) do ...` forms, then
 verify the literal Windows front rather than assuming a same-named file is a
 portable translation.
+
+### 2026-09-08 — Prove the JIT entry path explicitly
+
+A compiled-callback regression used execute_with_jit and hit its deliberate
+VM entry execution. Eager compilation there installs handlers for subsequent
+calls; it does not directly execute the entry binary. For a compiled-entry
+proof use compile(), assert is_compiled(), then execute(), with a callback
+counter and an interpreter callback that fails if selected.

@@ -1,0 +1,11 @@
+[package]
+name = "armv7-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "Exact 524,805-DFF gate-level partner for the Spec 07b ARMv7 educational simulator"
+license = "MIT"
+
+[dependencies]
+arm-simulator = { path = "../arm-simulator" }
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }

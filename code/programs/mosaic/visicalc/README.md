@@ -11,6 +11,20 @@ Run `cargo test` here for source and manifest checks. The web consumer's
 real controls with the compiled Rust application. Generated artifacts are not
 committed. The fixture directory remains shared by Rust and browser tests.
 
+The shared file toolbar exposes New workbook, Open and Save in both themes, with
+a compact Rust-owned status and polite announcements. The web host opts into
+protocol 2 and uses Mosaic's shared browser file executor directly from the
+button gesture. Apply an active cell edit with Enter before saving. Files use the
+`.visicalc` extension and the versioned Rust snapshot envelope. Cancelled or invalid
+opens preserve both committed cells and the pending edit; unsupported hosts report
+that Open/Save is unavailable.
+
+Rust and generated-control tests round-trip actual file bytes into a fresh app.
+Real OS file-dialog acceptance remains open in #14548 because the available
+in-app test panel does not expose the picker to desktop automation. Native hosts
+still need capability migration and launch acceptance; GitHub Releases and
+downloaded-artifact tests remain required in #14282.
+
 The migration backlog is GitHub issue #14267. Native application acceptance,
 responsive physical scrolling, accessibility, full persistence, finished visual
 design and GitHub Releases remain required work.

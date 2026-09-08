@@ -8,9 +8,9 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 3170
 chapter: 82
 type: word
-headword: "दूसरा"
-gloss: "second — and the same word means the other one"
-romanization: "dūsrā"
+headword: "दूसरा / दूसरी"
+gloss: "second or other / feminine second or other"
+romanization: "dūsrā / dūsrī"
 concept_tag: HI-ORDINAL-SECOND
 prerequisites: [HI-C75-first, HI-C74-closed, HI-A1F01-name-supported, HI-C68-india, HI-S122-letter-kha, HI-C24-pila-history]
 sounds: []
@@ -60,7 +60,7 @@ the Sanskrit word for two.
 ## You'll want to know: the other meaning
 <!-- hl-knowledge: introduces=[HI-LEX-C75-ORDINAL-03]; assesses=[] -->
 
-**दूसरा** also means "**other**, **another**", and that is not a separate word to
+**दूसरा** (*dūsrā*) also means "**other**, **another**", and that is not a separate word to
 learn — it is the same one.
 
 - **दूसरा आदमी** (*dūsrā ādmī*) — the other man.
@@ -81,5 +81,5 @@ thing Hindi does with no extra machinery at all.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C75-ORDINAL-01, HI-LEX-C75-ORDINAL-02, HI-LEX-C75-ORDINAL-03] -->
 
-[PAUSE 3s] Say "the second book". (**दूसरी किताब**.) What is the other thing *दूसरा* means?
-(**Other, another**.) And say "the other man". (**दूसरा आदमी**.)
+[PAUSE 3s] Say "the second book". (**दूसरी किताब**.) What is the other thing **दूसरा** (*dūsrā*) means?
+(**Other, another**.) And say "the other man". (**दूसरा** (*dūsrā*) **आदमी**.)

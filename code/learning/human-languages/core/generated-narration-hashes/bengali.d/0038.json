@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:dc38528892a123df",
+  "lessonIds": [
+    "BN-C27-ditiyo",
+    "BN-C27-tritiyo",
+    "BN-C27-choturtho",
+    "BN-C27-prothom",
+    "BN-W06-nya",
+    "BN-C27-ponchom",
+    "BN-R27-first-to-fifth"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "bengali/narration/ch38.txt",
+  "json": "bengali/narration/ch38.json",
+  "textHash": "fnv1a64:c0e0919a86482ea9",
+  "jsonHash": "fnv1a64:1b870a56cb2e5178",
+  "findings": []
+}

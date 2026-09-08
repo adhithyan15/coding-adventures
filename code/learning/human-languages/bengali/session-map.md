@@ -244,18 +244,28 @@ that waits until something has come between.
 | 191 | okhane | ওখানে | the reader is asked to predict it before it is shown |
 | 192 | kothay | কোথায় | the ninth cell, and the first question an examiner asks |
 | 193 | R — here, there, where | | three heads, three frames, seven chapters |
+| 194 | ditiyo | দ্বিতীয় | the cluster chapter twelve said survives only in re-borrowed words |
+| 195 | tritiyo | তৃতীয় | the second word to end in -তীয়, which is what makes it a shape |
+| 196 | choturtho | চতুর্থ | a second ending, and two pieces of চার still standing |
+| 197 | prothom | প্রথম | no number in it at all, and the gap is Sanskrit's |
+| 198 | nya | ঞ | the nasal of the চ row — the one letter the chapter buys |
+| 199 | ponchom | পঞ্চম | পাঁচ is পঞ্চ with the nasal worn down to a moon-dot |
+| 200 | R — first to fifth | | the two layers of number, side by side |
 
 ## Next
 
 Chapters 17–18 still need session-map entries. On the script side the corpus is
-down to **nine** never-taught glyphs (ং ঃ ঙ ঝ ঞ ফ শ ষ ূ), and the two that block
+down to **eight** never-taught glyphs (ং ঃ ঙ ঝ ফ শ ষ ূ — ঞ was spent on পঞ্চম
+in chapter 38), and the two that block
 open exam points are **ণ** (কারণ, ADV-08) and **অ** (অনেক, Q-05) — অ being an
 independent vowel, it is also the only one of the pair with a citable
 stroke-order animation on Commons (HL-C212).
 
-The largest single cluster left is the **numerals**: they stop at পাঁচ, not one
-of the ten Bengali digits is taught anywhere in sixty-two script lessons, and
-six points wait on them — Q-01, Q-03, Q-04, Q-06, FUN-25 (an age) and FUN-26 (a
-telephone number). After that, the locative *-e / -te* and the postpositions
+The largest single cluster left is still the **numerals**: they stop at পাঁচ,
+not one of the ten Bengali digits is taught anywhere in the script lessons, and
+five points wait on them — Q-01, Q-03, Q-06, FUN-25 (an age) and FUN-26 (a
+telephone number). Q-04, the ordinals, closed in chapter 38, and it closed
+without any of the cardinals moving: every Bengali ordinal is borrowed back out
+of Sanskrit, so the column did not depend on the count going past five. After that, the locative *-e / -te* and the postpositions
 সঙ্গে / জন্য / থেকে, which are three more points now that -কে has shown the
 reader what a case ending is.

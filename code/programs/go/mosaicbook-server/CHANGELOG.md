@@ -4,6 +4,10 @@
 
 ### Fixed
 
+- Pass each discovered package collection to `mosaic-compile` through
+  `--package-search-path`, so previews resolve manifest-declared dependencies
+  without depending on the server process's working directory (#14553).
+
 - Validate every populated three-file story fixture against the component's
   parsed `.mil` contract. MosaicBook now asks `mosaic-compile --describe` for
   slot names and types, rejects undeclared slots and mismatched scalar/list

@@ -8,6 +8,36 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-039d contract (selected after #14574 merged)
+
+Main is `2cc4f753e6`. Real CLR PR #14574 merged after all applicable final-head
+checks passed. Reprioritization selects the last standard-matrix adapter slice:
+VM and JIT callbacks for the same four FLOW-MATIC input/EOF programs. VM-059
+encoded CIL input is separately queued after this slice; no new defect outranks
+finishing the seven-column portable stream proof.
+
+Probe both missing callbacks before implementation. Register non-consuming
+input_more on the plain VM, the JIT interpreter fallback and GenericCirJit's
+compiled path, sharing each run's existing byte queue with numeric/string
+reads. Empty input returns zero; repeated peeks preserve all bytes. Preserve
+source/input identity, partial-record zero fill and fields unchanged at EOF.
+Add Vm/Jit columns only after execution and verify all 28 source/backend cells
+with positive sentinels after re-enumerating current row indices. Add stable
+shared-queue peek regression and verify the compiled callback actually runs
+rather than crediting interpreter fallback. Run BASIC input regressions and
+focused Clippy; relevant VM/JIT tests if their implementation changes. Keep
+this slice in lang-aot harness code unless a separately reproduced core defect
+requires a committed repair contract. Security review precedes a ready PR.
+
+VM-039d probes on row 443 failed in both VM and JIT with an unregistered
+input_more builtin. After registration, all 28 FLOW-MATIC cells (443–446,
+seven standard backends) passed in fresh processes with execution sentinels
+and zero skips. Ten BASIC input cells on VM/JIT also passed. The shared-queue
+regression and direct compiled-callback proof passed; all-target lang-aot
+Clippy is clean. No VM/JIT core implementation changes were required and no
+full matrix rerun is claimed. VM-059 remains the next separately scoped
+encoded-CIL input audit after this PR merges.
+
 ## VM-039c CLR contract (selected after #14544 merged)
 
 Main is `a355f64a2a`. JVM PR #14544 merged after every applicable check

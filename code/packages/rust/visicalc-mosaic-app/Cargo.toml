@@ -9,6 +9,7 @@ license = "MIT"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+coding_adventures_base64 = { path = "../base64" }
 mosaic-app-capi = { path = "../mosaic-app-capi" }
 mosaic-app-runtime = { path = "../mosaic-app-runtime" }
 serde = { version = "1", features = ["derive"] }

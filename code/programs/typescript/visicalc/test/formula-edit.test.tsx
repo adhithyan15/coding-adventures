@@ -94,10 +94,15 @@ it("replays the shared presentation contract through generated controls", async 
     // Check every displayed cell against the real engine's requested slice.
     // During editing the generated input replaces that one display string.
     const displayed = host.update.props["viewport-rows"] as string[][];
+    // No render occurs during these assertions. Query each row once rather than
+    // walking the entire table twice for every cell on slower CI runners.
+    const rendered = [...container.querySelectorAll("tbody:not([data-mosaic-spacer]) tr")]
+      .map(row => [...row.querySelectorAll("td")]);
     for (let row = 0; row < displayed.length; row++) {
       for (let col = 0; col < displayed[row].length; col++) {
-        if (!cell(row, col).querySelector("input")) {
-          expect(cell(row, col).textContent, `${step.id}: visible ${row},${col}`).toBe(displayed[row][col]);
+        const renderedCell = rendered[row][col];
+        if (!renderedCell.querySelector("input")) {
+          expect(renderedCell.textContent, `${step.id}: visible ${row},${col}`).toBe(displayed[row][col]);
         }
       }
     }

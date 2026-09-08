@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:7b58eb848075a8d2",
+  "lessonIds": [
+    "GU-C38-panchmu",
+    "GU-C38-triju",
+    "GU-C38-biju",
+    "GU-C38-chothu",
+    "GU-C38-pahelu",
+    "GU-R38-first-to-fifth"
+  ],
+  "tex": "gujarati/book/chapters/ch42-ordinals.tex"
+}

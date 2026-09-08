@@ -1940,8 +1940,11 @@ describe("the committed Gujarati A1 inventory", () => {
     expect(coverage.enumerated).toBe(210);
     // 100 -> 120. Chapters 35-41 answer this file's own uncovered list: seven
     // chapters, five items each, one new item per lesson.
-    expect(coverage.covered).toBe(120);
-    expect(coverage.unmapped).toBe(90);
+    // 120 -> 121. HL-C359 closes GU-A1-NUM-05, the ordinal point, with chapter
+    // 42. Sankhya goes 1/5 to 2/5; the three still open are all the count
+    // stopping at five, not the ordinal.
+    expect(coverage.covered).toBe(121);
+    expect(coverage.unmapped).toBe(89);
     expect(coverage.partial).toBe(0);
     // THE HEADLINE HAS CHANGED, and this assertion is the record of it. It read
     // `covered: 0` and was the starkest finding in the file: `ane` returned ZERO
@@ -1977,8 +1980,38 @@ describe("the committed Gujarati A1 inventory", () => {
     expect(coverage.byCategory["Nakaar (negation)"]!).toEqual({ enumerated: 4, covered: 3 });
     expect(coverage.byCategory["Prashna (asking questions)"]!).toEqual({ enumerated: 10, covered: 8 });
     expect(formatExamCoverage(coverage)).toContain(
-      "gujarati A1 (partial inventory): 120/210 points covered (57%)",
+      "gujarati A1 (partial inventory): 121/210 points covered (58%)",
     );
+  }, 60_000);
+
+  // The ordinal point, named rather than left to the aggregate. Both halves
+  // were falsified before this was kept: a fabricated id fails the "probes only
+  // atoms that EXIST" test above, and nulling the probe fails the coverage
+  // total two assertions up.
+  it("closes GU-A1-NUM-05 on eight atoms, five words and two shapes", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "gujarati");
+    const ordinals = inventory.points.find((point) => point.id === "GU-A1-NUM-05");
+    expect(ordinals?.probe).toEqual([
+      // The four the language HANDS DOWN, in the order the chapter teaches
+      // them -- which runs by how much of the cardinal survives, not by number.
+      "GU-LEX-PAHELU",
+      "GU-LEX-BIJU",
+      "GU-LEX-TRIJU",
+      "GU-LEX-CHOTHU",
+      // The one it BUILDS, and the suffix that builds it. This is the lesson
+      // the chapter OPENS on, because the four above are exceptions to it.
+      "GU-LEX-PANCHMU",
+      "GU-GRAMMAR-ORDINAL-MU",
+      // The shape beejun and treejun share, claimed only once there are two of
+      // them: one word is not a shape.
+      "GU-GRAMMAR-ORDINAL-IJU",
+    ]);
+    for (const atom of ordinals?.probe ?? []) expect(taught.has(atom), atom).toBe(true);
+    // The cardinal the rule stands on is taught, and is the reason the count
+    // stops where it does. GU-A1-NUM-03 (six to ten) is still open.
+    expect(taught.has("GU-LEX-NUMBERS-ONE-TO-FIVE")).toBe(true);
+    expect(inventory.points.find((point) => point.id === "GU-A1-NUM-03")?.probe).toBeNull();
   }, 60_000);
 });
 

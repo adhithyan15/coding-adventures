@@ -39,11 +39,15 @@ and book-only human pass evidence remain backlog.
 
 ## Current authored boundary
 
-Canonical data currently contains **34 chapters and 228 lessons**. All 228
+Canonical data currently contains **42 chapters and 269 lessons**. All 269
 lessons are mapped and generated, and every lesson stays within the five-minute
-cap. The pre-A1 writing-stage contract is complete, all 41 Gujarati forms shown
+cap. The pre-A1 writing-stage contract is complete, all 44 Gujarati forms shown
 by the current book are explicitly taught, and the exact script inventory has
 no never-taught glyphs.
+
+Chapter 42 is the ordinal column, and it cost no new letter: a census of every
+Gujarati character in it, headwords and worked examples alike, against the 44
+that the track's own writing lessons teach returns zero shown-but-untaught.
 
 The script side is now closed on both of its measures. Every native-script
 headword in the track carries a romanization, so no headword is load-bearing
@@ -81,6 +85,9 @@ still require substantial expansion.
 | 19-23 | Retrieve early script and conversation atoms at genuine third and fourth spacing windows. |
 | 24-27 | Hear, say, read, and write ten concrete map words through separate four-skill checks, then retrieve the newest route atoms at measured R1/R2 intervals. |
 | 28 | Acquire eight everyday time words by ear before any of them is shown, write the two whose signs were taught long before, and close on four separately scored skills plus two measured returns. |
+| 29-34 | Write the six oral time words, return the numbers and the core verbs at a fifth window, and build four ear-first vocabulary chapters around food, the house, the sky and people. |
+| 35-41 | Close the joining column: negation and apology, and, or, but, the reporting frame, reasons, conditions, pronouns and the question family. |
+| 42 | Say first to fifth, agree each with the three genders, and tell the one ordinal Gujarati builds from the four it hands down. |
 
 The exact chapter titles, lesson ranges, and ordered lesson IDs are in the
 [session map](session-map.md). The [roadmap](roadmap.md) separates this authored

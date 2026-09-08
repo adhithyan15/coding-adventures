@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-08
+
+- Query the rendered cell matrix once per presentation-fixture step, preserving
+  every assertion while avoiding repeated whole-grid scans on Windows CI.
+
+- Wire generated Open/Save buttons to Mosaic's shared protocol-2 file executor.
+  Add real-WASM file-byte round-trip, cancellation, malformed-file and unsupported
+  browser tests. Keep status and error presentation in the shared Mosaic root.
+
 ## 2026-09-05
 
 - Share the budget seed and versioned presentation fixture under the Mosaic
