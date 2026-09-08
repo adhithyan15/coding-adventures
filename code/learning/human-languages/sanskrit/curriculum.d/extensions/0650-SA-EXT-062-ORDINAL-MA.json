@@ -1,0 +1,18 @@
+{
+  "id": "SA-EXT-062-ORDINAL-MA",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can make a Sanskrit ordinal by putting -ma on a number, for five and for seven to ten.",
+  "prerequisites": [
+    "SA-EXT-061-SEASON"
+  ],
+  "lessons": [
+    "SA-C62-fifth",
+    "SA-C62-seventh",
+    "SA-C62-eighth",
+    "SA-C62-ninth",
+    "SA-C62-tenth",
+    "SA-R62-the-ending"
+  ]
+}

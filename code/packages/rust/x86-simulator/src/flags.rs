@@ -12,7 +12,10 @@ use crate::state::Flags;
 /// `dst + src` with full 64-bit flag computation. Returns `(result, flags)`.
 pub fn add_with_flags(dst: u64, src: u64) -> (u64, Flags) {
     let (res, carry) = dst.overflowing_add(src);
-    let mut f = Flags { cf: carry, ..Flags::default() };
+    let mut f = Flags {
+        cf: carry,
+        ..Flags::default()
+    };
     f.zf = res == 0;
     f.sf = (res >> 63) & 1 == 1;
     // Signed overflow: both operands same sign, result differs.
@@ -25,7 +28,10 @@ pub fn add_with_flags(dst: u64, src: u64) -> (u64, Flags) {
 /// `dst - src` with full 64-bit flag computation (also used by `cmp`).
 pub fn sub_with_flags(dst: u64, src: u64) -> (u64, Flags) {
     let (res, borrow) = dst.overflowing_sub(src);
-    let mut f = Flags { cf: borrow, ..Flags::default() };
+    let mut f = Flags {
+        cf: borrow,
+        ..Flags::default()
+    };
     f.zf = res == 0;
     f.sf = (res >> 63) & 1 == 1;
     // Signed overflow on subtract: operands differ in sign and result sign
@@ -34,6 +40,44 @@ pub fn sub_with_flags(dst: u64, src: u64) -> (u64, Flags) {
     f.af = ((dst ^ src ^ res) >> 4) & 1 == 1;
     f.pf = parity(res);
     (res, f)
+}
+
+/// `dst + src + carry` with full 64-bit ADC flag computation.
+pub fn adc_with_flags(dst: u64, src: u64, carry: bool) -> (u64, Flags) {
+    let carry = u64::from(carry);
+    let wide = u128::from(dst) + u128::from(src) + u128::from(carry);
+    let result = wide as u64;
+    let signed = i128::from(dst as i64) + i128::from(src as i64) + i128::from(carry);
+    (
+        result,
+        Flags {
+            cf: wide > u128::from(u64::MAX),
+            zf: result == 0,
+            sf: result >> 63 != 0,
+            of: signed < i128::from(i64::MIN) || signed > i128::from(i64::MAX),
+            pf: parity(result),
+            af: (dst & 0xf) + (src & 0xf) + carry > 0xf,
+        },
+    )
+}
+
+/// `dst - src - borrow` with full 64-bit SBB flag computation.
+pub fn sbb_with_flags(dst: u64, src: u64, borrow: bool) -> (u64, Flags) {
+    let borrow = u64::from(borrow);
+    let subtrahend = u128::from(src) + u128::from(borrow);
+    let result = dst.wrapping_sub(src).wrapping_sub(borrow);
+    let signed = i128::from(dst as i64) - i128::from(src as i64) - i128::from(borrow);
+    (
+        result,
+        Flags {
+            cf: u128::from(dst) < subtrahend,
+            zf: result == 0,
+            sf: result >> 63 != 0,
+            of: signed < i128::from(i64::MIN) || signed > i128::from(i64::MAX),
+            pf: parity(result),
+            af: (dst & 0xf) < (src & 0xf) + borrow,
+        },
+    )
 }
 
 /// Flags for a logical result (AND/OR/XOR/TEST): CF=OF=0, ZF/SF/PF from the value.
@@ -59,18 +103,44 @@ fn parity(v: u64) -> bool {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[allow(missing_docs)]
 pub enum Cond {
-    O = 0x0, No = 0x1, B = 0x2, Ae = 0x3, E = 0x4, Ne = 0x5, Be = 0x6, A = 0x7,
-    S = 0x8, Ns = 0x9, P = 0xA, Np = 0xB, L = 0xC, Ge = 0xD, Le = 0xE, G = 0xF,
+    O = 0x0,
+    No = 0x1,
+    B = 0x2,
+    Ae = 0x3,
+    E = 0x4,
+    Ne = 0x5,
+    Be = 0x6,
+    A = 0x7,
+    S = 0x8,
+    Ns = 0x9,
+    P = 0xA,
+    Np = 0xB,
+    L = 0xC,
+    Ge = 0xD,
+    Le = 0xE,
+    G = 0xF,
 }
 
 impl Cond {
     /// Decode the `tttn` condition nibble.
     pub fn from_nibble(n: u8) -> Cond {
         match n & 0xF {
-            0x0 => Cond::O, 0x1 => Cond::No, 0x2 => Cond::B, 0x3 => Cond::Ae,
-            0x4 => Cond::E, 0x5 => Cond::Ne, 0x6 => Cond::Be, 0x7 => Cond::A,
-            0x8 => Cond::S, 0x9 => Cond::Ns, 0xA => Cond::P, 0xB => Cond::Np,
-            0xC => Cond::L, 0xD => Cond::Ge, 0xE => Cond::Le, _ => Cond::G,
+            0x0 => Cond::O,
+            0x1 => Cond::No,
+            0x2 => Cond::B,
+            0x3 => Cond::Ae,
+            0x4 => Cond::E,
+            0x5 => Cond::Ne,
+            0x6 => Cond::Be,
+            0x7 => Cond::A,
+            0x8 => Cond::S,
+            0x9 => Cond::Ns,
+            0xA => Cond::P,
+            0xB => Cond::Np,
+            0xC => Cond::L,
+            0xD => Cond::Ge,
+            0xE => Cond::Le,
+            _ => Cond::G,
         }
     }
 }
@@ -81,20 +151,20 @@ pub fn condition_holds(c: Cond, f: &Flags) -> bool {
     match c {
         Cond::O => f.of,
         Cond::No => !f.of,
-        Cond::B => f.cf,                       // unsigned <
-        Cond::Ae => !f.cf,                     // unsigned >=
-        Cond::E => f.zf,                        // ==
-        Cond::Ne => !f.zf,                      // !=
-        Cond::Be => f.cf || f.zf,              // unsigned <=
-        Cond::A => !f.cf && !f.zf,             // unsigned >
+        Cond::B => f.cf,           // unsigned <
+        Cond::Ae => !f.cf,         // unsigned >=
+        Cond::E => f.zf,           // ==
+        Cond::Ne => !f.zf,         // !=
+        Cond::Be => f.cf || f.zf,  // unsigned <=
+        Cond::A => !f.cf && !f.zf, // unsigned >
         Cond::S => f.sf,
         Cond::Ns => !f.sf,
         Cond::P => f.pf,
         Cond::Np => !f.pf,
-        Cond::L => f.sf != f.of,               // signed <
-        Cond::Ge => f.sf == f.of,              // signed >=
-        Cond::Le => f.zf || (f.sf != f.of),    // signed <=
-        Cond::G => !f.zf && (f.sf == f.of),    // signed >
+        Cond::L => f.sf != f.of,            // signed <
+        Cond::Ge => f.sf == f.of,           // signed >=
+        Cond::Le => f.zf || (f.sf != f.of), // signed <=
+        Cond::G => !f.zf && (f.sf == f.of), // signed >
     }
 }
 
@@ -128,8 +198,8 @@ mod tests {
     fn unsigned_and_signed_compares() {
         // cmp 3, 5  →  3 - 5: CF (unsigned <) and SF!=OF (signed <).
         let (_, f) = sub_with_flags(3, 5);
-        assert!(condition_holds(Cond::B, &f));   // 3 <u 5
-        assert!(condition_holds(Cond::L, &f));   // 3 <s 5
+        assert!(condition_holds(Cond::B, &f)); // 3 <u 5
+        assert!(condition_holds(Cond::L, &f)); // 3 <s 5
         assert!(!condition_holds(Cond::Ae, &f));
         assert!(condition_holds(Cond::Ne, &f));
     }

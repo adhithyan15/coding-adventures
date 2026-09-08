@@ -657,6 +657,7 @@ export function runNetlist(text: string): AnalysisExecutionResult[] {
 }
 
 export const CLI_RESULT_SCHEMA_VERSION = 1;
+export const CLI_INSPECTION_SCHEMA_VERSION = 1;
 export const CLI_ERROR_CODE = "SPICE_CLI_ERROR";
 
 export function runNetlistJson(text: string): string {
@@ -670,6 +671,15 @@ export function runNetlistJson(text: string): string {
       kind: item.plan.analysis,
       records: cliTableRecords(item.plan.analysis, item.table),
     })),
+  }))}\n`;
+}
+
+export function inspectNetlistJson(text: string): string {
+  const parsed = parseNetlist(text);
+  return `${JSON.stringify(canonicalJson({
+    schemaVersion: CLI_INSPECTION_SCHEMA_VERSION,
+    title: parsed.title ?? null,
+    analyses: buildAnalysisPlan(parsed).map((step) => ({ index: step.index, kind: step.kind })),
   }))}\n`;
 }
 

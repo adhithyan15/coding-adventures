@@ -26,7 +26,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_architecture, try_tokenize_mermaid_block, try_tokenize_mermaid_kanban,
     try_tokenize_mermaid_mindmap, try_tokenize_mermaid_packet, try_tokenize_mermaid_timeline,
     try_tokenize_mermaid_eventmodeling, try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
-    try_tokenize_mermaid_treemap,
+    try_tokenize_mermaid_treemap, try_tokenize_mermaid_venn,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -64,6 +64,7 @@ const EVENTMODELING_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/eventmodeling.grammar");
 const TREEMAP_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/treemap.grammar");
+const VENN_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/venn.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -563,7 +564,8 @@ use diagram_ir::{
     SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
     GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskEnd,
     TaskStart, TemporalBody, TemporalDiagram, TemporalKind, TimelineDiagram, TimelineDirection,
-    TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, XyAxisConfig, XyChartConfig,
+    TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
+    VennStyle, VennText, XyAxisConfig, XyChartConfig,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -658,6 +660,7 @@ impl MermaidDiagramType {
                 | Self::Radar
                 | Self::EventModeling
                 | Self::Treemap
+                | Self::Venn
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -683,6 +686,7 @@ pub enum MermaidDiagram {
     Board(BoardDiagram),
     EventModel(EventModelDiagram),
     Treemap(TreemapDiagram),
+    Venn(VennDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -814,6 +818,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             parse_event_modeling(source).map(MermaidDiagram::EventModel)
         }
         MermaidDiagramType::Treemap => parse_treemap(source).map(MermaidDiagram::Treemap),
+        MermaidDiagramType::Venn => parse_venn(source).map(MermaidDiagram::Venn),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -2835,6 +2840,128 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
     }
     Ok(diagram)
 }
+
+// ── venn-beta parser ──────────────────────────────────────────────────────
+
+/// Parse Mermaid 11.16.1 Venn declarations into dedicated set IR.
+pub fn parse_venn(source: &str) -> Result<VennDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_venn(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(VENN_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse venn.grammar: {error}"));
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
+        .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
+
+    let mut diagram = VennDiagram::default();
+    let mut known_sets = std::collections::HashSet::new();
+    let mut current_sets: Option<Vec<String>> = None;
+    let mut pending_styles = Vec::<(Vec<String>, VennStyle)>::new();
+    for (line_index, line) in prepared.lines().enumerate() {
+        let trimmed = line.trim();
+        if trimmed.is_empty() || trimmed.eq_ignore_ascii_case("venn-beta") { continue; }
+        if let Some(value) = strip_keyword_ci(trimmed, "title") {
+            diagram.title = Some(unquote_mermaid_string(value.trim())); continue;
+        }
+        if let Some(value) = strip_keyword_ci(trimmed, "set") {
+            let (id, label, size) = parse_venn_region(value, line_index + 1)?;
+            let id = unquote_mermaid_string(&id);
+            if !known_sets.insert(id.clone()) { return Err(venn_error(line_index + 1, format!("duplicate set identifier {id:?}"))); }
+            current_sets = Some(vec![id.clone()]);
+            diagram.regions.push(VennRegion { sets: vec![id], size: size.unwrap_or(10.0), label, style: VennStyle::default() });
+            continue;
+        }
+        if let Some(value) = strip_keyword_ci(trimmed, "union") {
+            let (raw_ids, label, size) = parse_venn_region(value, line_index + 1)?;
+            let mut sets = split_venn_identifiers(&raw_ids, line_index + 1)?;
+            if sets.len() < 2 { return Err(venn_error(line_index + 1, "union requires multiple identifiers")); }
+            for set in &sets { if !known_sets.contains(set) { return Err(venn_error(line_index + 1, format!("unknown set identifier {set:?}"))); } }
+            sets.sort(); sets.dedup(); current_sets = Some(sets.clone());
+            diagram.regions.push(VennRegion { sets, size: size.unwrap_or(2.5), label, style: VennStyle::default() });
+            continue;
+        }
+        if let Some(value) = strip_keyword_ci(trimmed, "text") {
+            let (head, label, _) = parse_venn_region(value, line_index + 1)?;
+            let (sets, id) = if head.contains(',') {
+                let split = head.rfind(char::is_whitespace).ok_or_else(|| venn_error(line_index + 1, "explicit text requires target sets and an id"))?;
+                (split_venn_identifiers(head[..split].trim(), line_index + 1)?, unquote_mermaid_string(head[split..].trim()))
+            } else { (current_sets.clone().ok_or_else(|| venn_error(line_index + 1, "text requires set"))?, unquote_mermaid_string(head.trim())) };
+            diagram.texts.push(VennText { sets, id, label, style: VennStyle::default() }); continue;
+        }
+        if let Some(value) = strip_keyword_ci(trimmed, "style") {
+            let split = value.find(char::is_whitespace).ok_or_else(|| venn_error(line_index + 1, "style requires targets and properties"))?;
+            pending_styles.push((split_venn_identifiers(value[..split].trim(), line_index + 1)?, parse_venn_style(value[split..].trim(), line_index + 1)?));
+        }
+    }
+    for (mut targets, style) in pending_styles {
+        targets.sort();
+        if let Some(region) = diagram.regions.iter_mut().find(|region| region.sets == targets) { region.style = style; }
+        else if targets.len() == 1 { if let Some(text) = diagram.texts.iter_mut().find(|text| text.id == targets[0]) { text.style = style; } }
+    }
+    if diagram.regions.iter().all(|region| region.sets.len() != 1) { return Err(venn_error(1, "venn requires at least one set")); }
+    Ok(diagram)
+}
+
+fn strip_keyword_ci<'a>(line: &'a str, keyword: &str) -> Option<&'a str> {
+    let (head, tail) = line.split_at(keyword.len().min(line.len()));
+    (head.eq_ignore_ascii_case(keyword) && tail.starts_with(char::is_whitespace)).then(|| tail.trim_start())
+}
+
+fn parse_venn_region(raw: &str, line: usize) -> Result<(String, Option<String>, Option<f64>), ParseError> {
+    let mut quote = false; let mut bracket = None;
+    for (index, ch) in raw.char_indices() {
+        if ch == '"' { quote = !quote; }
+        if ch == '[' && !quote { bracket = Some(index); break; }
+    }
+    let (head, label, tail) = if let Some(open) = bracket {
+        let close = raw[open + 1..].find(']').map(|offset| open + 1 + offset).ok_or_else(|| venn_error(line, "unterminated Venn label"))?;
+        (raw[..open].trim(), Some(unquote_mermaid_string(raw[open + 1..close].trim())), raw[close + 1..].trim())
+    } else if let Some(colon) = raw.rfind(':').filter(|index| !raw[*index + 1..].trim().is_empty()) {
+        (raw[..colon].trim(), None, raw[colon..].trim())
+    } else { (raw.trim(), None, "") };
+    if head.is_empty() { return Err(venn_error(line, "missing Venn identifier")); }
+    let size = tail.strip_prefix(':').map(str::trim).filter(|value| !value.is_empty()).map(str::parse::<f64>).transpose().map_err(|_| venn_error(line, "invalid Venn size"))?;
+    if size.is_some_and(|value| !value.is_finite() || value < 0.0) { return Err(venn_error(line, "Venn sizes must be finite and non-negative")); }
+    Ok((head.to_string(), label, size))
+}
+
+fn split_venn_identifiers(raw: &str, line: usize) -> Result<Vec<String>, ParseError> {
+    let mut values = Vec::new(); let mut start = 0; let mut quote = false;
+    for (index, ch) in raw.char_indices() {
+        if ch == '"' { quote = !quote; }
+        if ch == ',' && !quote {
+            values.push(unquote_mermaid_string(raw[start..index].trim()));
+            start = index + 1;
+        }
+    }
+    values.push(unquote_mermaid_string(raw[start..].trim()));
+    if quote || values.iter().any(String::is_empty) { return Err(venn_error(line, "invalid Venn identifier list")); }
+    Ok(values)
+}
+
+fn parse_venn_style(raw: &str, line: usize) -> Result<VennStyle, ParseError> {
+    let mut style = VennStyle::default();
+    for property in split_venn_style_properties(raw) {
+        let (name, value) = property.split_once(':').ok_or_else(|| venn_error(line, "invalid Venn style property"))?;
+        let value = value.trim().trim_matches('"').to_string();
+        match name.trim().to_ascii_lowercase().as_str() {
+            "fill" => style.fill = Some(value), "stroke" => style.stroke = Some(value), "color" => style.text_color = Some(value),
+            "stroke-width" => style.stroke_width = value.trim_end_matches("px").parse().ok(), "fill-opacity" => style.fill_opacity = value.parse().ok(), _ => {}
+        }
+    }
+    Ok(style)
+}
+
+fn split_venn_style_properties(raw: &str) -> Vec<&str> {
+    let mut properties = Vec::new(); let mut start = 0; let mut depth = 0;
+    for (index, ch) in raw.char_indices() {
+        match ch { '(' => depth += 1, ')' => depth = (depth - 1).max(0), ',' if depth == 0 => {
+            properties.push(raw[start..index].trim()); start = index + 1;
+        }, _ => {} }
+    }
+    properties.push(raw[start..].trim()); properties
+}
+
+fn venn_error(line: usize, message: impl Into<String>) -> ParseError { ParseError { message: message.into(), line, col: 1 } }
 
 // ── radar-beta parser ─────────────────────────────────────────────────────
 

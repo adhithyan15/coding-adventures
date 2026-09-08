@@ -1,0 +1,24 @@
+{
+  "chapter": 44,
+  "title": "Which One in the Line",
+  "label": "ch:pa-ordinals",
+  "canDo": "I can say first to fifth in Punjabi, agree an ordinal with a masculine or feminine thing, and say which of the five endings is the only one that still works on a new number.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "PA-R44-first-to-fifth",
+    "kind": "production",
+    "summary": "Complete PA-R44-first-to-fifth and run pahilaa to panjvaan, then name the one ending that still works on a number the book has not taught.",
+    "assesses": [
+      "PA-LEX-DUJA-01",
+      "PA-GRAMMAR-ORDINAL-SET-01",
+      "PA-LEX-TIJA-01",
+      "PA-LEX-CHAUTHA-01",
+      "PA-LEX-PAHILA-01",
+      "PA-LEX-PANJVAN-01",
+      "PA-GRAMMAR-ORDINAL-VAAN-01"
+    ],
+    "note": "The chapter opens on SECOND, because duujaa still shows its doo, and puts FIRST fourth, because pahilaa keeps no letter of ikk and an exception is only legible after the shape it breaks has held three times. All five ordinals are INHERITED whole from Sanskrit -- Wiktionary says so for each -- so the seam at five is not where Punjabi stopped inheriting but where the inheriting stopped being visible: panjvaan came down from pancama, then looked like panj plus an ending, and -vaan became productive on that reading. It is also the only one of the five whose ending is audible, carrying a nasal the other four do not."
+  }
+}

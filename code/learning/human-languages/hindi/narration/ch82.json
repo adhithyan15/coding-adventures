@@ -4,22 +4,22 @@
   "chapter": 82,
   "title": "First, Second, Third",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ef1a85dc17082cad",
+  "sourceHash": "fnv1a64:78e2e68c53fb63c1",
   "lessons": [
     {
       "id": "HI-C75-first",
       "sequence": 3160,
       "title": "पहला (pahlā) — first",
-      "headword": "पहला",
-      "romanization": "pahlā",
-      "gloss": "first — and the word for before that is the same word",
+      "headword": "पहला / पहली / पहले",
+      "romanization": "pahlā / pahlī / pahle",
+      "gloss": "first / feminine first / before or earlier",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66658bbafea332be",
+      "sourceHash": "fnv1a64:568e125eaf17d2a6",
       "notice": null,
       "blocks": [
         {

@@ -2,6 +2,7 @@
 
 from spice_netlist_parser.parser import (
     CLI_ERROR_CODE,
+    CLI_INSPECTION_SCHEMA_VERSION,
     CLI_RESULT_SCHEMA_VERSION,
     AcAnalysis,
     AnalysisExecutionResult,
@@ -37,6 +38,7 @@ from spice_netlist_parser.parser import (
     TranAnalysis,
     TransientMethod,
     build_analysis_plan,
+    inspect_netlist_json,
     measure_results,
     parse_netlist,
     run_analysis_plan,
@@ -55,6 +57,7 @@ __all__ = [
     "AnalysisPlanStep",
     "AnalysisResult",
     "CLI_ERROR_CODE",
+    "CLI_INSPECTION_SCHEMA_VERSION",
     "CLI_RESULT_SCHEMA_VERSION",
     "DcAnalysis",
     "DistortionAnalysis",
@@ -92,5 +95,6 @@ __all__ = [
     "run_analysis_plan",
     "run_netlist",
     "run_netlist_json",
+    "inspect_netlist_json",
     "select_outputs",
 ]

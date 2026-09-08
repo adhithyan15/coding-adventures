@@ -177,7 +177,7 @@
     {
       "id": "venn",
       "headers": ["venn-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "set",
       "smoke_source": "venn-beta\nset A\nset B"
     },

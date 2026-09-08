@@ -1,0 +1,22 @@
+(test
+ (name test_capability_analyzer)
+ (modes byte)
+ (deps
+  (glob_files_rec fixtures/*))
+ (libraries alcotest coding_adventures_capability_analyzer yojson unix)
+ (instrumentation
+  (backend bisect_ppx)))
+
+(test
+ (name test_cli_entrypoint)
+ (modes byte)
+ (deps ../bin/main.bc)
+ (libraries alcotest)
+ (action
+  (setenv
+   CAPABILITY_TEST_OCAMLRUN
+   %{bin:ocamlrun}
+   (setenv
+    CAPABILITY_TEST_CLI
+    %{dep:../bin/main.bc}
+    (run %{test})))))

@@ -3,7 +3,13 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
 
-import { CLI_ERROR_CODE, CLI_RESULT_SCHEMA_VERSION, runNetlistJson } from "../src/index.js";
+import {
+  CLI_ERROR_CODE,
+  CLI_INSPECTION_SCHEMA_VERSION,
+  CLI_RESULT_SCHEMA_VERSION,
+  inspectNetlistJson,
+  runNetlistJson,
+} from "../src/index.js";
 
 describe("Berkeley SPICE CLI contract", () => {
   it("returns the shared JSON envelope for the core analysis plan", () => {
@@ -46,6 +52,34 @@ describe("Berkeley SPICE CLI contract", () => {
 
     expect(result.status, result.stderr).toBe(0);
     expect(JSON.parse(result.stdout).title).toBe(testCase.expected.title);
+  });
+
+  it("inspects the complete runnable plan through the API and CLI", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
+      "utf8",
+    )) as {
+      cases: readonly {
+        deck: string;
+        expected: { analysisIndexes: readonly number[]; analysisKinds: readonly string[] };
+      }[];
+    };
+    const testCase = corpus.cases[0]!;
+    const payload = JSON.parse(inspectNetlistJson(testCase.deck)) as {
+      schemaVersion: number;
+      analyses: readonly { index: number; kind: string }[];
+    };
+    const result = spawnSync(
+      process.execPath,
+      [fileURLToPath(new URL("../dist/cli.js", import.meta.url)), "inspect", "--json", "-"],
+      { encoding: "utf8", input: testCase.deck },
+    );
+
+    expect(payload.schemaVersion).toBe(CLI_INSPECTION_SCHEMA_VERSION);
+    expect(payload.analyses.map((analysis) => analysis.index)).toEqual(testCase.expected.analysisIndexes);
+    expect(payload.analyses.map((analysis) => analysis.kind)).toEqual(testCase.expected.analysisKinds);
+    expect(result.status, result.stderr).toBe(0);
+    expect(JSON.parse(result.stdout)).toEqual(payload);
   });
 
   it("reports the shared stable failure code", () => {

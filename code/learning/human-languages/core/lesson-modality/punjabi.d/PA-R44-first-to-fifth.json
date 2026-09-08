@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R44-first-to-fifth",
+    "language": "punjabi",
+    "chapter": 44,
+    "sequence": 2570,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a0c35b2d4e80deed"
+  },
+  "findings": []
+}

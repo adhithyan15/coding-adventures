@@ -1028,10 +1028,10 @@ building a clean educational simulator rather than a full hardware emulator:
    `gpr` tuple uses this same ordering so that the hardware encoding maps
    directly to a tuple index.
 
-2. **RSP initial value is 0**: unlike the AArch64 simulator (which starts
-   with SP=0), the x86-64 spec leaves RSP undefined after reset.  A real
-   OS bootloader or runtime sets RSP to the top of the allocated stack.
-   Programs that use PUSH/POP/CALL/RET must set RSP before use.
+2. **RSP initial value is 0xFFF8**: reset places RSP at the final aligned
+   qword in the educational 64 KiB address space. PUSH/CALL can therefore
+   decrement it before their first store, matching the Python and Rust
+   functional machines.
 
 3. **HLT sentinel**: opcode 0xF4 halts the simulation.  In real hardware,
    HLT enters a low-power idle state waiting for an interrupt.  Since there
@@ -1053,3 +1053,29 @@ building a clean educational simulator rather than a full hardware emulator:
 7. **No CMPXCHG, XADD, or atomic read-modify-write**: these instructions are
    used by lock-free data structures and OS synchronisation primitives.  They
    are not implemented in this simulator.
+
+---
+
+## Rust Completion Contract
+
+The normative Rust implementation is
+`code/packages/rust/x86-simulator::functional::X86FunctionalSimulator`.
+It owns exactly 65,536 wrapping memory bytes and exposes complete immutable
+state: RIP, all 16 GPRs, CF/PF/ZF/SF/OF, memory, HLT, and the installed program
+range. Reset, checked load/restore/direct access, single-step, and bounded run
+are deterministic. Every checked failure is transition-atomic; a bounded run
+that encounters a later decode, divide, or range fault restores the complete
+pre-run machine. Successful steps return raw bytes plus complete before/after
+snapshots.
+
+The crate's older `Simulator`/`MachineCodeHarness` API remains a separate
+consumer lane for running repository backend output. It intentionally retains
+caller-sized checked memory, XMM/SSE execution, relocation handling, host-call
+shims, and a private return sentinel. Those runtime facilities are not part of
+the Spec 07w architectural state.
+
+Conformance is locked by lifecycle suites and a reproducible 262-vector Python
+full-state corpus spanning every supported decode family and typed faults. The
+Python oracle lacks a `CQO` handler and consumes the following byte as part of
+an undefined instruction; the Rust implementation follows the documented AMD64
+`REX.W 99` encoding and covers that exception with manual-correct direct tests.

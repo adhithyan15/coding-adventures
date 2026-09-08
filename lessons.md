@@ -7157,3 +7157,18 @@ before `rebase --continue` or `commit` -- and check the test **count** against
 what each side contributed. Here the expected union was 83 (main) + 4 (branch) =
 87; seeing 87 is what confirmed nothing was silently dropped, which a green run
 alone would not have.
+### 2026-09-07 — A security job is optional until the stable aggregate requires it
+
+The first OCaml capability-gate draft created an independent job but omitted it
+from the final `ci-gate` `needs` list and result loop. It also reused a
+contract-step selector that covered only the analyzer package, so ordinary
+OCaml package changes could skip the all-OCaml scan. A job's existence is not
+enforcement: give it a dedicated registry owner covering the complete protected
+path, expose that verdict from detection, and include its result in the stable
+required aggregate. Contract-test all three links.
+
+The same audit caught a copied POSIX coverage command in `BUILD_windows`.
+Every Windows front is executed one line at a time by `cmd /C`; use the
+established `set VAR=value&& command` and `for %f in (...) do ...` forms, then
+verify the literal Windows front rather than assuming a same-named file is a
+portable translation.

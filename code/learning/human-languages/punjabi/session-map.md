@@ -268,6 +268,12 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 259 | 43 | PA-W10-thatha | the consonant tha |
 | 260 | 43 | PA-C43-kitthe | where |
 | 261 | 43 | PA-C43-kinne | how many, how much |
+| 262 | 44 | PA-C44-duja | the second, and the second set of number words |
+| 263 | 44 | PA-C44-tija | third, on the same worn-down Sanskrit ending |
+| 264 | 44 | PA-C44-chautha | fourth, on a different ending, so -jaa was no rule |
+| 265 | 44 | PA-C44-pahila | first, the one with no number inside it |
+| 266 | 44 | PA-C44-panjvan | fifth, where an inherited word turned into a rule |
+| 267 | 44 | PA-R44-first-to-fifth | the five run, and the ending that got a second life |
 
-After session 261, the track continues through the dependency-linked backlog;
+After session 267, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

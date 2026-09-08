@@ -1,8 +1,17 @@
-# x86 / x86-64 Runtime Simulator (Rust)
+# x86-64 Functional and Runtime Simulator (Rust)
 
-A runtime simulator that **decodes and executes the 64-bit x86 machine code the
-in-repo `x86_64-backend` emits** — so that backend's output can be *run* on any
-host architecture, not just byte-compared. On an Apple Silicon (aarch64) machine
+This crate now contains two deliberately separate public lanes:
+
+- `functional::X86FunctionalSimulator` is the complete Spec 07w architectural
+  machine: exact owned 64 KiB wrapping memory, 16 GPRs, RIP, the five specified
+  RFLAGS bits, HLT state, installed-program metadata, immutable snapshots,
+  checked direct access, atomic reset/load/restore/step/run operations, and
+  complete before/after traces.
+- `Simulator` and `harness::MachineCodeHarness` preserve the backend-runtime
+  lane that **decodes and executes the 64-bit x86 machine code the in-repo
+  `x86_64-backend` emits**, including SSE and host-call shims.
+
+On an Apple Silicon (aarch64) machine
 the LANG-FULL matrix's `NativeAot` cell only ever runs the *aarch64* backend; the
 x86_64 backend is verified locally by byte tests and actually executed only on an
 x86 CI runner. This crate closes that gap: it runs x86_64 codegen **locally**.
@@ -13,7 +22,7 @@ shape) and uses the ISA semantics in
 
 ## What it runs
 
-The subset the `x86_64-encoder` emits (and growing):
+The architectural lane covers the complete integer surface specified by 07w:
 
 - **Moves / addressing**: `mov` reg↔reg, reg↔`[base+disp]`, `mov reg,imm32`,
   `movzx reg,byte[mem]`, `mov byte[mem],reg8` (`0x88` — the byte-tape store),
@@ -24,16 +33,29 @@ The subset the `x86_64-encoder` emits (and growing):
   (`0xF7 /6`,`/7`, dividing the 128-bit `rdx:rax` pair), and `cqo` (`rax`→`rdx:rax`
   sign-extend). Divide-by-zero / quotient-overflow raise a `#DE` **trap**.
 - **Control flow**: `jmp`, `jcc` (all 16 conditions), `call` / `ret`, `push` /
-  `pop`, `setcc`, and `ud2` → an illegal-instruction **trap** (how an E5
-  out-of-bounds array access aborts).
+  `pop`, `ret imm16`, LOOP/LOOPE/LOOPNE/JRCXZ, `cmovcc`, `setcc`, and `ud2`.
+- **Transfer / bit / strings**: MOVSX/MOVZX/MOVSXD, XCHG, BSF/BSR/BT/BSWAP,
+  PUSH immediates, MUL/IMUL/INC/DEC/ADC/SBB, rotates and CL-counted shifts, and
+  REP STOSD/STOSQ.
 - **SSE2 scalar double** (ALGOL `real` / E3): `movsd` (load/store/reg), `addsd` /
   `subsd` / `mulsd` / `divsd`, `ucomisd`, and `movabs r64, imm64` — enough to run
   the backend's `f64` arithmetic + comparison output.
 
-Pending phases: `cvtsi2sd` / `cvttsd2si` (int↔float), and 32-bit x86. Anything
-unimplemented is a clean `DecodeError`.
+Anything outside Spec 07w is a typed, transition-atomic error in the functional
+lane. The legacy backend lane keeps its checked-memory sandbox and SSE surface.
 
 ## How to use it
+
+For the architectural machine:
+
+```rust
+use x86_simulator::functional::X86FunctionalSimulator;
+
+let mut cpu = X86FunctionalSimulator::new();
+let result = cpu.run_checked(&[0x48, 0xc7, 0xc0, 42, 0, 0, 0, 0xf4], 8)?;
+assert_eq!(result.final_state.gpr[0], 42);
+# Ok::<(), x86_simulator::functional::X86Error>(())
+```
 
 The high-level entry is the **`MachineCodeHarness`** — the bridge that runs the
 backend's output, mirroring `wasm-runtime`'s host-import model:
@@ -89,6 +111,7 @@ can only ever fault — it cannot escape or touch host memory.
 
 ```
 src/
+├── functional.rs # exact Spec 07w state + checked atomic lifecycle
 ├── state.rs    # CpuState: 16 GPRs, rip, RFLAGS subset, XMM file
 ├── flags.rs    # add/sub_with_flags, condition_holds (07w rules)
 ├── memory.rs   # flat little-endian address space + bump heap

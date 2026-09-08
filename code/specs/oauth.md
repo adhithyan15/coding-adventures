@@ -126,7 +126,9 @@ The delivery order is:
 
 Before the concrete encrypted credential-store adapter, remove the sealed
 store's remaining third-party JSON chain by migrating the shared storage
-metadata boundary to the repository's bounded JSON primitive. The
+metadata boundary to the repository's bounded JSON primitive. The prerequisite
+bounded compact serializer is now shipped alongside its depth-limited parser;
+the storage metadata type and consumers remain the next migration slice. The
 cross-platform kernel-entropy prerequisite is shipped: `csprng` now reads
 `/dev/urandom` through safe standard-library I/O on Unix and confines Windows
 CNG FFI to one documented `BCryptGenRandom` call, with no normal dependencies.

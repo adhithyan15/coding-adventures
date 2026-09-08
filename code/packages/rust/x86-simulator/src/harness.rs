@@ -33,7 +33,11 @@ pub enum BuildError {
     NoSuchEntry(String),
     /// A relocation's `rel32` site (`patch_offset..patch_offset+4`) lies outside
     /// its function's bytes — a malformed reloc.
-    BadReloc { symbol: String, patch_offset: usize, fn_len: usize },
+    BadReloc {
+        symbol: String,
+        patch_offset: usize,
+        fn_len: usize,
+    },
     /// The concatenated code is larger than the simulator's address space.
     CodeTooLarge { code_len: usize, capacity: u64 },
 }
@@ -88,7 +92,8 @@ impl MachineCodeHarness {
 
     /// Add a compiled function (name, machine-code bytes, relocations).
     pub fn function(mut self, name: &str, bytes: &[u8], relocs: &[Reloc]) -> Self {
-        self.funcs.push((name.to_string(), bytes.to_vec(), relocs.to_vec()));
+        self.funcs
+            .push((name.to_string(), bytes.to_vec(), relocs.to_vec()));
         self
     }
 
@@ -113,7 +118,10 @@ impl MachineCodeHarness {
             code.extend_from_slice(bytes);
             for r in rs {
                 // The rel32 site must lie within this function's bytes.
-                if r.patch_offset.checked_add(4).is_none_or(|e| e > bytes.len()) {
+                if r.patch_offset
+                    .checked_add(4)
+                    .is_none_or(|e| e > bytes.len())
+                {
                     return Err(BuildError::BadReloc {
                         symbol: r.symbol.clone(),
                         patch_offset: r.patch_offset,
@@ -124,7 +132,9 @@ impl MachineCodeHarness {
             }
         }
 
-        let entry_off = *fn_offset.get(entry).ok_or_else(|| BuildError::NoSuchEntry(entry.to_string()))?;
+        let entry_off = *fn_offset
+            .get(entry)
+            .ok_or_else(|| BuildError::NoSuchEntry(entry.to_string()))?;
 
         // The `_twig_globals` data region sits just past the code (16-aligned),
         // and the heap starts past it. Its runtime address is needed to patch
@@ -164,15 +174,20 @@ impl MachineCodeHarness {
         //    STACK_BOTTOM..STACK_TOP. Everything must fit below the heap window.
         let heap_base = ((globals_base + GLOBALS_SIZE) + 15) & !15;
         if heap_base >= STACK_BOTTOM {
-            return Err(BuildError::CodeTooLarge { code_len: code.len(), capacity: STACK_BOTTOM - CODE_BASE });
+            return Err(BuildError::CodeTooLarge {
+                code_len: code.len(),
+                capacity: STACK_BOTTOM - CODE_BASE,
+            });
         }
         let mut mem = Memory::new(MEM_SIZE, heap_base, STACK_BOTTOM);
         // These stores are now provably in-bounds (heap_base < STACK_BOTTOM <
         // STACK_TOP < MEM_SIZE), so a failure is a harness bug, not guest input.
-        mem.write_block(CODE_BASE, &code).expect("code region is in-bounds after the size check");
+        mem.write_block(CODE_BASE, &code)
+            .expect("code region is in-bounds after the size check");
         let mut state = CpuState::default();
         let sp = (STACK_TOP & !0xF) - 8;
-        mem.store(sp, 8, RETURN_SENTINEL).expect("stack top is in-bounds");
+        mem.store(sp, 8, RETURN_SENTINEL)
+            .expect("stack top is in-bounds");
         state.set(Reg::Rsp, sp);
         state.set(Reg::Rbp, sp);
         state.rip = CODE_BASE + entry_off as u64;
@@ -198,15 +213,24 @@ mod tests {
 
     #[test]
     fn missing_entry_fails_closed() {
-        let err = MachineCodeHarness::new().function("f", &[0xC3], &[]).build("nope").unwrap_err();
+        let err = MachineCodeHarness::new()
+            .function("f", &[0xC3], &[])
+            .build("nope")
+            .unwrap_err();
         assert!(matches!(err, BuildError::NoSuchEntry(_)));
     }
 
     #[test]
     fn out_of_range_reloc_fails_closed_not_panic() {
         // A reloc whose rel32 site is past the 1-byte function → BadReloc, no panic.
-        let relocs = [Reloc { patch_offset: 9999, symbol: "__twig_alloc_bytes".into() }];
-        let err = MachineCodeHarness::new().function("f", &[0xC3], &relocs).build("f").unwrap_err();
+        let relocs = [Reloc {
+            patch_offset: 9999,
+            symbol: "__twig_alloc_bytes".into(),
+        }];
+        let err = MachineCodeHarness::new()
+            .function("f", &[0xC3], &relocs)
+            .build("f")
+            .unwrap_err();
         assert!(matches!(err, BuildError::BadReloc { .. }));
     }
 }

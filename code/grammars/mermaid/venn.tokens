@@ -1,0 +1,15 @@
+# @version 1
+# Mermaid 11.16.1 Venn line grammar.
+
+case_sensitive: false
+
+skip:
+  COMMENT               = /%%[^\r\n]*/
+
+NEWLINE                  = /\r?\n/
+HEADER                   = /venn-beta/
+TITLE_STATEMENT          = /[ \t]*title[ \t]+[^\r\n;%]+/
+SET_STATEMENT            = /[ \t]*set[ \t]+(?:[A-Za-z_][A-Za-z0-9_-]*|"[^"]*")(?:\[(?:"[^"]*"|[^\]"]+)\])?(?:[ \t]*:[ \t]*[+-]?(?:\d+(?:\.\d+)?|\.\d+))?/
+UNION_STATEMENT          = /[ \t]*union[ \t]+(?:[A-Za-z_][A-Za-z0-9_-]*|"[^"]*")(?:[ \t]*,[ \t]*(?:[A-Za-z_][A-Za-z0-9_-]*|"[^"]*"))+(?:\[(?:"[^"]*"|[^\]"]+)\])?(?:[ \t]*:[ \t]*[+-]?(?:\d+(?:\.\d+)?|\.\d+))?/
+TEXT_STATEMENT           = /[ \t]*text[ \t]+(?:[A-Za-z_][A-Za-z0-9_-]*|"[^"]*")(?:\[(?:"[^"]*"|[^\]"]+)\])?/
+STYLE_STATEMENT          = /[ \t]*style[ \t]+[^\r\n;%]+/

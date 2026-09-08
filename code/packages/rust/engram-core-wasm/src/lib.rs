@@ -4497,14 +4497,14 @@ fn validate_command_deck_reference(
     state: &AppState,
     command: &FacadeCommand,
 ) -> Result<(), String> {
-    let deck_id = match command {
+    let deck_ids: Vec<&String> = match command {
         // These CREATE state that names a deck. An id naming nothing leaves a
         // record no deck list can reach.
-        FacadeCommand::CreateCard { deck_id, .. } => Some(deck_id),
+        FacadeCommand::CreateCard { deck_id, .. } => vec![deck_id],
         // A session is the worst of them: `DeleteDeck` selects sessions by
         // `deck_id`, so one naming a deck that does not exist outlives every
         // deletion with no other way to remove it.
-        FacadeCommand::StartSession { deck_id, .. } => Some(deck_id),
+        FacadeCommand::StartSession { deck_id, .. } => vec![deck_id],
         // NOT guarded, and the distinction is the point: `setDeckOptions`
         // creates *configuration*, not content. A preset for a deck that does
         // not exist is inert -- options are read while scheduling that deck's
@@ -4522,27 +4522,43 @@ fn validate_command_deck_reference(
         // an existing test pins that permissive behaviour. The cost of being
         // wrong in that direction is a host that cannot configure a deck; the
         // cost of leaving it is a few hundred bytes nothing reads.
-        FacadeCommand::SetDeckOptions { .. } => None,
+        FacadeCommand::SetDeckOptions { .. } => Vec::new(),
 
         // Safe no-ops on a missing deck, listed rather than omitted so the
         // reasoning is on the record: `UpdateDeck` mutates only a deck it
         // finds, and `DeleteDeck` removes only what matches. Rejecting them
         // would turn a harmless no-op into an error for a caller that
         // reasonably deletes twice.
-        FacadeCommand::UpdateDeck { .. } | FacadeCommand::DeleteDeck { .. } => None,
+        FacadeCommand::UpdateDeck { .. } | FacadeCommand::DeleteDeck { .. } => Vec::new(),
+
+        // A note type carries a deck id per TEMPLATE, and that id *overrides*
+        // the note's when a card is generated. So this command can put cards in
+        // a deck that does not exist without ever naming a deck itself -- which
+        // is why it is a list rather than an Option, and why the check could
+        // not simply be bolted onto the note one.
+        //
+        // `None` on a template means "use the note's deck" and is the correct,
+        // common case; only a `Some` that names nothing is refused.
+        FacadeCommand::UpsertNoteType { note_type, .. } => note_type
+            .templates
+            .iter()
+            .filter_map(|template| template.deck_id.as_ref())
+            .collect(),
 
         // Everything else carries no deck id. `UpsertNote` is checked
         // separately, by `validate_note_target`, because it has a note type to
         // check as well and an inherit rule this one does not share.
-        _ => None,
+        _ => Vec::new(),
     };
 
-    match deck_id {
-        Some(deck_id) if !state.decks.iter().any(|deck| deck.id == *deck_id) => Err(format!(
-            "command names deck `{deck_id}`, which the collection does not contain"
-        )),
-        _ => Ok(()),
+    for deck_id in deck_ids {
+        if !state.decks.iter().any(|deck| deck.id == *deck_id) {
+            return Err(format!(
+                "command names deck `{deck_id}`, which the collection does not contain"
+            ));
+        }
     }
+    Ok(())
 }
 
 /// Refuse to rebuild a filtered deck the collection does not contain.
@@ -7935,6 +7951,99 @@ mod tests {
             restored.presentation_cursor(),
             PresentationCursor::default()
         );
+    }
+
+    /// A note type whose template names a missing deck is refused.
+    ///
+    /// A template's deck id **overrides the note's** when a card is generated,
+    /// so this command can put every card of a note type into a deck that does
+    /// not exist without ever naming a deck itself. Unguarded it moved all five
+    /// demo cards and reported `ok: true`.
+    #[test]
+    fn upsert_note_type_refuses_a_template_deck_that_does_not_exist() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+        let note_type = session.state().note_types[0].clone();
+        let before: Vec<String> = session
+            .state()
+            .cards
+            .iter()
+            .map(|card| card.deck_id.clone())
+            .collect();
+
+        let mut templates = serde_json::to_value(&note_type.templates).unwrap();
+        templates[0]["deckId"] = json!("deck-that-does-not-exist");
+        let command = json!({
+            "type": "upsertNoteType",
+            "noteType": {
+                "id": note_type.id,
+                "name": note_type.name,
+                "fields": serde_json::to_value(&note_type.fields).unwrap(),
+                "templates": templates,
+                "createdAt": 1_700_000_000_000u64,
+                "updatedAt": 1_700_000_000_000u64,
+            },
+            "materializeCardsAt": 1_700_000_000_000u64,
+        });
+
+        let reply: Value = serde_json::from_str(&session.dispatch(&command.to_string())).unwrap();
+        assert_eq!(reply["ok"], false, "expected refusal, got {reply}");
+        assert!(reply["error"]
+            .as_str()
+            .unwrap_or_default()
+            .contains("does not contain"));
+        assert_eq!(
+            session
+                .state()
+                .cards
+                .iter()
+                .map(|card| card.deck_id.clone())
+                .collect::<Vec<_>>(),
+            before,
+            "no card may move"
+        );
+    }
+
+    /// A template naming a real deck, and one naming none, both still work.
+    ///
+    /// `None` is the ordinary case -- it means "use the note's deck" -- so a
+    /// guard that refused it would break every note type in existence.
+    #[test]
+    fn upsert_note_type_still_accepts_real_and_absent_template_decks() {
+        for template_deck in [Some("tamil-script"), None] {
+            let mut session = EngramSession::new();
+            session.load_snapshot(DEMO_SNAPSHOT_JSON);
+            let note_type = session.state().note_types[0].clone();
+            let mut templates = serde_json::to_value(&note_type.templates).unwrap();
+            templates[0]["deckId"] = match template_deck {
+                Some(deck) => json!(deck),
+                None => Value::Null,
+            };
+            let command = json!({
+                "type": "upsertNoteType",
+                "noteType": {
+                    "id": note_type.id,
+                    "name": note_type.name,
+                    "fields": serde_json::to_value(&note_type.fields).unwrap(),
+                    "templates": templates,
+                    "createdAt": 1_700_000_000_000u64,
+                    "updatedAt": 1_700_000_000_000u64,
+                },
+                "materializeCardsAt": 1_700_000_000_000u64,
+            });
+            let reply: Value =
+                serde_json::from_str(&session.dispatch(&command.to_string())).unwrap();
+            assert_eq!(
+                reply["ok"], true,
+                "template deck {template_deck:?} should be accepted: {reply}"
+            );
+            // And nothing was stranded either way.
+            assert!(session.state().cards.iter().all(|card| session
+                .state()
+                .decks
+                .iter()
+                .any(|deck| deck.id == card.deck_id)));
+        }
     }
 
     /// `createCard` and `startSession` refuse a deck the collection lacks.

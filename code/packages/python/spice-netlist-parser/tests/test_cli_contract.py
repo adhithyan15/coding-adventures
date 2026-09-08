@@ -3,7 +3,13 @@ import subprocess
 import sys
 from pathlib import Path
 
-from spice_netlist_parser import CLI_ERROR_CODE, CLI_RESULT_SCHEMA_VERSION, run_netlist_json
+from spice_netlist_parser import (
+    CLI_ERROR_CODE,
+    CLI_INSPECTION_SCHEMA_VERSION,
+    CLI_RESULT_SCHEMA_VERSION,
+    inspect_netlist_json,
+    run_netlist_json,
+)
 
 
 def _cli_case() -> dict[str, object]:
@@ -44,6 +50,27 @@ def test_module_cli_runs_a_deck_file_as_json(tmp_path: Path) -> None:
 
     assert completed.returncode == 0, completed.stderr
     assert json.loads(completed.stdout)["title"] == case["expected"]["title"]
+
+
+def test_inspection_api_and_cli_expose_the_complete_runnable_plan() -> None:
+    case = _cli_case()
+    expected = case["expected"]
+    payload = json.loads(inspect_netlist_json(case["deck"]))
+
+    assert payload["schemaVersion"] == CLI_INSPECTION_SCHEMA_VERSION
+    assert [analysis["index"] for analysis in payload["analyses"]] == expected["analysisIndexes"]
+    assert [analysis["kind"] for analysis in payload["analyses"]] == expected["analysisKinds"]
+
+    completed = subprocess.run(
+        [sys.executable, "-m", "spice_netlist_parser.cli", "inspect", "--json", "-"],
+        check=False,
+        capture_output=True,
+        input=case["deck"],
+        text=True,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout) == payload
 
 
 def test_module_cli_reports_a_stable_failure_code() -> None:

@@ -1,0 +1,174 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/fixtures/ocaml-capability-analyzer-v1/cases.schema.json",
+  "version": 1,
+  "cases": [
+    {
+      "id": "pure-computation",
+      "source_kind": "implementation",
+      "source": "let add left right = left + right\n",
+      "expected_capabilities": [],
+      "expected_banned": []
+    },
+    {
+      "id": "filesystem-qualified",
+      "source_kind": "implementation",
+      "source": "let load path = In_channel.open_bin path\nlet names path = Sys.read_directory path\nlet save path = Out_channel.open_text path\n",
+      "expected_capabilities": ["fs:list:*", "fs:read:*", "fs:write:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "unix-alias",
+      "source_kind": "implementation",
+      "source": "module U = Unix\nlet lookup host = U.gethostbyname host\nlet run () = U.create_process \"tool\" [|\"tool\"|] U.stdin U.stdout U.stderr\n",
+      "expected_capabilities": ["net:dns:*", "proc:exec:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "opened-unix",
+      "source_kind": "implementation",
+      "source": "open Unix\nlet pause () = sleepf 0.01\nlet now () = gettimeofday ()\n",
+      "expected_capabilities": ["time:read:*", "time:sleep:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "local-open-and-module",
+      "source_kind": "implementation",
+      "source": "let connect address =\n  let module U = Unix in\n  let open U in\n  let socket = socket PF_INET SOCK_STREAM 0 in\n  connect socket address\n",
+      "expected_capabilities": ["net:connect:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "shadowed-stdlib-name",
+      "source_kind": "implementation",
+      "source": "let print_endline value = String.length value\nlet size = print_endline \"quiet\"\n",
+      "expected_capabilities": [],
+      "expected_banned": []
+    },
+    {
+      "id": "lexical-shadowing",
+      "source_kind": "implementation",
+      "source": "let apply print_endline = print_endline \"quiet\"\nlet choose = function Some read_line -> read_line | None -> \"none\"\n",
+      "expected_capabilities": [],
+      "expected_banned": []
+    },
+    {
+      "id": "shadowed-canonical-module",
+      "source_kind": "implementation",
+      "source": "module Unix = struct let getenv _ = \"local\" end\nlet value = Unix.getenv \"HOME\"\n",
+      "expected_capabilities": [],
+      "expected_banned": []
+    },
+    {
+      "id": "stdlib-prefix-and-file-flags",
+      "source_kind": "implementation",
+      "source": "let exists path = Stdlib.Sys.file_exists path\nlet open_any path = Unix.openfile path [] 0\n",
+      "expected_capabilities": ["fs:list:*", "fs:read:*", "fs:write:*"],
+      "expected_banned": []
+    },
+    {
+      "id": "process-environment-time",
+      "source_kind": "implementation",
+      "source": "let run () = Sys.command \"tool\"\nlet home () = Sys.getenv_opt \"HOME\"\nlet cpu () = Sys.time ()\nlet stop pid = Unix.kill pid Sys.sigterm\n",
+      "expected_capabilities": ["env:read:*", "proc:exec:*", "proc:signal:*", "time:read:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "standard-streams",
+      "source_kind": "implementation",
+      "source": "let echo () = print_endline (read_line ())\nlet warn text = Printf.eprintf \"%s\" text\n",
+      "expected_capabilities": ["stdin:read:*", "stdout:write:*"] ,
+      "expected_banned": []
+    },
+    {
+      "id": "external-interface",
+      "source_kind": "interface",
+      "source": "external native_hash : bytes -> bytes = \"ca_native_hash\"\n",
+      "expected_capabilities": ["ffi:call:*"] ,
+      "expected_banned": ["external"]
+    },
+    {
+      "id": "external-implementation",
+      "source_kind": "implementation",
+      "source": "external native_hash : bytes -> bytes = \"ca_native_hash\"\n",
+      "expected_capabilities": ["ffi:call:*"],
+      "expected_banned": ["external"]
+    },
+    {
+      "id": "native-loading",
+      "source_kind": "implementation",
+      "source": "let load path = Dynlink.loadfile_private path\n",
+      "expected_capabilities": ["ffi:load:*"] ,
+      "expected_banned": ["Dynlink.loadfile_private"]
+    },
+    {
+      "id": "unsafe-runtime",
+      "source_kind": "implementation",
+      "source": "let decode bytes = Marshal.from_bytes bytes 0\nlet coerce value = Obj.magic value\n",
+      "expected_capabilities": [],
+      "expected_banned": ["Marshal.from_bytes", "Obj.magic"]
+    },
+    {
+      "id": "marshal-closures",
+      "source_kind": "implementation",
+      "source": "let encode value = Marshal.to_string value [Marshal.Closures]\n",
+      "expected_capabilities": [],
+      "expected_banned": ["Marshal.Closures"]
+    },
+    {
+      "id": "remaining-authority-actions",
+      "source_kind": "implementation",
+      "source": "let server socket address = Unix.bind socket address; Unix.listen socket 4\nlet child () = Unix.fork ()\nlet export key value = Unix.putenv key value\nlet wait () = Unix.sleep 1\n",
+      "expected_capabilities": ["env:write:*", "net:listen:*", "proc:fork:*", "time:sleep:*"],
+      "expected_banned": []
+    },
+    {
+      "id": "first-class-process-alias",
+      "source_kind": "implementation",
+      "source": "let run = Sys.command\nlet invoke () = run \"tool\"\n",
+      "expected_capabilities": ["proc:exec:*"],
+      "expected_banned": []
+    },
+    {
+      "id": "higher-order-filesystem-delete",
+      "source_kind": "implementation",
+      "source": "let remove_all paths = List.iter Sys.remove paths\n",
+      "expected_capabilities": ["fs:delete:*"],
+      "expected_banned": []
+    },
+    {
+      "id": "first-class-hard-ban",
+      "source_kind": "implementation",
+      "source": "let cast = Obj.magic\nlet coerce value = cast value\n",
+      "expected_capabilities": [],
+      "expected_banned": ["Obj.magic"]
+    },
+    {
+      "id": "constrained-include",
+      "source_kind": "implementation",
+      "source": "include (Unix : module type of Unix)\nlet invoke () = system \"tool\"\n",
+      "expected_capabilities": ["proc:exec:*"],
+      "expected_banned": []
+    },
+    {
+      "id": "shadowed-marshal-constructor",
+      "source_kind": "implementation",
+      "source": "module Marshal = struct type extern_flags = Closures end\nlet flag = Marshal.Closures\n",
+      "expected_capabilities": [],
+      "expected_banned": []
+    },
+    {
+      "id": "opened-marshal-constructor",
+      "source_kind": "implementation",
+      "source": "open Marshal\nlet flag = Closures\n",
+      "expected_capabilities": [],
+      "expected_banned": ["Marshal.Closures"]
+    },
+    {
+      "id": "filesystem-create-delete",
+      "source_kind": "implementation",
+      "source": "let make path = Unix.mkdir path 0o700\nlet remove path = Sys.remove path\n",
+      "expected_capabilities": ["fs:create:*", "fs:delete:*"],
+      "expected_banned": []
+    }
+  ]
+}

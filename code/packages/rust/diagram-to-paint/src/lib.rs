@@ -33,7 +33,7 @@ use std::collections::HashMap;
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
-    LayoutedTreemapDiagram,
+    LayoutedTreemapDiagram, LayoutedVennDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
@@ -170,6 +170,49 @@ where
 
 fn format_treemap_value(value: f64) -> String {
     if value.fract() == 0.0 { format!("{value:.0}") } else { format!("{value:.2}") }
+}
+
+/// Lower Venn circle geometry into backend-neutral ellipses and glyph runs.
+pub fn diagram_to_paint_venn<S, M, R>(diagram: &LayoutedVennDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
+where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
+    const FILLS: &[&str] = &["#60a5fa", "#f59e0b", "#34d399", "#f472b6", "#a78bfa"];
+    let mut instructions = Vec::new();
+    for (index, circle) in diagram.circles.iter().enumerate() {
+        let fill = circle.style.fill.clone().unwrap_or_else(|| FILLS[index % FILLS.len()].into());
+        instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(), cx: circle.cx, cy: circle.cy, rx: circle.radius, ry: circle.radius,
+            fill: Some(with_opacity(&fill, circle.style.fill_opacity.unwrap_or(0.38))),
+            stroke: Some(circle.style.stroke.clone().unwrap_or_else(|| "#334155".into())),
+            stroke_width: Some(circle.style.stroke_width.unwrap_or(2.0)), stroke_dash: None, stroke_dash_offset: None,
+        }));
+    }
+    let mut text_children = Vec::new();
+    if let Some(title) = &diagram.title {
+        text_children.push(text_node(title, 8.0, 5.0, diagram.width - 16.0, 28.0, options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+    }
+    for label in &diagram.labels {
+        text_children.push(text_node(&label.text, label.x - 70.0, label.y - 12.0, 140.0, 26.0, options.label_font.clone(),
+            label.style.text_color.as_deref().map(css_to_color).unwrap_or(Color { r: 15, g: 23, b: 42, a: 255 })));
+    }
+    let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+        id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
+        width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
+        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
+    });
+    instructions.extend(text_scene.instructions);
+    PaintScene { width: diagram.width, height: diagram.height,
+        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
+        instructions, id: None, metadata: None }
+}
+
+fn with_opacity(color: &str, opacity: f64) -> String {
+    let hex = color.trim_start_matches('#');
+    if hex.len() == 6 {
+        if let (Ok(r), Ok(g), Ok(b)) = (u8::from_str_radix(&hex[0..2], 16), u8::from_str_radix(&hex[2..4], 16), u8::from_str_radix(&hex[4..6], 16)) {
+            return format!("rgba({r},{g},{b},{})", opacity.clamp(0.0, 1.0));
+        }
+    }
+    color.to_string()
 }
 
 /// Lower a layouted Event Modeling diagram into backend-neutral paint instructions.
@@ -4941,6 +4984,23 @@ mod tests {
             scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")),
             Some(&"Allocation treemap".to_string())
         );
+    }
+
+    #[test]
+    fn venn_lowers_to_backend_neutral_ellipses_and_glyphs() {
+        let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedVennDiagram {
+            width: 400.0, height: 300.0, title: Some("Overlap".into()),
+            circles: vec![diagram_ir::LayoutedVennCircle {
+                id: "A".into(), label: "Alpha".into(), cx: 200.0, cy: 160.0, radius: 90.0,
+                style: diagram_ir::VennStyle { fill: Some("#ff0000".into()), fill_opacity: Some(0.5), ..Default::default() },
+            }],
+            labels: vec![diagram_ir::LayoutedVennLabel { text: "Alpha".into(), x: 200.0, y: 160.0, style: Default::default() }],
+        };
+        let scene = diagram_to_paint_venn(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
     }
 
     #[test]
