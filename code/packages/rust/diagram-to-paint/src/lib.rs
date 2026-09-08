@@ -33,13 +33,14 @@ use std::collections::HashMap;
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
-    LayoutedCynefinDiagram, LayoutedIshikawaDiagram, LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
+    LayoutedCynefinDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram,
+    LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
-    GanttTaskTags, SequenceProperty, TextAlign as GeoTextAlign, TreeViewNodeKind,
+    GanttTaskTags, SequenceProperty, SwimlaneEdgeKind, TextAlign as GeoTextAlign, TreeViewNodeKind,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -228,6 +229,224 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         instructions, id: None, metadata: (!metadata.is_empty()).then_some(metadata) }
 }
 
+/// Lower Swimlane ownership bands, process nodes, and handoffs to portable paint.
+pub fn diagram_to_paint_swimlane<S, M, R>(
+    diagram: &LayoutedSwimlaneDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    let mut instructions = Vec::new();
+    let mut text_children = Vec::new();
+    for (index, lane) in diagram.lanes.iter().enumerate() {
+        let fill = if index % 2 == 0 { "#f8fafc" } else { "#eef6f8" };
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: lane.x,
+            y: lane.y,
+            width: lane.width,
+            height: lane.height,
+            fill: Some(fill.into()),
+            stroke: Some("#78909c".into()),
+            stroke_width: Some(1.5),
+            corner_radius: Some(8.0),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+        text_children.push(text_node(
+            &lane.label,
+            lane.x + 8.0,
+            lane.y + 7.0,
+            lane.width - 16.0,
+            26.0,
+            options.title_font.clone(),
+            Color {
+                r: 38,
+                g: 50,
+                b: 56,
+                a: 255,
+            },
+        ));
+    }
+    for edge in &diagram.edges {
+        let mut path = line_path(
+            &[edge.from.clone(), edge.to.clone()],
+            "#455a64",
+            if edge.kind == SwimlaneEdgeKind::Thick {
+                3.5
+            } else {
+                1.8
+            },
+        );
+        if edge.kind == SwimlaneEdgeKind::Dotted {
+            path.stroke_dash = Some(vec![5.0, 5.0]);
+        }
+        instructions.push(PaintInstruction::Path(path));
+        if edge.kind != SwimlaneEdgeKind::Undirected {
+            instructions.push(PaintInstruction::Path(simple_arrowhead(
+                &edge.from, &edge.to, "#455a64",
+            )));
+        }
+        if let Some(label) = &edge.label {
+            text_children.push(text_node(
+                label,
+                (edge.from.x + edge.to.x) / 2.0 - 52.0,
+                (edge.from.y + edge.to.y) / 2.0 - 25.0,
+                104.0,
+                22.0,
+                options.label_font.clone(),
+                Color {
+                    r: 55,
+                    g: 71,
+                    b: 79,
+                    a: 255,
+                },
+            ));
+        }
+    }
+    for node in &diagram.nodes {
+        let fill = "#ffffff".to_string();
+        let stroke = "#1565c0".to_string();
+        let shape = match node.shape {
+            DiagramShape::Ellipse => PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: node.x + node.width / 2.0,
+                cy: node.y + node.height / 2.0,
+                rx: node.width / 2.0,
+                ry: node.height / 2.0,
+                fill: Some(fill),
+                stroke: Some(stroke),
+                stroke_width: Some(2.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::Diamond => {
+                let cx = node.x + node.width / 2.0;
+                let cy = node.y + node.height / 2.0;
+                PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: cx, y: node.y },
+                        PathCommand::LineTo {
+                            x: node.x + node.width,
+                            y: cy,
+                        },
+                        PathCommand::LineTo {
+                            x: cx,
+                            y: node.y + node.height,
+                        },
+                        PathCommand::LineTo { x: node.x, y: cy },
+                        PathCommand::Close,
+                    ],
+                    fill: Some(fill),
+                    fill_rule: None,
+                    stroke: Some(stroke),
+                    stroke_width: Some(2.0),
+                    stroke_cap: None,
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                })
+            }
+            _ => PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: node.x,
+                y: node.y,
+                width: node.width,
+                height: node.height,
+                fill: Some(fill),
+                stroke: Some(stroke),
+                stroke_width: Some(2.0),
+                corner_radius: Some(if node.shape == DiagramShape::Rect {
+                    2.0
+                } else {
+                    18.0
+                }),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+        };
+        instructions.push(shape);
+        text_children.push(text_node(
+            &node.label,
+            node.x + 8.0,
+            node.y + 10.0,
+            node.width - 16.0,
+            node.height - 16.0,
+            options.label_font.clone(),
+            Color {
+                r: 13,
+                g: 71,
+                b: 161,
+                a: 255,
+            },
+        ));
+    }
+    if let Some(title) = &diagram.title {
+        text_children.push(text_node(
+            title,
+            10.0,
+            5.0,
+            diagram.width - 20.0,
+            30.0,
+            options.title_font.clone(),
+            Color {
+                r: 15,
+                g: 23,
+                b: 42,
+                a: 255,
+            },
+        ));
+    }
+    let text_scene = layout_to_paint(
+        &PositionedNode {
+            x: 0.0,
+            y: 0.0,
+            width: diagram.width,
+            height: diagram.height,
+            id: None,
+            content: None,
+            children: text_children,
+            ext: HashMap::new(),
+        },
+        &LayoutToPaintOptions {
+            width: diagram.width,
+            height: diagram.height,
+            background: Color {
+                r: 0,
+                g: 0,
+                b: 0,
+                a: 0,
+            },
+            device_pixel_ratio: 1.0,
+            shaper: options.shaper,
+            metrics: options.metrics,
+            resolver: options.resolver,
+        },
+    );
+    instructions.extend(text_scene.instructions);
+    let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title {
+        metadata.insert("accessibility.title".into(), title.clone());
+    }
+    if let Some(description) = &diagram.accessibility_description {
+        metadata.insert("accessibility.description".into(), description.clone());
+    }
+    PaintScene {
+        width: diagram.width,
+        height: diagram.height,
+        background: format!(
+            "rgb({},{},{})",
+            options.background.r, options.background.g, options.background.b
+        ),
+        instructions,
+        id: None,
+        metadata: (!metadata.is_empty()).then_some(metadata),
+    }
+}
 /// Lower Venn circle geometry into backend-neutral ellipses and glyph runs.
 pub fn diagram_to_paint_venn<S, M, R>(diagram: &LayoutedVennDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {

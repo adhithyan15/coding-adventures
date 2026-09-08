@@ -1,0 +1,14 @@
+# @version 1
+# Mermaid 11.16.1 Swimlane line grammar.
+case_sensitive: false
+skip:
+  COMMENT = /[ \t]*%%[^\r\n]*/
+NEWLINE = /\r?\n/
+HEADER = /swimlane-beta(?:[ \t]+(?:TB|TD|BT|LR|RL))?[ \t]*/
+TITLE_LINE = /[ \t]*title[ \t]+[^\r\n]+/
+ACC_TITLE_LINE = /[ \t]*accTitle:[ \t]*[^\r\n]+/
+ACC_DESCR_LINE = /[ \t]*accDescr:[ \t]*[^\r\n]+/
+SUBGRAPH_LINE = /[ \t]*subgraph[ \t]+[^\r\n]+/
+END_LINE = /[ \t]*end[ \t]*/
+EDGE_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_]*(?:\(\([^\r\n]*\)\)|\(\[[^\r\n]*\]\)|\([^\r\n]*\)|\[[^\r\n]*\]|\{[^\r\n]*\})?(?:[ \t]*(?:-->|---|-.->|==>)(?:[ \t]*\|[^|\r\n]+\|)?[ \t]*[A-Za-z_][A-Za-z0-9_]*(?:\(\([^\r\n]*\)\)|\(\[[^\r\n]*\]\)|\([^\r\n]*\)|\[[^\r\n]*\]|\{[^\r\n]*\})?)+[ \t]*/
+NODE_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_]*(?:\(\([^\r\n]*\)\)|\(\[[^\r\n]*\]\)|\([^\r\n]*\)|\[[^\r\n]*\]|\{[^\r\n]*\})?[ \t]*/

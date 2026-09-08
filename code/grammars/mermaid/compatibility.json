@@ -212,9 +212,9 @@
     {
       "id": "swimlane",
       "headers": ["swimlane-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "swimlane",
-      "smoke_source": "swimlane-beta\nlane A\n  Task"
+      "smoke_source": "swimlane-beta\nsubgraph A\n  task[Task]\nend"
     },
     {
       "id": "railroad",

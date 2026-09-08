@@ -588,3 +588,16 @@ the target backend.
 Full compatibility is achieved when every manifest family is Level 5 for the
 pinned Mermaid release and unsupported syntax fails explicitly rather than
 silently degrading.
+
+## Swimlane Partial Compatibility
+
+The native Mermaid 11.16.1 Swimlane slice recognizes `swimlane-beta` with all
+five directions, top-level `subgraph` lanes, common process-node shapes,
+directed/undirected/dotted/thick chained links, link labels, titles, and
+accessibility metadata. It lowers through dedicated ownership IR and stable
+lane geometry before producing backend-neutral paint instructions.
+
+This is intentionally partial. Nested subgraphs, the complete Flowchart shape
+and link catalog, classes and inline styles, clicks, configuration-driven lane
+ordering and line hops, and exact upstream routing or typography remain
+unsupported rather than being counted as compatible.
