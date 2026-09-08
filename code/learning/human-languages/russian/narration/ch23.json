@@ -1,0 +1,626 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 23,
+  "title": "One to Five, and an Answer to Skolko",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:44cebb04602cae5a",
+  "lessons": [
+    {
+      "id": "RU-C23-dva",
+      "sequence": 1150,
+      "title": "два (dva) — two, and the question this book could already ask",
+      "headword": "два",
+      "romanization": "dva",
+      "gloss": "two — the second number in the book, twenty-two chapters after the first",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30bff7057db4be0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask сколько — how many. Then say один and the root it goes back to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "два — dva — two."
+            },
+            {
+              "kind": "speech",
+              "text": "Twenty-two chapters in, this book can ask сколько? and could not understand any answer to it. один is in the corpus, but it arrived as half of the один … другой pattern — one … the other — which is a joining word wearing a number's clothes. два (dva) is the first number this track teaches as a number."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — the same word as English two",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "два (dva) continues Indo-European dwóh₁, \"two.\" English two, Latin duo, Greek dýo and Sanskrit dvá are the same word, and Russian's form is among the least worn of them."
+            },
+            {
+              "kind": "speech",
+              "text": "Say dva and two one after the other. That is not something to learn; it is something to recognise, and it will be true of nearly every number in this slice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "два (dva) — two",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **два** — two]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "два (dva) from dwóh₁ becomes English two, Latin duo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **два** ← \\**dwóh₁* → English **two**, Latin **duo**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "один, два (dva)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **один, два**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: два (dva); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C23-dva-answer",
+              "prompt": "Someone asks skolko. Answer: two.",
+              "assesses": [
+                "RU-LEX-DVA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "два",
+                "dva",
+                "два — dva"
+              ],
+              "feedback": {
+                "correct": "The first answer this book can give to its own question.",
+                "incorrect": "два — dva."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C23-tri",
+      "sequence": 1160,
+      "title": "три (tri) — three",
+      "headword": "три",
+      "romanization": "tri",
+      "gloss": "three — three letters, and three of them shared with English",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d84e736f50b7d4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say два (dva) and its English cousin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "три — tri — three."
+            },
+            {
+              "kind": "speech",
+              "text": "Three letters, and every one of them is a Cyrillic shape this book taught long ago. Say it and read it at the same time: т-р-и."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — three, tres, tri",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "три continues Indo-European tréyes, \"three.\" English three, Latin trēs, Greek treîs and Sanskrit tri are the same word."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the plainest of the whole set. Nothing has shifted: the t, the r and the vowel are all where they were, which is why три (tri) and three sound like each other and сто and hundred, later in this slice, will not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "три (tri) — three",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **три** — three]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "три (tri) from tréyes becomes English three, Latin trēs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **три** ← \\**tréyes* → English **three**, Latin **trēs**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "один, два (dva), три (tri)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **один, два, три**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: три (tri); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C23-tri-count",
+              "prompt": "Count aloud from one to three in Russian.",
+              "assesses": [
+                "RU-LEX-TRI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "один два три",
+                "odin dva tri",
+                "один, два, три",
+                "odin, dva, tri"
+              ],
+              "feedback": {
+                "correct": "Three, and two of them are the English words.",
+                "incorrect": "один, два, три."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C23-chetyre",
+      "sequence": 1170,
+      "title": "четыре (chetýre) — four, and one consonant's three fates",
+      "headword": "четыре",
+      "romanization": "chetýre",
+      "gloss": "four — where a kw became a ch, as it did in every Slavic language",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53e820464cd4a63c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say три (tri) and its Latin cousin, then два (dva)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "четыре — chetýre — four."
+            },
+            {
+              "kind": "speech",
+              "text": "Three syllables, stressed on the second, and the vowel in that stressed syllable is ы — the sound this book warned has no English equivalent. Hold it there and the word falls into place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — quattuor, four, chetyre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "четыре (chetýre) continues Indo-European kʷetwóres, \"four.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The opening kʷ is the interesting part, because the branches split three ways over it. Latin kept it whole: quattuor. English lost the lip-rounding and softened the k to f: four. Slavic pushed it forward to a ch, which is what you are saying."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "четыре (chetýre) — four, stress on the ы",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **четыре** — four, stress on the **ы**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "четыре (chetýre) from kʷetwóres becomes Latin quattuor, English four",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **четыре** ← \\**kʷetwóres* → Latin **quattuor**, English **four**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "два (dva), три (tri), четыре (chetýre)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **два, три, четыре**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: четыре (chetýre); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C23-chetyre-kw",
+              "prompt": "Which language kept the original kw of four whole?",
+              "assesses": [
+                "RU-ETYMON-CHETYRE-KWETWORES"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "latin",
+                "latin, in quattuor",
+                "quattuor"
+              ],
+              "feedback": {
+                "correct": "Latin quattuor. English lost it; Slavic turned it into ch.",
+                "incorrect": "Latin — quattuor."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C23-pyat",
+      "sequence": 1180,
+      "title": "пять (pyat) — five, and a cousin English kept whole",
+      "headword": "пять",
+      "romanization": "pyat",
+      "gloss": "five — the number inside a word English borrowed whole",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcd1e0f07f106f2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say четыре (chetýre) and what three branches did with its first sound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пять — pyat — five."
+            },
+            {
+              "kind": "speech",
+              "text": "One syllable, ending in the soft sign that this book has been putting on the ends of words since its first chapters. It softens the т and is not a sound of its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — pentagon",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пять (pyat) continues Indo-European pénkʷe, \"five.\" Greek pénte, Latin quīnque and English five are the same word."
+            },
+            {
+              "kind": "speech",
+              "text": "The Greek form is the one an English speaker already owns: pentagon, pentathlon, Pentecost — all of them carry five in a shape much closer to пять (pyat) than English five is. The number was in the reader's vocabulary before the lesson was."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "пять (pyat) — five",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **пять** — five]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "пять (pyat) from pénkʷe becomes Greek pénte, English five",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **пять** ← \\**pénkʷe* → Greek **pénte**, English **five**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "один, два (dva), три (tri), четыре (chetýre), пять (pyat) — the whole first five",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **один, два, три, четыре, пять** — the whole first five]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: пять (pyat); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C23-pyat-count",
+              "prompt": "Count aloud from one to five in Russian.",
+              "assesses": [
+                "RU-LEX-PYAT-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "один два три четыре пять",
+                "odin dva tri chetyre pyat",
+                "один, два, три, четыре, пять",
+                "odin, dva, tri, chetyre, pyat"
+              ],
+              "feedback": {
+                "correct": "Five numbers, and five English cousins.",
+                "incorrect": "один, два, три, четыре, пять."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C23-practice",
+      "sequence": 1190,
+      "title": "Payoff — one to five, and an answer to сколько",
+      "headword": "один два три четыре пять",
+      "romanization": "odin dva tri chetýre pyat",
+      "gloss": "payoff — the first five, shuffled, and the question they finally answer",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37229f62c69f6374",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask сколько, say пять (pyat), then say what один goes back to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear each of the five named singly and out of order, and say what it is."
+            },
+            {
+              "kind": "speech",
+              "text": "Count backwards from пять (pyat) to один."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the five printed shuffled — пять (pyat), один, четыре (chetýre), три (tri), два (dva) — and say each."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all five from dictation. No new Cyrillic letter appears in any of them."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear сколько? and answer it with each of the five in turn."
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the English cousin of each: one, two, three, four, five. All five have one. That is not luck — Russian's numerals are among the least worn in the family, and this book's reader already owned most of them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C23-practice-back",
+              "prompt": "Count backwards from five to one in Russian.",
+              "assesses": [
+                "RU-PERFORMANCE-COUNT-FIVE"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "пять четыре три два один",
+                "pyat chetyre tri dva odin",
+                "пять, четыре, три, два, один",
+                "pyat, chetyre, tri, dva, odin"
+              ],
+              "feedback": {
+                "correct": "Retrieved out of sequence, which is how an answer arrives.",
+                "incorrect": "пять, четыре, три, два, один."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

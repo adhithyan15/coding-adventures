@@ -1,0 +1,20 @@
+{
+  "chapter": 25,
+  "title": "Twenty, a Hundred, and the Number That Named a Family",
+  "label": "ch:ru-round-amounts",
+  "canDo": "I can say twenty and a hundred, take twenty apart into its two pieces, name which side of the centum/satem split Russian is on, and say what a Russian number still does to the noun after it that I cannot yet produce.",
+  "payoff": {
+    "lesson": "RU-C25-practice",
+    "kind": "task",
+    "summary": "The tens taken apart into numbers already known, the hundred that gives the satem branch its name, and an explicit account of the case government the numerals impose and the chapter that owes it.",
+    "assesses": [
+      "RU-LEX-DVADTSAT-01",
+      "RU-GRAMMAR-TSAT-TENS-01",
+      "RU-LEX-STO-01",
+      "RU-ETYMON-STO-KMTOM",
+      "RU-CULTURE-CENTUM-SATEM-01",
+      "RU-PERFORMANCE-COUNT-TWENTY",
+      "RU-GRAMMAR-NUMERAL-CASE-DEBT-01"
+    ]
+  }
+}

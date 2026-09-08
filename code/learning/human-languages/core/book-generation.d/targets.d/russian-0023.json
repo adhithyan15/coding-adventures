@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 23,
+  "output": "russian/book/chapters/ch23-count-five.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

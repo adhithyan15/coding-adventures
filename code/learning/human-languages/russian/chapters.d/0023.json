@@ -1,0 +1,22 @@
+{
+  "chapter": 23,
+  "title": "One to Five, and an Answer to Skolko",
+  "label": "ch:ru-count-five",
+  "canDo": "I can say, hear, read and write the Russian numbers one to five, answer skolko with each of them, and name the English cousin of each.",
+  "payoff": {
+    "lesson": "RU-C23-practice",
+    "kind": "task",
+    "summary": "Five numbers, five Indo-European roots and five everyday English cousins -- the first answers this book can give to a question it has been able to ask since the last chapter.",
+    "assesses": [
+      "RU-LEX-DVA-01",
+      "RU-ETYMON-DVA-DWOH",
+      "RU-LEX-TRI-01",
+      "RU-ETYMON-TRI-TREYES",
+      "RU-LEX-CHETYRE-01",
+      "RU-ETYMON-CHETYRE-KWETWORES",
+      "RU-LEX-PYAT-01",
+      "RU-ETYMON-PYAT-PENKWE",
+      "RU-PERFORMANCE-COUNT-FIVE"
+    ]
+  }
+}

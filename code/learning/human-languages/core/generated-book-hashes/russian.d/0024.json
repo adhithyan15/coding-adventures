@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:4a3d922b5a635121",
+  "lessonIds": [
+    "RU-C24-shest",
+    "RU-C24-sem",
+    "RU-C24-vosem",
+    "RU-C24-devyat",
+    "RU-C24-desyat",
+    "RU-C24-practice"
+  ],
+  "tex": "russian/book/chapters/ch24-count-ten.tex"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "RU-EXT-033-ORDINALS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can build the ordinal of any number I can count to, and write one as a figure with its ending.",
+  "prerequisites": [
+    "RU-EXT-032-ROUND-AMOUNTS"
+  ],
+  "lessons": [
+    "RU-C26-pervyy",
+    "RU-C26-vtoroy-tretiy",
+    "RU-W26-ordinal-hyphen",
+    "RU-C26-practice",
+    "RU-R26-close"
+  ]
+}

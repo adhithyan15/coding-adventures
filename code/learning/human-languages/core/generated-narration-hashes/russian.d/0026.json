@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:b546a2e14a408405",
+  "lessonIds": [
+    "RU-C26-pervyy",
+    "RU-C26-vtoroy-tretiy",
+    "RU-W26-ordinal-hyphen",
+    "RU-C26-practice",
+    "RU-R26-close"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "russian/narration/ch26.txt",
+  "json": "russian/narration/ch26.json",
+  "textHash": "fnv1a64:14ff105970d1c57d",
+  "jsonHash": "fnv1a64:21f6dd9b9628925a",
+  "findings": []
+}

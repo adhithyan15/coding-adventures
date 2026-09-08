@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C23-tri",
+    "language": "russian",
+    "chapter": 23,
+    "sequence": 1160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d84e736f50b7d4e"
+  },
+  "findings": []
+}

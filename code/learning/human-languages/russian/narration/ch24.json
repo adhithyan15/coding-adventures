@@ -1,0 +1,753 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 24,
+  "title": "Six to Ten, and the Pairs That Shaped Each Other",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:03d6dc6b127541e0",
+  "lessons": [
+    {
+      "id": "RU-C24-shest",
+      "sequence": 1200,
+      "title": "шесть (shest) — six",
+      "headword": "шесть",
+      "romanization": "shest",
+      "gloss": "six — and the first sign of the split that names half the family",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57724bc8dce0ca61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to five, then five to one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "шесть — shest — six."
+            },
+            {
+              "kind": "speech",
+              "text": "One syllable, ending like пять in the soft sign."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — six, sex, shest",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "шесть (shest) continues Indo-European swéḱs, \"six.\" English six, Latin sex and Greek héx are the same word."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what survived: the s. Hold on to it, because the very last number in this slice is where that s turns into the fact that names half the Indo-European family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "шесть (shest) — six",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **шесть** — six]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "шесть (shest) from swéḱs becomes English six, Latin sex",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **шесть** ← \\**swéḱs* → English **six**, Latin **sex**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "четыре, пять, шесть (shest)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **четыре, пять, шесть**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: шесть (shest); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C24-shest-cousin",
+              "prompt": "Say six in Russian, and its English cousin.",
+              "assesses": [
+                "RU-LEX-SHEST-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "shest — six",
+                "шесть — six",
+                "shest, six",
+                "шесть six"
+              ],
+              "feedback": {
+                "correct": "The s is the piece to keep hold of.",
+                "incorrect": "шесть — shest, and English six."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C24-sem",
+      "sequence": 1210,
+      "title": "семь (sem) — seven",
+      "headword": "семь",
+      "romanization": "sem",
+      "gloss": "seven — the s that Persian turned into an h, kept",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c86f91b24d666ead",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say шесть (shest) and its Latin cousin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "семь — sem — seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — septem, seven, sem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "семь (sem) continues Indo-European septm, \"seven.\" Latin septem, English seven, Greek heptá and Sanskrit saptá are the same word."
+            },
+            {
+              "kind": "speech",
+              "text": "The p has gone and the s has stayed. That combination is worth marking, because the Iranian branch did the opposite: Persian's seven is haft, from the same word, with the s turned into an h. Two branches, one word, and each kept the piece the other lost."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "семь (sem) — seven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **семь** — seven]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "семь (sem) from septm becomes Latin septem, English seven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **семь** ← \\**septm* → Latin **septem**, English **seven**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "пять, шесть (shest), семь (sem)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **пять, шесть, семь**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: семь (sem); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C24-sem-septem",
+              "prompt": "Which sound has Russian sem lost that Latin septem still has?",
+              "assesses": [
+                "RU-ETYMON-SEM-SEPTM"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the p",
+                "p",
+                "the p sound"
+              ],
+              "feedback": {
+                "correct": "The p went and the s stayed.",
+                "incorrect": "The p."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C24-vosem",
+      "sequence": 1220,
+      "title": "восемь (vósem) — eight, and the seven inside it",
+      "headword": "восемь",
+      "romanization": "vósem",
+      "gloss": "eight — and the seven standing inside it",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d595287564f3dd5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say семь (sem), and which sound it lost that Latin kept."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "восемь — vósem — eight."
+            },
+            {
+              "kind": "speech",
+              "text": "Say семь and восемь (vósem) one after the other. Seven is audible at the end of eight, and the unstressed о at the front reduces towards a — the reduction this book named long ago."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — a neighbour's ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "восемь (vósem) continues Indo-European oḱtṓw, \"eight\" — Latin octō, Greek oktṓ, English eight."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no s and no m anywhere in that history, so neither is inherited. They came from семь (sem), standing next to it. Seven and eight are said together more often than almost any other pair of words in any language, and the pair pulls each other into shape: Persian's hasht borrowed its h- from haft for exactly the same reason, in a different family, with no contact between them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "восемь (vósem) — eight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **восемь** — eight]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "восемь (vósem) from oḱtṓw becomes Latin octō, English eight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **восемь** ← \\**oḱtṓw* → Latin **octō**, English **eight**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "шесть (shest), семь, восемь (vósem)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **шесть, семь, восемь**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: восемь (vósem); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C24-vosem-neighbour",
+              "prompt": "Where did the -sem of vosem come from, if not from oktow?",
+              "assesses": [
+                "RU-ETYMON-VOSEM-OKTOW"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "from sem, seven",
+                "from семь",
+                "from seven next to it",
+                "семь"
+              ],
+              "feedback": {
+                "correct": "Seven pulled eight into line.",
+                "incorrect": "From семь, seven, standing next to it."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C24-devyat",
+      "sequence": 1230,
+      "title": "девять (dévyat) — nine",
+      "headword": "девять",
+      "romanization": "dévyat",
+      "gloss": "nine — and the ten it is about to rhyme with",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2776a836582abd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say восемь (vósem), and where its ending came from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "девять — dévyat — nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — novem, nine, devyat",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "девять (dévyat) continues Indo-European h1newn, \"nine.\" Latin novem, English nine and Greek ennéa are the same word; the n at the front became a d in Slavic."
+            },
+            {
+              "kind": "speech",
+              "text": "That change is not an accident either, and the next lesson is the reason: ten begins with a d in every branch, and nine stands directly in front of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "девять (dévyat) — nine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **девять** — nine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "девять (dévyat) from h1newn becomes Latin novem, English nine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **девять** ← \\**h1newn* → Latin **novem**, English **nine**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "семь, восемь (vósem), девять (dévyat)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **семь, восемь, девять**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: девять (dévyat); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C24-devyat-d",
+              "prompt": "Latin has novem and Russian has devyat. Which sound changed at the front?",
+              "assesses": [
+                "RU-ETYMON-DEVYAT-HNEWN"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "n became d",
+                "the n became a d",
+                "n > d",
+                "n to d"
+              ],
+              "feedback": {
+                "correct": "And the next lesson says why.",
+                "incorrect": "The n became a d."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C24-desyat",
+      "sequence": 1240,
+      "title": "десять (désyat) — ten, and the letter nine borrowed",
+      "headword": "десять",
+      "romanization": "désyat",
+      "gloss": "ten — the word behind decimal, and the one nine copied",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73cf062faed03256",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say девять (dévyat) and which sound changed at its front."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "десять — désyat — ten."
+            },
+            {
+              "kind": "speech",
+              "text": "Say девять (dévyat) and десять (désyat) back to back. They differ in one consonant in the middle and nothing else, which makes them the pair this whole run is likeliest to confuse — so drill them together rather than in order."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — decem, decimal, ten",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "десять (désyat) continues Indo-European dekm, \"ten.\" Latin decem — and through it decimal, December, decade — English ten and Greek déka are the same word."
+            },
+            {
+              "kind": "speech",
+              "text": "The d here is the original one. девять (dévyat) copied it: nine stands in front of ten in every count anybody has ever said aloud, and it took its neighbour's first consonant, exactly as восемь (vósem) took its ending from семь two lessons ago. Two of the last four numbers in this chapter were shaped by the number standing beside them, which is what counting aloud does to words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "десять (désyat) — ten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **десять** — ten]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "десять (désyat) from dekm becomes Latin decem, English ten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **десять** ← \\**dekm* → Latin **decem**, English **ten**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "PAIR",
+              "instruction": "девять (dévyat) and десять (désyat), one consonant apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU PAIR: **девять** and **десять**, one consonant apart]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: десять (désyat); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C24-desyat-pair",
+              "prompt": "Say nine and ten one after the other.",
+              "assesses": [
+                "RU-LEX-DESYAT-01",
+                "RU-LEX-DEVYAT-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "девять десять",
+                "devyat desyat",
+                "девять, десять",
+                "devyat, desyat"
+              ],
+              "feedback": {
+                "correct": "One consonant apart, and the d was ten's first.",
+                "incorrect": "девять, десять."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C24-practice",
+      "sequence": 1250,
+      "title": "Payoff — one to ten",
+      "headword": "шесть семь восемь девять десять",
+      "romanization": "shest sem vósem dévyat désyat",
+      "gloss": "payoff — one to ten, shuffled, and the pairs that shaped each other",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e3a53ff2db1c03b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to five, then ask сколько."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Count aloud one to ten without a model, then ten to one."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear all ten named singly and out of order, and say each."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the ten printed shuffled and say each."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all ten from dictation. Not one new Cyrillic letter appears in any of them — this whole slice adds no sign to the alphabet."
+            },
+            {
+              "kind": "speech",
+              "text": "Drill the two pairs that shaped each other: семь / восемь (vósem), where eight took seven's ending, and девять (dévyat) / десять (désyat), where nine took ten's d."
+            },
+            {
+              "kind": "speech",
+              "text": "Answer сколько? ten times, once with each number."
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the English cousin of each. All ten have one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C24-practice-ten",
+              "prompt": "Count aloud from one to ten in Russian.",
+              "assesses": [
+                "RU-PERFORMANCE-COUNT-TEN"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "один два три четыре пять шесть семь восемь девять десять",
+                "odin dva tri chetyre pyat shest sem vosem devyat desyat",
+                "один, два, три, четыре, пять, шесть, семь, восемь, девять, десять"
+              ],
+              "feedback": {
+                "correct": "Ten numbers, and the book can answer its own question at last.",
+                "incorrect": "Run it slowly, and drill семь/восемь and девять/десять as pairs."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
