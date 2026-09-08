@@ -13,6 +13,10 @@
  (deps ../bin/main.bc)
  (libraries alcotest)
  (action
-  (setenv CAPABILITY_TEST_OCAMLRUN %{bin:ocamlrun}
-   (setenv CAPABILITY_TEST_CLI %{dep:../bin/main.bc}
+  (setenv
+   CAPABILITY_TEST_OCAMLRUN
+   %{bin:ocamlrun}
+   (setenv
+    CAPABILITY_TEST_CLI
+    %{dep:../bin/main.bc}
     (run %{test})))))

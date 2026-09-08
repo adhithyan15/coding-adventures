@@ -23,11 +23,11 @@ let fixture_root () =
 let sorted strings = List.sort_uniq String.compare strings
 
 let contains_substring text needle =
-  let text_length = String.length text and needle_length = String.length needle in
+  let text_length = String.length text
+  and needle_length = String.length needle in
   let rec search index =
     index + needle_length <= text_length
-    &&
-    (String.sub text index needle_length = needle || search (index + 1))
+    && (String.sub text index needle_length = needle || search (index + 1))
   in
   needle_length = 0 || search 0
 
@@ -212,35 +212,119 @@ let test_manifest_schema_boundaries () =
   let capability fields = "[{" ^ fields ^ "}]" in
   [
     ("root array", "[]");
-    ("missing version", {|{"package":"ocaml/example","capabilities":[],"justification":"Long enough explanation."}|});
-    ("non-string schema", {|{"$schema":1,"version":1,"package":"ocaml/example","capabilities":[],"justification":"Long enough explanation."}|});
-    ("non-string package", {|{"version":1,"package":7,"capabilities":[],"justification":"Long enough explanation."}|});
-    ("capabilities object", {|{"version":1,"package":"ocaml/example","capabilities":{},"justification":"Long enough explanation."}|});
+    ( "missing version",
+      {|{"package":"ocaml/example","capabilities":[],"justification":"Long enough explanation."}|}
+    );
+    ( "non-string schema",
+      {|{"$schema":1,"version":1,"package":"ocaml/example","capabilities":[],"justification":"Long enough explanation."}|}
+    );
+    ( "non-string package",
+      {|{"version":1,"package":7,"capabilities":[],"justification":"Long enough explanation."}|}
+    );
+    ( "capabilities object",
+      {|{"version":1,"package":"ocaml/example","capabilities":{},"justification":"Long enough explanation."}|}
+    );
     ("capability scalar", manifest "[1]" "");
-    ("missing category", manifest (capability {|"action":"read","target":"*","justification":"Long enough explanation."|}) "");
-    ("category type", manifest (capability {|"category":1,"action":"read","target":"*","justification":"Long enough explanation."|}) "");
-    ("missing action", manifest (capability {|"category":"fs","target":"*","justification":"Long enough explanation."|}) "");
-    ("action type", manifest (capability {|"category":"fs","action":1,"target":"*","justification":"Long enough explanation."|}) "");
-    ("missing target", manifest (capability {|"category":"fs","action":"read","justification":"Long enough explanation."|}) "");
-    ("empty target", manifest (capability {|"category":"fs","action":"read","target":" ","justification":"Long enough explanation."|}) "");
-    ("target type", manifest (capability {|"category":"fs","action":"read","target":1,"justification":"Long enough explanation."|}) "");
-    ("missing capability justification", manifest (capability {|"category":"fs","action":"read","target":"*"|}) "");
-    ("capability justification type", manifest (capability {|"category":"fs","action":"read","target":"*","justification":1|}) "");
-    ("short capability justification", manifest (capability {|"category":"fs","action":"read","target":"*","justification":"short"|}) "");
-    ("unknown capability field", manifest (capability {|"category":"fs","action":"read","target":"*","justification":"Long enough explanation.","extra":true|}) "");
-    ("duplicate capability field", manifest (capability {|"category":"fs","category":"fs","action":"read","target":"*","justification":"Long enough explanation."|}) "");
+    ( "missing category",
+      manifest
+        (capability
+           {|"action":"read","target":"*","justification":"Long enough explanation."|})
+        "" );
+    ( "category type",
+      manifest
+        (capability
+           {|"category":1,"action":"read","target":"*","justification":"Long enough explanation."|})
+        "" );
+    ( "missing action",
+      manifest
+        (capability
+           {|"category":"fs","target":"*","justification":"Long enough explanation."|})
+        "" );
+    ( "action type",
+      manifest
+        (capability
+           {|"category":"fs","action":1,"target":"*","justification":"Long enough explanation."|})
+        "" );
+    ( "missing target",
+      manifest
+        (capability
+           {|"category":"fs","action":"read","justification":"Long enough explanation."|})
+        "" );
+    ( "empty target",
+      manifest
+        (capability
+           {|"category":"fs","action":"read","target":" ","justification":"Long enough explanation."|})
+        "" );
+    ( "target type",
+      manifest
+        (capability
+           {|"category":"fs","action":"read","target":1,"justification":"Long enough explanation."|})
+        "" );
+    ( "missing capability justification",
+      manifest (capability {|"category":"fs","action":"read","target":"*"|}) ""
+    );
+    ( "capability justification type",
+      manifest
+        (capability
+           {|"category":"fs","action":"read","target":"*","justification":1|})
+        "" );
+    ( "short capability justification",
+      manifest
+        (capability
+           {|"category":"fs","action":"read","target":"*","justification":"short"|})
+        "" );
+    ( "unknown capability field",
+      manifest
+        (capability
+           {|"category":"fs","action":"read","target":"*","justification":"Long enough explanation.","extra":true|})
+        "" );
+    ( "duplicate capability field",
+      manifest
+        (capability
+           {|"category":"fs","category":"fs","action":"read","target":"*","justification":"Long enough explanation."|})
+        "" );
     ("exceptions object", manifest "[]" {|,"banned_construct_exceptions":{}|});
     ("exception scalar", manifest "[]" {|,"banned_construct_exceptions":[1]|});
-    ("missing exception construct", manifest "[]" {|,"banned_construct_exceptions":[{"language":"ocaml","justification":"Long enough explanation."}]|});
-    ("empty exception construct", manifest "[]" {|,"banned_construct_exceptions":[{"construct":" ","language":"ocaml","justification":"Long enough explanation."}]|});
-    ("missing exception language", manifest "[]" {|,"banned_construct_exceptions":[{"construct":"external","justification":"Long enough explanation."}]|});
-    ("exception language type", manifest "[]" {|,"banned_construct_exceptions":[{"construct":"external","language":1,"justification":"Long enough explanation."}]|});
-    ("missing exception justification", manifest "[]" {|,"banned_construct_exceptions":[{"construct":"external","language":"ocaml"}]|});
-    ("exception justification type", manifest "[]" {|,"banned_construct_exceptions":[{"construct":"external","language":"ocaml","justification":1}]|});
-    ("short exception justification", manifest "[]" {|,"banned_construct_exceptions":[{"construct":"external","language":"ocaml","justification":"short"}]|});
-    ("unknown exception field", manifest "[]" {|,"banned_construct_exceptions":[{"construct":"external","language":"ocaml","justification":"Long enough explanation.","extra":true}]|});
-    ("duplicate exception field", manifest "[]" {|,"banned_construct_exceptions":[{"construct":"external","construct":"external","language":"ocaml","justification":"Long enough explanation."}]|});
-    ("duplicate exception", manifest "[]" {|,"banned_construct_exceptions":[{"construct":"external","language":"ocaml","justification":"Long enough explanation."},{"construct":"external","language":"ocaml","justification":"Another long enough explanation."}]|});
+    ( "missing exception construct",
+      manifest "[]"
+        {|,"banned_construct_exceptions":[{"language":"ocaml","justification":"Long enough explanation."}]|}
+    );
+    ( "empty exception construct",
+      manifest "[]"
+        {|,"banned_construct_exceptions":[{"construct":" ","language":"ocaml","justification":"Long enough explanation."}]|}
+    );
+    ( "missing exception language",
+      manifest "[]"
+        {|,"banned_construct_exceptions":[{"construct":"external","justification":"Long enough explanation."}]|}
+    );
+    ( "exception language type",
+      manifest "[]"
+        {|,"banned_construct_exceptions":[{"construct":"external","language":1,"justification":"Long enough explanation."}]|}
+    );
+    ( "missing exception justification",
+      manifest "[]"
+        {|,"banned_construct_exceptions":[{"construct":"external","language":"ocaml"}]|}
+    );
+    ( "exception justification type",
+      manifest "[]"
+        {|,"banned_construct_exceptions":[{"construct":"external","language":"ocaml","justification":1}]|}
+    );
+    ( "short exception justification",
+      manifest "[]"
+        {|,"banned_construct_exceptions":[{"construct":"external","language":"ocaml","justification":"short"}]|}
+    );
+    ( "unknown exception field",
+      manifest "[]"
+        {|,"banned_construct_exceptions":[{"construct":"external","language":"ocaml","justification":"Long enough explanation.","extra":true}]|}
+    );
+    ( "duplicate exception field",
+      manifest "[]"
+        {|,"banned_construct_exceptions":[{"construct":"external","construct":"external","language":"ocaml","justification":"Long enough explanation."}]|}
+    );
+    ( "duplicate exception",
+      manifest "[]"
+        {|,"banned_construct_exceptions":[{"construct":"external","language":"ocaml","justification":"Long enough explanation."},{"construct":"external","language":"ocaml","justification":"Another long enough explanation."}]|}
+    );
   ]
   |> List.iter (fun (name, document) -> expect_error name document);
   let all_taxonomy_pairs =
@@ -271,9 +355,10 @@ let test_manifest_schema_boundaries () =
              category action)
     |> String.concat ","
   in
-  let parsed = unwrap (parse_manifest (manifest ("[" ^ all_taxonomy_pairs ^ "]") "")) in
-  Alcotest.(check int) "all taxonomy arms" 19
-    (List.length parsed.capabilities);
+  let parsed =
+    unwrap (parse_manifest (manifest ("[" ^ all_taxonomy_pairs ^ "]") ""))
+  in
+  Alcotest.(check int) "all taxonomy arms" 19 (List.length parsed.capabilities);
   let digit_package =
     unwrap
       (parse_manifest
@@ -382,7 +467,8 @@ let test_policy_hint_boundaries () =
          "external hash : bytes -> bytes = \"native_hash\"\n")
   in
   let missing_both =
-    evaluate ~dir:"." ~manifest:(unwrap (parse_manifest pure_manifest))
+    evaluate ~dir:"."
+      ~manifest:(unwrap (parse_manifest pure_manifest))
       ~detections ~banned
   in
   Alcotest.(check bool) "missing both" false (passed missing_both);
@@ -402,10 +488,12 @@ let test_policy_hint_boundaries () =
   in
   Alcotest.(check bool) "missing capability" false (passed missing_capability);
   let duplicate_detections =
-    evaluate ~dir:"." ~manifest:(unwrap (parse_manifest pure_manifest))
+    evaluate ~dir:"."
+      ~manifest:(unwrap (parse_manifest pure_manifest))
       ~detections:(detections @ detections) ~banned:[]
   in
-  Alcotest.(check int) "duplicate violation collapsed" 1
+  Alcotest.(check int)
+    "duplicate violation collapsed" 1
     (List.length duplicate_detections.violations);
   let optional_boundary : banned_construct =
     {
@@ -419,7 +507,8 @@ let test_policy_hint_boundaries () =
     }
   in
   let optional_result =
-    evaluate ~dir:"." ~manifest:(unwrap (parse_manifest pure_manifest))
+    evaluate ~dir:"."
+      ~manifest:(unwrap (parse_manifest pure_manifest))
       ~detections:[] ~banned:[ optional_boundary ]
   in
   match optional_result.violations with
@@ -494,39 +583,45 @@ let test_extended_source_resolution () =
       (sorted expected_capabilities)
       (detected_strings detections);
     Alcotest.(check (list string))
-      (name ^ " banned")
-      (sorted expected_banned) (banned_strings banned)
+      (name ^ " banned") (sorted expected_banned) (banned_strings banned)
   in
   check "unix prefixes"
-    "let () = Unix.exec_reviewed ()\nlet () = Unix.send_reviewed ()\nlet () = \
-     Unix.recv_reviewed ()\n"
-    [ "net:connect:*"; "proc:exec:*" ] [];
+    "let () = Unix.exec_reviewed ()\n\
+     let () = Unix.send_reviewed ()\n\
+     let () = Unix.recv_reviewed ()\n"
+    [ "net:connect:*"; "proc:exec:*" ]
+    [];
   check "module alias and open"
-    "module U = Unix\nopen U\nlet () = send_reviewed ()\nlet () = \
-     recv_reviewed ()\n"
+    "module U = Unix\n\
+     open U\n\
+     let () = send_reviewed ()\n\
+     let () = recv_reviewed ()\n"
     [ "net:connect:*" ] [];
   check "constrained alias"
-    "module U : module type of Unix = Unix\nlet () = U.create_process_reviewed \
-     ()\n"
+    "module U : module type of Unix = Unix\n\
+     let () = U.create_process_reviewed ()\n"
     [ "proc:exec:*" ] [];
   check "standard channels"
-    "let _ = input_char stdin\nlet _ = In_channel.input_line In_channel.stdin\n\
-     let () = output_string stdout \"ok\"\nlet () = Out_channel.flush \
-     Out_channel.stderr\n"
-    [ "stdin:read:*"; "stdout:write:*" ] [];
+    "let _ = input_char stdin\n\
+     let _ = In_channel.input_line In_channel.stdin\n\
+     let () = output_string stdout \"ok\"\n\
+     let () = Out_channel.flush Out_channel.stderr\n"
+    [ "stdin:read:*"; "stdout:write:*" ]
+    [];
   check "shadowed values"
-    "let input_line _ = \"local\"\nlet stdin = ()\nlet _ = input_line stdin\n\
+    "let input_line _ = \"local\"\n\
+     let stdin = ()\n\
+     let _ = input_line stdin\n\
      let _ = Stdlib.input_char stdin\n"
     [] [];
-  check "expression open"
-    "let run () = let open Unix in send_reviewed ()\n"
+  check "expression open" "let run () = let open Unix in send_reviewed ()\n"
     [ "net:connect:*" ] [];
   check "marshal closures"
-    "open Marshal\nlet flag = Closures\nlet flag2 = Marshal.Closures\n"
-    [] [ "Marshal.Closures" ];
+    "open Marshal\nlet flag = Closures\nlet flag2 = Marshal.Closures\n" []
+    [ "Marshal.Closures" ];
   check "first-class sensitive references"
-    "let magic = Obj.magic\nlet decode = Marshal.from_reviewed\n"
-    [] [ "Obj.magic" ];
+    "let magic = Obj.magic\nlet decode = Marshal.from_reviewed\n" []
+    [ "Obj.magic" ];
   check "top-level evaluation and non-identifier callee"
     "Sys.getenv \"TOP_LEVEL\"\nlet _ = ((fun f -> f) Sys.getenv) \"HOME\"\n"
     [ "env:read:*" ] []
@@ -537,26 +632,25 @@ let test_extended_ast_walks () =
       "let rec loop x = if x = 0 then 0 else loop (x - 1)\n\
        and other (x as alias) = alias\n";
       "let choose ?(fallback = 0) (type a) value =\n\
-       \  match value with\n\
-       \  | Some (x as alias) when alias > 0 -> x\n\
-       \  | _ -> fallback\n";
+      \  match value with\n\
+      \  | Some (x as alias) when alias > 0 -> x\n\
+      \  | _ -> fallback\n";
       "let handle value =\n\
-       \  try (match value with Some x -> x | None -> raise Exit)\n\
-       \  with Exit -> 0\n";
+      \  try (match value with Some x -> x | None -> raise Exit)\n\
+      \  with Exit -> 0\n";
       "let sum limit =\n\
-       \  let total = ref 0 in\n\
-       \  for index = 0 to limit do total := !total + index done;\n\
-       \  while !total < limit do incr total done;\n\
-       \  !total\n";
+      \  let total = ref 0 in\n\
+      \  for index = 0 to limit do total := !total + index done;\n\
+      \  while !total < limit do incr total done;\n\
+      \  !total\n";
       "module F (X : sig end) = struct let value = 1 end\n\
        module M = F (struct end)\n";
       "module G () = struct let value = 1 end\nmodule H = G ()\n";
       "module rec A : sig val value : int end = struct let value = 1 end\n\
        and B : sig val value : int end = struct let value = A.value end\n";
-      "module _ = struct let value = 1 end\ninclude struct let included = 1 end\n";
-      "let local =\n\
-       \  let module M = struct let value = 1 end in\n\
-       \  M.value\n";
+      "module _ = struct let value = 1 end\n\
+       include struct let included = 1 end\n";
+      "let local =\n  let module M = struct let value = 1 end in\n  M.value\n";
     ]
   in
   List.iteri
@@ -637,13 +731,17 @@ let test_module_expression_fail_closed_matrix () =
           Alcotest.failf "%s: unexpected analyzer error: %s" name message
       | Ok _ -> Alcotest.failf "%s: unsafe module expression was accepted" name)
     rejected;
-  (match analyze_source ~filename:"signature.mli" Interface "[%%generated]\n" with
+  (match
+     analyze_source ~filename:"signature.mli" Interface "[%%generated]\n"
+   with
   | Error message when contains_substring message "signature extension" -> ()
   | Error message -> Alcotest.failf "unexpected signature error: %s" message
   | Ok _ -> Alcotest.fail "signature extension was accepted");
   [ "open struct end\n"; "include struct end\n" ]
   |> List.iter (fun source ->
-         match analyze_source ~filename:"safe-module.ml" Implementation source with
+         match
+           analyze_source ~filename:"safe-module.ml" Implementation source
+         with
          | Ok _ -> ()
          | Error message ->
              Alcotest.failf "safe extended module was rejected: %s" message)
@@ -827,32 +925,36 @@ let test_directory_safe_inputs_and_exclusions () =
       write_file (Filename.concat src "input.ml") "let value = 1\n";
       write_file (Filename.concat src "input.mli") "val value : int\n";
       write_file (Filename.concat src "README.txt") "ignored\n";
-      write_file (Filename.concat src "dune")
-        "(library\n ; a safe comment\n (name example)\n \
-         (instrumentation (backend bisect_ppx))\n \
-         (libraries \"a\\\"quoted\\\"name\"))\n";
-      write_file (Filename.concat directory "dune-project")
+      write_file
+        (Filename.concat src "dune")
+        "(library\n\
+        \ ; a safe comment\n\
+        \ (name example)\n\
+        \ (instrumentation (backend bisect_ppx))\n\
+        \ (libraries \"a\\\"quoted\\\"name\"))\n";
+      write_file
+        (Filename.concat directory "dune-project")
         "(lang dune 3.16)\n(name example)\n";
       List.iter
         (fun name ->
           let excluded = Filename.concat directory name in
           Unix.mkdir excluded 0o700;
-          write_file (Filename.concat excluded "ignored.mll")
+          write_file
+            (Filename.concat excluded "ignored.mll")
             "generated content is ignored in excluded directories\n")
         [ "_build"; ".git"; "_opam"; "node_modules" ];
       let result = unwrap (analyze_directory directory) in
       Alcotest.(check bool) "safe package" true (passed result);
-      Alcotest.(check int) "two source files" 0
-        (List.length result.detected);
+      Alcotest.(check int) "two source files" 0 (List.length result.detected);
       let target = Filename.concat directory "target.ml" in
       let link = Filename.concat directory "source-link.ml" in
       write_file target "let linked = 1\n";
-      (try
-         Unix.symlink target link;
-         match analyze_directory directory with
-         | Error _ -> ()
-         | Ok _ -> Alcotest.fail "symlinked source was accepted"
-       with Unix.Unix_error _ -> ()))
+      try
+        Unix.symlink target link;
+        match analyze_directory directory with
+        | Error _ -> ()
+        | Ok _ -> Alcotest.fail "symlinked source was accepted"
+      with Unix.Unix_error _ -> ())
 
 let test_directory_instrumentation_boundaries () =
   with_temp_directory (fun root ->
@@ -876,7 +978,8 @@ let test_directory_instrumentation_boundaries () =
       let expect_instrumentation_error label =
         match analyze_directory directory with
         | Error message when contains_substring message "instrumentation" -> ()
-        | Error message -> Alcotest.failf "%s: unexpected error: %s" label message
+        | Error message ->
+            Alcotest.failf "%s: unexpected error: %s" label message
         | Ok _ -> Alcotest.failf "%s was accepted" label
       in
       let reject_in relative contents label =
@@ -898,8 +1001,7 @@ let test_directory_instrumentation_boundaries () =
         "compound bin instrumentation";
       reject_in "test/dune" "(instrumentation (backend \"bisect_ppx\"))\n"
         "quoted test backend";
-      reject_in "test/dune"
-        "(instrumentation (backend \"bisect\\x5fppx\"))\n"
+      reject_in "test/dune" "(instrumentation (backend \"bisect\\x5fppx\"))\n"
         "escaped test backend";
       let root_dune = Filename.concat directory "dune" in
       write_file root_dune exact;
@@ -932,14 +1034,18 @@ let test_directory_manifest_and_generated_boundaries () =
       write_file manifest (String.make ((1024 * 1024) + 1) 'x');
       (match analyze_directory root with
       | Error message when contains_substring message "input is" -> ()
-      | Error message -> Alcotest.failf "unexpected manifest limit error: %s" message
+      | Error message ->
+          Alcotest.failf "unexpected manifest limit error: %s" message
       | Ok _ -> Alcotest.fail "oversized manifest was accepted");
       Sys.remove manifest;
       let generated = Filename.concat root "parser.mly" in
       write_file generated "generated parser source\n";
       match analyze_directory root with
-      | Error message when contains_substring message "generated OCaml source" -> ()
-      | Error message -> Alcotest.failf "unexpected generated-source error: %s" message
+      | Error message when contains_substring message "generated OCaml source"
+        ->
+          ()
+      | Error message ->
+          Alcotest.failf "unexpected generated-source error: %s" message
       | Ok _ -> Alcotest.fail "generated parser input was accepted")
 
 let test_directory_analysis () =
@@ -1010,8 +1116,7 @@ let test_cli_results () =
       Alcotest.(check int) "verbose violation exit" 1 code;
       Alcotest.(check bool)
         "verbose detection" true
-        (String.ends_with ~suffix:"\n" output
-        && String.contains output ':');
+        (String.ends_with ~suffix:"\n" output && String.contains output ':');
       let code, _, errors = capture (Filename.concat root "missing") false in
       Alcotest.(check int) "error exit" 2 code;
       Alcotest.(check bool) "error output" true (String.length errors > 0))
@@ -1050,8 +1155,7 @@ let () =
             test_unsupported_ast_fails_closed;
           Alcotest.test_case "extended resolution" `Quick
             test_extended_source_resolution;
-          Alcotest.test_case "extended AST walks" `Quick
-            test_extended_ast_walks;
+          Alcotest.test_case "extended AST walks" `Quick test_extended_ast_walks;
           Alcotest.test_case "module expressions fail closed" `Quick
             test_module_expression_fail_closed_matrix;
           Alcotest.test_case "sensitive module wrappers fail closed" `Quick
