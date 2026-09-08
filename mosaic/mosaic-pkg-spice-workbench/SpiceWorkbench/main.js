@@ -19,6 +19,11 @@ const fallbackProps = {
   "resultText": "result-text",
   "runLabel": "run-label",
   "selectedAnalysisLabel": "selected-analysis-label",
+  "selectedWaveformLabel": "selected-waveform-label",
+  "waveformAxisLabel": "waveform-axis-label",
+  "waveformLabel": "waveform-label",
+  "waveformRows": [],
+  "waveformSegments": [],
   "workbenchTitle": "workbench-title"
 };
 const emitPayloads = {
@@ -31,6 +36,12 @@ const emitPayloads = {
   ],
   "onRun": [],
   "onSelectAnalysis": [
+    {
+      "name": "index",
+      "type": "number"
+    }
+  ],
+  "onSelectWaveform": [
     {
       "name": "index",
       "type": "number"
