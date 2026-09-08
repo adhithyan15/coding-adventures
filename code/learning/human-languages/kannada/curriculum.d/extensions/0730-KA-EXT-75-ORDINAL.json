@@ -1,0 +1,20 @@
+{
+  "id": "KA-EXT-75-ORDINAL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say sixth to eleventh in Kannada, use the everyday short ending, and read an ordinal written as a digit.",
+  "prerequisites": [
+    "KA-EXT-74-ORDINAL"
+  ],
+  "lessons": [
+    "KA-C75-sixth",
+    "KA-C75-seventh",
+    "KA-C75-eighth",
+    "KA-C75-ninth",
+    "KA-C75-tenth",
+    "KA-C75-eleventh",
+    "KA-C75-short-form",
+    "KA-C75-on-a-sign"
+  ]
+}

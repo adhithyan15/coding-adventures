@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-74-ORDINAL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say first to fifth in Kannada, and make an ordinal from any number by dropping its final vowel and adding -aneya.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C74-second",
+    "KA-C74-third",
+    "KA-C74-first",
+    "KA-C74-fourth",
+    "KA-C74-fifth"
+  ]
+}

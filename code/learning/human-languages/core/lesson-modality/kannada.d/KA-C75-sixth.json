@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C75-sixth",
+    "language": "kannada",
+    "chapter": 75,
+    "sequence": 2590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e3e6dba9082139f"
+  },
+  "findings": []
+}

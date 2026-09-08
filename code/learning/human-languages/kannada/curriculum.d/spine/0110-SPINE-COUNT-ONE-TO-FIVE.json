@@ -1,7 +1,9 @@
 {
   "segments": [
     "KA-PATH-011",
-    "KA-PATH-021"
+    "KA-PATH-021",
+    "KA-PATH-74-ORDINAL",
+    "KA-PATH-75-ORDINAL"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"

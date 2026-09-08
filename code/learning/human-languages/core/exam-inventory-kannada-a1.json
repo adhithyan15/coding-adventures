@@ -565,7 +565,24 @@
       "id": "KA-A1-NUM-07",
       "category": "Sankhye (numerals and quantity)",
       "label": "ordinal numerals to tenth",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C74-ORDINAL-01",
+        "KA-GRAMMAR-C74-ORDINAL-02",
+        "KA-LEX-C74-ORDINAL-03",
+        "KA-LEX-C74-ORDINAL-04",
+        "KA-ETYMON-C74-ORDINAL-05",
+        "KA-LEX-C74-ORDINAL-06",
+        "KA-LEX-C74-ORDINAL-07",
+        "KA-LEX-C75-ORDINAL-01",
+        "KA-LEX-C75-ORDINAL-02",
+        "KA-LEX-C75-ORDINAL-03",
+        "KA-LEX-C75-ORDINAL-04",
+        "KA-LEX-C75-ORDINAL-05",
+        "KA-LEX-C75-ORDINAL-06",
+        "KA-GRAMMAR-C75-ORDINAL-07",
+        "KA-LEX-C75-ORDINAL-08",
+        "KA-GRAMMAR-C75-ORDINAL-09"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -575,7 +592,7 @@
         "A1-Q-02",
         "A1-NG3-06"
       ],
-      "note": "Untaught. Kannada forms ordinals with -aneya on the cardinal (mooraneya, 'third'), so all ten follow from one suffix on numbers already taught -- another high points-per-word target."
+      "note": "CLOSED by the ordinal tranche, chapters 74-75, one word a lesson. Kannada's ordinal ending -aneya has NO exceptions, so the tranche opens on eraDaneya rather than on 'first': the rule leads, and modalaneya arrives third as the one surprise -- a surprise about the STEM only, because it is built on modalu 'a beginning' (Proto-Dravidian *mutal, Tamil mudal, Telugu modalu) and not on ondu, while still taking the same regular ending. Eleventh is taught to show the ending was never a fact about one-to-ten, and the last lesson teaches the everyday short form -anee and the digit-plus-ending written form the Kannada digit lessons had never been cashed in for. Every glyph in every word of the tranche was already taught: a census of the 69 distinct Kannada characters the track's lessons use, headwords AND worked examples, found no gap, so script was never the blocker here. NOT taught, and deliberately: the nominalized -aneyadu ('the second ONE'), which is mentioned nowhere and claimed nowhere."
     },
     {
       "id": "KA-A1-NUM-08",

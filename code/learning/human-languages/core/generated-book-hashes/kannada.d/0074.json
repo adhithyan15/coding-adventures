@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:13a94412fdcbab1b",
+  "lessonIds": [
+    "KA-C74-second",
+    "KA-C74-third",
+    "KA-C74-first",
+    "KA-C74-fourth",
+    "KA-C74-fifth"
+  ],
+  "tex": "kannada/book/chapters/ch74-ordinals.tex"
+}

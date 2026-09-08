@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C75-on-a-sign",
+    "language": "kannada",
+    "chapter": 75,
+    "sequence": 2660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23aed7322e266e8b"
+  },
+  "findings": []
+}

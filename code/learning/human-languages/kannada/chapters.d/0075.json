@@ -1,0 +1,21 @@
+{
+  "chapter": 75,
+  "title": "All the Way Up, and On a Sign",
+  "label": "ch:ka-ordinals-to-tenth",
+  "canDo": "I can say sixth to eleventh in Kannada, use the everyday short ending, and read an ordinal written as a digit.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "KA-C75-on-a-sign",
+    "kind": "production",
+    "summary": "Read an ordinal written as a Kannada digit with only its ending spelled out, and say the whole word aloud.",
+    "assesses": [
+      "KA-LEX-C75-ORDINAL-02",
+      "KA-LEX-C75-ORDINAL-06",
+      "KA-GRAMMAR-C75-ORDINAL-07",
+      "KA-LEX-C75-ORDINAL-08",
+      "KA-GRAMMAR-C75-ORDINAL-09"
+    ]
+  }
+}
