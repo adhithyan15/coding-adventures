@@ -85,7 +85,22 @@ case "$(uname -s)" in
 esac
 
 echo "[1/4] Building the Engram engine as a native library..."
-( cd "$RUST" && cargo build -q -p engram-capi --release )
+build_engram_capi() {
+  local rustflags="${RUSTFLAGS-}"
+  case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*) rustflags="${rustflags:+$rustflags }-C target-feature=+crt-static" ;;
+  esac
+  (
+    cd "$RUST"
+    RUSTFLAGS="$rustflags" \
+      cargo build -q -p engram-capi --release
+  )
+}
+
+# A Windows cdylib is dropped directly beside the emitted XAML app. Static CRT
+# linking is what makes that single file deployable without runner-local
+# `vcruntime140.dll`; every other host keeps the caller's normal Rust flags.
+build_engram_capi
 LIB_PATH="$RUST/target/release/$LIB_NAME"
 if [[ ! -f "$LIB_PATH" ]]; then
   echo "error: expected $LIB_PATH after building engram-capi" >&2
@@ -133,7 +148,7 @@ if [[ "$BACKEND" == "swiftui" ]]; then
   # being needed and this block should be deleted rather than generalised --
   # building emitter infrastructure for a configuration we intend to retire
   # would be the wrong investment.
-  ( cd "$RUST" && cargo build -q -p engram-capi --release )
+  build_engram_capi
   STATIC="$RUST/target/release/libengram_capi.a"
   if [[ ! -f "$STATIC" ]]; then
     echo "error: expected the static archive at $STATIC" >&2

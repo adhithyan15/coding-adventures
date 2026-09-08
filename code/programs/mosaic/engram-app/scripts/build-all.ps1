@@ -10,7 +10,8 @@ $packageRoot = (Resolve-Path (Join-Path $scriptRoot "..")).Path
 $rustWorkspace = (Resolve-Path (Join-Path $packageRoot "..\..\..\packages\rust")).Path
 $engramWasmRoot = (Resolve-Path (Join-Path $rustWorkspace "engram-wasm")).Path
 $nativeProfile = if ($Release) { "release" } else { "debug" }
-$nativeLibraryName = if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) {
+$isWindows = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)
+$nativeLibraryName = if ($isWindows) {
     "engram_capi.dll"
 } elseif ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::OSX)) {
     "libengram_capi.dylib"
@@ -60,11 +61,29 @@ if ($Release) {
 }
 Push-Location $rustWorkspace
 try {
+    # The XAML publish payload carries only the cdylib. Linking Rust's MSVC CRT
+    # statically keeps `vcruntime140.dll` out of that DLL's import table, so the
+    # archive stays relocatable instead of depending on the build runner's PATH.
+    $originalRustFlags = $env:RUSTFLAGS
+    if ($isWindows) {
+        $env:RUSTFLAGS = if ($originalRustFlags) {
+            "$originalRustFlags -C target-feature=+crt-static"
+        } else {
+            "-C target-feature=+crt-static"
+        }
+    }
     & cargo @capiCargoArgs
     if ($LASTEXITCODE -ne 0) {
         throw "engram-capi build failed with exit code $LASTEXITCODE"
     }
 } finally {
+    if ($isWindows) {
+        if ($null -eq $originalRustFlags) {
+            Remove-Item Env:RUSTFLAGS -ErrorAction SilentlyContinue
+        } else {
+            $env:RUSTFLAGS = $originalRustFlags
+        }
+    }
     Pop-Location
 }
 

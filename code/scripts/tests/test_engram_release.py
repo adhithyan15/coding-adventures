@@ -1994,6 +1994,20 @@ class ArchiveXamlTests(unittest.TestCase):
             )
             self.assertTrue(archive.is_file())
 
+    def test_accepts_the_windows_crypto_primitive_without_bundling_it(self) -> None:
+        # Rust's Windows entropy support imports bcryptprimitives directly.
+        # It is supplied by Windows, unlike the deployable MSVC runtime, so
+        # the archive may stay self-contained without copying an OS DLL.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(
+                root, engine_imports=[b"bcryptprimitives.dll", b"kernel32.dll"]
+            )
+            archive = engram_release.archive_xaml(
+                "0.4.0", "windows", publish, root / "out", COMMIT
+            )
+            self.assertTrue(archive.is_file())
+
     def test_refuses_output_missing_its_runtime_metadata(self) -> None:
         for kwargs, expected in [
             ({"runtimeconfig": False}, "runtimeconfig"),
@@ -2162,6 +2176,7 @@ class PeImportTests(unittest.TestCase):
         self.assertTrue(engram_release.is_windows_system_dll("api-ms-win-core-synch-l1-2-0.dll"))
         self.assertTrue(engram_release.is_windows_system_dll("ext-ms-win-anything-l9-9-9.dll"))
         self.assertTrue(engram_release.is_windows_system_dll("KERNEL32.DLL"))
+        self.assertTrue(engram_release.is_windows_system_dll("bcryptprimitives.dll"))
         self.assertFalse(engram_release.is_windows_system_dll("qt6core.dll"))
         self.assertFalse(engram_release.is_windows_system_dll("engram_capi.dll"))
 
