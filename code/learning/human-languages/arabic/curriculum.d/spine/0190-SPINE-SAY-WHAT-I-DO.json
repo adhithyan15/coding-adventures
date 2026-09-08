@@ -3,11 +3,11 @@
     "AR-PATH-027",
     "AR-PATH-027-C",
     "AR-PATH-028",
-    "AR-PATH-029"
+    "AR-PATH-029",
+    "AR-PATH-034"
   ],
   "omits": [
     "VERB-INFINITIVE",
-    "VERB-PRESENT-HABITUAL",
     "VERB-BE",
     "VERB-SPEAK",
     "VERB-HEAR",

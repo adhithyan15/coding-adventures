@@ -210,6 +210,22 @@ recap lessons are still schema v1 with no declared knowledge atoms, so a payoff
 there could only be invented. That absence is honest, measurable debt and is
 reported as such.
 
+## What the track can do, as of chapters 37–41
+
+A learner who reaches the end can now put a verb in the **present tense** for
+themselves, say **لا أفهم**, **join** two nouns (و), **choose** between them
+(أو), **turn** a clause against the one before it (لكن), **accept** what was
+said (حسنًا), **deny** each of the three kinds of Arabic sentence with the
+negator that belongs to it (ليس، ما، لا), **ask** a yes-or-no question (هل),
+**ask why** (لماذا) and answer it (لأن), **report** a thought (أنّ), **place** it
+in time (حينما), **call** somebody by name (يا) and ask them to **say it again**
+(كرّر من فضلك).
+
+Four words that would have covered further points were rejected because the
+script ladder has taught thirty of forty-five glyphs and each of these needs one
+it has not: عندما, الذي, إلا, أعرف. Each is written down in
+`core/exam-inventory-arabic-a1.json` beside the letter that blocks it.
+
 ## Files
 
 - [`lessons/`](./lessons/) · [`chapters.json`](./chapters.json)

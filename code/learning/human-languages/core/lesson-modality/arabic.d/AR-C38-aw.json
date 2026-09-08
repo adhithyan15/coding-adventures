@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C38-aw",
+    "language": "arabic",
+    "chapter": 38,
+    "sequence": 1050,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:776f0218df4c5abb"
+  },
+  "findings": []
+}

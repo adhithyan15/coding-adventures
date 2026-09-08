@@ -1,0 +1,13 @@
+{
+  "id": "AR-EXT-034-PRESENT-TENSE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can put any verb this book taught into the present tense for myself, and deny it.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-C37-present",
+    "AR-C37-la-afham",
+    "AR-R37-now-and-not"
+  ]
+}

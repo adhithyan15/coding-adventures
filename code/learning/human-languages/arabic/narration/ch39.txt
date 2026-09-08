@@ -1,0 +1,171 @@
+Arabic, chapter 39: Denying, and Asking.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+ليس (laysa) — is not.
+
+Warm-up.
+[pause 2 seconds]
+اسمي حسن — my name is Hasan — is a complete Arabic sentence with no verb in it, and it is the sentence shape this book teaches best. Try to deny it with لا and there is no verb for لا to stand in front of.
+[your turn — recall: the joiner two lessons back that has لا hiding inside it — lākin]
+[pause 8 seconds for the answer]
+
+You'll want to know: ليس.
+اسمي ليس حسن — ismī laysa Ḥasan — my name is not Hasan.
+الحليب ليس ماءً — al-ḥalīb laysa māʾan — milk is not water.
+Arabic leaves the present-tense is out. To deny a sentence that never had one, the language supplies a word that exists only for that job — and ليس (laysa) is it.
+Notice the ـً on ماءً: ليس (laysa) puts what follows it in the accusative, which is the one grammatical demand it makes and the reason its predicate wears a tanwīn where the affirmative would not.
+
+The word, taken apart.
+Arab grammarians read ليس (laysa) as لا — the negator of chapter five — welded to أيس, an old word meaning there is. So the word began as there-is-not, and it still behaves like a verb: it takes person endings, even though nothing it denies is a verb. It is a fossil doing a job nothing else in the language does.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the affirmative, then the denial — ismī Ḥasan … ismī laysa Ḥasan]
+[pause 8 seconds for the answer]
+[your turn — say: al-ḥalīb laysa māʾan]
+[pause 8 seconds for the answer]
+[your turn — say: ash-shāy laysa ḥalīban]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why can a nominal sentence not be denied with لا? (There is no verb for لا to stand in front of — Arabic leaves is out.) What are the two pieces grammarians find inside ليس (laysa)? (لا and أيس, there is.) And what does ليس (laysa) do to the word after it? (Puts it in the accusative.)
+Source: Unicode Arabic chart.
+
+
+Lesson 2 of 5.
+ما (mā) — did not.
+
+Warm-up.
+[pause 2 seconds]
+لا denies a present-tense verb and ليس (laysa) denies a sentence with no verb at all. Eleven verbs in this book are in the past, and neither of those two touches them.
+[your turn — recall: the item before this one, and what it demands of the word after it — laysa]
+[pause 8 seconds for the answer]
+
+You'll want to know: ما.
+ما كتب — mā kataba — he did not write.
+ما أكل — mā akala — he did not eat.
+Arabic uses a different word to negate the past from the one it uses for the present. لا in front of a past-tense verb is not a weaker sentence; it is the wrong word.
+
+Grammar Lens: three negators, three kinds of sentence.
+[a table of 3 rows, read aloud]
+negator: لا. denies: a present-tense verb. example: lā aktub.
+negator: ما. denies: a past-tense verb. example: mā kataba.
+negator: ليس. denies: a sentence with no verb. example: ismī laysa Ḥasan.
+That is the whole of A1 Arabic negation in three rows, and this chapter is where the second and third of them arrive.
+
+The word, taken apart.
+You have written these two letters before. ما (mā) اسمك — what is your name? — opens chapter two, and that ما (mā) means what. It is the same word. Semitic languages carry one very general particle that Arabic puts to work as what, as not, and as as long as, and only its position in the sentence tells you which one you are reading.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: kataba … mā kataba]
+[pause 8 seconds for the answer]
+[your turn — say: the present beside the past — lā aktub … mā kataba]
+[pause 8 seconds for the answer]
+[your turn — say: the two jobs of the same two letters — mā ismuka? … mā akala]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which negator goes with a past-tense verb, which with a present, and which with no verb? (ما (mā), لا, ليس (laysa).) Which question word is spelled the same as this one? (ما (mā), what.) And what tells the two apart? (Where they stand in the sentence.)
+Source: Unicode Arabic chart.
+
+
+Lesson 3 of 5.
+لا … ولا … (lā … wa-lā …) — neither, nor.
+
+Warm-up.
+[pause 2 seconds]
+The last chapter taught the joiner that adds. This lesson uses it to refuse — which is the one place a coordinator and a negator arrive as a single written word.
+[your turn — recall: the negator of the past, from the lesson before — mā]
+[pause 8 seconds for the answer]
+
+You'll want to know: لا … ولا …
+لا شاي ولا حليب — lā shāy wa-lā ḥalīb — neither tea nor milk.
+One لا in front of the first thing, and ولا — the joiner و written onto a second لا — in front of the next. English needs two different words, neither and nor; Arabic uses the same word twice and glues the and onto the second.
+
+Grammar Lens: the mirror of the joiner.
+[a table of 2 rows, read aloud]
+الشاي والحليب means the tea and the milk.
+لا شاي ولا حليب means neither tea nor milk.
+The second line is the first with a لا put in front of each thing. Nothing else changes — and the definite article drops, because you are refusing tea in general rather than a particular cup of it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: lā shāy wa-lā ḥalīb]
+[pause 8 seconds for the answer]
+[your turn — say: the affirmative it mirrors — ash-shāy wa-l-ḥalīb]
+[pause 8 seconds for the answer]
+[your turn — say: lā qahwa wa-lā sukkar]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many negators does neither … nor need in Arabic? (Two, and they are the same word.) What is welded onto the second one? (و, the joiner.) And what happens to the definite article? (It drops — the refusal is general.)
+Source: Unicode Arabic chart.
+
+
+Lesson 4 of 5.
+هل (hal) — a question is coming.
+
+Warm-up.
+[pause 2 seconds]
+نعم and لا were taught in chapter five as answers. Thirty-four chapters later this book still cannot ask the question they answer.
+[your turn — recall: the double refusal from the lesson before — lā shāy wa-lā ḥalīb]
+[pause 8 seconds for the answer]
+
+You'll want to know: هل.
+هل أنت بخير — hal anta bi-khayr? — are you well?
+هل كتب — hal kataba? — did he write?
+Put هل (hal) at the front of any statement and it becomes a yes-or-no question. Nothing else in the sentence moves — no word order changes, no ending changes.
+Arabic needs the word. English asks by moving the verb in front of the subject; Bengali and Urdu ask by letting the voice rise. Written Arabic does neither: the particle carries the whole question, which is why a page of Arabic tells you a question is coming before you have read any of it.
+
+Grammar Lens: what the particle replaces.
+[a table of 2 rows, read aloud]
+language: English. how a yes-or-no question is marked: the verb moves in front of the subject.
+language: Arabic. how a yes-or-no question is marked: هل (hal) at the front, and nothing moves.
+A negative asks the same way, and that is the ordinary way to check something you suspect: hal laysa hunāka shāy? Answer either with نعم or with لا.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: hal anta bi-khayr? — and answer it naʿam or lā]
+[pause 8 seconds for the answer]
+[your turn — say: hal kataba?]
+[pause 8 seconds for the answer]
+[your turn — say: the statement, then the question — anta bi-khayr … hal anta bi-khayr?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What moves when an Arabic statement becomes a yes-or-no question? (Nothing — هل (hal) goes at the front.) Why can it not be done with the voice alone, as in Bengali or Urdu? (Written Arabic marks it with a particle.) And which two words answer it? (نعم and لا, from chapter five.)
+Source: Unicode Arabic chart.
+
+
+Lesson 5 of 5.
+Denying, and asking — three negators for three kinds of sentence, one question particle, and the first Arabic exchange in this book that has two sides to it.
+
+Warm-up.
+[pause 4 seconds]
+Arabic has three negators and each one owns a different kind of sentence. Name all three, and say what each one denies.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the verbless sentence denied — ismī laysa Ḥasan]
+[pause 8 seconds for the answer]
+[your turn — say: the past denied — mā kataba]
+[pause 8 seconds for the answer]
+[your turn — say: the present denied — lā aktub, and lā afham]
+[pause 8 seconds for the answer]
+[your turn — say: both refused at once — lā shāy wa-lā ḥalīb]
+[pause 8 seconds for the answer]
+[your turn — say: each of those asked back — put hal in front and change nothing else]
+[pause 8 seconds for the answer]
+[your turn — recall: six lessons back, the word that accepts what was said — ḥasanan]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which negator would you use for اسمي حسن, which for كتب, and which for أكتب? (ليس (laysa), then ما (mā), then لا.) What does هل (hal) ask of the sentence it fronts? (Nothing at all — it only marks it.)

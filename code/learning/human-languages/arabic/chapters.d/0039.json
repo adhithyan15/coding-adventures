@@ -1,0 +1,20 @@
+{
+  "chapter": 39,
+  "title": "Denying, and Asking",
+  "label": "ch:ar-denying-and-asking",
+  "canDo": "I can deny a nominal sentence with ليس, a past-tense verb with ما and a present-tense verb with لا, refuse two things at once with لا … ولا, and turn any of them into a yes-or-no question with هل.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "AR-R39-denying-and-asking",
+    "kind": "speaking",
+    "summary": "Three negators sorted by the kind of sentence each one owns, then every one of them asked back with هل -- so نعم and لا, taught in chapter 5 as answers, finally have a question to answer.",
+    "assesses": [
+      "AR-GRAMMAR-C39-LAYSA-01",
+      "AR-GRAMMAR-C39-MA-01",
+      "AR-GRAMMAR-C39-LA-WALA-01",
+      "AR-GRAMMAR-C39-HAL-01"
+    ]
+  }
+}

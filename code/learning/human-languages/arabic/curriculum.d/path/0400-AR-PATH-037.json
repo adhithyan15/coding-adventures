@@ -1,0 +1,16 @@
+{
+  "id": "AR-PATH-037",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "AR-C40-limadha",
+    "AR-C40-lianna",
+    "AR-C40-anna",
+    "AR-C40-hinama",
+    "AR-R40-why-that-when"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-037-WHY-THAT-WHEN"
+  ],
+  "after": []
+}

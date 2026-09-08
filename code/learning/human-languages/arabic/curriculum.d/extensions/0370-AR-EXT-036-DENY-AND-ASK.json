@@ -1,0 +1,17 @@
+{
+  "id": "AR-EXT-036-DENY-AND-ASK",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can deny each of the three kinds of Arabic sentence with the negator that belongs to it, and mark any of them as a yes-or-no question.",
+  "prerequisites": [
+    "AR-EXT-035-JOINING"
+  ],
+  "lessons": [
+    "AR-C39-laysa",
+    "AR-C39-ma",
+    "AR-C39-la-wala",
+    "AR-C39-hal",
+    "AR-R39-denying-and-asking"
+  ]
+}

@@ -1,0 +1,165 @@
+Arabic, chapter 40: Why, That, and When.
+5 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 5.
+لماذا (limādhā) — why.
+
+Warm-up.
+[pause 2 seconds]
+This book can ask what, how, how much and — since the last chapter — yes or no. It has never been able to ask for a reason.
+[your turn — recall: the particle from the lesson before, and what it moves — hal, and nothing]
+[pause 8 seconds for the answer]
+
+You'll want to know: لماذا.
+لماذا؟ — limādhā? — why?
+It is a compound and every piece is recoverable: لـ, the preposition for, plus ماذا, what — which is itself ما plus ذا, this. Arabic's why is transparently for-what-this.
+And the ما inside it is the same particle the last chapter taught as the negator of the past tense, and the same one chapter two taught as what in ما اسمك. Three jobs, one word, told apart by where it stands.
+
+The word, taken apart.
+لماذا and هل are the two ends of Arabic questioning. هل asks for a yes or a no and adds no information; لماذا asks for a whole clause back, and the next lesson supplies the word that clause begins with.
+The letter ذال in the middle of this word has no lesson in this track's script ladder yet, so the word is printed whole here, in the lesson that owns it, and named in romanization wherever else it appears.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: limādhā? — on its own]
+[pause 8 seconds for the answer]
+[your turn — say: the question words this book now owns — mā, kayfa, kam, hal, limādhā]
+[pause 8 seconds for the answer]
+[your turn — say: the pieces it is built from — li- … mā … dhā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the three pieces of لماذا? (لـ for, ما what, ذا this.) Which of them has the book already taught twice, in two different jobs? (ما — what in chapter two, did not in chapter thirty-nine.) And what does لماذا ask for that هل does not? (A whole clause.)
+Source: Unicode Arabic chart.
+
+
+Lesson 2 of 5.
+لأن (li-anna) — because.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+The lesson before this taught the question. A question nobody can answer is worse than no question at all.
+[your turn — recall: the item before this, and the three pieces inside it — limādhā]
+[pause 8 seconds for the answer]
+
+You'll want to know: لأن.
+لا أكتب لأنني لا أسمع — lā aktub li-annanī lā asmaʿ — I am not writing because I do not hear.
+Look at the first letter. limādhā opens with لـ, for, and so does this word — with أنّ (anna), that, behind it instead of a question word. Arabic's why and because are one particle apart, and both are visibly built out of pieces rather than borrowed whole.
+لأنّ needs a subject after it, so for I it becomes لأنني, li-annanī. That is one ending on one word, and it is the only thing the construction asks of you.
+
+Grammar Lens: the claim, then the reason.
+[a table of 2 rows, read aloud]
+head word: لكن. what follows it: an objection.
+head word: لأن (li-anna). what follows it: a reason.
+Both stand at the head of the clause they govern, and both come after the claim they attach to. Put them in one sentence and you have the shape of an argument.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the question, then the answer word — limādhā? … li-anna]
+[pause 8 seconds for the answer]
+[your turn — say: lā aktub li-annanī lā asmaʿ]
+[pause 8 seconds for the answer]
+[your turn — say: an objection and a reason in one breath — ḥasanan, lākin … li-anna …]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which letter do limādhā and لأن (li-anna) share, and what does it mean? (لـ, for.) What follows it in each? (A question word in one, a complementiser in the other.) And which comes first, the claim or the reason? (The claim.)
+Source: Unicode Arabic chart.
+
+
+Lesson 3 of 5.
+أنّ (anna) — that.
+
+Warm-up.
+[pause 2 seconds]
+fakkara — he thought — has been in this book since chapter thirty-two, and nobody has ever been able to say what they think.
+[your turn — recall: the reason word from the lesson before, and the piece behind its لـ — li-anna]
+[pause 8 seconds for the answer]
+
+You'll want to know: أنّ.
+أكتب أنّ سامي جاري — aktub anna Sāmī jārī — I write that Sami is my neighbour.
+أنّ (anna) takes a whole sentence and makes it the object of a verb of writing, saying, knowing or thinking. Everything before it is the frame; everything after it is the reported thing.
+You met it one lesson ago without being told: لأنّ is لـ plus this word. The shadda over the ن is the doubling mark, and it belongs to the word — this is anna, with the n doubled, not ana.
+
+Grammar Lens: what follows it.
+The clause after أنّ (anna) is a nominal sentence — two nouns side by side, the shape chapter two taught — and أنّ (anna) puts the first of them in the accusative, in the same way ليس does to what follows it. Two particles, one grammatical habit, and it is worth seeing them together.
+English lets that be dropped: I think it is good. Arabic does not.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: aktub anna Sāmī jārī]
+[pause 8 seconds for the answer]
+[your turn — say: the word it hides in — li-anna … anna]
+[pause 8 seconds for the answer]
+[your turn — say: with the verb from chapter thirty-two, in romanization — fakkara anna …]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where have you already read أنّ (anna)? (Inside لأنّ, in the lesson before.) What kind of clause follows it? (A nominal sentence, whose first noun goes into the accusative.) And can it be dropped, the way English drops that? (No.)
+Source: Unicode Arabic chart.
+
+
+Lesson 4 of 5.
+حينما (ḥīnamā) — when.
+
+Warm-up.
+[pause 2 seconds]
+أنّ (anna) hangs a sentence off a verb. This lesson's word hangs one off a moment.
+[your turn — recall: the complementiser from the lesson before — anna]
+[pause 8 seconds for the answer]
+
+You'll want to know: حينما.
+حينما جاء، كتب — ḥīnamā jāʾa, kataba — when he came, he wrote.
+أكتب حينما أسمع — aktub ḥīnamā asmaʿ — I write when I hear.
+The clause it opens can come first or second, and Arabic marks the seam with a comma when it comes first — which is the same rule English follows and one of the few places the two languages punctuate alike.
+
+The word, taken apart.
+حين is an ordinary noun meaning a time, a moment, and ما is the same general particle you have now met three times: as what in chapter two, as the past-tense negator in chapter thirty-nine, and inside limādhā in this chapter. Stuck onto حين it makes at-the-moment-that.
+Arabic writes another word here, ʿindamā, built the same way on a preposition meaning at. It is the commoner of the two in modern prose and it needs a letter this track's script ladder has not reached, so it is named in romanization and left for a script lesson. حينما (ḥīnamā) costs no new letters at all.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ḥīnamā jāʾa, kataba]
+[pause 8 seconds for the answer]
+[your turn — say: the same joined the other way round — kataba ḥīnamā jāʾa]
+[pause 8 seconds for the answer]
+[your turn — say: aktub ḥīnamā asmaʿ]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the two pieces of حينما (ḥīnamā)? (حين, a moment, and ما.) How many jobs has that ما now done in this book? (Three — what, did not, and this one.) And when does Arabic put a comma at the seam? (When the time clause comes first, as English does.)
+Source: Unicode Arabic chart.
+
+
+Lesson 5 of 5.
+Why, that, and when — a question, its answer, a reported thought and a moment in time — and the first three-clause Arabic sentence in this book.
+
+Warm-up.
+[pause 4 seconds]
+Four items landed in this chapter and three of them share a piece with another. Name all four, and say which piece each one shares.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the question and its answer — limādhā? … li-anna …]
+[pause 8 seconds for the answer]
+[your turn — say: a reported thought — aktub anna Sāmī jārī]
+[pause 8 seconds for the answer]
+[your turn — say: a moment — ḥīnamā jāʾa, kataba]
+[pause 8 seconds for the answer]
+[your turn — say: the three-clause sentence — ḥasanan, lākin lā afham li-annanī lā asmaʿ]
+[pause 8 seconds for the answer]
+[your turn — recall: six lessons back, the particle that makes any statement a question — hal]
+[pause 8 seconds for the answer]
+[your turn — recall: eleven lessons back, the joiner written with no space after it — wa-]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two of this chapter's words begin with the same لـ? (limādhā and لأن (li-anna).) Which particle sits inside لأن (li-anna)? (أنّ (anna).) And which of the four hangs a clause off a moment rather than off a verb? (حينما (ḥīnamā).)

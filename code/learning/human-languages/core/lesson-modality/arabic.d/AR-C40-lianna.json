@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C40-lianna",
+    "language": "arabic",
+    "chapter": 40,
+    "sequence": 1150,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e43e5933c706cc77"
+  },
+  "findings": []
+}

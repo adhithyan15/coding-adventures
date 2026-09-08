@@ -1,0 +1,16 @@
+{
+  "id": "AR-PATH-036",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "lessons": [
+    "AR-C39-laysa",
+    "AR-C39-ma",
+    "AR-C39-la-wala",
+    "AR-C39-hal",
+    "AR-R39-denying-and-asking"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-036-DENY-AND-ASK"
+  ],
+  "after": []
+}

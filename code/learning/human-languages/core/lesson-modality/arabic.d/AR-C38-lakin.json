@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C38-lakin",
+    "language": "arabic",
+    "chapter": 38,
+    "sequence": 1060,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a278c98635058ecb"
+  },
+  "findings": []
+}

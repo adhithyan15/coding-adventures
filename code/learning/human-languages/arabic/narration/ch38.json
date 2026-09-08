@@ -1,0 +1,776 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 38,
+  "title": "Two at Once",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:49e1cdf8276d854f",
+  "lessons": [
+    {
+      "id": "AR-C38-wa",
+      "sequence": 1040,
+      "title": "و (wa-) — and",
+      "headword": "و",
+      "romanization": "wa-",
+      "gloss": "and — the commonest word in written Arabic, glossed once in chapter one inside a fixed reply and taught never",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:367c95c1a724d9d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter one taught the reply to the greeting and said of it: hear the little wa- at the front; it means and. That sentence taught nothing. This book has thirty-six chapters of vocabulary and has never joined two words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: و",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "الشاي والحليب — ash-shāy wa-l-ḥalīb — the tea and the milk."
+            },
+            {
+              "kind": "speech",
+              "text": "الملح واللحم — al-milḥ wa-l-laḥm — the salt and the meat."
+            },
+            {
+              "kind": "speech",
+              "text": "One letter, and it is written joined to the word that follows it, never with a space after it. That is why it looks like part of the next word and why it has been on the page in front of you since chapter one without ever being a word you owned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "و (wa-) is the same conjunction Hebrew and Aramaic write with a single letter, in the same job, and it has held that job for three thousand years. It is by a wide margin the commonest word in written Arabic: Arabic prose strings clauses with و (wa-) where English would use a full stop, so a page of Arabic has far more ands in it than a page of English ever does."
+            },
+            {
+              "kind": "speech",
+              "text": "Note that و (wa-) is also the letter wāw, the long ū inside كوب and يوم. One shape, two jobs, told apart by whether it stands alone at the head of a word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ash-shāy wa-l-ḥalīb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ash-shāy wa-l-ḥalīb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-milḥ wa-l-laḥm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-milḥ wa-l-laḥm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three at once — ash-shāy wa-l-ḥalīb wa-s-sukkar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three at once — *ash-shāy wa-l-ḥalīb wa-s-sukkar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the greeting reply that carried it all along — wa-ʿalaykum as-salām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the greeting reply that carried it all along — *wa-ʿalaykum as-salām*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is و (wa-) written with a space after it? (No — it is joined to the word it introduces.) Which two languages write the same conjunction with the same single letter? (Hebrew and Aramaic.) And where has it been sitting since chapter one? (At the front of the greeting reply.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C38-aw",
+      "sequence": 1050,
+      "title": "أو (aw) — or",
+      "headword": "أو",
+      "romanization": "aw",
+      "gloss": "or — two letters, and the word an offer cannot be made without",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:776f0218df4c5abb",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "و (wa-) gives somebody both things. Nothing in this book has ever made anybody choose."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the joiner from the lesson before, and where it is written — wa-, joined on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the joiner from the lesson before, and where it is written — *wa-*, joined on]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أو",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "الشاي أو الحليب — ash-shāy aw al-ḥalīb — the tea or the milk."
+            },
+            {
+              "kind": "speech",
+              "text": "Unlike و (wa-), this one stands as its own word with a space on each side. It sits where و (wa-) sits, between the two things, and nothing else in the sentence changes."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the shape: أ — the hamza-carrying alif you know from أكل — followed by و (wa-), the letter that on its own means and. Arabic's two coordinators are one letter apart and mean opposite things."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أو is Semitic ʾaw, the same word Hebrew keeps. It is the whole apparatus a host needs: two nouns, أو between them, and the question particle a later lesson in this book will add. Until this lesson the corpus could name coffee, tea, milk and sugar and could not offer any one of them against another."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ash-shāy aw al-qahwa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ash-shāy aw al-qahwa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same pair joined instead of split — ash-shāy wa-l-qahwa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same pair joined instead of split — *ash-shāy wa-l-qahwa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "and hear the difference — one hands you both, one makes you pick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: and hear the difference — one hands you both, one makes you pick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bi-sukkar aw bi-dūn — with sugar or without",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bi-sukkar aw bi-dūn* — with sugar or without]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which joiner is written joined to the next word, and which stands apart? (و (wa-) joins on; أو (aw) stands apart.) Which letter do they share? (و (wa-).) And which of them makes somebody choose? (أو (aw).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C38-lakin",
+      "sequence": 1060,
+      "title": "لكن (lākin) — but",
+      "headword": "لكن",
+      "romanization": "lākin",
+      "gloss": "but — the first word in this book that can set one clause against another, and three letters the reader has owned since chapter two",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a278c98635058ecb",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two joiners so far. One adds, one chooses, and neither of them can disagree with anything."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the two items before this one — wa-, aw",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the two items before this one — *wa-*, *aw*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لكن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أسمع لكن لا أكتب — asmaʿ lākin lā aktub — I hear, but I do not write."
+            },
+            {
+              "kind": "speech",
+              "text": "And with the sentence chapter thirty-seven built, whose verb carries a letter the script ladder has not reached: asmaʿ lākin lā afham, I hear, but I do not understand."
+            },
+            {
+              "kind": "speech",
+              "text": "الشاي حلو لكن الحليب لا — ash-shāy ḥulw lākin al-ḥalīb lā — the tea is sweet but the milk is not."
+            },
+            {
+              "kind": "speech",
+              "text": "و (wa-) puts two clauses on the same side. لكن (lākin) turns the second one against the first, and it stands at the head of the clause it turns."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at the first two letters: لا, the negator this book taught in chapter five, with an old particle behind it. Arabic's but has a not inside it."
+            },
+            {
+              "kind": "speech",
+              "text": "English did the same thing by a different road. But is Old English be-ūtan, \"be out, except\" — and out is still visible in it if you look. Two unrelated languages built their adversative out of a word for leaving something aside."
+            },
+            {
+              "kind": "speech",
+              "text": "In writing you will also meet لكنّ with a shadda, which takes a following noun in the accusative. The plain لكن (lākin) in this lesson joins clauses and asks nothing of what follows."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asmaʿ lākin lā afham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asmaʿ lākin lā afham*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same two clauses with the other joiner — asmaʿ wa-afham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same two clauses with the other joiner — *asmaʿ wa-afham*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "and hear what changed — the second clause no longer argues",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: and hear what changed — the second clause no longer argues]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ash-shāy wa-l-ḥalīb … ash-shāy lākin lā al-ḥalīb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ash-shāy wa-l-ḥalīb* … *ash-shāy lākin lā al-ḥalīb*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word is hiding at the front of لكن (lākin)? (لا, the negator from chapter five.) Which English word was built the same way? (But, from be-ūtan, \"be out.\") And what does لكن (lākin) do that و (wa-) cannot? (Turn the second clause against the first.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C38-hasanan",
+      "sequence": 1070,
+      "title": "حسنًا (ḥasanan) — all right",
+      "headword": "حسنًا",
+      "romanization": "ḥasanan",
+      "gloss": "all right, fine, very well — the backchannel this track had no word for, and the first way a learner can agree with somebody",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09c601092244ed7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "نعم and لا answer a question. Neither of them says I am following you, and a conversation needs that more often than it needs an answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the joiner from the lesson before, and the negator inside it — lākin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the joiner from the lesson before, and the negator inside it — *lākin*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حسنًا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حسنًا — ḥasanan — all right; fine; very well."
+            },
+            {
+              "kind": "speech",
+              "text": "حسنًا، لكن … — ḥasanan, lākin … — all right, but …"
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is one you have written twice already. شكرًا and ʿafwan wear the same ـًا, the two-stroke tanwīn over an alif that turns an Arabic adjective into an adverb. The root here is حَسَن, ḥasan, \"good, beautiful.\" So ḥasanan is literally goodly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: agreeing, and half-agreeing",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "said",
+                "does"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "said: نعم. does: answers a question.",
+                "said: حسنًا (ḥasanan). does: accepts what was said.",
+                "said: حسنًا (ḥasanan)، لكن (lākin) … does: accepts, and then turns."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The third row is the shape almost every real disagreement takes. A learner who can only say نعم or لا has to accept or refuse whole; this is the first thing in the book that lets them do neither."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥasanan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥasanan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three words with the same ending — shukran, ʿafwan, ḥasanan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three words with the same ending — *shukran, ʿafwan, ḥasanan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the half-agreement — ḥasanan, lākin …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the half-agreement — *ḥasanan, lākin …*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the ـًا ending do to an Arabic adjective? (Turns it into an adverb.) Which two words in this book already wear it? (شكرًا and ʿafwan.) And what does حسنًا (ḥasanan) do that نعم does not? (Accepts what was said, without answering a question.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R38-two-at-once",
+      "sequence": 1080,
+      "title": "Two at once",
+      "headword": "و · أو · لكن",
+      "romanization": "wa- · aw · lākin",
+      "gloss": "adding, choosing, turning — and the whole food and drink inventory of chapters thirty-three to thirty-six becoming combinable",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e4f593883eee2bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three joiners landed in this chapter. Name them, and say for each one whether it adds, chooses, or turns — and which of the three is written joined to the word after it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ash-shāy wa-l-qahwa, then ash-shāy aw al-qahwa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ash-shāy wa-l-qahwa*, then *ash-shāy aw al-qahwa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the half-agreement — ḥasanan, lākin …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the half-agreement — *ḥasanan, lākin …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "five lessons back, the prefix that means I — on aktub",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: five lessons back, the prefix that means *I* — on *aktub*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — every noun in the pantry, two at a time",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is what the chapter actually bought. Chapters thirty-three to thirty-six taught a pantry and a family that could only ever be named one item at a time — and every one of them is now combinable. Take them two at a time, cold, from memory."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four drinks and their sweetener — ash-shāy wa-l-qahwa wa-l-ḥalīb wa-s-sukkar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four drinks and their sweetener — *ash-shāy wa-l-qahwa wa-l-ḥalīb wa-s-sukkar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same four as a choice, two at a time — shāy aw qahwa, ḥalīb aw sukkar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same four as a choice, two at a time — *shāy aw qahwa*, *ḥalīb aw sukkar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what is on the table — al-milḥ wa-l-laḥm wa-l-jubn, and over it all aṭ-ṭaʿām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what is on the table — *al-milḥ wa-l-laḥm wa-l-jubn*, and over it all *aṭ-ṭaʿām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you eat it with — kūb wa-milʿaqa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you eat it with — *kūb wa-milʿaqa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the people — ibn wa-bint, jār wa-ṣadīq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the people — *ibn wa-bint*, *jār wa-ṣadīq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one of each, turned — ash-shāy lākin lā al-qahwa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one of each, turned — *ash-shāy lākin lā al-qahwa*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of this chapter's joiners has a negator inside it? (لكن (lākin).) Which one is a single letter with no space after it? (و (wa-).) And which word accepts what somebody said without answering a question? (حسنًا (ḥasanan).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

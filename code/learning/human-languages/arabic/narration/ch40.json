@@ -1,0 +1,702 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 40,
+  "title": "Why, That, and When",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b7413c20cfdd3898",
+  "lessons": [
+    {
+      "id": "AR-C40-limadha",
+      "sequence": 1140,
+      "title": "لماذا (limādhā) — why",
+      "headword": "لماذا؟",
+      "romanization": "limādhā?",
+      "gloss": "why — the question this book has never been able to ask, built out of the preposition لـ and the word for \"what\"",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fd9f3d8516f62f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This book can ask what, how, how much and — since the last chapter — yes or no. It has never been able to ask for a reason."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the particle from the lesson before, and what it moves — hal, and nothing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the particle from the lesson before, and what it moves — *hal*, and nothing]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لماذا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لماذا؟ — limādhā? — why?"
+            },
+            {
+              "kind": "speech",
+              "text": "It is a compound and every piece is recoverable: لـ, the preposition for, plus ماذا, what — which is itself ما plus ذا, this. Arabic's why is transparently for-what-this."
+            },
+            {
+              "kind": "speech",
+              "text": "And the ما inside it is the same particle the last chapter taught as the negator of the past tense, and the same one chapter two taught as what in ما اسمك. Three jobs, one word, told apart by where it stands."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لماذا and هل are the two ends of Arabic questioning. هل asks for a yes or a no and adds no information; لماذا asks for a whole clause back, and the next lesson supplies the word that clause begins with."
+            },
+            {
+              "kind": "speech",
+              "text": "The letter ذال in the middle of this word has no lesson in this track's script ladder yet, so the word is printed whole here, in the lesson that owns it, and named in romanization wherever else it appears."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "limādhā? — on its own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *limādhā?* — on its own]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question words this book now owns — mā, kayfa, kam, hal, limādhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question words this book now owns — *mā, kayfa, kam, hal, limādhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pieces it is built from — li- … mā … dhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pieces it is built from — *li- … mā … dhā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the three pieces of لماذا? (لـ for, ما what, ذا this.) Which of them has the book already taught twice, in two different jobs? (ما — what in chapter two, did not in chapter thirty-nine.) And what does لماذا ask for that هل does not? (A whole clause.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C40-lianna",
+      "sequence": 1150,
+      "title": "لأن (li-anna) — because",
+      "headword": "لأن",
+      "romanization": "li-anna",
+      "gloss": "because — the answer to the question the lesson before taught, and the same لـ with a complementiser behind it",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e43e5933c706cc77",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lesson before this taught the question. A question nobody can answer is worse than no question at all."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the item before this, and the three pieces inside it — limādhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the item before this, and the three pieces inside it — *limādhā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لأن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لا أكتب لأنني لا أسمع — lā aktub li-annanī lā asmaʿ — I am not writing because I do not hear."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the first letter. limādhā opens with لـ, for, and so does this word — with أنّ (anna), that, behind it instead of a question word. Arabic's why and because are one particle apart, and both are visibly built out of pieces rather than borrowed whole."
+            },
+            {
+              "kind": "speech",
+              "text": "لأنّ needs a subject after it, so for I it becomes لأنني, li-annanī. That is one ending on one word, and it is the only thing the construction asks of you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the claim, then the reason",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "head word",
+                "what follows it"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "head word: لكن. what follows it: an objection.",
+                "head word: لأن (li-anna). what follows it: a reason."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both stand at the head of the clause they govern, and both come after the claim they attach to. Put them in one sentence and you have the shape of an argument."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question, then the answer word — limādhā? … li-anna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question, then the answer word — *limādhā?* … *li-anna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lā aktub li-annanī lā asmaʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lā aktub li-annanī lā asmaʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an objection and a reason in one breath — ḥasanan, lākin … li-anna …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an objection and a reason in one breath — *ḥasanan, lākin … li-anna …*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter do limādhā and لأن (li-anna) share, and what does it mean? (لـ, for.) What follows it in each? (A question word in one, a complementiser in the other.) And which comes first, the claim or the reason? (The claim.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C40-anna",
+      "sequence": 1160,
+      "title": "أنّ (anna) — that",
+      "headword": "أنّ",
+      "romanization": "anna",
+      "gloss": "that — the complementiser that hangs a whole sentence off a verb, already met welded onto لـ in the word for \"because\"",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5624cfbea2736319",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "fakkara — he thought — has been in this book since chapter thirty-two, and nobody has ever been able to say what they think."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the reason word from the lesson before, and the piece behind its لـ — li-anna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the reason word from the lesson before, and the piece behind its لـ — *li-anna*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أنّ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أكتب أنّ سامي جاري — aktub anna Sāmī jārī — I write that Sami is my neighbour."
+            },
+            {
+              "kind": "speech",
+              "text": "أنّ (anna) takes a whole sentence and makes it the object of a verb of writing, saying, knowing or thinking. Everything before it is the frame; everything after it is the reported thing."
+            },
+            {
+              "kind": "speech",
+              "text": "You met it one lesson ago without being told: لأنّ is لـ plus this word. The shadda over the ن is the doubling mark, and it belongs to the word — this is anna, with the n doubled, not ana."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what follows it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The clause after أنّ (anna) is a nominal sentence — two nouns side by side, the shape chapter two taught — and أنّ (anna) puts the first of them in the accusative, in the same way ليس does to what follows it. Two particles, one grammatical habit, and it is worth seeing them together."
+            },
+            {
+              "kind": "speech",
+              "text": "English lets that be dropped: I think it is good. Arabic does not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aktub anna Sāmī jārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aktub anna Sāmī jārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word it hides in — li-anna … anna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word it hides in — *li-anna* … *anna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with the verb from chapter thirty-two, in romanization — fakkara anna …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with the verb from chapter thirty-two, in romanization — *fakkara anna …*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where have you already read أنّ (anna)? (Inside لأنّ, in the lesson before.) What kind of clause follows it? (A nominal sentence, whose first noun goes into the accusative.) And can it be dropped, the way English drops that? (No.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C40-hinama",
+      "sequence": 1170,
+      "title": "حينما (ḥīnamā) — when",
+      "headword": "حينما",
+      "romanization": "ḥīnamā",
+      "gloss": "when — the clause joiner that puts one event beside another in time, with the same ما inside it the last chapter taught twice",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:114cc5ad7d17b189",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "أنّ (anna) hangs a sentence off a verb. This lesson's word hangs one off a moment."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the complementiser from the lesson before — anna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the complementiser from the lesson before — *anna*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حينما",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حينما جاء، كتب — ḥīnamā jāʾa, kataba — when he came, he wrote."
+            },
+            {
+              "kind": "speech",
+              "text": "أكتب حينما أسمع — aktub ḥīnamā asmaʿ — I write when I hear."
+            },
+            {
+              "kind": "speech",
+              "text": "The clause it opens can come first or second, and Arabic marks the seam with a comma when it comes first — which is the same rule English follows and one of the few places the two languages punctuate alike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حين is an ordinary noun meaning a time, a moment, and ما is the same general particle you have now met three times: as what in chapter two, as the past-tense negator in chapter thirty-nine, and inside limādhā in this chapter. Stuck onto حين it makes at-the-moment-that."
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic writes another word here, ʿindamā, built the same way on a preposition meaning at. It is the commoner of the two in modern prose and it needs a letter this track's script ladder has not reached, so it is named in romanization and left for a script lesson. حينما (ḥīnamā) costs no new letters at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥīnamā jāʾa, kataba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥīnamā jāʾa, kataba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same joined the other way round — kataba ḥīnamā jāʾa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same joined the other way round — *kataba ḥīnamā jāʾa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aktub ḥīnamā asmaʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aktub ḥīnamā asmaʿ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two pieces of حينما (ḥīnamā)? (حين, a moment, and ما.) How many jobs has that ما now done in this book? (Three — what, did not, and this one.) And when does Arabic put a comma at the seam? (When the time clause comes first, as English does.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R40-why-that-when",
+      "sequence": 1180,
+      "title": "Why, that, and when",
+      "headword": "لماذا · لأن · أنّ · حينما",
+      "romanization": "limādhā · li-anna · anna · ḥīnamā",
+      "gloss": "a question, its answer, a reported thought and a moment in time — and the first three-clause Arabic sentence in this book",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cff3104a91e66f66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four items landed in this chapter and three of them share a piece with another. Name all four, and say which piece each one shares."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question and its answer — limādhā? … li-anna …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question and its answer — *limādhā?* … *li-anna …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reported thought — aktub anna Sāmī jārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reported thought — *aktub anna Sāmī jārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a moment — ḥīnamā jāʾa, kataba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a moment — *ḥīnamā jāʾa, kataba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three-clause sentence — ḥasanan, lākin lā afham li-annanī lā asmaʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three-clause sentence — *ḥasanan, lākin lā afham li-annanī lā asmaʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "six lessons back, the particle that makes any statement a question — hal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: six lessons back, the particle that makes any statement a question — *hal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "eleven lessons back, the joiner written with no space after it — wa-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: eleven lessons back, the joiner written with no space after it — *wa-*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two of this chapter's words begin with the same لـ? (limādhā and لأن (li-anna).) Which particle sits inside لأن (li-anna)? (أنّ (anna).) And which of the four hangs a clause off a moment rather than off a verb? (حينما (ḥīnamā).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": "AR-EXT-035-JOINING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can add two things, offer a choice between them, turn a clause against the one before it, and accept what somebody said.",
+  "prerequisites": [
+    "AR-EXT-034-PRESENT-TENSE"
+  ],
+  "lessons": [
+    "AR-C38-wa",
+    "AR-C38-aw",
+    "AR-C38-lakin",
+    "AR-C38-hasanan",
+    "AR-R38-two-at-once"
+  ]
+}

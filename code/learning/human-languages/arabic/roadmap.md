@@ -212,6 +212,29 @@ word lessons — never as a gated reading course.
   broken against **sound** plurals (*qahawāt*, *ṣadīqāt*). *Kūb*'s resemblance
   to Latin *cuppa* is offered as unsettled, not claimed. **Authored.**
 
+### Chapters 37–41 — the present tense, joining, and repair *(authored)*
+
+- **Ch. 37 — The Tense That Was Missing**: the أ- prefix that makes a
+  first-person present out of any taught verb → **لا أفهم**, which was one form
+  away for six chapters. Leaves SPINE-SAY-WHAT-I-DO's omission ledger.
+- **Ch. 38 — Two at Once**: **و**, glossed in chapter 1 and taught never →
+  **أو** → **لكن**, with **لا** visible at the front of it → **حسنًا**. The
+  review runs all three joiners over the pantry of chapters 33–36.
+- **Ch. 39 — Denying, and Asking**: **ليس** for the verbless sentence → **ما**
+  for the past → **لا … ولا** → **هل**. Negation closes outright and
+  SPINE-NEGATE-AND-ASK's ledger empties.
+- **Ch. 40 — Why, That, and When**: **لماذا** → **لأن** → **أنّ**, met one
+  lesson earlier inside **لأنّ** → **حينما**. Empties SPINE-SAY-WHY's ledger.
+- **Ch. 41 — Calling Somebody, and Asking Again**: **يا** → **كرّر من فضلك**.
+  The review replays the first meeting of chapters 1–4 and repairs it.
+
+Every headword in these five chapters was tested against the thirty letters the
+script ladder has taught. عندما, الذي, إلا and أعرف were rejected on that test
+and are recorded in the inventory beside the letters that block them; three
+headwords that could not be avoided — لا أفهم, لماذا؟ and كرّر من فضلك — use the
+romanization exemption, and the count of exposure-only lessons rose from 7 to 13
+to say so.
+
 ## Planned
 
 | Chapter | Theme |
