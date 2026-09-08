@@ -616,11 +616,11 @@ root.addEventListener("input", event => {
 });
 
 root.addEventListener("change", event => {
-  const target = closestEventTarget(event.target, "[data-on-toggle], [data-on-select]");
+  const target = closestEventTarget(event.target, "[data-on-toggle], [data-on-select], input[type=range][data-on-commit]");
   if (target === null || !root.contains(target)) {
     return;
   }
-  const emitName = target.dataset.onToggle ?? target.dataset.onSelect;
+  const emitName = target.dataset.onToggle ?? target.dataset.onSelect ?? target.dataset.onCommit;
   void dispatchMosaicEvent(emitName, target);
 });
 
@@ -1634,6 +1634,10 @@ fn emit_html_tree(
         out.push_str(&emit_host_radio(node, indent, part_styles));
         return Ok(out);
     }
+    if node.tag == "HostSlider" {
+        out.push_str(&emit_host_slider(node, indent, part_styles));
+        return Ok(out);
+    }
 
     // UI29-4 — `HostLink` lowers to `<a href ...>label</a>`.
     // `target="_blank"` always pairs with `rel="noopener
@@ -2314,6 +2318,55 @@ fn emit_host_radio(
         Some(body) => format!("{pad}<label><input{attrs}{style_attr}> {body}</label>\n"),
         None => format!("{pad}<input{attrs}{style_attr}>\n"),
     }
+}
+
+/// Lower `HostSlider` to the browser's native adjustable range input.
+///
+/// Static HTML preserves dynamic values and events as mustache/data
+/// markers for the same hydration pass used by the other host controls.
+fn emit_host_slider(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::from(" type=\"range\"");
+
+    for prop_name in ["value", "min", "max", "step"] {
+        match find_prop(node, prop_name) {
+            Some(LayoutPropValue::SlotRef(slot)) => {
+                write!(attrs, " {prop_name}=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+            }
+            Some(LayoutPropValue::Number(value)) => {
+                write!(attrs, " {prop_name}=\"{value}\"").unwrap();
+            }
+            _ => {}
+        }
+    }
+
+    match find_prop(node, "disabled") {
+        Some(LayoutPropValue::Keyword(value)) if value == "true" => attrs.push_str(" disabled"),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            write!(attrs, " data-disabled=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+        }
+        _ => {}
+    }
+
+    match find_prop(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => {
+            write!(attrs, " aria-label=\"{}\"", escape_html_attr(label)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            write!(attrs, " aria-label=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+        }
+        _ => {}
+    }
+
+    append_emit_marker(&mut attrs, node, "onChange", "data-on-change");
+    append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
+
+    let style_attr = build_style_attr(node, "", part_styles);
+    format!("{pad}<input{attrs}{style_attr}>\n")
 }
 
 // =====================================================================
@@ -6673,6 +6726,77 @@ mod tests {
         assert!(
             out.contains("data-on-change=\"onSet\""),
             "expected data-on-change=\"onSet\" marker, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_slider_preserves_range_bindings_accessibility_and_events() {
+        let model = component_with_emits(
+            "X",
+            vec![],
+            vec![
+                emit("onAdjust", vec![param("value", EmitPayloadType::Number)]),
+                emit("onCommit", vec![param("value", EmitPayloadType::Number)]),
+            ],
+        );
+        let l = layout(
+            "X",
+            node_with_props(
+                "HostSlider",
+                vec![
+                    prop_slot("value", "current-value"),
+                    LayoutProp {
+                        name: "min".into(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    prop_slot("max", "maximum-value"),
+                    LayoutProp {
+                        name: "step".into(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                    prop_slot("disabled", "is-disabled"),
+                    prop_string("a11y-label", "Volume"),
+                    prop_emit("onChange", "onAdjust"),
+                    prop_emit("onCommit", "onCommit"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&model, &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        for expected in [
+            "type=\"range\"",
+            "value=\"{{currentValue}}\"",
+            "min=\"0\"",
+            "max=\"{{maximumValue}}\"",
+            "step=\"5\"",
+            "data-disabled=\"{{isDisabled}}\"",
+            "aria-label=\"Volume\"",
+            "data-on-change=\"onAdjust\"",
+            "data-on-commit=\"onCommit\"",
+        ] {
+            assert!(out.contains(expected), "missing {expected}:\n{out}");
+        }
+
+        let mut options = EmitOptions::default();
+        options.emit_project = true;
+        let project = from_pipeline_with_options(
+            &model,
+            &l,
+            &empty_style("X"),
+            &options,
+        )
+        .unwrap()
+        .project
+        .expect("project shell");
+        assert!(
+            project
+                .main_js
+                .contains("input[type=range][data-on-commit]")
+                && project.main_js.contains("target.dataset.onCommit")
+                && project.main_js.contains("\"type\": \"number\""),
+            "range change must dispatch the numeric commit payload:\n{}",
+            project.main_js
         );
     }
 

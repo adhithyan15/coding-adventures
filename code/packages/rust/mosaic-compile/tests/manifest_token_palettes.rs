@@ -85,10 +85,7 @@ fn browser_backends_load_foundation_and_dependent_control_palettes() {
 }
 
 #[test]
-fn slider_reaches_the_separately_tracked_host_slider_gate() {
-    // #14635 owns the remaining browser HostSlider lowering. Until that lands,
-    // keep proving Slider gets past its manifest palette instead of regressing
-    // to the earlier unresolved-token failure.
+fn standard_slider_compiles_for_every_browser_backend() {
     let repository = repository_root();
     let package_collection = repository.join("code/packages/mosaic");
     let package_root = package_collection.join("mosaic-std-controls");
@@ -117,13 +114,14 @@ fn slider_reaches_the_separately_tracked_host_slider_gate() {
             .output()
             .expect("run mosaic-compile");
         assert!(
-            !result.status.success(),
-            "{backend} unexpectedly accepted HostSlider"
+            result.status.success(),
+            "Slider failed on {backend}:\n{}",
+            String::from_utf8_lossy(&result.stderr)
         );
-        let stderr = String::from_utf8_lossy(&result.stderr);
+        let artifact = fs::read_to_string(&output).expect("read Slider artifact");
         assert!(
-            stderr.contains("HostSlider") && !stderr.contains("Token '$foundation-"),
-            "Slider did not advance past manifest palette loading on {backend}:\n{stderr}"
+            artifact.contains("range") && !artifact.contains("$foundation-"),
+            "Slider did not lower a resolved native range input on {backend}:\n{artifact}"
         );
     }
 

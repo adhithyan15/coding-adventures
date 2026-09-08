@@ -133,6 +133,7 @@ static snapshot.
 | Input (compatibility)| `<input type="text">` or `<textarea>`                 |
 | HostInput (UI29)     | `<input type="text" value="{{value}}">`               |
 | HostButton (UI29)    | `<button>{{label}}</button>`                          |
+| HostSlider (UI29)    | `<input type="range" value="{{value}}">`            |
 | HostScroll (UI29)    | `<div style="overflow:auto">`                         |
 | HostTable (UI29)     | `<table>` with `<colgroup>`/`<thead>`/`<tbody>`/`<tfoot>` |
 | If / Else (UI29)     | `<!-- mosaic-if when="..." -->` comment markers       |
@@ -147,6 +148,8 @@ attach listeners without parsing Mosaic source files:
 - `HostButton` with `onClick` or `onTap` emits `data-on-click`.
 - `Input` or `HostInput` with `onChange`, `onCommit`, or `onCancel` emits
   `data-on-change`, `data-on-commit`, or `data-on-cancel`.
+- `HostSlider` with `onChange` or `onCommit` emits `data-on-change` or
+  `data-on-commit` while retaining native range semantics.
 
 ### The `If` / `For` static-HTML compromise
 

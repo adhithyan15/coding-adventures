@@ -16,6 +16,11 @@ based on the generated `variant` attribute local. Base declarations apply
 first, enum axes follow model slot order, and existing structural or
 interaction `state-when-*` layers remain more specific.
 
+`HostSlider` lowers to the browser's native `<input type="range">`. The
+generated element preserves literal and slot-backed value/bounds, disabled and
+accessible-name bindings, dispatches numeric `onChange` payloads on `input`,
+and numeric `onCommit` payloads on `change`.
+
 ## Dependencies
 
 - mosaic-vm

@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native browser HostSlider
+
+Web Component templates now lower `HostSlider` to `<input type="range">` with
+literal and slot-backed range values, disabled/accessibility bindings,
+continuous `input` dispatch, and committed `change` dispatch.
+
 ### Fixed - lower compatibility Input nodes
 
 Web Component templates now lower the legacy `Input` surface, including its
