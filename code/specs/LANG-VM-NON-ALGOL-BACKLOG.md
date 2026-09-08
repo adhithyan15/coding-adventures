@@ -8,6 +8,20 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 Nib BEAM probe (selected after #14632 merged)
+
+PR #14632 merged as `9b04b74cb8` after all 46 checks succeeded or skipped.
+Oct's twelve portable BEAM cells are complete. Reprioritize Nib next because
+its u8 arithmetic shares the newly proven lowering, while its u4/BCD cases
+provide discriminating checks for remaining width and representation gaps.
+
+Probe the existing Nib corpus on real Erlang, verifying row/source identity on
+fresh main. Return values must match without process-exit masking; preserve
+hard failures after runtime detection. Separate any failing u4, checked
+arithmetic, or storage operation into a committed bounded contract before
+backend edits. Promote only executed cells. Retain VM-028's broader Intel-4004
+fidelity audit and VM-060b's host input design as separate backlog work.
+
 ## VM-040 Oct BEAM probe (selected after #14621 merged)
 
 PR #14621 merged as `df39688c62` after all 46 checks succeeded or skipped.
