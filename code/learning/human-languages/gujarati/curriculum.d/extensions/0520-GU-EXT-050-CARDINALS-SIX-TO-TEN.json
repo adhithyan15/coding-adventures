@@ -1,0 +1,20 @@
+{
+  "id": "GU-EXT-050-CARDINALS-SIX-TO-TEN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can count from one to ten in Gujarati, write the retroflex aspirate that eight needs, and build the ordinal of any number from seven upward.",
+  "prerequisites": [
+    "GU-EXT-049-ORDINALS-ONE-TO-FIVE"
+  ],
+  "lessons": [
+    "GU-C39-chha",
+    "GU-C39-saat",
+    "GU-W22-ttha",
+    "GU-C39-aath",
+    "GU-C39-nav",
+    "GU-C39-das",
+    "GU-C39-ordinal-reach",
+    "GU-R39-one-to-ten"
+  ]
+}

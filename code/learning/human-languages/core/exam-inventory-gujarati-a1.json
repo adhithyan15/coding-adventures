@@ -719,7 +719,13 @@
       "id": "GU-A1-NUM-03",
       "category": "Sankhya (numerals and quantity)",
       "label": "cardinals six to ten",
-      "probe": null,
+      "probe": [
+        "GU-LEX-CHHA-SIX",
+        "GU-LEX-SAAT",
+        "GU-LEX-AATH",
+        "GU-LEX-NAV",
+        "GU-LEX-DAS"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -729,7 +735,7 @@
         "A1-Q-01"
       ],
       "gujaratiSpecific": false,
-      "note": "THE COUNT STOPS AT FIVE. chha, saat, aath, nav and das return zero hits. Ages, prices, times and quantities are all closed above five."
+      "note": "Chapter 43, eight lessons. The count runs six to ten in counting order, because Wiktionary's -mun entry ends its exception list at chha: the reader crosses the boundary between exception and rule exactly once, between the first lesson and the second. Four of the five numbers cost no new sign -- chha is the letter the reader has written inside chhe since chapter two -- and only aath needs one, the retroflex aspirate ttha bought in the third lesson. The chapter also ships GU-GRAMMAR-ORDINAL-MU-REACH, which is a rule rather than a word: it names both edges of the -mun exception list, and is NOT a claim to teach chhaththun, the irregular sixth, which the book prints once with its source and does not ask the reader to use."
     },
     {
       "id": "GU-A1-NUM-04",
@@ -746,7 +752,7 @@
         "A1-NG2-01"
       ],
       "gujaratiSpecific": false,
-      "note": "Follows from GU-A1-NUM-03."
+      "note": "Follows from GU-A1-NUM-03, which is now closed. The count reaches das and the -mun rule is unbounded above chha, so the ordinals past tenth are already derivable; what is still missing is the CARDINALS past ten -- agiyaar upward, and the tens -- which no lesson teaches."
     },
     {
       "id": "GU-A1-NUM-05",
@@ -771,7 +777,7 @@
         "A1-NG3-06"
       ],
       "gujaratiSpecific": false,
-      "note": "Chapter 42, six lessons. The Wiktionary entry for the suffix -મું names the numbers it does NOT build on -- ek, be, tran, chaar and six -- and the track's count reaches five, so four of the five reachable ordinals stand on that exception list and one does not. The chapter opens on paanchmun (paanch + -mun) so the rule is visible before the exceptions, then runs by how much of the number survives: treejun, beejun, chothun, pahelun. Ordinals past fifth wait on GU-A1-NUM-03."
+      "note": "Chapter 42, six lessons. The Wiktionary entry for the suffix -મું names the numbers it does NOT build on -- ek, be, tran, chaar and six -- and the track's count reaches five, so four of the five reachable ordinals stand on that exception list and one does not. The chapter opens on paanchmun (paanch + -mun) so the rule is visible before the exceptions, then runs by how much of the number survives: treejun, beejun, chothun, pahelun. Ordinals past fifth no longer wait: chapter 43 closes GU-A1-NUM-03 and ships GU-GRAMMAR-ORDINAL-MU-REACH, which builds saatmun, aathmun, navmun and dasmun from the rule taught here, with the sixth named as the last exception rather than taught as a word."
     },
     {
       "id": "GU-A1-NUM-06",
@@ -825,7 +831,7 @@
         "A1-NE16-01"
       ],
       "gujaratiSpecific": false,
-      "note": "NOT ONE DIGIT IS TAUGHT OR USED. A character census over every headword and every lesson body finds no codepoint in the Gujarati digit range at all, so a learner cannot read a price, a house number or a date."
+      "note": "NOT ONE DIGIT IS TAUGHT OR USED. A character census over every headword and every lesson body finds no codepoint in the Gujarati digit range at all, so a learner cannot read a price, a house number or a date. This is now the column's only remaining reading gap below ten: chapter 43 closed the spoken count to das without touching the digits, which are a separate script problem rather than a vocabulary one."
     },
     {
       "id": "GU-A1-CASE-01",

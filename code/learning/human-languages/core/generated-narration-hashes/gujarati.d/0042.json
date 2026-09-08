@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 42,
-  "sourceHash": "fnv1a64:f19c2b8de45755ab",
+  "sourceHash": "fnv1a64:5659552c7c100c45",
   "lessonIds": [
     "GU-C38-panchmu",
     "GU-C38-triju",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "gujarati/narration/ch42.txt",
   "json": "gujarati/narration/ch42.json",
-  "textHash": "fnv1a64:1dcefd720231d132",
-  "jsonHash": "fnv1a64:b2f32105ed951e11",
+  "textHash": "fnv1a64:9e6d62f043515a36",
+  "jsonHash": "fnv1a64:70294ab2b9b344ad",
   "findings": []
 }

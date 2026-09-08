@@ -39,15 +39,19 @@ and book-only human pass evidence remain backlog.
 
 ## Current authored boundary
 
-Canonical data currently contains **42 chapters and 269 lessons**. All 269
+Canonical data currently contains **43 chapters and 277 lessons**. All 277
 lessons are mapped and generated, and every lesson stays within the five-minute
-cap. The pre-A1 writing-stage contract is complete, all 44 Gujarati forms shown
+cap. The pre-A1 writing-stage contract is complete, all 45 Gujarati forms shown
 by the current book are explicitly taught, and the exact script inventory has
 no never-taught glyphs.
 
-Chapter 42 is the ordinal column, and it cost no new letter: a census of every
-Gujarati character in it, headwords and worked examples alike, against the 44
-that the track's own writing lessons teach returns zero shown-but-untaught.
+Chapter 42 is the ordinal column, and it cost no new letter. Chapter 43 takes the
+cardinal count from five to ten and costs exactly one — **ઠ**, the retroflex
+aspirate that આઠ needs. The other four numbers need nothing: છ is the letter the
+reader has been writing inside છે since chapter two. Both counts come from a
+census **derived from the corpus at point of use** — every Gujarati codepoint any
+script lesson puts on the page — rather than from a transcribed list, and both
+return zero shown-but-untaught.
 
 The script side is now closed on both of its measures. Every native-script
 headword in the track carries a romanization, so no headword is load-bearing
@@ -88,6 +92,7 @@ still require substantial expansion.
 | 29-34 | Write the six oral time words, return the numbers and the core verbs at a fifth window, and build four ear-first vocabulary chapters around food, the house, the sky and people. |
 | 35-41 | Close the joining column: negation and apology, and, or, but, the reporting frame, reasons, conditions, pronouns and the question family. |
 | 42 | Say first to fifth, agree each with the three genders, and tell the one ordinal Gujarati builds from the four it hands down. |
+| 43 | Count one to ten, write the one new letter eight needs, and build the ordinal of any number from seventh upward without being taught the word. |
 
 The exact chapter titles, lesson ranges, and ordered lesson IDs are in the
 [session map](session-map.md). The [roadmap](roadmap.md) separates this authored

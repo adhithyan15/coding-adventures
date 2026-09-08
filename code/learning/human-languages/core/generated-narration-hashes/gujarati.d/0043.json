@@ -1,0 +1,22 @@
+{
+  "language": "gujarati",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:a0870968c8db735b",
+  "lessonIds": [
+    "GU-C39-chha",
+    "GU-C39-saat",
+    "GU-W22-ttha",
+    "GU-C39-aath",
+    "GU-C39-nav",
+    "GU-C39-das",
+    "GU-C39-ordinal-reach",
+    "GU-R39-one-to-ten"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 2,
+  "text": "gujarati/narration/ch43.txt",
+  "json": "gujarati/narration/ch43.json",
+  "textHash": "fnv1a64:21c89262e53cbe7f",
+  "jsonHash": "fnv1a64:6f5f93beae240508",
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Which One in the Line",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f19c2b8de45755ab",
+  "sourceHash": "fnv1a64:5659552c7c100c45",
   "lessons": [
     {
       "id": "GU-C38-panchmu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1ea230d12d3f6550",
+      "sourceHash": "fnv1a64:f408770e18283614",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -130,7 +130,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "-મું is not a one-off. Wiktionary's entry for the suffix builds the ordinal of every Gujarati number with it except five: એક, બે, ત્રણ, ચાર, and the word for six, which this book has not reached."
+              "text": "-મું is not a one-off. Wiktionary's entry for the suffix builds the ordinal of every Gujarati number with it except five: એક, બે, ત્રણ, ચાર, and the word for six, which the next chapter reaches."
             },
             {
               "kind": "speech",

@@ -28,7 +28,11 @@ it("pins Gujarati lesson-content budgets", () =>
     // HL-C359: 263 -> 269. Chapter 42, the ordinal column, six lessons and
     // eight atoms. No new idiom, sense or culture claim, so only the lesson
     // total moves.
-    lessons: 269,
+    // 269 -> 277. Chapter 43, the cardinals six to ten: five numbers, one
+    // writing lesson for the retroflex aspirate that eight needs, one rule
+    // lesson naming both edges of the -mun exception list, and a payoff. Seven
+    // atoms. Again no new idiom, sense or culture claim.
+    lessons: 277,
     idioms: 12,
     senses: 6,
     cultureClaims: 16,
@@ -189,6 +193,13 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     // paanch -- so four of the five reachable ordinals are exceptions and one
     // is the rule they are exceptions to.
     ["42", 6],
+    // HL-C361: chapter 43, "Past Five, and the Balance Turns Over". Eight
+    // lessons in COUNTING order, because for six to ten counting order IS the
+    // construction order: Wiktionary's -mun entry ends its exception list at
+    // chha, so the reader crosses the boundary between exception and rule
+    // exactly once, between the first lesson and the second. The writing lesson
+    // is third, where chapters 35-41 already put theirs.
+    ["43", 8],
   ]);
 });
 
@@ -404,6 +415,14 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "guided-copy",
     "guided-copy",
     "guided-copy",
+    // 197 -> 200. Chapter 43's ONE new letter, the retroflex aspirate ttha, and
+    // the full three-stage ladder on it. The other four numbers of the chapter
+    // add nothing here because they add no sign: chha is a letter the reader has
+    // been writing inside chhe since chapter two, and saat, nav and das are made
+    // only of forms already in the hand.
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
   ]);
 });
 
@@ -769,9 +788,23 @@ it("closes Gujarati doorway R4 at position 134", () => {
   //   -2   pre-existing R4 misses closed outright: mahino and atyaare are said
   //        and written again at distance ~80, the first time either has been
   //        inside its fourth window.
+  // 362 -> 360. HL-C361's cardinal chapter, decomposed the same way against the
+  // corpus measured without chapter 43:
+  //    0   created by the tranche's OWN seven atoms. Each lesson recalls the
+  //        previous one's item by name, and the last three lessons service the
+  //        R2 of chha, saat and the new letter; those are every window a
+  //        277-lesson track is long enough to judge for atoms introduced at
+  //        positions 269-275.
+  //   16   PRE-EXISTING (atom, window) slots that did not exist until the track
+  //        grew by eight -- six R2, nine R3, one R4 -- assigned to the exact new
+  //        lesson at the window's minimum distance, one slot per lesson on a
+  //        diagonal, and all sixteen answered by name in the warm-ups.
+  //   -2   pre-existing R4 misses closed outright, and they are exactly the two
+  //        letters the new writing lesson sets beside ttha: GU-SCRIPT-TTA-01 and
+  //        GU-SCRIPT-THA-01 reach their fourth window for the first time.
   // The doorway assertion below is unchanged and still passes, which is the
   // property this test actually owns.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(362);
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(360);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),
@@ -951,6 +984,13 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C38-pahelu-r1",
     "GU-C38-panchmu-r1",
     "GU-C38-triju-r1",
+    "GU-C39-aath-write",
+    "GU-C39-chha-count",
+    "GU-C39-das-count",
+    "GU-C39-nav-ninth",
+    "GU-C39-ordinal-reach-edges",
+    "GU-C39-ordinal-reach-month",
+    "GU-C39-saat-ordinal",
     "GU-R03-doorway-three-r1-dictation",
     "GU-R03-doorway-three-r1-reading",
     "GU-R04-doorway-nine-r2-dictation",
@@ -1073,6 +1113,8 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-R30-people-five-r1-writing",
     "GU-R38-first-to-fifth-agree",
     "GU-R38-first-to-fifth-run",
+    "GU-R39-one-to-ten-ordinals",
+    "GU-R39-one-to-ten-run",
     "GU-W01-aa-matra-observe-check",
     "GU-W01-ha-observe-check",
     "GU-W01-haa-delayed-copy-check",
@@ -1116,5 +1158,6 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-W07-uu-matra-recall",
     "GU-W20-gha-copy",
     "GU-W21-ai-matra-copy",
+    "GU-W22-ttha-recall",
   ]);
 });
