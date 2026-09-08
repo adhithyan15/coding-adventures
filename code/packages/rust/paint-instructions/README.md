@@ -21,7 +21,7 @@ It is the Rust counterpart of the TypeScript `@coding-adventures/paint-instructi
 | `PaintGroup` | Logical container for transform/opacity; renders to parent surface |
 | `PaintLayer` | Offscreen compositing surface with filters and blend modes |
 | `PaintLine` | Straight line segment |
-| `PaintClip` | Rectangular clip mask |
+| `PaintClip` | Rectangular or exact path clip with conservative bounds |
 | `PaintGradient` | Linear or radial colour gradient |
 | `PaintImage` | Raster image from URI or `PixelContainer` |
 

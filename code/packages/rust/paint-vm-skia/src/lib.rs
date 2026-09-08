@@ -210,8 +210,35 @@ fn render_path(
     canvas: &skia_safe::Canvas,
     path: &PaintPath,
 ) -> Result<(), PaintRenderError> {
+    let mut sk_path = build_path(&path.commands)?;
+    sk_path.set_fill_type(
+        match path.fill_rule.as_ref().unwrap_or(&FillRule::NonZero) {
+            FillRule::NonZero => PathFillType::Winding,
+            FillRule::EvenOdd => PathFillType::EvenOdd,
+        },
+    );
+
+    if let Some(mut paint) = fill_paint(ctx, path.fill.as_deref()) {
+        paint.set_style(paint::Style::Fill);
+        canvas.draw_path(&sk_path, &paint);
+    }
+    if let Some(paint) = stroke_paint(
+        path.stroke.as_deref(),
+        path.stroke_width,
+        path.stroke_dash.as_deref(),
+        path.stroke_dash_offset,
+        path.stroke_cap.as_ref(),
+        path.stroke_join.as_ref(),
+    ) {
+        canvas.draw_path(&sk_path, &paint);
+    }
+
+    Ok(())
+}
+
+fn build_path(commands: &[PathCommand]) -> Result<skia_safe::Path, PaintRenderError> {
     let mut builder = PathBuilder::new();
-    for command in &path.commands {
+    for command in commands {
         match *command {
             PathCommand::MoveTo { x, y } => {
                 builder.move_to((x as f32, y as f32));
@@ -247,30 +274,7 @@ fn render_path(
             }
         }
     }
-    let mut sk_path = builder.detach();
-    sk_path.set_fill_type(
-        match path.fill_rule.as_ref().unwrap_or(&FillRule::NonZero) {
-            FillRule::NonZero => PathFillType::Winding,
-            FillRule::EvenOdd => PathFillType::EvenOdd,
-        },
-    );
-
-    if let Some(mut paint) = fill_paint(ctx, path.fill.as_deref()) {
-        paint.set_style(paint::Style::Fill);
-        canvas.draw_path(&sk_path, &paint);
-    }
-    if let Some(paint) = stroke_paint(
-        path.stroke.as_deref(),
-        path.stroke_width,
-        path.stroke_dash.as_deref(),
-        path.stroke_dash_offset,
-        path.stroke_cap.as_ref(),
-        path.stroke_join.as_ref(),
-    ) {
-        canvas.draw_path(&sk_path, &paint);
-    }
-
-    Ok(())
+    Ok(builder.detach())
 }
 
 fn render_line(canvas: &skia_safe::Canvas, line: &PaintLine) {
@@ -400,7 +404,12 @@ fn render_clip(
         clip.height as f32,
     );
     canvas.save();
-    canvas.clip_rect(rect, ClipOp::Intersect, true);
+    if let Some(path) = &clip.path {
+        let path = build_path(path)?;
+        canvas.clip_path(&path, ClipOp::Intersect, true);
+    } else {
+        canvas.clip_rect(rect, ClipOp::Intersect, true);
+    }
     let result = render_instructions(ctx, canvas, &clip.children);
     canvas.restore();
     result
@@ -449,11 +458,7 @@ fn fill_paint(ctx: &RenderContext, fill: Option<&str>) -> Option<Paint> {
         return None;
     }
     if let Some(id) = gradient_ref(fill) {
-        if let Some(shader) = ctx
-            .gradients
-            .get(id)
-            .and_then(shader_for_gradient)
-        {
+        if let Some(shader) = ctx.gradients.get(id).and_then(shader_for_gradient) {
             let mut paint = Paint::default();
             paint.set_anti_alias(true);
             paint.set_shader(shader);
@@ -768,6 +773,7 @@ mod tests {
     use super::*;
     use paint_instructions::{
         GlyphPosition, GradientStop, PaintBase, PaintGroup, PaintInstruction, PaintRect,
+        PathCommand,
     };
     use paint_vm_runtime::{
         PaintBackendPreference, PaintBackendRegistry, PaintRenderOptions, SupportLevel,
@@ -776,7 +782,9 @@ mod tests {
     fn dark_pixel_count(pixels: &PixelContainer) -> usize {
         pixels
             .data
-            .as_chunks::<4>().0.iter()
+            .as_chunks::<4>()
+            .0
+            .iter()
             .filter(|px| px[0] < 96 && px[1] < 96 && px[2] < 96 && px[3] > 0)
             .count()
     }
@@ -815,6 +823,33 @@ mod tests {
             y: 8.0,
             width: 16.0,
             height: 16.0,
+            path: None,
+            children: vec![PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 32.0, 32.0, "#000000",
+            ))],
+        }));
+
+        let pixels = render(&scene).unwrap();
+        assert_eq!(pixels.pixel_at(16, 16), (0, 0, 0, 255));
+        assert_eq!(pixels.pixel_at(2, 2), (255, 255, 255, 255));
+    }
+
+    #[test]
+    fn path_clip_restricts_drawing_beyond_its_bounds() {
+        let mut scene = PaintScene::new(32.0, 32.0);
+        scene.instructions.push(PaintInstruction::Clip(PaintClip {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 32.0,
+            height: 32.0,
+            path: Some(vec![
+                PathCommand::MoveTo { x: 8.0, y: 8.0 },
+                PathCommand::LineTo { x: 24.0, y: 8.0 },
+                PathCommand::LineTo { x: 24.0, y: 24.0 },
+                PathCommand::LineTo { x: 8.0, y: 24.0 },
+                PathCommand::Close,
+            ]),
             children: vec![PaintInstruction::Rect(PaintRect::filled(
                 0.0, 0.0, 32.0, 32.0, "#000000",
             ))],

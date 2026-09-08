@@ -7,11 +7,12 @@ Compact convergence pages cover flex, grid, positioned/clipped, CSS table,
 float/exclusion, fragmented inline-box, intrinsic replaced formatting, and
 generated pseudo-content/list markers
 and reusable visual effects
-and layered CSS backgrounds
+and layered CSS backgrounds with joined per-side borders and rounded overflow
 through one geometry-and-paint oracle shared by every host.
 
 `load_backgrounds_page` ratchets multiple gradient layers, painting boxes,
-repeat metadata, and normalized elliptical corners through the shared scene.
+repeat metadata, normalized elliptical clips, overflow descendants, and
+solid/dashed/dotted/double border sides through the shared scene.
 
 `load_effects_page` ratchets rounded backgrounds, subtree opacity, affine
 transforms and origins, filters, shadows, blending, isolation, and transformed

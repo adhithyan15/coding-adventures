@@ -556,9 +556,15 @@ function handleClip(
   vm: PaintVM<CanvasRenderingContext2D>,
 ): void {
   ctx.save();
-  ctx.beginPath();
-  ctx.rect(instr.x, instr.y, instr.width, instr.height);
-  ctx.clip();
+  if (instr.path) {
+    const path = new Path2D();
+    applyCommandsToPath2D(path, instr.path);
+    ctx.clip(path);
+  } else {
+    ctx.beginPath();
+    ctx.rect(instr.x, instr.y, instr.width, instr.height);
+    ctx.clip();
+  }
   for (const child of instr.children) {
     vm.dispatch(child, ctx);
   }
@@ -630,7 +636,7 @@ function handleImage(
       pixels.data.length === pixels.width * pixels.height * 4
     ) {
       const imageData = new ImageData(
-        new Uint8ClampedArray(pixels.data.buffer),
+        new Uint8ClampedArray(pixels.data),
         pixels.width,
         pixels.height,
       );

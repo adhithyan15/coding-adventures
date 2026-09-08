@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Report `clip.path` degradation when exact path clips are conservatively
+  lowered to rectangular GPU scissors.
 - Added balanced `BeginLayer` / `EndLayer` GPU commands with reusable layer
   opacity, all Paint blend modes, and validated ordered filter descriptors.
 - Added backend-profile declarations for isolated layers, filters, and blend

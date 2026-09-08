@@ -1,5 +1,3 @@
-set -eu
-
 (cd ../../../packages/typescript/directed-graph && npm install)
 (cd ../../../packages/typescript/matrix && npm install)
 (cd ../../../packages/typescript/multi-directed-graph && npm install)

@@ -1,5 +1,10 @@
 # Changelog — paint-instructions
 
+## Unreleased
+
+- Add optional closed path geometry to `PaintClip` while retaining its
+  rectangle as conservative culling and fallback bounds.
+
 ## 0.1.1 — 2026-04-23
 
 ### Added

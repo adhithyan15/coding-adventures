@@ -5,6 +5,8 @@
 - Compose layout-effect transforms while extracting link regions so paint and
   hit testing share visual geometry; transformed regions use conservative
   axis-aligned bounds.
+- Retain transformed elliptical ancestor overflow clips on link regions and
+  reject corner hits outside the painted clip.
 
 ## 0.6.0
 

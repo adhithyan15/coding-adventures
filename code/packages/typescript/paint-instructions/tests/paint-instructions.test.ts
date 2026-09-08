@@ -320,6 +320,16 @@ describe("paintClip", () => {
     expect(c.height).toBe(300);
     expect(c.children).toHaveLength(1);
   });
+
+  it("retains an exact path alongside conservative bounds", () => {
+    const path: PathCommand[] = [
+      { kind: "move_to", x: 8, y: 8 },
+      { kind: "line_to", x: 24, y: 8 },
+      { kind: "close" },
+    ];
+    const c = paintClip(0, 0, 32, 32, [], { path });
+    expect(c.path).toEqual(path);
+  });
 });
 
 // ============================================================================

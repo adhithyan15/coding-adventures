@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Apply optional `PaintClip` paths with anti-aliased Skia clipping.
 - Replaced the scaffold with a real Skia raster Paint VM backend.
 - Added rendering for rects, lines, ellipses, cubic/quadratic paths, clips,
   groups, layers, pixel images, simple text, positioned glyph runs, and

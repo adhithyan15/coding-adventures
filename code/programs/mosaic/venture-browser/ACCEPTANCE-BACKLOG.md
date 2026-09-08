@@ -155,6 +155,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
   normalized elliptical corner pairs. Completed with computed CSS mapping,
   backend-neutral gradient/path/image/clip emission, bounded repeat geometry,
   diagnostics, and a deterministic Venture fixture.
+- [x] **P2 CSS and paint convergence — rounded clipping and border geometry.**
+  Add path clips with conservative bounds for background images and overflow
+  descendants, normalized elliptical inner/outer curves, joined per-side
+  solid/dashed/dotted/double borders, and clip-aware hit testing. Completed
+  through shared layout metadata, paint scenes, deterministic fixtures,
+  native Canvas/Cairo/Skia/SVG execution, and explicit GPU degradation
+  diagnostics.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

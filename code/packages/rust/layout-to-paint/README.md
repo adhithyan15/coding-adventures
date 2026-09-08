@@ -29,8 +29,7 @@ associated type constraint.
 | PositionedNode feature              | PaintInstruction emitted                                       |
 |-------------------------------------|---------------------------------------------------------------|
 | `ext["paint"]["backgroundColor"]`   | `PaintRect` with fill                                          |
-| `ext["paint"]["borderWidth"]` > 0   | `PaintRect` with stroke + stroke_width (same rect as above)    |
-| `border{Side}Width/Color` > 0        | Independent filled edge rectangles for each requested side   |
+| `border{Side}Width/Color/Style`      | Joined rounded path geometry clipped to each requested side   |
 | `ext["paint"]["cornerRadius"]`      | `corner_radius` field on the rect                              |
 | `ext["effects"]`                    | One subtree `PaintGroup`/`PaintLayer` with transform, opacity, filters, blend mode, and isolation |
 | `ext["backgrounds"]`                | Ordered gradient definitions, rounded paths, and clipped/repeated image tiles |
@@ -53,8 +52,9 @@ native font-fallback subruns retain their own bindings in visual paint order.
   dimensions already; text renders at `(node.x, node.y + ascent)`
   without an extra inset. Code blocks look flush against their
   background. Tracked for v2 as a `PositionedNode.padding` field.
-- **No clip push** for rounded corners — the rounded background
-  renders correctly, content on top is not clipped to the radius.
+- **Bounded clip fallback** — exact rounded paths are retained alongside
+  conservative rectangles. GPU plans that only expose scissor clips report
+  `clip.path` degradation instead of silently claiming exact output.
 - **Bounded CSS effects** — effects wrap the complete node subtree so opacity
   is composited once. Shadows use the shared drop-shadow layer filter, the CSS
   adapter currently keeps one shadow from each property, and exact filter
