@@ -111,7 +111,7 @@ pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
     // `input_i64`: BASIC `INPUT X` — reads a long from stdin via `BasicRuntime.readLong()J`.
     // `input_str`: BASIC string `INPUT A$` (E4-dyn) — reads a whole line as a
     //   `java.lang.String` via `BasicRuntime.readLine()Ljava/lang/String;`.
-    &["putchar", "getchar", "print_i64", "input_i64", "input_str", "pair?", "not", "equal?"];
+    &["putchar", "getchar", "print_i64", "input_i64", "input_more", "input_str", "pair?", "not", "equal?"];
 
 /// Ops that are conditionally supported depending on their `type_hint`.
 ///

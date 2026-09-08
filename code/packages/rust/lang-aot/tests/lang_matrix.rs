@@ -6388,10 +6388,10 @@ const PROGRAMS: &[Prog] = &[
     },
 
     // VM-039a: real stdin and EOF on the shared native/LLVM runtime.
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm] },
 
 ];
 
@@ -7436,25 +7436,40 @@ fn java_ok() -> bool {
 /// runtime, and is *not* language-specific: any IIR that prints an integer links it.
 /// `run_jvm` compiles it with `javac` onto the classpath only when running an I/O
 /// program, so the expression languages still run a standalone `Main.class`.
-const BASIC_RUNTIME_JAVA: &str =
-    "package env; public final class BasicRuntime { \
-public static void println(long x){ System.out.println(x); } \
-public static long readLong(){ try { \
-java.io.InputStream in = System.in; \
-StringBuilder sb = new StringBuilder(); \
-int c; \
-while((c = in.read()) != -1 && c != '\\n'){ sb.append((char)c); } \
-String s = sb.toString().trim(); \
-if(s.isEmpty()) return 0L; \
-return Long.parseLong(s); \
-} catch(Exception e){ return 0L; } } \
-public static String readLine(){ try { \
-java.io.InputStream in = System.in; \
-StringBuilder sb = new StringBuilder(); \
-int c; \
-while((c = in.read()) != -1 && c != '\\n'){ sb.append((char)c); } \
-return sb.toString(); \
-} catch(Exception e){ return \"\"; } } }";
+// One pushback byte is sufficient: every peek restores exactly the byte it read.
+// Keeping this stream shared also prevents a peek from stealing a string's first byte.
+const BASIC_RUNTIME_JAVA: &str = r#"package env;
+public final class BasicRuntime {
+    private static final java.io.PushbackInputStream in =
+        new java.io.PushbackInputStream(System.in, 1);
+    public static void println(long x) { System.out.println(x); }
+    public static long inputMore() {
+        try {
+            int c = in.read();
+            if (c == -1) return 0L;
+            in.unread(c);
+            return 1L;
+        } catch (java.io.IOException e) {
+            throw new IllegalStateException("stdin peek failed", e);
+        }
+    }
+    public static long readLong() {
+        String s = readLine().trim();
+        if (s.isEmpty()) return 0L;
+        try { return Long.parseLong(s); }
+        catch (NumberFormatException e) { return 0L; }
+    }
+    public static String readLine() {
+        try {
+            StringBuilder sb = new StringBuilder();
+            int c;
+            while ((c = in.read()) != -1 && c != '\n') sb.append((char)c);
+            return sb.toString();
+        } catch (java.io.IOException e) {
+            throw new IllegalStateException("stdin read failed", e);
+        }
+    }
+}"#;
 
 /// The `env.BFRuntime` host class for Brainfuck (LANG-MATRIX LM-J). `iir-to-jvm-class-file`
 /// lowers Brainfuck's tape to a static `byte[] __tape` field (`getstatic … __tape : [B` +
@@ -13761,4 +13776,69 @@ fn portable_text_stdout_wasm_input_more_peek() {
         assert_eq!(peek.call(&[], None).unwrap(), vec![WasmValue::I64(0)]);
     }
     assert!(input.lock().unwrap().is_empty());
+}
+
+/// Execute the actual Java host, including mixed reads, stable EOF and hard I/O errors.
+#[test]
+fn portable_text_stdout_jvm_input_more_peek() {
+    if !java_ok() {
+        eprintln!("SKIP JVM peek: java unavailable");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("JVM peek tempdir");
+    let env_dir = dir.path().join("env");
+    std::fs::create_dir(&env_dir).unwrap();
+    std::fs::write(env_dir.join("BasicRuntime.java"), BASIC_RUNTIME_JAVA).unwrap();
+    let probe = r#"import env.BasicRuntime;
+public class Peek {
+    private static void check(long actual, long expected) {
+        if (actual != expected) throw new AssertionError(actual + " != " + expected);
+    }
+    private static void peek(long expected) {
+        check(BasicRuntime.inputMore(), expected);
+        check(BasicRuntime.inputMore(), expected);
+    }
+    public static void main(String[] args) {
+        if (args.length != 0) {
+            System.setIn(new java.io.InputStream() {
+                public int read() throws java.io.IOException {
+                    throw new java.io.IOException("injected input failure");
+                }
+            });
+            try {
+                if (args[0].equals("peek")) BasicRuntime.inputMore();
+                else BasicRuntime.readLong();
+                throw new AssertionError("I/O failure was swallowed");
+            } catch (IllegalStateException expected) {
+                if (!(expected.getCause() instanceof java.io.IOException)) throw expected;
+            }
+        } else {
+            peek(1); check(BasicRuntime.readLong(), 5);
+            peek(1);
+            if (!BasicRuntime.readLine().equals("hello")) throw new AssertionError("string byte lost");
+            peek(1); check(BasicRuntime.readLong(), 0); // Blank line is a present field.
+            peek(1); check(BasicRuntime.readLong(), 0); // Malformed field stays permissive.
+            peek(1); check(BasicRuntime.readLong(), -3); // Final field has no newline.
+            peek(0); check(BasicRuntime.readLong(), 0);
+            if (!BasicRuntime.readLine().isEmpty()) throw new AssertionError("EOF string");
+            peek(0);
+        }
+        System.out.print("peek-ok");
+    }
+}"#;
+    let source = dir.path().join("Peek.java");
+    std::fs::write(&source, probe).unwrap();
+    let built = Command::new("javac").arg("-d").arg(dir.path())
+        .arg(env_dir.join("BasicRuntime.java")).arg(&source).output()
+        .expect("spawn javac for JVM peek");
+    assert!(built.status.success(), "javac: {}", String::from_utf8_lossy(&built.stderr));
+    for mode in [None, Some("peek"), Some("read")] {
+        let mut cmd = Command::new("java");
+        cmd.arg("-cp").arg(dir.path()).arg("Peek");
+        if let Some(mode) = mode { cmd.arg(mode); }
+        let out = output_with_stdin(cmd, b"5\nhello\n\nbad\n-3")
+            .expect("run JVM peek");
+        assert!(out.status.success(), "JVM peek: {}", String::from_utf8_lossy(&out.stderr));
+        assert_eq!(out.stdout, b"peek-ok");
+    }
 }

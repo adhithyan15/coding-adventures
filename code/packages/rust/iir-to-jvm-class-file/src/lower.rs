@@ -3553,6 +3553,16 @@ fn lower_function(
                         code.extend_from_slice(&mref.to_be_bytes());
                         emit_lstore(&mut code, dest_slot);
                     }
+                    "input_more" => {
+                        // The host peeks at the same stream used by readLong/readLine.
+                        // Its boolean result uses the IIR i64 host ABI, hence lstore.
+                        let dest_name = builtin_dest(instr, fname, "input_more")?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let mref = cp.add_methodref(BASIC_RUNTIME_CLASS, "inputMore", "()J");
+                        code.push(INVOKESTATIC);
+                        code.extend_from_slice(&mref.to_be_bytes());
+                        emit_lstore(&mut code, dest_slot);
+                    }
                     "input_str" => {
                         // BASIC string `INPUT A$` (E4-dyn): read a whole line *as
                         // the string value itself* — no numeric parse, unlike

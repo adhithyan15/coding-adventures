@@ -549,3 +549,11 @@ FLOW-MATIC WASM EOF (VM-039b): modules using `input_more` import
 at EOF without consuming the next field. The peek and `env.__input_i64`
 reader must share the same input stream; repeated peeks must be stable.
 The matrix exercises the four native/LLVM input programs on WASM as well.
+
+### Portable input EOF on JVM
+
+`input_more` calls `env.BasicRuntime.inputMore()J`: return 1 when a byte
+remains and 0 at EOF, without consuming it. The host must share its stream
+with `readLong()J` and `readLine()Ljava/lang/String;`; I/O errors must fail
+rather than report EOF. The LANG matrix supplies this host and executes four
+FLOW-MATIC input/EOF cases, including a zero-filled partial record.

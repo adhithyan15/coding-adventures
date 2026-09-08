@@ -286,3 +286,11 @@ start of the branch instruction's opcode byte — exactly what this formula prod
 | `lower`   | Two-pass IIR → JVM bytecode lowering; error types; config       |
 | `codegen` | `IIRJvmCodeGenerator` — thin adapter (`name` / `validate` / `generate`) |
 | `lib`     | Re-exports; crate entry point                                   |
+
+### Portable input EOF on JVM
+
+`input_more` calls `env.BasicRuntime.inputMore()J`: return 1 when a byte
+remains and 0 at EOF, without consuming it. The host must share its stream
+with `readLong()J` and `readLine()Ljava/lang/String;`; I/O errors must fail
+rather than report EOF. The LANG matrix supplies this host and executes four
+FLOW-MATIC input/EOF cases, including a zero-filled partial record.

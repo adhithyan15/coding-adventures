@@ -1,5 +1,13 @@
 # Changelog — `lang-aot`
 
+## Unreleased — JVM input/EOF (VM-039c)
+
+Support `input_more` through `env.BasicRuntime.inputMore()J`, preserving the
+i64 result width. The matrix host shares a pushback stream between numeric
+reads, string reads and non-consuming EOF peeks. Four FLOW-MATIC JVM cells
+cover streams, empty input, partial records and repeated EOF. Java host tests
+verify stable peeks, permissive parsing and propagation of I/O failures.
+
 ## Unreleased — FLOW-MATIC WASM EOF (VM-039b)
 
 Add the `input_more` builtin as `env.__input_more() -> i64` and connect

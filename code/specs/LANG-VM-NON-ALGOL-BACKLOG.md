@@ -36,6 +36,17 @@ Clippy. Split JVM and CLR publication if the CLR repair is independently
 substantial; retain one active ready PR and security review before every push.
 VM/JIT common matrix callbacks remain the final VM-039 slice.
 
+VM-039c JVM probe: row 440 fails compilation because input_more is absent
+from the JVM host-class whitelist. Select the JVM adapter as the first PR;
+CLR remains a separate probe/repair slice and is not newly declared here.
+
+VM-039c JVM validation: all four cells (440–443) and five existing BASIC
+input cells (369–373) passed in fresh JVM processes with execution sentinels.
+The Java host regression proves shared numeric/string input, repeated peeks,
+blank/malformed fields, final input without newline, stable EOF and hard I/O
+failures. The complete JVM backend suite and focused all-target Clippy passed.
+No full matrix rerun is claimed. CLR and VM/JIT remain next after this PR.
+
 ## VM-039b implementation contract (selected after #14488 merged)
 
 Refreshed main is `1d1db6507d`. VM-039a merged after all applicable checks
