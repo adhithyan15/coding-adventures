@@ -2,7 +2,74 @@
 
 All notable changes to this package will be documented in this file.
 
-## [0.9.99] - 2026-09-02 - `ref.test`/`ref.cast` extended to struct/array/abstract heap types (W39 slice 2)
+## [0.9.100] - 2026-09-07 - `any.convert_extern`/`extern.convert_any` real conversion semantics (W39 slice 3)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 3 of 5.
+
+**`0xFB 0x1A`/`0x1B` execution handlers added.** The spec's own Design
+section proposed a pure identity pass-through (pop one value, push it
+back unchanged) on the theory that `WasmValue::Ref(Option<u32>)` carries
+no "which hierarchy" tag anyway. **Corpus re-verification found this is
+wrong, not just conservative**: `ref.test`/`ref.cast`'s own dynamic check
+(`ref_matches_abstract_heap_type`) infers a value's runtime kind from its
+representation SHAPE, so a converted value must actually change shape
+for that check to answer correctly afterward -- `ref_test.wast`'s own
+"Abstract Types" module requires an `any.convert_extern`'d value to match
+`any` but NOT `eq`, and an `extern.convert_any`'d value to match `extern`
+UNCONDITIONALLY even when its origin was an i31/struct/array. A pure
+pass-through gets both wrong (proven live: 5 real `assert_return` FAILs,
+not NYS, the first time this was tried).
+
+**New `GcObject` variants: `ExternOrigin(WasmValue)` / `AnyOrigin(WasmValue)`.**
+`any.convert_extern` boxes a genuinely extern-origin reference into a
+fresh `ExternOrigin` heap entry (skipped for null, which stays null with
+no allocation); `extern.convert_any` boxes an i31/struct/array value into
+a fresh `AnyOrigin` entry the same way. `ref_matches_abstract_heap_type`
+now recognizes both directly: `Eq` matches only `Struct`/`Array` (never
+`ExternOrigin`); `Any` matches `Struct`/`Array`/`ExternOrigin`; `Func`/
+`Extern` matches everything NOT in that set (covering a raw/never-
+converted externref/funcref handle, a dangling handle, AND `AnyOrigin`).
+A round trip through BOTH conversions UNWRAPS instead of double-boxing --
+`any.convert_extern` on an `AnyOrigin`-boxed value recovers the original
+value verbatim; `extern.convert_any` on an `ExternOrigin`-boxed value
+recovers the original raw handle verbatim -- preserving the real spec's
+own "same underlying reference" identity guarantee exactly, not just
+approximately. `GcObject::children()` (the mark-sweep collector's own
+root-walk helper) exposes BOTH as a one-element slice via `std::slice::
+from_ref`, so whatever `WasmValue` either wraps stays reachable for as
+long as the box itself is.
+
+**Security review finding, fixed before push**: an earlier revision of
+this same change stored `ExternOrigin` as a bare `u32` (not a
+`WasmValue`), reasoning that a raw externref identity is "never a real
+`gc_heap` reference" so has nothing to trace -- true only for a
+WELL-TYPED program. This crate's own validator does not reject `any.
+convert_extern` applied to an operand that ISN'T genuinely `externref`-
+typed (matching its own established looseness for this whole GC
+instruction family), so an out-of-spec module could hand a REAL struct/
+array `gc_heap` handle to `any.convert_extern`; with the bare-`u32`
+design, `children()` returned `&[]` for that box, so the mark-sweep
+collector would treat the original object as unreachable and reclaim it
+-- a real object-identity confusion (a later round trip, or an unrelated
+allocation reusing the freed slot, could read a DIFFERENT live object
+under the original one's identity), not merely a wrong-answer bug. Fixed
+by storing the full `WasmValue` in `ExternOrigin` (the same shape
+`AnyOrigin` already used) and tracing it uniformly in `children()` --
+tracing a genuinely opaque, non-`gc_heap` identity costs nothing (`mark`'s
+own bounds check already no-ops on an out-of-range index), while a real
+reference now stays correctly reachable.
+
+**`ref_matches_concrete_type`** gained a `Some(GcObject::ExternOrigin(_))
+| Some(GcObject::AnyOrigin(_)) => false` arm (a converted value is never
+a genuine instance of any CONCRETE struct/array type) -- required for
+exhaustiveness once `GcObject` grew the two new variants, and correct on
+its own terms besides.
+
+See `wasm-conformance`'s own CHANGELOG for the collision this exposed in
+the test harness's own `(ref.extern n)` handle numbering (a separate,
+pre-existing representational gap this slice's corpus re-verification
+surfaced, fixed entirely within that crate, not here) and the exact
+corpus delta.
 
 Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 2 of 5.
 

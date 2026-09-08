@@ -2663,6 +2663,29 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_val(&mut stack, frame!())?;
                         push_val(&mut stack, ValueType::I32);
                     }
+                    0x1A | 0x1B => {
+                        // any.convert_extern (0x1A) / extern.convert_any
+                        // (0x1B) (W39 slice 3): the externref <-> anyref
+                        // bridge. Real spec typing: `[(ref null1? extern)]
+                        // -> [(ref null2? any)]` (and the mirror image)
+                        // for any `null1?` that equals `null2?` -- an
+                        // identity-preserving, nullability-preserving
+                        // reinterpretation. This validator doesn't track
+                        // precise externref-vs-anyref static types
+                        // per-operand anywhere else in this GC family
+                        // either (`ref.cast`'s own `0x17` arm above already
+                        // pushes `Unknown` rather than a real narrowed
+                        // type), so, matching that established looseness
+                        // rather than introducing new rigor only here:
+                        // pop one generic value, push `Unknown` back. No
+                        // immediate bytes to consume -- MUST still fall
+                        // through to a real match arm (not the `_ => {}`
+                        // catch-all below) so the abstract stack's height
+                        // stays accurate; that catch-all is only correct
+                        // for a sub-opcode with NO stack effect at all.
+                        pop_val(&mut stack, frame!())?;
+                        stack.push(StackType::Unknown);
+                    }
                     _ => {} // unknown sub-opcode: no immediates, no stack effect
                 }
             }

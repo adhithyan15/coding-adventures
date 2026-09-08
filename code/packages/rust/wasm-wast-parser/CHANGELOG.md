@@ -1,6 +1,34 @@
 # Changelog — wasm-wast-parser
 
-## 0.1.107 — 2026-09-02 — `ref.test`/`ref.cast` accept concrete struct/array and abstract heap types (W39 slice 2)
+## 0.1.108 — 2026-09-07 — `any.convert_extern`/`extern.convert_any` wired into the text parser (W39 slice 3)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 3 of 5.
+
+**Both instructions added to both instruction-encoding sites** (the flat/
+stream form and the folded form -- same two sites `ref.i31`/`i31.get_s`/
+`i31.get_u` already use), each taking one stack operand and no immediate:
+`any.convert_extern` emits `0xFB 0x1A`, `extern.convert_any` emits `0xFB
+0x1B`. `wasm-module-encoder` already had a `GcInstruction::AnyConvertExtern`
+variant emitting the same `0xFB 0x1A` byte (for a different, non-text
+consumer); this crate's own encoder now agrees on it. `extern.convert_any`
+had no encoder anywhere before this slice, not even a stub.
+
+**Addendum, found while verifying against the live corpus, not
+assumed**: wiring `any.convert_extern` alone was not sufficient to unblock
+`ref_test.wast`'s "Abstract Types" module -- parsing advanced past the
+`any.convert_extern` call sites but then hit a SECOND, independent gap at
+`(ref.test (ref null nofunc) ...)` / `(ref.test (ref null noextern)
+...)`: `ref.test`/`ref.cast`'s own local abstract-heap-type match (added
+W39 slice 2 for `(ref null any)`) never grew arms for the four BOTTOM
+heap types' `(ref null X)` compound spelling (`none`/`nofunc`/`noextern`/
+`noexn`), only the bare-atom spelling `parse_value_type` already handles.
+Fixed by extending that SAME local match (not the shared `parse_value_type`,
+matching slice 2's own "handle locally" discipline) to recognize all
+four, mapping to the identical `ValueType::Null{Ref,Funcref,Externref,
+Exnref}` variants the bare-atom spelling already produces -- the
+encoder's own `parsed_ty` match already had arms for all four (previously
+reachable only via the bare-atom route), so no new encoding surface, just
+a second parse route into the same, already-tested arms.
 
 Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 2 of 5.
 
