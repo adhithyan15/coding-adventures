@@ -7,6 +7,7 @@ description = "Host-neutral navigation and page-loading orchestration for the Ve
 [dependencies]
 browser-bookmarks = { path = "../browser-bookmarks" }
 browser-form-controls = { path = "../browser-form-controls" }
+browser-form-submission = { path = "../browser-form-submission" }
 browser-navigation = { path = "../browser-navigation" }
 coding-adventures-html-parser = { path = "../html-parser" }
 html-to-layout = { path = "../html-to-layout" }

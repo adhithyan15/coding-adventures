@@ -129,7 +129,11 @@ Output: Instruction trace + final CPU state (registers, memory)
 - Execute `ecall`: verify execution halts
 - End-to-end: run `addi x1,x0,1; addi x2,x0,2; add x3,x1,x2; ecall` → verify x3 = 3
 
-## Future Extensions (add as programs demand)
+## Historical Future Extensions
+
+The original three-instruction teaching slice listed the following work as
+future extensions. The normative Rust completion described below now includes
+the entire list; it is retained here as the implementation history.
 
 - `sub`, `and`, `or`, `xor` — more arithmetic/logic
 - `lw`, `sw` — memory load/store
@@ -139,3 +143,32 @@ Output: Instruction trace + final CPU state (registers, memory)
 - `sll`, `srl`, `sra` — shifts
 - Full RV32I (47 instructions)
 - RV32M extension (multiply/divide)
+
+## Normative Rust Completion (RCPU-043)
+
+The Spec 07a Rust functional cell is `riscv-simulator::Rv32ISimulator`. Its
+architectural boundary is the RV32I base integer surface already implemented by
+the Python oracle, plus the repository's documented M-mode CSR, ECALL trap, and
+MRET teaching extension. Selected RV32M operations and compiler host ECALL
+services remain available only through the older `RiscVSimulator` compatibility
+harness and are not part of this RV32I completion boundary.
+
+The completed machine owns exactly 65,536 bytes of little-endian memory, 32
+32-bit GPRs with x0 hardwired to zero, a 32-bit PC, `mstatus`, `mtvec`,
+`mscratch`, `mepc`, `mcause`, and halt state. Program origin and length are
+validated lifecycle metadata. Program loads are word-aligned and strictly
+bounded. Instruction fetches must remain within the installed range; halfword
+and word data accesses are naturally aligned and every data access is bounded
+by the 64 KiB machine.
+
+`restore`, origin-aware load, direct register/memory access, `step_checked`, and
+`run_checked` are typed and fail closed. A failed step preserves the complete
+pre-step state. A failed bounded run, including budget exhaustion, preserves the
+complete pre-run state. Successful traces include raw instruction, mnemonic,
+PC before/after, and complete state before/after.
+
+Completion evidence is 98 preserved unit/consumer tests, seven exact lifecycle
+and fault suites, and a reproducible 256-vector Python full-state differential
+covering every RV32I/CSR/MRET decode family across four deterministic seeds.
+Strict Rustfmt, Clippy (`-D warnings`), and rustdoc (`-D warnings`) pass. Package
+line coverage is 91.46% (1,125/1,230).

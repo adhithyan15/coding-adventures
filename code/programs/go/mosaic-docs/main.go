@@ -52,7 +52,31 @@ type Component struct {
 	// language.
 	PreviewPath string
 	PreviewErr  string
+
+	// Previews is one entry per story when the component has a stories file.
+	// A component with stories shows a gallery -- every variant side by side,
+	// which is the thing that makes an inert axis obvious at a glance and is
+	// how six components shipped variant slots that did nothing (#14036).
+	Previews []Preview
 	HasDark    bool
+}
+
+// Preview is one rendered story: a name and the project that renders it.
+type Preview struct {
+	Name string
+	Path string
+	Err  string
+}
+
+// storiesFile is the sibling `<Component>.stories.json`, the same shape
+// MosaicBook reads, so one file serves both the dev server and this site.
+type storyDecl struct {
+	Name     string                 `json:"name"`
+	Fixtures map[string]interface{} `json:"fixtures"`
+}
+
+type storiesFile struct {
+	Stories []storyDecl `json:"stories"`
 }
 
 // Slot mirrors mosmodel's SlotDecl as `--describe` reports it.
@@ -107,7 +131,7 @@ func main() {
 
 	previewed := 0
 	for _, c := range comps {
-		if c.PreviewPath != "" {
+		if c.PreviewPath != "" || len(c.Previews) > 0 {
 			previewed++
 		}
 	}
@@ -174,7 +198,7 @@ func discover(root, compiler, outDir string) ([]Component, error) {
 			if err := c.describe(compiler, mil); err != nil {
 				return nil, fmt.Errorf("describe %s: %w", base, err)
 			}
-			c.emitPreview(compiler, mil, mll, style, manifest, pkgDir, outDir)
+			c.emitStories(compiler, mil, mll, style, manifest, pkgDir, srcDir, outDir)
 			comps = append(comps, c)
 		}
 	}
@@ -273,8 +297,71 @@ func (c *Component) sampleFixtures() string {
 // A failure is recorded on the component rather than aborting the build: one
 // component that cannot render should not take the whole catalog down, and the
 // page saying why is more useful than the component silently missing.
-func (c *Component) emitPreview(compiler, mil, mll, style, manifest, searchPath, outDir string) {
-	dir := filepath.Join(outDir, c.Package, c.Name)
+// emitStories renders every story the component declares, or a single sample
+// preview when it declares none.
+//
+// A component with a stories file gets a gallery: each story rendered on its
+// own, side by side. That is what makes an inert axis visible -- eight
+// identical badges in a row is unmissable, and is exactly what nobody could see
+// while stories were impossible (#14031) and fixtures were dropped (#14459).
+func (c *Component) emitStories(compiler, mil, mll, style, manifest, searchPath, srcDir, outDir string) {
+	stories := readStories(filepath.Join(srcDir, c.Name+".stories.json"))
+	if len(stories) == 0 {
+		c.emitPreview(compiler, mil, mll, style, manifest, searchPath, outDir, "", c.sampleFixtures())
+		return
+	}
+	for _, st := range stories {
+		fixtures, err := json.Marshal(st.Fixtures)
+		if err != nil {
+			c.Previews = append(c.Previews, Preview{Name: st.Name, Err: err.Error()})
+			continue
+		}
+		c.emitPreview(compiler, mil, mll, style, manifest, searchPath, outDir, st.Name, string(fixtures))
+	}
+}
+
+// readStories returns the declared stories, or nil when there is no file.
+//
+// A malformed file returns nil rather than aborting: the component still gets
+// its sample preview, and one bad JSON file taking the whole catalog down would
+// be worse. Once the CI gate in #14012 exists it can reject the file properly.
+func readStories(path string) []storyDecl {
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+	var f storiesFile
+	if err := json.Unmarshal(raw, &f); err != nil {
+		return nil
+	}
+	return f.Stories
+}
+
+// storySlug makes a story name safe as a directory component. Story names are
+// authored text and can contain spaces or anything else.
+func storySlug(name string) string {
+	var b strings.Builder
+	for _, r := range name {
+		switch {
+		case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r >= '0' && r <= '9':
+			b.WriteRune(r)
+		default:
+			b.WriteByte('-')
+		}
+	}
+	out := strings.Trim(b.String(), "-")
+	if out == "" {
+		return "story"
+	}
+	return out
+}
+
+func (c *Component) emitPreview(compiler, mil, mll, style, manifest, searchPath, outDir, story, fixtures string) {
+	slug := c.Name
+	if story != "" {
+		slug = filepath.Join(c.Name, storySlug(story))
+	}
+	dir := filepath.Join(outDir, c.Package, slug)
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		c.PreviewErr = err.Error()
 		return
@@ -303,7 +390,7 @@ func (c *Component) emitPreview(compiler, mil, mll, style, manifest, searchPath,
 	// placeholders. The values come from the same `--describe` output the
 	// slots table is built from, so the preview and the documentation cannot
 	// disagree about what a slot is.
-	if fixtures := c.sampleFixtures(); fixtures != "" {
+	if fixtures != "" {
 		fx, err := os.CreateTemp("", "mosaic-docs-fixtures-*.json")
 		if err == nil {
 			fxPath := fx.Name()
@@ -316,12 +403,22 @@ func (c *Component) emitPreview(compiler, mil, mll, style, manifest, searchPath,
 
 	cmd := exec.Command(compiler, args...)
 	if out, err := cmd.CombinedOutput(); err != nil {
-		c.PreviewErr = strings.TrimSpace(string(out))
-		if c.PreviewErr == "" {
-			c.PreviewErr = err.Error()
+		msg := strings.TrimSpace(string(out))
+		if msg == "" {
+			msg = err.Error()
 		}
 		_ = os.RemoveAll(dir)
+		if story == "" {
+			c.PreviewErr = msg
+		} else {
+			c.Previews = append(c.Previews, Preview{Name: story, Err: msg})
+		}
 		return
 	}
-	c.PreviewPath = c.Name + "/index.html"
+	rel := filepath.ToSlash(filepath.Join(slug, "index.html"))
+	if story == "" {
+		c.PreviewPath = rel
+	} else {
+		c.Previews = append(c.Previews, Preview{Name: story, Path: rel})
+	}
 }

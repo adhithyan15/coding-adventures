@@ -4,22 +4,22 @@
   "chapter": 83,
   "title": "Sixth to Tenth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:82c09472460fe63e",
+  "sourceHash": "fnv1a64:d3f3a8346013da86",
   "lessons": [
     {
       "id": "HI-C76-sixth",
       "sequence": 3210,
       "title": "छठा (chaṭhā) — the one hole in the rule",
-      "headword": "छठा",
-      "romanization": "chaṭhā",
-      "gloss": "sixth — the one number that will not take the rule",
+      "headword": "छठा / छठी",
+      "romanization": "chaṭhā / chaṭhī",
+      "gloss": "sixth / feminine sixth — the one number that will not take the rule",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fe4a48912c1dca6",
+      "sourceHash": "fnv1a64:b1ccf5324575da86",
       "notice": null,
       "blocks": [
         {

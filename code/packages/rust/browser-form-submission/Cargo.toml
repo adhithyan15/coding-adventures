@@ -1,0 +1,12 @@
+[package]
+name = "browser-form-submission"
+version = "0.1.0"
+edition = "2021"
+description = "Host-neutral HTML form validation, serialization, and navigation planning."
+
+[dependencies]
+browser-form-controls = { path = "../browser-form-controls" }
+coding-adventures-html-parser = { path = "../html-parser" }
+layout-controls = { path = "../layout-controls" }
+regex = "1"
+url-parser = { path = "../url-parser" }

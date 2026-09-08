@@ -153,8 +153,16 @@ describe("the committed Bengali A1 inventory", () => {
     // unblocks anything else, and the sixth item is the letter ঞ that পঞ্চম
     // needed. An ordinal column is expensive in a language that borrowed the
     // whole of it.
-    expect(coverage.covered).toBe(139);
-    expect(coverage.unmapped).toBe(105);
+    //
+    // 139 -> 141: the digit tranche (chapter 39). Twelve items closed TWO
+    // points, and the two are the same piece of work filed in two columns --
+    // BN-A1-Q-03 in the numeral column and BN-A1-LIP-11 in the script column,
+    // exactly as the LIP-11 note said would happen. Neither total shows the
+    // thing that actually changed: before this chapter the track taught 60
+    // script lessons and not one of them put a NON-LETTER on the page, so no
+    // price, date, clock face or page number was readable at all.
+    expect(coverage.covered).toBe(141);
+    expect(coverage.unmapped).toBe(103);
     expect(coverage.partial).toBe(0);
     // The headline was an EMPTY joining column: আর and এবং ("and"), কিন্তু
     // ("but"), কারণ ("because"), যে ("that") and যখন ("when") all returned ZERO
@@ -212,12 +220,21 @@ describe("the committed Bengali A1 inventory", () => {
     // both are taught the way the corpus's other consonant lessons are: place
     // of articulation, the square they complete, and a Unicode chart citation.
     // No pen path is claimed, because none can be sourced.
+    // 8 -> 9 with chapter 39's digits: the ONE point in this column that was
+    // never about a letter. measureScriptClosure now reports 47 glyphs taught,
+    // ten more than before and every one of them a digit, with violations and
+    // never-taught BOTH unchanged at 21 and 8 -- the tranche neither fixed nor
+    // added a single letter debt. The digits have no citable stroke order
+    // either: HL-C212 found Commons carries animations for every Bengali VOWEL
+    // and none for any consonant, and the same search finds nothing for the
+    // digits, so each lesson teaches the shape against something the reader
+    // already holds and claims NO PEN PATH.
     expect(coverage.byCategory["Lipi (script and orthography)"]!).toEqual({
       enumerated: 16,
-      covered: 8,
+      covered: 9,
     });
     expect(formatExamCoverage(coverage)).toContain(
-      "bengali A1 (partial inventory): 139/244 points covered (57%)",
+      "bengali A1 (partial inventory): 141/244 points covered (58%)",
     );
   }, 60_000);
 
@@ -251,5 +268,55 @@ describe("the committed Bengali A1 inventory", () => {
     // পঞ্চম could not be written before this tranche: ঞ was shown in the corpus
     // and taught nowhere. It is taught now, and that is what carries the word.
     expect(taught.has("BN-SCRIPT-NYA-01")).toBe(true);
+  }, 60_000);
+
+  // The digit point, named rather than left to the aggregate. Both halves were
+  // falsified before this was kept: a fabricated id fails the "probes only atoms
+  // that EXIST" test above AND the per-atom loop below, and nulling either probe
+  // fails the coverage total, the Lipi column and this file's own `toEqual`.
+  it("closes BN-A1-Q-03 and BN-A1-LIP-11 on one set of eleven atoms", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "bengali");
+    const digits = inventory.points.find((point) => point.id === "BN-A1-Q-03");
+    const script = inventory.points.find((point) => point.id === "BN-A1-LIP-11");
+    // Listed in NUMERICAL order here and taught in no such order: the chapter
+    // runs zero, two, three, one, five, six, eight, four, nine, seven -- by what
+    // the reader can bring to each shape, with the two false friends last and
+    // each of them taught immediately after the Bengali digit whose value its
+    // shape suggests.
+    const probe = [
+      "BN-SCRIPT-DIGIT-ZERO-01",
+      "BN-SCRIPT-DIGIT-ONE-01",
+      "BN-SCRIPT-DIGIT-TWO-01",
+      "BN-SCRIPT-DIGIT-THREE-01",
+      "BN-SCRIPT-DIGIT-FOUR-01",
+      "BN-SCRIPT-DIGIT-FIVE-01",
+      "BN-SCRIPT-DIGIT-SIX-01",
+      "BN-SCRIPT-DIGIT-SEVEN-01",
+      "BN-SCRIPT-DIGIT-EIGHT-01",
+      "BN-SCRIPT-DIGIT-NINE-01",
+      // The rule, with BOTH its edges: eight shapes may be trusted, and exactly
+      // two may not -- the 8-shape is four and the 9-shape is seven.
+      "BN-SCRIPT-DIGIT-FALSE-FRIENDS-01",
+    ];
+    expect(digits?.probe).toEqual(probe);
+    // ONE piece of work filed in two columns, so the two points carry the SAME
+    // probe. If they ever diverge, one of the two notes has gone stale.
+    expect(script?.probe).toEqual(probe);
+    for (const atom of probe) expect(taught.has(atom), atom).toBe(true);
+    // WHAT IS NOT CLAIMED, asserted rather than left to be inferred: the WORDS
+    // for zero and for six to nine. The reader can read every digit and say only
+    // the first five, and no lexical atom for the missing words exists anywhere.
+    expect(taught.has("BN-LEX-NUMBERS-ONE-TO-FIVE")).toBe(true);
+    for (const absent of [
+      "BN-LEX-SHUNYO-01",
+      "BN-LEX-CHHOY-01",
+      "BN-LEX-SHAT-01",
+      "BN-LEX-AAT-01",
+      "BN-LEX-NOY-01",
+    ]) expect(taught.has(absent), absent).toBe(false);
+    // And the cardinal point they would close is still open, which is where the
+    // gap is recorded.
+    expect(inventory.points.find((point) => point.id === "BN-A1-Q-01")?.probe).toBeNull();
   }, 60_000);
 });

@@ -1,0 +1,60 @@
+{
+  "stories": [
+    {
+      "name": "Primary",
+      "fixtures": {
+        "message": "A primary alert.",
+        "variant": "primary"
+      }
+    },
+    {
+      "name": "Secondary",
+      "fixtures": {
+        "message": "A secondary alert.",
+        "variant": "secondary"
+      }
+    },
+    {
+      "name": "Success",
+      "fixtures": {
+        "message": "A success alert.",
+        "variant": "success"
+      }
+    },
+    {
+      "name": "Danger",
+      "fixtures": {
+        "message": "A danger alert.",
+        "variant": "danger"
+      }
+    },
+    {
+      "name": "Warning",
+      "fixtures": {
+        "message": "A warning alert.",
+        "variant": "warning"
+      }
+    },
+    {
+      "name": "Info",
+      "fixtures": {
+        "message": "A info alert.",
+        "variant": "info"
+      }
+    },
+    {
+      "name": "Light",
+      "fixtures": {
+        "message": "A light alert.",
+        "variant": "light"
+      }
+    },
+    {
+      "name": "Dark",
+      "fixtures": {
+        "message": "A dark alert.",
+        "variant": "dark"
+      }
+    }
+  ]
+}

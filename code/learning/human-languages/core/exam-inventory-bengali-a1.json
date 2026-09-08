@@ -456,7 +456,7 @@
         "A1-NE16-01"
       ],
       "bengaliSpecific": false,
-      "note": "STOPS AT FIVE, and that is the finding. এক দুই তিন চার পাঁচ are taught in a single chapter-12 lesson and nothing goes further. Six to ten, then the teens, then twenty, are the cheapest large win in this file: an A1 candidate is expected to give an age, a telephone number and a price, and none of the three is reachable from five."
+      "note": "STOPS AT FIVE, and that is the finding. এক দুই তিন চার পাঁচ are taught in a single chapter-12 lesson and nothing goes further. Six to ten, then the teens, then twenty, are the cheapest large win in this file: an A1 candidate is expected to give an age, a telephone number and a price, and none of the three is reachable from five. STILL OPEN AFTER CHAPTER 39, and the gap is now sharper rather than smaller: the reader can READ chhoy, shat, aat and noy as digits and cannot SAY any of them, because chhoy and noy additionally need the letter ya-phola the track does not teach. The digit chapter says this on the page rather than letting the two abilities be confused."
     },
     {
       "id": "BN-A1-Q-02",
@@ -480,7 +480,19 @@
       "id": "BN-A1-Q-03",
       "category": "Shongkhya (numerals and quantity)",
       "label": "the Bengali digits ০ ১ ২ ৩ ৪ ৫ ৬ ৭ ৮ ৯ as written shapes",
-      "probe": null,
+      "probe": [
+        "BN-SCRIPT-DIGIT-ZERO-01",
+        "BN-SCRIPT-DIGIT-ONE-01",
+        "BN-SCRIPT-DIGIT-TWO-01",
+        "BN-SCRIPT-DIGIT-THREE-01",
+        "BN-SCRIPT-DIGIT-FOUR-01",
+        "BN-SCRIPT-DIGIT-FIVE-01",
+        "BN-SCRIPT-DIGIT-SIX-01",
+        "BN-SCRIPT-DIGIT-SEVEN-01",
+        "BN-SCRIPT-DIGIT-EIGHT-01",
+        "BN-SCRIPT-DIGIT-NINE-01",
+        "BN-SCRIPT-DIGIT-FALSE-FRIENDS-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -490,7 +502,7 @@
         "A1-O1-01"
       ],
       "bengaliSpecific": false,
-      "note": "NOT ONE DIGIT IS TAUGHT. Bengali has its own numeral shapes and the script strand — sixty lessons, the largest script strand in the corpus after Tamil's — teaches none of them. Chapter 24's BN-W02-tin-read reads তিন, the WORD, not ৩. Every price, date, clock time and page number in written Bengali is unreadable."
+      "note": "Chapter 39, twelve lessons, ten digits and one rule. NO STROKE ORDER IS CLAIMED: HL-C212 found Commons carries stroke-order animations for every Bengali VOWEL and none for any consonant, and the same search finds nothing at all for the digits, so each lesson teaches the SHAPE against something the reader already holds and cites the Unicode Bengali chart -- the precedent BN-W05-tha and BN-W06-nya set. The order is by what the reader can bring: shunyo and dui agree with the Western digit of the same value; tin collides with the TAUGHT LETTER o and differs from it by one right-hand stroke; ek, panch and chhoy carry nothing; and the last four are two false-friend pairs, each trap taught immediately after the Bengali digit whose value its shape suggests. WHAT IS NOT CLAIMED: the WORDS for zero and for six to nine, which this book still does not teach -- see BN-A1-Q-01. The reader can now READ every number and SAY the first five, and the last four lessons say so on the page."
     },
     {
       "id": "BN-A1-Q-04",
@@ -2183,7 +2195,19 @@
       "id": "BN-A1-LIP-11",
       "category": "Lipi (script and orthography)",
       "label": "the Bengali digits, and reading a number off a page",
-      "probe": null,
+      "probe": [
+        "BN-SCRIPT-DIGIT-ZERO-01",
+        "BN-SCRIPT-DIGIT-ONE-01",
+        "BN-SCRIPT-DIGIT-TWO-01",
+        "BN-SCRIPT-DIGIT-THREE-01",
+        "BN-SCRIPT-DIGIT-FOUR-01",
+        "BN-SCRIPT-DIGIT-FIVE-01",
+        "BN-SCRIPT-DIGIT-SIX-01",
+        "BN-SCRIPT-DIGIT-SEVEN-01",
+        "BN-SCRIPT-DIGIT-EIGHT-01",
+        "BN-SCRIPT-DIGIT-NINE-01",
+        "BN-SCRIPT-DIGIT-FALSE-FRIENDS-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-EXAM-LEVELS",
@@ -2194,7 +2218,7 @@
         "A1-O1-06"
       ],
       "bengaliSpecific": false,
-      "note": "Zero of ten taught — see BN-A1-Q-03. Filed in both columns because it is simultaneously a lexical gap and a script gap, and closing it in one place closes it in both."
+      "note": "Closed by chapter 39 together with BN-A1-Q-03, as this note predicted: it is one piece of work filed in two columns, and closing it in one place closed it in both. The script half is the harder one and is what the chapter actually spends its lessons on -- two of the ten shapes carry a WESTERN digit's outline with a different value (the 8-shape is four, the 9-shape is seven), so a reader who already reads digits arrives with a reflex that has to be removed rather than a gap that has to be filled."
     },
     {
       "id": "BN-A1-LIP-12",
@@ -3837,7 +3861,7 @@
         "A1-NE09-06"
       ],
       "bengaliSpecific": false,
-      "note": "Untaught, and doubly blocked: there is no Latin alphabet lesson and no digit lesson to dictate with."
+      "note": "Untaught, and now only SINGLY blocked: chapter 39 teaches the ten digits, so an address can be dictated in numbers. What is still missing is the Latin alphabet lesson."
     },
     {
       "id": "BN-A1-LEX-30",

@@ -7,7 +7,7 @@
 
 use std::collections::HashMap;
 
-use crate::csr::{CSRFile, CSR_MCAUSE, CSR_MEPC, CSR_MSTATUS, CSR_MTVEC, CAUSE_ECALL_M_MODE, MIE};
+use crate::csr::{CSRFile, CAUSE_ECALL_M_MODE, CSR_MCAUSE, CSR_MEPC, CSR_MSTATUS, CSR_MTVEC, MIE};
 use crate::decode;
 
 /// Pipeline token -- a dictionary-like struct carrying instruction state
@@ -62,7 +62,9 @@ pub struct SimpleRegisterFile {
 
 impl SimpleRegisterFile {
     pub fn new(count: usize) -> Self {
-        Self { regs: vec![0i32; count] }
+        Self {
+            regs: vec![0i32; count],
+        }
     }
 
     pub fn read(&self, index: i32) -> i32 {
@@ -90,7 +92,9 @@ pub struct RiscVISADecoder {
 
 impl RiscVISADecoder {
     pub fn new() -> Self {
-        Self { csr: CSRFile::new() }
+        Self {
+            csr: CSRFile::new(),
+        }
     }
 
     /// Access the CSR file.
@@ -119,8 +123,8 @@ impl RiscVISADecoder {
         token.immediate = get_field(&decoded.fields, "imm", 0);
 
         match decoded.mnemonic.as_str() {
-            "add" | "sub" | "mul" | "mulhu" | "div" | "divu" | "rem" | "remu"
-            | "sll" | "slt" | "sltu" | "xor" | "srl" | "sra" | "or" | "and" => {
+            "add" | "sub" | "mul" | "mulhu" | "div" | "divu" | "rem" | "remu" | "sll" | "slt"
+            | "sltu" | "xor" | "srl" | "sra" | "or" | "and" => {
                 token.reg_write = true;
             }
             "addi" | "slti" | "sltiu" | "xori" | "ori" | "andi" | "slli" | "srli" | "srai" => {
@@ -158,8 +162,16 @@ impl RiscVISADecoder {
 
     /// Perform ALU computation. Does NOT access memory or write registers.
     pub fn execute(&mut self, token: &mut PipelineToken, reg_file: &SimpleRegisterFile) {
-        let rs1_val = if token.rs1 >= 0 { reg_file.read(token.rs1) } else { 0 };
-        let rs2_val = if token.rs2 >= 0 { reg_file.read(token.rs2) } else { 0 };
+        let rs1_val = if token.rs1 >= 0 {
+            reg_file.read(token.rs1)
+        } else {
+            0
+        };
+        let rs2_val = if token.rs2 >= 0 {
+            reg_file.read(token.rs2)
+        } else {
+            0
+        };
 
         let rs1_u = rs1_val as u32;
         let rs2_u = rs2_val as u32;
@@ -226,7 +238,11 @@ impl RiscVISADecoder {
                 token.write_data = result;
             }
             "slt" => {
-                let result = if (rs1_u as i32) < (rs2_u as i32) { 1 } else { 0 };
+                let result = if (rs1_u as i32) < (rs2_u as i32) {
+                    1
+                } else {
+                    0
+                };
                 token.alu_result = result;
                 token.write_data = result;
             }
@@ -478,12 +494,21 @@ mod tests {
     #[test]
     fn test_decode_r_type() {
         for raw in [
-            encode_add(3, 1, 2), encode_sub(3, 1, 2), encode_sll(3, 1, 2),
-            encode_mul(3, 1, 2), encode_mulhu(3, 1, 2),
-            encode_div(3, 1, 2), encode_divu(3, 1, 2),
-            encode_rem(3, 1, 2), encode_remu(3, 1, 2),
-            encode_slt(3, 1, 2), encode_sltu(3, 1, 2), encode_xor(3, 1, 2),
-            encode_srl(3, 1, 2), encode_sra(3, 1, 2), encode_or(3, 1, 2),
+            encode_add(3, 1, 2),
+            encode_sub(3, 1, 2),
+            encode_sll(3, 1, 2),
+            encode_mul(3, 1, 2),
+            encode_mulhu(3, 1, 2),
+            encode_div(3, 1, 2),
+            encode_divu(3, 1, 2),
+            encode_rem(3, 1, 2),
+            encode_remu(3, 1, 2),
+            encode_slt(3, 1, 2),
+            encode_sltu(3, 1, 2),
+            encode_xor(3, 1, 2),
+            encode_srl(3, 1, 2),
+            encode_sra(3, 1, 2),
+            encode_or(3, 1, 2),
             encode_and(3, 1, 2),
         ] {
             check_signals(raw, true, false, false, false, false);
@@ -493,9 +518,15 @@ mod tests {
     #[test]
     fn test_decode_i_type() {
         for raw in [
-            encode_addi(1, 2, 5), encode_slti(1, 2, 5), encode_sltiu(1, 2, 5),
-            encode_xori(1, 2, 5), encode_ori(1, 2, 5), encode_andi(1, 2, 5),
-            encode_slli(1, 2, 3), encode_srli(1, 2, 3), encode_srai(1, 2, 3),
+            encode_addi(1, 2, 5),
+            encode_slti(1, 2, 5),
+            encode_sltiu(1, 2, 5),
+            encode_xori(1, 2, 5),
+            encode_ori(1, 2, 5),
+            encode_andi(1, 2, 5),
+            encode_slli(1, 2, 3),
+            encode_srli(1, 2, 3),
+            encode_srai(1, 2, 3),
         ] {
             check_signals(raw, true, false, false, false, false);
         }
@@ -510,8 +541,11 @@ mod tests {
     #[test]
     fn test_decode_loads() {
         for raw in [
-            encode_lb(1, 2, 0), encode_lh(1, 2, 0), encode_lw(1, 2, 0),
-            encode_lbu(1, 2, 0), encode_lhu(1, 2, 0),
+            encode_lb(1, 2, 0),
+            encode_lh(1, 2, 0),
+            encode_lw(1, 2, 0),
+            encode_lbu(1, 2, 0),
+            encode_lhu(1, 2, 0),
         ] {
             check_signals(raw, true, true, false, false, false);
         }
@@ -527,8 +561,12 @@ mod tests {
     #[test]
     fn test_decode_branches() {
         for raw in [
-            encode_beq(1, 2, 8), encode_bne(1, 2, 8), encode_blt(1, 2, 8),
-            encode_bge(1, 2, 8), encode_bltu(1, 2, 8), encode_bgeu(1, 2, 8),
+            encode_beq(1, 2, 8),
+            encode_bne(1, 2, 8),
+            encode_blt(1, 2, 8),
+            encode_bge(1, 2, 8),
+            encode_bltu(1, 2, 8),
+            encode_bgeu(1, 2, 8),
         ] {
             check_signals(raw, false, false, false, true, false);
         }
@@ -666,7 +704,11 @@ mod tests {
             decoder.execute(&mut token, &regs);
             assert_eq!(token.branch_taken, expected_taken, "{}: branch_taken", name);
             if expected_taken {
-                assert_eq!(token.branch_target, expected_target, "{}: branch_target", name);
+                assert_eq!(
+                    token.branch_target, expected_target,
+                    "{}: branch_target",
+                    name
+                );
             }
         }
     }

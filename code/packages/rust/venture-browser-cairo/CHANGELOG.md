@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Route form submit/reset activation through the shared validation and
+  transactional GET/POST navigation pipeline.
+
 - Route Qt, Flutter, and Compose surface clicks through shared form-control
   activation before link navigation.
 

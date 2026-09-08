@@ -1,5 +1,16 @@
 # Changelog — `lang-aot`
 
+## 0.300.0 — 2026-09-08 — tracked-integer powered ALGOL standard results
+
+The seven-backend ALGOL matrix now proves that an exact tracked local integer
+may bound a power around a path-independent pure built-in result while the
+runtime selector remains emitted.
+
+## 0.299.0 — 2026-09-08 — powered ALGOL standard results
+
+The seven-backend ALGOL matrix now proves a path-independent pure built-in
+result may compose through a bounded variable-free integral power.
+
 ## 0.298.0 — 2026-09-08 — tracked reals in ALGOL standard-result arithmetic
 
 The seven-backend ALGOL matrix now proves a finite tracked local real snapshot
@@ -5740,3 +5751,22 @@ The focused `mccarthy_encoded_clr_corpus_executes` conformance test executes
 all 19 McCarthy corpus programs in clr-simulator without external tools. It
 protects internal MethodDef call/return behavior while the simulator refuses
 unsupported call token tables. No host input execution is claimed.
+
+### Oct on BEAM (VM-040)
+
+All twelve portable Oct matrix programs now execute on real BEAM, bringing
+Oct to 96 declared cells across eight backends. Integer output lowers
+print_i64 to erlang:display/1; u8 arithmetic, unary and bitwise results are
+masked to eight bits. Wider integer behavior is unchanged. The matrix BEAM
+runner now preserves program stdout separately from the return marker, using
+the same outer-whitespace convention as the other text process runners.
+Coverage includes complement, wrapping, short circuit, globals and loops/calls.
+This does not implement Intel-8008 input, carry arithmetic or rotations.
+
+### Nib on BEAM (VM-040)
+
+All 26 existing portable Nib matrix programs now include real BEAM (208 declared
+cells across eight backends). Four-bit arithmetic, unary and bitwise results
+now use mask 15; u8 keeps 255 and wider integer lowering is unchanged. The
+executed corpus covers calls/loops, checked arithmetic, u4/u8 complement,
+globals and BCD storage. This does not establish full Intel-4004 fidelity.

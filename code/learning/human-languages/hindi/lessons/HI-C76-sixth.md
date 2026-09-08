@@ -8,9 +8,9 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 3210
 chapter: 83
 type: word
-headword: "छठा"
-gloss: "sixth — the one number that will not take the rule"
-romanization: "chaṭhā"
+headword: "छठा / छठी"
+gloss: "sixth / feminine sixth — the one number that will not take the rule"
+romanization: "chaṭhā / chaṭhī"
 concept_tag: HI-ORDINAL-SIXTH
 prerequisites: [HI-C75-fifth, HI-C75-first, HI-C71-kyon, HI-C69-vehicle, HI-C20-mausam, HI-C28-subah]
 sounds: []
@@ -54,7 +54,7 @@ reviews_of: [HI-C75-fifth, HI-C75-first, HI-C71-kyon, HI-C69-vehicle]
 **छठा दिन** (*chaṭhā din*), **छठी किताब** (*chaṭhī kitāb*).
 
 The last lesson gave you a rule one lesson ago and this is where it fails. **छह**
-is six, and the sixth is **not** *chhahvā̃*. It is **छठा**, with a retroflex **ठ**
+is six, and the sixth is **not** *chhahvā̃*. It is **छठा** (*chaṭhā*), with a retroflex **ठ**
 that comes from nowhere in the cardinal.
 
 ## The word, taken apart: why this one resisted
@@ -84,6 +84,6 @@ the rest of this chapter is the ending doing its work.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C76-ORDINAL-01] -->
 
-[PAUSE 3s] Say the sixth day. (**छठा दिन**.) Why is it not *chhahvā̃*? (**It was inherited
+[PAUSE 3s] Say the sixth day. (**छठा** (*chaṭhā*) **दिन**.) Why is it not *chhahvā̃*? (**It was inherited
 whole** from Sanskrit *ṣaṣṭha*, before the *-वाँ* rule existed.) And how many
 ordinals are separate words? (**Five**.)

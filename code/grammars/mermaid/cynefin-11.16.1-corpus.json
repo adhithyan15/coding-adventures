@@ -1,0 +1,4 @@
+{"upstream":"mermaid@11.16.1","scope":"native domain-framework subset","fixtures":[
+{"name":"domains","source":"cynefin-beta\ntitle Incident Response\ncomplex\n  \"Investigate root cause\"\ncomplicated\n  \"Expert review\"\nclear\n  \"Apply known fix\"\nchaotic\n  \"Page on-call\"\nconfusion\n  \"Unknown mode\""},
+{"name":"transitions","source":"cynefin-beta:\ncomplex\n  \"Research\"\ncomplicated\n  \"Analysis\"\ncomplex --> complicated : \"Pattern identified\"\nclear --> chaotic : \"Complacency\""},
+{"name":"empty-framework","source":"cynefin-beta\ncomplex\ncomplicated\nclear\nchaotic"}]}

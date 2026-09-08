@@ -8,6 +8,45 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 Nib BEAM probe (selected after #14632 merged)
+
+PR #14632 merged as `9b04b74cb8` after all 46 checks succeeded or skipped.
+Oct's twelve portable BEAM cells are complete. Reprioritize Nib next because
+its u8 arithmetic shares the newly proven lowering, while its u4/BCD cases
+provide discriminating checks for remaining width and representation gaps.
+
+Probe the existing Nib corpus on real Erlang, verifying row/source identity on
+fresh main. Return values must match without process-exit masking; preserve
+hard failures after runtime detection. Separate any failing u4, checked
+arithmetic, or storage operation into a committed bounded contract before
+backend edits. Promote only executed cells. Retain VM-028's broader Intel-4004
+fidelity audit and VM-060b's host input design as separate backlog work.
+
+## VM-040 Oct BEAM probe (selected after #14621 merged)
+
+PR #14621 merged as `df39688c62` after all 46 checks succeeded or skipped.
+VM-060a's token-table bug is fixed. Reprioritization selects the existing Oct
+BEAM gap before VM-060b: Oct already has twelve portable matrix programs,
+whereas simulator host input needs a separate reader/string/ABI design.
+
+Probe observable Oct stdout, u8 wrapping, and control flow on real Erlang using
+the existing matrix runner. Enumerate row-to-source identities on refreshed
+main. Do not promote declarations without successful execution sentinels;
+missing erl alone may skip, lowering/runtime/output failures may not. If the
+probe exposes a lowering defect, log it and define a bounded implementation
+contract before editing the backend. Validate all newly promoted Oct BEAM
+cells and relevant backend regression suites, then update coverage/docs.
+This does not claim the unimplemented Intel-8008 intrinsic semantics (VM-013).
+
+### VM-040 Oct implementation contract: integer output
+
+The real BEAM probe passed the initial void control-flow row, then refused
+`fn main() { out(1, 200); }` at validation: print_i64 is outside the predicate
+builtin set. Add print_i64 as an output builtin (no result) using the existing
+erlang:display/1 integer output sequence, with its argument at srcs[1].
+Preserve the predicate lowering and existing io_out path. Then rerun all twelve
+Oct programs before declaring BEAM coverage; record further failures separately.
+
 ## VM-060a contract (selected after #14613 merged)
 
 PR #14613 merged as `4462675c52` after 46 completed successful/skipped checks.
@@ -1355,3 +1394,48 @@ future frontend design scope, not missing proofs for already-implemented code.
 Do not select ALGOL items from this backlog while the separate ALGOL agent is
 active. Cross-cutting fixes may touch shared infrastructure used by ALGOL, but
 must preserve its tests and avoid changing ALGOL semantics or roadmap ownership.
+
+### VM-040 probe discovery: BEAM runner discarded program stdout
+
+After print_i64 lowered, the output assertion saw an empty string. Inspection
+found run_beam always returned an empty stdout after parsing its result marker.
+Preserve the actual bytes before the result marker as program stdout, with a
+parser regression covering output plus return value. Keep result-range and
+process failure checks. This harness fix is required for observable BEAM cells.
+
+### VM-040 Oct implementation contract: u8 result width
+
+Further executed probes produced -1 for ~0 (expected255) and300 for200+100
+(expected44). BEAM arbitrary-precision arithmetic lacks the frontend's u8
+width semantics. Mask u8 arithmetic/unary/bitwise results with255 at lowering;
+leave wider integer types unchanged. Rerun all12Oct programs, including wrap,
+loops/calls, and complement. Add backend structural coverage for masking and
+integer output; preserve existing predicate and wider arithmetic behavior.
+
+### VM-040 Oct validation
+
+All12Oct programs passed on real Erlang; each newly declared Beam cell also
+passed in a fresh process with the positive execution sentinel (rows75-83 and
+381-383 at this revision). The dedicated corpus checks zero return separately
+from stdout, protecting marker separation. The backend suite passed92tests
+before the additional width regression; that regression passed20op/type cases.
+Clippy for iir-to-beam and lang-aot alltargets passed. Remaining VM040families
+are Twig strings/records/closures, Nib, BASIC, FLOW-MATIC and COBOL; re-audit
+current declarations before selection. VM060b hostinput and VM0138008 remain.
+
+### VM-040 Nib implementation contract: four-bit result width
+
+The real-BEAM corpus reached Nib's ~15 u4 comparison and returned0 instead
+of1: complement was not narrowed to four bits. Extend the existing u8 result
+mask to select15 for u4 in all three arithmetic/unary/bitwise families; preserve
+u8mask255 and wider integers. Extend the op/type regression to u4. Rerun all26
+Nib programs including BCD storage, then promote only proven BEAM cells.
+
+### VM-040 Nib validation
+
+All26NibBEAM cells (rows49-74 at this revision) passed in fresh processes
+with positive sentinels and no skips. The dedicated26program corpus passed,
+and all12OctBEAM programs passed again after widening the mask selection.
+The backend suite passed93tests (18unit70integration5doc), including30op/type
+width cases. No full seven-standard-column rerun is claimed. Broader4004
+fidelity remains VM028; remaining BEAM families are reprioritized after merge.

@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Added — stories for the six components with variant or size axes
+
+`Badge`, `Alert`, `Button`, `Spinner`, `Input`, and `Toast` now declare
+`.stories.json` files covering every value of every `one-of` axis they have —
+41 stories in total. The documentation site renders one frame per story, so an
+axis that stops working shows up as identical frames rather than as nothing.
+
+Slot names were checked against `mosaic-compile --describe` rather than assumed:
+`Toast` needed `open: true`, since a closed toast renders nothing.
+
 ### Fixed — the last three inert variant/size axes (#14036)
 
 `Toast.variant`, `Spinner.size`, `Spinner.variant`, and `Input.size` were

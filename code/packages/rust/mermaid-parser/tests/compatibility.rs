@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_event_modeling, parse_ishikawa, parse_radar, parse_sequence_diagram, parse_timeline, parse_treemap, parse_venn, parse_wardley, parse_xychart,
+    parse_cynefin, parse_event_modeling, parse_ishikawa, parse_radar, parse_sequence_diagram, parse_timeline, parse_treemap, parse_venn, parse_wardley, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -59,6 +59,18 @@ const TREEMAP_CORPUS: &str = include_str!(concat!(
 const VENN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/venn-11.16.1-corpus.json"));
 const ISHIKAWA_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-corpus.json"));
 const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-corpus.json"));
+const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
+
+#[test]
+fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
+    let corpus: Value = serde_json::from_str(CYNEFIN_CORPUS).expect("cynefin corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        parse_cynefin(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("cynefin fixture {name} failed: {error}"));
+    }
+}
 
 #[test]
 fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
@@ -780,4 +792,18 @@ fn wardley_dispatches_to_dedicated_strategic_map_ir() {
         _ => panic!("wardley should lower to dedicated strategic map IR"),
     }
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nAPI -> Missing").is_err());
+}
+
+#[test]
+fn cynefin_dispatches_to_dedicated_domain_map_ir() {
+    let diagram = parse_any_mermaid("cynefin-beta:\ncomplex\n  \"Probe\"\nclear\n  \"Known fix\"\ncomplex --> clear : \"Codified\"\nclear --> clear")
+        .expect("cynefin subset should parse");
+    match diagram {
+        mermaid_parser::MermaidDiagram::Cynefin(diagram) => {
+            assert_eq!(diagram.domains[0].items, ["Probe"]); assert_eq!(diagram.transitions.len(), 1);
+            assert_eq!(diagram.transitions[0].label.as_deref(), Some("Codified"));
+        }
+        _ => panic!("cynefin should lower to dedicated domain-map IR"),
+    }
+    assert!(parse_cynefin("cynefin-beta\n\"orphan item\"").is_err());
 }
