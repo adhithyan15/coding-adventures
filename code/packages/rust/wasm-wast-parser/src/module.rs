@@ -3200,6 +3200,27 @@ fn encode_stream_instr(
         out.push(0x1E);
         return Ok(0);
     }
+    // `any.convert_extern` / `extern.convert_any` (W39 slice 3: `code/
+    // specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`) -- the externref <->
+    // anyref bridge. Like `ref.i31`/`i31.get_s`/`i31.get_u` above, neither
+    // is registered in `wasm_opcodes::OPCODES` (a two-byte `0xFB`-prefixed
+    // encoding this crate's own single-byte opcode table doesn't model),
+    // so both are intercepted here before the `get_opcode_by_name`
+    // lookup. Each takes exactly one stack operand (already on the stack
+    // by the time this flat/stream instruction runs) and no immediate at
+    // all -- see the folded-form encoder's own doc comment (below, in
+    // this file's other instruction-encoding function) for the real
+    // spec's identity-preserving semantics.
+    if name == "any.convert_extern" {
+        out.push(0xFB);
+        out.push(0x1A);
+        return Ok(0);
+    }
+    if name == "extern.convert_any" {
+        out.push(0xFB);
+        out.push(0x1B);
+        return Ok(0);
+    }
     // Atomic memory operations (`0xFE`-prefixed, threads proposal --
     // WASM18): like `ref.null`/`ref.is_null` above, these aren't in
     // `wasm_opcodes::OPCODES` (a two-byte prefix encoding, same reason
@@ -4936,6 +4957,37 @@ fn encode_flat_instr(
         out.push(0x1E);
         return Ok(());
     }
+    // `any.convert_extern` / `extern.convert_any` (GC proposal, W39 slice
+    // 3: `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`). Per the real
+    // spec's own validation rule ("`any.convert_extern`: valid with type
+    // `[(ref null1? extern)] -> [(ref null2? any)]` for any `null1?` that
+    // equals `null2?`"; `extern.convert_any` is the mirror image), both
+    // instructions are an IDENTITY-PRESERVING, nullability-preserving
+    // reinterpretation -- the same underlying reference, just re-tagged
+    // under the other type hierarchy's STATIC type, not a deep copy or a
+    // value-level transformation. `wasm-module-encoder` already carries a
+    // `GcInstruction::AnyConvertExtern` variant emitting this exact byte
+    // (`0xFB 0x1A`) for a different consumer (a language backend that
+    // targets this repo's own binary encoder directly, bypassing this
+    // TEXT parser entirely) -- this encoder must agree on the SAME byte,
+    // which it does. `extern.convert_any` (`0xFB 0x1B`) had no encoder
+    // anywhere prior to this slice, not even a stub.
+    //
+    // Both take exactly one stack operand (recursed into via
+    // `encode_instr_list`, same shape as `ref.is_null`/`ref.i31`/
+    // `i31.get_s`/`i31.get_u` above) and no immediate at all.
+    if name == "any.convert_extern" {
+        encode_instr_list(args, icx, out)?;
+        out.push(0xFB);
+        out.push(0x1A);
+        return Ok(());
+    }
+    if name == "extern.convert_any" {
+        encode_instr_list(args, icx, out)?;
+        out.push(0xFB);
+        out.push(0x1B);
+        return Ok(());
+    }
     // `ref.test` / `ref.cast` (GC proposal, W33 second slice item 4: `code/
     // specs/W33-wasm-gc-recursive-type-subtyping.md`'s second addendum;
     // extended W39 slice 2: `code/specs/
@@ -5020,8 +5072,42 @@ fn encode_flat_instr(
                     Some("extern") => Some(ValueType::Externref),
                     _ => None,
                 }
-            } else if items.len() == 3 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("null") && items[2].as_atom() == Some("any") {
-                Some(ValueType::Anyref)
+            } else if items.len() == 3 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("null") {
+                // `(ref null any)` -- see this arm's pre-existing doc
+                // comment above. W39 slice 3 addendum: `ref_test.wast`'s
+                // own "Concrete Types" module (byte 2623/2900-ish region,
+                // surfaced only once slice 3's own `any.convert_extern`
+                // fix let parsing get this far) also uses `(ref.test (ref
+                // null nofunc) ...)` / `(ref.test (ref null noextern)
+                // ...)` -- the four BOTTOM heap types' own `(ref null X)`
+                // compound spelling, which the shared `parse_value_type`'s
+                // 3-item null branch never grew an arm for (only `func`/
+                // `extern`/`i31`/`eq`/`struct` -- see that function's own
+                // doc comment). Same "handle locally, don't widen the
+                // shared parser" discipline as `any` above: these four
+                // map to the SAME `ValueType::Null{Ref,Funcref,Externref,
+                // Exnref}` variants `parse_value_type`'s own bare-atom
+                // match already produces for `nullref`/`nullfuncref`/
+                // `nullexternref`/`nullexnref` (and this encoder's own
+                // `parsed_ty` match below already has arms for all four,
+                // unconditionally nullable -- see those arms' own doc
+                // comment for why: today they're only ever reached via
+                // the bare-atom spelling, this adds the compound `(ref
+                // null X)` spelling as a second route to the exact same
+                // variants). `noexn`/`none` are included alongside the
+                // two corpus-proven cases (`nofunc`/`noextern`) because
+                // they share this exact match arm and their own encode
+                // arms already exist and are already exercised via the
+                // bare-atom spelling -- no new untested surface, just a
+                // second parse route into it.
+                match items[2].as_atom() {
+                    Some("any") => Some(ValueType::Anyref),
+                    Some("none") => Some(ValueType::NullRef),
+                    Some("nofunc") => Some(ValueType::NullFuncref),
+                    Some("noextern") => Some(ValueType::NullExternref),
+                    Some("noexn") => Some(ValueType::NullExnref),
+                    _ => None,
+                }
             } else {
                 None
             }

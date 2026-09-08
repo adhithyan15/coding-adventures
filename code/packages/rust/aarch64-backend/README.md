@@ -50,3 +50,7 @@ let frontends emit `call_builtin "gc_alloc"` / `"gc_safepoint"` directly.
 
 Later passes will add: real register allocation, float operations,
 runtime-call lowering, deopt support for JIT.
+
+FLOW-MATIC EOF support (VM-039a): `input_more()` uses a non-consuming stdio
+peek alongside `input_i64`. The native/LLVM input stream proof includes empty
+input and repeated EOF reads; this does not change existing integer parsing.

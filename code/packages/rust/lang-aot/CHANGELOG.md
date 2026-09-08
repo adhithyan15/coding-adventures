@@ -1,4 +1,11 @@
 # Changelog — `lang-aot`
+## Unreleased — FLOW-MATIC EOF peek (VM-039a)
+
+Support the zero-argument `input_more` builtin through the shared C runtime.
+It returns 1 when input remains and 0 at EOF without consuming the next field.
+Native/LLVM matrix proofs cover finite streams, empty input, partial records
+and field preservation after EOF. Other backend adapters remain follow-up work.
+
 
 ## Unreleased — Macsyma on BEAM (VM-038)
 
@@ -7,6 +14,12 @@ real Erlang execution. Assert successful process exit and full signed integer
 results; retain explicit missing-tool skips and unconditional corpus emission
 checks. Declare the Elixir toolchain in BUILD so hosted LANG PRs install Erlang.
 No production lowering change was required.
+
+## 0.291.0 — 2026-09-07 — canonical tracked ALGOL real-function exponents
+
+The seven-backend ALGOL matrix now covers a canonical built-in real standard
+function over a tracked integer snapshot feeding bounded real-power unrolling.
+Noncanonical inputs and user overrides continue through runtime power lowering.
 
 ## Unreleased — Macsyma on real CoreCLR (VM-049)
 

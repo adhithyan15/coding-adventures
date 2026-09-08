@@ -392,6 +392,17 @@ Junctions, alignment hints, group-edge modifiers, left and bidirectional
 arrows, custom icon text, icon artwork, edge labels, port-aware routing, and configuration remain unsupported
 at the partial level.
 
+### Radar Native Slice
+
+The initial Mermaid 11.16.1 Radar slice uses dedicated portable grammars and
+maps labeled axes plus positional or axis-keyed curves into chart semantic IR.
+The chart layout emits deterministic polygonal graticules, radial spokes, axis
+labels, closed series paths, and legends using backend-neutral PaintScene
+instructions, with a native Metal-to-PNG fixture. Radar options (`showLegend`,
+`ticks`, `min`, `max`, and `graticule`), multiple curves on one statement,
+multiline curve bodies, configuration, and filled or smoothed curve styling
+remain unsupported at the partial level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

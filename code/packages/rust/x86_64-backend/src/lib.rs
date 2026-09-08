@@ -350,6 +350,8 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "getchar",      n_args: 0, returns: true  },
     BuiltinSig { name: "print_string", n_args: 2, returns: false },
     BuiltinSig { name: "input_i64",    n_args: 0, returns: true  },
+    // FLOW-MATIC EOF peek preserves the next input field.
+    BuiltinSig { name: "input_more",   n_args: 0, returns: true  },
     // E4-dyn: BASIC string `INPUT A$` — reads a whole line as a runtime string.
     // Same 0-arg / returns-i64 shape as `input_i64`; the returned i64 is the
     // handle (base address) of a `[i64 len][bytes]` heap block, carried in RAX

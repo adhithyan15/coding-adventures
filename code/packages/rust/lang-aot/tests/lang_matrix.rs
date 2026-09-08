@@ -1558,6 +1558,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — canonical exact outputs from real standard functions may
+    // provide bounded exponents over tracked local integer snapshots.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer exponent; real saved; exponent := 0; saved := 6.0 ^ (cos(exponent) + 1) + 6.0; exponent := 9; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — equal branches of a pure runtime conditional may retain
     // bounded multiplication while the selector branch still lowers.
     Prog {
@@ -6369,6 +6378,12 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 
+    // VM-039a: real stdin and EOF on the shared native/LLVM runtime.
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm] },
+
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -6474,6 +6489,10 @@ fn program_stdin(p: &Prog) -> &'static [u8] {
         (Language::DartmouthBasic, "10 INPUT A$\n20 PRINT A$\n30 END\n") => b"OK\n",
         // BA runtime string concat: two INPUT lines feed `str_concat` → "OK!".
         (Language::DartmouthBasic, "10 INPUT A$\n20 INPUT B$\n30 PRINT A$ + B$\n40 END\n") => b"OK\n!\n",
+        (Language::FlowMatic, "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .") => b"5\n-3",
+        (Language::FlowMatic, "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .") => b"",
+        (Language::FlowMatic, "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .") => b"3\n100\n7\n",
+        (Language::FlowMatic, "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .") => b"9\n",
         _ => b"",
     }
 }
@@ -6707,7 +6726,8 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
         || ll.contains("@__twig_gc_live_bytes")
         // Runtime slices must execute the production bounds-checked helper.
         || ll.contains("@__twig_str_slice")
-        || ll.contains("@__twig_str_index");
+        || ll.contains("@__twig_str_index")
+        || ll.contains("@__twig_input_more");
     if uses_gc_runtime {
         let rt = |name: &str| {
             std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
@@ -9245,6 +9265,29 @@ fn algol_tracked_sqrt_standard_function_exponents_run_on_every_available_standar
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the tracked sqrt standard-function exponent did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_canonical_tracked_real_function_exponents_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("6.0 ^ (cos(exponent) + 1)")
+        })
+        .expect("the ALGOL canonical tracked real-function program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the canonical tracked real-function exponent did not run"
             );
             continue;
         };
@@ -13596,4 +13639,42 @@ fn t7_differential_random_basic_loops_agree() {
     }
     eprintln!("T7 loop differential: {cross_checks} cross-engine agreements over {N} loop programs");
     assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
+}
+
+/// Repeated peeks must preserve the next field. BUILD includes this through
+/// its portable_text_stdout_ filter, using the production C input runtime.
+#[test]
+fn portable_text_stdout_input_more_peek() {
+    if !clang_ok() {
+        eprintln!("input_more peek SKIP: clang absent");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("peek temp directory");
+    let source = dir.path().join("peek.c");
+    std::fs::write(&source, r#"
+#include <stdint.h>
+#include <stdio.h>
+extern int64_t __twig_input_more(void);
+extern int64_t __twig_input_i64(void);
+int main(void) {
+    int64_t a = __twig_input_more(), b = __twig_input_more();
+    int64_t v = __twig_input_i64();
+    int64_t c = __twig_input_more(), d = __twig_input_more();
+    printf("%lld %lld %lld %lld %lld", (long long)a, (long long)b,
+           (long long)v, (long long)c, (long long)d);
+    return 0;
+}
+"#).expect("write peek probe");
+    let runtime = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime");
+    let exe = dir.path().join(if cfg!(windows) { "peek.exe" } else { "peek" });
+    let build = Command::new("clang").arg(&source)
+        .arg(runtime.join("twig_runtime.c")).arg(runtime.join("dynval_runtime.c"))
+        .args(common::gc_link_args()).args(llvm_system_link_args(std::env::consts::OS))
+        .arg("-o").arg(&exe).output().expect("spawn detected clang");
+    assert!(build.status.success(), "peek link: {}", String::from_utf8_lossy(&build.stderr));
+    for (input, expected) in [(b"-7".as_slice(), "1 1 -7 0 0"), (b"".as_slice(), "0 0 0 0 0")] {
+        let out = output_with_stdin(Command::new(&exe), input).expect("run peek probe");
+        assert!(out.status.success(), "peek process failed");
+        assert_eq!(String::from_utf8_lossy(&out.stdout), expected);
+    }
 }

@@ -539,3 +539,7 @@ results. `macsyma_beam_corpus` also checks compilation without Erlang; runtime
 execution explicitly skips only when the tool is absent. Detected-tool failures
 fail the test. The BUILD declares the Elixir toolchain because hosted CI installs
 Erlang through setup-beam. Symbolic-result parity remains a separate work item.
+
+FLOW-MATIC EOF support (VM-039a): `input_more()` uses a non-consuming stdio
+peek alongside `input_i64`. The native/LLVM input stream proof includes empty
+input and repeated EOF reads; this does not change existing integer parsing.

@@ -2,7 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
-## [0.2.93] - 2026-09-02 - `I31ref`'s missing `<: Eqref`/`<: Anyref` edges (W39 slice 2)
+## [0.2.94] - 2026-09-07 - `any.convert_extern`/`extern.convert_any` validator arm (W39 slice 3)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 3 of 5.
+
+Added a `0x1A | 0x1B` arm to the `0xFB` sub-opcode match: pop one generic
+value (`pop_val`, no expected-type check -- matching this crate's own
+established looseness for every other GC instruction in this family,
+e.g. `ref.cast`'s own `0x17` arm), push `StackType::Unknown`. Previously
+these two sub-opcodes fell into the generic `_ => {}` "no immediates, no
+stack effect" catch-all, which is correct ONLY for a sub-opcode that
+truly has none -- `any.convert_extern`/`extern.convert_any` both pop one
+value and push one back, so leaving them in that catch-all would have
+desynced the abstract stack's height the moment `wasm-wast-parser` started
+emitting them (this slice's own `wasm-wast-parser` change). No immediate
+bytes to consume for either.
 
 Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 2 of 5.
 

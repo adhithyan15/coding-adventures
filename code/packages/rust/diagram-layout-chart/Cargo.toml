@@ -1,8 +1,8 @@
 [package]
 name = "diagram-layout-chart"
-version = "0.23.0"
+version = "0.24.0"
 edition = "2021"
-description = "XY, pie, Sankey, and quadrant layout engine for chart-family diagrams (DG04)"
+description = "XY, pie, Sankey, quadrant, and radar layout engine for chart-family diagrams (DG04)"
 
 [dependencies]
 diagram-ir = { path = "../diagram-ir" }

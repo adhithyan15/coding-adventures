@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_sequence_diagram, parse_timeline, parse_xychart,
+    parse_radar, parse_sequence_diagram, parse_timeline, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -44,6 +44,23 @@ const ARCHITECTURE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/architecture-11.16.1-corpus.json"
 ));
+const RADAR_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/radar-11.16.1-corpus.json"
+));
+
+#[test]
+fn pinned_radar_subset_corpus_parses_to_chart_ir() {
+    let corpus: Value = serde_json::from_str(RADAR_CORPUS).expect("radar corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        let chart = parse_radar(source)
+            .unwrap_or_else(|error| panic!("radar fixture {id} failed: {error}"));
+        assert!(!chart.series.is_empty());
+    }
+}
 
 #[test]
 fn pinned_architecture_subset_corpus_parses_to_structural_ir() {
@@ -605,10 +622,11 @@ Alice->>Bob: Hello
 }
 
 #[test]
-fn recognized_but_unimplemented_family_is_not_reported_as_unknown() {
-    let error = parse_any_mermaid("radar-beta\naxis A, B, C\ncurve x{1, 2, 3}")
-        .err()
-        .expect("radar support is not implemented yet");
-    assert!(error.message.contains("recognized but not implemented"));
-    assert!(error.message.contains(MERMAID_COMPATIBILITY_BASELINE));
+fn radar_dispatches_to_chart_ir() {
+    let diagram = parse_any_mermaid("radar-beta\naxis A, B, C\ncurve x{1, 2, 3}")
+        .expect("radar subset should parse");
+    match diagram {
+        mermaid_parser::MermaidDiagram::Chart(chart) => assert_eq!(chart.series[0].data.len(), 3),
+        _ => panic!("radar should lower to chart IR"),
+    }
 }

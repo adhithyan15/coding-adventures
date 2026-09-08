@@ -1345,11 +1345,71 @@ fn const_value_to_wasm_value(c: &ConstValue) -> Option<WasmValue> {
         ConstValue::F32Bits(bits) => Some(WasmValue::F32(f32::from_bits(bits))),
         ConstValue::F64Bits(bits) => Some(WasmValue::F64(f64::from_bits(bits))),
         // WASM17: `(ref.null func/extern)` -> Ref(None); `(ref.extern n)`
-        // -> Ref(Some(n)). Falls out for free since `WasmValue::Ref` already
-        // wraps the identical `Option<u32>` shape `ConstValue::Ref` does.
-        ConstValue::Ref(v) => Some(WasmValue::Ref(v)),
+        // -> Ref(Some(n)) -- but see `extern_handle_value`'s own doc
+        // comment (W39 slice 3) for why `n` is offset before it ever
+        // becomes a real `WasmValue::Ref`, not passed through raw.
+        ConstValue::Ref(v) => Some(WasmValue::Ref(v.map(extern_handle_value))),
         ConstValue::V128(_) => None,
     }
+}
+
+/// W39 slice 3 (`code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`):
+/// `(ref.extern n)` script literals and `wasm-execution`'s own `gc_heap`
+/// indices for real struct/array/`any.convert_extern`-boxed objects both
+/// live in the SAME `WasmValue::Ref(Option<u32>)` numeric space, with
+/// nothing at the value level to tell them apart. A small script literal
+/// like `(ref.extern 0)` can therefore coincidentally collide with a real
+/// `gc_heap` index (also small, starting from 0) -- confirmed live, not
+/// hypothetical: `ref_test.wast`'s own "Abstract Types" module uses
+/// `(ref.extern 0)` as `init`'s `$x` externref parameter, and that SAME
+/// module's `struct.new_default $st` call (its first real GC allocation)
+/// also lands at `gc_heap[0]` -- so `any.convert_extern (local.get $x)`
+/// produced a `Ref(Some(0))` that `ref.test`/`ref.cast`'s own dynamic
+/// check misread as "the live struct at `gc_heap[0]`" purely by numeric
+/// coincidence, five real `assert_return` directives silently computing
+/// the wrong boolean sum (traced directly, not assumed, before this fix
+/// landed).
+///
+/// Fixed by reserving bit 30 for every `ref.extern`-sourced handle:
+/// `EXTERN_HANDLE_BASE | n` lands in `[0x4000_0000, 0x7FFF_FFFF]`, a range
+/// no real `gc_heap` can ever reach (this crate's own DoS guards --
+/// `MAX_ARRAY_ALLOC` and friends -- keep every corpus module's real
+/// allocation count many orders of magnitude smaller). Bit 30, NOT bit
+/// 31: `wasm-execution`'s own `FUNC_REF_HANDLE_TAG` already reserves the
+/// TOP bit (`0x8000_0000`) to mark a `WasmValue::Ref` payload as a tagged
+/// `func_ref_heap` handle rather than a raw index -- a first attempt at
+/// this fix used `0x8000_0000` too and immediately regressed `table_get.
+/// wast`/`table_fill.wast`/`table_grow.wast`/`table_set.wast`/`global.
+/// wast`/`elem.wast`/`ref_is_null.wast` (confirmed live via the full
+/// 257-file diff, not assumed): every `(ref.extern n)` value instantly
+/// misread as a func_ref_heap handle the moment it entered ANY code path
+/// that checks that tag bit, trapping with "invalid func_ref handle" or
+/// silently resolving to the wrong function entirely. Bit 30 avoids that
+/// collision while remaining just as unreachable for a real `gc_heap`
+/// index.
+///
+/// This is a BIJECTION for every `n` a real corpus literal actually uses
+/// (small, non-negative, well under `2^30`), so two occurrences of the
+/// identical literal anywhere in the same script still compare equal,
+/// and two DIFFERENT literals still compare distinct -- applied ONCE,
+/// HERE, and reused by both `const_value_to_wasm_value` (an invoke
+/// argument's own `n`) and `value_matches_expected`'s matching
+/// `ConstValue::Ref` arm (an `assert_return` expected value's own `n`),
+/// so a raw, never-converted externref value read straight back out of
+/// the module still compares correctly against its own expected literal.
+///
+/// Deliberately confined to THIS crate's test harness, not `wasm-
+/// execution`'s real interpreter: `ref.extern` is a WAST SCRIPT
+/// convenience for synthesizing a host reference value for testing, not
+/// a real WASM instruction -- a genuine embedder-side host boundary
+/// (which this engine doesn't otherwise have) would need its own,
+/// possibly different, collision-avoidance scheme, but every corpus test
+/// this repo runs ultimately traces every externref value back to exactly
+/// this one script literal.
+const EXTERN_HANDLE_BASE: u32 = 0x4000_0000;
+
+fn extern_handle_value(n: u32) -> u32 {
+    EXTERN_HANDLE_BASE | n
 }
 
 /// Distinguishes a real LINK failure (an unresolved or type-mismatched
@@ -1416,8 +1476,11 @@ fn value_matches_expected(actual: &WasmValue, v128_bytes: Option<V128Bytes>, exp
         // (Some(n)) -- compares the *handle number*, not host-object
         // identity, matching this repo's own script-literal design (no
         // real host environment produces externref values to preserve
-        // identity for).
-        Expected::Value(ConstValue::Ref(v)) => matches!(actual, WasmValue::Ref(a) if a == v),
+        // identity for). W39 slice 3: `v.map(extern_handle_value)` applies
+        // the SAME offset `const_value_to_wasm_value` already applied to
+        // an invoke argument's own `(ref.extern n)` -- see that function's
+        // own doc comment.
+        Expected::Value(ConstValue::Ref(v)) => matches!(actual, WasmValue::Ref(a) if *a == v.map(extern_handle_value)),
         // Bare `(ref.null)` -- matches the null reference of ANY reference
         // type. This repo's `WasmValue::Ref(Option<u32>)` doesn't carry a
         // runtime type tag (only the *static* type distinguishes a funcref
