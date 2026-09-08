@@ -447,22 +447,22 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                 ));
             }
 
-            // ── Check 6b: call_builtin — predicate set only (McCarthy W10) ───
+            // ── Check 6b: call_builtin — predicates and integer output ───
             //
-            // `call_builtin` is supported ONLY for the McCarthy predicate set
-            // (`pair?`/`equal?`/`not`); any other builtin name has no BEAM
+            // `call_builtin` supports the McCarthy predicate set and print_i64;
+            // any other builtin name has no BEAM
             // lowering. We reject it here (not just at lowering) so that a
             // validated module is always lowerable — `generate()` panics on a
             // lowering error, assuming validation already screened the module.
             if instr.op == "call_builtin" {
                 let supported = matches!(
                     instr.srcs.first(),
-                    Some(Operand::Var(n)) if BEAM_PREDICATE_BUILTINS.contains(&n.as_str())
+                    Some(Operand::Var(n)) if BEAM_PREDICATE_BUILTINS.contains(&n.as_str()) || n == "print_i64"
                 );
                 if !supported {
                     errors.push(format!(
                         "UnsupportedOp: function {:?}, call_builtin {:?} is not in the \
-                         BEAM predicate set (pair?/equal?/not)",
+                         BEAM builtin set (pair?/equal?/not/print_i64)",
                         func.name, instr.srcs.first()
                     ));
                 }

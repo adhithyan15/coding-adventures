@@ -2,6 +2,9 @@
 
 ## 2026-09-08
 
+- Expose the workbook and startup titles as semantic level-two headings through
+  Mosaic's shared React emitter; retain their authored typography and spacing.
+
 - Replace plain startup messages with the generated Mosaic loading/error screen.
   Retry failed loads, dispose abandoned instances, and focus the recovered workbook.
 

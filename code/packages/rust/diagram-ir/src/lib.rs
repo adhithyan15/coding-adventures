@@ -1032,6 +1032,58 @@ pub struct LayoutedTreemapDiagram {
     pub nodes: Vec<LayoutedTreemapNode>,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum TreeViewNodeKind {
+    File,
+    Directory,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct TreeViewNode {
+    pub id: String,
+    pub parent_id: Option<String>,
+    pub depth: usize,
+    pub label: String,
+    pub kind: TreeViewNodeKind,
+    pub class_selector: Option<String>,
+    pub icon: Option<String>,
+    pub description: Option<String>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct TreeViewDiagram {
+    pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub nodes: Vec<TreeViewNode>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedTreeViewNode {
+    pub id: String,
+    pub parent_id: Option<String>,
+    pub depth: usize,
+    pub label: String,
+    pub kind: TreeViewNodeKind,
+    pub class_selector: Option<String>,
+    pub icon: Option<String>,
+    pub description: Option<String>,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedTreeViewDiagram {
+    pub width: f64,
+    pub height: f64,
+    pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub nodes: Vec<LayoutedTreeViewNode>,
+}
+
 // SET FAMILY
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct VennStyle {
@@ -1083,6 +1135,20 @@ pub struct LayoutedWardleyLink { pub from: Point, pub to: Point }
 pub struct LayoutedWardleyEvolution { pub from: Point, pub to: Point }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub stages: Vec<String>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>, pub evolves: Vec<LayoutedWardleyEvolution> }
+
+// SENSE-MAKING FAMILY
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CynefinDomain { pub name: String, pub items: Vec<String> }
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CynefinTransition { pub from: String, pub to: String, pub label: Option<String> }
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CynefinDiagram { pub title: Option<String>, pub domains: Vec<CynefinDomain>, pub transitions: Vec<CynefinTransition> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedCynefinDomain { pub name: String, pub items: Vec<String>, pub x: f64, pub y: f64, pub width: f64, pub height: f64, pub center: Point, pub confusion: bool }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedCynefinTransition { pub from: Point, pub to: Point, pub label: Option<String> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub domains: Vec<LayoutedCynefinDomain>, pub transitions: Vec<LayoutedCynefinTransition> }
 
 // STRUCTURAL FAMILY
 #[derive(Clone, Debug, PartialEq)]

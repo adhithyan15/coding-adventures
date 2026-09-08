@@ -38,6 +38,8 @@ pub const GENERATED_FIXTURE_PATH: &str = "/generated.html";
 pub const EFFECTS_FIXTURE_PATH: &str = "/effects.html";
 pub const BACKGROUNDS_FIXTURE_PATH: &str = "/backgrounds.html";
 pub const FORM_CONTROLS_FIXTURE_PATH: &str = "/form-controls.html";
+pub const FORM_SUBMISSION_FIXTURE_PATH: &str = "/form-submission.html";
+pub const FORM_SUBMISSION_RESULT_PATH: &str = "/form-result.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -141,6 +143,20 @@ pub const FORM_CONTROLS_FIXTURE_HTML: &str = r#"<!doctype html><html><body>
 <button id="disabled-control" disabled>Disabled</button>
 <input id="custom-control" value="custom" style="appearance:none;width:92px;min-width:80px;max-width:100px">
 </body></html>"#;
+
+/// Deterministic validation, successful-control, reset, and POST fixture.
+pub const FORM_SUBMISSION_FIXTURE_HTML: &str = r#"<!doctype html><html><head><title>Venture form fixture</title></head><body>
+<form id="search" action="/form-result.html" method="post">
+<input id="query-control" name="q" required value="venture">
+<input id="radio-a" type="radio" name="scope" value="docs">
+<input id="radio-b" type="radio" name="scope" value="web" checked>
+<select id="kind-control" name="kind"><option value="guide">Guide</option><option value="spec" selected>Spec</option></select>
+<button id="reset-control" type="reset">Reset</button>
+<button id="submit-control" type="submit" name="intent" value="search">Search</button>
+</form>
+</body></html>"#;
+
+pub const FORM_SUBMISSION_RESULT_HTML: &str = r#"<!doctype html><html><head><title>Venture form result</title></head><body><p id="form-result">Form accepted</p></body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -543,6 +559,8 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let effects_url = format!("{origin}{EFFECTS_FIXTURE_PATH}");
     let backgrounds_url = format!("{origin}{BACKGROUNDS_FIXTURE_PATH}");
     let form_controls_url = format!("{origin}{FORM_CONTROLS_FIXTURE_PATH}");
+    let form_submission_url = format!("{origin}{FORM_SUBMISSION_FIXTURE_PATH}");
+    let form_result_url = format!("{origin}{FORM_SUBMISSION_RESULT_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -639,6 +657,18 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             FORM_CONTROLS_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == form_submission_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            FORM_SUBMISSION_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == form_result_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            FORM_SUBMISSION_RESULT_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())

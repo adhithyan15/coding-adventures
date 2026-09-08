@@ -11,10 +11,11 @@ use layout_text_measure_native::NativeMeasurer;
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
-    BrowserFetchResponse, BrowserHostController, BrowserHostEventOutcome, BrowserLoadError,
-    BrowserNavigation, BrowserNavigationUpdate, BrowserPagePipeline, BrowserResourceFetcher,
-    BrowserScrollCommand, BrowserScrollMetrics, BrowserSession, BrowserSubresourceCompletion,
-    BrowserSubresourceUpdate, HttpBrowserFetcher, MemoryBookmarkRepository,
+    BrowserFetchRequest, BrowserFetchResponse, BrowserHostController, BrowserHostEventOutcome,
+    BrowserLoadError, BrowserNavigation, BrowserNavigationUpdate, BrowserPagePipeline,
+    BrowserResourceFetcher, BrowserScrollCommand, BrowserScrollMetrics, BrowserSession,
+    BrowserSubresourceCompletion, BrowserSubresourceUpdate, HttpBrowserFetcher,
+    MemoryBookmarkRepository,
 };
 
 #[cfg(any(target_os = "windows", test))]
@@ -51,7 +52,17 @@ where
     Ok(session.execute(navigation, &pipeline, fetcher)?.is_some())
 }
 
-fn activate_control(session: &mut BrowserSession, x: f64, y: f64, width: f64, height: f64) -> bool {
+fn activate_control<F>(
+    session: &mut BrowserSession,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    fetcher: &F,
+) -> Result<bool, BrowserLoadError>
+where
+    F: BrowserResourceFetcher,
+{
     let theme = mosaic_html_theme();
     let measurer = NativeMeasurer::new();
     let shaper = NativeShaper::new();
@@ -65,7 +76,9 @@ fn activate_control(session: &mut BrowserSession, x: f64, y: f64, width: f64, he
         &metrics,
         &resolver,
     );
-    session.activate_control(x, y, &pipeline).is_some()
+    Ok(session
+        .activate_control_and_submit(x, y, &pipeline, fetcher)?
+        .is_some())
 }
 
 struct OwnedFetcher(Box<dyn BrowserResourceFetcher>);
@@ -73,6 +86,10 @@ struct OwnedFetcher(Box<dyn BrowserResourceFetcher>);
 impl BrowserResourceFetcher for OwnedFetcher {
     fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String> {
         self.0.fetch(url)
+    }
+
+    fn fetch_request(&self, request: &BrowserFetchRequest) -> Result<BrowserFetchResponse, String> {
+        self.0.fetch_request(request)
     }
 }
 
@@ -189,10 +206,11 @@ impl WindowsBrowserHost {
     pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
         let width = self.width;
         let height = self.height;
-        if activate_control(self.controller.session_mut(), x, y, width, height) {
+        let fetcher = &self.fetcher;
+        if activate_control(self.controller.session_mut(), x, y, width, height, fetcher)? {
+            self.controller.synchronize_session_state();
             return Ok(true);
         }
-        let fetcher = &self.fetcher;
         self.controller.activate_link(x, y, |session, navigation| {
             execute_navigation(session, navigation, width, height, fetcher)
         })

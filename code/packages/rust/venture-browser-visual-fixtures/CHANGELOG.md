@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add deterministic form submission and result routes spanning required text,
+  radio groups, select values, reset, submitter data, and POST navigation.
+
 - Add a deterministic form-control fixture spanning normal, flex, grid,
   table, and float layout plus disabled, checked, select, and appearance state.
 

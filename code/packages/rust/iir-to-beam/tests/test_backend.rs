@@ -2506,3 +2506,37 @@ fn test_69_real_erl_tape_loop_preserves_pointer_across_iterations() {
     assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "0",
         "the tape pointer must survive every iteration");
 }
+
+#[test]
+fn integer_output_builtin_accepts_no_destination() {
+    let m = make_module_single(vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(200)], "u8"),
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("print_i64".into()), Operand::Var("n".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    assert!(has_opcode(&beam, OP_GC_BIF1));
+    let mut missing = m;
+    missing.functions[0].instructions[1].srcs.pop();
+    assert!(lower_iir_to_beam(&missing, &cfg()).is_err());
+}
+
+#[test]
+fn narrow_operations_mask_but_i64_remains_unbounded() {
+    for op in ["add", "sub", "mul", "neg", "not", "and", "or", "xor", "shl", "shr"] {
+        let unary = matches!(op, "neg" | "not");
+        for ty in ["u4", "u8", "i64"] {
+            let sources = if unary { vec![Operand::Var("a".into())] }
+                else { vec![Operand::Var("a".into()), Operand::Var("b".into())] };
+            let module = make_module_fn("width", vec![("a", ty), ("b", ty)], ty, vec![
+                IIRInstr::new(op, Some("r".into()), sources, ty),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], ty),
+            ]);
+            let beam = lower_iir_to_beam(&module, &cfg()).unwrap();
+            assert_eq!(count_opcode(&beam, OP_GC_BIF2),
+                usize::from(!unary) + usize::from(matches!(ty, "u4" | "u8")), "{op} {ty}");
+        }
+    }
+}

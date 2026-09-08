@@ -198,14 +198,14 @@
     {
       "id": "cynefin",
       "headers": ["cynefin-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "domain-map",
-      "smoke_source": "cynefin-beta\nClear:\n  Practice"
+      "smoke_source": "cynefin-beta\nclear\n  \"Practice\""
     },
     {
       "id": "treeview",
       "headers": ["treeView-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "tree",
       "smoke_source": "treeView-beta\nroot\n  child"
     },

@@ -88,6 +88,9 @@ authored appearance in every backend.
 Passing `--package-manifest <mosaic-package.toml>` also resolves bare component
 names listed as sibling exports in that manifest. Names that are neither kernel
 primitives nor declared package exports remain explicit compilation errors.
+For HTML, Web Component, and React pipeline builds, the manifest's
+`[styles].token_palette` is loaded relative to the manifest directory before
+the selected stylesheet is compiled.
 
 Package mode compiles a Mosaic package directory that contains
 `mosaic-package.toml` plus `src/*.mil`, `src/*.mll`, and optional `src/*.msl`

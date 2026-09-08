@@ -1,0 +1,23 @@
+[workspace]
+
+[package]
+name = "mosaic-pkg-spice-workbench"
+version = "0.1.0"
+edition = "2021"
+description = "Smoke-test harness for the Berkeley SPICE Mosaic workbench"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dev-dependencies]
+moslayout-compiler = { path = "../../rust/moslayout-compiler" }
+mosmodel-compiler = { path = "../../rust/mosmodel-compiler" }
+mosstyle-compiler = { path = "../../rust/mosstyle-compiler" }
+mosaic-package-artifact-builder = { path = "../../rust/mosaic-package-artifact-builder" }
+tempfile = "3"
+toml = "0.8"
+
+[[test]]
+name = "package_compiles"
+path = "tests/package_compiles.rs"

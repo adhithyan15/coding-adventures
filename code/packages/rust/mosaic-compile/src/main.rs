@@ -816,20 +816,32 @@ fn run_pipeline(
             }
         }
     }
-    let local_package = matches!(backend, "html" | "webcomponent" | "react")
-        .then(|| package_manifest_path)
-        .flatten()
-        .and_then(|path| mosaic_package_manifest::parse_path(Path::new(path)).ok());
+    let local_package = if matches!(backend, "html" | "webcomponent" | "react") {
+        package_manifest_path.and_then(|path| {
+            let manifest = mosaic_package_manifest::parse_path(Path::new(path)).ok()?;
+            let root = Path::new(path)
+                .parent()
+                .filter(|parent| !parent.as_os_str().is_empty())
+                .unwrap_or_else(|| Path::new("."))
+                .to_path_buf();
+            let backend = pkg_backend_from_str(backend)
+                .expect("browser pipeline backend must map to package backend");
+            Some((manifest, root, backend))
+        })
+    } else {
+        None
+    };
     let composed = match &local_package {
-        Some(manifest) => compose_component_with_model_in_package(
+        Some((manifest, package_root, package_backend)) => compose_component_with_model_in_package(
             &component_name,
             mosmodel_out,
             &layout_src,
             &style_src,
             &search_paths,
             None,
-            &manifest.package.name,
-            &manifest.components.exports,
+            package_root,
+            manifest,
+            *package_backend,
         ),
         None => compose_component_with_model(
             &component_name,

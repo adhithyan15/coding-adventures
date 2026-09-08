@@ -36,6 +36,11 @@ The default `HttpBrowserFetcher` adapts `http1-client`, but tests and platform
 hosts can inject any transport. Font measurement, shaping, metrics, resolution,
 and the final paint backend also remain caller-owned.
 
+`BrowserSession` routes submit/reset activation and implicit Enter submission
+through `browser-form-submission`. Invalid forms retain bounded diagnostics;
+valid GET and URL-encoded POST plans use the same transactional load, history,
+visited-link, control-state, and subresource lifecycle as ordinary navigation.
+
 `NavigationHistory` is re-exported from the reusable `browser-navigation`
 package and implements the BR01 in-memory navigation model: navigate, Back,
 Forward, Home, Reload, and redirect replacement. The same package owns

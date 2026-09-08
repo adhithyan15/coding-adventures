@@ -2,7 +2,7 @@
 
 `http1-client` is Venture's first concrete network transport. It composes the
 existing `url-parser`, `tcp-client`, `http1`, and `http-core` packages into a
-bounded synchronous HTTP/1.0 GET client.
+bounded synchronous HTTP/1.0 GET and URL-encoded POST client.
 
 ## What It Provides
 
@@ -10,20 +10,21 @@ bounded synchronous HTTP/1.0 GET client.
 - DNS/TCP connection and one-request-per-connection HTTP/1.0 exchange
 - Content-Length, bodyless, and read-until-EOF response framing
 - Relative 301/302 redirect following
+- `application/x-www-form-urlencoded` POST bodies with explicit byte lengths
 - Configurable connection, response-head, response-body, and redirect limits
 - Structured errors for every transport stage
 
 ```rust,no_run
-use http1_client::get;
+use http1_client::HttpClient;
 
-let response = get("http://info.cern.ch/")?;
+let response = HttpClient::default().get("http://info.cern.ch/")?;
 assert_eq!(response.head.status, 200);
 println!("{} bytes from {}", response.body.len(), response.final_url);
 # Ok::<(), http1_client::HttpClientError>(())
 ```
 
 The client deliberately sends HTTP/1.0 with `Connection: close`. HTTPS,
-cookies, caching, authentication, request bodies, and HTTP/1.1 chunk decoding
+cookies, caching, authentication, arbitrary request bodies, and HTTP/1.1 chunk decoding
 remain outside this package.
 
 ## Browser Integration

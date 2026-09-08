@@ -653,10 +653,12 @@ pub fn compose_component_with_model_and_tokens(
 /// Complete package composition for one component compiled with its owning
 /// package manifest.
 ///
-/// Bare PascalCase nodes that name a sibling export are package component
-/// references, not kernel primitives. Qualifying them before dependency-style
-/// collection and layout resolution lets every backend consume the same fully
-/// inlined layout rather than requiring backend-specific component registries.
+/// The owning manifest contributes both its package identity and its scoped
+/// token palette. Bare PascalCase nodes that name a sibling export are package
+/// component references, not kernel primitives. Qualifying them before
+/// dependency-style collection and layout resolution lets every backend consume
+/// the same fully inlined layout rather than requiring backend-specific
+/// component registries.
 #[allow(clippy::too_many_arguments)]
 pub fn compose_component_with_model_in_package(
     component: &str,
@@ -665,9 +667,16 @@ pub fn compose_component_with_model_in_package(
     msl_src: &str,
     package_search_paths: &[PathBuf],
     theme: Option<&str>,
-    package_name: &str,
-    package_exports: &[String],
+    package_root: &Path,
+    manifest: &MosaicPackage,
+    backend: Backend,
 ) -> Result<ComposedComponent, BuildError> {
+    let package_tokens = load_package_tokens(
+        package_root,
+        manifest,
+        Some(backend),
+        &mosstyle_compiler::TokenOverrides::default(),
+    )?;
     compose_component_with_model_and_style_options(
         component,
         model,
@@ -676,10 +685,10 @@ pub fn compose_component_with_model_in_package(
         package_search_paths,
         &StyleCompositionOptions {
             theme,
-            tokens: &mosstyle_compiler::TokenOverrides::default(),
-            backend: None,
+            tokens: &package_tokens,
+            backend: Some(backend),
         },
-        Some((package_name, package_exports)),
+        Some((&manifest.package.name, &manifest.components.exports)),
     )
 }
 

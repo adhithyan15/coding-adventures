@@ -1,0 +1,60 @@
+{
+  "stories": [
+    {
+      "name": "Primary",
+      "fixtures": {
+        "label": "Primary",
+        "variant": "primary"
+      }
+    },
+    {
+      "name": "Secondary",
+      "fixtures": {
+        "label": "Secondary",
+        "variant": "secondary"
+      }
+    },
+    {
+      "name": "Success",
+      "fixtures": {
+        "label": "Success",
+        "variant": "success"
+      }
+    },
+    {
+      "name": "Danger",
+      "fixtures": {
+        "label": "Danger",
+        "variant": "danger"
+      }
+    },
+    {
+      "name": "Warning",
+      "fixtures": {
+        "label": "Warning",
+        "variant": "warning"
+      }
+    },
+    {
+      "name": "Info",
+      "fixtures": {
+        "label": "Info",
+        "variant": "info"
+      }
+    },
+    {
+      "name": "Light",
+      "fixtures": {
+        "label": "Light",
+        "variant": "light"
+      }
+    },
+    {
+      "name": "Dark",
+      "fixtures": {
+        "label": "Dark",
+        "variant": "dark"
+      }
+    }
+  ]
+}

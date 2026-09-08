@@ -1,0 +1,101 @@
+{
+  "stories": [
+    {
+      "name": "Primary",
+      "fixtures": {
+        "label": "Primary",
+        "variant": "primary",
+        "size": "md"
+      }
+    },
+    {
+      "name": "Secondary",
+      "fixtures": {
+        "label": "Secondary",
+        "variant": "secondary",
+        "size": "md"
+      }
+    },
+    {
+      "name": "Success",
+      "fixtures": {
+        "label": "Success",
+        "variant": "success",
+        "size": "md"
+      }
+    },
+    {
+      "name": "Danger",
+      "fixtures": {
+        "label": "Danger",
+        "variant": "danger",
+        "size": "md"
+      }
+    },
+    {
+      "name": "Warning",
+      "fixtures": {
+        "label": "Warning",
+        "variant": "warning",
+        "size": "md"
+      }
+    },
+    {
+      "name": "Info",
+      "fixtures": {
+        "label": "Info",
+        "variant": "info",
+        "size": "md"
+      }
+    },
+    {
+      "name": "Light",
+      "fixtures": {
+        "label": "Light",
+        "variant": "light",
+        "size": "md"
+      }
+    },
+    {
+      "name": "Dark",
+      "fixtures": {
+        "label": "Dark",
+        "variant": "dark",
+        "size": "md"
+      }
+    },
+    {
+      "name": "Size sm",
+      "fixtures": {
+        "label": "Size sm",
+        "variant": "primary",
+        "size": "sm"
+      }
+    },
+    {
+      "name": "Size md",
+      "fixtures": {
+        "label": "Size md",
+        "variant": "primary",
+        "size": "md"
+      }
+    },
+    {
+      "name": "Size lg",
+      "fixtures": {
+        "label": "Size lg",
+        "variant": "primary",
+        "size": "lg"
+      }
+    },
+    {
+      "name": "Disabled",
+      "fixtures": {
+        "label": "Disabled",
+        "variant": "primary",
+        "size": "md",
+        "disabled": true
+      }
+    }
+  ]
+}

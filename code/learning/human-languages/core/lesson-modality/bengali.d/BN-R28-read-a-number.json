@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R28-read-a-number",
+    "language": "bengali",
+    "chapter": 39,
+    "sequence": 2120,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:be1e915c8587b828"
+  },
+  "findings": []
+}
