@@ -1,4 +1,12 @@
 {
   "version": 1,
-  "language": "german"
+  "language": "german",
+  "conceptAliases": {
+    "VERB-NEGATE": [
+      "GE-NEGATE-NICHT-POSITION"
+    ],
+    "PRONOUN-MY": [
+      "GE-POSS-MEIN"
+    ]
+  }
 }

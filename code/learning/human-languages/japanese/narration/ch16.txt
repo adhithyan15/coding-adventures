@@ -1,0 +1,258 @@
+Japanese, chapter 16: The Other Way to Count.
+8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 8.
+ひ (hi) — one stroke, and a second count begins.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then one sign.
+[your turn — recall: write ろ — R2, five lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say ten, then build thirteen and thirty from it — R2, five lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say more, again — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+Last chapter bought two signs for a count of ten. This chapter buys five, for a count of ten that Japanese runs beside the one you already have.
+
+Script — the shape.
+ひ — hi.
+One stroke, and the KanjiVG stroke data for this sign holds exactly one path: start high on the left, run a short way to the right, then sweep down and far to the left in a long shallow curve and finish by turning up. The pen does not lift once.
+Compare ろ, which you wrote five lessons ago: also one stroke, but ろ closes its loop and ひ never closes at all.
+
+Guided Practice.
+Trace ひ (hi) once and copy it once, without lifting.
+Hide it; write it after ten seconds.
+Write ろ and ひ (hi) side by side: one closes, one does not.
+
+Wrap-up Recall.
+How many strokes? (One.)
+Source: Unicode Hiragana chart; stroke count and order per KanjiVG.
+[question — say your answer, then pause 10 seconds]
+Write the hiragana sign for the mora hi.
+
+
+Lesson 2 of 8.
+ひとつ (hitotsu) — one thing.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then the first word of a second count.
+[your turn — recall: write ひ (hi) — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say six — R2, five lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: write も — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+
+You'll Want to Know — hear and say.
+ひとつ (hitotsu) — hi-to-tsu — one thing.
+Three beats, three signs: ひ (hi) from last lesson, と and つ long since yours.
+You already have a word for one. It is いち, and it is borrowed. ひとつ (hitotsu) is the word Japanese had before it borrowed anything, and the two are not interchangeable:
+[a table of 2 rows, read aloud]
+word: いち. what it is for: the number itself — one, counting aloud, a house number.
+word: ひとつ (hitotsu). what it is for: one thing — a thing you are pointing at.
+Wiktionary's usage note for ひとつ (hitotsu) is one sentence and it is the sentence this chapter turns on: it is used when the items counted have no specific counter category. Hold that. It will be the whole of the next chapter.
+
+Guided Practice — read, copy, recall.
+Write ひとつ. Say ichi, then hitotsu, and hear that they share nothing — not a beat, not a sound.
+
+Wrap-up Recall.
+Which of the two words is the borrowed one? (いち.)
+Sources: Wiktionary: hitotsu.
+[question — say your answer, then pause 15 seconds]
+You are pointing at one apple. Do you say ichi or hitotsu?
+
+
+Lesson 3 of 8.
+ふ (fu) — four strokes, and a counter you already own.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then one sign.
+[your turn — recall: say one thing — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: write the small ゅ — R2, five lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say one time — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+いちど is worth stopping on. Its own lesson said do counts an occurrence — which is to say いちど is a number with a counter behind it, and you have been saying it since chapter nine without anyone calling it that. Two chapters from now that sentence is the whole point.
+
+Script — the shape.
+ふ — fu.
+Four separate strokes, in this order, as KanjiVG records them: a short tick at the top; then the body, starting below it and curving down and to the left; then a small mark low on the left; then a small mark low on the right.
+Everything this book has taught you so far has been one, two or three strokes. This is the first sign with four, and the last two are easy to run together by accident. They are separate.
+
+Guided Practice.
+Trace ふ (fu) once, counting the four lifts aloud.
+Copy it once; hide it; write it again.
+Check only one thing: are the bottom two marks separate?
+
+Wrap-up Recall.
+How many strokes? (Four.)
+Source: Unicode Hiragana chart; stroke count and order per KanjiVG.
+[question — say your answer, then pause 12 seconds]
+Write the hiragana sign for the mora fu, and say how many strokes it takes.
+
+
+Lesson 4 of 8.
+ふたつ (futatsu) — two things.
+
+Warm-up.
+[pause 25 seconds]
+Four recalls, then the second thing.
+[your turn — recall: write ふ (fu), all four strokes — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say ten, then twenty — R2, five lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say please — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+
+You'll Want to Know — hear and say.
+ふたつ (futatsu) — fu-ta-tsu — two things.
+Three signs, and the only new one arrived last lesson.
+Now hear the two words together: ひとつ (hitotsu), ふたつ (futatsu). Both end in つ, and the part in front changes — hito-, futa-. That つ is not decoration. It is the piece doing the counting, and every word in this chapter but the last one carries it.
+に is two. ふたつ (futatsu) is two things. Same relation as いち and ひとつ (hitotsu), and again the two words share nothing at all.
+
+Guided Practice — read, copy, recall.
+Write ふたつ. Say the pair: hitotsu, futatsu. Then say ichi, ni straight after, and hear two different counts running side by side.
+
+Wrap-up Recall.
+What does the つ do? (It counts.)
+Sources: Wiktionary: futatsu.
+[question — say your answer, then pause 15 seconds]
+Say one thing and two things, and name the piece both words share.
+
+
+Lesson 5 of 8.
+みっつ (mittsu) — three things, for nothing.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then a word that costs nothing.
+[your turn — recall: say two things — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: run the family reception — R3, twenty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say one more time, please — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+
+You'll Want to Know — hear and say.
+みっつ (mittsu) — mi-t-tsu — three things.
+Every sign is already yours: み, the small っ, and つ.
+The small っ is the sign you met in ゆっくり: it holds the mouth shut for one beat. みっつ (mittsu) is three beats, and the middle one is silence.
+さん is three. みっつ (mittsu) is three things.
+
+Guided Practice — read, copy, recall.
+Write みっつ. Say the run so far, slowly: hitotsu, futatsu, mittsu. Stop on the silent beat in the third one.
+
+Wrap-up Recall.
+How many signs did this word cost? (None — all three were yours.)
+Sources: Wiktionary: mittsu.
+[question — say your answer, then pause 15 seconds]
+Write three things in hiragana, and say what the small sign in the middle does.
+
+
+Lesson 6 of 8.
+よっつ (yottsu) — four things, and the seam opens.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then the number that has been in both counts all along.
+[your turn — recall: say three things — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: run the nine family words — R3, twenty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: write せ — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+
+You'll Want to Know — hear and say.
+よっつ (yottsu) — yo-t-tsu — four things.
+No new sign. よ, the small っ, つ.
+
+Grammar Lens — the seam, from the other side.
+Chapter fourteen taught よん and said something that was left hanging: that split is coming back; it is the same seam the counters run along. Here it is.
+よん is a native word standing inside the borrowed count. よっつ (yottsu) is that same native word in the count it belongs to. They begin with the same beat, and that is not an accident — it is one word appearing twice:
+[a table of 4 rows, read aloud]
+number: one. borrowed: いち. native: ひと-.
+number: two. borrowed: に. native: ふた-.
+number: three. borrowed: さん. native: み-.
+number: four. borrowed: shi. native: よ-.
+Every other line of the borrowed column is genuinely borrowed. At four, the native word came across into the borrowed count and stayed — which is why the number you actually say for four is よん and not shi. That is what chapter fourteen was pointing at, and you can now see both halves of it at once.
+
+Guided Practice — read, copy, recall.
+Write よっつ. Say yon, then yottsu, and hear the shared beat. Then say shi and hear that it has none.
+
+Wrap-up Recall.
+Which two words share a beat? (よん and よっつ (yottsu).)
+Sources: Wiktionary: yottsu.
+[question — say your answer, then pause 18 seconds]
+Which word in the borrowed count is really a native word, and which word in this chapter shows where it came from?
+
+
+Lesson 7 of 8.
+いつつ (itsutsu) — five things.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then five.
+[your turn — recall: say four things — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say one — R3, twenty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: write お — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+
+You'll Want to Know — hear and say.
+いつつ (itsutsu) — i-tsu-tsu — five things.
+Three signs, and two of them are the same one. い, つ, つ.
+A warning worth one sentence: いつつ (itsutsu) opens on the same beat as いち, and the two have nothing to do with each other. ご is five; いつつ (itsutsu) is five things; いち is one. The ear will try to pair the wrong two.
+
+Guided Practice — read, copy, recall.
+Write いつつ. Say ichi and itsutsu back to back, then go and itsutsu, and fix which pair actually means the same number.
+
+Wrap-up Recall.
+Which number does いつつ (itsutsu) NOT mean? (One — however it starts.)
+Sources: Wiktionary: itsutsu.
+[question — say your answer, then pause 12 seconds]
+Which borrowed number means the same as itsutsu?
+
+
+Lesson 8 of 8.
+Five things, and five numbers — five things, run in order, against the five numbers you already had.
+
+Warm-up.
+[pause 30 seconds]
+Three recalls, then the run.
+[your turn — recall: say five things — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say one thing — R2, six lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say I understood — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+Nothing new arrives here.
+
+Guided Practice — the run.
+[your turn — say: ichi, hitotsu; ni, futatsu; san, mittsu; yon, yottsu; go, itsutsu]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: ひ and ふ (fu) — the two signs this chapter bought]
+[question — say your answer, then pause 25 seconds]
+Count things from one to five in the native series.
+[question — say your answer, then pause 30 seconds]
+Say the two counts side by side to five, then name the ONE place where the same word appears in both.
+
+What you've built so far.
+Five words for two signs. ひ and ふ (fu) were bought in the lessons immediately before the words that needed them; みっつ (mittsu), よっつ (yottsu) and いつつ (itsutsu) cost nothing, because every sign in them was already yours.
+Two counts of five now run side by side, and they share exactly one thing: at four, よん and よっつ (yottsu) begin with the same beat. Everywhere else the two words have nothing in common — ichi and hitotsu, ni and futatsu, and so on down.
+Five more to go, and three more signs.
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many signs did these five words cost? (Two.) Where do the two counts touch? (At four.)

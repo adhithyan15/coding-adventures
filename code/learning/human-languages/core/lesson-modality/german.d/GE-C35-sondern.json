@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C35-sondern",
+    "language": "german",
+    "chapter": 48,
+    "sequence": 1260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6672d5f2fa2c1805"
+  },
+  "findings": []
+}

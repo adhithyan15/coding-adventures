@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- Preserve Text accessibility in the compiler pipeline: level-two headings,
+  literal/slot accessible names, and hidden/decorative text. Heading defaults
+  retain authored typography without browser-added margins.
+
 - Support authored table focus and accessible names. Preserve focus in nested
   controls and return to the table when Enter/Escape removes a cell editor.
 

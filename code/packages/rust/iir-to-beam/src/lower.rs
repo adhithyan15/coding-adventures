@@ -163,6 +163,9 @@ const OP_CALL_EXT: u8 = 7;
 /// OTP 28: opcode 12 (beam_opcodes:opcode(allocate,2) -> 12).
 const OP_ALLOCATE: u8 = 12;
 
+/// test_heap/2 reserves words before constructing a character list.
+const OP_TEST_HEAP: u8 = 16;
+
 /// `{deallocate, {u,StackNeed}}` — deallocate the stack frame.
 ///
 /// Tears down the stack frame allocated by `allocate`.  Must match the
@@ -846,7 +849,8 @@ pub fn lower_iir_to_beam(
                     // memory ops were added, so a variable live across a
                     // closure call was silently destroyed.
                     | "call_closure"
-            ) {
+            ) && !(instr.op == "call_builtin" && matches!(instr.srcs.first(),
+                Some(Operand::Var(name)) if name == "putchar")) {
                 continue;
             }
 
@@ -1562,13 +1566,14 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(r2),
                         BEAMOperand::x(rd),
                     ]));
-                    // Erlang integers are unbounded; Oct u8 results wrap at
+                    // Erlang integers are unbounded; Nib/Oct narrow results wrap at
                     // the operation boundary, before later calls/comparisons.
-                    if instr.type_hint == "u8" {
+                    if matches!(instr.type_hint.as_str(), "u4" | "u8") {
+                        let mask = if instr.type_hint == "u4" { 15 } else { 255 };
                         instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                             BEAMOperand::f(0), BEAMOperand::u(live),
                             BEAMOperand::u(import_and as u64),
-                            BEAMOperand::x(rd), BEAMOperand::i(255), BEAMOperand::x(rd),
+                            BEAMOperand::x(rd), BEAMOperand::i(mask), BEAMOperand::x(rd),
                         ]));
                     }
                 }
@@ -1601,13 +1606,14 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(r),
                         BEAMOperand::x(rd),
                     ]));
-                    // Erlang integers are unbounded; Oct u8 results wrap at
+                    // Erlang integers are unbounded; Nib/Oct narrow results wrap at
                     // the operation boundary, before later calls/comparisons.
-                    if instr.type_hint == "u8" {
+                    if matches!(instr.type_hint.as_str(), "u4" | "u8") {
+                        let mask = if instr.type_hint == "u4" { 15 } else { 255 };
                         instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                             BEAMOperand::f(0), BEAMOperand::u(live),
                             BEAMOperand::u(import_and as u64),
-                            BEAMOperand::x(rd), BEAMOperand::i(255), BEAMOperand::x(rd),
+                            BEAMOperand::x(rd), BEAMOperand::i(mask), BEAMOperand::x(rd),
                         ]));
                     }
                 }
@@ -1639,13 +1645,14 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(r2),
                         BEAMOperand::x(rd),
                     ]));
-                    // Erlang integers are unbounded; Oct u8 results wrap at
+                    // Erlang integers are unbounded; Nib/Oct narrow results wrap at
                     // the operation boundary, before later calls/comparisons.
-                    if instr.type_hint == "u8" {
+                    if matches!(instr.type_hint.as_str(), "u4" | "u8") {
+                        let mask = if instr.type_hint == "u4" { 15 } else { 255 };
                         instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                             BEAMOperand::f(0), BEAMOperand::u(live),
                             BEAMOperand::u(import_and as u64),
-                            BEAMOperand::x(rd), BEAMOperand::i(255), BEAMOperand::x(rd),
+                            BEAMOperand::x(rd), BEAMOperand::i(mask), BEAMOperand::x(rd),
                         ]));
                     }
                 }
@@ -1780,6 +1787,24 @@ pub fn lower_iir_to_beam(
                 //   not    → is_eq_exact      {f,synth} {x,r} {i,0}   (x == 0)
                 // These are the native-Erlang twins of the JVM instanceof/ixor/
                 // if_icmpeq and the CLR isinst/xor/ceq.
+                "call_builtin" if matches!(instr.srcs.first(),
+                    Some(Operand::Var(name)) if name == "putchar") => {
+                    let source = operand_reg!(get_src!(instr, 1));
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
+                    // A character list has one two-word cons cell. test_heap
+                    // may collect, so keep the source registers live first.
+                    instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
+                        BEAMOperand::u(2), BEAMOperand::u(live),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                        BEAMOperand::x(source), BEAMOperand::a(0), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(1), BEAMOperand::u(import_put_chars as u64),
+                    ]));
+                    restore_live_across_imported_call!(cur_idx);
+                }
                 "call_builtin" if matches!(instr.srcs.first(),
                     Some(Operand::Var(name)) if name == "print_i64") => {
                     // Portable Oct output uses the same integer display BIF as

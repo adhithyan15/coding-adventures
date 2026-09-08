@@ -2,7 +2,10 @@
 
 use std::collections::HashMap;
 
-use diagram_ir::{LayoutedTreemapDiagram, LayoutedTreemapNode, TreemapDiagram};
+use diagram_ir::{
+    LayoutedTreeViewDiagram, LayoutedTreeViewNode, LayoutedTreemapDiagram, LayoutedTreemapNode,
+    TreeViewDiagram, TreemapDiagram,
+};
 
 pub const VERSION: &str = "0.1.0";
 
@@ -53,6 +56,38 @@ pub fn layout_treemap(diagram: &TreemapDiagram, canvas_width: f64) -> LayoutedTr
     LayoutedTreemapDiagram {
         width,
         height,
+        title: diagram.title.clone(),
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        nodes,
+    }
+}
+
+/// Lay out a TreeView as deterministic indented rows.
+pub fn layout_treeview(diagram: &TreeViewDiagram, canvas_width: f64) -> LayoutedTreeViewDiagram {
+    let title_height = if diagram.title.is_some() { 42.0 } else { 12.0 };
+    let row_height = 34.0;
+    let width = canvas_width.max(360.0);
+    let nodes = diagram.nodes.iter().enumerate().map(|(index, node)| {
+        let x = 26.0 + node.depth as f64 * 42.0;
+        LayoutedTreeViewNode {
+            id: node.id.clone(),
+            parent_id: node.parent_id.clone(),
+            depth: node.depth,
+            label: node.label.clone(),
+            kind: node.kind.clone(),
+            class_selector: node.class_selector.clone(),
+            icon: node.icon.clone(),
+            description: node.description.clone(),
+            x,
+            y: title_height + index as f64 * row_height,
+            width: (width - x - 18.0).max(80.0),
+            height: 28.0,
+        }
+    }).collect();
+    LayoutedTreeViewDiagram {
+        width,
+        height: title_height + diagram.nodes.len() as f64 * row_height + 12.0,
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
@@ -173,5 +208,21 @@ mod tests {
             .nodes
             .iter()
             .all(|node| node.width >= 0.0 && node.height >= 0.0));
+    }
+
+    #[test]
+    fn treeview_layout_indents_children_and_preserves_rows() {
+        use diagram_ir::{TreeViewDiagram, TreeViewNode, TreeViewNodeKind};
+        let diagram = TreeViewDiagram {
+            title: None, accessibility_title: None, accessibility_description: None,
+            nodes: vec![
+                TreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(), kind: TreeViewNodeKind::Directory, class_selector: None, icon: None, description: None },
+                TreeViewNode { id: "child".into(), parent_id: Some("root".into()), depth: 1, label: "main.rs".into(), kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: None },
+            ],
+        };
+        let layout = layout_treeview(&diagram, 500.0);
+        assert!(layout.nodes[1].x > layout.nodes[0].x);
+        assert!(layout.nodes[1].y > layout.nodes[0].y);
+        assert_eq!(layout.nodes[1].parent_id.as_deref(), Some("root"));
     }
 }

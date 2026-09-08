@@ -1,0 +1,25 @@
+{
+  "chapter": 18,
+  "title": "A Counter for the Shape of the Thing",
+  "label": "ch:ja-counters",
+  "canDo": "I can put a counter behind a number in Japanese, choose between the general one, the one for people and the one for long thin things, and say which one to reach for when I do not know.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "JA-R18-counting-things",
+    "kind": "production",
+    "summary": "Complete JA-R18-counting-things: say one thing, one person and one long thin thing, count two eyes, two legs, two people and two hairs, and state the rule with both its edges.",
+    "assesses": [
+      "JA-GRAMMAR-COUNTER-01",
+      "JA-LEX-NIN",
+      "JA-LEX-HITORI-FUTARI",
+      "JA-PERFORMANCE-COUNT-FACE-01",
+      "JA-SCRIPT-HO-01",
+      "JA-LEX-HON",
+      "JA-SCRIPT-HANDAKUTEN-01",
+      "JA-GRAMMAR-COUNTER-SOUND-CHANGE-01"
+    ],
+    "note": "The chapter opens on the counter the reader already had rather than on a new one: the tsu of chapters 16-17 IS the general counter, and the do of chapter 9's ichido was a counter too -- its own lesson said do counts an occurrence and never used the word. Every noun counted here is one the track already teaches, which is why the counters are these three and not the usual textbook set: me, mimi, hana and kuchi take the general counter, the nine family words take nin, and ashi and kami are long and thin. hitori and futari are placed immediately after nin because they are the seam again -- the native word standing inside a BORROWED COUNTER, exactly as yon and nana stand inside the borrowed count. NOT CLAIMED: mai, hiki, satsu and the rest of the counter set, and the nine-form of hon, which needs a kana this book has not taught and is left out of the ippon table on the page rather than guessed at."
+  }
+}

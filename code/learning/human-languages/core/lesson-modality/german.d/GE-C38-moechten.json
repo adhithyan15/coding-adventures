@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C38-moechten",
+    "language": "german",
+    "chapter": 51,
+    "sequence": 1430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ea2e5f5135d5bea"
+  },
+  "findings": []
+}

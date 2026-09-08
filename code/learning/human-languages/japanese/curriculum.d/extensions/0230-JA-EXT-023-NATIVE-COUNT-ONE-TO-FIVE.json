@@ -1,0 +1,20 @@
+{
+  "id": "JA-EXT-023-NATIVE-COUNT-ONE-TO-FIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can count things from one to five in the native Japanese series.",
+  "prerequisites": [
+    "JA-EXT-022-NUMBERS-SIX-TO-TEN"
+  ],
+  "lessons": [
+    "JA-W16-hi",
+    "JA-C16-hitotsu",
+    "JA-W16-fu",
+    "JA-C16-futatsu",
+    "JA-C16-mittsu",
+    "JA-C16-yottsu",
+    "JA-C16-itsutsu",
+    "JA-R16-first-five-things"
+  ]
+}

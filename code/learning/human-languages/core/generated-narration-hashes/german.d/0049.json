@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:ebdeff3c626b6fc6",
+  "lessonIds": [
+    "GE-C36-mein",
+    "GE-C36-dein",
+    "GE-C36-sein-his",
+    "GE-C36-ihr-her",
+    "GE-C36-das-ist",
+    "GE-R36-wer-ist-das"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "german/narration/ch49.txt",
+  "json": "german/narration/ch49.json",
+  "textHash": "fnv1a64:85a160059241d76b",
+  "jsonHash": "fnv1a64:6c310fa214040281",
+  "findings": []
+}

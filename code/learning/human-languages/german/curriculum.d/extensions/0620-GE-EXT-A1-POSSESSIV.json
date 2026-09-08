@@ -1,0 +1,18 @@
+{
+  "id": "GE-EXT-A1-POSSESSIV",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use mein, dein, sein and ihr with the ein endings, and introduce another person with das ist.",
+  "prerequisites": [
+    "GE-EXT-A1-VERBINDUNGEN"
+  ],
+  "lessons": [
+    "GE-C36-mein",
+    "GE-C36-dein",
+    "GE-C36-sein-his",
+    "GE-C36-ihr-her",
+    "GE-C36-das-ist",
+    "GE-R36-wer-ist-das"
+  ]
+}

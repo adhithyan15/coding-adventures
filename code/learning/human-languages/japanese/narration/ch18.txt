@@ -1,0 +1,354 @@
+Japanese, chapter 18: A Counter for the Shape of the Thing.
+9 lessons. You can do the first 4 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 9.
+What the つ was doing — the counter you already own — what the tsu was doing all along.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then the word for what you have been doing.
+[your turn — recall: say one thing and two things — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say eight things — R2, five lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say six — R3, twenty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: ask for it more slowly, in full — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+
+Grammar Lens — a number cannot stand alone.
+In Japanese a number does not simply sit in front of a thing. It takes a counter — a small word behind the number that says what kind of thing is being counted. Wikipedia's article calls counters measure words used with numbers to count things, actions, and events, and English has a few of the same shape: two sheets of paper, three head of cattle.
+You have been using one since chapter nine and nobody said so.
+いちど — ichido — one time.
+Its own lesson said: ichi is one, and do counts an occurrence. That ど is a counter. It counts occurrences, which is why いちど is one time and not one.
+And the つ you spent all of last chapter on is a counter too — the general one. That is why nine of the ten native words carry it and とお does not.
+
+You'll Want to Know — when to reach for it.
+Japanese has a great many counters and you will not learn them all here. What you can learn in one sentence is the rule that gets you through:
+When you do not know the counter, use the つ series. Up to ten it will carry almost any ordinary object.
+That is exactly what Wikipedia says of the traditional numerals — that the problem of choosing can often be sidestepped by using them. ひとつ to とお, and no further, because that is where the series stops.
+コーヒー ふたつ — two coffees. Nobody will blink.
+The rule has an edge, and it is the next lesson: people and animals do not take つ. They have counters of their own and there is no way round it.
+
+Guided Practice — read, copy, recall.
+Say コーヒー ふたつ. Then say いちど and name the counter inside it.
+
+Wrap-up Recall.
+What do you use when you do not know the counter? (つ, up to ten.)
+Sources: Wikipedia: Japanese counter word; Wiktionary: hitotsu.
+[question — say your answer, then pause 20 seconds]
+Name the two counters you already owned before this lesson, and say what each one counts.
+
+
+Lesson 2 of 9.
+にん (-nin) — counting people.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then the counter the last rule cannot reach.
+[your turn — recall: say what to use when you do not know the counter — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: write の — R2, five lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: write the small ゅ — R3, twenty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: write the small っ — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+
+You'll Want to Know — hear and say.
+にん — -nin — the counter for people.
+Both signs are old. What is new is that it attaches to the borrowed numbers, not the native ones:
+[a table of 4 rows, read aloud]
+how many: three people. how you say it: さんにん.
+how many: four people. how you say it: よにん.
+how many: five people. how you say it: ごにん.
+how many: ten people. how you say it: じゅうにん.
+さん plus にん (-nin), ご plus にん (-nin). Nothing changes. Four is the one to watch: it is よ, not よん — the native word again, and shorter here.
+You have nine family words and until now no way to say how many of anything you had. こども さんにん — three children.
+
+Grammar Lens — where the tsu rule stops.
+Last lesson's rule had an edge, and this is it. つ never counts people. There is no hitotsu of a person; you cannot sidestep にん (-nin), and the same is true of animals, which have counters of their own.
+So the rule now reads with both ends showing: use つ for ordinary things up to ten; use the proper counter for anything alive.
+And にん (-nin) itself has an exception, at exactly two numbers. That is the next lesson.
+
+Guided Practice — read, copy, recall.
+Write にん (-nin). Say sannin, yonin, gonin, juunin. Then say こども さんにん.
+
+Wrap-up Recall.
+Which number is odd in this list? (Four — よにん, not yonnin.)
+Sources: Wikipedia: Japanese counter word.
+[question — say your answer, then pause 20 seconds]
+Can you count people with the tsu series? Say why or why not, and give three people in Japanese.
+
+
+Lesson 3 of 9.
+ひとり・ふたり — one person, two people.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then the two people the last lesson could not count.
+[your turn — recall: say three people — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say nine things — R2, five lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say ten, then twelve — R3, twenty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: write て — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+
+You'll Want to Know — hear and say.
+ひとり — hitori — one person.
+ふたり — futari — two people.
+Not ichinin. Not ninin. Every other number takes にん (-nin) and these two do not.
+Every sign is yours: ひ and ふ came two chapters ago, と, た and り long before.
+
+Grammar Lens — the seam, one more time.
+Read the four words together and the exception stops looking like one:
+[a table of 3 rows, read aloud]
+number: one. native count: ひとつ. with the people counter: ひとり.
+number: two. native count: ふたつ. with the people counter: ふたり.
+number: three. native count: みっつ. with the people counter: さんにん.
+hito- and futa- are the same pieces you learned two chapters ago. At one and two, the native number walks into the borrowed counter and stays; from three on, the borrowed number takes over.
+That is the third time you have seen this. At よん and なな the native word stood inside the borrowed count. Here the native word stands inside a borrowed counter. It is one seam, and it runs the whole length of Japanese numbers.
+あね ひとり、あに ふたり — one elder sister, two elder brothers.
+
+Guided Practice — read, copy, recall.
+Write ひとり and ふたり. Say hitori, futari, sannin, yonin — and hear the switch happen between the second and the third.
+
+Wrap-up Recall.
+Where does the switch happen? (Between two and three.)
+Sources: Wikipedia: Japanese counter word.
+[question — say your answer, then pause 20 seconds]
+Count people from one to four.
+
+
+Lesson 4 of 9.
+Counting your own face — counting your own face, which is the first thing in this book you can count at all.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then the first thing in this book you can count.
+[your turn — recall: say one person and two people — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say face — R3, twenty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: write た — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+
+Guided Practice — count what you have.
+Chapter twelve gave you a face. Until this chapter you could name every part of it and say how many of nothing.
+め ふたつ — two eyes みみ ふたつ — two ears はな ひとつ — one nose くち ひとつ — one mouth.
+Four nouns, none of them alive on its own, so the つ rule covers all four without your having to know a thing about which counter a nose takes.
+[your turn — say: the four face lines without stopping, then ふたり]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 30 seconds]
+Count the four parts of a face in Japanese: eyes, ears, nose, mouth.
+[question — say your answer, then pause 18 seconds]
+Now count two people, and say why the word is not futatsu.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the four needed you to know a special counter? (None.) Which nearby word did? (A person — ふたり, not ふたつ.)
+
+
+Lesson 5 of 9.
+ほ (ho) — は with one more bar.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then the last sign of the chapter.
+[your turn — recall: count the four parts of a face — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: write ひ — R3, twenty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: write だ — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+
+Script — the shape.
+ほ — ho.
+Write は first. You have had it since chapter one: a left vertical, one horizontal, then the right stroke that loops at the foot.
+ほ is that figure with one more horizontal, and Sirgazil's animation puts it above the one は already has. Four strokes, in this order:
+the left vertical, hooking at the foot.
+the upper horizontal on the right.
+the lower horizontal on the right.
+the right vertical, down through both bars and looping at the foot.
+So the only thing you are learning is a bar, and where it goes.
+ほ also finishes a set. Japanese's h-row runs ha, hi, fu, he, ho, and you now hold four of its five: は from chapter one, ひ and ふ from two chapters ago, and ほ here. Only へ is missing.
+Write ひ once beside them and hear the row.
+
+Guided Practice.
+Write は, then ほ (ho) beneath it, and mark the stroke that differs.
+Copy ほ (ho); hide it; write it again.
+Say both aloud: ha, ho. Then say ひとつ and hear the same ひ.
+
+Wrap-up Recall.
+How many strokes? (Four.)
+Source: Unicode Hiragana chart; stroke count and order per KanjiVG and Sirgazil's Commons animation.
+[question — say your answer, then pause 12 seconds]
+Write ho, and say what makes it different from ha.
+
+
+Lesson 6 of 9.
+ほん (-hon) — counting long thin things.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then a counter chosen by shape.
+[your turn — recall: write ほ (ho) — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say hand — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say what つ is for, and what it is not for — R2, five lessons back]
+[pause 8 seconds for the answer]
+
+You'll Want to Know — hear and say.
+ほん — -hon — the counter for long, thin things.
+Wikipedia's list for it is worth reading whole: rivers, roads, train tracks, ties, pencils, bottles, guitars. Nothing on that list is a book, though the sign it is written with is 本 — the very kanji you have been writing since chapter five, inside 日本語.
+That is the shape rule in one word: ほん (-hon) does not care what the thing is, only that it is longer than it is wide.
+Two of your own words qualify. One of them you can already say:
+あし にほん — two legs.
+The other is かみ, a hair — and the word for one hair has to wait two lessons, because at one the counter changes shape.
+
+Grammar Lens — the counter bends the sound.
+にん (-nin) attached to the numbers and nothing moved. ほん (-hon) does not behave. Here are the four that leave it alone:
+[a table of 4 rows, read aloud]
+number: two. the form: にほん.
+number: four. the form: よんほん.
+number: five. the form: ごほん.
+number: seven. the form: ななほん.
+At three the ほ takes the dakuten you have had since chapter three, and at one, six, eight and ten it goes further still — further than the dakuten can take it. Both of those need a mark on the sign, and the second mark is one this book has never taught. The next two lessons buy it and then spend it; until then, say the four plain ones.
+
+Guided Practice — read, copy, recall.
+Write ほん (-hon). Say nihon, yonhon, gohon, nanahon — the four that leave the counter alone. Then say あし にほん.
+
+Wrap-up Recall.
+What does ほん (-hon) count? (Anything longer than it is wide.)
+Sources: Wikipedia: Japanese counter word.
+[question — say your answer, then pause 18 seconds]
+Say two long thin things and four long thin things in Japanese.
+
+
+Lesson 7 of 9.
+゜ (handakuten) — the other mark.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then the mark the last lesson stopped short of.
+[your turn — recall: say three long thin things — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: write ふ, all four strokes — R3, twenty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say ear — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+
+Script — the shape.
+゜ — the handakuten.
+A small circle, written at the top right of a kana, in the same place the dakuten goes.
+Japanese has exactly two of these marks and you have had one of them since chapter three:
+[a table of 2 rows, read aloud]
+mark: ゛ dakuten. what it does: voices the consonant. example: ほ (ho) becomes ぼ.
+mark: ゜ handakuten. what it does: turns the h-row into p. example: ほ (ho) becomes ぽ.
+The handakuten works on one row only — the row は and ほ (ho) belong to. Nowhere else in the syllabary does it appear, which makes it the rarest thing in the writing system and the easiest to place: if you see the little circle, the sign under it is an h-row kana and the sound is p.
+That row is the one you have just been filling in. ふ takes both marks too, giving bu and pu, and so does は. The mark is rare; the row is not.
+Write the circle small. It is a circle, not a dot, and it does not touch the sign it sits on.
+
+Guided Practice.
+Write ほ (ho), then ぼ, then ぽ, and say all three.
+Say the same three sounds on は, without writing them.
+Check one thing: is the circle open?
+
+Wrap-up Recall.
+Which row does the handakuten work on? (Only the h-row.)
+Source: Unicode Hiragana chart, U+309C.
+[question — say your answer, then pause 15 seconds]
+Write ho, then the same sign with each of the two marks, and say all three.
+
+
+Lesson 8 of 9.
+いっぽん (ippon) — and the four that bend.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 25 seconds]
+Three recalls, then the form the counter takes at one.
+[your turn — recall: write ぽ — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say mouth — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: write the small っ — R2, six lessons back]
+[pause 8 seconds for the answer]
+
+You'll Want to Know — hear and say.
+いっぽん — ippon — one long thin thing.
+Not ichihon. The いち shortens to いっ, and the ほ takes the handakuten you learned last lesson.
+Here is the whole counter, with the numbers this book can spell:
+[a table of 9 rows, read aloud]
+number: one. the form: いっぽん (ippon). what happens: p, and a held beat.
+number: two. the form: にほん. what happens: plain.
+number: three. the form: さんぼん. what happens: b.
+number: four. the form: よんほん. what happens: plain.
+number: five. the form: ごほん. what happens: plain.
+number: six. the form: ろっぽん. what happens: p, and a held beat.
+number: seven. the form: ななほん. what happens: plain.
+number: eight. the form: はっぽん. what happens: p, and a held beat.
+number: ten. the form: じゅっぽん. what happens: p, and a held beat.
+Nine is missing from that table on purpose. Its everyday form needs a sign this book has not taught, so it is left out rather than guessed at.
+Read the shape of the rest: one, six, eight and ten all end in a held beat and take p. Three ends in the nasal ん and takes b. Everything else is plain. The counter is not being irregular — it is being pushed by the sound in front of it.
+かみ いっぽん (ippon) — one hair.
+
+Guided Practice — read, copy, recall.
+Write いっぽん. Say the run: ippon, nihon, sanbon, yonhon, gohon, roppon. Then say かみ いっぽん.
+
+Wrap-up Recall.
+Why is nine missing from the table? (Its form needs a sign this book has not taught.)
+Sources: Wikipedia: Japanese counter word.
+[question — say your answer, then pause 20 seconds]
+Which numbers push the counter to p, and what do they all have in common?
+
+
+Lesson 9 of 9.
+Three counters, and how to choose — one thing, one person, one long thin thing — three counters, and the rule for choosing between them.
+
+Warm-up.
+[pause 30 seconds]
+Three recalls, then the run.
+[your turn — recall: say one long thin thing — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say three things and four things — R3, twenty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say nose — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say leg — R4, eighty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say what to use when you do not know the counter — R2, nine lessons back]
+[pause 8 seconds for the answer]
+Nothing new arrives here.
+
+Guided Practice — the run.
+[your turn — say: かみ いっぽん (ippon), あし にほん, ふたり, はな ひとつ]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: ほ (ho), then the same sign with the handakuten — ぽ]
+[question — say your answer, then pause 25 seconds]
+Say ONE of each: one thing, one person, one long thin thing.
+[question — say your answer, then pause 30 seconds]
+Count these four: two eyes, two legs, two people, two hairs.
+
+What you've built this chapter.
+A number in Japanese does not stand on its own. It takes a counter, and the counter is chosen by what kind of thing is being counted:
+[a table of 4 rows, read aloud]
+the thing: an ordinary object, up to ten. the counter: つ.
+the thing: a person. the counter: にん (-nin).
+the thing: anything longer than it is wide. the counter: ほん (-hon).
+the thing: an occurrence. the counter: ど, which you had in chapter nine.
+Both edges of that are worth carrying. Reach for つ when you do not know — up to ten it will carry almost any ordinary object. Do not reach for it for anything alive, and do not expect it past ten.
+And the seam this book has been drawing since chapter fourteen runs through all of it. よん and なな: the native word inside the borrowed count. ひとり and ふたり: the native word inside a borrowed counter. Two counts, and the places where they touch are not random — they are the same handful of numbers, every time.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do you use when you do not know the counter? (つ, to ten.) Where does that rule fail? (Anything alive.) Say one person and one hair. (ひとり; かみ いっぽん (ippon).)

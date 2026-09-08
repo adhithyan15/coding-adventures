@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C16-yottsu",
+    "language": "japanese",
+    "chapter": 16,
+    "sequence": 1370,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:56204d02d47664fc"
+  },
+  "findings": []
+}

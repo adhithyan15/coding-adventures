@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C36-sein-his",
+    "language": "german",
+    "chapter": 49,
+    "sequence": 1320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0dcf81d73fa71737"
+  },
+  "findings": []
+}

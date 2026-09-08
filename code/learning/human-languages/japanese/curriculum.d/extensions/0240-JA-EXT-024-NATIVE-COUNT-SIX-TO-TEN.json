@@ -1,0 +1,21 @@
+{
+  "id": "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can count things from one to ten in the native Japanese series and say where the series stops.",
+  "prerequisites": [
+    "JA-EXT-023-NATIVE-COUNT-ONE-TO-FIVE"
+  ],
+  "lessons": [
+    "JA-W17-mu",
+    "JA-C17-muttsu",
+    "JA-C17-nanatsu",
+    "JA-W17-ya",
+    "JA-C17-yattsu",
+    "JA-W17-no",
+    "JA-C17-kokonotsu",
+    "JA-C17-too",
+    "JA-R17-the-other-ten"
+  ]
+}

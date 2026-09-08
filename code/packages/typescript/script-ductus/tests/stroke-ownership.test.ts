@@ -169,12 +169,17 @@ describe("stroke ownership migration baseline", () => {
       // needed. Keys 359 -> 361, japanese 15 -> 17, the ordered key hash and the
       // non-Tamil data hash. Tamil is untouched again, so its count and both
       // shared-identity values are unchanged.
+      //
+      // Measured for HL-C364: the native-count and counter lessons verify six
+      // independently written hiragana — の, ひ, ふ, ほ, む and や. Keys move
+      // 361 -> 367 and Japanese 17 -> 23; Tamil and both shared-identity values
+      // remain unchanged.
     }).toEqual({
-      keys: 361,
+      keys: 367,
       keyHash:
-        "b466e5c4c8208f0e90d75827107fcfd932aefc87e831f00adfb5705d8914a4dd",
+        "dc25c8807749091bceadcb28e56b2669f1b48fde2c13452ed4a227686226d3bc",
       nonTamilDataHash:
-        "541f8d23a76a6e1f352608d22d86d20432eefa8174632f8ae91807b81795e083",
+        "19c7e6f1cc3c129adf6b041454e4aca87df4c9cae7eff291bcf55ad7b20cd8aa",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -185,7 +190,7 @@ describe("stroke ownership migration baseline", () => {
         devanagari: 44,
         gujarati: 44,
         hebrew: 22,
-        japanese: 17,
+        japanese: 23,
         kannada: 13,
         malayalam: 13,
         "perso-arabic": 24,

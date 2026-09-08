@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:f4794f95b41a0f00",
+  "lessonIds": [
+    "GE-C37-dich",
+    "GE-C37-ihn",
+    "GE-C37-uns",
+    "GE-C37-euch",
+    "GE-C37-sich",
+    "GE-R37-mich-dich-sich"
+  ],
+  "tex": "german/book/chapters/ch50-objektpronomen.tex"
+}

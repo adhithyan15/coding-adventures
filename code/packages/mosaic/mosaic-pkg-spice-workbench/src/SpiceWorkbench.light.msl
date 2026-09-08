@@ -13,10 +13,15 @@ style SpiceWorkbench {
   part inspect-button { background : "#e0f2fe" ; color : "#075985" ; border-width : 1 ; border-color : "#7dd3fc" ; border-radius : 4 ; padding : 8 ; }
   part run-button { background : "#dcfce7" ; color : "#166534" ; border-width : 1 ; border-color : "#86efac" ; border-radius : 4 ; padding : 8 ; }
   part diagnostics { color : "#334155" ; }
+  part diagnostic-row { color : "#b91c1c" ; font-family : "monospace" ; }
   part workbench-body { gap : 14 ; }
   part analyses { width : "30%" ; gap : 6 ; }
   part analysis-option { background : "#ffffff" ; color : "#0f172a" ; border-width : 1 ; border-color : "#cbd5e1" ; border-radius : 3 ; padding : 7 ; }
   part selected-analysis { color : "#0369a1" ; font-weight : bold ; }
   part results { width : "70%" ; gap : 6 ; }
+  part result-table { background : "#ffffff" ; border-width : 1 ; border-color : "#cbd5e1" ; }
+  part result-header { background : "#e0f2fe" ; color : "#0f172a" ; font-weight : bold ; padding : 6 ; }
+  part result-cell { color : "#0f172a" ; padding : 6 ; font-family : "monospace" ; }
+  part raw-result-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
   part result-output { min-height : 160 ; background : "#ffffff" ; color : "#0f172a" ; border-width : 1 ; border-color : "#cbd5e1" ; border-radius : 4 ; padding : 10 ; font-family : "monospace" ; white-space : "pre-wrap" ; }
 }

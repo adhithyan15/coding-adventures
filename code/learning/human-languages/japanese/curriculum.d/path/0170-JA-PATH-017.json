@@ -1,0 +1,20 @@
+{
+  "id": "JA-PATH-017",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "JA-C18-tsu-counter",
+    "JA-C18-nin",
+    "JA-C18-hitori-futari",
+    "JA-C18-count-the-face",
+    "JA-W18-ho",
+    "JA-C18-hon",
+    "JA-W18-handakuten",
+    "JA-C18-ippon",
+    "JA-R18-counting-things"
+  ],
+  "before": [],
+  "inline": [
+    "JA-EXT-025-COUNTERS"
+  ],
+  "after": []
+}

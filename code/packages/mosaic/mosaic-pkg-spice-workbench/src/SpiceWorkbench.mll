@@ -18,6 +18,9 @@ layout SpiceWorkbench {
       }
       Text [ diagnostics-label ] ( content : slot: diagnostics-label )
       Text [ diagnostics ] ( content : slot: diagnostics )
+      For ( each: slot: diagnostic-rows , as: diagnostic , index: diagnostic-index ) {
+        Text [ diagnostic-row ] ( content : ( diagnostic ) )
+      }
     }
     Row [ workbench-body ] {
       Column [ analyses ] {
@@ -32,6 +35,25 @@ layout SpiceWorkbench {
       }
       Column [ results ] {
         Text [ result-label ] ( content : slot: result-label )
+        HostTable [ result-table ] {
+          HostTableHead {
+            Row [ result-header-row ] {
+              For ( each: slot: result-columns , as: column , index: column-index ) {
+                Text [ result-header ] ( content : ( column ) )
+              }
+            }
+          }
+          HostTableBody {
+            For ( each: slot: result-rows , as: row , index: row-index ) {
+              Row [ result-row ] {
+                For ( each: row , as: value , index: value-index ) {
+                  Text [ result-cell ] ( content : ( value ) )
+                }
+              }
+            }
+          }
+        }
+        Text [ raw-result-label ] ( content : slot: raw-result-label )
         Text [ result-output ] ( content : slot: result-text )
       }
     }

@@ -1216,13 +1216,25 @@ fn emit_jsx_tree(
 
     // Decompose the primitive into its element name, built-in style (e.g.
     // flexbox for Row/Column), close tag, and self-closing flag.
+    let mut primitive = primitive_to_jsx_tag(&node.tag)?;
+    if node.tag == "Text" {
+        primitive.extra_attrs = text_accessibility_attrs(node)?;
+        if find_keyword_prop(node, "a11y-role") == Some("heading") {
+            // UI16: Text headings are level two. Reset browser heading defaults
+            // so semantic projection preserves Mosaic's authored typography.
+            primitive.tag_name = "<h2".to_string();
+            primitive.close = "</h2>".to_string();
+            primitive.builtin_style =
+                "margin: 0, fontSize: \"inherit\", fontWeight: \"inherit\"".to_string();
+        }
+    }
     let JsxTag {
         tag_name,
         builtin_style,
         close,
         self_close,
         extra_attrs,
-    } = primitive_to_jsx_tag(&node.tag)?;
+    } = primitive;
 
     // A multi-child `Box` needs a layout style the tag mapping cannot supply,
     // because that mapping sees only the tag name and this depends on how many
@@ -5253,6 +5265,42 @@ fn merge_styles(builtin: &str, author: &str) -> String {
     }
 }
 
+/// Project Text accessibility without changing authored content or styling.
+fn text_accessibility_attrs(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    let mut attrs = String::new();
+    for prop in &node.props {
+        if prop.name == "a11y-label" {
+            match &prop.value {
+                LayoutPropValue::String(label) => {
+                    attrs.push_str(&jsx_string_attr("aria-label", label));
+                }
+                LayoutPropValue::SlotRef(label) => {
+                    let label = to_camel_case_first_lower(label);
+                    validate_slot_or_field_name(&label)
+                        .map_err(PipelineEmitError::UnsafeSlotName)?;
+                    attrs.push_str(&format!(" aria-label={{{label}}}"));
+                }
+                _ => {}
+            }
+        }
+    }
+    match find_keyword_prop(node, "a11y-role") {
+        Some("heading" | "none") | None => {}
+        Some("image") => attrs.push_str(" role=\"img\""),
+        Some(role) => attrs.push_str(&jsx_string_attr("role", role)),
+    }
+    // The Mosaic `none` role hides decorative text (UI01), even when a
+    // conflicting a11y-hidden: false is present. Emit one unambiguous value.
+    if find_keyword_prop(node, "a11y-role") == Some("none")
+        || find_keyword_prop(node, "a11y-hidden") == Some("true")
+    {
+        attrs.push_str(" aria-hidden={true}");
+    } else if find_keyword_prop(node, "a11y-hidden") == Some("false") {
+        attrs.push_str(" aria-hidden={false}");
+    }
+    Ok(attrs)
+}
+
 /// If a node looks like a `Text { content: @slot; }` leaf, return the JSX
 /// expression for the content (e.g. `{slotName}`). Otherwise return None.
 ///
@@ -8691,6 +8739,84 @@ mod tests {
                 children: vec![],
             },
         }
+    }
+
+    #[test]
+    fn text_heading_keeps_level_two_and_authored_typography() {
+        let mut layout = text_layout(LayoutProp {
+            name: "content".into(),
+            value: LayoutPropValue::String("Workbook".into()),
+        });
+        layout.root.part_name = Some("title".into());
+        layout.root.props.push(LayoutProp {
+            name: "a11y-role".into(),
+            value: LayoutPropValue::Keyword("heading".into()),
+        });
+        let styles =
+            HashMap::from([("title".into(), "fontSize: \"44px\", fontWeight: 600".into())]);
+        let out = emit_jsx_tree(&layout.root, 0, &styles, &[], &[], &[], None).unwrap();
+        assert!(out.starts_with("<h2 style="), "{out}");
+        assert!(out.contains("margin: 0"), "{out}");
+        assert!(out.contains("fontSize: \"44px\""), "{out}");
+        assert!(out.contains("fontWeight: 600"), "{out}");
+        assert!(
+            out.find("fontSize: \"inherit\"") < out.find("fontSize: \"44px\""),
+            "author styles must win: {out}"
+        );
+        assert!(out.ends_with("{\"Workbook\"}</h2>\n"), "{out}");
+    }
+
+    #[test]
+    fn text_accessibility_labels_and_hidden_roles_survive_pipeline() {
+        for (role, hidden, expected) in [
+            ("none", "false", " aria-hidden={true}"),
+            ("heading", "true", " aria-hidden={true}"),
+            ("image", "false", " role=\"img\" aria-hidden={false}"),
+        ] {
+            let mut layout = text_layout(LayoutProp {
+                name: "a11y-label".into(),
+                value: LayoutPropValue::SlotRef("accessible-name".into()),
+            });
+            layout.root.props.extend([
+                LayoutProp {
+                    name: "a11y-role".into(),
+                    value: LayoutPropValue::Keyword(role.into()),
+                },
+                LayoutProp {
+                    name: "a11y-hidden".into(),
+                    value: LayoutPropValue::Keyword(hidden.into()),
+                },
+            ]);
+            let out = from_pipeline(
+                &component("T", vec![slot_text("accessible-name", true)], vec![]),
+                &layout,
+                &empty_style("T"),
+            )
+            .unwrap()
+            .output;
+            assert!(out.contains(" aria-label={accessibleName}"), "{out}");
+            assert!(out.contains(expected), "{out}");
+            assert_eq!(out.matches("aria-hidden=").count(), 1, "{out}");
+            assert!(!out.contains("role=\"none\""), "{out}");
+        }
+        let layout = text_layout(LayoutProp {
+            name: "a11y-label".into(),
+            value: LayoutPropValue::String("A \"quoted\" <name>".into()),
+        });
+        let attrs = text_accessibility_attrs(&layout.root).unwrap();
+        assert_eq!(attrs, jsx_string_attr("aria-label", "A \"quoted\" <name>"));
+    }
+
+    #[test]
+    fn text_accessibility_label_rejects_unsafe_slot() {
+        let layout = text_layout(LayoutProp {
+            name: "a11y-label".into(),
+            value: LayoutPropValue::SlotRef("name} injected={value".into()),
+        });
+        assert!(matches!(
+            text_accessibility_attrs(&layout.root),
+            Err(PipelineEmitError::UnsafeSlotName(_))
+        ));
     }
 
     /// A static label must render. It used to emit `<span></span>` — the text simply

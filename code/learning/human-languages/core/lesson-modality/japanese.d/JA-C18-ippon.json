@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C18-ippon",
+    "language": "japanese",
+    "chapter": 18,
+    "sequence": 1560,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:33294dd25cd1702b"
+  },
+  "findings": []
+}

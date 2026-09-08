@@ -27,7 +27,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_mindmap, try_tokenize_mermaid_packet, try_tokenize_mermaid_timeline,
     try_tokenize_mermaid_eventmodeling, try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
     try_tokenize_mermaid_treemap, try_tokenize_mermaid_venn, try_tokenize_mermaid_ishikawa,
-    try_tokenize_mermaid_wardley, try_tokenize_mermaid_cynefin,
+    try_tokenize_mermaid_wardley, try_tokenize_mermaid_cynefin, try_tokenize_mermaid_treeview,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -69,6 +69,7 @@ const VENN_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/merm
 const ISHIKAWA_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/ishikawa.grammar");
 const WARDLEY_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/wardley.grammar");
 const CYNEFIN_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/cynefin.grammar");
+const TREEVIEW_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/treeview.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -571,7 +572,8 @@ use diagram_ir::{
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinDiagram, CynefinDomain, CynefinTransition, IshikawaCause, IshikawaDiagram,
-    WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode,
+    WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewDiagram, TreeViewNode,
+    TreeViewNodeKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -670,6 +672,7 @@ impl MermaidDiagramType {
                 | Self::Ishikawa
                 | Self::Wardley
                 | Self::Cynefin
+                | Self::TreeView
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -699,6 +702,7 @@ pub enum MermaidDiagram {
     Ishikawa(IshikawaDiagram),
     Wardley(WardleyDiagram),
     Cynefin(CynefinDiagram),
+    TreeView(TreeViewDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -834,6 +838,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Ishikawa => parse_ishikawa(source).map(MermaidDiagram::Ishikawa),
         MermaidDiagramType::Wardley => parse_wardley(source).map(MermaidDiagram::Wardley),
         MermaidDiagramType::Cynefin => parse_cynefin(source).map(MermaidDiagram::Cynefin),
+        MermaidDiagramType::TreeView => parse_treeview(source).map(MermaidDiagram::TreeView),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -3133,6 +3138,103 @@ pub fn parse_cynefin(source: &str) -> Result<CynefinDiagram, ParseError> {
 }
 
 // ── radar-beta parser ─────────────────────────────────────────────────────
+
+/// Parse Mermaid 11.16.1 TreeView hierarchy and node annotations.
+pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let normalized = preprocess_treeview_box_drawing(&prepared)?;
+    let tokens = try_tokenize_mermaid_treeview(&normalized).map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(TREEVIEW_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse treeview.grammar: {error}"));
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
+        .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
+    let mut diagram = TreeViewDiagram { title: None, accessibility_title: None, accessibility_description: None, nodes: Vec::new() };
+    let mut ancestors = Vec::<(usize, usize, String)>::new();
+    for (index, raw) in normalized.lines().enumerate() {
+        let line_number = index + 1;
+        let trimmed = raw.trim();
+        if trimmed.is_empty() || trimmed == "treeView-beta" || trimmed.starts_with("%%") { continue; }
+        if let Some(value) = trimmed.strip_prefix("title ") { diagram.title = Some(value.trim().to_string()); continue; }
+        if let Some(value) = trimmed.strip_prefix("accTitle:") { diagram.accessibility_title = Some(value.trim().to_string()); continue; }
+        if let Some(value) = trimmed.strip_prefix("accDescr:") { diagram.accessibility_description = Some(value.trim().to_string()); continue; }
+        if let Some(value) = trimmed.strip_prefix("accDescr") {
+            if let Some(value) = value.trim().strip_prefix('{').and_then(|value| value.strip_suffix('}')) {
+                diagram.accessibility_description = Some(value.trim().to_string()); continue;
+            }
+        }
+        let indentation = raw.chars().take_while(|character| character.is_whitespace())
+            .map(|character| if character == '\t' { 4 } else { 1 }).sum::<usize>();
+        while ancestors.last().is_some_and(|(ancestor_indent, _, _)| *ancestor_indent >= indentation) { ancestors.pop(); }
+        let depth = ancestors.last().map_or(0, |(_, depth, _)| depth + 1);
+        let (label, kind, class_selector, icon, description) = parse_treeview_node(trimmed, line_number)?;
+        let id = format!("treeview-{}", diagram.nodes.len() + 1);
+        let parent_id = ancestors.last().map(|(_, _, id)| id.clone());
+        diagram.nodes.push(TreeViewNode { id: id.clone(), parent_id, depth, label, kind, class_selector, icon, description });
+        ancestors.push((indentation, depth, id));
+    }
+    if diagram.nodes.is_empty() {
+        return Err(ParseError { message: "TreeView diagrams require at least one node".into(), line: 1, col: 1 });
+    }
+    Ok(diagram)
+}
+
+type ParsedTreeViewNode = (String, TreeViewNodeKind, Option<String>, Option<String>, Option<String>);
+
+fn parse_treeview_node(line: &str, line_number: usize) -> Result<ParsedTreeViewNode, ParseError> {
+    let mut content = line.trim();
+    let mut description = None;
+    if let Some((before, value)) = content.split_once(" ##") {
+        content = before.trim_end();
+        description = (!value.trim().is_empty()).then(|| value.trim().to_string());
+    }
+    let mut class_selector = None;
+    let mut icon = None;
+    loop {
+        if let Some(start) = content.rfind(" :::") {
+            let candidate = content[start + 4..].trim();
+            if !candidate.is_empty() && candidate.chars().all(|character| character.is_ascii_alphanumeric() || matches!(character, '_' | '-')) {
+                class_selector = Some(candidate.to_string()); content = content[..start].trim_end(); continue;
+            }
+        }
+        if content.ends_with(')') {
+            if let Some(start) = content.rfind(" icon(") {
+                let value = content[start + 6..content.len() - 1].trim();
+                if value.chars().all(|character| character.is_ascii_alphanumeric() || matches!(character, '_' | '-' | ':')) {
+                    icon = Some(if value.is_empty() { "none".into() } else { value.into() });
+                    content = content[..start].trim_end(); continue;
+                }
+            }
+        }
+        break;
+    }
+    if (content.starts_with('"') && !content.ends_with('"')) || (content.starts_with('\'') && !content.ends_with('\'')) {
+        return Err(ParseError { message: "unterminated TreeView quoted label".into(), line: line_number, col: 1 });
+    }
+    let mut label = if (content.starts_with('"') && content.ends_with('"')) || (content.starts_with('\'') && content.ends_with('\'')) {
+        content[1..content.len() - 1].to_string()
+    } else { content.trim_end().to_string() };
+    if label.is_empty() && !matches!(content, "\"\"" | "''") {
+        return Err(ParseError { message: "TreeView node label cannot be empty".into(), line: line_number, col: 1 });
+    }
+    let kind = if label.ends_with('/') { label.pop(); TreeViewNodeKind::Directory } else { TreeViewNodeKind::File };
+    Ok((label, kind, class_selector, icon, description))
+}
+
+fn preprocess_treeview_box_drawing(source: &str) -> Result<String, ParseError> {
+    if !source.chars().any(|character| matches!(character, '│' | '┃' | '└' | '┗' | '├' | '┣' | '─' | '━')) { return Ok(source.to_string()); }
+    let mut output = Vec::new();
+    for (index, raw) in source.lines().enumerate() {
+        let normalized = raw.replace('\t', "    ");
+        if let Some(branch) = normalized.find(['└', '┗', '├', '┣']) {
+            let remainder = normalized[branch + '├'.len_utf8()..].trim_start_matches(['─', '━', ' ']);
+            let branch_column = normalized[..branch].chars().count();
+            if remainder.is_empty() { return Err(ParseError { message: "empty TreeView box-drawing node".into(), line: index + 1, col: branch_column + 1 }); }
+            output.push(format!("{}{}", "    ".repeat(branch_column / 4), remainder));
+        } else if normalized.trim().chars().all(|character| character.is_whitespace() || matches!(character, '│' | '┃')) { continue; }
+        else { output.push(normalized); }
+    }
+    Ok(output.join("\n"))
+}
 
 fn parse_radar_labeled_id(raw: &str, token: &Token) -> Result<(String, String), ParseError> {
     let raw = raw.trim();

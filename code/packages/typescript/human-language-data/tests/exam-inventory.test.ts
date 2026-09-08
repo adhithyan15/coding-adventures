@@ -894,16 +894,59 @@ describe("the committed German A1 inventory", () => {
     // A tranche aimed at any of those sixteen would have written a second lesson
     // for material already in the book. That is the failure an inventory exists to
     // prevent, and it had been running in the flattering direction for months.
-    expect(coverage.covered).toBe(37);
-    // Der Artikel leaves this list at 2/5 — der/die/das and ein/eine were always
-    // taught. Questions and prepositions are genuinely empty: no lesson in the
-    // track owns wer, wann, warum, welcher, or any preposition as a preposition.
-    for (const empty of ["Die Frage", "Die Praeposition"]) {
-      expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
+    //
+    // 37 -> 56. Seven chapters, thirty-five items, forty-four atoms, forty-two
+    // lessons. Nineteen points close, and FIVE COLUMNS go to full:
+    //
+    //   Das Verb        7/12 -> 12/12
+    //   Das Pronomen     3/5  ->  5/5
+    //   Der Satz         2/5  ->  5/5
+    //   Die Frage        0/4  ->  4/4
+    //   Die Negation     1/3  ->  3/3
+    //
+    // The ratio comes from spending rather than minting. kein is `ein` with two
+    // letters on the front, so it inherits an ending set the reader bought in the
+    // ein/eine lesson; `den` then names the row those endings move on, which is
+    // the chapter GE-C14-einen promised in plain text and never delivered; and
+    // the four possessives inherit the same set a third time. Six words end up
+    // sharing one paradigm and only two of the six are new.
+    expect(coverage.covered).toBe(56);
+    for (const full of ["Das Verb", "Das Pronomen", "Der Satz", "Die Frage", "Die Negation"]) {
+      const column = coverage.byCategory[full];
+      expect(column?.covered, full).toBe(column?.enumerated);
     }
-    expect(coverage.byCategory["Der Artikel"]).toEqual({ enumerated: 5, covered: 2 });
+    // Die Praeposition is the one column the tranche did not touch, and it is
+    // the next one: A1-ART-05 (dative article forms) sits under A1-PRAEP-02, so
+    // one lesson set unblocks two points at once.
+    expect(coverage.byCategory["Die Praeposition"]).toEqual({ enumerated: 4, covered: 0 });
+    expect(coverage.byCategory["Der Artikel"]).toEqual({ enumerated: 5, covered: 4 });
     expect(coverage.byCategory["Grundwortschatz"]!.covered).toBeGreaterThan(0);
   }, 60_000);
+
+  it("closes A1-ART-04 on the atom the corpus DEFERRED, not on a new paradigm", () => {
+    // Named rather than left to the aggregate. The 56/70 above would move if this
+    // probe were nulled, but it would move for eighteen other reasons too; this
+    // pins WHICH four atoms close the point, and that two of the four are words
+    // the reader has been saying since the haben and negation chapters.
+    //
+    // Both halves were falsified before this was kept: adding a fabricated id
+    // fails the "probes only atoms that exist" test above, and nulling the probe
+    // drops the total to 55.
+    const point = inventory.points.find((p) => p.id === "A1-ART-04");
+    expect(point?.probe).toEqual([
+      // The one new article.
+      "GE-LEX-DEN-01",
+      // The rule that says only the der row moves — which is why the German case
+      // system costs one row and not a nine-cell grid at this level.
+      "GE-GRAMMAR-AKKUSATIV-NUR-MASKULIN-01",
+      // SPENT, not minted. GE-C14-einen taught `einen` as a bare word and said on
+      // the page: "the system behind it ... gets a chapter of its own later".
+      "GE-LEX-EINEN-01",
+      // Minted by this tranche's own first chapter, three chapters earlier, and
+      // spent here.
+      "GE-LEX-KEINEN-01",
+    ]);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -2569,8 +2612,8 @@ describe("the committed Japanese A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(179);
-    expect(coverage.covered).toBe(66);
-    expect(coverage.unmapped).toBe(113);
+    expect(coverage.covered).toBe(67);
+    expect(coverage.unmapped).toBe(112);
     expect(coverage.partial).toBe(0);
     // THE HEADLINE, and it is a strength rather than a gap. This is the only
     // track measured so far that holds the complete CEFR A1 repair kit:
@@ -2610,9 +2653,17 @@ describe("the committed Japanese A1 inventory", () => {
     // because JA-A1-NUM-01 and JA-A1-NG2-01 were already ticked -- one on a
     // single numeral inside a phrase, the other on the vague half of counting.
     // The tranche deepened two ticks instead of adding one. A coverage total
-    // cannot see that, which is why the named pin below exists.
+    // cannot see that, which is why the named pins below exist.
+    //
+    // 66 -> 67. The counters (chapters 16-18) close JA-A1-NUM-02, and this is
+    // the first Japanese-specific point in the file to be closed at all -- it
+    // has no Spanish column behind it, because Spanish has no classifier
+    // system. ONE point again, and again the total is the least of what moved:
+    // the track's SECOND count now exists, the reader can attach a number to a
+    // noun for the first time in 157 lessons, and JA-A1-NUM-03 changes from
+    // "blocked upstream" to ordinary vocabulary work.
     expect(formatExamCoverage(coverage)).toContain(
-      "japanese A1 (partial inventory): 66/179 points covered (37%)",
+      "japanese A1 (partial inventory): 67/179 points covered (37%)",
     );
   }, 60_000);
 
@@ -2647,9 +2698,60 @@ describe("the committed Japanese A1 inventory", () => {
     // The numeral the old tick rested on is still taught, in the chapter-9
     // phrase the cardinal lesson takes apart.
     expect(taught.has("JA-LEX-ICHIDO")).toBe(true);
-    // And the counters are still absent, which is what blocks the ordinals.
-    expect(inventory.points.find((point) => point.id === "JA-A1-NUM-02")?.probe).toBeNull();
+    // The ordinals are still absent, and that point is now ordinary vocabulary
+    // work rather than a block: a Japanese ordinal is a counter with dai- in
+    // front or -me behind, and the counters exist as of chapter 18.
     expect(inventory.points.find((point) => point.id === "JA-A1-NUM-03")?.probe).toBeNull();
+  }, 60_000);
+
+  // The counter point, named rather than left to the aggregate. Both halves
+  // were falsified before this was kept: a fabricated id fails the "probes only
+  // atoms that EXIST" test above AND the per-atom loop below, and nulling the
+  // probe fails the coverage total and this file's own `toEqual`.
+  it("closes JA-A1-NUM-02 on BOTH counting systems, not on a list of counters", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "japanese");
+    const counters = inventory.points.find((point) => point.id === "JA-A1-NUM-02");
+    expect(counters?.probe).toEqual([
+      // The machinery, first, because it is what the point is about: a number
+      // in Japanese takes a counter chosen by the kind of thing.
+      "JA-GRAMMAR-COUNTER-01",
+      // The NATIVE series, which IS the general counter and is the whole of one
+      // of the two systems. Ten words for five signs, across chapters 16-17.
+      "JA-LEX-HITOTSU",
+      "JA-LEX-FUTATSU",
+      "JA-LEX-MITTSU",
+      "JA-LEX-YOTTSU",
+      "JA-LEX-ITSUTSU",
+      "JA-LEX-MUTTSU",
+      "JA-LEX-NANATSU",
+      "JA-LEX-YATTSU",
+      "JA-LEX-KOKONOTSU",
+      "JA-LEX-TOO",
+      // Two counters that are NOT the general one, chosen because the corpus's
+      // own nouns can exercise them: the nine family words, and ashi and kami.
+      "JA-LEX-NIN",
+      "JA-LEX-HITORI-FUTARI",
+      "JA-LEX-HON",
+      // And the fact that a counter is pushed by the sound in front of it.
+      "JA-GRAMMAR-COUNTER-SOUND-CHANGE-01",
+    ]);
+    for (const atom of counters?.probe ?? []) expect(taught.has(atom), atom).toBe(true);
+    // THE SEAM, asserted rather than described: the atom chapter 14 introduced
+    // on yon is the same one chapters 16-18 return to three more times, which is
+    // why it is NOT re-declared here under a counter-specific id.
+    expect(taught.has("JA-GRAMMAR-KUN-IN-THE-COUNT")).toBe(true);
+    // The counter the reader already owned and nobody had named. Its lesson said
+    // "do counts an occurrence" in chapter 9; chapter 18 is where that sentence
+    // is cashed, and no new atom was invented for it.
+    expect(taught.has("JA-LEX-ICHIDO")).toBe(true);
+    for (const absent of [
+      "JA-LEX-DO-COUNTER",
+      "JA-LEX-MAI",
+      "JA-LEX-HIKI",
+      "JA-LEX-SATSU",
+      "JA-LEX-DAI",
+    ]) expect(taught.has(absent), absent).toBe(false);
   }, 60_000);
 });
 

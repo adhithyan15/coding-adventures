@@ -1,0 +1,17 @@
+{
+  "language": "japanese",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:8da0689f3de67aaa",
+  "lessonIds": [
+    "JA-W17-mu",
+    "JA-C17-muttsu",
+    "JA-C17-nanatsu",
+    "JA-W17-ya",
+    "JA-C17-yattsu",
+    "JA-W17-no",
+    "JA-C17-kokonotsu",
+    "JA-C17-too",
+    "JA-R17-the-other-ten"
+  ],
+  "tex": "japanese/book/chapters/ch17-native-count-six-to-ten.tex"
+}

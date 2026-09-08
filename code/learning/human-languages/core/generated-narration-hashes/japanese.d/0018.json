@@ -1,0 +1,23 @@
+{
+  "language": "japanese",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:3a63181038fb22af",
+  "lessonIds": [
+    "JA-C18-tsu-counter",
+    "JA-C18-nin",
+    "JA-C18-hitori-futari",
+    "JA-C18-count-the-face",
+    "JA-W18-ho",
+    "JA-C18-hon",
+    "JA-W18-handakuten",
+    "JA-C18-ippon",
+    "JA-R18-counting-things"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 4,
+  "text": "japanese/narration/ch18.txt",
+  "json": "japanese/narration/ch18.json",
+  "textHash": "fnv1a64:a4dd219b926f1f6a",
+  "jsonHash": "fnv1a64:7244b8876522f190",
+  "findings": []
+}
