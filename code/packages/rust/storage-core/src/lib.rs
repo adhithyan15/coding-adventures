@@ -52,7 +52,7 @@ use std::sync::Mutex;
 use std::thread::sleep;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use coding_adventures_json_value::JsonValue;
+use coding_adventures_bounded_json::{serialize as serialize_json, JsonValue};
 use coding_adventures_sha256::sha256;
 
 /// Milliseconds since the Unix epoch in UTC.
@@ -1098,7 +1098,7 @@ impl StorageBackend for InMemoryStorageBackend {
 /// their own test suites to assert the repository-owned semantics.
 pub mod conformance {
     use super::*;
-    use coding_adventures_json_value::JsonNumber;
+    use coding_adventures_bounded_json::JsonNumber;
 
     /// `initialize()` must be idempotent.
     pub fn initialize_twice_is_safe<B: StorageBackend>(backend: &B) -> Result<(), StorageError> {
@@ -1527,6 +1527,10 @@ fn validate_metadata_object(metadata: &StorageMetadata) -> Result<(), StorageErr
             message: "must be a JSON object".to_string(),
         });
     }
+    serialize_json(metadata).map_err(|_| StorageError::Validation {
+        field: "metadata".to_string(),
+        message: "must be finite RFC 8259 JSON within the storage depth limit".to_string(),
+    })?;
     Ok(())
 }
 
@@ -1579,6 +1583,7 @@ fn validate_non_empty(field: &str, value: &str) -> Result<(), StorageError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_bounded_json::JsonNumber;
 
     fn metadata() -> StorageMetadata {
         JsonValue::Object(vec![(
@@ -1599,6 +1604,40 @@ mod tests {
         .expect_err("metadata must be a JSON object");
 
         assert!(matches!(error, StorageError::Validation { .. }));
+    }
+
+    #[test]
+    fn storage_put_input_rejects_unserializable_metadata() {
+        let non_finite = JsonValue::Object(vec![(
+            "value".to_string(),
+            JsonValue::Number(JsonNumber::Float(f64::NAN)),
+        )]);
+        assert!(matches!(
+            StoragePutInput::new(
+                "context",
+                "entries/non-finite.json",
+                "application/json",
+                non_finite,
+                Vec::new(),
+            ),
+            Err(StorageError::Validation { ref field, .. }) if field == "metadata"
+        ));
+
+        let mut too_deep = JsonValue::Null;
+        for _ in 0..128 {
+            too_deep = JsonValue::Array(vec![too_deep]);
+        }
+        let too_deep = JsonValue::Object(vec![("value".to_string(), too_deep)]);
+        assert!(matches!(
+            StoragePutInput::new(
+                "context",
+                "entries/too-deep.json",
+                "application/json",
+                too_deep,
+                Vec::new(),
+            ),
+            Err(StorageError::Validation { ref field, .. }) if field == "metadata"
+        ));
     }
 
     #[test]

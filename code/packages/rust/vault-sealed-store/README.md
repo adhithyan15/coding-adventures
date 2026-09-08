@@ -106,4 +106,4 @@ See the spec for the full argument. In short:
 - `coding_adventures_chacha20_poly1305` — XChaCha20-Poly1305 AEAD.
 - `coding_adventures_csprng` — OS entropy source.
 - `coding_adventures_zeroize` — key-wiping primitives.
-- `coding-adventures-json-value` — metadata encoding.
+- `coding_adventures_bounded_json` — bounded metadata value model.

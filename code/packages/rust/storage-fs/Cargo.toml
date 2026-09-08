@@ -7,5 +7,4 @@ description = "STR-FILE — filesystem implementation of storage_core::StorageBa
 [dependencies]
 coding_adventures_csprng = { path = "../csprng" }
 storage-core = { path = "../storage-core" }
-coding-adventures-json-value = { path = "../json-value" }
-coding-adventures-json-serializer = { path = "../json-serializer" }
+coding_adventures_bounded_json = { path = "../bounded-json" }

@@ -6,7 +6,7 @@ description = "Vault at-rest envelope encryption with password-derived or custod
 
 [dependencies]
 storage-core = { path = "../storage-core" }
-coding-adventures-json-value = { path = "../json-value" }
+coding_adventures_bounded_json = { path = "../bounded-json" }
 coding_adventures_argon2id = { path = "../argon2id" }
 coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
 coding_adventures_csprng = { path = "../csprng" }

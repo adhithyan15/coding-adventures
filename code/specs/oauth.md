@@ -124,11 +124,13 @@ The delivery order is:
 10. **Later hardening:** DPoP and full OpenID
    Connect discovery/JWKS/ID-token validation.
 
-Before the concrete encrypted credential-store adapter, remove the sealed
-store's remaining third-party JSON chain by migrating the shared storage
-metadata boundary to the repository's bounded JSON primitive. The prerequisite
-bounded compact serializer is now shipped alongside its depth-limited parser;
-the storage metadata type and consumers remain the next migration slice. The
+The sealed store's legacy JSON chain is now removed from its normal dependency
+graph: shared storage metadata uses the repository-owned bounded JSON value
+model, `storage-fs` parses and serializes through that primitive, and the legacy
+`json-value` facade re-exports the same types for source-compatible consumers.
+Metadata is rejected before backend dispatch when it is non-finite or exceeds
+the shared depth limit. This clears the JSON prerequisite for the concrete
+encrypted OAuth credential-store adapter. The
 cross-platform kernel-entropy prerequisite is shipped: `csprng` now reads
 `/dev/urandom` through safe standard-library I/O on Unix and confines Windows
 CNG FFI to one documented `BCryptGenRandom` call, with no normal dependencies.

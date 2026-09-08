@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Re-exported the canonical `bounded-json` value and number types so existing
+  consumers remain source-compatible while security-sensitive storage paths
+  migrate directly to the bounded parser and serializer.
+
 ## 0.1.0 (2026-03-22)
 
 ### Added

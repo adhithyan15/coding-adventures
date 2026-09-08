@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- Removed the legacy JSON value/parser chain from the sealed-store dependency
+  graph by using the repository-owned bounded RFC 8259 value model directly.
 - Raised measured Tarpaulin LLVM line coverage from 88.71% to 96.99%
   (773/797), closing VLT01's declared 95% target with focused rejection tests
   for malformed KEK manifests, sealed-record metadata, JSON field types,
