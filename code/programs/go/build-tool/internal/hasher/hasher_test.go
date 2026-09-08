@@ -575,12 +575,13 @@ func TestProductionLanguageSourceInputRegistryExactlyMatchesNeutralRegistry(t *t
 	if err != nil {
 		t.Fatal(err)
 	}
-	framed := make([]byte, len("coding-adventures/build-tool-language-source-input-registry/v1\x00")+8+len(canonicalBytes))
-	offset := copy(framed, []byte("coding-adventures/build-tool-language-source-input-registry/v1\x00"))
-	binary.BigEndian.PutUint64(framed[offset:offset+8], uint64(len(canonicalBytes)))
-	copy(framed[offset+8:], canonicalBytes)
-	digest := sha256.Sum256(framed)
-	if got := hex.EncodeToString(digest[:]); got != languageSourceInputRegistryDigest {
+	digest := sha256.New()
+	_, _ = digest.Write([]byte("coding-adventures/build-tool-language-source-input-registry/v1\x00"))
+	var length [8]byte
+	binary.BigEndian.PutUint64(length[:], uint64(len(canonicalBytes)))
+	_, _ = digest.Write(length[:])
+	_, _ = digest.Write(canonicalBytes)
+	if got := hex.EncodeToString(digest.Sum(nil)); got != languageSourceInputRegistryDigest {
 		t.Fatalf("registry digest mismatch: got %s, want %s", got, languageSourceInputRegistryDigest)
 	}
 	if len(checked.Languages) != 23 {

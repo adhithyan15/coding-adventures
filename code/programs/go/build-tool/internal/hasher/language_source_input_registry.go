@@ -275,12 +275,13 @@ func languageSourceInputRegistryDigestForJSON(data []byte) (string, error) {
 	}
 	canonical := bytes.TrimSuffix(encoded.Bytes(), []byte{'\n'})
 	domain := []byte("coding-adventures/build-tool-language-source-input-registry/v1\x00")
-	framed := make([]byte, len(domain)+8+len(canonical))
-	copy(framed, domain)
-	binary.BigEndian.PutUint64(framed[len(domain):len(domain)+8], uint64(len(canonical)))
-	copy(framed[len(domain)+8:], canonical)
-	digest := sha256.Sum256(framed)
-	return hex.EncodeToString(digest[:]), nil
+	digest := sha256.New()
+	_, _ = digest.Write(domain)
+	var length [8]byte
+	binary.BigEndian.PutUint64(length[:], uint64(len(canonical)))
+	_, _ = digest.Write(length[:])
+	_, _ = digest.Write(canonical)
+	return hex.EncodeToString(digest.Sum(nil)), nil
 }
 
 type registryJSONFrame struct {
