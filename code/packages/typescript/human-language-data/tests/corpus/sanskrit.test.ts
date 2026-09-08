@@ -40,7 +40,17 @@ it("pins Sanskrit lesson-content budgets", () =>
     // The three content totals below are unchanged, and that is the check worth
     // making here: a grammar tranche should declare no new idioms, senses or
     // culture claims, and this one declares none.
-    lessons: 335,
+    //
+    // 335 -> 347: the ordinal tranche, chapters 62-63. Twelve lessons -- ten
+    // ordinals one word a lesson, plus each chapter's retrieval payoff -- and
+    // thirteen atoms, because three of the twelve carry a naming atom for an
+    // ENDING beside the word that shows it. Re-measured against the tree.
+    // Idioms, senses and culture claims are again unchanged at 11 / 12 / 13, and
+    // here that is a deliberate claim rather than an accident: dvitiyah also
+    // means "a companion" in Macdonell and the lesson says so on the page, but
+    // no SENSE atom is declared for it, because the tranche teaches the numeral
+    // and does not drill the second reading.
+    lessons: 347,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,
@@ -67,8 +77,15 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   const { lessons } = loadEverything();
   const coverage = measureExamCoverage(loadExamInventory("sanskrit", "A1"), lessons);
   expect(coverage.enumerated).toBe(164);
-  expect(coverage.covered).toBe(141);
-  expect(coverage.unmapped).toBe(23);
+  // 141 -> 142: the ordinal tranche closes SA-A1-Q-02, and with it the Sankhya
+  // column outright. One point for twelve lessons is a poor ratio and it is the
+  // honest one -- the ordinals unlock nothing else in this inventory. In
+  // particular they do NOT unlock SA-A1-SP-02, which SA-A1-Q-02's own note used
+  // to claim they would; that point is relative position (left, right, above,
+  // below, in front, behind) and it is blocked on six direction words nobody
+  // teaches. The note was corrected in the same commit.
+  expect(coverage.covered).toBe(142);
+  expect(coverage.unmapped).toBe(22);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
@@ -76,7 +93,7 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // denominator is the smallest of the twenty-five. 86% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 141/164 points covered (86%)",
+    "sanskrit A1 (partial inventory): 142/164 points covered (87%)",
   );
   // Where the 23 gaps actually are, named rather than counted. Two columns hold
   // 13 of them, and they are the two an editorially derived A1 inventory is
@@ -93,4 +110,34 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // what a reader of a classical text needs first.
   expect(coverage.byCategory["Samuccaya — coordination"]!).toEqual({ enumerated: 5, covered: 5 });
   expect(coverage.byCategory["Vibhakti — the case system"]!).toEqual({ enumerated: 5, covered: 5 });
+  // And the column the ordinal tranche finished: number and quantity, 4/5 -> 5/5.
+  expect(coverage.byCategory["Saṅkhyā — number and quantity"]!).toEqual({ enumerated: 5, covered: 5 });
+  // The ordinal point, named rather than left to the aggregate, so a nulled
+  // probe or a fabricated id is caught HERE and not only by the total. Both
+  // halves were falsified before this was kept.
+  const ordinals = loadExamInventory("sanskrit", "A1").points.find(
+    (point) => point.id === "SA-A1-Q-02",
+  );
+  expect(ordinals?.probe).toEqual([
+    // The productive ending, and the five numbers it makes (chapter 62).
+    "SA-LEX-C62-ORDINAL-01",
+    "SA-GRAMMAR-C62-ORDINAL-MA-02",
+    "SA-LEX-C62-ORDINAL-03",
+    "SA-LEX-C62-ORDINAL-04",
+    "SA-LEX-C62-ORDINAL-05",
+    "SA-LEX-C62-ORDINAL-06",
+    // The two endings before it, and the word that uses neither (chapter 63).
+    "SA-LEX-C63-ORDINAL-01",
+    "SA-GRAMMAR-C63-ORDINAL-THA-02",
+    "SA-LEX-C63-ORDINAL-03",
+    "SA-LEX-C63-ORDINAL-04",
+    "SA-GRAMMAR-C63-ORDINAL-TIYA-05",
+    "SA-LEX-C63-ORDINAL-06",
+    "SA-LEX-C63-ORDINAL-07",
+  ]);
+  for (const atom of ordinals?.probe ?? []) {
+    expect(coverage.points.find((point) => point.id === "SA-A1-Q-02")?.missingAtoms, atom).toEqual(
+      [],
+    );
+  }
 }, 120_000);

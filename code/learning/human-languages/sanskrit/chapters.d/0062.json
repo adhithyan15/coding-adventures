@@ -1,0 +1,23 @@
+{
+  "chapter": 62,
+  "title": "The Ending That Counts",
+  "label": "ch:sa-ordinals",
+  "canDo": "I can make a Sanskrit ordinal from a number by putting -ma on it, and I can name the one number between five and ten where that does not work.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "SA-R62-the-ending",
+    "kind": "production",
+    "summary": "Complete SA-R62-the-ending and run pañcamaḥ to daśamaḥ, then name the number the chapter walked past and why.",
+    "assesses": [
+      "SA-LEX-C62-ORDINAL-01",
+      "SA-GRAMMAR-C62-ORDINAL-MA-02",
+      "SA-LEX-C62-ORDINAL-03",
+      "SA-LEX-C62-ORDINAL-04",
+      "SA-LEX-C62-ORDINAL-05",
+      "SA-LEX-C62-ORDINAL-06"
+    ],
+    "note": "The chapter opens at FIFTH, not at first. -ma is the ending that generalizes -- it makes 5, 7, 8, 9 and 10 with nothing else changing -- and a rule has to be visible before a departure from it can be read as one. Six is deliberately skipped; the next chapter opens on the hole."
+  }
+}

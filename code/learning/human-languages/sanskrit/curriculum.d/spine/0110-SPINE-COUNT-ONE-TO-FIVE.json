@@ -1,7 +1,9 @@
 {
   "segments": [
     "SA-PATH-009",
-    "SA-PATH-205"
+    "SA-PATH-205",
+    "SA-PATH-62-ORDINAL",
+    "SA-PATH-63-ORDINAL"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"
