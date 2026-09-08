@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 31,
+  "output": "urdu/book/chapters/ch31-digits.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

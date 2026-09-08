@@ -252,10 +252,16 @@ describe("real curriculum", () => {
       // 27 is the track's first place names, emptying SPINE-NAME-EVERYDAY-THINGS's.
       // Atom counts are 5 / 4 / 4 / 4 / 4, all inside the 12-atom chapter budget, and
       // every headword is spellable with the fifteen letters the ladder has taught.
+    
+      // 27 -> 32: HL-C350, the numeral tranche. Urdu taught NO numeral at all in
+      // 134 lessons -- ek and do both returned zero as words, the two raw matches
+      // for do being inside dost -- so no age, no price and no telephone number
+      // was reachable. Chapters 28-29 teach one to ten, 30 twenty and a hundred
+      // with an explicit account of why the teens are NOT here, 31 the ten Urdu
+      // digits, and 32 the ordinals.
     ).toEqual([
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-      26, 27,
-    ]);
+      26, 27, 28, 29, 30, 31, 32]);
     expect(
       books.books
         .find((book) => book.language === "russian")

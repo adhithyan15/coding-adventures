@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:644edb8e53b256e2",
+  "lessonIds": [
+    "UR-C32-pehla",
+    "UR-C32-dusra-tisra",
+    "UR-C32-chautha",
+    "UR-C32-practice",
+    "UR-R32-close"
+  ],
+  "tex": "urdu/book/chapters/ch32-ordinals.tex"
+}

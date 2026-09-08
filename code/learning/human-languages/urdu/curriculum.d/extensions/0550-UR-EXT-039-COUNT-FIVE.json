@@ -1,0 +1,16 @@
+{
+  "id": "UR-EXT-039-COUNT-FIVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say and recognise the Urdu numbers one to five and name the English cousin of each.",
+  "prerequisites": [],
+  "lessons": [
+    "UR-C28-ek",
+    "UR-C28-do",
+    "UR-C28-teen",
+    "UR-C28-char",
+    "UR-C28-panch",
+    "UR-C28-practice"
+  ]
+}

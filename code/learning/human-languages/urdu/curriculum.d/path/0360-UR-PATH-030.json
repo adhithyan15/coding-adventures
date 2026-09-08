@@ -1,0 +1,17 @@
+{
+  "id": "UR-PATH-030",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "UR-C29-chhe",
+    "UR-C29-saat",
+    "UR-C29-aath",
+    "UR-C29-nau",
+    "UR-C29-das",
+    "UR-C29-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "UR-EXT-040-COUNT-TEN"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "language": "urdu",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:8abf7c9de79cc586",
+  "lessonIds": [
+    "UR-C30-bees",
+    "UR-C30-sau",
+    "UR-C30-practice"
+  ],
+  "tex": "urdu/book/chapters/ch30-round-amounts.tex"
+}

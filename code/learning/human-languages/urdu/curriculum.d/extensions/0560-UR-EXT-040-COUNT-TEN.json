@@ -1,0 +1,18 @@
+{
+  "id": "UR-EXT-040-COUNT-TEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can count aloud from one to ten in Urdu and say why Persian's seven begins differently.",
+  "prerequisites": [
+    "UR-EXT-039-COUNT-FIVE"
+  ],
+  "lessons": [
+    "UR-C29-chhe",
+    "UR-C29-saat",
+    "UR-C29-aath",
+    "UR-C29-nau",
+    "UR-C29-das",
+    "UR-C29-practice"
+  ]
+}

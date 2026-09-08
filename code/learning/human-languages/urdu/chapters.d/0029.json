@@ -1,0 +1,24 @@
+{
+  "chapter": 29,
+  "title": "Six to Ten, and the Change That Happened Next Door",
+  "label": "ch:ur-count-ten",
+  "canDo": "I can count aloud from one to ten in Urdu, and explain why Persian says haft where Urdu says sat.",
+  "payoff": {
+    "lesson": "UR-C29-practice",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Five more numbers with no new letter, the Iranian s-to-h change seen from the side that did not undergo it, and the whole run of ten shuffled.",
+    "assesses": [
+      "UR-LEX-CHHE",
+      "UR-ETYMON-CHHE-SIX-PIE",
+      "UR-LEX-SAAT",
+      "UR-ETYMON-SAAT-SEVEN-PIE",
+      "UR-LEX-AATH",
+      "UR-ETYMON-AATH-EIGHT-PIE",
+      "UR-LEX-NAU",
+      "UR-ETYMON-NAU-NINE-PIE",
+      "UR-LEX-DAS",
+      "UR-ETYMON-DAS-TEN-PIE",
+      "UR-PERFORMANCE-COUNT-TEN"
+    ]
+  }
+}

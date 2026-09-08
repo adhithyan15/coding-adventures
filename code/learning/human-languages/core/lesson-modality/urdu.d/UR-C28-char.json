@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C28-char",
+    "language": "urdu",
+    "chapter": 28,
+    "sequence": 1500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91b8e91daafb51d4"
+  },
+  "findings": []
+}

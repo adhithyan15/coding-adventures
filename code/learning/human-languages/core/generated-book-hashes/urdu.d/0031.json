@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:af466a2cc36ad0ef",
+  "lessonIds": [
+    "UR-W31-digits-zero-one",
+    "UR-W31-digits-two-three",
+    "UR-W31-digits-four-five-six",
+    "UR-W31-digits-seven-eight-nine",
+    "UR-C31-practice"
+  ],
+  "tex": "urdu/book/chapters/ch31-digits.tex"
+}

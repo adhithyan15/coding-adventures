@@ -1,0 +1,24 @@
+{
+  "chapter": 28,
+  "title": "One to Five, By the Road Urdu Did Not Borrow",
+  "label": "ch:ur-count-five",
+  "canDo": "I can say, hear, read and write the Urdu numbers one to five, name the English cousin of each, and say why none of them came in from Persian.",
+  "payoff": {
+    "lesson": "UR-C28-practice",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Five numbers, five Indo-European roots, no new letter and no Persian borrowing -- retrieved shuffled rather than recited.",
+    "assesses": [
+      "UR-LEX-EK",
+      "UR-ETYMON-EK-INHERITED",
+      "UR-LEX-DO",
+      "UR-ETYMON-DO-TWO-PIE",
+      "UR-LEX-TEEN",
+      "UR-ETYMON-TEEN-THREE-PIE",
+      "UR-LEX-CHAR",
+      "UR-ETYMON-CHAR-FOUR-PIE",
+      "UR-LEX-PANCH",
+      "UR-ETYMON-PANCH-FIVE-PIE",
+      "UR-PERFORMANCE-COUNT-FIVE"
+    ]
+  }
+}

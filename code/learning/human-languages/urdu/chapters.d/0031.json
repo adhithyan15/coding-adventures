@@ -1,0 +1,25 @@
+{
+  "chapter": 31,
+  "title": "The Ten Urdu Digits",
+  "label": "ch:ur-digits",
+  "canDo": "I can read and write the ten Urdu digits, read a price, a bus number and a telephone number off the page, and say which way a number runs inside a right-to-left line.",
+  "payoff": {
+    "lesson": "UR-C31-practice",
+    "kind": "writing",
+    "summary": "Ten signs across four lessons, grouped by what makes each set hard: the reversed direction, the one-tooth pair, the three shapes Arabic draws differently, and the mirror pair.",
+    "assesses": [
+      "UR-SCRIPT-DIGIT-ZERO",
+      "UR-SCRIPT-DIGIT-ONE",
+      "UR-SCRIPT-DIGIT-TWO",
+      "UR-SCRIPT-DIGIT-THREE",
+      "UR-SCRIPT-DIGIT-FOUR",
+      "UR-SCRIPT-DIGIT-FIVE",
+      "UR-SCRIPT-DIGIT-SIX",
+      "UR-SCRIPT-DIGIT-SEVEN",
+      "UR-SCRIPT-DIGIT-EIGHT",
+      "UR-SCRIPT-DIGIT-NINE",
+      "UR-SCRIPT-DIGITS-LTR",
+      "UR-PERFORMANCE-DIGITS-READ"
+    ]
+  }
+}

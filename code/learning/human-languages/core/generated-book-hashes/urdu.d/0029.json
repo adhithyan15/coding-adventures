@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:80fd19bfdb50f235",
+  "lessonIds": [
+    "UR-C29-chhe",
+    "UR-C29-saat",
+    "UR-C29-aath",
+    "UR-C29-nau",
+    "UR-C29-das",
+    "UR-C29-practice"
+  ],
+  "tex": "urdu/book/chapters/ch29-count-ten.tex"
+}

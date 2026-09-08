@@ -1,0 +1,21 @@
+{
+  "chapter": 32,
+  "title": "Which One: the Ordinals",
+  "label": "ch:ur-ordinals",
+  "canDo": "I can say first, second, third and fourth, and build the ordinal of any number I can count to.",
+  "payoff": {
+    "lesson": "UR-C32-practice",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Three irregular forms at the bottom of the series and one ending above them, with the break at first set against the same break in English.",
+    "assesses": [
+      "UR-LEX-PEHLA",
+      "UR-ETYMON-PEHLA-FIRST",
+      "UR-LEX-DUSRA",
+      "UR-LEX-TISRA",
+      "UR-MORPH-ORDINAL-RA",
+      "UR-LEX-CHAUTHA",
+      "UR-MORPH-ORDINAL-VAN",
+      "UR-PERFORMANCE-ORDINALS"
+    ]
+  }
+}

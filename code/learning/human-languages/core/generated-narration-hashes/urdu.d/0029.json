@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:1ea4f84188725dc8",
+  "lessonIds": [
+    "UR-C29-chhe",
+    "UR-C29-saat",
+    "UR-C29-aath",
+    "UR-C29-nau",
+    "UR-C29-das",
+    "UR-C29-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch29.txt",
+  "json": "urdu/narration/ch29.json",
+  "textHash": "fnv1a64:47f8f62c426f4a03",
+  "jsonHash": "fnv1a64:234d488d384a2f88",
+  "findings": []
+}
