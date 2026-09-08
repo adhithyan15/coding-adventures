@@ -1,67 +1,51 @@
 # MIPS R2000 Simulator (Rust)
 
-Behavioral simulator for the MIPS R2000 (1985) — the first commercially
-successful RISC processor, designed by John Hennessy's team at Stanford.
-Rust port of `code/packages/python/mips-r2000-simulator` (Layer 07q); see
-[`code/specs/07q-mips-r2000-simulator.md`](../../../specs/07q-mips-r2000-simulator.md)
-for the full ISA writeup.
+Complete functional simulator for the Spec 07q MIPS R2000 educational machine:
+32 GPRs, HI/LO, a 32-bit PC wrapped onto exact 64 KiB big-endian memory, R/I/J
+formats, and the repository's no-delay-slot execution convention.
 
-## Supported Instructions
+The implemented ISA includes ALU and shift operations, HI/LO multiply/divide,
+all specified branches and jumps, byte/halfword/word loads and stores, and the
+MIPS I unaligned `LWL`, `LWR`, `SWL`, and `SWR` merge operations. `SYSCALL` is
+the repository HALT sentinel.
 
-- **R-type ALU**: add, addu, sub, subu, and, or, xor, nor, slt, sltu
-- **R-type shifts**: sll, srl, sra, sllv, srlv, srav
-- **Multiply/divide**: mult, multu, div, divu (HI:LO results); mfhi, mthi, mflo, mtlo
-- **R-type jumps**: jr, jalr
-- **I-type arithmetic/logic**: addi, addiu, slti, sltiu, andi, ori, xori, lui
-- **Loads**: lb, lh, lw, lbu, lhu
-- **Stores**: sb, sh, sw
-- **Branches**: beq, bne, blez, bgtz, bltz, bgez, bltzal, bgezal
-- **J-type jumps**: j, jal
-- **Halt**: syscall (our HALT sentinel, matching MIPS Linux convention); break (treated as a fault)
-
-## Architecture
-
-```
-opcodes.rs   -- opcode / funct-field constant tables (R/I/J formats)
-encoding.rs  -- encode_* helpers to construct machine code words
-decode.rs    -- instruction decoder for all three formats
-execute.rs   -- instruction executor + big-endian memory accessors
-simulator.rs -- top-level MipsR2000Simulator with fetch-decode-execute
-```
-
-## What differs from the Python original (and from `riscv-simulator`)
-
-- **Big-endian memory.**  MIPS R2000's default byte order is big-endian,
-  unlike RISC-V/ARM/x86 (little-endian).  `cpu_simulator::Memory`'s
-  `read_word`/`write_word` helpers are little-endian, so this crate builds
-  its own big-endian word/halfword accessors on `read_byte`/`write_byte`.
-- **No branch-delay slots.**  Matches the Python original's explicit
-  simplification — branches and jumps take effect immediately, without
-  executing the following instruction first.
-- **32-bit jump targets, not 64KB-scoped.**  The Python original masks `J`/
-  `JAL` targets against a fixed 64KB toy address space (`self._pc & 0xF000`).
-  This Rust port uses the real MIPS formula (`(pc+4) & 0xF000_0000 | target
-  << 2`) so the simulator works correctly for any `memory_size`, not just
-  64KB — `Memory` already bounds-checks out-of-range addresses safely.
-- **Fail-closed halt instead of `ValueError`.**  The Python simulator raises
-  on `ADD`/`ADDI`/`SUB` signed-overflow and on `DIV`/`DIVU` by zero.  This
-  port has no exception channel through `step() -> String`, so those cases
-  halt the simulator instead (leaving the destination register / HI / LO
-  unwritten) — the same fail-closed pattern `riscv-simulator` uses for an
-  invalid checked f64-to-i64 conversion.
-
-## Usage
+## Checked lifecycle
 
 ```rust
+use mips_r2000_simulator::encoding::{assemble, encode_addiu, encode_syscall};
 use mips_r2000_simulator::MipsR2000Simulator;
-use mips_r2000_simulator::encoding::*;
 
-let mut sim = MipsR2000Simulator::new(65536);
-sim.run_instructions(&[
-    encode_addiu(8, 0, 1),   // $t0 = 1
-    encode_addiu(9, 0, 2),   // $t1 = 2
-    encode_add(10, 8, 9),    // $t2 = 3
-    encode_syscall(),         // halt
-]);
-assert_eq!(sim.regs.read(10), 3);
+let program = assemble(&[encode_addiu(2, 0, 42), encode_syscall()]);
+let mut cpu = MipsR2000Simulator::architectural();
+let result = cpu.run_checked(&program, 10)?;
+assert!(result.halted);
+assert_eq!(result.final_state.regs[2], 42);
+# Ok::<(), mips_r2000_simulator::MipsError>(())
+```
+
+`MipsState` owns all 32 GPRs, HI/LO, PC, every memory byte, halt, and the
+installed-program range. Checked load, restore, direct register/memory access,
+step, and run operations are typed and atomic. Misalignment, BREAK, unknown
+instructions, signed overflow, division by zero, truncation, and halted stepping
+are distinct `MipsError` values. Legacy fields and `step() -> String` remain for
+existing callers.
+
+## Conformance
+
+A reproducible 218-vector Python corpus covers every Python-specified opcode,
+R-type function, REGIMM line, condition outcome, memory width, and fault family.
+Rust compares complete successful transitions and atomic faults; lifecycle tests
+separately pin all four MIPS I unaligned merge operations.
+
+Validation is 32 original unit tests, six lifecycle tests, one aggregate
+Python full-state differential, the 33-test/21-doctest Rust gate consumer, and
+the 130-test Python oracle. Strict formatting, Clippy, and rustdoc pass. Total
+Rust line coverage is 94.51% (1,481/1,567).
+
+See `code/specs/07q-mips-r2000-simulator.md` for the normative contract.
+
+## Development
+
+```bash
+bash BUILD
 ```

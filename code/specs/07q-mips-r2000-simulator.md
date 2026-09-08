@@ -170,12 +170,16 @@ DIV / DIVU compute quotient in LO and remainder in HI.
 | 0x0F | LUI      | rt = imm16 << 16 (loads upper 16 bits)                     |
 | 0x20 | LB       | rt = sign_extend(mem8[rs + sext(imm16)])                   |
 | 0x21 | LH       | rt = sign_extend(mem16[rs + sext(imm16)])                  |
+| 0x22 | LWL      | merge addressed word's left bytes into rt                  |
 | 0x23 | LW       | rt = mem32[rs + sext(imm16)]                               |
 | 0x24 | LBU      | rt = zero_extend(mem8[rs + sext(imm16)])                   |
 | 0x25 | LHU      | rt = zero_extend(mem16[rs + sext(imm16)])                  |
+| 0x26 | LWR      | merge addressed word's right bytes into rt                 |
 | 0x28 | SB       | mem8[rs + sext(imm16)] = rt[7:0]                           |
 | 0x29 | SH       | mem16[rs + sext(imm16)] = rt[15:0]                         |
+| 0x2A | SWL      | merge rt's left bytes into the addressed word              |
 | 0x2B | SW       | mem32[rs + sext(imm16)] = rt                               |
+| 0x2E | SWR      | merge rt's right bytes into the addressed word             |
 
 ---
 
@@ -246,6 +250,31 @@ class MIPSState:
 ```
 
 Convenience properties: `.sp` (R29), `.ra` (R31), `.v0` (R2), `.a0` (R4).
+
+## Normative Rust completion API
+
+The completed Rust package is `code/packages/rust/mips-r2000-simulator`.
+`MipsR2000Simulator::architectural()` constructs the exact 64 KiB machine;
+`new(memory_size)` remains for bounded compatibility tests.
+
+`MipsState` owns PC, all 32 GPRs, HI/LO, every memory byte, halt, and the exact
+installed-program range. `MipsError`, `StepTrace`, and `ExecutionResult` provide
+typed fail-closed boundaries and complete before/after/final state.
+
+`load_checked`, `load_at_checked`, `restore`, checked register/memory helpers,
+`step_checked`, `run_loaded_checked`, and `run_checked` validate before mutation
+and restore the complete machine after late failure. Checked execution exposes
+misalignment, BREAK, unknown encodings, signed overflow, divide-by-zero,
+truncated fetches, and halted stepping as distinct typed errors. Legacy public
+fields and `step() -> String` remain for existing consumers.
+
+The reproducible Python generator emits 218 one-step vectors spanning every
+Python-specified opcode, R-type function, REGIMM line, branch outcome, transfer
+width, and fault family. Successful vectors hash PC, all GPRs, HI/LO, all 64
+KiB, and halt. Error vectors must fail atomically. Lifecycle tests separately
+pin LWL/LWR/SWL/SWR. The audited Rust package passes 32 unit, six lifecycle, one
+aggregate differential, and one doctest at 94.51% line coverage; the 130-test
+Python oracle and Rust gate-level consumer remain green.
 
 ---
 

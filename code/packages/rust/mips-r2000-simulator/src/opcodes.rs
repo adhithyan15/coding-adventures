@@ -54,18 +54,26 @@ pub const OP_LUI: u32 = 0x0F;
 pub const OP_LB: u32 = 0x20;
 /// `LH rt, offset(rs)` — load halfword, sign-extended.
 pub const OP_LH: u32 = 0x21;
+/// `LWL rt, offset(rs)` — merge the addressed big-endian word's left bytes.
+pub const OP_LWL: u32 = 0x22;
 /// `LW rt, offset(rs)` — load word.
 pub const OP_LW: u32 = 0x23;
 /// `LBU rt, offset(rs)` — load byte, zero-extended.
 pub const OP_LBU: u32 = 0x24;
 /// `LHU rt, offset(rs)` — load halfword, zero-extended.
 pub const OP_LHU: u32 = 0x25;
+/// `LWR rt, offset(rs)` — merge the addressed big-endian word's right bytes.
+pub const OP_LWR: u32 = 0x26;
 /// `SB rt, offset(rs)` — store least-significant byte.
 pub const OP_SB: u32 = 0x28;
 /// `SH rt, offset(rs)` — store least-significant halfword.
 pub const OP_SH: u32 = 0x29;
+/// `SWL rt, offset(rs)` — merge the register's left bytes into memory.
+pub const OP_SWL: u32 = 0x2A;
 /// `SW rt, offset(rs)` — store word.
 pub const OP_SW: u32 = 0x2B;
+/// `SWR rt, offset(rs)` — merge the register's right bytes into memory.
+pub const OP_SWR: u32 = 0x2E;
 
 // ===========================================================================
 // R-type funct codes (bits 5:0, only meaningful when op == OP_RTYPE)

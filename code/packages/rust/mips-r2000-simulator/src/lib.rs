@@ -5,7 +5,7 @@
 //! for the full ISA writeup (this crate documents the port, not the ISA
 //! semantics again).
 //!
-//! Module split mirrors [`riscv_simulator`]:
+//! The implementation is split into:
 //!
 //! ```text
 //! opcodes.rs   -- opcode / funct-field constant tables (R/I/J formats)
@@ -27,11 +27,10 @@
 //! - **HI/LO registers.**  `MULT`/`MULTU`/`DIV`/`DIVU` write a 64-bit
 //!   result across `hi`/`lo` fields on [`simulator::MipsR2000Simulator`]
 //!   rather than a GPR, read back via `MFHI`/`MFLO`.
-//! - **Fail-closed halting instead of exceptions.**  The Python simulator
-//!   raises `ValueError` on `ADD`/`ADDI`/`SUB` signed overflow and on
-//!   `DIV`/`DIVU` by zero.  This Rust port has no exception channel
-//!   through `step() -> String`, so it halts instead (destination
-//!   register/HI/LO left unwritten) — see `execute.rs` module docs.
+//! - **Typed checked exceptions.** The legacy `step() -> String` surface keeps
+//!   its fail-closed halt behavior, while `step_checked` and `run_checked`
+//!   expose overflow, division, alignment, BREAK, and unknown-instruction
+//!   failures atomically through [`MipsError`].
 //!
 //! ## Usage
 //!
@@ -55,4 +54,6 @@ pub mod execute;
 pub mod opcodes;
 pub mod simulator;
 
-pub use simulator::{ExecutionResult, MipsR2000Simulator};
+pub use simulator::{
+    ExecutionResult, MipsError, MipsR2000Simulator, MipsState, StepTrace, MEMORY_SIZE,
+};

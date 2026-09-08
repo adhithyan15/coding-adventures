@@ -1,7 +1,7 @@
 //! Top-level MIPS R2000 simulator combining all components.
 //!
-//! Public API shape mirrors [`riscv_simulator::simulator::RiscVSimulator`]:
-//! `new(memory_size)`, public `regs`/`mem`/`pc`/`halted` fields,
+//! The compatibility API provides `new(memory_size)`, public
+//! `regs`/`mem`/`pc`/`halted` fields,
 //! `load_program(&[u8])`, `run(&[u8])`, `run_loaded_with_limit(max_steps)`,
 //! and `step() -> String`.
 
@@ -11,6 +11,116 @@ use crate::decode;
 use crate::encoding::assemble;
 use crate::execute;
 use crate::execute::read_word_be;
+
+/// Exact memory size of the educational Spec 07q machine.
+pub const MEMORY_SIZE: usize = 65_536;
+
+/// Complete owned MIPS R2000 state.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MipsState {
+    pub pc: u32,
+    pub regs: [u32; 32],
+    pub hi: u32,
+    pub lo: u32,
+    pub memory: Vec<u8>,
+    pub halted: bool,
+    pub loaded_origin: u32,
+    pub loaded_len: usize,
+}
+
+/// Typed fail-closed lifecycle and execution errors.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum MipsError {
+    Halted,
+    InvalidRegister {
+        index: usize,
+    },
+    InvalidState(String),
+    MisalignedProgram {
+        origin: u32,
+    },
+    ProgramOutOfRange {
+        origin: u32,
+        length: usize,
+        memory_size: usize,
+    },
+    TruncatedInstruction {
+        pc: u32,
+    },
+    MemoryOutOfRange {
+        address: u32,
+        width: usize,
+    },
+    MisalignedAccess {
+        address: u32,
+        width: usize,
+    },
+    Break {
+        pc: u32,
+    },
+    DivideByZero {
+        mnemonic: &'static str,
+    },
+    SignedOverflow {
+        mnemonic: &'static str,
+    },
+    UnknownInstruction {
+        raw: u32,
+        pc: u32,
+    },
+}
+
+impl std::fmt::Display for MipsError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Halted => f.write_str("CPU is halted"),
+            Self::InvalidRegister { index } => {
+                write!(f, "register index {index} is outside R0-R31")
+            }
+            Self::InvalidState(message) => f.write_str(message),
+            Self::MisalignedProgram { origin } => {
+                write!(f, "program origin {origin:#010x} is not word-aligned")
+            }
+            Self::ProgramOutOfRange {
+                origin,
+                length,
+                memory_size,
+            } => write!(
+                f,
+                "program of {length} bytes at {origin:#010x} exceeds {memory_size}-byte memory"
+            ),
+            Self::TruncatedInstruction { pc } => write!(
+                f,
+                "instruction at {pc:#010x} crosses the loaded program boundary"
+            ),
+            Self::MemoryOutOfRange { address, width } => {
+                write!(f, "{width}-byte access at {address:#010x} exceeds memory")
+            }
+            Self::MisalignedAccess { address, width } => {
+                write!(f, "misaligned {width}-byte access at {address:#010x}")
+            }
+            Self::Break { pc } => write!(f, "BREAK instruction at {pc:#010x}"),
+            Self::DivideByZero { mnemonic } => write!(f, "{mnemonic} by zero"),
+            Self::SignedOverflow { mnemonic } => write!(f, "{mnemonic} signed overflow"),
+            Self::UnknownInstruction { raw, pc } => {
+                write!(f, "unknown instruction {raw:#010x} at {pc:#010x}")
+            }
+        }
+    }
+}
+
+impl std::error::Error for MipsError {}
+
+/// Complete checked instruction transition.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StepTrace {
+    pub pc_before: u32,
+    pub pc_after: u32,
+    pub raw: u32,
+    pub mnemonic: String,
+    pub state_before: MipsState,
+    pub state_after: MipsState,
+}
 
 /// Complete MIPS R2000 simulator: 32 GPRs (R0 hardwired zero), HI/LO,
 /// flat byte-addressable memory (big-endian), and a 32-bit PC.
@@ -32,20 +142,29 @@ pub struct MipsR2000Simulator {
     /// True once `SYSCALL` (the HALT sentinel) or a fault (`BREAK`,
     /// signed-overflow `ADD`/`ADDI`/`SUB`, or divide-by-zero) has executed.
     pub halted: bool,
+    loaded_origin: u32,
+    loaded_len: usize,
 }
 
 /// Observable outcome of a bounded simulator run.  Mirrors
 /// `riscv_simulator::simulator::ExecutionResult` field-for-field.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExecutionResult {
     pub halted: bool,
     pub steps: usize,
     pub pc: i32,
+    pub final_state: MipsState,
+    pub traces: Vec<StepTrace>,
 }
 
 impl MipsR2000Simulator {
     /// Create a new simulator with the given memory size (in bytes).
     pub fn new(memory_size: usize) -> Self {
+        let memory_size = if memory_size == 0 {
+            MEMORY_SIZE
+        } else {
+            memory_size
+        };
         Self {
             regs: RegisterFile::new(32, true),
             mem: Memory::new(memory_size),
@@ -53,12 +172,34 @@ impl MipsR2000Simulator {
             lo: 0,
             pc: 0,
             halted: false,
+            loaded_origin: 0,
+            loaded_len: memory_size,
         }
+    }
+
+    /// Create the exact 64 KiB machine specified by Layer 07q.
+    pub fn architectural() -> Self {
+        Self::new(MEMORY_SIZE)
+    }
+
+    /// Reset registers, memory, PC, HI/LO, halt, and installed range.
+    pub fn reset(&mut self) {
+        let memory_size = self.mem.size();
+        self.regs = RegisterFile::new(32, true);
+        self.mem = Memory::new(memory_size);
+        self.hi = 0;
+        self.lo = 0;
+        self.pc = 0;
+        self.halted = false;
+        self.loaded_origin = 0;
+        self.loaded_len = memory_size;
     }
 
     /// Load a program (as raw big-endian bytes) into memory at address 0.
     pub fn load_program(&mut self, program: &[u8]) {
         self.mem.load_bytes(0, program);
+        self.loaded_origin = 0;
+        self.loaded_len = program.len().min(self.mem.size());
     }
 
     /// Run until halted or 10000 steps (safety limit).
@@ -90,6 +231,8 @@ impl MipsR2000Simulator {
             halted: self.halted,
             steps,
             pc: self.pc,
+            final_state: self.get_state(),
+            traces: Vec::new(),
         }
     }
 
@@ -115,10 +258,301 @@ impl MipsR2000Simulator {
             &mut self.lo,
             self.pc,
         );
-        self.pc = result.next_pc;
+        self.pc = result.next_pc.rem_euclid(self.mem.size() as i32);
         self.halted = result.halted;
 
         mnemonic
+    }
+
+    /// Return every register, memory byte, special register, and lifecycle bit.
+    pub fn get_state(&self) -> MipsState {
+        MipsState {
+            pc: self.pc as u32,
+            regs: std::array::from_fn(|index| self.regs.read(index)),
+            hi: self.hi,
+            lo: self.lo,
+            memory: (0..self.mem.size())
+                .map(|index| self.mem.read_byte(index))
+                .collect(),
+            halted: self.halted,
+            loaded_origin: self.loaded_origin,
+            loaded_len: self.loaded_len,
+        }
+    }
+
+    /// Atomically restore a validated complete state.
+    pub fn restore(&mut self, state: &MipsState) -> Result<(), MipsError> {
+        if state.memory.len() != self.mem.size() {
+            return Err(MipsError::InvalidState(format!(
+                "state memory has {} bytes; simulator requires {}",
+                state.memory.len(),
+                self.mem.size()
+            )));
+        }
+        if state.regs[0] != 0 {
+            return Err(MipsError::InvalidState(
+                "R0 must remain hardwired to zero".to_string(),
+            ));
+        }
+        if state.pc as usize >= self.mem.size() {
+            return Err(MipsError::InvalidState(format!(
+                "PC {:#010x} exceeds memory",
+                state.pc
+            )));
+        }
+        let start = state.loaded_origin as usize;
+        let end = start.checked_add(state.loaded_len);
+        if state.loaded_origin & 3 != 0 || end.is_none_or(|value| value > self.mem.size()) {
+            return Err(MipsError::InvalidState(
+                "installed program range is invalid".to_string(),
+            ));
+        }
+        self.regs = RegisterFile::new(32, true);
+        for (index, value) in state.regs.iter().copied().enumerate() {
+            self.regs.write(index, value);
+        }
+        self.mem = Memory::new(state.memory.len());
+        self.mem.load_bytes(0, &state.memory);
+        self.hi = state.hi;
+        self.lo = state.lo;
+        self.pc = state.pc as i32;
+        self.halted = state.halted;
+        self.loaded_origin = state.loaded_origin;
+        self.loaded_len = state.loaded_len;
+        Ok(())
+    }
+
+    /// Deterministically reset and load a program at address zero.
+    pub fn load_checked(&mut self, program: &[u8]) -> Result<(), MipsError> {
+        self.load_at_checked(program, 0)
+    }
+
+    /// Deterministically reset and load a program at an explicit origin.
+    pub fn load_at_checked(&mut self, program: &[u8], origin: u32) -> Result<(), MipsError> {
+        if origin & 3 != 0 {
+            return Err(MipsError::MisalignedProgram { origin });
+        }
+        let start = origin as usize;
+        let end = start.checked_add(program.len());
+        if end.is_none_or(|value| value > self.mem.size()) {
+            return Err(MipsError::ProgramOutOfRange {
+                origin,
+                length: program.len(),
+                memory_size: self.mem.size(),
+            });
+        }
+        self.reset();
+        self.mem.load_bytes(start, program);
+        self.pc = origin as i32;
+        self.loaded_origin = origin;
+        self.loaded_len = program.len();
+        Ok(())
+    }
+
+    /// Read a register with a typed bounds check.
+    pub fn read_register_checked(&self, index: usize) -> Result<u32, MipsError> {
+        if index >= 32 {
+            return Err(MipsError::InvalidRegister { index });
+        }
+        Ok(self.regs.read(index))
+    }
+
+    /// Write a register with a typed bounds check; writes to R0 are discarded.
+    pub fn write_register_checked(&mut self, index: usize, value: u32) -> Result<(), MipsError> {
+        if index >= 32 {
+            return Err(MipsError::InvalidRegister { index });
+        }
+        self.regs.write(index, value);
+        Ok(())
+    }
+
+    /// Read one byte with a typed direct bounds check.
+    pub fn read_byte_checked(&self, address: u32) -> Result<u8, MipsError> {
+        let address = address as usize;
+        if address >= self.mem.size() {
+            return Err(MipsError::MemoryOutOfRange {
+                address: address as u32,
+                width: 1,
+            });
+        }
+        Ok(self.mem.read_byte(address))
+    }
+
+    /// Write one byte with a typed direct bounds check.
+    pub fn write_byte_checked(&mut self, address: u32, value: u8) -> Result<(), MipsError> {
+        let address = address as usize;
+        if address >= self.mem.size() {
+            return Err(MipsError::MemoryOutOfRange {
+                address: address as u32,
+                width: 1,
+            });
+        }
+        self.mem.write_byte(address, value);
+        Ok(())
+    }
+
+    /// Read one aligned big-endian word with typed bounds checks.
+    pub fn read_word_checked(&self, address: u32) -> Result<u32, MipsError> {
+        if address & 3 != 0 {
+            return Err(MipsError::MisalignedAccess { address, width: 4 });
+        }
+        if (address as usize)
+            .checked_add(4)
+            .is_none_or(|end| end > self.mem.size())
+        {
+            return Err(MipsError::MemoryOutOfRange { address, width: 4 });
+        }
+        Ok(read_word_be(&self.mem, address as usize))
+    }
+
+    /// Write one aligned big-endian word with typed bounds checks.
+    pub fn write_word_checked(&mut self, address: u32, value: u32) -> Result<(), MipsError> {
+        if address & 3 != 0 {
+            return Err(MipsError::MisalignedAccess { address, width: 4 });
+        }
+        if (address as usize)
+            .checked_add(4)
+            .is_none_or(|end| end > self.mem.size())
+        {
+            return Err(MipsError::MemoryOutOfRange { address, width: 4 });
+        }
+        for (offset, byte) in value.to_be_bytes().into_iter().enumerate() {
+            self.mem.write_byte(address as usize + offset, byte);
+        }
+        Ok(())
+    }
+
+    fn preflight(&self, raw: u32) -> Result<(), MipsError> {
+        let op = (raw >> 26) & 0x3f;
+        let rs = ((raw >> 21) & 0x1f) as usize;
+        let rt = ((raw >> 16) & 0x1f) as usize;
+        let funct = raw & 0x3f;
+        let simm = (raw as i16) as i32;
+        let pc = self.pc as u32;
+
+        const VALID_R: &[u32] = &[
+            0x00, 0x02, 0x03, 0x04, 0x06, 0x07, 0x08, 0x09, 0x0c, 0x0d, 0x10, 0x11, 0x12, 0x13,
+            0x18, 0x19, 0x1a, 0x1b, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x2a, 0x2b,
+        ];
+        const VALID_OP: &[u32] = &[
+            0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d,
+            0x0e, 0x0f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x28, 0x29, 0x2a, 0x2b, 0x2e,
+        ];
+        if !VALID_OP.contains(&op) || (op == 0 && !VALID_R.contains(&funct)) {
+            return Err(MipsError::UnknownInstruction { raw, pc });
+        }
+        if op == 1 && ![0, 1, 0x10, 0x11].contains(&rt) {
+            return Err(MipsError::UnknownInstruction { raw, pc });
+        }
+        if op == 0 && funct == 0x0d {
+            return Err(MipsError::Break { pc });
+        }
+        if op == 0 && (funct == 0x1a || funct == 0x1b) && self.regs.read(rt) == 0 {
+            return Err(MipsError::DivideByZero {
+                mnemonic: if funct == 0x1a { "DIV" } else { "DIVU" },
+            });
+        }
+        if op == 0 && (funct == 0x20 || funct == 0x22) {
+            let a = self.regs.read(rs) as i32;
+            let b = self.regs.read(rt) as i32;
+            let overflow = if funct == 0x20 {
+                a.checked_add(b).is_none()
+            } else {
+                a.checked_sub(b).is_none()
+            };
+            if overflow {
+                return Err(MipsError::SignedOverflow {
+                    mnemonic: if funct == 0x20 { "ADD" } else { "SUB" },
+                });
+            }
+        }
+        if op == 0x08 && (self.regs.read(rs) as i32).checked_add(simm).is_none() {
+            return Err(MipsError::SignedOverflow { mnemonic: "ADDI" });
+        }
+        let width = match op {
+            0x21 | 0x25 | 0x29 => 2,
+            0x23 | 0x2b => 4,
+            _ => 1,
+        };
+        if width > 1 {
+            let address = self.regs.read(rs).wrapping_add(simm as u32) % self.mem.size() as u32;
+            if address & (width as u32 - 1) != 0 {
+                return Err(MipsError::MisalignedAccess { address, width });
+            }
+        }
+        Ok(())
+    }
+
+    /// Execute one instruction atomically with complete before/after state.
+    pub fn step_checked(&mut self) -> Result<StepTrace, MipsError> {
+        if self.halted {
+            return Err(MipsError::Halted);
+        }
+        let pc_before = self.pc as u32;
+        let start = self.loaded_origin as usize;
+        let pc = pc_before as usize;
+        if pc < start
+            || pc
+                .checked_add(4)
+                .is_none_or(|end| end > start + self.loaded_len)
+        {
+            return Err(MipsError::TruncatedInstruction { pc: pc_before });
+        }
+        let raw = read_word_be(&self.mem, pc);
+        self.preflight(raw)?;
+        let state_before = self.get_state();
+        let mnemonic = self.step();
+        if raw >> 26 == 0 && raw & 0x3f == 0x0c {
+            self.pc = ((pc_before + 4) % self.mem.size() as u32) as i32;
+        }
+        let state_after = self.get_state();
+        Ok(StepTrace {
+            pc_before,
+            pc_after: self.pc as u32,
+            raw,
+            mnemonic,
+            state_before,
+            state_after,
+        })
+    }
+
+    /// Execute already-loaded code transactionally for at most `max_steps`.
+    pub fn run_loaded_checked(&mut self, max_steps: usize) -> Result<ExecutionResult, MipsError> {
+        let original = self.get_state();
+        let mut traces = Vec::new();
+        while traces.len() < max_steps && !self.halted {
+            match self.step_checked() {
+                Ok(trace) => traces.push(trace),
+                Err(error) => {
+                    self.restore(&original)?;
+                    return Err(error);
+                }
+            }
+        }
+        Ok(ExecutionResult {
+            halted: self.halted,
+            steps: traces.len(),
+            pc: self.pc,
+            final_state: self.get_state(),
+            traces,
+        })
+    }
+
+    /// Deterministically load and execute a program transactionally.
+    pub fn run_checked(
+        &mut self,
+        program: &[u8],
+        max_steps: usize,
+    ) -> Result<ExecutionResult, MipsError> {
+        let original = self.get_state();
+        self.load_checked(program)?;
+        match self.run_loaded_checked(max_steps) {
+            Ok(result) => Ok(result),
+            Err(error) => {
+                self.restore(&original)?;
+                Err(error)
+            }
+        }
     }
 
     /// Run a list of instruction words (convenience for tests).
@@ -172,7 +606,10 @@ mod tests {
         assert!(!result.halted, "JR is not a halt instruction");
         assert_eq!(result.steps, 2);
         assert_eq!(sim.regs.read(V0 as usize), 42);
-        assert_eq!(result.pc, 0, "JR $ra jumps back to address 0 since $ra was never set");
+        assert_eq!(
+            result.pc, 0,
+            "JR $ra jumps back to address 0 since $ra was never set"
+        );
     }
 
     // ── ALU ops ──
@@ -536,7 +973,11 @@ mod tests {
     #[test]
     fn test_step_mnemonics() {
         let mut sim = MipsR2000Simulator::new(65536);
-        let prog = assemble(&[encode_addiu(T0, ZERO, 1), encode_addiu(T1, ZERO, 2), encode_syscall()]);
+        let prog = assemble(&[
+            encode_addiu(T0, ZERO, 1),
+            encode_addiu(T1, ZERO, 2),
+            encode_syscall(),
+        ]);
         sim.load_program(&prog);
         assert_eq!(sim.step(), "addiu");
         assert_eq!(sim.regs.read(T0 as usize), 1);
