@@ -4379,6 +4379,8 @@ enum TemplateInsertionMode {
     Row,
 }
 
+type TableMarkerSuspendedFormatting = (Vec<usize>, Vec<(String, Vec<Attribute>)>);
+
 impl DocumentTailMode {
     fn diagnostic_code(self) -> &'static str {
         match self {
@@ -4404,6 +4406,7 @@ pub struct HtmlParser {
     open_elements: Vec<Vec<usize>>,
     pending_formatting_reconstruction: Vec<(String, Vec<Attribute>)>,
     template_suspended_formatting: Vec<Vec<(String, Vec<Attribute>)>>,
+    table_marker_suspended_formatting: Vec<TableMarkerSuspendedFormatting>,
     anchors_below_closed_formatting_markers: Vec<Vec<usize>>,
     stack_displaced_formatting_paths: Vec<Vec<usize>>,
     prunable_empty_reconstructed_formatting_paths: Vec<Vec<usize>>,
@@ -4437,6 +4440,7 @@ impl Default for HtmlParser {
             open_elements: Vec::new(),
             pending_formatting_reconstruction: Vec::new(),
             template_suspended_formatting: Vec::new(),
+            table_marker_suspended_formatting: Vec::new(),
             anchors_below_closed_formatting_markers: Vec::new(),
             stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
@@ -4500,6 +4504,7 @@ impl HtmlParser {
             open_elements: vec![vec![0], vec![0, 1]],
             pending_formatting_reconstruction: Vec::new(),
             template_suspended_formatting: Vec::new(),
+            table_marker_suspended_formatting: Vec::new(),
             anchors_below_closed_formatting_markers: Vec::new(),
             stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
@@ -4535,6 +4540,7 @@ impl HtmlParser {
             open_elements,
             pending_formatting_reconstruction: Vec::new(),
             template_suspended_formatting: Vec::new(),
+            table_marker_suspended_formatting: Vec::new(),
             anchors_below_closed_formatting_markers: Vec::new(),
             stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
@@ -5131,19 +5137,7 @@ impl HtmlParser {
                 {
                     self.open_elements.pop();
                 }
-                let attributes: Vec<Attribute> = attributes
-                    .into_iter()
-                    .map(|attribute| Attribute {
-                        name: attribute.name,
-                        value: attribute.value,
-                    })
-                    .collect();
-                let child_index = self.append_node(Node::element(name.clone(), attributes));
-                if !is_void_element(&name) {
-                    let mut path = self.current_parent_path().to_vec();
-                    path.push(child_index);
-                    self.open_elements.push(path);
-                }
+                self.append_start_tag(name, attributes, self_closing);
                 return;
             }
             self.pop_foreign_elements();
@@ -5247,21 +5241,6 @@ impl HtmlParser {
             if let Some(path) = self.append_node_to_document_html(Node::element(name, attributes)) {
                 self.open_elements.push(path);
             }
-            return;
-        }
-        if !in_foreign_content
-            && matches!(name.as_str(), "param" | "source" | "track")
-            && !self.current_element_is("object")
-            && !self.has_open_element("body")
-            && !self.document_has_body_element()
-        {
-            self.diagnostics.push(
-                ParserDiagnostic::new(
-                    "unexpected-pre-body-void-start-tag",
-                    format!("start tag `<{name}>` before body was ignored"),
-                )
-                .at_emission(self.current_token_emission_position),
-            );
             return;
         }
         if !in_foreign_content
@@ -6007,8 +5986,13 @@ impl HtmlParser {
         };
         if !acknowledges_self_closing && !html_void_element {
             if let Some(path) = inserted_path {
-                self.open_elements.push(path);
-                if namespace.is_none() && name == "template" {
+                self.open_elements.push(path.clone());
+                if namespace.is_none() && matches!(name.as_str(), "caption" | "td" | "th") {
+                    self.table_marker_suspended_formatting.push((
+                        path,
+                        std::mem::take(&mut self.pending_formatting_reconstruction),
+                    ));
+                } else if namespace.is_none() && name == "template" {
                     self.template_suspended_formatting
                         .push(std::mem::take(&mut self.pending_formatting_reconstruction));
                     self.template_insertion_modes
@@ -6689,10 +6673,12 @@ impl HtmlParser {
             return;
         }
         if matches!(incoming_name, "style" | "title")
-            && !self
-                .pending_formatting_reconstruction
-                .iter()
-                .any(|(name, _)| name == "a")
+            && (self.current_element_is("body")
+                || self.current_element_is("html")
+                || !self
+                    .pending_formatting_reconstruction
+                    .iter()
+                    .any(|(name, _)| name == "a"))
         {
             return;
         }
@@ -6766,6 +6752,25 @@ impl HtmlParser {
             path.push(child_index);
             self.open_elements.push(path);
         }
+    }
+
+    fn truncate_open_elements(&mut self, new_len: usize) {
+        while let Some((marker_path, _)) = self.table_marker_suspended_formatting.last() {
+            let marker_is_closed = self
+                .open_elements
+                .iter()
+                .position(|path| path == marker_path)
+                .is_none_or(|index| index >= new_len);
+            if !marker_is_closed {
+                break;
+            }
+            let (_, suspended) = self
+                .table_marker_suspended_formatting
+                .pop()
+                .expect("the marker inspected above must still exist");
+            self.pending_formatting_reconstruction = suspended;
+        }
+        self.open_elements.truncate(new_len);
     }
 
     fn clear_pending_formatting_unless_next_reconstructs(&mut self, incoming_name: &str) {
@@ -7275,7 +7280,7 @@ impl HtmlParser {
         }
         parent_children.insert(insert_index, div);
 
-        self.open_elements.truncate(b_stack_index);
+        self.truncate_open_elements(b_stack_index);
         let mut div_path = b_parent_path.to_vec();
         div_path.push(insert_index);
         self.open_elements.push(div_path.clone());
@@ -7420,6 +7425,21 @@ impl HtmlParser {
         if name == "template" && in_foreign_content {
             self.handle_html_template_end_tag();
             return;
+        }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
+            && !matches!(name, "br" | "p")
+            && !is_table_context_element(name)
+            && self.open_html_element_in_scope_index(name).is_some()
+        {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    format!("end tag `</{name}>` did not match the current foreign element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            self.pop_foreign_elements();
         }
         if self.current_namespace().is_some()
             && !self.current_element_is(name)
@@ -8400,7 +8420,7 @@ impl HtmlParser {
                 }
                 if self.open_element_is_fostered_before_open_table(index) {
                     self.capture_formatting_above(index);
-                    self.open_elements.truncate(index);
+                    self.truncate_open_elements(index);
                 }
                 return;
             }
@@ -8526,8 +8546,10 @@ impl HtmlParser {
                 self.open_elements.remove(index);
                 return;
             }
-            if matches!(name, "div" | "p" | "select" | "dl" | "dt" | "dd") {
-                self.capture_formatting_above(index);
+            if is_scoped_block_end_tag(name)
+                || matches!(name, "p" | "select" | "dl" | "dt" | "dd")
+            {
+                self.capture_active_formatting_above(index);
             }
             if name == "select"
                 && element_ref_at_path(&self.document, &path)
@@ -8535,7 +8557,7 @@ impl HtmlParser {
             {
                 self.populate_selectedcontent_for_select_path(&path);
             }
-            self.open_elements.truncate(index);
+            self.truncate_open_elements(index);
             if remove_empty_reconstructed_formatting {
                 self.remove_reconstructed_formatting_node(&path);
             }
@@ -8799,7 +8821,7 @@ impl HtmlParser {
         }) else {
             return false;
         };
-        self.open_elements.truncate(lower_bound + relative_index);
+        self.truncate_open_elements(lower_bound + relative_index);
         true
     }
 
@@ -8955,6 +8977,14 @@ impl HtmlParser {
             }
             "nobr" => {
                 self.report_repeated_nobr_start_if_in_scope();
+                if let Some(index) = self.open_html_element_in_scope_index("nobr") {
+                    if !self.current_element_is("nobr")
+                        && self.adopt_formatting_end_tag_across_div(index, false)
+                    {
+                        self.close_open_element_silently("nobr");
+                        return false;
+                    }
+                }
                 let formatting_above_nobr = self.formatting_above_open_element("nobr");
                 self.close_open_element_silently("nobr");
                 if !formatting_above_nobr.is_empty() {
@@ -9052,7 +9082,7 @@ impl HtmlParser {
             return;
         };
         if self.open_elements.len() > head_index + 1 {
-            self.open_elements.truncate(head_index + 1);
+            self.truncate_open_elements(head_index + 1);
         }
     }
 
@@ -9086,7 +9116,7 @@ impl HtmlParser {
         {
             return;
         }
-        self.open_elements.truncate(index);
+        self.truncate_open_elements(index);
     }
 
     fn open_list_item_in_scope_index(&self) -> Option<usize> {
@@ -9114,7 +9144,7 @@ impl HtmlParser {
             return false;
         };
         self.capture_formatting_above(index);
-        self.open_elements.truncate(index);
+        self.truncate_open_elements(index);
         true
     }
 
@@ -9149,7 +9179,7 @@ impl HtmlParser {
             );
         }
         self.capture_formatting_above(index);
-        self.open_elements.truncate(index);
+        self.truncate_open_elements(index);
     }
 
     fn close_open_anchor_for_reconstruction_boundary(&mut self) -> bool {
@@ -9165,7 +9195,7 @@ impl HtmlParser {
             return false;
         };
         let attributes = element.attributes.clone();
-        self.open_elements.truncate(index);
+        self.truncate_open_elements(index);
         self.pending_formatting_reconstruction =
             trim_formatting_reconstruction_noah_ark(vec![("a".to_string(), attributes)]);
         true
@@ -9180,7 +9210,8 @@ impl HtmlParser {
         }
         let matched_current =
             expected_name.is_none_or(|expected| self.current_element_is(expected));
-        self.open_elements.truncate(index);
+        self.capture_active_formatting_above(index);
+        self.truncate_open_elements(index);
         matched_current
     }
 
@@ -9217,7 +9248,7 @@ impl HtmlParser {
             return false;
         }
         self.capture_formatting_above(index);
-        self.open_elements.truncate(index);
+        self.truncate_open_elements(index);
         true
     }
 
@@ -9313,7 +9344,7 @@ impl HtmlParser {
         };
         let insert_index = b_child_index + 1;
         parent_children.insert(insert_index, moved_div);
-        self.open_elements.truncate(b_stack_index);
+        self.truncate_open_elements(b_stack_index);
         let mut moved_div_path = b_parent_path.to_vec();
         moved_div_path.push(insert_index);
         self.open_elements.push(moved_div_path);
@@ -9340,7 +9371,7 @@ impl HtmlParser {
         }) {
             self.populate_selectedcontent_for_select_path(&closing_path);
         }
-        self.open_elements.truncate(index);
+        self.truncate_open_elements(index);
         true
     }
 
@@ -9379,7 +9410,7 @@ impl HtmlParser {
                 return false;
             }
             if element.name.eq_ignore_ascii_case(name) {
-                self.open_elements.truncate(index);
+                self.truncate_open_elements(index);
                 return true;
             }
         }
@@ -9411,7 +9442,7 @@ impl HtmlParser {
                     .at_emission(self.current_token_emission_position),
                 );
             }
-            self.open_elements.truncate(index);
+            self.truncate_open_elements(index);
             self.template_insertion_modes.pop();
             self.pending_formatting_reconstruction = self
                 .template_suspended_formatting
@@ -9500,6 +9531,24 @@ impl HtmlParser {
             .filter_map(|path| {
                 let element = element_ref_at_path(&self.document, path)?;
                 is_formatting_element(&element.name)
+                    .then(|| (element.name.clone(), element.attributes.clone()))
+            })
+            .collect::<Vec<_>>();
+
+        if !formatting.is_empty() {
+            self.pending_formatting_reconstruction =
+                trim_formatting_reconstruction_noah_ark(formatting);
+        }
+    }
+
+    fn capture_active_formatting_above(&mut self, element_index: usize) {
+        let formatting = self
+            .open_elements
+            .iter()
+            .skip(element_index + 1)
+            .filter_map(|path| {
+                let element = element_ref_at_path(&self.document, path)?;
+                is_adoption_agency_element(&element.name)
                     .then(|| (element.name.clone(), element.attributes.clone()))
             })
             .collect::<Vec<_>>();
@@ -9644,7 +9693,7 @@ impl HtmlParser {
         }
         formatting_parent_children.insert(formatting_child_index + 1, paragraph);
 
-        self.open_elements.truncate(formatting_index);
+        self.truncate_open_elements(formatting_index);
         let mut moved_paragraph_path = formatting_parent_path.to_vec();
         moved_paragraph_path.push(formatting_child_index + 1);
         self.open_elements.push(moved_paragraph_path);
@@ -9733,7 +9782,7 @@ impl HtmlParser {
         }
         formatting_parent_children.insert(insert_index, adopted_subtree);
 
-        self.open_elements.truncate(formatting_index);
+        self.truncate_open_elements(formatting_index);
         let mut adopted_path = formatting_parent_path.to_vec();
         adopted_path.push(insert_index);
         for _ in &wrapper_elements {
@@ -9839,7 +9888,7 @@ impl HtmlParser {
         }
         parent_children.insert(insertion.1, adopted_subtree);
 
-        self.open_elements.truncate(formatting_index);
+        self.truncate_open_elements(formatting_index);
         let mut inserted_path = insertion.0;
         inserted_path.push(insertion.1);
         for _ in &wrappers_to_clone {
@@ -9996,7 +10045,7 @@ impl HtmlParser {
         }
         formatting_parent_children.insert(insert_index, adopted_subtree);
 
-        self.open_elements.truncate(formatting_index);
+        self.truncate_open_elements(formatting_index);
         let mut moved_div_path = formatting_parent_path.to_vec();
         moved_div_path.push(insert_index);
         for _ in &cloned_wrappers {
@@ -10115,15 +10164,13 @@ impl HtmlParser {
         }
         formatting_parent_children.insert(insert_index, adopted_subtree);
 
-        self.open_elements.truncate(formatting_index);
+        self.truncate_open_elements(formatting_index);
         let mut moved_path = formatting_parent_path.to_vec();
         moved_path.push(insert_index);
         for _ in &formatting_wrappers {
             self.open_elements.push(moved_path.clone());
             moved_path.push(0);
         }
-        self.open_elements.push(moved_path.clone());
-        moved_path.push(0);
         self.open_elements.push(moved_path);
         true
     }
@@ -10923,6 +10970,15 @@ impl HtmlParser {
     }
 
     fn namespace_for_start_tag(&self, name: &str) -> Option<&'static str> {
+        if name == "svg" && self.current_node_is_mathml_annotation_xml() {
+            return Some("svg");
+        }
+        if self.current_namespace().is_some()
+            && !self.current_node_is_svg_html_integration_point()
+            && !self.current_node_is_mathml_integration_point()
+        {
+            return self.current_namespace();
+        }
         if name == "svg" {
             return Some("svg");
         }
@@ -10978,19 +11034,26 @@ impl HtmlParser {
     }
 
     fn current_node_is_mathml_html_integration_point(&self) -> bool {
+        if !self.current_node_is_mathml_annotation_xml() {
+            return false;
+        }
+        let path = self.open_elements.last().expect("current node should exist");
+        let element = element_ref_at_path(&self.document, path)
+            .expect("current open-element path should resolve");
+        element.attribute("encoding").is_some_and(|value| {
+            value.eq_ignore_ascii_case("text/html")
+                || value.eq_ignore_ascii_case("application/xhtml+xml")
+        })
+    }
+
+    fn current_node_is_mathml_annotation_xml(&self) -> bool {
         let Some(path) = self.open_elements.last() else {
             return false;
         };
         let Some(element) = element_ref_at_path(&self.document, path) else {
             return false;
         };
-        if element.namespace.as_deref() != Some("math") || element.name != "annotation-xml" {
-            return false;
-        }
-        element.attribute("encoding").is_some_and(|value| {
-            value.eq_ignore_ascii_case("text/html")
-                || value.eq_ignore_ascii_case("application/xhtml+xml")
-        })
+        element.namespace.as_deref() == Some("math") && element.name == "annotation-xml"
     }
 
     fn current_node_is_mathml_integration_point(&self) -> bool {
@@ -12627,7 +12690,7 @@ fn body_or_frameset_nodes(mut body: Element) -> Vec<Node> {
     let has_frameset_child = body
         .children
         .iter()
-        .any(|node| matches!(node, Node::Element(element) if element.name == "frameset"));
+        .any(|node| matches!(node, Node::Element(element) if element.namespace.is_none() && element.name == "frameset"));
     if body.attributes.is_empty() {
         let first_non_hidden = body
             .children
@@ -12635,7 +12698,8 @@ fn body_or_frameset_nodes(mut body: Element) -> Vec<Node> {
             .position(|node| !is_ignorable_before_frameset_node(node));
         if matches!(
             first_non_hidden.and_then(|index| body.children.get(index)),
-            Some(Node::Element(element)) if element.name == "frameset"
+            Some(Node::Element(element))
+                if element.namespace.is_none() && element.name == "frameset"
         ) {
             return body
                 .children
@@ -12654,7 +12718,7 @@ fn body_or_frameset_nodes(mut body: Element) -> Vec<Node> {
         strip_replacement_characters_from_direct_text(&mut body.children);
     }
     body.children
-        .retain(|node| !matches!(node, Node::Element(element) if element.name == "frameset"));
+        .retain(|node| !matches!(node, Node::Element(element) if element.namespace.is_none() && element.name == "frameset"));
     vec![Node::Element(body)]
 }
 
@@ -12671,7 +12735,7 @@ fn frameset_nodes_from_compatible_wrapper(node: &Node) -> Option<Vec<Node>> {
         .position(|node| !is_ignorable_before_frameset_node(node))?;
     if !matches!(
         element.children.get(first_non_ignorable),
-        Some(Node::Element(child)) if child.name == "frameset"
+        Some(Node::Element(child)) if child.namespace.is_none() && child.name == "frameset"
     ) {
         return element
             .children
@@ -12715,6 +12779,12 @@ fn is_hidden_input_node(node: &Node) -> bool {
 
 fn is_ignorable_before_frameset_node(node: &Node) -> bool {
     is_hidden_input_node(node)
+        || matches!(
+            node,
+            Node::Element(element)
+                if element.namespace.is_none()
+                    && matches!(element.name.as_str(), "param" | "source" | "track")
+        )
         || matches!(
             node,
             Node::Text(text)
@@ -29105,18 +29175,6 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
     }
 
-    fn unexpected_pre_body_void_start_tag(
-        source: &str,
-        name: &str,
-        occurrence: usize,
-    ) -> ParserDiagnostic {
-        ParserDiagnostic::new(
-            "unexpected-pre-body-void-start-tag",
-            format!("start tag `<{name}>` before body was ignored"),
-        )
-        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
-    }
-
     fn nested_heading_start_tag(
         source: &str,
         name: &str,
@@ -34306,18 +34364,29 @@ mod tests {
         assert_eq!(definitions.children.len(), 2);
         let term = element(&definitions.children[0]);
         assert_eq!(term.name, "dt");
-        assert_eq!(element(&term.children[0]).children, vec![Node::text("T")]);
+        let term_emphasis = element(&term.children[0]);
+        let term_strong = element(&term_emphasis.children[0]);
+        assert_eq!(
+            element(&term_strong.children[0]).children,
+            vec![Node::text("T")]
+        );
         let description = element(&definitions.children[1]);
         assert_eq!(description.name, "dd");
+        let description_emphasis = element(&description.children[0]);
+        let description_strong = element(&description_emphasis.children[0]);
         assert_eq!(
-            element(&description.children[0]).children,
+            element(&description_strong.children[0]).children,
             vec![Node::text("D")]
         );
 
         let continued_emphasis = element(&body.children[4]);
         assert_eq!(continued_emphasis.name, "em");
+        let continued_strong = element(&continued_emphasis.children[0]);
+        assert_eq!(continued_strong.name, "strong");
+        let continued_inner_emphasis = element(&continued_strong.children[0]);
+        assert_eq!(continued_inner_emphasis.name, "em");
 
-        let select = element(&continued_emphasis.children[0]);
+        let select = element(&continued_inner_emphasis.children[0]);
         assert_eq!(select.name, "select");
         assert_eq!(select.children.len(), 1);
         let first_option = element(&select.children[0]);
@@ -34341,10 +34410,9 @@ mod tests {
             vec![Node::text("Four")]
         );
 
-        let first_heading = element(&continued_emphasis.children[1]);
+        let first_heading = element(&continued_inner_emphasis.children[1]);
         assert_eq!(first_heading.name, "h1");
-        let outer_heading_span = element(&first_heading.children[0]);
-        let heading_bold = element(&outer_heading_span.children[0]);
+        let heading_bold = element(&first_heading.children[0]);
         assert_eq!(heading_bold.name, "b");
         let heading_span = element(&heading_bold.children[0]);
         assert_eq!(heading_span.children[0], Node::text("Head"));
@@ -34988,13 +35056,16 @@ mod tests {
         let boundary = find_element_by_id(&unmatched.document.children, "boundary").unwrap();
         assert_eq!(boundary.children, vec![Node::text("X")]);
 
-        let foreign_select = parse_html_with_diagnostics(
-            "<!doctype html><button id=outer><svg><select id=foreign></button>X",
-        )
-        .unwrap();
-        assert!(foreign_select.parser_diagnostics.iter().all(|diagnostic| {
-            diagnostic.code != "unexpected-end-tag-in-foreign-content"
-        }));
+        let foreign_select_source =
+            "<!doctype html><button id=outer><svg><select id=foreign></button>X";
+        let foreign_select = parse_html_with_diagnostics(foreign_select_source).unwrap();
+        assert_eq!(
+            foreign_select.parser_diagnostics,
+            vec![generic_foreign_end_tag_mismatch(
+                foreign_select_source,
+                "button"
+            )]
+        );
         assert_eq!(
             body(&foreign_select.document).children.last(),
             Some(&Node::text("X"))
@@ -36521,13 +36592,16 @@ mod tests {
         let boundary = find_element_by_id(&unmatched.document.children, "boundary").unwrap();
         assert_eq!(boundary.children, vec![Node::text("X")]);
 
-        let foreign_select = parse_html_with_diagnostics(
-            "<!doctype html><span id=outer><svg><select id=foreign></span>X",
-        )
-        .unwrap();
-        assert!(foreign_select.parser_diagnostics.iter().all(|diagnostic| {
-            diagnostic.code != "unexpected-end-tag-in-foreign-content"
-        }));
+        let foreign_select_source =
+            "<!doctype html><span id=outer><svg><select id=foreign></span>X";
+        let foreign_select = parse_html_with_diagnostics(foreign_select_source).unwrap();
+        assert_eq!(
+            foreign_select.parser_diagnostics,
+            vec![generic_foreign_end_tag_mismatch(
+                foreign_select_source,
+                "span"
+            )]
+        );
         assert_eq!(
             body(&foreign_select.document).children.last(),
             Some(&Node::text("X"))
@@ -36942,6 +37016,93 @@ mod tests {
     }
 
     #[test]
+    fn repeated_nobr_start_runs_adoption_across_an_intervening_div() {
+        for source in [
+            "<!doctype html><nobr><div><nobr>A</nobr>B</div>C",
+            "<!doctype html><!--é-->\r\n<nobr><div><nobr>A</nobr>B</div>C",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let document_body = body(&output.document);
+            let outer = element(&document_body.children[0]);
+            let div = element(&document_body.children[1]);
+
+            assert_eq!(outer.name, "nobr");
+            assert!(outer.children.is_empty());
+            assert_eq!(div.name, "div");
+            assert_eq!(element(&div.children[0]).name, "nobr");
+            assert!(element(&div.children[0]).children.is_empty());
+            assert_eq!(element(&div.children[1]).name, "nobr");
+            assert_eq!(element(&div.children[1]).children, vec![Node::text("A")]);
+            assert_eq!(div.children[2], Node::text("B"));
+            assert_eq!(document_body.children[2], Node::text("C"));
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "nested-nobr-start-tag")
+                    .count(),
+                1
+            );
+        }
+
+        let fragment = parse_html_fragment_for_context(
+            "<nobr><div><nobr>A</nobr>B</div>C",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(element(&fragment[0]).name, "nobr");
+        assert!(element(&fragment[0]).children.is_empty());
+        assert_eq!(element(&fragment[1]).name, "div");
+        assert_eq!(fragment[2], Node::text("C"));
+
+        let ordinary = parse_html("<nobr>A<nobr>B").unwrap();
+        let ordinary_body = body(&ordinary);
+        assert_eq!(ordinary_body.children.len(), 2);
+        assert_eq!(element(&ordinary_body.children[0]).children, vec![Node::text("A")]);
+        assert_eq!(element(&ordinary_body.children[1]).children, vec![Node::text("B")]);
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "nobr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "nobr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "nobr".to_string(),
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ] {
+            direct.process_token(token);
+        }
+        let direct_document = direct.finish_document();
+        let direct_body = body(&direct_document);
+        assert!(element(&direct_body.children[0]).children.is_empty());
+        assert_eq!(element(&direct_body.children[1]).name, "div");
+        assert_eq!(direct_body.children[2], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
     fn adoption_across_aside_preserves_foo_chain_em_continuation() {
         let document = parse_html("<b><em><foo><foo><aside></b>").unwrap();
 
@@ -37168,6 +37329,74 @@ mod tests {
     }
 
     #[test]
+    fn formatting_end_across_special_blocks_closes_the_reconstructed_formatting() {
+        let source =
+            "<!doctype html><!--é-->\r\n<u class=carry>A<figure id=block>B</u>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        let original = element(&document_body.children[0]);
+        assert_eq!(original.name, "u");
+        assert_eq!(original.children, vec![Node::text("A")]);
+        let block = find_element_by_id(&output.document.children, "block").unwrap();
+        let reconstructed = element(&block.children[0]);
+        assert_eq!(reconstructed.name, "u");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(reconstructed.children, vec![Node::text("B")]);
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(source.len() > source.chars().count());
+
+        for tag in ["section", "ol", "figure"] {
+            let source = format!("<!doctype html><em>A<{tag} id=block>B</em>C");
+            let document = parse_html(&source).unwrap();
+            let block = find_element_by_id(&document.children, "block").unwrap();
+            assert_eq!(element(&block.children[0]).name, "em", "{tag}");
+            assert_eq!(
+                element(&block.children[0]).children,
+                vec![Node::text("B")],
+                "{tag}"
+            );
+            assert_eq!(block.children[1], Node::text("C"), "{tag}");
+        }
+
+        let fragment = parse_html_fragment_for_context(
+            "<strong>A<figure id=block>B</strong>C",
+            "body",
+        )
+        .unwrap();
+        let block = find_element_by_id(&fragment, "block").unwrap();
+        assert_eq!(element(&block.children[0]).name, "strong");
+        assert_eq!(block.children[1], Node::text("C"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "u".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::StartTag {
+                name: "figure".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "u".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ]);
+        let block = find_first_element_in_nodes(&direct_document.children, "figure").unwrap();
+        assert_eq!(element(&block.children[0]).name, "u");
+        assert_eq!(block.children[1], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
     fn ordinary_block_starts_preserve_pending_formatting_for_following_text() {
         let source = "<!doctype html><!--é-->\r\n<div><b class=carry>A</div><p id=after>B";
         let output = parse_html_with_diagnostics(source).unwrap();
@@ -37251,6 +37480,84 @@ mod tests {
     }
 
     #[test]
+    fn block_end_tags_preserve_active_formatting_for_following_content() {
+        let source =
+            "<!doctype html><!--é-->\r\n<h4><strong class=carry>A</h4><track>B</strong>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let document_body = body(&output.document);
+        assert_eq!(element(&document_body.children[0]).name, "h4");
+        assert_eq!(element(&document_body.children[1]).name, "track");
+        let reconstructed = element(&document_body.children[2]);
+        assert_eq!(reconstructed.name, "strong");
+        assert_eq!(reconstructed.attribute("class"), Some("carry"));
+        assert_eq!(reconstructed.children, vec![Node::text("B")]);
+        assert_eq!(document_body.children[3], Node::text("C"));
+        assert!(source.len() > source.chars().count());
+
+        let list = parse_html("<!doctype html><ul><em>A</ul><body>B</em>C").unwrap();
+        let list_body = body(&list);
+        assert_eq!(element(&list_body.children[0]).name, "ul");
+        assert_eq!(element(&list_body.children[1]).name, "em");
+        assert_eq!(element(&list_body.children[1]).children, vec![Node::text("B")]);
+        assert_eq!(list_body.children[2], Node::text("C"));
+
+        let form = parse_html("<!doctype html><ol><big>A</ol><form id=after>B</big>C").unwrap();
+        let form = find_element_by_id(&form.children, "after").unwrap();
+        assert_eq!(element(&form.children[0]).name, "big");
+        assert_eq!(element(&form.children[0]).children, vec![Node::text("B")]);
+        assert_eq!(form.children[1], Node::text("C"));
+
+        let fragment = parse_html_fragment_for_context(
+            "<h4><strong>A</h4><track>B</strong>C",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(element(&fragment[2]).name, "strong");
+        assert_eq!(element(&fragment[2]).children, vec![Node::text("B")]);
+        assert_eq!(fragment[3], Node::text("C"));
+
+        let closed = parse_html("<!doctype html><h4><strong>A</strong></h4><track>B").unwrap();
+        assert_eq!(body(&closed).children[2], Node::text("B"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "h4".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "strong".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "h4".to_string(),
+            },
+            Token::StartTag {
+                name: "track".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::EndTag {
+                name: "strong".to_string(),
+            },
+            Token::Text("C".to_string()),
+            Token::Eof,
+        ]);
+        let direct_body = body(&direct_document);
+        assert_eq!(element(&direct_body.children[2]).name, "strong");
+        assert_eq!(element(&direct_body.children[2]).children, vec![Node::text("B")]);
+        assert_eq!(direct_body.children[3], Node::text("C"));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
     fn ignored_table_only_starts_preserve_pending_formatting() {
         for tag in ["caption", "colgroup", "tbody", "tr", "td"] {
             let source = format!(
@@ -37331,6 +37638,86 @@ mod tests {
         .unwrap();
         assert_eq!(element(&fragment[1]).name, "b");
         assert_eq!(element(&element(&fragment[1]).children[0]).name, "select");
+    }
+
+    #[test]
+    fn table_cells_and_captions_scope_active_formatting_with_markers() {
+        for source in [
+            "<!doctype html><!--é-->\r\n<div><b>before</div><table><tr><td id=inside>inside</td></tr></table>after",
+            "<!doctype html><!--é-->\r\n<div><b>before</div><table><caption id=inside>inside</caption></table>after",
+            "<!doctype html><!--é-->\r\n<div><b>before</div><table><tr><td id=inside>inside</table>after",
+        ] {
+            let document = parse_html(source).unwrap();
+            let inside = find_element_by_id(&document.children, "inside").unwrap();
+            let document_body = body(&document);
+            let trailing = element(document_body.children.last().unwrap());
+
+            assert_eq!(inside.children, vec![Node::text("inside")], "{source}");
+            assert_eq!(trailing.name, "b", "{source}");
+            assert_eq!(trailing.children, vec![Node::text("after")], "{source}");
+            assert!(source.len() > source.chars().count());
+        }
+
+        let fragment = parse_html_fragment_for_context(
+            "<div><i>before</div><table><caption id=inside>inside</caption></table>after",
+            "body",
+        )
+        .unwrap();
+        let inside = find_element_by_id(&fragment, "inside").unwrap();
+        assert_eq!(inside.children, vec![Node::text("inside")]);
+        let trailing = element(fragment.last().unwrap());
+        assert_eq!(trailing.name, "i");
+        assert_eq!(trailing.children, vec![Node::text("after")]);
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("before".to_string()),
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "tr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "td".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("inside".to_string()),
+            Token::EndTag {
+                name: "table".to_string(),
+            },
+            Token::Text("after".to_string()),
+            Token::Eof,
+        ]);
+        let direct_body = body(&direct_document);
+        let table = element(&direct_body.children[1]);
+        let inside = find_first_element_in_nodes(&table.children, "td").unwrap();
+        assert_eq!(inside.children, vec![Node::text("inside")]);
+        let trailing = element(direct_body.children.last().unwrap());
+        assert_eq!(trailing.name, "b");
+        assert_eq!(trailing.children, vec![Node::text("after")]);
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
@@ -37445,6 +37832,62 @@ mod tests {
         let reconstructed = element(&body(&direct_document).children[1]);
         assert_eq!(reconstructed.name, "b");
         assert_eq!(element(&reconstructed.children[0]).name, "em");
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn pre_body_media_void_starts_create_and_use_the_implied_body() {
+        for tag in ["param", "source", "track"] {
+            let source = format!("<!doctype html><!--é-->\r\n<{tag} id=resource>");
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            let resource = find_element_by_id(&output.document.children, "resource").unwrap();
+            assert_eq!(resource.name, tag, "{tag}");
+            assert_eq!(resource.namespace, None, "{tag}");
+            assert!(body(&output.document).children.iter().any(|node| {
+                matches!(node, Node::Element(element) if element.name == tag)
+            }));
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-pre-body-void-start-tag"));
+            assert!(source.len() > source.chars().count());
+        }
+
+        let ordinary = parse_html("<!doctype html><body><source id=resource>").unwrap();
+        assert_eq!(
+            find_element_by_id(&ordinary.children, "resource")
+                .unwrap()
+                .name,
+            "source"
+        );
+
+        for tag in ["param", "source", "track"] {
+            let document = parse_html(&format!("<!doctype html><{tag}><frameset></frameset>"))
+                .unwrap();
+            let html = html(&document);
+            assert_eq!(element(&html.children[1]).name, "frameset", "{tag}");
+        }
+
+        let mut direct = HtmlParser::new();
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "track".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "id".to_string(),
+                    value: "resource".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]);
+        let resource = find_element_by_id(&direct_document.children, "resource").unwrap();
+        assert_eq!(resource.name, "track");
+        assert!(body(&direct_document).children.iter().any(|node| {
+            matches!(node, Node::Element(element) if element.name == "track")
+        }));
         assert!(direct
             .diagnostics()
             .iter()
@@ -39193,6 +39636,58 @@ mod tests {
         assert_eq!(inner_anchor.children.len(), 2);
         assert_eq!(element(&inner_anchor.children[0]).name, "style");
         assert_eq!(element(&inner_anchor.children[1]).name, "title");
+    }
+
+    #[test]
+    fn raw_text_starts_do_not_reconstruct_pending_anchors_at_body_scope() {
+        for (container, raw_text) in [("p", "style"), ("div", "title")] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<{container}><a>A</{container}><{raw_text}>B"
+            );
+            let document = parse_html(&source).unwrap();
+            let document_body = body(&document);
+            let raw_text_element = element(document_body.children.last().unwrap());
+            assert_eq!(raw_text_element.name, raw_text);
+            assert_eq!(raw_text_element.children, vec![Node::text("B")]);
+            assert!(source.len() > source.chars().count());
+        }
+
+        let fragment = parse_html_fragment_for_context(
+            "<p><a>A</p><style>B",
+            "body",
+        )
+        .unwrap();
+        let style = element(fragment.last().unwrap());
+        assert_eq!(style.name, "style");
+        assert_eq!(style.children, vec![Node::text("B")]);
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "p".to_string(),
+            },
+            Token::StartTag {
+                name: "style".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ]);
+        let style = element(body(&direct_document).children.last().unwrap());
+        assert_eq!(style.name, "style");
+        assert_eq!(style.children, vec![Node::text("B")]);
     }
 
     #[test]
@@ -41271,6 +41766,16 @@ mod tests {
             .all(|diagnostic| diagnostic.code != "eof-in-frameset"));
         assert!(unclosed_source.len() > unclosed_source.chars().count());
 
+        let nested_integration = parse_html(
+            "<!doctype html><svg><foreignObject><svg><frameset>foreign",
+        )
+        .unwrap();
+        let nested_body = body(&nested_integration);
+        let nested_frameset =
+            find_first_element_in_nodes(&nested_body.children, "frameset").unwrap();
+        assert_eq!(nested_frameset.namespace.as_deref(), Some("svg"));
+        assert_eq!(element_text_content(nested_frameset), "foreign");
+
         for (namespace_source, expected_namespace) in [
             (
                 "<!doctype html><math><frameset></frameset></math><p id=tail>B",
@@ -41339,6 +41844,126 @@ mod tests {
             element_text_content(find_element_by_id(&direct_document.children, "tail").unwrap()),
             "direct"
         );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn nested_foreign_roots_inherit_the_current_foreign_namespace() {
+        let svg_source = "<!doctype html><!--é-->\r\n<svg><math id=inner>A";
+        let svg_output = parse_html_with_diagnostics(svg_source).unwrap();
+        let inner = find_element_by_id(&svg_output.document.children, "inner").unwrap();
+        assert_eq!(inner.name, "math");
+        assert_eq!(inner.namespace.as_deref(), Some("svg"));
+        assert_eq!(element_text_content(inner), "A");
+        assert!(svg_source.len() > svg_source.chars().count());
+
+        let math = parse_html("<!doctype html><math><svg id=inner>B").unwrap();
+        let inner = find_element_by_id(&math.children, "inner").unwrap();
+        assert_eq!(inner.name, "svg");
+        assert_eq!(inner.namespace.as_deref(), Some("math"));
+        assert_eq!(element_text_content(inner), "B");
+
+        let annotation =
+            parse_html("<!doctype html><math><annotation-xml><svg id=inner>F").unwrap();
+        let inner = find_element_by_id(&annotation.children, "inner").unwrap();
+        assert_eq!(inner.namespace.as_deref(), Some("svg"));
+        assert_eq!(element_text_content(inner), "F");
+
+        let integration =
+            parse_html("<!doctype html><svg><foreignObject><math id=inner>C").unwrap();
+        let inner = find_element_by_id(&integration.children, "inner").unwrap();
+        assert_eq!(inner.namespace.as_deref(), Some("math"));
+
+        let fragment =
+            parse_html_fragment_for_context("<math id=inner>D", "svg svg").unwrap();
+        let inner = find_element_by_id(&fragment, "inner").unwrap();
+        assert_eq!(inner.namespace.as_deref(), Some("svg"));
+        assert_eq!(element_text_content(inner), "D");
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for name in ["svg", "math"] {
+            direct.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        direct.process_token(Token::Text("E".to_string()));
+        direct.process_token(Token::Eof);
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+        let direct_document = direct.finish_document();
+        let inner = find_first_element_in_nodes(&direct_document.children, "math").unwrap();
+        assert_eq!(inner.namespace.as_deref(), Some("svg"));
+        assert_eq!(element_text_content(inner), "E");
+    }
+
+    #[test]
+    fn foreign_end_tags_reprocess_matching_html_elements_in_scope() {
+        let source =
+            "<!doctype html><!--é-->\r\n<aside id=target><math>A</aside><fieldset id=after>B</math>C";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let target = find_element_by_id(&output.document.children, "target").unwrap();
+        assert_eq!(element(&target.children[0]).namespace.as_deref(), Some("math"));
+        assert_eq!(element_text_content(target), "A");
+        let after = find_element_by_id(&output.document.children, "after").unwrap();
+        assert_eq!(element_text_content(after), "BC");
+        assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-end-tag-in-foreign-content"
+                && diagnostic.position == Some(end_tag_position_at(source, "aside", 0))
+        }));
+        assert!(source.len() > source.chars().count());
+
+        let integration = parse_html(
+            "<!doctype html><svg><foreignObject><section id=target><svg><g>A</section><nav id=after>B</foreignObject></svg>",
+        )
+        .unwrap();
+        let target = find_element_by_id(&integration.children, "target").unwrap();
+        assert_eq!(element_text_content(target), "A");
+        let after = find_element_by_id(&integration.children, "after").unwrap();
+        assert_eq!(after.namespace, None);
+        assert_eq!(element_text_content(after), "B");
+
+        let fragment = parse_html_fragment_for_context(
+            "<aside id=target><math>A</aside><fieldset id=after>B",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(element_text_content(find_element_by_id(&fragment, "target").unwrap()), "A");
+        assert_eq!(element_text_content(find_element_by_id(&fragment, "after").unwrap()), "B");
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "aside".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "aside".to_string(),
+            },
+            Token::StartTag {
+                name: "fieldset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ]);
+        let direct_body = body(&direct_document);
+        assert_eq!(element(&direct_body.children[0]).name, "aside");
+        assert_eq!(element(&direct_body.children[1]).name, "fieldset");
         assert!(direct
             .diagnostics()
             .iter()
@@ -45238,56 +45863,6 @@ mod tests {
             .find(|diagnostic| {
                 diagnostic.code == "unexpected-head-content-start-tag-after-head"
             })
-            .unwrap();
-        assert_eq!(diagnostic.position, None);
-    }
-
-    #[test]
-    fn positions_void_start_tags_ignored_before_body() {
-        let source = "<!doctype html><param><!--é-->\r\n<param>";
-        let output = parse_html_with_diagnostics(source).unwrap();
-        assert_eq!(
-            output
-                .parser_diagnostics
-                .iter()
-                .filter(|diagnostic| diagnostic.code == "unexpected-pre-body-void-start-tag")
-                .collect::<Vec<_>>(),
-            vec![
-                &unexpected_pre_body_void_start_tag(source, "param", 0),
-                &unexpected_pre_body_void_start_tag(source, "param", 1),
-            ]
-        );
-
-        for excluded in [
-            "<!doctype html><param",
-            "<!doctype html><body><param>",
-            "<!doctype html><object><param></object>",
-            "<!doctype html><svg><param></param></svg>",
-        ] {
-            let output = parse_html_with_diagnostics(excluded).unwrap();
-            assert!(output
-                .parser_diagnostics
-                .iter()
-                .all(|diagnostic| diagnostic.code != "unexpected-pre-body-void-start-tag"));
-        }
-
-        let fragment = parse_html_fragment_with_diagnostics("<param>").unwrap();
-        assert!(fragment
-            .parser_diagnostics
-            .iter()
-            .all(|diagnostic| diagnostic.code != "unexpected-pre-body-void-start-tag"));
-
-        let mut unpositioned = HtmlParser::new();
-        unpositioned.process_token(Token::StartTag {
-            name: "param".to_string(),
-            attributes: Vec::new(),
-            self_closing: false,
-        });
-        unpositioned.process_token(Token::Eof);
-        let diagnostic = unpositioned
-            .diagnostics()
-            .iter()
-            .find(|diagnostic| diagnostic.code == "unexpected-pre-body-void-start-tag")
             .unwrap();
         assert_eq!(diagnostic.position, None);
     }
@@ -56071,6 +56646,65 @@ mod tests {
             fragment.parser_diagnostics,
             vec![html_foreign_start_tag_recovery("<p>", "p")]
         );
+    }
+
+    #[test]
+    fn reprocesses_foreign_breakout_shell_starts_at_the_integration_point() {
+        let body_source = "<!doctype html><!--é-->\r\n<body id=root><svg><foreignObject><svg><body class=merged>A";
+        let body_output = parse_html_with_diagnostics(body_source).unwrap();
+        let document_body = body(&body_output.document);
+        assert_eq!(document_body.attribute("id"), Some("root"));
+        assert_eq!(document_body.attribute("class"), Some("merged"));
+        let integration =
+            find_first_element_in_nodes(&document_body.children, "foreignObject").unwrap();
+        assert_eq!(integration.children.len(), 2);
+        assert_eq!(element(&integration.children[0]).name, "svg");
+        assert_eq!(integration.children[1], Node::text("A"));
+        assert!(body_output.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-html-start-tag-in-foreign-content"
+                && diagnostic.position == Some(start_tag_position_at(body_source, "body", 1))
+        }));
+        assert!(body_source.len() > body_source.chars().count());
+
+        let head_source =
+            "<!doctype html><svg><foreignObject><svg><head data-nested=yes>A";
+        let head_output = parse_html_with_diagnostics(head_source).unwrap();
+        assert_eq!(head(&head_output.document).attribute("data-nested"), None);
+        let integration =
+            find_first_element_in_nodes(&head_output.document.children, "foreignObject").unwrap();
+        assert_eq!(integration.children.len(), 2);
+        assert_eq!(element(&integration.children[0]).name, "svg");
+        assert_eq!(integration.children[1], Node::text("A"));
+        assert!(head_output.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &html_foreign_start_tag_recovery(head_source, "head")
+        }));
+
+        let ordinary = parse_html(
+            "<!doctype html><svg><foreignObject><svg><p id=content>A",
+        )
+        .unwrap();
+        let paragraph = find_element_by_id(&ordinary.children, "content").unwrap();
+        assert_eq!(paragraph.namespace, None);
+        assert_eq!(paragraph.children, vec![Node::text("A")]);
+
+        let mut direct = HtmlParser::new();
+        for name in ["html", "body", "svg", "foreignObject", "svg", "body"] {
+            direct.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        direct.process_token(Token::Text("A".to_string()));
+        direct.process_token(Token::Eof);
+        assert!(direct.diagnostics().iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-html-start-tag-in-foreign-content"
+                && diagnostic.position.is_none()
+        }));
+        let direct_document = direct.finish_document();
+        let integration =
+            find_first_element_in_nodes(&direct_document.children, "foreignObject").unwrap();
+        assert_eq!(integration.children[1], Node::text("A"));
     }
 
     #[test]
