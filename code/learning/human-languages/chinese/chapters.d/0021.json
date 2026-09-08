@@ -1,0 +1,23 @@
+{
+  "chapter": 21,
+  "title": "Ten Words, Ninety-Nine Numbers",
+  "label": "ch:zh-decimal",
+  "canDo": "I can build any number from eleven to ninety-nine out of the ten words I already have, say a hundred, and read a price written in Arabic numerals.",
+  "payoff": {
+    "lesson": "ZH-C21-practice",
+    "kind": "four-skill-function-map",
+    "summary": "One rule of order turns ten words into ninety-nine numbers, 一百 is where 一's tone finally moves, and the digits chapter says which of 5 and 五 a price tag actually prints.",
+    "assesses": [
+      "ZH-LEX-SHIYI",
+      "ZH-GRAMMAR-DECIMAL-TEENS",
+      "ZH-LEX-ERSHI",
+      "ZH-GRAMMAR-DECIMAL-TENS",
+      "ZH-SCRIPT-NUM-BAI",
+      "ZH-LEX-NUM-BAI",
+      "ZH-TONE-SANDHI-YI",
+      "ZH-SCRIPT-ARABIC-DIGITS",
+      "ZH-CULTURE-DIGIT-REGISTER",
+      "ZH-PERFORMANCE-DECIMAL-HUNDRED"
+    ]
+  }
+}

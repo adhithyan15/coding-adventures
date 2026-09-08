@@ -1,6 +1,8 @@
 {
   "segments": [
-    "ZH-PATH-002"
+    "ZH-PATH-002",
+    "ZH-PATH-019",
+    "ZH-PATH-020"
   ],
   "omits": [],
   "relocates": {}

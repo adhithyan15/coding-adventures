@@ -45,6 +45,12 @@ const CHINESE_COUNTRY = DUCTUS[ductusKey("chinese", "国")];
 const CHINESE_LOOK = DUCTUS[ductusKey("chinese", "看")];
 const CHINESE_BOOK = DUCTUS[ductusKey("chinese", "书")];
 const CHINESE_QUESTION = DUCTUS[ductusKey("chinese", "吗")];
+const CHINESE_SIX = DUCTUS[ductusKey("chinese", "六")];
+const CHINESE_SEVEN = DUCTUS[ductusKey("chinese", "七")];
+const CHINESE_EIGHT = DUCTUS[ductusKey("chinese", "八")];
+const CHINESE_NINE = DUCTUS[ductusKey("chinese", "九")];
+const CHINESE_TEN = DUCTUS[ductusKey("chinese", "十")];
+const CHINESE_HUNDRED = DUCTUS[ductusKey("chinese", "百")];
 
 const OWNER_SCRIPTS = new Set(["chinese"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -148,19 +154,29 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("吗", CHINESE_QUESTION.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
+    for (const numeral of [
+      CHINESE_SIX,
+      CHINESE_SEVEN,
+      CHINESE_EIGHT,
+      CHINESE_NINE,
+      CHINESE_TEN,
+      CHINESE_HUNDRED,
+    ]) {
+      expect(verifiedLetterFont(numeral.glyph, numeral.source.url)).toBe(
+        "_fonts/NotoSansSC-Subset.ttf",
+      );
+    }
   });
 
   it("marks Chinese complete with every current-corpus row source-verified", () => {
     const chinese = SCRIPTS.find((script) => script.script === "chinese")!;
     expect(chinese.complete).toBe(true);
-    // 43 -> 44: 吗, the yes-or-no question particle, taught in Chapter 19. It is
-    // the first Chinese character this corpus has added for a GRAMMATICAL word
-    // rather than a lexical one, and the subset font was regenerated to cover
-    // it -- `complete` means the inventory covers the current lesson corpus, so
-    // it has to grow with the corpus rather than being asserted once.
-    expect(chinese.letters).toHaveLength(44);
+    // 44 -> 50: Chapters 20–21 add 六, 七, 八, 九, 十 and 百. `complete`
+    // means the inventory covers the current lesson corpus, so the source-
+    // verified inventory and authored ductus must grow together.
+    expect(chinese.letters).toHaveLength(50);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      44,
+      50,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),
@@ -1025,5 +1041,29 @@ describe("handwriting ductus", () => {
       CHINESE_BOOK.strokes.map((stroke) => penPath(stroke).length),
     ).toEqual([8, 13, 6, 5]);
     expect(penLifts(CHINESE_BOOK)).toBe(3);
+  });
+
+  it("Chinese numeral ductus preserves every pinned source median and lift", () => {
+    const numerals = [
+      [CHINESE_SIX, "%E5%85%AD", [4, 5, 5, 5]],
+      [CHINESE_SEVEN, "%E4%B8%83", [5, 10]],
+      [CHINESE_EIGHT, "%E5%85%AB", [6, 6]],
+      [CHINESE_NINE, "%E4%B9%9D", [6, 13]],
+      [CHINESE_TEN, "%E5%8D%81", [5, 5]],
+      [CHINESE_HUNDRED, "%E7%99%BE", [5, 4, 4, 7, 4, 4]],
+    ] as const;
+
+    for (const [ductus, encodedGlyph, medianLengths] of numerals) {
+      expect(ductus.source.url).toBe(
+        `https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/${encodedGlyph}.json`,
+      );
+      expect(ductus.source.citation).toMatch(
+        new RegExp(`Hanzi Writer Data ${ductus.glyph}\\.json.*snapshot 68d10a4`, "i"),
+      );
+      expect(ductus.strokes.map((stroke) => penPath(stroke).length)).toEqual(
+        medianLengths,
+      );
+      expect(penLifts(ductus)).toBe(ductus.strokes.length - 1);
+    }
   });
 });

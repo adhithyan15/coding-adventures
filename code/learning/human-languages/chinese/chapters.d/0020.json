@@ -1,0 +1,25 @@
+{
+  "chapter": 20,
+  "title": "Six to Ten, and the Character That Was Already Here",
+  "label": "ch:zh-count-ten",
+  "canDo": "I can say, hear, read and write the Mandarin numbers one to ten with their tones, and write the five characters this chapter adds.",
+  "payoff": {
+    "lesson": "ZH-C20-practice",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Five characters and twelve strokes finish a run the book abandoned at five seventeen chapters earlier -- with 八 set against 人, and 十 finally taught on its own after thirteen chapters inside 早.",
+    "assesses": [
+      "ZH-SCRIPT-NUM-LIU",
+      "ZH-LEX-NUM-LIU",
+      "ZH-SCRIPT-NUM-QI",
+      "ZH-LEX-NUM-QI",
+      "ZH-SCRIPT-NUM-BA",
+      "ZH-LEX-NUM-BA",
+      "ZH-CULTURE-BA-LUCKY",
+      "ZH-SCRIPT-NUM-JIU",
+      "ZH-LEX-NUM-JIU",
+      "ZH-SCRIPT-NUM-SHI",
+      "ZH-LEX-NUM-SHI",
+      "ZH-PERFORMANCE-COUNT-TEN"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C21-bai",
+    "language": "chinese",
+    "chapter": 21,
+    "sequence": 2120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad265597d35a8f03"
+  },
+  "findings": []
+}

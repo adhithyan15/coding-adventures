@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W20-qi",
+    "language": "chinese",
+    "chapter": 20,
+    "sequence": 2000,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1646ec9cfd8fc265",
+    "detachableSegments": [
+      "Script — the second stroke does the work"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

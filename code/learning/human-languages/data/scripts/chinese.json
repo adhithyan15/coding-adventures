@@ -1200,6 +1200,150 @@
         "variation": "The cited PRC-order dataset supplies six ordered strokes for 吗. Medians 1–3 draw the left 口 in the same order the standalone character uses: its left vertical, its joined top and right sides, and its closing bottom horizontal, all inside the upper-left third of the square. Medians 4–6 then draw 马: a horizontal that turns down at the right, a long stroke that turns twice and hooks, and a wide finishing horizontal that runs almost the full width of the character and is the widest stroke in it. Make Me a Hanzi documents that its stroke paths are ordered in proper stroke order, its medians use the same coordinate system for stroke-order animation, and the project follows People's Republic of China stroke order. This learner path adapts those six ordered medians to the vendored Noto Sans SC outline while preserving their order, directions, the two joined corners and five intervening pen lifts; stroke widths and proportions differ between the Arphic-derived source graphics and Noto Sans SC."
       },
       "notes": "The yes-or-no question particle. Carries no tone and no meaning of its own; 口 marks it as something spoken and 马 supplies only the sound mǎ. Finish the whole 口 before starting 马, and keep 口 small and high."
+    },
+    {
+      "glyph": "六",
+      "sound": "liù",
+      "role": "logograph",
+      "tone": "4",
+      "components": [
+        "a short dot at the very top",
+        "a long horizontal beneath it",
+        "a left-falling leg",
+        "a right-falling leg"
+      ],
+      "strokeOrder": [
+        "draw the short diǎn dot at the top centre, down and to the right",
+        "lift, then draw the long horizontal héng stroke beneath it, left to right",
+        "lift, then draw the left leg as a piě stroke, down and to the left",
+        "lift, then draw the right leg as a right-falling nà stroke, down and to the right"
+      ],
+      "strokeOrderNote": "source-verified PRC stroke order",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 六.json, ordered stroke paths and medians 1–4 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%85%AD.json",
+        "variation": "The cited PRC-order dataset supplies four ordered strokes for 六. Median 1 is the short top dot, descending to the right; median 2 is the long horizontal that spans the character beneath it; medians 3 and 4 are the two legs, the left one falling to the lower left and the right one falling to the lower right. Top before bottom and left before right, the two rules this course has already used for 三 and 八."
+      },
+      "notes": "Six. The two legs are the same pair of strokes that make 八, eight, standing under a dot and a bar."
+    },
+    {
+      "glyph": "七",
+      "sound": "qī",
+      "role": "logograph",
+      "tone": "1",
+      "components": [
+        "a horizontal that rises slightly to the right",
+        "a stroke that descends, bends right and hooks up"
+      ],
+      "strokeOrder": [
+        "draw the horizontal héng stroke from left to right, rising a little as it goes",
+        "lift, then draw the shùwangōu: descend from the upper right, bend to the right along the foot, and hook upward at the end"
+      ],
+      "strokeOrderNote": "source-verified PRC stroke order",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 七.json, ordered stroke paths and medians 1–2 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%B8%83.json",
+        "variation": "The cited PRC-order dataset supplies two ordered strokes for 七. Median 1 crosses from the left edge to the right, rising slightly; median 2 begins high on the right, descends, turns along the foot and lifts into a hook. Two strokes for seven, which is the point the course makes about stroke count and meaning having parted company."
+      },
+      "notes": "Seven. Two strokes, against 五's four for five and 六's four for six."
+    },
+    {
+      "glyph": "八",
+      "sound": "bā",
+      "role": "logograph",
+      "tone": "1",
+      "components": [
+        "a left-falling stroke",
+        "a right-falling stroke, not touching it"
+      ],
+      "strokeOrder": [
+        "draw the left-falling piě stroke from the upper centre down to the lower left",
+        "lift, then draw the right-falling nà stroke from the upper centre down to the lower right"
+      ],
+      "strokeOrderNote": "source-verified PRC stroke order",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 八.json, ordered stroke paths and medians 1–2 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%85%AB.json",
+        "variation": "The cited PRC-order dataset supplies two ordered strokes for 八, left before right. They are the same piě and nà pair the course learned in 人, and unlike 人 they do not meet at the top — the gap between them is the whole difference between the two characters."
+      },
+      "notes": "Eight. The same two strokes as 人, rén, but parted at the top instead of joined."
+    },
+    {
+      "glyph": "九",
+      "sound": "jiǔ",
+      "role": "logograph",
+      "tone": "3",
+      "components": [
+        "a long left-falling stroke from the top right",
+        "a stroke that crosses it, turns down and hooks"
+      ],
+      "strokeOrder": [
+        "draw the long piě stroke from the upper right down to the lower left",
+        "lift, then draw the héngzhéwangōu: cross to the right, turn downward, and hook to the left at the foot"
+      ],
+      "strokeOrderNote": "source-verified PRC stroke order",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 九.json, ordered stroke paths and medians 1–2 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%B9%9D.json",
+        "variation": "The cited PRC-order dataset supplies two ordered strokes for 九. Median 1 falls from the upper right to the lower left across the whole square; median 2 crosses it, bends downward on the right and hooks back at the foot in a single unbroken run. Two strokes for nine, the largest single-digit numeral in the run and among the cheapest to write."
+      },
+      "notes": "Nine. Two strokes, like 七 and 八 — the last three single digits are the quickest to write."
+    },
+    {
+      "glyph": "百",
+      "sound": "bǎi",
+      "role": "logograph",
+      "tone": "3",
+      "components": [
+        "a top horizontal",
+        "a short left-falling stroke",
+        "a vertical",
+        "a turning stroke that closes the right side",
+        "an inner horizontal",
+        "a closing bottom horizontal"
+      ],
+      "strokeOrder": [
+        "draw the top horizontal héng stroke from left to right",
+        "lift, then draw the short piě stroke below it, falling to the left",
+        "lift, then draw the vertical shù stroke down the left side of the box",
+        "lift, then draw the héngzhé stroke across the top of the box and down its right side",
+        "lift, then draw the inner horizontal héng stroke",
+        "lift, then close the box with the bottom horizontal héng stroke"
+      ],
+      "strokeOrderNote": "source-verified PRC stroke order",
+      "penLifts": 5,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 百.json, ordered stroke paths and medians 1–6 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E7%99%BE.json",
+        "variation": "The cited PRC-order dataset supplies six ordered strokes for 百. Median 1 is the bar across the very top; median 2 is the short left-falling stroke beneath it; medians 3–6 build the box below exactly as 四's outer frame and inner bar were built — left side, then the top-and-right turn, then the inner horizontal, then the closing floor. Outside before inside, and the box is closed last."
+      },
+      "notes": "A hundred. The bar and the short falling stroke sit on top of a box built the same way 四's was."
+    },
+    {
+      "glyph": "十",
+      "sound": "shí",
+      "role": "logograph",
+      "tone": "2",
+      "components": [
+        "a horizontal",
+        "a vertical crossing it at the centre"
+      ],
+      "strokeOrder": [
+        "draw the horizontal héng stroke from left to right",
+        "lift, then draw the vertical shù stroke from top to bottom, crossing it at the centre"
+      ],
+      "strokeOrderNote": "source-verified PRC stroke order",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 十.json, ordered stroke paths and medians 1–2 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%8D%81.json",
+        "variation": "The cited PRC-order dataset supplies two ordered strokes for 十: median 1 crosses from left to right, median 2 descends through its centre. Horizontal before vertical, the same order 三 and 四 already used. The character is the lower component of 早 and appeared in this course as a part of that character for thirteen chapters before it was taught on its own."
+      },
+      "notes": "Ten. 一 with a vertical post through it, and the lower half of 早."
     }
   ]
 }

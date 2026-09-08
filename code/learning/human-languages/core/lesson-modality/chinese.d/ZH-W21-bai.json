@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W21-bai",
+    "language": "chinese",
+    "chapter": 21,
+    "sequence": 2110,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9a97ff361407d22f",
+    "detachableSegments": [
+      "Script — six strokes, five of them familiar"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

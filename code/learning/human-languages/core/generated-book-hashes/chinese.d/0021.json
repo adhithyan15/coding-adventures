@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:0df58d61e82df1bc",
+  "lessonIds": [
+    "ZH-C21-shiyi",
+    "ZH-C21-ershi",
+    "ZH-W21-bai",
+    "ZH-C21-bai",
+    "ZH-C21-digits",
+    "ZH-C21-practice",
+    "ZH-R21-close"
+  ],
+  "tex": "chinese/book/chapters/ch21-decimal.tex"
+}
