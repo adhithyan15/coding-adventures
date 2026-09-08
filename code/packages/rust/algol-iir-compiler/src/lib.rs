@@ -2774,7 +2774,7 @@ impl Compiler {
             if !saw_real_dependency {
                 return None;
             }
-            let value = self.static_real_arithmetic_value_with_widen(node, true)?;
+            let value = self.static_tracked_exponent_real_value(node)?;
             (value >= 0.0
                 && value <= MAX_POW_UNROLL_EXPONENT as f64
                 && value.fract() == 0.0)
@@ -2897,9 +2897,7 @@ impl Compiler {
             return false;
         }
         let actuals = self.standard_fn_actuals(node);
-        if actuals.len() != 1
-            || !self.exact_tracked_integral_exponent_expression(actuals[0])
-        {
+        if actuals.len() != 1 || !self.exact_tracked_standard_function_operand(actuals[0]) {
             return false;
         }
         if target_name == "entier"
@@ -2909,8 +2907,23 @@ impl Compiler {
         {
             return false;
         }
-        self.static_real_arithmetic_value_with_widen(node, true)
+        self.static_tracked_exponent_real_value(node)
             .is_some_and(|value| value.fract() == 0.0)
+    }
+
+    /// A pure conditional may feed a standard function even when its branch
+    /// values differ, provided the function maps every branch to the same
+    /// exact result. The selector remains part of emitted IIR.
+    fn exact_tracked_standard_function_operand(&self, node: &GrammarASTNode) -> bool {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            return self.static_predicate_dependencies(condition).is_some()
+                && self.exact_tracked_standard_function_operand(then_node)
+                && self.exact_tracked_standard_function_operand(else_node);
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.exact_tracked_standard_function_operand(child);
+        }
+        self.exact_tracked_integral_exponent_expression(node)
     }
 
     /// Recognize checked integer arithmetic whose leaves are literals, exact
@@ -3123,7 +3136,57 @@ impl Compiler {
         }
         let operand = self
             .static_real_arithmetic_value_with_widen(actuals[0], widen_tracked_integers)?;
-        let value = match target_name.as_str() {
+        Self::static_standard_real_result(&target_name, operand)
+    }
+
+    fn static_tracked_exponent_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
+        expr_static_real_arithmetic_value_with(node, &|candidate| {
+            self.static_path_independent_standard_real_value(candidate)
+                .or_else(|| self.static_conditional_real_value_with_widen(candidate, true))
+                .or_else(|| self.static_standard_real_value_with_widen(candidate, true))
+                .or_else(|| self.static_tracked_numeric_value(candidate, true))
+        })
+    }
+
+    fn static_path_independent_standard_real_value(
+        &self,
+        node: &GrammarASTNode,
+    ) -> Option<f64> {
+        if node.rule_name != "proc_call" {
+            return None;
+        }
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&name);
+        if self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return None;
+        }
+        let (condition, then_node, else_node) = self.conditional_expression_parts(actuals[0])?;
+        self.static_predicate_dependencies(condition)?;
+        let branch_value = |branch: &GrammarASTNode| {
+            let operand = self.static_tracked_exponent_real_value(branch)?;
+            Self::static_standard_real_result(&target_name, operand)
+        };
+        match self.static_boolean_value(condition) {
+            Some(true) => branch_value(then_node),
+            Some(false) => branch_value(else_node),
+            None => {
+                let then_value = branch_value(then_node)?;
+                let else_value = branch_value(else_node)?;
+                (then_value.to_bits() == else_value.to_bits()).then_some(then_value)
+            }
+        }
+    }
+
+    fn static_standard_real_result(target_name: &str, operand: f64) -> Option<f64> {
+        let value = match target_name {
             "abs" => operand.abs(),
             "sqrt" if operand >= 0.0 => {
                 let root = operand.sqrt();
@@ -11144,6 +11207,40 @@ mod tests {
                 "{source}"
             );
             if source.contains("real procedure choose") {
+                assert!(main.instructions.iter().any(|instr| instr.op == "call"));
+            }
+        }
+    }
+
+    #[test]
+    fn al4_path_independent_standard_function_results_unroll_real_powers() {
+        let module = compile_source(
+            "begin real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ abs(if gate = 0.0 then exponent else -exponent) + 6.0; gate := 1.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("a built-in may collapse distinct pure conditional operands to one exponent");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
+    fn al4_path_independent_standard_function_results_fail_closed() {
+        for source in [
+            "begin real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ abs(if gate = 0.0 then exponent else exponent - 1.0) end",
+            "begin real procedure choose(x); value x; real x; choose := x; real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ abs(if choose(gate) = 0.0 then exponent else -exponent) end",
+            "begin real procedure abs(x); value x; real x; abs := 2.0; real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ abs(if gate = 0.0 then exponent else -exponent) end",
+            "begin real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ (if gate = 0.0 then exponent else -exponent) end",
+        ] {
+            let module = compile_source(source, "test")
+                .expect("unsafe conditional standard-function exponents retain runtime power");
+            let main = module.get_function("main").expect("has main");
+            assert!(
+                main.instructions.iter().any(|instr| instr.op == "f64_pow"),
+                "{source}"
+            );
+            if source.contains("procedure choose") || source.contains("procedure abs") {
                 assert!(main.instructions.iter().any(|instr| instr.op == "call"));
             }
         }
