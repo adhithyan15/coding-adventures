@@ -1,4 +1,7 @@
 style VisiCalc {
+  part empty-introduction { padding: 14px 16px; margin-bottom: 12px; gap: 4px; border: 1px solid #dce2d9; border-radius: 8px; background: #e9eee3; flex-shrink: 0; }
+  part empty-heading { font-family: serif; font-size: 18px; font-weight: 400; color: #203d34; }
+  part empty-hint { font-size: 13px; line-height: 1.5; color: #506358; }
   part workbook { color-scheme: light; background: #f4f3ed; color: #203d34; min-height: 100vh; height: 100vh; padding: 24px; box-sizing: border-box; font-family: sans-serif; }
   part toolbar { padding: 12px 0px 28px; gap: 24px; align-items: center; flex-wrap: wrap; }
   part brand { gap: 4px; }

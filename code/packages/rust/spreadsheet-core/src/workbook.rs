@@ -360,6 +360,20 @@ impl Workbook {
         })
     }
 
+    /// Whether any sheet contains a literal value or authored formula.
+    /// Unlike the display extent, an unevaluated or blank-result formula still
+    /// counts as content. Formatting alone does not. Visits only stored cells
+    /// and stops at the first match, independent of the visible window.
+    pub fn has_cell_content(&self) -> bool {
+        self.sheets.iter().any(|sheet| {
+            sheet.cells.values().any(|cell| match &cell.content {
+                CellContent::Empty => false,
+                CellContent::Value(value) => !value.is_empty(),
+                CellContent::Formula { .. } => true,
+            })
+        })
+    }
+
     /// The bounding box of all materialised, non-empty cells on `sheet`, or
     /// `None` if the sheet is empty. 1-based inclusive. A host uses this to size
     /// its scrollable area to the data. `O(materialised cells)`.

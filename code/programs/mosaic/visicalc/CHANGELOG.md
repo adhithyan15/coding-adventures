@@ -2,6 +2,9 @@
 
 ## 2026-09-08
 
+- Add a themed empty-workbook introduction above the existing editable grid.
+  Rust supplies emptiness; the shared component owns the guidance and styling.
+
 - Export a themed Mosaic startup component with loading/error content and Retry,
   preserving VisiCalc as the default project root.
 

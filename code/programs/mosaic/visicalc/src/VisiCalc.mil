@@ -1,4 +1,5 @@
 component VisiCalc {
+  slot workbook-empty : bool ;
   slot file-status : text ;
   slot selection-summary : text ;
   slot viewport-offset : number ;

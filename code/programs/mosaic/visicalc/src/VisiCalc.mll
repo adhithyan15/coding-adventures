@@ -27,6 +27,12 @@ layout VisiCalc {
       Text [sheet-name] (content: "Sheet 1")
       Text [sheet-hint] (content: "Enter to apply · Esc to cancel")
     }
+    If (when: slot: workbook-empty) {
+      Column [empty-introduction] {
+        Text [empty-heading] (content: "Room for your next idea", a11y-role: heading)
+        Text [empty-hint] (content: "Choose a cell and type a number, a note, or a formula like =2+3. Press Enter to keep it.")
+      }
+    }
     HostScroll [sheet-frame] {
       pkg::mosaic-pkg-grid::RowHeaderGrid (
       viewport-offset: slot: viewport-offset,
