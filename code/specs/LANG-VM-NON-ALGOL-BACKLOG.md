@@ -1388,3 +1388,12 @@ found run_beam always returned an empty stdout after parsing its result marker.
 Preserve the actual bytes before the result marker as program stdout, with a
 parser regression covering output plus return value. Keep result-range and
 process failure checks. This harness fix is required for observable BEAM cells.
+
+### VM-040 Oct implementation contract: u8 result width
+
+Further executed probes produced -1 for ~0 (expected255) and300 for200+100
+(expected44). BEAM arbitrary-precision arithmetic lacks the frontend's u8
+width semantics. Mask u8 arithmetic/unary/bitwise results with255 at lowering;
+leave wider integer types unchanged. Rerun all12Oct programs, including wrap,
+loops/calls, and complement. Add backend structural coverage for masking and
+integer output; preserve existing predicate and wider arithmetic behavior.
