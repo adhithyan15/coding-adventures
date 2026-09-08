@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 14615,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/14615",
+    "branch": "codex/build-tool-neutral-graph-diff-corpus",
+    "implementation_revision": "b90320f5b189748c1457bacc598392de8de8ed99",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-08T11:12:34Z",
-    "pr_number": 14519,
-    "status": "merged",
-    "notes": "PR #14519 completed all 53 reported checks acceptably after the failed-job-only rerun of two transient Linux setup-ocaml repository-lock bootstrap failures passed. GitHub reported MERGEABLE/CLEAN with zero pending or failed checks; squash auto-merge was enabled and merged reviewed head 7754ee01db709fd10a71b3066db38ba72e5410f2 as d4f83c934d6898bf5d55d844c88f5988142a5309 without a plain manual merge command."
+    "observed_at": "2026-09-08T12:45:41Z",
+    "pr_number": 14615,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #14615 opened from implementation revision b90320f5b189748c1457bacc598392de8de8ed99. GitHub reports MERGEABLE with no merge conflict; the initial CI, CodeQL, and human-language detection checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "5778c35c3c83c65f2a4f0eebc99e778cd15b70b4",
@@ -1723,10 +1729,14 @@
     {
       "id": "build-tool-neutral-graph-diff-corpus-completion",
       "title": "Complete the language-neutral build-tool graph and diff corpus",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-neutral-graph-diff-corpus",
-      "pr_number": null,
+      "pr_number": 14615,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14615",
+      "opened_at": "2026-09-08T12:45:41Z",
+      "opened_revision": "b90320f5b189748c1457bacc598392de8de8ed99",
+      "publication_notes": "Published ready for review with the complete specification-first, red-test, shared-corpus, Go oracle, build-tool dry-plan, collision, state-DAG, lint/security-baseline, and independent exact-final-diff security validation summary. Initial GitHub checks are pending; no auto-merge action has been taken.",
       "selected_at": "2026-09-08T11:24:00Z",
       "selection_revision": "d4f83c934d6898bf5d55d844c88f5988142a5309",
       "selection_notes": "Selected after PR #14519 completed all 53 reported checks acceptably and merged through squash auto-merge as d4f83c934d6898bf5d55d844c88f5988142a5309. The exact merged-main schema-3 inventory contains 15 established lanes, 1,420 implementation identities, 4,640 slots, 1,459 all-reported identities, bands 175/265, 123/934, 176/2,217, and 946/13,244, 761 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Twenty-two collision-free owners discovered by parallel build-tool, bounded-JSON, SHA-512, barcode, HMAC/HKDF/PBKDF2, and font-parser audits were registered before selection, and the smart-home lifecycle dependency was corrected. Raw descendant counts favor smart-home, but that owner is blocked on its pending neutral core and unresolved authorization/idempotency semantics; Chief crypto is already implemented and needs ledger reconciliation. This process-free five-case graph/diff completion is the smallest authority-free item that directly advances both mandatory all-language build-tool closure and OCaml promotion. The fresh worktree and branch start from exact merged main, and every open PR has zero overlap with its schema, fixture, runner, test, or documentation paths.",

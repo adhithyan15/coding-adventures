@@ -13381,8 +13381,8 @@ the final denominator switch. The later refresh adds
 `armv7-gatelevel-singleton-classification`, dependent on the six-lane ARM
 functional-classification owner, for the new exact 524,805-DFF model from
 merged PR #14604. These additions bring the state to 753 unique owners: 211 merged,
-541 pending, and exactly this graph/diff owner in
-progress, with complete dependencies, no cycle, and no merged-to-unfinished
+541 pending, and exactly this graph/diff owner PR-open as #14615, with complete
+dependencies, no cycle, and no merged-to-unfinished
 edge.
 
 ## Autonomous Loop Protocol
