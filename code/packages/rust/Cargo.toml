@@ -866,6 +866,7 @@ members = [
     "layout-replaced",
     "layout-generated",
     "layout-effects",
+    "layout-backgrounds",
     "layout-text-measure-native",
     "layout-to-paint",
     "document-ast-to-layout",

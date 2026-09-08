@@ -56,6 +56,10 @@
 
 use std::collections::HashMap;
 
+use layout_backgrounds::{
+    BackgroundBox, BackgroundColor, BackgroundRepeat, BackgroundSize, BackgroundSource,
+    BackgroundStyle, Rect as BackgroundRect,
+};
 use layout_effects::{EffectBlendMode, EffectColor, EffectFilter, EffectStyle};
 use layout_ir::{
     Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecorationLines,
@@ -63,8 +67,9 @@ use layout_ir::{
 use layout_positioned::{Position, PositionedStyle};
 use layout_replaced::{object_fit_rect, IntrinsicSize};
 use paint_instructions::{
-    BlendMode, FilterEffect, GlyphPosition, ImageSrc, PaintBase, PaintClip, PaintGlyphRun,
-    PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintRect, PaintScene,
+    BlendMode, FilterEffect, GlyphPosition, GradientKind, GradientStop, ImageSrc, PaintBase,
+    PaintClip, PaintGlyphRun, PaintGradient, PaintGroup, PaintImage, PaintInstruction, PaintLayer,
+    PaintPath, PaintRect, PaintScene, PathCommand,
 };
 use text_flow::{BaseDirection, Direction as FlowDirection, TextFlow};
 use text_interfaces::{
@@ -72,7 +77,7 @@ use text_interfaces::{
     ShapeOptions, ShapedText, TextShaper,
 };
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.6.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Options
@@ -450,9 +455,10 @@ fn emit_box_decorations(
     dpr: f64,
     out: &mut Vec<PaintInstruction>,
 ) {
+    let empty_paint = HashMap::new();
     let paint_map = match node.ext.get("paint") {
         Some(ExtValue::Map(m)) => m,
-        _ => return,
+        _ => &empty_paint,
     };
 
     let bg = read_color(paint_map, "backgroundColor");
@@ -472,7 +478,9 @@ fn emit_box_decorations(
         )
     });
 
+    let backgrounds = BackgroundStyle::from_positioned(node);
     if bg.is_none()
+        && backgrounds.layers.is_empty()
         && border_color.is_none()
         && border_width.unwrap_or(0.0) == 0.0
         && side_borders.iter().all(|(width, _)| *width == 0.0)
@@ -484,19 +492,70 @@ fn emit_box_decorations(
         return;
     }
 
-    if bg.is_some() || border_width.unwrap_or(0.0) > 0.0 {
+    let border_box = BackgroundRect {
+        x,
+        y,
+        width: w,
+        height: h,
+    };
+    if let Some(background) = bg {
+        let clip = backgrounds.painting_box(backgrounds.color_clip, border_box);
+        if backgrounds.corners.iter().any(|corner| {
+            corner.x.factor != 0.0
+                || corner.x.offset != 0.0
+                || corner.y.factor != 0.0
+                || corner.y.offset != 0.0
+        }) {
+            out.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: rounded_rect_path(
+                    BackgroundRect {
+                        x: clip.x * dpr,
+                        y: clip.y * dpr,
+                        width: clip.width * dpr,
+                        height: clip.height * dpr,
+                    },
+                    backgrounds
+                        .resolved_corners_for_box(backgrounds.color_clip, border_box)
+                        .map(|(rx, ry)| (rx * dpr, ry * dpr)),
+                ),
+                fill: Some(color_to_css(background)),
+                fill_rule: None,
+                stroke: None,
+                stroke_width: None,
+                stroke_cap: None,
+                stroke_join: None,
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+        } else {
+            out.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: clip.x * dpr,
+                y: clip.y * dpr,
+                width: clip.width * dpr,
+                height: clip.height * dpr,
+                fill: Some(color_to_css(background)),
+                stroke: None,
+                stroke_width: None,
+                corner_radius: corner_radius.map(|v| v * dpr),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+        }
+    }
+
+    emit_background_layers(node, &backgrounds, border_box, dpr, out);
+
+    if border_width.unwrap_or(0.0) > 0.0 {
         out.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: x * dpr,
             y: y * dpr,
             width: w * dpr,
             height: h * dpr,
-            fill: bg.map(color_to_css),
-            stroke: if border_width.unwrap_or(0.0) > 0.0 {
-                border_color.map(color_to_css)
-            } else {
-                None
-            },
+            fill: None,
+            stroke: border_color.map(color_to_css),
             stroke_width: border_width.map(|v| v * dpr),
             corner_radius: corner_radius.map(|v| v * dpr),
             stroke_dash: None,
@@ -527,6 +586,367 @@ fn emit_box_decorations(
             )));
         }
     }
+}
+
+fn emit_background_layers(
+    node: &PositionedNode,
+    style: &BackgroundStyle,
+    border_box: BackgroundRect,
+    dpr: f64,
+    out: &mut Vec<PaintInstruction>,
+) {
+    for (paint_index, layer) in style.layers.iter().rev().enumerate() {
+        let origin = style.painting_box(layer.origin, border_box);
+        let clip = style.painting_box(layer.clip, border_box);
+        let (mut tile_w, mut tile_h) = background_tile_size(layer.size, origin);
+        if layer.repeat_x == BackgroundRepeat::Round && tile_w > 0.0 {
+            tile_w = clip.width / (clip.width / tile_w).round().max(1.0);
+        }
+        if layer.repeat_y == BackgroundRepeat::Round && tile_h > 0.0 {
+            tile_h = clip.height / (clip.height / tile_h).round().max(1.0);
+        }
+        if tile_w <= 0.0 || tile_h <= 0.0 || clip.width <= 0.0 || clip.height <= 0.0 {
+            continue;
+        }
+        let tile_x = origin.x + layer.position_x.resolve((origin.width - tile_w).max(0.0));
+        let tile_y = origin.y + layer.position_y.resolve((origin.height - tile_h).max(0.0));
+        let source_key = format!("{:?}", layer.source);
+        let tiles = background_tiles(
+            tile_x,
+            tile_y,
+            tile_w,
+            tile_h,
+            clip,
+            layer.repeat_x,
+            layer.repeat_y,
+        );
+        match &layer.source {
+            BackgroundSource::LinearGradient {
+                angle_degrees,
+                stops,
+            } => {
+                for (tile_index, (x, y)) in tiles.iter().copied().enumerate() {
+                    let tile = BackgroundRect {
+                        x,
+                        y,
+                        width: tile_w,
+                        height: tile_h,
+                    };
+                    let Some(painted) = intersect_rect(tile, clip) else {
+                        continue;
+                    };
+                    let id = background_id(node, paint_index, tile_index, &source_key, border_box);
+                    let angle = angle_degrees.to_radians();
+                    let dx = angle.sin() * tile_w / 2.0;
+                    let dy = -angle.cos() * tile_h / 2.0;
+                    out.push(PaintInstruction::Gradient(PaintGradient {
+                        base: PaintBase {
+                            id: Some(id.clone()),
+                            metadata: None,
+                        },
+                        kind: GradientKind::Linear {
+                            x1: (x + tile_w / 2.0 - dx) * dpr,
+                            y1: (y + tile_h / 2.0 - dy) * dpr,
+                            x2: (x + tile_w / 2.0 + dx) * dpr,
+                            y2: (y + tile_h / 2.0 + dy) * dpr,
+                        },
+                        stops: paint_gradient_stops(stops),
+                    }));
+                    emit_gradient_shape(style, border_box, layer.clip, painted, dpr, id, out);
+                }
+            }
+            BackgroundSource::RadialGradient { stops } => {
+                for (tile_index, (x, y)) in tiles.iter().copied().enumerate() {
+                    let tile = BackgroundRect {
+                        x,
+                        y,
+                        width: tile_w,
+                        height: tile_h,
+                    };
+                    let Some(painted) = intersect_rect(tile, clip) else {
+                        continue;
+                    };
+                    let id = background_id(node, paint_index, tile_index, &source_key, border_box);
+                    out.push(PaintInstruction::Gradient(PaintGradient {
+                        base: PaintBase {
+                            id: Some(id.clone()),
+                            metadata: None,
+                        },
+                        kind: GradientKind::Radial {
+                            cx: (x + tile_w / 2.0) * dpr,
+                            cy: (y + tile_h / 2.0) * dpr,
+                            r: tile_w.max(tile_h) * dpr / 2.0,
+                        },
+                        stops: paint_gradient_stops(stops),
+                    }));
+                    emit_gradient_shape(style, border_box, layer.clip, painted, dpr, id, out);
+                }
+            }
+            BackgroundSource::Image(uri) => {
+                let mut children = Vec::new();
+                for (tile_x, tile_y) in tiles {
+                    children.push(PaintInstruction::Image(PaintImage {
+                        base: PaintBase::default(),
+                        x: tile_x * dpr,
+                        y: tile_y * dpr,
+                        width: tile_w * dpr,
+                        height: tile_h * dpr,
+                        src: ImageSrc::Uri(uri.clone()),
+                        opacity: None,
+                    }));
+                }
+                out.push(PaintInstruction::Clip(PaintClip {
+                    base: PaintBase::default(),
+                    x: clip.x * dpr,
+                    y: clip.y * dpr,
+                    width: clip.width * dpr,
+                    height: clip.height * dpr,
+                    children,
+                }));
+            }
+        }
+    }
+}
+
+fn background_tile_size(size: BackgroundSize, origin: BackgroundRect) -> (f64, f64) {
+    match size {
+        BackgroundSize::Explicit { width, height } => (
+            width
+                .map(|value| value.resolve(origin.width))
+                .unwrap_or(origin.width),
+            height
+                .map(|value| value.resolve(origin.height))
+                .unwrap_or(origin.height),
+        ),
+        BackgroundSize::Auto | BackgroundSize::Cover | BackgroundSize::Contain => {
+            (origin.width, origin.height)
+        }
+    }
+}
+
+fn background_tiles(
+    x: f64,
+    y: f64,
+    w: f64,
+    h: f64,
+    clip: BackgroundRect,
+    repeat_x: BackgroundRepeat,
+    repeat_y: BackgroundRepeat,
+) -> Vec<(f64, f64)> {
+    let xs = tile_axis(x, w, clip.x, clip.width, repeat_x);
+    let ys = tile_axis(y, h, clip.y, clip.height, repeat_y);
+    xs.into_iter()
+        .flat_map(|x| ys.iter().copied().map(move |y| (x, y)))
+        .take(256)
+        .collect()
+}
+
+fn tile_axis(
+    start: f64,
+    size: f64,
+    clip_start: f64,
+    clip_size: f64,
+    repeat: BackgroundRepeat,
+) -> Vec<f64> {
+    if repeat == BackgroundRepeat::NoRepeat || size <= 0.0 {
+        return vec![start];
+    }
+    if repeat == BackgroundRepeat::Space {
+        let count = (clip_size / size).floor() as usize;
+        if count <= 1 {
+            return vec![start];
+        }
+        let gap = (clip_size - count as f64 * size) / (count - 1) as f64;
+        return (0..count)
+            .map(|index| clip_start + index as f64 * (size + gap))
+            .collect();
+    }
+    let mut first = start;
+    while first > clip_start {
+        first -= size;
+    }
+    let mut out = Vec::new();
+    let mut cursor = first;
+    while cursor < clip_start + clip_size && out.len() < 256 {
+        out.push(cursor);
+        cursor += size;
+    }
+    out
+}
+
+fn emit_gradient_shape(
+    style: &BackgroundStyle,
+    border_box: BackgroundRect,
+    clip_kind: BackgroundBox,
+    painted: BackgroundRect,
+    dpr: f64,
+    id: String,
+    out: &mut Vec<PaintInstruction>,
+) {
+    let clip = style.painting_box(clip_kind, border_box);
+    let clip_corners = style.resolved_corners_for_box(clip_kind, border_box);
+    let at_left = (painted.x - clip.x).abs() < f64::EPSILON;
+    let at_top = (painted.y - clip.y).abs() < f64::EPSILON;
+    let at_right = (painted.x + painted.width - clip.x - clip.width).abs() < f64::EPSILON;
+    let at_bottom = (painted.y + painted.height - clip.y - clip.height).abs() < f64::EPSILON;
+    let corners = [
+        if at_left && at_top {
+            clip_corners[0]
+        } else {
+            (0.0, 0.0)
+        },
+        if at_right && at_top {
+            clip_corners[1]
+        } else {
+            (0.0, 0.0)
+        },
+        if at_right && at_bottom {
+            clip_corners[2]
+        } else {
+            (0.0, 0.0)
+        },
+        if at_left && at_bottom {
+            clip_corners[3]
+        } else {
+            (0.0, 0.0)
+        },
+    ]
+    .map(|(rx, ry)| (rx * dpr, ry * dpr));
+    out.push(PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: rounded_rect_path(
+            BackgroundRect {
+                x: painted.x * dpr,
+                y: painted.y * dpr,
+                width: painted.width * dpr,
+                height: painted.height * dpr,
+            },
+            corners,
+        ),
+        fill: Some(format!("url(#{id})")),
+        fill_rule: None,
+        stroke: None,
+        stroke_width: None,
+        stroke_cap: None,
+        stroke_join: None,
+        stroke_dash: None,
+        stroke_dash_offset: None,
+    }));
+}
+
+fn intersect_rect(a: BackgroundRect, b: BackgroundRect) -> Option<BackgroundRect> {
+    let x = a.x.max(b.x);
+    let y = a.y.max(b.y);
+    let right = (a.x + a.width).min(b.x + b.width);
+    let bottom = (a.y + a.height).min(b.y + b.height);
+    (right > x && bottom > y).then_some(BackgroundRect {
+        x,
+        y,
+        width: right - x,
+        height: bottom - y,
+    })
+}
+
+fn rounded_rect_path(rect: BackgroundRect, c: [(f64, f64); 4]) -> Vec<PathCommand> {
+    vec![
+        PathCommand::MoveTo {
+            x: rect.x + c[0].0,
+            y: rect.y,
+        },
+        PathCommand::LineTo {
+            x: rect.x + rect.width - c[1].0,
+            y: rect.y,
+        },
+        PathCommand::ArcTo {
+            rx: c[1].0,
+            ry: c[1].1,
+            x_rotation: 0.0,
+            large_arc: false,
+            sweep: true,
+            x: rect.x + rect.width,
+            y: rect.y + c[1].1,
+        },
+        PathCommand::LineTo {
+            x: rect.x + rect.width,
+            y: rect.y + rect.height - c[2].1,
+        },
+        PathCommand::ArcTo {
+            rx: c[2].0,
+            ry: c[2].1,
+            x_rotation: 0.0,
+            large_arc: false,
+            sweep: true,
+            x: rect.x + rect.width - c[2].0,
+            y: rect.y + rect.height,
+        },
+        PathCommand::LineTo {
+            x: rect.x + c[3].0,
+            y: rect.y + rect.height,
+        },
+        PathCommand::ArcTo {
+            rx: c[3].0,
+            ry: c[3].1,
+            x_rotation: 0.0,
+            large_arc: false,
+            sweep: true,
+            x: rect.x,
+            y: rect.y + rect.height - c[3].1,
+        },
+        PathCommand::LineTo {
+            x: rect.x,
+            y: rect.y + c[0].1,
+        },
+        PathCommand::ArcTo {
+            rx: c[0].0,
+            ry: c[0].1,
+            x_rotation: 0.0,
+            large_arc: false,
+            sweep: true,
+            x: rect.x + c[0].0,
+            y: rect.y,
+        },
+        PathCommand::Close,
+    ]
+}
+
+fn paint_gradient_stops(stops: &[layout_backgrounds::GradientStop]) -> Vec<GradientStop> {
+    let last = stops.len().saturating_sub(1).max(1) as f64;
+    stops
+        .iter()
+        .enumerate()
+        .map(|(index, stop)| GradientStop {
+            offset: stop.offset.unwrap_or(index as f64 / last).clamp(0.0, 1.0),
+            color: background_color_to_css(stop.color),
+        })
+        .collect()
+}
+
+fn background_color_to_css(color: BackgroundColor) -> String {
+    color_to_css(Color {
+        r: color.r,
+        g: color.g,
+        b: color.b,
+        a: color.a,
+    })
+}
+fn background_id(
+    node: &PositionedNode,
+    layer_index: usize,
+    tile_index: usize,
+    source: &str,
+    rect: BackgroundRect,
+) -> String {
+    let hash = source.bytes().fold(0xcbf29ce484222325_u64, |hash, byte| {
+        (hash ^ u64::from(byte)).wrapping_mul(0x100000001b3)
+    });
+    format!(
+        "background-{}-{layer_index}-{tile_index}-{:x}-{:x}-{:x}-{:x}-{hash:x}",
+        node.id.as_deref().unwrap_or("anonymous"),
+        rect.x.to_bits(),
+        rect.y.to_bits(),
+        rect.width.to_bits(),
+        rect.height.to_bits(),
+    )
 }
 
 fn read_color(m: &HashMap<String, ExtValue>, key: &str) -> Option<Color> {
@@ -1801,6 +2221,64 @@ mod tests {
             layer.children.as_slice(),
             [PaintInstruction::GlyphRun(_)]
         ));
+    }
+
+    #[test]
+    fn layered_gradients_and_images_emit_clipped_backend_neutral_paint() {
+        let mut leaf = positioned_leaf(text_content("background"), 4.0, 6.0, 80.0, 40.0);
+        let style = BackgroundStyle {
+            layers: vec![
+                layout_backgrounds::BackgroundLayer::new(BackgroundSource::LinearGradient {
+                    angle_degrees: 90.0,
+                    stops: vec![
+                        layout_backgrounds::GradientStop {
+                            color: BackgroundColor {
+                                r: 255,
+                                g: 0,
+                                b: 0,
+                                a: 255,
+                            },
+                            offset: Some(0.0),
+                        },
+                        layout_backgrounds::GradientStop {
+                            color: BackgroundColor {
+                                r: 0,
+                                g: 0,
+                                b: 255,
+                                a: 255,
+                            },
+                            offset: Some(1.0),
+                        },
+                    ],
+                }),
+                layout_backgrounds::BackgroundLayer {
+                    size: BackgroundSize::Explicit {
+                        width: Some(layout_backgrounds::LengthPercent::length(10.0)),
+                        height: Some(layout_backgrounds::LengthPercent::length(10.0)),
+                    },
+                    repeat_y: BackgroundRepeat::NoRepeat,
+                    ..layout_backgrounds::BackgroundLayer::new(BackgroundSource::Image(
+                        "checker.gif".into(),
+                    ))
+                },
+            ],
+            corners: [layout_backgrounds::CornerRadius {
+                x: layout_backgrounds::LengthPercent::length(8.0),
+                y: layout_backgrounds::LengthPercent::length(4.0),
+            }; 4],
+            ..BackgroundStyle::default()
+        };
+        leaf.ext.insert("backgrounds".into(), style.to_ext());
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        assert!(scene
+            .instructions
+            .iter()
+            .any(|value| matches!(value, PaintInstruction::Gradient(_))));
+        assert!(scene.instructions.iter().any(|value| matches!(value, PaintInstruction::Path(path) if matches!(path.commands.get(2), Some(PathCommand::ArcTo { rx, ry, .. }) if (*rx, *ry) == (8.0, 4.0)))));
+        assert!(scene.instructions.iter().any(|value| matches!(value, PaintInstruction::Clip(clip) if clip.children.iter().any(|child| matches!(child, PaintInstruction::Image(_))))));
     }
 
     #[test]

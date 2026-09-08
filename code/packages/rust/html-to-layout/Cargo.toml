@@ -1,6 +1,6 @@
 [package]
 name = "html-to-layout"
-version = "0.5.0"
+version = "0.7.0"
 edition = "2021"
 description = "Converts html-parser browser render trees into the shared Layout IR."
 
@@ -17,6 +17,7 @@ layout-positioned = { path = "../layout-positioned" }
 layout-replaced = { path = "../layout-replaced" }
 layout-generated = { path = "../layout-generated" }
 layout-effects = { path = "../layout-effects" }
+layout-backgrounds = { path = "../layout-backgrounds" }
 lexer = { path = "../lexer" }
 parser = { path = "../parser" }
 

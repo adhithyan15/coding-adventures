@@ -20,7 +20,7 @@ use venture_browser_core::{
     BrowserViewport,
 };
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.4.0";
 pub const FIXTURE_PATH: &str = "/visual.html";
 pub const IMAGE_PATH: &str = "/checker.gif";
 pub const MISSING_IMAGE_PATH: &str = "/missing.gif";
@@ -36,6 +36,7 @@ pub const INLINE_BOX_FIXTURE_PATH: &str = "/inline-box.html";
 pub const REPLACED_FIXTURE_PATH: &str = "/replaced.html";
 pub const GENERATED_FIXTURE_PATH: &str = "/generated.html";
 pub const EFFECTS_FIXTURE_PATH: &str = "/effects.html";
+pub const BACKGROUNDS_FIXTURE_PATH: &str = "/backgrounds.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -122,6 +123,9 @@ li::marker { color: green; }
 
 /// Affine paint, isolated compositing, rounded decoration, and transformed hit testing.
 pub const EFFECTS_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="effect-card" style="width:100px;height:40px;background:red;border-radius:7px;opacity:0.7;transform:translate(18px, 6px) rotate(4deg);transform-origin:left top;filter:brightness(110%);box-shadow:3px 4px 2px #000;mix-blend-mode:multiply;isolation:isolate"><a id="effect-link" href="effect-next.html" style="text-shadow:1px 1px 1px #000">Effect link</a></div></body></html>"#;
+
+/// Multiple gradients, painting boxes, and per-corner elliptical radii.
+pub const BACKGROUNDS_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="background-card" style="width:120px;height:60px;padding:8px;border:3px solid black;background-color:white;background-image:linear-gradient(90deg,red 0%,blue 100%),radial-gradient(white 0%,green 100%),url('http://venture.test/checker.gif');background-position:center,10px 20%,right bottom;background-size:cover,40px 30px,12px 12px;background-repeat:no-repeat,repeat-x,no-repeat;background-origin:padding-box,content-box,content-box;background-clip:border-box,padding-box,content-box;border-radius:18px 10px 6px 2px / 10px 8px 4px 2px">Layered background</div></body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -522,6 +526,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let replaced_url = format!("{origin}{REPLACED_FIXTURE_PATH}");
     let generated_url = format!("{origin}{GENERATED_FIXTURE_PATH}");
     let effects_url = format!("{origin}{EFFECTS_FIXTURE_PATH}");
+    let backgrounds_url = format!("{origin}{BACKGROUNDS_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -606,6 +611,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             EFFECTS_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == backgrounds_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            BACKGROUNDS_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -784,6 +795,23 @@ pub fn load_effects_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{EFFECTS_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_backgrounds_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{BACKGROUNDS_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1531,8 +1559,35 @@ mod tests {
             &page.paint.scene.instructions,
             &|instruction| matches!(
                 instruction,
-                PaintInstruction::Rect(rect) if rect.corner_radius == Some(7.0)
+                PaintInstruction::Path(path)
+                    if path.commands.iter().any(|command| matches!(
+                        command,
+                        paint_instructions::PathCommand::ArcTo { rx, ry, .. }
+                            if (*rx, *ry) == (7.0, 7.0)
+                    ))
             )
+        ));
+    }
+
+    #[test]
+    fn backgrounds_fixture_converges_gradients_boxes_and_elliptical_corners() {
+        let page = load_backgrounds_page("http://venture.test").expect("background fixture page");
+        let gradients = page
+            .paint
+            .scene
+            .instructions
+            .iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::Gradient(_)))
+            .count();
+        assert_eq!(gradients, 5, "repeat-x must emit four radial tiles");
+        assert!(page.paint.scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, paint_instructions::PathCommand::ArcTo { rx, ry, .. } if rx != ry)))
+        }));
+        assert!(contains_instruction(
+            &page.paint.scene.instructions,
+            &|instruction| {
+                matches!(instruction, PaintInstruction::Image(image) if matches!(image.src, paint_instructions::ImageSrc::Pixels(_)))
+            }
         ));
     }
 

@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.4.0
+
+- Add a deterministic layered-background fixture covering linear/radial
+  gradients, painting boxes, repeat, and elliptical corner paths.
+
+## 0.3.0
 
 - Add a deterministic visual-effects fixture covering rounded backgrounds,
   isolated opacity, transforms, filters, shadows, blending, and transformed
