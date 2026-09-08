@@ -3,6 +3,9 @@ requires 'coding-adventures-wasm-leb128', '0.01';
 requires 'coding-adventures-wasm-opcodes', '0.01';
 requires 'coding-adventures-wasm-types', '0.01';
 on 'test' => sub {
+    requires 'coding-adventures-grammar-tools', '0.01';
+    requires 'coding-adventures-lexer', '0.01';
+    requires 'coding-adventures-virtual-machine', '0.01';
     requires 'coding-adventures-brainfuck', '0.01';
     requires 'coding-adventures-brainfuck-ir-compiler', '0.01';
     requires 'coding-adventures-wasm-module-encoder', '0.01';
