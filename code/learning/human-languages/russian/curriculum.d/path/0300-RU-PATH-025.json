@@ -1,0 +1,16 @@
+{
+  "id": "RU-PATH-025",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "RU-C23-dva",
+    "RU-C23-tri",
+    "RU-C23-chetyre",
+    "RU-C23-pyat",
+    "RU-C23-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "RU-EXT-030-COUNT-FIVE"
+  ]
+}

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 import os
 import plistlib
 import shutil
@@ -1714,7 +1715,95 @@ def _pe_with_exports(names: list[str]) -> bytes:
 
     optional = bytearray(240)
     struct.pack_into("<H", optional, 0, 0x20B)  # PE32+
+    # NumberOfRvaAndSizes. Every real PE sets this -- it is how the reader knows
+    # how many data directories exist -- and this fixture used to leave it zero,
+    # so it was accepted only because the reader trusted SizeOfOptionalHeader
+    # instead. A fixture that is not shaped like the thing it stands in for will
+    # keep a parser honest right up until the parser is fixed.
+    struct.pack_into("<I", optional, 108, 16)
     struct.pack_into("<II", optional, 112, rva(0), len(blob))  # export directory
+
+    section = bytearray(40)
+    section[:8] = b".rdata\x00\x00"
+    struct.pack_into("<IIII", section, 8, len(blob), section_rva, len(blob), section_offset)
+
+    header = b"PE\x00\x00" + struct.pack("<HHIIIHH", 0x8664, 1, 0, 0, 0, len(optional), 0x2022)
+    image = bytearray(b"MZ" + b"\x00" * 0x3E)
+    struct.pack_into("<I", image, 0x3C, 0x40)
+    image += header + optional + section
+    image += b"\x00" * (section_offset - len(image))
+    image += blob
+    return bytes(image)
+
+
+def _pe_with_exports_and_imports(
+    exports: list[str],
+    imports: list[bytes],
+    *,
+    break_import_rva: bool = False,
+    directory_count: int = 16,
+    trailing_directory_garbage: bool = False,
+) -> bytes:
+    """A minimal PE32+ DLL exporting `exports` and importing `imports`.
+
+    `imports` are raw BYTES, not `str`, so a test can plant a name the loader
+    would compare byte-for-byte -- including one that is not ASCII.
+
+    Synthetic, and knowingly so: the import READER is pinned against the four
+    real PE images this repository carries, and its output was matched against
+    `llvm-objdump` name for name. What these bytes exercise is the surrounding
+    policy -- that an unbundled import is refused, and that an unreadable table
+    raises -- which no real binary here can demonstrate.
+    """
+
+    section_rva, section_offset = 0x1000, 0x400
+    blob = bytearray()
+
+    def rva(offset: int) -> int:
+        return section_rva + offset
+
+    export_directory_offset = 0
+    directory = bytearray(40)
+    names_array_offset = 40
+    strings_offset = names_array_offset + 4 * len(exports)
+    struct.pack_into("<I", directory, 24, len(exports))
+    struct.pack_into("<I", directory, 32, rva(names_array_offset))
+    blob += directory
+
+    strings = bytearray()
+    pointers = bytearray()
+    for name in exports:
+        pointers += struct.pack("<I", rva(strings_offset + len(strings)))
+        strings += name.encode() + b"\x00"
+    blob += pointers + strings
+    export_size = len(blob) - export_directory_offset
+
+    # Import descriptors: one per name plus the all-zero terminator, then the
+    # name strings they point at.
+    import_directory_offset = len(blob)
+    descriptors = bytearray()
+    name_bytes = bytearray()
+    names_base = import_directory_offset + 20 * (len(imports) + 1)
+    for name in imports:
+        entry = bytearray(20)
+        struct.pack_into("<I", entry, 12, rva(names_base + len(name_bytes)))
+        descriptors += entry
+        name_bytes += name + b"\x00"
+    descriptors += bytearray(20)  # terminator
+    blob += descriptors + name_bytes
+
+    optional = bytearray(240)
+    struct.pack_into("<H", optional, 0, 0x20B)
+    struct.pack_into("<I", optional, 108, directory_count)  # NumberOfRvaAndSizes
+    if trailing_directory_garbage:
+        # Bytes sitting where directory 13 (delay-load) would be, BEYOND the
+        # declared count. A reader that bounds on SizeOfOptionalHeader instead
+        # of the count reads these as a real directory.
+        struct.pack_into("<II", optional, 112 + 13 * 8, 0xDEAD0000, 32)
+    struct.pack_into("<II", optional, 112, rva(export_directory_offset), export_size)
+    if imports or break_import_rva:
+        import_rva = 0xDEAD0000 if break_import_rva else rva(import_directory_offset)
+        struct.pack_into("<II", optional, 120, import_rva, len(descriptors))
 
     section = bytearray(40)
     section[:8] = b".rdata\x00\x00"
@@ -1741,6 +1830,7 @@ def _write_xaml_publish(
     deps: bool = True,
     flattened: bool = True,
     engine_exports: list[str] | None = None,
+    engine_imports: list[bytes] | None = None,
 ) -> Path:
     """A stand-in for what `dotnet publish` writes for the WinUI app."""
 
@@ -1756,7 +1846,10 @@ def _write_xaml_publish(
     (publish / "Assets").mkdir()
     if engine:
         (publish / "engram_capi.dll").write_bytes(
-            _pe_with_exports(ENGINE_EXPORTS if engine_exports is None else engine_exports)
+            _pe_with_exports_and_imports(
+                ENGINE_EXPORTS if engine_exports is None else engine_exports,
+                engine_imports or [],
+            )
         )
     natives = publish / "runtimes" / "win-x64" / "native"
     natives.mkdir(parents=True)
@@ -1868,6 +1961,39 @@ class ArchiveXamlTests(unittest.TestCase):
                 )
             self.assertIn("exports only 2", str(caught.exception))
 
+    def test_refuses_an_engine_importing_a_dll_the_payload_does_not_carry(self) -> None:
+        # A PE names its imports without paths, so the loader searches the
+        # executable's directory, then the system directories, then PATH. A Qt
+        # DLL present only on the build machine therefore produces a payload
+        # that launches for whoever built it and for nobody else -- the Windows
+        # form of the failure the macOS lane catches by walking load commands.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(
+                root, engine_imports=[b"qt6core.dll", b"kernel32.dll"]
+            )
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_xaml(
+                    "0.4.0", "windows", publish, root / "out", COMMIT
+                )
+            message = str(caught.exception)
+            self.assertIn("qt6core.dll", message)
+            # kernel32 is Windows'\''s to provide, so naming it would be noise.
+            self.assertNotIn("kernel32", message)
+
+    def test_accepts_an_engine_whose_imports_are_bundled_or_from_windows(self) -> None:
+        # The other side of the boundary: the guard must not refuse a payload
+        # that is genuinely self-contained, or it would block every release.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(
+                root, engine_imports=[b"kernel32.dll", b"EngramApp.dll"]
+            )
+            archive = engram_release.archive_xaml(
+                "0.4.0", "windows", publish, root / "out", COMMIT
+            )
+            self.assertTrue(archive.is_file())
+
     def test_refuses_output_missing_its_runtime_metadata(self) -> None:
         for kwargs, expected in [
             ({"runtimeconfig": False}, "runtimeconfig"),
@@ -1943,6 +2069,160 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(
             engram_release.main(["artifact-names", "--version", "0.3.0"]), 0
         )
+
+
+
+class PeImportTests(unittest.TestCase):
+    """The PE import reader, measured against real Windows binaries.
+
+    Fixtures I construct from my own reading of the format cannot test that
+    reading -- a struct built from the same wrong offset agrees with the parser
+    exactly. This repository happens to carry four genuine PE images, so the
+    parser is checked against those, and its output was separately confirmed to
+    match `llvm-objdump --private-headers` name for name.
+    """
+
+    REPO_ROOT = Path(__file__).resolve().parents[3]
+
+    GO_EXE = "code/programs/go/build-tool/build-tool.exe"
+    NODE_ADDON = "code/packages/typescript/bitset-native/bitset_native_node.node"
+
+    def read(self, relative: str) -> bytes:
+        path = self.REPO_ROOT / relative
+        if not path.exists():  # pragma: no cover - guards a moved fixture
+            self.skipTest(f"missing PE fixture: {relative}")
+        return path.read_bytes()
+
+    def test_reads_the_imports_of_a_real_go_executable(self):
+        # Go links its runtime statically and reaches the OS through syscalls,
+        # so a Go binary importing anything beyond kernel32 would mean the
+        # parser invented an entry.
+        self.assertEqual(
+            engram_release.pe_imported_libraries(self.read(self.GO_EXE)),
+            ["kernel32.dll"],
+        )
+
+    def test_reads_the_imports_of_a_real_node_addon(self):
+        # Verified against `llvm-objdump --private-headers`, which reports these
+        # same seven in this same order (and spells two of them in a different
+        # case, which is why the reader lowercases).
+        self.assertEqual(
+            engram_release.pe_imported_libraries(self.read(self.NODE_ADDON)),
+            [
+                "node.exe",
+                "api-ms-win-core-synch-l1-2-0.dll",
+                "kernel32.dll",
+                "ntdll.dll",
+                "vcruntime140.dll",
+                "api-ms-win-crt-runtime-l1-1-0.dll",
+                "api-ms-win-crt-heap-l1-1-0.dll",
+            ],
+        )
+
+    def test_rejects_input_that_is_not_a_pe(self):
+        for payload in (b"", b"MZ", b"not a pe at all", b"\x7fELF\x02\x01\x01"):
+            with self.assertRaises(ValueError):
+                engram_release.pe_imported_libraries(payload)
+
+    def test_system_dlls_need_no_bundling(self):
+        # The Go binary needs nothing shipped beside it. If this ever reports a
+        # finding, either the allowlist lost a name or the reader gained one.
+        self.assertEqual(
+            engram_release.non_relocatable_pe_imports(self.read(self.GO_EXE), []),
+            [],
+        )
+
+    def test_reports_an_import_that_is_neither_bundled_nor_from_windows(self):
+        binary = self.read(self.NODE_ADDON)
+        # `vcruntime140.dll` is redistributable, not part of Windows -- exactly
+        # the class of dependency that resolves from the build machine's PATH
+        # and is absent everywhere else.
+        self.assertIn(
+            "vcruntime140.dll",
+            engram_release.non_relocatable_pe_imports(binary, []),
+        )
+        self.assertNotIn(
+            "vcruntime140.dll",
+            engram_release.non_relocatable_pe_imports(binary, ["vcruntime140.dll"]),
+        )
+
+    def test_bundled_names_match_case_insensitively(self):
+        # Windows resolves imports case-insensitively, so a check that treats
+        # `NODE.EXE` and `node.exe` as different names would refuse a bundle the
+        # loader accepts -- and, worse, accept one it does not.
+        binary = self.read(self.NODE_ADDON)
+        self.assertNotIn(
+            "node.exe",
+            engram_release.non_relocatable_pe_imports(binary, ["NODE.EXE"]),
+        )
+
+    def test_api_set_names_are_matched_by_prefix(self):
+        # API-set names carry version numbers that move between Windows
+        # releases, so an exact list would fail closed on a newer runner.
+        self.assertTrue(engram_release.is_windows_system_dll("api-ms-win-core-synch-l1-2-0.dll"))
+        self.assertTrue(engram_release.is_windows_system_dll("ext-ms-win-anything-l9-9-9.dll"))
+        self.assertTrue(engram_release.is_windows_system_dll("KERNEL32.DLL"))
+        self.assertFalse(engram_release.is_windows_system_dll("qt6core.dll"))
+        self.assertFalse(engram_release.is_windows_system_dll("engram_capi.dll"))
+
+    def test_a_qt_payload_shape_is_reported_through_the_real_function(self):
+        # The motivating case, and it goes through `non_relocatable_pe_imports`
+        # rather than re-implementing the filter inline -- a test that
+        # reproduces the rule it is checking passes when the rule is wrong.
+        binary = _pe_with_exports_and_imports(
+            ["eg_a"], [b"qt6core.dll", b"qt6gui.dll", b"kernel32.dll", b"engram_capi.dll"]
+        )
+        self.assertEqual(
+            engram_release.non_relocatable_pe_imports(binary, ["engram_capi.dll"]),
+            ["qt6core.dll", "qt6gui.dll"],
+        )
+
+    def test_a_non_ascii_import_name_cannot_lowercase_into_the_allowlist(self):
+        # U+212A KELVIN SIGN lowercases to ASCII `k`, so `\u212aERNEL32.DLL`
+        # used to report itself as `kernel32.dll`: matched the system allowlist,
+        # dropped out of the check, and misreported what the image imports --
+        # while the loader would look for that literal name and fail.
+        binary = _pe_with_exports_and_imports(
+            ["eg_a"], ["\u212aERNEL32.DLL".encode("utf-8"), b"qt6core.dll"]
+        )
+        with self.assertRaises(ValueError) as caught:
+            engram_release.pe_imported_libraries(binary)
+        self.assertIn("could not read", str(caught.exception))
+
+    def test_an_unresolvable_import_directory_raises_rather_than_reporting_none(self):
+        # The dangerous direction is returning FEWER names than the loader
+        # resolves, because that reads as "relocatable". A directory RVA that
+        # points at no section is exactly that, so it raises.
+        binary = _pe_with_exports_and_imports(["eg_a"], [], break_import_rva=True)
+        with self.assertRaises(ValueError) as caught:
+            engram_release.pe_imported_libraries(binary)
+        self.assertIn("resolves to no section", str(caught.exception))
+
+    def test_directories_beyond_the_declared_count_are_not_read(self):
+        # `NumberOfRvaAndSizes`, not `SizeOfOptionalHeader`, says how many data
+        # directories exist. An image may declare a full-size optional header
+        # and only a couple of directories; reading past the count picks up
+        # whatever bytes follow. Here that garbage would parse as a delay-load
+        # directory whose RVA resolves to nothing -- and, because an unreadable
+        # table now raises, would REJECT a perfectly good image.
+        binary = _pe_with_exports_and_imports(
+            ["eg_a"],
+            [b"kernel32.dll"],
+            directory_count=2,
+            trailing_directory_garbage=True,
+        )
+        self.assertEqual(
+            engram_release.pe_imported_libraries(binary), ["kernel32.dll"]
+        )
+
+    def test_the_export_reader_shares_the_header_walk(self):
+        # It used to carry its own copy, and the two had already drifted: only
+        # one bounded the offset it computed. This asserts the shared helper is
+        # actually used, since a docstring saying so is not evidence.
+        source = inspect.getsource(engram_release.pe_exported_names)
+        self.assertIn("_pe_image(binary)", source)
+        self.assertNotIn("missing PE signature", source)
+
 
 
 if __name__ == "__main__":

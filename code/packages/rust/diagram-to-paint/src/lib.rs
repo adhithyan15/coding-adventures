@@ -26,12 +26,13 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.62.0";
+pub const VERSION: &str = "0.63.0";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
+    EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
@@ -71,6 +72,138 @@ where
     pub shaper: &'a S,
     pub metrics: &'a M,
     pub resolver: &'a R,
+}
+
+/// Lower a layouted Event Modeling diagram into backend-neutral paint instructions.
+pub fn diagram_to_paint_event_model<S, M, R>(
+    diagram: &LayoutedEventModelDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    let mut instructions = Vec::new();
+    let mut text_children = Vec::new();
+    let label_color = Color { r: 30, g: 41, b: 59, a: 255 };
+
+    if let Some(title) = &diagram.title {
+        text_children.push(text_node(
+            title,
+            0.0,
+            8.0,
+            diagram.width,
+            28.0,
+            options.title_font.clone(),
+            label_color,
+        ));
+    }
+
+    for item in &diagram.items {
+        match item {
+            LayoutedEventModelItem::Lane { x, y, width, height, label, fill } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x,
+                    y: *y,
+                    width: *width,
+                    height: *height,
+                    fill: Some(fill.clone()),
+                    stroke: Some("#cbd5e1".into()),
+                    stroke_width: Some(1.0),
+                    corner_radius: Some(6.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                text_children.push(text_node(
+                    label,
+                    x + 8.0,
+                    y + 8.0,
+                    132.0,
+                    height - 16.0,
+                    options.label_font.clone(),
+                    label_color,
+                ));
+            }
+            LayoutedEventModelItem::Frame { x, y, width, height, label, kind } => {
+                let fill = match kind {
+                    EventModelEntityKind::Ui => "#dbeafe",
+                    EventModelEntityKind::Processor => "#e0e7ff",
+                    EventModelEntityKind::Command => "#fef3c7",
+                    EventModelEntityKind::ReadModel => "#dcfce7",
+                    EventModelEntityKind::Event => "#fee2e2",
+                };
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x,
+                    y: *y,
+                    width: *width,
+                    height: *height,
+                    fill: Some(fill.into()),
+                    stroke: Some("#475569".into()),
+                    stroke_width: Some(1.5),
+                    corner_radius: Some(5.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                text_children.push(text_node(
+                    label,
+                    x + 6.0,
+                    y + 6.0,
+                    width - 12.0,
+                    height - 12.0,
+                    options.label_font.clone(),
+                    label_color,
+                ));
+            }
+            LayoutedEventModelItem::Relation { from, to } => {
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[from.clone(), to.clone()],
+                    "#64748b",
+                    2.0,
+                )));
+            }
+        }
+    }
+
+    let text_root = PositionedNode {
+        x: 0.0,
+        y: 0.0,
+        width: diagram.width,
+        height: diagram.height,
+        id: None,
+        content: None,
+        children: text_children,
+        ext: HashMap::new(),
+    };
+    let text_scene = layout_to_paint(&text_root, &LayoutToPaintOptions {
+        width: diagram.width,
+        height: diagram.height,
+        background: Color { r: 0, g: 0, b: 0, a: 0 },
+        device_pixel_ratio: 1.0,
+        shaper: options.shaper,
+        metrics: options.metrics,
+        resolver: options.resolver,
+    });
+    instructions.extend(text_scene.instructions);
+
+    let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title {
+        metadata.insert("accessibility.title".into(), title.clone());
+    }
+    if let Some(description) = &diagram.accessibility_description {
+        metadata.insert("accessibility.description".into(), description.clone());
+    }
+    let bg = &options.background;
+    PaintScene {
+        width: diagram.width,
+        height: diagram.height,
+        background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
+        instructions,
+        id: None,
+        metadata: (!metadata.is_empty()).then_some(metadata),
+    }
 }
 
 // ============================================================================
@@ -3947,7 +4080,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.62.0");
+        assert_eq!(crate::VERSION, "0.63.0");
     }
 
     #[test]

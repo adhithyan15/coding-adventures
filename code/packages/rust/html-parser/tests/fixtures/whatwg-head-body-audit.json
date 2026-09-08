@@ -1,5 +1,5 @@
 {
-  "case_count": 1219,
+  "case_count": 1225,
   "cases": [
     {
       "axis": "head-text-mode",
@@ -7314,11 +7314,47 @@
       "id": "scripted-foster01-dat-2",
       "reason": "title, style, and script handoff around document shell boundaries",
       "source": "scripted_foster01.dat:2"
+    },
+    {
+      "axis": "body-frameset-transition",
+      "id": "template-dat-44",
+      "reason": "frameset/body compatibility and frameset-ok transitions",
+      "source": "template.dat:44"
+    },
+    {
+      "axis": "body-frameset-transition",
+      "id": "template-dat-45",
+      "reason": "frameset/body compatibility and frameset-ok transitions",
+      "source": "template.dat:45"
+    },
+    {
+      "axis": "body-frameset-transition",
+      "id": "template-dat-46",
+      "reason": "frameset/body compatibility and frameset-ok transitions",
+      "source": "template.dat:46"
+    },
+    {
+      "axis": "body-frameset-transition",
+      "id": "template-dat-47",
+      "reason": "frameset/body compatibility and frameset-ok transitions",
+      "source": "template.dat:47"
+    },
+    {
+      "axis": "body-frameset-transition",
+      "id": "template-dat-48",
+      "reason": "frameset/body compatibility and frameset-ok transitions",
+      "source": "template.dat:48"
+    },
+    {
+      "axis": "body-frameset-transition",
+      "id": "template-dat-49",
+      "reason": "frameset/body compatibility and frameset-ok transitions",
+      "source": "template.dat:49"
     }
   ],
   "counts_by_axis": {
     "body-boundary": 405,
-    "body-frameset-transition": 153,
+    "body-frameset-transition": 159,
     "head-boundary": 51,
     "head-metadata-boundary": 50,
     "head-text-mode": 487,

@@ -1,0 +1,14 @@
+{
+  "id": "RU-PATH-027",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "RU-C25-dvadtsat",
+    "RU-C25-sto",
+    "RU-C25-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "RU-EXT-032-ROUND-AMOUNTS"
+  ]
+}

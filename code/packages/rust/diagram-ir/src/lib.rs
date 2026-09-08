@@ -928,6 +928,69 @@ pub struct LayoutedChartDiagram {
     pub items: Vec<LayoutedChartItem>,
 }
 
+// EVENT MODELING FAMILY
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum EventModelEntityKind {
+    Ui,
+    Processor,
+    Command,
+    ReadModel,
+    Event,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct EventModelFrame {
+    pub id: String,
+    pub entity_id: String,
+    pub namespace: Option<String>,
+    pub label: String,
+    pub kind: EventModelEntityKind,
+    pub reset: bool,
+    pub source_frames: Vec<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct EventModelDiagram {
+    pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub frames: Vec<EventModelFrame>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum LayoutedEventModelItem {
+    Lane {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        label: String,
+        fill: String,
+    },
+    Frame {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        label: String,
+        kind: EventModelEntityKind,
+    },
+    Relation {
+        from: Point,
+        to: Point,
+    },
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedEventModelDiagram {
+    pub width: f64,
+    pub height: f64,
+    pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub items: Vec<LayoutedEventModelItem>,
+}
+
 // STRUCTURAL FAMILY
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralKind {

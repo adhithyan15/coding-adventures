@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "RU-W26-ordinal-hyphen",
+    "language": "russian",
+    "chapter": 26,
+    "sequence": 1310,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0cb8e9063b2a2147",
+    "detachableSegments": [
+      "Script — the figure and its ending"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

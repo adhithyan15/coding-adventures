@@ -2039,8 +2039,10 @@ describe("the committed Russian A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(228);
-    expect(coverage.covered).toBe(104);
-    expect(coverage.unmapped).toBe(124);
+    // 104 -> 107: HL-C350's numeral tranche (chapters 23-26) closes RU-A1-Q-01,
+    // RU-A1-Q-02 and RU-A1-L-09.
+    expect(coverage.covered).toBe(107);
+    expect(coverage.unmapped).toBe(121);
     // Zero partials is a property of the "existing atoms only" rule, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -2084,11 +2086,33 @@ describe("the committed Russian A1 inventory", () => {
     // uncovered points here — the letter names, the four untaught letters, the
     // cursive hand, the lower-case rule, the spelling rule — are the
     // distinction.
-    expect(coverage.byCategory["Kirillitsa - the letters"]!).toEqual({ enumerated: 10, covered: 5 });
+    // 5 -> 6: the written ordinal, 1-y, is the one letters point that was a
+    // numerals point seen from the other side. Its derivation was written to
+    // defend a transfer from Spanish superscripts and now pays off: the demand
+    // is a numeral carrying a written grammatical ending, and Russian answers it
+    // with a hyphen instead of a superscript.
+    expect(coverage.byCategory["Kirillitsa - the letters"]!).toEqual({ enumerated: 10, covered: 6 });
+    // THE COLUMN THAT HELD EXACTLY ONE NUMBER. odin was taught as half of the
+    // odin ... drugoy joining pattern rather than as a numeral, so the track
+    // could ask skolko and understand no answer to it. HL-C350 closes the
+    // cardinals and the ordinals at NO new Cyrillic letter, and leaves the two
+    // that are not downstream of a numeral.
+    expect(coverage.byCategory["Chislitelnye i kolichestvo - numerals and quantity"]!)
+      .toEqual({ enumerated: 5, covered: 2 });
+    // The case government the numerals impose is NOT claimed. dva/tri/chetyre
+    // take the genitive singular and pyat upward the genitive plural, and this
+    // track has taught the genitive in one place, after `do`. RU-C25-practice
+    // tells the reader so in as many words, and the atom below is the record of
+    // their having been told -- which is a different thing from teaching it.
+    const cardinals = inventory.points.find((point) => point.id === "RU-A1-Q-01")!;
+    expect(cardinals.probe).toContain("RU-GRAMMAR-TSAT-TENS-01");
+    expect(cardinals.probe).not.toContain("RU-GRAMMAR-NUMERAL-CASE-01");
+    expect(cardinals.note).toMatch(/Counting THINGS is a genitive chapter/);
+    expect(inventory.points.find((point) => point.id === "RU-A1-C-05")!.probe).toBeNull();
     // Nothing in the corpus can be described, because no adjective is taught.
     expect(coverage.byCategory["Prilagatelnoe - the adjective"]!.covered).toBe(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "russian A1 (partial inventory): 104/228 points covered (46%)",
+      "russian A1 (partial inventory): 107/228 points covered (47%)",
     );
   }, 60_000);
 });

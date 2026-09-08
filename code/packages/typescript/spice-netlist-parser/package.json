@@ -4,8 +4,12 @@
   "description": "SPICE3 netlist parser that builds coding-adventures SPICE engine circuits",
   "type": "module",
   "main": "src/index.ts",
+  "bin": {
+    "spice-netlist-parser": "dist/cli.js"
+  },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && esbuild src/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js",
+    "pretest": "npm run build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
@@ -23,6 +27,8 @@
   },
   "devDependencies": {
     "typescript": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "esbuild": "^0.27.0",
     "vitest": "^4.1.0",
     "@vitest/coverage-v8": "^4.1.0"
   }

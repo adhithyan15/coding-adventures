@@ -1,5 +1,5 @@
 {
-  "case_count": 657,
+  "case_count": 662,
   "cases": [
     {
       "axis": "interactive-formatting-boundary",
@@ -3942,6 +3942,36 @@
       "id": "adoption02-dat-4",
       "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
       "source": "adoption02.dat:4"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "template-dat-44",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "template.dat:44"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "template-dat-45",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "template.dat:45"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "template-dat-46",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "template.dat:46"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "template-dat-47",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "template.dat:47"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "template-dat-48",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "template.dat:48"
     }
   ],
   "counts_by_axis": {
@@ -3950,7 +3980,7 @@
     "heading-boundary": 28,
     "interactive-formatting-boundary": 152,
     "list-definition-boundary": 57,
-    "paragraph-boundary": 228,
+    "paragraph-boundary": 233,
     "ruby-implied-end-tags": 43
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress active formatting elements, implied end tags, ruby scopes, headings, and paragraph/list boundaries.",

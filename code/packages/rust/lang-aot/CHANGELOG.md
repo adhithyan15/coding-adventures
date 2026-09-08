@@ -8,6 +8,12 @@ reads, string reads and non-consuming EOF peeks. Four FLOW-MATIC JVM cells
 cover streams, empty input, partial records and repeated EOF. Java host tests
 verify stable peeks, permissive parsing and propagation of I/O failures.
 
+## 0.293.0 — 2026-09-07 — conditional tracked ALGOL real exponents
+
+The seven-backend ALGOL matrix now proves a pure real selector may execute
+around path-independent exact built-in exponent branches over a tracked local
+real snapshot without retaining runtime power.
+
 ## Unreleased — FLOW-MATIC WASM EOF (VM-039b)
 
 Add the `input_more` builtin as `env.__input_more() -> i64` and connect

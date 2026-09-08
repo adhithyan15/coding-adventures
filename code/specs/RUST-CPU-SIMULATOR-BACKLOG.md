@@ -81,7 +81,7 @@ according to the current prioritization run.
 | RCPU-027 / RCPU-028 | 1985 | ARM1 / ARMv1 | Complete: `arm1-simulator` | Complete: `arm1-gatelevel` |
 | RCPU-029 / RCPU-030 | 1985 | MIPS R2000 | Complete: `mips-r2000-simulator` | Complete: `mips-r2000-gatelevel` |
 | RCPU-031 / RCPU-032 | 1987 | SPARC V8 | Complete: `sparc-v8-simulator` | Complete: `sparc-v8-gatelevel` |
-| RCPU-033 / RCPU-034 | 1992 | DEC Alpha AXP 21064 | Missing | Missing |
+| RCPU-033 / RCPU-034 | 1992 | DEC Alpha AXP 21064 | Complete: `alpha-axp-simulator` | Missing |
 | RCPU-035 / RCPU-036 | 1992 | PowerPC 601 | Missing | Missing |
 | RCPU-037 / RCPU-038 | 2003 | x86-64 (AMD64) | Audit: `x86-simulator` | Missing |
 | RCPU-039 / RCPU-040 | 2004 | ARMv7 educational baseline (07b) | Audit: `arm-simulator` | Missing |
@@ -91,9 +91,9 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-033**, the DEC Alpha AXP 21064 functional Rust
-implementation. The 2026-08-31 prioritization run closes the SPARC V8 pair and
-keeps each later architecture pair together while completed earlier cells
+Current selection: **RCPU-034**, the DEC Alpha AXP 21064 gate-level Rust
+implementation. The 2026-08-31 prioritization run keeps the Alpha pair
+together after closing its functional cell while completed earlier cells
 publish one at a time.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
@@ -499,6 +499,20 @@ normative Spec 07r2 pins the topology, gate networks, lifecycle, and
 conformance boundary. Publication follows RCPU-031 and advances to RCPU-033,
 the DEC Alpha AXP 21064 functional implementation.
 
+RCPU-033 is complete locally atop RCPU-032. The new Rust functional simulator
+implements the complete Layer 07s integer surface over the exact 64 KiB
+little-endian machine, all 32 64-bit GPRs with hardwired r31, PC/nPC, halt,
+and installed-program lifecycle state. It adds public structured encoders,
+validated complete restore, origin-aware deterministic loading, checked direct
+register and byte/word/long/quad access, typed atomic instruction failures,
+complete before/after traces, and transactional bounded runs. Three unit tests,
+four lifecycle/workload tests, and the aggregate 624-vector Python full-state
+decode/fault differential pass; the Python oracle's 146 tests remain green.
+Strict formatting, Clippy, and rustdoc pass; total Rust line coverage is 88.08%
+(532/604). Spec 07s now defines the normative Rust completion boundary. No
+Alpha Rust encoder/backend consumer existed to validate. Publication follows
+RCPU-032 and advances to RCPU-034, the Alpha gate-level implementation.
+
 ## Cross-language wave
 
 After RCPU-050, freeze the Rust APIs and golden conformance vectors, then port
@@ -525,6 +539,7 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-31 | RCPU-033 has no Rust package or Rust encoder/backend consumer. Normative Spec 07s and the Python oracle provide a broad 64-bit little-endian integer ISA baseline with 146 passing tests at 88.83% line coverage, but the oracle exposes only legacy SIM00 state: no installed-program range, restore, typed direct access, typed errors, complete atomic traces/results, or transactional runs. Invalid instructions, PAL calls, and alignment failures are converted into a mutated halt state; an already-halted step succeeds; loads cannot select an origin; and no reproducible full-state differential corpus exists. | Resolved by RCPU-033; selects RCPU-034 by pair priority | Completed as `alpha-axp-simulator` with the exact machine, public encoders, validated complete state, typed atomic lifecycle, 624-vector Python full-state differential, all 146 Python tests, strict checks, and 88.08% Rust line coverage. No Alpha Rust consumer existed. Build the DFF/gate partner next. |
 | 2026-08-31 | RCPU-032 baseline has 42 passing tests but only 59.60% package line coverage. All 526,185 persistent architectural bits (524,288 memory, 1,792 physical-register, PC/nPC, CWP/depth, PSR, Y, and halt) are host values and nPC is absent. The gate branch-condition table assigns most condition numbers to the wrong predicates; divide-cc is missing; divide-by-zero saturates instead of faulting; loads retain stale memory; misalignment is accepted; halted/illegal/faulting steps mutate PC or state; non-sentinel traps can halt; state/restore/complete traces/results and typed transactional load/step/run are absent; the differential corpus is absent; and strict formatting already fails. | Resolved by RCPU-032; selects RCPU-033 by chronological pair priority | Completed with the exact 526,185-DFF topology, shared functional lifecycle, fixed-round gate division, all 16 corrected Bicc predicates, atomic trap/fault handling, documented UDIVcc/SDIVcc paths, the complete 248-vector differential, normative Spec 07r2, strict checks, and 94.72% line coverage. |
 | 2026-08-31 | RCPU-032's full-state differential exposed two additional legacy gate defects after the baseline audit: MULScc used a different recurrence from the completed functional/manual contract, and RD `%y` rejected valid encodings whenever `rs1` was nonzero. Native host division also remained beneath the existing UDIV/SDIV facade. | Resolved, P0 functional and gate fidelity | Match the functional MULScc recurrence, accept the architecturally ignored RD `%y` source field, and replace native division with fixed 64-step unsigned/signed restoring gate networks. Pin all fixes through the aggregate differential and divide-cc lifecycle edges. |
 | 2026-08-31 | RCPU-031 completion audit closes the full Rust functional boundary with 58 tests, 248 reproducible Python full-state vectors, manual-backed cc multiply/divide corrections, strict checks, green encoder/backend consumers, and 93.45% line coverage. | Completed; selects RCPU-032 by chronological pair priority | Audit the SPARC V8 gate model against the completed functional lifecycle and all vectors; add the manual-defined divide-cc gate paths, preserve the already-correct multiply-cc encodings, and keep publication serialized behind RCPU-031. |

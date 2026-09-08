@@ -1,0 +1,11 @@
+{
+  "language": "russian",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:db9754fb5c05efc1",
+  "lessonIds": [
+    "RU-C25-dvadtsat",
+    "RU-C25-sto",
+    "RU-C25-practice"
+  ],
+  "tex": "russian/book/chapters/ch25-round-amounts.tex"
+}

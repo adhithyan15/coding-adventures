@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import math
 import re
 from dataclasses import dataclass, field
@@ -40,8 +41,10 @@ from spice_engine import (
     ac_sweep,
     dc_op,
     dc_sweep,
+    format_deck_table_json,
     mosfet_from_model_card,
     normalize_model_card,
+    run_deck,
     tf,
     transient,
 )
@@ -689,6 +692,40 @@ def run_netlist(text: str) -> list[AnalysisExecutionResult]:
     """Parse a deck and execute its runnable `.op`, `.dc`, `.ac`, `.tran`, and `.tf` cards."""
 
     return run_analysis_plan(parse_netlist(text))
+
+
+CLI_RESULT_SCHEMA_VERSION = 1
+
+
+def run_netlist_json(text: str) -> str:
+    """Run a deck and return the cross-language CLI JSON result envelope."""
+
+    parsed = parse_netlist(text)
+    execution = run_deck(parsed.circuit, text)
+    payload = {
+        "schemaVersion": CLI_RESULT_SCHEMA_VERSION,
+        "title": parsed.title,
+        "analyses": [
+            {
+                "index": index,
+                "kind": item.plan.analysis,
+                "records": _cli_table_records(item.plan.analysis, item.table),
+            }
+            for index, item in enumerate(execution.executions)
+        ],
+    }
+    return json.dumps(payload, separators=(",", ":"), allow_nan=False, sort_keys=True) + "\n"
+
+
+def _cli_table_records(analysis: str, table: str) -> list[dict[str, str]]:
+    records = json.loads(format_deck_table_json(table))
+    if analysis == "tran":
+        records = [record for record in records if record.get("Time") != "0.000000e+00"]
+        return [
+            {**record, "Index": str(index)}
+            for index, record in enumerate(records)
+        ]
+    return records
 
 
 def select_outputs(

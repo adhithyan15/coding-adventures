@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "suite": "berkeley-v1-cli",
+  "cases": [
+    {
+      "id": "core-analysis-plan",
+      "deck": "* Berkeley SPICE v1 CLI corpus\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\nC1 out 0 1u IC=0\n.options method=trap\n.op\n.dc V1 0 1 1\n.ac dec 1 1k 1k\n.tran 1m 1m\n.tf V(out) V1\n.save V(out)\n.end\n",
+      "expected": {
+        "title": "Berkeley SPICE v1 CLI corpus",
+        "analysisKinds": ["op", "dc", "ac", "tran", "tf"],
+        "recordCounts": [1, 2, 1, 1, 1]
+      }
+    }
+  ]
+}

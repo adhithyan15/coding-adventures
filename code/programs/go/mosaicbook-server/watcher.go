@@ -52,7 +52,7 @@ func (s *Server) watchFiles() {
 		if changed {
 			// Re-discover components so the in-memory catalogue is fresh.
 			s.mu.Lock()
-			comps, err := discoverComponents(s.root)
+			comps, err := s.discoverValidatedComponents()
 			if err != nil {
 				log.Printf("watcher: re-discover error: %v", err)
 			} else {

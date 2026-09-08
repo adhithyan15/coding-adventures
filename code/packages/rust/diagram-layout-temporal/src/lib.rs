@@ -13,12 +13,13 @@
 
 use diagram_ir::{
     DiagramDirection, GanttDateFormat, GanttDateFormatPart, GanttDisplayMode, GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
+    EventModelDiagram, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedTemporalDiagram, LayoutedTemporalInteraction, LayoutedTemporalItem, TaskEnd, TaskStart,
     TemporalBody, TemporalDiagram, TimelineDiagram, TimelineDirection,
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.34.0";
+pub const VERSION: &str = "0.35.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -1228,6 +1229,90 @@ fn mermaid_branch_order(explicit_order: Option<i64>, declaration_index: usize) -
     })
 }
 
+/// Lay out event-model frames on inferred namespace/entity swimlanes.
+pub fn layout_event_model_diagram(
+    diagram: &EventModelDiagram,
+    canvas_width: f64,
+) -> LayoutedEventModelDiagram {
+    let lane_name = |frame: &diagram_ir::EventModelFrame| {
+        let category = match frame.kind {
+            EventModelEntityKind::Ui | EventModelEntityKind::Processor => "UI / Automation",
+            EventModelEntityKind::Command | EventModelEntityKind::ReadModel => {
+                "Command / Read Model"
+            }
+            EventModelEntityKind::Event => "Events",
+        };
+        frame
+            .namespace
+            .as_ref()
+            .map(|namespace| format!("{namespace} · {category}"))
+            .unwrap_or_else(|| category.to_string())
+    };
+    let mut lane_indices = HashMap::<String, usize>::new();
+    for frame in &diagram.frames {
+        let lane = lane_name(frame);
+        let next = lane_indices.len();
+        lane_indices.entry(lane).or_insert(next);
+    }
+
+    let title_height = if diagram.title.is_some() { 42.0 } else { 16.0 };
+    let lane_height = 92.0;
+    let label_width = 150.0;
+    let frame_width = 122.0;
+    let frame_height = 54.0;
+    let frame_step = 148.0;
+    let width = canvas_width.max(label_width + 32.0 + diagram.frames.len() as f64 * frame_step);
+    let height = title_height + lane_indices.len() as f64 * lane_height + 20.0;
+    let mut items = Vec::new();
+    let mut positions = HashMap::<String, (f64, f64)>::new();
+
+    let mut lanes = lane_indices.iter().collect::<Vec<_>>();
+    lanes.sort_by_key(|(_, index)| **index);
+    for (label, index) in lanes {
+        items.push(LayoutedEventModelItem::Lane {
+            x: 12.0,
+            y: title_height + *index as f64 * lane_height,
+            width: width - 24.0,
+            height: lane_height - 8.0,
+            label: label.clone(),
+            fill: if *index % 2 == 0 { "#f8fafc".into() } else { "#f1f5f9".into() },
+        });
+    }
+    for (index, frame) in diagram.frames.iter().enumerate() {
+        let lane = lane_indices[&lane_name(frame)];
+        let x = label_width + 24.0 + index as f64 * frame_step;
+        let y = title_height + lane as f64 * lane_height + 15.0;
+        positions.insert(frame.id.clone(), (x, y));
+        items.push(LayoutedEventModelItem::Frame {
+            x,
+            y,
+            width: frame_width,
+            height: frame_height,
+            label: frame.label.clone(),
+            kind: frame.kind.clone(),
+        });
+    }
+    for frame in &diagram.frames {
+        let (to_x, to_y) = positions[&frame.id];
+        for source in &frame.source_frames {
+            let (from_x, from_y) = positions[source];
+            items.push(LayoutedEventModelItem::Relation {
+                from: diagram_ir::Point { x: from_x + frame_width, y: from_y + frame_height / 2.0 },
+                to: diagram_ir::Point { x: to_x, y: to_y + frame_height / 2.0 },
+            });
+        }
+    }
+
+    LayoutedEventModelDiagram {
+        width,
+        height,
+        title: diagram.title.clone(),
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        items,
+    }
+}
+
 // ── Tests ─────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
@@ -1304,7 +1389,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.34.0");
+        assert_eq!(crate::VERSION, "0.35.0");
     }
 
     #[test]
@@ -2308,5 +2393,41 @@ mod tests {
             item,
             LayoutedTemporalItem::TimelineSpine { .. }
         )));
+    }
+
+    #[test]
+    fn event_model_layout_builds_lanes_frames_and_relations() {
+        let diagram = EventModelDiagram {
+            title: Some("Checkout".into()),
+            accessibility_title: None,
+            accessibility_description: None,
+            frames: vec![
+                EventModelFrame {
+                    id: "01".into(),
+                    entity_id: "CheckoutUI".into(),
+                    namespace: Some("Sales".into()),
+                    label: "CheckoutUI".into(),
+                    kind: EventModelEntityKind::Ui,
+                    reset: true,
+                    source_frames: Vec::new(),
+                },
+                EventModelFrame {
+                    id: "02".into(),
+                    entity_id: "SubmitOrder".into(),
+                    namespace: Some("Sales".into()),
+                    label: "SubmitOrder".into(),
+                    kind: EventModelEntityKind::Command,
+                    reset: false,
+                    source_frames: vec!["01".into()],
+                },
+            ],
+        };
+        let layout = layout_event_model_diagram(&diagram, 640.0);
+        assert_eq!(layout.items.iter().filter(|item| matches!(
+            item, LayoutedEventModelItem::Frame { .. }
+        )).count(), 2);
+        assert_eq!(layout.items.iter().filter(|item| matches!(
+            item, LayoutedEventModelItem::Relation { .. }
+        )).count(), 1);
     }
 }

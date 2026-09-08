@@ -75,3 +75,17 @@ to this app's table, so keys elsewhere on the page and formula-editor caret keys
 do not navigate the workbook. Modified navigation and IME composition are left
 alone. Complete grid roles/selected-cell announcements, native focus and broader
 assistive-technology acceptance remain under #14278.
+
+The selection readout beneath the sheet shows the selected address and committed
+display value, including formula source and results. Blank cells are named
+explicitly. Long descriptions truncate visually inside the worksheet; the host's
+atomic polite live region preserves the full message without adding layout
+height. Navigation, entering an editor, commit/cancel and restoration use Rust
+messages; typing and viewport changes do not repeat announcements. Inline commit
+names both the updated cell and the new selection. These are DOM/runtime checks;
+real screen-reader and native accessibility acceptance remain open in #14278.
+
+Browser acceptance covered the dark desktop readout for E1's SUM result and a
+375px light-theme worksheet with a long cell value: the readout stayed 327px wide
+with an ellipsis, the worksheet scroll width stayed 375px, and the complete value
+remained in the live region. The document stayed within the 720px viewport.

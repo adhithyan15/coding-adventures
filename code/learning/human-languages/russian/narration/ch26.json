@@ -1,0 +1,597 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 26,
+  "title": "Which One: the Ordinals, Said and Written",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:b546a2e14a408405",
+  "lessons": [
+    {
+      "id": "RU-C26-pervyy",
+      "sequence": 1290,
+      "title": "первый (pérvyy) — first",
+      "headword": "первый",
+      "romanization": "pérvyy",
+      "gloss": "first — which one, not how many, and a word not built from odin",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78c915339c6d78cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to ten, say двадцать and сто, say один and its root, and say what a number still does to the noun after it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "первый — pérvyy — first."
+            },
+            {
+              "kind": "speech",
+              "text": "Counting says how many. Ordering says which one — a floor number, a date, a queue, a chapter heading — and twelve numbers do not give you one of them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — forward, foremost",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "первый (pérvyy) is not built from один. It goes back to Indo-European per-, \"forward, in front,\" which is also behind English fore, before and former — and behind first itself, which is fore with a superlative ending on it."
+            },
+            {
+              "kind": "speech",
+              "text": "So Russian and English break in the same place and for the same reason: the word for first means foremost in both, and neither is built from the word for one. The series comes into line at second."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "первый (pérvyy) — first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **первый** — first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "один counts, первый (pérvyy) orders",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **один** counts, **первый** orders]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "первый (pérvyy) from per- becomes English fore, first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **первый** ← \\**per-* → English **fore**, **first**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: первый (pérvyy); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C26-pervyy-source",
+              "prompt": "Is pervyy built from odin?",
+              "assesses": [
+                "RU-ETYMON-PERVYY-PER"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "no",
+                "no — it means foremost",
+                "no, it is a separate root",
+                "foremost"
+              ],
+              "feedback": {
+                "correct": "Foremost, like English first from fore.",
+                "incorrect": "No — it goes back to a root meaning forward, foremost."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C26-vtoroy-tretiy",
+      "sequence": 1300,
+      "title": "второй and третий — second, third, and the ending above them",
+      "headword": "второй третий",
+      "romanization": "vtoróy trétiy",
+      "gloss": "second and third — where the numbers come back",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3cda5eefed9c5f3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say первый (pérvyy) and why it is not built from один. Then say три."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — two words and an ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "второй — vtoróy — second третий — trétiy — third."
+            },
+            {
+              "kind": "speech",
+              "text": "три is audible whole inside третий. And from four upward the pattern settles completely: the ordinal is the plain number with an adjective ending on it — четвёртый, fourth; пятый, fifth; десятый, tenth."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth saying plainly, because it means the reader who has twelve cardinals has twelve ordinals as soon as they have one ending, with only первый (pérvyy) and второй outside it."
+            },
+            {
+              "kind": "speech",
+              "text": "Russian ordinals are adjectives, and that carries a debt as well as a rule: an adjective changes its ending to agree with what it describes, and this book has not taught an adjective yet. So the forms here are the ones a masculine noun takes, and agreeing them with anything else is an adjective chapter rather than a numeral one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "второй — second; третий — third",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **второй** — second; **третий** — third]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "три inside третий",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: **три** inside **третий**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "четыре becomes четвёртый; десять becomes десятый",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: **четыре** → **четвёртый**; **десять** → **десятый**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: второй; Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C26-vtoroy-tretiy-build",
+              "prompt": "Build fifth and tenth from pyat and desyat.",
+              "assesses": [
+                "RU-MORPH-ORDINAL-ADJ-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "пятый десятый",
+                "pyatyy desyatyy",
+                "пятый, десятый",
+                "pyatyy, desyatyy"
+              ],
+              "feedback": {
+                "correct": "From four upward the ordinal is the number with an adjective ending.",
+                "incorrect": "пятый, десятый."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W26-ordinal-hyphen",
+      "sequence": 1310,
+      "title": "1-й (pérvyy) — writing an ordinal as a figure",
+      "headword": "1-й",
+      "romanization": "pérvyy",
+      "gloss": "the written ordinal — a figure with its grammatical ending hyphenated on",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0cb8e9063b2a2147",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the figure and its ending",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the figure and its ending and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say первый (pérvyy) and второй, then build пятый from пять."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the figure and its ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1-й — pérvyy — first 2-е — vtoróye — second."
+            },
+            {
+              "kind": "speech",
+              "text": "A Russian ordinal written as a figure carries the tail of its own ending after a hyphen. 1-й is первый (pérvyy) with everything but the last letter replaced by the figure; 2-е is второе in the same way."
+            },
+            {
+              "kind": "speech",
+              "text": "This is not decoration. Ordinals are adjectives, so the ending is the agreement — change what is being ordered and the letters after the hyphen change with it. That is why the figure alone will not do, and why an English reader who writes 1st for all of them is losing information the Russian page is carrying."
+            },
+            {
+              "kind": "speech",
+              "text": "The hyphen is the short dash this book taught among its punctuation, not the long dash that stands for a missing verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "1-й (pérvyy), 2-е, 3-й",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **1-й**, **2-е**, **3-й**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each aloud as the full word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each aloud as the full word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why the letters after the hyphen are not always the same",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why the letters after the hyphen are not always the same]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W26-ordinal-hyphen-read",
+              "prompt": "Read 1-y aloud as a full Russian word.",
+              "assesses": [
+                "RU-SCRIPT-ORDINAL-HYPHEN-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "первый",
+                "pervyy",
+                "первый — pervyy"
+              ],
+              "feedback": {
+                "correct": "The figure carries the tail of its own ending.",
+                "incorrect": "первый — pervyy."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C26-practice",
+      "sequence": 1320,
+      "title": "Payoff — which one, said and written",
+      "headword": "первый второй третий 1-й",
+      "romanization": "pérvyy vtoróy trétiy — 1-y",
+      "gloss": "payoff — which one, said and written",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00b7350b979b7789",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to ten, say двадцать and сто, and name the side of the family Russian is on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say первый (pérvyy), второй, третий in order, then out of order."
+            },
+            {
+              "kind": "speech",
+              "text": "Build, do not recall: fourth, fifth, tenth, twentieth."
+            },
+            {
+              "kind": "speech",
+              "text": "Write 1-й (pérvyy), 2-е, 3-й and read each aloud as a full word."
+            },
+            {
+              "kind": "speech",
+              "text": "Say which two of the series are not built from their numbers, and what English does in the same place."
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to ten, say двадцать and сто, and say what a number still does to the noun after it that this book has not taught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C26-practice-order",
+              "prompt": "Say first, second, third in Russian, then write the first of them as a figure.",
+              "assesses": [
+                "RU-PERFORMANCE-ORDINALS"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "первый второй третий — 1-й",
+                "pervyy vtoroy tretiy — 1-y",
+                "первый, второй, третий, 1-й",
+                "pervyy, vtoroy, tretiy, 1-y"
+              ],
+              "feedback": {
+                "correct": "Said and written, with the ending carried on the figure.",
+                "incorrect": "первый, второй, третий — and 1-й."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R26-close",
+      "sequence": 1330,
+      "title": "Close the numeral slice",
+      "headword": "один — сто — 1-й",
+      "romanization": "odin — sto — 1-y",
+      "gloss": "the whole numeral slice, retrieved once more and closed",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16215fed67505d26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the first three ordinals, count one to five, and ask сколько."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Everything this slice added, with nothing in front of you."
+            },
+            {
+              "kind": "speech",
+              "text": "Count aloud one to ten, then say двадцать and сто."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all twelve from dictation, shuffled."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the first three ordinals, build three more, and write 1-й (pérvyy) and 2-е."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the English cousin of each of the ten cardinals. Every one has one."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the two pairs that shaped each other — семь / восемь, девять / десять — and which side of the centum/satem split сто puts Russian on."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the one thing these numbers still cannot do, and which chapter owes it."
+            },
+            {
+              "kind": "speech",
+              "text": "Then say what the whole slice cost the hand: no new Cyrillic letter at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-R26-close-recall",
+              "prompt": "Say ten and tenth in Russian.",
+              "assesses": [
+                "RU-PERFORMANCE-COUNT-TWENTY",
+                "RU-PERFORMANCE-ORDINALS"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "десять десятый",
+                "desyat desyatyy",
+                "десять, десятый",
+                "desyat, desyatyy"
+              ],
+              "feedback": {
+                "correct": "The number, then the number with the adjective ending.",
+                "incorrect": "десять — десятый."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -22,6 +22,19 @@ facade, so normal simulator parsing honors leading `+` continuations, strips
 inline comments from normalized cards, and reports stable syntax diagnostics
 before semantic lowering starts.
 
+## Command line
+
+Run a deck with a portable JSON result envelope:
+
+```console
+spice-netlist-parser run --json circuit.cir
+cat circuit.cir | spice-netlist-parser run --json -
+```
+
+The version-1 envelope contains the deck title and source-ordered analysis
+records. Its object keys are canonicalized across the Python, Rust, and
+TypeScript ports; transient records begin after initialization at `t=0`.
+
 For editor, Mosaic, and parser-generator frontends, the crate also exposes the
 same facade directly:
 

@@ -1,0 +1,122 @@
+% ---------------------------------------------------------------------------
+% _shared/nasal-macron.tex -- stack a combining tilde ON TOP OF a macron vowel.
+%
+% THE DEFECT
+% Seven tracks -- Bengali, Gujarati, Hindi, Marathi, Marwadi, Punjabi and Urdu --
+% romanize a LONG NASAL vowel as a macron vowel plus U+0303 COMBINING TILDE:
+% "gā̃v", "nahī̃", "tū̃". 346 occurrences in the SEVEN GENERATED BOOKS -- Punjabi
+% 180, Gujarati 47, Hindi 47, Marwadi 30, Urdu 25, Bengali 16, Marathi 1 -- out
+% of 1,837 across the whole corpus. The larger figure is the one to quote about
+% the convention and the smaller is the one to quote about the page: the rest
+% live in lesson frontmatter and in narration scripts, which are never typeset.
+%
+% Latin Modern SET THAT AS THE SHORT NASAL VOWEL. The macron was dropped, so
+% "gā̃v" printed as "gãv" and a reader of the PDF could not tell a long nasal
+% vowel from a short one anywhere in seven books.
+%
+% It is not a missing glyph: U+0101 and U+0303 are both in Latin Modern's cmap,
+% XeLaTeX reports no missing character, and the bytes in the .tex are exactly
+% the bytes the lesson wrote -- so no gate in this repository could see it. It
+% is a MARK STACKING gap. Latin Modern has no anchor for a second above-mark on
+% a base that already carries one, and the shaper resolves that by dropping the
+% first mark rather than raising the second. Times New Roman and Georgia both
+% stack the identical byte sequence correctly, which is how the cause was
+% pinned to the font rather than to XeTeX or to the source.
+%
+% WHY NOT A PRECOMPOSED CHARACTER
+% There is none. Unicode has no "latin small letter a with macron and tilde",
+% nor one for i or u. (U+1E53 exists for o-with-macron-and-acute and is absent
+% from Latin Modern, which is why book.ts already escapes that one by hand.)
+%
+% WHY NOT A \newunicodechar MAPPING ON THE TILDE
+% \newunicodechar maps ONE character, and what fails is a two-character
+% SEQUENCE. By the time TeX reads the tilde the vowel is already set, and TeX
+% cannot look backwards at a character it has typeset. So the lookahead goes on
+% the VOWEL, which can see what follows it.
+%
+% WHY NOT AN EDIT TO THE LESSONS
+% The romanization is correct; the rendering was wrong. Respelling 1,840 words
+% across seven tracks to work around a font would move the workaround into the
+% curriculum. Nothing here touches a lesson, and no generated .tex changes by a
+% single byte: the fix is entirely in how the same bytes are set.
+%
+% ORDERING: input this AFTER hyperref, whose \pdfstringdefDisableCommands is
+% used below; without it the preamble stops on an undefined control sequence,
+% which is loud and immediate. Nothing here needs graphicx -- \raisebox is a
+% kernel command -- so the only real constraint is hyperref.
+%
+% AND INPUT IT LAST AMONG THE \newunicodechar DECLARATIONS. newunicodechar's
+% Unicode branch has NO redefinition warning (the "Redefining Unicode
+% character" message exists only in its 8-bit branch), so a later
+% \newunicodechar{ā} silently wins and the page goes back to printing the short
+% vowel with no error anywhere. Marwadi's preamble already carries an earlier
+% \newunicodechar{ā}{\={a}}, which this file must come after and does.
+% `nasal-macron.test.ts` gates that ordering, because it is the one way this
+% fix can be undone invisibly.
+% ---------------------------------------------------------------------------
+
+% The stacked form.
+%
+% The mark is U+0303 ITSELF rather than a scaled ASCII tilde, and that choice
+% does two jobs at once. On the page, a combining mark carries zero advance
+% width and its ink is drawn to the left of its origin, so setting it directly
+% after the vowel puts it over the vowel with no kerning, no \llap and no
+% measurement -- the font's own idea of where an above-mark belongs, in upright
+% and italic alike. An earlier draft here centred a scaled \textasciitilde in a
+% box the width of the base, and it landed a whole letter to the left in the
+% Punjabi table of contents, because centring the ORIGIN of a mark whose ink
+% sits left of that origin displaces it by exactly one glyph.
+%
+% In the text layer, \llap or not, the mark is emitted after the vowel, so a
+% reader who copies "gā̃v" out of the PDF gets U+0101 U+0303 -- the same two
+% characters the lesson wrote. The scaled ASCII tilde looked identical on paper
+% and silently dropped the nasalization out of every copy, search and screen
+% reader; pdftotext read "sāp".
+%
+% All that is left to do, then, is lift the mark clear of the macron. 0.62ex,
+% in ex so it tracks the font size.
+\newcommand{\hlnasalstack}[1]{%
+  \leavevmode
+  #1\raisebox{0.62ex}{\char"0303\relax}%
+}
+
+% The lookahead. \newunicodechar makes the vowel active; the active token peeks
+% at the next token with \futurelet. If that token is the active combining
+% tilde, the tilde is swallowed and the stacked form is set. Otherwise the vowel
+% sets exactly as it always did.
+\usepackage{newunicodechar}
+\newunicodechar{̃}{\hlcombiningtilde}
+\let\hlcombiningtildetoken=̃
+% A combining tilde that did NOT follow a macron vowel is left to the font,
+% which places a single above-mark correctly. h̃ and ɛ̃ both occur in the corpus
+% and both already set; this file must not disturb them.
+\newcommand{\hlcombiningtilde}{\char"0303\relax}
+
+\makeatletter
+\newcommand{\hl@macronvowel}[1]{\def\hl@nasalbase{#1}\futurelet\hl@nasalnext\hl@nasaldecide}
+\newcommand{\hl@nasaldecide}{%
+  \ifx\hl@nasalnext\hlcombiningtildetoken
+    \expandafter\hl@nasalyes
+  \else
+    \expandafter\hl@nasalno
+  \fi}
+% Takes the tilde token as its argument, which is how the tilde is consumed.
+\newcommand{\hl@nasalyes}[1]{\hlnasalstack{\hl@nasalbase}}
+\newcommand{\hl@nasalno}{\hl@nasalbase}
+\newunicodechar{ā}{\hl@macronvowel{\=a}}
+\newunicodechar{ī}{\hl@macronvowel{\={\i}}}
+\newunicodechar{ū}{\hl@macronvowel{\=u}}
+
+% PDF bookmarks: a guard that is currently INERT, kept deliberately.
+%
+% newunicodechar declares its Unicode characters with \protected\def, so the
+% active vowels never expand inside \pdfstringdef and these three definitions
+% are not reached. Bookmarks come out carrying U+0101 U+0303 in full, which is
+% verified in book.out rather than assumed. The block stays as the answer for
+% the day that protection changes, and it costs a hook that already runs.
+\pdfstringdefDisableCommands{%
+  \def\hlnasalstack#1{#1}%
+  \def\hl@macronvowel#1{#1}%
+  \def\hlcombiningtilde{}%
+}
+\makeatother

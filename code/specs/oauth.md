@@ -1,11 +1,13 @@
 # OAuth
 
-**Status:** Phase 2 credential-custody boundary implemented — provider-neutral
+**Status:** Phase 2 provider-neutral broker boundary implemented —
 installed-app Authorization Code + PKCE, token/error codecs, refresh rotation,
 revocation request preparation, RFC 8414 metadata validation, and an audited
 literal-loopback callback host plus storage-agnostic audit-before-disclosure
-credential custody; broker orchestration, transport, concrete encrypted-store
-adapters, device flow, and provider integrations remain prioritized below.
+credential custody now compose through data-driven provider registration,
+expiry policy, injected transport, and compare-and-swap refresh orchestration;
+concrete transport, encrypted-store adapters, device flow, and provider data
+remain prioritized below.
 
 ## Overview
 
@@ -98,13 +100,15 @@ The delivery order is:
    closed immediately after the first accepted connection. Browser launch is
    an injected platform adapter; provider behavior remains data in the pure
    OAuth core.
-5. **Shipped credential-custody primitive; broker remains:** opaque account
+5. **Shipped credential custody and provider-neutral broker:** opaque account
    keys, injected compare-and-swap storage, zeroizing credential records,
    no-clone codec handoff, atomic refresh-token retain/rotation, conditional
    deletion, and audit-before-access-token or refresh-token disclosure. Audit
-   publication failure fails the operation closed. The next broker slice owns
-   provider registration, multiple accounts, clock/expiry policy, transport
-   orchestration, and a concrete encrypted-vault adapter.
+   publication failure fails the operation closed. The broker registers any
+   number of providers as validated data, applies caller-injected clock and
+   expiry policy, audit-brackets its injected token transport, and rotates
+   credentials with the custody layer's exact revision. Concrete encrypted
+   storage and HTTPS authority remain separate adapters.
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
@@ -120,12 +124,24 @@ The delivery order is:
 10. **Later hardening:** DPoP and full OpenID
    Connect discovery/JWKS/ID-token validation.
 
+Before the concrete encrypted credential-store adapter, remove the sealed
+store's remaining third-party JSON and OS-random shims: use the repository's
+bounded JSON primitive and implement the small cross-platform kernel-entropy
+boundary in-repo. OAuth production dependency graphs must contain only
+workspace-owned libraries; operating-system APIs and wire protocols are the
+lowest trusted boundary.
+
+Before the concrete HTTPS adapter, replace `tls-platform`'s `rustls` and
+`webpki-roots` dependency chain with repository-owned TLS, certificate parsing,
+path validation, hostname verification, and a reviewed trust-root source. This
+is prerequisite work, not permission to weaken HTTPS or certificate checks.
+
 The current slices intentionally stop before provider HTTPS transport and a
 concrete encrypted credential-store adapter. The loopback host owns only local
-TCP and injected browser authority; the custody primitive owns only audited
-secret lifecycle over an injected compare-and-swap contract. The preceding
-slices remain complete boundaries, not mock transports or provider-specific
-midpoints.
+TCP and injected browser authority; custody owns only audited secret lifecycle
+over an injected compare-and-swap contract; and the broker owns policy and
+sequencing without acquiring clock, network, or storage authority. The
+preceding slices remain complete boundaries, not provider-specific midpoints.
 
 ---
 
@@ -153,8 +169,8 @@ midpoints.
 **Depends on:**
 - `https-transport` — every OAuth call is HTTPS.
 - `tls-platform` (transitively) — TLS for those calls.
-- `bounded-json` — zero-dependency, depth-limited parsing for hostile metadata
-  and token endpoint responses.
+- `bounded-json` — zero-dependency, depth-limited RFC 8259 parsing for hostile
+  metadata and token endpoint responses.
 - `vault-records`, `vault-key-custody` — token storage as Zeroizing
   records under `vault://oauth/...`.
 - `vault-secure-channel` — when the broker talks to the vault.

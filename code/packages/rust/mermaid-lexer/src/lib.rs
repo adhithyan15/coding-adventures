@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.71.0";
+pub const VERSION: &str = "0.72.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -33,6 +33,8 @@ const KANBAN_TOKEN_GRAMMAR_SOURCE: &str =
 const ARCHITECTURE_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/architecture.tokens");
 const RADAR_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/radar.tokens");
+const EVENTMODELING_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/eventmodeling.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
 const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
@@ -111,6 +113,14 @@ pub fn create_mermaid_architecture_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_radar_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, RADAR_TOKEN_GRAMMAR_SOURCE, "radar.tokens")
+}
+
+pub fn create_mermaid_eventmodeling_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(
+        source,
+        EVENTMODELING_TOKEN_GRAMMAR_SOURCE,
+        "eventmodeling.tokens",
+    )
 }
 
 pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
@@ -359,6 +369,11 @@ pub fn try_tokenize_mermaid_radar(source: &str) -> Result<Vec<Token>, String> {
     lexer.tokenize().map_err(|error| error.to_string())
 }
 
+pub fn try_tokenize_mermaid_eventmodeling(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_eventmodeling_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
 pub fn try_tokenize_mermaid_xychart(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_xychart_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
@@ -438,6 +453,17 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_eventmodeling_frames_as_complete_statements() {
+        let tokens = try_tokenize_mermaid_eventmodeling(
+            "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem ->> 01\n",
+        )
+        .unwrap();
+        let values = tokens.iter().map(|token| token.value.as_str()).collect::<Vec<_>>();
+        assert!(values.contains(&"tf 01 ui CartUI"));
+        assert!(values.contains(&"tf 02 cmd AddItem ->> 01"));
+    }
+
+    #[test]
     fn tokenizes_mindmap_indentation_and_shapes_as_complete_lines() {
         let tokens = try_tokenize_mermaid_mindmap(
             "mindmap\n  root((Native))\n    Parser[Grammar first]\n",
@@ -458,7 +484,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.71.0");
+        assert_eq!(VERSION, "0.72.0");
     }
 
     #[test]

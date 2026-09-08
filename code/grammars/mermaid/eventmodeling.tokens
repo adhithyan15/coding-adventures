@@ -1,0 +1,21 @@
+# @version 1
+#
+# Mermaid 11.16.1 event-modeling token grammar. This first native slice covers
+# timeline/reset frames, compact and relaxed entity kinds, explicit frame
+# sources, titles, and accessibility metadata.
+
+case_sensitive: true
+
+skip:
+  WHITESPACE          = /[ \t]+/
+  COMMENT             = /%%[^\r\n]*/
+  SL_COMMENT          = /\/\/[^\r\n]*/
+
+NEWLINE               = /\r?\n/
+SEMICOLON             = ";"
+HEADER                = "eventmodeling"
+ACC_DESCR_BLOCK       = /accDescr[ \t]*\{[^}]*\}/
+ACC_TITLE_STATEMENT   = /accTitle[ \t]*:[^\r\n;%]+/
+ACC_DESCR_STATEMENT   = /accDescr[ \t]*:[^\r\n;%]+/
+TITLE_STATEMENT       = /title[ \t]+[^\r\n;%]+/
+FRAME_STATEMENT       = /(?:tf|timeframe|rf|resetframe)[ \t]+[0-9]{1,3}[ \t]+(?:rmo|readmodel|ui|cmd|command|evt|event|pcr|processor)[ \t]+[_A-Za-z][A-Za-z0-9_]*(?:\.[_A-Za-z][A-Za-z0-9_]*)*(?:[ \t]+->>[ \t]+[0-9]{1,3})*/

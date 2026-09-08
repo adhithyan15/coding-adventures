@@ -7,6 +7,12 @@ to browser-native backends (HTML, Web Component, React), and serves an
 interactive preview UI in your browser.  File changes are detected
 automatically and the preview reloads within one second.
 
+For three-file components, populated story fixtures are checked against the
+actual `.mil` contract through `mosaic-compile --describe`. An undeclared slot,
+wrong JSON type, invalid list element, or value outside a `one-of` set is
+reported in the component's `storiesError`; leaving a slot unset remains a
+valid story state.
+
 Two authoring forms are discovered:
 
 - **Three-file (UI29)** — `Button.mil` + `Button.mll` + `Button.light.msl`

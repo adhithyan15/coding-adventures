@@ -1,5 +1,5 @@
 {
-  "case_count": 859,
+  "case_count": 865,
   "cases": [
     {
       "axis": "comment-whitespace-shell",
@@ -5154,13 +5154,49 @@
       "id": "processing-instructions-dat-122",
       "reason": "body, frameset, and frame transitions around the document shell",
       "source": "processing-instructions.dat:122"
+    },
+    {
+      "axis": "head-element-boundary",
+      "id": "template-dat-44",
+      "reason": "head insertion, head content, and noscript-in-head recovery",
+      "source": "template.dat:44"
+    },
+    {
+      "axis": "head-element-boundary",
+      "id": "template-dat-45",
+      "reason": "head insertion, head content, and noscript-in-head recovery",
+      "source": "template.dat:45"
+    },
+    {
+      "axis": "head-element-boundary",
+      "id": "template-dat-46",
+      "reason": "head insertion, head content, and noscript-in-head recovery",
+      "source": "template.dat:46"
+    },
+    {
+      "axis": "head-element-boundary",
+      "id": "template-dat-47",
+      "reason": "head insertion, head content, and noscript-in-head recovery",
+      "source": "template.dat:47"
+    },
+    {
+      "axis": "head-element-boundary",
+      "id": "template-dat-48",
+      "reason": "head insertion, head content, and noscript-in-head recovery",
+      "source": "template.dat:48"
+    },
+    {
+      "axis": "head-element-boundary",
+      "id": "template-dat-49",
+      "reason": "head insertion, head content, and noscript-in-head recovery",
+      "source": "template.dat:49"
     }
   ],
   "counts_by_axis": {
     "body-frameset-boundary": 432,
     "comment-whitespace-shell": 15,
     "doctype-and-quirks": 37,
-    "head-element-boundary": 134,
+    "head-element-boundary": 140,
     "html-element-boundary": 210,
     "implicit-document-shell": 18,
     "shell-fragment-context": 13

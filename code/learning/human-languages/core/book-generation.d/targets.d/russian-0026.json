@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 26,
+  "output": "russian/book/chapters/ch26-ordinals.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

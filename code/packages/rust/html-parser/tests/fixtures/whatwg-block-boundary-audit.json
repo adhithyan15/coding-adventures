@@ -2571,9 +2571,9 @@
     },
     {
       "axis": "block-fragment-context",
-      "id": "template-dat-109",
+      "id": "template-dat-116",
       "reason": "block boundary handling inside html5lib fragment contexts",
-      "source": "template.dat:109"
+      "source": "template.dat:116"
     },
     {
       "axis": "block-heading-boundary",
@@ -2601,9 +2601,9 @@
     },
     {
       "axis": "block-table-boundary",
-      "id": "template-dat-46",
+      "id": "template-dat-52",
       "reason": "block and heading boundaries around table insertion and foster parenting modes",
-      "source": "template.dat:46"
+      "source": "template.dat:52"
     }
   ],
   "counts_by_axis": {

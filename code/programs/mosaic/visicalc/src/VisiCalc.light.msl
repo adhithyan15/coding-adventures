@@ -28,4 +28,5 @@ style VisiCalc {
   part data-cell { padding: 0px; }
   part row-heading { position: sticky; inset-inline-start: 0px; z-index: 1; width: 48px; min-width: 48px; font-size: 11px; font-weight: 400; text-align: center; background: #f1f4ec; color: #5e7063; border: 1px solid #dce2d9; }
   part row-corner { position: sticky; inset-inline-start: 0px; z-index: 2; width: 48px; min-width: 48px; background: #f1f4ec; border: 1px solid #dce2d9; }
+  part selection-summary { padding: 10px 2px 0px; font-family: monospace; font-size: 12px; color: #66746b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
 }
