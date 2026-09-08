@@ -1,0 +1,17 @@
+{
+  "id": "PT-PATH-032",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "PT-C28-sexto",
+    "PT-C28-setimo",
+    "PT-C28-oitavo",
+    "PT-C28-nono",
+    "PT-C28-decimo",
+    "PT-C28-indicador"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "PT-EXT-032-ORDINAIS-ATE-DECIMO"
+  ]
+}

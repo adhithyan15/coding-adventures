@@ -1,0 +1,15 @@
+{
+  "id": "PT-EXT-032-ORDINAIS-ATE-DECIMO",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can count in order all the way to tenth, say why oitavo and nono break the pattern in different ways, and read an ordinal written as a digit with a raised letter.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C28-sexto",
+    "PT-C28-setimo",
+    "PT-C28-oitavo",
+    "PT-C28-nono",
+    "PT-C28-decimo",
+    "PT-C28-indicador"
+  ]
+}

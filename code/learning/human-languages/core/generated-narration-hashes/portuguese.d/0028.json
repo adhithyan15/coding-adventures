@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:f6805140540aae95",
+  "lessonIds": [
+    "PT-C28-sexto",
+    "PT-C28-setimo",
+    "PT-C28-oitavo",
+    "PT-C28-nono",
+    "PT-C28-decimo",
+    "PT-C28-indicador"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch28.txt",
+  "json": "portuguese/narration/ch28.json",
+  "textHash": "fnv1a64:7b1339d5da10b6d0",
+  "jsonHash": "fnv1a64:ee3ef75e65b29e34",
+  "findings": []
+}

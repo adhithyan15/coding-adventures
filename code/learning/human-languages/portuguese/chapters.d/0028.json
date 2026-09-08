@@ -1,0 +1,26 @@
+{
+  "chapter": 28,
+  "title": "Sexto ao Decimo",
+  "label": "ch:pt-ordinais-ate-decimo",
+  "canDo": "I can count in order all the way to tenth, say why oitavo and nono break the pattern in different ways, and read an ordinal written as a digit with a raised letter.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "PT-C28-indicador",
+    "kind": "production",
+    "summary": "The written ordinal -- digit plus a raised letter that agrees in gender -- put against the ten spoken words the two chapters taught.",
+    "assesses": [
+      "PT-LEX-SEXTO-02",
+      "PT-LEX-SETIMO-02",
+      "PT-ETYMON-SETIMO-03",
+      "PT-LEX-OITAVO-02",
+      "PT-GRAMMAR-OITAVO-04",
+      "PT-LEX-NONO-02",
+      "PT-LEX-DECIMO-02",
+      "PT-GRAMMAR-DECIMO-04",
+      "PT-GRAMMAR-INDICADOR-04",
+      "PT-NOTICE-C28-ORDINAIS-04"
+    ]
+  }
+}

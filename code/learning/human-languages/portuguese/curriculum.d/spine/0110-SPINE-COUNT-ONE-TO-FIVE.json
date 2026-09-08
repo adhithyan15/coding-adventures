@@ -1,7 +1,9 @@
 {
   "segments": [
     "PT-PATH-013",
-    "PT-PATH-017"
+    "PT-PATH-017",
+    "PT-PATH-031",
+    "PT-PATH-032"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"

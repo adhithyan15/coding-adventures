@@ -546,7 +546,19 @@
       "id": "PT-A1-Q-04",
       "category": "Os quantificadores (quantity and number)",
       "label": "ordinal numerals to tenth",
-      "probe": null,
+      "probe": [
+        "PT-LEX-PRIMEIRO-02",
+        "PT-LEX-SEGUNDO-02",
+        "PT-LEX-TERCEIRO-02",
+        "PT-LEX-QUARTO-02",
+        "PT-LEX-QUINTO-02",
+        "PT-LEX-SEXTO-02",
+        "PT-LEX-SETIMO-02",
+        "PT-LEX-OITAVO-02",
+        "PT-LEX-NONO-02",
+        "PT-LEX-DECIMO-02",
+        "PT-GRAMMAR-INDICADOR-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PT-CORPUS",
@@ -555,7 +567,7 @@
       "derivedFrom": [
         "A1-Q-02"
       ],
-      "note": "primeiro, segundo: absent as words. The WEEKDAYS are ordinals -- segunda, terca, quarta, quinta, sexta -- and chapter 7 says so, which is the nearest the corpus comes and is not the same as teaching the ordinal series."
+      "note": "CLOSED by the ordinal tranche, and taught in the order Portuguese's own construction dictates rather than in numerical order. Five of the ten were already in the learner's mouth as weekdays -- segunda, terca, quarta, quinta, sexta -- so the chapter starts from those. primeiro is the ordinal the week does NOT contain, and its absence is what the chapter-7 lesson left unexplained: domingo is counted first, so Monday lands on two. terceiro is the exception and gets a lesson of its own, because Latin tertius left TWO children and the weekday kept the other one (terca, not terceira). oitavo takes -avo and nono is a contraction, so each of those gets a lesson too. The written form, 1.o and 1.a, is taught in the chapter's last lesson. NOT taught: ordinals above tenth beyond the decimo primeiro stacking pattern, and the -avos fractions are named rather than drilled."
     },
     {
       "id": "PT-A1-Q-05",
@@ -2592,7 +2604,7 @@
         "A1-NG3-05",
         "A1-NG3-06"
       ],
-      "note": "FOUR PROXY POINTS AND NO EXPONENT: no perto, no longe, no direita, no antes, no depois."
+      "note": "FOUR PROXY POINTS AND STILL NO EXPONENT for three of them: no perto, no longe, no direita. The ORDER quarter of this point is now served -- the ordinals to tenth are at PT-A1-Q-04 -- but antes and depois are still absent, and a point merged from four proxy points cannot be covered by one of them. The cheapest remaining move is antes/depois, which would leave only position and direction."
     },
     {
       "id": "PT-A1-NG-07",
@@ -3571,7 +3583,7 @@
         "A1-O4-03",
         "A1-O1-06"
       ],
-      "note": "Sr., Sra., Dr. -- and the ordinal indicators 1o and 1a, which are the exact counterpart of the Spanish superscript letter, so that point transfers rather than dropping. Nothing in this group is taught, and o senhor and a senhora ARE taught in chapter 2, which makes Sr. and Sra. a one-line addition."
+      "note": "PARTLY MET AND STILL UNCOVERED, and the split is worth recording. The ordinal indicators 1.o and 1.a ARE now taught, in the ordinal chapter's last lesson, and U+00AA and U+00BA were added to core/main-font-charset.json for it -- both were verified present in lmroman10-regular.otf twice, by a fontTools cmap query and by a XeLaTeX render with no missing-character warning, which is the procedure that file's own howToAdd field prescribes. What remains uncovered is the rest of the group: Sr., Sra. and Dr. are still absent, and o senhor and a senhora ARE taught in chapter 2, so that half is still a one-line addition. The point stays open on the abbreviations, not on the symbols."
     },
     {
       "id": "PT-A1-REG-01",

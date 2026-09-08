@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:46249db2d79cdfe5",
+  "lessonIds": [
+    "PT-C28-sexto",
+    "PT-C28-setimo",
+    "PT-C28-oitavo",
+    "PT-C28-nono",
+    "PT-C28-decimo",
+    "PT-C28-indicador"
+  ],
+  "tex": "portuguese/book/chapters/ch28-ordinais-ate-decimo.tex"
+}

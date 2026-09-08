@@ -1,0 +1,954 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 27,
+  "title": "Primeiro, Segundo, Terceiro",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:d62a10596021459a",
+  "lessons": [
+    {
+      "id": "PT-C27-primeiro",
+      "sequence": 970,
+      "title": "primeiro — first, and the day the week left out",
+      "headword": "primeiro / primeira",
+      "romanization": "primeiro / primeira",
+      "gloss": "first — the ordinal the Portuguese week does NOT contain, and that absence is why Monday is the second day",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bda602de1869e15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new kind of counting starts here, so the recalls come first, at the four growing distances this book measures."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say a boca e o coração — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *a boca e o coração* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say o café — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *o café* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say o pão — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *o pão* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say a água e o vinho — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *a água e o vinho* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say olá — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *olá* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bom / boa — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bom / boa* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "primeiro (masculine), primeira (feminine) — first. o primeiro dia — the first day. a primeira vez — the first time."
+            },
+            {
+              "kind": "speech",
+              "text": "Um, dois, três answer how many. This word answers which one in the line, and Portuguese keeps a second series of words for that job. Like any describing word it changes its ending with what it counts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the day the week left out",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The weekday chapter left a question open on purpose: why does segunda-feira mean \"second feast-day\" when it is the first day of the working week?"
+            },
+            {
+              "kind": "speech",
+              "text": "Because it is not the first day of the week. Domingo is — diēs Dominica, \"the Lord's day\" — and it was counted as the first. So the numbering starts at domingo, Monday lands on two, and Portuguese never needed a primeira-feira. The one ordinal that is missing from the week is the one that explains it."
+            },
+            {
+              "kind": "speech",
+              "text": "Primeiro itself comes not from Latin prīmus but from prīmārius, \"of the first rank\" — the same shape behind English primary and premier."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "primeiro, primeira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *primeiro, primeira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o primeiro dia — the first day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o primeiro dia* — the first day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "domingo é o primeiro dia — and that is why Monday is segunda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *domingo é o primeiro dia* — and that is why Monday is *segunda*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the first time.\" (A primeira vez.) Why is Monday segunda-feira and not the first? (Domingo is counted first, so the numbering starts there.) And which Latin word is primeiro built on? (Prīmārius, \"of the first rank\" — not prīmus.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C27-segundo",
+      "sequence": 980,
+      "title": "segundo — the word already in your week",
+      "headword": "segundo / segunda",
+      "romanization": "segundo / segunda",
+      "gloss": "second — the word you have been saying every Monday, and the verb hiding inside it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7491addcc78e5447",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls before the second ordinal, at the four measured distances."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say primeiro — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *primeiro* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say o chá — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *o chá* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say o olho — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *o olho* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say onze a quinze — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *onze a quinze* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dezasseis a vinte — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dezasseis a vinte* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say o / a — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *o / a* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dia — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dia* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "segundo (masculine), segunda (feminine) — second. o segundo andar — the second floor. a segunda vez — the second time."
+            },
+            {
+              "kind": "speech",
+              "text": "You have been saying the feminine every week without knowing it was a number word: segunda-feira is exactly this, with feira attached."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: the one that follows",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "There is no dois in segundo, and there was never meant to be. It comes from Latin sequī, \"to follow\" — so second place is named for what it does, the place that comes after, rather than for the count it sits at."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed the whole family: second is this word; so are sequel, sequence, consequence and subsequent, and every one still has \"follow\" inside it."
+            },
+            {
+              "kind": "speech",
+              "text": "And the segundo on a clock is the same word. The Romans cut the hour into a pars minūta prīma, \"the first small part\" — our minute — and cut that again into a pars minūta secunda. Portuguese kept the adjective and dropped the noun, so um segundo is literally \"a following one\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "segundo, segunda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *segundo, segunda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "segunda-feira — the second feast-day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *segunda-feira* — the second feast-day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "um segundo — a second, the second cutting of the hour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *um segundo* — a second, the second cutting of the hour]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What verb is segundo built on? (Sequī, to follow.) So what is second place, in Portuguese's own terms? (The place that comes after.) And what is um segundo on a clock, taken apart? (The second small part of the hour, after the minute.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C27-terceiro",
+      "sequence": 990,
+      "title": "terceiro — one Latin word, two Portuguese children",
+      "headword": "terceiro / terceira",
+      "romanization": "terceiro / terceira",
+      "gloss": "third — where Portuguese kept TWO descendants of one Latin word, and the week has the other one",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3e5a86531a48dbf4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the third ordinal — the one that does not match its weekday."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say segundo — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *segundo* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say o leite — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *o leite* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say a orelha — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *a orelha* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say preto e branco — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *preto e branco* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vermelho e azul — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vermelho e azul* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bom dia — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bom dia* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say boa tarde — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *boa tarde* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "terceiro (masculine), terceira (feminine) — third. o terceiro dia — the third day. a terceira vez — the third time."
+            },
+            {
+              "kind": "speech",
+              "text": "Now look at Tuesday. It is terça-feira, not terceira-feira."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two children of one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin tertius left two descendants in Portuguese, and both survive:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "where it lives"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "form: terça. where it lives: frozen in terça-feira, and in um terço, \"a third part\".",
+                "form: terceiro. where it lives: the ordinary counting word — o terceiro andar."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Terça is the older, inherited shape, worn down in ordinary speech; terceiro was rebuilt later on the pattern of primeiro. The week was numbered in the sixth century and kept the shape that existed then, which is why Tuesday looks older than the word for \"third\" — it is."
+            },
+            {
+              "kind": "speech",
+              "text": "So quarta and quinta will match their ordinals exactly, and this one does not. Watch for it: it is the only weekday that disagrees."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "terceiro, terceira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *terceiro, terceira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two children — terça-feira and o terceiro andar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two children — *terça-feira* and *o terceiro andar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "um terço — a third part",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *um terço* — a third part]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which weekday is Tuesday, and why is it not terceira-feira? (Terça-feira — it kept the older, inherited shape.) What does um terço mean? (A third part.) And which of the two forms would you use to say \"the third floor\"? (O terceiro andar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C27-quarto",
+      "sequence": 1000,
+      "title": "quarto — the ordinal that is also Wednesday, and also a bedroom",
+      "headword": "quarto / quarta",
+      "romanization": "quarto / quarta",
+      "gloss": "fourth — and here the ordinal and the weekday are the same word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d766da2adf939c73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the fourth — and the shape that carries the rest of the way."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say terceiro — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *terceiro* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say o queijo — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *o queijo* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say a boca — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *a boca* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ter — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ter* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say falei — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *falei* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say boa noite — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *boa noite* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say obrigado / obrigada — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *obrigado / obrigada* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quarto (masculine), quarta (feminine) — fourth. o quarto andar — the fourth floor. a quarta vez — the fourth time."
+            },
+            {
+              "kind": "speech",
+              "text": "And Wednesday is quarta-feira — the feminine of this word, unchanged. After terça's split, the series settles: the number you already know, wearing an ending, agreeing with what it counts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: a fourth of a house",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Quatro is four; quarto is four with the ordinal ending, and you can hear the cardinal inside it."
+            },
+            {
+              "kind": "speech",
+              "text": "O quarto also means \"a bedroom\", and that is the same word doing a second job: a quarta parte, a fourth part of a house, became the name for a room in it. English keeps exactly this in quarters — \"the servants' quarters\", \"close quarters\" — and in a quart, a fourth of a gallon."
+            },
+            {
+              "kind": "speech",
+              "text": "So one Portuguese word covers \"fourth\", \"Wednesday\" and \"bedroom\", and all three are the same idea seen from different rooms."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quarto, quarta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quarto, quarta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quarta-feira — Wednesday, the fourth feast-day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quarta-feira* — Wednesday, the fourth feast-day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o meu quarto — my bedroom, a fourth part of the house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o meu quarto* — my bedroom, a fourth part of the house]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the fourth floor.\" (O quarto andar.) What is quarta-feira, taken literally? (The fourth feast-day — Wednesday.) And why does o quarto mean a bedroom? (A fourth part of a house — English quarters does the same.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C27-quinto",
+      "sequence": 1010,
+      "title": "quinto — the fifth, and the fifth of the harvest",
+      "headword": "quinto / quinta",
+      "romanization": "quinto / quinta",
+      "gloss": "fifth — and the farm named after the rent it paid",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:625cedee6fc272fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the fifth — and a word you will see on every wine label."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quarto — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quarto* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say o ovo — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *o ovo* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ser — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ser* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sou, era, fui — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sou, era, fui* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say de nada — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *de nada* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say como — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *como* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quinto (masculine), quinta (feminine) — fifth. o quinto andar — the fifth floor. a quinta vez — the fifth time."
+            },
+            {
+              "kind": "speech",
+              "text": "Thursday is quinta-feira, the feminine again unchanged. Note the vowel: cinco is five, but the ordinal keeps the older qu- of Latin quīntus, so the two do not rhyme."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the fifth of the harvest",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A quinta is a country estate or farm, and it is on the label of half the port in Portugal — Quinta do Noval, Quinta da Boeira. It is this ordinal."
+            },
+            {
+              "kind": "speech",
+              "text": "A tenant once paid the landowner a share of what the land produced, and in Portugal that share was the quinta parte, the fifth part. The land was named for its rent, the rent stopped being a fifth centuries ago, and the name stayed. So a Portuguese farm is a number, and the number is five."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quinto, quinta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quinto, quinta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quinta-feira — Thursday, the fifth feast-day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quinta-feira* — Thursday, the fifth feast-day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a quinta — the farm named for its fifth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a quinta* — the farm named for its fifth]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the fifth time.\" (A quinta vez.) What is a quinta, and where does the name come from? (A farm — from the quinta parte, the fifth of the crop paid as rent.) And which day is quinta-feira? (Thursday.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

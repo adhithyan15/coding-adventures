@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C28-decimo",
+    "language": "portuguese",
+    "chapter": 28,
+    "sequence": 1060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6716fb69872d8528"
+  },
+  "findings": []
+}
