@@ -464,7 +464,7 @@ func TestCollectSourceFilesIncludesOnlyExactBuildFronts(t *testing.T) {
 	}
 	root := makeFixture(t, tree)
 	pkgPath := filepath.Join(root, "pkg")
-	got := relativePaths(t, pkgPath, collectSourceFiles(discovery.Package{Name: "go/demo", Path: pkgPath}))
+	got := relativePaths(t, pkgPath, collectSourceFiles(discovery.Package{Name: "go/demo", Path: pkgPath, Language: "go"}))
 	want := []string{"BUILD", "BUILD_linux", "BUILD_mac", "BUILD_mac_and_linux", "BUILD_windows"}
 	if strings.Join(got, "\n") != strings.Join(want, "\n") {
 		t.Fatalf("BUILD-front mismatch: got %v, want %v", got, want)
@@ -564,6 +564,22 @@ func TestProductionLanguageSourceInputRegistryExactlyMatchesNeutralRegistry(t *t
 	if !reflect.DeepEqual(checked, languageSourceInputRegistry) {
 		t.Fatal("generated production registry differs from checked neutral registry")
 	}
+	var canonical any
+	if err := json.Unmarshal(contents, &canonical); err != nil {
+		t.Fatal(err)
+	}
+	canonicalBytes, err := json.Marshal(canonical)
+	if err != nil {
+		t.Fatal(err)
+	}
+	framed := make([]byte, len("coding-adventures/build-tool-language-source-input-registry/v1\x00")+8+len(canonicalBytes))
+	offset := copy(framed, []byte("coding-adventures/build-tool-language-source-input-registry/v1\x00"))
+	binary.BigEndian.PutUint64(framed[offset:offset+8], uint64(len(canonicalBytes)))
+	copy(framed[offset+8:], canonicalBytes)
+	digest := sha256.Sum256(framed)
+	if got := hex.EncodeToString(digest[:]); got != languageSourceInputRegistryDigest {
+		t.Fatalf("registry digest mismatch: got %s, want %s", got, languageSourceInputRegistryDigest)
+	}
 	if len(checked.Languages) != 23 {
 		t.Fatalf("expected 23 languages, got %d", len(checked.Languages))
 	}
@@ -583,6 +599,25 @@ func TestProductionLanguageSourceInputRegistryExactlyMatchesNeutralRegistry(t *t
 	extra.UniversalInputs.RootExactBasenames = append(append([]string(nil), checked.UniversalInputs.RootExactBasenames...), "undeclared.extra")
 	if reflect.DeepEqual(extra, languageSourceInputRegistry) {
 		t.Fatal("undeclared selector must not equal production")
+	}
+}
+
+func TestPackageExactInputsDoNotWidenToSiblingRoots(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "code", "packages", "rust", "not-engram-wasm")
+	for _, relative := range []string{"BUILD", "js/engram-mosaic-host-wasm.mjs", "js/smoke.mjs", "pkg/engram_engine.wasm"} {
+		path := filepath.Join(root, filepath.FromSlash(relative))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("source\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "rust/not-engram-wasm", Path: root, Language: "rust"}
+	got := relativePaths(t, root, collectSourceFiles(pkg))
+	want := []string{"BUILD"}
+	if strings.Join(got, "\n") != strings.Join(want, "\n") {
+		t.Fatalf("package-exact inputs widened to sibling: got %v, want %v", got, want)
 	}
 }
 
@@ -691,6 +726,7 @@ func TestHashPackageMatchesHashingV1Oracle(t *testing.T) {
 	pkg := discovery.Package{
 		Name:         fixture.Input.Options.Package,
 		Path:         pkgPath,
+		Language:     strings.Split(fixture.Input.Options.Package, "/")[0],
 		DeclaredSrcs: []string{"src/data.bin"},
 	}
 	if got := mustHashPackage(t, pkg); got != fixture.Expected.Result.PackageDigest {
@@ -708,7 +744,7 @@ func TestHashPackageFramesRepositoryPathAndRawContent(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(pkgPath, "src", "\U0001f600.bin"), contents, 0o644); err != nil {
 		t.Fatal(err)
 	}
-	pkg := discovery.Package{Name: "go/demo", Path: pkgPath, DeclaredSrcs: []string{"src/*.bin"}}
+	pkg := discovery.Package{Name: "go/demo", Path: pkgPath, Language: "go", DeclaredSrcs: []string{"src/*.bin"}}
 	want := hashingV1Digest(t, map[string][]byte{"code/packages/go/demo/src/\U0001f600.bin": contents})
 	if got := mustHashPackage(t, pkg); got != want {
 		t.Fatalf("raw package frame mismatch: got %s, want %s", got, want)
@@ -732,7 +768,7 @@ func TestHashPackageFramesAndSortsMultipleFilesByUTF8Bytes(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	pkg := discovery.Package{Name: "go/demo", Path: pkgPath, DeclaredSrcs: []string{"src/*.bin"}}
+	pkg := discovery.Package{Name: "go/demo", Path: pkgPath, Language: "go", DeclaredSrcs: []string{"src/*.bin"}}
 	want := hashingV1Digest(t, map[string][]byte{
 		"code/packages/go/demo/src/\U0001f600.bin": files["src/\U0001f600.bin"],
 		"code/packages/go/demo/src/\ue000.bin":     files["src/\ue000.bin"],
@@ -782,9 +818,9 @@ func TestHashPackageChangesOnModification(t *testing.T) {
 func TestHashPackageEmptyPackage(t *testing.T) {
 	root := t.TempDir()
 	pkg := discovery.Package{
-		Name:     "unknown/empty",
+		Name:     "go/empty",
 		Path:     root,
-		Language: "unknown",
+		Language: "go",
 	}
 
 	hash := mustHashPackage(t, pkg)
