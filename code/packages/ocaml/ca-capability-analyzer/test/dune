@@ -1,0 +1,8 @@
+(test
+ (name test_capability_analyzer)
+ (libraries alcotest coding_adventures_capability_analyzer yojson unix)
+ (instrumentation
+  (backend bisect_ppx))
+ (action
+  (setenv CA_PACKAGE_ROOT %{workspace_root}
+   (run %{test}))))
