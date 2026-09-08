@@ -23,6 +23,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -83,8 +84,30 @@ func (c *cappedWriter) String() string {
 // Returns a descriptive error if the binary is not found or exits non-zero.
 // Compiler output captured for error messages is capped at maxCompilerOutputBytes
 // (via cappedWriter) to avoid holding unbounded buffers in memory.
-func (s *Server) compile(c Component, backend string, outputPath string) error {
-	cmd := exec.Command(s.compilerPath, compilerArgs(c, backend, outputPath)...)
+func (s *Server) compile(c Component, backend string, outputPath string, story *Story) error {
+	// A story's fixtures reach the compiler as a JSON file, the shape
+	// mosaic-compile's --fixtures expects: a flat object of slot name to
+	// value. Written per compile and removed after, so concurrent previews of
+	// different stories cannot read each other's values.
+	fixturesPath := ""
+	if story != nil && len(story.Fixtures) > 0 {
+		tmp, err := os.CreateTemp("", "mosaicbook-fixtures-*.json")
+		if err != nil {
+			return fmt.Errorf("cannot create fixtures file: %w", err)
+		}
+		fixturesPath = tmp.Name()
+		defer os.Remove(fixturesPath)
+		enc := json.NewEncoder(tmp)
+		if err := enc.Encode(story.Fixtures); err != nil {
+			tmp.Close()
+			return fmt.Errorf("cannot write fixtures file: %w", err)
+		}
+		if err := tmp.Close(); err != nil {
+			return fmt.Errorf("cannot close fixtures file: %w", err)
+		}
+	}
+
+	cmd := exec.Command(s.compilerPath, compilerArgs(c, backend, outputPath, fixturesPath)...)
 
 	// Capture combined stdout+stderr so we can surface compiler errors in the
 	// preview HTML page rather than just logging them server-side.
@@ -145,14 +168,26 @@ func (s *Server) compile(c Component, backend string, outputPath string) error {
 // Two defences: three-file component names are constrained to identifiers at
 // discovery (validComponentBase), and the legacy positional source is placed
 // after a `--` end-of-options separator so it can never be read as a flag.
-func compilerArgs(c Component, backend string, outputPath string) []string {
+func compilerArgs(c Component, backend string, outputPath string, fixturesPath string) []string {
 	if !c.isThreeFile() {
-		return []string{"--backend", backend, "--output", outputPath, "--", c.SourcePath}
+		args := []string{"--backend", backend, "--output", outputPath}
+		if fixturesPath != "" {
+			args = append(args, "--fixtures", fixturesPath)
+		}
+		return append(args, "--", c.SourcePath)
 	}
 
 	args := []string{
 		"--interface", c.InterfacePath,
 		"--layout", c.LayoutPath,
+	}
+	// Three-file components could not receive fixtures at all until #14459:
+	// pipeline mode ignored --fixtures, so a story's values were parsed,
+	// stored, and dropped, and every story of a component rendered
+	// identically. Passing it here is what makes selecting a story mean
+	// something.
+	if fixturesPath != "" {
+		args = append(args, "--fixtures", fixturesPath)
 	}
 	if c.StylePath != "" {
 		args = append(args, "--style", c.StylePath)
@@ -169,7 +204,7 @@ func compilerArgs(c Component, backend string, outputPath string) []string {
 // It creates a temp file in the OS temp directory, compiles into it, reads the
 // result, and removes the temp file.  The temp file approach keeps the
 // interface identical to the real compiler CLI (which always writes to a file).
-func (s *Server) compileToString(c Component, backend string) (string, error) {
+func (s *Server) compileToString(c Component, backend string, story *Story) (string, error) {
 	// Create a temp file with an extension appropriate for the backend.
 	// The extension doesn't affect correctness but helps debugging when you
 	// inspect /tmp during development.
@@ -184,7 +219,7 @@ func (s *Server) compileToString(c Component, backend string) (string, error) {
 	// Always remove the temp file, even on error.
 	defer os.Remove(tmpPath)
 
-	if err := s.compile(c, backend, tmpPath); err != nil {
+	if err := s.compile(c, backend, tmpPath, story); err != nil {
 		return "", err
 	}
 

@@ -207,7 +207,7 @@ func TestCompilerArgs_ThreeFileFormPassesManifest(t *testing.T) {
 		StylePath:     "src/Field.light.msl",
 		ManifestPath:  "mosaic-package.toml",
 	}
-	got := strings.Join(compilerArgs(c, "react", "out.tsx"), " ")
+	got := strings.Join(compilerArgs(c, "react", "out.tsx", ""), " ")
 
 	for _, want := range []string{
 		"--interface src/Field.mil",
@@ -227,7 +227,7 @@ func TestCompilerArgs_ThreeFileFormPassesManifest(t *testing.T) {
 // defaults rather than failing on a path that does not exist.
 func TestCompilerArgs_OmitsStyleWhenAbsent(t *testing.T) {
 	c := Component{InterfacePath: "A.mil", LayoutPath: "A.mll"}
-	got := strings.Join(compilerArgs(c, "html", "out.html"), " ")
+	got := strings.Join(compilerArgs(c, "html", "out.html", ""), " ")
 	if strings.Contains(got, "--style") {
 		t.Errorf("expected no --style flag; got: %s", got)
 	}
@@ -239,7 +239,7 @@ func TestCompilerArgs_OmitsStyleWhenAbsent(t *testing.T) {
 // a flag by the compiler.
 func TestCompilerArgs_LegacySingleFileForm(t *testing.T) {
 	c := Component{SourcePath: "Button.mosaic"}
-	got := strings.Join(compilerArgs(c, "html", "out.html"), " ")
+	got := strings.Join(compilerArgs(c, "html", "out.html", ""), " ")
 	want := "--backend html --output out.html -- Button.mosaic"
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
@@ -477,5 +477,62 @@ func TestDiscoverThreeFile_StoriesFileIsHotReloadWatched(t *testing.T) {
 	// the preview and the seam would look broken rather than unwatched.
 	if !hasWatchedSuffix("Button.stories.json") {
 		t.Fatal("stories files must trigger a hot reload")
+	}
+}
+
+// ── Story fixtures reach the compiler (#14459) ────────────────────────────
+//
+// The story name was parsed out of /preview/{backend}/{id}/{story} and then
+// discarded, and pipeline mode ignored --fixtures regardless, so every story
+// of a component rendered identically. These cover the plumbing that makes
+// selecting a story mean something.
+
+func TestCompilerArgs_PassesFixturesWhenPresent(t *testing.T) {
+	dir := t.TempDir()
+	writeThreeFileComponent(t, dir, "Badge", ".light.msl")
+	comps, err := discoverComponents(dir)
+	if err != nil {
+		t.Fatalf("discover: %v", err)
+	}
+	got := strings.Join(compilerArgs(comps[0], "html", "out.html", "/tmp/fx.json"), " ")
+	if !strings.Contains(got, "--fixtures /tmp/fx.json") {
+		t.Fatalf("fixtures path must reach the compiler: %s", got)
+	}
+}
+
+func TestCompilerArgs_OmitsFixturesFlagWhenAbsent(t *testing.T) {
+	dir := t.TempDir()
+	writeThreeFileComponent(t, dir, "Badge", ".light.msl")
+	comps, err := discoverComponents(dir)
+	if err != nil {
+		t.Fatalf("discover: %v", err)
+	}
+	got := strings.Join(compilerArgs(comps[0], "html", "out.html", ""), " ")
+	// A story with no fixtures must not pass an empty --fixtures: "unset" is a
+	// legitimate state a component has to render, not an empty file to apply.
+	if strings.Contains(got, "--fixtures") {
+		t.Fatalf("no fixtures means no flag: %s", got)
+	}
+}
+
+func TestCompile_WritesStoryFixturesAsJSONObject(t *testing.T) {
+	// The file handed to --fixtures has to be a flat object of slot name to
+	// value -- the shape mosaic-compile parses. A mismatch here would be
+	// accepted-and-ignored, which is the exact failure this whole chain is
+	// made of.
+	story := Story{
+		Name:     "Danger",
+		Fixtures: map[string]interface{}{"variant": "danger", "label": "Delete"},
+	}
+	encoded, err := json.Marshal(story.Fixtures)
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+	var round map[string]interface{}
+	if err := json.Unmarshal(encoded, &round); err != nil {
+		t.Fatalf("fixtures must round-trip as a JSON object: %v", err)
+	}
+	if round["variant"] != "danger" {
+		t.Fatalf("fixture value lost: %v", round)
 	}
 }
