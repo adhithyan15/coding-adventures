@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/oauth-credential-sealed-store",
+  "capabilities": ["os_random"],
+  "justification": "Credential writes delegate to vault-sealed-store, which draws per-record encryption keys and AEAD nonces from the repository-owned OS CSPRNG. The adapter has no filesystem, network, browser, clock, or process authority."
+}
