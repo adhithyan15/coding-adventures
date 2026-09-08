@@ -8,6 +8,12 @@ results; retain explicit missing-tool skips and unconditional corpus emission
 checks. Declare the Elixir toolchain in BUILD so hosted LANG PRs install Erlang.
 No production lowering change was required.
 
+## 0.291.0 — 2026-09-07 — canonical tracked ALGOL real-function exponents
+
+The seven-backend ALGOL matrix now covers a canonical built-in real standard
+function over a tracked integer snapshot feeding bounded real-power unrolling.
+Noncanonical inputs and user overrides continue through runtime power lowering.
+
 ## Unreleased — Macsyma on real CoreCLR (VM-049)
 
 Add `tests/clr_real_macsyma.rs`: the McCarthy `clr_real_scalar.rs` pattern
