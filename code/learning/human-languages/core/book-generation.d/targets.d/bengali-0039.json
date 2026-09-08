@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 39,
+  "output": "bengali/book/chapters/ch39-digits.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

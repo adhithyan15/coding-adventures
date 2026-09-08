@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W07-digit-two",
+    "language": "bengali",
+    "chapter": 39,
+    "sequence": 2020,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d93499f1432a6ac0",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
