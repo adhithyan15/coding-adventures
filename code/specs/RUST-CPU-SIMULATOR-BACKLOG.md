@@ -78,7 +78,7 @@ according to the current prioritization run.
 | RCPU-021 / RCPU-022 | 1978 | Intel 8086 | Complete: `intel8086-simulator` | Complete: `intel8086-gatelevel` |
 | RCPU-023 / RCPU-024 | 1979 | Motorola 68000 | Complete: `m68k-simulator` | Complete: `motorola68k-gatelevel` |
 | RCPU-025 / RCPU-026 | 1980 | Intel 8051 | Complete: `intel8051-simulator` | Complete: `intel8051-gatelevel` |
-| RCPU-027 / RCPU-028 | 1985 | ARM1 / ARMv1 | Complete: `arm1-simulator` | Audit: `arm1-gatelevel` |
+| RCPU-027 / RCPU-028 | 1985 | ARM1 / ARMv1 | Complete: `arm1-simulator` | Complete: `arm1-gatelevel` |
 | RCPU-029 / RCPU-030 | 1985 | MIPS R2000 | Audit: `mips-r2000-simulator` | Audit: `mips-r2000-gatelevel` |
 | RCPU-031 / RCPU-032 | 1987 | SPARC V8 | Audit: `sparc-v8-simulator` | Audit: `sparc-v8-gatelevel` |
 | RCPU-033 / RCPU-034 | 1992 | DEC Alpha AXP 21064 | Missing | Missing |
@@ -91,7 +91,7 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-028**, the ARM1 / ARMv1 gate-level Rust audit. The
+Current selection: **RCPU-029**, the MIPS R2000 functional Rust audit. The
 2026-08-28 prioritization run keeps each architecture pair together while the
 completed Intel 4004 through Intel 8051 functional cells publish one at a time.
 RCPU-005 is complete after its AAU/final-audit slice added separate
@@ -426,6 +426,20 @@ green. Strict formatting, Clippy, and rustdoc pass. Total Rust line coverage is
 92.29% (1,675/1,815), above the completion floor. Publication advances to the
 ARM1 gate-level audit.
 
+RCPU-028 is audit-complete locally atop RCPU-027. The simulator now owns the
+exact 536,871,777-DFF persistent topology: 536,870,912 memory bits, 864 bits
+across all 27 physical registers, and one halt bit. Packed stable-Q storage
+clocks simulator-owned writes through the sequential-gate primitive without a
+multi-gigabyte latch expansion. The gate machine shares the functional
+complete state/error/trace/result contract, adds deterministic typed
+transactional load/restore/step/run boundaries, checked direct access,
+force-user block transfers, and mask-aware IRQ/FIQ entry. The original 21 unit
+tests, eight lifecycle tests, and one aggregate 599-vector Python/functional
+full-state differential pass. Strict formatting, Clippy, and rustdoc are green;
+total line coverage is 93.12% (1,042/1,119). Normative Spec 07e2 replaces the
+stale Python/25-register sketch. Publication closes the ARM1 pair and advances
+to the MIPS R2000 functional audit.
+
 ## Cross-language wave
 
 After RCPU-050, freeze the Rust APIs and golden conformance vectors, then port
@@ -452,6 +466,7 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-28 | RCPU-028 audit found 21 passing tests and working gate ALU, condition, barrel-shifter, and broad instruction execution, but all 536,871,777 persistent memory/register/halt bits are host-backed; memory is caller-sized; out-of-range access silently fabricates or drops data; loads truncate and retain stale bytes; halted stepping mutates state; block arithmetic can panic; force-user transfers and external IRQ/FIQ are absent; state/results/traces and typed transactional lifecycle boundaries are absent; the differential covers only nine small programs instead of the completed 599-vector functional corpus; and Spec 07e2 retains a Python/25-register design sketch. Baseline strict checks pass at 81.78% line coverage. | P0, gate completion contract, follows RCPU-027 | Resolved locally with exact 536,871,777-DFF state, the shared typed transactional lifecycle, force-user transfers and IRQ/FIQ entry, all 599 full-state functional transitions, normative Rust Spec 07e2, strict checks, and 93.12% total line coverage. Publish after RCPU-027, then audit RCPU-029. |
 | 2026-08-28 | RCPU-027 audit found a broad 51-test Rust ARMv1 implementation at 91.63% line coverage with strict checks already green, but memory is caller-sized instead of exposing the 64 MiB architectural constructor; out-of-range fetch/data reads return zero, writes and oversized loads silently truncate, halted steps keep mutating PC, unchecked block-transfer arithmetic can panic, LDM/STM's force-user bit is decoded but ignored, external IRQ/FIQ entry promised by Spec 07e is absent, traces omit banked registers/full memory, state restore and typed atomic load/step/run boundaries are absent, and no Python full-state differential exists. | P0, functional completion contract, follows RCPU-026 | Resolved locally with the exact architectural constructor, complete physical-register/memory state, force-user transfers and IRQ/FIQ entry, deterministic typed transactional lifecycle, 599 Python full-state vectors, consumer verification, strict checks, and 92.29% total line coverage. Publish after RCPU-026, then audit RCPU-028. |
 | 2026-08-28 | RCPU-026 audit found 69 passing unit tests and a broad instruction dispatcher, but all 1,050,641 persistent code/XDATA/IRAM/PC/halt bits are host-backed; checked atomic load/restore/step/run state and complete traces are absent; no functional full-state differential exists; RL/RR incorrectly modify CY; MUL/DIV use host shifts and data-dependent control; legacy loads retain stale code/XDATA and can panic at the boundary; strict rustdoc fails; and total line coverage is 78.94% with the CPU engine at 69.98%. | P0, gate completion contract, follows RCPU-025 | Resolved locally with exact DFF state, shared typed transactional lifecycle, corrected rotate/divide edges, fixed MUL/DIV networks, normative Spec 07p2, all 256 full-state functional transitions, strict checks, 97.01% CPU-engine coverage, and 97.51% total coverage. Publish after RCPU-025, then audit RCPU-027. |
 | 2026-08-28 | RCPU-025 audit found a broad Rust dispatcher with 35 passing tests, but oversized loads and invalid indirect inputs panic, truncated instructions intentionally wrap across the 64 KiB code boundary, reserved opcodes panic after partial fetch, loads retain stale code beyond the new program, bounded results omit traces/final state/errors, complete owned state and typed transactional load/restore/step/run boundaries are absent, no Python full-state differential exists, and strict rustdoc fails. | P0, functional completion contract, follows RCPU-024 | Resolved locally with deterministic typed transactional lifecycle, complete Harvard state/traces/results, reproducible exhaustive 256-opcode Python full-state hashes, all consumers, strict checks, 98.20% instruction-engine coverage, and 94.53% total coverage. Publish after RCPU-024, then audit RCPU-026. |
