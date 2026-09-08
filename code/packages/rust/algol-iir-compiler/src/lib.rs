@@ -2914,8 +2914,8 @@ impl Compiler {
     /// A pure conditional may feed a standard function even when its branch
     /// values differ, provided the function maps every branch to the same
     /// exact result. Such a result may compose with finite literal arithmetic
-    /// and exact tracked integer snapshots before feeding another built-in.
-    /// The selector remains part of emitted IIR, and bare tracked reals remain
+    /// and exact tracked scalar snapshots before feeding another built-in. The
+    /// selector remains part of emitted IIR, and untracked values remain
     /// excluded.
     fn exact_tracked_standard_function_operand(&self, node: &GrammarASTNode) -> bool {
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
@@ -2958,7 +2958,8 @@ impl Compiler {
                                 .tracked_integer_expression_dependencies(operand)
                                 .is_some_and(|dependencies| dependencies.is_empty())
                             || (self.exact_tracked_integral_exponent_expression(operand)
-                                && self.static_integer_scalar_value(operand).is_some()))
+                                && self.static_integer_scalar_value(operand).is_some())
+                            || self.exact_tracked_real_snapshot_operand(operand))
                 }
                 Piece::Op(_) => false,
             })
@@ -2966,6 +2967,15 @@ impl Compiler {
                 matches!(piece, Piece::Node(operand) if self.contains_pure_standard_function_call(operand))
             })
             && self.static_tracked_exponent_real_value(node).is_some()
+    }
+
+    fn exact_tracked_real_snapshot_operand(&self, node: &GrammarASTNode) -> bool {
+        let Some((_, name)) = exact_signed_bare_variable_expression(node) else {
+            return false;
+        };
+        self.require_var(&name)
+            .is_ok_and(|binding| !binding.is_global && binding.ty == ScalarType::Real)
+            && self.static_tracked_numeric_value(node, false).is_some()
     }
 
     fn contains_pure_standard_function_call(&self, node: &GrammarASTNode) -> bool {
@@ -11390,15 +11400,35 @@ mod tests {
 
     #[test]
     fn al4_path_independent_standard_result_tracked_integer_arithmetic_fails_closed() {
-        for source in [
-            "begin integer offset; real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ entier(abs(if gate = 0.0 then exponent else -exponent) + offset + 0.5) end",
-            "begin real offset, gate, exponent, saved; offset := 0.0; exponent := -2.0; saved := 6.0 ^ entier(abs(if gate = 0.0 then exponent else -exponent) + offset + 0.5) end",
-        ] {
-            let module = compile_source(source, "test")
-                .expect("unproven arithmetic must retain runtime power");
-            let main = module.get_function("main").expect("has main");
-            assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"), "{source}");
-        }
+        let source = "begin integer offset; real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ entier(abs(if gate = 0.0 then exponent else -exponent) + offset + 0.5) end";
+        let module = compile_source(source, "test")
+            .expect("unproven arithmetic must retain runtime power");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+    }
+
+    #[test]
+    fn al4_path_independent_standard_results_compose_with_tracked_reals() {
+        let module = compile_source(
+            "begin real offset, gate, exponent, saved; offset := 0.0; exponent := -2.0; saved := 6.0 ^ entier(abs(if gate = 0.0 then exponent else -exponent) + offset + 0.5) + 6.0; gate := 1.0; offset := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("a path-independent built-in result may compose with an exact real snapshot");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
+    fn al4_path_independent_standard_result_tracked_real_arithmetic_fails_closed() {
+        let module = compile_source(
+            "begin real offset, gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ entier(abs(if gate = 0.0 then exponent else -exponent) + offset + 0.5) end",
+            "test",
+        )
+        .expect("an uninitialized real snapshot must retain runtime power");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
     }
 
     #[test]
