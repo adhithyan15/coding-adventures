@@ -8,9 +8,9 @@ spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 890
 chapter: 34
 type: word
-headword: लिखना
-gloss: to write — from a Sanskrit verb meaning "to scratch", the same picture five language families reached independently
-romanization: "likhnā"
+headword: लिखना / लिख / लिखता / लिखती / लिखते
+gloss: to write / stem / masculine, feminine, and respectful-plural present forms — from a Sanskrit verb meaning "to scratch", the same picture five language families reached independently
+romanization: "likhnā / likh / likhtā / likhtī / likhte"
 concept_tag: VERB-WRITE
 prerequisites: [HI-C34-padhna, HI-W03-preposed-i, HI-W04-write-mera-naam]
 sounds: [matra-i-preposed, aspirated-kha]
