@@ -5169,7 +5169,7 @@ const PROGRAMS: &[Prog] = &[
                000000     DISPLAY \"HELLO\".\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("HELLO"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — `MOVE` a numeric literal into a PICTURE-typed item, then
     // `DISPLAY` the item (PL09 step 4). This is the cell that proves the
@@ -5195,7 +5195,7 @@ const PROGRAMS: &[Prog] = &[
                000000     DISPLAY N.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("00042"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — integer arithmetic (PL09 step 4, PR2). Numeric items are now
     // scaled `i64` slots, so `ADD`/`MULTIPLY`/`SUBTRACT` lower to native `add` /
@@ -5221,7 +5221,7 @@ const PROGRAMS: &[Prog] = &[
                000000     DISPLAY R.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("20"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — scaled-decimal ADD (PL09 step 4, PR3). `R PIC 9(2)V99` holds a
     // value scaled by 2, so it starts 1.50 (slot `150`). `ADD 2.25 TO R` aligns
@@ -5243,7 +5243,7 @@ const PROGRAMS: &[Prog] = &[
                000000     DISPLAY R.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("0375"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — IF / ELSE with a relational condition (PL09 step 4, PR4). The
     // condition lowers to a `cmp_gt` on the aligned values; `jmp_if_false` skips
@@ -14349,4 +14349,60 @@ fn portable_text_stdout_beam_putchar_preserves_loop_state() {
         .output().unwrap();
     assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
     assert_eq!(String::from_utf8_lossy(&out.stdout), format!("{}<<R>>42<</R>>", "A".repeat(200)));
+}
+
+#[test]
+fn portable_text_stdout_cobol_beam_initial_output() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM initial output: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM initial output: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_beam_arithmetic_immediates() {
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+    if !erl_ok() {
+        eprintln!("SKIP BEAM arithmetic immediates: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for (op, left, right, expected) in [
+        ("add", -7, 3, -4), ("sub", 7, 3, 4), ("mul", -7, 3, -21),
+        ("div", 7, 3, 2), ("mod", 7, 3, 1),
+    ] {
+        for variant in 0..3 {
+            let mut module = IIRModule::new("immediate_arithmetic", "test");
+            module.entry_point = Some("main".into());
+            let lhs = if variant == 1 { Operand::Var("lhs".into()) } else { Operand::Int(left) };
+            let rhs = if variant == 2 { Operand::Var("rhs".into()) } else { Operand::Int(right) };
+            module.add_or_replace(IIRFunction::new("main", vec![], "i64", vec![
+                IIRInstr::new("const", Some("lhs".into()), vec![Operand::Int(left)], "i64"),
+                IIRInstr::new("const", Some("rhs".into()), vec![Operand::Int(right)], "i64"),
+                IIRInstr::new(op, Some("result".into()), vec![lhs, rhs], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("result".into())], "i64"),
+            ]));
+            let beam = iir_to_beam::lower_iir_to_beam(&module,
+                &iir_to_beam::IIRBeamConfig::new("immediate_arithmetic")).unwrap();
+            let dir = tempfile::tempdir().unwrap();
+            std::fs::write(dir.path().join("immediate_arithmetic.beam"),
+                iir_to_beam::encode_beam(&beam)).unwrap();
+            let out = Command::new("erl").arg("-noshell").arg("-pa").arg(dir.path())
+                .arg("-eval").arg(r#"io:format("~w",[immediate_arithmetic:main()]),halt(0)."#)
+                .output().unwrap();
+            assert!(out.status.success(), "{op} variant {variant}: {}", String::from_utf8_lossy(&out.stderr));
+            assert_eq!(String::from_utf8_lossy(&out.stdout), expected.to_string(), "{op} variant {variant}");
+            executed += 1;
+        }
+    }
+    assert_eq!(executed, 15);
+    eprintln!("BEAM arithmetic immediates: {executed} programs executed");
 }

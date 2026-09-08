@@ -1556,14 +1556,24 @@ pub fn lower_iir_to_beam(
                     };
                     // Use get_src! instead of direct indexing to produce a clean
                     // error rather than a panic when srcs is shorter than expected.
-                    let r1 = operand_reg!(get_src!(instr, 0));
-                    let r2 = operand_reg!(get_src!(instr, 1));
+                    let source = |operand: &Operand| -> Result<BEAMOperand, IIRBeamError> {
+                        match operand {
+                            Operand::Var(name) => Ok(BEAMOperand::x(var_reg!(name))),
+                            Operand::Int(value) => Ok(BEAMOperand::i(*value as u64)),
+                            other => Err(IIRBeamError::InvalidOperand {
+                                function: fn_name.clone(),
+                                detail: format!("{} expects integer or variable operands, got {:?}", instr.op, other),
+                            }),
+                        }
+                    };
+                    let r1 = source(get_src!(instr, 0))?;
+                    let r2 = source(get_src!(instr, 1))?;
                     instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                         BEAMOperand::f(0),
                         BEAMOperand::u(live),
                         BEAMOperand::u(import_idx as u64), // U-type, not A-type (OTP 25+ requirement)
-                        BEAMOperand::x(r1),
-                        BEAMOperand::x(r2),
+                        r1,
+                        r2,
                         BEAMOperand::x(rd),
                     ]));
                     // Erlang integers are unbounded; Nib/Oct narrow results wrap at

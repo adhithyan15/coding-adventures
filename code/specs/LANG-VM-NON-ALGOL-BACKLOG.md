@@ -1496,3 +1496,13 @@ Var and Int operands directly in the existing gc_bif2 arithmetic source slots;
 retain explicit errors for unsupported operand kinds, source arity validation,
 and u4/u8 narrowing. Do not allocate scratch registers for immediate values.
 Rerun the four COBOL probes and add operation/operand regression coverage.
+
+### VM-040 initial COBOL validation
+
+All four selected COBOL programs passed on real Erlang and in fresh matrix
+processes with positive sentinels (rows 390-393). Fifteen arithmetic immediate
+executions passed, including negative operands and all five binary operations.
+All 12 Oct and 26 Nib BEAM programs passed again, along with 93 backend tests
+and all-target Clippy for iir-to-beam and lang-aot. No seven-column rerun is
+claimed. Remaining COBOL BEAM rows require further probes after this PR merges;
+only four of the 58 COBOL rows now declare BEAM, for 410 total declared cells.
