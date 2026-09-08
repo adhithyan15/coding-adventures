@@ -1,0 +1,23 @@
+{
+  "glyph": "む",
+  "sound": "mu",
+  "role": "hiragana",
+  "components": [
+    "a horizontal across the upper left",
+    "a long stroke down through it, looping at the foot and sweeping right",
+    "a small separate mark at the upper right"
+  ],
+  "strokeOrder": [
+    "draw the horizontal from left to right across the upper left",
+    "lift; begin above the horizontal, come down through it, loop anticlockwise at the foot and sweep out to the right",
+    "lift; add the small separate mark at the upper right"
+  ],
+  "strokeOrderNote": "Sirgazil's 32-frame animation moves the start marker twice, which is two pen lifts and three strokes; the small right-hand mark is drawn last and is never joined to the body.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%80_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana む stroke order animation.gif, hiragana む, 32 frames, 3.2 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws む as three strokes in the order horizontal, body-with-loop, right-hand mark. KanjiVG's data for U+3080 holds three paths in the same order. The loop at the foot is drawn anticlockwise; its size varies in handwriting, but the three-stroke order does not."
+  },
+  "notes": "The mu of むっつ, six things. The small mark on the right is a separate stroke and is the one most often left off; a む without it is not a む."
+}

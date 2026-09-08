@@ -492,7 +492,23 @@
       "id": "JA-A1-NUM-02",
       "category": "Suushi to josuushi - numerals and counters",
       "label": "the counters, and the two counting systems Japanese runs in parallel",
-      "probe": null,
+      "probe": [
+        "JA-GRAMMAR-COUNTER-01",
+        "JA-LEX-HITOTSU",
+        "JA-LEX-FUTATSU",
+        "JA-LEX-MITTSU",
+        "JA-LEX-YOTTSU",
+        "JA-LEX-ITSUTSU",
+        "JA-LEX-MUTTSU",
+        "JA-LEX-NANATSU",
+        "JA-LEX-YATTSU",
+        "JA-LEX-KOKONOTSU",
+        "JA-LEX-TOO",
+        "JA-LEX-NIN",
+        "JA-LEX-HITORI-FUTARI",
+        "JA-LEX-HON",
+        "JA-GRAMMAR-COUNTER-SOUND-CHANGE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "JA-CORPUS",
@@ -500,7 +516,7 @@
       ],
       "derivedFrom": [],
       "japaneseSpecific": true,
-      "note": "Japanese-specific and still absent, but no longer blocked. Spanish has no classifier column. Japanese has two -- the native hitotsu/futatsu series and the Sino-Japanese ichi/ni series with a counter word attached -- and choosing between them is the first hard thing about Japanese numbers. Chapters 14-15 supply the Sino series and open the seam the choice runs along: JA-GRAMMAR-KUN-IN-THE-COUNT records that at four and seven the NATIVE reading stands inside the borrowed count and is the one used, while at nine both everyday readings are borrowed. The reader also already owns one counter without its being named as one: chapter 9's ichido, whose lesson says do counts an occurrence. The counter series is the next tranche."
+      "note": "Chapters 16 and 17, twenty-five lessons. BOTH systems are now present and the seam between them is named three times rather than once. Chapter 16 teaches the NATIVE series hitotsu to too -- five of its ten words cost nothing and five signs are bought, each in the lesson immediately before the word that needs it -- and shows that the count STOPS at too, which is the reason a counter is needed at all. Chapter 17 names the machinery: a number takes a counter chosen by the kind of thing, tsu is the general one, and the reader already owned TWO counters without either being called one -- the tsu itself and the do inside chapter 9's ichido, whose lesson said 'do counts an occurrence' and never used the word. The three counters taught are the three the corpus's own nouns can exercise: tsu on the face words, nin on the nine family words, hon on ashi and kami. hitori/futari is the seam again -- the native word inside a BORROWED counter, exactly as yon and nana stand inside the borrowed count. NOT CLAIMED: mai, hiki, satsu and the rest of the counter set, and the nine-form of hon, which needs a kana this book has not taught and is left out of the ippon table on the page rather than guessed at."
     },
     {
       "id": "JA-A1-NUM-03",
@@ -516,7 +532,7 @@
         "A1-Q-02",
         "A1-NG3-06"
       ],
-      "note": "Absent, and blocked upstream rather than merely unwritten: a Japanese ordinal is a counter with dai- in front of it or -me behind it, so it cannot be taught before JA-A1-NUM-02. Chapters 14-15 removed the other half of the block by supplying the cardinals it attaches to. The ordering words -- tsugi, saisho, saigo -- are a separate absence and want no numeral at all."
+      "note": "Absent, and NO LONGER BLOCKED. A Japanese ordinal is a counter with dai- in front of it or -me behind it; chapters 16-17 supply the counters, so the block named here is cleared and what remains is ordinary vocabulary work. The ordering words -- tsugi, saisho, saigo -- are still a separate absence and want no numeral at all."
     },
     {
       "id": "JA-A1-NUM-04",

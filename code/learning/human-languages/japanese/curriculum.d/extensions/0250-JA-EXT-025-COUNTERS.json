@@ -1,0 +1,21 @@
+{
+  "id": "JA-EXT-025-COUNTERS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can choose a counter for the kind of thing I am counting, and I know which one to use when I do not know.",
+  "prerequisites": [
+    "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN"
+  ],
+  "lessons": [
+    "JA-C18-tsu-counter",
+    "JA-C18-nin",
+    "JA-C18-hitori-futari",
+    "JA-C18-count-the-face",
+    "JA-W18-ho",
+    "JA-C18-hon",
+    "JA-W18-handakuten",
+    "JA-C18-ippon",
+    "JA-R18-counting-things"
+  ]
+}

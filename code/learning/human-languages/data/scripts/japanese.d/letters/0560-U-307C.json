@@ -1,0 +1,15 @@
+{
+  "glyph": "ぼ",
+  "sound": "bo",
+  "role": "hiragana",
+  "components": [
+    "ほ",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "ほ in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "ほ voiced. The three of さんぼん, where the counter for long thin things takes the mark the reader has had since chapter three."
+}

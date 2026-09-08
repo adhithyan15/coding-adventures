@@ -1,0 +1,23 @@
+{
+  "language": "japanese",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:dd12a50cef3fdd73",
+  "lessonIds": [
+    "JA-W17-mu",
+    "JA-C17-muttsu",
+    "JA-C17-nanatsu",
+    "JA-W17-ya",
+    "JA-C17-yattsu",
+    "JA-W17-no",
+    "JA-C17-kokonotsu",
+    "JA-C17-too",
+    "JA-R17-the-other-ten"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 0,
+  "text": "japanese/narration/ch17.txt",
+  "json": "japanese/narration/ch17.json",
+  "textHash": "fnv1a64:12e7a5e0c7c4f332",
+  "jsonHash": "fnv1a64:2d1c4531fc0ac5f7",
+  "findings": []
+}

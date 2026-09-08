@@ -1,0 +1,24 @@
+{
+  "chapter": 16,
+  "title": "The Other Way to Count",
+  "label": "ch:ja-native-count-one-to-five",
+  "canDo": "I can count things from one to five in the native Japanese series, write the two signs it cost, and say the one place where the same word stands in both of Japanese's counts.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "JA-R16-first-five-things",
+    "kind": "production",
+    "summary": "Run hitotsu to itsutsu, say the borrowed five beside them, and name the one number where a single word appears in both counts.",
+    "assesses": [
+      "JA-SCRIPT-HI-01",
+      "JA-LEX-HITOTSU",
+      "JA-SCRIPT-FU-01",
+      "JA-LEX-FUTATSU",
+      "JA-LEX-MITTSU",
+      "JA-LEX-YOTTSU",
+      "JA-LEX-ITSUTSU"
+    ],
+    "note": "Chapter 14 said of yon that the split it showed was a seam the counters would run along, and left it hanging. This chapter is the other side of that seam, and it stops at five for the same reason chapters 14 and 15 did: five is where a reader can hold a run. The order is by COST -- mittsu, yottsu and itsutsu are spelled entirely from signs the reader already had -- and each of the two signs it does buy is bought in the lesson IMMEDIATELY BEFORE the word that needs it, so the count grows contiguously and there is no hole to count around. That is deliberately unlike chapter 15, which bought its two kana last and left the reader counting round an audible gap at six for three lessons."
+  }
+}

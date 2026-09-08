@@ -1,0 +1,22 @@
+{
+  "language": "japanese",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:22a436e5626947c9",
+  "lessonIds": [
+    "JA-W16-hi",
+    "JA-C16-hitotsu",
+    "JA-W16-fu",
+    "JA-C16-futatsu",
+    "JA-C16-mittsu",
+    "JA-C16-yottsu",
+    "JA-C16-itsutsu",
+    "JA-R16-first-five-things"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 0,
+  "text": "japanese/narration/ch16.txt",
+  "json": "japanese/narration/ch16.json",
+  "textHash": "fnv1a64:b12a18dfa6ce9fed",
+  "jsonHash": "fnv1a64:a93de1949e019ae5",
+  "findings": []
+}

@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 16,
+  "output": "japanese/book/chapters/ch16-native-count-one-to-five.tex",
+  "scriptSet": "japanese-main"
+}

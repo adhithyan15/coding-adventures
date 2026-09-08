@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C18-hitori-futari",
+    "language": "japanese",
+    "chapter": 18,
+    "sequence": 1510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e0a8d5fc508e7fd"
+  },
+  "findings": []
+}

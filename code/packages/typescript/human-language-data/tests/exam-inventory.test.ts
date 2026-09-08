@@ -2485,8 +2485,8 @@ describe("the committed Japanese A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(179);
-    expect(coverage.covered).toBe(66);
-    expect(coverage.unmapped).toBe(113);
+    expect(coverage.covered).toBe(67);
+    expect(coverage.unmapped).toBe(112);
     expect(coverage.partial).toBe(0);
     // THE HEADLINE, and it is a strength rather than a gap. This is the only
     // track measured so far that holds the complete CEFR A1 repair kit:
@@ -2526,9 +2526,17 @@ describe("the committed Japanese A1 inventory", () => {
     // because JA-A1-NUM-01 and JA-A1-NG2-01 were already ticked -- one on a
     // single numeral inside a phrase, the other on the vague half of counting.
     // The tranche deepened two ticks instead of adding one. A coverage total
-    // cannot see that, which is why the named pin below exists.
+    // cannot see that, which is why the named pins below exist.
+    //
+    // 66 -> 67. The counters (chapters 16-18) close JA-A1-NUM-02, and this is
+    // the first Japanese-specific point in the file to be closed at all -- it
+    // has no Spanish column behind it, because Spanish has no classifier
+    // system. ONE point again, and again the total is the least of what moved:
+    // the track's SECOND count now exists, the reader can attach a number to a
+    // noun for the first time in 157 lessons, and JA-A1-NUM-03 changes from
+    // "blocked upstream" to ordinary vocabulary work.
     expect(formatExamCoverage(coverage)).toContain(
-      "japanese A1 (partial inventory): 66/179 points covered (37%)",
+      "japanese A1 (partial inventory): 67/179 points covered (37%)",
     );
   }, 60_000);
 
@@ -2563,9 +2571,60 @@ describe("the committed Japanese A1 inventory", () => {
     // The numeral the old tick rested on is still taught, in the chapter-9
     // phrase the cardinal lesson takes apart.
     expect(taught.has("JA-LEX-ICHIDO")).toBe(true);
-    // And the counters are still absent, which is what blocks the ordinals.
-    expect(inventory.points.find((point) => point.id === "JA-A1-NUM-02")?.probe).toBeNull();
+    // The ordinals are still absent, and that point is now ordinary vocabulary
+    // work rather than a block: a Japanese ordinal is a counter with dai- in
+    // front or -me behind, and the counters exist as of chapter 18.
     expect(inventory.points.find((point) => point.id === "JA-A1-NUM-03")?.probe).toBeNull();
+  }, 60_000);
+
+  // The counter point, named rather than left to the aggregate. Both halves
+  // were falsified before this was kept: a fabricated id fails the "probes only
+  // atoms that EXIST" test above AND the per-atom loop below, and nulling the
+  // probe fails the coverage total and this file's own `toEqual`.
+  it("closes JA-A1-NUM-02 on BOTH counting systems, not on a list of counters", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "japanese");
+    const counters = inventory.points.find((point) => point.id === "JA-A1-NUM-02");
+    expect(counters?.probe).toEqual([
+      // The machinery, first, because it is what the point is about: a number
+      // in Japanese takes a counter chosen by the kind of thing.
+      "JA-GRAMMAR-COUNTER-01",
+      // The NATIVE series, which IS the general counter and is the whole of one
+      // of the two systems. Ten words for five signs, across chapters 16-17.
+      "JA-LEX-HITOTSU",
+      "JA-LEX-FUTATSU",
+      "JA-LEX-MITTSU",
+      "JA-LEX-YOTTSU",
+      "JA-LEX-ITSUTSU",
+      "JA-LEX-MUTTSU",
+      "JA-LEX-NANATSU",
+      "JA-LEX-YATTSU",
+      "JA-LEX-KOKONOTSU",
+      "JA-LEX-TOO",
+      // Two counters that are NOT the general one, chosen because the corpus's
+      // own nouns can exercise them: the nine family words, and ashi and kami.
+      "JA-LEX-NIN",
+      "JA-LEX-HITORI-FUTARI",
+      "JA-LEX-HON",
+      // And the fact that a counter is pushed by the sound in front of it.
+      "JA-GRAMMAR-COUNTER-SOUND-CHANGE-01",
+    ]);
+    for (const atom of counters?.probe ?? []) expect(taught.has(atom), atom).toBe(true);
+    // THE SEAM, asserted rather than described: the atom chapter 14 introduced
+    // on yon is the same one chapters 16-18 return to three more times, which is
+    // why it is NOT re-declared here under a counter-specific id.
+    expect(taught.has("JA-GRAMMAR-KUN-IN-THE-COUNT")).toBe(true);
+    // The counter the reader already owned and nobody had named. Its lesson said
+    // "do counts an occurrence" in chapter 9; chapter 18 is where that sentence
+    // is cashed, and no new atom was invented for it.
+    expect(taught.has("JA-LEX-ICHIDO")).toBe(true);
+    for (const absent of [
+      "JA-LEX-DO-COUNTER",
+      "JA-LEX-MAI",
+      "JA-LEX-HIKI",
+      "JA-LEX-SATSU",
+      "JA-LEX-DAI",
+    ]) expect(taught.has(absent), absent).toBe(false);
   }, 60_000);
 });
 
