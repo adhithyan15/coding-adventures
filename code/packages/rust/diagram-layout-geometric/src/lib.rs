@@ -7,7 +7,7 @@
 //! bounding box of all elements) and passes elements through unchanged.
 
 use std::collections::HashMap;
-use diagram_ir::{GeoElement, GeometricDiagram, IshikawaDiagram, LayoutedGeometricDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
+use diagram_ir::{CynefinDiagram, GeoElement, GeometricDiagram, IshikawaDiagram, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
 
 pub const VERSION: &str = "0.1.0";
 
@@ -116,6 +116,27 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
         Some(LayoutedWardleyEvolution { from: positions.get(node.label.as_str())?.clone(), to: point(node.visibility, evolve.target) })
     }).collect();
     LayoutedWardleyDiagram { width, height, title: diagram.title.clone(), stages: diagram.stages.clone(), nodes, links, evolves }
+}
+
+/// Place the four Cynefin quadrants and central confusion domain deterministically.
+pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
+    let width = 800.0; let height = 600.0; let top = if diagram.title.is_some() { 48.0 } else { 24.0 };
+    let left = 28.0; let gap = 10.0; let domain_width = (width - left * 2.0 - gap) / 2.0;
+    let domain_height = (height - top - 28.0 - gap) / 2.0;
+    let specs = [("complex", left, top), ("complicated", left + domain_width + gap, top),
+        ("chaotic", left, top + domain_height + gap), ("clear", left + domain_width + gap, top + domain_height + gap)];
+    let mut domains: Vec<_> = specs.into_iter().map(|(name, x, y)| LayoutedCynefinDomain { name: name.into(),
+        items: diagram.domains.iter().find(|domain| domain.name == name).map_or_else(Vec::new, |domain| domain.items.clone()),
+        x, y, width: domain_width, height: domain_height, center: Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 }, confusion: false }).collect();
+    domains.push(LayoutedCynefinDomain { name: "confusion".into(),
+        items: diagram.domains.iter().find(|domain| domain.name == "confusion").map_or_else(Vec::new, |domain| domain.items.clone()),
+        x: width / 2.0 - 90.0, y: top + (height - top - 28.0) / 2.0 - 58.0, width: 180.0, height: 116.0,
+        center: Point { x: width / 2.0, y: top + (height - top - 28.0) / 2.0 }, confusion: true });
+    let centers: HashMap<_, _> = domains.iter().map(|domain| (domain.name.as_str(), domain.center.clone())).collect();
+    let transitions = diagram.transitions.iter().filter_map(|transition| Some(LayoutedCynefinTransition {
+        from: centers.get(transition.from.as_str())?.clone(), to: centers.get(transition.to.as_str())?.clone(), label: transition.label.clone(),
+    })).collect();
+    LayoutedCynefinDiagram { width, height, title: diagram.title.clone(), domains, transitions }
 }
 
 /// Resolve canvas size and produce a `LayoutedGeometricDiagram`.
@@ -285,5 +306,15 @@ mod tests {
         let layout = layout_wardley(&diagram);
         assert!(layout.nodes[0].position.y < layout.nodes[1].position.y);
         assert!(layout.nodes[0].position.x < layout.nodes[1].position.x);
+    }
+
+
+    #[test]
+    fn cynefin_layout_places_domains_in_fixed_semantic_quadrants() {
+        let layout = layout_cynefin(&CynefinDiagram { title: None, domains: vec![], transitions: vec![] });
+        let complex = layout.domains.iter().find(|domain| domain.name == "complex").unwrap();
+        let clear = layout.domains.iter().find(|domain| domain.name == "clear").unwrap();
+        assert!(complex.center.x < clear.center.x && complex.center.y < clear.center.y);
+        assert!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().confusion);
     }
 }

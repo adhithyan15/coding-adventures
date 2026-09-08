@@ -33,7 +33,7 @@ use std::collections::HashMap;
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
-    LayoutedIshikawaDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
+    LayoutedCynefinDiagram, LayoutedIshikawaDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
@@ -272,6 +272,51 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     instructions.extend(text_scene.instructions);
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b), instructions, id: None, metadata: None }
+}
+
+/// Lower Cynefin domains and transitions into backend-neutral geometry and glyphs.
+pub fn diagram_to_paint_cynefin<S, M, R>(diagram: &LayoutedCynefinDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
+where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
+    let mut instructions = Vec::new(); let mut text_children = Vec::new();
+    const COLORS: &[(&str, &str)] = &[("complex", "#dbeafe"), ("complicated", "#dcfce7"), ("clear", "#fef3c7"), ("chaotic", "#fee2e2")];
+    for domain in diagram.domains.iter().filter(|domain| !domain.confusion) {
+        let fill = COLORS.iter().find(|(name, _)| *name == domain.name).map_or("#f8fafc", |(_, color)| *color);
+        instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: domain.x, y: domain.y,
+            width: domain.width, height: domain.height, fill: Some(fill.into()), stroke: Some("#64748b".into()),
+            stroke_width: Some(1.5), corner_radius: Some(20.0), stroke_dash: None, stroke_dash_offset: None }));
+    }
+    for transition in &diagram.transitions {
+        instructions.push(PaintInstruction::Path(line_path(&[transition.from.clone(), transition.to.clone()], "#475569", 2.0)));
+        if let Some(label) = &transition.label { text_children.push(text_node(label, (transition.from.x + transition.to.x) / 2.0 - 65.0,
+            (transition.from.y + transition.to.y) / 2.0 - 30.0, 130.0, 24.0, options.label_font.clone(), Color { r: 51, g: 65, b: 85, a: 255 })); }
+    }
+    if let Some(domain) = diagram.domains.iter().find(|domain| domain.confusion) {
+        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: domain.center.x, cy: domain.center.y,
+            rx: domain.width / 2.0, ry: domain.height / 2.0, fill: Some("#e2e8f0".into()), stroke: Some("#475569".into()),
+            stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None }));
+    }
+    if let Some(title) = &diagram.title { text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
+        options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 })); }
+    for domain in &diagram.domains {
+        let label_y = if domain.confusion { domain.center.y - 34.0 } else { domain.y + 14.0 };
+        text_children.push(text_node(&capitalize(&domain.name), domain.x + 12.0, label_y, domain.width - 24.0, 28.0,
+            options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+        for (index, item) in domain.items.iter().take(if domain.confusion { 3 } else { usize::MAX }).enumerate() {
+            let y = if domain.confusion { domain.center.y - 2.0 + index as f64 * 22.0 } else { domain.y + 52.0 + index as f64 * 28.0 };
+            text_children.push(text_node(item, domain.x + 18.0, y, domain.width - 36.0, 24.0, options.label_font.clone(), Color { r: 30, g: 41, b: 59, a: 255 }));
+        }
+    }
+    let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+        id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions { width: diagram.width,
+        height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
+        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver });
+    instructions.extend(text_scene.instructions);
+    PaintScene { width: diagram.width, height: diagram.height,
+        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b), instructions, id: None, metadata: None }
+}
+
+fn capitalize(value: &str) -> String {
+    let mut characters = value.chars(); characters.next().map_or_else(String::new, |first| first.to_uppercase().collect::<String>() + characters.as_str())
 }
 
 fn with_opacity(color: &str, opacity: f64) -> String {
@@ -5097,6 +5142,21 @@ mod tests {
             links: vec![], evolves: vec![] };
         let scene = diagram_to_paint_wardley(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+    }
+
+
+    #[test]
+    fn cynefin_lowers_to_backend_neutral_rects_ellipse_and_glyphs() {
+        let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver; let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedCynefinDiagram { width: 400.0, height: 300.0, title: None,
+            domains: vec![diagram_ir::LayoutedCynefinDomain { name: "complex".into(), items: vec!["Probe".into()], x: 10.0, y: 10.0,
+                width: 180.0, height: 130.0, center: Point { x: 100.0, y: 75.0 }, confusion: false },
+                diagram_ir::LayoutedCynefinDomain { name: "confusion".into(), items: vec![], x: 150.0, y: 110.0,
+                    width: 100.0, height: 80.0, center: Point { x: 200.0, y: 150.0 }, confusion: true }], transitions: vec![] };
+        let scene = diagram_to_paint_cynefin(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
     }

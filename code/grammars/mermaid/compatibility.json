@@ -198,9 +198,9 @@
     {
       "id": "cynefin",
       "headers": ["cynefin-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "domain-map",
-      "smoke_source": "cynefin-beta\nClear:\n  Practice"
+      "smoke_source": "cynefin-beta\nclear\n  \"Practice\""
     },
     {
       "id": "treeview",

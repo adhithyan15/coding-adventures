@@ -1,0 +1,10 @@
+# @version 1
+case_sensitive: false
+skip:
+  COMMENT = /[ \t]*%%[^\r\n]*/
+NEWLINE = /\r?\n/
+HEADER = /cynefin-beta:?/
+TITLE_LINE = /[ \t]*title[ \t]+[^\r\n]+/
+TRANSITION_LINE = /[ \t]*(?:complex|complicated|clear|chaotic|confusion)[ \t]*-->[ \t]*(?:complex|complicated|clear|chaotic|confusion)(?:[ \t]*:[ \t]*"[^"\r\n]*")?[ \t]*/
+DOMAIN_LINE = /[ \t]*(?:complex|complicated|clear|chaotic|confusion)[ \t]*/
+ITEM_LINE = /[ \t]*"[^"\r\n]*"[ \t]*/
