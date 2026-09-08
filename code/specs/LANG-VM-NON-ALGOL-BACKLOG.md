@@ -32,6 +32,16 @@ column only after real execution; validate four source cases, stable peeks,
 existing BASIC input, backend tests and focused Clippy. Security review
 precedes a ready PR. VM/JIT callbacks remain the final VM-039 slice.
 
+CLR probes confirmed: row 441 refuses call_builtin input_more. The independent
+BASIC EOF test executes on real CoreCLR and throws ArgumentNullException in
+System.Int64.Parse. The bounded repair is now part of this slice: use the
+matching Int32/Int64.TryParse(string, out value), with dedicated scratch locals
+and a zero result on EOF/malformed/overflow input. Do not catch I/O exceptions.
+Implement input_more with Console.In.Peek() > -1, converting the boolean to
+the destination width. Textual CLR is the matrix's real runtime path; encoded
+CIL currently lacks numeric/string input as well, so its input support remains
+explicitly outside this proof rather than claiming simulator parity.
+
 ## VM-039c implementation contract (selected after #14511 merged)
 
 Refreshed main is `53795b6fe5`. VM-039b merged after every applicable
