@@ -149,6 +149,12 @@ cross-platform proving application. Items are ordered by risk and dependency.
   subtrees in backend-neutral groups/layers; and compose the same transforms
   into link hit regions. Completed with bounded diagnostics, deterministic
   device-pixel scaling, and one browser fixture shared by available hosts.
+- [x] **P2 CSS and paint convergence — layered backgrounds and corners.** Add a
+  reusable contract for multiple image and linear/radial gradient layers,
+  per-layer position/size/repeat/origin/clip, painting-box geometry, and four
+  normalized elliptical corner pairs. Completed with computed CSS mapping,
+  backend-neutral gradient/path/image/clip emission, bounded repeat geometry,
+  diagnostics, and a deterministic Venture fixture.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

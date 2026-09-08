@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## [0.6.0]
+
+- Emit ordered, clipped, and repeated linear/radial gradients and image tiles
+  from the shared background contract, using arbitrary paths for normalized
+  per-corner elliptical radii and nested painting boxes.
+
+## [0.5.0]
 
 - Wrap complete positioned subtrees in backend-neutral groups or isolated
   layers for affine transforms, opacity, ordered filters and shadows, blend
