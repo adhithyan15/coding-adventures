@@ -23,8 +23,9 @@ use mermaid_lexer::{
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state, try_tokenize_mermaid_gantt, try_tokenize_mermaid_journey,
     try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
-    try_tokenize_mermaid_block, try_tokenize_mermaid_kanban, try_tokenize_mermaid_mindmap,
-    try_tokenize_mermaid_packet, try_tokenize_mermaid_timeline, try_tokenize_mermaid_xychart,
+    try_tokenize_mermaid_architecture, try_tokenize_mermaid_block, try_tokenize_mermaid_kanban,
+    try_tokenize_mermaid_mindmap, try_tokenize_mermaid_packet, try_tokenize_mermaid_timeline,
+    try_tokenize_mermaid_xychart,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -54,6 +55,8 @@ const PACKET_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/packet.grammar");
 const KANBAN_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/kanban.grammar");
+const ARCHITECTURE_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/architecture.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -643,6 +646,7 @@ impl MermaidDiagramType {
                 | Self::Block
                 | Self::Packet
                 | Self::Kanban
+                | Self::Architecture
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -789,6 +793,9 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Block => parse_block(source).map(MermaidDiagram::Grid),
         MermaidDiagramType::Packet => parse_packet(source).map(MermaidDiagram::Packet),
         MermaidDiagramType::Kanban => parse_kanban(source).map(MermaidDiagram::Board),
+        MermaidDiagramType::Architecture => {
+            parse_architecture(source).map(MermaidDiagram::Structural)
+        }
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -799,6 +806,177 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             col: 1,
         }),
     }
+}
+
+/// Parse the core Mermaid Architecture service/group/edge subset.
+pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_architecture(&prepared).map_err(|message| ParseError {
+        message, line: 1, col: 1,
+    })?;
+    let grammar = parse_parser_grammar(ARCHITECTURE_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse architecture.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message, line: error.token.line, col: error.token.column,
+        })?;
+
+    let mut diagram = StructuralDiagram {
+        kind: StructuralKind::Architecture,
+        title: None,
+        accessibility_title: None,
+        accessibility_description: None,
+        direction: None,
+        nodes: Vec::new(),
+        groups: Vec::new(),
+        relationships: Vec::new(),
+    };
+    let mut ids = HashSet::new();
+    let mut service_ids = HashSet::new();
+    for token in tokens.iter().filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE")) {
+        let statement = token.value.trim();
+        if let Some(value) = statement.strip_prefix("group ") {
+            let declaration = parse_architecture_declaration(token, value)?;
+            validate_architecture_parent(token, declaration.parent.as_deref(), &diagram.groups)?;
+            if !ids.insert(declaration.id.clone()) {
+                return Err(token_error(token, "duplicate architecture identifier"));
+            }
+            diagram.groups.push(StructuralGroup {
+                id: declaration.id,
+                label: declaration.label,
+                stereotype: declaration.icon,
+                parent_group: declaration.parent,
+            });
+        } else if let Some(value) = statement.strip_prefix("service ") {
+            let declaration = parse_architecture_declaration(token, value)?;
+            validate_architecture_parent(token, declaration.parent.as_deref(), &diagram.groups)?;
+            if !ids.insert(declaration.id.clone()) {
+                return Err(token_error(token, "duplicate architecture identifier"));
+            }
+            service_ids.insert(declaration.id.clone());
+            diagram.nodes.push(StructuralNode {
+                id: declaration.id,
+                label: declaration.label,
+                stereotype: declaration.icon,
+                node_kind: StructuralNodeKind::Element,
+                metadata: None,
+                style: None,
+                compartments: Vec::new(),
+                parent_group: declaration.parent,
+            });
+        } else if statement.starts_with("junction ") || statement.starts_with("align ") {
+            return Err(token_error(token, "architecture junctions and alignments are outside the supported subset"));
+        } else {
+            diagram.relationships.push(parse_architecture_edge(token, statement, &service_ids)?);
+        }
+    }
+    if diagram.nodes.is_empty() {
+        return Err(ParseError { message: "architecture diagram requires a service".into(), line: 1, col: 1 });
+    }
+    Ok(diagram)
+}
+
+struct ArchitectureDeclaration {
+    id: String,
+    icon: Option<String>,
+    label: String,
+    parent: Option<String>,
+}
+
+fn parse_architecture_declaration(
+    token: &Token,
+    source: &str,
+) -> Result<ArchitectureDeclaration, ParseError> {
+    let id_end = source.find(|character: char| character == '(' || character == '[' || character.is_whitespace())
+        .unwrap_or(source.len());
+    let id = source[..id_end].trim().to_string();
+    if id.is_empty() {
+        return Err(token_error(token, "architecture declaration requires an identifier"));
+    }
+    let mut rest = source[id_end..].trim_start();
+    let icon = if rest.starts_with('(') {
+        let end = rest.find(')').ok_or_else(|| token_error(token, "unterminated architecture icon"))?;
+        let icon = rest[1..end].trim().to_string();
+        rest = rest[end + 1..].trim_start();
+        Some(icon)
+    } else if rest.starts_with('"') || rest.starts_with('\'') {
+        return Err(token_error(token, "architecture custom icon text is outside the supported subset"));
+    } else {
+        None
+    };
+    let label = if rest.starts_with('[') {
+        let end = rest.find(']').ok_or_else(|| token_error(token, "unterminated architecture title"))?;
+        let label = rest[1..end].trim().trim_matches(['"', '\'']).to_string();
+        rest = rest[end + 1..].trim_start();
+        label
+    } else {
+        id.clone()
+    };
+    let parent = if let Some(value) = rest.strip_prefix("in ") {
+        let parent = value.trim();
+        if parent.is_empty() || parent.contains(char::is_whitespace) {
+            return Err(token_error(token, "invalid architecture parent group"));
+        }
+        Some(parent.to_string())
+    } else if rest.is_empty() {
+        None
+    } else {
+        return Err(token_error(token, "unsupported architecture declaration suffix"));
+    };
+    Ok(ArchitectureDeclaration { id, icon, label, parent })
+}
+
+fn validate_architecture_parent(
+    token: &Token,
+    parent: Option<&str>,
+    groups: &[StructuralGroup],
+) -> Result<(), ParseError> {
+    if let Some(parent) = parent {
+        if !groups.iter().any(|group| group.id == parent) {
+            return Err(token_error(token, "architecture parent group must be declared first"));
+        }
+    }
+    Ok(())
+}
+
+fn parse_architecture_edge(
+    token: &Token,
+    source: &str,
+    ids: &HashSet<String>,
+) -> Result<StructuralRelationship, ParseError> {
+    let parts = source.split_whitespace().collect::<Vec<_>>();
+    if parts.len() != 3 {
+        return Err(token_error(token, "architecture edge labels are outside the supported subset"));
+    }
+    let (from, from_direction) = parts[0].rsplit_once(':')
+        .ok_or_else(|| token_error(token, "invalid architecture edge source"))?;
+    let (to_direction, to) = parts[2].split_once(':')
+        .ok_or_else(|| token_error(token, "invalid architecture edge target"))?;
+    if from.contains("{group}") || to.contains("{group}") {
+        return Err(token_error(token, "architecture group-edge modifiers are outside the supported subset"));
+    }
+    for direction in [from_direction, to_direction] {
+        if !matches!(direction, "L" | "R" | "T" | "B") {
+            return Err(token_error(token, "invalid architecture edge direction"));
+        }
+    }
+    if from_direction == to_direction {
+        return Err(token_error(token, "architecture edge ports must use different directions"));
+    }
+    if !ids.contains(from) || !ids.contains(to) {
+        return Err(token_error(token, "architecture edge services must be declared first"));
+    }
+    let kind = match parts[1] {
+        "--" => RelKind::Link,
+        "-->" => RelKind::Dependency,
+        _ => return Err(token_error(token, "unsupported architecture edge operator")),
+    };
+    Ok(StructuralRelationship {
+        from: from.into(), to: to.into(), kind,
+        from_mult: None, to_mult: None, label: None,
+    })
 }
 
 /// Parse a core indentation-defined Mermaid Kanban board.
@@ -7327,6 +7505,50 @@ mod tests_dg04 {
     fn kanban_rejects_nested_cards_outside_partial_subset() {
         let error = parse_kanban("kanban\nTodo\n  task1[Task]\n    nested[Nested]").unwrap_err();
         assert!(error.message.contains("nested kanban cards"));
+    }
+
+    #[test]
+    fn architecture_parses_groups_services_and_edges() {
+        let diagram = parse_architecture(
+            "architecture-beta\ngroup cloud(cloud)[Platform]\nservice api(server)[API] in cloud\nservice db(database)[Database] in cloud\napi:R --> L:db",
+        )
+        .unwrap();
+        assert_eq!(diagram.kind, StructuralKind::Architecture);
+        assert_eq!(diagram.groups.len(), 1);
+        assert_eq!(diagram.nodes.len(), 2);
+        assert_eq!(diagram.nodes[0].parent_group.as_deref(), Some("cloud"));
+        assert_eq!(diagram.relationships.len(), 1);
+    }
+
+    #[test]
+    fn dispatch_architecture_to_structural_ir() {
+        match parse_any_mermaid("architecture-beta\nservice api(server)[API]").unwrap() {
+            MermaidDiagram::Structural(diagram) => {
+                assert_eq!(diagram.kind, StructuralKind::Architecture)
+            }
+            _ => panic!("expected structural architecture IR"),
+        }
+    }
+
+    #[test]
+    fn architecture_rejects_unsupported_alignment() {
+        let error = parse_architecture(
+            "architecture-beta\nservice api(server)[API]\nservice db(database)[DB]\nalign row api db",
+        )
+        .unwrap_err();
+        assert!(error.message.contains("outside the supported subset"));
+    }
+
+    #[test]
+    fn architecture_rejects_group_endpoints_and_left_arrows() {
+        assert!(parse_architecture(
+            "architecture-beta\ngroup cloud(cloud)[Cloud]\nservice api(server)[API] in cloud\ncloud:R --> L:api",
+        )
+        .is_err());
+        assert!(parse_architecture(
+            "architecture-beta\nservice api(server)[API]\nservice db(database)[DB]\napi:R <-- L:db",
+        )
+        .is_err());
     }
 
     #[test]

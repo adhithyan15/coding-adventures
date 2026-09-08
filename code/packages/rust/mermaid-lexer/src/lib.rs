@@ -30,6 +30,8 @@ const PACKET_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/packet.tokens");
 const KANBAN_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/kanban.tokens");
+const ARCHITECTURE_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/architecture.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
 const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
@@ -100,6 +102,10 @@ pub fn create_mermaid_packet_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_kanban_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, KANBAN_TOKEN_GRAMMAR_SOURCE, "kanban.tokens")
+}
+
+pub fn create_mermaid_architecture_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, ARCHITECTURE_TOKEN_GRAMMAR_SOURCE, "architecture.tokens")
 }
 
 pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
@@ -338,6 +344,11 @@ pub fn try_tokenize_mermaid_kanban(source: &str) -> Result<Vec<Token>, String> {
     lexer.tokenize().map_err(|error| error.to_string())
 }
 
+pub fn try_tokenize_mermaid_architecture(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_architecture_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
 pub fn try_tokenize_mermaid_xychart(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_xychart_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
@@ -392,6 +403,17 @@ mod tests {
         let values = tokens.iter().map(|token| token.value.as_str()).collect::<Vec<_>>();
         assert!(values.contains(&"  Todo"));
         assert!(values.contains(&"    task[Write tests]"));
+    }
+
+    #[test]
+    fn tokenizes_architecture_statements_as_complete_lines() {
+        let tokens = try_tokenize_mermaid_architecture(
+            "architecture-beta\nservice api(server)[API]\napi:R --> L:db\n",
+        )
+        .unwrap();
+        let values = tokens.iter().map(|token| token.value.as_str()).collect::<Vec<_>>();
+        assert!(values.contains(&"service api(server)[API]"));
+        assert!(values.contains(&"api:R --> L:db"));
     }
 
     #[test]

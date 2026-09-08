@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.109.0
+
+- Validate Architecture structural groups, services, and edges through native PaintScene lowering.
+
 ## 0.108.0
 
 - Lower Kanban columns and cards to backend-neutral paint with Metal-to-PNG validation.

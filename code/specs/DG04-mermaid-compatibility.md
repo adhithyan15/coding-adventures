@@ -381,6 +381,17 @@ backend-neutral rectangles and shaped text. A native Metal-to-PNG fixture gates
 this slice; icons, classes, shape-data metadata, styles, links, assignments,
 priorities, and configurable fields remain unsupported at the partial level.
 
+### Architecture Native Slice
+
+The initial Mermaid 11.16.1 Architecture slice uses dedicated portable
+grammars and maps groups, services, containment, icon identifiers, titles, and
+undirected and right-directed edges into structural semantic IR. Existing deterministic
+structural layout lowers groups, nodes, relationships, and shaped text through
+backend-neutral PaintScene instructions, with a native Metal-to-PNG fixture.
+Junctions, alignment hints, group-edge modifiers, left and bidirectional
+arrows, custom icon text, icon artwork, edge labels, port-aware routing, and configuration remain unsupported
+at the partial level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not
