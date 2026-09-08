@@ -1,0 +1,9 @@
+[package]
+name = "coding_adventures_oauth_private_key_signer"
+version = "0.1.0"
+edition = "2021"
+description = "Audit-first non-exporting OAuth private-key signing"
+
+[dependencies]
+coding_adventures_oauth = { path = "../oauth" }
+coding_adventures_zeroize = { path = "../zeroize" }
