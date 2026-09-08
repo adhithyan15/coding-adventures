@@ -1855,7 +1855,7 @@ mod tests {
     use super::*;
     use paint_instructions::{
         GradientKind, GradientStop, PaintBase, PaintClip, PaintGradient, PaintGroup,
-        PaintInstruction, PaintRect, PaintText, PathCommand, TextAlign,
+        PaintInstruction, PaintRect, PaintText, TextAlign,
     };
     use paint_vm_runtime::{
         PaintBackendPreference, PaintBackendRegistry, PaintFeature, PaintRenderOptions,
@@ -1929,6 +1929,37 @@ mod tests {
         let mut scene = transparent_scene(6.0, 6.0);
         scene.instructions.push(PaintInstruction::Clip(PaintClip {
             base: PaintBase::default(),
+            x: 2.0,
+            y: 2.0,
+            width: 2.0,
+            height: 2.0,
+            path: None,
+            children: vec![PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 6.0, 6.0, "#00ff00",
+            ))],
+        }));
+
+        let pixels = render(&scene).expect("clip scene renders");
+
+        assert_eq!(pixels.pixel_at(2, 2), (0, 255, 0, 255));
+        assert_eq!(pixels.pixel_at(1, 1), (0, 0, 0, 0));
+        assert_eq!(pixels.pixel_at(4, 4), (0, 0, 0, 0));
+    }
+
+    #[cfg(any(
+        target_os = "linux",
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd"
+    ))]
+    #[test]
+    fn clips_child_instructions_to_a_path() {
+        use paint_instructions::PathCommand;
+
+        let mut scene = transparent_scene(6.0, 6.0);
+        scene.instructions.push(PaintInstruction::Clip(PaintClip {
+            base: PaintBase::default(),
             x: 0.0,
             y: 0.0,
             width: 6.0,
@@ -1945,7 +1976,7 @@ mod tests {
             ))],
         }));
 
-        let pixels = render(&scene).expect("clip scene renders");
+        let pixels = render(&scene).expect("path clip scene renders");
 
         assert_eq!(pixels.pixel_at(2, 2), (0, 255, 0, 255));
         assert_eq!(pixels.pixel_at(1, 1), (0, 0, 0, 0));
