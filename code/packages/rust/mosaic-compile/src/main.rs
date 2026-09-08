@@ -154,6 +154,50 @@ fn run(result: cli_builder::types::ParseResult) {
     let flags = &result.flags;
     let args = &result.arguments;
 
+    // `--describe` runs before the --backend requirement: describing a
+    // component's declared surface needs no backend, and demanding one
+    // would be a papercut for every consumer of this output.
+    //
+    // `--describe` answers "what does this component declare?" from the real
+    // mosmodel parser and exits. It needs only the interface, so it runs before
+    // pipeline mode's three-flag requirement.
+    //
+    // It exists so that consumers stop re-deriving the answer. The component
+    // docs site (#14026) needs every slot and its closed `one-of` value set to
+    // generate a page; story-fixture validation (#14435) needs the same slot
+    // names to reject a fixture naming a slot that does not exist. The
+    // tempting shortcut for both is a regex over the .mil -- which would
+    // re-implement part of mosmodel-compiler in a second language and drift
+    // the moment the grammar changes, as it did twice recently (`one-of`, and
+    // the slot_type ordering repair in #14067).
+    if flags
+        .get("describe")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false)
+    {
+        let interface = require_pipeline_flag(
+            "interface",
+            flags.get("interface").and_then(|v| v.as_str()),
+        );
+        let src = read_file_or_die(interface);
+        let out = mosmodel_compiler::compile(&src).unwrap_or_else(|errs| {
+            eprintln!("mosaic-compile: mosmodel error(s) in {interface}:");
+            for e in errs {
+                eprintln!("  {e:?}");
+            }
+            process::exit(1);
+        });
+        match describe_component_json(&out.component) {
+            Ok(json) => println!("{json}"),
+            Err(e) => {
+                eprintln!("mosaic-compile: could not serialise component: {e}");
+                process::exit(1);
+            }
+        }
+        return;
+    }
+
+
     // Required: --backend
     let backend = flags
         .get("backend")
@@ -1494,7 +1538,6 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
 // File I/O helpers
 // ===========================================================================
 
-/// Read a file to a String, or print an error and exit with code 1.
 /// Read a fixtures file into slot values for pipeline-mode emitters (#14459).
 ///
 /// The file is a flat JSON object of slot name to value, the same shape the
@@ -1542,6 +1585,22 @@ fn pipeline_slot_values(fixtures_path: Option<&str>) -> HashMap<String, String> 
     out
 }
 
+/// Serialise a component's declared surface as JSON (#14026, #14435).
+///
+/// The `MosmodelComponent` struct is the contract, so it is serialised
+/// directly rather than projected into a hand-written shape. That way this
+/// output cannot drift from what the compiler actually parsed, and a slot type
+/// the compiler learns later appears here without a second edit.
+///
+/// Split out of the CLI branch so it is testable without spawning a process or
+/// reaching a `process::exit`.
+fn describe_component_json(
+    component: &mosmodel_compiler::MosmodelComponent,
+) -> Result<String, serde_json::Error> {
+    serde_json::to_string_pretty(component)
+}
+
+/// Read a file to a String, or print an error and exit with code 1.
 fn read_file_or_die(path: &str) -> String {
     fs::read_to_string(path).unwrap_or_else(|e| {
         eprintln!("mosaic-compile: cannot read {path}: {e}");
@@ -1593,6 +1652,62 @@ fn write_bytes_or_die(path: &str, content: &[u8]) {
 
 #[cfg(test)]
 mod tests {
+    // --- --describe (#14026, #14435) ------------------------------------
+
+    /// The JSON carries every `one-of` value set, machine-readably.
+    ///
+    /// This is the whole reason the flag exists. The docs site needs each
+    /// slot's closed value set to generate a variant gallery, and fixture
+    /// validation needs it to reject a value outside the set. Both were
+    /// otherwise going to regex the .mil -- re-implementing part of
+    /// mosmodel-compiler in a second language, which would drift the moment
+    /// the grammar changes. It changed twice recently.
+    #[test]
+    fn describe_emits_one_of_value_sets() {
+        let src = "component Button {\n  \
+                   slot label : text ;\n  \
+                   slot variant : one-of primary danger ;\n  \
+                   emit onClick ;\n}\n";
+        let out = mosmodel_compiler::compile(src).expect("fixture should compile");
+        let json = super::describe_component_json(&out.component).expect("serialises");
+        let v: serde_json::Value = serde_json::from_str(&json).expect("valid JSON");
+
+        assert_eq!(v["component"], "Button");
+        let slots = v["slots"].as_array().expect("slots array");
+        assert_eq!(slots.len(), 2);
+
+        let variant = slots
+            .iter()
+            .find(|s| s["name"] == "variant")
+            .expect("variant slot present");
+        let values: Vec<&str> = variant["type"]["oneOf"]
+            .as_array()
+            .expect("one-of carries its values")
+            .iter()
+            .map(|v| v.as_str().unwrap())
+            .collect();
+        assert_eq!(values, vec!["primary", "danger"]);
+
+        // Scalar types stay simple strings, so a consumer can switch on them.
+        let label = slots.iter().find(|s| s["name"] == "label").unwrap();
+        assert_eq!(label["type"], "text");
+
+        // Emits are described too: a consumer generating a demo app needs to
+        // know what the component fires, not only what it accepts.
+        assert_eq!(v["emits"][0]["name"], "onClick");
+    }
+
+    /// A component with no slots is describable rather than an error --
+    /// "declares nothing" is a real answer and a page still needs generating.
+    #[test]
+    fn describe_handles_a_component_with_no_slots() {
+        let out = mosmodel_compiler::compile("component Spacer {}\n").expect("compiles");
+        let json = super::describe_component_json(&out.component).expect("serialises");
+        let v: serde_json::Value = serde_json::from_str(&json).unwrap();
+        assert_eq!(v["component"], "Spacer");
+        assert!(v["slots"].as_array().unwrap().is_empty());
+    }
+
     use super::*;
 
     /// A stylesheet naming the wrong component must fail the build.
