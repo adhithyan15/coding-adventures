@@ -2,6 +2,59 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.102] - 2026-09-08 - `f32.nearest`/`f64.nearest` now quiet a signaling NaN input, fixing a real Windows-only conformance divergence
+
+Found via `wasm-conformance`'s real `WebAssembly/testsuite` corpus run on
+`windows-2025` CI (PR #14648, an otherwise-unrelated `br_on_cast` PR
+whose Windows build the drift was blocking): `corpus_matches_the_committed_
+baseline` failed on `f32.wast` alone (`assert_return: pass=2498, fail=2`
+against a checked-in baseline of `pass=2500, fail=0`), while macOS
+(arm64) and Linux (x86_64) CI both matched the baseline exactly on the
+same commit -- ruling out an ISA-specific (x86 vs ARM) NaN-payload
+divergence in favor of a genuine Windows-libm-specific one.
+
+**Root cause**: `f32.nearest`'s (opcode `0x90`) and `f64.nearest`'s
+(opcode `0x9E`) opcode handlers called Rust's `f32::round()`/`f64::round()`
+directly on their operand with no NaN guard at all -- unlike the sibling
+`ceil`/`floor`/`trunc` handlers immediately above them in this same file,
+which already force the canonical `NAN` on any NaN input (a fix from an
+earlier, macOS-vs-Linux version of this exact same bug class, found on
+`f64.wast`). WASM's spec `nans(z)` function requires ANY NaN a rounding
+op propagates to have its quiet bit SET, but `round()` performs no actual
+floating-point arithmetic/comparison on a NaN operand, so whether the
+underlying libm/intrinsic call happens to quiet a signaling NaN along the
+way is platform-dependent. On `windows-2025`, `nearest` applied to a
+signaling NaN input (the real corpus's own `nan:0x200000` literal --
+quiet bit clear) passed the operand's bit pattern through completely
+unchanged, so the result was STILL a signaling NaN -- failing the
+corpus's own `nan:arithmetic` expectation (any NaN, but with the quiet
+bit set). macOS/Linux's `round()` happened to already quiet it, which is
+exactly why the divergence was invisible on those platforms and only
+surfaced once real Windows CI signal was available. Diagnosed by
+temporarily instrumenting `wasm-conformance`'s test suite (a throwaway
+`#[test]` that zipped each `f32.wast` `Action` against its graded
+outcome and dumped every non-`Pass` `assert_return` case) to pin the
+exact two failing directives -- both `nearest` calls on a signaling NaN
+-- before reverting the instrumentation once diagnosed.
+
+**Fix**: both `f32.nearest` and `f64.nearest` now check `a.is_nan()`
+first and return the canonical `NAN` immediately, exactly matching the
+existing `ceil`/`floor`/`trunc` pattern, before falling into the existing
+round-ties-to-even + zero-sign-fixup logic (both unchanged for non-NaN
+input). `f64.wast`'s own corpus already exercises the identical
+signaling-NaN `nearest` case (`nan:0x4000000000000`) and was already
+passing on macOS/Linux before this fix -- confirming `f64.nearest` had
+the identical latent gap, just not yet exercised on a platform whose
+`round()` fails to quiet.
+
+**Verification**: full `cargo test --workspace` (macOS) green;
+`cargo clippy --all-targets -p wasm-execution -p wasm-conformance -- -D
+warnings` clean; `wasm-conformance`'s golden baseline
+(`tests/fixtures/testsuite-status.json`) regenerated via `--write-
+baseline` and diffed BYTE-IDENTICAL to before this fix -- confirming the
+fix changes zero macOS/Linux-observable behavior and is purely a
+Windows-only correctness fix, exactly as intended.
+
 ## [0.9.101] - 2026-09-08 - `br_on_cast`/`br_on_cast_fail` execution, plus two pre-existing gaps found live (W39 slice 4)
 
 Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 4 of 5.

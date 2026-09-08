@@ -8243,6 +8243,28 @@ fn register_numeric_f32(vm: &mut GenericVM) {
         vm,
         0x90,
         |a: f32| {
+            // Same NaN-quieting requirement as the f32 `ceil`/`floor`/
+            // `trunc` registrations just above -- WASM's spec `nans(z)`
+            // always returns a QUIET NaN, never a signaling one, but
+            // `a.round()` (used below) doesn't perform any arithmetic
+            // comparison on a NaN operand, so whether it quiets a
+            // signaling NaN along the way is platform-and-libm-dependent,
+            // same class of bug already fixed on `ceil`/`floor`/`trunc` --
+            // this opcode was simply missed at the time. Confirmed via a
+            // real, reproduced Windows-only divergence running the real
+            // WebAssembly/testsuite corpus (`f32.wast`) through
+            // `wasm-conformance`: `nearest` applied to a signaling NaN
+            // input (`nan:0x200000`, quiet bit clear) passed the input's
+            // bit pattern through UNCHANGED -- still signaling -- on
+            // `windows-2025` CI, failing the corpus's own
+            // `nan:arithmetic` expectation (any NaN, but with the quiet
+            // bit SET), while macOS/Linux's `round()`/libm already
+            // happened to quiet it. Forcing the canonical NaN on any NaN
+            // input sidesteps the platform dependency entirely, exactly
+            // as `ceil`/`floor`/`trunc` already do.
+            if a.is_nan() {
+                return f32::NAN;
+            }
             // WASM's `nearest` (round-ties-to-even) must preserve the sign
             // of a result that rounds to zero -- `nearest(-0.25)` is
             // `-0.0`, not `0.0` -- per IEEE 754's roundTiesToEven. Rust's
@@ -8372,8 +8394,19 @@ fn register_numeric_f64(vm: &mut GenericVM) {
         vm,
         0x9E,
         // See the f32 `nearest` registration above for why the zero-result
-        // sign fixup is needed.
+        // sign fixup AND the NaN-quieting guard are both needed. `f64.wast`
+        // itself already exercises the identical signaling-NaN case
+        // (`nearest` on `nan:0x4000000000000` -- quiet bit clear, same
+        // shape as the f32 payload that failed on Windows), and it was
+        // already PASSING on macOS/Linux CI before this fix -- their
+        // `f64::round()` happens to already quiet a signaling NaN input,
+        // same as `f32::round()` does there. `f64.nearest` had the
+        // identical missing-guard gap as `f32.nearest`; it just hadn't yet
+        // been exercised on a platform whose `round()` fails to quiet.
         |a: f64| {
+            if a.is_nan() {
+                return f64::NAN;
+            }
             let rounded = if a.fract() == 0.5 || a.fract() == -0.5 {
                 let r = a.round();
                 if r as i64 % 2 != 0 {
