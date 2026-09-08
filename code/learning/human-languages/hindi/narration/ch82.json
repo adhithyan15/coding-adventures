@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "First, Second, Third",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:78e2e68c53fb63c1",
+  "sourceHash": "fnv1a64:451e96ce51b72883",
   "lessons": [
     {
       "id": "HI-C75-first",
@@ -190,16 +190,16 @@
       "id": "HI-C75-second",
       "sequence": 3170,
       "title": "दूसरा (dūsrā) — second, and the other one",
-      "headword": "दूसरा",
-      "romanization": "dūsrā",
-      "gloss": "second — and the same word means the other one",
+      "headword": "दूसरा / दूसरी",
+      "romanization": "dūsrā / dūsrī",
+      "gloss": "second or other / feminine second or other",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f65e1e7d76d49337",
+      "sourceHash": "fnv1a64:72d66f7c28e59860",
       "notice": null,
       "blocks": [
         {
