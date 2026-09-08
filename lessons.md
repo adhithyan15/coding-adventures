@@ -7120,3 +7120,10 @@ just like input_i64 so the subsequent EOF comparison can resolve it.
 A guarded test insertion expected tool_ok, but this matrix uses clang_ok. The
 assertion prevented the edit; the following filter consequently ran zero tests.
 Require a positive test count as well as exit success for focused validation.
+
+### 2026-09-07 — Re-enumerate matrix rows after main advances
+
+An ALGOL insertion shifted the FLOW-MATIC rows to 439–442. A positive row
+sentinel proves that row ran, not that it still names the intended source.
+Check row-to-source identity after syncing; row 439 reproduced the intended
+WASM input_more whitelist refusal.

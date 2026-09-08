@@ -12,7 +12,7 @@ roadmap is reconciled.
 
 Refreshed main is `1d1db6507d`. VM-039a merged after all applicable checks
 passed, including both final gates. No new defect outranks the next adapter:
-WASM input/EOF for the identical four FLOW-MATIC rows 438–441.
+WASM input/EOF for the identical four FLOW-MATIC rows 439–442.
 
 Add WASM to those rows without changing source, stdin or expected output.
 First execute a discriminating cell and record the current failure. Introduce
@@ -28,6 +28,12 @@ and shared-buffer assertions, the complete iir-to-wasm suite and focused Clippy.
 Native/LLVM behavior remains the previously merged proof; JVM/CLR and shared
 VM/JIT matrix callbacks remain subsequent slices. Update counts by four cells,
 not four programs. Security review precedes publishing a ready PR.
+
+The executed source probe fails the WASM host-import whitelist on input_more.
+A newly merged ALGOL row shifts these four rows by one; enumerate the actual
+corpus rather than relying on previous indices (443 total rows, 233 ALGOL).
+The first attempted row 438 passed an older COBOL program, not the intended
+FLOW-MATIC source; only the corrected row 439 establishes this refusal.
 
 ## VM-039a implementation contract (selected after #14471 merged)
 
