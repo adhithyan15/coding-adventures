@@ -118,9 +118,8 @@ model-card parameter, or a UI artifact is not a completion signal.
      pipeline must lower legacy `Input(multiline: true)` to `<textarea>` and
      retain its hydration event markers. `HostInput` remains deliberately
      single-line.
-   - Status: the first usable Mosaic workbench phase is ready for review. It
-     deliberately renders stable raw JSON rather than inventing a second
-     result schema in the UI.
+   - Status: completed in PR #14594. The raw JSON view deliberately remains
+     available so the UI does not invent a second result schema.
 
 6. **Post-Berkeley product tracks** (not Berkeley completion blockers).
    - ngspice and vendor-dialect compatibility, nested sweeps and raw-format
@@ -136,11 +135,11 @@ model-card parameter, or a UI artifact is not a completion signal.
      legacy multiline `Input` contract because `HostInput` is intentionally
      single-line across web hosts. Schematic capture, table rendering, and
      waveform interaction stay after this first workbench is usable.
-   - Next UI priority: render the existing stable result records as selectable
-     tables with source-span diagnostics. Follow with waveform/axis interaction
-     built from the same records; schematic capture stays after the text-deck
-     workflow is proven, because it must emit the canonical netlist rather than
-     introduce a parallel circuit model.
+   - Current UI priority: render the existing stable result records as
+     selectable tables with source-span diagnostics. Follow with waveform/axis
+     interaction built from the same records; schematic capture stays after the
+     text-deck workflow is proven, because it must emit the canonical netlist
+     rather than introduce a parallel circuit model.
 
 ### Operating rules
 
