@@ -13489,7 +13489,7 @@ disjoint from all of these inventory and readiness findings.
 ### Go source-registry latest-main readiness packet
 
 Parallel audit continued through exact `origin/main`
-`7382456025bb4726c28e777f894381e1c52de3ed` while the Go implementation was
+`b47d16146f7a7722f56f968674a31610ae9a5469` while the Go implementation was
 validated. The collision-clean inventory now has 1,430 established-lane
 identities, 4,651 implementation slots, 1,470 all-reported identities, and
 1,203 Rust packages. The breadth bands are 175/265, 123/934, 177/2,230, and
@@ -13520,6 +13520,11 @@ Rust `spice-mosaic-app` identity and authored special-lane
 `mosaic-pkg-spice-workbench` identity share a portable workbench owner behind
 Mosaic runtime and browser-composition contracts; its C ABI and WASM shells
 remain in a dependent selection-blocked native review.
+
+PR #14643 is topology-neutral but extends deterministic HTML adoption-agency
+recovery. Its tree-shape, reconstruction-order, marker-boundary, diagnostic,
+and resource-bound evidence stays with `html-frontend-portable-conformance`;
+rendering and browser-host authority remain out of scope.
 
 The state therefore has 788 unique owners: 212 merged, 575 pending, and exactly
 one in progress, with 1,332 dependency edges, no duplicate ID, missing
