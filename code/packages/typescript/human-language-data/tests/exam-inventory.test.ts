@@ -2882,12 +2882,33 @@ describe("the committed Chinese A1 inventory", () => {
     // Chinese writes a comma rather than smuggling one in.
     expect(coverage.byCategory["Yinshi - food and drink"]!).toEqual({ enumerated: 1, covered: 0 });
     expect(coverage.byCategory["Biaodian - punctuation"]!).toEqual({ enumerated: 7, covered: 0 });
-    // The numeral work of the previous tranche, unchanged by this one.
+    // The numeral work of the previous tranche, unchanged by this one — and the
+    // assertions that say so are kept rather than replaced by the sentence,
+    // because "unchanged" is a claim a test should hold rather than a comment.
     expect(coverage.byCategory["Shuci - numerals and quantity"]!)
       .toEqual({ enumerated: 5, covered: 2 });
+    expect(coverage.byCategory["Suoxie - abbreviations and symbols"]!)
+      .toEqual({ enumerated: 2, covered: 1 });
+    // Education is still the strongest specific-notion field measured in any
+    // track in this series — three institutions and four kinds of student built
+    // productively out of four characters.
+    expect(coverage.byCategory["Jiaoyu - education"]!.covered).toBe(3);
+    // The decimal structure stays probed as a RULE and two worked examples, not
+    // as eighty-nine lexical atoms, because that is what Mandarin asks of a
+    // learner: shi yi is ten-one and er shi is two-ten, and the order is the
+    // whole grammar.
     const zhDecimal = inventory.points.find((point) => point.id === "ZH-A1-NUM-02")!;
     expect(zhDecimal.probe).toContain("ZH-GRAMMAR-DECIMAL-TEENS");
+    expect(zhDecimal.probe).toContain("ZH-GRAMMAR-DECIMAL-TENS");
     expect(zhDecimal.probe).not.toContain("ZH-LEX-SHISAN");
+    // The cardinals stay probed at BOTH doors, because this track splits a
+    // character's sound from its hand and a probe naming only the LEX atom would
+    // report a number the reader cannot write.
+    const zhCardinals = inventory.points.find((point) => point.id === "ZH-A1-NUM-01")!;
+    for (const digit of ["LIU", "QI", "BA", "JIU", "SHI"]) {
+      expect(zhCardinals.probe, digit).toContain(`ZH-LEX-NUM-${digit}`);
+      expect(zhCardinals.probe, digit).toContain(`ZH-SCRIPT-NUM-${digit}`);
+    }
     expect(formatExamCoverage(coverage)).toContain(
       "chinese A1 (partial inventory): 98/191 points covered (51%)",
     );

@@ -262,7 +262,6 @@ describe("corpus snapshot", () => {
     expect(liking).toHaveLength(21);
     expect(liking.map((t) => t.language)).toContain("chinese");
     expect(liking.map((t) => t.language)).not.toContain("japanese");
-    const EIGHT = [...SEVEN, "VERB-LIKE-LOVE"];
     // None of the eight is in the universally-missing list any more, and every other
     // canonical verb still is.
     for (const verb of latin.covered) {
