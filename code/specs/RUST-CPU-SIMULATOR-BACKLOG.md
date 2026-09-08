@@ -89,9 +89,9 @@ according to the current prioritization run.
 | RCPU-043 / RCPU-044 | 2010 | RISC-V RV32I (07a) | Complete: `riscv-simulator` | Complete: `riscv-gatelevel` |
 | RCPU-045 / RCPU-046 | 2010 | RISC-V RV64I + M | Complete: `riscv-rv64i-simulator` | Complete: `riscv-rv64i-gatelevel` |
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Complete: `aarch64-simulator` | Complete: `aarch64-gatelevel` |
-| RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
+| RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Complete: `apple-m1-simulator` | Missing |
 
-Current selection: **RCPU-049**, the Apple M1 functional implementation.
+Current selection: **RCPU-050**, the Apple M1 gate-level implementation.
 The checked Spec 07v/07v2 AArch64 functional and gate-level pair is complete
 locally; chronological priority advances to the final listed architecture while
 earlier completed cells publish one at a time.
@@ -118,6 +118,17 @@ vectors pass in complete functional trace/state lockstep; the existing Python
 AArch64 gate package's 256 tests remain green. Strict Rustfmt, Clippy, and
 rustdoc pass; package line coverage is 97.45% (763/783). Publication follows
 RCPU-047 and advances to RCPU-049.
+
+RCPU-049 is complete locally. The new `apple-m1-simulator` extends the complete
+AArch64 integer core with exact 32x128-bit vector/FP state, the full Spec 07z
+scalar-FP, vector-memory, NEON integer/FP, DUP, and FMLA surface, structured
+encoders, checked restore/load/direct access, typed atomic faults, complete
+traces, and transactional runs. Ten Rust tests and all 360 reproducible Python
+Apple-specific full-state vectors pass; the delegated AArch64 core retains its
+836-vector differential. All 109 Python Apple M1 tests and Rust AArch64
+functional/gate consumers are green. Strict formatting, Clippy, and rustdoc
+pass; package line coverage is 88.37% (646/731). Publication follows RCPU-048
+and advances to RCPU-050.
 
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
@@ -586,6 +597,9 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-09-07 | RCPU-049 is complete. | Resolved; selects RCPU-050 by pair priority | `apple-m1-simulator` now has exact checked integer/vector state and lifecycle, the complete Spec 07z Python integer/scalar-FP/NEON surface, structured encoders, strict reserved/alignment/range faults, ten Rust tests, a reproducible 360-vector Python Apple-specific full-state differential in addition to the delegated AArch64 core's 836 vectors, green Python and Rust consumers, strict checks, normative completion text, and 88.37% line coverage (646/731). |
+| 2026-09-07 | RCPU-049 differential review found that DUP's bit 21 belongs to `imm5`, despite a nearby Python comment describing it as a fixed-zero discriminator; requiring bit 21 to be zero rejects the valid 32-bit-lane encoding. The same review confirmed legacy wrapping FP memory and permissive reserved precision behavior conflict with the checked lifecycle. | P0 correctness, discovered during implementation | Decode DUP from its complete bits 18:10 structural pattern and U bit while allowing all documented nonzero `imm5` widths; reject reserved scalar precisions and invalid vector forms, and preflight FP memory alignment/ranges as typed atomic faults. |
+| 2026-09-07 | RCPU-049 baseline audit found no Rust Apple M1 simulator or gate partner. The Python `apple-m1-simulator` has 109 passing tests and 84.46% statement coverage over the Spec 07z AArch64 integer, scalar IEEE-754, and NEON/AdvSIMD surface, but retains the legacy non-atomic SIM00 lifecycle: loads silently truncate beyond 64 KiB; fetch and multi-byte data access wrap; unaligned accesses succeed; installed origin/length are absent; snapshots cannot be validated/restored; register, vector, flag, stack, and memory access are not checked public operations; unknown/reserved encodings halt through a mutable error trace; post-halt steps succeed; and bounded execution always reloads, retains partial state on failure/exhaustion, and omits raw instructions and complete boundary states from traces. Its architectural state implies 64 KiB memory, 32x64-bit GPR slots with XZR enforced, separate 64-bit SP and PC, four NZCV bits, 32x128-bit vector/FP registers, and halt. | P0, chronological functional completion, blocks RCPU-050 | Create `apple-m1-simulator` with exact checked full state, origin-aware load/restore/direct access, typed fail-closed alignment/range/decode faults, atomic steps, transactional bounded runs, complete traces/results, structured big-endian encoders, and the complete Python integer/scalar-FP/NEON surface. Build a reproducible Python full-state corpus covering every decode and fault family, preserve documented IEEE-754 and vector semantics, run Python/Rust consumers and strict checks, add normative completion text, and exceed 80% package line coverage. |
 | 2026-09-07 | RCPU-048 is complete. | Resolved; selects RCPU-049 chronologically | `aarch64-gatelevel` now has the exact 526,469-DFF topology; independent complete AArch64 integer execution; repository-gate strict decode, Boolean/ripple/NZCV/condition/barrel/address/branch/bitmask/multiply/divide/count/reverse networks; the shared typed atomic lifecycle; all 836 Python full-state hashes in complete functional trace/state lockstep; manual topology/lifecycle/fault suites; normative Spec 07v2; strict checks; green functional and historical Python gate consumers; and 97.45% package line coverage (763/783). |
 | 2026-09-07 | RCPU-048 implementation audit corrected the initial inventory: the historical Python `aarch64-gatelevel` package does exist at commit 5f37144153, with a broad gate-oriented integer engine, 256 passing tests, and 82.24% statement coverage. It does not provide the Rust package or the exact checked DFF-backed state and transactional lifecycle required by this wave. | P0 audit correction, discovered before completion | Retain the Python gate package as a required consumer and independent implementation reference; create only the missing Rust package and normative completion contract, and verify all 256 Python gate tests alongside the Rust functional/differential suites. |
 | 2026-09-07 | RCPU-048 baseline audit found no Rust AArch64 gate-level package and no normative Rust completion contract in Spec 07v2. The completed RCPU-047 state establishes exactly 526,469 persistent bits: 524,288 memory bits, 2,048 GPR bits, 64 SP bits, 64 PC bits, four NZCV bits, and one halt bit. Installed origin/length remain validated lifecycle metadata. The RV64I gate package supplies reusable packed-DFF and 64-bit gate-network patterns, but its little-endian transport, x0/reset-SP convention, decoder, flags, load/store modes, and instruction families differ materially from AArch64. | P0, chronological gate completion | Create `aarch64-gatelevel` and normative Spec 07v2 with exactly 526,469 clocked DFFs; independent strict AArch64 decode; big-endian memory; repository-gate Boolean/ripple arithmetic, NZCV/condition, barrel shift/rotate, address/branch, fixed multiply/high-half/divide, count/reverse, and bitmask networks; the shared typed atomic functional lifecycle; all 836 Python/functional full-state vectors plus manual topology/lifecycle/fault suites; strict checks; consumers; and at least 80% coverage. |

@@ -1,0 +1,9 @@
+[package]
+name = "apple-m1-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked Apple M1 AArch64 and NEON functional simulator"
+license = "MIT"
+
+[dependencies]
+aarch64-simulator = { path = "../aarch64-simulator" }
