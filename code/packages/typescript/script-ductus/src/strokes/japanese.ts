@@ -1192,4 +1192,328 @@ export const entries: DuctusEntry[] = [
         .strokeOrderSource!,
     },
   ],
+  // The counter tranche adds six independently written hiragana. Each path
+  // follows the cited Sirgazil frame order and is fitted to the bundled Noto
+  // Sans JP subset, so the prose claim and the rendered filmstrip stay one
+  // checkable object.
+  [
+    "japanese:の",
+    {
+      script: "japanese",
+      glyph: "の",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "descend from high centre-right toward the lower left",
+              path: [
+                { x: 520, y: 680 }, { x: 510, y: 600 }, { x: 490, y: 515 },
+                { x: 465, y: 425 }, { x: 435, y: 335 }, { x: 400, y: 245 },
+                { x: 360, y: 170 }, { x: 315, y: 120 }, { x: 270, y: 95 },
+              ],
+            },
+            {
+              label: "round the bottom and rise around the broad left curve",
+              path: [
+                { x: 270, y: 95 }, { x: 225, y: 90 }, { x: 185, y: 115 },
+                { x: 150, y: 165 }, { x: 130, y: 230 }, { x: 128, y: 305 },
+                { x: 145, y: 385 }, { x: 180, y: 460 }, { x: 235, y: 525 },
+                { x: 305, y: 585 }, { x: 375, y: 635 }, { x: 455, y: 665 },
+                { x: 520, y: 680 },
+              ],
+            },
+            {
+              label: "cross near the top and swing right and down to the finish",
+              path: [
+                { x: 520, y: 680 }, { x: 575, y: 665 }, { x: 665, y: 640 },
+                { x: 740, y: 595 }, { x: 800, y: 530 }, { x: 845, y: 450 },
+                { x: 865, y: 360 }, { x: 855, y: 270 }, { x: 820, y: 190 },
+                { x: 765, y: 125 }, { x: 695, y: 80 }, { x: 615, y: 55 },
+                { x: 525, y: 40 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "の")!
+        .strokeOrderSource!,
+    },
+  ],
+  [
+    "japanese:ひ",
+    {
+      script: "japanese",
+      glyph: "ひ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the short high shoulder rightward and turn down",
+              path: [
+                { x: 120, y: 645 }, { x: 205, y: 650 }, { x: 295, y: 660 },
+                { x: 385, y: 675 }, { x: 465, y: 695 }, { x: 430, y: 660 },
+                { x: 390, y: 615 },
+              ],
+            },
+            {
+              label: "descend and swing left around the broad bottom",
+              path: [
+                { x: 390, y: 615 }, { x: 335, y: 545 }, { x: 285, y: 455 },
+                { x: 245, y: 355 }, { x: 215, y: 255 }, { x: 205, y: 165 },
+                { x: 225, y: 90 }, { x: 275, y: 35 }, { x: 350, y: 5 },
+                { x: 435, y: -5 }, { x: 520, y: 20 },
+              ],
+            },
+            {
+              label: "rise up the right side and finish with the outward flick",
+              path: [
+                { x: 520, y: 20 }, { x: 590, y: 65 }, { x: 640, y: 135 },
+                { x: 675, y: 225 }, { x: 700, y: 330 }, { x: 710, y: 440 },
+                { x: 720, y: 545 }, { x: 710, y: 635 }, { x: 690, y: 700 },
+                { x: 720, y: 650 }, { x: 750, y: 575 }, { x: 785, y: 495 },
+                { x: 825, y: 420 }, { x: 870, y: 350 }, { x: 915, y: 290 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "ひ")!
+        .strokeOrderSource!,
+    },
+  ],
+  [
+    "japanese:ふ",
+    {
+      script: "japanese",
+      glyph: "ふ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the short top tick down and to the right",
+              path: [
+                { x: 395, y: 735 }, { x: 445, y: 710 }, { x: 500, y: 680 },
+                { x: 555, y: 650 }, { x: 610, y: 615 }, { x: 560, y: 565 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve down and round before sweeping away to the lower left",
+              path: [
+                { x: 425, y: 450 }, { x: 475, y: 405 }, { x: 520, y: 355 },
+                { x: 560, y: 300 }, { x: 590, y: 240 }, { x: 610, y: 175 },
+                { x: 610, y: 110 }, { x: 585, y: 60 }, { x: 535, y: 30 },
+                { x: 470, y: 15 }, { x: 400, y: 18 }, { x: 330, y: 30 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw the separate lower-left mark down and left",
+              path: [
+                { x: 300, y: 260 }, { x: 255, y: 220 }, { x: 205, y: 175 },
+                { x: 150, y: 130 }, { x: 95, y: 90 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw the separate lower-right mark down and right",
+              path: [
+                { x: 755, y: 350 }, { x: 795, y: 300 }, { x: 835, y: 240 },
+                { x: 875, y: 175 }, { x: 910, y: 110 }, { x: 930, y: 65 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "ふ")!
+        .strokeOrderSource!,
+    },
+  ],
+  [
+    "japanese:ほ",
+    {
+      script: "japanese",
+      glyph: "ほ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "descend through the left vertical and hook left at the foot",
+              path: [
+                { x: 205, y: 745 }, { x: 195, y: 660 }, { x: 180, y: 565 },
+                { x: 165, y: 465 }, { x: 155, y: 365 }, { x: 155, y: 270 },
+                { x: 165, y: 185 }, { x: 190, y: 120 }, { x: 225, y: 85 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw the upper right horizontal from left to right",
+              path: [
+                { x: 430, y: 680 }, { x: 515, y: 680 }, { x: 610, y: 680 },
+                { x: 705, y: 680 }, { x: 795, y: 685 }, { x: 865, y: 695 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw the lower right horizontal from left to right",
+              path: [
+                { x: 420, y: 450 }, { x: 510, y: 445 }, { x: 605, y: 445 },
+                { x: 700, y: 445 }, { x: 795, y: 450 }, { x: 885, y: 465 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "descend through both bars and turn around the lower loop",
+              path: [
+                { x: 690, y: 680 }, { x: 690, y: 590 }, { x: 690, y: 500 },
+                { x: 690, y: 410 }, { x: 690, y: 320 }, { x: 685, y: 235 },
+                { x: 680, y: 165 }, { x: 690, y: 100 }, { x: 665, y: 50 },
+                { x: 610, y: 20 }, { x: 545, y: 10 }, { x: 485, y: 25 },
+                { x: 440, y: 60 }, { x: 420, y: 110 }, { x: 430, y: 155 },
+                { x: 465, y: 195 }, { x: 520, y: 220 }, { x: 585, y: 225 },
+                { x: 650, y: 215 },
+              ],
+            },
+            {
+              label: "sweep right from the loop to the low finish",
+              path: [
+                { x: 650, y: 215 }, { x: 735, y: 195 }, { x: 805, y: 165 },
+                { x: 865, y: 125 }, { x: 915, y: 80 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "ほ")!
+        .strokeOrderSource!,
+    },
+  ],
+  [
+    "japanese:む",
+    {
+      script: "japanese",
+      glyph: "む",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the upper-left horizontal from left to right",
+              path: [
+                { x: 100, y: 620 }, { x: 180, y: 620 }, { x: 265, y: 620 },
+                { x: 350, y: 620 }, { x: 435, y: 630 }, { x: 520, y: 650 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "descend through the horizontal into the foot loop",
+              path: [
+                { x: 330, y: 780 }, { x: 330, y: 700 }, { x: 330, y: 620 },
+                { x: 330, y: 535 }, { x: 330, y: 450 }, { x: 335, y: 365 },
+                { x: 340, y: 285 }, { x: 330, y: 220 }, { x: 300, y: 180 },
+                { x: 255, y: 165 }, { x: 205, y: 180 }, { x: 165, y: 220 },
+                { x: 145, y: 280 }, { x: 155, y: 345 }, { x: 185, y: 395 },
+                { x: 230, y: 425 }, { x: 280, y: 425 }, { x: 320, y: 395 },
+                { x: 340, y: 345 },
+              ],
+            },
+            {
+              label: "leave the loop and sweep broadly to the right",
+              path: [
+                { x: 340, y: 345 }, { x: 330, y: 265 }, { x: 325, y: 190 },
+                { x: 330, y: 110 }, { x: 330, y: 40 }, { x: 360, y: 10 },
+                { x: 420, y: 0 }, { x: 500, y: 0 }, { x: 580, y: 0 },
+                { x: 650, y: 10 }, { x: 710, y: 35 }, { x: 750, y: 80 },
+                { x: 770, y: 140 }, { x: 785, y: 210 }, { x: 785, y: 245 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "add the separate upper-right mark down and right",
+              path: [
+                { x: 685, y: 660 }, { x: 730, y: 625 }, { x: 775, y: 585 },
+                { x: 820, y: 540 }, { x: 865, y: 495 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "む")!
+        .strokeOrderSource!,
+    },
+  ],
+  [
+    "japanese:や",
+    {
+      script: "japanese",
+      glyph: "や",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep right from the left and curl into the hook",
+              path: [
+                { x: 75, y: 390 }, { x: 155, y: 415 }, { x: 245, y: 455 },
+                { x: 340, y: 500 }, { x: 440, y: 545 }, { x: 540, y: 580 },
+                { x: 635, y: 605 }, { x: 710, y: 610 }, { x: 775, y: 595 },
+                { x: 825, y: 560 }, { x: 855, y: 510 }, { x: 870, y: 455 },
+                { x: 860, y: 400 }, { x: 830, y: 350 }, { x: 785, y: 315 },
+                { x: 725, y: 295 }, { x: 660, y: 295 }, { x: 600, y: 315 },
+                { x: 555, y: 335 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "add the separate short tick at the top",
+              path: [
+                { x: 445, y: 770 }, { x: 485, y: 740 }, { x: 530, y: 705 },
+                { x: 575, y: 665 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw the long descender across the sweep to the lower right",
+              path: [
+                { x: 200, y: 700 }, { x: 235, y: 635 }, { x: 270, y: 565 },
+                { x: 305, y: 490 }, { x: 340, y: 410 }, { x: 375, y: 325 },
+                { x: 405, y: 240 }, { x: 435, y: 155 }, { x: 465, y: 75 },
+                { x: 490, y: 5 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "や")!
+        .strokeOrderSource!,
+    },
+  ],
 ];
