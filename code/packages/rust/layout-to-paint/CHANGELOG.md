@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Wrap complete positioned subtrees in backend-neutral groups or isolated
+  layers for affine transforms, opacity, ordered filters and shadows, blend
+  modes, and isolation.
+
+## [0.4.0]
+
 - Emit centered contain/cover/fill/none image geometry from the shared replaced
   contract and clip overflowing fitted content backend-neutrally.
 

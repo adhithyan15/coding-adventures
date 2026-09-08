@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add a deterministic visual-effects fixture covering rounded backgrounds,
+  isolated opacity, transforms, filters, shadows, blending, and transformed
+  link regions through the shared browser pipeline.
+
+## 0.2.0
+
 - Add scoped counters, generated before/after content, and inside/outside list
   markers to the shared browser fixture router and paint acceptance.
 

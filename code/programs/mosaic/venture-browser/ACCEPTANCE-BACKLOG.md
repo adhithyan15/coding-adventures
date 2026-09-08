@@ -142,6 +142,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
   inside/outside marker geometry, typed diagnostics, and ordinary Layout IR
   text boxes that flow through shared paint, hit testing, and every available
   host without toolkit-specific behavior.
+- [x] **P2 CSS and paint convergence — reusable visual effects.** Add a typed
+  affine-transform, origin, opacity, filter, shadow, blend, and isolation
+  contract independent from CSS and paint backends; map computed CSS plus
+  uniform border radii into shared Layout IR; wrap complete positioned
+  subtrees in backend-neutral groups/layers; and compose the same transforms
+  into link hit regions. Completed with bounded diagnostics, deterministic
+  device-pixel scaling, and one browser fixture shared by available hosts.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

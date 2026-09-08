@@ -27,7 +27,7 @@ function visibleSelection() {
   const match = /^([A-Z]+)(\d+)$/.exec(address)!;
   const row = Number(match[2]) - 1;
   const col = [...match[1]].reduce((value, letter) => value * 26 + letter.charCodeAt(0) - 64, 0) - 1;
-  const rows = [...container.querySelectorAll("tbody tr")];
+  const rows = [...container.querySelectorAll("tbody:not([data-mosaic-spacer]) tr")];
   const relativeRow = rows.findIndex((tr) => [...tr.querySelectorAll("td > div")]
     .some((div) => (div as HTMLElement).style.background === "rgb(48, 79, 60)"
       || (div as HTMLElement).style.background === "rgb(81, 77, 48)"));
@@ -90,7 +90,7 @@ it("replays the shared presentation contract through generated controls", async 
     });
     expect(formulaField().value, step.id).toBe(slots.formula);
     expect(!!container.querySelector("tbody input"), step.id).toBe(slots.editing);
-    expect(container.querySelectorAll("tbody tr").length, step.id).toBe(slots.viewportSize);
+    expect(container.querySelectorAll("tbody:not([data-mosaic-spacer]) tr").length, step.id).toBe(slots.viewportSize);
     // Check every displayed cell against the real engine's requested slice.
     // During editing the generated input replaces that one display string.
     const displayed = host.update.props["viewport-rows"] as string[][];
@@ -125,7 +125,7 @@ function formulaField() {
 }
 
 function cell(row: number, col: number) {
-  return container.querySelectorAll("tbody tr")[row].querySelectorAll("td")[col];
+  return container.querySelectorAll("tbody:not([data-mosaic-spacer]) tr")[row].querySelectorAll("td")[col];
 }
 
 async function change(value: string, input = formulaField()) {
@@ -200,7 +200,7 @@ describe("viewport workbook coordinates", () => {
     await gridKey("ArrowDown", 30);
     expect(container.textContent).toContain("A31");
     expect(container.querySelector("tbody th[scope='row']")?.textContent).toBe("2");
-    expect(container.querySelectorAll("tbody tr")).toHaveLength(30);
+    expect(container.querySelectorAll("tbody:not([data-mosaic-spacer]) tr")).toHaveLength(30);
     expect((cell(29, 0).firstElementChild as HTMLElement).style.background).toBe("rgb(48, 79, 60)");
     // The first visible row is workbook row 2, not row 1.
     await act(async () => { (cell(0, 0).firstElementChild as HTMLElement).click(); });

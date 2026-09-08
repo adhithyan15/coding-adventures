@@ -49,21 +49,22 @@
 //!   rectangle is rendered correctly; its content is drawn on top
 //!   without being clipped to the radius. Metal and Canvas both
 //!   handle this correctly at the background level.
-//! - **No shadows / opacity / layer filters.** ext["paint"] fields
-//!   for these are silently ignored in v1.
-//! - Images render as a `PaintImage` with the `src` string
-//!   unchanged; no intrinsic-size resolution.
+//! - CSS shadows are represented by the shared drop-shadow filter and therefore
+//!   follow the composited node subtree rather than a box-only silhouette.
+//! - Images render as a `PaintImage`; shared replaced metadata resolves
+//!   intrinsic-ratio fit geometry while resource decoding remains host-owned.
 
 use std::collections::HashMap;
 
+use layout_effects::{EffectBlendMode, EffectColor, EffectFilter, EffectStyle};
 use layout_ir::{
     Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecorationLines,
 };
 use layout_positioned::{Position, PositionedStyle};
 use layout_replaced::{object_fit_rect, IntrinsicSize};
 use paint_instructions::{
-    GlyphPosition, ImageSrc, PaintBase, PaintClip, PaintGlyphRun, PaintGroup, PaintImage,
-    PaintInstruction, PaintRect, PaintScene,
+    BlendMode, FilterEffect, GlyphPosition, ImageSrc, PaintBase, PaintClip, PaintGlyphRun,
+    PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintRect, PaintScene,
 };
 use text_flow::{BaseDirection, Direction as FlowDirection, TextFlow};
 use text_interfaces::{
@@ -71,7 +72,7 @@ use text_interfaces::{
     ShapeOptions, ShapedText, TextShaper,
 };
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Options
@@ -176,6 +177,42 @@ where
                 }));
                 continue;
             }
+            WalkAction::ExitEffect {
+                start,
+                style,
+                x,
+                y,
+                width,
+                height,
+                dpr,
+            } => {
+                let children = out.drain(start..).collect();
+                let transform = style.resolved_transform(x, y, width, height, dpr);
+                let base = PaintBase {
+                    id: None,
+                    metadata: Some(HashMap::from([("layout.effects".into(), "css".into())])),
+                };
+                if style.needs_layer() {
+                    out.push(PaintInstruction::Layer(PaintLayer {
+                        base,
+                        children,
+                        filters: (!style.filters.is_empty())
+                            .then(|| paint_filters(&style.filters, dpr)),
+                        blend_mode: (style.blend_mode != EffectBlendMode::Normal)
+                            .then(|| paint_blend_mode(style.blend_mode)),
+                        opacity: (style.opacity < 1.0).then_some(style.opacity),
+                        transform,
+                    }));
+                } else {
+                    out.push(PaintInstruction::Group(PaintGroup {
+                        base,
+                        children,
+                        transform,
+                        opacity: None,
+                    }));
+                }
+                continue;
+            }
         };
         let abs_x = frame.parent_abs_x + frame.node.x;
         let abs_y = frame.parent_abs_y + frame.node.y;
@@ -183,6 +220,8 @@ where
         let box_h = frame.node.height;
         let direction = node_direction(frame.node).unwrap_or(frame.inherited_direction);
         let positioned = PositionedStyle::from_positioned(frame.node);
+        let effects = EffectStyle::from_positioned(frame.node);
+        let effect_start = (!effects.is_default()).then_some(out.len());
         let fixed_start = (positioned.position == Position::Fixed).then_some(out.len());
         let sticky_start = (positioned.position == Position::Sticky).then_some(out.len());
 
@@ -235,6 +274,17 @@ where
             None => {}
         }
 
+        if let Some(start) = effect_start {
+            stack.push(WalkAction::ExitEffect {
+                start,
+                style: effects,
+                x: abs_x,
+                y: abs_y,
+                width: box_w,
+                height: box_h,
+                dpr,
+            });
+        }
         if let Some(start) = fixed_start {
             stack.push(WalkAction::ExitFixed { start });
         }
@@ -303,6 +353,73 @@ enum WalkAction<'a> {
         top: f64,
         original_y: f64,
     },
+    ExitEffect {
+        start: usize,
+        style: EffectStyle,
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        dpr: f64,
+    },
+}
+
+fn paint_filters(filters: &[EffectFilter], dpr: f64) -> Vec<FilterEffect> {
+    filters
+        .iter()
+        .map(|filter| match filter {
+            EffectFilter::Blur { radius } => FilterEffect::Blur {
+                radius: radius * dpr,
+            },
+            EffectFilter::DropShadow {
+                dx,
+                dy,
+                blur,
+                color,
+            } => FilterEffect::DropShadow {
+                dx: dx * dpr,
+                dy: dy * dpr,
+                blur: blur * dpr,
+                color: effect_color_to_css(*color),
+            },
+            EffectFilter::Brightness { amount } => FilterEffect::Brightness { amount: *amount },
+            EffectFilter::Contrast { amount } => FilterEffect::Contrast { amount: *amount },
+            EffectFilter::Saturate { amount } => FilterEffect::Saturate { amount: *amount },
+            EffectFilter::HueRotate { angle } => FilterEffect::HueRotate { angle: *angle },
+            EffectFilter::Invert { amount } => FilterEffect::Invert { amount: *amount },
+            EffectFilter::Opacity { amount } => FilterEffect::Opacity { amount: *amount },
+        })
+        .collect()
+}
+
+fn paint_blend_mode(mode: EffectBlendMode) -> BlendMode {
+    match mode {
+        EffectBlendMode::Normal => BlendMode::Normal,
+        EffectBlendMode::Multiply => BlendMode::Multiply,
+        EffectBlendMode::Screen => BlendMode::Screen,
+        EffectBlendMode::Overlay => BlendMode::Overlay,
+        EffectBlendMode::Darken => BlendMode::Darken,
+        EffectBlendMode::Lighten => BlendMode::Lighten,
+        EffectBlendMode::ColorDodge => BlendMode::ColorDodge,
+        EffectBlendMode::ColorBurn => BlendMode::ColorBurn,
+        EffectBlendMode::HardLight => BlendMode::HardLight,
+        EffectBlendMode::SoftLight => BlendMode::SoftLight,
+        EffectBlendMode::Difference => BlendMode::Difference,
+        EffectBlendMode::Exclusion => BlendMode::Exclusion,
+        EffectBlendMode::Hue => BlendMode::Hue,
+        EffectBlendMode::Saturation => BlendMode::Saturation,
+        EffectBlendMode::Color => BlendMode::Color,
+        EffectBlendMode::Luminosity => BlendMode::Luminosity,
+    }
+}
+
+fn effect_color_to_css(color: EffectColor) -> String {
+    color_to_css(Color {
+        r: color.r,
+        g: color.g,
+        b: color.b,
+        a: color.a,
+    })
 }
 
 fn node_direction(node: &PositionedNode) -> Option<BaseDirection> {
@@ -1648,6 +1765,42 @@ mod tests {
         };
         let _scene = layout_to_paint(&root, &opts);
         assert_eq!(counting.count.get(), 1);
+    }
+
+    #[test]
+    fn visual_effects_wrap_each_node_in_one_isolated_layer() {
+        let mut leaf = positioned_leaf(text_content("effect"), 10.0, 20.0, 80.0, 30.0);
+        let effects = EffectStyle {
+            opacity: 0.5,
+            transform: layout_effects::translation(6.0, 4.0),
+            transform_origin: layout_effects::TransformOrigin {
+                x: layout_effects::OriginComponent::percent(0.0),
+                y: layout_effects::OriginComponent::percent(0.0),
+            },
+            filters: vec![EffectFilter::Blur { radius: 2.0 }],
+            blend_mode: EffectBlendMode::Multiply,
+            isolation: true,
+        };
+        leaf.ext.insert("effects".into(), effects.to_ext());
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+
+        let [PaintInstruction::Layer(layer)] = scene.instructions.as_slice() else {
+            panic!("effect node must become one isolated layer");
+        };
+        assert_eq!(layer.opacity, Some(0.5));
+        assert_eq!(layer.blend_mode, Some(BlendMode::Multiply));
+        assert_eq!(layer.transform, Some([1.0, 0.0, 0.0, 1.0, 6.0, 4.0]));
+        assert_eq!(
+            layer.filters,
+            Some(vec![FilterEffect::Blur { radius: 2.0 }])
+        );
+        assert!(matches!(
+            layer.children.as_slice(),
+            [PaintInstruction::GlyphRun(_)]
+        ));
     }
 
     #[test]

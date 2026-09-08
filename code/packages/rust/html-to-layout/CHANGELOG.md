@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Project computed opacity, affine transforms and origins, filters, one
+  box/text shadow, blend modes, isolation, and uniform border radii into the
+  reusable visual-effects and paint contracts.
+
+## [0.5.0]
+
 - Project decoded image dimensions, CSS `aspect-ratio`, and `object-fit` into
   the reusable replaced sizing contract.
 

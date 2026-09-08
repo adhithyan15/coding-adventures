@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Compose layout-effect transforms while extracting link regions so paint and
+  hit testing share visual geometry; transformed regions use conservative
+  axis-aligned bounds.
+
+## 0.6.0
+
 - Exercise computed CSS table geometry and decorated cells through the shared
   HTML-to-layout-to-paint pipeline without introducing host-specific behavior.
 

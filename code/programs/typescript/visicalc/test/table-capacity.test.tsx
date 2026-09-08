@@ -92,3 +92,47 @@ it("releases boundary and nonvertical gestures and removes wheel listeners", () 
   const end = mosaic$tableCapacityRef(vi.fn(), undefined, {offset:98,total:100,shift});
   end(table); flush(); table.dispatchEvent(event); expect(event.defaultPrevented).toBe(false); end(null);
 });
+
+
+it("maps physical scrollbar travel to bounded row windows without counting spacers", () => {
+  const body = table.tBodies[0];
+  const before = document.createElement("tbody"), after = document.createElement("tbody");
+  before.dataset.mosaicSpacer = "before"; after.dataset.mosaicSpacer = "after";
+  before.innerHTML = after.innerHTML = "<tr><td></td></tr>";
+  table.insertBefore(before, body); table.append(after);
+  table.getBoundingClientRect = () => ({ top: -frame.scrollTop } as DOMRect);
+  frame.getBoundingClientRect = () => ({ top: 0 } as DOMRect);
+  const capacity = vi.fn(), shift = vi.fn();
+  let ref = mosaic$tableCapacityRef(capacity, undefined, {offset:0,total:100,shift});
+  ref(table); flush();
+  expect(capacity.mock.calls).toEqual([[10]]);
+  expect(after.rows[0].style.height).toBe("3332px");
+  frame.scrollTop = 1700.5; frame.dispatchEvent(new Event("scroll"));
+  expect(shift).toHaveBeenLastCalledWith(50);
+  // Consecutive native events before React commits must not double-apply offsets.
+  frame.scrollTop = 1768.5; frame.dispatchEvent(new Event("scroll"));
+  expect(shift).toHaveBeenLastCalledWith(2);
+  ref(null); ref = mosaic$tableCapacityRef(capacity, undefined, {offset:52,total:100,shift});
+  ref(table); flush();
+  expect(frame.scrollTop).toBe(1768.5);
+  expect(before.rows[0].style.height).toBe("1768px");
+  expect(after.rows[0].style.height).toBe("1564px");
+  expect(body.rows.length).toBe(2);
+  ref(null);
+  const count = shift.mock.calls.length;
+  frame.scrollTop = 0; frame.dispatchEvent(new Event("scroll"));
+  expect(shift).toHaveBeenCalledTimes(count);
+  // A programmatic window change (keyboard navigation) synchronizes the thumb.
+  ref = mosaic$tableCapacityRef(capacity, undefined, {offset:20,total:100,shift});
+  ref(table); flush(); expect(frame.scrollTop).toBe(680);
+  ref(null);
+});
+
+
+it("ignores a collapsed-border half pixel at the first row boundary", () => {
+  const body = table.tBodies[0];
+  body.innerHTML = "<tr><td>1</td></tr><tr><td>2</td></tr><tr><td>3</td></tr><tr><td>4</td></tr>";
+  [...body.rows].forEach((row,i) => { row.getBoundingClientRect = () => ({height:34,top:i*34+(i?0.33:0)} as DOMRect); });
+  const report = vi.fn(); const ref = mosaic$tableCapacityRef(report);
+  ref(table); flush(); expect(report.mock.calls).toEqual([[9]]); ref(null);
+});

@@ -46,6 +46,11 @@ typography, decoration, fixed and percentage dimensions, `em`/`rem` values,
 min/max constraints, `auto` horizontal margins, border/content box sizing,
 per-side spacing and borders, text alignment, and white-space flow. Parsed
 `@import` metadata remains transport-neutral for browser schedulers.
+The visual-effects profile maps uniform border radii, opacity, affine
+transforms and origins, filter chains, one box/text shadow, blend modes, and
+isolation into the producer-neutral `layout-effects` contract. Syntax remains
+at this CSS adapter boundary; shared layout, paint, and hit testing consume
+only typed metadata.
 Table display roles and HTML span/section metadata map to a typed table
 contract alongside computed layout mode, border model/spacing, caption side,
 and cell vertical alignment.

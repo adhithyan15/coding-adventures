@@ -1,0 +1,8 @@
+[package]
+name = "layout-effects"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable visual-effect and affine-transform contracts over Layout IR."
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }

@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- Give opted-in row windows a full-table physical scroll extent using measured,
+  React-owned spacers. Preserve native scroll position and bounded realization;
+  exclude spacer rows from capacity and selected-cell coordinates.
+
 - Route opt-in table wheel input through measured signed row shifts, retaining
   fractional motion across renders and releasing horizontal/zoom/boundary input.
 
