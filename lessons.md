@@ -7128,3 +7128,32 @@ An ALGOL insertion shifted the FLOW-MATIC rows to 439–442. A positive row
 sentinel proves that row ran, not that it still names the intended source.
 Check row-to-source identity after syncing; row 439 reproduced the intended
 WASM input_more whitelist refusal.
+
+### 2026-09-07 — A conflict resolution with no markers left can still be structurally broken
+
+Resolving a "keep both" rebase conflict in `engram-core-wasm/src/lib.rs`, I
+concatenated the HEAD hunk and the branch hunk, then verified the resolution by
+grepping for `<<<<<<<`, `=======`, and `>>>>>>>`. Zero matches, so I called it
+resolved and ran `git rebase --continue`. The rebase succeeded; git does not
+parse what it commits.
+
+The conflict boundary had fallen **inside** an `assert!` call. HEAD's hunk ended
+at the message string, and the `);` and `}` that closed the call and its test
+function sat on the other side of the divider. Concatenating the two hunks left
+main's last test unterminated, so `mod tests` never closed. The file was 6,500
+lines short of balanced and had no markers anywhere.
+
+`cargo build` found it immediately: "mismatched closing delimiter", pointing at
+`mod tests {` thousands of lines above.
+
+**A marker grep proves the conflict is resolved, not that the result is valid
+code.** Markers are the only thing git guarantees it leaves behind; brace
+balance, import order, and duplicated or dropped statements are all invisible to
+it. Nothing short of compiling the crate and running its tests establishes that
+a resolution preserved both sides.
+
+So: after every conflict resolution, run the crate's build AND its test suite
+before `rebase --continue` or `commit` -- and check the test **count** against
+what each side contributed. Here the expected union was 83 (main) + 4 (branch) =
+87; seeing 87 is what confirmed nothing was silently dropped, which a green run
+alone would not have.

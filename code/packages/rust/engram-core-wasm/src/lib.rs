@@ -29,7 +29,7 @@ use engram_core::{
     ExternalSourceTarget, LeechAction, MediaAssetRecord, Note, NoteFieldValue, Rating,
     SearchContext, TypeAnswerSpec,
 };
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 const DEFAULT_BROWSER_QUERY: &str = "is:due OR is:new";
@@ -291,7 +291,48 @@ pub struct EngramSession {
     note_type_editor: NoteTypeEditorSessionState,
 }
 
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+/// Everything in an [`EngramSession`] that is *not* the collection: where the
+/// person using Engram had got to.
+///
+/// `AppState` is the collection — decks, notes, cards, scheduling. This is the
+/// other half: which deck is selected, which screen is showing, what is typed
+/// into the browser's search box, how far into a review you are, and which
+/// drafts the two editors are holding.
+///
+/// It is a separate type rather than more fields on the snapshot because the two
+/// halves have genuinely different lifetimes. A collection is worth syncing and
+/// backing up; a half-typed search box is worth restoring when you reopen the
+/// app on the same machine, and nowhere else. Keeping them apart lets
+/// [`EngramSession::snapshot`] stay exactly what it has always been — the
+/// collection, and only the collection — which matters because `eg_snapshot` is
+/// in the published C header and every native host reads it.
+///
+/// Every field is `#[serde(default)]`, so a cursor written by an older build —
+/// or by a newer one that has since grown a field — restores the fields it does
+/// carry rather than failing.
+///
+/// Note what that does *not* cover: `#[serde(default)]` fills fields that are
+/// **missing**, not fields that are present and malformed. An unknown
+/// `activeScreen`, a negative index, a `null` cursor — each of those still fails
+/// to deserialise. That case is handled a level up, in
+/// [`EngramSession::load_session_snapshot`], which parses the cursor separately
+/// from the collection so a cursor it cannot read costs a scroll position rather
+/// than the whole collection. Losing where you were is a much smaller harm than
+/// refusing to open the app.
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[serde(default)]
+pub struct PresentationCursor {
+    selected_deck_id: Option<String>,
+    active_screen: EngramAppScreen,
+    browser: BrowserSessionState,
+    review: ReviewSessionState,
+    editor: NoteEditorSessionState,
+    note_type_editor: NoteTypeEditorSessionState,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 enum EngramAppScreen {
     #[default]
     Decks,
@@ -302,7 +343,9 @@ enum EngramAppScreen {
     Options,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[serde(default)]
 struct BrowserSessionState {
     query: String,
     filter: String,
@@ -314,13 +357,17 @@ struct BrowserSessionState {
     custom_study_reschedule: bool,
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[serde(default)]
 struct ReviewSessionState {
     typed_answer_card_id: Option<String>,
     typed_answer: String,
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[serde(default)]
 struct NoteEditorSessionState {
     selected_field_index: usize,
     draft_note_id: Option<String>,
@@ -404,7 +451,9 @@ impl NoteEditorSessionState {
     }
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[serde(default)]
 struct NoteTypeEditorSessionState {
     selected_index: usize,
     selected_field_index: usize,
@@ -717,6 +766,120 @@ impl EngramSession {
 
     pub fn snapshot(&self) -> String {
         ok_with("state", &self.state)
+    }
+
+    /// The presentation cursor on its own — where the reader had got to.
+    ///
+    /// Separate from [`snapshot`](Self::snapshot) on purpose: that one is the
+    /// collection and is read by `eg_snapshot` in the published C header, so its
+    /// shape cannot move without breaking all five native hosts.
+    pub fn presentation_cursor(&self) -> PresentationCursor {
+        PresentationCursor {
+            selected_deck_id: self.selected_deck_id.clone(),
+            active_screen: self.active_screen,
+            browser: self.browser.clone(),
+            review: self.review.clone(),
+            editor: self.editor.clone(),
+            note_type_editor: self.note_type_editor.clone(),
+        }
+    }
+
+    /// Put a previously captured cursor back.
+    ///
+    /// The cursor is *not* repaired against the current collection here, because
+    /// the facade already tolerates a stale selection: `selected_deck_id` is
+    /// resolved through `selected_deck_id_with_override`, which falls back when
+    /// the named deck is absent. Silently dropping a selection that a subsequent
+    /// import would have made valid again would lose more than it protects.
+    pub fn restore_presentation_cursor(&mut self, cursor: PresentationCursor) {
+        let PresentationCursor {
+            selected_deck_id,
+            active_screen,
+            browser,
+            review,
+            editor,
+            note_type_editor,
+        } = cursor;
+        self.selected_deck_id = selected_deck_id;
+        self.active_screen = active_screen;
+        self.browser = browser;
+        self.review = review;
+        self.editor = editor;
+        self.note_type_editor = note_type_editor;
+    }
+
+    /// Collection **and** cursor, as one restorable document.
+    ///
+    /// This is what a host should persist when it wants reopening Engram to put
+    /// the reader back where they were. [`snapshot`](Self::snapshot) remains the
+    /// right call for a backup or a sync payload, where a half-typed search box
+    /// is noise.
+    pub fn session_snapshot(&self) -> String {
+        // A borrowing `Serialize` struct, NOT `json!`.
+        //
+        // `json!` expands to `serde_json::to_value`, which materialises the whole
+        // collection as a `Value` tree before anything is written -- the exact
+        // amplification `ok_with` was rewritten to remove (#13671), reintroduced
+        // one layer up. Measured on a 41.6 MB collection it cost ~300 MB of peak
+        // RSS over the streaming path, on the success path of a routine save, and
+        // this is the only snapshot call the Mosaic hosts make. Borrowing `state`
+        // rather than cloning it removes that copy.
+        //
+        // This makes the *facade* side streaming; it does not make the whole
+        // round trip so. `EngramMosaicApp::snapshot` still parses this reply back
+        // into a `Value` to splice in its own field, which is a pre-existing
+        // pattern and a separate copy. Worth removing, and not claimed here.
+        #[derive(Serialize)]
+        struct SessionDocument<'a> {
+            state: &'a AppState,
+            cursor: PresentationCursor,
+        }
+
+        ok_with(
+            "session",
+            &SessionDocument {
+                state: &self.state,
+                cursor: self.presentation_cursor(),
+            },
+        )
+    }
+
+    /// Load what [`session_snapshot`](Self::session_snapshot) wrote.
+    ///
+    /// A missing `cursor` is not an error: it is what a snapshot taken before
+    /// cursors were persisted looks like, and it restores the collection with a
+    /// fresh cursor — exactly what [`load_snapshot`](Self::load_snapshot) does.
+    /// That is the backward-compatible case, and it has its own test rather than
+    /// being left to the assumption that `#[serde(default)]` covers it.
+    pub fn load_session_snapshot(&mut self, session_json: &str) -> String {
+        catch_json(|| {
+            // `cursor` is parsed as a raw `Value` and converted separately, so
+            // that a cursor which will not parse costs a scroll position rather
+            // than the whole collection.
+            //
+            // `#[serde(default)]` on `PresentationCursor` would not achieve
+            // this: it fills fields that are *missing*, but a field that is
+            // present and malformed -- `"activeScreen": "settings"`, a `null`
+            // cursor, a negative index -- still aborts the entire
+            // deserialisation, and `state` would go down with it. Refusing to
+            // open someone's collection because their saved scroll position is
+            // corrupt is the wrong trade, and it is the same trade this crate
+            // refuses when it accepts a version-1 snapshot.
+            #[derive(Deserialize)]
+            struct SessionSnapshot {
+                state: AppState,
+                #[serde(default)]
+                cursor: Value,
+            }
+
+            let session: SessionSnapshot = serde_json::from_str(session_json)
+                .map_err(|err| format!("invalid session snapshot: {err}"))?;
+            self.state = session.state;
+            self.restore_presentation_cursor(
+                serde_json::from_value(session.cursor).unwrap_or_default(),
+            );
+            Ok(ok_with("state", &self.state))
+        })
     }
 
     pub fn load_snapshot(&mut self, snapshot_json: &str) -> String {
@@ -4056,11 +4219,11 @@ fn new_note_editor_selection(
     // A draft marked NEW may not adopt an id an existing note already holds.
     //
     // `draft_is_new` and `draft_note_id` are set together by `start_new`, which
-    // mints a fresh id, so the two cannot disagree by any route through the
-    // event surface. They are separate fields, though, so any writer that sets
-    // them independently makes "create" save over an existing note instead --
-    // replacing its fields and its deck. Minting a fresh id when the supplied
-    // one is taken keeps the "new" in `draft_is_new` meaning what it says.
+    // mints a fresh id, so in-app the two can never disagree. A restored cursor
+    // supplies both independently: `draftIsNew: true` beside an existing note's
+    // id makes "create" save over that note instead, replacing its fields and
+    // its deck. Minting a fresh id when the supplied one is taken keeps the
+    // "new" in `draft_is_new` meaning what it says.
     let note_id = editor
         .draft_note_id
         .clone()
@@ -4531,12 +4694,15 @@ fn note_type_editor_selected_note_type(
 ) -> Option<engram_core::NoteType> {
     let mut note_type = if editor.draft_is_new {
         let mut draft = default_note_type_model(editor.draft_created_at.unwrap_or(now));
-        // Same rule as a new note draft, and this is the more damaging of the
-        // two. `default_note_type_model` is a blank two-field model, so a NEW
-        // draft carrying an existing note type's id would save that blank over
-        // a real note type -- discarding its fields and templates, and taking
-        // every note built on it with them. Keeping the freshly minted id makes
-        // it a genuinely new note type, which is what the flag claims.
+        // Same rule as a new note draft: a NEW note type may not adopt an id an
+        // existing one already holds.
+        //
+        // This one is the more damaging of the two. `default_note_type_model` is
+        // a blank two-field model, so a restored `draftIsNew: true` beside an
+        // existing note type's id would save that blank over a real note type —
+        // discarding its fields and templates, and taking every note built on it
+        // with them. Keeping the freshly minted id makes it a genuinely new
+        // note type, which is what the flag claims.
         if let Some(note_type_id) = editor
             .draft_note_type_id
             .as_ref()
@@ -7083,10 +7249,138 @@ mod tests {
         assert_eq!(loaded["state"]["decks"][0]["id"], "deck");
     }
 
+    /// Build a session that has been *used*: two decks, one of them selected,
+    /// the browse screen showing, and a search typed in.
+    ///
+    /// The point is a cursor no field of which is its default. A round-trip test
+    /// built on a fresh session would pass while restoring nothing at all, since
+    /// `default() == default()`.
+    fn session_with_a_moved_cursor() -> EngramSession {
+        let mut session = EngramSession::new();
+        for (id, name) in [("deck-a", "Tamil"), ("deck-b", "Spanish")] {
+            session.dispatch(&format!(
+                r#"{{
+                    "type": "createDeck",
+                    "id": "{id}",
+                    "name": "{name}",
+                    "description": "Script",
+                    "createdAt": 1700000000000
+                }}"#
+            ));
+        }
+        session.handle_engram_app_event(r#"{"event":"onSelectDeck","index":1}"#, "", NOW);
+        session.handle_engram_app_event("onShowBrowse", "", NOW + 1);
+        session.handle_engram_app_event(
+            r#"{"event":"onBrowserQueryChange","value":"hola"}"#,
+            "",
+            NOW + 2,
+        );
+        session
+    }
+
+    #[test]
+    fn session_snapshot_round_trips_the_presentation_cursor() {
+        let session = session_with_a_moved_cursor();
+        let cursor = session.presentation_cursor();
+
+        // Guard the guard: if the setup stopped moving the cursor, the equality
+        // below would still hold and prove nothing.
+        assert_ne!(
+            cursor,
+            PresentationCursor::default(),
+            "the fixture must actually move the cursor, or the round trip is vacuous"
+        );
+
+        let reply: Value = serde_json::from_str(&session.session_snapshot()).unwrap();
+        assert_eq!(reply["ok"], true);
+        let document = reply["session"].to_string();
+
+        let mut restored = EngramSession::new();
+        let loaded: Value =
+            serde_json::from_str(&restored.load_session_snapshot(&document)).unwrap();
+        assert_eq!(loaded["ok"], true);
+
+        // Identical, not merely "restore succeeded". Resetting everything to
+        // `default()` -- the behaviour this test exists to rule out -- is also a
+        // successful restore.
+        assert_eq!(restored.presentation_cursor(), cursor);
+        assert_eq!(loaded["state"]["decks"][1]["id"], "deck-b");
+    }
+
+    /// A snapshot written before cursors were persisted still opens.
+    ///
+    /// The legacy document is assembled here rather than taken from
+    /// `session_snapshot()`, because the property under test is the *absence* of
+    /// the `cursor` key — and a document this build produced would always carry
+    /// one. The collection half is real, so the fixture does not go stale as
+    /// `AppState` grows fields; the shape being tested is asserted directly.
+    #[test]
+    fn a_session_snapshot_without_a_cursor_loads_with_a_fresh_one() {
+        let mut session = session_with_a_moved_cursor();
+        assert_ne!(session.presentation_cursor(), PresentationCursor::default());
+
+        let collection: Value = serde_json::from_str(&EngramSession::new().snapshot()).unwrap();
+        let legacy = json!({ "state": collection["state"] }).to_string();
+        assert!(
+            !legacy.contains("cursor"),
+            "the legacy fixture must carry no cursor: {legacy}"
+        );
+
+        let loaded: Value = serde_json::from_str(&session.load_session_snapshot(&legacy)).unwrap();
+        assert_eq!(loaded["ok"], true, "legacy snapshot should load: {loaded}");
+        // The session had two decks; the legacy collection has none. Landing on
+        // zero shows the state half was genuinely replaced rather than merged.
+        assert_eq!(loaded["state"]["decks"].as_array().unwrap().len(), 0);
+        assert_eq!(
+            session.presentation_cursor(),
+            PresentationCursor::default(),
+            "a snapshot with no cursor should leave a fresh one, not the previous session's"
+        );
+    }
+
+    /// A cursor that will not parse costs a scroll position, not the collection.
+    ///
+    /// `#[serde(default)]` does not cover this: it fills fields that are
+    /// *missing*, while `"activeScreen": "settings"` is present and invalid, and
+    /// would abort the whole document — taking `state` with it — if the two
+    /// halves were parsed together.
+    #[test]
+    fn a_malformed_cursor_still_loads_the_collection() {
+        let source = session_with_a_moved_cursor();
+        let reply: Value = serde_json::from_str(&source.session_snapshot()).unwrap();
+        let mut document = reply["session"].clone();
+
+        // A screen name no build of this enum has ever had.
+        document["cursor"]["activeScreen"] = json!("settings");
+        assert!(
+            serde_json::from_value::<PresentationCursor>(document["cursor"].clone()).is_err(),
+            "the fixture must be a cursor that genuinely fails to parse"
+        );
+
+        let mut session = EngramSession::new();
+        let loaded: Value =
+            serde_json::from_str(&session.load_session_snapshot(&document.to_string())).unwrap();
+
+        assert_eq!(
+            loaded["ok"], true,
+            "a corrupt cursor must not stop the collection loading: {loaded}"
+        );
+        assert_eq!(loaded["state"]["decks"].as_array().unwrap().len(), 2);
+        assert_eq!(
+            session.presentation_cursor(),
+            PresentationCursor::default(),
+            "an unreadable cursor should degrade to a fresh one"
+        );
+    }
+
     /// A draft naming a deck the collection lacks cannot write a note into it.
     ///
     /// The note type was already checked here and the deck was not, even though
-    /// both come from the same editor draft.
+    /// both come from the same editor draft. The event surface held the
+    /// invariant on its own -- `NoteEditorSelectDeck` resolves an *index* into
+    /// `state.decks` -- so nothing could set a deck that did not exist. A draft
+    /// is restorable from a snapshot now, which makes those bytes a writer that
+    /// never passed through that event.
     #[test]
     fn a_draft_deck_the_collection_lacks_is_refused_like_a_missing_note_type() {
         // The demo collection, because the note type has to be REAL for the
@@ -7134,11 +7428,11 @@ mod tests {
     /// A "new" draft cannot adopt the id of something that already exists.
     ///
     /// `draft_is_new` and the draft id are set together by `start_new`, which
-    /// mints a fresh id, so they cannot disagree by any route through the event
-    /// surface. Set independently, `draft_is_new` beside an existing id turns
-    /// "create" into "overwrite" -- for a note type especially, since the
-    /// new-draft model is a blank two-field one that would replace a real note
-    /// type's fields and templates and break every note built on it.
+    /// mints a fresh id, so in-app they cannot disagree. A restored cursor
+    /// supplies them independently, and `draftIsNew: true` beside an existing
+    /// id turns "create" into "overwrite" — for a note type especially, since
+    /// the new-draft model is a blank two-field one that would replace a real
+    /// note type's fields and templates, and break every note built on it.
     #[test]
     fn a_new_draft_cannot_overwrite_an_existing_note_or_note_type() {
         let mut session = EngramSession::new();
@@ -7159,9 +7453,9 @@ mod tests {
             draft_note_id: Some(existing_note_id.clone()),
             ..NoteEditorSessionState::default()
         };
+        let selection = new_note_editor_selection(&state, &editor, NOW, None);
         assert_ne!(
-            new_note_editor_selection(&state, &editor, NOW, None).note_id,
-            existing_note_id,
+            selection.note_id, existing_note_id,
             "a new draft must not save over the existing note"
         );
 
@@ -7189,6 +7483,7 @@ mod tests {
             new_note_editor_selection(&state, &fresh, NOW, None).note_id,
             "genuinely-new-note"
         );
+        // The existing note is untouched by any of the above.
         assert_eq!(session.state().notes[0].fields, existing_note_fields);
     }
 
@@ -7513,6 +7808,32 @@ mod tests {
                 .filter(|card| card.lineage.as_ref().is_some_and(|l| l.note_id == note.id))
                 .all(|card| !card.deck_id.is_empty()),
             "generated cards must not be stranded either"
+        );
+    }
+
+    /// `load_snapshot` is unchanged, and that is deliberate.
+    ///
+    /// `eg_snapshot` / `eg_load_snapshot` are in the published C header and every
+    /// native host binds them. Their payload is the collection and stays the
+    /// collection; cursors ride on the new pair instead. This test is here so
+    /// that contract cannot drift silently.
+    #[test]
+    fn load_snapshot_still_carries_only_the_collection() {
+        let session = session_with_a_moved_cursor();
+        let state_only: Value = serde_json::from_str(&session.snapshot()).unwrap();
+        assert!(
+            state_only.get("cursor").is_none(),
+            "snapshot() must stay collection-only: {state_only}"
+        );
+
+        let mut restored = EngramSession::new();
+        let loaded: Value =
+            serde_json::from_str(&restored.load_snapshot(&state_only["state"].to_string()))
+                .unwrap();
+        assert_eq!(loaded["ok"], true);
+        assert_eq!(
+            restored.presentation_cursor(),
+            PresentationCursor::default()
         );
     }
 
