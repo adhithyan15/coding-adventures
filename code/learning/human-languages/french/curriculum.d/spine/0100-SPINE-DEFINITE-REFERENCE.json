@@ -1,7 +1,8 @@
 {
   "segments": [
     "FR-PATH-003",
-    "FR-PATH-022"
+    "FR-PATH-022",
+    "FR-PATH-A1-SILENT"
   ],
   "omits": [],
   "relocates": {}

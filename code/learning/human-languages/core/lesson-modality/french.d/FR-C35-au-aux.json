@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C35-au-aux",
+    "language": "french",
+    "chapter": 39,
+    "sequence": 1410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8735e3479702bcb1"
+  },
+  "findings": []
+}

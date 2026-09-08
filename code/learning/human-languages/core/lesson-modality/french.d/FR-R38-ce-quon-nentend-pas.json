@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R38-ce-quon-nentend-pas",
+    "language": "french",
+    "chapter": 42,
+    "sequence": 1620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20d3e36460c91c04"
+  },
+  "findings": []
+}

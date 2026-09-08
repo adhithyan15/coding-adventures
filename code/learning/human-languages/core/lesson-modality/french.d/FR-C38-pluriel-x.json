@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C38-pluriel-x",
+    "language": "french",
+    "chapter": 42,
+    "sequence": 1600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fb427a0a9ceaaed"
+  },
+  "findings": []
+}

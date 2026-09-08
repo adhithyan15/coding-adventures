@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C38-pas-de",
+    "language": "french",
+    "chapter": 42,
+    "sequence": 1610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be4b4857a789f6bc"
+  },
+  "findings": []
+}

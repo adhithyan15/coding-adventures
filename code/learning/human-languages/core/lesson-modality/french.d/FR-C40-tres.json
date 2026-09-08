@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C40-tres",
+    "language": "french",
+    "chapter": 44,
+    "sequence": 1710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ba05f6e75256411"
+  },
+  "findings": []
+}

@@ -1,0 +1,971 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 44,
+  "title": "How Much, and What to Call People",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:16f28e032dfc7994",
+  "lessons": [
+    {
+      "id": "FR-C40-beaucoup",
+      "sequence": 1690,
+      "title": "beaucoup — \"a beautiful blow\"",
+      "headword": "beaucoup",
+      "romanization": "beaucoup",
+      "gloss": "a lot — a beautiful blow, two words fused, and the p that never sounds",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30c5ea11980c0bea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say some four ways and none one way. You have no way at all to say a lot."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the four partitives collapsing after a negative — pas de",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the four partitives collapsing after a negative — *pas de*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "beaucoup — a lot, much, many."
+            },
+            {
+              "kind": "speech",
+              "text": "beaucoup de café — a lot of coffee., beaucoup d'amis — a lot of friends."
+            },
+            {
+              "kind": "speech",
+              "text": "Note what follows it: a bare de, exactly as after a negative. Any word of quantity in French takes de and never du or des, for the same reason — the quantity word is already doing the measuring, so the measuring article drops out."
+            },
+            {
+              "kind": "speech",
+              "text": "beaucoup is beau + coup, \"a beautiful blow.\" Coup is Latin colaphus, a punch on the ear, and English borrowed it far more politely as coup d'état and a coup. A word from a fistfight became the ordinary French for a lot — the promotion any word earns by carrying emphasis often enough."
+            },
+            {
+              "kind": "speech",
+              "text": "The p is silent, as final consonants are: boh-KOO."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beaucoup — boh-KOO, the p silent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beaucoup* — *boh-KOO*, the *p* silent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"beaucoup de café\", \"beaucoup de pain\", \"beaucoup d'amis\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"beaucoup de café\", \"beaucoup de pain\", \"beaucoup d'amis\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three shapes of the same de — \"du café\", \"pas de café\", \"beaucoup de café\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three shapes of the same *de* — \"du café\", \"pas de café\", \"beaucoup de café\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words inside it — beau and coup",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words inside it — *beau* and *coup*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asked and explained — \"Qu'est-ce que c'est? — Beaucoup de café, parce que j'ai beaucoup d'amis.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: asked and explained — \"Qu'est-ce que c'est ? — Beaucoup de café, parce que j'ai beaucoup d'amis.\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What follows beaucoup? (A bare de — never du or des.) Why? (The quantity word is already measuring, so the article drops.) What two words are inside it? (Beau and coup — a beautiful blow.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C40-un-peu",
+      "sequence": 1700,
+      "title": "un peu — the other end of the scale",
+      "headword": "un peu",
+      "romanization": "un peu",
+      "gloss": "a little — the opposite end of the same scale, and the same bare de after it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ad4e12dee8f64d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Beaucoup de café. Say it, and say what has to follow any word of quantity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "un peu — a little."
+            },
+            {
+              "kind": "speech",
+              "text": "un peu de café — a little coffee., un peu d'eau — a little water."
+            },
+            {
+              "kind": "speech",
+              "text": "The same bare de follows it, because the same reasoning applies: the quantity is already stated."
+            },
+            {
+              "kind": "speech",
+              "text": "peu is Latin paucus, \"few,\" and English has it twice — in paucity, borrowed from the Latin directly, and buried in poor, which came through French from pauper. So the everyday French word for a little and the English word for scarcity are one Latin adjective that travelled by two roads."
+            },
+            {
+              "kind": "speech",
+              "text": "un peu is also the standard modest answer to a question about what you can do:"
+            },
+            {
+              "kind": "speech",
+              "text": "Vous parlez français? — Un peu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair, both ends of the scale — \"beaucoup de café\", \"un peu de café\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair, both ends of the scale — \"beaucoup de café\", \"un peu de café\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"un peu de pain\", \"un peu d'eau\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"un peu de pain\", \"un peu d'eau\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the modest answer — \"Vous parlez français? — Un peu.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the modest answer — \"Vous parlez français ? — Un peu.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asked short — \"C'est quoi? — Un peu de pain.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: asked short — \"C'est quoi ? — Un peu de pain.\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What follows un peu? (A bare de, as after beaucoup.) What Latin word is peu? (Paucus, \"few\" — English paucity.) Answer vous parlez français? modestly."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C40-tres",
+      "sequence": 1710,
+      "title": "très — \"very,\" and the line it crosses",
+      "headword": "très",
+      "romanization": "très",
+      "gloss": "very — Latin trans, 'across', which crossed over into an intensifier and takes no de at all",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ba05f6e75256411",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Beaucoup and un peu measure a thing and both take de. This one measures a quality, and it takes nothing at all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "très — very, in front of an adjective or an adverb."
+            },
+            {
+              "kind": "speech",
+              "text": "très bien — very well., très bon — very good."
+            },
+            {
+              "kind": "speech",
+              "text": "No de, ever. That is the whole difference: beaucoup and un peu stand in front of a noun and need the bare de; très stands in front of an adjective and needs nothing."
+            },
+            {
+              "kind": "speech",
+              "text": "très is Latin trans, \"across, beyond\" — the trans of transport and translate. To say a thing is très bon is to say it has gone across a line into another category, which is what every intensifier in every language is trying to do."
+            },
+            {
+              "kind": "speech",
+              "text": "The s is silent and comes back as a z before a vowel: très intéressant is tray-zan-tay-ress-AHN."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"très bien\", \"très bon\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"très bien\", \"très bon\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the feminine — \"très bonne\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the feminine — \"très bonne\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"beaucoup de café\" against \"très bon\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"beaucoup de café\" against \"très bon\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the liaison — \"très intéressant\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the liaison — \"très intéressant\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer everybody gives — \"Ça va? — Très bien, merci.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer everybody gives — \"Ça va ? — Très bien, merci.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "as a command — \"Parle très bien!\" and \"Écoute!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: as a command — \"Parle très bien !\" and \"Écoute !\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "standing alone — \"Moi, très bien. Et toi?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: standing alone — \"Moi, très bien. Et toi ?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the weather, measured — \"Il fait très chaud.\" \"Il pleut\", and le temps, which is both the time and the weather",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the weather, measured — \"Il fait très chaud.\" \"Il pleut\", and *le temps*, which is both the time and the weather]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the colours, measured — \"très vert\", \"très jaune\", and the German cousin gelb that jaune is not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the colours, measured — \"très vert\", \"très jaune\", and the German cousin *gelb* that *jaune* is not]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does très stand in front of? (An adjective or an adverb — never a noun.) Does it take de? (No.) What Latin word is it? (Trans, \"across\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C40-assez",
+      "sequence": 1720,
+      "title": "assez — \"enough,\" and \"rather\"",
+      "headword": "assez",
+      "romanization": "assez",
+      "gloss": "enough, and rather — one word doing both jobs, and it takes de before a noun and nothing before an adjective",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8ae2b051d3e0b6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three quantity words are yours. Two take de and one does not. Say which is which before you read on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "assez — enough; and also rather, fairly."
+            },
+            {
+              "kind": "speech",
+              "text": "assez de café — enough coffee., assez bon — rather good."
+            },
+            {
+              "kind": "speech",
+              "text": "It does both jobs, and which one it is doing depends on what follows it: before a noun it takes de and means enough; before an adjective it takes nothing and means rather."
+            },
+            {
+              "kind": "speech",
+              "text": "So assez behaves like beaucoup in one position and like très in the other, which makes it the word that ties the chapter together."
+            },
+            {
+              "kind": "speech",
+              "text": "assez is Latin ad satis, \"to enough.\" That satis is the root inside English satisfy, saturate and satiate — so to be satisfied is literally to have been given enough."
+            },
+            {
+              "kind": "speech",
+              "text": "The z is silent, like every final consonant, and unlike très it does not usually come back before a vowel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with a noun — \"assez de café\", \"assez de pain\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with a noun — \"assez de café\", \"assez de pain\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with an adjective — \"assez bon\", \"assez bien\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with an adjective — \"assez bon\", \"assez bien\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four, in order of size — \"un peu, assez, beaucoup\" and, for a quality, \"très\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four, in order of size — \"un peu, assez, beaucoup\" and, for a quality, \"très\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin inside it — ad satis, and English satisfy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin inside it — *ad satis*, and English *satisfy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "about to happen — \"Je vais prendre assez de pain.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: about to happen — \"Je vais prendre assez de pain.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "about him — \"Lui? Assez bien.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: about him — \"Lui ? Assez bien.\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When does assez take de? (Before a noun, where it means enough.) And when does it take nothing? (Before an adjective, where it means rather.) What Latin phrase is it? (Ad satis — \"to enough\".) Which English words share that root?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C40-monsieur",
+      "sequence": 1730,
+      "title": "Monsieur, Madame — \"my lord\" and \"my lady\"",
+      "headword": "Monsieur, Madame",
+      "romanization": "Monsieur, Madame",
+      "gloss": "sir and madam — my lord and my lady, worn down, and the two words French uses where English uses a surname",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f53455218874a71",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have said bonjour since page one and vous since the second chapter. A bare bonjour to a stranger in France is slightly abrupt, and the word that fixes it is one you have never met."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Monsieur — sir., Madame — madam., Mademoiselle — miss."
+            },
+            {
+              "kind": "speech",
+              "text": "Bonjour, Monsieur., Bonjour, Madame."
+            },
+            {
+              "kind": "speech",
+              "text": "Two possessives fused into titles. Monsieur is mon sieur, \"my lord,\" and Madame is ma dame, \"my lady\" — the same dame inside English dame and damsel, and the sieur is a worn-down seigneur, from Latin senior, \"the elder.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The spelling records a word the mouth stopped saying centuries ago. Monsieur is pronounced muh-SYUH: the n has gone nasal-free, the s is silent, and the ending is the eu vowel. Nothing about the sound follows from the letters, which is why it is worth learning as a noise first and a spelling second."
+            },
+            {
+              "kind": "speech",
+              "text": "Where English attaches a surname — good morning, Mr Dubois — French attaches the bare title far more often. Bonjour, Madame to a shopkeeper is ordinary and expected; the surname is not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the noise, not the spelling — \"Monsieur\", muh-SYUH",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the noise, not the spelling — \"Monsieur\", *muh-SYUH*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the greeting, completed — \"Bonjour, Monsieur.\" \"Bonjour, Madame.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the greeting, completed — \"Bonjour, Monsieur.\" \"Bonjour, Madame.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at night — \"Bonsoir, Madame.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at night — \"Bonsoir, Madame.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thanking and leaving — \"Merci, Monsieur.\" \"Au revoir, Madame.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thanking and leaving — \"Merci, Monsieur.\" \"Au revoir, Madame.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "introducing — \"Voici Madame Dubois.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: introducing — \"Voici Madame Dubois.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two possessives inside them — mon sieur, ma dame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two possessives inside them — *mon sieur*, *ma dame*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "closing a conversation — \"Je finis, Monsieur.\" and \"Nous finissons, Madame.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: closing a conversation — \"Je finis, Monsieur.\" and \"Nous finissons, Madame.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the courtesy words, each with a title — \"S'il vous plaît, Monsieur.\" \"Je suis désolé, Madame.\" \"Oui, Monsieur.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the courtesy words, each with a title — \"S'il vous plaît, Monsieur.\" \"Je suis désolé, Madame.\" \"Oui, Monsieur.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "admitting it politely — \"Je ne comprends pas, Monsieur.\" and the stem it borrows from prendre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: admitting it politely — \"Je ne comprends pas, Monsieur.\" and the stem it borrows from *prendre*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two words are inside Monsieur? (Mon and sieur — \"my lord\".) And inside Madame? (Ma and dame.) How is Monsieur said? (Muh-SYUH — the s silent.) Greet a shopkeeper properly."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R40-combien",
+      "sequence": 1740,
+      "title": "Combien? — the chapter, run cold",
+      "headword": "beaucoup, un peu, très, assez",
+      "romanization": "beaucoup, un peu, très, assez",
+      "gloss": "four measures, one bare de, and the question they were all waiting for",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f812f21f7b23083",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four measures. Three take a bare de in at least one position and one never does. Sort them, then say the one rule that decides it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: the answers combien was waiting for",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Combien? has had no answer since it was taught. Now it has four."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole table, measured — \"beaucoup de café, un peu de lait, assez de pain, pas de vin\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole table, measured — \"beaucoup de café, un peu de lait, assez de pain, pas de vin\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"beaucoup de fromage, un peu de sucre, assez de sel, pas de beurre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"beaucoup de fromage, un peu de sucre, assez de sel, pas de beurre\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with the plural — \"beaucoup d'œufs\", \"pas d'œufs\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with the plural — \"beaucoup d'œufs\", \"pas d'œufs\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four shapes of de in one breath — \"du café, pas de café, beaucoup de café, un peu de café\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four shapes of *de* in one breath — \"du café, pas de café, beaucoup de café, un peu de café\"]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — qualities, measured",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every adjective the book owns, intensified — and no de anywhere."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"très bon, très bien, assez bon\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"très bon, très bien, assez bon\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the feminine — \"très bonne\", and the consonant it wakes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the feminine — \"très bonne\", and the consonant it wakes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the colours — \"très rouge, très blanc, assez noir, très vert\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the colours — \"très rouge, très blanc, assez noir, très vert\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with the noun behind — \"un vin très rouge\", \"un pain très blanc\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with the noun behind — \"un vin très rouge\", \"un pain très blanc\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday exchange — \"Ça va? — Très bien, merci.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday exchange — \"Ça va ? — Très bien, merci.\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: and the person you are talking to",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the greeting completed — \"Bonjour, Monsieur.\" \"Bonsoir, Madame.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the greeting completed — \"Bonjour, Monsieur.\" \"Bonsoir, Madame.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Merci, Madame.\" \"Au revoir, Monsieur.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Merci, Madame.\" \"Au revoir, Monsieur.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Qui est-ce? — C'est Madame Dubois.\" then \"Voici Madame Dubois.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Qui est-ce ? — C'est Madame Dubois.\" then \"Voici Madame Dubois.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "written, then as speech says it — \"Je ne sais pas, Monsieur.\" / \"Je sais pas.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: written, then as speech says it — \"Je ne sais pas, Monsieur.\" / \"Je sais pas.\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the four measures refuses de? (Très.) Which one takes it before a noun and not before an adjective? (Assez.) Why do quantity words take a bare de at all? (They are already measuring, so the measuring article drops.) And what two words are inside Monsieur?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

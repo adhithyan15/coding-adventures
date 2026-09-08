@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C40-un-peu",
+    "language": "french",
+    "chapter": 44,
+    "sequence": 1700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ad4e12dee8f64d8"
+  },
+  "findings": []
+}

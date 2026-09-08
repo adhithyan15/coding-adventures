@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C37-ne-chute",
+    "language": "french",
+    "chapter": 41,
+    "sequence": 1540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c6c68d62d2f1416"
+  },
+  "findings": []
+}

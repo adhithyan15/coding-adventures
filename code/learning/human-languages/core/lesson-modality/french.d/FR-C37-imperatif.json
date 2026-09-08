@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C37-imperatif",
+    "language": "french",
+    "chapter": 41,
+    "sequence": 1510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5379f408ad4fdc9"
+  },
+  "findings": []
+}

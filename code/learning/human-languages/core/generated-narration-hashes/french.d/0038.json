@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:c16dd10d17bfd151",
+  "lessonIds": [
+    "FR-C34-il-y-a",
+    "FR-C34-cest",
+    "FR-C34-ici-la",
+    "FR-C34-voici",
+    "FR-C34-ce-cette",
+    "FR-R34-voici-tout"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch38.txt",
+  "json": "french/narration/ch38.json",
+  "textHash": "fnv1a64:b3d569df1444b8fb",
+  "jsonHash": "fnv1a64:3e806a978261dcdc",
+  "findings": []
+}

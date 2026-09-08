@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:c46497941ce35fa1",
+  "lessonIds": [
+    "FR-C35-a",
+    "FR-C35-de",
+    "FR-C35-au-aux",
+    "FR-C35-de-la",
+    "FR-C35-des",
+    "FR-R35-au-cafe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "french/narration/ch39.txt",
+  "json": "french/narration/ch39.json",
+  "textHash": "fnv1a64:4ada23b7d71b0501",
+  "jsonHash": "fnv1a64:9bd6fd9043894384",
+  "findings": []
+}

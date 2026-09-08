@@ -166,7 +166,7 @@ it("pins French modality", () => expectLanguageModality("french"));
 // chapters 9-19 landed here.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 232,
+    lessons: 274,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,

@@ -1,0 +1,17 @@
+{
+  "id": "FR-PATH-A1-SILENT",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "FR-C38-consonne-finale",
+    "FR-C38-pluriel-s",
+    "FR-C38-feminin-e",
+    "FR-C38-pluriel-x",
+    "FR-C38-pas-de",
+    "FR-R38-ce-quon-nentend-pas"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-A1-SILENT"
+  ],
+  "after": []
+}

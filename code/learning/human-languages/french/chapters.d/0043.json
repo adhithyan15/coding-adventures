@@ -1,0 +1,23 @@
+{
+  "chapter": 43,
+  "title": "Standing Alone",
+  "label": "ch:fr-pronouns",
+  "canDo": "I can ask who and what, and use the pronouns that stand on their own instead of leaning on a verb.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FR-R39-qui-est-ce",
+    "kind": "production",
+    "summary": "Every person and every thing the book owns is asked about and answered. One accident runs under three of the chapter's four pairs: a pronoun that lived unstressed in front of a verb wore down, and the one that stood alone kept its weight -- which is why French has que and quoi, je and moi, tu and toi, and only one elle.",
+    "assesses": [
+      "FR-LEX-QUI-01",
+      "FR-LEX-QUE-02",
+      "FR-LEX-QUOI-03",
+      "FR-LEX-MOI-01",
+      "FR-LEX-TOI-02",
+      "FR-LEX-LUI-03"
+    ],
+    "note": "et toi ? had been a fixed piece of two practice dialogues since the wellbeing chapter, glossed as a phrase and owned as nothing. This is where the word inside it becomes a word."
+  }
+}

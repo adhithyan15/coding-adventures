@@ -1,0 +1,24 @@
+{
+  "chapter": 38,
+  "title": "Five Ways to Point",
+  "label": "ch:fr-pointing",
+  "canDo": "I can say that something exists, say what it is, hand somebody over, point at a noun, and answer the question where.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-R34-voici-tout",
+    "kind": "production",
+    "summary": "Everything the book owns is pointed at five ways: it exists, it is a thing, it is handed over, it is pointed at in front of its noun, and it is somewhere. One Latin word runs under four of the five -- ecce, 'behold', which fused into ce, ici, voici and voila and then vanished inside all of them.",
+    "assesses": [
+      "FR-LEX-ILYA-01",
+      "FR-GRAM-CEST-01",
+      "FR-LEX-VOICI-01",
+      "FR-GRAM-CE-DEMONSTRATIF-01",
+      "FR-LEX-ICI-01",
+      "FR-LEX-LA-ADV-02",
+      "FR-LEX-LABAS-03"
+    ],
+    "note": "The cheapest chapter in the French inventory: five items close five points, because four of them are single-phrase constructions the track had never named and the fifth rides on the article system the opening chapter already taught."
+  }
+}

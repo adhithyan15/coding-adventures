@@ -1,0 +1,18 @@
+{
+  "id": "FR-EXT-A1-PRONOUNS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use qui, que and quoi to ask, and moi, toi, lui and elle to answer.",
+  "prerequisites": [
+    "FR-EXT-A1-SILENT"
+  ],
+  "lessons": [
+    "FR-C39-qui",
+    "FR-C39-que",
+    "FR-C39-quoi",
+    "FR-C39-moi-toi",
+    "FR-C39-lui-elle",
+    "FR-R39-qui-est-ce"
+  ]
+}

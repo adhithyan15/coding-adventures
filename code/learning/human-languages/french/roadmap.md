@@ -391,11 +391,45 @@ the three an earlier note implied:
 comment, combien, pourquoi* and *quel* and skipped exactly these three, so it is a
 one-lesson patch to a chapter that just shipped.
 
+## Chapters 38–44 — the function words the book was already using
+
+Seven chapters authored against the DELF A1 inventory rather than the theme
+sequence, because the gap was never vocabulary. `Lexique de base` was already
+10/10 and every open point was grammar or a function word — and eleven of those
+words were **already in the book's own prose with no lesson owning any of
+them**.
+
+- **Ch. 38 — Five ways to point**: ***il y a*** (`FR-C34-il-y-a`), whose **y** is
+  Latin *ibi* → ***c'est*** (`FR-C34-cest`) → ***ici, là, là-bas***
+  (`FR-C34-ici-la`) → ***voici*** (`FR-C34-voici`), a frozen imperative →
+  ***ce, cet, cette, ces*** (`FR-C34-ce-cette`). One Latin word, **ecce**,
+  "behold", is buried in four of the five. **Authored.**
+- **Ch. 39 — Where two words melt into one**: ***à***, ***de***, ***au/aux***,
+  ***de la***, ***des***. The *u* in *au* was an *l*, which is the change that
+  also makes *chevaux* out of *cheval* — a fact chapter 42 then spends.
+  **Authored.**
+- **Ch. 40 — Two ideas, one sentence**: the subject-verb-object order and why
+  French is stricter about it than Latin was, then ***et***, ***ou***,
+  ***mais*** (Latin *magis*, "more", which Spanish still uses that way) and
+  ***parce que***. **Authored.**
+- **Ch. 41 — Three more ways to use a verb**: the imperative, the near future,
+  the ***finir*** family and its fossil *-iss-*, the ***ne*** speech drops, and
+  ***on***, Latin *homo*. **Authored.**
+- **Ch. 42 — What the ear cannot hear**: the silent final consonant, and the
+  silent plural, the audible feminine, the *-x* plural and the bare *de* after a
+  negative as four consequences of it rather than four facts. **Authored.**
+- **Ch. 43 — Standing alone**: ***qui***, ***que***, ***quoi***, ***moi***,
+  ***toi***, ***lui***. One accident under three of the four pairs: the
+  unstressed form wore down and the standing one kept its weight. **Authored.**
+- **Ch. 44 — How much, and what to call people**: ***beaucoup***, ***un peu***,
+  ***très***, ***assez*** and ***Monsieur/Madame***. *Combien ?* has had no
+  possible answer since it was taught. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 10+ | Family, food, the body — following the Spanish theme order, with the Spanish cousin supplied for contrast |
+| 45+ | **Les prépositions** — the worst ratio left in the A1 inventory and therefore the next job: place (*dans, sur, sous, devant, derrière, chez*), countries (*en, au, aux, à*) and time (*à, en, de … à, depuis*) are three points for fourteen words. Then the possessives (*mon/ma/mes*), which are blocked on ordering rather than on authoring — the book has used *mon* and *ma* since chapter 2, so teaching them at chapter 45 would make forty earlier lessons forward-refer to it; and the tens above twenty |
 
 The *tu/vous* lesson (Ch. 2) is the French counterpart to Spanish *tú/usted*:
 same formal/informal split, but French makes the formal from the **plural**
