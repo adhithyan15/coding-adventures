@@ -119,7 +119,8 @@ construction ratchets; native generated-host interaction gates; shared
 scrollbars, hover status, and cursors; reusable fragmented/international inline
 layout; deterministic real-page visual acceptance; and host-neutral flex,
 grid, positioned/clipped, table, float, fragmented inline-box, and intrinsic
-replaced formatting contexts; plus scoped generated content and marker boxes.
+replaced formatting contexts; scoped generated content and marker boxes; and
+backend-neutral visual effects with transformed hit regions.
 
 Generated/marker convergence is complete: `layout-generated` owns CSS counter
 scopes and formatting, content evaluation, typed extension metadata, and
@@ -127,6 +128,15 @@ diagnostics; `html-to-layout` maps pseudo-element cascade plus HTML list
 ordinals into ordinary text boxes; and shared block layout supplies outside
 marker gutters while inside markers remain in normal inline flow. The browser
 fixture ratchets layout and paint through the same host-neutral pipeline.
+
+Visual-effect convergence is complete for the bounded profile:
+`layout-effects` owns typed transforms, origins, opacity, filters, blend modes,
+isolation, diagnostics, and device-pixel resolution; `html-to-layout` maps CSS
+effects, one box/text shadow, and uniform border radii into shared metadata;
+`layout-to-paint` isolates each affected subtree in one group or layer; and
+`html-to-paint` composes identical transforms into conservative link bounds.
+The shared effects fixture ratchets geometry and scene semantics while backend
+capability profiles remain responsible for exact filter fidelity.
 
 Completed in the visited-link convergence phase: `browser-navigation` owns
 canonical, fragment-insensitive URL membership and reusable history;
@@ -164,6 +174,7 @@ Layer 6 — Platform Paint VMs
 
 Layer 5 — Layout & Paint Translation
   ├── html-to-layout
+  ├── layout-effects
   ├── layout-block
   └── layout-to-paint
 

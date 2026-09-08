@@ -1,0 +1,13 @@
+[package]
+name = "layout-effects"
+version = "0.1.0"
+
+[capabilities]
+affine_transforms = "supported"
+transform_origins = "supported"
+opacity = "supported"
+filter_chains = "supported"
+blend_modes = "supported"
+isolation = "supported"
+shadows = "supported"
+diagnostics = "supported"

@@ -32,6 +32,7 @@ associated type constraint.
 | `ext["paint"]["borderWidth"]` > 0   | `PaintRect` with stroke + stroke_width (same rect as above)    |
 | `border{Side}Width/Color` > 0        | Independent filled edge rectangles for each requested side   |
 | `ext["paint"]["cornerRadius"]`      | `corner_radius` field on the rect                              |
+| `ext["effects"]`                    | One subtree `PaintGroup`/`PaintLayer` with transform, opacity, filters, blend mode, and isolation |
 | `Content::Text(tc)`                 | One `PaintGlyphRun` per wrapped line plus decoration `PaintRect`s; alignment (Start/Center/End) via `TextContent.text_align` |
 | `Content::Image(ic)`                | `PaintImage` with `src` unchanged                              |
 
@@ -53,10 +54,13 @@ native font-fallback subruns retain their own bindings in visual paint order.
   background. Tracked for v2 as a `PositionedNode.padding` field.
 - **No clip push** for rounded corners — the rounded background
   renders correctly, content on top is not clipped to the radius.
-- **No shadows, opacity, or layer filters** in v1. ext["paint"] fields
-  for those are silently ignored.
-- **No intrinsic image sizing** — `width`/`height` come directly from
-  the node's positioned dimensions.
+- **Bounded CSS effects** — effects wrap the complete node subtree so opacity
+  is composited once. Shadows use the shared drop-shadow layer filter, the CSS
+  adapter currently keeps one shadow from each property, and exact filter
+  fidelity follows each paint backend's advertised capabilities.
+- **Host-owned image resources** — shared replaced metadata resolves fit and
+  intrinsic-ratio geometry, while URI fetching and decoding remain outside
+  this translator.
 
 ## Text alignment
 

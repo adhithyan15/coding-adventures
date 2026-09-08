@@ -6,7 +6,12 @@ pipeline and generated hosts.
 Compact convergence pages cover flex, grid, positioned/clipped, CSS table,
 float/exclusion, fragmented inline-box, intrinsic replaced formatting, and
 generated pseudo-content/list markers
+and reusable visual effects
 through one geometry-and-paint oracle shared by every host.
+
+`load_effects_page` ratchets rounded backgrounds, subtree opacity, affine
+transforms and origins, filters, shadows, blending, isolation, and transformed
+link hit regions without relying on platform screenshots.
 
 The crate owns one versioned Mosaic-era page and its resources, deterministic
 text measurement/shaping services, element and link geometry capture, full

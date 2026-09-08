@@ -10,6 +10,10 @@ use std::collections::HashMap;
 
 use coding_adventures_css_parser::create_css_parser;
 use coding_adventures_html_parser::{BrowserRenderNode, BrowserRenderTree};
+use layout_effects::{
+    multiply, rotation, scale, translation, EffectBlendMode, EffectColor, EffectFilter,
+    EffectStyle, OriginComponent, Transform2D, TransformOrigin, IDENTITY,
+};
 use layout_flexbox::{
     flex_ext, AlignContent, AlignItems, AlignSelf, FlexBasis, FlexContainerStyle, FlexDirection,
     FlexItemStyle, FlexWrap, JustifyContent,
@@ -25,9 +29,9 @@ use layout_grid::{
 };
 use layout_inline_box::{inline_box_ext, BoxDecorationBreak};
 use layout_ir::{
-    color_black, edges_all, edges_xy, font_bold, font_italic, font_spec, rgb, Color, Edges,
-    ExtValue, FontSpec, ImageContent, ImageFit, LayoutNode, SizeValue, TextAlign, TextContent,
-    TextDecoration,
+    color_black, edges_all, edges_xy, font_bold, font_italic, font_spec, rgb, Color, Content,
+    Edges, ExtValue, FontSpec, ImageContent, ImageFit, LayoutNode, SizeValue, TextAlign,
+    TextContent, TextDecoration,
 };
 use layout_positioned::{positioned_ext, Overflow, Position, PositionedStyle};
 use layout_replaced::replaced_ext;
@@ -38,7 +42,7 @@ use layout_table::{
 use lexer::token::TokenType;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 /// A parsed author stylesheet ready for deterministic cascade evaluation.
 ///
@@ -170,6 +174,7 @@ pub struct HtmlComputedStyle {
     pub margin_auto: [bool; 4],
     pub border_width: Edges,
     pub border_color: [Option<Color>; 4],
+    pub corner_radius: Option<f64>,
     pub box_sizing: String,
     pub text_align: TextAlign,
     pub white_space: String,
@@ -184,6 +189,9 @@ pub struct HtmlComputedStyle {
     pub table_container: TableContainerStyle,
     pub table_item: TableItemStyle,
     pub positioned: PositionedStyle,
+    pub effects: EffectStyle,
+    pub box_shadow: Option<EffectFilter>,
+    pub text_shadow: Option<EffectFilter>,
     pub generated_content: Option<Vec<ContentPart>>,
     pub list_style_type: Option<CounterStyle>,
     pub list_style_position: MarkerPosition,
@@ -318,6 +326,10 @@ where
         "paint".into(),
         background_ext(style.background.unwrap_or(theme.page_background)),
     );
+    let effects = effect_style_for_layout(&style, false);
+    if !effects.is_default() {
+        root.ext.insert("effects".into(), effects.to_ext());
+    }
     root
 }
 
@@ -420,6 +432,10 @@ where
     }
     if style.background.is_some() || style.border_width != Edges::default() {
         layout.ext.insert("paint".into(), box_paint_ext(&style));
+    }
+    let effects = effect_style_for_layout(&style, matches!(layout.content, Some(Content::Text(_))));
+    if !effects.is_default() {
+        layout.ext.insert("effects".into(), effects.to_ext());
     }
     layout.ext.insert("html".into(), html_ext(node));
     layout
@@ -621,6 +637,10 @@ fn generated_text_box(
     position: MarkerPosition,
 ) -> LayoutNode {
     let mut node = text_leaf(value, style);
+    let effects = effect_style_for_layout(style, true);
+    if !effects.is_default() {
+        node.ext.insert("effects".into(), effects.to_ext());
+    }
     node.ext
         .insert("generated".into(), generated_ext(kind, position));
     node.ext.insert("block".into(), display_ext("inline-text"));
@@ -745,6 +765,7 @@ where
     style.margin_auto = [false; 4];
     style.border_width = Edges::default();
     style.border_color = [None; 4];
+    style.corner_radius = None;
     style.box_sizing = "content-box".into();
     style.box_decoration_break = BoxDecorationBreak::Slice;
     style.aspect_ratio = None;
@@ -757,6 +778,8 @@ where
     style.table_container = TableContainerStyle::default();
     style.table_item = TableItemStyle::default();
     style.positioned = PositionedStyle::default();
+    style.effects = EffectStyle::default();
+    style.box_shadow = None;
     style.generated_content = None;
     style.counter_reset.clear();
     style.counter_set.clear();
@@ -903,6 +926,7 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         margin_auto: [false; 4],
         border_width: Edges::default(),
         border_color: [None; 4],
+        corner_radius: None,
         box_sizing: "content-box".into(),
         text_align: TextAlign::Start,
         white_space: "normal".into(),
@@ -917,6 +941,9 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         table_container: TableContainerStyle::default(),
         table_item: TableItemStyle::default(),
         positioned: PositionedStyle::default(),
+        effects: EffectStyle::default(),
+        box_shadow: None,
+        text_shadow: None,
         generated_content: None,
         list_style_type: None,
         list_style_position: MarkerPosition::Outside,
@@ -1002,6 +1029,9 @@ where
     let mut style = inherited.clone();
     style.display = Some("inline-text".into());
     style.background = None;
+    style.corner_radius = None;
+    style.effects = EffectStyle::default();
+    style.box_shadow = None;
     style.generated_content = None;
     style.counter_reset.clear();
     style.counter_set.clear();
@@ -1098,6 +1128,30 @@ fn apply_declaration_winners(
                 }
             }
             "background" | "background-color" => style.background = parse_color(&value),
+            "opacity" => {
+                if let Some(opacity) = value.first().and_then(|value| value.parse::<f64>().ok()) {
+                    style.effects.opacity = opacity.clamp(0.0, 1.0);
+                }
+            }
+            "transform" => {
+                if let Some(transform) = parse_transform(&value, style, context) {
+                    style.effects.transform = transform;
+                }
+            }
+            "transform-origin" => {
+                if let Some(origin) = parse_transform_origin(&value, style, context) {
+                    style.effects.transform_origin = origin;
+                }
+            }
+            "filter" => style.effects.filters = parse_filter_list(&value, style, context),
+            "mix-blend-mode" => {
+                style.effects.blend_mode = parse_blend_mode(value.first().map(String::as_str))
+            }
+            "isolation" => {
+                style.effects.isolation = value.first().is_some_and(|value| value == "isolate")
+            }
+            "box-shadow" => style.box_shadow = parse_shadow(&value, style, context),
+            "text-shadow" => style.text_shadow = parse_shadow(&value, style, context),
             "font-family" => {
                 if let Some(family) = value.first() {
                     style.font.family = family.trim_matches(['\'', '"']).to_string();
@@ -1399,6 +1453,14 @@ fn apply_declaration_winners(
             "border-right-color" => apply_border_color(style, EdgeSide::Right, &value),
             "border-bottom-color" => apply_border_color(style, EdgeSide::Bottom, &value),
             "border-left-color" => apply_border_color(style, EdgeSide::Left, &value),
+            "border-radius" => {
+                style.corner_radius = parse_box_length(
+                    value.split(|token| token == "/").next().unwrap_or_default(),
+                    style,
+                    context,
+                    context.viewport_width,
+                )
+            }
             "text-align" => {
                 style.text_align = match value.first().map(String::as_str) {
                     Some("center") => TextAlign::Center,
@@ -1417,6 +1479,313 @@ fn apply_declaration_winners(
             _ => {}
         }
     }
+}
+
+fn effect_style_for_layout(style: &HtmlComputedStyle, text: bool) -> EffectStyle {
+    let mut effects = style.effects.clone();
+    if let Some(shadow) = style.box_shadow.clone() {
+        effects.filters.insert(0, shadow);
+    }
+    if text {
+        if let Some(shadow) = style.text_shadow.clone() {
+            effects.filters.insert(0, shadow);
+        }
+    }
+    effects
+}
+
+fn parse_transform(
+    value: &[String],
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> Option<Transform2D> {
+    if value.first().is_some_and(|value| value == "none") {
+        return Some(IDENTITY);
+    }
+    let mut result = IDENTITY;
+    let calls = function_calls(value)?;
+    if calls.is_empty() {
+        return None;
+    }
+    for (name, arguments) in calls {
+        let args = function_arguments(&arguments);
+        let transform = match name.as_str() {
+            "matrix" if args.len() == 6 => args
+                .iter()
+                .map(|value| value.parse::<f64>().ok())
+                .collect::<Option<Vec<_>>>()?
+                .try_into()
+                .ok()?,
+            "translate" => translation(
+                parse_effect_length(args.first()?, style, context)?,
+                args.get(1)
+                    .and_then(|value| parse_effect_length(value, style, context))
+                    .unwrap_or(0.0),
+            ),
+            "translatex" => translation(parse_effect_length(args.first()?, style, context)?, 0.0),
+            "translatey" => translation(0.0, parse_effect_length(args.first()?, style, context)?),
+            "scale" => {
+                let x = args.first()?.parse::<f64>().ok()?;
+                let y = args
+                    .get(1)
+                    .and_then(|value| value.parse::<f64>().ok())
+                    .unwrap_or(x);
+                scale(x, y)
+            }
+            "scalex" => scale(args.first()?.parse::<f64>().ok()?, 1.0),
+            "scaley" => scale(1.0, args.first()?.parse::<f64>().ok()?),
+            "rotate" => rotation(parse_angle(args.first()?)?),
+            "skewx" => [
+                1.0,
+                0.0,
+                parse_angle(args.first()?)?.to_radians().tan(),
+                1.0,
+                0.0,
+                0.0,
+            ],
+            "skewy" => [
+                1.0,
+                parse_angle(args.first()?)?.to_radians().tan(),
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+            ],
+            _ => return None,
+        };
+        result = multiply(result, transform);
+    }
+    Some(result)
+}
+
+fn parse_transform_origin(
+    value: &[String],
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> Option<TransformOrigin> {
+    let values = value
+        .iter()
+        .filter(|token| !matches!(token.as_str(), "," | "/"))
+        .collect::<Vec<_>>();
+    let first = values.first()?;
+    let second = values.get(1);
+    let (x, y) = if matches!(first.as_str(), "top" | "bottom") {
+        (
+            second
+                .and_then(|value| parse_origin_component(value, true, style, context))
+                .unwrap_or(OriginComponent::percent(0.5)),
+            parse_origin_component(first, false, style, context)?,
+        )
+    } else {
+        (
+            parse_origin_component(first, true, style, context)?,
+            second
+                .and_then(|value| parse_origin_component(value, false, style, context))
+                .unwrap_or(OriginComponent::percent(0.5)),
+        )
+    };
+    Some(TransformOrigin { x, y })
+}
+
+fn parse_origin_component(
+    value: &str,
+    horizontal: bool,
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> Option<OriginComponent> {
+    match (value, horizontal) {
+        ("left", true) | ("top", false) => Some(OriginComponent::percent(0.0)),
+        ("center", _) => Some(OriginComponent::percent(0.5)),
+        ("right", true) | ("bottom", false) => Some(OriginComponent::percent(1.0)),
+        (value, _) if value.ends_with('%') => value
+            .trim_end_matches('%')
+            .parse::<f64>()
+            .ok()
+            .map(|value| OriginComponent::percent(value / 100.0)),
+        (value, _) => parse_effect_length(value, style, context).map(OriginComponent::length),
+    }
+}
+
+fn parse_filter_list(
+    value: &[String],
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> Vec<EffectFilter> {
+    if value.first().is_some_and(|value| value == "none") {
+        return Vec::new();
+    }
+    function_calls(value)
+        .unwrap_or_default()
+        .into_iter()
+        .filter_map(|(name, arguments)| {
+            let args = function_arguments(&arguments);
+            match name.as_str() {
+                "blur" => Some(EffectFilter::Blur {
+                    radius: parse_effect_length(args.first()?, style, context)?.max(0.0),
+                }),
+                "drop-shadow" => parse_shadow_arguments(&args, style, context),
+                "brightness" => Some(EffectFilter::Brightness {
+                    amount: parse_filter_amount(args.first()?)?.max(0.0),
+                }),
+                "contrast" => Some(EffectFilter::Contrast {
+                    amount: parse_filter_amount(args.first()?)?.max(0.0),
+                }),
+                "saturate" => Some(EffectFilter::Saturate {
+                    amount: parse_filter_amount(args.first()?)?.max(0.0),
+                }),
+                "hue-rotate" => Some(EffectFilter::HueRotate {
+                    angle: parse_angle(args.first()?)?,
+                }),
+                "invert" => Some(EffectFilter::Invert {
+                    amount: parse_filter_amount(args.first()?)?.clamp(0.0, 1.0),
+                }),
+                "opacity" => Some(EffectFilter::Opacity {
+                    amount: parse_filter_amount(args.first()?)?.clamp(0.0, 1.0),
+                }),
+                _ => None,
+            }
+        })
+        .collect()
+}
+
+fn parse_shadow(
+    value: &[String],
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> Option<EffectFilter> {
+    if value.first().is_some_and(|value| value == "none") {
+        return None;
+    }
+    let first_shadow = value.split(|token| token == ",").next().unwrap_or_default();
+    let args = first_shadow
+        .iter()
+        .filter(|token| token.as_str() != "inset")
+        .map(String::as_str)
+        .collect::<Vec<_>>();
+    parse_shadow_arguments(&args, style, context)
+}
+
+fn parse_shadow_arguments(
+    args: &[&str],
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> Option<EffectFilter> {
+    let color = args
+        .iter()
+        .find_map(|value| parse_color(&[(*value).to_string()]))
+        .unwrap_or(style.color);
+    let lengths = args
+        .iter()
+        .filter_map(|value| parse_effect_length(value, style, context))
+        .collect::<Vec<_>>();
+    Some(EffectFilter::DropShadow {
+        dx: *lengths.first()?,
+        dy: *lengths.get(1)?,
+        blur: lengths.get(2).copied().unwrap_or(0.0).max(0.0),
+        color: EffectColor {
+            r: color.r,
+            g: color.g,
+            b: color.b,
+            a: color.a,
+        },
+    })
+}
+
+fn parse_blend_mode(value: Option<&str>) -> EffectBlendMode {
+    match value {
+        Some("multiply") => EffectBlendMode::Multiply,
+        Some("screen") => EffectBlendMode::Screen,
+        Some("overlay") => EffectBlendMode::Overlay,
+        Some("darken") => EffectBlendMode::Darken,
+        Some("lighten") => EffectBlendMode::Lighten,
+        Some("color-dodge") => EffectBlendMode::ColorDodge,
+        Some("color-burn") => EffectBlendMode::ColorBurn,
+        Some("hard-light") => EffectBlendMode::HardLight,
+        Some("soft-light") => EffectBlendMode::SoftLight,
+        Some("difference") => EffectBlendMode::Difference,
+        Some("exclusion") => EffectBlendMode::Exclusion,
+        Some("hue") => EffectBlendMode::Hue,
+        Some("saturation") => EffectBlendMode::Saturation,
+        Some("color") => EffectBlendMode::Color,
+        Some("luminosity") => EffectBlendMode::Luminosity,
+        _ => EffectBlendMode::Normal,
+    }
+}
+
+fn parse_effect_length(
+    value: &str,
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> Option<f64> {
+    parse_css_length_in_context(
+        &[value.to_string()],
+        style.font.size,
+        context.theme.body_font.size,
+        context.viewport_width,
+    )
+}
+
+fn parse_filter_amount(value: &str) -> Option<f64> {
+    if let Some(percent) = value.strip_suffix('%') {
+        return percent.parse::<f64>().ok().map(|value| value / 100.0);
+    }
+    value.parse().ok()
+}
+
+fn parse_angle(value: &str) -> Option<f64> {
+    if let Some(value) = value.strip_suffix("deg") {
+        value.parse().ok()
+    } else if let Some(value) = value.strip_suffix("rad") {
+        value.parse::<f64>().ok().map(|value| value.to_degrees())
+    } else if let Some(value) = value.strip_suffix("turn") {
+        value.parse::<f64>().ok().map(|value| value * 360.0)
+    } else {
+        value.parse().ok()
+    }
+}
+
+fn function_calls(tokens: &[String]) -> Option<Vec<(String, String)>> {
+    let source = css_component_text(tokens);
+    let bytes = source.as_bytes();
+    let mut index = 0;
+    let mut calls = Vec::new();
+    while index < bytes.len() {
+        while index < bytes.len() && bytes[index].is_ascii_whitespace() {
+            index += 1;
+        }
+        let name_start = index;
+        while index < bytes.len() && (bytes[index].is_ascii_alphanumeric() || bytes[index] == b'-')
+        {
+            index += 1;
+        }
+        if name_start == index || bytes.get(index) != Some(&b'(') {
+            return None;
+        }
+        let name = source[name_start..index].to_ascii_lowercase();
+        index += 1;
+        let argument_start = index;
+        let mut depth = 1usize;
+        while index < bytes.len() && depth > 0 {
+            match bytes[index] {
+                b'(' => depth += 1,
+                b')' => depth -= 1,
+                _ => {}
+            }
+            index += 1;
+        }
+        if depth != 0 {
+            return None;
+        }
+        calls.push((name, source[argument_start..index - 1].to_string()));
+    }
+    Some(calls)
+}
+
+fn function_arguments(source: &str) -> Vec<&str> {
+    source
+        .split(|character: char| character == ',' || character.is_whitespace())
+        .filter(|value| !value.is_empty())
+        .collect()
 }
 
 fn apply_flex_flow(style: &mut HtmlComputedStyle, value: &[String]) {
@@ -3124,6 +3493,9 @@ fn box_paint_ext(style: &HtmlComputedStyle) -> ExtValue {
     if let Some(background) = style.background {
         values.insert("backgroundColor".into(), color_ext(background));
     }
+    if let Some(radius) = style.corner_radius.filter(|radius| *radius >= 0.0) {
+        values.insert("cornerRadius".into(), ExtValue::Float(radius));
+    }
     for (name, side, width) in [
         ("Top", EdgeSide::Top, style.border_width.top),
         ("Right", EdgeSide::Right, style.border_width.right),
@@ -3357,6 +3729,40 @@ mod tests {
         let positioned_box = find_positioned_by_id(&positioned, "box").unwrap();
         assert_eq!(positioned_box.width, 184.0);
         assert_eq!(positioned_box.x, 92.0);
+    }
+
+    #[test]
+    fn computed_visual_effects_project_to_the_shared_contract() {
+        let render = parse_browser_render_tree(
+            "<div id='effect'>Layered <a href='next.html'>link</a></div>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["#effect { width: 80px; height: 30px; background: red; \
+              border-radius: 6px; opacity: 0.5; \
+              transform: translate(10px, 4px) scale(1.5); \
+              transform-origin: left top; filter: blur(2px) brightness(120%); \
+              box-shadow: 3px 4px 5px #000; mix-blend-mode: multiply; \
+              isolation: isolate; }"],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let effect = find_by_id(&layout, "effect").unwrap();
+        let effects = EffectStyle::from_layout(effect);
+
+        assert_eq!(effects.opacity, 0.5);
+        assert_eq!(effects.transform_origin.x, OriginComponent::percent(0.0));
+        assert_eq!(effects.transform_origin.y, OriginComponent::percent(0.0));
+        assert_eq!(effects.filters.len(), 3);
+        assert_eq!(effects.blend_mode, EffectBlendMode::Multiply);
+        assert!(effects.isolation);
+        assert!(matches!(
+            effect.ext.get("paint"),
+            Some(ExtValue::Map(values))
+                if values.get("cornerRadius") == Some(&ExtValue::Float(6.0))
+        ));
     }
 
     #[test]

@@ -20,7 +20,7 @@ use venture_browser_core::{
     BrowserViewport,
 };
 
-pub const VERSION: &str = "0.1.1";
+pub const VERSION: &str = "0.2.0";
 pub const FIXTURE_PATH: &str = "/visual.html";
 pub const IMAGE_PATH: &str = "/checker.gif";
 pub const MISSING_IMAGE_PATH: &str = "/missing.gif";
@@ -35,6 +35,7 @@ pub const FLOAT_FIXTURE_PATH: &str = "/float.html";
 pub const INLINE_BOX_FIXTURE_PATH: &str = "/inline-box.html";
 pub const REPLACED_FIXTURE_PATH: &str = "/replaced.html";
 pub const GENERATED_FIXTURE_PATH: &str = "/generated.html";
+pub const EFFECTS_FIXTURE_PATH: &str = "/effects.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -118,6 +119,9 @@ li::marker { color: green; }
 #inside { list-style-position: inside; }
 #generated-link::before { content: 'Open '; }
 </style></head><body><h2 id="generated-heading" title="Atlas">Layout</h2><ol start="3" reversed><li id="outside">Outside marker</li><li id="inside" value="7">Inside marker</li></ol><a id="generated-link" href="generated-next.html">page</a></body></html>"#;
+
+/// Affine paint, isolated compositing, rounded decoration, and transformed hit testing.
+pub const EFFECTS_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="effect-card" style="width:100px;height:40px;background:red;border-radius:7px;opacity:0.7;transform:translate(18px, 6px) rotate(4deg);transform-origin:left top;filter:brightness(110%);box-shadow:3px 4px 2px #000;mix-blend-mode:multiply;isolation:isolate"><a id="effect-link" href="effect-next.html" style="text-shadow:1px 1px 1px #000">Effect link</a></div></body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -517,6 +521,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let inline_box_url = format!("{origin}{INLINE_BOX_FIXTURE_PATH}");
     let replaced_url = format!("{origin}{REPLACED_FIXTURE_PATH}");
     let generated_url = format!("{origin}{GENERATED_FIXTURE_PATH}");
+    let effects_url = format!("{origin}{EFFECTS_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -595,6 +600,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             GENERATED_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == effects_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            EFFECTS_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -756,6 +767,23 @@ pub fn load_generated_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{GENERATED_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_effects_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{EFFECTS_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1475,6 +1503,37 @@ mod tests {
             .iter()
             .any(|region| region.url.ends_with("generated-next.html") && region.width > 40.0));
         assert!(!page.paint.scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn effects_fixture_converges_layers_rounding_and_transformed_hit_regions() {
+        let page = load_effects_page("http://venture.test").expect("effects fixture page");
+        let (_, link_x, link_y) = find_node(&page.paint.positioned, "effect-link").unwrap();
+        let link = page
+            .paint
+            .links
+            .iter()
+            .find(|region| region.url.ends_with("effect-next.html"))
+            .unwrap();
+        assert_ne!((link.x, link.y), (link_x, link_y));
+        assert!(contains_instruction(
+            &page.paint.scene.instructions,
+            &|instruction| matches!(
+                instruction,
+                PaintInstruction::Layer(layer)
+                    if layer.opacity == Some(0.7)
+                        && layer.blend_mode == Some(BlendMode::Multiply)
+                        && layer.transform.is_some()
+                        && layer.filters.as_ref().is_some_and(|filters| filters.len() == 2)
+            )
+        ));
+        assert!(contains_instruction(
+            &page.paint.scene.instructions,
+            &|instruction| matches!(
+                instruction,
+                PaintInstruction::Rect(rect) if rect.corner_radius == Some(7.0)
+            )
+        ));
     }
 
     #[test]
