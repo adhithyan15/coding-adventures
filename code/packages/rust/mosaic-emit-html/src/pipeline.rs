@@ -289,6 +289,18 @@ pub struct EmitOptions {
     /// inlining the component fragment), `main.js`, and `README.md`
     /// alongside the component `.html` file. Default `false`.
     pub emit_project: bool,
+
+    /// Author-supplied slot values — a story's fixtures (#14459).
+    ///
+    /// Empty means "no fixtures", which is the pre-existing behaviour: an
+    /// `emit_project` build falls back to sample values (the first legal
+    /// member of every `one-of` slot) and a fragment build renders unset.
+    ///
+    /// When non-empty these WIN over the samples. That is the whole point:
+    /// before this, a story's fixtures were parsed, stored, and dropped, so
+    /// every story of a component rendered identically -- which is how six
+    /// toolkit components shipped `variant` slots that did nothing (#14036).
+    pub slot_values: HashMap<String, String>,
 }
 
 /// Project-shaped artifacts emitted when `EmitOptions::emit_project`
@@ -337,7 +349,12 @@ pub fn from_pipeline_with_options(
     // `one-of` slot, so bake those same values into slot-owned styles. Keeping
     // the two samples aligned prevents the shell from saying `danger` while
     // still painting the base/primary appearance.
-    let component = if options.emit_project {
+    let component = if !options.slot_values.is_empty() {
+        // Author-supplied fixtures win over generated samples, for both
+        // fragment and project builds. A story that sets `variant: danger`
+        // has to paint danger, or the story is decoration.
+        from_pipeline_with_slot_values(interface, layout, style, &options.slot_values)?
+    } else if options.emit_project {
         from_pipeline_with_sample_slot_values(interface, layout, style)?
     } else {
         from_pipeline(interface, layout, style)?
@@ -5435,7 +5452,7 @@ mod tests {
             &component("Board", vec![]),
             &drag_board_layout(),
             &empty_style("Board"),
-            &EmitOptions { emit_project: true },
+            &EmitOptions { emit_project: true, slot_values: Default::default() },
         )
         .unwrap()
         .project
@@ -6553,6 +6570,82 @@ mod tests {
         );
     }
 
+    /// Fixtures reach the render, and BEAT the generated sample (#14459).
+    ///
+    /// This is the assertion the whole story mechanism rests on. Before this,
+    /// a story's fixtures were parsed, stored, and dropped: every story of a
+    /// component rendered identically, which is how six toolkit components
+    /// shipped `variant` slots that did nothing (#14036). Asserting that a
+    /// fixtures build merely *succeeds* would not catch that -- the check has
+    /// to be that two different fixture sets produce two different renders.
+    #[test]
+    fn ui49_fixtures_beat_the_generated_sample_and_differ_from_each_other() {
+        let m = component(
+            "Badge",
+            vec![SlotDecl {
+                name: "variant".to_string(),
+                // `primary` is first, so it is what the sample fallback picks.
+                r#type: SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                required: false,
+                default: None,
+            }],
+        );
+        let l = layout("Badge", node_with_part("Box", "badge"));
+        let s = StyleDef {
+            component_name: "Badge".to_string(),
+            parts: vec![PartStyle {
+                name: "badge".to_string(),
+                base: vec![],
+                transitions: vec![],
+                states: vec![
+                    StateStyle {
+                        state: "primary".to_string(),
+                        slot: Some("variant".to_string()),
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#0d6efd".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                    StateStyle {
+                        state: "danger".to_string(),
+                        slot: Some("variant".to_string()),
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#dc3545".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                ],
+            }],
+        };
+
+        let render = |variant: &str| {
+            let mut slot_values = HashMap::new();
+            slot_values.insert("variant".to_string(), variant.to_string());
+            from_pipeline_with_options(
+                &m,
+                &l,
+                &s,
+                &EmitOptions { emit_project: true, slot_values },
+            )
+            .expect("fixtures build should emit")
+            .output
+        };
+
+        let primary = render("primary");
+        let danger = render("danger");
+
+        assert!(primary.contains("background: #0d6efd"), "{primary}");
+        assert!(danger.contains("background: #dc3545"), "{danger}");
+        // The load-bearing one: a fixture must override the sample fallback,
+        // which would otherwise have picked `primary` for both.
+        assert_ne!(
+            primary, danger,
+            "two fixture sets must not render identically"
+        );
+    }
+
     #[test]
     fn ui49_project_snapshot_style_matches_first_member_fallback_prop() {
         let m = component(
@@ -6587,7 +6680,7 @@ mod tests {
             &m,
             &l,
             &s,
-            &EmitOptions { emit_project: true },
+            &EmitOptions { emit_project: true, slot_values: Default::default() },
         )
         .expect("project snapshot should emit");
         let project = r.project.expect("project shell expected");
