@@ -17,6 +17,7 @@ diverge in how they validate identifiers or shape their payloads.
 from __future__ import annotations
 
 import argparse
+from collections.abc import Iterable
 import os
 import plistlib
 import posixpath
@@ -530,17 +531,16 @@ XAML_TARGETS = {"windows": "zip"}
 MIN_EXPORTED_ENGINE_SYMBOLS = 20
 
 
-def pe_exported_names(binary: bytes) -> list[str]:
-    """The names a PE image exports.
+def _pe_image(binary: bytes):
+    """Walk a PE far enough to resolve RVAs, or raise.
 
-    Parsed from the export directory rather than trusted from the filename,
-    because `MZ` is not a discriminator: every PE starts with it, including
-    the app's own managed assembly. Copying `EngramApp.dll` over
-    `engram_capi.dll` passed every check this lane had -- an app that launches
-    into a UI where nothing works, on the platform with no local verification.
+    Returns `(data_directories, to_offset)` where `data_directories` maps a
+    directory index to its `(rva, size)` and `to_offset` converts an RVA to a
+    file offset, or `None` when the RVA falls outside every section.
 
-    Returns an empty list for a PE with no export directory, which is the
-    normal shape of a managed assembly or an apphost.
+    Shared by the export and import readers because getting the optional-header
+    magic or the section table wrong is the same mistake twice, and one of them
+    has already been made here once.
     """
 
     if len(binary) < 0x40 or binary[:2] != b"MZ":
@@ -561,12 +561,6 @@ def pe_exported_names(binary: bytes) -> list[str]:
         directories = optional + 96
     else:
         raise ValueError(f"unknown optional header magic {magic:#x}")
-    if directories + 8 > len(binary) or optional_size < (directories - optional) + 8:
-        return []
-
-    export_rva, export_size = struct.unpack_from("<II", binary, directories)
-    if export_rva == 0 or export_size == 0:
-        return []
 
     sections = []
     section_table = optional + optional_size
@@ -582,8 +576,263 @@ def pe_exported_names(binary: bytes) -> list[str]:
     def to_offset(rva: int) -> int | None:
         for virtual_address, raw_size, raw_pointer in sections:
             if virtual_address <= rva < virtual_address + raw_size:
-                return raw_pointer + (rva - virtual_address)
+                offset = raw_pointer + (rva - virtual_address)
+                return offset if offset < len(binary) else None
         return None
+
+    # `NumberOfRvaAndSizes` -- NOT `SizeOfOptionalHeader` -- is what says how
+    # many directory entries exist. An image may declare a full-size optional
+    # header and only two directories, and reading past the count returns
+    # whatever bytes follow: garbage that parses as a directory and gets an
+    # honest image rejected.
+    count_offset = optional + (108 if magic == 0x20B else 92)
+    if count_offset + 4 > len(binary):
+        raise ValueError("truncated optional header")
+    directory_count = struct.unpack_from("<I", binary, count_offset)[0]
+
+    def directory(index: int) -> tuple[int, int]:
+        if index >= directory_count:
+            return (0, 0)
+        entry = directories + index * 8
+        if entry + 8 > len(binary) or optional_size < (entry - optional) + 8:
+            return (0, 0)
+        return struct.unpack_from("<II", binary, entry)
+
+    return directory, to_offset
+
+
+# A DLL name longer than this is not a name, it is a scan looking for a NUL.
+_PE_MAX_NAME = 260  # MAX_PATH
+
+# A bound on descriptor arrays. Reaching it raises rather than truncating.
+_PE_MAX_DESCRIPTORS = 4096
+
+
+def _pe_string_at(binary: bytes, offset: int | None) -> str | None:
+    """The NUL-terminated ASCII DLL name at a file offset, or `None`.
+
+    `None` means *unreadable*, and every caller treats it as an error rather
+    than as "no name" -- see `pe_imported_libraries`.
+
+    **ASCII, strictly.** PE import names are bytes the loader compares against
+    filenames; decoding them as UTF-8 and calling `str.lower()` is a case
+    mapping the loader does not perform, and it is exploitable. U+212A KELVIN
+    SIGN lowercases to ASCII `k`, so an image importing `\u212aERNEL32.DLL`
+    reported itself as importing `kernel32.dll` -- matching the system allowlist
+    and dropping out of the check entirely, while the loader would look for a
+    file by that literal name and fail. Refusing non-ASCII removes the mapping
+    rather than trying to enumerate which characters are dangerous.
+
+    The scan is bounded so a file with no NUL bytes cannot turn each descriptor
+    into a full-image search.
+    """
+
+    if offset is None or offset >= len(binary):
+        return None
+    end = binary.find(b"\x00", offset, offset + _PE_MAX_NAME)
+    if end <= offset:
+        return None
+    raw = binary[offset:end]
+    try:
+        return raw.decode("ascii").lower()
+    except UnicodeDecodeError:
+        return None
+
+
+def pe_imported_libraries(binary: bytes) -> list[str]:
+    """Every DLL a PE image names in its import tables, lowercased.
+
+    The Windows analogue of `dylib_dependencies`: what the loader will go
+    looking for when the payload is opened on a machine that is not the one that
+    built it.
+
+    Both tables are read. The **import** directory (1) holds the ordinary
+    `IMAGE_IMPORT_DESCRIPTOR` array, 20 bytes each, terminated by an all-zero
+    entry, with the DLL name RVA at +12. The **delay-load** directory (13) holds
+    `IMAGE_DELAYLOAD_DESCRIPTOR`s, 32 bytes each, name RVA at +4; a Qt DLL
+    resolved lazily is exactly as absent at runtime as one resolved eagerly, so
+    reading only the first table would call a payload relocatable that is not.
+
+    ## Every way this can fail to read raises
+
+    A reader for a security check has one dangerous direction: returning *fewer*
+    names than the loader will resolve, because that reads as "relocatable".
+    Silence is therefore not an option anywhere -- a directory RVA that does not
+    resolve, a descriptor array that runs off the end, a name that is
+    unreadable, or an array longer than the cap all raise rather than returning
+    a short list.
+
+    That matters most for the delay-load table, which no PE in this repository
+    has, so it is checked against the structure definition rather than against
+    observed bytes. Every reader here written that way has had a field offset
+    wrong at least once.
+    """
+
+    directory, to_offset = _pe_image(binary)
+    names: list[str] = []
+
+    def read_descriptors(
+        rva: int, stride: int, name_field: int, unpack: str, label: str
+    ) -> list[str]:
+        table = to_offset(rva)
+        if table is None:
+            raise ValueError(
+                f"PE {label} directory RVA {rva:#x} resolves to no section; "
+                "refusing to report the image as fully read"
+            )
+        found: list[str] = []
+        for index in range(_PE_MAX_DESCRIPTORS):
+            entry = table + index * stride
+            if entry + stride > len(binary):
+                raise ValueError(
+                    f"PE {label} descriptors run past the end of the image"
+                )
+            fields = struct.unpack_from(unpack, binary, entry)
+            if not any(fields):  # the all-zero terminator
+                return found
+            name_rva = fields[name_field]
+            name = _pe_string_at(binary, to_offset(name_rva))
+            if name is None:
+                raise ValueError(
+                    f"PE {label} descriptor {index} names a DLL this reader "
+                    f"could not read at RVA {name_rva:#x}"
+                )
+            found.append(name)
+        raise ValueError(
+            f"PE {label} table exceeds {_PE_MAX_DESCRIPTORS} descriptors without "
+            "a terminator; refusing to report a truncated list"
+        )
+
+    import_rva, _ = directory(1)
+    if import_rva:
+        names.extend(read_descriptors(import_rva, 20, 3, "<IIIII", "import"))
+
+    # Gated on the RVA alone. Gating on the directory *Size* too let a crafted
+    # image zero the size, keep the descriptors, and skip this branch entirely
+    # -- turning the fail-closed guard below into a fail-open one.
+    delay_rva, _ = directory(13)
+    if delay_rva:
+        names.extend(read_descriptors(delay_rva, 32, 1, "<IIIIIIII", "delay-load"))
+
+    # Order-preserving dedupe: an image may name the same DLL in both tables,
+    # and this list is reported to a human.
+    seen: set[str] = set()
+    unique = []
+    for name in names:
+        if name not in seen:
+            seen.add(name)
+            unique.append(name)
+    return unique
+
+
+# DLLs Windows itself provides, which a bundle is not expected to carry.
+#
+# Deliberately a small, explicit set rather than "anything that looks like a
+# system name". The failure this list guards is a payload that launches on the
+# machine that built it and not on anyone else's, and every name added here is a
+# dependency this lane stops checking -- so the bar for adding one is that
+# Windows genuinely ships it, not that it is inconvenient to bundle.
+#
+# `api-ms-win-*` and `ext-ms-win-*` are API sets: virtual DLL names the loader
+# resolves to real system modules. They are matched by prefix because their
+# names carry version numbers that change between Windows releases, so an exact
+# list would be a maintenance trap that fails closed on a newer runner.
+WINDOWS_SYSTEM_DLLS = frozenset(
+    {
+        "advapi32.dll", "bcrypt.dll", "combase.dll", "comdlg32.dll", "crypt32.dll",
+        "d3d11.dll", "d3d12.dll", "d3d9.dll", "dbghelp.dll", "dwmapi.dll",
+        "dxgi.dll", "gdi32.dll", "gdiplus.dll", "imm32.dll", "iphlpapi.dll",
+        "kernel32.dll", "kernelbase.dll", "mf.dll", "mfplat.dll", "mfreadwrite.dll",
+        "msvcrt.dll", "netapi32.dll", "normaliz.dll", "ntdll.dll", "ole32.dll",
+        "oleaut32.dll", "opengl32.dll", "powrprof.dll", "propsys.dll", "psapi.dll",
+        "rpcrt4.dll", "secur32.dll", "setupapi.dll", "shcore.dll", "shell32.dll",
+        "shlwapi.dll", "user32.dll", "userenv.dll", "usp10.dll", "uxtheme.dll",
+        "version.dll", "winmm.dll", "wintrust.dll", "ws2_32.dll",
+        "wtsapi32.dll",
+    }
+)
+
+# API-set names, matched by their grammar rather than by prefix alone.
+#
+# A bare `startswith("api-ms-win-")` excused anything merely *named* like an API
+# set -- `api-ms-win-totally-made-up.dll` passed. Requiring the real shape
+# (`api-ms-win-<component>-l<major>-<minor>-<patch>.dll`) keeps the reason for
+# prefix-matching, which is that the version numbers move between Windows
+# releases so an exact list would fail closed on a newer runner, without
+# excusing a name that is not one.
+WINDOWS_API_SET = re.compile(
+    r"^(?:api|ext)-ms-win-[a-z0-9]+(?:-[a-z0-9]+)*-l\d+-\d+-\d+\.dll$"
+)
+
+
+def is_windows_system_dll(name: str) -> bool:
+    """Whether Windows provides this DLL, so a bundle need not carry it.
+
+    ASCII-only by construction: a name is compared as the loader would compare
+    it, and `str.lower()` on non-ASCII performs a mapping the loader does not.
+    `pe_imported_libraries` already refuses non-ASCII names, and this refuses
+    them again rather than relying on that -- U+212A KELVIN SIGN lowercasing to
+    ASCII `k` is the kind of thing that gets past exactly one layer.
+    """
+
+    if not name.isascii():
+        return False
+    lowered = name.lower()
+    return lowered in WINDOWS_SYSTEM_DLLS or bool(WINDOWS_API_SET.match(lowered))
+
+
+def non_relocatable_pe_imports(binary: bytes, bundled: Iterable[str]) -> list[str]:
+    """Imports that will not resolve once the payload leaves this machine.
+
+    The Windows counterpart of [`non_relocatable_dependencies`], and it has to
+    ask a different question. A Mach-O records a *path* per dependency, so the
+    check there is whether that path escapes the bundle. A PE records only a
+    *name*: the loader searches the executable's directory, then the system
+    directories, then `PATH`. Nothing in the file says which one it found on the
+    build machine.
+
+    So the only thing the bytes can tell us is which names must be satisfied,
+    and the check is that every one of them is either shipped beside the
+    executable or provided by Windows. A name that is neither resolved from the
+    build machine's `PATH` -- the exact failure that makes a Qt build run for
+    whoever compiled it and no one else.
+
+    `bundled` is the set of filenames present in the payload directory.
+    Comparison is case-insensitive because Windows resolves imports that way,
+    and a check that distinguishes `Qt6Core.dll` from `qt6core.dll` would pass
+    on a bundle the loader rejects.
+    """
+
+    available = {name.lower() for name in bundled}
+    return [
+        name
+        for name in pe_imported_libraries(binary)
+        if name not in available and not is_windows_system_dll(name)
+    ]
+
+
+def pe_exported_names(binary: bytes) -> list[str]:
+    """The names a PE image exports.
+
+    Parsed from the export directory rather than trusted from the filename,
+    because `MZ` is not a discriminator: every PE starts with it, including the
+    app's own managed assembly. Copying `EngramApp.dll` over `engram_capi.dll`
+    passed every check this lane had -- an app that launches into a UI where
+    nothing works, on the platform with no local verification.
+
+    Returns an empty list for a PE with no export directory, which is the normal
+    shape of a managed assembly or an apphost.
+
+    Shares `_pe_image` with `pe_imported_libraries`. It used to carry its own
+    copy of the header walk, and the two had already drifted apart: only one
+    bounded the file offset it computed. One copy of a parser is the point of
+    having a helper.
+    """
+
+    directory, to_offset = _pe_image(binary)
+    export_rva, export_size = directory(0)
+    if export_rva == 0 or export_size == 0:
+        return []
 
     table = to_offset(export_rva)
     if table is None or table + 40 > len(binary):
@@ -591,8 +840,8 @@ def pe_exported_names(binary: bytes) -> list[str]:
     # IMAGE_EXPORT_DIRECTORY: NumberOfNames at +24, AddressOfNames at +32.
     # Reading +28 gets AddressOfFunctions -- an array of CODE addresses -- and
     # the "names" come back as disassembly. Caught only by running this against
-    # real exporting DLLs; a fixture built from the same wrong layout would
-    # have agreed with the parser exactly.
+    # real exporting DLLs; a fixture built from the same wrong layout would have
+    # agreed with the parser exactly.
     name_count = struct.unpack_from("<I", binary, table + 24)[0]
     names_rva = struct.unpack_from("<I", binary, table + 32)[0]
     names_offset = to_offset(names_rva)
@@ -605,12 +854,9 @@ def pe_exported_names(binary: bytes) -> list[str]:
         if entry + 4 > len(binary):
             break
         name_rva = struct.unpack_from("<I", binary, entry)[0]
-        start = to_offset(name_rva)
-        if start is None:
-            continue
-        end = binary.find(b"\x00", start)
-        if end > start:
-            names.append(binary[start:end].decode("utf-8", "replace"))
+        name = _pe_string_at(binary, to_offset(name_rva))
+        if name is not None:
+            names.append(name)
     return names
 
 
@@ -1671,6 +1917,29 @@ def archive_xaml(
             f"{engine.name} exports only {len(exported)} eg_* symbols; the host "
             f"resolves ~40, and a library that exists but exports nothing "
             f"produces the same silent, feature-free app as no library at all"
+        )
+
+    # The engine's DEPENDENCIES, not just its exports.
+    #
+    # A PE records imports by name only; the loader searches the executable's
+    # directory, then the system directories, then `PATH`. So a DLL the build
+    # machine happened to have on `PATH` produces a payload that launches for
+    # whoever built it and for nobody else -- the same failure the macOS lane
+    # found by walking Mach-O load commands, in the form Windows takes.
+    #
+    # .NET probes beside the executable, so the payload root is what counts as
+    # bundled. `runtimes/win-x64/native` is included because the block below
+    # requires those to be flattened to the root anyway.
+    bundled = {path.name for path in source.iterdir() if path.is_file()}
+    native_dir = source / "runtimes" / "win-x64" / "native"
+    if native_dir.is_dir():
+        bundled.update(path.name for path in native_dir.iterdir() if path.is_file())
+    unresolved = non_relocatable_pe_imports(engine.read_bytes(), bundled)
+    if unresolved:
+        raise ValueError(
+            f"{engine.name} imports {', '.join(unresolved)}, which the payload "
+            f"does not carry and Windows does not provide; it would resolve "
+            f"from the build machine's PATH and be missing everywhere else"
         )
 
     # `FlattenNativeRuntimeDlls` copies the WindowsAppSDK natives out of
