@@ -2254,7 +2254,13 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             }
         }
         Backend::Html => {
-            let html_opts = mosaic_emit_html::pipeline::EmitOptions { emit_project: true };
+            // No fixtures here: the artifact builder emits a package's
+            // shipped projects, not a story preview, so slot values stay the
+            // generated samples (#14459).
+            let html_opts = mosaic_emit_html::pipeline::EmitOptions {
+                emit_project: true,
+                slot_values: Default::default(),
+            };
             let r = mosaic_emit_html::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,

@@ -22,6 +22,7 @@
 //! version output are generated from that spec — there is no hand-rolled help
 //! string in this file.
 
+use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process;
@@ -263,6 +264,10 @@ fn run(result: cli_builder::types::ParseResult) {
             strict_style,
             package_manifest_path.as_deref(),
             package_search_path.as_deref(),
+            // Read here rather than reusing the binding below: that one is
+            // declared after this branch returns, and it belongs to the legacy
+            // single-file path.
+            flags.get("fixtures").and_then(|v| v.as_str()),
         );
         return;
     }
@@ -648,6 +653,7 @@ fn run_pipeline(
     strict_style: bool,
     package_manifest_path: Option<&str>,
     package_search_path: Option<&str>,
+    fixtures_path: Option<&str>,
 ) {
     // Pipeline mode supports every backend with a `pipeline::from_pipeline`
     // entry point. The mosaic-package-artifact-builder crate calls each
@@ -982,7 +988,16 @@ fn run_pipeline(
             // HTML shell emission. Bare invocation (emit_project:
             // false) is byte-identical to pre-UI32 behaviour — same
             // .html fragment, same exit code.
-            let html_opts = mosaic_emit_html::pipeline::EmitOptions { emit_project };
+            // Fixtures (#14459). Pipeline mode ignored --fixtures entirely
+            // until now: the flag was read at the top of main but only ever
+            // consumed by the LEGACY single-file html arm, so a three-file
+            // component -- which is every component in this repository --
+            // could not be given slot values at all. MosaicBook could load a
+            // story and never make it render.
+            let html_opts = mosaic_emit_html::pipeline::EmitOptions {
+                emit_project,
+                slot_values: pipeline_slot_values(fixtures_path),
+            };
             let result = mosaic_emit_html::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1480,6 +1495,53 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
 // ===========================================================================
 
 /// Read a file to a String, or print an error and exit with code 1.
+/// Read a fixtures file into slot values for pipeline-mode emitters (#14459).
+///
+/// The file is a flat JSON object of slot name to value, the same shape the
+/// legacy single-file path has always accepted and the same shape MosaicBook
+/// stores per story.
+///
+/// Scalars are stringified because that is what the emitters' slot-value maps
+/// hold. A non-scalar (array or object) is skipped with a warning rather than
+/// rendered as `[object Object]`: list- and node-typed slots need real
+/// support, and silently substituting nonsense is exactly the
+/// accepted-and-dropped behaviour this change exists to end.
+fn pipeline_slot_values(fixtures_path: Option<&str>) -> HashMap<String, String> {
+    let Some(path) = fixtures_path else {
+        return HashMap::new();
+    };
+    let raw = read_file_or_die(path);
+    let value: serde_json::Value = serde_json::from_str(&raw).unwrap_or_else(|e| {
+        eprintln!("mosaic-compile: error parsing fixtures file {path}: {e}");
+        process::exit(1);
+    });
+    let Some(object) = value.as_object() else {
+        eprintln!("mosaic-compile: fixtures file {path} must be a JSON object of slot values");
+        process::exit(1);
+    };
+
+    let mut out = HashMap::new();
+    for (name, v) in object {
+        let scalar = match v {
+            serde_json::Value::String(s) => Some(s.clone()),
+            serde_json::Value::Number(n) => Some(n.to_string()),
+            serde_json::Value::Bool(b) => Some(b.to_string()),
+            serde_json::Value::Null => None,
+            _ => {
+                eprintln!(
+                    "mosaic-compile: fixtures file {path}: slot `{name}` has a non-scalar value; \
+                     list- and node-typed fixtures are not supported yet and this one is ignored"
+                );
+                None
+            }
+        };
+        if let Some(scalar) = scalar {
+            out.insert(name.clone(), scalar);
+        }
+    }
+    out
+}
+
 fn read_file_or_die(path: &str) -> String {
     fs::read_to_string(path).unwrap_or_else(|e| {
         eprintln!("mosaic-compile: cannot read {path}: {e}");
