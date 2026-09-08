@@ -3279,7 +3279,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Review the AppKit, CoreText, Metal, filesystem, and process authority of the macOS host against the shared Venture portable bridge; record a reviewed native-source exception for irreducible shell behavior."
+      "notes": "Review the AppKit, CoreText, Metal, filesystem, and process authority of the macOS host against the shared Venture portable bridge; record a reviewed native-source exception for irreducible shell behavior. PR #14630 adds shared BrowserFetchRequest, submit/reset/implicit-Enter routing, bounded diagnostics, session synchronization, and transactional navigation as portable bridge evidence; AppKit, CoreText, Metal, and native host lifetimes remain native authority."
     },
     {
       "id": "smart-home-automation-runtime-portable-conformance",
@@ -3443,7 +3443,7 @@
       "depends_on": ["venture-browser-windows-portable-bridge-and-native-host"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean ec53a3f9 inventory after PR #9615 added Rust-only venture-browser-qt. Reconcile its deterministic BrowserHostController projection, Mosaic event decoding, input normalization, and C-ABI state/error contract with venture-browser-core and the Windows/macOS bridge owners, using shared language-neutral fixtures where portable. Classify Cairo rasterization, Qt Quick/QML registration, dynamic-library loading, C++ adapter code, native pointer and buffer lifetimes, CMake/Qt discovery, and live application launch as native-source or wrapper behavior with direct platform tests rather than all-language gaps. The collision-clean 481a30c3 inventory adds venture-browser-cairo under this same owner: it centralizes the backend-neutral native session and Cairo RGBA renderer behind unsafe Qt, Flutter, and Compose C ABIs, while reusable controller, event, navigation, scrolling, hover, link, and projection behavior remains owned by venture-browser-core fixtures."
+      "notes": "Discovered in the collision-clean ec53a3f9 inventory after PR #9615 added Rust-only venture-browser-qt. Reconcile its deterministic BrowserHostController projection, Mosaic event decoding, input normalization, and C-ABI state/error contract with venture-browser-core and the Windows/macOS bridge owners, using shared language-neutral fixtures where portable. Classify Cairo rasterization, Qt Quick/QML registration, dynamic-library loading, C++ adapter code, native pointer and buffer lifetimes, CMake/Qt discovery, and live application launch as native-source or wrapper behavior with direct platform tests rather than all-language gaps. The collision-clean 481a30c3 inventory adds venture-browser-cairo under this same owner: it centralizes the backend-neutral native session and Cairo RGBA renderer behind unsafe Qt, Flutter, and Compose C ABIs, while reusable controller, event, navigation, scrolling, hover, link, and projection behavior remains owned by venture-browser-core fixtures. PR #14630 adds the common Cairo host's shared form POST-request boundary and session synchronization as portable bridge evidence; Cairo, Qt, FFI, and pointer lifetimes remain native."
     },
     {
       "id": "smart-home-camera-media-security-boundary-hardening",
@@ -3555,7 +3555,7 @@
       "depends_on": ["capability-schema-category-action-constraints"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the Shelly dependency audit and reconfirmed by the WLED integration. tcp-client and http1-client declare empty capability profiles despite concrete DNS/TCP calls, while udp-client and smart-home-discovery lack manifests despite socket and discovery authority. Inventory the executable library and harness boundaries, split pure parsers/planners from native I/O where necessary, and add truthful minimum runtime/test profiles without claiming Layer 5 approval. This shared substrate item has leverage across Shelly, WLED, and other local-network integrations."
+      "notes": "Discovered during the Shelly dependency audit and reconfirmed by the WLED integration. tcp-client and http1-client declare empty capability profiles despite concrete DNS/TCP calls, while udp-client and smart-home-discovery lack manifests despite socket and discovery authority. Inventory the executable library and harness boundaries, split pure parsers/planners from native I/O where necessary, and add truthful minimum runtime/test profiles without claiming Layer 5 approval. This shared substrate item has leverage across Shelly, WLED, and other local-network integrations. PR #14630 extends http1-client beyond GET to application/x-www-form-urlencoded POST through the same concrete DNS/TCP authority while its capability profile remains empty."
     },
     {
       "id": "smart-home-wled-host-security-hardening",
@@ -3604,7 +3604,7 @@
       "depends_on": ["rust-network-substrate-capability-truthfulness"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the joint Shelly/WLED dependency audit. Both integrations duplicate DNS resolution, connect timeouts, TCP read/write, HTTP/1.1 request encoding, bounded response reads, chunked decoding, and error projection while smart-home-local-http is correctly a pure request planner and http1-client is GET-only. Add a separate native executor with retained origin/address policy, shared byte/time/output ceilings, redacted typed failures, truthful capability profiles, and POST support; migrate Shelly and WLED only after their security owners define pairing, authorization, and transactional semantics."
+      "notes": "Discovered in the joint Shelly/WLED dependency audit. Both integrations duplicate DNS resolution, connect timeouts, TCP read/write, HTTP/1.1 request encoding, bounded response reads, chunked decoding, and error projection while smart-home-local-http is correctly a pure request planner. PR #14630 means http1-client now supports GET plus application/x-www-form-urlencoded POST only; arbitrary request bodies, retained origin/address policy, chunked handling, shared execution ceilings, redacted typed failures, and truthful capability profiles remain unclosed. Add a separate native executor and migrate Shelly and WLED only after their security owners define pairing, authorization, and transactional semantics."
     },
     {
       "id": "dart-current-14-of-15-matrix-family",
@@ -3625,7 +3625,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered after origin/main advanced to c2b5a3d8 with Rust-only venture-browser-windows. Its session/chrome/status orchestration, navigation and link activation, JSON projection, and Mosaic event decoding are deterministic and substantially duplicate venture-browser-macos, so move them into venture-browser-core or a fixture-driven shared bridge core before assessing any cross-lane gaps. Keep the Direct2D renderer, WinUI XAML adapter, C ABI, native text shaping, Windows DLL, and platform acceptance build as the native-source shell. Add and review the currently missing capability metadata for default HTTP fetching and native-library authority, then enforce Windows ABI, generated-project, panic-containment, pointer-lifetime, and pixel-buffer tests."
+      "notes": "Discovered after origin/main advanced to c2b5a3d8 with Rust-only venture-browser-windows. Its session/chrome/status orchestration, navigation and link activation, JSON projection, and Mosaic event decoding are deterministic and substantially duplicate venture-browser-macos, so move them into venture-browser-core or a fixture-driven shared bridge core before assessing any cross-lane gaps. Keep the Direct2D renderer, WinUI XAML adapter, C ABI, native text shaping, Windows DLL, and platform acceptance build as the native-source shell. Add and review the currently missing capability metadata for default HTTP fetching and native-library authority, then enforce Windows ABI, generated-project, panic-containment, pointer-lifetime, and pixel-buffer tests. PR #14630 adds shared BrowserFetchRequest, submit/reset/implicit-Enter routing, bounded diagnostics, session synchronization, and transactional navigation as portable bridge behavior; WinUI, Direct2D, C ABI, and native resource lifetimes remain native."
     },
     {
       "id": "smart-home-dashboard-core-portable-conformance",
@@ -4265,7 +4265,7 @@
       "depends_on": ["layout-controls-portable-core-classification", "html-frontend-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered with layout-controls after merged PR #14602 added the separately named Rust-only browser-form-controls identity. The package is host-neutral and deterministic over retained browser trees: it owns control discovery, focus, value, selection, checked state, disabled/read-only/required semantics, and semantic keyboard/pointer transitions before reflow. Define neutral UI53 fixtures for stable preorder-and-ID keys, duplicate IDs, mutation refusal, text and selection editing, checkbox/radio behavior, malformed controls, and bounded transitions; then roll the portable state machine across applicable established lanes or record narrowly reviewed exceptions. Depend on the layout-controls contract and keep window systems, paint backends, native toolkits, filesystem, network, credentials, and direct host input authority outside this owner."
+      "notes": "Discovered with layout-controls after merged PR #14602 added the separately named Rust-only browser-form-controls identity. The package is host-neutral and deterministic over retained browser trees: it owns control discovery, focus, value, selection, checked state, disabled/read-only/required semantics, and semantic keyboard/pointer transitions before reflow. Define neutral UI53 fixtures for stable preorder-and-ID keys, duplicate IDs, mutation refusal, text and selection editing, checkbox/radio behavior, malformed controls, and bounded transitions; then roll the portable state machine across applicable established lanes or record narrowly reviewed exceptions. Depend on the layout-controls contract and keep window systems, paint backends, native toolkits, filesystem, network, credentials, and direct host input authority outside this owner. PR #14630 adds form association plus initial value, checked, and selected baselines and form-scoped reset/query; retain association/reset fixtures here while submission policy belongs to the dependent UI54 owner."
     },
     {
       "id": "ibm704-simulator-two-lane-classification",
@@ -9246,7 +9246,62 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#14624 semantic audit of existing Rust Mosaic compiler and emitter identities. Define bounded language-neutral fixtures for declared same-package export qualification and inlining, unknown PascalCase refusal, compatible Input single-line and multiline lowering, value, placeholder, max-length, read-only, accessibility, and event behavior, and consistent HTML, WebComponent, and React artifacts. Keep browsers, files, processes, network, clocks, native rendering, and package installation outside this deterministic composition contract."
+      "notes": "Discovered by the post-#14624 semantic audit of existing Rust Mosaic compiler and emitter identities. Define bounded language-neutral fixtures for declared same-package export qualification and inlining, unknown PascalCase refusal, compatible Input single-line and multiline lowering, value, placeholder, max-length, read-only, accessibility, and event behavior, and consistent HTML, WebComponent, and React artifacts. Keep browsers, files, processes, network, clocks, native rendering, and package installation outside this deterministic composition contract. PR #14640 adds 41 story fixtures covering all one-of axes for Badge, Alert, Button, Spinner, Input, and Toast and exposes missing disabled Button treatment; retain those stories as browser-emitter and disabled-semantics evidence while Go gallery/process/filesystem mechanics remain tooling scope."
+    },
+    {
+      "id": "browser-form-submission-portable-core-classification",
+      "title": "Classify and fixture portable browser form submission",
+      "status": "pending",
+      "depends_on": ["browser-form-controls-portable-core-classification", "html-frontend-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14630 inventory after the Rust-only browser-form-submission identity appeared. Own UI54 form association, submit/reset/implicit-Enter activation, successful-control document ordering and filtering, text-line normalization, required/radio/email/length/pattern/numeric validation, the first 32 typed diagnostics, UTF-8 urlencoded GET/POST plans, 1,024-entry and 1 MiB bounds, stable errors, and applicable-lane rollout. Keep transactional session/history/fetch behavior and native UI hosts outside this deterministic owner."
+    },
+    {
+      "id": "riscv-simulator-six-lane-classification",
+      "title": "Classify checked RV32I simulator parity across six lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the semantic audit after PR #14629 completed the normative checked Rust RV32I implementation beside Elixir, Go, Python, Ruby, and TypeScript. Reconcile exact 64 KiB little-endian memory, 32 registers with x0, PC, five machine CSRs, lifecycle and install metadata, checked load/restore/direct access, typed decode/alignment/range/lifecycle/CSR faults, atomic failed steps, transactional failed or budgeted runs, complete traces, and the 256-vector Python oracle. Preserve Rust RV32M and compiler-host compatibility separately. The Rust riscv-gatelevel identity is owned by the dependent gate-level classifier and may consume this functional corpus."
+    },
+    {
+      "id": "riscv-gatelevel-singleton-classification",
+      "title": "Classify the Rust-only RISC-V gate-level simulator",
+      "status": "pending",
+      "depends_on": ["riscv-simulator-six-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14641 inventory after the Rust-only riscv-gatelevel identity appeared. Classify its exact 525,505-DFF topology, strict RV32I plus five-CSR and MRET decode, repository-gate Boolean/decode/ripple arithmetic/compare/barrel-shift/address/branch/CSR/trap networks, shared checked state and typed faults, atomic steps, transactional bounded runs, stable bounded traces, exact resource ceilings, and the 256-vector Python plus functional-Rust differential. Define an applicable-lane rollout or narrow reviewed resource/toolchain exception and add the absent truthful explicit empty capability profile. Keep RV32M, compiler host services, native execution, files, processes, network, clocks, devices, analog timing, physical caches/MMUs/pins, and transistor placement outside."
+    },
+    {
+      "id": "oct-eight-backend-language-neutral-conformance",
+      "title": "Define language-neutral Oct conformance across eight backends",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the semantic audit after PR #14632 completed Oct output and byte operations on BEAM without changing package topology. Freeze the 12-program, eight-backend, 96-cell contract: stdout is separate from return value, print_i64 maps to erlang:display/1, and u8 arithmetic, unary, and bitwise operations wrap or mask without changing wider integers. Fixture complement, wrapping, short-circuiting, globals, loops, calls, and matrix drift. Intel 8008 input, carry arithmetic, and rotations remain outside VM-040."
+    },
+    {
+      "id": "mermaid-cynefin-language-neutral-conformance",
+      "title": "Define language-neutral Mermaid Cynefin conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the semantic audit after PR #14631 added the Cynefin slice without changing package topology. Own cynefin-beta and colon headers, titles, the fixed five domains, quoted ordered items, labeled cross-domain transitions, self-loop discard, stable diagnostics, fixed semantic quadrants and center ellipse, deterministic paint projection, hostile and bounded cases, and the pinned Mermaid 11.16.1 corpus. Theme overrides, organic seeded waviness, exact cliff styling, arrowheads, accessibility directives, overflow badges, and Metal-to-PNG native validation remain reviewed exclusions."
+    },
+    {
+      "id": "mermaid-cynefin-established-lane-parity",
+      "title": "Roll Mermaid Cynefin through applicable established lanes",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["mermaid-cynefin-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "After the neutral Cynefin contract is frozen, implement the agreed subset in every applicable established Mermaid lane or record narrow reviewed exceptions. This semantic expansion uses existing Mermaid and diagram identities rather than manufacturing a new package identity."
     },
     {
       "id": "armv7-gatelevel-singleton-classification",

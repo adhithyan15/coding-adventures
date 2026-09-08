@@ -13486,6 +13486,41 @@ one in progress, with 1,321 dependency edges, no missing dependency, no cycle,
 and no merged-to-unfinished edge. The active Go implementation paths remain
 disjoint from all of these inventory and readiness findings.
 
+### Go source-registry latest-main readiness packet
+
+Parallel audit continued through exact `origin/main`
+`8e5aa0293b2a6a2de46f6de6601a0cc0e6e549a4` while the Go implementation was
+validated. The collision-clean inventory now has 1,428 established-lane
+identities, 4,649 implementation slots, 1,467 all-reported identities, and
+1,201 Rust packages. The breadth bands are 175/265, 123/934, 177/2,230, and
+953/13,342; canonical collisions and unknown language buckets remain zero.
+
+The refresh adds two Rust-only identities. `browser-form-submission` is owned
+by `browser-form-submission-portable-core-classification` behind the existing
+form-control and HTML frontend contracts. `riscv-gatelevel` is owned by
+`riscv-gatelevel-singleton-classification` behind a new six-lane checked RV32I
+functional classifier. The latter preserves the gate-level package as a
+separate topology and resource contract while sharing the normative functional
+corpus.
+
+Three topology-neutral semantic deltas also receive exact owners.
+`oct-eight-backend-language-neutral-conformance` freezes output separation and
+byte-width behavior across its 96 execution cells.
+`mermaid-cynefin-language-neutral-conformance` owns the parser-to-paint subset,
+and its selection-blocked rollout owner prevents the Rust slice from being
+mistaken for completed established-lane parity. Existing browser bridge,
+network-capability, local HTTP, form-control, and Mosaic composition owners now
+record the corresponding PR #14630 and #14640 evidence and residual native or
+authority boundaries.
+
+The state therefore has 785 unique owners: 212 merged, 572 pending, and exactly
+one in progress, with 1,325 dependency edges, no duplicate ID, missing
+dependency, cycle, or merged-to-unfinished edge. The next three ready new
+owners by cross-lane leverage are the six-lane RV32I classifier, neutral
+Mermaid Cynefin contract, and eight-backend Oct contract. The UI54 owner waits
+on form controls and HTML frontend; the Cynefin rollout waits on its neutral
+contract.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
