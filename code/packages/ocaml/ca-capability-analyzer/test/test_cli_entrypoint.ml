@@ -17,7 +17,11 @@ let test_cli ocamlrun executable () =
   with_temp_directory (fun directory ->
       Alcotest.(check int)
         "clean package" 0
-        (run ocamlrun executable [ "--dir"; directory; "--verbose" ]))
+        (run ocamlrun executable [ "--dir"; directory; "--verbose" ]);
+      Alcotest.(check int)
+        "missing package" 2
+        (run ocamlrun executable
+           [ "--dir"; Filename.concat directory "missing" ]))
 
 let () =
   let ocamlrun = Sys.getenv "CAPABILITY_TEST_OCAMLRUN"
