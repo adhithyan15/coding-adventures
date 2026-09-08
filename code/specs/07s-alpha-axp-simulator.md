@@ -320,6 +320,35 @@ Convenience properties on `AlphaState`: `.r0`–`.r31`, `.sp` (= r30), `.ra`
 
 ---
 
+## Normative Rust completion contract
+
+The Rust package `code/packages/rust/alpha-axp-simulator` is the completed
+functional implementation of this specification. It preserves the Python
+instruction semantics while replacing the legacy fail-closed string boundary
+with the repository's complete checked lifecycle.
+
+The Rust `AlphaState` additionally owns `loaded_origin` and `loaded_len`, so
+fetch never observes bytes outside the installed program. `load_checked` and
+`load_at_checked` validate before deterministic reset; `restore` validates the
+complete 64 KiB state atomically; checked register and little-endian byte,
+word, longword, and quadword helpers return typed errors; `step_checked`
+returns the raw word and complete before/after states; and checked bounded runs
+roll the complete machine back on any instruction fault or step-limit failure.
+
+Unknown opcodes/functions, nonzero PALcodes, alignment errors, truncation,
+invalid state, invalid indices/ranges, halted stepping, and exhausted step
+limits are distinct typed failures. `call_pal 0` remains a successful halt
+transition and advances PC/nPC exactly once, matching the Python oracle.
+
+Conformance is pinned by a reproducible 624-vector Python full-state corpus.
+It covers register and literal forms of every implemented operate function,
+all loads/stores, all integer branches and jumps, four seeded register/memory
+states, and seven fault families. Completion requires strict formatting,
+Clippy and rustdoc with warnings denied, all Python/Rust tests, and at least
+80% total Rust line coverage.
+
+---
+
 ## Package Layout
 
 ```
