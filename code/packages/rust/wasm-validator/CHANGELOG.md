@@ -2,6 +2,75 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.95] - 2026-09-08 - `br_on_cast`/`br_on_cast_fail` validator arm, plus two pre-existing gaps found live (W39 slice 4)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 4 of 5.
+
+- **New `0x18 | 0x19` arm** (function-body checker only -- these two
+  instructions are never valid in a constant expression, so the separate
+  const-expr `0xFB` matcher correctly keeps rejecting them via its own
+  `_ => Err(...)` catch-all, unchanged). Modeled directly on `br_if`'s own
+  arm: decodes `flags` (one raw byte, NOT LEB128) + `labelidx` (LEB) +
+  `ht1`/`ht2` (each decoded exactly like `ref.test`/`ref.cast`'s own
+  single heap-type immediate, consuming the right byte length but not
+  resolving the VALUE -- same permissive looseness), bounds-checks the
+  branch target via the same `resolve_label_target` helper `br`/`br_if`
+  already use, pops one generic value (`pop_val`), pushes `StackType::
+  Unknown` back for the fallthrough path. Deliberately does NOT compute
+  the real spec's `rt1\rt2` difference type or validate `rt2 <: rt1` --
+  matching `ref.cast`'s own established `Unknown`-pushing precedent, an
+  explicit scope boundary the spec's own "Explicitly out of scope" item 3
+  calls out, not an oversight.
+- **`ref.eq`'s `0xD3` arm gains one narrow, targeted check**: a
+  `NonNullAnyref`- or plain `Anyref`-typed operand is rejected ("type
+  mismatch") -- `any` sits strictly ABOVE `eq` in the real hierarchy, so
+  neither can ever be a real `eqref`. Added because `wasm-wast-parser`'s
+  own Correction 3 widening (`(ref any)`/`(ref null any)` now parse as
+  real param/result types, needed for `br_on_cast.wast`'s own function
+  signatures) would otherwise let `ref_eq.wast`'s own two `assert_invalid`
+  cases for exactly these two spellings silently flip from "correctly
+  rejected via parse failure" to "wrongly accepted" (this arm's `pop_val`
+  doesn't check anything else, matching its own pre-existing looseness
+  for every other `ValueType`). Confirmed safe against the full 257-file
+  corpus: no vendored `.wast` file anywhere calls `ref.eq` on a genuinely
+  `anyref`-typed operand expecting success (the other real `ref.eq` call
+  sites outside `ref_eq.wast` -- `table_init(64).wast`/`array_new_elem.
+  wast`/`array_init_elem.wast` -- all compare `arrayref`-typed values, a
+  different `ValueType` this check doesn't touch).
+- **Two genuinely pre-existing gaps found live by this slice's own full
+  corpus re-verification, fixed in the same pass (not this slice's own
+  new work, but newly REACHABLE by it):**
+  1. **`decode_blocktype` had no arm for the `eq`/`i31`/`struct`/`array`/
+     `any` abstract hierarchy tops (`0x6A`-`0x6E`) as single-value
+     blocktype results** -- each byte fell into the generic signed-LEB128
+     type-index fallback instead, which happily "succeeded" decoding a
+     bogus NEGATIVE index (`0x6B` StructRefAny's own payload bits
+     sign-extend to `-21`) and then correctly rejected it as
+     `TypeIndexOutOfBounds` -- so ANY module using `(block (result
+     structref) ...)` (or `anyref`/`eqref`/`i31ref`/`arrayref`) as a
+     genuine single-value blocktype was unconditionally rejected, even
+     though each byte already has a real single-byte `ValueType::
+     byte_tag()` encoding that never needed a type-section lookup at all.
+     Found live via `br_on_cast.wast`'s "Concrete Types" module (`(block
+     (result structref) (br_on_cast ...))`, nested inside another `(block
+     (result structref) ...)`), newly reachable only once `br_on_cast`
+     itself parses. `wasm-execution`'s own `block_arity`/blocktype operand
+     decoder had the identical gap -- see that crate's own CHANGELOG.
+  2. **`is_assignable` never had a direct `(StructRef(_), Anyref)` /
+     `(ArrayRef(_), Anyref)` edge** -- only their non-null
+     (`NonNullStructRef(_)`/`NonNullArrayRef(_)`, via `is_non_null_
+     subtype_of`) and abstract-hierarchy-top (`StructRefAny`/
+     `ArrayRefAny`, via `Eqref`/`Anyref`) counterparts did, and this
+     function's own documented "no transitive closure" contract means a
+     value satisfying two separate two-hop chains doesn't automatically
+     satisfy the direct one-hop check. Found live via `br_on_cast_fail.
+     wast`'s own "Abstract Types" module, whose `init` function's table
+     entries read back as `StructRef`/`ArrayRef` and flow into an
+     `anyref`-typed slot -- unreachable before this slice's own `(ref
+     null any)` parser widening let that module's functions parse at all.
+     See `wasm-types`'s own CHANGELOG for the mirrored `NonNullAnyref`
+     lattice edges this same investigation added.
+
 ## [0.2.94] - 2026-09-07 - `any.convert_extern`/`extern.convert_any` validator arm (W39 slice 3)
 
 Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 3 of 5.
