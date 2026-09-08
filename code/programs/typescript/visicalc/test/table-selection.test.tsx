@@ -1,7 +1,7 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { mosaic$revealTableCell } from "../../../../packages/rust/mosaic-emit-react/src/table_selection";
 afterEach(() => { document.body.innerHTML = ""; vi.restoreAllMocks(); });
-it.each([false, true])("reveals data columns past sticky row headers (rtl=%s)", rtl => {
+it.each([[false,false], [true,false], [false,true], [true,true]])("reveals data columns past sticky row headers (rtl=%s, spacers=%s)", (rtl, spacers) => {
   const frame = document.createElement("div");
   frame.style.overflowX = "auto";
   frame.innerHTML = '<table><tbody><tr><th scope="row">100</th><td>A</td><td>Z</td></tr></tbody></table>';
@@ -9,6 +9,12 @@ it.each([false, true])("reveals data columns past sticky row headers (rtl=%s)", 
   const table = frame.querySelector("table")!;
   table.style.direction = rtl ? "rtl" : "ltr";
   const [header, first, last] = Array.from(table.rows[0].cells);
+  if (spacers) {
+    const spacer = document.createElement("tbody");
+    spacer.dataset.mosaicSpacer = "before";
+    spacer.innerHTML = "<tr><td></td></tr>";
+    table.prepend(spacer);
+  }
   header.style.position = "sticky";
   Object.defineProperty(frame, "clientWidth", { value: 200 });
   Object.defineProperty(frame, "clientHeight", { value: 100 });

@@ -591,7 +591,34 @@ and clamps the displacement without retargeting the selected cell or committing
 pending edits. Subsequent cell clicks translate through the new viewport offset.
 Native routing is reported as interaction.table-wheel-shift-unimplemented.
 
-This is discrete row-window routing, not smooth pixel virtualization. The
-native scrollbar still describes the materialized table; a whole-workbook
-scrollbar thumb, touch dragging and broader scroll accessibility remain required
-under #14277. Do not infer their completion from wheel traversal alone.
+Wheel routing remains discrete. React also implements the physical extent
+below; native frameworks and touch/accessibility acceptance remain under #14277.
+
+## 11. Physical row-window extent (React)
+
+A forwarded onViewportShift with a body emits two React-owned, aria-hidden
+spacer sections around the semantic tbody. Measurement sets spacer row heights
+to offset * pitch and (total - offset - realized rows) * pitch. Empty spacers
+are hidden. Capacity and selected-cell reveal skip these sections. The browser
+scrollbar represents the full logical table while data rows remain bounded.
+Uniform row heights and a bounded containing scroll frame are required. Use
+the median adjacent-row interval to avoid collapsed-border edge distortion
+(#14476); subpixel noise must not resynchronize the scroll position.
+
+For this physical window, onViewportRows requests ceil(available / pitch) + 1
+realized rows: the partial trailing row and one additional row cover fractional
+scroll travel. Applications clamp this request to their logical row count.
+Capacity-only tables retain the floor-based contract from section 8.
+
+Native scroll events request relative shifts from measured physical position,
+clamped to the final realized window. Consecutive events before a render use the
+last requested offset to avoid applying the same displacement twice. Ref
+rebinding preserves fractional physical position when acknowledging a scroll
+request. External offset changes synchronize the thumb; changed row pitch
+recomputes spacer heights. Scroll anchoring is disabled on the table. Cleanup
+removes the native scroll listener, observer and pending measurement callback.
+
+Acceptance includes native scroll-position changes across the actual Rust-backed
+VisiCalc workbook, pinned headers, A100 editing, bounded realization and spacer
+exclusion from coordinate and reveal tests. This does not establish native
+framework implementation, touch-drag acceptance or complete grid accessibility.

@@ -20,7 +20,7 @@ it("edits through the generated root and real Rust lifecycle", async () => {
       input.dispatchEvent(new Event("input", { bubbles: true }));
     });
     await act(async () => { input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })); });
-    expect(container.querySelectorAll("tbody tr")[4].querySelectorAll("td")[4].textContent).toBe("174");
+    expect(container.querySelectorAll("tbody:not([data-mosaic-spacer]) tr")[4].querySelectorAll("td")[4].textContent).toBe("174");
     expect(host.update.props.formula).toBe("20");
   } finally {
     await act(async () => root.unmount());
@@ -39,7 +39,7 @@ it("keeps Z100 edits and absolute labels independent of the row-header column", 
     await act(async () => { root.render(<App load={async () => host} />); });
     expect([...container.querySelectorAll("tbody th[scope='row']")].map(cell => cell.textContent)).toEqual(["98", "99", "100"]);
     expect(container.querySelectorAll("thead th[scope='col']")).toHaveLength(26);
-    const rows = container.querySelectorAll("tbody tr");
+    const rows = container.querySelectorAll("tbody:not([data-mosaic-spacer]) tr");
     expect(rows[2].querySelectorAll("td")).toHaveLength(26);
     await act(async () => { (rows[2].querySelectorAll("td")[25].firstElementChild as HTMLElement).click(); });
     expect(host.update.props["cell-address"]).toBe("Z100");
