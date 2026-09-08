@@ -1562,13 +1562,14 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(r2),
                         BEAMOperand::x(rd),
                     ]));
-                    // Erlang integers are unbounded; Oct u8 results wrap at
+                    // Erlang integers are unbounded; Nib/Oct narrow results wrap at
                     // the operation boundary, before later calls/comparisons.
-                    if instr.type_hint == "u8" {
+                    if matches!(instr.type_hint.as_str(), "u4" | "u8") {
+                        let mask = if instr.type_hint == "u4" { 15 } else { 255 };
                         instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                             BEAMOperand::f(0), BEAMOperand::u(live),
                             BEAMOperand::u(import_and as u64),
-                            BEAMOperand::x(rd), BEAMOperand::i(255), BEAMOperand::x(rd),
+                            BEAMOperand::x(rd), BEAMOperand::i(mask), BEAMOperand::x(rd),
                         ]));
                     }
                 }
@@ -1601,13 +1602,14 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(r),
                         BEAMOperand::x(rd),
                     ]));
-                    // Erlang integers are unbounded; Oct u8 results wrap at
+                    // Erlang integers are unbounded; Nib/Oct narrow results wrap at
                     // the operation boundary, before later calls/comparisons.
-                    if instr.type_hint == "u8" {
+                    if matches!(instr.type_hint.as_str(), "u4" | "u8") {
+                        let mask = if instr.type_hint == "u4" { 15 } else { 255 };
                         instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                             BEAMOperand::f(0), BEAMOperand::u(live),
                             BEAMOperand::u(import_and as u64),
-                            BEAMOperand::x(rd), BEAMOperand::i(255), BEAMOperand::x(rd),
+                            BEAMOperand::x(rd), BEAMOperand::i(mask), BEAMOperand::x(rd),
                         ]));
                     }
                 }
@@ -1639,13 +1641,14 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(r2),
                         BEAMOperand::x(rd),
                     ]));
-                    // Erlang integers are unbounded; Oct u8 results wrap at
+                    // Erlang integers are unbounded; Nib/Oct narrow results wrap at
                     // the operation boundary, before later calls/comparisons.
-                    if instr.type_hint == "u8" {
+                    if matches!(instr.type_hint.as_str(), "u4" | "u8") {
+                        let mask = if instr.type_hint == "u4" { 15 } else { 255 };
                         instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                             BEAMOperand::f(0), BEAMOperand::u(live),
                             BEAMOperand::u(import_and as u64),
-                            BEAMOperand::x(rd), BEAMOperand::i(255), BEAMOperand::x(rd),
+                            BEAMOperand::x(rd), BEAMOperand::i(mask), BEAMOperand::x(rd),
                         ]));
                     }
                 }

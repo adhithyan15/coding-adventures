@@ -1430,3 +1430,12 @@ of1: complement was not narrowed to four bits. Extend the existing u8 result
 mask to select15 for u4 in all three arithmetic/unary/bitwise families; preserve
 u8mask255 and wider integers. Extend the op/type regression to u4. Rerun all26
 Nib programs including BCD storage, then promote only proven BEAM cells.
+
+### VM-040 Nib validation
+
+All26NibBEAM cells (rows49-74 at this revision) passed in fresh processes
+with positive sentinels and no skips. The dedicated26program corpus passed,
+and all12OctBEAM programs passed again after widening the mask selection.
+The backend suite passed93tests (18unit70integration5doc), including30op/type
+width cases. No full seven-standard-column rerun is claimed. Broader4004
+fidelity remains VM028; remaining BEAM families are reprioritized after merge.

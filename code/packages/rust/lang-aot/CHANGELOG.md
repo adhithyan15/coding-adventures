@@ -5756,3 +5756,11 @@ runner now preserves program stdout separately from the return marker, using
 the same outer-whitespace convention as the other text process runners.
 Coverage includes complement, wrapping, short circuit, globals and loops/calls.
 This does not implement Intel-8008 input, carry arithmetic or rotations.
+
+### Nib on BEAM (VM-040)
+
+All 26 existing portable Nib matrix programs now include real BEAM (208 declared
+cells across eight backends). Four-bit arithmetic, unary and bitwise results
+now use mask 15; u8 keeps 255 and wider integer lowering is unchanged. The
+executed corpus covers calls/loops, checked arithmetic, u4/u8 complement,
+globals and BCD storage. This does not establish full Intel-4004 fidelity.
