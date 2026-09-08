@@ -2965,7 +2965,14 @@ Bootstrap order:
 6. Add an OCaml capability analyzer over compiler-libs ASTs, covering process
    execution, dynamic loading, unsafe marshaling, and `Obj.magic` under the
    repository's explicit capability/exception policy after the shared
-   category/action constraint schema is complete.
+   category/action constraint schema is complete. The selected implementation
+   now includes resource-bounded all-source discovery, strict schema-v1
+   manifests, alias/open/shadow and first-class-module tracking, fail-closed
+   generated/PPX/native Dune boundaries, a real CLI, numeric per-production-file
+   coverage, and a required independent all-OCaml CI gate. Local package,
+   archive, registry, build-tool, format, lint, and security/release reviews pass;
+   hosted Linux remains responsible for native linking and the numeric 95%
+   coverage proof before this item can advance from `pr-open` to `merged`.
 7. Implement the OCaml build tool on `directed-graph` and require two-way
    build-plan interchange plus the shared conformance corpus.
 8. Promote OCaml into the implementation denominator only when Ubuntu, macOS,
