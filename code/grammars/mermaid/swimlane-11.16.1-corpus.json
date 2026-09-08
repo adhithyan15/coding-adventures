@@ -1,0 +1,14 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "fixtures": [
+    {
+      "name": "basic-handoff",
+      "source": "swimlane-beta LR\nsubgraph Customer\n  request[Request service]\n  receive[Receive update]\nend\nsubgraph Support\n  triage[Triage request]\n  answer[Send answer]\nend\nrequest --> triage --> answer --> receive"
+    },
+    {
+      "name": "shapes-labels-and-accessibility",
+      "source": "swimlane-beta TB\ntitle Approval flow\naccTitle: Accessible approval flow\naccDescr: A request crosses two teams.\nsubgraph intake [Intake team]\n  start([Start])\n  review{Ready?}\nend\nsubgraph done [Completion]\n  finish((Done))\nend\nstart --> review\nreview -->|Yes| finish"
+    }
+  ]
+}

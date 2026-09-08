@@ -3,8 +3,9 @@
 use std::collections::HashMap;
 
 use diagram_ir::{
-    LayoutedTreeViewDiagram, LayoutedTreeViewNode, LayoutedTreemapDiagram, LayoutedTreemapNode,
-    TreeViewDiagram, TreemapDiagram,
+    DiagramDirection, LayoutedSwimlaneDiagram, LayoutedSwimlaneEdge, LayoutedSwimlaneLane,
+    LayoutedSwimlaneNode, LayoutedTreeViewDiagram, LayoutedTreeViewNode, LayoutedTreemapDiagram,
+    LayoutedTreemapNode, Point, SwimlaneDiagram, TreeViewDiagram, TreemapDiagram,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -13,6 +14,133 @@ const OUTER_PADDING: f64 = 8.0;
 const NODE_GAP: f64 = 3.0;
 const PARENT_HEADER: f64 = 24.0;
 
+/// Lay out top-level Mermaid subgraphs as stable ownership lanes.
+pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
+    let title_height = if diagram.title.is_some() { 44.0 } else { 16.0 };
+    let horizontal_flow = matches!(
+        diagram.direction,
+        DiagramDirection::Lr | DiagramDirection::Rl
+    );
+    let lane_header = 38.0;
+    let lane_gap = 12.0;
+    let node_width = 132.0;
+    let node_height = 54.0;
+    let node_gap = 42.0;
+    let max_nodes = diagram
+        .lanes
+        .iter()
+        .map(|lane| lane.node_ids.len())
+        .max()
+        .unwrap_or(1)
+        .max(1);
+    let lane_cross = 150.0;
+    let lane_along = lane_header + max_nodes as f64 * (node_width + node_gap) + 28.0;
+    let (width, height) = if horizontal_flow {
+        (
+            lane_along.max(420.0),
+            title_height + diagram.lanes.len() as f64 * (lane_cross + lane_gap) + 12.0,
+        )
+    } else {
+        (
+            diagram.lanes.len() as f64 * (lane_cross + lane_gap) + 12.0,
+            title_height + lane_along.max(420.0),
+        )
+    };
+    let mut lanes = Vec::new();
+    let mut nodes = Vec::new();
+    for (lane_index, lane) in diagram.lanes.iter().enumerate() {
+        let (x, y, lane_width, lane_height) = if horizontal_flow {
+            (
+                12.0,
+                title_height + lane_index as f64 * (lane_cross + lane_gap),
+                width - 24.0,
+                lane_cross,
+            )
+        } else {
+            (
+                12.0 + lane_index as f64 * (lane_cross + lane_gap),
+                title_height,
+                lane_cross,
+                height - title_height - 12.0,
+            )
+        };
+        lanes.push(LayoutedSwimlaneLane {
+            id: lane.id.clone(),
+            label: lane.label.clone(),
+            x,
+            y,
+            width: lane_width,
+            height: lane_height,
+        });
+        let mut member_ids = lane.node_ids.clone();
+        if matches!(
+            diagram.direction,
+            DiagramDirection::Rl | DiagramDirection::Bt
+        ) {
+            member_ids.reverse();
+        }
+        for (node_index, node_id) in member_ids.iter().enumerate() {
+            let Some(node) = diagram.nodes.iter().find(|node| &node.id == node_id) else {
+                continue;
+            };
+            let (node_x, node_y) = if horizontal_flow {
+                (
+                    x + lane_header + 20.0 + node_index as f64 * (node_width + node_gap),
+                    y + (lane_cross - node_height) / 2.0,
+                )
+            } else {
+                (
+                    x + (lane_cross - node_width) / 2.0,
+                    y + lane_header + 20.0 + node_index as f64 * (node_height + node_gap),
+                )
+            };
+            nodes.push(LayoutedSwimlaneNode {
+                id: node.id.clone(),
+                label: node.label.clone(),
+                shape: node.shape.clone(),
+                x: node_x,
+                y: node_y,
+                width: node_width,
+                height: node_height,
+            });
+        }
+    }
+    let centers = nodes
+        .iter()
+        .map(|node| {
+            (
+                node.id.as_str(),
+                Point {
+                    x: node.x + node.width / 2.0,
+                    y: node.y + node.height / 2.0,
+                },
+            )
+        })
+        .collect::<HashMap<_, _>>();
+    let edges = diagram
+        .edges
+        .iter()
+        .filter_map(|edge| {
+            Some(LayoutedSwimlaneEdge {
+                from: centers.get(edge.from.as_str())?.clone(),
+                to: centers.get(edge.to.as_str())?.clone(),
+                label: edge.label.clone(),
+                kind: edge.kind,
+            })
+        })
+        .collect();
+    LayoutedSwimlaneDiagram {
+        width,
+        height,
+        direction: diagram.direction.clone(),
+        title: diagram.title.clone(),
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        lanes,
+        nodes,
+        edges,
+    }
+}
 /// Lay out a treemap using stable alternating slice-and-dice partitions.
 pub fn layout_treemap(diagram: &TreemapDiagram, canvas_width: f64) -> LayoutedTreemapDiagram {
     let width = canvas_width.max(320.0);
@@ -224,5 +352,28 @@ mod tests {
         assert!(layout.nodes[1].x > layout.nodes[0].x);
         assert!(layout.nodes[1].y > layout.nodes[0].y);
         assert_eq!(layout.nodes[1].parent_id.as_deref(), Some("root"));
+    }
+
+    #[test]
+    fn swimlane_layout_keeps_nodes_inside_ownership_bands() {
+        use diagram_ir::{DiagramShape, SwimlaneDiagram, SwimlaneLane, SwimlaneNode};
+        let diagram = SwimlaneDiagram {
+            direction: DiagramDirection::Lr, title: Some("Handoff".into()), accessibility_title: None,
+            accessibility_description: None,
+            lanes: vec![
+                SwimlaneLane { id: "buyer".into(), label: "Buyer".into(), node_ids: vec!["choose".into()] },
+                SwimlaneLane { id: "store".into(), label: "Store".into(), node_ids: vec!["ship".into()] },
+            ],
+            nodes: vec![
+                SwimlaneNode { id: "choose".into(), label: "Choose".into(), lane_id: Some("buyer".into()), shape: DiagramShape::Rect },
+                SwimlaneNode { id: "ship".into(), label: "Ship".into(), lane_id: Some("store".into()), shape: DiagramShape::RoundedRect },
+            ], edges: Vec::new(),
+        };
+        let layout = layout_swimlane(&diagram);
+        assert!(layout.lanes[1].y > layout.lanes[0].y);
+        for (node, lane) in layout.nodes.iter().zip(layout.lanes.iter()) {
+            assert!(node.x >= lane.x && node.x + node.width <= lane.x + lane.width);
+            assert!(node.y >= lane.y && node.y + node.height <= lane.y + lane.height);
+        }
     }
 }

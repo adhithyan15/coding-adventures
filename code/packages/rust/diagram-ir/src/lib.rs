@@ -1150,6 +1150,34 @@ pub struct LayoutedCynefinTransition { pub from: Point, pub to: Point, pub label
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub domains: Vec<LayoutedCynefinDomain>, pub transitions: Vec<LayoutedCynefinTransition> }
 
+// PROCESS OWNERSHIP FAMILY
+#[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneNode { pub id: String, pub label: String, pub lane_id: Option<String>, pub shape: DiagramShape }
+#[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneLane { pub id: String, pub label: String, pub node_ids: Vec<String> }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick }
+#[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneEdge { pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind }
+#[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneDiagram {
+    pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>, pub lanes: Vec<SwimlaneLane>, pub nodes: Vec<SwimlaneNode>,
+    pub edges: Vec<SwimlaneEdge>,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedSwimlaneNode { pub id: String, pub label: String, pub shape: DiagramShape, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedSwimlaneEdge { pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedSwimlaneDiagram {
+    pub width: f64, pub height: f64, pub direction: DiagramDirection, pub title: Option<String>,
+    pub accessibility_title: Option<String>, pub accessibility_description: Option<String>,
+    pub lanes: Vec<LayoutedSwimlaneLane>, pub nodes: Vec<LayoutedSwimlaneNode>, pub edges: Vec<LayoutedSwimlaneEdge>,
+}
+
 // STRUCTURAL FAMILY
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralKind {
