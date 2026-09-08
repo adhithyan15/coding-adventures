@@ -17,6 +17,20 @@ pub struct ConformanceApp {
     platform: Option<Platform>,
     protocol_version: u32,
     next_effect_id: u64,
+    /// Awaited effects this app has emitted and not yet seen completed.
+    ///
+    /// The runtime already tracks these -- `pending_effects()` -- but that is
+    /// Rust-side, and a native host drives this fixture through the C ABI and
+    /// sees only props. So a host that receives an `Await` effect and never
+    /// calls `mosaic_app_complete_effect` leaves the app waiting forever with
+    /// nothing to show for it, which is precisely the gap that let `Effect` be
+    /// serialised onto the wire and dropped on the floor by every host for as
+    /// long as it was.
+    ///
+    /// Surfacing the count as a prop is what makes that failure *reportable*:
+    /// an acceptance run asserts it returns to zero, and a host that never
+    /// completes fails visibly instead of passing quietly.
+    awaited_effects: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -46,24 +60,40 @@ impl ConformanceApp {
     fn request_effect(&mut self, notify: bool) -> AppUpdate {
         self.next_effect_id += 1;
         let mut update = self.update("requested");
+        let delivery = if notify {
+            Delivery::Notify
+        } else {
+            Delivery::Await
+        };
+        // Only `Await` is counted. A `Notify` effect is fire-and-forget by
+        // definition -- a host is never expected to answer one -- so counting
+        // it would make the prop report a failure that is not one.
+        if delivery == Delivery::Await {
+            self.awaited_effects = self.awaited_effects.saturating_add(1);
+        }
         update.effects.push(Effect {
             id: self.next_effect_id,
             kind: "conformance.counter".into(),
             payload: json!({}),
-            delivery: if notify {
-                Delivery::Notify
-            } else {
-                Delivery::Await
-            },
+            delivery,
         });
+        // Recomputed AFTER the increment: the update carrying the effect must
+        // already report it as outstanding, or a host could read a stale zero
+        // and conclude it has nothing to complete.
+        update.props = self.props("requested");
         update
     }
-    fn update(&self, status: &str) -> AppUpdate {
-        AppUpdate::new(json!({
+    fn props(&self, status: &str) -> Value {
+        json!({
             "count": self.count,
             "platform": self.platform.map(platform_name).unwrap_or("unknown"),
             "status": status,
-        }))
+            "awaitedEffects": self.awaited_effects,
+        })
+    }
+
+    fn update(&self, status: &str) -> AppUpdate {
+        AppUpdate::new(self.props(status))
     }
 }
 
@@ -110,6 +140,11 @@ impl MosaicApp for ConformanceApp {
         _id: EffectId,
         result: EffectResult,
     ) -> Result<AppUpdate, EffectCompletionError<Self::Error>> {
+        // Answered is answered, whatever the outcome: a cancellation and a
+        // failure both discharge the host's obligation, so all three arms clear
+        // it. Counting only `Ok` would leave the prop reporting an outstanding
+        // effect for a host that behaved correctly.
+        self.awaited_effects = self.awaited_effects.saturating_sub(1);
         match result {
             EffectResult::Ok(payload) => {
                 let amount = payload
@@ -367,6 +402,132 @@ mod tests {
             );
             mosaic_app_destroy(handle);
         }
+    }
+
+    /// An `Await` effect a host never completes is visible in props.
+    ///
+    /// This is the check that keeps the original gap from recurring. `Effect`
+    /// was serialised onto the wire and read by no host for as long as it
+    /// existed, and nothing anywhere said so -- the app simply waited. The
+    /// runtime does track outstanding effects, but `pending_effects()` is
+    /// Rust-side, and a native host drives this fixture through the C ABI and
+    /// sees only props.
+    ///
+    /// So the count rides in the props a host already reads. An acceptance run
+    /// asserts it returns to zero; a host that receives an effect and never
+    /// calls `mosaic_app_complete_effect` leaves it non-zero and fails
+    /// visibly, which is the whole point of the fixture.
+    #[test]
+    fn an_await_a_host_never_completes_is_reported_in_props() {
+        let mut runtime = MosaicRuntime::new(ConformanceApp::default());
+        let started = runtime
+            .start(StartContext {
+                protocol_version: EFFECT_PROTOCOL_VERSION,
+                ..context()
+            })
+            .unwrap();
+        assert_eq!(
+            started.props["awaitedEffects"], 0,
+            "a fresh app awaits nothing"
+        );
+
+        // Request an awaited effect and DO NOT complete it, which is exactly
+        // what every host did before the completion path existed.
+        let requested = request(&mut runtime, false);
+        assert_eq!(
+            requested.props["awaitedEffects"], 1,
+            "the update carrying the effect must already report it outstanding, \
+             or a host reads a stale zero and concludes it has nothing to answer"
+        );
+        assert_eq!(runtime.pending_effects().len(), 1);
+
+        // The prop stays non-zero for as long as the host ignores it. That
+        // persistence is what an acceptance assertion catches.
+        let mut increment = Event::new(
+            runtime.next_sequence().unwrap(),
+            "increment",
+            json!({"amount": 1}),
+        );
+        increment.protocol_version = EFFECT_PROTOCOL_VERSION;
+        let ignored = runtime.dispatch(increment).unwrap();
+        assert_eq!(
+            ignored.props["awaitedEffects"], 1,
+            "an ignored effect must not quietly stop being outstanding"
+        );
+
+        // Answering it clears the report.
+        let id = runtime.pending_effects()[0];
+        let completed = runtime
+            .complete_effect(id, EffectResult::Ok(json!({"amount": 1})))
+            .unwrap();
+        assert_eq!(completed.props["awaitedEffects"], 0);
+        assert!(runtime.pending_effects().is_empty());
+    }
+
+    /// A cancelled or failed effect is answered, and stops being outstanding.
+    ///
+    /// All three completion outcomes discharge the host's obligation: it was
+    /// asked for something and it came back, even to say no. Clearing only on
+    /// `Ok` would leave the count non-zero for a host that behaved correctly,
+    /// so an acceptance run asserting it returns to zero would fail whenever a
+    /// user cancelled a file dialog -- which is the single most likely thing to
+    /// happen to an `importAnki` effect.
+    ///
+    /// Written because clearing only on `Ok` passed every other test here.
+    #[test]
+    fn a_cancelled_or_failed_effect_stops_being_outstanding() {
+        use mosaic_app_runtime::{EffectFailure, EmptyOutcome};
+
+        for outcome in [
+            EffectResult::Cancelled(EmptyOutcome {}),
+            EffectResult::Failed(EffectFailure {
+                message: "the user said no".to_string(),
+            }),
+        ] {
+            let mut runtime = MosaicRuntime::new(ConformanceApp::default());
+            runtime
+                .start(StartContext {
+                    protocol_version: EFFECT_PROTOCOL_VERSION,
+                    ..context()
+                })
+                .unwrap();
+
+            let requested = request(&mut runtime, false);
+            assert_eq!(requested.props["awaitedEffects"], 1);
+            let id = requested.effects[0].id;
+
+            let settled = runtime.complete_effect(id, outcome.clone()).unwrap();
+            assert_eq!(
+                settled.props["awaitedEffects"], 0,
+                "a host that answered must not still be reported as owing one: {outcome:?}"
+            );
+            assert!(runtime.pending_effects().is_empty());
+        }
+    }
+
+    /// `Notify` is fire-and-forget and must not be reported as outstanding.
+    ///
+    /// A host is never expected to answer a `Notify`, so counting it would make
+    /// the prop report a failure that is not one -- and an acceptance run that
+    /// asserts the count returns to zero would fail every correct host.
+    #[test]
+    fn a_notify_effect_is_not_reported_as_awaited() {
+        let mut runtime = MosaicRuntime::new(ConformanceApp::default());
+        runtime
+            .start(StartContext {
+                protocol_version: EFFECT_PROTOCOL_VERSION,
+                ..context()
+            })
+            .unwrap();
+
+        let requested = request(&mut runtime, true);
+
+        assert_eq!(requested.effects.len(), 1);
+        assert_eq!(requested.effects[0].delivery, Delivery::Notify);
+        assert_eq!(
+            requested.props["awaitedEffects"], 0,
+            "a Notify effect is not something a host owes an answer to"
+        );
     }
 
     #[test]
