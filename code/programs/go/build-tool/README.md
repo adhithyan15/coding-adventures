@@ -9,13 +9,27 @@ This tool discovers packages in the monorepo by recursively walking for `BUILD` 
 ## Portable source hashing
 
 Extension and declared-source collection share the language-neutral v1 rules.
-Both modes prune the exact case-sensitive 26-component generated-directory
-registry before matching files, preserve near names such as `_Build` and
-`_build-example`, and never traverse symlink or Windows reparse-point
-components. The five exact BUILD fronts participate in both modes. OCaml adds
-`.ml`, `.mli`, and `.opam` sources plus exact `.ocamlformat`, `dune`, and
-`dune-project` metadata; declared mode retains a root `.opam` manifest when a
-glob omits it, while a nested manifest still needs an explicit match.
+The Go implementation embeds a generated, strictly decoded projection of the
+complete checked 23-language source-input registry. Production code never
+reads the neutral fixture at runtime. Its seven role families distinguish
+recursive sources and metadata, root-only exact and variable manifests, fixed
+relative inputs, path-scoped companions, and exact package resources. Both
+modes also include the five exact BUILD fronts and the universal root-only
+`required_capabilities.json` input.
+
+Unknown language keys fail before the package root is inspected. Exact package
+inputs bind to their complete canonical `code/packages/<language>/<package>` or
+`code/programs/<language>/<package>` root, so the Engram WASM resources cannot
+widen to a sibling Rust package. The exact case-sensitive 26-component
+generated-directory registry is applied before every selector while preserving
+near names such as `_Build` and `_build-example`; symlink and Windows
+reparse-point components are never traversed.
+
+Regenerate the embedded projection deterministically from the repository root:
+
+```powershell
+pwsh code/programs/go/build-tool/tools/generate-language-source-input-registry.ps1
+```
 
 Package digests use hashing v1. Included files sort by normalized
 repository-relative forward-slash UTF-8 path. Each path and its exact raw file

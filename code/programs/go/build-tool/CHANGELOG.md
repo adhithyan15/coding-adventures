@@ -47,6 +47,15 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- **Source selection now consumes the complete generated language registry.**
+  The Go hasher replaces its partial engine-local maps with a deterministic
+  embedded projection of all 23 languages and seven selector roles. Unknown
+  languages fail before filesystem inspection; root, scoped, and exact-package
+  rules retain their neutral scope; generated components are pruned before all
+  matching; and exact Engram WASM resources cannot widen to sibling packages.
+  Strict projection, digest, fixture, and generator-roundtrip tests detect both
+  missing and undeclared selectors without any runtime fixture dependency.
+
 - **Source collection and package digests now match portable hashing v1.**
   Extension and declared-source modes share the exact case-sensitive
   26-component generated-directory registry, all five BUILD fronts, OCaml
