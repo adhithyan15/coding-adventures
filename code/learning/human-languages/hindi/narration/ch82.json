@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "First, Second, Third",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:451e96ce51b72883",
+  "sourceHash": "fnv1a64:af8305d30f39f71c",
   "lessons": [
     {
       "id": "HI-C75-first",
@@ -378,16 +378,16 @@
       "id": "HI-C75-third",
       "sequence": 3180,
       "title": "तीसरा (tīsrā) — third",
-      "headword": "तीसरा",
-      "romanization": "tīsrā",
-      "gloss": "third — the third word to end in -सरा, and the last one that will",
+      "headword": "तीसरा / तीसरी",
+      "romanization": "tīsrā / tīsrī",
+      "gloss": "third / feminine third — the third word to end in -सरा, and the last one that will",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f77111c02d62678b",
+      "sourceHash": "fnv1a64:65e8c25b1a9f982f",
       "notice": null,
       "blocks": [
         {
