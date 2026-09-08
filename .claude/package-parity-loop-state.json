@@ -4966,7 +4966,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-checked 6e0a40b7a6 inventory after merged PR #10250 added Rust mosaic-app-runtime as an authority-free deterministic state-machine identity without a capability manifest. Define language-neutral fixtures and established-lane implementations for protocol-version gating, startup cardinality, exact event-sequence and revision progression, overflow rejection, transactional no-advance failures, snapshot and restore behavior, effects, accessibility announcements, and stable errors. Native and web host transport remain outside this portable core."
+      "notes": "Discovered in the collision-checked 6e0a40b7a6 inventory after merged PR #10250 added Rust mosaic-app-runtime as an authority-free deterministic state-machine identity without a capability manifest. Define language-neutral fixtures and established-lane implementations for protocol-version gating, startup cardinality, exact event-sequence and revision progression, overflow rejection, transactional no-advance failures, snapshot and restore behavior, effects, accessibility announcements, and stable errors. Native and web host transport remain outside this portable core. PR #14594 provides a real SPICE domain adapter proving versioned bounded snapshot/restore and retry without sequence consumption; retain that as consumer evidence without adding a reverse dependency."
     },
     {
       "id": "mosaic-app-capi-wrapper-native-abi-review",
@@ -8419,7 +8419,16 @@
       "depends_on": ["oauth-wire-codecs-refresh-revocation-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-checked 2516389f inventory after merged PR #13682 added the Rust-only oauth-credential-custody identity. Define language-neutral fixtures and established-lane implementations for bounded opaque account and provider keys, metadata and scope validation, zeroizing credential records, audit-before-access and durable-success-before-release ordering, one-shot access and refresh disclosure, exact-revision compare-and-swap rotation and delete, omitted-refresh retention, redacted stable errors, and injected storage/audit failures. Keep filesystem, Vault, database, network, browser, clock, entropy, provider registration, durable audit transport, and concrete credential-store authority injected or native."
+      "notes": "Discovered in the collision-checked 2516389f inventory after merged PR #13682 added the Rust-only oauth-credential-custody identity. Define language-neutral fixtures and established-lane implementations for bounded opaque account and provider keys, metadata and scope validation, zeroizing credential records, audit-before-access and durable-success-before-release ordering, one-shot access and refresh disclosure, exact-revision compare-and-swap rotation and delete, omitted-refresh retention, redacted stable errors, and injected storage/audit failures. Keep filesystem, Vault, database, network, browser, clock, entropy, provider registration, durable audit transport, and concrete credential-store authority injected or native. PR #14638 adds a distinct confidential-client shared-secret owner; this access-token and refresh-token record contract remains separate."
+    },
+    {
+      "id": "oauth-client-secret-custody-portable-conformance",
+      "title": "Fixture and port audit-first OAuth client-secret custody",
+      "status": "pending",
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14638 inventory after the Rust-only oauth-client-secret-custody identity appeared. Define neutral fixtures and applicable-lane implementations for exact provider plus opaque 32-byte reference keys, 1..65,536-byte non-control secrets, wipe-on-drop and one-closure disclosure semantics, create/load/CAS-rotate/conditional-delete, opaque revisions, attempt-before-effect and durable-result-before-return or disclosure audit ordering, fail-closed audit/store failures, closed redacted errors and debug output, concurrency and poison behavior, and explicit resource bounds. Keep filesystem, Vault, database, encryption and key custody, durable audit transport, clocks, entropy, and network behind injected hosts. Managed runtimes may require a narrow reviewed zeroization exception."
     },
     {
       "id": "oauth-credential-sealed-store-portable-conformance",
@@ -8444,11 +8453,11 @@
       "id": "oauth-credential-broker-vault-custody-and-scope",
       "title": "Review OAuth credential-broker, vault custody, and authorized scope",
       "status": "pending",
-      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-host-authority-review", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-credential-custody-portable-conformance", "oauth-credential-sealed-store-native-authority-review"],
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-host-authority-review", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-credential-custody-portable-conformance", "oauth-client-secret-custody-portable-conformance", "oauth-credential-sealed-store-native-authority-review"],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Review client-secret, refresh-token, and access-token custody; vault references and leases; durable storage; rotation and revocation execution; authorized scope policy; redaction; broker grants; and operator approval. Scope-string syntax is never authorization. This credential and host-security surface is excluded from autonomous parity selection."
+      "notes": "Review client-secret, refresh-token, and access-token custody; vault references and leases; durable storage; rotation and revocation execution; authorized scope policy; redaction; broker grants; and operator approval. Scope-string syntax is never authorization. This credential and host-security surface is excluded from autonomous parity selection. PR #14638 supplies the storage-agnostic portable client-secret primitive; concrete Vault/database/encryption/audit durability, authorization policy, client_secret_basic and client_secret_post request binding, and private-key-JWT non-exporting signing remain here or in later host/auth owners."
     },
     {
       "id": "text-flow-portable-conformance",
@@ -9246,7 +9255,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#14624 semantic audit of existing Rust Mosaic compiler and emitter identities. Define bounded language-neutral fixtures for declared same-package export qualification and inlining, unknown PascalCase refusal, compatible Input single-line and multiline lowering, value, placeholder, max-length, read-only, accessibility, and event behavior, and consistent HTML, WebComponent, and React artifacts. Keep browsers, files, processes, network, clocks, native rendering, and package installation outside this deterministic composition contract. PR #14640 adds 41 story fixtures covering all one-of axes for Badge, Alert, Button, Spinner, Input, and Toast and exposes missing disabled Button treatment; retain those stories as browser-emitter and disabled-semantics evidence while Go gallery/process/filesystem mechanics remain tooling scope."
+      "notes": "Discovered by the post-#14624 semantic audit of existing Rust Mosaic compiler and emitter identities. Define bounded language-neutral fixtures for declared same-package export qualification and inlining, unknown PascalCase refusal, compatible Input single-line and multiline lowering, value, placeholder, max-length, read-only, accessibility, and event behavior, and consistent HTML, WebComponent, and React artifacts. Keep browsers, files, processes, network, clocks, native rendering, and package installation outside this deterministic composition contract. PR #14640 adds 41 story fixtures covering all one-of axes for Badge, Alert, Button, Spinner, Input, and Toast and exposes missing disabled Button treatment; retain those stories as browser-emitter and disabled-semantics evidence while Go gallery/process/filesystem mechanics remain tooling scope. PR #14637 adds manifest-declared token-palette selection, backend-specific precedence, unresolved-token behavior, same-package composition, and consistent HTML, WebComponent, and React artifact evidence; manifest-relative file loading and CLI subprocess/temp-directory work remain host tooling. PR #14594 proves legacy portable Input(multiline: true) lowers to textarea with controlled value, placeholder, readonly/max-length, and neutral onChange/onCommit/onCancel hydration markers; HostInput intentionally remains single-line."
     },
     {
       "id": "browser-form-submission-portable-core-classification",
@@ -9302,6 +9311,25 @@
       "branch": null,
       "pr_number": null,
       "notes": "After the neutral Cynefin contract is frozen, implement the agreed subset in every applicable established Mermaid lane or record narrow reviewed exceptions. This semantic expansion uses existing Mermaid and diagram identities rather than manufacturing a new package identity."
+    },
+    {
+      "id": "spice-mosaic-workbench-portable-conformance",
+      "title": "Define portable SPICE Mosaic workbench conformance",
+      "status": "pending",
+      "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-browser-package-composition-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14594 inventory after the established Rust spice-mosaic-app and authored Mosaic mosaic-pkg-spice-workbench identities appeared. Fixture the authority-free state core and authored UI together: editable deck, complete .op/.dc/.ac/.tran/.tf analysis rows, inspect/run/select transitions, stable props/diagnostics/raw-result projection, rejected-event no-mutation and retry, versioned bounded snapshot/restore, dark-mode and startup behavior, and exact MIL slot/event correspondence. Delegate parser and engine semantics to canonical spice-netlist-parser. Require the currently absent truthful empty capability profile for the pure Rust core. Raw JSON output and documented later product features remain reviewed first-slice exclusions."
+    },
+    {
+      "id": "spice-mosaic-app-native-abi-review",
+      "title": "Review SPICE Mosaic app native ABI and WASM hosts",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["spice-mosaic-workbench-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-wasm-rust-and-javascript-host-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "After the portable workbench contract is explicit, review the cdylib C ABI and WASM exports, handles and buffers, panic containment, target builds, generated hosts, and wrapper applicability without manufacturing fifteen copies of the ABI shell. Native toolchains, generated hosts, and ABI resource lifetimes remain host-specific authority."
     },
     {
       "id": "armv7-gatelevel-singleton-classification",

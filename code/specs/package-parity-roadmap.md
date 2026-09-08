@@ -13489,11 +13489,11 @@ disjoint from all of these inventory and readiness findings.
 ### Go source-registry latest-main readiness packet
 
 Parallel audit continued through exact `origin/main`
-`8e5aa0293b2a6a2de46f6de6601a0cc0e6e549a4` while the Go implementation was
-validated. The collision-clean inventory now has 1,428 established-lane
-identities, 4,649 implementation slots, 1,467 all-reported identities, and
-1,201 Rust packages. The breadth bands are 175/265, 123/934, 177/2,230, and
-953/13,342; canonical collisions and unknown language buckets remain zero.
+`7382456025bb4726c28e777f894381e1c52de3ed` while the Go implementation was
+validated. The collision-clean inventory now has 1,430 established-lane
+identities, 4,651 implementation slots, 1,470 all-reported identities, and
+1,203 Rust packages. The breadth bands are 175/265, 123/934, 177/2,230, and
+955/13,370; canonical collisions and unknown language buckets remain zero.
 
 The refresh adds two Rust-only identities. `browser-form-submission` is owned
 by `browser-form-submission-portable-core-classification` behind the existing
@@ -13513,8 +13513,16 @@ network-capability, local HTTP, form-control, and Mosaic composition owners now
 record the corresponding PR #14630 and #14640 evidence and residual native or
 authority boundaries.
 
-The state therefore has 785 unique owners: 212 merged, 572 pending, and exactly
-one in progress, with 1,325 dependency edges, no duplicate ID, missing
+Later merges add two more dependency-shaped surfaces. The Rust-only
+`oauth-client-secret-custody` identity has a portable audit-first custody owner
+and now gates the broader selection-blocked credential-broker review. The
+Rust `spice-mosaic-app` identity and authored special-lane
+`mosaic-pkg-spice-workbench` identity share a portable workbench owner behind
+Mosaic runtime and browser-composition contracts; its C ABI and WASM shells
+remain in a dependent selection-blocked native review.
+
+The state therefore has 788 unique owners: 212 merged, 575 pending, and exactly
+one in progress, with 1,332 dependency edges, no duplicate ID, missing
 dependency, cycle, or merged-to-unfinished edge. The next three ready new
 owners by cross-lane leverage are the six-lane RV32I classifier, neutral
 Mermaid Cynefin contract, and eight-backend Oct contract. The UI54 owner waits
