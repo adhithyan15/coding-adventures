@@ -71,11 +71,11 @@ One lesson back, and the character is under your pen.
 [pause 8 seconds for the answer]
 
 Grammar Lens: put 呢 after a noun and it asks the last question again.
-呢 ne — toneless, placed after a noun or a pronoun. It repeats whatever question was just asked, about this one instead.
+呢 ne — toneless, placed after a noun or a pronoun. It repeats whatever question was on the table, about this one instead.
 — 你是学生吗 — Are you a student? — 我是学生你呢 nǐ ne — I'm a student. And you?
 你呢 is two syllables and a complete turn. Nothing has to be repeated: 呢 (ne) carries the whole of the previous question with it.
 我是中国人你呢 我有一个名字你呢 我看了书你呢.
-Every one of those means something different, and 呢 is the same in all of them, because the question it asks is whichever one was just on the table.
+Every one of those means something different, and 呢 is the same in all of them, because the question it asks is whichever one was already on the table.
 
 What you've built — the second particle, and the pair.
 Keep 吗 and 呢 (ne) apart by what comes before them:
@@ -165,7 +165,7 @@ One lesson back, and this word does two jobs.
 Sounds you'll need.
 对 duì is fourth tone — the sharp fall, the same shape as 四, 六 and 个.
 对 — Right. Correct. 不对 bú duì — Wrong. Not right. 对不对 duì bu duì — Right or not?
-That last one is a shape you already own. The asking chapter taught 好不好, the verb-not-verb question, and 对不对 is the same pattern on a new word — no new grammar at all, just one new syllable.
+That last one is a shape you already own. The asking chapter taught 好不好, the verb-not-verb question, and 对不对 is the same pattern on a new word — no new grammar at all, one new syllable.
 And the 不 in front of 对 rises: bú duì, not bù duì. That is the 不 sandhi the 是 chapter taught on 不是, working exactly as it did there, because 对 is fourth tone too.
 
 Why it's said this way: agreeing out loud.

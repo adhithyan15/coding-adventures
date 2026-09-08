@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 24,
-  "sourceHash": "fnv1a64:e78f7364f17947db",
+  "sourceHash": "fnv1a64:26e097335b545951",
   "lessonIds": [
     "ZH-W24-you",
     "ZH-C24-you",
@@ -14,6 +14,6 @@
   "text": "chinese/narration/ch24.txt",
   "json": "chinese/narration/ch24.json",
   "textHash": "fnv1a64:49505a1d1e917b69",
-  "jsonHash": "fnv1a64:d0bce5b1b08840e1",
+  "jsonHash": "fnv1a64:aacbfe2bae0f2734",
   "findings": []
 }

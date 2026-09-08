@@ -12,7 +12,7 @@ concept_tag: VERB-LIKE-LOVE
 prerequisites: [ZH-W28-huan, ZH-W27-he, ZH-W24-ge, ZH-R18-looking-three-r1, ZH-W08-ming]
 sounds: [tone-3, tone-neutral]
 roots: []
-etymology_hook: "Spanish inverts gustar and Italian inverts piacere; Mandarin does not invert anything, and the liker is simply the subject."
+etymology_hook: "Spanish inverts gustar and Italian inverts piacere; Mandarin inverts nothing at all, and the liker is the subject."
 duration:
   max_seconds: 230
 requires:

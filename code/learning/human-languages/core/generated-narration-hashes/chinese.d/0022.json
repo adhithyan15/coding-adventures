@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 22,
-  "sourceHash": "fnv1a64:4867fffdd2a98130",
+  "sourceHash": "fnv1a64:596223e2ea49886a",
   "lessonIds": [
     "ZH-C22-bubian",
     "ZH-C22-buyizhi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "chinese/narration/ch22.txt",
   "json": "chinese/narration/ch22.json",
-  "textHash": "fnv1a64:5429cdd19efe11a9",
-  "jsonHash": "fnv1a64:f77a0576e7047c87",
+  "textHash": "fnv1a64:32c48318a11f4bb9",
+  "jsonHash": "fnv1a64:2c13429847274f64",
   "findings": []
 }

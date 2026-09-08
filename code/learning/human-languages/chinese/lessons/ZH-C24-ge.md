@@ -12,7 +12,7 @@ concept_tag: ZH-MEASURE-GE
 prerequisites: [ZH-W24-ge, ZH-C23-huati, ZH-W20-ba, ZH-C20-ba, ZH-W17-guo-observe, ZH-C13-hear-daxuesheng]
 sounds: [tone-4]
 roots: []
-etymology_hook: "san ren is not how you say three people; san ge ren is. This is one of the two or three things that most obviously mark a beginner's Mandarin as wrong."
+etymology_hook: "san ren is not how you say three people; san ge ren is. It is one of the two or three things that mark a beginner's Mandarin as wrong before anything else does."
 duration:
   max_seconds: 230
 requires:

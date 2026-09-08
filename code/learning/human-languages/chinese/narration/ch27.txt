@@ -172,7 +172,7 @@ Grammar Lens: it joins nouns, and only nouns.
 和 (hé) joins two nouns. It does NOT join two sentences.
 This is the part an English or Spanish speaker gets wrong on the first day, because in their language one word does both:
 Right: 我和你 — you and I (two nouns) Wrong: 我看书和你看书 — not Mandarin at all.
-English says I read and you read. Spanish says yo leo y tú lees. Mandarin will not use 和 (hé) there at all. To join two statements it simply puts them next to each other, with a comma and no joining word:
+English says I read and you read. Spanish says yo leo y tú lees. Mandarin will not use 和 (hé) there at all. To join two statements it puts them next to each other, with a comma and no joining word:
 我看书 — 你看书 — I read, and you read.
 Mandarin writes a comma at that seam; this book prints a dash, because it has taught no punctuation. What matters is that there is no joining word in it at all. That is not a shortcut or a casual register — it is how Mandarin does it, and the words that DO join clauses are different words for different relations, because, but, or, none of which is 和 (hé) and none of which this book has yet taught.
 So 和 (hé) is the first joining word in this track, and the first thing it teaches is where it may not go.

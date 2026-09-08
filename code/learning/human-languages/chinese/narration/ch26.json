@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Ne and Dui",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6db38a8d7b2d45b3",
+  "sourceHash": "fnv1a64:6581976bdaf75c38",
   "lessons": [
     {
       "id": "ZH-W26-ne",
@@ -225,7 +225,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4317b609c45dd85d",
+      "sourceHash": "fnv1a64:397041f319545237",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -313,7 +313,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "呢 ne — toneless, placed after a noun or a pronoun. It repeats whatever question was just asked, about this one instead."
+              "text": "呢 ne — toneless, placed after a noun or a pronoun. It repeats whatever question was on the table, about this one instead."
             },
             {
               "kind": "speech",
@@ -329,7 +329,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every one of those means something different, and 呢 is the same in all of them, because the question it asks is whichever one was just on the table."
+              "text": "Every one of those means something different, and 呢 is the same in all of them, because the question it asks is whichever one was already on the table."
             }
           ]
         },
@@ -630,7 +630,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52cec006b6e40ec7",
+      "sourceHash": "fnv1a64:47e6f8a330cdccf7",
       "notice": null,
       "blocks": [
         {
@@ -719,7 +719,7 @@
             },
             {
               "kind": "speech",
-              "text": "That last one is a shape you already own. The asking chapter taught 好不好, the verb-not-verb question, and 对不对 is the same pattern on a new word — no new grammar at all, just one new syllable."
+              "text": "That last one is a shape you already own. The asking chapter taught 好不好, the verb-not-verb question, and 对不对 is the same pattern on a new word — no new grammar at all, one new syllable."
             },
             {
               "kind": "speech",

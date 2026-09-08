@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Xihuan — What You Like",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e5ec0b59a26fc448",
+  "sourceHash": "fnv1a64:0fb3ab82a7b82534",
   "lessons": [
     {
       "id": "ZH-W28-xi",
@@ -411,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8684abf0670d81b",
+      "sourceHash": "fnv1a64:7f2a16ed5bab6c85",
       "notice": null,
       "blocks": [
         {

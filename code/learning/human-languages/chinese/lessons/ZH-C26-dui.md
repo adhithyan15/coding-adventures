@@ -57,7 +57,7 @@ reviews_of: [ZH-W26-dui, ZH-C25-ti, ZH-C22-zhongguoren, ZH-C19-nihaoma, ZH-C18-h
 
 That last one is a shape you already own. The asking chapter taught **好不好**,
 the verb-not-verb question, and **对不对** is the same pattern on a new word — no new
-grammar at all, just one new syllable.
+grammar at all, one new syllable.
 
 And the 不 in front of 对 rises: *bú duì*, not *bù duì*. That is the 不 sandhi the
 是 chapter taught on 不是, working exactly as it did there, because 对 is fourth

@@ -169,18 +169,26 @@ describe("stroke ownership migration baseline", () => {
       // needed. Keys 359 -> 361, japanese 15 -> 17, the ordered key hash and the
       // non-Tamil data hash. Tamil is untouched again, so its count and both
       // shared-identity values are unchanged.
+      //
+      // Measured a third time for the Mandarin grammar tranche (chapters 22-28),
+      // which adds exactly ten glyphs: 的, 有, 个, 了, 呢, 对, 岁, 和, 喜 and 欢.
+      // Keys 361 -> 371, chinese 50 -> 60, the ordered key hash and the
+      // non-Tamil data hash. Tamil is untouched for the third time, so its count
+      // and both shared-identity values do not move — which is the property this
+      // assertion exists to prove, since a Chinese record sharing an object with
+      // a Tamil one would show up here and nowhere else.
     }).toEqual({
-      keys: 361,
+      keys: 371,
       keyHash:
-        "b466e5c4c8208f0e90d75827107fcfd932aefc87e831f00adfb5705d8914a4dd",
+        "c13f9ff47f07a65509c6c6c676a26bdc2b282c613868c849419b8649e92685df",
       nonTamilDataHash:
-        "541f8d23a76a6e1f352608d22d86d20432eefa8174632f8ae91807b81795e083",
+        "7ed03564998e2c8d1cc70bd115fa36f234f4c49037c73d1c4a199a7146c6beee",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
       counts: {
         arabic: 32,
-        chinese: 50,
+        chinese: 60,
         cyrillic: 33,
         devanagari: 44,
         gujarati: 44,

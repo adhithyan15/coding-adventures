@@ -171,12 +171,16 @@ describe("handwriting ductus", () => {
   it("marks Chinese complete with every current-corpus row source-verified", () => {
     const chinese = SCRIPTS.find((script) => script.script === "chinese")!;
     expect(chinese.complete).toBe(true);
-    // 44 -> 50: Chapters 20–21 add 六, 七, 八, 九, 十 and 百. `complete`
-    // means the inventory covers the current lesson corpus, so the source-
-    // verified inventory and authored ductus must grow together.
-    expect(chinese.letters).toHaveLength(50);
+    // 44 -> 50: Chapters 20–21 add 六, 七, 八, 九, 十 and 百.
+    // 50 -> 60: chapters 22–28 add 的, 有, 个, 了, 呢, 对, 岁, 和, 喜 and 欢.
+    // `complete` means the inventory covers the current lesson corpus, so the
+    // source-verified inventory and the authored ductus must grow together —
+    // which is exactly what the count below and the registry length in
+    // stroke-ownership.test.ts hold each other to. A glyph may not claim a
+    // sourced stroke order that nothing can render.
+    expect(chinese.letters).toHaveLength(60);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      50,
+      60,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),

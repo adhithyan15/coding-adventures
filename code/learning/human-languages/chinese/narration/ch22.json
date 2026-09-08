@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "The Grammar That Is Not There",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4867fffdd2a98130",
+  "sourceHash": "fnv1a64:596223e2ea49886a",
   "lessons": [
     {
       "id": "ZH-C22-bubian",
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d44705d5af7f3cc",
+      "sourceHash": "fnv1a64:538b403b89aa0ca4",
       "notice": null,
       "blocks": [
         {
@@ -465,7 +465,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the trap for an English or Spanish speaker, and it runs both ways. Arriving, they hunt for the missing the and try to supply it from their own language. Leaving, they drop English articles: I read book. Neither is a vocabulary problem. Mandarin simply does not mark the distinction here, and 书 (shū) on its own is complete."
+              "text": "This is the trap for an English or Spanish speaker, and it runs both ways. Arriving, they hunt for the missing the and try to supply it from their own language. Leaving, they drop English articles: I read book. Neither is a vocabulary problem. Mandarin does not mark the distinction here at all, and 书 (shū) on its own is complete."
             }
           ]
         },

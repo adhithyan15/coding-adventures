@@ -69,8 +69,8 @@ because in their language one word does both:
 > **Wrong:** *我看书和你看书* — not Mandarin at all
 
 English says *I read and you read*. Spanish says *yo leo y tú lees*. Mandarin
-will not use 和 there at all. To join two statements it simply **puts them next
-to each other**, with a comma and no joining word:
+will not use 和 there at all. To join two statements it **puts them next to each
+other**, with a comma and no joining word:
 
 > **我看书 — 你看书** — I read, and you read.
 

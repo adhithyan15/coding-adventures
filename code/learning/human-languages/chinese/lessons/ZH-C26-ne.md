@@ -50,7 +50,7 @@ reviews_of: [ZH-W26-ne, ZH-C25-le-dongci, ZH-C22-buyizhi, ZH-C19-shima, ZH-R17-w
 <!-- hl-knowledge: introduces=[ZH-LEX-NE-01]; assesses=[] -->
 
 > **呢** *ne* — toneless, placed after a noun or a pronoun. It repeats whatever
-> question was just asked, about this one instead.
+> question was on the table, about this one instead.
 
 > — **你是学生吗** — Are you a student?
 > — **我是学生你呢** *nǐ ne* — I'm a student. **And you?**
@@ -63,7 +63,7 @@ carries the whole of the previous question with it.
 > **我看了书你呢**
 
 Every one of those means something different, and 呢 is the same in all of them,
-because the question it asks is whichever one was just on the table.
+because the question it asks is whichever one was already on the table.
 
 ## What you've built — the second particle, and the pair
 <!-- hl-knowledge: introduces=[ZH-GRAMMAR-NE-FOLLOWUP-01]; assesses=[] -->

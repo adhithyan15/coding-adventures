@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Age, and And",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:96a1e76effdb0a73",
+  "sourceHash": "fnv1a64:a43cf99e33442a2e",
   "lessons": [
     {
       "id": "ZH-W27-sui",
@@ -637,7 +637,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c64e0752683ded58",
+      "sourceHash": "fnv1a64:54c28cf10ca623c6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -747,7 +747,7 @@
             },
             {
               "kind": "speech",
-              "text": "English says I read and you read. Spanish says yo leo y tú lees. Mandarin will not use 和 (hé) there at all. To join two statements it simply puts them next to each other, with a comma and no joining word:"
+              "text": "English says I read and you read. Spanish says yo leo y tú lees. Mandarin will not use 和 (hé) there at all. To join two statements it puts them next to each other, with a comma and no joining word:"
             },
             {
               "kind": "speech",

@@ -4579,4 +4579,1023 @@ export const entries: DuctusEntry[] = [
       source: chineseCharacterSource("百"),
     },
   ],
+  // ---------------------------------------------------------------------
+  // Chapters 22-28. Ten characters whose prose stroke claims are sourced from
+  // the same pinned Hanzi Writer Data snapshot the fifty above cite, so a
+  // record must exist for each: a glyph may not claim a verified stroke order
+  // that nothing can render.
+  //
+  // ORDER AND DIRECTION are the source's. GEOMETRY is the vendored Noto Sans
+  // SC outline's own: the source is a brush-styled face whose centre-lines do
+  // not agree with an upright sans, so what transfers is which REGION of the
+  // character each stroke owns. Each source stroke outline was registered onto
+  // the font, the font's own ink assigned to the stroke whose region claims it,
+  // and the medial line read out in the order the source median runs. Twelve
+  // strokes across six characters, where two components' outlines overlap after
+  // registration, were instead read by hand off row and column scans of the
+  // font's outline; those coordinates are measured, not transformed.
+  //
+  // Every path was checked against the glyph it draws: fractionOnInk 0.97 or
+  // better on every stroke (eight of the ten sit at 1.0000), under 2% of the
+  // letter's ink further than 100 units from any pen path, and no gap inside a
+  // stroke, which is what makes a segment boundary a turn rather than a lift.
+  // ---------------------------------------------------------------------
+  // 的 is 白 over a ladle: five strokes build the box exactly as 百's was — left
+  // side, joined top and right, inner bar, closing floor — and 勺's three
+  // finish with the dot placed LAST, inside the enclosure it just closed.
+  [
+    "chinese:的",
+    {
+      script: "chinese",
+      glyph: "的",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw 白's short piě at the top, falling to the left",
+              path: [
+                { x: 273, y: 830 },
+                { x: 238, y: 692 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 白's left vertical shù stroke",
+              path: [
+                { x: 112, y: 530 },
+                { x: 132, y: -43 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 白's héngzhé across the top of the box",
+              path: [
+                { x: 120, y: 640 },
+                { x: 408, y: 640 },
+              ],
+            },
+            {
+              label: "turn the corner without lifting and descend the right side",
+              path: [
+                { x: 408, y: 640 },
+                { x: 408, y: 64 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 白's inner horizontal héng stroke",
+              path: [
+                { x: 151, y: 365 },
+                { x: 267, y: 369 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then close 白 with its bottom horizontal héng stroke",
+              path: [
+                { x: 119, y: 49 },
+                { x: 255, y: 61 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 勺's piě from the top, falling to the left",
+              path: [
+                { x: 628, y: 830 },
+                { x: 505, y: 470 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 勺's héngzhégōu across the top",
+              path: [
+                { x: 570, y: 640 },
+                { x: 880, y: 640 },
+              ],
+            },
+            {
+              label: "turn the corner without lifting and descend the right side",
+              path: [
+                { x: 880, y: 640 },
+                { x: 880, y: 30 },
+              ],
+            },
+            {
+              label: "hook left at the base, still without lifting",
+              path: [
+                { x: 880, y: 30 },
+                { x: 660, y: -30 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then place the short diǎn dot inside 勺",
+              path: [
+                { x: 586, y: 434 },
+                { x: 737, y: 218 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: chineseCharacterSource("的"),
+    },
+  ],
+  // 有 crosses a horizontal and a long left-falling stroke at the top,
+  // horizontal first as 大 and 六 already showed, then hangs 月 beneath it:
+  // walls before the two inner bars.
+  [
+    "chinese:有",
+    {
+      script: "chinese",
+      glyph: "有",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the top horizontal héng stroke from left to right",
+              path: [
+                { x: 72, y: 669 },
+                { x: 928, y: 675 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then draw the long piě from the top centre, falling to the lower left",
+              path: [
+                { x: 400, y: 833 },
+                { x: 432, y: 821 },
+                { x: 388, y: 633 },
+                { x: 268, y: 429 },
+                { x: 80, y: 285 },
+                { x: 44, y: 301 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then descend 月's left side",
+              path: [
+                { x: 300, y: 520 },
+                { x: 288, y: -50 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 月's héngzhégōu across the top",
+              path: [
+                { x: 436, y: 487 },
+                { x: 676, y: 491 },
+              ],
+            },
+            {
+              label: "turn the corner without lifting and descend the right side",
+              path: [
+                { x: 676, y: 491 },
+                { x: 768, y: 489 },
+                { x: 780, y: 441 },
+                { x: 728, y: 321 },
+                { x: 784, y: 245 },
+                { x: 736, y: 161 },
+                { x: 788, y: 25 },
+              ],
+            },
+            {
+              label: "hook left at the base, still without lifting",
+              path: [
+                { x: 788, y: 25 },
+                { x: 684, y: -43 },
+                { x: 604, y: -19 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 月's upper inner horizontal héng stroke",
+              path: [
+                { x: 388, y: 316 },
+                { x: 632, y: 321 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 月's lower inner horizontal héng stroke",
+              path: [
+                { x: 372, y: 149 },
+                { x: 640, y: 152 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: chineseCharacterSource("有"),
+    },
+  ],
+  // 个 is 人 with a vertical hung under the junction. The first two strokes are
+  // the same pair, from the same peak, in the same order as the very first
+  // character this track taught.
+  [
+    "chinese:个",
+    {
+      script: "chinese",
+      glyph: "个",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the piě from the top centre, falling to the lower left",
+              path: [
+                { x: 564, y: 804 },
+                { x: 89, y: 395 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then draw the nà from the same peak, falling to the lower right",
+              path: [
+                { x: 493, y: 743 },
+                { x: 921, y: 401 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then draw the vertical shù stroke straight down from under the peak",
+              path: [
+                { x: 499, y: 533 },
+                { x: 499, y: -71 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: chineseCharacterSource("个"),
+    },
+  ],
+  // 了 is two strokes and one lift: a flat start that turns and falls away,
+  // then a vertical that flicks left at its foot. Only 一 and 二 use fewer.
+  [
+    "chinese:了",
+    {
+      script: "chinese",
+      glyph: "了",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the short flat héng at the upper left",
+              path: [
+                { x: 110, y: 718 },
+                { x: 800, y: 718 },
+              ],
+            },
+            {
+              label: "let it fall away to the right without lifting",
+              path: [
+                { x: 800, y: 718 },
+                { x: 503, y: 445 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then descend the shùgōu from under the turn",
+              path: [
+                { x: 502, y: 496 },
+                { x: 505, y: -32 },
+              ],
+            },
+            {
+              label: "flick left at the foot, still without lifting",
+              path: [
+                { x: 505, y: -32 },
+                { x: 273, y: -20 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: chineseCharacterSource("了"),
+    },
+  ],
+  // 呢 sets 口 small and high in the upper-left third, exactly where 吗 puts it,
+  // and then draws 尸 and the 匕 tucked inside it.
+  [
+    "chinese:呢",
+    {
+      script: "chinese",
+      glyph: "呢",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw 口's left vertical shù stroke from top to bottom",
+              path: [
+                { x: 90, y: 627 },
+                { x: 134, y: 100 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 口's héngzhé across the top",
+              path: [
+                { x: 107, y: 677 },
+                { x: 271, y: 709 },
+              ],
+            },
+            {
+              label: "turn the corner without lifting and descend the right side",
+              path: [
+                { x: 271, y: 709 },
+                { x: 284, y: 415 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then close 口 with a horizontal héng from left to right",
+              path: [
+                { x: 96, y: 220 },
+                { x: 288, y: 220 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then draw 尸's héngzhé across the top of the right half",
+              path: [
+                { x: 447, y: 745 },
+                { x: 835, y: 737 },
+                { x: 875, y: 633 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 尸's horizontal héng beneath it",
+              path: [
+                { x: 418, y: 519 },
+                { x: 906, y: 574 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then draw 尸's long piě, falling from the top to the lower left",
+              path: [
+                { x: 472, y: 779 },
+                { x: 424, y: 190 },
+                { x: 320, y: -43 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 匕's short piě, falling to the left",
+              path: [
+                { x: 860, y: 355 },
+                { x: 662, y: 249 },
+                { x: 600, y: 258 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 匕's shùwāngōu down and along the base",
+              path: [
+                { x: 595, y: 425 },
+                { x: 595, y: 13 },
+                { x: 659, y: -35 },
+              ],
+            },
+            {
+              label: "finish to the right without lifting",
+              path: [
+                { x: 659, y: -35 },
+                { x: 863, y: -31 },
+                { x: 927, y: 41 },
+                { x: 895, y: 129 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: chineseCharacterSource("呢"),
+    },
+  ],
+  // 对 draws 又 as a turning left-falling stroke crossed by a right-falling
+  // one, then 寸 as a horizontal, a long hooked vertical, and a dot placed
+  // last.
+  [
+    "chinese:对",
+    {
+      script: "chinese",
+      glyph: "对",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw 又's short flat start",
+              path: [
+                { x: 81, y: 670 },
+                { x: 449, y: 674 },
+              ],
+            },
+            {
+              label: "turn without lifting and fall to the lower left",
+              path: [
+                { x: 449, y: 674 },
+                { x: 353, y: 357 },
+                { x: 289, y: 301 },
+                { x: 229, y: 109 },
+                { x: 125, y: -3 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then draw 又's nà, crossing it and falling to the lower right",
+              path: [
+                { x: 130, y: 477 },
+                { x: 464, y: 86 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 寸's horizontal héng across the right half",
+              path: [
+                { x: 493, y: 562 },
+                { x: 949, y: 569 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 寸's long shùgōu down through it",
+              path: [
+                { x: 800, y: 829 },
+                { x: 802, y: 5 },
+              ],
+            },
+            {
+              label: "hook left at the foot without lifting",
+              path: [
+                { x: 802, y: 5 },
+                { x: 785, y: -51 },
+                { x: 637, y: -27 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then place 寸's short diǎn dot to the left of the hook",
+              path: [
+                { x: 541, y: 404 },
+                { x: 645, y: 196 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: chineseCharacterSource("对"),
+    },
+  ],
+  // 岁 is the one place in this inventory where centre comes before the sides:
+  // 山's middle vertical is written first, then the joined left-and-base, then
+  // the right vertical, and 夕 follows beneath.
+  [
+    "chinese:岁",
+    {
+      script: "chinese",
+      glyph: "岁",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw 山's central vertical shù stroke",
+              path: [
+                { x: 502, y: 835 },
+                { x: 498, y: 567 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then descend 山's left side",
+              path: [
+                { x: 169, y: 739 },
+                { x: 181, y: 575 },
+                { x: 249, y: 583 },
+              ],
+            },
+            {
+              label: "turn without lifting and run along the base to the right",
+              path: [
+                { x: 249, y: 583 },
+                { x: 741, y: 594 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 山's right vertical shù stroke",
+              path: [
+                { x: 833, y: 767 },
+                { x: 841, y: 647 },
+                { x: 793, y: 579 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 夕's short piě, falling to the lower left",
+              path: [
+                { x: 401, y: 583 },
+                { x: 441, y: 551 },
+                { x: 341, y: 419 },
+                { x: 121, y: 283 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 夕's héngzhégōu, turning down",
+              path: [
+                { x: 320, y: 415 },
+                { x: 810, y: 415 },
+              ],
+            },
+            {
+              label: "fall to the lower left with a hook, still without lifting",
+              path: [
+                { x: 810, y: 415 },
+                { x: 679, y: 220 },
+                { x: 560, y: 120 },
+                { x: 240, y: -25 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then place 夕's diǎn dot across it",
+              path: [
+                { x: 337, y: 271 },
+                { x: 469, y: 159 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: chineseCharacterSource("岁"),
+    },
+  ],
+  // 和 completes 禾 before 口 begins, and 口 is built in the same three movements
+  // the standalone character uses. The sounding half is 禾 itself.
+  [
+    "chinese:和",
+    {
+      script: "chinese",
+      glyph: "和",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw 禾's short piě at the very top, falling to the left",
+              path: [
+                { x: 450, y: 806 },
+                { x: 96, y: 730 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 禾's horizontal héng stroke",
+              path: [
+                { x: 85, y: 508 },
+                { x: 478, y: 508 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 禾's long central vertical shù stroke",
+              path: [
+                { x: 280, y: 774 },
+                { x: 289, y: -70 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 禾's piě, falling to the lower left",
+              path: [
+                { x: 326, y: 486 },
+                { x: 66, y: 122 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 禾's closing diǎn to the lower right",
+              path: [
+                { x: 342, y: 362 },
+                { x: 438, y: 258 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 口's left vertical shù stroke",
+              path: [
+                { x: 552, y: 515 },
+                { x: 586, y: -27 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 口's héngzhé across the top",
+              path: [
+                { x: 567, y: 712 },
+                { x: 865, y: 712 },
+              ],
+            },
+            {
+              label: "turn the corner without lifting and descend the right side",
+              path: [
+                { x: 865, y: 712 },
+                { x: 865, y: 100 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then close 口 with a horizontal héng from left to right",
+              path: [
+                { x: 567, y: 100 },
+                { x: 865, y: 100 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: chineseCharacterSource("和"),
+    },
+  ],
+  // 喜 descends in four bands — 士, a 口, the short pair, the widest horizontal
+  // in the character, and a closing 口 — top before bottom throughout, with
+  // both 口 built the way the reader already writes them.
+  [
+    "chinese:喜",
+    {
+      script: "chinese",
+      glyph: "喜",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the long top horizontal héng stroke",
+              path: [
+                { x: 96, y: 736 },
+                { x: 906, y: 736 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the vertical shù stroke down through it",
+              path: [
+                { x: 497, y: 824 },
+                { x: 497, y: 672 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the second horizontal héng beneath",
+              path: [
+                { x: 168, y: 616 },
+                { x: 840, y: 616 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the upper 口's left vertical shù stroke",
+              path: [
+                { x: 233, y: 511 },
+                { x: 233, y: 379 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the upper 口's héngzhé across the top",
+              path: [
+                { x: 233, y: 511 },
+                { x: 768, y: 511 },
+              ],
+            },
+            {
+              label: "turn the corner without lifting and descend the right side",
+              path: [
+                { x: 768, y: 511 },
+                { x: 768, y: 379 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then close the upper 口 with a horizontal héng",
+              path: [
+                { x: 233, y: 379 },
+                { x: 768, y: 379 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then draw the left short stroke of the pair beneath it",
+              path: [
+                { x: 313, y: 352 },
+                { x: 336, y: 285 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the right short stroke of that pair",
+              path: [
+                { x: 688, y: 352 },
+                { x: 662, y: 285 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then draw the widest horizontal héng in the character, edge to edge",
+              path: [
+                { x: 64, y: 244 },
+                { x: 934, y: 244 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the lower 口's left vertical shù stroke",
+              path: [
+                { x: 216, y: 110 },
+                { x: 216, y: -30 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the lower 口's héngzhé across the top",
+              path: [
+                { x: 216, y: 110 },
+                { x: 787, y: 110 },
+              ],
+            },
+            {
+              label: "turn the corner without lifting and descend the right side",
+              path: [
+                { x: 787, y: 110 },
+                { x: 787, y: -30 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then close the lower 口 with a horizontal héng",
+              path: [
+                { x: 216, y: -30 },
+                { x: 787, y: -30 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: chineseCharacterSource("喜"),
+    },
+  ],
+  // 欢 opens with the same 又 that opens 对, then draws 欠: a short left-falling
+  // stroke, a hooked horizontal, and the long falling pair that carry the
+  // whole right half.
+  [
+    "chinese:欢",
+    {
+      script: "chinese",
+      glyph: "欢",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw 又's short flat start",
+              path: [
+                { x: 62, y: 690 },
+                { x: 408, y: 690 },
+              ],
+            },
+            {
+              label: "turn without lifting and fall to the lower left",
+              path: [
+                { x: 408, y: 690 },
+                { x: 300, y: 360 },
+                { x: 84, y: 22 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then draw 又's nà, crossing it and falling to the lower right",
+              path: [
+                { x: 141, y: 489 },
+                { x: 386, y: 109 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 欠's piě at the top, falling to the left",
+              path: [
+                { x: 561, y: 810 },
+                { x: 561, y: 694 },
+                { x: 513, y: 662 },
+                { x: 521, y: 570 },
+                { x: 469, y: 458 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then draw 欠's hénggōu, running right and hooking down",
+              path: [
+                { x: 509, y: 610 },
+                { x: 825, y: 666 },
+                { x: 885, y: 630 },
+                { x: 829, y: 502 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 欠's long piě, falling to the lower left",
+              path: [
+                { x: 661, y: 498 },
+                { x: 669, y: 338 },
+                { x: 589, y: 142 },
+                { x: 393, y: -42 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw 欠's nà, falling to the lower right",
+              path: [
+                { x: 646, y: 324 },
+                { x: 918, y: -71 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: chineseCharacterSource("欢"),
+    },
+  ],
 ];

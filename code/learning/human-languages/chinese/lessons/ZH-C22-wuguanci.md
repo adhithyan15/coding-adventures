@@ -66,8 +66,8 @@ yet. What you never need is an article, because there is not one to leave out.
 **This is the trap for an English or Spanish speaker**, and it runs both ways.
 Arriving, they hunt for the missing *the* and try to supply it from their own
 language. Leaving, they drop English articles: *I read book*. Neither is a
-vocabulary problem. Mandarin simply does not mark the distinction here, and 书 on
-its own is complete.
+vocabulary problem. Mandarin does not mark the distinction here at all, and 书
+on its own is complete.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-GRAMMAR-NO-ARTICLE-01] -->
