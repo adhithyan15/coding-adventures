@@ -159,23 +159,22 @@ describe("stroke ownership migration baseline", () => {
       counts: Object.fromEntries(
         Object.entries(counts).sort(([a], [b]) => a.localeCompare(b)),
       ),
-      // Measured, not reasoned: source-verified Chinese 吗 is the only glyph
-      // added since the previous pin, so it moves keys 352 -> 353, the ordered
-      // key hash, the non-Tamil data hash, and Chinese 43 -> 44. Tamil is
-      // untouched, which is why its own count and the shared-identity hashes
-      // below do not move.
+      // Measured, not reasoned: the source-verified numeral tranche adds 六,
+      // 七, 八, 九, 十 and 百, so it moves keys 353 -> 359, the ordered key hash,
+      // the non-Tamil data hash, and Chinese 44 -> 50. Tamil is untouched,
+      // which is why its own count and the shared-identity hashes do not move.
     }).toEqual({
-      keys: 353,
+      keys: 359,
       keyHash:
-        "293815a3938fae4202e9fb3916b007d3bb2ccd4958139dca489c43c37d3dc08e",
+        "9441944f3f0ef47669be959a09c07d7779f15d537afafb4d8dcf3751ae97b4da",
       nonTamilDataHash:
-        "095077e88c1ad7427d4947fe9a0cb63f2c545a8135f14024be8f48d5bd59555a",
+        "0fe0f170e553ee974953386120f625d3aac1a3ec73d9cfaca0ba9357a215ab9b",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
       counts: {
         arabic: 32,
-        chinese: 44,
+        chinese: 50,
         cyrillic: 33,
         devanagari: 44,
         gujarati: 44,

@@ -4367,4 +4367,216 @@ export const entries: DuctusEntry[] = [
       source: chineseCharacterSource("吗"),
     },
   ],
+  // The numeral tranche keeps the pinned Hanzi Writer medians as its authored
+  // centre lines. These six characters are deliberately not approximated by
+  // reusing a superficially similar component: 七 and 九 each contain a joined
+  // hook, while 百 closes its box only after the inner horizontal.
+  [
+    "chinese:六",
+    {
+      script: "chinese",
+      glyph: "六",
+      strokes: [
+        simpleStroke("draw the short top dot down and to the right", [
+          { x: 445, y: 800 },
+          { x: 470, y: 750 },
+          { x: 510, y: 690 },
+          { x: 545, y: 635 },
+        ]),
+        simpleStroke("lift, then draw the long horizontal left to right", [
+          { x: 75, y: 536 },
+          { x: 250, y: 536 },
+          { x: 500, y: 536 },
+          { x: 750, y: 536 },
+          { x: 930, y: 536 },
+        ]),
+        simpleStroke("lift, then draw the left-falling leg", [
+          { x: 335, y: 350 },
+          { x: 300, y: 275 },
+          { x: 255, y: 190 },
+          { x: 200, y: 105 },
+          { x: 125, y: -30 },
+        ]),
+        simpleStroke("lift, then draw the right-falling leg", [
+          { x: 640, y: 350 },
+          { x: 700, y: 260 },
+          { x: 770, y: 160 },
+          { x: 835, y: 65 },
+          { x: 900, y: -30 },
+        ]),
+      ],
+      source: chineseCharacterSource("六"),
+    },
+  ],
+  [
+    "chinese:七",
+    {
+      script: "chinese",
+      glyph: "七",
+      strokes: [
+        simpleStroke("draw the rising horizontal from left to right", [
+          { x: 65, y: 405 },
+          { x: 250, y: 435 },
+          { x: 500, y: 475 },
+          { x: 750, y: 515 },
+          { x: 935, y: 545 },
+        ]),
+        simpleStroke(
+          "lift, descend, bend right along the foot and hook upward",
+          [
+            { x: 380, y: 790 },
+            { x: 380, y: 500 },
+            { x: 380, y: 150 },
+            { x: 390, y: 65 },
+            { x: 450, y: 0 },
+            { x: 600, y: -8 },
+            { x: 760, y: -8 },
+            { x: 820, y: 25 },
+            { x: 850, y: 100 },
+            { x: 870, y: 170 },
+          ],
+        ),
+      ],
+      source: chineseCharacterSource("七"),
+    },
+  ],
+  [
+    "chinese:八",
+    {
+      script: "chinese",
+      glyph: "八",
+      strokes: [
+        simpleStroke("draw the left-falling stroke", [
+          { x: 345, y: 720 },
+          { x: 325, y: 560 },
+          { x: 290, y: 390 },
+          { x: 240, y: 220 },
+          { x: 175, y: 80 },
+          { x: 90, y: -30 },
+        ]),
+        simpleStroke("lift, then draw the separate right-falling stroke", [
+          { x: 625, y: 735 },
+          { x: 645, y: 585 },
+          { x: 680, y: 420 },
+          { x: 730, y: 260 },
+          { x: 805, y: 115 },
+          { x: 915, y: -30 },
+        ]),
+      ],
+      source: chineseCharacterSource("八"),
+    },
+  ],
+  [
+    "chinese:九",
+    {
+      script: "chinese",
+      glyph: "九",
+      strokes: [
+        simpleStroke("draw the long left-falling stroke", [
+          { x: 390, y: 800 },
+          { x: 390, y: 620 },
+          { x: 375, y: 440 },
+          { x: 335, y: 275 },
+          { x: 260, y: 125 },
+          { x: 100, y: -30 },
+        ]),
+        simpleStroke(
+          "lift, cross right, turn downward and hook left at the foot",
+          [
+            { x: 95, y: 546 },
+            { x: 300, y: 546 },
+            { x: 520, y: 546 },
+            { x: 690, y: 546 },
+            { x: 690, y: 380 },
+            { x: 690, y: 160 },
+            { x: 690, y: 45 },
+            { x: 720, y: 0 },
+            { x: 800, y: -28 },
+            { x: 875, y: -28 },
+            { x: 920, y: 15 },
+            { x: 940, y: 80 },
+            { x: 945, y: 120 },
+          ],
+        ),
+      ],
+      source: chineseCharacterSource("九"),
+    },
+  ],
+  [
+    "chinese:十",
+    {
+      script: "chinese",
+      glyph: "十",
+      strokes: [
+        simpleStroke("draw the horizontal from left to right", [
+          { x: 70, y: 427 },
+          { x: 300, y: 427 },
+          { x: 500, y: 427 },
+          { x: 700, y: 427 },
+          { x: 935, y: 427 },
+        ]),
+        simpleStroke("lift, then draw the crossing vertical top to bottom", [
+          { x: 501, y: 820 },
+          { x: 501, y: 600 },
+          { x: 501, y: 350 },
+          { x: 501, y: 100 },
+          { x: 501, y: -60 },
+        ]),
+      ],
+      source: chineseCharacterSource("十"),
+    },
+  ],
+  [
+    "chinese:百",
+    {
+      script: "chinese",
+      glyph: "百",
+      strokes: [
+        simpleStroke("draw the top horizontal from left to right", [
+          { x: 80, y: 749 },
+          { x: 300, y: 749 },
+          { x: 500, y: 749 },
+          { x: 700, y: 749 },
+          { x: 920, y: 749 },
+        ]),
+        simpleStroke("lift, then draw the short left-falling stroke", [
+          { x: 490, y: 730 },
+          { x: 480, y: 655 },
+          { x: 455, y: 575 },
+          { x: 430, y: 530 },
+        ]),
+        simpleStroke("lift, then draw the box's left vertical", [
+          { x: 215, y: 530 },
+          { x: 215, y: 350 },
+          { x: 215, y: 150 },
+          { x: 215, y: -60 },
+        ]),
+        simpleStroke(
+          "lift, then draw the box's top and turn down its right side",
+          [
+            { x: 220, y: 528 },
+            { x: 400, y: 528 },
+            { x: 600, y: 528 },
+            { x: 800, y: 528 },
+            { x: 798, y: 350 },
+            { x: 798, y: 150 },
+            { x: 798, y: -50 },
+          ],
+        ),
+        simpleStroke("lift, then draw the inner horizontal", [
+          { x: 245, y: 275 },
+          { x: 420, y: 275 },
+          { x: 600, y: 275 },
+          { x: 770, y: 275 },
+        ]),
+        simpleStroke("lift, then close the box with the bottom horizontal", [
+          { x: 245, y: 19 },
+          { x: 420, y: 19 },
+          { x: 600, y: 19 },
+          { x: 770, y: 19 },
+        ]),
+      ],
+      source: chineseCharacterSource("百"),
+    },
+  ],
 ];
