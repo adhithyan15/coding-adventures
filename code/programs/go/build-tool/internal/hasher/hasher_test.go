@@ -1,14 +1,17 @@
 package hasher
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"runtime"
 	"sort"
 	"strings"
@@ -602,6 +605,72 @@ func TestProductionLanguageSourceInputRegistryExactlyMatchesNeutralRegistry(t *t
 	}
 }
 
+func cloneLanguageSourceInputRegistry(t *testing.T) languageSourceInputRegistryDocument {
+	t.Helper()
+	encoded, err := json.Marshal(languageSourceInputRegistry)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var clone languageSourceInputRegistryDocument
+	if err := json.Unmarshal(encoded, &clone); err != nil {
+		t.Fatal(err)
+	}
+	return clone
+}
+
+func TestLanguageSourceInputRegistryRejectsUnsafeSelectorsAndBounds(t *testing.T) {
+	tests := []struct {
+		name   string
+		mutate func(*languageSourceInputRegistryDocument)
+	}{
+		{
+			name: "empty suffix",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				registry.Languages[0].RecursiveSuffixes[0] = ""
+			},
+		},
+		{
+			name: "unsafe relative path",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				registry.Languages[0].RootExactRelativePaths = []string{"../secret"}
+			},
+		},
+		{
+			name: "duplicate cross role selector",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				registry.Languages[0].RootExactBasenames = []string{registry.Languages[0].RecursiveExactBasenames[0]}
+			},
+		},
+		{
+			name: "oversized universal role",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				registry.UniversalInputs.RootExactBasenames = make([]string, 257)
+				for index := range registry.UniversalInputs.RootExactBasenames {
+					registry.UniversalInputs.RootExactBasenames[index] = fmt.Sprintf("input-%03d", index)
+				}
+			},
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			registry := cloneLanguageSourceInputRegistry(t)
+			test.mutate(&registry)
+			encoded, err := json.Marshal(registry)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := decodeLanguageSourceInputRegistry(encoded); err == nil {
+				t.Fatal("malformed registry must fail closed")
+			}
+		})
+	}
+
+	tooLarge := bytes.Repeat([]byte{' '}, maxLanguageSourceInputRegistryBytes+1)
+	if _, err := decodeLanguageSourceInputRegistry(tooLarge); err == nil {
+		t.Fatal("oversized registry must fail before decoding")
+	}
+}
+
 func TestPackageExactInputsDoNotWidenToSiblingRoots(t *testing.T) {
 	root := filepath.Join(t.TempDir(), "code", "packages", "rust", "not-engram-wasm")
 	for _, relative := range []string{"BUILD", "js/engram-mosaic-host-wasm.mjs", "js/smoke.mjs", "pkg/engram_engine.wasm"} {
@@ -618,6 +687,23 @@ func TestPackageExactInputsDoNotWidenToSiblingRoots(t *testing.T) {
 	want := []string{"BUILD"}
 	if strings.Join(got, "\n") != strings.Join(want, "\n") {
 		t.Fatalf("package-exact inputs widened to sibling: got %v, want %v", got, want)
+	}
+}
+
+func TestPackageExactInputsRequireCanonicalDiscoveredPath(t *testing.T) {
+	root := t.TempDir()
+	for _, relative := range []string{"BUILD", "js/smoke.mjs"} {
+		path := filepath.Join(root, filepath.FromSlash(relative))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("source\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "rust/engram-wasm", Path: root, Language: "rust"}
+	if _, err := collectSourceFilesChecked(pkg); err == nil {
+		t.Fatal("caller-supplied package identity must not replace a canonical discovered path")
 	}
 }
 
@@ -644,6 +730,31 @@ func TestLanguageSourceInputRegistryGeneratorRoundTrip(t *testing.T) {
 	if string(generated) != string(checked) {
 		t.Fatal("generated registry source is stale")
 	}
+
+	registry := cloneLanguageSourceInputRegistry(t)
+	registry.Languages[0].ScopedInputs[0].Reason += " reviewed"
+	mutated, err := json.Marshal(registry)
+	if err != nil {
+		t.Fatal(err)
+	}
+	registryPath := filepath.Join(t.TempDir(), "registry.json")
+	if err := os.WriteFile(registryPath, mutated, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	mutatedOutput := filepath.Join(t.TempDir(), "generated.go")
+	command = exec.Command(commandName, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", filepath.Join("..", "..", "tools", "generate-language-source-input-registry.ps1"), "-RegistryPath", registryPath, "-OutputPath", mutatedOutput)
+	if combined, err := command.CombinedOutput(); err != nil {
+		t.Fatalf("registry generator failed for valid mutation: %v: %s", err, combined)
+	}
+	mutatedGenerated, err := os.ReadFile(mutatedOutput)
+	if err != nil {
+		t.Fatal(err)
+	}
+	digestPattern := regexp.MustCompile(`languageSourceInputRegistryDigest = "([0-9a-f]{64})"`)
+	match := digestPattern.FindSubmatch(mutatedGenerated)
+	if len(match) != 2 || string(match[1]) == languageSourceInputRegistryDigest {
+		t.Fatal("generator must derive a new digest from changed registry content")
+	}
 }
 
 func TestRepositoryRelativePackagePath(t *testing.T) {
@@ -654,20 +765,10 @@ func TestRepositoryRelativePackagePath(t *testing.T) {
 	if got, err := repositoryRelativePackagePath(canonical); err != nil || got != "code/programs/go/demo" {
 		t.Fatalf("canonical program path: got %q, err %v", got, err)
 	}
-	for _, tc := range []struct {
-		name string
-		want string
-	}{
-		{name: "python/demo", want: "code/packages/python/demo"},
-		{name: "go/programs/demo", want: "code/programs/go/demo"},
-	} {
-		got, err := repositoryRelativePackagePath(discovery.Package{Name: tc.name, Path: t.TempDir()})
-		if err != nil || got != tc.want {
-			t.Fatalf("identity %q: got %q, err %v", tc.name, got, err)
+	for _, name := range []string{"python/demo", "go/programs/demo", "invalid"} {
+		if _, err := repositoryRelativePackagePath(discovery.Package{Name: name, Path: t.TempDir()}); err == nil {
+			t.Fatalf("noncanonical path with identity %q must fail closed", name)
 		}
-	}
-	if _, err := repositoryRelativePackagePath(discovery.Package{Name: "invalid", Path: t.TempDir()}); err == nil {
-		t.Fatal("invalid package identity must fail closed")
 	}
 }
 
