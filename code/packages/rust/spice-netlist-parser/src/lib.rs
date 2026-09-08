@@ -4,12 +4,12 @@ use std::{
 };
 
 use spice_engine::{
-    ac_sweep, dc_op_with_options, dc_sweep, mosfet_from_model_card, normalize_model_card,
+    ac_sweep, dc_op_with_options, dc_sweep, mosfet_from_model_card, normalize_model_card, tf,
     transient_with_method, AcPoint, AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs,
     Ccvs, Circuit, Complex, CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element,
     ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType,
-    MutualInductor, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod,
-    TransientPoint, TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
+    MutualInductor, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TfResult,
+    TransientMethod, TransientPoint, TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
@@ -364,6 +364,7 @@ pub enum AnalysisKind {
     Tran,
     Dc,
     Ac,
+    Tf,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -372,6 +373,7 @@ pub enum RunnableAnalysis {
     Tran(TranAnalysis),
     Dc(DcAnalysis),
     Ac(AcAnalysis),
+    Tf(TfAnalysis),
 }
 
 impl RunnableAnalysis {
@@ -381,6 +383,7 @@ impl RunnableAnalysis {
             Self::Tran(_) => AnalysisKind::Tran,
             Self::Dc(_) => AnalysisKind::Dc,
             Self::Ac(_) => AnalysisKind::Ac,
+            Self::Tf(_) => AnalysisKind::Tf,
         }
     }
 }
@@ -401,6 +404,7 @@ pub enum AnalysisResult {
     Tran(Vec<TransientPoint>),
     Dc(Vec<DcSweepPoint>),
     Ac(Vec<AcPoint>),
+    Tf(TfResult),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1059,6 +1063,7 @@ fn analysis_plan_step(index: usize, analysis: &Analysis) -> Option<AnalysisPlanS
         Analysis::Tran(card) => RunnableAnalysis::Tran(*card),
         Analysis::Dc(card) => RunnableAnalysis::Dc(card.clone()),
         Analysis::Ac(card) => RunnableAnalysis::Ac(card.clone()),
+        Analysis::Tf(card) => RunnableAnalysis::Tf(card.clone()),
         _ => return None,
     };
     Some(AnalysisPlanStep {
@@ -1100,6 +1105,11 @@ fn execute_analysis_step(
             card.start_hz,
             card.stop_hz,
             executable_ac_points_per_decade(card)?,
+        )?)),
+        RunnableAnalysis::Tf(card) => Ok(AnalysisResult::Tf(tf(
+            &parsed.circuit,
+            &card.output_node,
+            &card.input_source,
         )?)),
     }
 }
@@ -1155,6 +1165,7 @@ fn analysis_name_matches(requested: &str, kind: AnalysisKind) -> bool {
         "dc" => kind == AnalysisKind::Dc,
         "ac" => kind == AnalysisKind::Ac,
         "tran" | "transient" => kind == AnalysisKind::Tran,
+        "tf" => kind == AnalysisKind::Tf,
         _ => false,
     }
 }
@@ -1226,6 +1237,9 @@ fn selected_output_rows(
                 })
             })
             .collect(),
+        AnalysisResult::Tf(_) => Err(NetlistParseError::new(
+            ".tf output selection is not yet supported",
+        )),
     }
 }
 
@@ -1386,6 +1400,9 @@ fn measure_samples(
                 })
             })
             .collect(),
+        AnalysisResult::Tf(_) => Err(NetlistParseError::new(
+            ".measure does not yet support .tf results",
+        )),
     }
 }
 

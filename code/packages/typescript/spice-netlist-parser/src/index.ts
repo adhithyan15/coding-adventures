@@ -30,6 +30,7 @@ import {
   voltageSourceWithAc,
   voltageSourceWithWaveform,
   transient,
+  tf,
   type AdaptiveTransientOptions,
   type AcPoint,
   type Complex,
@@ -41,6 +42,7 @@ import {
   type MosfetLevel1Params,
   type TransientPoint,
   type TransientMethod,
+  type TfResult,
   type Waveform,
 } from "@coding-adventures/spice-engine";
 
@@ -202,13 +204,14 @@ export type Analysis =
   | PoleZeroAnalysis
   | OptionsAnalysis;
 
-export type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis;
+export type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis;
 export type AnalysisKind = RunnableAnalysis["kind"];
 export type AnalysisResult =
   | DcResult
   | readonly DcSweepPoint[]
   | readonly AcPoint[]
-  | readonly TransientPoint[];
+  | readonly TransientPoint[]
+  | TfResult;
 export type SelectedOutputValue = number | Complex;
 
 export interface AnalysisPlanStep {
@@ -718,7 +721,8 @@ function analysisPlanStep(index: number, analysis: Analysis): AnalysisPlanStep |
     analysis.kind === "op" ||
     analysis.kind === "tran" ||
     analysis.kind === "dc" ||
-    analysis.kind === "ac"
+    analysis.kind === "ac" ||
+    analysis.kind === "tf"
   ) {
     return { index, kind: analysis.kind, analysis };
   }
@@ -754,6 +758,9 @@ function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): Ana
       analysis.stopTime,
       parsed.transientMethod(analysis) ?? "euler",
     );
+  }
+  if (analysis.kind === "tf") {
+    return tf(parsed.circuit, analysis.outputNode, analysis.inputSource);
   }
   throw new NetlistParseError(`analysis card at index ${step.index} is not executable`);
 }
@@ -804,6 +811,7 @@ function analysisNameMatches(requested: string, kind: AnalysisKind): boolean {
     ["ac", "ac"],
     ["tran", "tran"],
     ["transient", "tran"],
+    ["tf", "tf"],
   ]);
   return (aliases.get(requested.toLowerCase()) ?? requested.toLowerCase()) === kind;
 }
@@ -851,6 +859,9 @@ function selectedOutputRows(
         ".ac output selection",
       ),
     }));
+  }
+  if (execution.kind === "tf") {
+    throw new NetlistParseError(".tf output selection is not yet supported");
   }
   return (execution.result as readonly TransientPoint[]).map((point, index) => ({
     index,
@@ -949,6 +960,9 @@ function measureSamples(card: MeasureAnalysis, execution: AnalysisExecutionResul
       point.frequencyHz,
       probeValue(card.probe, point.nodeVoltages, point.branchCurrents, `.measure ${card.name}`),
     ]);
+  }
+  if (execution.kind === "tf") {
+    throw new NetlistParseError(".measure does not yet support .tf results");
   }
   return (execution.result as readonly TransientPoint[]).map((point) => [
     point.time,

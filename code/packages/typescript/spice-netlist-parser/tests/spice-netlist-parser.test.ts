@@ -51,6 +51,7 @@ C1 out 0 1u IC=0
 .dc V1 0 1 0.5
 .ac dec 1 1k 1k
 .tran 1m 1m
+.tf V(out) V1
 .end
 `;
     const parsed = parseNetlist(deck);
@@ -62,10 +63,11 @@ C1 out 0 1u IC=0
       [2, "dc"],
       [3, "ac"],
       [4, "tran"],
+      [5, "tf"],
     ]);
 
     const results = parsed.runAnalysisPlan();
-    expect(results.map((result) => result.kind)).toEqual(["op", "dc", "ac", "tran"]);
+    expect(results.map((result) => result.kind)).toEqual(["op", "dc", "ac", "tran", "tf"]);
     expect((results[0].result as { voltage(node: string): number | undefined }).voltage("out"))
       .toBeCloseTo(0.5, 9);
     const dcPoints = results[1].result as readonly {
@@ -83,11 +85,12 @@ C1 out 0 1u IC=0
     }[];
     expect(transientPoints).toHaveLength(1);
     expect(transientPoints[0].voltage("out")).toBeGreaterThan(0.0);
+    expect((results[4].result as { transferRatio: number }).transferRatio).toBeCloseTo(0.5, 9);
 
-    expect(runNetlist(deck)).toHaveLength(4);
+    expect(runNetlist(deck)).toHaveLength(5);
   });
 
-  it("runs the shared Berkeley v1 operating-point corpus", () => {
+  it("runs the shared Berkeley v1 core corpus", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/berkeley-v1-op-corpus.json", import.meta.url),
       "utf8",
@@ -97,6 +100,8 @@ C1 out 0 1u IC=0
       cases: readonly {
         id: string;
         kind: string;
+        analysis: "op" | "dc" | "ac" | "tran" | "tf";
+        sample: "op-node" | "dc-final-node" | "ac-first-magnitude" | "tran-final-node" | "tf-ratio";
         deck: string;
         probe: string;
         expected: { min: number; max: number };
@@ -104,16 +109,31 @@ C1 out 0 1u IC=0
     };
 
     expect(corpus.schemaVersion).toBe(1);
-    expect(corpus.suite).toBe("berkeley-v1-op");
-    expect(corpus.cases.map((testCase) => testCase.kind)).toEqual([
-      "D", "NPN", "NJF", "NMOS",
+    expect(corpus.suite).toBe("berkeley-v1-core");
+    expect(corpus.cases.map((testCase) => testCase.analysis)).toEqual([
+      "op", "op", "op", "op", "ac", "ac", "ac", "ac", "tran", "tran", "tran", "tran", "dc", "tf",
     ]);
 
     for (const testCase of corpus.cases) {
       const results = parseNetlist(testCase.deck).runAnalysisPlan();
-      expect(results.map((result) => result.kind), testCase.id).toEqual(["op"]);
-      const op = results[0].result as { voltage(node: string): number | undefined };
-      const value = op.voltage(testCase.probe);
+      expect(results.map((result) => result.kind), testCase.id).toEqual([testCase.analysis]);
+      const result = results[0].result;
+      let value: number | undefined;
+      if (testCase.sample === "op-node") {
+        value = (result as { voltage(node: string): number | undefined }).voltage(testCase.probe);
+      } else if (testCase.sample === "dc-final-node") {
+        value = (result as readonly { result: { voltage(node: string): number | undefined } }[])
+          .at(-1)?.result.voltage(testCase.probe);
+      } else if (testCase.sample === "ac-first-magnitude") {
+        const point = (result as readonly { voltage(node: string): { real: number; imag: number } | undefined }[])[0];
+        const voltage = point?.voltage(testCase.probe);
+        value = voltage === undefined ? undefined : Math.hypot(voltage.real, voltage.imag);
+      } else if (testCase.sample === "tran-final-node") {
+        value = (result as readonly { voltage(node: string): number | undefined }[])
+          .at(-1)?.voltage(testCase.probe);
+      } else {
+        value = (result as { transferRatio: number }).transferRatio;
+      }
       expect(value, testCase.id).toBeGreaterThanOrEqual(testCase.expected.min);
       expect(value, testCase.id).toBeLessThanOrEqual(testCase.expected.max);
     }

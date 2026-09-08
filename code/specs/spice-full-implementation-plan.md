@@ -50,11 +50,12 @@ model-card parameter, or a UI artifact is not a completion signal.
      parser-executed gate. Its numerical windows are intentionally broad enough
      to preserve cross-language solver parity while catching model or lowering
      regressions.
-   - Next: extend that same corpus and runner pattern to the currently
-     supported `.dc`, `.ac`, `.tran`, and `.tf` surfaces, then add accepted and
-     deliberately rejected Berkeley syntax cases. Classify every case as
-     passing, a proven implementation gap, or deliberate exclusion; no silent
-     skips.
+   - The active PR batches `.dc`, `.ac`, `.tran`, and `.tf` into that same
+     corpus rather than paying CI separately for each analysis. It also makes
+     parsed `.tf` cards executable across the three ports.
+   - Next: add accepted and deliberately rejected Berkeley syntax cases.
+     Classify every case as passing, a proven implementation gap, or deliberate
+     exclusion; no silent skips.
 
 2. **Corpus-blocking Berkeley core closure**.
    - Fix the grouped failures found by the executable gate, batched by a

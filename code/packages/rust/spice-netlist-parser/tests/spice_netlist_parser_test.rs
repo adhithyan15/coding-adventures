@@ -134,6 +134,7 @@ C1 out 0 1u IC=0
 .dc V1 0 1 0.5
 .ac dec 1 1k 1k
 .tran 1m 1m
+.tf V(out) V1
 .end
 "#;
     let parsed = parse_netlist(deck).unwrap();
@@ -149,6 +150,7 @@ C1 out 0 1u IC=0
             (2, AnalysisKind::Dc),
             (3, AnalysisKind::Ac),
             (4, AnalysisKind::Tran),
+            (5, AnalysisKind::Tf),
         ]
     );
 
@@ -159,7 +161,8 @@ C1 out 0 1u IC=0
             AnalysisKind::Op,
             AnalysisKind::Dc,
             AnalysisKind::Ac,
-            AnalysisKind::Tran
+            AnalysisKind::Tran,
+            AnalysisKind::Tf
         ]
     );
     let AnalysisResult::Op(op) = &results[0].result else {
@@ -184,28 +187,35 @@ C1 out 0 1u IC=0
     };
     assert_eq!(transient_points.len(), 1);
     assert!(transient_points[0].voltage("out").unwrap() > 0.0);
+    let AnalysisResult::Tf(tf_result) = &results[4].result else {
+        panic!("expected .tf result");
+    };
+    assert_close(tf_result.transfer_ratio, 0.5);
 
-    assert_eq!(run_netlist(deck).unwrap().len(), 4);
+    assert_eq!(run_netlist(deck).unwrap().len(), 5);
 }
 
 #[test]
-fn runs_shared_berkeley_v1_operating_point_corpus() {
+fn runs_shared_berkeley_v1_core_corpus() {
     let corpus: serde_json::Value = serde_json::from_str(include_str!(
         "../../../../grammars/spice/berkeley-v1-op-corpus.json"
     ))
     .expect("shared Berkeley v1 corpus should be valid JSON");
 
     assert_eq!(corpus["schemaVersion"], 1);
-    assert_eq!(corpus["suite"], "berkeley-v1-op");
+    assert_eq!(corpus["suite"], "berkeley-v1-core");
     let cases = corpus["cases"]
         .as_array()
         .expect("shared Berkeley v1 corpus should contain cases");
     assert_eq!(
         cases
             .iter()
-            .map(|case| case["kind"].as_str().unwrap())
+            .map(|case| case["analysis"].as_str().unwrap())
             .collect::<Vec<_>>(),
-        vec!["D", "NPN", "NJF", "NMOS"]
+        vec![
+            "op", "op", "op", "op", "ac", "ac", "ac", "ac", "tran", "tran", "tran", "tran", "dc",
+            "tf"
+        ]
     );
 
     for case in cases {
@@ -216,12 +226,28 @@ fn runs_shared_berkeley_v1_operating_point_corpus() {
             .run_analysis_plan()
             .unwrap_or_else(|error| panic!("{case_id}: {error}"));
         assert_eq!(results.len(), 1, "{case_id}");
-        let AnalysisResult::Op(op) = &results[0].result else {
-            panic!("{case_id}: expected .op result");
+        assert_eq!(
+            format!("{:?}", results[0].kind).to_ascii_lowercase(),
+            case["analysis"].as_str().unwrap(),
+            "{case_id}"
+        );
+        let probe = case["probe"].as_str().unwrap();
+        let value = match (case["sample"].as_str().unwrap(), &results[0].result) {
+            ("op-node", AnalysisResult::Op(result)) => result.voltage(probe),
+            ("dc-final-node", AnalysisResult::Dc(points)) => {
+                points.last().and_then(|point| point.result.voltage(probe))
+            }
+            ("ac-first-magnitude", AnalysisResult::Ac(points)) => points
+                .first()
+                .and_then(|point| point.voltage(probe))
+                .map(|value| value.abs()),
+            ("tran-final-node", AnalysisResult::Tran(points)) => {
+                points.last().and_then(|point| point.voltage(probe))
+            }
+            ("tf-ratio", AnalysisResult::Tf(result)) => Some(result.transfer_ratio),
+            (sample, _) => panic!("{case_id}: unexpected result for {sample}"),
         };
-        let value = op
-            .voltage(case["probe"].as_str().unwrap())
-            .unwrap_or_else(|| panic!("{case_id}: missing probe"));
+        let value = value.unwrap_or_else(|| panic!("{case_id}: missing probe"));
         let expected = &case["expected"];
         assert!(
             value >= expected["min"].as_f64().unwrap()
