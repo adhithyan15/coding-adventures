@@ -16,4 +16,10 @@ crate-type = ["cdylib", "rlib"]
 engram-core-wasm = { path = "../engram-core-wasm" }
 mosaic-app-capi = { path = "../mosaic-app-capi" }
 mosaic-app-runtime = { path = "../mosaic-app-runtime" }
+# `serde` is a direct edge only so `restore` can deserialise the ONE adapter
+# field it needs out of the snapshot document. Parsing the whole thing into a
+# `Value` to read a single string would materialise the entire collection --
+# media blobs included -- a second time. No new crate reaches the graph: serde
+# already arrives through `engram-core-wasm`.
+serde = { version = "1", features = ["derive"] }
 serde_json = "1"

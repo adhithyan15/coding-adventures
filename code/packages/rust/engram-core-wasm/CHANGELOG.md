@@ -2,6 +2,45 @@
 
 ## Unreleased
 
+### Added -- the presentation cursor survives snapshot/restore (#13646)
+
+`snapshot()` serialised `AppState` and nothing else, and `load_snapshot` reset
+`selected_deck_id`, `browser`, `review`, `editor`, and `note_type_editor` to
+`default()`. Reopening Engram silently put you back at the deck list: the deck
+you had chosen, the screen you were on, the search you had typed, and how far
+into a review you were all went away, with no error to say so.
+
+The mechanical cause was that those types derived `Clone, Debug, PartialEq, Eq`
+but not `Serialize`/`Deserialize`, so there was nothing to put in a snapshot even
+if one had wanted to.
+
+Now they do, and there is a `PresentationCursor` bundling them with the active
+screen. Note the issue named five types; `active_screen` is a sixth. It was never
+reset by `load_snapshot` -- but it was never *serialised* either, so it did not
+survive a restore any more than the other five did, and leaving it out would have
+restored the search box while losing the screen it belongs to.
+
+Two new facade calls carry it:
+
+- `session_snapshot()` -> `{"ok": true, "session": {"state": ..., "cursor": ...}}`
+- `load_session_snapshot(json)`, where a missing `cursor` is not an error --
+  that is what a pre-cursor snapshot looks like, and it loads with a fresh one.
+
+The cursor is parsed separately from the collection, so a cursor that will not
+parse costs a scroll position rather than the whole collection.
+`#[serde(default)]` alone would not do this: it fills fields that are *missing*,
+while a field that is present and malformed -- an unknown `activeScreen`, a
+`null` cursor -- aborts the entire document and would take `state` with it.
+Refusing to open someone's collection because their saved scroll position is
+corrupt is the wrong trade, and the same one this crate already refuses when it
+accepts a cursor-less snapshot.
+
+`snapshot()` and `load_snapshot()` are **unchanged**, deliberately. `eg_snapshot`
+and `eg_load_snapshot` are in the published C header and all five native hosts
+bind them, and `load_snapshot` is a `engram-wasm` export besides; moving their
+payload would have been a silent ABI break for every shell. They remain the
+collection-only pair, which is also the right shape for a backup or a sync
+payload, where a half-typed search box is noise.
 ### Fixed -- `onSaveNote` accepted a deck or note type the collection does not contain
 
 **Three** routes build a `Note` from partly-external input and hand it to
