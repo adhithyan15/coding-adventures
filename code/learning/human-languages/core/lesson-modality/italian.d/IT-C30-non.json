@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C30-non",
+    "language": "italian",
+    "chapter": 30,
+    "sequence": 1080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e79b18abb386dd5c"
+  },
+  "findings": []
+}

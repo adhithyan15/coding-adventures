@@ -1,0 +1,25 @@
+{
+  "chapter": 29,
+  "title": "Yes and No",
+  "label": "ch:it-si-e-no",
+  "canDo": "I can say yes and no, take or turn down what is offered, agree, and ask somebody to confirm what I have just said.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C29-vero",
+    "kind": "task",
+    "summary": "The chapter's last lesson gives vero its second job — the tag hung on the end of a statement to ask the other person to confirm it — and gathers the four answering moves the chapter opened: sì, no, sì grazie / no grazie, and d'accordo.",
+    "assesses": [
+      "IT-LEX-SI-02",
+      "IT-ETYMON-SI-03",
+      "IT-LEX-NO-02",
+      "IT-ETYMON-NO-03",
+      "IT-PRAGMATIC-SI-NO-GRAZIE-02",
+      "IT-LEX-DACCORDO-02",
+      "IT-ETYMON-DACCORDO-03",
+      "IT-LEX-VERO-02",
+      "IT-GRAMMAR-VERO-03"
+    ]
+  }
+}

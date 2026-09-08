@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-037-DIMOSTRATIVI",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can use questo and quello, drop the article after them, say questo è … to introduce somebody, and use qui and lì.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C33-questo",
+    "IT-C33-quello",
+    "IT-C33-questo-caffe",
+    "IT-C33-questo-e",
+    "IT-C33-qui-li"
+  ]
+}

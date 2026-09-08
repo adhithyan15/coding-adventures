@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C29-no",
+    "language": "italian",
+    "chapter": 29,
+    "sequence": 1040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78475fd2403355a4"
+  },
+  "findings": []
+}

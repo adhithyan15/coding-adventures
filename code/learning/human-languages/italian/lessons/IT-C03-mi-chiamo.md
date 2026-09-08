@@ -44,7 +44,7 @@ Spanish *me llamo*.
 
 - `ch-hard-k` — Italian **ch** is a **hard k** (the opposite of English!): so
   **chiamo** = *KYAH-moh*, not "chee-." (Italian softens *c* to *ch*-sound only
-  before *e/i*; the *h* in *chi* is there precisely to keep it hard.)
+  before *e/i*; the *h* in *chiamo* is there precisely to keep it hard.)
 - **mi chiamo** = *mee KYAH-moh*.
 
 ## The phrase, taken apart

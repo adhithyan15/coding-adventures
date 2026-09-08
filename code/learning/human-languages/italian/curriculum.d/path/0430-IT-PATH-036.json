@@ -1,0 +1,16 @@
+{
+  "id": "IT-PATH-036",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "IT-C32-ma",
+    "IT-C32-o",
+    "IT-C32-perche",
+    "IT-C32-quando",
+    "IT-C32-per"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "IT-EXT-036-UNIRE"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "IT-PATH-039",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "IT-C35-sapere",
+    "IT-C35-non-so",
+    "IT-C35-oggi-ieri",
+    "IT-C35-molto-poco",
+    "IT-C35-abbastanza"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "IT-EXT-039-SAPERE"
+  ]
+}

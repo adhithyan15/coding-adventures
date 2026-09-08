@@ -1,0 +1,16 @@
+{
+  "id": "IT-PATH-034",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "lessons": [
+    "IT-C30-non",
+    "IT-C30-non-capisco",
+    "IT-C30-ne",
+    "IT-C30-anche",
+    "IT-C30-ce"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "IT-EXT-034-NON"
+  ]
+}

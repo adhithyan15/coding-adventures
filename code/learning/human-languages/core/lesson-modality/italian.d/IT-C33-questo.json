@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C33-questo",
+    "language": "italian",
+    "chapter": 33,
+    "sequence": 1230,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:391bd7c527227a7e"
+  },
+  "findings": []
+}

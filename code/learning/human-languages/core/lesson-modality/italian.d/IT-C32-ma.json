@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C32-ma",
+    "language": "italian",
+    "chapter": 32,
+    "sequence": 1180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ac7db0d864fde00"
+  },
+  "findings": []
+}

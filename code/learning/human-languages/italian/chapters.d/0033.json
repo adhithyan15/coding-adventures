@@ -1,0 +1,24 @@
+{
+  "chapter": 33,
+  "title": "This and That",
+  "label": "ch:it-questo-quello",
+  "canDo": "I can point at a thing near me and a thing away from me, put a demonstrative in front of a noun, introduce a third person, and say here and there.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C33-qui-li",
+    "kind": "task",
+    "summary": "The chapter's last lesson closes the pointing set and shows that ille — the Latin far-pointer — has now done three jobs in this book: the article of Chapter 1, the quello of two lessons back, and lì.",
+    "assesses": [
+      "IT-LEX-QUESTO-02",
+      "IT-ETYMON-QUESTO-03",
+      "IT-LEX-QUELLO-02",
+      "IT-ETYMON-QUELLO-03",
+      "IT-GRAMMAR-QUESTO-CAFFE-02",
+      "IT-PRAGMATIC-QUESTO-E-02",
+      "IT-LEX-QUI-LI-02",
+      "IT-ETYMON-QUI-LI-03"
+    ]
+  }
+}

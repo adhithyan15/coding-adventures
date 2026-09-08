@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C34-mio-tuo-suo",
+    "language": "italian",
+    "chapter": 34,
+    "sequence": 1280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b8d6d9340dd09b31"
+  },
+  "findings": []
+}

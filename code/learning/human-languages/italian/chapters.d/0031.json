@@ -1,0 +1,25 @@
+{
+  "chapter": 31,
+  "title": "Che",
+  "label": "ch:it-che",
+  "canDo": "I can join two clauses with che, say what I think, ask who and what, and exclaim.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "IT-C31-che-buono",
+    "kind": "task",
+    "summary": "The chapter's last lesson spends what the book already owns: che from four lessons back and buono from Chapter 1, which had spent twenty-nine chapters welded to a time of day and was never once said about anything.",
+    "assesses": [
+      "IT-GRAMMAR-CHE-02",
+      "IT-ETYMON-CHE-03",
+      "IT-GRAMMAR-PENSO-CHE-02",
+      "IT-LEX-CHI-02",
+      "IT-ETYMON-CHI-03",
+      "IT-LEX-CHE-COSA-02",
+      "IT-NOTICE-CHE-COSA-03",
+      "IT-GRAMMAR-CHE-BUONO-02",
+      "IT-GRAMMAR-BUONO-PREDICATO-03"
+    ]
+  }
+}

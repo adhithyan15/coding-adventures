@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-038-POSSESSIVI",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can use mio, tuo, suo, nostro and vostro, say il mio nome and mio fratello, address somebody as signore or signora, and say per me and a te.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C34-mio-tuo-suo",
+    "IT-C34-nostro-vostro",
+    "IT-C34-il-mio-nome",
+    "IT-C34-signore-signora",
+    "IT-C34-per-me"
+  ]
+}

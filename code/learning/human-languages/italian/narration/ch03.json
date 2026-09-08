@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:83f1390fd16977dd",
+  "sourceHash": "fnv1a64:6ebb19cc14888185",
   "lessons": [
     {
       "id": "IT-C03-io",
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73fc9f2501c60c1a",
+      "sourceHash": "fnv1a64:c56a28b18c24cd92",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ch-hard-k — Italian ch is a hard k (the opposite of English!): so chiamo = KYAH-moh, not \"chee-.\" (Italian softens c to ch-sound only before e/i; the h in chi is there precisely to keep it hard.)"
+              "text": "ch-hard-k — Italian ch is a hard k (the opposite of English!): so chiamo = KYAH-moh, not \"chee-.\" (Italian softens c to ch-sound only before e/i; the h in chiamo is there precisely to keep it hard.)"
             },
             {
               "kind": "speech",
@@ -449,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ec6113c9b63f559",
+      "sourceHash": "fnv1a64:19f2bcf3e7849859",
       "notice": null,
       "blocks": [
         {
@@ -526,7 +526,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Piacere stands alone — you just say it, with a small nod, as you shake hands. For a touch more you can say molto piacere (\"much pleasure\") or piacere di conoscerti (\"pleasure to know you\")."
+              "text": "Piacere stands alone — you just say it, with a small nod, as you shake hands. For a touch more you can say piacere di conoscerti (\"pleasure to know you\")."
             }
           ]
         },
@@ -602,7 +602,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf0fb9fc20b4d034",
+      "sourceHash": "fnv1a64:38c75f8e11c4a330",
       "notice": null,
       "blocks": [
         {
@@ -641,7 +641,7 @@
             },
             {
               "kind": "speech",
-              "text": "— Buongiorno. Come si chiama? — Mi chiamo Marco Rossi. E Lei? — Rossi. Molto piacere."
+              "text": "— Buongiorno. Come si chiama? — Mi chiamo Marco Rossi. E Lei? — Rossi. Piacere."
             }
           ]
         },
