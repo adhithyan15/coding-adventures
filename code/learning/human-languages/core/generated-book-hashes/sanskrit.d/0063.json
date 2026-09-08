@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:97e2e89a57f728e2",
+  "lessonIds": [
+    "SA-C63-sixth",
+    "SA-C63-fourth",
+    "SA-C63-third",
+    "SA-C63-second",
+    "SA-C63-first",
+    "SA-R63-all-ten"
+  ],
+  "tex": "sanskrit/book/chapters/ch63-ordinals-older-endings.tex"
+}

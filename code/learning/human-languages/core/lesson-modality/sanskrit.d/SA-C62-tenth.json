@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C62-tenth",
+    "language": "sanskrit",
+    "chapter": 62,
+    "sequence": 2880,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5ddb1f1399aaef8c"
+  },
+  "findings": []
+}

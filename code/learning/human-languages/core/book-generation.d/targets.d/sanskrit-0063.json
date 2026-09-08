@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 63,
+  "output": "sanskrit/book/chapters/ch63-ordinals-older-endings.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

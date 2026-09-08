@@ -449,7 +449,21 @@
       "id": "SA-A1-Q-02",
       "category": "Saṅkhyā — number and quantity",
       "label": "ordinal numerals to tenth",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C62-ORDINAL-01",
+        "SA-GRAMMAR-C62-ORDINAL-MA-02",
+        "SA-LEX-C62-ORDINAL-03",
+        "SA-LEX-C62-ORDINAL-04",
+        "SA-LEX-C62-ORDINAL-05",
+        "SA-LEX-C62-ORDINAL-06",
+        "SA-LEX-C63-ORDINAL-01",
+        "SA-GRAMMAR-C63-ORDINAL-THA-02",
+        "SA-LEX-C63-ORDINAL-03",
+        "SA-LEX-C63-ORDINAL-04",
+        "SA-GRAMMAR-C63-ORDINAL-TIYA-05",
+        "SA-LEX-C63-ORDINAL-06",
+        "SA-LEX-C63-ORDINAL-07"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -459,7 +473,7 @@
         "A1-Q-02",
         "A1-NG3-06"
       ],
-      "note": "UNCOVERED. prathamaḥ, dvitīyaḥ and the rest appear nowhere. This also leaves ordering — first, second, then — without its exponents, which is why the spatial-order point below is uncovered too."
+      "note": "CLOSED by the ordinal tranche, chapters 62-63, one word a lesson, in the order Sanskrit's own construction dictates rather than in numerical order. Chapter 62 opens at FIFTH, because -ma is the ending that generalizes -- it makes 5, 7, 8, 9 and 10 with nothing else changing -- and a rule must be visible before a departure from it is legible. It skips SIX on purpose and says so. Chapter 63 then works OUTWARD from that hole: sasthah is strange until caturthah makes -tha a pair; trtiyah is a third oddity until dvitiyah makes -tiya a pair; and prathamah arrives last because it can only be recognised as a DIFFERENT KIND of word once nine words of the same kind have gone past -- Macdonell records it as pra-tama, a superlative of pra 'forward', with no numeral in it at all. The grouping is read off the dictionary rather than asserted: Macdonell prints the join inside every one of the ten headwords, and the chapter-63 payoff prints that table with his page numbers. CORRECTION TO THIS NOTE'S OWN PREVIOUS TEXT: it claimed the missing ordinals were also why SA-A1-SP-02 was uncovered. That was wrong. SP-02 is RELATIVE POSITION -- left, right, above, below, in front, behind -- and it is uncovered because vamam, daksinam, upari, adhah, agre and pascat are taught nowhere. Closing the ordinals does not touch it. NOT CLAIMED HERE: ordinals above tenth, and the feminine forms in -i that Macdonell lists for several of these -- no lesson teaches a feminine ordinal and none is probed."
     },
     {
       "id": "SA-A1-Q-03",
