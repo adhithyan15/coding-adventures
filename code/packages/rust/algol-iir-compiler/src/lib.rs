@@ -2787,6 +2787,17 @@ impl Compiler {
         node: &GrammarASTNode,
         inside_standard_function: bool,
     ) -> bool {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            return self.static_predicate_dependencies(condition).is_some()
+                && self.real_dependencies_are_standard_function_operands(
+                    then_node,
+                    inside_standard_function,
+                )
+                && self.real_dependencies_are_standard_function_operands(
+                    else_node,
+                    inside_standard_function,
+                );
+        }
         let call_name = (node.rule_name == "proc_call")
             .then(|| {
                 direct_tokens(node)
@@ -11100,6 +11111,39 @@ mod tests {
                 "{source}"
             );
             if source.contains("real procedure cos") {
+                assert!(main.instructions.iter().any(|instr| instr.op == "call"));
+            }
+        }
+    }
+
+    #[test]
+    fn al4_conditional_tracked_real_standard_function_exponents_unroll_real_powers() {
+        let module = compile_source(
+            "begin real gate, exponent, saved; exponent := 0.0; saved := 6.0 ^ (if gate = 0.0 then cos(exponent) + 1 else cos(exponent) + 1) + 6.0; gate := 1.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("a pure real selector may guard path-independent exact exponent branches");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
+    fn al4_conditional_tracked_real_standard_function_exponents_fail_closed() {
+        for source in [
+            "begin real gate, exponent, saved; exponent := 0.0; saved := 6.0 ^ (if gate = 0.0 then cos(exponent) + 1 else cos(exponent) + 2) end",
+            "begin real gate, exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate = 0.0 then exponent else exponent) end",
+            "begin real procedure choose(x); value x; real x; choose := x; real gate, exponent, saved; gate := 0.0; exponent := 0.0; saved := 6.0 ^ (if choose(gate) = 0.0 then cos(exponent) + 1 else cos(exponent) + 1) end",
+        ] {
+            let module = compile_source(source, "test")
+                .expect("unsafe conditional tracked real exponents must retain runtime power");
+            let main = module.get_function("main").expect("has main");
+            assert!(
+                main.instructions.iter().any(|instr| instr.op == "f64_pow"),
+                "{source}"
+            );
+            if source.contains("real procedure choose") {
                 assert!(main.instructions.iter().any(|instr| instr.op == "call"));
             }
         }

@@ -1576,6 +1576,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a pure real selector still executes around equal exact
+    // built-in exponent branches over a tracked local real snapshot.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real gate, exponent, saved; exponent := 0.0; saved := 6.0 ^ (if gate = 0.0 then cos(exponent) + 1 else cos(exponent) + 1) + 6.0; gate := 1.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — equal branches of a pure runtime conditional may retain
     // bounded multiplication while the selector branch still lowers.
     Prog {
@@ -9351,6 +9360,35 @@ fn algol_tracked_real_standard_function_exponents_run_on_every_available_standar
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the tracked real standard-function exponent did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_tracked_real_standard_function_exponents_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("real gate, exponent, saved; exponent := 0.0")
+                && program.src.contains(
+                    "if gate = 0.0 then cos(exponent) + 1 else cos(exponent) + 1",
+                )
+        })
+        .expect("the conditional tracked real standard-function program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional tracked real standard-function exponent did not run"
             );
             continue;
         };
