@@ -12,12 +12,12 @@
 //! Instructions with the `cc` suffix update these flags; others leave PSR alone.
 
 use crate::bits::{
-    add_32, add_32c, and_32, andn_32, bits_to_u32, compute_zero, not_32, or_32,
-    orn_32, overflow_add, overflow_sub, sll_32, sra_32, srl_32, sub_32, sub_32b, u32_to_bits,
-    u64_to_bits, xnor_32, xor_32,
+    add_32, add_32c, and_32, andn_32, bits_to_u32, compute_zero, not_32, or_32, orn_32,
+    overflow_add, overflow_sub, sll_32, sra_32, srl_32, sub_32, sub_32b, u32_to_bits, u64_to_bits,
+    xnor_32, xor_32,
 };
 use arithmetic::adders::ripple_carry_adder_with_carry;
-use logic_gates::gates::{not_gate, xor_gate};
+use logic_gates::gates::{and_gate, not_gate, or_gate, xor_gate};
 
 /// Condition codes produced by an ALU operation.
 #[derive(Debug, Clone, Copy, Default)]
@@ -127,11 +127,18 @@ pub fn subxcc32(a: u32, b: u32, borrow_in: u8) -> (u32, Cc) {
 
 /// Derive CC from a logic result (no carry or overflow for logical ops).
 fn logic_cc(bits: &[u8]) -> Cc {
-    Cc { n: bits[31], z: compute_zero(bits), v: 0, c: 0 }
+    Cc {
+        n: bits[31],
+        z: compute_zero(bits),
+        v: 0,
+        c: 0,
+    }
 }
 
 /// AND: no CC update.
-pub fn and32(a: u32, b: u32) -> u32 { bits_to_u32(&and_32(&u32_to_bits(a), &u32_to_bits(b))) }
+pub fn and32(a: u32, b: u32) -> u32 {
+    bits_to_u32(&and_32(&u32_to_bits(a), &u32_to_bits(b)))
+}
 
 /// ANDcc: update CC.
 pub fn andcc32(a: u32, b: u32) -> (u32, Cc) {
@@ -141,7 +148,9 @@ pub fn andcc32(a: u32, b: u32) -> (u32, Cc) {
 }
 
 /// ANDN: `rd = rs1 & ~src2`, no CC.
-pub fn andn32(a: u32, b: u32) -> u32 { bits_to_u32(&andn_32(&u32_to_bits(a), &u32_to_bits(b))) }
+pub fn andn32(a: u32, b: u32) -> u32 {
+    bits_to_u32(&andn_32(&u32_to_bits(a), &u32_to_bits(b)))
+}
 
 /// ANDNcc: update CC.
 pub fn andncc32(a: u32, b: u32) -> (u32, Cc) {
@@ -151,7 +160,9 @@ pub fn andncc32(a: u32, b: u32) -> (u32, Cc) {
 }
 
 /// OR: no CC.
-pub fn or32(a: u32, b: u32) -> u32 { bits_to_u32(&or_32(&u32_to_bits(a), &u32_to_bits(b))) }
+pub fn or32(a: u32, b: u32) -> u32 {
+    bits_to_u32(&or_32(&u32_to_bits(a), &u32_to_bits(b)))
+}
 
 /// ORcc: update CC.
 pub fn orcc32(a: u32, b: u32) -> (u32, Cc) {
@@ -161,7 +172,9 @@ pub fn orcc32(a: u32, b: u32) -> (u32, Cc) {
 }
 
 /// ORN: `rd = rs1 | ~src2`, no CC.
-pub fn orn32(a: u32, b: u32) -> u32 { bits_to_u32(&orn_32(&u32_to_bits(a), &u32_to_bits(b))) }
+pub fn orn32(a: u32, b: u32) -> u32 {
+    bits_to_u32(&orn_32(&u32_to_bits(a), &u32_to_bits(b)))
+}
 
 /// ORNcc: update CC.
 pub fn orncc32(a: u32, b: u32) -> (u32, Cc) {
@@ -171,7 +184,9 @@ pub fn orncc32(a: u32, b: u32) -> (u32, Cc) {
 }
 
 /// XOR: no CC.
-pub fn xor32(a: u32, b: u32) -> u32 { bits_to_u32(&xor_32(&u32_to_bits(a), &u32_to_bits(b))) }
+pub fn xor32(a: u32, b: u32) -> u32 {
+    bits_to_u32(&xor_32(&u32_to_bits(a), &u32_to_bits(b)))
+}
 
 /// XORcc: update CC.
 pub fn xorcc32(a: u32, b: u32) -> (u32, Cc) {
@@ -181,7 +196,9 @@ pub fn xorcc32(a: u32, b: u32) -> (u32, Cc) {
 }
 
 /// XNOR: `rd = ~(rs1 ^ src2)`, no CC.
-pub fn xnor32(a: u32, b: u32) -> u32 { bits_to_u32(&xnor_32(&u32_to_bits(a), &u32_to_bits(b))) }
+pub fn xnor32(a: u32, b: u32) -> u32 {
+    bits_to_u32(&xnor_32(&u32_to_bits(a), &u32_to_bits(b)))
+}
 
 /// XNORcc: update CC.
 pub fn xnorcc32(a: u32, b: u32) -> (u32, Cc) {
@@ -272,67 +289,114 @@ pub fn smul32(a: u32, b: u32) -> (u32, u32) {
 
 // ─── Divide ───────────────────────────────────────────────────────────────────
 
-/// UDIV: unsigned 64÷32 → 32-bit quotient.  Dividend is `Y:rs1`.
-///
-/// Saturates to `0xFFFF_FFFF` on overflow (quotient > 2^32-1).
-/// Uses non-restoring shift-and-subtract via gate-level adders.
-pub fn udiv64(y: u32, rs1: u32, src2: u32) -> u32 {
-    if src2 == 0 {
-        return 0xFFFF_FFFF;
-    }
-    let dividend = ((y as u64) << 32) | (rs1 as u64);
-    let divisor = src2 as u64;
-    // Quotient overflow check: if dividend / divisor > 0xFFFF_FFFF, saturate.
-    if divisor != 0 && dividend / divisor > 0xFFFF_FFFF {
-        return 0xFFFF_FFFF;
-    }
-    // Shift-and-subtract long division (64 steps, 1 bit of quotient per step).
-    let divisor_bits = u64_to_bits(divisor);
-    let mut remainder = u64_to_bits(0u64);
-    let dividend_bits = u64_to_bits(dividend);
-    let mut quotient = [0u8; 64];
+fn twos_complement(bits: &[u8]) -> Vec<u8> {
+    let inverted: Vec<u8> = bits.iter().copied().map(not_gate).collect();
+    let mut one = vec![0; bits.len()];
+    one[0] = 1;
+    ripple_carry_adder_with_carry(&inverted, &one, 0).sum
+}
+
+fn divide_unsigned_bits(dividend: &[u8], divisor: &[u8]) -> Vec<u8> {
+    let mut remainder = vec![0; 64];
+    let mut quotient = vec![0; 64];
+    let inverted_divisor: Vec<u8> = divisor.iter().copied().map(not_gate).collect();
     for i in (0..64).rev() {
-        // Shift remainder left by 1, bring in next dividend bit.
         for j in (1..64).rev() {
             remainder[j] = remainder[j - 1];
         }
-        remainder[0] = dividend_bits[i];
-        // Try to subtract divisor from remainder.
-        let not_div: Vec<u8> = divisor_bits.iter().map(|&b| not_gate(b)).collect();
-        let r = ripple_carry_adder_with_carry(&remainder, &not_div, 1);
-        // If no borrow (carry_out == 1), divisor fit → quotient bit = 1.
-        if r.carry_out == 1 {
-            quotient[i] = 1;
-            remainder = r.sum;
+        remainder[0] = dividend[i];
+        let subtraction = ripple_carry_adder_with_carry(&remainder, &inverted_divisor, 1);
+        quotient[i] = subtraction.carry_out;
+        for (remainder_bit, sum_bit) in remainder.iter_mut().zip(&subtraction.sum) {
+            *remainder_bit = if subtraction.carry_out == 1 {
+                *sum_bit
+            } else {
+                *remainder_bit
+            };
         }
     }
-    
-    bits_to_u32(&quotient[..32])
+    quotient
 }
 
-/// SDIV: signed 64÷32 → 32-bit quotient.
-///
-/// Saturates to `0x7FFF_FFFF` (positive overflow) or `0x8000_0000` (negative
-/// overflow) following SPARC V8 semantics.
-pub fn sdiv64(y: u32, rs1: u32, src2: u32) -> u32 {
+fn any_high(bits: &[u8]) -> u8 {
+    bits.iter().copied().fold(0, or_gate)
+}
+
+/// UDIV plus the quotient-overflow signal used by UDIVcc.
+pub fn udiv64_with_overflow(y: u32, rs1: u32, src2: u32) -> (u32, bool) {
     if src2 == 0 {
-        return 0x7FFF_FFFF;
+        return (u32::MAX, false);
     }
-    let dividend = (((y as i32) as i64) << 32) | (rs1 as u64 as i64);
-    let divisor = (src2 as i32) as i64;
-    // i64::MIN / -1 would panic in debug (overflow) and give wrong result in
-    // release.  Per SPARC V8 §5.2.9 this saturates to the positive maximum.
-    if dividend == i64::MIN && divisor == -1 {
-        return 0x7FFF_FFFF;
+    let mut dividend = u32_to_bits(rs1);
+    dividend.extend(u32_to_bits(y));
+    let mut divisor = u32_to_bits(src2);
+    divisor.resize(64, 0);
+    let quotient = divide_unsigned_bits(&dividend, &divisor);
+    let overflow = any_high(&quotient[32..]) != 0;
+    (
+        if overflow {
+            u32::MAX
+        } else {
+            bits_to_u32(&quotient[..32])
+        },
+        overflow,
+    )
+}
+
+/// UDIV: unsigned 64÷32 → saturated 32-bit quotient.
+pub fn udiv64(y: u32, rs1: u32, src2: u32) -> u32 {
+    udiv64_with_overflow(y, rs1, src2).0
+}
+
+/// SDIV plus the quotient-overflow signal used by SDIVcc.
+pub fn sdiv64_with_overflow(y: u32, rs1: u32, src2: u32) -> (u32, bool) {
+    if src2 == 0 {
+        return (i32::MAX as u32, false);
     }
-    let q = dividend / divisor;
-    if q > i32::MAX as i64 {
-        0x7FFF_FFFF
-    } else if q < i32::MIN as i64 {
-        0x8000_0000
+    let mut dividend = u32_to_bits(rs1);
+    dividend.extend(u32_to_bits(y));
+    let dividend_negative = dividend[63];
+    if dividend_negative == 1 {
+        dividend = twos_complement(&dividend);
+    }
+    let mut divisor = u32_to_bits(src2);
+    let divisor_negative = divisor[31];
+    if divisor_negative == 1 {
+        divisor = twos_complement(&divisor);
+    }
+    divisor.resize(64, 0);
+
+    let quotient = divide_unsigned_bits(&dividend, &divisor);
+    let negative = xor_gate(dividend_negative, divisor_negative);
+    let high = any_high(&quotient[32..]);
+    let positive_overflow = or_gate(high, quotient[31]);
+    let negative_overflow = or_gate(high, and_gate(quotient[31], any_high(&quotient[..31])));
+    let overflow = if negative == 1 {
+        negative_overflow == 1
     } else {
-        q as u32
+        positive_overflow == 1
+    };
+    if overflow {
+        return (
+            if negative == 1 {
+                i32::MIN as u32
+            } else {
+                i32::MAX as u32
+            },
+            true,
+        );
     }
+    let low = if negative == 1 {
+        twos_complement(&quotient[..32])
+    } else {
+        quotient[..32].to_vec()
+    };
+    (bits_to_u32(&low), false)
+}
+
+/// SDIV: signed 64÷32 → saturated 32-bit quotient.
+pub fn sdiv64(y: u32, rs1: u32, src2: u32) -> u32 {
+    sdiv64_with_overflow(y, rs1, src2).0
 }
 
 // ─── MULScc ───────────────────────────────────────────────────────────────────
@@ -341,41 +405,30 @@ pub fn sdiv64(y: u32, rs1: u32, src2: u32) -> u32 {
 ///
 /// SPARC V8 §5.2.5: performs one step of the Booth-encoded multiply loop.
 ///
-/// ```text
-/// step_operand = (PSR.N XOR PSR.V) ? (Y:rd >> 1) + rs1 : (Y:rd >> 1)
-///              adjusted by Y bit 0 as the Booth digit
-/// ```
-///
-/// Simplified model matching the Python reference:
-/// 1. The "partial product" operand is determined by `Y bit 0`.
-/// 2. The 32-bit sum is `(rd >> 1) | (old_N_xor_V << 31)` ± rs1.
-/// 3. Y is shifted right by 1; old rd bit 0 feeds into Y bit 31.
-/// 4. CC are updated.
+/// The repository contract shifts `src2` right with old Y bit zero entering
+/// bit 31, then conditionally adds `rs1` when old N XOR V is set. Y shifts the
+/// old destination right with result bit zero entering bit 31. Condition codes
+/// come from the addition.
 ///
 /// Returns `(new_rd, new_y, cc)`.
-pub fn mulscc(rd: u32, y: u32, rs1: u32, psr_n: u8, psr_v: u8) -> (u32, u32, Cc) {
-    // Operand = rs1 if Y[0] == 1, else 0.
+pub fn mulscc(rd: u32, y: u32, rs1: u32, src2: u32, psr_n: u8, psr_v: u8) -> (u32, u32, Cc) {
     let y_bit0 = (y & 1) as u8;
-    let operand = if y_bit0 == 1 { rs1 } else { 0u32 };
-
-    // Shifted partial product: MSB from (N XOR V).
     let n_xor_v = xor_gate(psr_n, psr_v);
-    let shifted_rd_bits = {
-        let rb = u32_to_bits(rd);
-        let mut s = srl_32(&rb, 1);
-        s[31] = n_xor_v;
+    let operand = if n_xor_v == 1 { rs1 } else { 0u32 };
+
+    // Shift src2 right; Y[0] enters its high bit before the conditional add.
+    let shifted_bits = {
+        let mut s = srl_32(&u32_to_bits(src2), 1);
+        s[31] = y_bit0;
         s
     };
-    let shifted_rd = bits_to_u32(&shifted_rd_bits);
+    let (result, cc) = addcc32(bits_to_u32(&shifted_bits), operand);
 
-    let (result, cc) = addcc32(shifted_rd, operand);
-
-    // New Y: shift right, bring in old rd bit 0.
-    let rd_bit0 = (rd & 1) as u8;
+    // New Y: shift the old destination right; result bit zero enters bit 31.
+    let result_bit0 = (result & 1) as u8;
     let new_y_bits = {
-        let yb = u32_to_bits(y);
-        let mut s = srl_32(&yb, 1);
-        s[31] = rd_bit0;
+        let mut s = srl_32(&u32_to_bits(rd), 1);
+        s[31] = result_bit0;
         s
     };
     let new_y = bits_to_u32(&new_y_bits);

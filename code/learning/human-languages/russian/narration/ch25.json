@@ -1,0 +1,393 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 25,
+  "title": "Twenty, a Hundred, and the Number That Named a Family",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:7c08110e3d579aef",
+  "lessons": [
+    {
+      "id": "RU-C25-dvadtsat",
+      "sequence": 1260,
+      "title": "двадцать (dvádtsat) — twenty, and both halves still audible",
+      "headword": "двадцать",
+      "romanization": "dvádtsat",
+      "gloss": "twenty — two tens, with both halves still audible",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df3f3bf8db899b06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to ten, then say ten on its own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word, and a piece",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "двадцать — dvádtsat — twenty."
+            },
+            {
+              "kind": "speech",
+              "text": "Take it apart and both pieces are words you have: два at the front, and -дцать, which is десять worn down, at the back. Two tens."
+            },
+            {
+              "kind": "speech",
+              "text": "That worn ending does the same job further up: тридцать is three tens, thirty. Russian's tens are not a new vocabulary; they are numbers you already know with десять ground down onto the end of them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "двадцать (dvádtsat) — twenty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **двадцать** — twenty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SPLIT",
+              "instruction": "два + -дцать",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SPLIT: **два** + **-дцать**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "три + -дцать becomes тридцать, thirty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: **три** + **-дцать** → **тридцать**, thirty]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: двадцать (dvádtsat); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C25-dvadtsat-split",
+              "prompt": "What are the two pieces of dvadtsat?",
+              "assesses": [
+                "RU-GRAMMAR-TSAT-TENS-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "dva and desyat",
+                "два and десять",
+                "dva + dtsat",
+                "two and ten"
+              ],
+              "feedback": {
+                "correct": "Two tens, both still audible.",
+                "incorrect": "два, two, and -дцать, which is десять worn down."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C25-sto",
+      "sequence": 1270,
+      "title": "сто (sto) — a hundred, and the number that named a family",
+      "headword": "сто",
+      "romanization": "sto",
+      "gloss": "a hundred — three letters, and the word that names half the Indo-European family",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba62579f30f780e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say двадцать (dvádtsat) and its two pieces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "сто — sto — a hundred."
+            },
+            {
+              "kind": "speech",
+              "text": "Three letters, and the largest number this book teaches is the shortest word in it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — centum and satem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "сто continues Indo-European kmtom, \"hundred.\" English hundred, Greek hekatón and Latin centum are the same word — and centum is where this stops being an etymology and becomes the name of a division."
+            },
+            {
+              "kind": "speech",
+              "text": "Some branches kept that first ḱ as a k sound. Latin centum, Greek hekatón, Welsh cant — these are the centum languages, named after the Latin word for a hundred."
+            },
+            {
+              "kind": "speech",
+              "text": "Others turned it into an s or an sh. Russian сто (sto), Avestan satəm, Sanskrit śatám, Lithuanian šimtas — these are the satem languages, named after the Avestan word for the same number."
+            },
+            {
+              "kind": "speech",
+              "text": "A word for a hundred is what the two halves of the Indo-European family are named after, and сто (sto) is on the satem side. It is the same s that survived in шесть and семь, doing the same work on a different consonant."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "сто (sto) — a hundred",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **сто** — a hundred]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "сто (sto) from kmtom becomes Latin centum, English hundred",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **сто** ← \\**kmtom* → Latin **centum**, English **hundred**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "centum and satem, and which side Russian is on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: **centum** and **satem**, and which side Russian is on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "десять, двадцать (dvádtsat), сто (sto)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **десять, двадцать, сто**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: сто (sto); Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C25-sto-satem",
+              "prompt": "Russian sto and Latin centum are the same word. Which side of the centum/satem split is Russian on, and why?",
+              "assesses": [
+                "RU-CULTURE-CENTUM-SATEM-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "satem — the k became an s",
+                "satem, because the k became s",
+                "satem",
+                "the satem side"
+              ],
+              "feedback": {
+                "correct": "And the two halves of the family are named after this very number.",
+                "incorrect": "Satem — Russian turned the first k into an s."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C25-practice",
+      "sequence": 1280,
+      "title": "Payoff — twelve numbers, and what they still cannot do",
+      "headword": "десять двадцать сто",
+      "romanization": "désyat dvádtsat sto",
+      "gloss": "payoff — twelve numbers, and an honest account of what a Russian number still does to the noun after it",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7cc84f6baf5185d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to ten, then ask сколько."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: what a Russian number does to the noun after it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A number in Russian does not simply sit in front of a noun. It governs it: два, три and четыре take one form of the following noun and пять upward takes another, and neither is the dictionary form."
+            },
+            {
+              "kind": "speech",
+              "text": "This book cannot teach that yet, and saying so is more useful than skirting it. The forms it needs are the genitive singular and the genitive plural, and this track has taught the genitive in exactly one place — after до, in до свидания. Counting THINGS is therefore a genitive chapter rather than a numeral one."
+            },
+            {
+              "kind": "speech",
+              "text": "What the twelve numbers are already good for: answering сколько? with a bare figure, giving an age, saying a price, reading a room number, and every place a number stands alone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Count aloud one to ten, then say двадцать (dvádtsat) and сто (sto)."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear twelve amounts named singly and out of order; say each."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the twelve printed shuffled and say each."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all twelve from dictation."
+            },
+            {
+              "kind": "speech",
+              "text": "Split двадцать (dvádtsat) into its two pieces and build тридцать from три."
+            },
+            {
+              "kind": "speech",
+              "text": "Say which side of the centum/satem split Russian is on, and name the number the split is named after."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Russian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C25-practice-honest",
+              "prompt": "Can this book yet say 'two books' in Russian? Say why or why not.",
+              "assesses": [
+                "RU-GRAMMAR-NUMERAL-CASE-DEBT-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "no — dva changes the form of the noun after it",
+                "no, the noun changes form",
+                "no — it needs the genitive",
+                "no, it governs the noun"
+              ],
+              "feedback": {
+                "correct": "The numbers are here; the case they govern is a genitive chapter.",
+                "incorrect": "No. два, три and четыре take one form of the noun and пять upward another, and neither is taught yet."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -250,3 +250,9 @@ source local, and assign the destination only after the last read. COBOL's
 (a lone sending field is used as its own concatenation with no intermediate
 temporary), and is now a direct regression alongside the destination-aliases-
 source unit test.
+
+FLOW-MATIC WASM EOF (VM-039b): modules using `input_more` import
+`env.__input_more() -> i64`. Hosts must return 1 when input remains and 0
+at EOF without consuming the next field. The peek and `env.__input_i64`
+reader must share the same input stream; repeated peeks must be stable.
+The matrix exercises the four native/LLVM input programs on WASM as well.

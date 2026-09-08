@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:caa8d4145128d3b6",
+  "lessonIds": [
+    "UR-C26-is-ka",
+    "UR-C26-apna",
+    "UR-C26-hai-na",
+    "UR-C26-vocative",
+    "UR-R26-whose-and-who-to"
+  ],
+  "tex": "urdu/book/chapters/ch26-whose-and-who-to.tex"
+}

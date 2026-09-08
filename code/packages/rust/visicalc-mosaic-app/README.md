@@ -62,3 +62,10 @@ VisiCalc Linux/Windows workflow also runs the Rust tests when shared fixtures
 change. This is application/ABI validation; native GUI launch, physical
 scrolling, accessible focus, polished design and downloaded-release acceptance
 remain required by [the delivery backlog](https://github.com/adhithyan15/coding-adventures/issues/14267).
+
+Selected-cell descriptions use committed display values rather than pending
+keystrokes. Formula cells include the result (including errors) and source;
+empty cells say blank. The selection-summary prop and polite announcements share
+this Rust-owned description. Commits identify the updated cell and, after inline
+commit, the next selection. Cancel/restore/new-workbook messages include current
+selection context. Typing, viewport changes and a no-op cancel stay silent.

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:44cebb04602cae5a",
+  "lessonIds": [
+    "RU-C23-dva",
+    "RU-C23-tri",
+    "RU-C23-chetyre",
+    "RU-C23-pyat",
+    "RU-C23-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch23.txt",
+  "json": "russian/narration/ch23.json",
+  "textHash": "fnv1a64:a9685b18f41a7cf3",
+  "jsonHash": "fnv1a64:46da2545ead7f370",
+  "findings": []
+}

@@ -27,7 +27,16 @@ it("pins Urdu lesson-content budgets", () =>
     // note (ārām se, whose politeness comes from asking for ease rather than
     // slowness) states what the WORD means, which is etymology and already has
     // its own strand.
-    lessons: 108,
+    //
+    // 108 -> 134: the oblique tranche (chapters 23-27) adds twenty-six lessons --
+    // twenty-one items and five reviews. RE-MEASURED against the tree. Idioms,
+    // senses and culture claims stay at 2 / 4 / 4: a case ending is none of the
+    // three, and the two lessons that came closest to a culture claim -- the
+    // vocative, where an Urdu speaker addresses almost nobody by name, and the
+    // nisba, where a person's last name WAS their birthplace -- both state a fact
+    // about how the language is used rather than a claim about a people, which is
+    // pragmatics and etymology and both already have their own strands.
+    lessons: 134,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,

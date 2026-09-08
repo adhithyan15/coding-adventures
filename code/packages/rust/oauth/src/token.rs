@@ -10,7 +10,8 @@ use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{self, Debug, Formatter};
 
-const MAX_TOKEN_RESPONSE_BYTES: usize = 128 * 1024;
+/// Largest token-endpoint response body accepted by the protocol decoder.
+pub const MAX_TOKEN_RESPONSE_BYTES: usize = 128 * 1024;
 const MAX_TOKEN_RESPONSE_FIELDS: usize = 64;
 const MAX_TOKEN_BYTES: usize = 64 * 1024;
 const MAX_TOKEN_TYPE_BYTES: usize = 64;
@@ -294,6 +295,16 @@ pub struct TokenResponse {
 }
 
 impl TokenResponse {
+    /// Return the provider identity bound to the originating token request.
+    pub fn provider(&self) -> &ProviderId {
+        &self.provider
+    }
+
+    /// Return the caller-owned trace inherited from the originating request.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.trace
+    }
+
     /// Return the declared token type, normally `Bearer`.
     pub fn token_type(&self) -> &str {
         &self.token_type

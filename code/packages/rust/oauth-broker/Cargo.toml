@@ -1,0 +1,10 @@
+[package]
+name = "coding_adventures_oauth_broker"
+version = "0.1.0"
+edition = "2021"
+description = "Provider-neutral audit-first OAuth credential and refresh orchestration"
+
+[dependencies]
+coding_adventures_oauth = { path = "../oauth" }
+coding_adventures_oauth_credential_custody = { path = "../oauth-credential-custody" }
+coding_adventures_zeroize = { path = "../zeroize" }

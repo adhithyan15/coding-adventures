@@ -1,0 +1,21 @@
+{
+  "chapter": 24,
+  "title": "Here, There, and Where",
+  "label": "ch:ur-here-there-and-where",
+  "canDo": "I can put a demonstrative in front of a postposition, and I can say where something is and where it is not.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-R24-here-there-where",
+    "kind": "speaking",
+    "summary": "کہاں has been askable since chapter seventeen and unanswerable ever since. یہاں and وہاں answer it, and اس and ان let the demonstratives the book already owned stand in front of a postposition for the first time.",
+    "assesses": [
+      "UR-GRAMMAR-IS-OBLIQUE",
+      "UR-GRAMMAR-UN-OBLIQUE",
+      "UR-LEX-YAHAN",
+      "UR-LEX-VAHAN"
+    ],
+    "note": "ان is a grammatical plural and a social one at once: it is 'those' and it is 'him, respectfully', which is the same courtesy آپ carries and a learner must be told rather than left to guess."
+  }
+}

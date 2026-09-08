@@ -1,5 +1,5 @@
 {
-  "case_count": 302,
+  "case_count": 315,
   "cases": [
     {
       "axis": "adoption-agency",
@@ -1779,15 +1779,15 @@
     },
     {
       "axis": "template-insertion",
-      "id": "template-dat-112",
+      "id": "template-dat-127",
       "reason": "template contents and template-context insertion modes",
-      "source": "template.dat:112"
+      "source": "template.dat:127"
     },
     {
       "axis": "template-insertion",
-      "id": "template-dat-109",
+      "id": "template-dat-116",
       "reason": "template contents and template-context insertion modes",
-      "source": "template.dat:109"
+      "source": "template.dat:116"
     },
     {
       "axis": "html-fragment",
@@ -1803,15 +1803,93 @@
     },
     {
       "axis": "template-insertion",
-      "id": "template-dat-46",
+      "id": "template-dat-52",
       "reason": "template contents and template-context insertion modes",
-      "source": "template.dat:46"
+      "source": "template.dat:52"
     },
     {
       "axis": "adoption-agency",
       "id": "adoption02-dat-4",
       "reason": "misnested formatting elements and adoption-agency recovery",
       "source": "adoption02.dat:4"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-44",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:44"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-45",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:45"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-46",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:46"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-47",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:47"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-48",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:48"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-49",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:49"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-117",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:117"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-118",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:118"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-119",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:119"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-120",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:120"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-121",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:121"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-122",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:122"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-123",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:123"
     }
   ],
   "counts_by_axis": {
@@ -1819,7 +1897,7 @@
     "foreign-fragment": 66,
     "html-fragment": 81,
     "table-insertion": 19,
-    "template-insertion": 114
+    "template-insertion": 127
   },
   "description": "Focused parser audit over selected html5lib tree-construction families that stress insertion-mode recovery.",
   "format": "whatwg-html-tree-insertion-audit/v1",

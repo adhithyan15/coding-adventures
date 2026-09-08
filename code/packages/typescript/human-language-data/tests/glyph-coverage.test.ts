@@ -7,7 +7,7 @@ import {
   type BookFonts,
 } from "../src/glyph-coverage.js";
 import { loadBookFonts, loadMainFontCharset } from "../src/loader.js";
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -329,5 +329,130 @@ describe("hostile preamble input", () => {
     const started = Date.now();
     measureGlyphCoverage([book], new Set());
     expect(Date.now() - started).toBeLessThan(2_000);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// The charset file itself, which nothing checked.
+//
+// `loadMainFontCharset` reads one field, `char`, and throws only when the array
+// is empty. Everything else about the file -- whether `cp` names the character
+// beside it, whether an entry is duplicated, whether a codepoint that cannot
+// render is listed -- was unchecked, on a file that is the sole authority for
+// whether a character reaches the reader.
+//
+// It was also CURATED, and a curated allow-list fails in one direction only:
+// silently, against the author. It held 123 of the 530 characters Latin Modern
+// actually sets. `1.º` was unwritable in every book until the ordinal tranche
+// added U+00AA and U+00BA by hand, and german/CHANGELOG.md records capital Ü
+// being avoided while the font has had it all along. The file is regenerated
+// from the font's cmap now, so the class is closed rather than the two instances.
+//
+// These tests cannot re-read the font: Latin Modern ships with TeX Live and is
+// not resolvable from a plain checkout, which is why the answer is committed at
+// all. What they CAN do is refuse a file that contradicts itself, and refuse the
+// three kinds of entry the regeneration deliberately excluded -- which is where
+// a hand-edit would land.
+// ---------------------------------------------------------------------------
+describe("the committed main-font charset", () => {
+  const charset = loadMainFontCharset();
+
+  interface CharsetEntry {
+    cp: string;
+    char: string;
+    name: string;
+  }
+  function entries(): CharsetEntry[] {
+    // Read as data rather than through the loader, which returns only `char`.
+    const root = new URL("../../../../learning/human-languages/core/main-font-charset.json", import.meta.url);
+    return (JSON.parse(readFileSync(root, "utf8")) as { characters: CharsetEntry[] }).characters;
+  }
+
+  it("says the same thing twice about every character, so a hand-edit cannot drift", () => {
+    // `cp` and `char` are two spellings of one fact, and only `char` is read.
+    // A wrong `cp` is therefore invisible at runtime and misleading to a reader,
+    // which is the worst combination a ledger can have.
+    for (const entry of entries()) {
+      const codepoint = entry.char.codePointAt(0);
+      expect([...entry.char], `${entry.cp} is more than one character`).toHaveLength(1);
+      expect(`U+${codepoint!.toString(16).toUpperCase().padStart(4, "0")}`).toBe(entry.cp);
+      expect(entry.name.trim().length, `${entry.cp} has no name`).toBeGreaterThan(0);
+    }
+  });
+
+  it("is sorted and free of duplicates, so a regeneration is a readable diff", () => {
+    const codepoints = entries().map((entry) => entry.char.codePointAt(0)!);
+    expect(new Set(codepoints).size).toBe(codepoints.length);
+    expect(codepoints).toEqual([...codepoints].sort((a, b) => a - b));
+    expect(charset.size).toBe(codepoints.length);
+  });
+
+  it("lists NOTHING invisible, ASCII or private-use, which is where a hand-edit lands", () => {
+    // The exclusions the regeneration makes, restated as a gate. Each is a way of
+    // blessing something that is not a rendering claim: a Private Use codepoint
+    // is a font-internal glyph slot rather than a character (Unicode calls the
+    // range Co, so the category check below covers it); a C1 control is mapped
+    // only for legacy TeX encodings; and U+00A0's glyph has no outline at all, so
+    // "the cmap has it" and "it sets" come apart there.
+    // By CATEGORY and not by range. The first draft of this test listed the four
+    // things the regeneration actually excluded -- ASCII, the Private Use Area,
+    // the C1 controls, U+00A0 and U+00AD -- and the security review of this
+    // change pointed out that it therefore closed four instances rather than the
+    // class: a hand-edit adding U+202E RIGHT-TO-LEFT OVERRIDE, U+200B, U+2028 or
+    // U+FEFF would have walked straight through a gate whose stated purpose is
+    // catching exactly that. `\p{C}` and `\p{Z}` are the property the exclusion
+    // was always about -- renders nothing -- so they are what is asserted.
+    const invisible = /^[\p{C}\p{Z}]$/u;
+    const offenders: string[] = [];
+    for (const entry of entries()) {
+      const codepoint = entry.char.codePointAt(0)!;
+      if (codepoint <= 0x7f) offenders.push(`${entry.cp} ASCII`);
+      if (invisible.test(entry.char)) offenders.push(`${entry.cp} renders nothing`);
+    }
+    expect(offenders).toEqual([]);
+    // The control, so the regex is known to discriminate rather than to be
+    // trivially satisfied by every character in the file.
+    for (const hostile of ["\u00A0", "\u00AD", "\u202E", "\u200B", "\u2028", "\uFEFF", "\uE000"]) {
+      expect(invisible.test(hostile), `${hostile.codePointAt(0)!.toString(16)} must be caught`).toBe(true);
+    }
+    expect(invisible.test("\u00AA")).toBe(false);
+  });
+
+  it("keeps the six small-caps casualties INSIDE the list, and says why", () => {
+    // lmromancaps10 carries 821 codepoints rather than 828: a small-caps face has
+    // no lowercase long s and no lowercase f-ligatures. No book uses small caps --
+    // `\textsc` and `\scshape` appear zero times across every book/ directory --
+    // so the six are covered by the faces that actually set, and the file records
+    // the difference rather than losing it. If small caps ever appear, this is
+    // where the reader finds out the answer became face-dependent.
+    const root = new URL("../../../../learning/human-languages/core/main-font-charset.json", import.meta.url);
+    const parsed = JSON.parse(readFileSync(root, "utf8")) as {
+      smallCapsGap: { note: string; characters: { cp: string; char: string }[] };
+    };
+    expect(parsed.smallCapsGap.characters.map((entry) => entry.cp)).toEqual([
+      "U+017F", "U+FB00", "U+FB01", "U+FB02", "U+FB03", "U+FB04",
+    ]);
+    expect(parsed.smallCapsGap.note).toMatch(/NO BOOK IN THIS CORPUS USES SMALL CAPS/);
+    for (const entry of parsed.smallCapsGap.characters) {
+      expect(charset.has(entry.char), `${entry.cp} named as a gap but not listed`).toBe(true);
+    }
+  });
+
+  it("HOLDS THE CHARACTERS THE OLD CURATION DROPPED, named rather than counted", () => {
+    // The instances this file was regenerated for. A count would pass on any 530
+    // characters; these are the ones a book could not write while the font could
+    // set them. U+00AA and U+00BA made `1.º` impossible corpus-wide; U+00DC is
+    // the capital Ü german/CHANGELOG.md records working around; U+2010 is the
+    // real HYPHEN, distinct from the ASCII one; U+20AC is the euro sign.
+    for (const char of ["ª", "º", "Ü", "Ä", "Ö", "Å", "Ø", "ø", "ð", "Þ", "€", "±", "½", "‐", "†"]) {
+      expect(charset.has(char), `${char} is set by the font and must be listed`).toBe(true);
+    }
+    // And the control: three characters Latin Modern genuinely does NOT have
+    // stay out. U+0254 is the open o that failed CI in Bengali, U+01E3 the
+    // ae-with-macron that failed it in Latin, U+1E9E the capital eszett German
+    // wanted. A regeneration that swept in the whole of Unicode would list these.
+    for (const char of ["ɔ", "ǣ", "ẞ"]) {
+      expect(charset.has(char), `${char} is NOT in the font and must not be listed`).toBe(false);
+    }
   });
 });

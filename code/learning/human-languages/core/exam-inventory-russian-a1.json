@@ -579,7 +579,24 @@
       "id": "RU-A1-Q-01",
       "category": "Chislitelnye i kolichestvo - numerals and quantity",
       "label": "cardinal numerals, at least to ten",
-      "probe": null,
+      "probe": [
+        "RU-LEX-ODIN-01",
+        "RU-LEX-DVA-01",
+        "RU-LEX-TRI-01",
+        "RU-LEX-CHETYRE-01",
+        "RU-LEX-PYAT-01",
+        "RU-LEX-SHEST-01",
+        "RU-LEX-SEM-01",
+        "RU-LEX-VOSEM-01",
+        "RU-LEX-DEVYAT-01",
+        "RU-LEX-DESYAT-01",
+        "RU-LEX-DVADTSAT-01",
+        "RU-LEX-STO-01",
+        "RU-GRAMMAR-TSAT-TENS-01",
+        "RU-PERFORMANCE-COUNT-FIVE",
+        "RU-PERFORMANCE-COUNT-TEN",
+        "RU-PERFORMANCE-COUNT-TWENTY"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -590,13 +607,19 @@
         "A1-NG2-01",
         "A1-NE16-01"
       ],
-      "note": "STILL ABSENT as a series. odin is now taught, as half of the odin ... drugoy joining pattern rather than as a numeral, so the track holds exactly one number and cannot count. dva through desyat, and the case government numerals impose, are untouched."
+      "note": "CLOSED BY HL-C350, and the note it replaces is the finding: the track held EXACTLY ONE number and could not count. odin was taught as half of the odin ... drugoy joining pattern -- a joining word wearing a number's clothes -- so a book that could ask skolko understood no answer to it. Chapters 23-26 teach twelve cardinals and it cost NO NEW CYRILLIC LETTER: every sign in all twelve was already on the page. TWO THINGS THE PROBE SAYS DELIBERATELY. It names RU-GRAMMAR-TSAT-TENS-01, because dvadtsat is dva plus a worn-down desyat and the tens are therefore numbers the reader already has rather than new vocabulary; and it does NOT claim the case government, which has its own point below. What is still owed is at RU-A1-C-05: dva, tri and chetyre take the genitive singular and pyat upward the genitive plural, and this track has taught the genitive in exactly one place, after do. Counting THINGS is a genitive chapter; counting is not. RU-C25-practice says so to the reader in as many words rather than skirting it, and RU-GRAMMAR-NUMERAL-CASE-DEBT-01 is the atom that records the reader having been told."
     },
     {
       "id": "RU-A1-Q-02",
       "category": "Chislitelnye i kolichestvo - numerals and quantity",
       "label": "ordinal numerals to tenth",
-      "probe": null,
+      "probe": [
+        "RU-LEX-PERVYY-01",
+        "RU-LEX-VTOROY-01",
+        "RU-LEX-TRETIY-01",
+        "RU-MORPH-ORDINAL-ADJ-01",
+        "RU-PERFORMANCE-ORDINALS"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -606,7 +629,7 @@
         "A1-Q-02",
         "A1-NG3-06"
       ],
-      "note": "Absent, downstream of RU-A1-Q-01."
+      "note": "CLOSED BY HL-C350. pervyy and vtoroy sit outside the pattern -- pervyy is not built from odin at all but from a root meaning 'foremost', exactly as English first is fore plus a superlative -- and from four upward the ordinal is the plain number with an adjective ending, so the probe names the ending rather than a list of forms. Russian ordinals are adjectives and agree with what they order, which is the machinery the track already had. Recorded because ordinals are the weakest column in the whole corpus: twenty tracks enumerate one and eighteen leave it uncovered."
     },
     {
       "id": "RU-A1-Q-03",
@@ -3729,7 +3752,11 @@
       "id": "RU-A1-L-09",
       "category": "Kirillitsa - the letters",
       "label": "the written ordinal: a numeral with its grammatical ending hyphenated on, 1-y, 2-e",
-      "probe": null,
+      "probe": [
+        "RU-SCRIPT-ORDINAL-HYPHEN-01",
+        "RU-MORPH-ORDINAL-ADJ-01",
+        "RU-PUNCT-TIRE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -3738,7 +3765,7 @@
       "derivedFrom": [
         "A1-O1-06"
       ],
-      "note": "DERIVED, NOT DROPPED. Spanish's superscript letters in abbreviations look untransferable, but they are the same demand - a numeral carrying a written grammatical ending - and Russian answers it with a hyphen instead of a superscript. Absent from the track, downstream of RU-A1-Q-02."
+      "note": "CLOSED BY HL-C350, and the derivation it was written to defend now pays off. The Spanish point is a superscript letter in an abbreviation; Russian answers the same demand -- a numeral carrying a written grammatical ending -- with a hyphen, so 1-y is pervyy and 2-e is vtoroye. RU-W26-ordinal-hyphen teaches it, and teaches WHY the letters after the hyphen are not always the same: an ordinal is an adjective, so the tail is the agreement rather than decoration, which is the information an English reader writing 1st for all of them loses."
     },
     {
       "id": "RU-A1-L-10",

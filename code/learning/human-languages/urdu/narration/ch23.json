@@ -1,0 +1,1000 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 23,
+  "title": "Before a Postposition, Everything Changes",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:28e785017af0f314",
+  "lessons": [
+    {
+      "id": "UR-C23-kamra",
+      "sequence": 1210,
+      "title": "کمرہ (kamrā) — room",
+      "headword": "کمرہ",
+      "romanization": "kamrā",
+      "gloss": "room — a noun this chapter needs something to be inside, and the one everyday place the book has never named",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebdcd261b02420e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this. Then say black, and say what its last vowel is doing."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the two items before this one — kyā kahā?, ārām se",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the two items before this one — *kyā kahā?*, *ārām se*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کمرہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "یہ کمرہ — yih kamrā — this room."
+            },
+            {
+              "kind": "speech",
+              "text": "پرانا کمرہ — purānā kamrā — an old room."
+            },
+            {
+              "kind": "speech",
+              "text": "Twenty-two chapters, and this book has named a mother, a brother, a friend, four foods, four garments and five kinds of weather — and not one place. A learner could say who they were and could not say where anything was."
+            },
+            {
+              "kind": "speech",
+              "text": "کمرہ is said kamrā and ends in the vowel -ā, even though the last letter on the page is ہ. That is worth pausing on: at the end of a word like this the gol he is not an h at all — it is how Urdu writes a final -ā. You met the same letter in this job inside shukriyā."
+            },
+            {
+              "kind": "speech",
+              "text": "So کمرہ (kamrā) is one of the masculine nouns whose adjectives agree with it: کالا کمرہ (kamrā), پرانا کمرہ (kamrā). The -ا on the adjective is answering the -ā on the noun, exactly as chapter thirteen showed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کمرہ (kamrā) is Portuguese. Câmara came ashore with the sixteenth-century sea trade, and it is the same Latin camera — a vaulted room — that English borrowed twice: once as chamber, and once as camera, because a camera obscura is a dark room."
+            },
+            {
+              "kind": "speech",
+              "text": "So this word arrived by ship, where نیلا arrived by land — the Sanskrit indigo that also gives English aniline. Urdu takes words from every direction it has ever been reached from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih kamrā, then voh kamrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih kamrā*, then *voh kamrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with an adjective that agrees — kālā kamrā, nīlā kamrā, purānā kamrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with an adjective that agrees — *kālā kamrā*, *nīlā kamrā*, *purānā kamrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousins — chamber, camera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousins — *chamber*, *camera*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which language did کمرہ (kamrā) come from, and by what route? (Portuguese, by sea.) Which two English words share its Latin root? (Chamber and camera.) And what does its final -ا tell an adjective to do? (End in -ا too.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C23-oblique",
+      "sequence": 1220,
+      "title": "کمرے (kamre) — the shape a noun takes before a postposition",
+      "headword": "کمرے",
+      "romanization": "kamre",
+      "gloss": "the oblique — the shape every Urdu noun changes into before a postposition, and the invisible rule under everything this chapter and the next three teach",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b919221fc4637d78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this room. Then say your name, and notice the little word standing between آپ and نام."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the noun changes first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کمرہ — kamrā — a room, standing on its own."
+            },
+            {
+              "kind": "speech",
+              "text": "کمرے کے لیے — kamre ke liye — for the room."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what happened to the noun. It was کمرہ (kamrā) and it is now کمرے (kamre), and nothing about the meaning changed. The final -ā became -ے because a postposition was coming."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the single most important rule in Urdu grammar that a learner can be taught, and this book has used it since chapter three without stating it. آپ کا نام and کے لیے are both postpositions, and both have been quietly demanding this change all along."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two shapes, and only two",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sanskrit inflected a noun eight ways. Urdu kept one distinction:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "shape",
+                "when",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "shape: direct. when: the noun is a subject, or alone. example: کمرہ (kamrā).",
+                "shape: oblique. when: a postposition follows it. example: کمرے (kamre)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And the adjective goes with it. کالا کمرہ (kamrā) becomes کالے کمرے (kamre): the adjective is agreeing with the noun's new shape, not merely with its gender."
+            },
+            {
+              "kind": "speech",
+              "text": "Nouns not ending in -ā do not visibly change — ماں is ماں either way. A reader can go a long way without noticing the shape-change, and then be unable to build a phrase."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — kamrā, then kamre ke liye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *kamrā*, then *kamre ke liye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with the adjective following it over — kālā kamrā, then kāle kamre ke liye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with the adjective following it over — *kālā kamrā*, then *kāle kamre ke liye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purāne kamre ke liye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purāne kamre ke liye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that does not move — māṅ, and māṅ ke liye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that does not move — *māṅ*, and *māṅ ke liye*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What makes a noun change shape? (A postposition coming after it.) What does کمرہ (kamrā) become? (کمرے (kamre).) Does the adjective follow it over? (Yes — کالے کمرے (kamre).) And which nouns do not visibly change? (Those not ending in -ā.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C23-ko",
+      "sequence": 1230,
+      "title": "کو (ko) — to, and the one it happens to",
+      "headword": "کو",
+      "romanization": "ko",
+      "gloss": "to, and the mark on the person a thing is done to — the postposition already hiding inside mujhe since chapter eight",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ad5994f9433a981",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happens to کمرہ (kamrā) when a postposition follows it? Then say the sentence from chapter eight that means I like mangoes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کو",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ماں کو — māṅ ko — to the mother, or the mother, as the one it happens to."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter eight taught mujhe ām pasand haiṅ — mangoes are pleasing to me — and then left you unable to say it about anybody else, because mujhe looked like one word."
+            },
+            {
+              "kind": "speech",
+              "text": "It is not. Mujhe is mujh plus کو (ko), fused so long ago that the seam has closed. Now that you have the postposition on its own, the frame opens to everybody:"
+            },
+            {
+              "kind": "speech",
+              "text": "ماں کو ām pasand haiṅ — māṅ ko ām pasand haiṅ — mother likes mangoes."
+            },
+            {
+              "kind": "speech",
+              "text": "Mujhe and pasand stay in romanization here. Between them they need three letters the script ladder has not reached — jīm, do chashmī he and dāl — and this book does not print a letter before it has taught it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two jobs, one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کو (ko) marks the person a thing is given to, and the person a thing is done to. English needs to for the first and word order alone for the second; Urdu uses one postposition for both."
+            },
+            {
+              "kind": "speech",
+              "text": "And it takes the oblique in front of it, like every postposition:"
+            },
+            {
+              "kind": "speech",
+              "text": "کمرہ (kamrā) becomes کمرے (kamre) کو (ko)."
+            },
+            {
+              "kind": "speech",
+              "text": "A postposition never touches a direct-shape noun. That rule has no exceptions and it is worth over-learning now, because six more postpositions are coming."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṅ ko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṅ ko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the frame, opened — māṅ ko ām pasand haiṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the frame, opened — *māṅ ko ām pasand haiṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fused one beside the free one — mujhe, then māṅ ko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fused one beside the free one — *mujhe*, then *māṅ ko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taking the oblique — kamre ko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: taking the oblique — *kamre ko*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two pieces is mujhe made of? (Mujh and کو (ko).) What does کو (ko) mark? (The one a thing is given or done to.) And what shape must the noun in front of it be in? (Oblique.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C23-mein",
+      "sequence": 1240,
+      "title": "میں (meṅ) — in",
+      "headword": "میں",
+      "romanization": "meṅ",
+      "gloss": "in — spelled exactly like the word for \"I\", told apart only by where it stands, and the first postposition that can put something somewhere",
+      "script": "urdu-nastaliq",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8c3641068712565d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to the mother. Then say I am well, and look at the first word of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: میں after a noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کمرے میں — kamre meṅ — in the room."
+            },
+            {
+              "kind": "speech",
+              "text": "پانی میں — pānī meṅ — in the water."
+            },
+            {
+              "kind": "speech",
+              "text": "Twenty-three chapters, and this is the first time anything in this book has been inside anything else."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the noun. کمرہ (kamrā) became کمرے (kamre) again, because a postposition is following it. That is the rule from two lessons ago, and it will be the rule every time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the same spelling, two different words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This word is spelled exactly like the pronoun میں (meṅ) you have used since chapter four, and they are unrelated. They are told apart by position:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "where it stands",
+                "what it is",
+                "said"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "where it stands: at the head of a clause. what it is: I. said: maiṅ.",
+                "where it stands: after a noun. what it is: in. said: meṅ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The pronoun comes from Sanskrit maya; the postposition from madhye, \"in the middle of\". They fell together on the page because the Urdu script writes no short vowels — which is exactly the difficulty that makes reading Urdu hard and that this book will keep returning to."
+            },
+            {
+              "kind": "speech",
+              "text": "Both in one sentence:"
+            },
+            {
+              "kind": "speech",
+              "text": "میں کمرے میں ہوں — maiṅ kamre meṅ hūṅ — I am in the room."
+            },
+            {
+              "kind": "speech",
+              "text": "First word, pronoun. Fourth word, postposition. Same three letters."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamre meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamre meṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānī meṅ, then āsmān meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānī meṅ*, then *āsmān meṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both words at once — maiṅ kamre meṅ hūṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both words at once — *maiṅ kamre meṅ hūṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the oblique doing its work — kamrā, then kamre meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the oblique doing its work — *kamrā*, then *kamre meṅ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you tell the pronoun from the postposition? (By where it stands — head of the clause, or after a noun.) Why do they look identical? (The script writes no short vowels.) And what shape is the noun in front of it? (Oblique.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C23-par",
+      "sequence": 1250,
+      "title": "پر (par) — on",
+      "headword": "پر",
+      "romanization": "par",
+      "gloss": "on — the second half of the spatial pair, and a word that also means \"but\", which is a joke Urdu plays on the reader",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6af8ecf894884c0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say in the room. Then say the joiner from chapter twenty that turns a sentence against the one before it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کام پر — kām par — at work."
+            },
+            {
+              "kind": "speech",
+              "text": "آسمان پر — āsmān par — in the sky (literally on the sky)."
+            },
+            {
+              "kind": "speech",
+              "text": "میں (meṅ) puts a thing inside; پر (par) puts it on top of, or at. Between them they cover most of what an A1 learner needs to say about where something is — and Urdu draws the line in a slightly different place from English, which is why the sky is something you are on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: and a second پر, which is not this one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Urdu does this to the reader twice in one chapter. پر is also a joiner meaning but — the everyday rival of the لیکن you learned in chapter twenty — and again the two are told apart by where they stand:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "where it stands",
+                "what it is"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "where it stands: after a noun. what it is: on, at.",
+                "where it stands: at the head of a clause. what it is: but."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One is Sanskrit upari, the ancestor of English over. The other is Persian. They are not related and they are spelled identically, which is the same trap میں (meṅ) set one lesson ago — and the same lesson: in Urdu, position is meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "And, like every postposition, it takes the oblique: کمرے (kamre) پر (par)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kām par",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kām par*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — kamre meṅ, then kamre par",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *kamre meṅ*, then *kamre par*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsmān par",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsmān par*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the other پر, at the head — par …, and its rival lekin …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the other پر, at the head — *par …*, and its rival *lekin …*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which postposition puts a thing inside, and which on top? (میں (meṅ) and پر (par).) What else does پر (par) mean, and how do you tell? (But — by standing at the head of a clause.) And which English word is its Sanskrit cousin? (Over.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R23-into-and-onto",
+      "sequence": 1260,
+      "title": "Into, onto, and to",
+      "headword": "کمرے · کو · میں · پر",
+      "romanization": "kamre · ko · meṅ · par",
+      "gloss": "one shape-change, three postpositions, and the first sentences in this book that put something somewhere",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9bebe43521e980a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One rule ran under every lesson in this chapter. State it, then name the three postpositions that made it visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shape-change, bare — kamrā, then kamre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shape-change, bare — *kamrā*, then *kamre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all three — kamre ko, kamre meṅ, kamre par",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all three — *kamre ko*, *kamre meṅ*, *kamre par*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sentence with both spellings of one word — maiṅ kamre meṅ hūṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sentence with both spellings of one word — *maiṅ kamre meṅ hūṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the joiner that heads a reason — kyūṅki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the joiner that heads a reason — *kyūṅki*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — everything this book owns, put somewhere",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until this chapter nothing in this book could be anywhere. Every postposition the book has ever shown you — کا since chapter three, کے لیے since chapter twenty-one — was quietly demanding the same shape-change and never said so. Run all of it, cold."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the foods, placed — pānī meṅ, roṭī kamre meṅ, ām kamre meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the foods, placed — *pānī meṅ*, *roṭī kamre meṅ*, *ām kamre meṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the weather, placed — hawā kamre meṅ, āsmān par",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the weather, placed — *hawā kamre meṅ*, *āsmān par*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with an adjective that follows the noun over — kāle kamre meṅ, purāne kamre meṅ, nīle kamre meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with an adjective that follows the noun over — *kāle kamre meṅ*, *purāne kamre meṅ*, *nīle kamre meṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "people, marked — māṅ ko, and the older fused one, mujhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: people, marked — *māṅ ko*, and the older fused one, *mujhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the postpositions you already had — āp kā nām, kamre ke liye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the postpositions you already had — *āp kā nām*, *kamre ke liye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pointing and placing at once — yih kamrā, then is kamre meṅ … which is the next chapter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pointing and placing at once — *yih kamrā*, then *is kamre meṅ* … which is the next chapter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words spelled میں — maiṅ, then meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words spelled میں — *maiṅ*, then *meṅ*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What must a noun do before a postposition? (Take the oblique shape.) Does the adjective follow? (Yes.) Which nouns show no visible change? (Those not ending in -ا.) And which two words in this chapter are each spelled like something else entirely? (میں (meṅ) and پر (par).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

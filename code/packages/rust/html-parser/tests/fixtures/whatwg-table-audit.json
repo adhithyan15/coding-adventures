@@ -1,5 +1,5 @@
 {
-  "case_count": 462,
+  "case_count": 464,
   "cases": [
     {
       "axis": "foster-parenting",
@@ -2625,9 +2625,9 @@
     },
     {
       "axis": "cell-boundary",
-      "id": "template-dat-112",
+      "id": "template-dat-127",
       "reason": "td/th insertion, implied rows, and cell closure recovery",
-      "source": "template.dat:112"
+      "source": "template.dat:127"
     },
     {
       "axis": "cell-boundary",
@@ -2763,21 +2763,33 @@
     },
     {
       "axis": "row-group-boundary",
-      "id": "template-dat-46",
+      "id": "template-dat-52",
       "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
-      "source": "template.dat:46"
+      "source": "template.dat:52"
     },
     {
       "axis": "foster-parenting",
       "id": "adoption02-dat-4",
       "reason": "non-table content, formatting, and form recovery around tables",
       "source": "adoption02.dat:4"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "template-dat-117",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "template.dat:117"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "template-dat-118",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "template.dat:118"
     }
   ],
   "counts_by_axis": {
     "caption-colgroup": 69,
     "cell-boundary": 103,
-    "foster-parenting": 60,
+    "foster-parenting": 62,
     "row-group-boundary": 58,
     "select-in-table": 51,
     "table-fragment-context": 91,

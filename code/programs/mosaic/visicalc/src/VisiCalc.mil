@@ -1,4 +1,5 @@
 component VisiCalc {
+  slot selection-summary : text ;
   slot viewport-offset : number ;
   slot total-rows : number ;
   slot row-headers : list<text> ;

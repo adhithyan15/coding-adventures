@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:d7783b9502d85445",
+  "lessonIds": [
+    "UR-C25-plural",
+    "UR-C25-oblique-plural",
+    "UR-C25-hum",
+    "UR-C25-hamara",
+    "UR-R25-more-than-one"
+  ],
+  "tex": "urdu/book/chapters/ch25-more-than-one.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:ca386465b6b40ad5",
+  "lessonIds": [
+    "UR-C25-plural",
+    "UR-C25-oblique-plural",
+    "UR-C25-hum",
+    "UR-C25-hamara",
+    "UR-R25-more-than-one"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch25.txt",
+  "json": "urdu/narration/ch25.json",
+  "textHash": "fnv1a64:8c6fb1c6ff0c4e86",
+  "jsonHash": "fnv1a64:6c1359bbed8b83de",
+  "findings": []
+}

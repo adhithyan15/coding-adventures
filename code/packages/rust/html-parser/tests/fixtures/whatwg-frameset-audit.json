@@ -1,5 +1,5 @@
 {
-  "case_count": 182,
+  "case_count": 188,
   "cases": [
     {
       "axis": "frameset-shell",
@@ -1092,6 +1092,42 @@
       "id": "webkit01-dat-52",
       "reason": "frameset acceptance or rejection after body-compatible content",
       "source": "webkit01.dat:52"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-44",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:44"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-45",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:45"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-46",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:46"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-47",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:47"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-48",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:48"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-49",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:49"
     }
   ],
   "counts_by_axis": {
@@ -1100,7 +1136,7 @@
     "frame-element": 9,
     "frameset-shell": 79,
     "noframes-content": 29,
-    "template-boundary": 6
+    "template-boundary": 12
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress frameset, frame, and noframes recovery.",
   "format": "whatwg-html-frameset-audit/v1",

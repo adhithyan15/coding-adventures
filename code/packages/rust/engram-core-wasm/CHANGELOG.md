@@ -2,6 +2,65 @@
 
 ## Unreleased
 
+### Fixed -- `onSaveNote` accepted a deck or note type the collection does not contain
+
+**Three** routes build a `Note` from partly-external input and hand it to
+`UpsertNote`: the editor draft, the `onSaveNote` event payload, and the raw
+`upsertNote` command. The editor route refused a note type that does not exist,
+and (since the id-hardening pass) a deck that does not exist. The other two
+checked **neither**.
+
+The third is the least guarded and the most exposed: `upsertNote` carries a
+whole `Note` straight from the caller, and it is a documented public surface --
+the crate README describes it, the web host declares it in its `.d.ts`, and
+`eg_dispatch` exports it to every native shell.
+
+So the invariant "a note belongs to a deck that exists" held on one path and not
+the other. On the unchecked path the note *and its generated cards* land in a
+deck no deck list can reach, with the editor rendering a selected-deck index of
+-1, so the UI cannot say where they went.
+
+All three routes now share `validate_note_target`. The reducer would be the tempting
+home for it, since every write passes through `reduce` -- but `reduce` returns
+`AppState`, not `Result`, so the only thing it could do with a bad id is drop
+the note silently, trading a visible wrong answer for an invisible one. The rule
+lives at the two points that can still report an error, and a test pins both so
+they cannot drift apart again.
+
+### Scope, stated so it is not read as more than it is
+
+This closes the three `UpsertNote` routes. It is **not** a global invariant on
+`AppState`. `loadState`, `load_snapshot`, `import_backup`, `merge_app_states`,
+and the `.apkg`/TSV importers can all still introduce a note or card naming a
+deck that does not exist, and `rebuild_filtered_deck`, `createCard`, and a
+per-template `deckId` can each write one directly. Those are tracked separately
+(#14531, #14532, #14533); the merge paths matter most, because they fold
+untrusted file content into an existing collection rather than replacing it.
+
+An empty deck id means "inherit the existing note's deck" for the two callers
+that resolve inheritance before validating, and is **refused** for the raw
+`upsertNote` command, which has no such step -- the reducer stores the `Note`
+verbatim, so empty there means "belongs to no deck". Sharing one rule across
+callers whose empty case means different things is how a guard becomes a hole:
+it let `deckId: ""` store exactly the orphan this change prevents, and blank an
+existing note's real deck besides -- but the
+`onSaveNote` arm now resolves the caller's deck argument the way every sibling
+arm does, instead of passing it through raw. It did not before, so a **new**
+note saved with no deck named reached the inherit exemption with an empty id and
+was stored with `deck_id: ""`, along with the cards generated from it: absent
+from every deck's queue and stats, and not reached by `DeleteDeck`'s cascade.
+The exemption is for inheriting a real deck, not for having none.
+
+### Changed -- `onSaveNote` and `upsertNote` now require the note type to exist
+
+Previously a note naming a not-yet-created note type was stored with zero cards,
+and a later `upsertNoteType` with `materializeCardsAt` would retroactively
+generate them. A host that streams notes before models will now get an error
+instead. Nothing in this repository does that -- the shipped UI emits
+`onNoteEditorSaveNote`, and the `.apkg` and TSV importers build `AppState`
+directly without going through `UpsertNote` -- but it is a public contract
+change and is recorded as one.
+
 ### Fixed -- three ways a collection could name something it does not contain
 
 Each of these is a place where an id was used verbatim where the sibling code

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C24-shest",
+    "language": "russian",
+    "chapter": 24,
+    "sequence": 1200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57724bc8dce0ca61"
+  },
+  "findings": []
+}

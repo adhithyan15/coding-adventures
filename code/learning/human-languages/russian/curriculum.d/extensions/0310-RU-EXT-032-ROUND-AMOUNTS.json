@@ -1,0 +1,15 @@
+{
+  "id": "RU-EXT-032-ROUND-AMOUNTS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say twenty and a hundred and take a Russian ten apart into the numbers it is built from.",
+  "prerequisites": [
+    "RU-EXT-031-COUNT-TEN"
+  ],
+  "lessons": [
+    "RU-C25-dvadtsat",
+    "RU-C25-sto",
+    "RU-C25-practice"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "UR-EXT-036-PLURAL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can make a noun plural, make it plural before a postposition, and say we and our.",
+  "prerequisites": [
+    "UR-EXT-035-OBLIQUE-DEIXIS"
+  ],
+  "lessons": [
+    "UR-C25-plural",
+    "UR-C25-oblique-plural",
+    "UR-C25-hum",
+    "UR-C25-hamara",
+    "UR-R25-more-than-one"
+  ]
+}

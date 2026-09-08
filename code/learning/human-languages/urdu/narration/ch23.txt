@@ -1,0 +1,235 @@
+Urdu, chapter 23: Before a Postposition, Everything Changes.
+6 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 6.
+کمرہ (kamrā) — room.
+
+Warm-up.
+[pause 2 seconds]
+Say this. Then say black, and say what its last vowel is doing.
+[your turn — recall: the two items before this one — kyā kahā?, ārām se]
+[pause 8 seconds for the answer]
+
+You'll want to know: کمرہ.
+یہ کمرہ — yih kamrā — this room.
+پرانا کمرہ — purānā kamrā — an old room.
+Twenty-two chapters, and this book has named a mother, a brother, a friend, four foods, four garments and five kinds of weather — and not one place. A learner could say who they were and could not say where anything was.
+کمرہ is said kamrā and ends in the vowel -ā, even though the last letter on the page is ہ. That is worth pausing on: at the end of a word like this the gol he is not an h at all — it is how Urdu writes a final -ā. You met the same letter in this job inside shukriyā.
+So کمرہ (kamrā) is one of the masculine nouns whose adjectives agree with it: کالا کمرہ (kamrā), پرانا کمرہ (kamrā). The -ا on the adjective is answering the -ā on the noun, exactly as chapter thirteen showed.
+
+The word, taken apart.
+کمرہ (kamrā) is Portuguese. Câmara came ashore with the sixteenth-century sea trade, and it is the same Latin camera — a vaulted room — that English borrowed twice: once as chamber, and once as camera, because a camera obscura is a dark room.
+So this word arrived by ship, where نیلا arrived by land — the Sanskrit indigo that also gives English aniline. Urdu takes words from every direction it has ever been reached from.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: kamrā]
+[pause 8 seconds for the answer]
+[your turn — say: yih kamrā, then voh kamrā]
+[pause 8 seconds for the answer]
+[your turn — say: with an adjective that agrees — kālā kamrā, nīlā kamrā, purānā kamrā]
+[pause 8 seconds for the answer]
+[your turn — say: the English cousins — chamber, camera]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which language did کمرہ (kamrā) come from, and by what route? (Portuguese, by sea.) Which two English words share its Latin root? (Chamber and camera.) And what does its final -ا tell an adjective to do? (End in -ا too.)
+Source: Unicode Arabic chart.
+
+
+Lesson 2 of 6.
+کمرے (kamre) — the shape a noun takes before a postposition.
+
+Warm-up.
+[pause 2 seconds]
+Say this room. Then say your name, and notice the little word standing between آپ and نام.
+
+You'll want to know: the noun changes first.
+کمرہ — kamrā — a room, standing on its own.
+کمرے کے لیے — kamre ke liye — for the room.
+Look at what happened to the noun. It was کمرہ (kamrā) and it is now کمرے (kamre), and nothing about the meaning changed. The final -ā became -ے because a postposition was coming.
+This is the single most important rule in Urdu grammar that a learner can be taught, and this book has used it since chapter three without stating it. آپ کا نام and کے لیے are both postpositions, and both have been quietly demanding this change all along.
+
+Grammar Lens: two shapes, and only two.
+Sanskrit inflected a noun eight ways. Urdu kept one distinction:
+[a table of 2 rows, read aloud]
+shape: direct. when: the noun is a subject, or alone. example: کمرہ (kamrā).
+shape: oblique. when: a postposition follows it. example: کمرے (kamre).
+And the adjective goes with it. کالا کمرہ (kamrā) becomes کالے کمرے (kamre): the adjective is agreeing with the noun's new shape, not merely with its gender.
+Nouns not ending in -ā do not visibly change — ماں is ماں either way. A reader can go a long way without noticing the shape-change, and then be unable to build a phrase.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — kamrā, then kamre ke liye]
+[pause 8 seconds for the answer]
+[your turn — say: with the adjective following it over — kālā kamrā, then kāle kamre ke liye]
+[pause 8 seconds for the answer]
+[your turn — say: purāne kamre ke liye]
+[pause 8 seconds for the answer]
+[your turn — say: the one that does not move — māṅ, and māṅ ke liye]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What makes a noun change shape? (A postposition coming after it.) What does کمرہ (kamrā) become? (کمرے (kamre).) Does the adjective follow it over? (Yes — کالے کمرے (kamre).) And which nouns do not visibly change? (Those not ending in -ā.)
+Source: Unicode Arabic chart.
+
+
+Lesson 3 of 6.
+کو (ko) — to, and the one it happens to.
+
+Warm-up.
+[pause 2 seconds]
+What happens to کمرہ (kamrā) when a postposition follows it? Then say the sentence from chapter eight that means I like mangoes.
+
+You'll want to know: کو.
+ماں کو — māṅ ko — to the mother, or the mother, as the one it happens to.
+Chapter eight taught mujhe ām pasand haiṅ — mangoes are pleasing to me — and then left you unable to say it about anybody else, because mujhe looked like one word.
+It is not. Mujhe is mujh plus کو (ko), fused so long ago that the seam has closed. Now that you have the postposition on its own, the frame opens to everybody:
+ماں کو ām pasand haiṅ — māṅ ko ām pasand haiṅ — mother likes mangoes.
+Mujhe and pasand stay in romanization here. Between them they need three letters the script ladder has not reached — jīm, do chashmī he and dāl — and this book does not print a letter before it has taught it.
+
+Grammar Lens: two jobs, one word.
+کو (ko) marks the person a thing is given to, and the person a thing is done to. English needs to for the first and word order alone for the second; Urdu uses one postposition for both.
+And it takes the oblique in front of it, like every postposition:
+کمرہ (kamrā) becomes کمرے (kamre) کو (ko).
+A postposition never touches a direct-shape noun. That rule has no exceptions and it is worth over-learning now, because six more postpositions are coming.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: māṅ ko]
+[pause 8 seconds for the answer]
+[your turn — say: the frame, opened — māṅ ko ām pasand haiṅ]
+[pause 8 seconds for the answer]
+[your turn — say: the fused one beside the free one — mujhe, then māṅ ko]
+[pause 8 seconds for the answer]
+[your turn — say: taking the oblique — kamre ko]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two pieces is mujhe made of? (Mujh and کو (ko).) What does کو (ko) mark? (The one a thing is given or done to.) And what shape must the noun in front of it be in? (Oblique.)
+Source: Unicode Arabic chart.
+
+
+Lesson 4 of 6.
+میں (meṅ) — in.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Say to the mother. Then say I am well, and look at the first word of it.
+
+You'll want to know: میں after a noun.
+کمرے میں — kamre meṅ — in the room.
+پانی میں — pānī meṅ — in the water.
+Twenty-three chapters, and this is the first time anything in this book has been inside anything else.
+Notice the noun. کمرہ (kamrā) became کمرے (kamre) again, because a postposition is following it. That is the rule from two lessons ago, and it will be the rule every time.
+
+Grammar Lens: the same spelling, two different words.
+This word is spelled exactly like the pronoun میں (meṅ) you have used since chapter four, and they are unrelated. They are told apart by position:
+[a table of 2 rows, read aloud]
+where it stands: at the head of a clause. what it is: I. said: maiṅ.
+where it stands: after a noun. what it is: in. said: meṅ.
+The pronoun comes from Sanskrit maya; the postposition from madhye, "in the middle of". They fell together on the page because the Urdu script writes no short vowels — which is exactly the difficulty that makes reading Urdu hard and that this book will keep returning to.
+Both in one sentence:
+میں کمرے میں ہوں — maiṅ kamre meṅ hūṅ — I am in the room.
+First word, pronoun. Fourth word, postposition. Same three letters.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: kamre meṅ]
+[pause 8 seconds for the answer]
+[your turn — say: pānī meṅ, then āsmān meṅ]
+[pause 8 seconds for the answer]
+[your turn — say: both words at once — maiṅ kamre meṅ hūṅ]
+[pause 8 seconds for the answer]
+[your turn — say: the oblique doing its work — kamrā, then kamre meṅ]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you tell the pronoun from the postposition? (By where it stands — head of the clause, or after a noun.) Why do they look identical? (The script writes no short vowels.) And what shape is the noun in front of it? (Oblique.)
+Source: Unicode Arabic chart.
+
+
+Lesson 5 of 6.
+پر (par) — on.
+
+Warm-up.
+[pause 2 seconds]
+Say in the room. Then say the joiner from chapter twenty that turns a sentence against the one before it.
+
+You'll want to know: پر.
+کام پر — kām par — at work.
+آسمان پر — āsmān par — in the sky (literally on the sky).
+میں (meṅ) puts a thing inside; پر (par) puts it on top of, or at. Between them they cover most of what an A1 learner needs to say about where something is — and Urdu draws the line in a slightly different place from English, which is why the sky is something you are on.
+
+Grammar Lens: and a second پر, which is not this one.
+Urdu does this to the reader twice in one chapter. پر is also a joiner meaning but — the everyday rival of the لیکن you learned in chapter twenty — and again the two are told apart by where they stand:
+[a table of 2 rows, read aloud]
+where it stands: after a noun. what it is: on, at.
+where it stands: at the head of a clause. what it is: but.
+One is Sanskrit upari, the ancestor of English over. The other is Persian. They are not related and they are spelled identically, which is the same trap میں (meṅ) set one lesson ago — and the same lesson: in Urdu, position is meaning.
+And, like every postposition, it takes the oblique: کمرے (kamre) پر (par).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: kām par]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — kamre meṅ, then kamre par]
+[pause 8 seconds for the answer]
+[your turn — say: āsmān par]
+[pause 8 seconds for the answer]
+[your turn — say: the other پر, at the head — par …, and its rival lekin …]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which postposition puts a thing inside, and which on top? (میں (meṅ) and پر (par).) What else does پر (par) mean, and how do you tell? (But — by standing at the head of a clause.) And which English word is its Sanskrit cousin? (Over.)
+Source: Unicode Arabic chart.
+
+
+Lesson 6 of 6.
+Into, onto, and to — one shape-change, three postpositions, and the first sentences in this book that put something somewhere.
+
+Warm-up.
+[pause 4 seconds]
+One rule ran under every lesson in this chapter. State it, then name the three postpositions that made it visible.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the shape-change, bare — kamrā, then kamre]
+[pause 8 seconds for the answer]
+[your turn — say: all three — kamre ko, kamre meṅ, kamre par]
+[pause 8 seconds for the answer]
+[your turn — say: the sentence with both spellings of one word — maiṅ kamre meṅ hūṅ]
+[pause 8 seconds for the answer]
+[your turn — recall: two chapters back, the joiner that heads a reason — kyūṅki]
+[pause 8 seconds for the answer]
+
+Guided Practice: the distant band — everything this book owns, put somewhere.
+[pause 4 seconds]
+Until this chapter nothing in this book could be anywhere. Every postposition the book has ever shown you — کا since chapter three, کے لیے since chapter twenty-one — was quietly demanding the same shape-change and never said so. Run all of it, cold.
+[your turn — say: the foods, placed — pānī meṅ, roṭī kamre meṅ, ām kamre meṅ]
+[pause 8 seconds for the answer]
+[your turn — say: the weather, placed — hawā kamre meṅ, āsmān par]
+[pause 8 seconds for the answer]
+[your turn — say: with an adjective that follows the noun over — kāle kamre meṅ, purāne kamre meṅ, nīle kamre meṅ]
+[pause 8 seconds for the answer]
+[your turn — say: people, marked — māṅ ko, and the older fused one, mujhe]
+[pause 8 seconds for the answer]
+[your turn — say: the postpositions you already had — āp kā nām, kamre ke liye]
+[pause 8 seconds for the answer]
+[your turn — say: pointing and placing at once — yih kamrā, then is kamre meṅ … which is the next chapter]
+[pause 8 seconds for the answer]
+[your turn — say: the two words spelled میں — maiṅ, then meṅ]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 4 seconds]
+What must a noun do before a postposition? (Take the oblique shape.) Does the adjective follow? (Yes.) Which nouns show no visible change? (Those not ending in -ا.) And which two words in this chapter are each spelled like something else entirely? (میں (meṅ) and پر (par).)
+Source: Unicode Arabic chart.

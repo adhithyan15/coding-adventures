@@ -43,5 +43,6 @@ layout VisiCalc {
       onEditCancel: emit: onEditCancel
       )
     }
+    Text [selection-summary] (content: slot: selection-summary)
   }
 }

@@ -1,90 +1,54 @@
-//! SPARC V8 register file with sliding register windows.
-//!
-//! # Register architecture
-//!
-//! SPARC V8 has a *windowed* register file.  Each procedure sees 32 logical
-//! registers, but only 8 of them (the globals) are truly shared; the remaining
-//! 24 are a *window* into the physical register file that slides when SAVE or
-//! RESTORE is executed.
-//!
-//! ## Physical layout (NWINDOWS = 3)
-//!
-//! ```text
-//!  Physical regs 0–7:   globals (%g0–%g7)     — shared by all windows
-//!  Physical regs 8–23:  window 0 outs/locals   — CWP=0 → %o0–%l7
-//!  Physical regs 24–39: window 1 outs/locals   — CWP=1 → %o0–%l7
-//!  Physical regs 40–55: window 2 outs/locals   — CWP=2 → %o0–%l7
-//! ```
-//!
-//! ## Logical-to-physical mapping
-//!
-//! With `CWP` (current window pointer) in 0..NWINDOWS:
-//!
-//! ```text
-//!  logical 0–7   (%g0–%g7):  physical 0–7    (globals, always)
-//!  logical 8–23  (%o0–%l7):  physical 8 + CWP*16 + (logical-8)
-//!  logical 24–31 (%i0–%i7):  physical 8 + ((CWP+1)%NWINDOWS)*16 + (logical-24)
-//! ```
-//!
-//! The *in* registers of window N are the *out* registers of window N+1, which
-//! is how the call/return argument passing mechanism works.
-//!
-//! ## SAVE and RESTORE
-//!
-//! - `SAVE`: decrement CWP (mod NWINDOWS).  The caller's `%o` registers become
-//!   the callee's `%i` registers.  Detects register window overflow.
-//! - `RESTORE`: increment CWP (mod NWINDOWS).  The callee's `%i` registers
-//!   become the caller's `%o` registers again.
+//! D-flip-flop-backed SPARC V8 register windows and control state.
+
+use crate::bits::bits_to_u32;
+use crate::state::{clock_bit, clock_two_bits, clock_word};
+use sparc_v8_simulator::execute::Psr;
 
 pub const NWINDOWS: u32 = 3;
-pub const NUM_PHYS: usize = 56;   // 8 globals + 3 × 16 windowed
-pub const MEM_SIZE: usize = 0x10000;
+pub const NUM_PHYS: usize = 56;
+pub const MEM_SIZE: usize = 0x1_0000;
 
-/// Map a logical register number (0–31) and CWP to a physical register index.
+/// Map a logical register number (0-31) and CWP to physical storage.
 pub fn virt_to_phys(virt: u32, cwp: u32) -> usize {
-    assert!(virt < 32, "virt_to_phys: logical register {virt} out of range 0..31");
+    assert!(
+        virt < 32,
+        "virt_to_phys: logical register {virt} out of range 0..31"
+    );
     let cwp = cwp % NWINDOWS;
     if virt < 8 {
         virt as usize
     } else if virt < 24 {
-        8 + (cwp as usize) * 16 + (virt as usize - 8)
+        8 + cwp as usize * 16 + (virt as usize - 8)
     } else {
-        let prev_window = ((cwp + 1) % NWINDOWS) as usize;
-        8 + prev_window * 16 + (virt as usize - 24)
+        8 + ((cwp + 1) % NWINDOWS) as usize * 16 + (virt as usize - 24)
     }
 }
 
-/// PSR (Processor State Register) condition-code fields.
-#[derive(Debug, Clone, Copy, Default)]
-pub struct Psr {
-    pub n: u8,   // Negative
-    pub z: u8,   // Zero
-    pub v: u8,   // Overflow
-    pub c: u8,   // Carry / borrow
-}
-
-/// The full register file: physical integer regs, PC, Y, and PSR.
-#[derive(Debug, Clone)]
+/// The 1,896 DFFs outside memory and the halt latch: 56 physical registers,
+/// PC/nPC, Y, four PSR flags, and two bits each for CWP/save depth.
 pub struct RegisterFile {
-    phys: [u32; NUM_PHYS],
-    pub pc: u32,
-    pub y: u32,
-    pub psr: Psr,
-    pub cwp: u32,
-    /// Tracks SAVE nesting depth to detect register window overflow.
-    pub save_depth: u32,
+    phys: [[u8; 32]; NUM_PHYS],
+    pc: [u8; 32],
+    npc: [u8; 32],
+    y: [u8; 32],
+    psr: [u8; 4],
+    cwp: [u8; 2],
+    save_depth: [u8; 2],
 }
 
 impl Default for RegisterFile {
     fn default() -> Self {
-        Self {
-            phys: [0u32; NUM_PHYS],
-            pc: 0,
-            y: 0,
-            psr: Psr::default(),
-            cwp: 0,
-            save_depth: 0,
-        }
+        let mut result = Self {
+            phys: [[0; 32]; NUM_PHYS],
+            pc: [0; 32],
+            npc: [0; 32],
+            y: [0; 32],
+            psr: [0; 4],
+            cwp: [0; 2],
+            save_depth: [0; 2],
+        };
+        result.npc[2] = 1;
+        result
     }
 }
 
@@ -93,62 +57,108 @@ impl RegisterFile {
         Self::default()
     }
 
-    /// Read a logical register.  `%g0` always reads as zero.
+    /// Read a logical register. `%g0` is tied to zero.
     pub fn read(&self, virt: u32) -> u32 {
         if virt == 0 {
-            return 0;
+            0
+        } else {
+            bits_to_u32(&self.phys[virt_to_phys(virt, self.read_cwp())])
         }
-        self.phys[virt_to_phys(virt, self.cwp)]
     }
 
-    /// Write a logical register.  Writes to `%g0` are silently discarded.
-    pub fn write(&mut self, virt: u32, val: u32) {
-        if virt == 0 {
-            return;
+    /// Clock a logical register. Writes to `%g0` are discarded.
+    pub fn write(&mut self, virt: u32, value: u32) {
+        if virt != 0 {
+            let physical = virt_to_phys(virt, self.read_cwp());
+            clock_word(&mut self.phys[physical], value);
         }
-        let phys = virt_to_phys(virt, self.cwp);
-        self.phys[phys] = val;
     }
 
-    /// SAVE: compute result *before* rotating window (the compute uses the
-    /// caller's registers), then decrement CWP.
-    ///
-    /// Returns the computed `rs1 + src2` that must be written to `rd` in the
-    /// *new* window (the callee's `%sp`).
-    pub fn save(&mut self, rs1: u32, src2: u32, rd: u32, adder: impl Fn(u32, u32) -> u32) -> Result<u32, &'static str> {
-        if self.save_depth >= NWINDOWS - 1 {
+    pub(crate) fn physical_registers(&self) -> [u32; NUM_PHYS] {
+        std::array::from_fn(|index| bits_to_u32(&self.phys[index]))
+    }
+
+    pub(crate) fn restore_physical(&mut self, values: [u32; NUM_PHYS]) {
+        for (storage, value) in self.phys.iter_mut().zip(values) {
+            clock_word(storage, value);
+        }
+    }
+
+    pub fn read_pc(&self) -> u32 {
+        bits_to_u32(&self.pc)
+    }
+
+    pub fn write_pc(&mut self, value: u32) {
+        clock_word(&mut self.pc, value);
+    }
+
+    pub fn read_npc(&self) -> u32 {
+        bits_to_u32(&self.npc)
+    }
+
+    pub fn write_npc(&mut self, value: u32) {
+        clock_word(&mut self.npc, value);
+    }
+
+    pub fn read_y(&self) -> u32 {
+        bits_to_u32(&self.y)
+    }
+
+    pub fn write_y(&mut self, value: u32) {
+        clock_word(&mut self.y, value);
+    }
+
+    pub fn read_psr(&self) -> Psr {
+        Psr {
+            n: self.psr[0] != 0,
+            z: self.psr[1] != 0,
+            v: self.psr[2] != 0,
+            c: self.psr[3] != 0,
+        }
+    }
+
+    pub fn write_psr(&mut self, psr: Psr) {
+        for (storage, value) in self.psr.iter_mut().zip([psr.n, psr.z, psr.v, psr.c]) {
+            clock_bit(storage, value);
+        }
+    }
+
+    pub fn read_cwp(&self) -> u32 {
+        u32::from(self.cwp[0]) | (u32::from(self.cwp[1]) << 1)
+    }
+
+    pub fn write_cwp(&mut self, value: u32) {
+        clock_two_bits(&mut self.cwp, value);
+    }
+
+    pub fn read_save_depth(&self) -> u32 {
+        u32::from(self.save_depth[0]) | (u32::from(self.save_depth[1]) << 1)
+    }
+
+    pub fn write_save_depth(&mut self, value: u32) {
+        clock_two_bits(&mut self.save_depth, value);
+    }
+
+    /// Rotate backward for SAVE after the caller computes the result.
+    pub fn rotate_save(&mut self) -> Result<(), &'static str> {
+        let depth = self.read_save_depth();
+        if depth >= NWINDOWS - 1 {
             return Err("register window overflow");
         }
-        // Compute in caller's window.
-        let result = adder(rs1, src2);
-        // Rotate CWP.
-        self.cwp = (self.cwp + NWINDOWS - 1) % NWINDOWS;
-        self.save_depth += 1;
-        // Write to callee's %sp (rd in new window).
-        self.write(rd, result);
-        Ok(result)
+        self.write_cwp((self.read_cwp() + NWINDOWS - 1) % NWINDOWS);
+        self.write_save_depth(depth + 1);
+        Ok(())
     }
 
-    /// RESTORE: compute result in *callee's* window, rotate CWP back, then
-    /// write result to `rd` in the *caller's* window.
-    pub fn restore(&mut self, rs1: u32, src2: u32, rd: u32, adder: impl Fn(u32, u32) -> u32) -> u32 {
-        let result = adder(rs1, src2);
-        self.cwp = (self.cwp + 1) % NWINDOWS;
-        if self.save_depth > 0 {
-            self.save_depth -= 1;
-        }
-        self.write(rd, result);
-        result
+    /// Rotate forward for RESTORE.
+    pub fn rotate_restore(&mut self) {
+        self.write_cwp((self.read_cwp() + 1) % NWINDOWS);
+        self.write_save_depth(self.read_save_depth().saturating_sub(1));
     }
 
-    /// Reset all registers and PC to zero.
+    /// Clear all persistent register/control DFFs and initialize nPC to four.
     pub fn reset(&mut self) {
-        self.phys = [0u32; NUM_PHYS];
-        self.pc = 0;
-        self.y = 0;
-        self.psr = Psr::default();
-        self.cwp = 0;
-        self.save_depth = 0;
+        *self = Self::new();
     }
 }
 
@@ -159,22 +169,16 @@ mod tests {
     #[test]
     fn globals_are_shared_across_windows() {
         let mut rf = RegisterFile::new();
-        rf.cwp = 0;
         rf.write(1, 42);
-        rf.cwp = 1;
-        // %g1 should still read 42 in window 1.
+        rf.write_cwp(1);
         assert_eq!(rf.read(1), 42);
     }
 
     #[test]
     fn out_regs_of_caller_become_in_regs_of_callee() {
         let mut rf = RegisterFile::new();
-        rf.cwp = 0;
-        rf.write(8, 99);  // %o0 in window 0
-        // After SAVE, CWP goes to 2 (i.e., (0+3-1)%3 = 2).
-        rf.cwp = 2;
-        // %i0 = logical 24; phys = 8 + ((2+1)%3)*16 + 0 = 8 + 0*16 = 8.
-        // That is the same physical as CWP=0,%o0.
+        rf.write(8, 99);
+        rf.write_cwp(2);
         assert_eq!(rf.read(24), 99);
     }
 
@@ -186,20 +190,39 @@ mod tests {
     }
 
     #[test]
-    fn virt_to_phys_globals() {
-        for g in 0..8u32 {
-            assert_eq!(virt_to_phys(g, 0), g as usize);
-            assert_eq!(virt_to_phys(g, 1), g as usize);
-        }
+    fn all_control_fields_clock_through_dffs() {
+        let mut rf = RegisterFile::new();
+        rf.write_pc(0x1234_5678);
+        rf.write_npc(0x1234_567c);
+        rf.write_y(0xfeed_beef);
+        rf.write_psr(Psr {
+            n: true,
+            z: false,
+            v: true,
+            c: true,
+        });
+        rf.write_cwp(2);
+        rf.write_save_depth(1);
+        assert_eq!(rf.read_pc(), 0x1234_5678);
+        assert_eq!(rf.read_npc(), 0x1234_567c);
+        assert_eq!(rf.read_y(), 0xfeed_beef);
+        assert_eq!(
+            rf.read_psr(),
+            Psr {
+                n: true,
+                z: false,
+                v: true,
+                c: true
+            }
+        );
+        assert_eq!(rf.read_cwp(), 2);
+        assert_eq!(rf.read_save_depth(), 1);
     }
 
     #[test]
     fn virt_to_phys_windowed_cwp0() {
-        // %o0 = logical 8, CWP=0 → physical 8 + 0*16 + 0 = 8
         assert_eq!(virt_to_phys(8, 0), 8);
-        // %l0 = logical 16, CWP=0 → physical 8 + 0*16 + 8 = 16
         assert_eq!(virt_to_phys(16, 0), 16);
-        // %i0 = logical 24, CWP=0 → physical 8 + 1*16 + 0 = 24
         assert_eq!(virt_to_phys(24, 0), 24);
     }
 }

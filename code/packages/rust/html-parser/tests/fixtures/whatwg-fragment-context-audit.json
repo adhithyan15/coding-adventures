@@ -1,5 +1,5 @@
 {
-  "case_count": 196,
+  "case_count": 198,
   "cases": [
     {
       "axis": "fragment-basic-context",
@@ -1334,9 +1334,9 @@
     {
       "axis": "fragment-template-context",
       "context": "template",
-      "id": "template-dat-109",
+      "id": "template-dat-116",
       "reason": "fragment parser context seeded from template insertion modes",
-      "source": "template.dat:109"
+      "source": "template.dat:116"
     },
     {
       "axis": "fragment-select-context",
@@ -1372,6 +1372,20 @@
       "id": "plain-text-unsafe-dat-41",
       "reason": "fragment parser context in SVG and MathML integration modes",
       "source": "plain-text-unsafe.dat:41"
+    },
+    {
+      "axis": "fragment-template-context",
+      "context": "template",
+      "id": "template-dat-118",
+      "reason": "fragment parser context seeded from template insertion modes",
+      "source": "template.dat:118"
+    },
+    {
+      "axis": "fragment-template-context",
+      "context": "template",
+      "id": "template-dat-120",
+      "reason": "fragment parser context seeded from template insertion modes",
+      "source": "template.dat:120"
     }
   ],
   "counts_by_axis": {
@@ -1381,7 +1395,7 @@
     "fragment-select-context": 5,
     "fragment-shell-context": 15,
     "fragment-table-context": 91,
-    "fragment-template-context": 1,
+    "fragment-template-context": 3,
     "fragment-text-mode-context": 6
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress fragment parsing contexts across table, shell, block, foreign-content, text-mode, select/list, template, and ordinary phrasing modes.",

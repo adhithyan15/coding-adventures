@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C23-kamra",
+    "language": "urdu",
+    "chapter": 23,
+    "sequence": 1210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebdcd261b02420e5"
+  },
+  "findings": []
+}

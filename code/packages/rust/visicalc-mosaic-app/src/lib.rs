@@ -143,6 +143,19 @@ impl VisiCalcMosaicApp {
             .cell_source_text(SheetId(0), CellAddress::new(row + 1, col + 1))
     }
 
+    fn describe_cell(&self, row: u32, col: u32) -> String {
+        let address = CellAddress::new(row + 1, col + 1).to_a1();
+        let window = self.workbook.get_display_window(SheetId(0), row + 1, col + 1, row + 1, col + 1)
+            .expect("valid selected cell");
+        let value = window.cells.first().map(String::as_str).filter(|value| !value.is_empty()).unwrap_or("blank");
+        let source = self.source(row, col);
+        if source.starts_with('=') {
+            format!("{address}, {value}, formula {source}")
+        } else {
+            format!("{address}, {value}")
+        }
+    }
+
     fn update(&self) -> AppUpdate {
         let cursor = &self.cursor;
         // Cursor validation bounds the allocation to at most 100 * 26 cells.
@@ -180,6 +193,7 @@ impl VisiCalcMosaicApp {
             .unwrap_or((-1, -1, ""));
         AppUpdate::new(json!({
             "cell-address": address, "formula": formula, "read-only": false,
+            "selection-summary": self.describe_cell(cursor.row, cursor.col),
             "selected-row": cursor.row, "selected-col": cursor.col,
             "grid-selected-row": i64::from(cursor.row) - i64::from(cursor.offset),
             "grid-edit-row": if edit_row < 0 { -1 } else { edit_row - i64::from(cursor.offset) },
@@ -245,7 +259,8 @@ impl MosaicApp for VisiCalcMosaicApp {
                 } else {
                     None
                 };
-                Ok(self.announced(format!("{}{}", column_index_to_letters(col + 1), row + 1)))
+                let description = self.describe_cell(row, col);
+                Ok(self.announced(if self.edit.is_some() { format!("Editing {description}") } else { description }))
             }
             "formulaChange" => {
                 let value = event
@@ -273,14 +288,19 @@ impl MosaicApp for VisiCalcMosaicApp {
                         self.cursor.col = edit.col;
                         self.cursor.reveal();
                     }
-                    Ok(self.announced("Cell updated"))
+                    let updated = self.describe_cell(edit.row, edit.col);
+                    let message = if (self.cursor.row, self.cursor.col) != (edit.row, edit.col) {
+                        format!("Updated {updated}. Selected {}", self.describe_cell(self.cursor.row, self.cursor.col))
+                    } else { format!("Updated {updated}") };
+                    Ok(self.announced(message))
                 } else {
                     Ok(self.update())
                 }
             }
             "cancel" | "editCancel" => {
-                self.edit = None;
-                Ok(self.announced("Edit cancelled"))
+                if self.edit.take().is_some() {
+                    Ok(self.announced(format!("Edit cancelled. {}", self.describe_cell(self.cursor.row, self.cursor.col))))
+                } else { Ok(self.update()) }
             }
             "scroll" => {
                 let offset = index(&event, "offset", ROWS - self.cursor.size + 1)?;
@@ -318,7 +338,7 @@ impl MosaicApp for VisiCalcMosaicApp {
                 self.cursor.col = 0;
                 self.cursor.offset = 0;
                 self.edit = None;
-                Ok(self.announced("New workbook"))
+                Ok(self.announced(format!("New workbook. {}", self.describe_cell(0, 0))))
             }
             _ => Err(invalid(format!("unknown VisiCalc event: {}", event.name))),
         }
@@ -354,7 +374,7 @@ impl MosaicApp for VisiCalcMosaicApp {
         self.workbook = workbook;
         self.cursor = saved.cursor;
         self.edit = None;
-        Ok(self.announced("Workbook restored"))
+        Ok(self.announced(format!("Workbook restored. {}", self.describe_cell(self.cursor.row, self.cursor.col))))
     }
 }
 
@@ -606,6 +626,35 @@ mod tests {
     }
 
     #[test]
+    fn descriptions_cover_results_blank_cells_edits_and_quiet_viewport_updates() {
+        let mut app = VisiCalcMosaicApp::default();
+        assert_eq!(app.update().props["selection-summary"], "A1, 15");
+        let formula = dispatch(&mut app, "navigate", json!({"row":0,"col":4}));
+        assert_eq!(formula.announcements[0].message, "E1, 38, formula =SUM(A1:D1)");
+        let scrolled = dispatch(&mut app, "viewportShift", json!({"rows":70}));
+        assert!(scrolled.announcements.is_empty());
+        assert_eq!(scrolled.props["selection-summary"], formula.props["selection-summary"]);
+        let typing = dispatch(&mut app, "formulaChange", json!({"value":"=1/0"}));
+        assert!(typing.announcements.is_empty());
+        let error = dispatch(&mut app, "commit", json!({}));
+        assert_eq!(error.announcements[0].message, "Updated E1, #DIV/0!, formula =1/0");
+        let editing = dispatch(&mut app, "editStart", json!({"row":0,"col":4}));
+        assert!(editing.announcements[0].message.starts_with("Editing E1, #DIV/0!"));
+        dispatch(&mut app, "formulaChange", json!({"value":"42"}));
+        let committed = dispatch(&mut app, "editCommit", json!({}));
+        assert_eq!(committed.announcements[0].message, "Updated E1, 42. Selected E2, 51, formula =SUM(A2:D2)");
+        dispatch(&mut app, "formulaChange", json!({"value":"99"}));
+        let cancelled = dispatch(&mut app, "cancel", json!({}));
+        assert_eq!(cancelled.announcements[0].message, "Edit cancelled. E2, 51, formula =SUM(A2:D2)");
+        assert!(dispatch(&mut app, "cancel", json!({})).announcements.is_empty());
+        let saved = app.snapshot().unwrap().unwrap();
+        let empty = dispatch(&mut app, "newWorkbook", json!({}));
+        assert_eq!(empty.announcements[0].message, "New workbook. A1, blank");
+        let restored = app.restore(saved).unwrap();
+        assert_eq!(restored.announcements[0].message, "Workbook restored. E2, 51, formula =SUM(A2:D2)");
+    }
+
+    #[test]
     fn runtime_can_retry_rejected_event_without_consuming_sequence() {
         let mut runtime = MosaicRuntime::new(VisiCalcMosaicApp::default());
         runtime
@@ -619,7 +668,7 @@ mod tests {
             .unwrap();
         assert_eq!(update.revision, 2);
         assert_eq!(update.props["formula"], "=SUM(A1:D1)");
-        assert_eq!(update.announcements[0].message, "E1");
+        assert_eq!(update.announcements[0].message, "E1, 38, formula =SUM(A1:D1)");
     }
 
     #[test]

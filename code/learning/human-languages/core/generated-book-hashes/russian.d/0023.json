@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:689d723e12d1eda3",
+  "lessonIds": [
+    "RU-C23-dva",
+    "RU-C23-tri",
+    "RU-C23-chetyre",
+    "RU-C23-pyat",
+    "RU-C23-practice"
+  ],
+  "tex": "russian/book/chapters/ch23-count-five.tex"
+}

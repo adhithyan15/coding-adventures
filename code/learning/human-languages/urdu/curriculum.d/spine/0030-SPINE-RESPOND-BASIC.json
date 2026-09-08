@@ -4,7 +4,9 @@
     "UR-PATH-017",
     "UR-PATH-018",
     "UR-PATH-019",
-    "UR-PATH-021"
+    "UR-PATH-021",
+    "UR-PATH-026",
+    "UR-PATH-027"
   ],
   "omits": [
     "RESPONSE-YESNO"

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C26-hai-na",
+    "language": "urdu",
+    "chapter": 26,
+    "sequence": 1390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6907417fc616094e"
+  },
+  "findings": []
+}

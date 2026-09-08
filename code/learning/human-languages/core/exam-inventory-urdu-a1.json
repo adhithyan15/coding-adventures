@@ -106,7 +106,11 @@
       "id": "UR-A1-N-02",
       "category": "Ism (the noun)",
       "label": "place names: the town or the country you are from",
-      "probe": null,
+      "probe": [
+        "UR-LEX-LAHORE",
+        "UR-LEX-SHAHR",
+        "UR-LEX-MULK"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -117,7 +121,7 @@
         "A1-NE20-02"
       ],
       "urduSpecific": false,
-      "note": "UNTAUGHT, and the corpus does not even write its own language's name in its own script: اردو returns ZERO occurrences in 89 files, and so does پاکستان. There is no word for a country, a city or a village, so a learner can be introduced and can never say where they are from."
+      "note": "CLOSED at chapter 27, and the note's finding held: the corpus wrote no place name of any kind in 108 lessons. لاہور is the first, with شہر and ملک for the categories. اردو and پاکستان both remain unwritable — پاکستان needs te and qaf — and the city chosen is the one this book's own script can spell."
     },
     {
       "id": "UR-A1-N-03",
@@ -178,7 +182,10 @@
       "id": "UR-A1-N-06",
       "category": "Ism (the noun)",
       "label": "number: the plural, and the oblique plural",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-PLURAL",
+        "UR-GRAMMAR-OBLIQUE-PLURAL"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -188,7 +195,7 @@
         "A1-N-05"
       ],
       "urduSpecific": false,
-      "note": "UNTAUGHT. No noun in the corpus is ever pluralised, and Urdu needs two things here that Spanish needs one for — a plural form and an oblique plural before a postposition. A learner who owns five body words, four garments, four foods and five weather words cannot say more than one of any of them."
+      "note": "CLOSED at chapter 25, and it needed BOTH things the note said Spanish needs one for. The plural of a masculine -ا noun is spelled exactly like its oblique singular, and the lesson teaches that collision rather than hiding it: the postposition is what settles the reading, and the oblique plural -وں is what removes the ambiguity."
     },
     {
       "id": "UR-A1-ADJ-01",
@@ -255,7 +262,9 @@
       "id": "UR-A1-ADJ-04",
       "category": "Sifat (the adjective)",
       "label": "relational adjectives: naming where a person is from",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-NISBA"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -266,7 +275,7 @@
         "A1-NG3-07"
       ],
       "urduSpecific": false,
-      "note": "Untaught, and blocked behind UR-A1-N-02. Urdu builds these with the same Persian -ی the corpus already teaches inside گرمی and سردی, so the machinery is present and has no place name to attach to."
+      "note": "CLOSED at chapter 27, and it cost one lesson because the note was right that 'the machinery is present and has no place name to attach to'. The -ی is named as the Arabic nisba, shown to be the same ending already inside garmī and sardī, and shown to be the naming system behind Bukhārī and Ghazālī."
     },
     {
       "id": "UR-A1-ADJ-05",
@@ -385,7 +394,10 @@
       "id": "UR-A1-DEM-03",
       "category": "Isharat (demonstratives and deixis)",
       "label": "position, and the oblique form اس / اُن before a postposition",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-IS-OBLIQUE",
+        "UR-GRAMMAR-UN-OBLIQUE"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -395,13 +407,16 @@
         "A1-DEM-03"
       ],
       "urduSpecific": false,
-      "note": "Untaught. Urdu's demonstrative changes shape before every postposition, so یہ and وہ as taught can only ever be subjects — the learner has the words and cannot put them into any of the frames the corpus also teaches."
+      "note": "CLOSED at chapter 24. اس and ان are taught as the oblique shapes of یہ and وہ, so the demonstratives the corpus already owned stop being subjects-only. ان also carries the respect grading — 'those' and 'him, respectfully' are one form — which a learner has to be told rather than left to guess."
     },
     {
       "id": "UR-A1-DEM-04",
       "category": "Isharat (demonstratives and deixis)",
       "label": "place deixis: یہاں and وہاں",
-      "probe": null,
+      "probe": [
+        "UR-LEX-YAHAN",
+        "UR-LEX-VAHAN"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -412,7 +427,7 @@
         "A1-NG3-01"
       ],
       "urduSpecific": false,
-      "note": "ABSENT: یہاں and وہاں both return zero occurrences. Nothing can be located anywhere, which with the missing میں ('in') as a postposition leaves the whole spatial column empty."
+      "note": "CLOSED at chapter 24. یہاں and وہاں are taught on the frame کہاں already sits on, so the reader is asked to predict وہاں before it is shown. This also gives کہاں — askable since chapter 17 — its first possible answer."
     },
     {
       "id": "UR-A1-POS-01",
@@ -456,7 +471,10 @@
       "id": "UR-A1-POS-03",
       "category": "Milkiyat (possession)",
       "label": "possessives for the remaining persons: ہمارا, اس کا, ان کا",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-HAMARA",
+        "UR-GRAMMAR-IS-KA"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -466,7 +484,7 @@
         "A1-POS-02"
       ],
       "urduSpecific": false,
-      "note": "Untaught. Two of the six persons are available, and the third-person one is blocked behind the missing oblique at UR-A1-DEM-03."
+      "note": "CLOSED across chapters 25 and 26, and the third-person half was blocked exactly where the note said — behind the oblique of UR-A1-DEM-03, which chapter 24 supplies. The pair also makes the whole column one rule rather than six items: میرا and ہمارا are the pronoun fused with کا, and آپ کا, اس کا and ان کا are the same construction written apart."
     },
     {
       "id": "UR-A1-Q-01",
@@ -613,7 +631,9 @@
       "id": "UR-A1-PRON-04",
       "category": "Zameer (pronouns)",
       "label": "plural pronouns: ہم, آپ لوگ",
-      "probe": null,
+      "probe": [
+        "UR-LEX-HUM"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -623,7 +643,7 @@
         "A1-PRON-01"
       ],
       "urduSpecific": false,
-      "note": "Untaught, on the same footing as the missing noun plural at UR-A1-N-06."
+      "note": "CLOSED at chapter 25. ہم is the track's first plural pronoun, taught with the plural ہیں it takes and with the observation that Urdu uses ہم, آپ and ان alike as plural forms for one person. آپ لوگ is not taught: لوگ needs گاف, which the script ladder has not reached, and آپ alone already carries the plural second person."
     },
     {
       "id": "UR-A1-PRON-05",
@@ -707,7 +727,9 @@
       "id": "UR-A1-PRON-09",
       "category": "Zameer (pronouns)",
       "label": "the reflexive اپنا, which Urdu requires where English does not",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-APNA"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -717,7 +739,7 @@
         "A1-PRON-04"
       ],
       "urduSpecific": false,
-      "note": "Restated, not transferred. Spanish's reflexive point is about the clitic se on a verb. Urdu's اپنا is a POSSESSIVE that must replace میرا whenever the owner is also the subject, which is where the same A1 demand -- mark that the actor and the owner are one person -- lands in Urdu. It is a rule a Spanish speaker has no analogue for and which an A1 learner breaks in their second sentence. Untaught, and made more visible by the fact that میرا itself is taught well."
+      "note": "CLOSED at chapter 26 as the RESTATEMENT the note describes: not a clitic on a verb but a possessive that must replace میرا whenever the owner is also the subject. The lesson turns on the minimal pair the point exists for — اپنے کمرے میں is his own room and اس کے کمرے میں is somebody else's — which English cannot distinguish at all."
     },
     {
       "id": "UR-A1-ADV-01",
@@ -1084,7 +1106,9 @@
       "id": "UR-A1-PST-03",
       "category": "Huruf-e-jar (postpositions and case)",
       "label": "کو, the object and dative postposition",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-KO"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1095,13 +1119,16 @@
         "A1-SV-05"
       ],
       "urduSpecific": false,
-      "note": "UNTAUGHT, AND HALF-PRESENT. مجھے is taught in chapter 8 and مجھے IS مجھ + کو fused; the postposition behind it is never named, so the learner has one frozen dative pronoun and no way to make another. The three raw matches for کو were checked and are all inside کوٹ."
+      "note": "CLOSED at chapter 23, and the note was right that it was HALF-PRESENT: UR-C23-ko is written directly against UR-GRAMMAR-DATIVE-EXPERIENCER, names مجھ + کو as the seam inside the frozen dative pronoun of chapter 8, and re-opens the frame to any noun."
     },
     {
       "id": "UR-A1-PST-04",
       "category": "Huruf-e-jar (postpositions and case)",
       "label": "میں ('in') and پر ('on')",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-MEIN-POST",
+        "UR-GRAMMAR-PAR"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1112,13 +1139,16 @@
         "A1-NG3-02"
       ],
       "urduSpecific": false,
-      "note": "Untaught. میں occurs in twelve files and every occurrence is the PRONOUN 'I', which is spelled identically — a genuine ambiguity a lesson would have to disentangle, and no lesson does. Nothing in this corpus can be located anywhere."
+      "note": "CLOSED at chapter 23, one lesson each. UR-C23-mein disentangles exactly the ambiguity the note recorded — the postposition and the pronoun 'I' are spelled identically, and the lesson tells them apart by position and explains that the collision exists because the script writes no short vowels. پر sets the same trap a second time, being also the everyday rival of لیکن."
     },
     {
       "id": "UR-A1-PST-05",
       "category": "Huruf-e-jar (postpositions and case)",
       "label": "the oblique case a noun takes before any postposition",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-OBLIQUE",
+        "UR-GRAMMAR-OBLIQUE-PLURAL"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1126,7 +1156,7 @@
       ],
       "derivedFrom": [],
       "urduSpecific": true,
-      "note": "NO SPANISH ORIGIN: Spanish prepositions leave their noun untouched. Every Urdu noun changes shape before a postposition, and a learner who does not know that cannot use کا, کو, سے or میں even after learning them. Untaught, and it is the invisible prerequisite under four of the five points above. Urdu-specific."
+      "note": "CLOSED at chapters 23 and 25, and taught as a RULE BEFORE any postposition that needs it — which is what the note asked for when it called this 'the invisible prerequisite under four of the five points above'. UR-C23-oblique states the direct/oblique split and shows the adjective following the noun over; UR-C25-oblique-plural adds the -وں that is the one ending in Urdu that is never ambiguous. Four other points in this column and the two demonstrative points stand on these two atoms."
     },
     {
       "id": "UR-A1-PST-06",
@@ -1246,7 +1276,9 @@
       "id": "UR-A1-SEN-06",
       "category": "Jumla (the sentence)",
       "label": "the vocative, and addressing somebody by a kin term",
-      "probe": null,
+      "probe": [
+        "UR-FUNC-VOCATIVE"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1257,7 +1289,7 @@
         "A1-F5-03"
       ],
       "urduSpecific": false,
-      "note": "Untaught. Urdu addresses almost everybody by a kin term or a title, and the corpus teaches بھائی, بہن and ماں as nouns without ever using one in address."
+      "note": "CLOSED at chapter 26. ماں has been a noun since chapter 17 and had never been used in address. The lesson teaches the kin term as an address and the fragment of the old vocative case Urdu kept: a masculine -ا noun ends in -ے when called, and a plural in -و rather than the -وں it takes before a postposition."
     },
     {
       "id": "UR-A1-SEN-07",
@@ -1389,7 +1421,9 @@
       "id": "UR-A1-QUE-07",
       "category": "Sawal (questions)",
       "label": "the tag question: ہے نا؟",
-      "probe": null,
+      "probe": [
+        "UR-FUNC-HAI-NA"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1399,7 +1433,7 @@
         "A1-F1-04"
       ],
       "urduSpecific": false,
-      "note": "Untaught. Both pieces are in chapter 1 and chapter 2 and the tag is never formed."
+      "note": "CLOSED at chapter 26, and the note was exactly right that both pieces were already there: ہے from chapter 2 and نہ from chapter 19, never put together. The lesson contrasts it with chapter 19's کیا — one asks, the other invites agreement — and introduces no new vocabulary at all."
     },
     {
       "id": "UR-A1-NEG-01",
@@ -3066,7 +3100,7 @@
         "A1-F1-02"
       ],
       "urduSpecific": false,
-      "note": "COVERED, and uniquely in this series. یہ کہاں؟ appears in چapter 17's own lesson as a pointing question."
+      "note": "COVERED, and uniquely in this series. یہ کہاں؟ appears in chapter 17's own lesson as a pointing question."
     },
     {
       "id": "UR-A1-FUN-46",
@@ -4103,7 +4137,11 @@
       "id": "UR-A1-LEX-52",
       "category": "Lughat (lexicon by domain)",
       "label": "geography: country, town, city, capital",
-      "probe": null,
+      "probe": [
+        "UR-LEX-SHAHR",
+        "UR-LEX-MULK",
+        "UR-LEX-LAHORE"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -4113,7 +4151,7 @@
         "A1-NE20-02"
       ],
       "urduSpecific": false,
-      "note": "Untaught — the same hole as UR-A1-N-02, filed here so the domain walk is total."
+      "note": "CLOSED at chapter 27, alongside UR-A1-N-02 as the note predicted. شہر is Persian for the seat of a realm, ملک is Arabic for what a king owns, and لاہور is a Sanskrit name out of the Ramayana — three words for three sizes of place from three languages, which is the layering of Urdu shown on a map."
     },
     {
       "id": "UR-A1-LEX-53",

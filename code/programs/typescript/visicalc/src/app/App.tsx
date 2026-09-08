@@ -62,6 +62,6 @@ export function App({ load = loadApplication }: { load?: () => Promise<MosaicHos
   return <div onKeyDown={key}>
     <View {...props} dispatch={dispatch} />
     {error && <div role="alert">{error}</div>}
-    <div aria-live="polite">{update.announcements.map(item => item.message).join(". ")}</div>
+    <div role="status" aria-live="polite" aria-atomic="true" style={{ position: "absolute", top: 0, left: 0, width: 1, height: 1, overflow: "hidden", clipPath: "inset(50%)", whiteSpace: "nowrap" }}>{update.announcements.map(item => item.message).join(". ")}</div>
   </div>;
 }

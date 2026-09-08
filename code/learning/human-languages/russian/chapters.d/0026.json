@@ -1,0 +1,20 @@
+{
+  "chapter": 26,
+  "title": "Which One: the Ordinals, Said and Written",
+  "label": "ch:ru-ordinals",
+  "canDo": "I can say first, second and third, build the ordinal of any number I can count to, and read and write an ordinal as a figure with its ending hyphenated on.",
+  "payoff": {
+    "lesson": "RU-C26-practice",
+    "kind": "task",
+    "summary": "Two forms outside the pattern, one adjective ending for everything above them, and the written 1-y whose letters after the hyphen are the agreement rather than decoration.",
+    "assesses": [
+      "RU-LEX-PERVYY-01",
+      "RU-ETYMON-PERVYY-PER",
+      "RU-LEX-VTOROY-01",
+      "RU-LEX-TRETIY-01",
+      "RU-MORPH-ORDINAL-ADJ-01",
+      "RU-SCRIPT-ORDINAL-HYPHEN-01",
+      "RU-PERFORMANCE-ORDINALS"
+    ]
+  }
+}

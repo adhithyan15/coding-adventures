@@ -34,7 +34,11 @@ pub fn u64_to_bits(n: u64) -> Vec<u8> {
 /// Panics if `bits.len() > 32`; a longer slice would shift by ≥ 32, which
 /// overflows `u32` and panics in debug or produces garbage in release.
 pub fn bits_to_u32(bits: &[u8]) -> u32 {
-    assert!(bits.len() <= 32, "bits_to_u32: slice length {} exceeds 32", bits.len());
+    assert!(
+        bits.len() <= 32,
+        "bits_to_u32: slice length {} exceeds 32",
+        bits.len()
+    );
     bits.iter()
         .enumerate()
         .fold(0u32, |acc, (i, &b)| acc | ((b as u32) << i))
@@ -46,7 +50,11 @@ pub fn bits_to_u32(bits: &[u8]) -> u32 {
 ///
 /// Panics if `bits.len() > 64`.
 pub fn bits_to_u64(bits: &[u8]) -> u64 {
-    assert!(bits.len() <= 64, "bits_to_u64: slice length {} exceeds 64", bits.len());
+    assert!(
+        bits.len() <= 64,
+        "bits_to_u64: slice length {} exceeds 64",
+        bits.len()
+    );
     bits.iter()
         .enumerate()
         .fold(0u64, |acc, (i, &b)| acc | ((b as u64) << i))
@@ -56,17 +64,26 @@ pub fn bits_to_u64(bits: &[u8]) -> u64 {
 
 /// Bitwise AND of two 32-bit vectors.
 pub fn and_32(a: &[u8], b: &[u8]) -> Vec<u8> {
-    a.iter().zip(b.iter()).map(|(&x, &y)| and_gate(x, y)).collect()
+    a.iter()
+        .zip(b.iter())
+        .map(|(&x, &y)| and_gate(x, y))
+        .collect()
 }
 
 /// Bitwise OR of two 32-bit vectors.
 pub fn or_32(a: &[u8], b: &[u8]) -> Vec<u8> {
-    a.iter().zip(b.iter()).map(|(&x, &y)| or_gate(x, y)).collect()
+    a.iter()
+        .zip(b.iter())
+        .map(|(&x, &y)| or_gate(x, y))
+        .collect()
 }
 
 /// Bitwise XOR of two 32-bit vectors.
 pub fn xor_32(a: &[u8], b: &[u8]) -> Vec<u8> {
-    a.iter().zip(b.iter()).map(|(&x, &y)| xor_gate(x, y)).collect()
+    a.iter()
+        .zip(b.iter())
+        .map(|(&x, &y)| xor_gate(x, y))
+        .collect()
 }
 
 /// Bitwise NOT of a 32-bit vector.
@@ -76,12 +93,18 @@ pub fn not_32(a: &[u8]) -> Vec<u8> {
 
 /// Bitwise AND-NOT: `a & ~b` (used by ANDN / BIC).
 pub fn andn_32(a: &[u8], b: &[u8]) -> Vec<u8> {
-    a.iter().zip(b.iter()).map(|(&x, &y)| and_gate(x, not_gate(y))).collect()
+    a.iter()
+        .zip(b.iter())
+        .map(|(&x, &y)| and_gate(x, not_gate(y)))
+        .collect()
 }
 
 /// Bitwise OR-NOT: `a | ~b` (used by ORN).
 pub fn orn_32(a: &[u8], b: &[u8]) -> Vec<u8> {
-    a.iter().zip(b.iter()).map(|(&x, &y)| or_gate(x, not_gate(y))).collect()
+    a.iter()
+        .zip(b.iter())
+        .map(|(&x, &y)| or_gate(x, not_gate(y)))
+        .collect()
 }
 
 /// Bitwise XNOR: `~(a ^ b)` (used by XNOR).

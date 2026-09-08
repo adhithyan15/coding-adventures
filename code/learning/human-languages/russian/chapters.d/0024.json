@@ -1,0 +1,24 @@
+{
+  "chapter": 24,
+  "title": "Six to Ten, and the Pairs That Shaped Each Other",
+  "label": "ch:ru-count-ten",
+  "canDo": "I can count aloud from one to ten in Russian and say why vosem ends like sem and devyat begins like desyat.",
+  "payoff": {
+    "lesson": "RU-C24-practice",
+    "kind": "task",
+    "summary": "Five more numbers with no new letter, two pairs shaped by standing next to each other, and the whole run of ten scored shuffled rather than recited.",
+    "assesses": [
+      "RU-LEX-SHEST-01",
+      "RU-ETYMON-SHEST-SWEKS",
+      "RU-LEX-SEM-01",
+      "RU-ETYMON-SEM-SEPTM",
+      "RU-LEX-VOSEM-01",
+      "RU-ETYMON-VOSEM-OKTOW",
+      "RU-LEX-DEVYAT-01",
+      "RU-ETYMON-DEVYAT-HNEWN",
+      "RU-LEX-DESYAT-01",
+      "RU-ETYMON-DESYAT-DEKM",
+      "RU-PERFORMANCE-COUNT-TEN"
+    ]
+  }
+}

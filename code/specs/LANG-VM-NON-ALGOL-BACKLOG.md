@@ -8,6 +8,40 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-039b implementation contract (selected after #14488 merged)
+
+Refreshed main is `1d1db6507d`. VM-039a merged after all applicable checks
+passed, including both final gates. No new defect outranks the next adapter:
+WASM input/EOF for the identical four FLOW-MATIC rows 439–442.
+
+Add WASM to those rows without changing source, stdin or expected output.
+First execute a discriminating cell and record the current failure. Introduce
+`env.__input_more() -> i64` alongside the existing input_i64 import: preserve
+feature detection, import ordering, function indices and destination writes.
+The matrix host adapter must inspect the same per-program byte queue consumed
+by InputI64Func without mutating it. Empty input returns zero; repeated peeks
+remain stable before and after consumption. Host import errors must remain
+hard failures, never post-detection skips. Document the new host ABI.
+
+Validate all four new WASM cells with positive sentinels, direct repeated-peek
+and shared-buffer assertions, the complete iir-to-wasm suite and focused Clippy.
+Native/LLVM behavior remains the previously merged proof; JVM/CLR and shared
+VM/JIT matrix callbacks remain subsequent slices. Update counts by four cells,
+not four programs. Security review precedes publishing a ready PR.
+
+The executed source probe fails the WASM host-import whitelist on input_more.
+A newly merged ALGOL row shifts these four rows by one; enumerate the actual
+corpus rather than relying on previous indices (443 total rows, 233 ALGOL).
+The first attempted row 438 passed an older COBOL program, not the intended
+FLOW-MATIC source; only the corrected row 439 establishes this refusal.
+
+VM-039b local execution: all four WASM cells (439–442) passed in fresh
+processes with positive sentinels. The direct adapter regression proves
+repeated peeks share the same buffer as integer reads, including a final
+negative value without newline and stable EOF. The complete iir-to-wasm
+suite and focused Clippy (warnings denied) passed. No further lowering defect
+was found; the JVM/CLR adapter slice VM-039c is next after merge.
+
 ## VM-039a implementation contract (selected after #14471 merged)
 
 Refreshed main is `1ff49866a8`. VM-038 merged with every applicable

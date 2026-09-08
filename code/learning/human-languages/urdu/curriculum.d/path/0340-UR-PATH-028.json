@@ -1,0 +1,16 @@
+{
+  "id": "UR-PATH-028",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "UR-C27-shahr",
+    "UR-C27-mulk",
+    "UR-C27-lahore",
+    "UR-C27-lahori",
+    "UR-R27-where-you-are-from"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-038-ORIGIN"
+  ],
+  "after": []
+}

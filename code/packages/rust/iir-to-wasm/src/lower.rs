@@ -1364,6 +1364,7 @@ fn emit_instr(
     putchar_fn_idx: Option<u32>,
     getchar_fn_idx: Option<u32>,
     input_i64_fn_idx: Option<u32>,
+    input_more_fn_idx: Option<u32>,
     input_str_fn_idx: Option<u32>,
     sin_fn_idx: Option<u32>,
     cos_fn_idx: Option<u32>,
@@ -3855,6 +3856,21 @@ fn emit_instr(
                     code.extend(encode_call(fn_idx));
                     code.extend(encode_local_set(rd));
                 }
+                // Non-consuming EOF query shares the host input stream.
+                "input_more" => {
+                    let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: "call_builtin \"input_more\" requires a dest register".to_string(),
+                    })?;
+                    let rd = get_reg(dest)?;
+                    let fn_idx = input_more_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "call_builtin \"input_more\": no env.__input_more import registered (internal error)".to_string(),
+                    })?;
+                    // `env.__input_more` returns i64 directly — no widening needed.
+                    code.extend(encode_call(fn_idx));
+                    code.extend(encode_local_set(rd));
+                }
                 // E4-dyn: BASIC string `INPUT A$`. `input_str` reads a whole line as
                 // a runtime string. On WASM a `str` value is an i32 **handle** — the
                 // linear-memory offset of a `[i32 len][bytes]` block. We bump-allocate
@@ -4120,6 +4136,7 @@ fn lower_function(
     putchar_fn_idx: Option<u32>,
     getchar_fn_idx: Option<u32>,
     input_i64_fn_idx: Option<u32>,
+    input_more_fn_idx: Option<u32>,
     input_str_fn_idx: Option<u32>,
     sin_fn_idx: Option<u32>,
     cos_fn_idx: Option<u32>,
@@ -4240,7 +4257,7 @@ fn lower_function(
                     print_str_fn_idx,
                     putchar_fn_idx,
                     getchar_fn_idx,
-                    input_i64_fn_idx,
+                    input_i64_fn_idx, input_more_fn_idx,
                     input_str_fn_idx,
                     sin_fn_idx,
                     cos_fn_idx,
@@ -4334,7 +4351,7 @@ fn lower_function(
                 print_str_fn_idx,
                 putchar_fn_idx,
                 getchar_fn_idx,
-                input_i64_fn_idx,
+                input_i64_fn_idx, input_more_fn_idx,
                 input_str_fn_idx,
                 sin_fn_idx,
                 cos_fn_idx,
@@ -4440,6 +4457,7 @@ struct ModuleFeatures {
     uses_putchar: bool,
     uses_getchar: bool,
     uses_input_i64: bool,
+    uses_input_more: bool,
     /// True when the module calls `call_builtin "input_str"` (BASIC string
     /// `INPUT A$`). Triggers injection of the `env.__input_str(i32,i32) -> i32`
     /// host import (fills a linear-memory buffer with the line, returns its length).
@@ -4876,6 +4894,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     let mut uses_putchar = false;
     let mut uses_getchar = false;
     let mut uses_input_i64 = false;
+    let mut uses_input_more = false;
     let mut uses_input_str = false;
     let mut uses_f64_sin  = false;
     let mut uses_f64_cos  = false;
@@ -5299,6 +5318,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                             // BA-INPUT: BASIC `INPUT X` — triggers injection of
                             // `env.__input_i64() -> i64` host import.
                             "input_i64" => uses_input_i64 = true,
+                            "input_more" => uses_input_more = true,
                             // E4-dyn: BASIC string `INPUT A$` — triggers the
                             // `env.__input_str(i32,i32) -> i32` host import AND (like an
                             // array op) linear memory + the `__array_bump` global, since
@@ -5338,6 +5358,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
         uses_putchar,
         uses_getchar,
         uses_input_i64,
+        uses_input_more,
         uses_input_str,
         uses_f64_sin,
         uses_f64_cos,
@@ -5423,6 +5444,7 @@ pub fn lower_iir_to_wasm(
     let uses_putchar = features.uses_putchar;
     let uses_getchar = features.uses_getchar;
     let uses_input_i64 = features.uses_input_i64;
+    let uses_input_more = features.uses_input_more;
     let uses_input_str = features.uses_input_str;
     let uses_f64_sin  = features.uses_f64_sin;
     let uses_f64_cos  = features.uses_f64_cos;
@@ -5479,6 +5501,9 @@ pub fn lower_iir_to_wasm(
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
     let input_i64_fn_idx: Option<u32> = if uses_input_i64 {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let input_more_fn_idx: Option<u32> = if uses_input_more {
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
     let input_str_fn_idx: Option<u32> = if uses_input_str {
@@ -5695,6 +5720,17 @@ pub fn lower_iir_to_wasm(
             type_info: ImportTypeInfo::Function(type_idx),
         });
     }
+    if uses_input_more {
+        // EOF peek: () -> i64, with no input consumption.
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType { params: vec![], results: vec![ValueType::I64] });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "__input_more".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
     if uses_input_str {
         // env.__input_str(i32 block, i32 max) -> () — BASIC string `INPUT A$`
         // (E4-dyn). Reads one line from stdin and writes the WHOLE runtime-string
@@ -5859,7 +5895,7 @@ pub fn lower_iir_to_wasm(
             fn_, &fn_map, lispy_pair_type_idx, &global_map, fn_string_literals,
             fn_runtime_str_vars, fn_runtime_str_blocks,
             print_fn_idx, print_str_fn_idx, putchar_fn_idx, getchar_fn_idx,
-            input_i64_fn_idx, input_str_fn_idx,
+            input_i64_fn_idx, input_more_fn_idx, input_str_fn_idx,
             sin_fn_idx, cos_fn_idx, ln_fn_idx, exp_fn_idx,
             atan_fn_idx, tan_fn_idx,
             pow_fn_idx, str_eq_fn_idx, str_cmp_fn_idx, ensure_capacity_fn_idx,
