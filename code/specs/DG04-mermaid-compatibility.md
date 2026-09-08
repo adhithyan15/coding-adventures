@@ -403,6 +403,17 @@ instructions, with a native Metal-to-PNG fixture. Radar options (`showLegend`,
 multiline curve bodies, configuration, and filled or smoothed curve styling
 remain unsupported at the partial level.
 
+### Event Modeling Native Slice
+
+The initial Mermaid 11.16.1 Event Modeling slice uses dedicated portable
+grammars and semantic event-model IR for numbered time and reset frames,
+entity-kind aliases, qualified namespaces, inferred sequence relations, and
+explicit multi-source relations. Temporal swimlane layout lowers through
+backend-neutral PaintScene instructions and a native Metal-to-PNG fixture.
+Inline and block data, notes, Given/When/Then annotations, standalone entity
+declarations, configuration, and interactive behavior remain unsupported at
+the partial level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

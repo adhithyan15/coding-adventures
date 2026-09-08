@@ -163,9 +163,9 @@
     {
       "id": "eventmodeling",
       "headers": ["eventmodeling"],
-      "status": "detected",
+      "status": "partial",
       "ir": "event-model",
-      "smoke_source": "eventmodeling\nCustomer : actor"
+      "smoke_source": "eventmodeling\ntf 01 ui CustomerUI"
     },
     {
       "id": "treemap",

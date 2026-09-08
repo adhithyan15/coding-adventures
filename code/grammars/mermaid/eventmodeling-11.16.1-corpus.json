@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "upstream": "mermaid@11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, explicit sources, titles, and accessibility metadata.",
+  "fixtures": [
+    {
+      "id": "state-change",
+      "source": "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem\ntf 03 evt ItemAdded"
+    },
+    {
+      "id": "relaxed-syntax",
+      "source": "eventmodeling\ntitle Checkout flow\naccTitle: Checkout event model\naccDescr: Commands and events\ntimeframe 01 ui CheckoutUI\ntimeframe 02 command SubmitOrder\ntimeframe 03 event OrderSubmitted"
+    },
+    {
+      "id": "reset-and-namespaces",
+      "source": "eventmodeling\nresetframe 01 event External.InventoryChanged\ntimeframe 02 processor Inventory.SyncProcessor\ntimeframe 03 command Inventory.ChangeInventory\ntimeframe 04 readmodel Inventory.StockView"
+    },
+    {
+      "id": "multiple-sources",
+      "source": "eventmodeling\nrf 02 evt CartCreated\nrf 03 evt ItemAdded\nrf 04 evt ItemRemoved\ntf 01 rmo CartUI ->> 02 ->> 03 ->> 04"
+    }
+  ]
+}

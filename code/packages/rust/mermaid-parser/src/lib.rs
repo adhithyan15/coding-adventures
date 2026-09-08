@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.127.0";
+pub const VERSION: &str = "0.128.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -25,7 +25,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
     try_tokenize_mermaid_architecture, try_tokenize_mermaid_block, try_tokenize_mermaid_kanban,
     try_tokenize_mermaid_mindmap, try_tokenize_mermaid_packet, try_tokenize_mermaid_timeline,
-    try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
+    try_tokenize_mermaid_eventmodeling, try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -59,6 +59,8 @@ const ARCHITECTURE_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/architecture.grammar");
 const RADAR_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/radar.grammar");
+const EVENTMODELING_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/eventmodeling.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -548,7 +550,8 @@ fn token_name(token: &Token) -> &str {
 use diagram_ir::{
     Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
-    GitDiagram, GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice,
+    EventModelDiagram, EventModelEntityKind, EventModelFrame, GitDiagram, GitEvent, JourneyConfig,
+    JourneyDiagram, JourneySection, JourneyTask, PieSlice,
     QuadrantConfig, QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind,
     RequirementMetadata, RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode,
     SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection, SequenceDiagram,
@@ -650,6 +653,7 @@ impl MermaidDiagramType {
                 | Self::Kanban
                 | Self::Architecture
                 | Self::Radar
+                | Self::EventModeling
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -673,6 +677,7 @@ pub enum MermaidDiagram {
     Grid(GridDiagram),
     Packet(PacketDiagram),
     Board(BoardDiagram),
+    EventModel(EventModelDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -800,6 +805,9 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             parse_architecture(source).map(MermaidDiagram::Structural)
         }
         MermaidDiagramType::Radar => parse_radar(source).map(MermaidDiagram::Chart),
+        MermaidDiagramType::EventModeling => {
+            parse_event_modeling(source).map(MermaidDiagram::EventModel)
+        }
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -2592,6 +2600,117 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
         }
     }
     None
+}
+
+// ── eventmodeling parser ──────────────────────────────────────────────────
+
+/// Parse the Mermaid 11.16.1 event-modeling frame subset into dedicated IR.
+pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_eventmodeling(&prepared).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(EVENTMODELING_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse eventmodeling.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message,
+            line: error.token.line,
+            col: error.token.column,
+        })?;
+
+    let mut diagram = EventModelDiagram {
+        title: None,
+        accessibility_title: None,
+        accessibility_description: None,
+        frames: Vec::new(),
+    };
+    let mut frame_ids = HashSet::new();
+    let mut previous_id: Option<String> = None;
+
+    for token in &tokens {
+        match token_name(token) {
+            "TITLE_STATEMENT" => {
+                diagram.title = Some(unquote_mermaid_string(token.value["title".len()..].trim()));
+            }
+            "ACC_TITLE_STATEMENT" => {
+                diagram.accessibility_title = Some(xychart_metadata_value(token));
+            }
+            "ACC_DESCR_STATEMENT" => {
+                diagram.accessibility_description = Some(xychart_metadata_value(token));
+            }
+            "ACC_DESCR_BLOCK" => {
+                let open = token.value.find('{').expect("grammar requires '{'");
+                let close = token.value.rfind('}').expect("grammar requires '}'");
+                diagram.accessibility_description =
+                    Some(token.value[open + 1..close].trim().to_string());
+            }
+            "FRAME_STATEMENT" => {
+                let fields = token.value.split_whitespace().collect::<Vec<_>>();
+                let reset = matches!(fields[0], "rf" | "resetframe");
+                let id = fields[1].to_string();
+                if !frame_ids.insert(id.clone()) {
+                    return Err(token_error(token, format!("duplicate event-model frame {id:?}")));
+                }
+                let kind = match fields[2] {
+                    "ui" => EventModelEntityKind::Ui,
+                    "pcr" | "processor" => EventModelEntityKind::Processor,
+                    "cmd" | "command" => EventModelEntityKind::Command,
+                    "rmo" | "readmodel" => EventModelEntityKind::ReadModel,
+                    "evt" | "event" => EventModelEntityKind::Event,
+                    _ => unreachable!("grammar restricts event-model entity kinds"),
+                };
+                let entity = fields[3];
+                let namespace = entity.rsplit_once('.').map(|(prefix, _)| prefix.to_string());
+                let mut source_frames = fields[4..]
+                    .iter()
+                    .skip(1)
+                    .step_by(2)
+                    .map(|source| (*source).to_string())
+                    .collect::<Vec<_>>();
+                if source_frames.is_empty() && !reset {
+                    if let Some(previous) = &previous_id {
+                        source_frames.push(previous.clone());
+                    }
+                }
+                diagram.frames.push(EventModelFrame {
+                    id: id.clone(),
+                    entity_id: entity.to_string(),
+                    label: entity.to_string(),
+                    namespace,
+                    kind,
+                    reset,
+                    source_frames,
+                });
+                previous_id = Some(id);
+            }
+            _ => {}
+        }
+    }
+
+    for frame in &diagram.frames {
+        for source_id in &frame.source_frames {
+            if !frame_ids.contains(source_id) {
+                return Err(ParseError {
+                    message: format!("unknown source frame {source_id:?} for {:?}", frame.id),
+                    line: 1,
+                    col: 1,
+                });
+            }
+        }
+    }
+    if diagram.frames.is_empty() {
+        return Err(ParseError {
+            message: "event-modeling diagrams require at least one frame".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+    Ok(diagram)
 }
 
 // ── radar-beta parser ─────────────────────────────────────────────────────
@@ -10430,7 +10549,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.127.0");
+        assert_eq!(crate::VERSION, "0.128.0");
     }
 
     #[test]
