@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 83,
-  "sourceHash": "fnv1a64:da036a6ebb4aa610",
+  "sourceHash": "fnv1a64:c710c83da3df2efd",
   "lessonIds": [
     "HI-C76-sixth",
     "HI-C76-seventh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch83.txt",
   "json": "hindi/narration/ch83.json",
-  "textHash": "fnv1a64:3c0a6cfbcbf28ece",
-  "jsonHash": "fnv1a64:a27759be793f3949",
+  "textHash": "fnv1a64:a92e6603fb9e6125",
+  "jsonHash": "fnv1a64:80392a5cb71e0db4",
   "findings": []
 }

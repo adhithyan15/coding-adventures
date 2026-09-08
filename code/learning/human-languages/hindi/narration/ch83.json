@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Sixth to Tenth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:da036a6ebb4aa610",
+  "sourceHash": "fnv1a64:c710c83da3df2efd",
   "lessons": [
     {
       "id": "HI-C76-sixth",
@@ -363,16 +363,16 @@
       "id": "HI-C76-eighth",
       "sequence": 3230,
       "title": "आठवाँ (āṭhvā̃) — eighth",
-      "headword": "आठवाँ",
-      "romanization": "āṭhvā̃",
-      "gloss": "eighth — the ending on a number that ends in a consonant cluster",
+      "headword": "आठवाँ / आठवीं",
+      "romanization": "āṭhvā̃ / āṭhvī̃",
+      "gloss": "eighth / feminine eighth — the ending on a number that ends in a consonant cluster",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63e3a97bc5299ad0",
+      "sourceHash": "fnv1a64:7fee3b53d9039227",
       "notice": null,
       "blocks": [
         {
@@ -501,6 +501,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "āṭhvī̃ kitāb — the eighth book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭhvī̃ kitāb* — the eighth book]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "chaṭhā against āṭhvā̃ — one is a word, one is a sum",
               "spoken": true,
               "scored": false,
@@ -522,7 +531,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the eighth day. (आठवाँ दिन.) What happened to the ṭh of āṭh? (Nothing — the ending follows it.) And which of chaṭhā and āṭhvā̃ had to be memorised? (Chaṭhā.)"
+              "text": "Say the eighth day. (आठवाँ (āṭhvā̃) दिन.) What happened to the ṭh of āṭh? (Nothing — the ending follows it.) What changes for a feminine noun? (आठवीं.) And which of chaṭhā and āṭhvā̃ had to be memorised? (Chaṭhā.)"
             }
           ]
         }
