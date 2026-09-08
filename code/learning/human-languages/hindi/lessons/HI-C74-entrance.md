@@ -60,7 +60,8 @@ The opening प्र stacks प on र with the vowel-killer, as क्र did 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Three: खुला, बंद, प्रवेश. Two states of a door and one of its two labels.
+Three: **खुला** (*khulā*), बंद, प्रवेश. Two states of a door and one of its two
+labels.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-02, HI-LEX-C74-SIGNS-03, HI-LEX-C72-COST-03, HI-LEX-C73-EATING-03] -->

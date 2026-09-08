@@ -8,9 +8,9 @@ spine_node: SPINE-TAKE-LEAVE
 sequence: 3110
 chapter: 81
 type: word
-headword: "खुला"
-gloss: "open"
-romanization: "khulā"
+headword: "खुला / खुलना"
+gloss: "open / to open"
+romanization: "khulā / khulnā"
 concept_tag: HI-ADJ-OPEN
 prerequisites: [HI-C73-drink, HI-C73-waiter, HI-C72-money, HI-C73-eating-house]
 sounds: []
@@ -49,8 +49,9 @@ behind — the way English *opened* stands to *open*. Hindi makes these
 already-done forms constantly, and this is one you will meet before you are
 taught the pattern.
 
-खुला is the word on a shutter, a shop board, a gate and a ticket window. It is
-also used of a thing that is loose or unpacked: **खुला पैसा** is loose change,
+**खुला** (*khulā*) is the word on a shutter, a shop board, a gate and a ticket
+window. It is also used of a thing that is loose or unpacked: **खुला** (*khulā*)
+पैसा is loose change,
 coins rather than a note, which is the phrase that will save you at a counter.
 
 The ु under the ख is the short *u* matra, hanging below.
@@ -65,7 +66,7 @@ The first of five words you read rather than say.
 
 [PAUSE 1s]
 - [YOU RECALL: say *veṭar*, then read **पीना** and say what it means]
-- [YOU READ: खुला, as though it were painted on a shutter]
+- [YOU READ: **खुला** (*khulā*), as though it were painted on a shutter]
 - [YOU SAY: *khulā*]
 - [YOU SAY: *khulā paisā*]
 - [YOU RECALL: say *paisā*, then read **होटल**]
@@ -73,4 +74,4 @@ The first of five words you read rather than say.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01] -->
 
-[PAUSE 3s] What does खुला mean? ("open".) Say it once more.
+[PAUSE 3s] What does **खुला** (*khulā*) mean? ("open".) Say it once more.
