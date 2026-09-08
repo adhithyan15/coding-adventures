@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "graph/cycle",
+  "domain": "graph",
+  "summary": "A dependency cycle fails without returning a partial topological order.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["graph"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "graph",
+    "options": {
+      "packages": ["python/a", "python/b", "python/c"],
+      "edges": [
+        ["python/a", "python/b"],
+        ["python/b", "python/c"],
+        ["python/c", "python/a"]
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "graph/cycle",
+    "domain": "graph",
+    "outcome": "error",
+    "result": {},
+    "diagnostics": [
+      {"code": "GRAPH_CYCLE", "severity": "error"}
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "graph/multiple-components",
+  "domain": "graph",
+  "summary": "Disconnected chains and an isolated package share deterministic levels.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["graph"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "graph",
+    "options": {
+      "packages": [
+        "python/alpha",
+        "python/beta",
+        "python/delta",
+        "python/gamma",
+        "python/isolated"
+      ],
+      "edges": [
+        ["python/alpha", "python/beta"],
+        ["python/gamma", "python/delta"]
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "graph/multiple-components",
+    "domain": "graph",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        ["python/alpha", "python/beta"],
+        ["python/gamma", "python/delta"]
+      ],
+      "levels": [
+        ["python/alpha", "python/gamma", "python/isolated"],
+        ["python/beta", "python/delta"]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

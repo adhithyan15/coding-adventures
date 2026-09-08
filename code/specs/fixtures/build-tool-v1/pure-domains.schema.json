@@ -34,6 +34,9 @@
       "$ref": "#/$defs/ci_gate_selection_record"
     },
     {
+      "$ref": "#/$defs/graph_record"
+    },
+    {
       "$ref": "#/$defs/diff_selection_record"
     },
     {
@@ -62,6 +65,7 @@
     "pure_domain": {
       "enum": [
         "ci_gate_selection",
+        "graph",
         "diff_selection",
         "source_collection",
         "hashing_cache",
@@ -326,6 +330,124 @@
       "type": "object",
       "additionalProperties": false,
       "maxProperties": 0
+    },
+    "graph_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "graph"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "packages",
+            "edges"
+          ],
+          "properties": {
+            "packages": {
+              "$ref": "#/$defs/package_names"
+            },
+            "edges": {
+              "type": "array",
+              "maxItems": 16384,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/edge"
+              }
+            }
+          }
+        }
+      }
+    },
+    "graph_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edges",
+        "levels"
+      ],
+      "properties": {
+        "edges": {
+          "type": "array",
+          "maxItems": 16384,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/edge"
+          }
+        },
+        "levels": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "array",
+            "maxItems": 4096,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/package_name"
+            }
+          }
+        }
+      }
+    },
+    "graph_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "outcome",
+        "input",
+        "result"
+      ],
+      "properties": {
+        "domain": {
+          "const": "graph"
+        },
+        "outcome": {
+          "enum": [
+            "ok",
+            "error",
+            "unsupported",
+            "skipped"
+          ]
+        },
+        "input": {
+          "$ref": "#/$defs/graph_input"
+        },
+        "result": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "ok"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/graph_result"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/empty_result"
+              }
+            }
+          }
+        }
+      ]
     },
     "json_value": {
       "oneOf": [

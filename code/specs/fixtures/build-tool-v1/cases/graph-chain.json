@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "graph/chain",
+  "domain": "graph",
+  "summary": "A dependency chain produces one prerequisite-first package per level.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["graph"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "graph",
+    "options": {
+      "packages": ["python/app", "python/base", "python/middle"],
+      "edges": [
+        ["python/base", "python/middle"],
+        ["python/middle", "python/app"]
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "graph/chain",
+    "domain": "graph",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        ["python/base", "python/middle"],
+        ["python/middle", "python/app"]
+      ],
+      "levels": [
+        ["python/base"],
+        ["python/middle"],
+        ["python/app"]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

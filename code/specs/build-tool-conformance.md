@@ -573,9 +573,22 @@ Required cases cover isolated nodes, chains, diamonds, multiple components,
 cycles, affected dependents, prerequisite closure, independent levels, and
 failure propagation.
 
-Topological ordering is deterministic: packages inside a level are sorted by
-qualified name. A cycle is a build-plan error. If package `A` fails, every
-transitive dependent of `A` is `dep-skipped`; unrelated packages may continue.
+Each graph edge is the ordered pair `[prerequisite, dependent]`. Successful
+graph results reproduce the canonical edge set and contain every declared
+package exactly once across prerequisite-first levels. All currently ready
+packages form one level, packages inside a level are sorted by qualified name,
+and a package may enter the next level only after every prerequisite has
+entered an earlier level. This deterministic Kahn traversal handles isolated
+nodes and disconnected components without inventing edges.
+
+A cycle is a build-plan error with empty result object and stable error
+diagnostic `GRAPH_CYCLE`; adapters must not return a partial order. Graph input
+is process-free and bounded to 4,096 unique package names and 16,384 unique
+edges. Result edges are bounded to 16,384; levels and every level are each
+bounded to 4,096 package names. If package `A` fails during later execution,
+every transitive dependent of `A` is `dep-skipped`; unrelated packages may
+continue. Failure propagation remains an execution-domain contract and is not
+modeled as a graph operation.
 
 ### 4. Diff selection
 
@@ -591,6 +604,12 @@ the host Git binary. Implementations MUST map:
 
 The adapter must not read the caller's real checkout, Git config, hooks, or
 credentials.
+
+When at least one changed path is outside every declared package and repository
+source boundary, `unknown_path_policy: "all"` selects every declared package.
+With `unknown_path_policy: "error"`, the operation returns an empty result
+object and stable error diagnostic `DIFF_UNKNOWN_PATH`; it must not return a
+partial selection.
 
 ### 5. Hashing and cache
 
@@ -1124,6 +1143,7 @@ structured command fields use the shared definitions in the corpus schema.
 | Domain | `input.options` | Successful `result` |
 |---|---|---|
 | `ci_gate_selection` | a validated closed registry, nullable affected-package and changed-file snapshots, and `force` | every gate sorted by id with its required verdict and deterministic `run_` output name |
+| `graph` | up to 4,096 unique package names and 16,384 unique `[prerequisite, dependent]` edges | canonical edges and prerequisite-first deterministic levels containing every package exactly once |
 | `diff_selection` | packages with repository-relative roots and an explicit `package_prefix` or `strict_globs` source mode, dependency edges, forced packages, an `all` or `error` unknown-path policy, and an optional pinned repository source-input boundary digest | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
 | `source_collection` | an `extension` or `declared_sources` mode, exact extensions, special filenames, portable globs, and bounded inert file/symlink/reparse candidate records | sorted normalized included file paths with lowercase SHA-256 content digests |
 | `hashing_cache` | SHA-256 mode, package, included paths, dependency digests, dependents, and a closed missing, corrupt, or typed prior-cache record | lowercase `package_digest`, `dependencies_digest`, `combined_digest`, cache status, and sorted invalidated packages |
@@ -1150,6 +1170,12 @@ These records intentionally model decisions, not host operations:
 - CLI fixtures parse a bounded, language-neutral `argv` grammar into a closed
   typed record and then classify an explicitly supplied post-parse outcome.
   They never invoke a front door or launch a build.
+
+The process-free graph oracle independently derives levels from the input edge
+set and declared packages. It rejects an edge whose endpoint is undeclared,
+requires the expected successful result to contain exactly the declared
+package set, and derives cycle failure from the absence of any ready package
+before all packages are emitted. Checked-in output is evidence, not the oracle.
 
 When `diff_selection.options.boundary_sha256` is present, it MUST equal the
 digest of the validated repository source-input boundary before any package is

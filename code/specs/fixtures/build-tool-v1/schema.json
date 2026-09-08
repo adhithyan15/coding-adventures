@@ -433,6 +433,7 @@
       "properties": {
         "packages": {
           "type": "array",
+          "maxItems": 4096,
           "uniqueItems": true,
           "items": {
             "$ref": "#/$defs/package_name"
@@ -440,6 +441,7 @@
         },
         "edges": {
           "type": "array",
+          "maxItems": 16384,
           "uniqueItems": true,
           "items": {
             "$ref": "#/$defs/edge"

@@ -409,6 +409,7 @@
       "properties": {
         "edges": {
           "type": "array",
+          "maxItems": 16384,
           "uniqueItems": true,
           "items": {
             "$ref": "#/$defs/edge"
@@ -416,8 +417,10 @@
         },
         "levels": {
           "type": "array",
+          "maxItems": 4096,
           "items": {
             "type": "array",
+            "maxItems": 4096,
             "uniqueItems": true,
             "items": {
               "$ref": "#/$defs/package_name"
