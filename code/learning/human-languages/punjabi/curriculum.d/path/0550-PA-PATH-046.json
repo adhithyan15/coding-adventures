@@ -1,0 +1,17 @@
+{
+  "id": "PA-PATH-046",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "PA-C44-duja",
+    "PA-C44-tija",
+    "PA-C44-chautha",
+    "PA-C44-pahila",
+    "PA-C44-panjvan",
+    "PA-R44-first-to-fifth"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-066-ORDINALS"
+  ],
+  "after": []
+}

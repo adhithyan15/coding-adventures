@@ -690,7 +690,15 @@
       "id": "PA-A1-NUM-05",
       "category": "Ginti (numerals and quantity)",
       "label": "ordinals: first, second, third",
-      "probe": null,
+      "probe": [
+        "PA-LEX-DUJA-01",
+        "PA-GRAMMAR-ORDINAL-SET-01",
+        "PA-LEX-TIJA-01",
+        "PA-LEX-CHAUTHA-01",
+        "PA-LEX-PAHILA-01",
+        "PA-LEX-PANJVAN-01",
+        "PA-GRAMMAR-ORDINAL-VAAN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -701,7 +709,7 @@
         "A1-NG3-06"
       ],
       "punjabiSpecific": false,
-      "note": "Not taught."
+      "note": "CLOSED by the ordinal tranche, chapter 44, one word a lesson, in the order Punjabi's own construction dictates rather than in numerical order. The chapter opens on SECOND because duujaa still shows its doo, and puts FIRST fourth because pahilaa keeps no letter of ikk -- an exception is only legible after the shape it breaks has been seen holding, and here it holds three times first. THE FINDING IS THAT NOTHING IN THIS SET IS BUILT: Wiktionary derives all five from Sanskrit whole -- prathama, dvitiya, trtiya, caturtha, pancama -- so the seam at five is not where Punjabi stopped inheriting but where the inheriting stopped being VISIBLE. panjvaan came down in one piece and then looked like panj plus an ending, and -vaan became productive on that reading; Wiktionary records both the inheritance and the 'by surface analysis' split in the same entry. -vaan is also the only one of the four endings a learner can hear, because it carries a nasal the other three do not. NOT CLAIMED: ordinals above fifth. The track teaches no cardinal above panj (PA-A1-NUM-02 is still open), so sixth upward would be an ordinal on a number the reader does not have -- the ending is named as productive and deliberately not exercised past five."
     },
     {
       "id": "PA-A1-NUM-06",
