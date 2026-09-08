@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 6395,
+    "totalLessons": 6417,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 542,
+    "atomsNeverRevisited": 539,
     "forwardReferences": 710,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 86,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 4,
     "missingWritingStagePairs": 519,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 5144,
+    "drivableLessons": 5162,
     "drivablePercent": 80,
     "chaptersWithoutDrivablePrefix": 169,
     "unexplainedModalityOverrides": 0
@@ -3310,7 +3310,8 @@
           39,
           40,
           41,
-          42
+          42,
+          43
         ],
         "bookChapters": [
           1,
@@ -3354,7 +3355,8 @@
           39,
           40,
           41,
-          42
+          42,
+          43
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3755,7 +3757,9 @@
           10,
           11,
           12,
-          13
+          13,
+          14,
+          15
         ],
         "bookChapters": [
           1,
@@ -3770,7 +3774,9 @@
           10,
           11,
           12,
-          13
+          13,
+          14,
+          15
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3911,9 +3917,9 @@
       {
         "language": "gujarati",
         "status": "version-2",
-        "lessonCount": 269,
+        "lessonCount": 277,
         "versions": {
-          "2": 269
+          "2": 277
         }
       },
       {
@@ -3959,9 +3965,9 @@
       {
         "language": "japanese",
         "status": "version-2",
-        "lessonCount": 117,
+        "lessonCount": 131,
         "versions": {
-          "2": 117
+          "2": 131
         }
       }
     ]
@@ -4614,8 +4620,8 @@
       },
       {
         "language": "gujarati",
-        "bookChapters": 42,
-        "declaredChapters": 42,
+        "bookChapters": 43,
+        "declaredChapters": 43,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4638,8 +4644,8 @@
       },
       {
         "language": "japanese",
-        "bookChapters": 13,
-        "declaredChapters": 13,
+        "bookChapters": 15,
+        "declaredChapters": 15,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4758,8 +4764,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1443,
-      "declaredChapters": 1443,
+      "bookChapters": 1446,
+      "declaredChapters": 1446,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 86,
@@ -4771,10 +4777,10 @@
     }
   },
   "levels": {
-    "totalLessons": 6395,
+    "totalLessons": 6417,
     "byLevel": {
       "pre-A1": 3809,
-      "A1": 1929,
+      "A1": 1951,
       "A2": 573,
       "B1": 39,
       "B2": 17,
@@ -4861,10 +4867,10 @@
       },
       {
         "language": "gujarati",
-        "lessonCount": 269,
+        "lessonCount": 277,
         "byLevel": {
           "pre-A1": 212,
-          "A1": 43,
+          "A1": 51,
           "A2": 14,
           "B1": 0,
           "B2": 0,
@@ -4906,10 +4912,10 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 117,
+        "lessonCount": 131,
         "byLevel": {
           "pre-A1": 117,
-          "A1": 0,
+          "A1": 14,
           "A2": 0,
           "B1": 0,
           "B2": 0,
@@ -4917,7 +4923,7 @@
           "C2": 0
         },
         "unmapped": 0,
-        "reach": "pre-A1"
+        "reach": "A1"
       },
       {
         "language": "kannada",
@@ -5890,8 +5896,8 @@
       },
       {
         "language": "gujarati",
-        "lessonCount": 269,
-        "measurable": 265,
+        "lessonCount": 277,
+        "measurable": 273,
         "unmeasurable": 4,
         "lessonViolations": 2,
         "chapterViolations": 1
@@ -5914,8 +5920,8 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 117,
-        "measurable": 117,
+        "lessonCount": 131,
+        "measurable": 131,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -6437,8 +6443,8 @@
           "language": "gujarati",
           "script": "gujarati",
           "latinScript": false,
-          "lessonCount": 269,
-          "totalGlyphs": 44,
+          "lessonCount": 277,
+          "totalGlyphs": 45,
           "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
@@ -6467,8 +6473,8 @@
           "language": "japanese",
           "script": "japanese",
           "latinScript": false,
-          "lessonCount": 117,
-          "totalGlyphs": 47,
+          "lessonCount": 131,
+          "totalGlyphs": 50,
           "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -28872,30 +28878,6 @@
         "revisits": 1
       },
       {
-        "atom": "GU-SCRIPT-THA-01",
-        "language": "gujarati",
-        "introducedBy": "GU-W04-tha",
-        "introducedAt": 37,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "GU-SCRIPT-TTA-01",
-        "language": "gujarati",
-        "introducedBy": "GU-W07-tta",
-        "introducedAt": 52,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "GU-SCRIPT-UU-MATRA-01",
         "language": "gujarati",
         "introducedBy": "GU-W07-uu-matra",
@@ -47504,7 +47486,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "GU-PRON-AME-01",
@@ -47515,7 +47497,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "GU-SCRIPT-AA-01",
@@ -47526,7 +47508,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 7
+        "revisits": 8
       },
       {
         "atom": "GU-SCRIPT-AI-MATRA-01",
@@ -47680,7 +47662,29 @@
           "R2",
           "R3"
         ],
-        "revisits": 8
+        "revisits": 10
+      },
+      {
+        "atom": "GU-SCRIPT-THA-01",
+        "language": "gujarati",
+        "introducedBy": "GU-W04-tha",
+        "introducedAt": 37,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GU-SCRIPT-TTA-01",
+        "language": "gujarati",
+        "introducedBy": "GU-W07-tta",
+        "introducedAt": 52,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "GU-SCRIPT-VIRAMA-01",
@@ -47702,7 +47706,7 @@
           "R1",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "GU-SOUND-PRAKRIT-P-TO-V",
@@ -68560,7 +68564,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 13
+        "revisits": 18
       },
       {
         "atom": "GU-LEX-RAAT-01",
@@ -68640,7 +68644,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "GU-PERFORMANCE-HOUSE-FIVE-ORAL-01",
@@ -68710,7 +68714,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "GU-PRON-TE-01",
@@ -68720,7 +68724,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "GU-SCRIPT-AAJ-01",
@@ -68860,7 +68864,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "GU-SCRIPT-KE-01",
@@ -68910,7 +68914,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 10
+        "revisits": 11
       },
       {
         "atom": "GU-SCRIPT-NADI-01",
@@ -68960,7 +68964,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 9
+        "revisits": 11
       },
       {
         "atom": "GU-SCRIPT-U-MATRA-01",
@@ -86068,12 +86072,12 @@
       },
       {
         "language": "gujarati",
-        "lessonCount": 269,
+        "lessonCount": 277,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 265,
-        "atomsNeverRevisited": 4,
+        "atomsTaught": 272,
+        "atomsNeverRevisited": 2,
         "forwardReferences": 0
       },
       {
@@ -86098,12 +86102,12 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 117,
+        "lessonCount": 131,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 111,
-        "atomsNeverRevisited": 1,
+        "atomsTaught": 125,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 0
       },
       {
@@ -86252,14 +86256,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 8145,
-      "atomsNeverRevisited": 542,
+      "atomsTaught": 8166,
+      "atomsNeverRevisited": 539,
       "neverRevisitedPercent": 7,
       "missedByWindow": {
         "R1": 1679,
         "R2": 3702,
         "R3": 5403,
-        "R4": 3932
+        "R4": 3930
       },
       "forwardReferences": 710
     }
@@ -86308,10 +86312,10 @@
       {
         "language": "gujarati",
         "script": "gujarati",
-        "lessonCount": 269,
-        "scriptLessons": 85,
-        "taughtGlyphs": 44,
-        "shownGlyphs": 44,
+        "lessonCount": 277,
+        "scriptLessons": 86,
+        "taughtGlyphs": 45,
+        "shownGlyphs": 45,
         "neverTaughtGlyphs": 0,
         "violations": 0,
         "exposureOnly": 5,
@@ -86334,10 +86338,10 @@
       {
         "language": "japanese",
         "script": "japanese",
-        "lessonCount": 117,
-        "scriptLessons": 48,
-        "taughtGlyphs": 47,
-        "shownGlyphs": 47,
+        "lessonCount": 131,
+        "scriptLessons": 50,
+        "taughtGlyphs": 50,
+        "shownGlyphs": 50,
         "neverTaughtGlyphs": 0,
         "violations": 0,
         "exposureOnly": 9,
@@ -93103,6 +93107,33 @@
             "stage": "guided-copy",
             "level": "A1",
             "sequence": 2100
+          },
+          {
+            "language": "gujarati",
+            "lessonId": "GU-W22-ttha",
+            "blockIndex": 3,
+            "blockTitle": "Writing — notice and trace",
+            "stage": "observe-trace",
+            "level": "A1",
+            "sequence": 2210
+          },
+          {
+            "language": "gujarati",
+            "lessonId": "GU-W22-ttha",
+            "blockIndex": 4,
+            "blockTitle": "Writing — copy with the model",
+            "stage": "guided-copy",
+            "level": "A1",
+            "sequence": 2210
+          },
+          {
+            "language": "gujarati",
+            "lessonId": "GU-W22-ttha",
+            "blockIndex": 5,
+            "blockTitle": "Writing — recall after hiding",
+            "stage": "delayed-copy",
+            "level": "A1",
+            "sequence": 2210
           }
         ],
         "validEvidence": [
@@ -94878,6 +94909,33 @@
             "stage": "guided-copy",
             "level": "A1",
             "sequence": 2100
+          },
+          {
+            "language": "gujarati",
+            "lessonId": "GU-W22-ttha",
+            "blockIndex": 3,
+            "blockTitle": "Writing — notice and trace",
+            "stage": "observe-trace",
+            "level": "A1",
+            "sequence": 2210
+          },
+          {
+            "language": "gujarati",
+            "lessonId": "GU-W22-ttha",
+            "blockIndex": 4,
+            "blockTitle": "Writing — copy with the model",
+            "stage": "guided-copy",
+            "level": "A1",
+            "sequence": 2210
+          },
+          {
+            "language": "gujarati",
+            "lessonId": "GU-W22-ttha",
+            "blockIndex": 5,
+            "blockTitle": "Writing — recall after hiding",
+            "stage": "delayed-copy",
+            "level": "A1",
+            "sequence": 2210
           }
         ],
         "defects": [],
@@ -105248,7 +105306,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 19,
       "tracksCompleteAtPreA1": 15,
-      "evidenceBlocks": 718,
+      "evidenceBlocks": 721,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 519
     }
@@ -105623,8 +105681,8 @@
       },
       {
         "language": "gujarati",
-        "lessonCount": 269,
-        "atomMeasurableLessons": 265,
+        "lessonCount": 277,
+        "atomMeasurableLessons": 273,
         "atomMeasurementBlindLessons": 4,
         "durationViolations": 0,
         "atomLessonSpikes": 2,
@@ -105639,17 +105697,17 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 265,
-        "atomsNeverRevisited": 4,
-        "reinforcementWindowMisses": 362,
+        "atomsTaught": 272,
+        "atomsNeverRevisited": 2,
+        "reinforcementWindowMisses": 360,
         "reinforcementMissesByWindow": {
           "R1": 29,
           "R2": 124,
           "R3": 149,
-          "R4": 60
+          "R4": 58
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 177,
+        "writingPracticeLessons": 178,
         "firstWritingPracticeAt": 1,
         "lessonsBeforeWritingPractice": 1,
         "findings": [
@@ -105670,7 +105728,7 @@
           {
             "language": "gujarati",
             "kind": "reinforcement",
-            "count": 362,
+            "count": 360,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -105844,8 +105902,8 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 117,
-        "atomMeasurableLessons": 117,
+        "lessonCount": 131,
+        "atomMeasurableLessons": 131,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -105860,8 +105918,8 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 111,
-        "atomsNeverRevisited": 1,
+        "atomsTaught": 125,
+        "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 0,
         "reinforcementMissesByWindow": {
           "R1": 0,
@@ -105870,7 +105928,7 @@
           "R4": 0
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 57,
+        "writingPracticeLessons": 59,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [],
@@ -107463,7 +107521,7 @@
       {
         "language": "gujarati",
         "kind": "reinforcement",
-        "count": 362,
+        "count": 360,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -107870,11 +107928,11 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "15 atom(s) at or below pre-A1 are revisited fewer than twice (12 etymology hook(s) waived)",
-            "shortfall": 15
+            "detail": "14 atom(s) at or below pre-A1 are revisited fewer than twice (12 etymology hook(s) waived)",
+            "shortfall": 14
           }
         ],
-        "vocabulary": 121
+        "vocabulary": 127
       },
       {
         "language": "hindi",
@@ -107936,7 +107994,7 @@
       },
       {
         "language": "japanese",
-        "touches": "pre-A1",
+        "touches": "A1",
         "attained": null,
         "inProgressAt": "pre-A1",
         "blockers": [
@@ -107951,7 +108009,7 @@
             "shortfall": 5
           }
         ],
-        "vocabulary": 44
+        "vocabulary": 54
       },
       {
         "language": "kannada",
@@ -108336,12 +108394,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 6395,
-    "voice": 4611,
-    "sight": 684,
-    "pen": 1100,
-    "coreVoice": 5144,
-    "lessonsWithWritingSegments": 647,
+    "totalLessons": 6417,
+    "voice": 4629,
+    "sight": 685,
+    "pen": 1103,
+    "coreVoice": 5162,
+    "lessonsWithWritingSegments": 648,
     "drivablePercent": 80,
     "tracks": [
       {
@@ -111040,13 +111098,13 @@
       },
       {
         "language": "gujarati",
-        "lessonCount": 269,
-        "voice": 88,
+        "lessonCount": 277,
+        "voice": 95,
         "sight": 47,
-        "pen": 134,
-        "coreVoice": 179,
+        "pen": 135,
+        "coreVoice": 186,
         "drivablePercent": 67,
-        "drivablePrefixTotal": 148,
+        "drivablePrefixTotal": 150,
         "chapters": [
           {
             "language": "gujarati",
@@ -111689,6 +111747,22 @@
             ],
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "GU-C38-panchmu"
+          },
+          {
+            "language": "gujarati",
+            "chapter": 43,
+            "lessonCount": 8,
+            "voice": 7,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 7,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "GU-W22-ttha"
           }
         ]
       },
@@ -113344,13 +113418,13 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 117,
-        "voice": 60,
-        "sight": 8,
-        "pen": 49,
-        "coreVoice": 69,
-        "drivablePercent": 59,
-        "drivablePrefixTotal": 23,
+        "lessonCount": 131,
+        "voice": 71,
+        "sight": 9,
+        "pen": 51,
+        "coreVoice": 80,
+        "drivablePercent": 61,
+        "drivablePrefixTotal": 30,
         "chapters": [
           {
             "language": "japanese",
@@ -113549,6 +113623,36 @@
             ],
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "JA-W13-tsu"
+          },
+          {
+            "language": "japanese",
+            "chapter": 14,
+            "lessonCount": 6,
+            "voice": 6,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 6,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 15,
+            "lessonCount": 8,
+            "voice": 5,
+            "sight": 1,
+            "pen": 2,
+            "coreVoice": 5,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "JA-C15-hachi"
           }
         ]
       },
@@ -130086,14 +130190,14 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 4101,
-    "underspent": 3762,
-    "neverSpent": 2584,
+    "roots": 4106,
+    "underspent": 3766,
+    "neverSpent": 2589,
     "payoffDistribution": {
-      "0": 2584,
-      "1": 705,
+      "0": 2589,
+      "1": 704,
       "2": 473,
-      "3": 184,
+      "3": 185,
       "4": 82,
       "5": 36,
       "6": 15,
@@ -130107,7 +130211,7 @@
     "underspentPercent": 92
   },
   "infoDump": {
-    "lessons": 6395,
+    "lessons": 6417,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -130115,11 +130219,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 6395,
-    "measuredLessons": 3361,
-    "idiomMeasuredLessons": 3361,
-    "senseMeasuredLessons": 3361,
-    "cultureClaimMeasuredLessons": 3361,
+    "lessons": 6417,
+    "measuredLessons": 3369,
+    "idiomMeasuredLessons": 3369,
+    "senseMeasuredLessons": 3369,
+    "cultureClaimMeasuredLessons": 3369,
     "idioms": 101,
     "senses": 101,
     "cultureClaims": 207,
@@ -130128,10 +130232,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 5956,
-    "usesBeforeIntroduction": 19573,
-    "technicalUsesBeforeIntroduction": 4800,
-    "technicalLessons": 2670,
+    "lessonsUsingTerms": 5977,
+    "usesBeforeIntroduction": 19610,
+    "technicalUsesBeforeIntroduction": 4803,
+    "technicalLessons": 2673,
     "worstTerms": [
       {
         "term": "verb",
@@ -130151,7 +130255,7 @@
       },
       {
         "term": "voice",
-        "lessons": 203
+        "lessons": 204
       },
       {
         "term": "pronoun",
@@ -130160,14 +130264,14 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 6395,
+    "lessonsScanned": 6417,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1512,
+    "filesScanned": 1515,
     "mainCharacters": 131,
-    "scriptCharacters": 757,
+    "scriptCharacters": 761,
     "gaps": 0
   }
 }
