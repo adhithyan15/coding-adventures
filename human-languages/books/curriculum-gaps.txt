@@ -103,7 +103,7 @@ info dump (report-only): 120 of 6574 lessons -- 32 rule statements, 91 paradigm 
 lesson content budgets (report-only): 3488 of 6574 lessons measured -- 101 idioms, 101 senses, 207 culture claims; 0 lessons over budget
   annotation coverage: idioms 3488, senses 3488, culture claims 3488
 
-metalanguage: 54 of 54 grammar terms appear in 6127 lessons; 20189 uses come before introduction, of which 5001 are technical terms across 2783 lessons
-  most-used-before-introduction: verb (1575 lessons), noun (919 lessons), adjective (275 lessons), pronoun (221 lessons), tense (210 lessons), voice (207 lessons)
+metalanguage: 54 of 54 grammar terms appear in 6127 lessons; 20191 uses come before introduction, of which 5002 are technical terms across 2783 lessons
+  most-used-before-introduction: verb (1575 lessons), noun (920 lessons), adjective (275 lessons), pronoun (221 lessons), tense (210 lessons), voice (207 lessons)
 literal markup: none in 6574 lessons or any generated book
 glyph coverage: every character renders -- 132 main-font and 781 script characters across 1540 generated files

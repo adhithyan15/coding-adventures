@@ -130354,8 +130354,8 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 6127,
-    "usesBeforeIntroduction": 20189,
-    "technicalUsesBeforeIntroduction": 5001,
+    "usesBeforeIntroduction": 20191,
+    "technicalUsesBeforeIntroduction": 5002,
     "technicalLessons": 2783,
     "worstTerms": [
       {
@@ -130364,7 +130364,7 @@
       },
       {
         "term": "noun",
-        "lessons": 919
+        "lessons": 920
       },
       {
         "term": "adjective",
