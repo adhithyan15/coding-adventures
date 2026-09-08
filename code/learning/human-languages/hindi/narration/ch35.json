@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Taking, Asking, Helping — and Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e025fbdfbfa504eb",
+  "sourceHash": "fnv1a64:ba1cdb55da4b84ed",
   "lessons": [
     {
       "id": "HI-C35-lena",
@@ -319,16 +319,16 @@
       "id": "HI-C35-madad",
       "sequence": 920,
       "title": "मदद करना (madad karnā) — \"to help,\" and the machine that builds it",
-      "headword": "मदद करना",
-      "romanization": "madad karnā",
-      "gloss": "to help — a noun plus करना, which is how Hindi turns almost anything into a verb",
+      "headword": "मदद करना / मदद करता / मदद करती / मदद करते",
+      "romanization": "madad karnā / madad kartā / madad kartī / madad karte",
+      "gloss": "to help / masculine, feminine, and respectful-plural present forms — a noun plus करना, which is how Hindi turns almost anything into a verb",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b33e9afc9498105",
+      "sourceHash": "fnv1a64:750eb529c66804d5",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +355,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मदद (madad) is a noun: \"help, aid.\" On its own it does nothing. Bolt करना (karnā, \"to do\") on the end and you have the verb: मदद करना (madad karnā), literally \"to do help.\""
+              "text": "मदद (madad) is a noun: \"help, aid.\" On its own it does nothing. Bolt करना (karnā, \"to do\") on the end and you have the verb मदद करना, madad karnā — literally \"to do help.\""
             },
             {
               "kind": "speech",
