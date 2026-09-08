@@ -88,13 +88,13 @@ according to the current prioritization run.
 | RCPU-041 / RCPU-042 | 2004 | ARMv7-A / Thumb-2 (07x) | Complete: `armv7a-simulator` | Complete: `armv7a-gatelevel` |
 | RCPU-043 / RCPU-044 | 2010 | RISC-V RV32I (07a) | Complete: `riscv-simulator` | Complete: `riscv-gatelevel` |
 | RCPU-045 / RCPU-046 | 2010 | RISC-V RV64I + M | Complete: `riscv-rv64i-simulator` | Complete: `riscv-rv64i-gatelevel` |
-| RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Complete: `aarch64-simulator` | Missing |
+| RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Complete: `aarch64-simulator` | Complete: `aarch64-gatelevel` |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-048**, the AArch64 (ARMv8-A) gate-level implementation.
-The checked Spec 07v functional implementation is complete locally;
-pair priority now advances to its gate-level partner while earlier completed
-cells publish one at a time.
+Current selection: **RCPU-049**, the Apple M1 functional implementation.
+The checked Spec 07v/07v2 AArch64 functional and gate-level pair is complete
+locally; chronological priority advances to the final listed architecture while
+earlier completed cells publish one at a time.
 
 RCPU-047 is complete locally. The new `aarch64-simulator` owns exact 64 KiB
 big-endian state, 32x64-bit GPR storage with XZR enforced, separate 64-bit SP
@@ -107,6 +107,18 @@ the reproducible 836-vector Python full-state differential pass; the Python
 oracle's 151 tests and existing Rust AArch64 encoder/backend consumers remain
 green. Strict Rustfmt, Clippy, and rustdoc pass; package line coverage is
 97.20% (938/965). Publication follows RCPU-046 and advances to RCPU-048.
+
+RCPU-048 is complete locally. The new `aarch64-gatelevel` owns exactly 526,469
+clocked DFFs and an independent strict decoder for the complete Spec 07v integer
+surface. Repository gates implement Boolean/ripple arithmetic, NZCV conditions,
+barrel shifts/rotates and logical bitmasks, big-endian memory assembly,
+fixed-width multiply/high-half/divide, and count/reverse networks. Seven unit
+tests, six lifecycle/fault suites, and all 836 reproducible Python full-state
+vectors pass in complete functional trace/state lockstep; the existing Python
+AArch64 gate package's 256 tests remain green. Strict Rustfmt, Clippy, and
+rustdoc pass; package line coverage is 97.45% (763/783). Publication follows
+RCPU-047 and advances to RCPU-049.
+
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -574,6 +586,9 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-09-07 | RCPU-048 is complete. | Resolved; selects RCPU-049 chronologically | `aarch64-gatelevel` now has the exact 526,469-DFF topology; independent complete AArch64 integer execution; repository-gate strict decode, Boolean/ripple/NZCV/condition/barrel/address/branch/bitmask/multiply/divide/count/reverse networks; the shared typed atomic lifecycle; all 836 Python full-state hashes in complete functional trace/state lockstep; manual topology/lifecycle/fault suites; normative Spec 07v2; strict checks; green functional and historical Python gate consumers; and 97.45% package line coverage (763/783). |
+| 2026-09-07 | RCPU-048 implementation audit corrected the initial inventory: the historical Python `aarch64-gatelevel` package does exist at commit 5f37144153, with a broad gate-oriented integer engine, 256 passing tests, and 82.24% statement coverage. It does not provide the Rust package or the exact checked DFF-backed state and transactional lifecycle required by this wave. | P0 audit correction, discovered before completion | Retain the Python gate package as a required consumer and independent implementation reference; create only the missing Rust package and normative completion contract, and verify all 256 Python gate tests alongside the Rust functional/differential suites. |
+| 2026-09-07 | RCPU-048 baseline audit found no Rust AArch64 gate-level package and no normative Rust completion contract in Spec 07v2. The completed RCPU-047 state establishes exactly 526,469 persistent bits: 524,288 memory bits, 2,048 GPR bits, 64 SP bits, 64 PC bits, four NZCV bits, and one halt bit. Installed origin/length remain validated lifecycle metadata. The RV64I gate package supplies reusable packed-DFF and 64-bit gate-network patterns, but its little-endian transport, x0/reset-SP convention, decoder, flags, load/store modes, and instruction families differ materially from AArch64. | P0, chronological gate completion | Create `aarch64-gatelevel` and normative Spec 07v2 with exactly 526,469 clocked DFFs; independent strict AArch64 decode; big-endian memory; repository-gate Boolean/ripple arithmetic, NZCV/condition, barrel shift/rotate, address/branch, fixed multiply/high-half/divide, count/reverse, and bitmask networks; the shared typed atomic functional lifecycle; all 836 Python/functional full-state vectors plus manual topology/lifecycle/fault suites; strict checks; consumers; and at least 80% coverage. |
 | 2026-09-07 | RCPU-047 is complete. | Resolved; selects RCPU-048 by pair priority | `aarch64-simulator` now has exact checked state/lifecycle, the complete Spec 07v/Python integer decode surface, structured big-endian encoders, strict reserved and alignment/range faults, fourteen Rust tests, the reproducible 836-vector Python full-state differential, green Python and Rust consumers, strict checks, normative completion text, and 97.20% line coverage (938/965). |
 | 2026-09-07 | RCPU-047 strict lifecycle review found that the first Rust AArch64 decode port accepted condition `0xf` in `B.cond` using the Python oracle's permissive AL/NV fallback, accepted architecturally undefined all-ones logical-immediate masks, and committed unaligned BR/BLR/RET targets even though restored and fetched PCs must be word aligned. | P0 correctness, discovered before completion | Reject reserved `B.cond` condition 15 and undefined logical-immediate element masks as typed atomic unknown instructions; preflight register-branch target alignment as `MisalignedFetch`; retain these intentional Python lifecycle/decode corrections in manual fault suites while keeping the valid 836-vector full-state corpus reproducible. |
 | 2026-09-07 | RCPU-047 baseline audit found no Rust AArch64 simulator or gate partner. The Python `aarch64-simulator` has 151 passing tests and 95.60% statement coverage over a broad Spec 07v integer surface, but retains a legacy permissive lifecycle: program loads silently truncate beyond 64 KiB; fetch and multi-byte data accesses wrap; unaligned accesses succeed; installed origin/length are absent; snapshots cannot be restored; register and memory access are not checked public operations; unknown or reserved encodings halt through an error string after mutating state rather than returning a typed atomic fault; post-halt steps return another halt trace; and bounded execution always reloads, retains partial state on failure/exhaustion, and omits raw instructions and complete boundary states from traces. The existing Rust `aarch64-encoder` emits little-endian native text and covers only its backend-oriented subset, while Spec 07v and the Python oracle use big-endian teaching-machine transport. | P0, chronological functional completion, blocks RCPU-048 | Create `aarch64-simulator` with exact 64 KiB big-endian state, 32x64-bit GPR storage with XZR enforced, separate 64-bit SP and PC, four NZCV bits, halt and installed-range metadata; checked origin-aware load/restore/direct access; typed fail-closed alignment/range/decode faults; atomic step and transactional bounded run; complete traces/results; structured big-endian encoders for the entire Python integer surface; a reproducible Python full-state corpus plus strict malformed/fault families; corrected normative Spec 07v completion text; strict checks; consumers; and at least 80% coverage. Preserve the documented zero reset state and distinguish transport helpers from the native little-endian backend encoder. |
