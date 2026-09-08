@@ -287,5 +287,45 @@ export const scriptInventoryEvidence = {
     );
     expect(missingJapanese.has("つ")).toBe(false);
     expect(affected.get("つ") ?? 0).toBe(0);
+    // HL-C360: the two signs the cardinals one to ten cost. ろ was observed
+    // frame by frame from the cited animation -- the start marker never leaves
+    // the upper-left origin across all 26 frames, so the run is single and
+    // penLifts is 0. ゅ claims NO independent handwriting evidence: it reuses
+    // ゆ's observed two-run movement and says so, exactly as っ reuses つ's.
+    const japaneseRo = scripts.japanese!.letters.find(
+      (entry) => entry.glyph === "ろ",
+    )!;
+    expect(japaneseRo.sound).toBe("ro");
+    expect(japaneseRo.role).toBe("hiragana");
+    expect(japaneseRo.penLifts).toBe(0);
+    expect(japaneseRo.strokeOrder).toEqual([
+      "begin at the upper left and draw the short high shoulder to the right, turning down at the corner",
+      "without lifting, descend the long diagonal down and left toward the lower centre",
+      "without lifting, swing right into the broad clockwise belly and finish with a short tail curving left at the bottom",
+    ]);
+    expect(japaneseRo.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*Hiragana ろ stroke order animation\.gif.*26 frames.*2\.6 seconds.*Wikimedia Commons.*1 October 2009/i,
+    );
+    expect(japaneseRo.strokeOrderSource?.variation).toMatch(
+      /CC0.*one uninterrupted run.*high shoulder.*long diagonal.*clockwise belly.*left tail.*Noto Sans JP.*zero-lift order/i,
+    );
+    expect(missingJapanese.has("ろ")).toBe(false);
+    expect(affected.get("ろ") ?? 0).toBe(0);
+    const japaneseSmallYu = scripts.japanese!.letters.find(
+      (entry) => entry.glyph === "ゅ",
+    )!;
+    expect(japaneseSmallYu.sound).toMatch(
+      /small yu.*joins.*preceding sign.*one mora/i,
+    );
+    expect(japaneseSmallYu.role).toBe("hiragana");
+    expect(japaneseSmallYu.penLifts).toBe(1);
+    expect(japaneseSmallYu.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*ゆ.*30 frames.*U\+3085 HIRAGANA LETTER SMALL YU/i,
+    );
+    expect(japaneseSmallYu.strokeOrderSource?.variation).toMatch(
+      /two pen-down runs.*one lift.*U\+3085.*small yu.*scaling.*explicit.*independent handwriting evidence/i,
+    );
+    expect(missingJapanese.has("ゅ")).toBe(false);
+    expect(affected.get("ゅ") ?? 0).toBe(0);
   },
 };

@@ -1,0 +1,25 @@
+{
+  "chapter": 15,
+  "title": "The Two Signs the Rest of the Run Cost",
+  "label": "ch:ja-numbers-six-to-ten",
+  "canDo": "I can say and write one to ten in Japanese, build any number up to ninety-nine out of those ten words, and say which of them carry a second reading and why.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "JA-R15-six-to-ten",
+    "kind": "production",
+    "summary": "Run ichi to juu in order, build thirteen and thirty out of the same two words, and say what the ten numbers cost in signs.",
+    "assesses": [
+      "JA-LEX-NANA",
+      "JA-LEX-HACHI",
+      "JA-LEX-KU",
+      "JA-SCRIPT-RO-01",
+      "JA-LEX-ROKU",
+      "JA-SCRIPT-SMALL-YU-01",
+      "JA-LEX-JUU",
+      "JA-GRAMMAR-JUU-COMPOUND"
+    ],
+    "note": "The chapter is ordered by COST, not by number. nana, hachi and ku need no new sign and come first; six and ten are the only two numerals between one and ten whose everyday reading needs a hiragana sign this book had not taught, and both wait until the end, so the reader counts round an audible hole at six for three lessons before it closes. nana is second in the kun-in-the-count pattern, hachi is the plain case that shows the pattern's edge, and ku is the exception: it has two readings and Wiktionary's box calls both of them on'yomi."
+  }
+}

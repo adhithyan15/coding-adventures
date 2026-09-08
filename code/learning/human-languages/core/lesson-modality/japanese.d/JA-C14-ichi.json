@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C14-ichi",
+    "language": "japanese",
+    "chapter": 14,
+    "sequence": 1180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f615e8d7747fb45e"
+  },
+  "findings": []
+}

@@ -1,0 +1,23 @@
+{
+  "glyph": "ろ",
+  "sound": "ro",
+  "role": "hiragana",
+  "components": [
+    "a short high shoulder turning at a corner",
+    "a long diagonal down to the left",
+    "a broad clockwise belly closing to a short left tail"
+  ],
+  "strokeOrder": [
+    "begin at the upper left and draw the short high shoulder to the right, turning down at the corner",
+    "without lifting, descend the long diagonal down and left toward the lower centre",
+    "without lifting, swing right into the broad clockwise belly and finish with a short tail curving left at the bottom"
+  ],
+  "strokeOrderNote": "Sirgazil's 26-frame animation writes ろ in a single pen-down run: the start marker never moves off the upper-left origin across all 26 frames.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%8D_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana ろ stroke order animation.gif, hiragana ろ, 26 frames, 2.6 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws ろ in one uninterrupted run: a short high shoulder rightward, a corner, a long diagonal down and left, then a broad clockwise belly that closes and finishes with a short left tail. The learner path is fitted to the bundled Noto Sans JP subset; handwritten belly width and tail length vary, but the zero-lift order is the same."
+  },
+  "notes": "The ro of ろく, six. Same tap as ら, on a shape that closes its belly instead of leaving a hook; and distinct from る, whose belly ends in a closed loop."
+}

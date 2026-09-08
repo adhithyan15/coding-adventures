@@ -536,12 +536,18 @@ describe("real curriculum", () => {
     // learner has earned. Chapter 13 deliberately gives its reception and
     // production checkpoints two activities each so the four skills remain
     // separately scored; every other lesson keeps one objective activity.
+    //
+    // 117 -> 131, chapters 14 and 15: the cardinals, one to ten. The two chapter
+    // payoffs join chapter 13's checkpoints in carrying TWO activities each,
+    // for the same reason those two do — each scores two separable things (the
+    // run in order, and either where the two already-owned numbers came from or
+    // how juu compounds), and collapsing them would score one and report both.
     const report = buildCurriculumGapReport({ registry, lessons, books });
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
-    expect(japanese).toHaveLength(117);
+    expect(japanese).toHaveLength(131);
     expect(
       new Set(japanese.map((lesson) => lesson.realization.chapter)),
-    ).toEqual(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]));
+    ).toEqual(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]));
     expect(
       japanese.every((lesson) => lesson.frontmatter.schema_version === "2"),
     ).toBe(true);
@@ -554,15 +560,19 @@ describe("real curriculum", () => {
       expect.arrayContaining([
         ["JA-C13-family-reception", 2],
         ["JA-C13-family-check", 2],
+        ["JA-R14-one-to-five", 2],
+        ["JA-R15-six-to-ten", 2],
       ]),
     );
+    const twoActivityLessons = new Set([
+      "JA-C13-family-reception",
+      "JA-C13-family-check",
+      "JA-R14-one-to-five",
+      "JA-R15-six-to-ten",
+    ]);
     expect(
       japanese
-        .filter(
-          (lesson) =>
-            lesson.realization.lessonId !== "JA-C13-family-reception" &&
-            lesson.realization.lessonId !== "JA-C13-family-check",
-        )
+        .filter((lesson) => !twoActivityLessons.has(lesson.realization.lessonId))
         .every((lesson) => compileLessonActivities(lesson.blocks).length === 1),
     ).toBe(true);
     expect(

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C14-yon",
+    "language": "japanese",
+    "chapter": 14,
+    "sequence": 1220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28ad4b72ee0fd7e1"
+  },
+  "findings": []
+}

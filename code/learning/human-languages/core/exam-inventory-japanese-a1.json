@@ -463,7 +463,18 @@
       "category": "Suushi to josuushi - numerals and counters",
       "label": "the cardinal numerals, at least to ten",
       "probe": [
-        "JA-LEX-ICHIDO"
+        "JA-LEX-ICHI",
+        "JA-LEX-NI",
+        "JA-LEX-SAN",
+        "JA-LEX-YON",
+        "JA-LEX-GO",
+        "JA-LEX-ROKU",
+        "JA-LEX-NANA",
+        "JA-LEX-HACHI",
+        "JA-LEX-KU",
+        "JA-LEX-JUU",
+        "JA-GRAMMAR-JUU-COMPOUND",
+        "JA-GRAMMAR-KUN-IN-THE-COUNT"
       ],
       "anchorIds": [
         "ES-A1-PROXY",
@@ -475,7 +486,7 @@
         "A1-NG2-01",
         "A1-NE16-01"
       ],
-      "note": "COUNTED ON ONE, AND THE ONE IS INSIDE A PHRASE, so read this tick narrowly. ichido ('one time; once') is taught in chapter 9 as part of mou ichido onegai shimasu, and the ichi in it is the numeral one. Nothing else: ni, san, yon, go and the rest are absent, as is every counter. A candidate cannot count, give an age, a price or a telephone number. It is counted because the Spanish point asks whether the reader can produce a cardinal at all and one is genuinely there, and it is marked thin because one is not a paradigm."
+      "note": "COUNTED ON ALL TEN, in chapters 14-15. The count is taught in hiragana, not in kanji: 五 is the only one of the ten the reader can write as Japanese writes it, because its chapter-5 script lesson taught it as a component of 語 and said on the page that it means five on its own. ichi was already in the mouth inside mou ichido. Two of the ten needed a new hiragana sign -- ろ for roku and ゅ for juu -- and the chapter is ordered by that cost rather than by number. JA-GRAMMAR-JUU-COMPOUND carries the tick past ten: a numeral before juu multiplies it and one after it is added, with nothing between, so the ten words reach ninety-nine. The nine remaining kanji are NOT taught and JA-A1-LIP/SCR points that want them stay open."
     },
     {
       "id": "JA-A1-NUM-02",
@@ -489,7 +500,7 @@
       ],
       "derivedFrom": [],
       "japaneseSpecific": true,
-      "note": "Japanese-specific and absent. Spanish has no classifier column. Japanese has two - the native hitotsu/futatsu series and the Sino-Japanese ichi/ni series with a counter word attached - and choosing between them is the first hard thing about Japanese numbers. Nothing in the track touches it."
+      "note": "Japanese-specific and still absent, but no longer blocked. Spanish has no classifier column. Japanese has two -- the native hitotsu/futatsu series and the Sino-Japanese ichi/ni series with a counter word attached -- and choosing between them is the first hard thing about Japanese numbers. Chapters 14-15 supply the Sino series and open the seam the choice runs along: JA-GRAMMAR-KUN-IN-THE-COUNT records that at four and seven the NATIVE reading stands inside the borrowed count and is the one used, while at nine both everyday readings are borrowed. The reader also already owns one counter without its being named as one: chapter 9's ichido, whose lesson says do counts an occurrence. The counter series is the next tranche."
     },
     {
       "id": "JA-A1-NUM-03",
@@ -505,7 +516,7 @@
         "A1-Q-02",
         "A1-NG3-06"
       ],
-      "note": "Absent."
+      "note": "Absent, and blocked upstream rather than merely unwritten: a Japanese ordinal is a counter with dai- in front of it or -me behind it, so it cannot be taught before JA-A1-NUM-02. Chapters 14-15 removed the other half of the block by supplying the cardinals it attaches to. The ordering words -- tsugi, saisho, saigo -- are a separate absence and want no numeral at all."
     },
     {
       "id": "JA-A1-NUM-04",
@@ -1879,7 +1890,10 @@
       "label": "counting, and quantity",
       "probe": [
         "JA-LEX-SUKOSHI",
-        "JA-LEX-MOU-SUKOSHI"
+        "JA-LEX-MOU-SUKOSHI",
+        "JA-LEX-ICHI",
+        "JA-LEX-JUU",
+        "JA-GRAMMAR-JUU-COMPOUND"
       ],
       "anchorIds": [
         "ES-A1-PROXY",
@@ -1890,7 +1904,7 @@
         "A1-NG2-01",
         "A1-NG2-02"
       ],
-      "note": "COUNTED ON THE VAGUE END ONLY. sukoshi and mou sukoshi are taught; no numeral above one and no counter, so nothing can be counted exactly. Two Spanish points collapse here and only the approximate half is answered."
+      "note": "BOTH HALVES NOW. sukoshi and mou sukoshi answered the approximate half; chapters 14-15 answer the exact half to ninety-nine. What is still missing is the counter that has to sit between a number and a noun, so the reader can count aloud but cannot yet count THINGS -- see JA-A1-NUM-02."
     },
     {
       "id": "JA-A1-NG2-02",

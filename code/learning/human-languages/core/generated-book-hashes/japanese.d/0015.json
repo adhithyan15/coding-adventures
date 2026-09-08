@@ -1,0 +1,16 @@
+{
+  "language": "japanese",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:ef2a7924c4191663",
+  "lessonIds": [
+    "JA-C15-nana",
+    "JA-C15-hachi",
+    "JA-C15-ku",
+    "JA-W15-ro",
+    "JA-C15-roku",
+    "JA-W15-small-yu",
+    "JA-C15-juu",
+    "JA-R15-six-to-ten"
+  ],
+  "tex": "japanese/book/chapters/ch15-numbers-six-to-ten.tex"
+}
