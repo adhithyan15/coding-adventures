@@ -702,8 +702,12 @@ func TestPackageExactInputsRequireCanonicalDiscoveredPath(t *testing.T) {
 		}
 	}
 	pkg := discovery.Package{Name: "rust/engram-wasm", Path: root, Language: "rust"}
-	if _, err := collectSourceFilesChecked(pkg); err == nil {
-		t.Fatal("caller-supplied package identity must not replace a canonical discovered path")
+	got, err := collectSourceFilesChecked(pkg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if paths := relativePaths(t, root, got); strings.Join(paths, "\n") != "BUILD" {
+		t.Fatalf("caller-supplied identity activated exact package inputs: %v", paths)
 	}
 }
 
@@ -765,10 +769,20 @@ func TestRepositoryRelativePackagePath(t *testing.T) {
 	if got, err := repositoryRelativePackagePath(canonical); err != nil || got != "code/programs/go/demo" {
 		t.Fatalf("canonical program path: got %q, err %v", got, err)
 	}
-	for _, name := range []string{"python/demo", "go/programs/demo", "invalid"} {
-		if _, err := repositoryRelativePackagePath(discovery.Package{Name: name, Path: t.TempDir()}); err == nil {
-			t.Fatalf("noncanonical path with identity %q must fail closed", name)
+	for _, tc := range []struct {
+		name string
+		want string
+	}{
+		{name: "python/demo", want: "code/packages/python/demo"},
+		{name: "go/programs/demo", want: "code/programs/go/demo"},
+	} {
+		got, err := repositoryRelativePackagePath(discovery.Package{Name: tc.name, Path: t.TempDir()})
+		if err != nil || got != tc.want {
+			t.Fatalf("identity %q: got %q, err %v", tc.name, got, err)
 		}
+	}
+	if _, err := repositoryRelativePackagePath(discovery.Package{Name: "invalid", Path: t.TempDir()}); err == nil {
+		t.Fatal("invalid package identity must fail closed")
 	}
 }
 

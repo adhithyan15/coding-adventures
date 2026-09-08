@@ -87,14 +87,16 @@ func collectSourceInputsChecked(pkg discovery.Package, declaredMode bool) ([]str
 	if !ok {
 		return nil, fmt.Errorf("unsupported source language")
 	}
-	packageRoot, err := repositoryRelativePackagePath(pkg)
+	packageRoot, err := exactPackageSourceRoot(pkg)
 	if err != nil {
 		return nil, fmt.Errorf("repository package identity is invalid")
 	}
-	parts := strings.Split(packageRoot, "/")
-	if len(parts) < 4 || parts[0] != "code" ||
-		(parts[1] != "packages" && parts[1] != "programs") || parts[2] != pkg.Language {
-		return nil, fmt.Errorf("repository package identity is invalid")
+	if packageRoot != "" {
+		parts := strings.Split(packageRoot, "/")
+		if len(parts) < 4 || parts[0] != "code" ||
+			(parts[1] != "packages" && parts[1] != "programs") || parts[2] != pkg.Language {
+			return nil, fmt.Errorf("repository package identity is invalid")
+		}
 	}
 
 	files := make([]string, 0)
@@ -208,20 +210,8 @@ func sortPortablePaths(files []string, root string) error {
 }
 
 func repositoryRelativePackagePath(pkg discovery.Package) (string, error) {
-	normalized := filepath.ToSlash(filepath.Clean(pkg.Path))
-	parts := strings.Split(normalized, "/")
-	canonicalStart := -1
-	for index := 0; index+1 < len(parts); index++ {
-		if parts[index] == "code" && (parts[index+1] == "packages" || parts[index+1] == "programs") {
-			canonicalStart = index
-		}
-	}
-	if canonicalStart >= 0 {
-		candidate := strings.Join(parts[canonicalStart:], "/")
-		if err := validateRepositoryPath(candidate); err != nil {
-			return "", err
-		}
-		return candidate, nil
+	if candidate, found, err := canonicalRepositoryPackagePath(pkg.Path); err != nil || found {
+		return candidate, err
 	}
 
 	identity := strings.Split(pkg.Name, "/")
@@ -237,6 +227,37 @@ func repositoryRelativePackagePath(pkg discovery.Package) (string, error) {
 		return "", err
 	}
 	return candidate, nil
+}
+
+func exactPackageSourceRoot(pkg discovery.Package) (string, error) {
+	candidate, found, err := canonicalRepositoryPackagePath(pkg.Path)
+	if err != nil || !found {
+		return candidate, err
+	}
+	parts := strings.Split(candidate, "/")
+	if len(parts) < 4 || parts[2] != pkg.Language {
+		return "", fmt.Errorf("canonical package path does not match language")
+	}
+	return candidate, nil
+}
+
+func canonicalRepositoryPackagePath(packagePath string) (string, bool, error) {
+	normalized := filepath.ToSlash(filepath.Clean(packagePath))
+	parts := strings.Split(normalized, "/")
+	canonicalStart := -1
+	for index := 0; index+1 < len(parts); index++ {
+		if parts[index] == "code" && (parts[index+1] == "packages" || parts[index+1] == "programs") {
+			canonicalStart = index
+		}
+	}
+	if canonicalStart >= 0 {
+		candidate := strings.Join(parts[canonicalStart:], "/")
+		if err := validateRepositoryPath(candidate); err != nil {
+			return "", false, err
+		}
+		return candidate, true, nil
+	}
+	return "", false, nil
 }
 
 func validateRepositoryPath(path string) error {

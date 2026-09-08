@@ -14,9 +14,59 @@ if (-not $OutputPath) {
 }
 
 $registry = Get-Content -LiteralPath $RegistryPath -Raw
-$null = $registry | ConvertFrom-Json
+$parsedRegistry = $registry | ConvertFrom-Json
 if ($registry.Contains('`')) {
     throw "language source-input registry cannot contain a Go raw-string delimiter"
+}
+
+function ConvertTo-CanonicalJson {
+    param([AllowNull()]$Value)
+
+    if ($null -eq $Value) {
+        return "null"
+    }
+    if ($Value -is [string]) {
+        return ConvertTo-Json -InputObject $Value -Compress
+    }
+    if ($Value -is [bool]) {
+        if ($Value) { return "true" }
+        return "false"
+    }
+    if ($Value -is [System.Collections.IEnumerable] -and $Value -isnot [System.Management.Automation.PSCustomObject]) {
+        $items = @($Value | ForEach-Object { ConvertTo-CanonicalJson $_ })
+        return "[" + ($items -join ",") + "]"
+    }
+    if ($Value -is [System.Management.Automation.PSCustomObject]) {
+        $members = @(
+            $Value.PSObject.Properties |
+                Sort-Object -Property Name -CaseSensitive |
+                ForEach-Object {
+                    (ConvertTo-Json -InputObject $_.Name -Compress) + ":" +
+                        (ConvertTo-CanonicalJson $_.Value)
+                }
+        )
+        return "{" + ($members -join ",") + "}"
+    }
+    return [System.Convert]::ToString($Value, [System.Globalization.CultureInfo]::InvariantCulture)
+}
+
+$canonical = ConvertTo-CanonicalJson $parsedRegistry
+$utf8 = [System.Text.UTF8Encoding]::new($false)
+$domain = $utf8.GetBytes("coding-adventures/build-tool-language-source-input-registry/v1`0")
+$canonicalBytes = $utf8.GetBytes($canonical)
+$length = [System.BitConverter]::GetBytes([uint64]$canonicalBytes.Length)
+if ([System.BitConverter]::IsLittleEndian) {
+    [System.Array]::Reverse($length)
+}
+$framed = [byte[]]::new($domain.Length + 8 + $canonicalBytes.Length)
+[System.Array]::Copy($domain, 0, $framed, 0, $domain.Length)
+[System.Array]::Copy($length, 0, $framed, $domain.Length, 8)
+[System.Array]::Copy($canonicalBytes, 0, $framed, $domain.Length + 8, $canonicalBytes.Length)
+$sha256 = [System.Security.Cryptography.SHA256]::Create()
+try {
+    $digest = -join ($sha256.ComputeHash($framed) | ForEach-Object { $_.ToString("x2") })
+} finally {
+    $sha256.Dispose()
 }
 
 $header = @'
@@ -33,11 +83,12 @@ const languageSourceInputRegistryJSON = `
 $footer = @'
 `
 
-const languageSourceInputRegistryDigest = "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70"
+const languageSourceInputRegistryDigest = "__REGISTRY_DIGEST__"
 '@
 
 $normalizedRegistry = $registry.Replace("`r`n", "`n").TrimEnd("`r", "`n")
-$content = $header + "`n" + $normalizedRegistry + "`n" + $footer.TrimStart("`r", "`n") + "`n"
+$content = $header + "`n" + $normalizedRegistry + "`n" +
+    $footer.TrimStart("`r", "`n").Replace("__REGISTRY_DIGEST__", $digest) + "`n"
 $outputDirectory = Split-Path -Parent $OutputPath
 New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
 [System.IO.File]::WriteAllText(
