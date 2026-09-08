@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:a494fb5d49f89b7b",
+  "lessonIds": [
+    "BN-C27-ditiyo",
+    "BN-C27-tritiyo",
+    "BN-C27-choturtho",
+    "BN-C27-prothom",
+    "BN-W06-nya",
+    "BN-C27-ponchom",
+    "BN-R27-first-to-fifth"
+  ],
+  "tex": "bengali/book/chapters/ch38-ordinals.tex"
+}

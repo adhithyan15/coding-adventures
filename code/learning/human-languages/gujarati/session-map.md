@@ -80,10 +80,11 @@ canonical `sequence` order.
 | 249-253 | 39 | If, and When | `GU-C35-jo` -> `GU-C35-jo-to` -> `GU-C35-jo-write` -> `GU-C35-jyaare` -> `GU-C35-condition-checkpoint` |
 | 254-258 | 40 | He, She, We, and the One Who | `GU-C36-te` -> `GU-C36-ame-aapne` -> `GU-C36-te-write` -> `GU-C36-je` -> `GU-C36-je-te` |
 | 259-263 | 41 | Who, Where, When, How Many | `GU-C37-kon` -> `GU-C37-kyaan` -> `GU-C37-kyaan-write` -> `GU-C37-kyaare` -> `GU-C37-ketla` |
+| 264-269 | 42 | Which One in the Line | `GU-C38-panchmu` -> `GU-C38-triju` -> `GU-C38-biju` -> `GU-C38-chothu` -> `GU-C38-pahelu` -> `GU-R38-first-to-fifth` |
 
 ## Current boundary
 
-The current book contains 41 chapters and 263 lessons. It teaches all 41
+The current book contains 42 chapters and 269 lessons. It teaches all 41
 Gujarati forms that the book shows, includes the complete pre-A1 writing-stage
 ladder, and carries the doorway, conversation, number and core-verb material
 through measured distant retrieval. Every native-script headword carries a
@@ -94,7 +95,8 @@ at 72. Chapters 35-41 close the joining column, which stood at 0 of 11: the
 book can now negate a sentence, apologise, join two clauses, report a thought,
 give a reason, suppose a condition, describe rather than name, and ask who,
 where, when and how many. Ten of the eleven joining devices needed no new sign
-at all, and the run spends exactly one — the ફ that માફ કરો required. Later
+at all, and the run spends exactly one — the ફ that માફ કરો required. Chapter 42 adds the
+ordinal column, first to fifth, on no new sign at all. Later
 vocabulary, composition, timed mocks, rubrics, calibration, and
 book-only learner evidence remain explicit backlog rather than present-tense
 readiness claims.

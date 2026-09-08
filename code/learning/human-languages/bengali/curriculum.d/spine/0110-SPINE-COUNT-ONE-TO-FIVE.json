@@ -1,6 +1,7 @@
 {
   "segments": [
-    "BN-PATH-010"
+    "BN-PATH-010",
+    "BN-PATH-035"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"

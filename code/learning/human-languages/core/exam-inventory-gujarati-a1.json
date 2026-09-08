@@ -752,7 +752,15 @@
       "id": "GU-A1-NUM-05",
       "category": "Sankhya (numerals and quantity)",
       "label": "ordinals",
-      "probe": null,
+      "probe": [
+        "GU-LEX-PAHELU",
+        "GU-LEX-BIJU",
+        "GU-LEX-TRIJU",
+        "GU-LEX-CHOTHU",
+        "GU-LEX-PANCHMU",
+        "GU-GRAMMAR-ORDINAL-MU",
+        "GU-GRAMMAR-ORDINAL-IJU"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -763,7 +771,7 @@
         "A1-NG3-06"
       ],
       "gujaratiSpecific": false,
-      "note": "Not taught."
+      "note": "Chapter 42, six lessons. The Wiktionary entry for the suffix -મું names the numbers it does NOT build on -- ek, be, tran, chaar and six -- and the track's count reaches five, so four of the five reachable ordinals stand on that exception list and one does not. The chapter opens on paanchmun (paanch + -mun) so the rule is visible before the exceptions, then runs by how much of the number survives: treejun, beejun, chothun, pahelun. Ordinals past fifth wait on GU-A1-NUM-03."
     },
     {
       "id": "GU-A1-NUM-06",

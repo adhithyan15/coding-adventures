@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:f19c2b8de45755ab",
+  "lessonIds": [
+    "GU-C38-panchmu",
+    "GU-C38-triju",
+    "GU-C38-biju",
+    "GU-C38-chothu",
+    "GU-C38-pahelu",
+    "GU-R38-first-to-fifth"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch42.txt",
+  "json": "gujarati/narration/ch42.json",
+  "textHash": "fnv1a64:1dcefd720231d132",
+  "jsonHash": "fnv1a64:b2f32105ed951e11",
+  "findings": []
+}
