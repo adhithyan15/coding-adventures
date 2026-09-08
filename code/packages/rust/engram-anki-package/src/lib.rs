@@ -941,10 +941,14 @@ pub fn v11_collection_to_engram_state(
             .collect()
     };
 
+    // Computed before the note types, because a template's deck id needs the
+    // same check a card's does.
+    let declared_deck_ids: HashSet<String> = decks.iter().map(|deck| deck.id.clone()).collect();
+
     let note_types = collection
         .note_types
         .iter()
-        .map(map_v11_note_type)
+        .map(|note_type| map_v11_note_type(note_type, &declared_deck_ids))
         .collect::<Vec<_>>();
     let anki_note_types_by_id: HashMap<i64, &AnkiV11NoteType> = collection
         .note_types
@@ -979,7 +983,6 @@ pub fn v11_collection_to_engram_state(
     // that was missing it. It is also the better outcome for a hostile file:
     // a card visible in the default deck can be seen and deleted, and an
     // invisible one cannot.
-    let declared_deck_ids: HashSet<String> = decks.iter().map(|deck| deck.id.clone()).collect();
     // The options map is keyed by the Anki i64 id, so resolution has to be
     // available in both shapes. Same rule, one definition.
     let declared_i64: HashSet<i64> = collection.decks.iter().map(|deck| deck.id).collect();
@@ -3475,7 +3478,7 @@ fn anki_field_checksum(sort_field: &str) -> i64 {
     u32::from_be_bytes([digest[0], digest[1], digest[2], digest[3]]) as i64
 }
 
-fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
+fn map_v11_note_type(note_type: &AnkiV11NoteType, declared_deck_ids: &HashSet<String>) -> NoteType {
     let id = note_type.id.to_string();
     let fields = note_type
         .fields
@@ -3497,9 +3500,20 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
                 name: template.name.clone(),
                 front_template: template.question_format.clone(),
                 back_template: template.answer_format.clone(),
+                // A template's deck id overrides the note's at card generation
+                // time, so an id naming no declared deck is the same orphan as
+                // a card's -- just deferred. Nothing goes wrong at import,
+                // because cards are mapped from the file's own card rows rather
+                // than generated; it bites the next time the note type
+                // materialises a card, which is why the import looked clean.
+                //
+                // `None` means "use the note's deck", which is both the natural
+                // fallback and the one the resolution for cards already lands
+                // on, so an undeclared id is dropped rather than remapped.
                 deck_id: template
                     .deck_id
                     .filter(|deck_id| *deck_id > 0)
+                    .filter(|deck_id| declared_deck_ids.contains(&deck_id.to_string()))
                     .map(|deck_id| deck_id.to_string()),
                 required_field_names: requirement.field_names,
                 requirement_mode: requirement.mode,
@@ -5219,6 +5233,70 @@ CREATE TABLE graves (
 
         assert_eq!(collection.note_types[0].name, "Basic");
         assert_eq!(collection.notes[0].field_values, vec!["hola", "hello"]);
+    }
+
+    /// A template deck id the file never declares is dropped, not stored.
+    ///
+    /// A template's deck id **overrides the note's** when a card is generated.
+    /// Nothing goes wrong at import -- cards are mapped from the file's own card
+    /// rows rather than generated -- so an import looks clean and the value sits
+    /// there until the note type next materialises a card, which then lands in
+    /// a deck that does not exist. Verified against `generate_cards_for_note`:
+    /// a stored `Some("999999")` produces a card in `"999999"` even for a note
+    /// in a real deck.
+    ///
+    /// `None` means "use the note's deck", which is the fallback the card
+    /// resolution already lands on, so an undeclared id is dropped rather than
+    /// remapped.
+    #[test]
+    fn a_template_deck_the_file_never_declares_is_dropped() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let undeclared = 999_999;
+        assert!(
+            !collection.decks.iter().any(|deck| deck.id == undeclared),
+            "the fixture must not declare the deck this test calls undeclared"
+        );
+        assert!(!collection.note_types[0].templates.is_empty());
+        collection.note_types[0].templates[0].deck_id = Some(undeclared);
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        let deck_ids: BTreeSet<&str> = state.decks.iter().map(|deck| deck.id.as_str()).collect();
+        for note_type in &state.note_types {
+            for template in &note_type.templates {
+                if let Some(deck_id) = &template.deck_id {
+                    assert!(
+                        deck_ids.contains(deck_id.as_str()),
+                        "template {} kept deck {deck_id}, which the collection does not contain",
+                        template.id
+                    );
+                }
+            }
+        }
+        assert_eq!(
+            state.note_types[0].templates[0].deck_id, None,
+            "the undeclared id should be dropped so the note's deck is used"
+        );
+    }
+
+    /// A template deck id the file DOES declare survives.
+    ///
+    /// A filter that dropped every template deck would satisfy the test above
+    /// while silently discarding a legitimate per-template deck, which is a real
+    /// Anki feature.
+    #[test]
+    fn a_declared_template_deck_is_kept() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let declared = collection.decks[0].id;
+        collection.note_types[0].templates[0].deck_id = Some(declared);
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        assert_eq!(
+            state.note_types[0].templates[0].deck_id,
+            Some(declared.to_string()),
+            "a template naming a real deck must keep it"
+        );
     }
 
     /// A card naming a deck the file never declares lands somewhere reachable.

@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Fixed -- `upsertNoteType` accepted a template deck the collection does not contain (#14532)
+
+A `CardTemplate` carries an optional deck id, and that id **overrides the
+note's** when a card is generated. So this command can put every card of a note
+type into a deck that does not exist without ever naming a deck itself -- which
+is why the command guard added for #14533 did not catch it, and why it takes a
+*list* of ids rather than one.
+
+Unguarded, an `upsertNoteType` whose template named `deck-that-does-not-exist`
+moved all five demo cards and reported `ok: true`.
+
+`None` on a template means "use the note's deck" and is the ordinary case; only
+a `Some` naming nothing is refused. Both halves have a test, because a guard
+that refused `None` would break every note type there is.
+
 ### Fixed -- `createCard` and `startSession` accepted a deck the collection does not contain (#14533)
 
 Both reach `reduce` raw through `dispatch` -- a documented public surface: the
