@@ -1,0 +1,1216 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 60,
+  "title": "Which One in the Line",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:9e96c6bae8d758ce",
+  "lessons": [
+    {
+      "id": "MR-C60-dusra-ordinal",
+      "sequence": 2440,
+      "title": "दुसरा (dusrā) — the second, and the set it belongs to",
+      "headword": "दुसरा",
+      "romanization": "dusrā",
+      "gloss": "the second — the ordinal you have owned since chapter thirty-one, taken apart at last",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ed79c5c6cdbfa7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A second kind of number word starts here, so the recalls come first, at the four growing distances this book measures."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rupayā — R1, one chapter back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rupayā* — **R1**, one chapter back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vīs — R2, the first real retrieval",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vīs* — **R2**, the first real retrieval]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sahā — R3, twenty-four lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sahā* — **R3**, twenty-four lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kitī? — R4, ninety-one lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kitī?* — **R4**, ninety-one lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: you already own one of these",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुसरा — dusrā — the second, the other."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter thirty-one gave you this word as the partner एक needed: एक चहा आणि दुसरा (dusrā) पाणी. Its gloss said the other, the second, and its etymology said it is दोन wearing an ending."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing about it changes today. What changes is that it stops being one word and becomes a member of a set."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two sets of number words, not one",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "the question",
+                "the set",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "the question: किती? — how many? the set: एक, दोन, तीन, चार, पाच. example: दोन चहा — two teas.",
+                "the question: which one in the line? the set: दुसरा (dusrā) and its fellows. example: दुसरा (dusrā) चहा — the second tea."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "दोन चहा and दुसरा (dusrā) चहा are not the same order at a stall: the first asks for two cups, the second picks one cup out of a line."
+            },
+            {
+              "kind": "speech",
+              "text": "This chapter teaches the second set, and it teaches no new word today — because the set already has a member in your mouth, and noticing that is the honest first step."
+            },
+            {
+              "kind": "speech",
+              "text": "An ordinal is an ordinary adjective in -आ, so it takes the three endings chapter forty-nine taught on मोठा: दुसरा (dusrā), दुसरी, दुसरं. Every word in this chapter and the next behaves this way, and it will not be repeated for each one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "don chahā, then dusrā chahā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *don chahā*, then *dusrā chahā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three agreeing forms — dusrā, dusrī, dusraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three agreeing forms — *dusrā*, *dusrī*, *dusraṁ*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C60-dusra-ordinal-r1",
+              "prompt": "Which question does dusrā answer, and which one does don answer?",
+              "assesses": [
+                "MR-GRAMMAR-ORDINAL-SET",
+                "MR-LEX-DUSRA"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "dusrā answers which one in the line; don answers kitī — how many",
+                "dusra which one, don how many",
+                "which one; how many"
+              ],
+              "feedback": {
+                "correct": "Two sets, two questions.",
+                "incorrect": "kitī asks how many. The other set asks which one in the line."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many sets of number words does Marathi keep? (Two.) How many new words did this lesson teach? (None.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Molesworth, A Dictionary, Marathi and English, p. 420 (DSAL); Wiktionary: दुसरा (dusrā)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C60-tisra",
+      "sequence": 2450,
+      "title": "तिसरा (tisrā) — third",
+      "headword": "तिसरा",
+      "romanization": "tisrā",
+      "gloss": "third — the same ending as दुसरा, on the number you can still see inside it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4abb76b6bd0db5e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four recalls, at four distances."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say how many sets of number words Marathi keeps — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say how many sets of number words Marathi keeps — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write the ai sign on क — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write the *ai* sign on **क** — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dahā — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dahā* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ghar — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ghar* — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तिसरा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिसरा — tisrā — third."
+            },
+            {
+              "kind": "speech",
+              "text": "तिसरं घर — tisraṁ ghar — the third house."
+            },
+            {
+              "kind": "speech",
+              "text": "Put the two words you now have side by side against the numbers under them:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "how many",
+                "which one in the line"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "how many: दोन (don). which one in the line: दुसरा (dusrā).",
+                "how many: तीन (tīn). which one in the line: तिसरा (tisrā)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The number is still visible in both. दोन leaves दु-, तीन leaves ति-, and the same -सरा sits on the end of each."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two is not yet a rule",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "It would be pleasant to say -सरा is how Marathi makes ordinals. It is not, and this book will not claim it: -सरा appears on these two words and on no others in the language. What the pair does prove is smaller and true — that the which-one set is related to the how-many set, close enough for the eye to catch it."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the vowel change in view too. don has an o and dusrā has a u; tīn has a long ī and tisrā a short i. The number is visible, not untouched."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dusrā, then tisrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dusrā*, then *tisrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the number inside each — don, tīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the number inside each — *don*, *tīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tisraṁ ghar — the third house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tisraṁ ghar* — the third house]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C60-tisra-r1",
+              "prompt": "Say: the third house.",
+              "assesses": [
+                "MR-LEX-TISRA",
+                "MR-LEX-GHAR"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "tisraṁ ghar",
+                "तिसरं घर",
+                "tisra ghar",
+                "tisram ghar"
+              ],
+              "feedback": {
+                "correct": "ghar is neuter, so the ordinal ends in -aṁ.",
+                "incorrect": "The ordinal agrees: ghar is neuter, so tisraṁ."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which number is inside तिसरा (tisrā)? (तीन.) Is -सरा a rule you can use on any number? (No — it is on these two words only.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Molesworth, A Dictionary, Marathi and English, p. 381 (DSAL); Omniglot: Numbers in Marathi."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C60-pahila",
+      "sequence": 2460,
+      "title": "पहिला (pahilā) — first",
+      "headword": "पहिला",
+      "romanization": "pahilā",
+      "gloss": "first — the one word in the set with no number inside it at all",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a141e2ef581fed4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four recalls, at four distances."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tisrā — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tisrā* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say paise — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *paise* — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say akrā — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *akrā* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say khoolī — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *khoolī* — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पहिला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पहिला — pahilā — first."
+            },
+            {
+              "kind": "speech",
+              "text": "पहिली खोली — pahilī khoolī — the first room."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: why first arrives third",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Go looking for the number inside this one:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "how many",
+                "which one in the line",
+                "the number, still visible?"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "how many: दोन. which one in the line: दुसरा (dusrā). the number, still visible?: yes — दु-.",
+                "how many: तीन. which one in the line: तिसरा (tisrā). the number, still visible?: yes — ति-.",
+                "how many: एक. which one in the line: पहिला (pahilā). the number, still visible?: no."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "There is no एक anywhere in पहिला (pahilā). Not a letter of it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why the chapter did not begin here. A word can only be seen to break a shape once the shape has been seen holding, and you have now watched the number stay visible in two words running. The third case is a surprise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: what this book claims about पहिला, and what it does not",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Molesworth's dictionary gives पहिला (pahilā) twice over — as an adjective, \"the first\", and, declined, as an adverb, \"at first; in the beginning\". Marathi never built a separate word for putting an action first; it re-used this one."
+            },
+            {
+              "kind": "speech",
+              "text": "This lesson teaches the adjective only — a thing picked out of a line, as in पहिली खोली. The adverb is named so you recognise it, and not drilled. The words that order a sequence — before, after, next — are not taught here."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahilā, dusrā, tisrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahilā*, *dusrā*, *tisrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three has no number inside it — pahilā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three has no number inside it — ***pahilā***]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahilī khoolī — the first room",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahilī khoolī* — the first room]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C60-pahila-r1",
+              "prompt": "Say: the first room, then the second room.",
+              "assesses": [
+                "MR-LEX-PAHILA",
+                "MR-LEX-KHOLI"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "pahilī khoolī, dusrī khoolī",
+                "पहिली खोली दुसरी खोली",
+                "pahili kholi dusri kholi"
+              ],
+              "feedback": {
+                "correct": "khoolī is feminine, so both ordinals end in -ī.",
+                "incorrect": "khoolī is feminine: pahilī, dusrī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which number is inside पहिला (pahilā)? (None — एक is not in it.) Why was this word not the first one in the chapter? (Nothing had been seen for it to break yet.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Molesworth, A Dictionary, Marathi and English, p. 497 (DSAL); Omniglot: Numbers in Marathi."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C60-chautha",
+      "sequence": 2470,
+      "title": "चौथा (chauthā) — fourth",
+      "headword": "चौथा",
+      "romanization": "chauthā",
+      "gloss": "fourth — the last of the four Marathi inherited whole, and the third different shape in four words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:caa67e98c32deef1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four recalls, at four distances."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pahilā — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pahilā* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rupayā — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rupayā* — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bārā — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bārā* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gharāt and name what the -आ did to घर — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gharāt* and name what the **-आ** did to **घर** — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चौथा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौथा — chauthā — fourth."
+            },
+            {
+              "kind": "speech",
+              "text": "The au sign you wrote in chapter fifty-six is the visible part of this word. चार (chār) gives चौ- (chau-), and then an ending you have not seen before takes over: -था."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: four words, three shapes, no rule",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The chapter's four words, laid out against their numbers:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "how many",
+                "which one in the line",
+                "what happened"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "how many: एक. which one in the line: पहिला (pahilā). what happened: nothing survives.",
+                "how many: दोन. which one in the line: दुसरा (dusrā). what happened: -सरा.",
+                "how many: तीन. which one in the line: तिसरा (tisrā). what happened: -सरा.",
+                "how many: चार. which one in the line: चौथा (chauthā). what happened: -था."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three different shapes across four words. Marathi did not build these; it inherited them, each one worn down separately over centuries — Molesworth records चौथा (chauthā) as coming straight from Sanskrit चतुर्थ."
+            },
+            {
+              "kind": "speech",
+              "text": "So do not look for a rule here. There is none, and this book will not invent one: these four are four words, and the honest instruction is to learn them as four words. What matters is that the list ENDS. There are exactly four of them, and you now have all four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahilā dusrā tisrā chauthā — the four, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahilā dusrā tisrā chauthā* — the four, in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two share an ending — dusrā and tisrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two share an ending — ***dusrā*** and ***tisrā***]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chauthā rupayā — the fourth rupee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chauthā rupayā* — the fourth rupee]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C60-chautha-r1",
+              "prompt": "Say first, second, third, fourth in Marathi, then say how many different endings that is.",
+              "assesses": [
+                "MR-LEX-CHAUTHA",
+                "MR-LEX-PAHILA",
+                "MR-LEX-TISRA",
+                "MR-LEX-DUSRA"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "pahilā dusrā tisrā chauthā — three different shapes",
+                "पहिला दुसरा तिसरा चौथा",
+                "pahila dusra tisra chautha"
+              ],
+              "feedback": {
+                "correct": "Four words, three shapes, no rule.",
+                "incorrect": "pahilā, dusrā, tisrā, chauthā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of these four can you predict from the number? (None — they are inherited, not built.) How many are there in all? (Four.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Molesworth, A Dictionary, Marathi and English, p. 296 (DSAL); Omniglot: Numbers in Marathi."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C60-pachva",
+      "sequence": 2480,
+      "title": "पाचवा (pāchvā) — fifth, and the seam",
+      "headword": "पाचवा",
+      "romanization": "pāchvā",
+      "gloss": "fifth — the seam, where Marathi stops inheriting ordinals and starts building them",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:69bf2f128e5cfe75",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four recalls, at four distances."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chauthā — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chauthā* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ekoṇīs and take it apart — R2, ten lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ekoṇīs* and take it apart — **R2**, ten lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write the au sign — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write the *au* sign — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ghar — R4, eighty-three lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ghar* — **R4**, eighty-three lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाचवा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाचवा — pāchvā — fifth."
+            },
+            {
+              "kind": "speech",
+              "text": "पाचवं घर — pāchvaṁ ghar — the fifth house."
+            },
+            {
+              "kind": "speech",
+              "text": "Say पाच and then say पाचवा (pāchvā). The number did not change at all. Nothing was worn down, nothing was replaced: पाच is still sitting there whole, with -वा added behind it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -वा, and where the language changes its mind",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the whole chapter in one column, with the break marked:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "how many",
+                "which one in the line"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "blank. how many: एक. which one in the line: पहिला (pahilā).",
+                "blank. how many: दोन. which one in the line: दुसरा (dusrā).",
+                "blank. how many: तीन. which one in the line: तिसरा (tisrā).",
+                "blank. how many: चार. which one in the line: चौथा (chauthā).",
+                "— the seam —. how many: blank. which one in the line: blank.",
+                "blank. how many: पाच. which one in the line: पाच + वा."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Above the line, four words Marathi received from its ancestors, each worn down its own way, none predictable from the number."
+            },
+            {
+              "kind": "speech",
+              "text": "Below the line, a rule: take the number and put -वा on it. That is all there is, and it does not stop at five. Six, seven, ten, twenty, a hundred — the next chapter walks the rest of the way, and every one of them is made this way."
+            },
+            {
+              "kind": "speech",
+              "text": "You have therefore learned two different kinds of thing in one chapter. Four words, which had to be memorised. And one ending, which does not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāch, then pāchvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāch*, then *pāchvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāchvaṁ ghar — the fifth house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāchvaṁ ghar* — the fifth house]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four that had to be memorised — pahilā dusrā tisrā chauthā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four that had to be memorised — *pahilā dusrā tisrā chauthā*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C60-pachva-r1",
+              "prompt": "How does Marathi make fifth out of five, and how many of the first four ordinals are made that way?",
+              "assesses": [
+                "MR-GRAMMAR-ORDINAL-VA",
+                "MR-LEX-PACHVA"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "paach plus -vaa; none of the first four",
+                "pāch + vā, none",
+                "add -va to the number; none of them"
+              ],
+              "feedback": {
+                "correct": "The rule starts at five. The four before it are inherited words.",
+                "incorrect": "pāch takes -vā. The first four take nothing predictable."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do you add to a number to make an ordinal? (-वा.) At which number does that start working? (Five — everything before it is a word, not a rule.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Omniglot: Numbers in Marathi; Molesworth, A Dictionary, Marathi and English, p. 500 (DSAL)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R60-first-to-fifth",
+      "sequence": 2490,
+      "title": "First to fifth, and where the language changed its mind",
+      "headword": "पहिला · दुसरा · तिसरा · चौथा · पाचवा",
+      "romanization": "pahilā · dusrā · tisrā · chauthā · pāchvā",
+      "gloss": "first to fifth, and the one place in the run where the language changed its mind",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5abc3c5264a6d3bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four recalls, at four distances, before the run."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pāchvā and the ending that made it — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pāchvā* and the ending that made it — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say how many sets of number words Marathi keeps — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say how many sets of number words Marathi keeps — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the three agreeing endings of मोठा — R3, fifty-three lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the three agreeing endings of **मोठा** — **R3**, fifty-three lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say madhye — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *madhye* — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahilā dusrā tisrā chauthā pāchvā — the run, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahilā dusrā tisrā chauthā pāchvā* — the run, without stopping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four that had to be memorised, and the one that did not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four that had to be memorised, and the one that did not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāchvaṁ, pāchvī, pāchvā — the three agreeing endings on the fifth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāchvaṁ*, *pāchvī*, *pāchvā* — the three agreeing endings on the fifth]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R60-first-to-fifth-run",
+              "prompt": "Say first to fifth, then say which of the five you could have worked out without being told.",
+              "assesses": [
+                "MR-LEX-PAHILA",
+                "MR-LEX-DUSRA",
+                "MR-LEX-TISRA",
+                "MR-LEX-CHAUTHA",
+                "MR-LEX-PACHVA",
+                "MR-GRAMMAR-ORDINAL-VA"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "pahilā dusrā tisrā chauthā pāchvā — only pāchvā, because it is pāch plus -vā",
+                "पहिला दुसरा तिसरा चौथा पाचवा",
+                "pahila dusra tisra chautha pachva only the fifth"
+              ],
+              "feedback": {
+                "correct": "One of five was built. Four had to be learned.",
+                "incorrect": "Run them in order, then ask which one the number is still whole inside."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built this chapter, in one number",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Of the five ordinals in this chapter, one was built and four were memorised. That is the worst ratio you will ever see in this set, and it is worth saying out loud, because the next chapter reverses it completely: five more ordinals, and every single one of them built."
+            },
+            {
+              "kind": "speech",
+              "text": "The break sits between चौथा (chauthā) and पाचवा (pāchvā). Everything before it is a word Marathi received. Everything after it is a word Marathi makes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Between which two ordinals does the seam fall? (चौथा (chauthā) and पाचवा (pāchvā).) What sits on the far side of it? (A rule — the number, plus -वा.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C60-pahila",
+    "language": "marathi",
+    "chapter": 60,
+    "sequence": 2460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a141e2ef581fed4"
+  },
+  "findings": []
+}

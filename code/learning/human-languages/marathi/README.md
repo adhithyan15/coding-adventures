@@ -352,6 +352,19 @@ first-person can-do sentence and the lesson that pays it off.
   **पैसे** and **रुपया**, and the first price this book can ask and answer. The
   two vowel signs **ौ** and **ै** are placed where the words that need them are
   rather than side by side. A1 exam coverage 157/301 → **161/301**.
+- **Chapters 60–61 — the ordinals** ([`lessons/MR-C60-*`](./lessons/),
+  [`lessons/MR-C61-*`](./lessons/)): first to tenth, one word a lesson, in the
+  order Marathi's own construction dictates rather than in numerical order.
+  **60** opens on **दुसरा** and teaches NO new word to do it — chapter 31
+  already put it in the reader's mouth as the partner of **एक**, glossed there
+  as *the other, the second* — then **तिसरा**, then **पहिला** third because it
+  is the one ordinal with no **एक** anywhere inside it and an exception is only
+  legible after the shape it breaks has been seen holding twice. **61** is the
+  half Marathi BUILDS: the cardinal plus **-वा**, with one adjustment at nine,
+  where **नववा** stands on the older **नव** rather than the modern **नऊ**. The
+  seam between the two chapters is checkable: Molesworth's 1857 dictionary
+  carries all four inherited ordinals as headwords and none of the built ones.
+  A1 exam coverage 161/301 → **162/301**.
 
 Chapters 9–12 **are** in the ledger with scored payoffs, and that is a change
 worth recording rather than quietly editing. This paragraph used to say the

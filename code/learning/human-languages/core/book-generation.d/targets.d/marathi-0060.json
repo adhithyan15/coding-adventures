@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 60,
+  "output": "marathi/book/chapters/ch60-ordinals.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}
