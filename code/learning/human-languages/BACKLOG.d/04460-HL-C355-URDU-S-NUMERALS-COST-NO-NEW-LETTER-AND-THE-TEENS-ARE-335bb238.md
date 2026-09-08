@@ -35,16 +35,27 @@ it. The proof is *sāt* against Persian *haft*: Iranian turned every word-initia
 *s* into an *h* and Indo-Aryan did not, so a word that came in FROM Persian
 carries the change and an inherited word does not.
 
-**A LATENT INVENTORY BUG, found by trying to write a headword.** The
-Perso-Arabic maddah's carrier evidence lived under a singular `example` key
-while `uncoveredGlyphs` — and the mark file next to it — reads `examples`. The
-composition was source-verified and invisible to every consumer, so **آ** read
-as an uncovered glyph with its own evidence sitting in the same file, and
-**آٹھ**, eight, was unwritable for a reason that was a typo. Converted to the
-array form. **The general shape: a schema that accepts two spellings of one
-field will eventually be written in the one nothing reads**, and the failure is
-silent in the flattering direction — the glyph-gap queue stayed empty because
-the glyph was never asked for.
+**A BUG I REPORTED AND THEN WITHDREW, because the first measurement was
+built wrong.** Trying to write **آٹھ**, eight, I found the Perso-Arabic maddah's
+carrier evidence under a singular `example` key while `uncoveredGlyphs` reads
+`examples`, concluded that **آ** was therefore an uncovered glyph with its own
+evidence sitting unread in the same file, and patched `validate.ts` to read
+both spellings. **It is a no-op, and the patch is not in this branch.** The
+mark loop already calls `add(m.mark)`, which covers U+0653, and the function
+normalises the headword to NFD, so **آ** arrives as alif plus maddah and both
+halves are covered by rows that were always there. The `examples` array below
+it matters only for a carrier that is NOT an alphabet row of its own — Urdu
+**ئ**, whose U+0654 carrier the comment names. Running the check with and
+without the patch returns zero gaps both times.
+
+**What produced the wrong answer was the shape of my own measurement**: I built
+the covered set from the letter rows alone and asked whether **آ** was in it,
+rather than calling the function the validator calls. A reimplementation of a
+check is not the check, and it fails in the direction that flatters the finding
+— it invents a bug where the real code has none. The singular `example` key is
+still real and still unread, and it is a latent hazard for any FUTURE mark
+whose carrier is not itself a letter; it is not a defect today, and this entry
+previously said it was.
 
 **THE DIGITS ARE A READING GAP, AND THE INVENTORY HAD ALREADY SAID SO.**
 `UR-A1-Q-02`'s old note observed that Urdu draws four and six differently from
