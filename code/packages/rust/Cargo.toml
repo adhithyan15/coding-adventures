@@ -430,6 +430,7 @@ members = [
     "database-core",
     "spice-engine",
     "spice-netlist-parser",
+    "spice-mosaic-app",
     "device-physics",
     "mosfet-models",
     "fab-process-simulation",

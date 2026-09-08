@@ -1,0 +1,21 @@
+component SpiceWorkbench {
+  slot workbench-title : text ;
+  slot mode-label : text ;
+  slot netlist-label : text ;
+  slot netlist-text : text ;
+  slot netlist-placeholder : text ;
+  slot inspect-label : text ;
+  slot run-label : text ;
+  slot diagnostics-label : text ;
+  slot diagnostics : text ;
+  slot analysis-label : text ;
+  slot analysis-rows : list<list<text>> ;
+  slot selected-analysis-label : text ;
+  slot result-label : text ;
+  slot result-text : text ;
+
+  emit onNetlistChange ( value : text ) ;
+  emit onInspect ;
+  emit onRun ;
+  emit onSelectAnalysis ( index : number ) ;
+}

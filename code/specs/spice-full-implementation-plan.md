@@ -106,14 +106,41 @@ model-card parameter, or a UI artifact is not a completion signal.
    - Status: completed in the cross-language analysis-inventory slice. The
      next actionable product phase is the Mosaic UI shell and host integration.
 
-5. **Post-Berkeley product tracks** (not Berkeley completion blockers).
+5. **Mosaic SPICE workbench foundation** (completed).
+   - Add a real `mosaic-pkg-spice-workbench` package with an editable,
+     multiline Berkeley deck, inspect/run actions, runnable-analysis selection,
+     status, and a raw-result view.
+   - Add a small `spice-mosaic-app` adapter that owns deck state, snapshots,
+     retry-safe dispatch, and delegates inspection/execution to the canonical
+     Rust parser APIs. Its default deck exercises `.op`, `.dc`, `.ac`,
+     `.tran`, and `.tf` together.
+   - Close the web-host gap uncovered by the workbench artifact test: the HTML
+     pipeline must lower legacy `Input(multiline: true)` to `<textarea>` and
+     retain its hydration event markers. `HostInput` remains deliberately
+     single-line.
+   - Status: the first usable Mosaic workbench phase is ready for review. It
+     deliberately renders stable raw JSON rather than inventing a second
+     result schema in the UI.
+
+6. **Post-Berkeley product tracks** (not Berkeley completion blockers).
    - ngspice and vendor-dialect compatibility, nested sweeps and raw-format
-     interchange, advanced nonlinear convergence work, mixed-signal coupling,
-     and the Mosaic/LTspice-style UI move only after item 4 is green.
+   interchange, advanced nonlinear convergence work, mixed-signal coupling,
+     and the Mosaic/LTspice-style UI move only after item 5 is green.
    - Discovery: align the Rust Mosaic app facade's runnable-analysis inventory
      with parser-plan `.tf` execution during the UI/API phase. This is not a
      Berkeley corpus blocker because the cross-language parser plans already
      execute `.tf`.
+   - Discovery: the existing Rust `BerkeleyApp` shell is a host-status JSON
+     facade, not a renderable Mosaic package. The first UI phase must add an
+     editable workbench package and a small `MosaicApp` adapter; it must use the
+     legacy multiline `Input` contract because `HostInput` is intentionally
+     single-line across web hosts. Schematic capture, table rendering, and
+     waveform interaction stay after this first workbench is usable.
+   - Next UI priority: render the existing stable result records as selectable
+     tables with source-span diagnostics. Follow with waveform/axis interaction
+     built from the same records; schematic capture stays after the text-deck
+     workflow is proven, because it must emit the canonical netlist rather than
+     introduce a parallel circuit model.
 
 ### Operating rules
 

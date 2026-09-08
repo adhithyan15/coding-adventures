@@ -1,0 +1,11 @@
+[package]
+name = "mosaic-pkg-spice-workbench"
+version = "0.1.0"
+description = "Editable Berkeley SPICE workbench with inspection and execution controls"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["SpiceWorkbench"]
+
+[kernel]
+version = "1"
