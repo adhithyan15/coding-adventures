@@ -123,3 +123,54 @@ fn every_vendored_file_is_readable_and_non_empty() {
         assert!(!source.trim().is_empty(), "{} is empty", path.display());
     }
 }
+
+// TEMPORARY diagnostic for the Windows-only `f32.wast` baseline drift
+// (`corpus_matches_the_committed_baseline` fails there with pass=2498,
+// fail=2 against a baseline of pass=2500, fail=0 -- macOS/Linux CI both
+// match the baseline exactly). `ConformanceReport` only tallies aggregate
+// pass/fail counts per directive kind, not per-directive detail, so there
+// is no way to see WHICH two `assert_return` cases differ from a report
+// alone. This test re-parses `f32.wast` itself (via `wasm_wast_parser::
+// parse_script`, the exact same call `wasm_conformance::run_wast_source`
+// makes internally) so it can zip each directive's own `Action` (function
+// name + literal args) against `run_wast_source`'s outcome for that same
+// directive, in the same deterministic order -- then panics unconditionally
+// with the full dump, so the detail shows up in `cargo test`'s captured
+// stdout on FAILURE regardless of platform (a plain `println!` would be
+// swallowed on a passing run, and this run intentionally never "passes").
+// Remove this test once the Windows divergence is root-caused and fixed.
+#[test]
+fn temp_diagnose_f32_wast_assert_return_mismatches() {
+    let path = testsuite_dir().join("f32.wast");
+    let source = fs::read_to_string(&path).unwrap_or_else(|e| panic!("failed to read {}: {e}", path.display()));
+
+    let directives = wasm_wast_parser::parse_script(&source).expect("f32.wast should parse");
+    let results = wasm_conformance::run_wast_source(&source).expect("f32.wast should parse (second pass)");
+    assert_eq!(directives.len(), results.len(), "directive/result count mismatch -- re-parsing must be deterministic");
+
+    let mut report = String::new();
+    let mut mismatch_count = 0usize;
+    for (i, (directive, (kind, outcome))) in directives.iter().zip(results.iter()).enumerate() {
+        if outcome.is_pass() {
+            continue;
+        }
+        if !matches!(kind, wasm_conformance::report::DirectiveKind::AssertReturn) {
+            continue;
+        }
+        mismatch_count += 1;
+        if let wasm_wast_parser::script::Directive::AssertReturn { action, expected } = directive {
+            report.push_str(&format!(
+                "\n--- mismatch #{mismatch_count} (directive index {i}) ---\naction: {action:?}\nexpected: {expected:?}\noutcome: {outcome:?}\n"
+            ));
+        } else {
+            report.push_str(&format!("\n--- mismatch #{mismatch_count} (directive index {i}) ---\n(non-AssertReturn kind {kind:?} but non-pass outcome: {outcome:?})\n"));
+        }
+    }
+
+    panic!(
+        "temp_diagnose_f32_wast_assert_return_mismatches: {mismatch_count} non-passing assert_return \
+         directive(s) in f32.wast on this platform.{report}\n\
+         (this test ALWAYS panics -- it's a diagnostic, not a real assertion; \
+         mismatch_count == 0 means this platform matches the baseline exactly)"
+    );
+}
