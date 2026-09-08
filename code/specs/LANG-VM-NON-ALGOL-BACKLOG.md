@@ -35,6 +35,13 @@ corpus rather than relying on previous indices (443 total rows, 233 ALGOL).
 The first attempted row 438 passed an older COBOL program, not the intended
 FLOW-MATIC source; only the corrected row 439 establishes this refusal.
 
+VM-039b local execution: all four WASM cells (439–442) passed in fresh
+processes with positive sentinels. The direct adapter regression proves
+repeated peeks share the same buffer as integer reads, including a final
+negative value without newline and stable EOF. The complete iir-to-wasm
+suite and focused Clippy (warnings denied) passed. No further lowering defect
+was found; the JVM/CLR adapter slice VM-039c is next after merge.
+
 ## VM-039a implementation contract (selected after #14471 merged)
 
 Refreshed main is `1ff49866a8`. VM-038 merged with every applicable

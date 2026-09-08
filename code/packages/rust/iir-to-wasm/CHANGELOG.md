@@ -1,5 +1,14 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — FLOW-MATIC WASM EOF (VM-039b)
+
+Add the `input_more` builtin as `env.__input_more() -> i64` and connect
+feature detection, import indices and destination writes. The host returns
+1 when another input field remains and 0 at EOF, without consuming input.
+Four existing FLOW-MATIC matrix rows now execute on WASM; a shared-buffer
+regression verifies repeated peeks before and after integer consumption.
+
+
 ## Runtime substring operand aliasing (VM-057)
 
 Runtime `str_slice` preserves the source handle until the header write and
