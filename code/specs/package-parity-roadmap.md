@@ -13308,6 +13308,83 @@ port cannot resolve its native runtime symbols. Publication remains gated on
 that hosted evidence and the required independent security review; no second
 parity implementation is active.
 
+### Post-PR #14519 reconciliation and graph/diff corpus selection
+
+PR #14519 completed 53 terminal acceptable checks at reviewed head
+`7754ee01db709fd10a71b3066db38ba72e5410f2`. Two Linux OCaml jobs initially
+failed while `setup-ocaml` encountered an opam repository maintenance lock;
+failed-job-only reruns completed successfully. GitHub reported the branch
+mergeable and conflict-free, guarded squash auto-merge was enabled, and GitHub
+merged the reviewed head at `2026-09-08T11:12:34Z` as
+`d4f83c934d6898bf5d55d844c88f5988142a5309`, without a plain manual merge
+command.
+
+The collision-checked schema-3 inventory on that exact merged main now has 15
+established lanes, 1,420 implementation identities, 4,640 implementation
+slots, and 1,459 all-reported identities. The breadth bands are 175 packages
+with 265 missing slots, 123/934, 176/2,217, and 946/13,244. Rust has 761
+singletons; OCaml remains emerging with five packages; canonical collisions
+and unknown language buckets remain zero.
+
+Parallel read-only dependency and contract audits registered the newly
+discovered bounded JSON, SHA-512, six barcode symbologies plus layout and
+facade, HMAC/HKDF/PBKDF2, Dart process-free graph/diff, and font-parser
+contract-repair fronts before selection. The smart-home lifecycle owner now
+waits for its neutral core contract rather than bypassing that prerequisite.
+The font-parser expansion now waits for neutral FNT00 repair, and its current
+Haskell package is tracked separately because it is not yet an FNT00 reference.
+Existing chief-crypto owners already cover that lane; their stale lifecycle
+records require later state reconciliation rather than duplicate work.
+The new Java/Kotlin/Dart children are linked to both affected high-consensus
+umbrellas so aggregate completion cannot bypass their exact owners.
+
+The reconciled state contains 749 unique owners: 211 merged, 537 pending, and
+exactly one in progress. All dependencies resolve, the graph is acyclic, and no
+merged owner depends on unfinished work. The selected
+`build-tool-neutral-graph-diff-corpus-completion` owner is the highest-leverage
+ready build-tool prerequisite: it gates the remaining all-language build-tool
+implementations and OCaml promotion, while the higher raw-descendant
+smart-home work is not ready until its neutral lifecycle contract lands.
+
+The tranche runs on fresh branch
+`codex/build-tool-neutral-graph-diff-corpus` from exact merged main above. Its
+bounded scope adds neutral isolated-node, chain, disconnected-component,
+stable-cycle-error, and unknown-diff-path cases; closes graph schema resource
+bounds; and adds an independent topology oracle. Execution failure propagation
+remains in the existing execution corpus. Implementation publication stays
+serial, while independent inventory, dependency, fixture, lessons, and
+validation audits continue in parallel.
+
+Before publication, the four implementation commits rebased without conflict
+through exact `origin/main` `5778c35c3c83c65f2a4f0eebc99e778cd15b70b4`.
+The intervening Algol result-composition, ARMv7 functional-simulator, Hindi,
+Mosaic conformance/root-resolution, VisiCalc file-effect, FLOW-MATIC VM/JIT,
+and ARMv7 gate-level changes have no exact changed-path overlap with this
+tranche. The final refreshed collision-checked schema-3 inventory has 15
+established lanes, 1,422 implementation identities, 4,642 implementation
+slots, and 1,461 all-reported identities. Its breadth bands are 175/265,
+123/934, 176/2,217, and 948/13,272; Rust has 763 singletons, OCaml remains
+emerging at five packages, and canonical
+collisions and unknown buckets remain zero.
+
+The refresh registers `x86-64-gatelevel-singleton-classification` for the new
+Rust-only exact 525,382-DFF model from merged PR #14595 and
+`arm-simulator-six-lane-classification` for the newly completed Rust checked
+ARMv7 lane in the existing six-lane simulator identity from merged PR #14599.
+Both owners require bounded
+neutral contracts, explicit resource ceilings, and applicable-lane or reviewed
+exception decisions before rollout; the x86-64 owner also records its missing
+explicit empty capability profile. The parallel OCaml readiness audit also
+registers `ocaml-build-tool-three-platform-ci-execution` and makes it a hard
+promotion dependency so hosted native-build-tool proof cannot be hidden inside
+the final denominator switch. The later refresh adds
+`armv7-gatelevel-singleton-classification`, dependent on the six-lane ARM
+functional-classification owner, for the new exact 524,805-DFF model from
+merged PR #14604. These additions bring the state to 753 unique owners: 211 merged,
+541 pending, and exactly this graph/diff owner PR-open as #14615, with complete
+dependencies, no cycle, and no merged-to-unfinished
+edge.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
