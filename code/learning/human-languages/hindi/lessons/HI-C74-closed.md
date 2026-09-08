@@ -49,7 +49,8 @@ closed door is a **tied** door.
 
 Two things to keep straight. First, बंद is not the beginning of **बंदर**, the
 monkey you met among the animals — the eye will want to join them and they are
-unrelated. Second, बंद stands opposite खुला on exactly the same signboards, so
+unrelated. Second, बंद stands opposite **खुला** (*khulā*) on exactly the same
+signboards, so
 learn them as one pair and you have read half a street.
 
 ## What you've built
@@ -64,7 +65,7 @@ The pair every shutter in the country is painted with.
 - [YOU RECALL: read **पीना**, then say it without looking]
 - [YOU SAY: *khulā*, then *band*]
 - [YOU READ: बंद, and check that it is not बंदर]
-- [YOU WRITE: खुला once more, then बंद beside it]
+- [YOU WRITE: **खुला** (*khulā*) once more, then बंद beside it]
 - [YOU RECALL: read **रुपया**, then say *nāshtā*]
 
 ## Wrap-up Recall

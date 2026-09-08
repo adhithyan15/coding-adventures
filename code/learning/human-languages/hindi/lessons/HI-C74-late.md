@@ -58,7 +58,8 @@ traveller can understand on a platform.
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Five: खुला, बंद, प्रवेश, निकास, देर. Enough to read a door, find a way through
+Five: **खुला** (*khulā*), बंद, प्रवेश, निकास, देर. Enough to read a door, find a
+way through
 it, and understand why the train has not come.
 
 ## Guided Practice
