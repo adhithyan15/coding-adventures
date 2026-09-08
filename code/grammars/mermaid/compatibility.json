@@ -205,7 +205,7 @@
     {
       "id": "treeview",
       "headers": ["treeView-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "tree",
       "smoke_source": "treeView-beta\nroot\n  child"
     },

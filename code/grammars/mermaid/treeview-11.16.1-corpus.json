@@ -1,0 +1,23 @@
+{
+  "upstream": "mermaid@11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "native hierarchy subset",
+  "fixtures": [
+    {
+      "name": "indented-directories-and-files",
+      "source": "treeView-beta\nproject/\n    src/\n        index.js\n    README.md"
+    },
+    {
+      "name": "quoted-labels-and-annotations",
+      "source": "treeView-beta\ntitle Application Files\naccTitle: Application tree\n\"my project/\" :::highlight\n    App.tsx icon(logos:react) ## main component\n    \"entry point.js\" ## bootstrap"
+    },
+    {
+      "name": "box-drawing-input",
+      "source": "treeView-beta\n├── src/\n│   ├── index.ts\n│   └── utils.ts\n└── README.md"
+    },
+    {
+      "name": "heavy-box-drawing-input",
+      "source": "treeView-beta\n┗━━ packages/\n    ┗━━ parser/\n        ┗━━ lib.rs"
+    }
+  ]
+}
