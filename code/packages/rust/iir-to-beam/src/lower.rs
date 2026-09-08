@@ -1048,6 +1048,20 @@ pub fn lower_iir_to_beam(
             }};
         }
 
+        // Integer immediates need no scratch register in BIF/test operands.
+        macro_rules! integer_operand {
+            ($operand:expr) => {{
+                match $operand {
+                    Operand::Var(name) => BEAMOperand::x(var_reg!(name)),
+                    Operand::Int(value) => BEAMOperand::i(*value as u64),
+                    other => return Err(IIRBeamError::InvalidOperand {
+                        function: fn_name.clone(),
+                        detail: format!("expected integer or variable operand, got {:?}", other),
+                    }),
+                }
+            }};
+        }
+
         // Helper: resolve an IIR label name to a BEAM label number.
         // We use `&*$name` to coerce both `String` and `&str` to `&str`,
         // avoiding the unstable `str::as_str()` method (stabilized after 1.94).
@@ -1408,8 +1422,7 @@ pub fn lower_iir_to_beam(
                 // Universal IIR primitive emitted by `dartmouth-basic-iir-compiler`,
                 // `oct-iir-compiler`, and any frontend that wants the simplest
                 // "copy slot to slot" form.  Lowers directly to a BEAM `move`
-                // between two `{x,reg}` operands — no immediate decode, no
-                // arithmetic.
+                // from a register or integer literal into `{x,reg}` — no arithmetic.
                 //
                 // The matching `vm-core` dispatch arm (see
                 // `vm-core/src/dispatch.rs::handle_mov`) is the JIT-path twin
@@ -1422,24 +1435,9 @@ pub fn lower_iir_to_beam(
                             detail: "mov instruction must have a dest".into(),
                         }),
                     };
-                    // srcs[0] is the source slot.  Literals here would be a
-                    // frontend bug (a `const` should produce the literal into
-                    // its own slot first); accept only `Operand::Var`.
-                    let src_reg = match instr.srcs.first() {
-                        Some(Operand::Var(name)) => var_reg!(name),
-                        Some(other) => return Err(IIRBeamError::InvalidOperand {
-                            function: fn_name.clone(),
-                            detail: format!(
-                                "mov src must be Var, got {:?}", other
-                            ),
-                        }),
-                        None => return Err(IIRBeamError::InvalidOperand {
-                            function: fn_name.clone(),
-                            detail: "mov instruction has no source operand".into(),
-                        }),
-                    };
+                    let source = integer_operand!(get_src!(instr, 0));
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                        BEAMOperand::x(src_reg), // {x,src_reg}
+                        source, // register or integer literal
                         BEAMOperand::x(rd),      // {x,rd}
                     ]));
                 }
@@ -1556,18 +1554,8 @@ pub fn lower_iir_to_beam(
                     };
                     // Use get_src! instead of direct indexing to produce a clean
                     // error rather than a panic when srcs is shorter than expected.
-                    let source = |operand: &Operand| -> Result<BEAMOperand, IIRBeamError> {
-                        match operand {
-                            Operand::Var(name) => Ok(BEAMOperand::x(var_reg!(name))),
-                            Operand::Int(value) => Ok(BEAMOperand::i(*value as u64)),
-                            other => Err(IIRBeamError::InvalidOperand {
-                                function: fn_name.clone(),
-                                detail: format!("{} expects integer or variable operands, got {:?}", instr.op, other),
-                            }),
-                        }
-                    };
-                    let r1 = source(get_src!(instr, 0))?;
-                    let r2 = source(get_src!(instr, 1))?;
+                    let r1 = integer_operand!(get_src!(instr, 0));
+                    let r2 = integer_operand!(get_src!(instr, 1));
                     instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                         BEAMOperand::f(0),
                         BEAMOperand::u(live),
@@ -1690,8 +1678,8 @@ pub fn lower_iir_to_beam(
                             detail: format!("{} must have a dest", instr.op),
                         }),
                     };
-                    let r1 = operand_reg!(get_src!(instr, 0));
-                    let r2 = operand_reg!(get_src!(instr, 1));
+                    let r1 = integer_operand!(get_src!(instr, 0));
+                    let r2 = integer_operand!(get_src!(instr, 1));
 
                     // Allocate a synthetic label for the false branch to converge.
                     label_counter = label_counter.checked_add(1).ok_or_else(|| {
@@ -1717,8 +1705,8 @@ pub fn lower_iir_to_beam(
                             // → falls through if r1 == r2, branches if r1 != r2
                             instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
                                 BEAMOperand::f(synth),
-                                BEAMOperand::x(r1),
-                                BEAMOperand::x(r2),
+                                r1,
+                                r2,
                             ]));
                         }
                         "cmp_ne" => {
@@ -1726,8 +1714,8 @@ pub fn lower_iir_to_beam(
                             // → falls through if r1 != r2, branches if r1 == r2
                             instrs.push(BEAMInstruction::new(OP_IS_NE_EXACT, vec![
                                 BEAMOperand::f(synth),
-                                BEAMOperand::x(r1),
-                                BEAMOperand::x(r2),
+                                r1,
+                                r2,
                             ]));
                         }
                         "cmp_lt" => {
@@ -1735,8 +1723,8 @@ pub fn lower_iir_to_beam(
                             // → falls through if r1 < r2, branches if r1 >= r2
                             instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
                                 BEAMOperand::f(synth),
-                                BEAMOperand::x(r1),
-                                BEAMOperand::x(r2),
+                                r1,
+                                r2,
                             ]));
                         }
                         "cmp_le" => {
@@ -1745,8 +1733,8 @@ pub fn lower_iir_to_beam(
                             // → falls through if r2 >= r1, branches if r2 < r1
                             instrs.push(BEAMInstruction::new(OP_IS_GE, vec![
                                 BEAMOperand::f(synth),
-                                BEAMOperand::x(r2),  // swapped: r2 >= r1 ⟺ r1 <= r2
-                                BEAMOperand::x(r1),
+                                r2,  // swapped: r2 >= r1 ⟺ r1 <= r2
+                                r1,
                             ]));
                         }
                         "cmp_gt" => {
@@ -1755,8 +1743,8 @@ pub fn lower_iir_to_beam(
                             // → falls through if r2 < r1, branches if r2 >= r1
                             instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
                                 BEAMOperand::f(synth),
-                                BEAMOperand::x(r2),  // swapped: r2 < r1 ⟺ r1 > r2
-                                BEAMOperand::x(r1),
+                                r2,  // swapped: r2 < r1 ⟺ r1 > r2
+                                r1,
                             ]));
                         }
                         "cmp_ge" => {
@@ -1764,8 +1752,8 @@ pub fn lower_iir_to_beam(
                             // → falls through if r1 >= r2, branches if r1 < r2
                             instrs.push(BEAMInstruction::new(OP_IS_GE, vec![
                                 BEAMOperand::f(synth),
-                                BEAMOperand::x(r1),
-                                BEAMOperand::x(r2),
+                                r1,
+                                r2,
                             ]));
                         }
                         _ => unreachable!(),

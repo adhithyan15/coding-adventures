@@ -1532,3 +1532,14 @@ rejects mov Int(3), used to initialize its counter. Permit checked Var/Int
 operands in mov through the same conversion helper; retain missing-source and
 unsupported-kind errors. The executed counted loop must print 1, 2, 3 and stop.
 Include positive and negative immediate moves in direct runtime coverage.
+
+### VM-040 COBOL control and rounding validation
+
+The four selected programs pass real Erlang and fresh matrix processes with
+positive execution sentinels (rows 395-398 before the final main refresh).
+All 54 direct comparison/move cases, 15 arithmetic cases, the earlier four
+COBOL cases, 12 Oct and 26 Nib programs pass. All 93 backend tests and Clippy
+for both affected packages with all targets pass. Eight COBOL rows now declare
+BEAM (414 total declared cells); no complete seven-column rerun is claimed.
+Reprioritize remaining COBOL proofs against other BEAM and host ABI work after
+merge, preserving the separate ALGOL owner.

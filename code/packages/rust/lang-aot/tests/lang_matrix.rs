@@ -5273,7 +5273,7 @@ const PROGRAMS: &[Prog] = &[
                000000     IF N GREATER 3 DISPLAY \"BIG\" ELSE DISPLAY \"SMALL\".\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("BIG"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — scaled DIVIDE with ROUNDED (PL09 step 4, PR3b). `20 / 3 =
     // 6.666…`; carried to one guard digit past the `V99` receiver then rounded
@@ -5294,7 +5294,7 @@ const PROGRAMS: &[Prog] = &[
                000000     DISPLAY R.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("0667"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — PERFORM … TIMES (PL09 step 4). The performed paragraph range is
     // inlined at the call site with a counted loop around it: TICK runs 3 times,
@@ -5317,7 +5317,7 @@ const PROGRAMS: &[Prog] = &[
                000000     ADD 1 TO COUNT.\n\
                000000     DISPLAY COUNT.",
         expect: Expect::Stdout("1\n2\n3"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — COMPUTE with operator precedence (PL09 step 4). `A + B * C =
     // 10 + (3*2) = 16`, stored into `9(4)V99` → `001600`. This proves the
@@ -5340,7 +5340,7 @@ const PROGRAMS: &[Prog] = &[
                000000     DISPLAY R.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("001600"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — signed numeric with trailing overpunch (PL09 step 4). `N PIC
     // S9(2)` starts at 3; SUBTRACT 5 → -2; a signed receiver keeps the sign, and
@@ -14440,4 +14440,65 @@ fn portable_text_stdout_beam_arithmetic_immediates() {
     }
     assert_eq!(executed, 15);
     eprintln!("BEAM arithmetic immediates: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_cobol_beam_control_rounding() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM control and rounding: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(4).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM control and rounding: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_beam_comparison_and_move_immediates() {
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+    if !erl_ok() {
+        eprintln!("SKIP BEAM comparison/move immediates: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for op in ["cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge"] {
+        for (left, right) in [(-7, 3), (3, 3), (7, -3)] {
+            let expected = match op {
+                "cmp_eq" => left == right, "cmp_ne" => left != right,
+                "cmp_lt" => left < right, "cmp_le" => left <= right,
+                "cmp_gt" => left > right, "cmp_ge" => left >= right,
+                _ => unreachable!(),
+            };
+            for variant in 0..3 {
+                let mut module = IIRModule::new("immediate_comparison", "test");
+                module.entry_point = Some("main".into());
+                let lhs = if variant == 1 { Operand::Var("lhs".into()) } else { Operand::Int(left) };
+                let rhs = if variant == 2 { Operand::Var("rhs".into()) } else { Operand::Int(right) };
+                module.add_or_replace(IIRFunction::new("main", vec![], "i64", vec![
+                    IIRInstr::new("mov", Some("lhs".into()), vec![Operand::Int(left)], "i64"),
+                    IIRInstr::new("mov", Some("rhs".into()), vec![Operand::Int(right)], "i64"),
+                    IIRInstr::new(op, Some("result".into()), vec![lhs, rhs], "bool"),
+                    IIRInstr::new("ret", None, vec![Operand::Var("result".into())], "i64"),
+                ]));
+                let beam = iir_to_beam::lower_iir_to_beam(&module,
+                    &iir_to_beam::IIRBeamConfig::new("immediate_comparison")).unwrap();
+                let dir = tempfile::tempdir().unwrap();
+                std::fs::write(dir.path().join("immediate_comparison.beam"),
+                    iir_to_beam::encode_beam(&beam)).unwrap();
+                let out = Command::new("erl").arg("-noshell").arg("-pa").arg(dir.path())
+                    .arg("-eval").arg(r#"io:format("~w",[immediate_comparison:main()]),halt(0)."#)
+                    .output().unwrap();
+                assert!(out.status.success(), "{op} ({left},{right}) variant {variant}: {}", String::from_utf8_lossy(&out.stderr));
+                assert_eq!(String::from_utf8_lossy(&out.stdout), u8::from(expected).to_string(), "{op} ({left},{right}) variant {variant}");
+                executed += 1;
+            }
+        }
+    }
+    assert_eq!(executed, 54);
+    eprintln!("BEAM comparison/move immediates: {executed} programs executed");
 }
