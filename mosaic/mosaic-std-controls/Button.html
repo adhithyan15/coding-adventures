@@ -47,9 +47,13 @@ iframe.preview { background:var(--card); border:1px solid var(--line); border-ra
 
 <h2>Preview</h2>
 
-<div class="err">This component could not be rendered.
+<iframe class="preview" src="Button/index.html" title="Button preview"
+ loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
+<p class="note">The real emitted html project, running its own runtime — not a screenshot and not a
+re-render. Slot values are samples: the first legal member of each <code>one-of</code> axis, and the
+slot's own name for text, because this component has no stories yet.
+<a href="Button/index.html" target="_blank" rel="noopener">Open it on its own</a>.</p>
 
-mosaic-compile: package composition failed for Button: pipeline error for component &#39;Button&#39;: CompileError { kind: UnresolvedToken, message: &#34;Token &#39;$foundation-color-accent&#39; not found in token map&#34; }</div>
 
 <h2>Slots</h2>
 <table><tr><th>Name</th><th>Type</th><th>Values</th></tr>

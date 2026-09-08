@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Surface — Mosaic</title><style>
+<title>SpiceWorkbench — Mosaic</title><style>
 :root { --bg:#faf8f5; --fg:#1f1d1b; --muted:#6b645c; --line:#e6ded3;
         --card:#ffffff; --accent:#b4601a; --code:#f3efe9; }
 @media (prefers-color-scheme: dark) {
@@ -42,23 +42,43 @@ iframe.preview { background:var(--card); border:1px solid var(--line); border-ra
 </style>
 <div class="wrap">
 <p class="sub"><a href="../index.html">← All components</a></p>
-<h1>Surface</h1>
-<p class="sub"><code>mosaic-std-foundation</code> · light and dark themes</p>
+<h1>SpiceWorkbench</h1>
+<p class="sub"><code>mosaic-pkg-spice-workbench</code> · light and dark themes</p>
 
 <h2>Preview</h2>
 
-<div class="err">This component could not be rendered.
+<iframe class="preview" src="SpiceWorkbench/index.html" title="SpiceWorkbench preview"
+ loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
+<p class="note">The real emitted html project, running its own runtime — not a screenshot and not a
+re-render. Slot values are samples: the first legal member of each <code>one-of</code> axis, and the
+slot's own name for text, because this component has no stories yet.
+<a href="SpiceWorkbench/index.html" target="_blank" rel="noopener">Open it on its own</a>.</p>
 
-mosaic-compile: html pipeline emit error: moslayout primitive &#39;$mosaic-child-slot&#39; is not yet supported by the pipeline HTML emitter</div>
 
 <h2>Slots</h2>
 <table><tr><th>Name</th><th>Type</th><th>Values</th></tr>
-<tr><td><code>children</code></td><td><code>{
-        &#34;list&#34;: &#34;node&#34;
+<tr><td><code>workbench-title</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>mode-label</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>netlist-label</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>netlist-text</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>netlist-placeholder</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>inspect-label</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>run-label</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>diagnostics-label</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>diagnostics</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>analysis-label</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>analysis-rows</code></td><td><code>{
+        &#34;list&#34;: {
+          &#34;list&#34;: &#34;text&#34;
+        }
       }</code></td>
+<td></td></tr><tr><td><code>selected-analysis-label</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>result-label</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>result-text</code></td><td><code>text</code></td>
 <td></td></tr>
 </table>
 
 <h2>Events</h2>
-<p class="note">This component emits no events.</p>
+<p><span class="pill">onNetlistChange</span><span class="pill">onInspect</span><span class="pill">onRun</span><span class="pill">onSelectAnalysis</span></p>
+
 </div>
