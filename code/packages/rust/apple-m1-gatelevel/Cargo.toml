@@ -1,0 +1,13 @@
+[package]
+name = "apple-m1-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "Exact 530,565-DFF gate-level Apple M1 simulator"
+license = "MIT"
+
+[dependencies]
+aarch64-gatelevel = { path = "../aarch64-gatelevel" }
+aarch64-simulator = { path = "../aarch64-simulator" }
+apple-m1-simulator = { path = "../apple-m1-simulator" }
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
