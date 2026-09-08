@@ -169,6 +169,11 @@ cross-platform proving application. Items are ordered by risk and dependency.
   every available Venture host. Completed with dedicated layout/state crates,
   typed control metadata and diagnostics, retained pointer/keyboard reduction,
   native host activation, and cross-format deterministic fixture coverage.
+- [ ] **P1 browser convergence — form submission and validation.** Build on
+  the shared control model with successful-control collection, radio and select
+  serialization, constraint validation, submit/reset activation, GET and
+  urlencoded POST navigation, history integration, bounded diagnostics, and
+  deterministic acceptance shared by every available host.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a
