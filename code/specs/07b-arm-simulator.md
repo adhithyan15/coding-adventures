@@ -108,6 +108,26 @@ def decode(instruction: int) -> Instruction: ...
     # Decode a 32-bit integer into an Instruction
 ```
 
+### Rust completion contract
+
+The Rust package preserves the historical `ARMSimulator` wrapper and exposes
+the normative checked machine as `functional::Armv7Simulator`. Its complete
+state is exactly 64 KiB of little-endian memory, R0–R15, a mirrored PC/R15,
+NZCV, halt, and the installed origin/length. Restore validates the whole state;
+loading is origin-aware and checked; direct access is typed; a failing step
+commits nothing; and a bounded run either returns complete before/after traces
+or restores its entry state.
+
+The completed Rust decode surface is MOV, ADD, SUB, CMP, AND, ORR, word
+LDR/STR with pre-indexed immediate offsets, B/BL (using ARM's PC+8 base), all
+sixteen condition predicates, and the custom HLT sentinel. Unsupported operand2
+shifts and addressing modes fail closed rather than being mis-executed. The
+documented S bit updates NZCV; CMP always updates NZCV and never writes Rd.
+
+Verification includes strict formatting, Clippy and rustdoc, lifecycle and
+manual Spec 07b suites, and a reproducible 388-vector Python common-surface
+full-state corpus. Rust line coverage is 90.15% (714/792 package lines).
+
 ## Data Flow
 
 ```
