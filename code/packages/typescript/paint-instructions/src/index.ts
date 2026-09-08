@@ -522,12 +522,8 @@ export interface PaintLine extends PaintBase {
 /**
  * PaintClip — clip mask for child instructions.
  *
- * Children are rendered clipped to the given rectangle. Pixels outside the
- * clip rect are not drawn. The clip is applied only to the children array —
- * instructions outside PaintClip are not affected.
- *
- * This is currently a rectangular clip. Arbitrary path clipping is deferred
- * to PaintMask (P2D08).
+ * Children are rendered inside `path` when present, otherwise inside the
+ * rectangle. The rectangle remains the conservative culling bounds.
  *
  * Implementation note: backends use save/clip/restore semantics internally.
  * The clip does not permanently modify the context state.
@@ -538,6 +534,7 @@ export interface PaintClip extends PaintBase {
   y: number;
   width: number;
   height: number;
+  path?: PathCommand[];
   children: PaintInstruction[];
 }
 

@@ -999,6 +999,13 @@ impl PlanBuilder<'_> {
 
     fn plan_clip(&mut self, clip: &PaintClip, transform: Transform2D, opacity: f32) {
         let rect = transformed_rect(clip.x, clip.y, clip.width, clip.height, transform);
+        if clip.path.is_some() {
+            self.diagnostic(
+                GpuPlanSeverity::Degraded,
+                "clip.path",
+                "path clip is conservatively lowered to its rectangular scissor bounds",
+            );
+        }
         self.plan.commands.push(GpuCommand::PushClip { rect });
         self.plan_instructions(&clip.children, transform, opacity);
         self.plan.commands.push(GpuCommand::PopClip);
@@ -2682,6 +2689,12 @@ mod tests {
             y: 6.0,
             width: 10.0,
             height: 12.0,
+            path: Some(vec![
+                PathCommand::MoveTo { x: 5.0, y: 6.0 },
+                PathCommand::LineTo { x: 15.0, y: 6.0 },
+                PathCommand::LineTo { x: 15.0, y: 18.0 },
+                PathCommand::Close,
+            ]),
             children: vec![PaintInstruction::Rect(PaintRect::filled(
                 0.0, 0.0, 40.0, 40.0, "#000000",
             ))],
@@ -2693,6 +2706,10 @@ mod tests {
             Some(GpuCommand::PushClip { .. })
         ));
         assert!(matches!(plan.commands.last(), Some(GpuCommand::PopClip)));
+        assert!(plan
+            .diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.feature == "clip.path"));
     }
 
     #[test]

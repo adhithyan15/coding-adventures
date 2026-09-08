@@ -658,9 +658,12 @@ function handleClip(
   vm: PaintVM<SvgContext>,
 ): void {
   const clipId = instr.id ? `clip-${instr.id}` : `clip-${ctx.clipCounter++}`;
+  const shape = instr.path
+    ? `<path d="${escAttr(commandsToPathData(instr.path))}"/>`
+    : `<rect x="${safeNum(instr.x, "clip.x")}" y="${safeNum(instr.y, "clip.y")}" width="${safeNum(instr.width, "clip.width")}" height="${safeNum(instr.height, "clip.height")}"/>`;
   ctx.defs.push(
     `<clipPath id="${escAttr(clipId)}">` +
-      `<rect x="${safeNum(instr.x, "clip.x")}" y="${safeNum(instr.y, "clip.y")}" width="${safeNum(instr.width, "clip.width")}" height="${safeNum(instr.height, "clip.height")}"/>` +
+      shape +
       `</clipPath>`,
   );
   ctx.elements.push(`<g clip-path="url(#${escAttr(clipId)})">`);

@@ -33,6 +33,7 @@ use std::collections::HashMap;
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
+    LayoutedTreemapDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
@@ -72,6 +73,103 @@ where
     pub shaper: &'a S,
     pub metrics: &'a M,
     pub resolver: &'a R,
+}
+
+/// Lower a layouted treemap into backend-neutral paint instructions.
+pub fn diagram_to_paint_treemap<S, M, R>(
+    diagram: &LayoutedTreemapDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    const FILLS: &[&str] = &["#dbeafe", "#dcfce7", "#fef3c7", "#fee2e2", "#e0e7ff"];
+    let mut instructions = Vec::new();
+    let mut text_children = Vec::new();
+    let text_color = Color { r: 15, g: 23, b: 42, a: 255 };
+
+    if let Some(title) = &diagram.title {
+        text_children.push(text_node(title, 8.0, 6.0, diagram.width - 16.0, 30.0, options.title_font.clone(), text_color));
+    }
+    for node in &diagram.nodes {
+        if node.width <= 0.0 || node.height <= 0.0 {
+            continue;
+        }
+        let color_index = node.class_selector.as_ref().map_or(node.depth, |class| {
+            class.bytes().fold(node.depth, |hash, byte| hash.wrapping_mul(31).wrapping_add(byte as usize))
+        });
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: node.x,
+            y: node.y,
+            width: node.width,
+            height: node.height,
+            fill: Some(FILLS[color_index % FILLS.len()].into()),
+            stroke: Some("#475569".into()),
+            stroke_width: Some(1.0),
+            corner_radius: Some(3.0),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+        if node.width >= 44.0 && node.height >= 22.0 {
+            let label = if node.height >= 42.0 {
+                format!("{}\n{}", node.label, format_treemap_value(node.value))
+            } else {
+                node.label.clone()
+            };
+            text_children.push(text_node(
+                &label,
+                node.x + 6.0,
+                node.y + 4.0,
+                (node.width - 12.0).max(0.0),
+                node.height.min(42.0),
+                options.label_font.clone(),
+                text_color,
+            ));
+        }
+    }
+    let text_root = PositionedNode {
+        x: 0.0,
+        y: 0.0,
+        width: diagram.width,
+        height: diagram.height,
+        id: None,
+        content: None,
+        children: text_children,
+        ext: HashMap::new(),
+    };
+    let text_scene = layout_to_paint(&text_root, &LayoutToPaintOptions {
+        width: diagram.width,
+        height: diagram.height,
+        background: Color { r: 0, g: 0, b: 0, a: 0 },
+        device_pixel_ratio: 1.0,
+        shaper: options.shaper,
+        metrics: options.metrics,
+        resolver: options.resolver,
+    });
+    instructions.extend(text_scene.instructions);
+
+    let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title {
+        metadata.insert("accessibility.title".into(), title.clone());
+    }
+    if let Some(description) = &diagram.accessibility_description {
+        metadata.insert("accessibility.description".into(), description.clone());
+    }
+    PaintScene {
+        width: diagram.width,
+        height: diagram.height,
+        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
+        instructions,
+        id: None,
+        metadata: (!metadata.is_empty()).then_some(metadata),
+    }
+}
+
+fn format_treemap_value(value: f64) -> String {
+    if value.fract() == 0.0 { format!("{value:.0}") } else { format!("{value:.2}") }
 }
 
 /// Lower a layouted Event Modeling diagram into backend-neutral paint instructions.
@@ -4809,6 +4907,39 @@ mod tests {
         assert_eq!(
             metadata["accessibility.description"],
             "Native renderer priorities"
+        );
+    }
+
+    #[test]
+    fn treemap_lowers_to_backend_neutral_rectangles_and_metadata() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedTreemapDiagram {
+            width: 320.0,
+            height: 240.0,
+            title: Some("Allocation".into()),
+            accessibility_title: Some("Allocation treemap".into()),
+            accessibility_description: None,
+            nodes: vec![diagram_ir::LayoutedTreemapNode {
+                id: "root".into(),
+                label: "Root".into(),
+                value: 10.0,
+                depth: 0,
+                x: 8.0,
+                y: 48.0,
+                width: 304.0,
+                height: 184.0,
+                class_selector: None,
+            }],
+        };
+
+        let scene = diagram_to_paint_treemap(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        assert_eq!(
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")),
+            Some(&"Allocation treemap".to_string())
         );
     }
 

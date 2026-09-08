@@ -991,6 +991,47 @@ pub struct LayoutedEventModelDiagram {
     pub items: Vec<LayoutedEventModelItem>,
 }
 
+// HIERARCHY FAMILY
+#[derive(Clone, Debug, PartialEq)]
+pub struct TreemapNode {
+    pub id: String,
+    pub label: String,
+    pub value: Option<f64>,
+    pub class_selector: Option<String>,
+    pub parent_id: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct TreemapDiagram {
+    pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub nodes: Vec<TreemapNode>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedTreemapNode {
+    pub id: String,
+    pub label: String,
+    pub value: f64,
+    pub depth: usize,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub class_selector: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedTreemapDiagram {
+    pub width: f64,
+    pub height: f64,
+    pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub nodes: Vec<LayoutedTreemapNode>,
+}
+
 // STRUCTURAL FAMILY
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralKind {

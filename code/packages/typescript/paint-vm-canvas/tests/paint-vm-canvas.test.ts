@@ -654,6 +654,25 @@ describe("PaintClip handler", () => {
     expect(ctx.fillRect).toHaveBeenCalled();
     expect(ctx.ellipse).toHaveBeenCalled();
   });
+
+  it("uses a Path2D when an exact clip path is provided", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    vm.execute(
+      paintScene(32, 32, "transparent", [
+        paintClip(0, 0, 32, 32, [], {
+          path: [
+            { kind: "move_to", x: 8, y: 8 },
+            { kind: "line_to", x: 24, y: 8 },
+            { kind: "close" },
+          ],
+        }),
+      ]),
+      ctx,
+    );
+    expect(ctx.clip).toHaveBeenCalledWith(expect.any(MockPath2D));
+    expect(ctx.rect).not.toHaveBeenCalled();
+  });
 });
 
 // ============================================================================

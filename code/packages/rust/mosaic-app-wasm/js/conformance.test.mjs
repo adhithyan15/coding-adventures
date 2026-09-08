@@ -1,7 +1,54 @@
 import { readFile } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { loadMosaicModule } from './mosaic-host.mjs';
+import { loadMosaicModule, MosaicHostError } from './mosaic-host.mjs';
+
+test('protocol 2 completion preserves pending work, sequence and instance lifetime', async () => {
+  const module = await loadMosaicModule(await readFile(artifact('mosaic_app_conformance')));
+  const legacy = module.create();
+  assert.throws(() => legacy.dispatch('requestEffect'), /protocol 2/);
+  assert.equal(legacy.dispatch('increment', { amount: 1 }).props.count, 1);
+  legacy.dispose();
+  const app = module.create({ protocolVersion: 2 });
+  const saved = app.snapshot();
+  const effect = app.dispatch('requestEffect').effects[0];
+  assert.equal(effect.delivery, 'await');
+  const pending = error => error instanceof MosaicHostError && error.code === 'pendingEffects'
+    && error.pendingEffects.length === 1 && error.pendingEffects[0] === effect.id;
+  assert.throws(() => app.snapshot(), pending);
+  assert.throws(() => app.restore(saved), pending);
+  for (const result of [{ ok: { amount: 'bad' } }, { cancelled: { extra: true } },
+    { ok: {}, cancelled: {} }, { failed: {} }]) {
+    assert.throws(() => app.completeEffect(effect.id, result));
+    assert.equal(app.update.revision, 2);
+    assert.throws(() => app.snapshot(), pending);
+  }
+  assert.throws(() => app.completeEffect(Number.MAX_SAFE_INTEGER + 1, { cancelled: {} }), /safe integer/);
+  assert.throws(() => app.completeEffect(effect.id + 1, { ok: { amount: 9 } }), /unknown|pending/);
+  const chained = app.completeEffect(effect.id, { ok: { amount: 7, chain: true } });
+  assert.equal(chained.props.count, 7);
+  assert.equal(chained.revision, 3);
+  assert.throws(() => app.completeEffect(effect.id, { cancelled: {} }), /unknown|pending/);
+  const second = chained.effects[0].id;
+  assert.ok(second > effect.id);
+  assert.throws(() => app.snapshot(), /pending/);
+  app.completeEffect(second, { cancelled: {} });
+  assert.equal(app.dispatch('increment', { amount: 1 }).props.count, 8, 'completions do not consume UI sequence');
+  app.restore(saved);
+  const third = app.dispatch('requestEffect').effects[0].id;
+  assert.ok(third > second, 'restore does not recycle effect IDs');
+  assert.equal(app.completeEffect(third, { failed: { message: 'disk full' } }).props.count, 0);
+  const notify = app.dispatch('requestEffect', { notify: true }).effects[0];
+  assert.equal(notify.delivery, 'notify');
+  assert.deepEqual(app.snapshot(), saved);
+  assert.throws(() => app.completeEffect(notify.id, { cancelled: {} }), /unknown|pending/);
+  const restored = module.create({ protocolVersion: 2, restoredSnapshot: saved });
+  assert.deepEqual(restored.update.effects, []);
+  app.dispose();
+  assert.throws(() => app.completeEffect(third, { cancelled: {} }), /disposed/);
+  assert.equal(restored.dispatch('increment', { amount: 2 }).props.count, 2);
+  restored.dispose();
+});
 
 const artifact = name => new URL(`../../target/wasm32-unknown-unknown/debug/${name}.wasm`, import.meta.url);
 

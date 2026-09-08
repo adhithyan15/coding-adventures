@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Extend the background fixture with rounded overflow descendants, exact image
+  clips, and four independently styled border sides with elliptical joins.
+
 ## 0.4.0
 
 - Add a deterministic layered-background fixture covering linear/radial

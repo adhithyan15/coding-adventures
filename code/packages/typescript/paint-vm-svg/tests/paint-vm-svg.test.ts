@@ -361,6 +361,21 @@ describe("PaintClip → SVG clipPath", () => {
     expect(svg).toContain("clip-path=\"url(#");
     expect(svg).toContain("<rect"); // the clipped child
   });
+
+  it("emits an exact path clip when commands are present", () => {
+    const svg = renderToSvgString(
+      paintScene(32, 32, "transparent", [
+        paintClip(0, 0, 32, 32, [], {
+          path: [
+            { kind: "move_to", x: 8, y: 8 },
+            { kind: "line_to", x: 24, y: 8 },
+            { kind: "close" },
+          ],
+        }),
+      ]),
+    );
+    expect(svg).toContain('<path d="M 8 8 L 24 8 Z"/>');
+  });
 });
 
 // ============================================================================

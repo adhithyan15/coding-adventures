@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Emit exact normalized elliptical path clips for layered backgrounds,
+  overflowing descendants, and fitted replaced content.
+- Paint per-side solid, dashed, dotted, and double borders with shared
+  inner/outer curves and corner-join clips.
+
 ## [0.6.0]
 
 - Emit ordered, clipped, and repeated linear/radial gradients and image tiles

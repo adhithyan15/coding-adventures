@@ -124,8 +124,8 @@ li::marker { color: green; }
 /// Affine paint, isolated compositing, rounded decoration, and transformed hit testing.
 pub const EFFECTS_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="effect-card" style="width:100px;height:40px;background:red;border-radius:7px;opacity:0.7;transform:translate(18px, 6px) rotate(4deg);transform-origin:left top;filter:brightness(110%);box-shadow:3px 4px 2px #000;mix-blend-mode:multiply;isolation:isolate"><a id="effect-link" href="effect-next.html" style="text-shadow:1px 1px 1px #000">Effect link</a></div></body></html>"#;
 
-/// Multiple gradients, painting boxes, and per-corner elliptical radii.
-pub const BACKGROUNDS_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="background-card" style="width:120px;height:60px;padding:8px;border:3px solid black;background-color:white;background-image:linear-gradient(90deg,red 0%,blue 100%),radial-gradient(white 0%,green 100%),url('http://venture.test/checker.gif');background-position:center,10px 20%,right bottom;background-size:cover,40px 30px,12px 12px;background-repeat:no-repeat,repeat-x,no-repeat;background-origin:padding-box,content-box,content-box;background-clip:border-box,padding-box,content-box;border-radius:18px 10px 6px 2px / 10px 8px 4px 2px">Layered background</div></body></html>"#;
+/// Multiple gradients, rounded clips, and independently styled border sides.
+pub const BACKGROUNDS_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="background-card" style="width:120px;height:60px;padding:8px;border-top:3px solid black;border-right:3px dashed red;border-bottom:3px dotted blue;border-left:3px double green;overflow:hidden;background-color:white;background-image:linear-gradient(90deg,red 0%,blue 100%),radial-gradient(white 0%,green 100%),url('http://venture.test/checker.gif');background-position:center,10px 20%,right bottom;background-size:cover,40px 30px,12px 12px;background-repeat:no-repeat,repeat-x,no-repeat;background-origin:padding-box,content-box,content-box;background-clip:border-box,padding-box,content-box;border-radius:18px 10px 6px 2px / 10px 8px 4px 2px"><span style="position:relative;left:-16px">Layered background</span></div></body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -1562,8 +1562,7 @@ mod tests {
                 PaintInstruction::Path(path)
                     if path.commands.iter().any(|command| matches!(
                         command,
-                        paint_instructions::PathCommand::ArcTo { rx, ry, .. }
-                            if (*rx, *ry) == (7.0, 7.0)
+                        paint_instructions::PathCommand::CubicTo { .. }
                     ))
             )
         ));
@@ -1581,8 +1580,12 @@ mod tests {
             .count();
         assert_eq!(gradients, 5, "repeat-x must emit four radial tiles");
         assert!(page.paint.scene.instructions.iter().any(|instruction| {
-            matches!(instruction, PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, paint_instructions::PathCommand::ArcTo { rx, ry, .. } if rx != ry)))
+            matches!(instruction, PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, paint_instructions::PathCommand::CubicTo { .. })))
         }));
+        assert!(contains_instruction(
+            &page.paint.scene.instructions,
+            &|instruction| matches!(instruction, PaintInstruction::Clip(clip) if clip.path.is_some())
+        ));
         assert!(contains_instruction(
             &page.paint.scene.instructions,
             &|instruction| {

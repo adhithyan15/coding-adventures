@@ -27,4 +27,5 @@ diagram-layout-structural = { path = "../diagram-layout-structural" }
 diagram-layout-sequence = { path = "../diagram-layout-sequence" }
 diagram-layout-temporal = { path = "../diagram-layout-temporal" }
 diagram-layout-geometric = { path = "../diagram-layout-geometric" }
+diagram-layout-hierarchy = { path = "../diagram-layout-hierarchy" }
 serde_json = "1"

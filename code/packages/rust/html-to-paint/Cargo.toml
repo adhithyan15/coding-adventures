@@ -10,6 +10,7 @@ html-to-layout = { path = "../html-to-layout" }
 image-codec-gif = { path = "../image-codec-gif" }
 image-codec-jpeg = { path = "../image-codec-jpeg" }
 layout-block = { path = "../layout-block" }
+layout-backgrounds = { path = "../layout-backgrounds" }
 layout-effects = { path = "../layout-effects" }
 layout-positioned = { path = "../layout-positioned" }
 layout-ir = { path = "../layout-ir" }

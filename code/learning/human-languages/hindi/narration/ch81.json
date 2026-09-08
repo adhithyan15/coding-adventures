@@ -4,22 +4,22 @@
   "chapter": 81,
   "title": "Words on the Door",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d9691ce26041b5da",
+  "sourceHash": "fnv1a64:231c855d418b1ab9",
   "lessons": [
     {
       "id": "HI-C74-open",
       "sequence": 3110,
       "title": "खुला (khulā) — open",
-      "headword": "खुला",
-      "romanization": "khulā",
-      "gloss": "open",
+      "headword": "खुला / खुलना",
+      "romanization": "khulā / khulnā",
+      "gloss": "open / to open",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:967d1cb3757f016d",
+      "sourceHash": "fnv1a64:9fde41a182ced440",
       "notice": null,
       "blocks": [
         {
@@ -100,7 +100,7 @@
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: खुला, as though it were painted on a shutter]"
+              "source": "[YOU READ: **खुला** (*khulā*), as though it were painted on a shutter]"
             },
             {
               "kind": "prompt",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ecbb96de7fca0d54",
+      "sourceHash": "fnv1a64:e951c82d4573f252",
       "notice": null,
       "blocks": [
         {
@@ -258,7 +258,7 @@
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: खुला once more, then बंद beside it]"
+              "source": "[YOU WRITE: **खुला** (*khulā*) once more, then बंद beside it]"
             },
             {
               "kind": "prompt",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73e1b79aa6212995",
+      "sourceHash": "fnv1a64:58f36bdb98a1a151",
       "notice": null,
       "blocks": [
         {
@@ -577,7 +577,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b592d0e6c503550",
+      "sourceHash": "fnv1a64:c64a834fcb4db458",
       "notice": null,
       "blocks": [
         {

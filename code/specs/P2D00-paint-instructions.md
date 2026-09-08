@@ -589,7 +589,7 @@ catches producer bugs at schema validation time rather than producing invisible 
 
 ---
 
-### PaintClip — Rectangular clipping region
+### PaintClip — Rectangular or path clipping region
 
 ```typescript
 interface PaintClip extends PaintBase {
@@ -598,8 +598,9 @@ interface PaintClip extends PaintBase {
   y: number;
   width: number;
   height: number;
-  // The clip rectangle. Any pixels of children that fall outside this rectangle
-  // are not drawn. The clip is in the current coordinate space (after parent transforms).
+  path?: PathCommand[];
+  // When path is present it defines the exact clip; the rectangle remains its
+  // conservative bounds for culling and backends that explicitly degrade.
   children: PaintInstruction[];
   // The instructions to render inside the clip region.
 }
@@ -611,9 +612,8 @@ interface PaintClip extends PaintBase {
 - Scroll containers: clip content to the visible viewport.
 - Spark lines: clip chart lines to the chart area.
 
-The clipping shape is always a rectangle. For non-rectangular clipping
-(e.g., clip to a circle or to a path), use a PaintPath with `clip-rule` — this is
-a backend-specific extension that may be added in a future spec revision.
+The clipping shape defaults to the rectangle. A closed `path` supports rounded
+boxes and arbitrary masks while keeping bounds explicit for culling.
 
 ---
 

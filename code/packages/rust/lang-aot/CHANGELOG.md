@@ -1,13 +1,9 @@
 # Changelog — `lang-aot`
 
-## Unreleased — real CLR input/EOF (VM-039c)
+## 0.295.0 — 2026-09-08 — composed path-independent ALGOL built-ins
 
-Textual CIL now lowers input_more through Console.In.Peek without consuming
-input. Numeric input uses width-matched TryParse and scratch locals, returning
-zero for EOF or malformed values while allowing I/O errors to propagate.
-Four FLOW-MATIC matrix rows execute on real CoreCLR; direct regressions cover
-EOF, repeated peeks, mixed string/numeric input and 32/64-bit destinations.
-The encoded CIL simulator path still does not implement numeric/string input.
+The seven-backend ALGOL matrix now proves an exact path-independent built-in
+result may feed another pure built-in without erasing the runtime selector.
 
 ## 0.294.0 — 2026-09-08 — path-independent ALGOL standard-function results
 
@@ -22,6 +18,15 @@ i64 result width. The matrix host shares a pushback stream between numeric
 reads, string reads and non-consuming EOF peeks. Four FLOW-MATIC JVM cells
 cover streams, empty input, partial records and repeated EOF. Java host tests
 verify stable peeks, permissive parsing and propagation of I/O failures.
+
+## Unreleased — real CLR input/EOF (VM-039c)
+
+Textual CIL now lowers input_more through Console.In.Peek without consuming
+input. Numeric input uses width-matched TryParse and scratch locals, returning
+zero for EOF or malformed values while allowing I/O errors to propagate.
+Four FLOW-MATIC matrix rows execute on real CoreCLR; direct regressions cover
+EOF, repeated peeks, mixed string/numeric input and 32/64-bit destinations.
+The encoded CIL simulator path still does not implement numeric/string input.
 
 ## 0.293.0 — 2026-09-07 — conditional tracked ALGOL real exponents
 

@@ -1,0 +1,18 @@
+# @version 1
+#
+# Mermaid 11.16.1 treemap token grammar. Indentation is retained inside each
+# node token so semantic lowering can construct the hierarchy deterministically.
+
+case_sensitive: true
+
+skip:
+  COMMENT               = /%%[^\r\n]*/
+
+NEWLINE                  = /\r?\n/
+HEADER                   = /treemap(?:-beta)?/
+ACC_DESCR_BLOCK          = /[ \t]*accDescr[ \t]*\{[^}]*\}/
+ACC_TITLE_STATEMENT      = /[ \t]*accTitle[ \t]*:[^\r\n;%]+/
+ACC_DESCR_STATEMENT      = /[ \t]*accDescr[ \t]*:[^\r\n;%]+/
+TITLE_STATEMENT          = /[ \t]*title(?:[ \t]+[^\r\n;%]+)?/
+CLASS_DEF_STATEMENT      = /[ \t]*classDef[ \t]+[A-Za-z_][A-Za-z0-9_]*(?:[ \t]+[^\r\n;]*)?;?/
+NODE_STATEMENT           = /[ \t]*(?:"[^"]*"|'[^']*')(?:[ \t]*(?::|,)[ \t]*[0-9_.,]+)?(?:[ \t]*:::[A-Za-z_][A-Za-z0-9_]*)?/

@@ -178,6 +178,7 @@ pub struct HtmlComputedStyle {
     pub margin_auto: [bool; 4],
     pub border_width: Edges,
     pub border_color: [Option<Color>; 4],
+    pub border_style: [String; 4],
     pub corner_radius: Option<f64>,
     pub box_sizing: String,
     pub text_align: TextAlign,
@@ -336,7 +337,10 @@ where
         root.ext.insert("effects".into(), effects.to_ext());
     }
     let backgrounds = background_style_for_layout(&style, root.padding.unwrap_or_default());
-    if !backgrounds.layers.is_empty() || backgrounds.corners != [CornerRadius::default(); 4] {
+    if !backgrounds.layers.is_empty()
+        || backgrounds.corners != [CornerRadius::default(); 4]
+        || backgrounds.border != layout_backgrounds::BoxEdges::default()
+    {
         root.ext.insert("backgrounds".into(), backgrounds.to_ext());
     }
     root
@@ -447,7 +451,10 @@ where
         layout.ext.insert("effects".into(), effects.to_ext());
     }
     let backgrounds = background_style_for_layout(&style, layout.padding.unwrap_or_default());
-    if !backgrounds.layers.is_empty() || backgrounds.corners != [CornerRadius::default(); 4] {
+    if !backgrounds.layers.is_empty()
+        || backgrounds.corners != [CornerRadius::default(); 4]
+        || backgrounds.border != layout_backgrounds::BoxEdges::default()
+    {
         layout
             .ext
             .insert("backgrounds".into(), backgrounds.to_ext());
@@ -657,7 +664,10 @@ fn generated_text_box(
         node.ext.insert("effects".into(), effects.to_ext());
     }
     let backgrounds = background_style_for_layout(style, node.padding.unwrap_or_default());
-    if !backgrounds.layers.is_empty() || backgrounds.corners != [CornerRadius::default(); 4] {
+    if !backgrounds.layers.is_empty()
+        || backgrounds.corners != [CornerRadius::default(); 4]
+        || backgrounds.border != layout_backgrounds::BoxEdges::default()
+    {
         node.ext.insert("backgrounds".into(), backgrounds.to_ext());
     }
     node.ext
@@ -784,6 +794,7 @@ where
     style.margin_auto = [false; 4];
     style.border_width = Edges::default();
     style.border_color = [None; 4];
+    style.border_style = std::array::from_fn(|_| "none".into());
     style.corner_radius = None;
     style.box_sizing = "content-box".into();
     style.box_decoration_break = BoxDecorationBreak::Slice;
@@ -946,6 +957,7 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         margin_auto: [false; 4],
         border_width: Edges::default(),
         border_color: [None; 4],
+        border_style: std::array::from_fn(|_| "none".into()),
         corner_radius: None,
         box_sizing: "content-box".into(),
         text_align: TextAlign::Start,
@@ -1050,6 +1062,9 @@ where
     let mut style = inherited.clone();
     style.display = Some("inline-text".into());
     style.background = None;
+    style.border_width = Edges::default();
+    style.border_color = [None; 4];
+    style.border_style = std::array::from_fn(|_| "none".into());
     style.corner_radius = None;
     style.effects = EffectStyle::default();
     style.box_shadow = None;
@@ -1483,10 +1498,19 @@ fn apply_declaration_winners(
                     style.border_color = [Some(color); 4];
                 }
             }
+            "border-style" => {
+                if let Some(value) = value.first().filter(|value| is_border_style(value)) {
+                    style.border_style = std::array::from_fn(|_| value.clone());
+                }
+            }
             "border-top-color" => apply_border_color(style, EdgeSide::Top, &value),
             "border-right-color" => apply_border_color(style, EdgeSide::Right, &value),
             "border-bottom-color" => apply_border_color(style, EdgeSide::Bottom, &value),
             "border-left-color" => apply_border_color(style, EdgeSide::Left, &value),
+            "border-top-style" => apply_border_style(style, EdgeSide::Top, &value),
+            "border-right-style" => apply_border_style(style, EdgeSide::Right, &value),
+            "border-bottom-style" => apply_border_style(style, EdgeSide::Bottom, &value),
+            "border-left-style" => apply_border_style(style, EdgeSide::Left, &value),
             "border-radius" => {
                 style.background_properties.insert(property, value.clone());
                 style.corner_radius = parse_box_length(
@@ -3347,7 +3371,57 @@ fn expand_declaration(declaration: &Declaration) -> Vec<(String, Vec<String>)> {
         {
             expanded.push(("border-color".into(), vec![color.clone()]));
         }
+        if let Some(style) = declaration
+            .value
+            .iter()
+            .find(|token| is_border_style(token))
+        {
+            expanded.push(("border-style".into(), vec![style.clone()]));
+        }
         return expanded;
+    }
+    if let Some(side) = declaration
+        .property
+        .strip_prefix("border-")
+        .filter(|side| matches!(*side, "top" | "right" | "bottom" | "left"))
+    {
+        let mut expanded = Vec::new();
+        if let Some(width) = declaration
+            .value
+            .iter()
+            .find(|token| parse_css_length(&[(*token).clone()]).is_some())
+        {
+            expanded.push((format!("border-{side}-width"), vec![width.clone()]));
+        }
+        if let Some(color) = declaration
+            .value
+            .iter()
+            .find(|token| parse_color(&[(*token).clone()]).is_some())
+        {
+            expanded.push((format!("border-{side}-color"), vec![color.clone()]));
+        }
+        if let Some(style) = declaration
+            .value
+            .iter()
+            .find(|token| is_border_style(token))
+        {
+            expanded.push((format!("border-{side}-style"), vec![style.clone()]));
+        }
+        return expanded;
+    }
+    if matches!(
+        declaration.property.as_str(),
+        "border-width" | "border-color" | "border-style"
+    ) {
+        let Some(values) = expand_edge_values(&declaration.value) else {
+            return Vec::new();
+        };
+        let suffix = declaration.property.trim_start_matches("border-");
+        return ["top", "right", "bottom", "left"]
+            .into_iter()
+            .zip(values)
+            .map(|(side, value)| (format!("border-{side}-{suffix}"), vec![value]))
+            .collect();
     }
     if !matches!(declaration.property.as_str(), "margin" | "padding") {
         return vec![(declaration.property.clone(), declaration.value.clone())];
@@ -3360,6 +3434,13 @@ fn expand_declaration(declaration: &Declaration) -> Vec<(String, Vec<String>)> {
         .zip(edges)
         .map(|(side, value)| (format!("{}-{side}", declaration.property), vec![value]))
         .collect()
+}
+
+fn is_border_style(value: &str) -> bool {
+    matches!(
+        value,
+        "none" | "hidden" | "solid" | "dashed" | "dotted" | "double"
+    )
 }
 
 fn expand_edge_values(value: &[String]) -> Option<[String; 4]> {
@@ -3601,6 +3682,12 @@ fn apply_border_color(style: &mut HtmlComputedStyle, side: EdgeSide, value: &[St
     style.border_color[side.index()] = parse_color(value);
 }
 
+fn apply_border_style(style: &mut HtmlComputedStyle, side: EdgeSide, value: &[String]) {
+    if let Some(value) = value.first().filter(|value| is_border_style(value)) {
+        style.border_style[side.index()] = value.clone();
+    }
+}
+
 fn parse_color(value: &[String]) -> Option<Color> {
     let value = value.first()?.to_ascii_lowercase();
     match value.as_str() {
@@ -3830,6 +3917,10 @@ fn box_paint_ext(style: &HtmlComputedStyle) -> ExtValue {
                 format!("border{name}Color"),
                 color_ext(style.border_color[side.index()].unwrap_or(style.color)),
             );
+            values.insert(
+                format!("border{name}Style"),
+                ExtValue::Str(style.border_style[side.index()].clone()),
+            );
         }
     }
     ExtValue::Map(values)
@@ -4045,6 +4136,7 @@ mod tests {
             box_node.ext.get("paint"),
             Some(ExtValue::Map(values))
                 if values.get("borderTopWidth") == Some(&ExtValue::Float(2.0))
+                    && values.get("borderTopStyle") == Some(&ExtValue::Str("solid".into()))
         ));
 
         let positioned = layout_block(&layout, constraints_width(400.0), &TestMeasurer);

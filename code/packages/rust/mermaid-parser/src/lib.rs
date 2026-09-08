@@ -26,6 +26,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_architecture, try_tokenize_mermaid_block, try_tokenize_mermaid_kanban,
     try_tokenize_mermaid_mindmap, try_tokenize_mermaid_packet, try_tokenize_mermaid_timeline,
     try_tokenize_mermaid_eventmodeling, try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
+    try_tokenize_mermaid_treemap,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -61,6 +62,8 @@ const RADAR_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/radar.grammar");
 const EVENTMODELING_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/eventmodeling.grammar");
+const TREEMAP_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/treemap.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -560,7 +563,7 @@ use diagram_ir::{
     SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
     GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskEnd,
     TaskStart, TemporalBody, TemporalDiagram, TemporalKind, TimelineDiagram, TimelineDirection,
-    TimelinePeriod, TimelineSection, XyAxisConfig, XyChartConfig,
+    TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, XyAxisConfig, XyChartConfig,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -654,6 +657,7 @@ impl MermaidDiagramType {
                 | Self::Architecture
                 | Self::Radar
                 | Self::EventModeling
+                | Self::Treemap
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -678,6 +682,7 @@ pub enum MermaidDiagram {
     Packet(PacketDiagram),
     Board(BoardDiagram),
     EventModel(EventModelDiagram),
+    Treemap(TreemapDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -724,7 +729,7 @@ pub fn detect_mermaid_type(source: &str) -> Result<MermaidDiagramType, ParseErro
         "architecture" | "architecture-beta" => MermaidDiagramType::Architecture,
         "radar-beta" => MermaidDiagramType::Radar,
         "eventmodeling" => MermaidDiagramType::EventModeling,
-        "treemap" => MermaidDiagramType::Treemap,
+        "treemap" | "treemap-beta" => MermaidDiagramType::Treemap,
         "venn-beta" => MermaidDiagramType::Venn,
         "ishikawa" | "ishikawa-beta" => MermaidDiagramType::Ishikawa,
         "wardley-beta" => MermaidDiagramType::Wardley,
@@ -808,6 +813,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::EventModeling => {
             parse_event_modeling(source).map(MermaidDiagram::EventModel)
         }
+        MermaidDiagramType::Treemap => parse_treemap(source).map(MermaidDiagram::Treemap),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -2706,6 +2712,123 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
     if diagram.frames.is_empty() {
         return Err(ParseError {
             message: "event-modeling diagrams require at least one frame".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+    Ok(diagram)
+}
+
+// ── treemap parser ────────────────────────────────────────────────────────
+
+/// Parse the Mermaid 11.16.1 quoted, indentation-based treemap subset.
+pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_treemap(&prepared).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(TREEMAP_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse treemap.grammar: {error}"));
+    GrammarParser::new(tokens, grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message,
+            line: error.token.line,
+            col: error.token.column,
+        })?;
+
+    let mut diagram = TreemapDiagram {
+        title: None,
+        accessibility_title: None,
+        accessibility_description: None,
+        nodes: Vec::new(),
+    };
+    let mut ancestors = Vec::<(usize, String)>::new();
+
+    for (line_index, line) in prepared.lines().enumerate() {
+        let trimmed = line.trim();
+        if trimmed.is_empty() || matches!(trimmed, "treemap" | "treemap-beta") {
+            continue;
+        }
+        if let Some(value) = trimmed.strip_prefix("title") {
+            diagram.title = Some(value.trim().to_string());
+            continue;
+        }
+        if let Some(value) = trimmed.strip_prefix("accTitle:") {
+            diagram.accessibility_title = Some(value.trim().to_string());
+            continue;
+        }
+        if let Some(value) = trimmed.strip_prefix("accDescr:") {
+            diagram.accessibility_description = Some(value.trim().to_string());
+            continue;
+        }
+        if let Some(value) = trimmed.strip_prefix("accDescr") {
+            if let Some(value) = value.trim().strip_prefix('{').and_then(|value| value.strip_suffix('}')) {
+                diagram.accessibility_description = Some(value.trim().to_string());
+            }
+            continue;
+        }
+        if trimmed.starts_with("classDef") {
+            continue;
+        }
+
+        let indentation = line
+            .chars()
+            .take_while(|character| character.is_whitespace())
+            .map(|character| if character == '\t' { 4 } else { 1 })
+            .sum::<usize>();
+        let quote = trimmed.chars().next().unwrap_or_default();
+        let closing = trimmed[1..].find(quote).map(|offset| offset + 1).ok_or_else(|| ParseError {
+            message: "unterminated treemap node label".into(),
+            line: line_index + 1,
+            col: indentation + 1,
+        })?;
+        let label = trimmed[1..closing].to_string();
+        let remainder = trimmed[closing + 1..].trim();
+        let (value_text, class_selector) = remainder
+            .split_once(":::")
+            .map_or((remainder, None), |(value, class)| (value.trim(), Some(class.trim().to_string())));
+        let value = value_text
+            .strip_prefix(':')
+            .or_else(|| value_text.strip_prefix(','))
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+            .map(|value| value.replace(['_', ','], "").parse::<f64>())
+            .transpose()
+            .map_err(|_| ParseError {
+                message: format!("invalid treemap value for {label:?}"),
+                line: line_index + 1,
+                col: closing + 2,
+            })?;
+        if value.is_some_and(|value| !value.is_finite() || value < 0.0) {
+            return Err(ParseError {
+                message: "treemap values must be finite and non-negative".into(),
+                line: line_index + 1,
+                col: closing + 2,
+            });
+        }
+
+        while ancestors.last().is_some_and(|(depth, _)| *depth >= indentation) {
+            ancestors.pop();
+        }
+        let id = format!("treemap-{}", diagram.nodes.len() + 1);
+        let parent_id = ancestors.last().map(|(_, id)| id.clone());
+        diagram.nodes.push(TreemapNode {
+            id: id.clone(),
+            label,
+            value,
+            class_selector,
+            parent_id,
+        });
+        ancestors.push((indentation, id));
+    }
+
+    if diagram.nodes.is_empty() {
+        return Err(ParseError {
+            message: "treemap requires at least one node".into(),
             line: 1,
             col: 1,
         });

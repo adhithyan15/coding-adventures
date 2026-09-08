@@ -58,7 +58,7 @@ use std::collections::HashMap;
 
 use layout_backgrounds::{
     BackgroundBox, BackgroundColor, BackgroundRepeat, BackgroundSize, BackgroundSource,
-    BackgroundStyle, Rect as BackgroundRect,
+    BackgroundStyle, BoxEdges, CornerRadius, LengthPercent, Rect as BackgroundRect,
 };
 use layout_effects::{EffectBlendMode, EffectColor, EffectFilter, EffectStyle};
 use layout_ir::{
@@ -67,9 +67,9 @@ use layout_ir::{
 use layout_positioned::{Position, PositionedStyle};
 use layout_replaced::{object_fit_rect, IntrinsicSize};
 use paint_instructions::{
-    BlendMode, FilterEffect, GlyphPosition, GradientKind, GradientStop, ImageSrc, PaintBase,
-    PaintClip, PaintGlyphRun, PaintGradient, PaintGroup, PaintImage, PaintInstruction, PaintLayer,
-    PaintPath, PaintRect, PaintScene, PathCommand,
+    BlendMode, FillRule, FilterEffect, GlyphPosition, GradientKind, GradientStop, ImageSrc,
+    PaintBase, PaintClip, PaintGlyphRun, PaintGradient, PaintGroup, PaintImage, PaintInstruction,
+    PaintLayer, PaintPath, PaintRect, PaintScene, PathCommand,
 };
 use text_flow::{BaseDirection, Direction as FlowDirection, TextFlow};
 use text_interfaces::{
@@ -270,6 +270,7 @@ where
                         y: abs_y * dpr,
                         width: box_w * dpr,
                         height: box_h * dpr,
+                        path: clip_path_for_node(frame.node, abs_x, abs_y, box_w, box_h, dpr),
                         children: vec![image],
                     }));
                 } else {
@@ -309,6 +310,7 @@ where
                     y: abs_y * dpr,
                     width: box_w.max(0.0) * dpr,
                     height: box_h.max(0.0) * dpr,
+                    path: clip_path_for_node(frame.node, abs_x, abs_y, box_w, box_h, dpr),
                     children: Vec::new(),
                 },
             });
@@ -464,26 +466,51 @@ fn emit_box_decorations(
     let bg = read_color(paint_map, "backgroundColor");
     let border_color = read_color(paint_map, "borderColor");
     let border_width = read_float(paint_map, "borderWidth");
+    let border_style = read_string(paint_map, "borderStyle").unwrap_or("solid");
     let corner_radius = read_float(paint_map, "cornerRadius");
     let side_borders = [
-        ("borderTopWidth", "borderTopColor"),
-        ("borderRightWidth", "borderRightColor"),
-        ("borderBottomWidth", "borderBottomColor"),
-        ("borderLeftWidth", "borderLeftColor"),
-    ]
-    .map(|(width, color)| {
+        ("borderTopWidth", "borderTopColor", "borderTopStyle"),
+        ("borderRightWidth", "borderRightColor", "borderRightStyle"),
         (
-            read_float(paint_map, width).unwrap_or(0.0),
-            read_color(paint_map, color),
+            "borderBottomWidth",
+            "borderBottomColor",
+            "borderBottomStyle",
+        ),
+        ("borderLeftWidth", "borderLeftColor", "borderLeftStyle"),
+    ]
+    .map(|(width, color, style)| {
+        (
+            read_float(paint_map, width).unwrap_or(border_width.unwrap_or(0.0)),
+            read_color(paint_map, color).or(border_color),
+            read_string(paint_map, style).unwrap_or(border_style),
         )
     });
 
-    let backgrounds = BackgroundStyle::from_positioned(node);
+    let mut backgrounds = BackgroundStyle::from_positioned(node);
+    backgrounds.border = BoxEdges {
+        top: side_borders[0].0,
+        right: side_borders[1].0,
+        bottom: side_borders[2].0,
+        left: side_borders[3].0,
+    };
+    if backgrounds.corners.iter().all(|corner| {
+        corner.x.factor == 0.0
+            && corner.x.offset == 0.0
+            && corner.y.factor == 0.0
+            && corner.y.offset == 0.0
+    }) {
+        if let Some(radius) = corner_radius.filter(|radius| *radius > 0.0) {
+            backgrounds.corners = [CornerRadius {
+                x: LengthPercent::length(radius),
+                y: LengthPercent::length(radius),
+            }; 4];
+        }
+    }
     if bg.is_none()
         && backgrounds.layers.is_empty()
         && border_color.is_none()
         && border_width.unwrap_or(0.0) == 0.0
-        && side_borders.iter().all(|(width, _)| *width == 0.0)
+        && side_borders.iter().all(|(width, _, _)| *width == 0.0)
     {
         return;
     }
@@ -547,45 +574,184 @@ fn emit_box_decorations(
 
     emit_background_layers(node, &backgrounds, border_box, dpr, out);
 
-    if border_width.unwrap_or(0.0) > 0.0 {
-        out.push(PaintInstruction::Rect(PaintRect {
+    emit_borders(&backgrounds, border_box, dpr, side_borders, out);
+}
+
+fn emit_borders(
+    style: &BackgroundStyle,
+    border_box: BackgroundRect,
+    dpr: f64,
+    sides: [(f64, Option<Color>, &str); 4],
+    out: &mut Vec<PaintInstruction>,
+) {
+    let outer = rounded_rect_path(
+        scale_rect(border_box, dpr),
+        style
+            .resolved_corners(border_box)
+            .map(|(rx, ry)| (rx * dpr, ry * dpr)),
+    );
+    let inner_box = style.painting_box(BackgroundBox::Padding, border_box);
+    let inner = rounded_rect_path(
+        scale_rect(inner_box, dpr),
+        style
+            .resolved_corners_for_box(BackgroundBox::Padding, border_box)
+            .map(|(rx, ry)| (rx * dpr, ry * dpr)),
+    );
+    let mut ring = outer.clone();
+    ring.extend(inner.clone());
+
+    for (index, (width, color, border_style)) in sides.into_iter().enumerate() {
+        if width <= 0.0 || matches!(border_style, "none" | "hidden") {
+            continue;
+        }
+        let color = color_to_css(color.unwrap_or(Color {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 255,
+        }));
+        let child = match border_style {
+            "dashed" | "dotted" => stroked_border_path(
+                outer.clone(),
+                color,
+                width * 2.0 * dpr,
+                Some(if border_style == "dotted" {
+                    vec![0.0, width * 2.0 * dpr]
+                } else {
+                    vec![width * 3.0 * dpr, width * 2.0 * dpr]
+                }),
+                (border_style == "dotted").then_some(paint_instructions::StrokeCap::Round),
+            ),
+            "double" => PaintInstruction::Group(PaintGroup {
+                base: PaintBase::default(),
+                children: vec![
+                    stroked_border_path(
+                        outer.clone(),
+                        color.clone(),
+                        width * 2.0 * dpr / 3.0,
+                        None,
+                        None,
+                    ),
+                    stroked_border_path(inner.clone(), color, width * 2.0 * dpr / 3.0, None, None),
+                ],
+                transform: None,
+                opacity: None,
+            }),
+            _ => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: ring.clone(),
+                fill: Some(color),
+                fill_rule: Some(FillRule::EvenOdd),
+                stroke: None,
+                stroke_width: None,
+                stroke_cap: None,
+                stroke_join: None,
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+        };
+        let clip_path = border_side_clip(index, border_box, style.border, dpr);
+        out.push(PaintInstruction::Clip(PaintClip {
             base: PaintBase::default(),
-            x: x * dpr,
-            y: y * dpr,
-            width: w * dpr,
-            height: h * dpr,
-            fill: None,
-            stroke: border_color.map(color_to_css),
-            stroke_width: border_width.map(|v| v * dpr),
-            corner_radius: corner_radius.map(|v| v * dpr),
-            stroke_dash: None,
-            stroke_dash_offset: None,
+            x: border_box.x * dpr,
+            y: border_box.y * dpr,
+            width: border_box.width * dpr,
+            height: border_box.height * dpr,
+            path: Some(clip_path),
+            children: vec![child],
         }));
     }
-    let [(top, top_color), (right, right_color), (bottom, bottom_color), (left, left_color)] =
-        side_borders;
-    for (rx, ry, rw, rh, width, color) in [
-        (x, y, w, top, top, top_color),
-        (x + w - right, y, right, h, right, right_color),
-        (x, y + h - bottom, w, bottom, bottom, bottom_color),
-        (x, y, left, h, left, left_color),
-    ] {
-        if width > 0.0 {
-            let fill = color_to_css(color.unwrap_or(Color {
-                r: 0,
-                g: 0,
-                b: 0,
-                a: 255,
-            }));
-            out.push(PaintInstruction::Rect(PaintRect::filled(
-                rx * dpr,
-                ry * dpr,
-                rw * dpr,
-                rh * dpr,
-                &fill,
-            )));
-        }
+}
+
+fn scale_rect(rect: BackgroundRect, scale: f64) -> BackgroundRect {
+    BackgroundRect {
+        x: rect.x * scale,
+        y: rect.y * scale,
+        width: rect.width * scale,
+        height: rect.height * scale,
     }
+}
+
+fn stroked_border_path(
+    commands: Vec<PathCommand>,
+    color: String,
+    width: f64,
+    dash: Option<Vec<f64>>,
+    cap: Option<paint_instructions::StrokeCap>,
+) -> PaintInstruction {
+    PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands,
+        fill: None,
+        fill_rule: None,
+        stroke: Some(color),
+        stroke_width: Some(width),
+        stroke_cap: cap,
+        stroke_join: Some(paint_instructions::StrokeJoin::Round),
+        stroke_dash: dash,
+        stroke_dash_offset: None,
+    })
+}
+
+fn border_side_clip(
+    side: usize,
+    rect: BackgroundRect,
+    border: layout_backgrounds::BoxEdges,
+    dpr: f64,
+) -> Vec<PathCommand> {
+    let x = rect.x * dpr;
+    let y = rect.y * dpr;
+    let right = (rect.x + rect.width) * dpr;
+    let bottom = (rect.y + rect.height) * dpr;
+    let inner_left = (rect.x + border.left) * dpr;
+    let inner_top = (rect.y + border.top) * dpr;
+    let inner_right = (rect.x + rect.width - border.right) * dpr;
+    let inner_bottom = (rect.y + rect.height - border.bottom) * dpr;
+    let points = match side {
+        0 => [
+            (x, y),
+            (right, y),
+            (inner_right, inner_top),
+            (inner_left, inner_top),
+        ],
+        1 => [
+            (right, y),
+            (right, bottom),
+            (inner_right, inner_bottom),
+            (inner_right, inner_top),
+        ],
+        2 => [
+            (right, bottom),
+            (x, bottom),
+            (inner_left, inner_bottom),
+            (inner_right, inner_bottom),
+        ],
+        _ => [
+            (x, bottom),
+            (x, y),
+            (inner_left, inner_top),
+            (inner_left, inner_bottom),
+        ],
+    };
+    vec![
+        PathCommand::MoveTo {
+            x: points[0].0,
+            y: points[0].1,
+        },
+        PathCommand::LineTo {
+            x: points[1].0,
+            y: points[1].1,
+        },
+        PathCommand::LineTo {
+            x: points[2].0,
+            y: points[2].1,
+        },
+        PathCommand::LineTo {
+            x: points[3].0,
+            y: points[3].1,
+        },
+        PathCommand::Close,
+    ]
 }
 
 fn emit_background_layers(
@@ -701,6 +867,7 @@ fn emit_background_layers(
                     y: clip.y * dpr,
                     width: clip.width * dpr,
                     height: clip.height * dpr,
+                    path: rounded_clip_path(style, border_box, layer.clip, dpr),
                     children,
                 }));
             }
@@ -848,6 +1015,7 @@ fn intersect_rect(a: BackgroundRect, b: BackgroundRect) -> Option<BackgroundRect
 }
 
 fn rounded_rect_path(rect: BackgroundRect, c: [(f64, f64); 4]) -> Vec<PathCommand> {
+    const KAPPA: f64 = 0.552_284_749_830_793_6;
     vec![
         PathCommand::MoveTo {
             x: rect.x + c[0].0,
@@ -857,12 +1025,11 @@ fn rounded_rect_path(rect: BackgroundRect, c: [(f64, f64); 4]) -> Vec<PathComman
             x: rect.x + rect.width - c[1].0,
             y: rect.y,
         },
-        PathCommand::ArcTo {
-            rx: c[1].0,
-            ry: c[1].1,
-            x_rotation: 0.0,
-            large_arc: false,
-            sweep: true,
+        PathCommand::CubicTo {
+            cx1: rect.x + rect.width - c[1].0 + c[1].0 * KAPPA,
+            cy1: rect.y,
+            cx2: rect.x + rect.width,
+            cy2: rect.y + c[1].1 - c[1].1 * KAPPA,
             x: rect.x + rect.width,
             y: rect.y + c[1].1,
         },
@@ -870,12 +1037,11 @@ fn rounded_rect_path(rect: BackgroundRect, c: [(f64, f64); 4]) -> Vec<PathComman
             x: rect.x + rect.width,
             y: rect.y + rect.height - c[2].1,
         },
-        PathCommand::ArcTo {
-            rx: c[2].0,
-            ry: c[2].1,
-            x_rotation: 0.0,
-            large_arc: false,
-            sweep: true,
+        PathCommand::CubicTo {
+            cx1: rect.x + rect.width,
+            cy1: rect.y + rect.height - c[2].1 + c[2].1 * KAPPA,
+            cx2: rect.x + rect.width - c[2].0 + c[2].0 * KAPPA,
+            cy2: rect.y + rect.height,
             x: rect.x + rect.width - c[2].0,
             y: rect.y + rect.height,
         },
@@ -883,12 +1049,11 @@ fn rounded_rect_path(rect: BackgroundRect, c: [(f64, f64); 4]) -> Vec<PathComman
             x: rect.x + c[3].0,
             y: rect.y + rect.height,
         },
-        PathCommand::ArcTo {
-            rx: c[3].0,
-            ry: c[3].1,
-            x_rotation: 0.0,
-            large_arc: false,
-            sweep: true,
+        PathCommand::CubicTo {
+            cx1: rect.x + c[3].0 - c[3].0 * KAPPA,
+            cy1: rect.y + rect.height,
+            cx2: rect.x,
+            cy2: rect.y + rect.height - c[3].1 + c[3].1 * KAPPA,
             x: rect.x,
             y: rect.y + rect.height - c[3].1,
         },
@@ -896,17 +1061,61 @@ fn rounded_rect_path(rect: BackgroundRect, c: [(f64, f64); 4]) -> Vec<PathComman
             x: rect.x,
             y: rect.y + c[0].1,
         },
-        PathCommand::ArcTo {
-            rx: c[0].0,
-            ry: c[0].1,
-            x_rotation: 0.0,
-            large_arc: false,
-            sweep: true,
+        PathCommand::CubicTo {
+            cx1: rect.x,
+            cy1: rect.y + c[0].1 - c[0].1 * KAPPA,
+            cx2: rect.x + c[0].0 - c[0].0 * KAPPA,
+            cy2: rect.y,
             x: rect.x + c[0].0,
             y: rect.y,
         },
         PathCommand::Close,
     ]
+}
+
+fn rounded_clip_path(
+    style: &BackgroundStyle,
+    border_box: BackgroundRect,
+    kind: BackgroundBox,
+    dpr: f64,
+) -> Option<Vec<PathCommand>> {
+    let corners = style.resolved_corners_for_box(kind, border_box);
+    corners
+        .iter()
+        .any(|&(rx, ry)| rx > 0.0 || ry > 0.0)
+        .then(|| {
+            let rect = style.painting_box(kind, border_box);
+            rounded_rect_path(
+                BackgroundRect {
+                    x: rect.x * dpr,
+                    y: rect.y * dpr,
+                    width: rect.width * dpr,
+                    height: rect.height * dpr,
+                },
+                corners.map(|(rx, ry)| (rx * dpr, ry * dpr)),
+            )
+        })
+}
+
+fn clip_path_for_node(
+    node: &PositionedNode,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    dpr: f64,
+) -> Option<Vec<PathCommand>> {
+    rounded_clip_path(
+        &BackgroundStyle::from_positioned(node),
+        BackgroundRect {
+            x,
+            y,
+            width: width.max(0.0),
+            height: height.max(0.0),
+        },
+        BackgroundBox::Border,
+        dpr,
+    )
 }
 
 fn paint_gradient_stops(stops: &[layout_backgrounds::GradientStop]) -> Vec<GradientStop> {
@@ -974,6 +1183,13 @@ fn read_float(m: &HashMap<String, ExtValue>, key: &str) -> Option<f64> {
     match m.get(key)? {
         ExtValue::Float(v) => Some(*v),
         ExtValue::Int(v) => Some(*v as f64),
+        _ => None,
+    }
+}
+
+fn read_string<'a>(m: &'a HashMap<String, ExtValue>, key: &str) -> Option<&'a str> {
+    match m.get(key)? {
+        ExtValue::Str(value) => Some(value),
         _ => None,
     }
 }
@@ -1461,6 +1677,15 @@ mod tests {
         color_black, color_white, font_spec, rgb, TextAlign, TextContent, TextDecoration,
     };
     use layout_positioned::{Overflow, PositionedStyle};
+
+    fn color_ext(r: u8, g: u8, b: u8) -> ExtValue {
+        ExtValue::Map(HashMap::from([
+            ("r".into(), ExtValue::Int(i64::from(r))),
+            ("g".into(), ExtValue::Int(i64::from(g))),
+            ("b".into(), ExtValue::Int(i64::from(b))),
+            ("a".into(), ExtValue::Int(255)),
+        ]))
+    }
     use text_interfaces::{
         Direction, FontResolutionError, Glyph, ShapedRun, ShapedText, ShapingError,
     };
@@ -2277,8 +2502,69 @@ mod tests {
             .instructions
             .iter()
             .any(|value| matches!(value, PaintInstruction::Gradient(_))));
-        assert!(scene.instructions.iter().any(|value| matches!(value, PaintInstruction::Path(path) if matches!(path.commands.get(2), Some(PathCommand::ArcTo { rx, ry, .. }) if (*rx, *ry) == (8.0, 4.0)))));
-        assert!(scene.instructions.iter().any(|value| matches!(value, PaintInstruction::Clip(clip) if clip.children.iter().any(|child| matches!(child, PaintInstruction::Image(_))))));
+        assert!(scene.instructions.iter().any(|value| matches!(
+            value,
+            PaintInstruction::Path(path)
+                if matches!(path.commands.get(2), Some(PathCommand::CubicTo { .. }))
+        )));
+        assert!(scene.instructions.iter().any(|value| matches!(
+            value,
+            PaintInstruction::Clip(clip)
+                if clip.path.is_some()
+                    && clip.children.iter().any(|child| matches!(child, PaintInstruction::Image(_)))
+        )));
+    }
+
+    #[test]
+    fn elliptical_per_side_borders_emit_join_clips_and_style_geometry() {
+        let mut leaf = positioned_container(Vec::new(), 120.0, 70.0);
+        let mut style = BackgroundStyle {
+            corners: [layout_backgrounds::CornerRadius {
+                x: layout_backgrounds::LengthPercent::length(18.0),
+                y: layout_backgrounds::LengthPercent::length(12.0),
+            }; 4],
+            border: layout_backgrounds::BoxEdges {
+                top: 6.0,
+                right: 8.0,
+                bottom: 10.0,
+                left: 12.0,
+            },
+            ..BackgroundStyle::default()
+        };
+        style.color_clip = BackgroundBox::Padding;
+        leaf.ext.insert("backgrounds".into(), style.to_ext());
+        leaf.ext.insert(
+            "paint".into(),
+            ExtValue::Map(HashMap::from([
+                ("borderTopWidth".into(), ExtValue::Float(6.0)),
+                ("borderTopColor".into(), color_ext(255, 0, 0)),
+                ("borderTopStyle".into(), ExtValue::Str("solid".into())),
+                ("borderRightWidth".into(), ExtValue::Float(8.0)),
+                ("borderRightColor".into(), color_ext(0, 128, 0)),
+                ("borderRightStyle".into(), ExtValue::Str("dashed".into())),
+                ("borderBottomWidth".into(), ExtValue::Float(10.0)),
+                ("borderBottomColor".into(), color_ext(0, 0, 255)),
+                ("borderBottomStyle".into(), ExtValue::Str("dotted".into())),
+                ("borderLeftWidth".into(), ExtValue::Float(12.0)),
+                ("borderLeftColor".into(), color_ext(0, 0, 0)),
+                ("borderLeftStyle".into(), ExtValue::Str("double".into())),
+            ])),
+        );
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let clips = scene
+            .instructions
+            .iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::Clip(clip) if clip.path.is_some() => Some(clip),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(clips.len(), 4);
+        assert!(matches!(clips[0].children[0], PaintInstruction::Path(_)));
+        assert!(matches!(clips[3].children[0], PaintInstruction::Group(_)));
     }
 
     #[test]

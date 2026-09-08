@@ -11,21 +11,13 @@
 //!
 //! The right source is the operating system's kernel entropy pool:
 //!
-//!   * **Linux**: the `getrandom(2)` syscall (preferred), falling back
-//!     to `/dev/urandom`.
-//!   * **macOS / iOS**: `getentropy(2)`.
+//!   * **Unix**: `/dev/urandom`, read to completion with standard-library I/O.
 //!   * **Windows**: `BCryptGenRandom(…, BCRYPT_USE_SYSTEM_PREFERRED_RNG)`.
-//!   * **FreeBSD/OpenBSD**: `getrandom`/`getentropy`.
 //!
-//! The [`getrandom`] crate is a single, well-audited shim over all of
-//! these. We wrap it, not re-implement it, because the FFI dance is
-//! large, boring, and already solved.
+//! This crate owns that small platform boundary directly, so vault callers do
+//! not acquire an external-library dependency for kernel entropy. It provides:
 //!
-//! This crate **adds** to `getrandom`:
-//!
-//!   * A tiny, stable, typed API (`CsprngError`) — callers don't touch
-//!     the getrandom error type directly and don't have to deal with
-//!     its `#[non_exhaustive]` variants.
+//!   * A tiny, stable, typed API (`CsprngError`).
 //!   * `random_array::<N>()` for the common fixed-size case.
 //!   * `random_u64()` / `random_u32()` helpers so callers don't have
 //!     to hand-assemble integers from byte buffers.
@@ -64,7 +56,8 @@
 //! let lease_id = random_u64().expect("OS CSPRNG unavailable");
 //! ```
 
-#![deny(unsafe_code)]
+#![deny(unsafe_op_in_unsafe_fn)]
+#![deny(clippy::undocumented_unsafe_blocks)]
 
 // === Section 1. Error type ==================================================
 
@@ -109,15 +102,71 @@ impl std::error::Error for CsprngError {}
 /// Fill `buf` with cryptographically secure random bytes from the OS.
 ///
 /// On success `buf` is entirely overwritten. On error the buffer is
-/// left in whatever state `getrandom` produced — callers that cannot
+/// left in whatever state the operating-system read produced — callers that cannot
 /// tolerate partial writes should wrap a fresh local buffer, copy on
 /// success only, and rely on the caller's own zeroize policy.
 pub fn fill_random(buf: &mut [u8]) -> Result<(), CsprngError> {
     if buf.is_empty() {
         return Err(CsprngError::ZeroLengthRequest);
     }
-    getrandom::getrandom(buf).map_err(|e| CsprngError::OsRandomUnavailable(e.to_string()))
+    platform::fill(buf).map_err(CsprngError::OsRandomUnavailable)
 }
+
+#[cfg(unix)]
+mod platform {
+    use std::fs::File;
+    use std::io::Read;
+
+    pub(super) fn fill(buf: &mut [u8]) -> Result<(), String> {
+        let mut source = File::open("/dev/urandom").map_err(|error| error.to_string())?;
+        source.read_exact(buf).map_err(|error| error.to_string())
+    }
+}
+
+#[cfg(windows)]
+mod platform {
+    use core::ffi::c_void;
+    use core::ptr;
+
+    const BCRYPT_USE_SYSTEM_PREFERRED_RNG: u32 = 0x0000_0002;
+
+    #[link(name = "bcrypt")]
+    extern "system" {
+        fn BCryptGenRandom(
+            algorithm: *mut c_void,
+            buffer: *mut u8,
+            buffer_len: u32,
+            flags: u32,
+        ) -> i32;
+    }
+
+    pub(super) fn fill(buf: &mut [u8]) -> Result<(), String> {
+        for chunk in buf.chunks_mut(u32::MAX as usize) {
+            // SAFETY: a null algorithm handle is required with
+            // BCRYPT_USE_SYSTEM_PREFERRED_RNG; `chunk` supplies a writable
+            // pointer valid for the exact length passed to Windows, and the
+            // linked function does not retain it after returning.
+            let status = unsafe {
+                BCryptGenRandom(
+                    ptr::null_mut(),
+                    chunk.as_mut_ptr(),
+                    chunk.len() as u32,
+                    BCRYPT_USE_SYSTEM_PREFERRED_RNG,
+                )
+            };
+            if status < 0 {
+                return Err(format!(
+                    "BCryptGenRandom failed with NTSTATUS 0x{:08x}",
+                    status as u32
+                ));
+            }
+        }
+        Ok(())
+    }
+}
+
+#[cfg(not(any(unix, windows)))]
+compile_error!("coding_adventures_csprng supports Unix and Windows targets only");
 
 /// Allocate a `Vec<u8>` of length `n` and fill it with OS random bytes.
 ///
@@ -177,7 +226,7 @@ pub fn random_u32() -> Result<u32, CsprngError> {
 //   4. Length-0 requests are rejected with `ZeroLengthRequest`.
 //
 // We DO NOT try to statistically test randomness quality here. That
-// belongs in the OS / the `getrandom` crate's test suite, not ours —
+// belongs in the operating system's entropy implementation, not ours —
 // and a real randomness test needs millions of bytes plus a NIST-
 // suite-shaped battery, which is out of scope.
 

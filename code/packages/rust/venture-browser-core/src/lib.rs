@@ -3026,6 +3026,7 @@ mod tests {
             height: 12.0,
             url: "http://example.test/next".into(),
             fixed: false,
+            clips: Vec::new(),
         };
         let mut scroll = ScrollState::new(60.0, 140.0);
         scroll.set_offset_y(60.0);
