@@ -1369,6 +1369,10 @@ fn ignored_native_property(
     native_radio_groups: &HashSet<String>,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
+        ("HostTable", "focusable" | "a11y-label") if backend != Backend::React => Some((
+            "accessibility.table-focus-unimplemented",
+            "authored table focus and accessible naming are currently implemented only by React",
+        )),
         ("HostTable", "onViewportShift") if backend != Backend::React => Some((
             "interaction.table-wheel-shift-unimplemented",
             "measured table wheel routing is currently implemented only by React",
@@ -6325,6 +6329,18 @@ layout AccessibleText {
                 "unexpected {backend:?} degradation inventory: {:?}",
                 report.degradations
             );
+        }
+    }
+
+    #[test]
+    fn authored_table_focus_reports_unimplemented_backends() {
+        let node = LayoutNode { tag: "HostTable".into(), part_name: None, props: vec![], children: vec![] };
+        for name in ["focusable", "a11y-label"] {
+            let prop = LayoutProp { name: name.into(), value: LayoutPropValue::Keyword("true".into()) };
+            for backend in [Backend::React, Backend::Flutter, Backend::Compose, Backend::Qt, Backend::SwiftUI, Backend::Xaml] {
+                let result = ignored_native_property(backend, &node, &prop, &HashSet::new());
+                assert_eq!(result.map(|value| value.0), if backend == Backend::React { None } else { Some("accessibility.table-focus-unimplemented") });
+            }
         }
     }
 

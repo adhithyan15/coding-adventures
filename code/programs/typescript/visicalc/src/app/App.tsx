@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ComponentProps } from "react";
+import { useEffect, useRef, useState, type ComponentProps, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { VisiCalc as Light } from "../components/light/react/VisiCalc";
 import { VisiCalc as Dark, type VisiCalcEvent } from "../components/dark/react/VisiCalc";
 import { loadMosaicModule, type MosaicHost, type MosaicUpdate } from "../../../../../packages/rust/mosaic-app-wasm/js/mosaic-host.mjs";
@@ -31,35 +31,37 @@ export function App({ load = loadApplication }: { load?: () => Promise<MosaicHos
     try { setUpdate(host.current.dispatch(name, payload)); setError(""); }
     catch (reason) { setError(String(reason)); }
   };
-  useEffect(() => {
-    const key = (event: KeyboardEvent) => {
-      if (event.defaultPrevented || !host.current) return;
-      if (event.target instanceof HTMLElement &&
-          (event.target.closest("input, textarea, select, button") || event.target.isContentEditable)) return;
-      const p = host.current.update.props;
-      if (p.editing) return;
-      const row = Number(p["selected-row"]), col = Number(p["selected-col"]);
-      const delta: Record<string, [number, number]> = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
-      if (delta[event.key]) {
-        const [dr, dc] = delta[event.key];
-        send("navigate", { row: Math.max(0, Math.min(Number(p["total-rows"]) - 1, row + dr)), col: Math.max(0, Math.min(Number(p["total-cols"]) - 1, col + dc)) });
-        event.preventDefault();
-      } else if (event.key === "Enter" || event.key === "F2") {
-        send("editStart", { row, col }); event.preventDefault();
-      } else if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
-        send("editStart", { row, col }); send("formulaChange", { value: event.key }); event.preventDefault();
-      }
-    };
-    window.addEventListener("keydown", key);
-    return () => window.removeEventListener("keydown", key);
-  }, []);
+  const key = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (event.defaultPrevented || !host.current) return;
+    if (!(event.target instanceof HTMLElement) || !event.target.closest('table[tabindex="0"]')) return;
+    if (event.altKey || event.ctrlKey || event.metaKey || event.nativeEvent.isComposing) return;
+    if (event.target instanceof HTMLElement &&
+        (event.target.closest("input, textarea, select, button") || event.target.isContentEditable)) return;
+    const p = host.current.update.props;
+    if (p.editing) return;
+    const row = Number(p["selected-row"]), col = Number(p["selected-col"]);
+    const delta: Record<string, [number, number]> = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
+    if (event.shiftKey && (delta[event.key] || event.key === "Home" || event.key === "End")) return;
+    if (delta[event.key]) {
+      const [dr, dc] = delta[event.key];
+      send("navigate", { row: Math.max(0, Math.min(Number(p["total-rows"]) - 1, row + dr)), col: Math.max(0, Math.min(Number(p["total-cols"]) - 1, col + dc)) });
+      event.preventDefault();
+    } else if (event.key === "Home" || event.key === "End") {
+      send("navigate", { row, col: event.key === "Home" ? 0 : Number(p["total-cols"]) - 1 });
+      event.preventDefault();
+    } else if (event.key === "Enter" || event.key === "F2") {
+      send("editStart", { row, col }); event.preventDefault();
+    } else if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      send("editStart", { row, col }); send("formulaChange", { value: event.key }); event.preventDefault();
+    }
+  };
   if (!update) return <div role="status">{error || "Opening workbook…"}</div>;
   const props = Object.fromEntries(Object.entries(update.props).map(([name, value]) => [name.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase()), value])) as Omit<ComponentProps<typeof Light>, "dispatch">;
   const View = update.props["dark-theme"] ? Dark : Light;
   const dispatch = ({ type, ...payload }: VisiCalcEvent) => send(type, payload);
-  return <>
+  return <div onKeyDown={key}>
     <View {...props} dispatch={dispatch} />
     {error && <div role="alert">{error}</div>}
     <div aria-live="polite">{update.announcements.map(item => item.message).join(". ")}</div>
-  </>;
+  </div>;
 }

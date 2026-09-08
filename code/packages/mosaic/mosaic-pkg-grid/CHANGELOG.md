@@ -6,6 +6,8 @@ the package follows semantic versioning.
 
 ## Unreleased
 
+- Make RowHeaderGrid a named keyboard focus target and autofocus inline editors.
+
 - Forward optional measured viewport-shift requests through RowHeaderGrid.
 
 - Add opt-in RowHeaderGrid with parallel row labels, semantic cell roles and

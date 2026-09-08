@@ -23,7 +23,7 @@ beforeEach(async () => {
   await act(async () => { root.render(<App load={async () => host} />); });
 });
 function visibleSelection() {
-  const address = container.firstElementChild!.children[1].firstElementChild!.textContent!;
+  const address = formulaField().parentElement!.firstElementChild!.textContent!;
   const match = /^([A-Z]+)(\d+)$/.exec(address)!;
   const row = Number(match[2]) - 1;
   const col = [...match[1]].reduce((value, letter) => value * 26 + letter.charCodeAt(0) - 64, 0) - 1;
@@ -190,7 +190,7 @@ async function gridKey(key: string, times = 1) {
   // Flush each key so the next event sees the new presentation cursor.
   for (let index = 0; index < times; index++) {
     await act(async () => {
-      window.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
+      container.querySelector("table")!.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
     });
   }
 }
