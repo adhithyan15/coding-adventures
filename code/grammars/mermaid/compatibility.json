@@ -191,7 +191,7 @@
     {
       "id": "wardley",
       "headers": ["wardley-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "wardley",
       "smoke_source": "wardley-beta\ncomponent User [0.9, 0.5]"
     },

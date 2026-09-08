@@ -33,7 +33,7 @@ use std::collections::HashMap;
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
-    LayoutedIshikawaDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram,
+    LayoutedIshikawaDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
@@ -237,6 +237,41 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
         instructions, id: None, metadata: None }
+}
+
+/// Lower a Wardley strategic map into backend-neutral paths, ellipses, and glyph runs.
+pub fn diagram_to_paint_wardley<S, M, R>(diagram: &LayoutedWardleyDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
+where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
+    let left = 62.0; let right = diagram.width - 28.0; let top = if diagram.title.is_some() { 48.0 } else { 24.0 }; let bottom = diagram.height - 52.0;
+    let mut instructions = vec![PaintInstruction::Path(line_path(&[Point { x: left, y: top }, Point { x: left, y: bottom }, Point { x: right, y: bottom }], "#475569", 2.0))];
+    let mut text_children = Vec::new();
+    if let Some(title) = &diagram.title {
+        text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0, options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+    }
+    for (index, stage) in diagram.stages.iter().enumerate() {
+        let x = left + (right - left) * index as f64 / (diagram.stages.len().saturating_sub(1).max(1)) as f64;
+        if index > 0 { instructions.push(PaintInstruction::Path(line_path(&[Point { x, y: top }, Point { x, y: bottom }], "#cbd5e1", 1.0))); }
+        text_children.push(text_node(stage, (x - 45.0).clamp(2.0, diagram.width - 92.0), bottom + 8.0, 90.0, 24.0, options.label_font.clone(), Color { r: 71, g: 85, b: 105, a: 255 }));
+    }
+    for link in &diagram.links { instructions.push(PaintInstruction::Path(line_path(&[link.from.clone(), link.to.clone()], "#64748b", 1.5))); }
+    for evolution in &diagram.evolves { instructions.push(PaintInstruction::Path(line_path(&[evolution.from.clone(), evolution.to.clone()], "#dc2626", 2.0))); }
+    for node in &diagram.nodes {
+        let radius = if node.anchor { 8.0 } else { 6.0 };
+        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: node.position.x, cy: node.position.y,
+            rx: radius, ry: radius, fill: Some(if node.anchor { "#0f172a" } else { "#ffffff" }.into()), stroke: Some("#0f172a".into()),
+            stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None }));
+        text_children.push(text_node(&node.label, node.position.x + 9.0, node.position.y - 16.0, 150.0, 24.0,
+            options.label_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+    }
+    text_children.push(text_node("Visibility", 2.0, top, 56.0, 24.0, options.label_font.clone(), Color { r: 71, g: 85, b: 105, a: 255 }));
+    let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+        id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
+        width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
+        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
+    });
+    instructions.extend(text_scene.instructions);
+    PaintScene { width: diagram.width, height: diagram.height,
+        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b), instructions, id: None, metadata: None }
 }
 
 fn with_opacity(color: &str, opacity: f64) -> String {
@@ -5050,6 +5085,19 @@ mod tests {
         let scene = diagram_to_paint_ishikawa(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+    }
+
+
+    #[test]
+    fn wardley_lowers_to_backend_neutral_paths_ellipses_and_glyphs() {
+        let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver; let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedWardleyDiagram { width: 500.0, height: 320.0, title: Some("Map".into()), stages: vec!["Genesis".into(), "Commodity".into()],
+            nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true }],
+            links: vec![], evolves: vec![] };
+        let scene = diagram_to_paint_wardley(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
     }
 

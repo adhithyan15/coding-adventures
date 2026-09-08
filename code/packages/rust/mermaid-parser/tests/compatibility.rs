@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_event_modeling, parse_ishikawa, parse_radar, parse_sequence_diagram, parse_timeline, parse_treemap, parse_venn, parse_xychart,
+    parse_event_modeling, parse_ishikawa, parse_radar, parse_sequence_diagram, parse_timeline, parse_treemap, parse_venn, parse_wardley, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -58,6 +58,19 @@ const TREEMAP_CORPUS: &str = include_str!(concat!(
 ));
 const VENN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/venn-11.16.1-corpus.json"));
 const ISHIKAWA_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-corpus.json"));
+const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-corpus.json"));
+
+#[test]
+fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
+    let corpus: Value = serde_json::from_str(WARDLEY_CORPUS).expect("wardley corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let diagram = parse_wardley(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("wardley fixture {name} failed: {error}"));
+        assert!(!diagram.nodes.is_empty());
+    }
+}
 
 #[test]
 fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
@@ -753,4 +766,18 @@ fn ishikawa_dispatches_to_dedicated_causal_tree_ir() {
     let indented_effect = parse_ishikawa("ishikawa-beta\n    Failure\nPeople\n  Training").unwrap();
     assert_eq!(indented_effect.causes[0].parent_id, None);
     assert_eq!(indented_effect.causes[1].parent_id.as_deref(), Some("cause-1"));
+}
+
+#[test]
+fn wardley_dispatches_to_dedicated_strategic_map_ir() {
+    let diagram = parse_any_mermaid("wardley-beta\nanchor User [0.9, 0.8]\ncomponent API [0.6, 0.5]\nUser -> API\nevolve API 0.75")
+        .expect("wardley subset should parse");
+    match diagram {
+        mermaid_parser::MermaidDiagram::Wardley(diagram) => {
+            assert_eq!(diagram.nodes.len(), 2); assert!(diagram.nodes[0].anchor);
+            assert_eq!(diagram.links[0].source, "User"); assert_eq!(diagram.evolves[0].target, 0.75);
+        }
+        _ => panic!("wardley should lower to dedicated strategic map IR"),
+    }
+    assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nAPI -> Missing").is_err());
 }

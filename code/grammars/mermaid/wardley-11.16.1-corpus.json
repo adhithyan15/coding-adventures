@@ -1,0 +1,9 @@
+{
+  "upstream": "mermaid@11.16.1",
+  "scope": "native strategic-map core subset",
+  "fixtures": [
+    {"name":"basic","source":"wardley-beta\ntitle Tea Shop\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61]\ncomponent Kettle [0.43, 0.35]\nBusiness -> Cup of Tea\nCup of Tea -> Kettle"},
+    {"name":"size-and-evolution","source":"wardley-beta\nsize [800, 500]\nevolution Genesis -> Custom -> Product -> Commodity\ncomponent API [0.6, 0.7]\ncomponent Database [0.4, 0.5]\nAPI -> Database"},
+    {"name":"quoted-and-evolve","source":"wardley-beta\ncomponent \"Mobile App\" [0.8, 0.85]\ncomponent API [0.6, 0.65]\n\"Mobile App\" -> API\nevolve API 0.82"}
+  ]
+}
