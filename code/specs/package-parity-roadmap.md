@@ -13355,6 +13355,36 @@ remains in the existing execution corpus. Implementation publication stays
 serial, while independent inventory, dependency, fixture, lessons, and
 validation audits continue in parallel.
 
+Before publication, the four implementation commits rebased without conflict
+through exact `origin/main` `5778c35c3c83c65f2a4f0eebc99e778cd15b70b4`.
+The intervening Algol result-composition, ARMv7 functional-simulator, Hindi,
+Mosaic conformance/root-resolution, VisiCalc file-effect, FLOW-MATIC VM/JIT,
+and ARMv7 gate-level changes have no exact changed-path overlap with this
+tranche. The final refreshed collision-checked schema-3 inventory has 15
+established lanes, 1,422 implementation identities, 4,642 implementation
+slots, and 1,461 all-reported identities. Its breadth bands are 175/265,
+123/934, 176/2,217, and 948/13,272; Rust has 763 singletons, OCaml remains
+emerging at five packages, and canonical
+collisions and unknown buckets remain zero.
+
+The refresh registers `x86-64-gatelevel-singleton-classification` for the new
+Rust-only exact 525,382-DFF model from merged PR #14595 and
+`arm-simulator-six-lane-classification` for the newly completed Rust checked
+ARMv7 lane in the existing six-lane simulator identity from merged PR #14599.
+Both owners require bounded
+neutral contracts, explicit resource ceilings, and applicable-lane or reviewed
+exception decisions before rollout; the x86-64 owner also records its missing
+explicit empty capability profile. The parallel OCaml readiness audit also
+registers `ocaml-build-tool-three-platform-ci-execution` and makes it a hard
+promotion dependency so hosted native-build-tool proof cannot be hidden inside
+the final denominator switch. The later refresh adds
+`armv7-gatelevel-singleton-classification`, dependent on the six-lane ARM
+functional-classification owner, for the new exact 524,805-DFF model from
+merged PR #14604. These additions bring the state to 753 unique owners: 211 merged,
+541 pending, and exactly this graph/diff owner in
+progress, with complete dependencies, no cycle, and no merged-to-unfinished
+edge.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

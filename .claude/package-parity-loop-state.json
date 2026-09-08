@@ -19,21 +19,21 @@
     "notes": "PR #14519 completed all 53 reported checks acceptably after the failed-job-only rerun of two transient Linux setup-ocaml repository-lock bootstrap failures passed. GitHub reported MERGEABLE/CLEAN with zero pending or failed checks; squash auto-merge was enabled and merged reviewed head 7754ee01db709fd10a71b3066db38ba72e5410f2 as d4f83c934d6898bf5d55d844c88f5988142a5309 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "d4f83c934d6898bf5d55d844c88f5988142a5309",
+    "revision": "5778c35c3c83c65f2a4f0eebc99e778cd15b70b4",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1420,
-    "implementation_package_slots": 4640,
-    "all_reported_identities": 1459,
+    "implementation_identities": 1422,
+    "implementation_package_slots": 4642,
+    "all_reported_identities": 1461,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 176,
     "two_to_four_missing_slots": 2217,
-    "singleton_packages": 946,
-    "singleton_missing_slots": 13244,
-    "rust_singletons": 761,
+    "singleton_packages": 948,
+    "singleton_missing_slots": 13272,
+    "rust_singletons": 763,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -1730,6 +1730,8 @@
       "selected_at": "2026-09-08T11:24:00Z",
       "selection_revision": "d4f83c934d6898bf5d55d844c88f5988142a5309",
       "selection_notes": "Selected after PR #14519 completed all 53 reported checks acceptably and merged through squash auto-merge as d4f83c934d6898bf5d55d844c88f5988142a5309. The exact merged-main schema-3 inventory contains 15 established lanes, 1,420 implementation identities, 4,640 slots, 1,459 all-reported identities, bands 175/265, 123/934, 176/2,217, and 946/13,244, 761 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Twenty-two collision-free owners discovered by parallel build-tool, bounded-JSON, SHA-512, barcode, HMAC/HKDF/PBKDF2, and font-parser audits were registered before selection, and the smart-home lifecycle dependency was corrected. Raw descendant counts favor smart-home, but that owner is blocked on its pending neutral core and unresolved authorization/idempotency semantics; Chief crypto is already implemented and needs ledger reconciliation. This process-free five-case graph/diff completion is the smallest authority-free item that directly advances both mandatory all-language build-tool closure and OCaml promotion. The fresh worktree and branch start from exact merged main, and every open PR has zero overlap with its schema, fixture, runner, test, or documentation paths.",
+      "rebase_notes": "The five-commit branch rebased without conflict through exact origin/main 5778c35c3c83c65f2a4f0eebc99e778cd15b70b4. Intervening x86-64 gate-level, Algol result-composition, ARMv7 functional-simulator, Hindi, Mosaic conformance/root-resolution, VisiCalc file-effect, FLOW-MATIC VM/JIT, and ARMv7 gate-level changes have zero exact path overlap with the tranche. The refreshed collision-clean inventory has 15 established lanes, 1,422 implementation identities, 4,642 slots, 1,461 all-reported identities, bands 175/265, 123/934, 176/2,217, and 948/13,272, 763 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Parallel audits registered the x86-64 and ARMv7 gate-level, six-lane ARM simulator, and OCaml three-platform native-build-tool CI owners before publication.",
+      "validation_notes": "Specification-first changes close process-free graph edge direction, deterministic Kahn levels, stable GRAPH_CYCLE and DIFF_UNKNOWN_PATH failures, and explicit 4,096-node/16,384-edge bounds. Test-first execution failed on the deliberately absent graph schema and cases before implementation. The final shared conformance family passes 237 tests with 23 expected platform skips; its focused post-rebase graph/diff suite passes, the 146-case corpus validates 285 retained files, and the separate execution contract remains valid. The canonical Go directed-graph package passes tests, vet, its literal BUILD front, and 95.4% statement coverage. The complete Go build tool passes all packages, vet, trimpath build, and its literal BUILD front; a fresh real diff dry run evaluates 45 Starlark files, discovers 5,159 packages, keeps the five reviewed orphan entries clean, reports no package files changed, and selects the shared build-tool conformance and adjacent-stdlib contract gates. Branch-aware Python coverage measured 85% for the shared conformance runner before the conflict-free rebases. The exact-main package report is schema 3 and collision-clean at 1,422 identities and 4,642 slots; the 753-owner state is strict-JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unfinished edges at 211 merged, 541 pending, and exactly this owner in progress. Ruff reproduces nine existing findings and three existing formatting fronts in the touched Python files; no new changed-line finding remains. Bandit reports zero medium/high issue and only seven existing low-severity test-only fixed-argv subprocess notices. An independent exact-final-diff security review passed after exercising the maximum 4,096-node/16,384-edge shape and confirming closed schemas, iterative O(V+E) traversal, fail-closed errors, and no authority expansion. No dependency, Git, filesystem, process, environment, network, credential, native-link, or execution authority was added.",
       "notes": "Discovered by the parallel all-language build-tool audit after PR #14352. The normative neutral contract requires isolated nodes, chains, diamonds, multiple components, cycles, affected and prerequisite closures, deterministic levels, failure propagation, and both unknown-path policies, but build-tool-v1 currently has only graph-diamond plus three successful diff cases and no DIFF_UNKNOWN_PATH error fixture. Add the missing process-free fixtures, schemas, reference-runner assertions, README/changelog correction, and exact case-count validation. Failure-propagation fixtures that require trusted execution remain under build-tool-execution-semantics-corpus rather than expanding this process-free owner."
     },
     {
@@ -2809,6 +2811,7 @@
         "ocaml-build-tool-current-contract-conformance",
         "ocaml-classical-cipher-denominator-consumers",
         "ocaml-lzss-zip-raw-rfc1951-denominator-consumer",
+        "ocaml-build-tool-three-platform-ci-execution",
         "ocaml-capability-analyzer",
         "ocaml-representative-core",
         "ocaml-representative-package-ci-execution",
@@ -8671,6 +8674,15 @@
       "notes": "The existing OCaml native-build-tool owner predates later shared contracts. Before promotion, require native consumption of every current process-free corpus, including source registry, repository-boundary reverse diff and digest, CI-gate selection, and the remaining universal contract families."
     },
     {
+      "id": "ocaml-build-tool-three-platform-ci-execution",
+      "title": "Execute the native OCaml build tool on Ubuntu, macOS, and Windows CI",
+      "status": "pending",
+      "depends_on": ["ocaml-build-tool-current-contract-conformance", "ocaml-ci-toolchain", "ocaml-representative-package-ci-execution"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the parallel OCaml promotion-readiness audit after PR #14519. Own the real three-platform native-build-tool qualification separately from the atomic denominator switch: execute the current-contract OCaml build tool against the representative package chain on pinned Ubuntu, macOS, and Windows toolchains with no skips, deterministic two-way Go plan interchange, measured coverage, stable failure evidence, retained artifacts, and the same language-neutral corpora. Keep native execution, toolchain provisioning, and hosted-runner evidence in this CI owner; `ocaml-lane-promotion` remains blocked until it and the representative package execution owner are complete. No reviewed exception is currently justified."
+    },
+    {
       "id": "ocaml-classical-cipher-denominator-consumers",
       "title": "Add OCaml consumers for the classical-cipher denominator",
       "status": "pending",
@@ -8959,6 +8971,33 @@
       "branch": null,
       "pr_number": null,
       "notes": "The counted Haskell font-parser package is a generic lexer/parser wrapper rather than an FNT00 implementation. Implement the repaired bounded FNT00 core in Haskell or record an explicit reviewed identity/applicability correction so reporter coverage is semantically truthful."
+    },
+    {
+      "id": "x86-64-gatelevel-singleton-classification",
+      "title": "Classify x86-64 gate-level simulator portability",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14595 refresh after merged PR #14595 added the independently named Rust-only `x86-64-gatelevel` identity. Classify its deterministic exact 525,382-DFF topology, fixed 64 KiB memory, gate-backed integer decode, arithmetic, flags, Boolean, shift, rotate, address, condition, multiply, and divide networks, shared checked state and trace lifecycle, stable atomic failures, public bit-helper boundary, topology and resource ceilings, and 262-vector functional-oracle differential; define a bounded language-neutral gate-level corpus and applicable-lane rollout where practical or record narrowly reviewed resource or toolchain exceptions. Add a truthful explicit empty capability profile. Use the merged Rust `x86-simulator` only as the functional and differential reference boundary while keeping that separately named functional identity, backend runtime, JIT, SSE2, host calls, native execution, files, processes, environment, network, clocks, and devices outside this owner."
+    },
+    {
+      "id": "arm-simulator-six-lane-classification",
+      "title": "Classify ARM simulator portability across six established lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14599 semantic audit after merged PR #14599 completed a checked ARMv7 functional lane inside the existing six-lane `arm-simulator` identity without changing package inventory topology. Reconcile the Elixir, Go, Python, Ruby, Rust, and TypeScript legacy MOV, ADD, SUB, and HLT wrapper surface with Rust's completed Spec 07b lane: exact 64 KiB little-endian memory, R0-R15 with mirrored PC/R15, NZCV flags, all condition predicates, data-processing, LDR/STR, B/BL, origin-aware checked load, restore, direct access, typed atomic failures, complete traces, and the 388-vector Python common-surface differential. Define a bounded language-neutral functional-simulator corpus, stable errors, resource ceilings, and dependency-shaped applicable-lane rollout; preserve all six truthful empty capability profiles and reconcile the Rust Cargo 0.1.0 versus changelog 0.2.0 metadata mismatch. Keep the separately named Python-only `armv7a-simulator` identity outside this owner, keep each legacy wrapper's `cpu-simulator` dependency distinct from the self-contained functional contract, and exclude host devices, files, processes, environment, network, clocks, native execution, unsupported Thumb/VFP/NEON/system-call behavior, and unconstrained trace growth."
+    },
+    {
+      "id": "armv7-gatelevel-singleton-classification",
+      "title": "Classify ARMv7 gate-level simulator portability",
+      "status": "pending",
+      "depends_on": ["arm-simulator-six-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14604 refresh after merged PR #14604 added the independently named Rust-only `armv7-gatelevel` identity. Classify its deterministic exact 524,805-DFF topology, fixed 64 KiB memory, R0-R15 with PC stored only in R15, NZCV and halt state, repository-gate condition/decode/Boolean/flag/mux/address networks, ripple-carry arithmetic and control flow, checked load/restore/direct-access lifecycle, complete traces, stable atomic failures, topology and resource ceilings, exhaustive functional differential, and 388-vector Python common-surface differential. Define a bounded language-neutral gate-level corpus and applicable-lane rollout where practical or record narrow reviewed resource or toolchain exceptions. Preserve its truthful explicit empty capability profile; use the six-lane `arm-simulator` owner as the functional/differential reference boundary while keeping the gate-level identity separate, and exclude host devices, files, processes, environment, network, clocks, native execution, unsupported Thumb/VFP/NEON/system-call behavior, and unconstrained trace growth."
     },
     {
       "id": "five-to-nine-unowned-gap-classification-20260905",
