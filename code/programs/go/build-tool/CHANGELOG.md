@@ -6,6 +6,10 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Site packages under `code/sites` now use the canonical TypeScript source-input
+  profile for hashing while retaining their legacy `unknown/*` build-graph
+  identities.
+
 - The pure CI gate evaluator now consumes all seven shared language-neutral
   `ci_gate_selection` fixtures, pinning package/path matches, globstar behavior,
   complete false verdicts, output names, and every fail-open escape for future

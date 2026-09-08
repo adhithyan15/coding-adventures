@@ -981,6 +981,15 @@
       "notes": "Production Go currently owns 14 source-language entries, 14 metadata-language entries, and a 26-name generated-component registry, but the neutral registry adds reviewed Rust companions and package resources for hybrid lanes. Replace the engine-local maps with an exact complete projection and prove no missing or undeclared-extra selector."
     },
     {
+      "id": "build-tool-site-authored-resource-source-input-extension",
+      "title": "Extend the neutral source-input registry for authored site resources",
+      "status": "pending",
+      "depends_on": ["build-tool-go-language-source-input-registry-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered from PR #14659's failed full-repository CI run. The repository's two code/sites packages retain legacy unknown/* graph identities but are TypeScript build surfaces. The focused PR repair safely maps those canonical roots to the already-reviewed TypeScript hashing profile; however, the merged neutral registry does not yet classify the blog's authored data/*.md posts and data/assets/*.svg input. Evolve the neutral registry and digest, refresh every already-adopted engine projection, add exact site fixtures, and prove other TypeScript data directories are not widened accidentally. This is a separate dependent contract change because mutating the registry inside the Go adoption PR would invalidate Haskell, Swift, and .NET digest pins and mix cross-engine work into the CI repair."
+    },
+    {
       "id": "build-tool-go-native-source-snapshot-stability-hardening",
       "title": "Harden native Go source snapshot stability",
       "status": "pending",

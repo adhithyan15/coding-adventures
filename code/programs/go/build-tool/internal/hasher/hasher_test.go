@@ -916,6 +916,14 @@ func TestRepositoryRelativePackagePath(t *testing.T) {
 	if got, err := repositoryRelativePackagePath(canonical); err != nil || got != "code/programs/go/demo" {
 		t.Fatalf("canonical program path: got %q, err %v", got, err)
 	}
+	site := discovery.Package{
+		Name:     "unknown/blog",
+		Path:     filepath.Join(t.TempDir(), "code", "sites", "blog"),
+		Language: "unknown",
+	}
+	if got, err := repositoryRelativePackagePath(site); err != nil || got != "code/sites/blog" {
+		t.Fatalf("canonical site path: got %q, err %v", got, err)
+	}
 	for _, tc := range []struct {
 		name string
 		want string
@@ -930,6 +938,28 @@ func TestRepositoryRelativePackagePath(t *testing.T) {
 	}
 	if _, err := repositoryRelativePackagePath(discovery.Package{Name: "invalid", Path: t.TempDir()}); err == nil {
 		t.Fatal("invalid package identity must fail closed")
+	}
+}
+
+func TestTypeScriptSiteSourceInputs(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "code", "sites", "blog")
+	for _, relative := range []string{"BUILD", "forme.config.ts", "package.json", "data/post.md", "data/diagram.svg", "dist/generated.js"} {
+		path := filepath.Join(root, filepath.FromSlash(relative))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("source\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "unknown/blog", Path: root, Language: "unknown"}
+	got, err := collectSourceFilesChecked(pkg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"BUILD", "forme.config.ts", "package.json"}
+	if paths := relativePaths(t, root, got); strings.Join(paths, "\n") != strings.Join(want, "\n") {
+		t.Fatalf("site source inputs: got %v, want %v", paths, want)
 	}
 }
 

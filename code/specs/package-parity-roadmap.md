@@ -13542,6 +13542,37 @@ Mermaid Cynefin contract, and eight-backend Oct contract. The UI54 owner waits
 on form controls and HTML frontend; the Cynefin rollout waits on its neutral
 contract.
 
+### Go source-registry CI repair and parallel backlog packet
+
+Full-repository CI for PR #14659 exposed the two `code/sites` packages as
+legacy `unknown/*` graph identities that the strict Go registry adopter could
+not hash. The focused repair preserves those graph identities but maps only
+canonical `code/sites/<name>` roots to the existing TypeScript source-input
+profile and frames their real repository paths. The complete Go suite, race,
+vet, module verification, generator-stability, 24 schema tests, 80 neutral
+runner tests, and a real 5,170-package all-language dry plan pass locally.
+
+That repair deliberately does not mutate the merged neutral registry. The
+blog's authored `data/*.md` posts and `data/assets/*.svg` file remain a newly
+classified gap under
+`build-tool-site-authored-resource-source-input-extension`. That dependent
+owner must evolve the neutral digest, refresh every already-adopted engine
+projection, add exact site fixtures, and avoid widening unrelated TypeScript
+data directories.
+
+Parallel read-only backlog work continued while CI ran. The next recommended
+implementation owner remains `riscv-simulator-six-lane-classification`, but its
+first tranche should be the classification, normative checked-execution spec,
+and neutral fixture corpus rather than six implementations at once. The audit
+found that the current 256-vector oracle covers only successful Rust-local
+execution; error, lifecycle, atomicity, rollback, and bounded-run cases need a
+neutral fixture family before lane rollout. The Rust checked runner also needs
+a hard step/trace ceiling. Elixir has no simulator yet, while Go, Python, Ruby,
+and TypeScript still need a checked transactional boundary. Mermaid Cynefin and
+Oct remain the next alternatives but overlap live work, so they rank behind the
+RV32I contract tranche. With the new site-resource owner, the state has 790
+unique owners: 212 merged, 577 pending, and one PR open.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

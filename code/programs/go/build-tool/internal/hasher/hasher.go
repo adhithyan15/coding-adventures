@@ -83,18 +83,20 @@ func resolveDeclaredSrcsChecked(pkg discovery.Package) ([]string, error) {
 }
 
 func collectSourceInputsChecked(pkg discovery.Package, declaredMode bool) ([]string, error) {
-	language, ok := languageSourceInputRegistryByName[pkg.Language]
-	if !ok {
-		return nil, fmt.Errorf("unsupported source language")
-	}
-	packageRoot, err := exactPackageSourceRoot(pkg)
+	sourceLanguage, packageRoot, err := sourceInputProfile(pkg)
 	if err != nil {
 		return nil, fmt.Errorf("repository package identity is invalid")
 	}
+	language, ok := languageSourceInputRegistryByName[sourceLanguage]
+	if !ok {
+		return nil, fmt.Errorf("unsupported source language")
+	}
 	if packageRoot != "" {
 		parts := strings.Split(packageRoot, "/")
-		if len(parts) < 4 || parts[0] != "code" ||
-			(parts[1] != "packages" && parts[1] != "programs") || parts[2] != pkg.Language {
+		languageRoot := len(parts) >= 4 && parts[0] == "code" &&
+			(parts[1] == "packages" || parts[1] == "programs") && parts[2] == sourceLanguage
+		siteRoot := len(parts) == 3 && parts[0] == "code" && parts[1] == "sites" && sourceLanguage == "typescript"
+		if !languageRoot && !siteRoot {
 			return nil, fmt.Errorf("repository package identity is invalid")
 		}
 	}
@@ -125,6 +127,27 @@ func collectSourceInputsChecked(pkg discovery.Package, declaredMode bool) ([]str
 		return nil, err
 	}
 	return files, nil
+}
+
+// sourceInputProfile maps repository-owned site packages to the TypeScript
+// source-input contract without changing their legacy unknown/* graph identity.
+// Arbitrary unknown packages remain unsupported and fail before traversal.
+func sourceInputProfile(pkg discovery.Package) (string, string, error) {
+	packageRoot, found, err := canonicalRepositoryPackagePath(pkg.Path)
+	if err != nil {
+		return "", "", err
+	}
+	if found {
+		parts := strings.Split(packageRoot, "/")
+		if len(parts) == 3 && parts[0] == "code" && parts[1] == "sites" {
+			if pkg.Language != "unknown" {
+				return "", "", fmt.Errorf("site package language is invalid")
+			}
+			return "typescript", packageRoot, nil
+		}
+	}
+	packageRoot, err = exactPackageSourceRoot(pkg)
+	return pkg.Language, packageRoot, err
 }
 
 // walkSourceFiles enumerates only regular lexical descendants of root. It
@@ -235,7 +258,7 @@ func exactPackageSourceRoot(pkg discovery.Package) (string, error) {
 		return candidate, err
 	}
 	parts := strings.Split(candidate, "/")
-	if len(parts) < 4 || parts[2] != pkg.Language {
+	if len(parts) < 4 || (parts[1] != "packages" && parts[1] != "programs") || parts[2] != pkg.Language {
 		return "", fmt.Errorf("canonical package path does not match language")
 	}
 	return candidate, nil
@@ -246,7 +269,7 @@ func canonicalRepositoryPackagePath(packagePath string) (string, bool, error) {
 	parts := strings.Split(normalized, "/")
 	canonicalStart := -1
 	for index := 0; index+1 < len(parts); index++ {
-		if parts[index] == "code" && (parts[index+1] == "packages" || parts[index+1] == "programs") {
+		if parts[index] == "code" && (parts[index+1] == "packages" || parts[index+1] == "programs" || parts[index+1] == "sites") {
 			canonicalStart = index
 		}
 	}
