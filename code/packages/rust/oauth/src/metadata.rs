@@ -2,10 +2,10 @@
 
 use super::{
     audited, json_nesting_within_limit, validate_https_endpoint, validate_issuer, Audited,
-    OAuthAuditAction, OAuthError, OAuthTraceId, ProviderConfig, ProviderId,
+    OAuthAuditAction, OAuthError, OAuthTraceId, ProviderConfig, ProviderId, MAX_JSON_NESTING,
 };
 use crate::token::zeroize_json;
-use coding_adventures_json_value::JsonValue;
+use coding_adventures_bounded_json::JsonValue;
 use coding_adventures_zeroize::Zeroizing;
 use std::collections::BTreeSet;
 use std::fmt::{self, Debug, Formatter};
@@ -347,7 +347,7 @@ fn decode_metadata_inner(
     if !json_nesting_within_limit(body) {
         return Err(invalid(MetadataViolation::Encoding));
     }
-    let mut root = coding_adventures_json_value::parse(text)
+    let mut root = coding_adventures_bounded_json::parse_with_depth_limit(text, MAX_JSON_NESTING)
         .map_err(|_| invalid(MetadataViolation::Encoding))?;
     let outcome = parse_metadata_object(context, &root);
     zeroize_json(&mut root);

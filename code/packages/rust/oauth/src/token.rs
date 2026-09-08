@@ -3,8 +3,9 @@
 use super::{
     audited, json_nesting_within_limit, render_secret_form, validate_scopes, Audited,
     OAuthAuditAction, OAuthError, OAuthTraceId, ProviderConfig, ProviderId, TokenExchangeRequest,
+    MAX_JSON_NESTING,
 };
-use coding_adventures_json_value::{JsonNumber, JsonValue};
+use coding_adventures_bounded_json::{JsonNumber, JsonValue};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{self, Debug, Formatter};
@@ -513,7 +514,7 @@ fn parse_json_fields(text: &str) -> Result<Fields, OAuthError> {
     if !json_nesting_within_limit(text.as_bytes()) {
         return Err(invalid(TokenResponseViolation::Encoding));
     }
-    let mut root = coding_adventures_json_value::parse(text)
+    let mut root = coding_adventures_bounded_json::parse_with_depth_limit(text, MAX_JSON_NESTING)
         .map_err(|_| invalid(TokenResponseViolation::Encoding))?;
     let outcome = if let JsonValue::Object(pairs) = &root {
         if pairs.len() > MAX_TOKEN_RESPONSE_FIELDS {

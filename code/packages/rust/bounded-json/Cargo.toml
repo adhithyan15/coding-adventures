@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_bounded_json"
+version = "0.1.0"
+edition = "2021"
+description = "Zero-dependency bounded RFC 8259 parser for hostile protocol inputs"
+
+[dependencies]
