@@ -32,6 +32,7 @@ from spice_engine import (
     PwlWaveform,
     Resistor,
     SinWaveform,
+    TfResult,
     TransientResult,
     TransmissionLine,
     VoltageSource,
@@ -41,6 +42,7 @@ from spice_engine import (
     dc_sweep,
     mosfet_from_model_card,
     normalize_model_card,
+    tf,
     transient,
 )
 
@@ -241,15 +243,15 @@ type Analysis = (
     | PoleZeroAnalysis
     | OptionsAnalysis
 )
-type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis
-type AnalysisKind = Literal["op", "tran", "dc", "ac"]
-type AnalysisResult = DcResult | DcSweepResult | AcResult | TransientResult
+type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis
+type AnalysisKind = Literal["op", "tran", "dc", "ac", "tf"]
+type AnalysisResult = DcResult | DcSweepResult | AcResult | TransientResult | TfResult
 type SelectedOutputValue = float | complex
 
 
 @dataclass(frozen=True, slots=True)
 class AnalysisPlanStep:
-    """One executable `.op`, `.dc`, `.ac`, or `.tran` card in deck order."""
+    """One executable `.op`, `.dc`, `.ac`, `.tran`, or `.tf` card in deck order."""
 
     index: int
     kind: AnalysisKind
@@ -665,7 +667,7 @@ def parse_netlist(text: str) -> ParsedNetlist:
 
 
 def build_analysis_plan(parsed: ParsedNetlist) -> list[AnalysisPlanStep]:
-    """Build the executable `.op`, `.dc`, `.ac`, and `.tran` plan for a deck."""
+    """Build the executable `.op`, `.dc`, `.ac`, `.tran`, and `.tf` plan for a deck."""
 
     plan: list[AnalysisPlanStep] = []
     for index, analysis in enumerate(parsed.analyses):
@@ -693,7 +695,7 @@ def run_analysis_plan(
 
 
 def run_netlist(text: str) -> list[AnalysisExecutionResult]:
-    """Parse a deck and execute its runnable `.op`, `.dc`, `.ac`, and `.tran` cards."""
+    """Parse a deck and execute its runnable `.op`, `.dc`, `.ac`, `.tran`, and `.tf` cards."""
 
     return run_analysis_plan(parse_netlist(text))
 
@@ -766,6 +768,8 @@ def _analysis_plan_step(index: int, analysis: Analysis) -> AnalysisPlanStep | No
         return AnalysisPlanStep(index=index, kind="dc", analysis=analysis)
     if isinstance(analysis, AcAnalysis):
         return AnalysisPlanStep(index=index, kind="ac", analysis=analysis)
+    if isinstance(analysis, TfAnalysis):
+        return AnalysisPlanStep(index=index, kind="tf", analysis=analysis)
     return None
 
 
@@ -802,6 +806,12 @@ def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> Ana
             t_step=analysis.t_step,
             t_stop=analysis.t_stop,
             **transient_kwargs,
+        )
+    if isinstance(analysis, TfAnalysis):
+        return tf(
+            parsed.circuit,
+            output_node=analysis.output_node,
+            input_source=analysis.input_source,
         )
     raise NetlistParseError(f"analysis card at index {step.index} is not executable")
 
@@ -847,6 +857,7 @@ def _analysis_name_matches(requested: str, kind: AnalysisKind) -> bool:
         "ac": "ac",
         "tran": "tran",
         "transient": "tran",
+        "tf": "tf",
     }
     return aliases.get(requested.lower(), requested.lower()) == kind
 

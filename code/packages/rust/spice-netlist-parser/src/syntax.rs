@@ -25968,6 +25968,7 @@ fn runnable_analysis_kind(directive: &str) -> Option<AnalysisKind> {
         ".dc" => Some(AnalysisKind::Dc),
         ".ac" => Some(AnalysisKind::Ac),
         ".tran" => Some(AnalysisKind::Tran),
+        ".tf" => Some(AnalysisKind::Tf),
         _ => None,
     }
 }
