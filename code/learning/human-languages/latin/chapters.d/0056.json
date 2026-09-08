@@ -1,0 +1,22 @@
+{
+  "chapter": 56,
+  "title": "Sextus ad Decimum",
+  "label": "ch:la-ordinals-to-tenth",
+  "canDo": "I can count in order all the way to tenth, and say why noon and siesta are ordinal numbers wearing a disguise.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "LA-C56-decimus",
+    "kind": "task",
+    "summary": "The tenth ordinal, and the whole series said in order from primus to decimus.",
+    "assesses": [
+      "LA-LEX-C56-ORDINAL-06",
+      "LA-LEX-C56-ORDINAL-07",
+      "LA-LEX-C56-ORDINAL-08",
+      "LA-LEX-C56-ORDINAL-09",
+      "LA-ETYMON-C56-NONA-HORA-01",
+      "LA-LEX-C56-ORDINAL-10"
+    ]
+  }
+}

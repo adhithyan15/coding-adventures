@@ -1,0 +1,17 @@
+{
+  "language": "latin",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:ab7073f40c70b41e",
+  "lessonIds": [
+    "LA-C57-ante",
+    "LA-C57-post",
+    "LA-C57-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "latin/narration/ch57.txt",
+  "json": "latin/narration/ch57.json",
+  "textHash": "fnv1a64:a06a871c7a3f428b",
+  "jsonHash": "fnv1a64:3d516aa7f646199e",
+  "findings": []
+}

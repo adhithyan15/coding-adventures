@@ -161,12 +161,12 @@ describe("the committed Latin A1 inventory", () => {
     }
   });
 
-  it("reports the joining column REBUILT by the vocabulary tranche", () => {
+  it("reports the joining column REBUILT, and the ordinal column CLOSED", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(270);
-    expect(coverage.covered).toBe(132);
-    expect(coverage.unmapped).toBe(138);
+    expect(coverage.covered).toBe(135);
+    expect(coverage.unmapped).toBe(135);
     expect(coverage.partial).toBe(0);
     // WAS 0 OF 12, AND IT WAS THE ELEVENTH FLAT ZERO IN THIS SERIES. `et`
     // occurred twice in 112 files and both were inside quoted classical
@@ -188,8 +188,23 @@ describe("the committed Latin A1 inventory", () => {
     // is what actually lets somebody read Latin and a vocabulary tranche cannot
     // close it — LA-A1-CAS-02, -03, -05, -06 and -07 all need a grammar lesson.
     expect(coverage.byCategory["Casus (the case system)"]!).toEqual({ enumerated: 7, covered: 2 });
+    // THE ORDINAL TRANCHE, measured here rather than asserted in prose. HL-C350
+    // found ordinals the weakest column in the whole corpus — twenty tracks
+    // enumerate an ordinal point and eighteen left it uncovered — and Latin was
+    // one of the cheap ones, because the cardinals to ten were already taught in
+    // chapter 2 and Quīntīlis and Sextīlis were already glossed with their
+    // ordinal sense in chapter 11 without the words behind them ever being
+    // given. Numeri goes 3 of 7 to 4 of 7 on LA-A1-Q-05 alone; the two that
+    // moved in Notiones generales are LA-A1-NG-15 and LA-A1-NG-19, both closed
+    // by `ante` and `post`. LA-A1-Q-03 (cardinals above twenty) is untouched and
+    // stays named, because vīgintī is still the ceiling.
+    expect(coverage.byCategory["Numeri (quantity and number)"]!).toEqual({ enumerated: 7, covered: 4 });
+    expect(coverage.byCategory["Notiones generales (general notions)"]!).toEqual({
+      enumerated: 36,
+      covered: 19,
+    });
     expect(formatExamCoverage(coverage)).toContain(
-      "latin A1 (partial inventory): 132/270 points covered (49%)",
+      "latin A1 (partial inventory): 135/270 points covered (50%)",
     );
   }, 60_000);
 

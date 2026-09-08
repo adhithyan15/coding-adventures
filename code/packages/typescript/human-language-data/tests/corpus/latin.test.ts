@@ -9,7 +9,7 @@ it("pins Latin continuity", () => expectLanguageContinuity("latin"));
 it("pins Latin modality", () => expectLanguageModality("latin"));
 it("pins Latin lesson-content budgets", () =>
   expectLanguageLessonBudgets("latin", {
-    lessons: 147,
+    lessons: 160,
     idioms: 16,
     senses: 6,
     cultureClaims: 17,
