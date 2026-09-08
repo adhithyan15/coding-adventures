@@ -285,6 +285,17 @@ pub struct EmitOptions {
     /// the custom element) and `README.md` alongside the component
     /// `.js` file. Default `false`.
     pub emit_project: bool,
+
+    /// Author-supplied slot values — a story's fixtures (#14459).
+    ///
+    /// Like React and unlike the static html backend, the custom element takes
+    /// its values at runtime, so fixtures replace the generated per-slot
+    /// `fallback` in the emitted slot table — what the element renders before
+    /// a host supplies anything, and therefore what a component page shows.
+    ///
+    /// Empty means "no fixtures": the generated samples are used, which is the
+    /// pre-existing behaviour.
+    pub slot_values: HashMap<String, String>,
 }
 
 /// Project-shaped artifacts emitted when `EmitOptions::emit_project`
@@ -331,7 +342,7 @@ pub fn from_pipeline_with_options(
     let component = from_pipeline(interface, layout, style)?;
 
     let project = if options.emit_project {
-        Some(build_webcomp_project_files(interface))
+        Some(build_webcomp_project_files(interface, &options.slot_values))
     } else {
         None
     };
@@ -353,12 +364,15 @@ pub fn from_pipeline_with_options(
 /// include a hyphen. The `mos-` prefix guarantees this for any
 /// PascalCase or single-word component (e.g., `Hello` → `mos-hello`,
 /// `ProfileCard` → `mos-profile-card`).
-fn build_webcomp_project_files(interface: &MosmodelComponent) -> ProjectFiles {
+fn build_webcomp_project_files(
+    interface: &MosmodelComponent,
+    slot_values: &HashMap<String, String>,
+) -> ProjectFiles {
     let component_name = &interface.component;
     let custom_tag = format!("mos-{}", to_kebab_case(component_name));
     ProjectFiles {
         index_html: build_index_html(component_name, &custom_tag),
-        main_js: build_main_js(interface, &custom_tag),
+        main_js: build_main_js(interface, &custom_tag, slot_values),
         readme: build_webcomp_readme(component_name, &custom_tag),
     }
 }
@@ -397,7 +411,11 @@ fn build_index_html(component_name: &str, custom_tag: &str) -> String {
     shell
 }
 
-fn build_main_js(interface: &MosmodelComponent, custom_tag: &str) -> String {
+fn build_main_js(
+    interface: &MosmodelComponent,
+    custom_tag: &str,
+    slot_values: &HashMap<String, String>,
+) -> String {
     let mut out = String::new();
     out.push_str(BANNER_JS);
     writeln!(out).unwrap();
@@ -431,7 +449,12 @@ fn build_main_js(interface: &MosmodelComponent, custom_tag: &str) -> String {
             escape_js_string(&slot.name),
             escape_js_string(&to_camel_case_first_lower(&slot.name)),
             slot_type_name(&slot.r#type),
-            sample_js_value_for_slot(slot),
+            // A fixture wins over the generated sample, so selecting a story
+            // changes what the element renders (#14459).
+            match slot_values.get(&slot.name) {
+                Some(fixture) => js_literal_for_fixture(&slot.r#type, fixture),
+                None => sample_js_value_for_slot(slot),
+            },
         )
         .unwrap();
     }
@@ -610,6 +633,30 @@ fn slot_type_name(slot_type: &SlotType) -> &'static str {
         SlotType::Node => "node",
         SlotType::List(_) => "list",
         SlotType::Component(_) => "component",
+    }
+}
+
+/// Render a fixture value as a JavaScript literal for the slot's declared type.
+///
+/// Fixtures arrive as strings, so the slot's type decides how they are
+/// written: a `bool` slot must emit `true`, not `"true"`, or `readSlotValue`
+/// hands the component a string where it expects a boolean.
+///
+/// A value that does not parse for its type falls back to a quoted string
+/// rather than emitting something the element would misread. Rejecting it
+/// belongs to fixture validation (#14435), which can report it properly.
+fn js_literal_for_fixture(slot_type: &SlotType, value: &str) -> String {
+    match slot_type {
+        SlotType::Number => match value.parse::<f64>() {
+            Ok(n) if n.is_finite() => format!("{n}"),
+            _ => format!("\"{}\"", escape_js_string(value)),
+        },
+        SlotType::Bool => match value {
+            "true" => "true".to_string(),
+            "false" => "false".to_string(),
+            _ => format!("\"{}\"", escape_js_string(value)),
+        },
+        _ => format!("\"{}\"", escape_js_string(value)),
     }
 }
 
@@ -3403,6 +3450,39 @@ mod tests {
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::{EmitParam, SlotDecl};
     use mosstyle_compiler::{PartStyle, StateStyle};
+
+    // --- Story fixtures (#14459) ---------------------------------------
+
+    /// A fixture value is written as a literal of the slot's declared type.
+    ///
+    /// `readSlotValue` hands the component whatever the table holds, so a
+    /// `bool` slot carrying the string `"true"` would reach the element as a
+    /// string where it expects a boolean.
+    #[test]
+    fn fixtures_render_as_typed_js_literals() {
+        assert_eq!(super::js_literal_for_fixture(&SlotType::Bool, "true"), "true");
+        assert_eq!(super::js_literal_for_fixture(&SlotType::Number, "7"), "7");
+        assert_eq!(
+            super::js_literal_for_fixture(&SlotType::Text, "hi"),
+            "\"hi\"".to_string()
+        );
+        // Unparseable for its type falls back to a quoted string rather than
+        // emitting something the element would misread. Rejecting it belongs
+        // to fixture validation (#14435), which can report it properly.
+        assert_eq!(
+            super::js_literal_for_fixture(&SlotType::Number, "abc"),
+            "\"abc\"".to_string()
+        );
+    }
+
+    /// A fixture must be escaped like any other emitted string, so a value
+    /// containing a quote cannot break out of the slot table.
+    #[test]
+    fn fixtures_are_escaped_in_the_slot_table() {
+        let out = super::js_literal_for_fixture(&SlotType::Text, "a\"b");
+        assert!(!out.contains("a\"b"), "raw quote must not survive: {out}");
+    }
+
 
     // -------- Style fixtures (UI28 — part-style inlining) --------
 

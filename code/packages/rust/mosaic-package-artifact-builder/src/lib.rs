@@ -2290,7 +2290,13 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             }
         }
         Backend::WebComponent => {
-            let wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions { emit_project: true };
+            let wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions {
+                emit_project: true,
+                // As with html: the artifact builder emits a package's shipped
+                // projects, not a story preview, so slot values stay the
+                // generated samples (#14459).
+                slot_values: Default::default(),
+            };
             let r = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
