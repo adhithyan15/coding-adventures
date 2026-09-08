@@ -26,6 +26,11 @@ buffers containing credentials are wipe-on-drop or explicitly scrubbed; secret
 form bodies are zeroizing from their first byte and create no encoded temporary
 strings.
 
+Authorization-server JSON is parsed by the sibling zero-dependency
+`coding_adventures_bounded_json` package. The OAuth normal dependency tree is
+therefore entirely repository-owned; it does not reach `serde_json`, the
+third-party `regex` crate, or another registry library.
+
 The crate performs no network, browser, listener, clock, storage, or credential
 I/O. The sibling `coding_adventures_oauth_installed_app_host` package owns the
 separately audited literal-loopback and injected-browser boundary, while

@@ -9,6 +9,7 @@ resolver = "2"
 exclude = ["os-kernel"]
 members = [
     "browser-bookmarks",
+    "bounded-json",
     "browser-bookmarks-file",
     "browser-navigation",
     "adj-lang",

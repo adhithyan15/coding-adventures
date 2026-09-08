@@ -86,6 +86,11 @@ The delivery order is:
    `signed_metadata` and unknown fields are ignored and scrubbed, not trusted.
    RFC 9207 response-issuer support is retained exactly; providers that omit it
    require the existing registry-owned distinct-redirect defense.
+   Metadata and token responses now use the repository-owned zero-dependency
+   `bounded-json` parser: exact RFC 8259 grammar, duplicate preservation for
+   protocol-level rejection, closed input-free errors, and depth rejection
+   during parsing rather than after an unbounded recursive walk. The OAuth
+   normal dependency graph contains only workspace packages.
 4. **Shipped installed-app host:** audit-bracketed external-browser release and
    a transient listener bound only to an IP-literal loopback redirect, with
    provider/trace/redirect binding, exact aggregate/request-line/header/Host
@@ -139,7 +144,7 @@ midpoints.
    OAuthClient (trait)
         │  the actual HTTP dance with the provider
         ▼
-   https-transport  +  json-parser  +  url-encode
+   https-transport  +  bounded-json  +  url-encode
         │
         ▼
    provider's OAuth endpoints
@@ -148,8 +153,8 @@ midpoints.
 **Depends on:**
 - `https-transport` — every OAuth call is HTTPS.
 - `tls-platform` (transitively) — TLS for those calls.
-- `json-parser`, `json-value`, `json-serializer` — token endpoint
-  responses are JSON.
+- `bounded-json` — zero-dependency, depth-limited parsing for hostile metadata
+  and token endpoint responses.
 - `vault-records`, `vault-key-custody` — token storage as Zeroizing
   records under `vault://oauth/...`.
 - `vault-secure-channel` — when the broker talks to the vault.

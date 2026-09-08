@@ -5,7 +5,7 @@ edition = "2021"
 description = "Provider-neutral OAuth 2.0 metadata, authorization-code, PKCE, token, refresh, and revocation primitives implemented in-repo"
 
 [dependencies]
-coding-adventures-json-value = { path = "../json-value" }
+coding_adventures_bounded_json = { path = "../bounded-json" }
 coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_zeroize = { path = "../zeroize" }
 url-parser = { path = "../url-parser" }
