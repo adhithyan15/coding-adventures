@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Sixth to Tenth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:059792dac3e3fc81",
+  "sourceHash": "fnv1a64:8aff1fd30ad5f2e4",
   "lessons": [
     {
       "id": "HI-C76-sixth",
@@ -719,16 +719,16 @@
       "id": "HI-C76-tenth",
       "sequence": 3250,
       "title": "दसवाँ (dasvā̃) — tenth",
-      "headword": "दसवाँ",
-      "romanization": "dasvā̃",
-      "gloss": "tenth — the ten closed, and the ending carrying on past it",
+      "headword": "दसवाँ / दसवीं",
+      "romanization": "dasvā̃ / dasvī̃",
+      "gloss": "tenth / feminine tenth — the ten closed, and the ending carrying on past it",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:291959f1e67b8ae7",
+      "sourceHash": "fnv1a64:c14bc275410852a4",
       "notice": null,
       "blocks": [
         {
@@ -848,6 +848,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "dasvī̃ kitāb — the tenth book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dasvī̃ kitāb* — the tenth book]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "the ten in order, pahlā to dasvā̃",
               "spoken": true,
               "scored": false,
@@ -878,7 +887,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the ten in order. (Pahlā through dasvā̃.) How much had to be learned as words? (Five — and one ending for the rest.) And say \"eleventh\". (ग्यारहवाँ.)"
+              "text": "Say the tenth day. (दसवाँ (dasvā̃) दिन.) What changes for a feminine noun? (दसवीं.) Now say the ten in order. (Pahlā through dasvā̃.) How much had to be learned as words? (Five — and one ending for the rest.) And say \"eleventh\". (ग्यारहवाँ.)"
             }
           ]
         }
