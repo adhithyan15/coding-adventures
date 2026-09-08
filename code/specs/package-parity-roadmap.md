@@ -13308,6 +13308,53 @@ port cannot resolve its native runtime symbols. Publication remains gated on
 that hosted evidence and the required independent security review; no second
 parity implementation is active.
 
+### Post-PR #14519 reconciliation and graph/diff corpus selection
+
+PR #14519 completed 53 terminal acceptable checks at reviewed head
+`7754ee01db709fd10a71b3066db38ba72e5410f2`. Two Linux OCaml jobs initially
+failed while `setup-ocaml` encountered an opam repository maintenance lock;
+failed-job-only reruns completed successfully. GitHub reported the branch
+mergeable and conflict-free, guarded squash auto-merge was enabled, and GitHub
+merged the reviewed head at `2026-09-08T11:12:34Z` as
+`d4f83c934d6898bf5d55d844c88f5988142a5309`, without a plain manual merge
+command.
+
+The collision-checked schema-3 inventory on that exact merged main now has 15
+established lanes, 1,420 implementation identities, 4,640 implementation
+slots, and 1,459 all-reported identities. The breadth bands are 175 packages
+with 265 missing slots, 123/934, 176/2,217, and 946/13,244. Rust has 761
+singletons; OCaml remains emerging with five packages; canonical collisions
+and unknown language buckets remain zero.
+
+Parallel read-only dependency and contract audits registered the newly
+discovered bounded JSON, SHA-512, six barcode symbologies plus layout and
+facade, HMAC/HKDF/PBKDF2, Dart process-free graph/diff, and font-parser
+contract-repair fronts before selection. The smart-home lifecycle owner now
+waits for its neutral core contract rather than bypassing that prerequisite.
+The font-parser expansion now waits for neutral FNT00 repair, and its current
+Haskell package is tracked separately because it is not yet an FNT00 reference.
+Existing chief-crypto owners already cover that lane; their stale lifecycle
+records require later state reconciliation rather than duplicate work.
+The new Java/Kotlin/Dart children are linked to both affected high-consensus
+umbrellas so aggregate completion cannot bypass their exact owners.
+
+The reconciled state contains 749 unique owners: 211 merged, 537 pending, and
+exactly one in progress. All dependencies resolve, the graph is acyclic, and no
+merged owner depends on unfinished work. The selected
+`build-tool-neutral-graph-diff-corpus-completion` owner is the highest-leverage
+ready build-tool prerequisite: it gates the remaining all-language build-tool
+implementations and OCaml promotion, while the higher raw-descendant
+smart-home work is not ready until its neutral lifecycle contract lands.
+
+The tranche runs on fresh branch
+`codex/build-tool-neutral-graph-diff-corpus` from exact merged main above. Its
+bounded scope adds neutral isolated-node, chain, disconnected-component,
+stable-cycle-error, and unknown-diff-path cases; closes graph schema resource
+bounds; and adds an independent topology oracle. Execution failure propagation
+remains in the existing execution corpus. Implementation publication stays
+serial, while independent inventory, dependency, fixture, lessons, and
+validation audits continue in parallel.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

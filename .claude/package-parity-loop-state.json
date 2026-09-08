@@ -13,28 +13,28 @@
   },
   "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-08T01:38:33Z",
-    "pr_number": 14393,
+    "observed_at": "2026-09-08T11:12:34Z",
+    "pr_number": 14519,
     "status": "merged",
-    "notes": "PR #14393 completed every final-head gate acceptably after one macOS locked-fixture job lost hosted-runner communication and its exact failed-job rerun passed. GitHub reported MERGEABLE/CLEAN with zero pending or failed checks; guarded squash auto-merge was then enabled and merged the reviewed head as f05c7b88f38e772255cd565cd83868b2a984f56f without a plain manual merge command."
+    "notes": "PR #14519 completed all 53 reported checks acceptably after the failed-job-only rerun of two transient Linux setup-ocaml repository-lock bootstrap failures passed. GitHub reported MERGEABLE/CLEAN with zero pending or failed checks; squash auto-merge was enabled and merged reviewed head 7754ee01db709fd10a71b3066db38ba72e5410f2 as d4f83c934d6898bf5d55d844c88f5988142a5309 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "15691ed6ccc94548e9b51febf08be0cfd3547642",
+    "revision": "d4f83c934d6898bf5d55d844c88f5988142a5309",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1415,
-    "implementation_package_slots": 4631,
-    "all_reported_identities": 1454,
+    "implementation_identities": 1420,
+    "implementation_package_slots": 4640,
+    "all_reported_identities": 1459,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
-    "two_to_four_packages": 172,
-    "two_to_four_missing_slots": 2165,
-    "singleton_packages": 945,
-    "singleton_missing_slots": 13230,
-    "rust_singletons": 756,
-    "ocaml_packages": 4,
+    "two_to_four_packages": 176,
+    "two_to_four_missing_slots": 2217,
+    "singleton_packages": 946,
+    "singleton_missing_slots": 13244,
+    "rust_singletons": 761,
+    "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -1723,10 +1723,13 @@
     {
       "id": "build-tool-neutral-graph-diff-corpus-completion",
       "title": "Complete the language-neutral build-tool graph and diff corpus",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-pure-domain-corpus"],
-      "branch": null,
+      "branch": "codex/build-tool-neutral-graph-diff-corpus",
       "pr_number": null,
+      "selected_at": "2026-09-08T11:24:00Z",
+      "selection_revision": "d4f83c934d6898bf5d55d844c88f5988142a5309",
+      "selection_notes": "Selected after PR #14519 completed all 53 reported checks acceptably and merged through squash auto-merge as d4f83c934d6898bf5d55d844c88f5988142a5309. The exact merged-main schema-3 inventory contains 15 established lanes, 1,420 implementation identities, 4,640 slots, 1,459 all-reported identities, bands 175/265, 123/934, 176/2,217, and 946/13,244, 761 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Twenty-two collision-free owners discovered by parallel build-tool, bounded-JSON, SHA-512, barcode, HMAC/HKDF/PBKDF2, and font-parser audits were registered before selection, and the smart-home lifecycle dependency was corrected. Raw descendant counts favor smart-home, but that owner is blocked on its pending neutral core and unresolved authorization/idempotency semantics; Chief crypto is already implemented and needs ledger reconciliation. This process-free five-case graph/diff completion is the smallest authority-free item that directly advances both mandatory all-language build-tool closure and OCaml promotion. The fresh worktree and branch start from exact merged main, and every open PR has zero overlap with its schema, fixture, runner, test, or documentation paths.",
       "notes": "Discovered by the parallel all-language build-tool audit after PR #14352. The normative neutral contract requires isolated nodes, chains, diamonds, multiple components, cycles, affected and prerequisite closures, deterministic levels, failure propagation, and both unknown-path policies, but build-tool-v1 currently has only graph-diamond plus three successful diff cases and no DIFF_UNKNOWN_PATH error fixture. Add the missing process-free fixtures, schemas, reference-runner assertions, README/changelog correction, and exact case-count validation. Failure-propagation fixtures that require trusted execution remain under build-tool-execution-semantics-corpus rather than expanding this process-free owner."
     },
     {
@@ -2620,6 +2623,7 @@
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening",
         "build-tool-tracked-artifact-unicode-version-contract",
+        "build-tool-dart-process-free-graph-diff-core",
         "build-tool-execution-semantics-corpus"
       ],
       "branch": null,
@@ -2742,7 +2746,7 @@
     {
       "id": "ocaml-capability-analyzer",
       "title": "Enforce OCaml capability declarations with compiler-libs ASTs",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "ocaml-representative-core",
         "capability-schema-category-action-constraints"
@@ -2765,6 +2769,10 @@
       "ci_repair_notes": "On rebased head ed661ef611c003e142424cc76935d9bc4f1228e8, the independent OCaml capability gate passed all 27 analyzer tests, the real CLI subprocess test, 95.19% analyzer coverage, and 100% entrypoint coverage, then correctly exposed a policy mismatch while scanning the representative package chain: their reviewed package-local src/dune files use the same exact bisect_ppx stanza that OCAML06 permitted only for the analyzer itself. A red integration test reproduced the mismatch with a non-analyzer package root. The focused repair permits only the exact bisect_ppx backend in src/dune, bin/dune, or test/dune for any analyzed package; root-level and nested instrumentation, alternate and escaped backends, extra fields, preprocessing, generators, flags, native inputs, attributes, and extensions remain fail-closed. All 28 analyzer tests and the CLI test pass locally, the analyzer accepts itself plus directed-graph, graph, logic-gates, and state-machine, the 10-test capability-gate suite passes, direct formatting and diff checks pass, and hosted Linux retains ownership of measured instrumented linking and coverage.",
       "release_review_revision": "d420d980073537fa35138a0bc8e69f14a940d00c",
       "release_review_notes": "Independent release review passed after verifying the package-only Git archive, real CLI subprocess behavior, instrumentation of both production files, cross-platform aggregation of every bisect process file, dual 95% thresholds, opam lint, workflow/registry/toolchain gates, and clean packaging. The later security-only hardening did not alter release structure; focused post-rebase tests pass.",
+      "merged_head_revision": "7754ee01db709fd10a71b3066db38ba72e5410f2",
+      "merged_at": "2026-09-08T11:12:34Z",
+      "merge_revision": "d4f83c934d6898bf5d55d844c88f5988142a5309",
+      "merge_notes": "All 53 reported checks reached terminal acceptable conclusions. Two transient Linux setup-ocaml repository-lock bootstrap failures were rerun through failed-job-only attempts and passed without a code change. GitHub reported the reviewed head clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #14519 without a manual merge command.",
       "notes": "Cover the full relevant OCaml stdlib, Unix, Dynlink, Marshal, and Obj surface across the repository taxonomy: filesystem, network, process, environment, FFI/native loading, time, stdin, stdout, unsafe marshaling, and Obj.magic. Require all-source compiler-libs AST subset checking, explicit reviewed exceptions, BUILD integration, and an independent publication gate under the governing capability-security contract."
     },
     {
@@ -2984,12 +2992,17 @@
       "status": "pending",
       "depends_on": [
         "java-kotlin-high-consensus-lz78-deflate-state-machine",
-        "high-consensus-unowned-gap-classification-20260905"
+        "high-consensus-unowned-gap-classification-20260905",
+        "sha512-java-kotlin-dart-lane-parity",
+        "barcode-1d-java-kotlin-dart-lane-parity",
+        "hkdf-java-kotlin-dart-lane-parity",
+        "pbkdf2-java-kotlin-dart-lane-parity",
+        "font-parser-java-kotlin-dart-lane-parity"
       ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Selection-blocked historical umbrella. Its only current child, lz78/deflate/state-machine, is merged, while 53 high-consensus gaps remain in each JVM lane. Further decomposition is owned by high-consensus-unowned-gap-classification-20260905; do not select or mark this umbrella complete until those exact children and exceptions are linked."
+      "notes": "Selection-blocked historical umbrella. The merged lz78/deflate/state-machine child and the post-#14519 SHA-512, barcode, HMAC-derived KDF, and font-parser fronts are linked explicitly, while the remaining JVM gaps continue under high-consensus-unowned-gap-classification-20260905. Do not select or mark this umbrella complete until every remaining exact child and exception is linked."
     },
     {
       "id": "java-kotlin-high-consensus-lz78-deflate-state-machine",
@@ -3018,11 +3031,19 @@
       "id": "swift-dart-high-consensus",
       "title": "Close Swift/Dart data-structure, storage, parser, WASM, ML, and protocol families",
       "status": "pending",
-      "depends_on": ["dart-current-14-of-15", "high-consensus-unowned-gap-classification-20260905"],
+      "depends_on": [
+        "dart-current-14-of-15",
+        "high-consensus-unowned-gap-classification-20260905",
+        "sha512-java-kotlin-dart-lane-parity",
+        "barcode-1d-java-kotlin-dart-lane-parity",
+        "hkdf-java-kotlin-dart-lane-parity",
+        "pbkdf2-java-kotlin-dart-lane-parity",
+        "font-parser-java-kotlin-dart-lane-parity"
+      ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Selection-blocked umbrella. Use generated grammars and dependency-first storage/compiler sequences only after the exact Swift and Dart gap classifier has materialized bounded child owners and reviewed exceptions."
+      "notes": "Selection-blocked umbrella. The post-#14519 Dart SHA-512, barcode, HMAC-derived KDF, and font-parser fronts are linked explicitly. Continue using generated grammars and dependency-first storage/compiler sequences only after the exact Swift and remaining Dart gap classifier has materialized bounded child owners and reviewed exceptions."
     },
     {
       "id": "portable-core-expansion",
@@ -3632,7 +3653,10 @@
       "id": "smart-home-runtime-command-effect-lifecycle",
       "title": "Define a shared confirmed command-effect lifecycle for smart-home ports",
       "status": "pending",
-      "depends_on": ["capability-schema-category-action-constraints"],
+      "depends_on": [
+        "capability-schema-category-action-constraints",
+        "smart-home-core-language-neutral-conformance"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Define language-neutral prepare/authorize, confirmed-or-failed effect, retry, idempotency, audit, and result fixtures. Native device I/O and runtime mutation are reviewed host exceptions."
@@ -8340,10 +8364,10 @@
       "id": "font-parser-java-kotlin-dart-lane-parity",
       "title": "Complete FNT00 font-parser parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["font-parser-language-neutral-conformance-repair"],
       "branch": null,
       "pr_number": null,
-      "notes": "The refreshed inventory shows font-parser in twelve of fifteen established lanes with no prior owner for Java, Kotlin, and Dart. Implement the existing FNT00 bounded portable contract and shared fixture oracle in those three lanes without adding filesystem, shaping, rasterization, or native-font authority."
+      "notes": "The refreshed inventory reports font-parser in twelve of fifteen established lanes, but the counted Haskell package is an unrelated generic parser scaffold and FNT00 has no closed shared fixture oracle yet. After the neutral repair owner reconciles Inter kerning, errors, bounds, provenance, and the stale matrix, implement the portable FNT00 core in Java, Kotlin, and Dart without adding filesystem, shaping, rasterization, MATH-table, or native-font authority."
     },
     {
       "id": "glyph-parser-language-neutral-conformance",
@@ -8736,7 +8760,205 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "The exact-main audit found 93 Java/Kotlin/Dart high-consensus identities and 50 Swift high-consensus identities without exact package owners. Decompose this classification owner into dependency-shaped children, beginning with barcode-layout-1d and sha512; point2d requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion."
+      "notes": "The exact-main audit found 93 Java/Kotlin/Dart high-consensus identities and 50 Swift high-consensus identities without exact package owners. The post-#14519 audit now owns the SHA-512, barcode-layout/facade/symbology, and HMAC/HKDF/PBKDF2 Java/Kotlin/Dart fronts below; continue decomposing the remainder. Point2d still requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion."
+    },
+    {
+      "id": "build-tool-dart-process-free-graph-diff-core",
+      "title": "Implement Dart build-tool graph and diff-selection cores",
+      "status": "pending",
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14519 all-language build-tool audit. Implement only the process-free graph and diff-selection domains against the closed neutral corpus, with deterministic topology, cycle errors, closures, unknown-path policies, bounded inputs, and no filesystem, Git, process, environment, network, or credential authority. This bounded core becomes a prerequisite of the full Dart build tool rather than claiming a complete adapter."
+    },
+    {
+      "id": "bounded-json-rfc8259-portable-core-classification-and-conformance",
+      "title": "Classify and fixture the bounded RFC 8259 JSON core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14519 portable-core audit. Separate the bounded byte-oriented RFC 8259 parser/value core from existing json-parser and json-value identities; freeze invalid UTF-8, number range, depth, size, duplicate-key, offset, stable-error, and resource-ceiling behavior in a neutral corpus before lane expansion. Keep filesystem, streaming hosts, schema validation, and unbounded numeric policy outside this owner."
+    },
+    {
+      "id": "sha512-existing-lane-hf04-conformance-audit",
+      "title": "Reconcile existing SHA-512 lanes with HF04",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit all twelve established SHA-512 implementations against shared HF04 vectors, incremental/finalization behavior, large-length accounting, input ownership, exact output, empty capability profiles, and stable bounded errors before using them as the HMAC-family foundation."
+    },
+    {
+      "id": "sha512-java-kotlin-dart-lane-parity",
+      "title": "Complete SHA-512 parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["sha512-existing-lane-hf04-conformance-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port the reviewed HF04 SHA-512 core into the three missing established lanes. Use unsigned-safe word operations, Dart BigInt only where needed to preserve exact length arithmetic across VM and web targets, deterministic vectors, empty capability manifests, and no host-crypto substitution."
+    },
+    {
+      "id": "barcode-symbologies-language-neutral-conformance",
+      "title": "Define neutral contracts for six one-dimensional barcode symbologies",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Freeze ITF, Code 39, Codabar, Code 128, UPC-A, and EAN-13 ASCII semantics, empty-input policy, checksums, stable errors, atomicity, checked resource ceilings, and exact module outputs in one bounded neutral corpus. Reject Unicode digit and case-folding ambiguity and keep layout, raster, font, device, filesystem, and native-paint authority outside this owner."
+    },
+    {
+      "id": "barcode-layout-1d-java-kotlin-dart-lane-parity",
+      "title": "Complete barcode-layout-1d parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port the pure shared geometry layer into the three missing established lanes using their existing paint-instructions packages. Preserve exact pattern expansion, symbol inference, spans, finite checked geometry, authoritative metadata, immutable outputs, fail-closed text behavior, and empty capability profiles."
+    },
+    {
+      "id": "itf-java-kotlin-dart-lane-parity",
+      "title": "Complete ITF parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral ITF encoder in all three missing lanes with strict nonempty even-length ASCII digits, exact patterns, checked bounds, stable payload-blind errors, and shared layout output."
+    },
+    {
+      "id": "code39-java-kotlin-dart-lane-parity",
+      "title": "Complete Code 39 parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral Code 39 encoder in all three missing lanes with ASCII-only folding, reserved-asterisk handling, exact symbol/checksum behavior, checked bounds, and shared layout output."
+    },
+    {
+      "id": "codabar-java-kotlin-dart-lane-parity",
+      "title": "Complete Codabar parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral Codabar encoder in all three missing lanes with exact guard and alphabet rules, checked bounds, stable errors, and shared layout output."
+    },
+    {
+      "id": "code128-java-kotlin-dart-lane-parity",
+      "title": "Complete Code 128 parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral Code 128 encoder in all three missing lanes with the exact printable-ASCII domain, complete symbol table, deterministic code-set policy, checksums, checked bounds, and shared layout output."
+    },
+    {
+      "id": "upc-a-java-kotlin-dart-lane-parity",
+      "title": "Complete UPC-A parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral UPC-A encoder in all three missing lanes with ASCII-only digits, exact check-digit validation/generation, role metadata, checked bounds, and shared layout output."
+    },
+    {
+      "id": "ean-13-java-kotlin-dart-lane-parity",
+      "title": "Complete EAN-13 parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral EAN-13 encoder in all three missing lanes as a sibling of UPC-A, not a runtime dependent. Require ASCII-only digits, exact parity/check-digit behavior, role metadata, checked bounds, and shared layout output."
+    },
+    {
+      "id": "barcode-1d-facade-language-neutral-conformance",
+      "title": "Define the language-neutral barcode-1d facade contract",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Freeze six-symbology routing aliases, defaults, typed errors, options, Codabar guards, exact scene metadata, and pure ASCII rendering. Exclude native raster, fonts, shaping, device, filesystem, and process backends."
+    },
+    {
+      "id": "barcode-1d-java-kotlin-dart-lane-parity",
+      "title": "Complete the barcode-1d facade in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["barcode-layout-1d-java-kotlin-dart-lane-parity", "itf-java-kotlin-dart-lane-parity", "code39-java-kotlin-dart-lane-parity", "codabar-java-kotlin-dart-lane-parity", "code128-java-kotlin-dart-lane-parity", "upc-a-java-kotlin-dart-lane-parity", "ean-13-java-kotlin-dart-lane-parity", "barcode-1d-facade-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the reviewed pure facade and paint-vm-ascii output in the three missing lanes after all six encoders and shared layout exist. Keep native image and text authority out of the portable surface."
+    },
+    {
+      "id": "hmac-language-neutral-conformance",
+      "title": "Define the neutral HMAC contract and fixture corpus",
+      "status": "pending",
+      "depends_on": ["sha512-existing-lane-hf04-conformance-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Reconcile raw RFC HMAC and named-wrapper empty-key policy, MD5/SHA-1/SHA-256/SHA-512 variants, binary inputs, verification mismatch behavior, input ownership, stable errors, and bounded resources. Do not promise guaranteed zeroization on managed runtimes."
+    },
+    {
+      "id": "hmac-java-kotlin-dart-lane-parity",
+      "title": "Complete HMAC parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["hmac-language-neutral-conformance", "sha512-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral HMAC corpus in the three missing established lanes using repository-owned hash packages, unsigned octet handling, empty capability profiles, and no JCA, WebCrypto, or host-crypto substitution."
+    },
+    {
+      "id": "hkdf-language-neutral-conformance",
+      "title": "Define the neutral HKDF contract and fixture corpus",
+      "status": "pending",
+      "depends_on": ["hmac-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Freeze absent-versus-empty salt, empty IKM/info, output-length bounds, short-PRK policy, stable errors, non-mutation, and RFC variants. Keep Rust-only BLAKE2b behavior as an extension outside the portable contract."
+    },
+    {
+      "id": "hkdf-java-kotlin-dart-lane-parity",
+      "title": "Complete HKDF parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["hkdf-language-neutral-conformance", "hmac-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral HKDF core in the three missing established lanes using the repository-owned HMAC dependency, checked bounds, empty capability profiles, and no platform crypto substitution."
+    },
+    {
+      "id": "pbkdf2-language-neutral-conformance",
+      "title": "Define the neutral PBKDF2 contract and fixture corpus",
+      "status": "pending",
+      "depends_on": ["hmac-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Reconcile SHA-1/SHA-256/SHA-512 coverage, empty-password and empty-salt primitive behavior, positive iterations, portable integer bounds, a one-MiB output ceiling, overflow-before-allocation checks, stable errors, and bounded fixture cost. PBKDF2 is a sibling of HKDF, not its dependent."
+    },
+    {
+      "id": "pbkdf2-java-kotlin-dart-lane-parity",
+      "title": "Complete PBKDF2 parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["pbkdf2-language-neutral-conformance", "hmac-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral PBKDF2 core in the three missing established lanes using repository-owned HMAC/hash packages, checked integer/resource bounds, empty capability profiles, and no platform crypto substitution."
+    },
+    {
+      "id": "font-parser-language-neutral-conformance-repair",
+      "title": "Repair and fixture the portable FNT00 font-parser contract",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Correct Inter A/V kerning to zero because the fixture has GPOS but no legacy kern table; add a synthetic negative-kern fixture, provenance, closed errors, hostile-offset and structural bounds, immutable input rules, resource ceilings, and at least two mature native consumers. Reconcile the stale lane matrix and keep Rust MATH extensions outside FNT00."
+    },
+    {
+      "id": "font-parser-haskell-fnt00-reconciliation",
+      "title": "Replace or reclassify the Haskell font-parser scaffold",
+      "status": "pending",
+      "depends_on": ["font-parser-language-neutral-conformance-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The counted Haskell font-parser package is a generic lexer/parser wrapper rather than an FNT00 implementation. Implement the repaired bounded FNT00 core in Haskell or record an explicit reviewed identity/applicability correction so reporter coverage is semantically truthful."
     },
     {
       "id": "five-to-nine-unowned-gap-classification-20260905",
