@@ -1,0 +1,851 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 56,
+  "title": "Sextus ad Decimum",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8e2489c83c33830e",
+  "lessons": [
+    {
+      "id": "LA-C56-sextus",
+      "sequence": 1550,
+      "title": "sextus — the sixth, and the hour that became a nap",
+      "headword": "sextus, sexta, sextum",
+      "romanization": "sextus, sexta, sextum",
+      "gloss": "sixth — and the nap named after the sixth hour",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ac4d12c1709e237",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls open the chapter, at the four measured distances."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quīntus — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quīntus* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say prīmus — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *prīmus* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say domus — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *domus* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ubi — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ubi* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sex, septem, octō, novem, decem — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sex, septem, octō, novem, decem* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sextus, sexta, sextum — \"sixth.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Sex is six; sextus is the same word with the ending. And Sextīlis, the other renamed month, is what Quīntīlis was: an ordinal doing duty as a name, later handed over to Augustus."
+            },
+            {
+              "kind": "speech",
+              "text": "The better story is the hour. A Roman day was cut into twelve hours running from sunrise to sunset, so prīma hōra began at dawn and the sixth hour landed on the middle of the day — which is why sexta hōra meant noon and the heat of it. That hour became a rest, the rest kept the hour's name, and the name wore down through Spanish into siesta. A word for a nap that is, underneath, an ordinal number."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the plainer ones: a sextet, a sextant (a sixth of a circle), and sexagēsimus behind sexagesimal, counting by sixties."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sextus, sexta, sextum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sextus, sexta, sextum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the join — sex becomes sextus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the join — *sex → sextus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sexta hōra — the sixth hour, the middle of the day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sexta hōra* — the sixth hour, the middle of the day]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which hour of a Roman day was sexta hōra, and where did it fall? (The sixth, counted from sunrise — so the middle of the day.) What everyday Spanish word came out of it? (Siesta.) And which month was Sextīlis renamed after? (Augustus.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C56-septimus",
+      "sequence": 1560,
+      "title": "septimus — the seventh, and the week that is a seven",
+      "headword": "septimus, septima, septimum",
+      "romanization": "septimus, septima, septimum",
+      "gloss": "seventh — the ending wears the vowel down",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0bd814cb35817ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the seventh."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sextus — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sextus* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say secundus — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *secundus* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say porta — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *porta* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cūr — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cūr* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quaesō — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quaesō* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ignōsce mihi — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ignōsce mihi* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "septimus, septima, septimum — \"seventh.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Septem is seven. Put the ending on and the vowel in the middle goes quiet: septem becomes septimus, with e worn down to i because nothing is leaning on it. Latin does that to unstressed middles constantly, and once you have heard it here you will hear it everywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "September is this number in a name, and the calendar lesson explained why it sits in ninth place: two months were pushed in at the front and the names never moved."
+            },
+            {
+              "kind": "speech",
+              "text": "The prettier descendant is the week. Septimāna was \"a set of seven\" — seven days — and it went into Spanish as semana and French as semaine. So in two of Latin's daughters the ordinary word for a week is a number word, and the number is this one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "septimus, septima, septimum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *septimus, septima, septimum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the join — septem becomes septimus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the join — *septem → septimus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "septima hōra — the seventh hour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *septima hōra* — the seventh hour]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happens to the vowel in the middle of septem when the ending goes on? (It wears down — e to i.) Which month keeps this number, and why is it two places out? (September; two months were added at the front.) And what is a semana, taken apart? (A set of seven — septimāna.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C56-octavus",
+      "sequence": 1570,
+      "title": "octāvus — the eighth, and the ending that breaks step",
+      "headword": "octāvus, octāva, octāvum",
+      "romanization": "octāvus, octāva, octāvum",
+      "gloss": "eighth — the one that takes a different ending",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac3086ecb64ff11a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the eighth — the one that does not do what the last four did."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say septimus — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *septimus* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tertius — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tertius* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mūrus — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mūrus* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quia — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quia* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say diēs Lūnae — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *diēs Lūnae* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say diēs Sōlis — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *diēs Sōlis* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "octāvus, octāva, octāvum — \"eighth.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Octō is eight. By now you would expect octus, and it is not that. This one takes -āvus, and it is the only ordinal in the ten that does."
+            },
+            {
+              "kind": "speech",
+              "text": "Worth stopping on, because it shows what a pattern in a language actually is. Four ordinals in a row behaved alike, so the shape looked settled; the eighth breaks step, and then the ninth breaks it differently, and the tenth goes back to behaving. A learner who was told a rule and then met these would think the rule was broken. A learner who was shown the shape and then shown where it bends has learned the language instead."
+            },
+            {
+              "kind": "speech",
+              "text": "October is this number in a month's name. And an octave in music is the eighth note, the one at which the names begin again — do to do — so the interval is named for the count that closes it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "octāvus, octāva, octāvum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *octāvus, octāva, octāvum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ending that breaks step — not octus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ending that breaks step — not *octus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the eight so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the eight so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What ending does octāvus take, and how many of the ten take it? (-āvus, and only this one.) What is an octave, counted out? (The eighth note — where the names start again.) And what is October, taken literally? (The eighth month.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C56-nonus",
+      "sequence": 1580,
+      "title": "nōnus — the ninth, and where noon comes from",
+      "headword": "nōnus, nōna, nōnum",
+      "romanization": "nōnus, nōna, nōnum",
+      "gloss": "ninth — and the hour that turned into noon",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82b4e034f895cf70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the ninth — and the best word-history in the chapter."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say octāvus — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *octāvus* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quārtus — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quārtus* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hortus — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hortus* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say meus — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *meus* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say niger and albus — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *niger and albus* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ruber and caeruleus — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ruber and caeruleus* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nōnus, nōna, nōnum — \"ninth.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Novem is nine, and this time the word is not lengthened but squeezed: noven- collapses in on itself and comes out as nōnus, with a long ō where the ove used to be. Two ordinals running have now bent the shape in two different ways."
+            },
+            {
+              "kind": "speech",
+              "text": "November is this number in a name."
+            },
+            {
+              "kind": "speech",
+              "text": "And then nōna hōra. Counting from sunrise, the ninth hour is the middle of the afternoon, and it was the hour of a fixed prayer. Over centuries that prayer crept earlier and earlier in the day, until it was being said at midday — and the name went with it. English noon is nōna, still meaning \"the ninth\", attached now to an hour three hours away from the one it was named for. The word stayed put; the clock moved under it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nōnus, nōna, nōnum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nōnus, nōna, nōnum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the squeeze — novem becomes nōnus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the squeeze — *novem → nōnus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nōna hōra — the ninth hour, once mid-afternoon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nōna hōra* — the ninth hour, once mid-afternoon]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How is nōnus made out of novem? (By squeezing it shut, not by adding — noven- to nōn-.) Which English word is nōna hōra? (Noon.) And what moved, the word or the hour? (The hour — the name stayed and the time it named drifted to midday.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C56-decimus",
+      "sequence": 1590,
+      "title": "decimus — the tenth, and the ten complete",
+      "headword": "decimus, decima, decimum",
+      "romanization": "decimus, decima, decimum",
+      "gloss": "tenth — and the tax that took one in ten",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d3863652e317380",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the tenth, which closes the series."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nōnus — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nōnus* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quīntus — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quīntus* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say focus — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *focus* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tuus — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tuus* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pater and mater — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pater and mater* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say frater and soror — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *frater and soror* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "decimus, decima, decimum — \"tenth.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Decem is ten, and the ending goes on with the same worn-down middle you met in septimus: decem becomes decimus. Remember that c is hard — DEK-imus."
+            },
+            {
+              "kind": "speech",
+              "text": "December is this number in a name, and it is the last of the four the calendar froze."
+            },
+            {
+              "kind": "speech",
+              "text": "Decima on its own means \"a tenth part\", and that noun did a great deal of work. Decimate is the Roman army's punishment: a unit that broke was made to draw lots and one man in ten was killed by the other nine. A dime is a tenth of a dollar. A tithe is a tenth of a harvest, and décima is still the word for it in Spanish."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the ten. Say them in order and you have a series that no cardinal count gives you: the place a thing holds, not how many of it there are."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "decimus, decima, decimum — DEK-imus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *decimus, decima, decimum* — *DEK-imus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the join — decem becomes decimus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the join — *decem → decimus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all ten in order, prīmus to decimus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all ten in order, *prīmus* to *decimus*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How is c said in decimus? (Hard — DEK-imus.) What did the Roman army actually do when it decimated a unit? (Killed one man in ten, chosen by lot.) And how many of the ten ordinals have their own number visible inside them? (Eight — every one but prīmus and secundus.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

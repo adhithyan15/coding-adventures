@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Ante et Post",
+  "label": "ch:la-ante-post",
+  "canDo": "I can put one thing before or after another with ante and post, and place an event in a Roman day.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "LA-C57-practice",
+    "kind": "task",
+    "summary": "The hours and the halves of the day put together: prima, sexta and nona hora against ante and post meridiem.",
+    "assesses": [
+      "LA-LEX-C57-ORDER-01",
+      "LA-LEX-C57-ORDER-02",
+      "LA-TASK-C57-ORDER-03"
+    ]
+  }
+}
