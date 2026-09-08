@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+### Fixed -- `createCard` and `startSession` accepted a deck the collection does not contain (#14533)
+
+Both reach `reduce` raw through `dispatch` -- a documented public surface: the
+README describes it, the web host declares it, and `eg_dispatch` exports it to
+every native shell. `reduce` returns `AppState` and cannot refuse anything, so
+nothing checked the deck.
+
+The session is the more serious of the two. `DeleteDeck` selects sessions by
+`deck_id`, so one naming a deck that never existed can never be selected and
+never removed -- the same permanently-undeletable shape as the importer bug in
+#14559.
+
+The check is written as a **match over every command variant that carries a deck
+id**, not a list of the ones known to be broken. Each earlier fix in this family
+patched the routes someone had already found, and each time there was another;
+enumerating the surface is what stops that, and a new variant carrying a deck id
+now has to be decided about rather than defaulted.
+
+Two are deliberately exempt, and both are pinned by tests so the choice cannot
+be widened by accident:
+
+- `updateDeck` and `deleteDeck` mutate or remove only what they find, so neither
+  can create a dangling reference. Refusing them would turn a harmless no-op
+  into an error for a caller that deletes twice -- which a retry, or two hosts
+  on one collection, will do.
+- `setDeckOptions` creates *configuration*, not content. A preset for a deck
+  that does not exist is inert, since options are read while scheduling that
+  deck's cards and it has none. It does outlive `DeleteDeck`, which cleans
+  cards, notes, sessions and reviews but not presets -- that is worth fixing by
+  making the deletion complete (#14576) rather than by refusing the write.
+
 ### Fixed -- rebuilding a filtered deck that does not exist emptied the collection (#14531)
 
 Rebuilding a filtered deck *moves cards out of the decks they are in* and into
