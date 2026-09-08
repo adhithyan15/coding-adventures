@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:cb0da8b3b0afd6b6",
+  "lessonIds": [
+    "FR-C39-qui",
+    "FR-C39-que",
+    "FR-C39-quoi",
+    "FR-C39-moi-toi",
+    "FR-C39-lui-elle",
+    "FR-R39-qui-est-ce"
+  ],
+  "tex": "french/book/chapters/ch43-pronouns.tex"
+}

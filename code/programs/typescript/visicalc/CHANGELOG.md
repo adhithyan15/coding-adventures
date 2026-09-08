@@ -2,6 +2,9 @@
 
 ## 2026-09-08
 
+- Guide new workbooks with shared Mosaic content. Keep the same grid mounted
+  as the first cell is committed or the last cell is cleared, in both themes.
+
 - Expose the workbook and startup titles as semantic level-two headings through
   Mosaic's shared React emitter; retain their authored typography and spacing.
 

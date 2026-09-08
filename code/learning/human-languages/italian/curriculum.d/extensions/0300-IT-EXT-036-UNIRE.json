@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-036-UNIRE",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can join clauses with ma, o, perché and quando, and build a purpose clause with per plus an infinitive.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C32-ma",
+    "IT-C32-o",
+    "IT-C32-perche",
+    "IT-C32-quando",
+    "IT-C32-per"
+  ]
+}

@@ -34,12 +34,14 @@ both descriptor metadata and isolated array value storage.
 **AL4 path-independent standard-result arithmetic:** an exact result produced
 by a pure built-in over conditional tracked-real branches may compose with
 finite literal `+`, `-`, `*`, or `/` arithmetic, bounded powers with
-variable-free, exact tracked-local-integer, or exact integral tracked-local-real
-exponents, and exact tracked local
+variable-free, exact tracked-local-integer, exact integral tracked-local-real,
+or finite integral arithmetic over initialized tracked-local-real exponents,
+and exact tracked local
 scalar snapshots before feeding another pure
 built-in bounded exponent. The selector still executes; uninitialized or
 global snapshots, non-finite results, uninitialized or fractional tracked power
-operands, standard-free tracked-real powers, effectful
+operands and arithmetic, call-bearing or conditional arithmetic, standard-free
+tracked-real powers, effectful
 selectors, and overrides fail closed.
 
 **AL-multidim-string-capture:** the seven-backend matrix executes a nested

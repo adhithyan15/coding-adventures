@@ -15,6 +15,14 @@ private final class VentureNativeLibrary {
   typealias ScrollCommand = @convention(c) (
     UnsafeMutableRawPointer?, UnsafePointer<CChar>?
   ) -> UInt8
+  typealias ControlKey = @convention(c) (
+    UnsafeMutableRawPointer?, UnsafePointer<CChar>?, UInt8
+  ) -> UInt8
+  typealias ControlText = @convention(c) (
+    UnsafeMutableRawPointer?, UnsafePointer<CChar>?
+  ) -> UInt8
+  typealias ControlClipboard = @convention(c) (UnsafeMutableRawPointer?) -> UnsafeMutablePointer<CChar>?
+  typealias CaretTick = @convention(c) (UnsafeMutableRawPointer?, UInt64) -> UInt8
   typealias ScrollMetrics = @convention(c) (
     UnsafeMutableRawPointer?, UnsafeMutablePointer<Double>?, UnsafeMutablePointer<Double>?,
     UnsafeMutablePointer<Double>?, UnsafeMutablePointer<Double>?
@@ -33,6 +41,13 @@ private final class VentureNativeLibrary {
   let handleEvent: HandleEvent
   let scroll: Scroll
   let scrollCommand: ScrollCommand
+  let controlKey: ControlKey
+  let controlText: ControlText
+  let controlCopy: ControlClipboard
+  let controlCut: ControlClipboard
+  let controlPaste: ControlText
+  let caretTick: CaretTick
+  let imeCandidateRect: ControlClipboard
   let scrollMetrics: ScrollMetrics
   let scrollTo: ScrollTo
   let activateLink: ActivateLink
@@ -66,6 +81,15 @@ private final class VentureNativeLibrary {
       let scrollCommand = symbol(
         "venture_browser_macos_scroll_command", as: ScrollCommand.self
       ),
+      let controlKey = symbol("venture_browser_macos_control_key", as: ControlKey.self),
+      let controlText = symbol("venture_browser_macos_control_text", as: ControlText.self),
+      let controlCopy = symbol("venture_browser_macos_control_copy", as: ControlClipboard.self),
+      let controlCut = symbol("venture_browser_macos_control_cut", as: ControlClipboard.self),
+      let controlPaste = symbol("venture_browser_macos_control_paste", as: ControlText.self),
+      let caretTick = symbol("venture_browser_macos_caret_tick", as: CaretTick.self),
+      let imeCandidateRect = symbol(
+        "venture_browser_macos_ime_candidate_rect", as: ControlClipboard.self
+      ),
       let scrollMetrics = symbol(
         "venture_browser_macos_scroll_metrics", as: ScrollMetrics.self
       ),
@@ -87,6 +111,13 @@ private final class VentureNativeLibrary {
     self.handleEvent = handleEvent
     self.scroll = scroll
     self.scrollCommand = scrollCommand
+    self.controlKey = controlKey
+    self.controlText = controlText
+    self.controlCopy = controlCopy
+    self.controlCut = controlCut
+    self.controlPaste = controlPaste
+    self.caretTick = caretTick
+    self.imeCandidateRect = imeCandidateRect
     self.scrollMetrics = scrollMetrics
     self.scrollTo = scrollTo
     self.activateLink = activateLink
@@ -1385,6 +1416,22 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     contentView?.renderPage()
   }
 
+  fileprivate func controlKey(_ key: String, shift: Bool) -> Bool {
+    guard let native, let browser else { return false }
+    let changed = key.withCString { native.controlKey(browser, $0, shift ? 1 : 0) }
+    guard changed != 0 else { return false }
+    contentView?.renderPage()
+    return true
+  }
+
+  fileprivate func controlText(_ text: String) -> Bool {
+    guard let native, let browser else { return false }
+    let changed = text.withCString { native.controlText(browser, $0) }
+    guard changed != 0 else { return false }
+    contentView?.renderPage()
+    return true
+  }
+
   fileprivate func scrollMetrics() -> VentureScrollMetrics? {
     guard let native, let browser else { return nil }
     var offsetY = 0.0
@@ -1599,6 +1646,29 @@ private final class VentureContentView: NSView {
     }
     guard modifiers.intersection([.command, .control, .option]).isEmpty else {
       super.keyDown(with: event)
+      return
+    }
+    let controlKey: String?
+    switch event.keyCode {
+    case 51: controlKey = "backspace"
+    case 117: controlKey = "delete"
+    case 123: controlKey = "arrow-left"
+    case 124: controlKey = "arrow-right"
+    case 126: controlKey = "arrow-up"
+    case 125: controlKey = "arrow-down"
+    case 115: controlKey = "home"
+    case 119: controlKey = "end"
+    case 36: controlKey = "enter"
+    case 49: controlKey = "space"
+    default: controlKey = nil
+    }
+    if let controlKey, host?.controlKey(controlKey, shift: modifiers.contains(.shift)) == true {
+      return
+    }
+    if let text = event.characters, !text.isEmpty,
+      text.rangeOfCharacter(from: .controlCharacters) == nil,
+      host?.controlText(text) == true
+    {
       return
     }
     let command: String?

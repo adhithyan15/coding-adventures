@@ -8,9 +8,9 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 3240
 chapter: 83
 type: word
-headword: "नौवाँ"
-gloss: "ninth — a cardinal ending in a vowel, and the ending still just follows"
-romanization: "nauvā̃"
+headword: "नौवाँ / नौवीं"
+gloss: "ninth / feminine ninth — a cardinal ending in a vowel, and the ending still just follows"
+romanization: "nauvā̃ / nauvī̃"
 concept_tag: HI-ORDINAL-NINTH
 prerequisites: [HI-C76-eighth, HI-C75-fourth, HI-C69-verb-last, HI-C69-ticket, HI-C21-six-nine-ten-history, HI-C31-suprabhat]
 sounds: []
@@ -68,11 +68,12 @@ you can hear which is which.
 [PAUSE 1s]
 - [YOU SAY: *nauvā̃*]
 - [YOU SAY: the rule — *nau* + *-vā̃*, after a vowel]
+- [YOU SAY: *nauvī̃ kitāb* — the ninth book]
 - [YOU SAY: *cauthā* is fused; *nauvā̃* is added]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C76-ORDINAL-01, HI-LEX-C76-ORDINAL-02, HI-LEX-C76-ORDINAL-03, HI-LEX-C76-ORDINAL-04] -->
 
-[PAUSE 3s] Say the ninth day. (**नौवाँ दिन**.) What does *नौ* end in, and does the ending
-care? (**A vowel**, and **no**.) And which of *cauthā* and *nauvā̃* was fused
-rather than added? (***Cauthā***.)
+[PAUSE 3s] Say the ninth day. (**नौवाँ** (*nauvā̃*) **दिन**.) What does *नौ* end in, and does the ending
+care? (**A vowel**, and **no**.) What changes for a feminine noun? (**नौवीं**.)
+And which of *cauthā* and *nauvā̃* was fused rather than added? (***Cauthā***.)

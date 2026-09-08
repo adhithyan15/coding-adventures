@@ -1,0 +1,17 @@
+{
+  "id": "FR-PATH-A1-JOINERS",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "FR-C36-svo",
+    "FR-C36-et",
+    "FR-C36-ou-conj",
+    "FR-C36-mais",
+    "FR-C36-parce-que",
+    "FR-R36-deux-idees"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-A1-JOINERS"
+  ],
+  "after": []
+}

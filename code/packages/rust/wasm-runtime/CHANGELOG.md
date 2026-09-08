@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.38] — 2026-09-08 — `ValueType::NonNullAnyref` exhaustiveness fix (W39 slice 4)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 4 of 5.
+`wasm-types` 0.1.28 adds `ValueType::NonNullAnyref` (Correction 3) --
+this crate's own `call()` legacy i64-round-trip argument conversion
+(`wasm_args`) is an exhaustive match over `ValueType`, so it needed one
+new arm. Joins the existing `Eqref`/`StructRefAny`/`ArrayRefAny`
+"lossy-legacy-path placeholder" group (`WasmValue::I32(arg as i32)`) --
+no vendored corpus directive passes a `(ref any)`-typed value as a
+top-level `invoke` argument (`br_on_cast.wast`'s own `(ref any)`-typed
+function is only ever reached via a nested `call` inside another
+function body). No other change needed in this crate.
+
 ## [0.6.37] — 2026-09-02 — thread the module's composite-kind ledger into `wasm-execution` (W39 slice 2)
 
 Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 2 of 5. One

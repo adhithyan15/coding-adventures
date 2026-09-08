@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:86821155ce4b6fc5",
+  "lessonIds": [
+    "IT-C34-mio-tuo-suo",
+    "IT-C34-nostro-vostro",
+    "IT-C34-il-mio-nome",
+    "IT-C34-signore-signora",
+    "IT-C34-per-me"
+  ],
+  "tex": "italian/book/chapters/ch34-possessivi.tex"
+}

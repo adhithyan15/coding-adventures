@@ -128,8 +128,18 @@ The delivery order is:
    body; Post credentials remain only in the form body. Returned headers and
    bodies are zeroizing, reject provider or client-identity mismatches before
    secret access, and retain the provider/trace audit binding. A
-   non-exporting signer for `private_key_jwt` remains next. Public native
-   clients remain `none` + PKCE.
+   non-exporting signer boundary for `private_key_jwt` is shipped: opaque
+   provider-bound key references, algorithm-as-data, bounded zeroizing
+   signature ownership, and durable trace-correlated audit before signing and
+   before result release. RFC 8414 signing algorithms are retained exactly as
+   provider data, required when JWT client authentication is advertised, and
+   reject `none` without inventing defaults. No concrete software algorithm is
+   implied. The repository-owned Ed25519 implementation must first replace
+   secret-dependent scalar branches/loops and scrub key-derived temporaries
+   before an `EdDSA` authority can be enabled; `RS256` requires a separate
+   repository-owned RSA primitive. JWT claims, replay-resistant identifiers,
+   and provider-driven request binding remain next. Public native clients
+   remain `none` + PKCE.
 7. **Device Authorization Grant:** RFC 8628 preparation and a caller-driven
    polling state machine with no internal sleep or network authority.
 8. **HTTPS transport:** provider-neutral request/response types over the

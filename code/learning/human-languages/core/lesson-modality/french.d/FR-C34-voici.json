@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C34-voici",
+    "language": "french",
+    "chapter": 38,
+    "sequence": 1360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f24fb2ef61a81eda"
+  },
+  "findings": []
+}

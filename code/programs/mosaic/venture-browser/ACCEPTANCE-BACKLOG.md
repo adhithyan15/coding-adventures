@@ -177,13 +177,25 @@ cross-platform proving application. Items are ordered by risk and dependency.
   dedicated host-neutral planner, transactional session requests, HTTP POST
   transport, shared host activation, bounded diagnostics, and deterministic
   core/Cairo fixtures covering validation, reset, serialization, and history.
-- [ ] **P1 browser convergence — native form editing and feedback.** Promote
+- [x] **P1 browser convergence — native form editing and feedback.** Promote
   retained controls from append/backspace semantics to selection, caret,
   replacement, composition/IME, password masking, and multiline editing;
   focus the first invalid control and expose reusable validation/accessibility
   metadata. Route the same keyboard, text-input, and focus contract through
   available native/web hosts with deterministic interaction fixtures, without
   moving editing or validation policy into toolkit adapters.
+- [x] **P1 browser convergence — editor presentation and clipboard.** Project
+  retained caret, selection, composition ranges, and validation feedback into
+  backend-neutral paint/accessibility scenes; add pointer drag selection,
+  input/textarea viewport scrolling, clipboard cut/copy/paste, and deterministic
+  blink timing. Route host clipboard and IME candidate-rectangle capabilities
+  through explicit interfaces, preserving password secrecy and avoiding
+  toolkit-owned editing state.
+- [ ] **P1 browser convergence — advanced editing transactions.** Add
+  grapheme- and word-aware navigation, undo/redo transactions, clipboard HTML
+  flavor negotiation, drag autoscroll, double/triple-click selection, and
+  platform accessibility actions while keeping edit history and selection
+  policy shared across every host.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

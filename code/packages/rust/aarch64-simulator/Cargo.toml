@@ -1,0 +1,8 @@
+[package]
+name = "aarch64-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked AArch64 ARMv8-A functional simulator"
+license = "MIT"
+
+[dependencies]

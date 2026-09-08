@@ -682,7 +682,10 @@ mod tests {
             request.content_type.as_deref(),
             Some("application/x-www-form-urlencoded")
         );
-        assert_eq!(request.body, b"bio=hello+world&intent=save".to_vec());
+        assert_eq!(
+            request.body,
+            b"bio=hello%0D%0Aworld&intent=save".to_vec()
+        );
     }
 
     #[test]

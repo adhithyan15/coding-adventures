@@ -1,0 +1,910 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 33,
+  "title": "This and That",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:0f2da8061d632963",
+  "lessons": [
+    {
+      "id": "IT-C33-questo",
+      "sequence": 1230,
+      "title": "questo — this one, here",
+      "headword": "questo",
+      "romanization": "questo",
+      "gloss": "this — the first pointing word this book has ever had",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:391bd7c527227a7e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, opening a column this book has left entirely empty."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say per + infinito — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *per + infinito* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ma — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ma* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say prima il primo, dopo il secondo — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *prima il primo, dopo il secondo* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sì — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sì* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il pane — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il pane* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "questo (masculine), questa (feminine) — this. plural: questi, queste — these."
+            },
+            {
+              "kind": "speech",
+              "text": "Questo è buono. — This is good. Questa è la mia amica. — This is my friend. (the possessive is the next chapter's) Prendo questo. — I'll have this one."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing in the previous thirty-two chapters could point at anything. You could name a coffee, and you could not indicate that coffee rather than another."
+            },
+            {
+              "kind": "speech",
+              "text": "It changes its ending like any describing word, and it can either stand alone — prendo questo — or go in front of a noun, which is the next lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: behold, that of yours",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin's pointing words were hic (this, near me), iste (that, near you) and ille (that, over there). Spoken Latin found them too small to hear and reinforced them with eccum, \"behold, look\" — the same gesture-word that is inside ecce homo."
+            },
+            {
+              "kind": "speech",
+              "text": "Eccu(m) istum becomes questo. Literally: look, that one of yours."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met that reinforcing eccu- twice already without being told. Così is eccu(m) sīc, \"behold, thus.\" And the article il, la, lo is what is left of ille — the third of those three Latin pointers, worn down until it stopped pointing at all and became \"the\". The next lesson takes ille back the other way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "questo, questa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *questo, questa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Questo è buono.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Questo è buono.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Prendo questo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Prendo questo.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"this\"? (Questo, or questa.) Which Latin words is it made of? (Eccu(m) istum — \"behold, that of yours\".) Which word already in this book carries the same eccu-? (Così.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C33-quello",
+      "sequence": 1240,
+      "title": "quello — that one, over there",
+      "headword": "quello",
+      "romanization": "quello",
+      "gloss": "that — the far half of the pair, and the same Latin word as the article you learnt on the first page",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:317a283abcdc2de8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, and this chapter is already half built."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say questo — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *questo* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say o — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *o* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say no — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *no* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say l'acqua, il vino — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *l'acqua, il vino* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the pair, and it is only a pair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quello (masculine), quella (feminine) — that. plural: quelli, quelle — those."
+            },
+            {
+              "kind": "speech",
+              "text": "Questo è buono, quello non è buono. — This one's good, that one isn't. Prendo quello. — I'll have that one."
+            },
+            {
+              "kind": "speech",
+              "text": "Italian points two ways, not three. Questo is near the speaker; quello is everything else — near you, or far from both of us. Spanish keeps all three of Latin's — este, ese, aquel — and a learner arriving from Spanish has one distinction to forget rather than one to learn."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole system. There is no third word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: the article, pointing again",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Quello is eccu(m) illum — \"behold, that one over there.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Illum is ille, and you have owned ille since the first chapter of this book. It is what il, la and lo are made of: the Latin far-pointer, used so often to mean the one already mentioned that it stopped pointing and became the definite article."
+            },
+            {
+              "kind": "speech",
+              "text": "So Italian took one Latin word down two roads. Unstressed and worn to a stump, it became il — a word that points at nothing. Reinforced with eccum and kept strong, it became quello — a word that points hard."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a noun, quello takes exactly the shapes the article takes, for exactly the same reason: quel giorno (il giorno), quello zucchero (lo zucchero), quell'amico (l'amico), quella sera (la sera). If you know the article rule you already know this one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quello, quella",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quello, quella*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Questo è buono, quello non è buono.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Questo è buono, quello non è buono.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quel giorno, quello zucchero, quell'amico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quel giorno, quello zucchero, quell'amico*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many ways does Italian point? (Two — questo and quello.) Which Latin word is quello built on? (Ille.) And which word from the first chapter is built on the same ille? (The article il, la, lo.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C33-questo-caffe",
+      "sequence": 1250,
+      "title": "questo caffè — where the pointing word goes, and what it evicts",
+      "headword": "questo caffè",
+      "romanization": "questo caffè",
+      "gloss": "the position rule: a demonstrative goes in front of its noun and throws the article out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2520ff7c7900238e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter's middle lesson, and it introduces no new word."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quello — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quello* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say perché — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *perché* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sì, grazie / no, grazie — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sì, grazie / no, grazie* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say undici — sedici — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *undici — sedici* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: in front, and instead of the article",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "questo caffè — this coffee, quella persona — that person."
+            },
+            {
+              "kind": "speech",
+              "text": "Two rules, and the second is the one to watch."
+            },
+            {
+              "kind": "speech",
+              "text": "One: it goes in front. Italian's ordinary describing words go after the noun — un vino rosso, a red wine — but questo and quello go before it, always, exactly as English does."
+            },
+            {
+              "kind": "speech",
+              "text": "Two: it replaces the article. From its first chapter this book has told you to store every noun with its article — il caffè, la persona, lo zucchero. When a demonstrative arrives, the article goes:"
+            },
+            {
+              "kind": "speech",
+              "text": "Right: questo caffè, quella persona Wrong: questo il caffè, il questo caffè, quella la persona."
+            },
+            {
+              "kind": "speech",
+              "text": "Italian will not carry two of these at once. English does the same without comment — you cannot say the this coffee — so the rule costs an English speaker nothing to obey and is worth stating because it is the only place in this book where a taught article has to be taken back out."
+            },
+            {
+              "kind": "speech",
+              "text": "This lesson introduces no new word. Questo and quello are two and one lessons back; caffè, persona and zucchero are Chapters 22 and 23."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "questo caffè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *questo caffè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quella persona",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quella persona*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quello zucchero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quello zucchero*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "questa amica",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *questa amica*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does questo go? (In front of the noun.) What happens to the article? (It goes — questo caffè, never questo il caffè.) Which describing words go AFTER the noun instead? (The ordinary ones — un vino rosso.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C33-questo-e",
+      "sequence": 1260,
+      "title": "Questo è Marco — introducing somebody",
+      "headword": "Questo è Marco",
+      "romanization": "Questo è Marco",
+      "gloss": "introducing somebody else — the move this book could not make, for want of a word for this",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbe06082306eabdc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four in, and this one puts three chapters together."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say questo caffè — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *questo caffè* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quando — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quando* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say d'accordo — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *d'accordo* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say diciassette — venti — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *diciassette — venti* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the introduction",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Questo è Marco. — This is Marco. Questa è Giulia. — This is Giulia."
+            },
+            {
+              "kind": "speech",
+              "text": "Questo for a man, questa for a woman. The word agrees with the person being introduced, not with you and not with the person you are speaking to."
+            },
+            {
+              "kind": "speech",
+              "text": "The mi chiamo chapter taught you the whole of introducing yourself — mi chiamo, come ti chiami, piacere — and left the third person out entirely, because a third-person introduction needs a pointing word and there was none. There is now."
+            },
+            {
+              "kind": "speech",
+              "text": "The full exchange, using only what this book has given you:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Questo è Marco. — Piacere. — Piacere."
+            },
+            {
+              "kind": "speech",
+              "text": "You can add what the person is to you, once the possessives arrive. For now, the plain noun does it:"
+            },
+            {
+              "kind": "speech",
+              "text": "Questo è l'amico di Giulia. — This is Giulia's friend."
+            },
+            {
+              "kind": "speech",
+              "text": "And note what Italian does not do. English says this is my friend Marco and can also say meet Marco. Italian has no imperative in this book yet, so questo è is the introduction, and it is the ordinary one — an Italian would say it too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Questo è Marco.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Questo è Marco.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Questa è Giulia.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Questa è Giulia.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Questo è l'amico di Giulia.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Questo è l'amico di Giulia.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you introduce a man? (Questo è …) And a woman? (Questa è …) Which chapter taught you to introduce yourself and could not teach this? (The mi chiamo chapter — it had no word for this.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C33-qui-li",
+      "sequence": 1270,
+      "title": "qui, lì — here and there",
+      "headword": "qui / lì",
+      "romanization": "qui / lì",
+      "gloss": "here and there — the place pair that matches the pointing pair, made from the same two Latin words",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02df60d1c985561c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes where it began, with pointing."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Questo è Marco — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Questo è Marco* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say per + infinito — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *per + infinito* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vero? — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vero?* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nero, bianco — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nero, bianco* — **R4**, recognition at distance, eighty lessons back or more]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the pair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qui — here, lì — there."
+            },
+            {
+              "kind": "speech",
+              "text": "Il caffè è qui. — The coffee is here. Marco è lì. — Marco is there. Sono qui. — I'm here."
+            },
+            {
+              "kind": "speech",
+              "text": "Two ways, matching the two ways of pointing:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "pointing at a thing",
+                "pointing at a place"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "pointing at a thing: questo — this, near me. pointing at a place: qui — here.",
+                "pointing at a thing: quello — that, away. pointing at a place: lì — there."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Italian also has qua and là, which mean the same and are used equally often; qui/lì are slightly more precise and qua/là slightly vaguer, and no Italian will notice which you pick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: the same two Latin pointers again",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the third lesson in a row built on the same two Latin words."
+            },
+            {
+              "kind": "speech",
+              "text": "Qui is eccu(m) hīc — \"behold, here.\" That hīc is Latin's near-pointer, the one Italian did not keep for things; it survives only in the place word."
+            },
+            {
+              "kind": "speech",
+              "text": "Lì is illīc — \"there\", and illīc is ille again, the same far-pointer that gave you quello one lesson ago and il, la, lo on the first page."
+            },
+            {
+              "kind": "speech",
+              "text": "So: ille became the article, and quello, and now lì. One Latin word, three Italian jobs, and this book has now taught all three."
+            },
+            {
+              "kind": "speech",
+              "text": "The accent on lì is doing the work it did on sì and né: it keeps the word apart from li, an unstressed word with another job."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qui, lì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qui, lì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Il caffè è qui.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Il caffè è qui.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Marco è lì.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Marco è lì.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qua, là",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qua, là*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"here\" and \"there\". (Qui — lì.) Which Latin word is lì built on? (Ille, through illīc.) Name the three Italian jobs ille has done in this book. (The article il/la/lo, the far demonstrative quello, and lì.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

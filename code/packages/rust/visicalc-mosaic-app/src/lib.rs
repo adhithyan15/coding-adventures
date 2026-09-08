@@ -209,6 +209,7 @@ impl VisiCalcMosaicApp {
             })
             .unwrap_or((-1, -1, ""));
         AppUpdate::new(json!({
+            "workbook-empty": !self.workbook.has_cell_content(),
             "cell-address": address, "formula": formula, "read-only": self.pending_file.is_some(),
             "file-status": self.file_status,
             "selection-summary": self.describe_cell(cursor.row, cursor.col),
@@ -558,6 +559,32 @@ mod tests {
 
     fn dispatch(app: &mut VisiCalcMosaicApp, event: &str, payload: Value) -> AppUpdate {
         app.dispatch(Event::new(1, event, payload)).unwrap()
+    }
+
+    #[test]
+    fn empty_introduction_tracks_committed_content_across_the_workbook() {
+        let mut app = VisiCalcMosaicApp::default();
+        assert_eq!(app.update().props["workbook-empty"], false);
+        assert_eq!(dispatch(&mut app, "newWorkbook", json!({})).props["workbook-empty"], true);
+        dispatch(&mut app, "onFormulaChange", json!({"value":"12"}));
+        assert_eq!(app.update().props["workbook-empty"], true);
+        dispatch(&mut app, "cancel", json!({}));
+        assert_eq!(app.update().props["workbook-empty"], true);
+        dispatch(&mut app, "navigate", json!({"row":99,"col":25}));
+        dispatch(&mut app, "onFormulaChange", json!({"value":"0"}));
+        dispatch(&mut app, "commit", json!({}));
+        dispatch(&mut app, "scroll", json!({"offset":0}));
+        assert_eq!(app.update().props["workbook-empty"], false);
+        let saved = app.snapshot().unwrap().unwrap();
+        dispatch(&mut app, "newWorkbook", json!({}));
+        app.restore(saved).unwrap();
+        assert_eq!(app.update().props["workbook-empty"], false);
+        app.workbook.clear_cell(SheetId(0), CellAddress::new(100, 26));
+        assert_eq!(app.update().props["workbook-empty"], true);
+        let second = app.workbook.add_sheet("Other");
+        app.workbook.set_formula(second, CellAddress::new(100, 26), "=A1").unwrap();
+        // No recalc: authored formulas count even before a display value exists.
+        assert_eq!(app.update().props["workbook-empty"], false);
     }
 
     fn file_app() -> MosaicRuntime<VisiCalcMosaicApp> {

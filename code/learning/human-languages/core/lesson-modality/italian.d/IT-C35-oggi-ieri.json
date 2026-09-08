@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C35-oggi-ieri",
+    "language": "italian",
+    "chapter": 35,
+    "sequence": 1350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c6ea7528e26f9e1"
+  },
+  "findings": []
+}

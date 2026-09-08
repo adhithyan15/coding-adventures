@@ -2897,7 +2897,7 @@ fn emit_xaml_node(
         // to the "not yet supported" error inside emit_path itself, not the
         // generic UnsupportedPrimitive fallback below, so the message names
         // the kind specifically).
-        "Path" => emit_path(node, indent, part_styles),
+        "Path" => emit_path(node, indent, part_styles, ctx),
 
         // PR-2: For lowering.
         "For" => emit_for(node, indent, part_styles, ctx),
@@ -4132,6 +4132,37 @@ fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, Pipel
     }
 }
 
+/// Read a numeric coordinate for a `line` Path. Unlike circle and curve
+/// geometry, Line exposes each coordinate as a dependency property, so WinUI
+/// can bind it directly. This is deliberately separate from
+/// `required_path_number`: circle positioning needs derived `Margin` values
+/// and curve geometry needs `Point` construction, neither of which an XAML
+/// markup binding can express safely yet.
+fn required_path_line_number(
+    node: &LayoutNode,
+    prop_name: &str,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    match find_prop_value(node, prop_name) {
+        Some(LayoutPropValue::Number(value)) => Ok(value.to_string()),
+        Some(LayoutPropValue::SlotRef(slot)) => Ok(format!(
+            "{{x:Bind {}, Mode=OneWay}}",
+            ctx.slot_xbind_path(slot)
+        )),
+        Some(LayoutPropValue::Expr(source)) => match lower_number_expr_for_xbind(source, ctx) {
+            ExprLowering::Bindable(path) | ExprLowering::Helper(path) => {
+                Ok(format!("{{x:Bind {path}, Mode=OneWay}}"))
+            }
+            ExprLowering::Unsupported(reason) => Err(PipelineEmitError::UnsupportedExpression(
+                format!("Path.{prop_name}: {reason}"),
+            )),
+        },
+        _ => Err(PipelineEmitError::UnsupportedPrimitive(format!(
+            "Path missing required numeric prop '{prop_name}:'"
+        ))),
+    }
+}
+
 /// `Path [name] (kind: circle|line|curve, ...)` → real WinUI vector
 /// geometry. UI39 §3.1's four shape kinds; `arc` is a stretch goal not
 /// implemented in this PR (falls through to a named "not yet supported"
@@ -4153,6 +4184,7 @@ fn emit_path(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let paint = path_paint_attr(node, part_styles);
@@ -4172,10 +4204,10 @@ fn emit_path(
             ))
         }
         "line" => {
-            let x1 = required_path_number(node, "x1")?;
-            let y1 = required_path_number(node, "y1")?;
-            let x2 = required_path_number(node, "x2")?;
-            let y2 = required_path_number(node, "y2")?;
+            let x1 = required_path_line_number(node, "x1", ctx)?;
+            let y1 = required_path_line_number(node, "y1", ctx)?;
+            let x2 = required_path_line_number(node, "x2", ctx)?;
+            let y2 = required_path_line_number(node, "y2", ctx)?;
             Ok(format!(
                 "{pad}<Line X1=\"{x1}\" Y1=\"{y1}\" X2=\"{x2}\" Y2=\"{y2}\" HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}/>\n"
             ))
@@ -7500,6 +7532,23 @@ fn try_lower_for_template_predicate(src: &str, ctx: &mut EmitContext<'_>) -> Opt
 /// re-tokenise here only to figure out which branch of the lowering
 /// table we're in.
 fn lower_expr_for_xbind(src: &str, ctx: &mut EmitContext<'_>) -> ExprLowering {
+    lower_expr_for_xbind_with_indexer_type(src, ctx, "string", "")
+}
+
+/// Numeric consumers need index expressions such as `segment[0]` to produce
+/// a `double` helper rather than the text lowerer's historical `string`
+/// default. The suffix keeps helpers for the same expression in different
+/// property domains type-safe and independently deduplicated.
+fn lower_number_expr_for_xbind(src: &str, ctx: &mut EmitContext<'_>) -> ExprLowering {
+    lower_expr_for_xbind_with_indexer_type(src, ctx, "double", "Number")
+}
+
+fn lower_expr_for_xbind_with_indexer_type(
+    src: &str,
+    ctx: &mut EmitContext<'_>,
+    indexer_return_type: &'static str,
+    helper_name_suffix: &'static str,
+) -> ExprLowering {
     let trimmed = src.trim();
     let tokens = match tokenise_expr(trimmed) {
         Ok(t) => t,
@@ -7510,7 +7559,13 @@ fn lower_expr_for_xbind(src: &str, ctx: &mut EmitContext<'_>) -> ExprLowering {
     // output is the lowered form. The parser is split into helper
     // functions; see below.
     let inside_template = !ctx.for_scope.is_empty();
-    let mut p = ExprParser::new(&tokens, ctx, src);
+    let mut p = ExprParser::new(
+        &tokens,
+        ctx,
+        src,
+        indexer_return_type,
+        helper_name_suffix,
+    );
     let lowered = match p.parse_or() {
         Ok(lowering) => {
             if p.is_done() {
@@ -7823,15 +7878,28 @@ struct ExprParser<'a, 'b> {
     /// The original source string â€” used in error messages and helper
     /// name hashing.
     src: &'a str,
+    /// The C# type of an indexer-only helper's result.
+    indexer_return_type: &'static str,
+    /// Distinguishes helpers with the same source but incompatible result
+    /// types, such as a text cell and a Path coordinate both reading `row[0]`.
+    helper_name_suffix: &'static str,
 }
 
 impl<'a, 'b> ExprParser<'a, 'b> {
-    fn new(tokens: &'a [ExprTok], ctx: &'a mut EmitContext<'b>, src: &'a str) -> Self {
+    fn new(
+        tokens: &'a [ExprTok],
+        ctx: &'a mut EmitContext<'b>,
+        src: &'a str,
+        indexer_return_type: &'static str,
+        helper_name_suffix: &'static str,
+    ) -> Self {
         Self {
             tokens,
             pos: 0,
             ctx,
             src,
+            indexer_return_type,
+            helper_name_suffix,
         }
     }
 
@@ -8027,7 +8095,7 @@ impl<'a, 'b> ExprParser<'a, 'b> {
         let return_type = if self.contains_logical_or_comparison() || self.starts_with_not() {
             "bool".to_string()
         } else {
-            "string".to_string()
+            self.indexer_return_type.to_string()
         };
 
         // Transliterate the source. Simple substitutions are enough
@@ -8035,7 +8103,7 @@ impl<'a, 'b> ExprParser<'a, 'b> {
         // operators (==/!=/<=/>=/<>/&&/||/!) and member/indexer access.
         let body = transliterate_to_csharp(self.tokens, self.ctx);
 
-        let name = format!("Expr_{:x}", hash_expr(self.src));
+        let name = format!("Expr_{:x}{}", hash_expr(self.src), self.helper_name_suffix);
         Ok(HelperMethod {
             name,
             parameters: params,
@@ -12730,6 +12798,72 @@ mod tests {
         assert!(r.xaml.contains("Y1=\"4\""), "got:\n{}", r.xaml);
         assert!(r.xaml.contains("X2=\"12\""), "got:\n{}", r.xaml);
         assert!(r.xaml.contains("Y2=\"4\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn path_line_binds_numeric_index_expressions_inside_for_templates() {
+        let c = component(
+            "Waveform",
+            vec![slot(
+                "segments",
+                SlotType::List(Box::new(ListInnerType::List(Box::new(
+                    ListInnerType::Number,
+                )))),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Waveform",
+            for_node(
+                LayoutPropValue::SlotRef("segments".to_string()),
+                "segment",
+                Some("segment-index"),
+                vec![LayoutNode {
+                    tag: "Path".to_string(),
+                    part_name: Some("waveform-segment".to_string()),
+                    props: vec![
+                        LayoutProp {
+                            name: "kind".to_string(),
+                            value: LayoutPropValue::Keyword("line".to_string()),
+                        },
+                        LayoutProp {
+                            name: "x1".to_string(),
+                            value: LayoutPropValue::Expr("segment[0]".to_string()),
+                        },
+                        LayoutProp {
+                            name: "y1".to_string(),
+                            value: LayoutPropValue::Expr("segment[1]".to_string()),
+                        },
+                        LayoutProp {
+                            name: "x2".to_string(),
+                            value: LayoutPropValue::Expr("segment[2]".to_string()),
+                        },
+                        LayoutProp {
+                            name: "y2".to_string(),
+                            value: LayoutPropValue::Expr("segment[3]".to_string()),
+                        },
+                    ],
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Waveform"));
+
+        assert!(r.xaml.contains("<Line X1=\"{x:Bind Expr_"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Y1=\"{x:Bind Expr_"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("X2=\"{x:Bind Expr_"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Y2=\"{x:Bind Expr_"), "got:\n{}", r.xaml);
+        assert!(
+            r.code_behind.contains("internal double Expr_"),
+            "numeric indexers must generate double helpers, got:\n{}",
+            r.code_behind
+        );
+        assert!(
+            r.for_view_models[0].source.contains("public double Expr_"),
+            "typed template must expose numeric helper values as row properties, got:\n{}",
+            r.for_view_models[0].source
+        );
     }
 
     #[test]

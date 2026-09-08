@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:ff63a69135564877",
+  "lessonIds": [
+    "IT-C31-che",
+    "IT-C31-penso-che",
+    "IT-C31-chi",
+    "IT-C31-che-cosa",
+    "IT-C31-che-buono"
+  ],
+  "tex": "italian/book/chapters/ch31-che.tex"
+}

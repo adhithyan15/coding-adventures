@@ -143,6 +143,8 @@ pub enum PipelineEmitError {
     /// relative reference with no scheme (`"#"`, `"/about"`) is
     /// unaffected -- only an explicit, disallowed scheme is rejected.
     UnsafeUriScheme(String),
+    /// A bound typography property cannot be projected safely.
+    InvalidTypography,
 }
 
 #[derive(Clone, Copy)]
@@ -154,6 +156,7 @@ struct ForPayloadScope<'a> {
 impl std::fmt::Display for PipelineEmitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            PipelineEmitError::InvalidTypography => write!(f, "font-size must be a positive finite number or a numeric slot reference on Text, HostButton, HostInput, or HostTable"),
             PipelineEmitError::ComponentNameMismatch {
                 mosmodel,
                 moslayout,
@@ -975,6 +978,9 @@ fn emit_jsx_tree(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
+    // Validate before specialized emitters can silently drop an authored font.
+    bound_typography_style(node)?;
+
     // `HostSurface` is the cross-backend composition seam for host-owned
     // content such as Venture's browser viewport. React/Electron hosts pass
     // any ReactNode (canvas, webview, native bridge wrapper, ...); Mosaic
@@ -1051,6 +1057,10 @@ fn emit_jsx_tree(
         return emit_host_radio_jsx(node, indent, part_styles);
     }
 
+    if node.tag == "HostSlider" {
+        return emit_host_slider_jsx(node, indent, part_styles);
+    }
+
     // UI29-4 — `HostLink` lowers to `<a href={...} target rel
     // onClick>`. The dedicated emitter is needed because:
     //   1. `target="_blank"` MUST be paired with `rel="noopener
@@ -1095,6 +1105,13 @@ fn emit_jsx_tree(
             emits,
             for_payload,
         );
+    }
+
+    // UI39 — web hosts lower parameterized Path geometry to real SVG rather
+    // than dropping the shape. Expressions stay live inside For bodies, which
+    // is what lets a host render data-derived line segments.
+    if node.tag == "Path" {
+        return emit_path_jsx(node, indent, part_styles);
     }
 
     if node.tag == "HostTooltip" {
@@ -1301,7 +1318,11 @@ fn emit_jsx_tree(
     // clobber the value the host bound, which is exactly the "my binding did nothing"
     // confusion this feature removes. See `dynamic_bound_style` for why this can't
     // live in mosstyle.
-    let size_style = dynamic_bound_style(node)?;
+    let mut size_style = dynamic_bound_style(node)?;
+    let typography = bound_typography_style(node)?;
+    if !typography.is_empty() {
+        size_style.push_str(&format!(", {typography}"));
+    }
 
     let style_attr = if merged_style.is_empty() && state_spreads.is_empty() && size_style.is_empty()
     {
@@ -1918,6 +1939,7 @@ fn emit_host_input_jsx(
         .as_deref()
         .and_then(|n| part_styles.get(n).map(String::as_str))
         .unwrap_or("");
+    let part_style_str = merge_styles(part_style_str, &bound_typography_style(node)?);
     if !part_style_str.is_empty() {
         attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
     }
@@ -2084,6 +2106,7 @@ fn emit_host_button_jsx(
         .as_deref()
         .and_then(|n| part_styles.get(n).map(String::as_str))
         .unwrap_or("");
+    let part_style_str = merge_styles(part_style_str, &bound_typography_style(node)?);
     if !part_style_str.is_empty() {
         attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
     }
@@ -3686,6 +3709,75 @@ fn emit_host_number_input_jsx(
     Ok(format!("{pad}<input{attrs} />\n"))
 }
 
+/// Lower `HostSlider` to React's native range input. React's `onChange`
+/// tracks live movement; pointer, key, and blur completion routes preserve
+/// the portable `onCommit(value: number)` contract.
+fn emit_host_slider_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::from(" type=\"range\"");
+
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|name| part_styles.get(name).map(String::as_str))
+        .unwrap_or("");
+    if !part_style_str.is_empty() {
+        attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
+    }
+
+    for prop_name in ["value", "min", "max", "step"] {
+        if let Some(slot) = find_slot_ref_prop(node, prop_name) {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            attrs.push_str(&format!(" {prop_name}={{{camel}}}"));
+        } else if let Some(value) = find_number_prop(node, prop_name) {
+            attrs.push_str(&format!(" {prop_name}={{{value}}}"));
+        }
+    }
+
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" disabled={{{camel}}}"));
+    } else if let Some(value) = find_keyword_prop(node, "disabled") {
+        if value == "true" || value == "false" {
+            attrs.push_str(&format!(" disabled={{{value}}}"));
+        }
+    }
+
+    if let Some(label) = find_string_prop(node, "a11y-label") {
+        attrs.push_str(&jsx_string_attr("aria-label", label));
+    } else if let Some(slot) = find_slot_ref_prop(node, "a11y-label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" aria-label={{{camel}}}"));
+    }
+
+    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&type_field)?;
+        attrs.push_str(&format!(
+            " onChange={{e => dispatch({{ type: \"{type_field}\", value: e.currentTarget.valueAsNumber }})}}"
+        ));
+    }
+
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&type_field)?;
+        let handler = format!(
+            "{{e => dispatch({{ type: \"{type_field}\", value: e.currentTarget.valueAsNumber }})}}"
+        );
+        attrs.push_str(&format!(
+            " onPointerUp={handler} onKeyUp={handler} onBlur={handler}"
+        ));
+    }
+
+    Ok(format!("{pad}<input{attrs} />\n"))
+}
 // =====================================================================
 // HostTable primitive (UI29 §2.1)
 // =====================================================================
@@ -3824,6 +3916,7 @@ fn emit_host_table_jsx(
         .as_deref()
         .and_then(|n| part_styles.get(n).map(String::as_str))
         .unwrap_or("");
+    let part_style_str = merge_styles(part_style_str, &bound_typography_style(node)?);
     let style_attr = if part_style_str.is_empty() {
         String::new()
     } else {
@@ -4726,6 +4819,29 @@ fn find_keyword_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a st
     })
 }
 
+/// Numeric typography binding, independent of compile-time theme styles.
+fn bound_typography_style(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|prop| prop.name == "font-size") else {
+        return Ok(String::new());
+    };
+    if !matches!(node.tag.as_str(), "Text" | "HostButton" | "HostInput" | "HostTable") {
+        return Err(PipelineEmitError::InvalidTypography);
+    }
+    match &prop.value {
+        LayoutPropValue::Number(value) if value.is_finite() && *value > 0.0 => {
+            Ok(format!("fontSize: {value}"))
+        }
+        LayoutPropValue::SlotRef(slot) => {
+            let slot = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&slot).map_err(PipelineEmitError::UnsafeSlotName)?;
+            // Invalid live values retain the author's fallback. A conditional
+            // spread also avoids undefined wiping out an earlier fontSize.
+            Ok(format!("...((typeof {slot} === \"number\" && Number.isFinite({slot}) && {slot} > 0) ? {{ fontSize: {slot} }} : {{}})"))
+        }
+        _ => Err(PipelineEmitError::InvalidTypography),
+    }
+}
+
 /// Find a prop on `node` whose value is a `Number`. Returns the f64, or
 /// `None`.
 /// UI36 — **data-driven sizing**: a size (or, since the richer-Gantt/icon-assets
@@ -4864,6 +4980,116 @@ fn find_expr_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> 
         }
         None
     })
+}
+
+fn path_coordinate_expression(
+    node: &LayoutNode,
+    prop_name: &str,
+) -> Result<String, PipelineEmitError> {
+    match node
+        .props
+        .iter()
+        .find(|prop| prop.name == prop_name)
+        .map(|prop| &prop.value)
+    {
+        Some(LayoutPropValue::Number(value)) if value.is_finite() => Ok(value.to_string()),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let slot = to_camel_case_first_lower(slot.as_str());
+            validate_slot_or_field_name(&slot).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(slot)
+        }
+        Some(LayoutPropValue::Expr(expression)) => Ok(expression.clone()),
+        Some(LayoutPropValue::Number(_)) => Err(PipelineEmitError::UnsafeSlotName(format!(
+            "Path prop `{prop_name}:` must be a finite number"
+        ))),
+        _ => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path missing required numeric prop `{prop_name}:`"
+        ))),
+    }
+}
+
+fn react_style_property<'a>(style: &'a str, property: &str) -> Option<&'a str> {
+    style.split(',').find_map(|declaration| {
+        let (name, value) = declaration.trim().split_once(':')?;
+        (name.trim() == property).then_some(value.trim())
+    })
+}
+
+fn path_paint_jsx(part_style: &str) -> (String, String, String) {
+    let fill = react_style_property(part_style, "background")
+        .map(|value| format!("{{{value}}}"))
+        .unwrap_or_else(|| "\"none\"".to_owned());
+    let stroke = react_style_property(part_style, "borderColor")
+        .map(|value| format!("{{{value}}}"))
+        .unwrap_or_else(|| "\"currentColor\"".to_owned());
+    let stroke_width = react_style_property(part_style, "borderWidth")
+        .map(|value| format!("{{{value}}}"))
+        .unwrap_or_else(|| "{1}".to_owned());
+    (fill, stroke, stroke_width)
+}
+
+fn emit_path_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let part_style = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(String::as_str)
+        .unwrap_or("");
+    let (fill, stroke, stroke_width) = path_paint_jsx(part_style);
+    let kind = find_keyword_prop(node, "kind").ok_or_else(|| {
+        PipelineEmitError::UnknownPrimitive("Path missing required prop `kind:`".to_owned())
+    })?;
+    let geometry = match kind {
+        "circle" => format!(
+            "<circle cx={{{}}} cy={{{}}} r={{{}}} fill={} stroke={} strokeWidth={} />",
+            path_coordinate_expression(node, "cx")?,
+            path_coordinate_expression(node, "cy")?,
+            path_coordinate_expression(node, "r")?,
+            fill,
+            stroke,
+            stroke_width,
+        ),
+        "line" => format!(
+            "<line x1={{{}}} y1={{{}}} x2={{{}}} y2={{{}}} fill={} stroke={} strokeWidth={} />",
+            path_coordinate_expression(node, "x1")?,
+            path_coordinate_expression(node, "y1")?,
+            path_coordinate_expression(node, "x2")?,
+            path_coordinate_expression(node, "y2")?,
+            fill,
+            stroke,
+            stroke_width,
+        ),
+        "curve" => format!(
+            "<path d={{[\"M\", {}, {}, \"Q\", {}, {}, {}, {}].join(\" \")}} fill={} stroke={} strokeWidth={} />",
+            path_coordinate_expression(node, "x1")?,
+            path_coordinate_expression(node, "y1")?,
+            path_coordinate_expression(node, "cx")?,
+            path_coordinate_expression(node, "cy")?,
+            path_coordinate_expression(node, "x2")?,
+            path_coordinate_expression(node, "y2")?,
+            fill,
+            stroke,
+            stroke_width,
+        ),
+        "arc" => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "Path kind `arc` is not yet supported by the React emitter".to_owned(),
+            ))
+        }
+        other => {
+            return Err(PipelineEmitError::UnknownPrimitive(format!(
+                "Path kind `{other}` is not a recognized shape kind (expected circle, line, curve, or arc)"
+            )))
+        }
+    };
+    Ok(format!(
+        "{pad}<svg aria-hidden=\"true\" focusable=\"false\" style={{{{ position: \"absolute\", inset: 0, width: \"100%\", height: \"100%\", overflow: \"visible\", pointerEvents: \"none\" }}}}>\n{pad}  {geometry}\n{pad}</svg>\n"
+    ))
 }
 
 fn jsx_string_attr(name: &str, value: &str) -> String {
@@ -8742,6 +8968,38 @@ mod tests {
     }
 
     #[test]
+    fn typography_bindings_reach_text_and_specialized_controls_after_defaults() {
+        for tag in ["Text", "HostButton", "HostInput", "HostTable"] {
+            let node = LayoutNode {
+                tag: tag.into(), part_name: Some("label".into()),
+                props: vec![size_prop("font-size", LayoutPropValue::SlotRef("text-size".into()))],
+                children: vec![],
+            };
+            let styles = HashMap::from([("label".into(), "fontSize: 13".into())]);
+            let out = emit_jsx_tree(&node, 0, &styles, &[], &[], &[], None).unwrap();
+            assert!(out.contains("fontSize: textSize"), "{tag}: {out}");
+            assert!(out.find("fontSize: 13").unwrap() < out.find("fontSize: textSize").unwrap(), "{tag}: {out}");
+            assert!(out.contains("Number.isFinite(textSize) && textSize > 0"), "{tag}: {out}");
+            assert_eq!(out.matches(" style=").count(), 1, "{tag}: {out}");
+        }
+    }
+
+    #[test]
+    fn typography_literals_are_positive_numbers_and_slots_are_safe() {
+        let mut node = text_layout(size_prop("font-size", LayoutPropValue::Number(19.5))).root;
+        assert_eq!(bound_typography_style(&node).unwrap(), "fontSize: 19.5");
+        for value in [LayoutPropValue::Number(0.0), LayoutPropValue::Number(-1.0),
+            LayoutPropValue::Number(f64::INFINITY), LayoutPropValue::String("19px".into()),
+            LayoutPropValue::Expr("size * 2".into()), LayoutPropValue::SlotRef("bad} injected".into())] {
+            node.props[0].value = value;
+            assert!(bound_typography_style(&node).is_err());
+        }
+        node.props[0].value = LayoutPropValue::Number(19.0);
+        node.tag = "HostLink".into();
+        assert!(matches!(emit_jsx_tree(&node, 0, &HashMap::new(), &[], &[], &[], None), Err(PipelineEmitError::InvalidTypography)));
+    }
+
+    #[test]
     fn text_heading_keeps_level_two_and_authored_typography() {
         let mut layout = text_layout(LayoutProp {
             name: "content".into(),
@@ -10133,6 +10391,52 @@ mod tests {
             ),
             "expected onChange with e.target.valueAsNumber payload, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn host_slider_preserves_range_bindings_accessibility_and_event_payloads() {
+        let m = component(
+            "X",
+            vec![],
+            vec![
+                emit("onAdjust", vec![param("value", EmitPayloadType::Number)]),
+                emit("onCommit", vec![param("value", EmitPayloadType::Number)]),
+            ],
+        );
+        let l = LayoutDef {
+            component_name: "X".into(),
+            root: LayoutNode {
+                tag: "HostSlider".into(),
+                part_name: None,
+                props: vec![
+                    slot_ref_prop("value", "current-value"),
+                    number_prop("min", 0.0),
+                    slot_ref_prop("max", "maximum-value"),
+                    number_prop("step", 5.0),
+                    slot_ref_prop("disabled", "is-disabled"),
+                    string_prop("a11y-label", "Volume"),
+                    emit_ref_prop("onChange", "onAdjust"),
+                    emit_ref_prop("onCommit", "onCommit"),
+                ],
+                children: vec![],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        for expected in [
+            "type=\"range\"",
+            "value={currentValue}",
+            "min={0}",
+            "max={maximumValue}",
+            "step={5}",
+            "disabled={isDisabled}",
+            "aria-label=\"Volume\"",
+            "onChange={e => dispatch({ type: \"adjust\", value: e.currentTarget.valueAsNumber })}",
+            "onPointerUp={e => dispatch({ type: \"commit\", value: e.currentTarget.valueAsNumber })}",
+            "onKeyUp={e => dispatch({ type: \"commit\", value: e.currentTarget.valueAsNumber })}",
+            "onBlur={e => dispatch({ type: \"commit\", value: e.currentTarget.valueAsNumber })}",
+        ] {
+            assert!(out.contains(expected), "missing {expected}:\n{out}");
+        }
     }
 
     // -----------------------------------------------------------------

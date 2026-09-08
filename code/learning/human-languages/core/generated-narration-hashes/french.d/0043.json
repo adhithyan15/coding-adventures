@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:a13ad1aca8f21b59",
+  "lessonIds": [
+    "FR-C39-qui",
+    "FR-C39-que",
+    "FR-C39-quoi",
+    "FR-C39-moi-toi",
+    "FR-C39-lui-elle",
+    "FR-R39-qui-est-ce"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch43.txt",
+  "json": "french/narration/ch43.json",
+  "textHash": "fnv1a64:ac6fba3127681da5",
+  "jsonHash": "fnv1a64:17a4e56f2a6f678a",
+  "findings": []
+}

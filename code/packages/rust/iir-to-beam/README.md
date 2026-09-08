@@ -235,3 +235,14 @@ loop regression verifies output and the surviving return value. These proofs
 cover the ASCII characters used by FLOW-MATIC's integer printer; broader byte
 I/O and the four input/EOF cases remain separate work. FLOW-MATIC has 60
 declared cells: four rows on eight backends and four input rows on seven.
+
+
+### Initial COBOL output on BEAM (VM-040)
+
+Four COBOL programs now execute on BEAM: literal DISPLAY, numeric MOVE,
+integer arithmetic and scaled-decimal ADD. Binary integer arithmetic accepts
+IIR integer literals directly as BEAM operands, preserving register operands
+and existing u4/u8 result narrowing. A real-Erlang regression covers all five
+arithmetic operations with immediate/immediate and mixed register/immediate
+sources, including negative values (15 executions). Remaining COBOL programs
+have not been promoted. The matrix declares 410 COBOL cells across 58 rows.

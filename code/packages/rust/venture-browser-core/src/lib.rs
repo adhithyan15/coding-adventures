@@ -9,12 +9,17 @@ pub use browser_bookmarks::{
     Bookmark, BookmarkCatalog, BookmarkChange, BookmarkRepository, BookmarkRepositoryError,
     BookmarkUrl, MemoryBookmarkRepository,
 };
-pub use browser_form_controls::{BrowserControlModel, ControlEffect, ControlKey};
+pub use browser_form_controls::{
+    BrowserControlModel, ControlEditorPresentation, ControlEditorState, ControlEffect, ControlKey,
+    ControlRect, ControlSelection, ControlTextMetrics,
+};
 use browser_form_submission::{plan_activation, plan_implicit_submission};
 pub use browser_form_submission::{
     FormActivation, FormDiagnostic, FormEntry, FormMethod, FormNavigation, FormPlanningError,
 };
 pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
+#[cfg(test)]
+use coding_adventures_html_parser::BrowserRenderNode;
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
 use html_to_layout::{html_media_query_applies, HtmlAuthorStylesheet, HtmlStyleContext, HtmlTheme};
 use html_to_paint::{
@@ -25,12 +30,23 @@ use html_to_paint::{
 };
 use http1_client::HttpClient;
 use layout_ir::TextMeasurer;
-use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintScene, PixelContainer};
+use paint_instructions::{
+    PaintBase, PaintGroup, PaintInstruction, PaintRect, PaintScene, PixelContainer,
+};
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 use url_parser::Url;
 
 pub const VERSION: &str = "0.8.0";
+
+const CONTROL_TEXT_METRICS: ControlTextMetrics = ControlTextMetrics {
+    advance: 8.0,
+    line_height: 18.0,
+    inset_x: 8.0,
+    inset_y: 5.0,
+    caret_width: 1.5,
+};
+const EDITOR_OVERLAY_PREFIX: &str = "venture-editor:";
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
 pub const VENTURE_CHROME_SLOT_NAMES: [&str; 9] = [
@@ -773,6 +789,20 @@ impl BrowserViewport {
         )
     }
 
+    fn control_local_point(
+        &self,
+        viewport_x: f64,
+        viewport_y: f64,
+    ) -> Option<(ControlRegion, f64, f64)> {
+        let region = self.hit_test_control(viewport_x, viewport_y)?.clone();
+        let content_y = if region.fixed {
+            viewport_y
+        } else {
+            viewport_y + self.scroll.offset_y()
+        };
+        Some((region.clone(), viewport_x - region.x, content_y - region.y))
+    }
+
     pub fn viewport_scene(&self) -> PaintScene {
         scrolled_viewport_scene(&self.page.paint.scene, &self.scroll)
     }
@@ -1347,12 +1377,164 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let key = self
-            .hovered_control_key(viewport_x, viewport_y)?
-            .to_string();
-        let effect = self.controls.pointer_activate(&key)?;
+        let (region, x, y) = self
+            .viewport
+            .as_ref()?
+            .control_local_point(viewport_x, viewport_y)?;
+        let effect = if region.kind.accepts_text() {
+            self.controls.pointer_place(
+                &region.key,
+                x - CONTROL_TEXT_METRICS.inset_x,
+                y - CONTROL_TEXT_METRICS.inset_y,
+                CONTROL_TEXT_METRICS,
+            )?
+        } else {
+            self.controls.pointer_activate(&region.key)?
+        };
         self.reflow_controls(pipeline)?;
         Some(effect)
+    }
+
+    /// Place a text caret using viewport coordinates. Hosts use the same
+    /// method for mouse, touch, and stylus presses.
+    pub fn control_pointer_down<M, S, FM, R>(
+        &mut self,
+        viewport_x: f64,
+        viewport_y: f64,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let (region, x, y) = self
+            .viewport
+            .as_ref()?
+            .control_local_point(viewport_x, viewport_y)?;
+        if !region.kind.accepts_text() {
+            return self.activate_control(viewport_x, viewport_y, pipeline);
+        }
+        let effect = self.controls.pointer_place(
+            &region.key,
+            x - CONTROL_TEXT_METRICS.inset_x,
+            y - CONTROL_TEXT_METRICS.inset_y,
+            CONTROL_TEXT_METRICS,
+        )?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    /// Continue selection from the most recent pointer press. Coordinates
+    /// outside the control clamp to the nearest scalar position.
+    pub fn control_pointer_drag<M, S, FM, R>(
+        &mut self,
+        viewport_x: f64,
+        viewport_y: f64,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let key = self.controls.focused_key()?.to_string();
+        let viewport = self.viewport.as_ref()?;
+        let region = viewport
+            .page()
+            .paint
+            .controls
+            .iter()
+            .find(|region| region.key == key)?
+            .clone();
+        let content_y = if region.fixed {
+            viewport_y
+        } else {
+            viewport_y + viewport.scroll_state().offset_y()
+        };
+        let effect = self.controls.pointer_drag(
+            viewport_x - region.x - CONTROL_TEXT_METRICS.inset_x,
+            content_y - region.y - CONTROL_TEXT_METRICS.inset_y,
+            CONTROL_TEXT_METRICS,
+        )?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_pointer_up(&mut self) {
+        self.controls.pointer_release();
+    }
+
+    /// Read selected text for a host clipboard. Password values are rejected
+    /// by the shared model before they can cross the host boundary.
+    pub fn control_copy(&self) -> Option<String> {
+        self.controls.copy_selection()
+    }
+
+    pub fn control_cut<M, S, FM, R>(
+        &mut self,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<String>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let cut = self.controls.cut_selection()?;
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        self.reflow_controls(pipeline)?;
+        Some(cut.text)
+    }
+
+    pub fn control_paste<M, S, FM, R>(
+        &mut self,
+        text: &str,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.paste_text(text)?;
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    /// Advance caret animation from a host-provided monotonic duration.
+    pub fn control_advance_caret_blink(&mut self, elapsed_ms: u64) -> bool {
+        let changed = self.controls.advance_caret_blink(elapsed_ms);
+        if changed {
+            self.refresh_control_editor_presentation();
+        }
+        changed
+    }
+
+    pub fn focused_ime_candidate_rect(&mut self) -> Option<ControlRect> {
+        let key = self.controls.focused_key()?.to_string();
+        let mut rect = self
+            .refresh_control_editor_presentation()
+            .into_iter()
+            .find(|presentation| presentation.key == key)?
+            .candidate_rect?;
+        let viewport = self.viewport.as_ref()?;
+        let region = viewport
+            .page()
+            .paint
+            .controls
+            .iter()
+            .find(|region| region.key == key)?;
+        if !region.fixed {
+            rect.y -= viewport.scroll_state().offset_y();
+        }
+        Some(rect)
     }
 
     pub fn activate_control_and_submit<F, M, S, FM, R>(
@@ -1369,13 +1551,25 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let Some(key) = self
-            .hovered_control_key(viewport_x, viewport_y)
-            .map(str::to_owned)
+        let Some((region, x, y)) = self
+            .viewport
+            .as_ref()
+            .and_then(|viewport| viewport.control_local_point(viewport_x, viewport_y))
         else {
             return Ok(None);
         };
-        let Some(effect) = self.controls.pointer_activate(&key) else {
+        let key = region.key.clone();
+        let effect = if region.kind.accepts_text() {
+            self.controls.pointer_place(
+                &key,
+                x - CONTROL_TEXT_METRICS.inset_x,
+                y - CONTROL_TEXT_METRICS.inset_y,
+                CONTROL_TEXT_METRICS,
+            )
+        } else {
+            self.controls.pointer_activate(&key)
+        };
+        let Some(effect) = effect else {
             return Ok(None);
         };
         if matches!(effect, ControlEffect::Activated(_)) {
@@ -1383,6 +1577,7 @@ impl BrowserSession {
             self.apply_form_activation(activation, pipeline, fetcher)?;
         } else {
             self.form_diagnostics.clear();
+            self.controls.clear_validation();
             self.reflow_controls(pipeline);
         }
         Ok(Some(effect))
@@ -1401,6 +1596,23 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        self.control_key_down_with_shift_and_submit(key, false, pipeline, fetcher)
+    }
+
+    pub fn control_key_down_with_shift_and_submit<F, M, S, FM, R>(
+        &mut self,
+        key: ControlKey,
+        shift: bool,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<Option<ControlEffect>, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
         let focused_key = self.controls.focused_key().map(str::to_owned);
         let focused_accepts_implicit = focused_key
             .as_deref()
@@ -1408,7 +1620,7 @@ impl BrowserSession {
             .is_some_and(|control| {
                 control.kind.accepts_text() && control.kind.name() != "textarea"
             });
-        let effect = self.controls.key_down(key);
+        let effect = self.controls.key_down_with_shift(key, shift);
         let activation = match &effect {
             Some(ControlEffect::Activated(activated)) => {
                 Some(self.plan_form_activation(activated)?)
@@ -1423,6 +1635,7 @@ impl BrowserSession {
             self.apply_form_activation(activation, pipeline, fetcher)?;
         } else if effect.is_some() {
             self.form_diagnostics.clear();
+            self.controls.clear_validation();
             self.reflow_controls(pipeline);
         }
         Ok(effect)
@@ -1471,6 +1684,7 @@ impl BrowserSession {
         match activation {
             FormActivation::None => {
                 self.form_diagnostics.clear();
+                self.controls.clear_validation();
                 self.reflow_controls(pipeline);
             }
             FormActivation::Reset {
@@ -1478,16 +1692,25 @@ impl BrowserSession {
                 form_index,
             } => {
                 self.form_diagnostics.clear();
+                self.controls.clear_validation();
                 self.controls
                     .reset_form(form_id.as_deref(), Some(form_index));
                 self.reflow_controls(pipeline);
             }
             FormActivation::Invalid(diagnostics) => {
+                self.controls.clear_validation();
+                for diagnostic in &diagnostics {
+                    if let Some(key) = &diagnostic.key {
+                        self.controls.set_invalid(key, diagnostic.message.clone());
+                    }
+                }
+                self.controls.focus_first_invalid();
                 self.form_diagnostics = diagnostics;
                 self.reflow_controls(pipeline);
             }
             FormActivation::Navigate(navigation) => {
                 self.form_diagnostics.clear();
+                self.controls.clear_validation();
                 self.execute_form_navigation(navigation, pipeline, fetcher)?;
             }
         }
@@ -1530,6 +1753,7 @@ impl BrowserSession {
         self.controls = controls;
         self.form_diagnostics.clear();
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
+        self.refresh_control_editor_presentation();
         for request in self.pending_subresource_requests() {
             let completion = request.resolve(fetcher);
             self.complete_subresource(completion, pipeline);
@@ -1564,7 +1788,24 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.key_down(key)?;
+        self.control_key_down_with_shift(key, false, pipeline)
+    }
+
+    pub fn control_key_down_with_shift<M, S, FM, R>(
+        &mut self,
+        key: ControlKey,
+        shift: bool,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.key_down_with_shift(key, shift)?;
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -1581,8 +1822,176 @@ impl BrowserSession {
         R: FontResolver<Handle = S::Handle>,
     {
         let effect = self.controls.text_input(text)?;
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
         Some(effect)
+    }
+
+    pub fn control_set_selection<M, S, FM, R>(
+        &mut self,
+        key: &str,
+        anchor: usize,
+        focus: usize,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.set_selection(key, anchor, focus)?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_update_composition<M, S, FM, R>(
+        &mut self,
+        text: &str,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.update_composition(text)?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_commit_composition<M, S, FM, R>(
+        &mut self,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.commit_composition()?;
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_cancel_composition<M, S, FM, R>(
+        &mut self,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.cancel_composition()?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    /// Rebuild retained editor overlays and return their host-facing
+    /// geometry, including the IME candidate rectangle and accessibility
+    /// description.
+    fn refresh_control_editor_presentation(&mut self) -> Vec<ControlEditorPresentation> {
+        let regions = self
+            .viewport
+            .as_ref()
+            .map(|viewport| viewport.page.paint.controls.clone())
+            .unwrap_or_default();
+        let mut presentations = Vec::new();
+        let mut overlays = Vec::new();
+        for region in regions {
+            let bounds = ControlRect {
+                x: region.x,
+                y: region.y,
+                width: region.width,
+                height: region.height,
+            };
+            let Some(presentation) =
+                self.controls
+                    .editor_presentation(&region.key, bounds, CONTROL_TEXT_METRICS)
+            else {
+                continue;
+            };
+            let mut children = Vec::new();
+            for rect in &presentation.selection {
+                if let Some(rect) = clipped_editor_rect(*rect, presentation.viewport) {
+                    children.push(PaintInstruction::Rect(PaintRect::filled(
+                        rect.x,
+                        rect.y,
+                        rect.width,
+                        rect.height,
+                        "rgba(37, 99, 235, 0.32)",
+                    )));
+                }
+            }
+            for rect in &presentation.composition_underlines {
+                if let Some(rect) = clipped_editor_rect(*rect, presentation.viewport) {
+                    children.push(PaintInstruction::Rect(PaintRect::filled(
+                        rect.x,
+                        rect.y,
+                        rect.width,
+                        rect.height,
+                        "#2563eb",
+                    )));
+                }
+            }
+            if let Some(rect) = presentation
+                .caret
+                .and_then(|rect| clipped_editor_rect(rect, presentation.viewport))
+            {
+                children.push(PaintInstruction::Rect(PaintRect::filled(
+                    rect.x,
+                    rect.y,
+                    rect.width,
+                    rect.height,
+                    "#111827",
+                )));
+            }
+            if presentation.invalid_message.is_some() {
+                children.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: region.x + 1.0,
+                    y: region.y + 1.0,
+                    width: (region.width - 2.0).max(0.0),
+                    height: (region.height - 2.0).max(0.0),
+                    fill: None,
+                    stroke: Some("#dc2626".into()),
+                    stroke_width: Some(2.0),
+                    corner_radius: Some(3.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+            }
+            let mut metadata = std::collections::HashMap::new();
+            if region.fixed {
+                metadata.insert("layout.position".into(), "fixed".into());
+            }
+            overlays.push(PaintInstruction::Group(PaintGroup {
+                base: PaintBase {
+                    id: Some(format!("{EDITOR_OVERLAY_PREFIX}{}", region.key)),
+                    metadata: (!metadata.is_empty()).then_some(metadata),
+                },
+                children,
+                transform: None,
+                opacity: None,
+            }));
+            presentations.push(presentation);
+        }
+        if let Some(viewport) = self.viewport.as_mut() {
+            viewport.page.paint.scene.instructions.retain(|instruction| {
+                !matches!(instruction,
+                    PaintInstruction::Group(group)
+                        if group.base.id.as_deref().is_some_and(|id| id.starts_with(EDITOR_OVERLAY_PREFIX)))
+            });
+            viewport.page.paint.scene.instructions.extend(overlays);
+        }
+        presentations
     }
 
     fn reflow_controls<M, S, FM, R>(
@@ -1601,6 +2010,7 @@ impl BrowserSession {
         self.viewport
             .as_mut()?
             .reflow_page(updated, self.viewport_height);
+        self.refresh_control_editor_presentation();
         Some(())
     }
 
@@ -1701,6 +2111,7 @@ impl BrowserSession {
         self.controls = controls;
         self.form_diagnostics.clear();
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
+        self.refresh_control_editor_presentation();
         Ok(BrowserNavigationUpdate {
             viewport_changed: true,
             requests: self.pending_subresource_requests(),
@@ -1799,6 +2210,7 @@ impl BrowserSession {
         if let Some(viewport) = self.viewport.as_mut() {
             viewport.reflow_page(updated, self.viewport_height);
         }
+        self.refresh_control_editor_presentation();
         let pending_after = self.pending_subresource_requests();
         let requests = pending_after
             .iter()
@@ -1844,6 +2256,19 @@ impl BrowserSession {
         };
         self.execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
     }
+}
+
+fn clipped_editor_rect(rect: ControlRect, viewport: ControlRect) -> Option<ControlRect> {
+    let x = rect.x.max(viewport.x);
+    let y = rect.y.max(viewport.y);
+    let right = (rect.x + rect.width).min(viewport.x + viewport.width);
+    let bottom = (rect.y + rect.height).min(viewport.y + viewport.height);
+    (right > x && bottom > y).then_some(ControlRect {
+        x,
+        y,
+        width: right - x,
+        height: bottom - y,
+    })
 }
 
 fn pending_stylesheet_ordinals(resources: &[BrowserStylesheetResource]) -> Vec<usize> {
@@ -4291,11 +4716,14 @@ mod tests {
         let query = session.viewport().unwrap().page().paint.controls[0].clone();
         assert_eq!(
             session.activate_control(query.x + 1.0, query.y + 1.0, &pipeline),
-            Some(ControlEffect::Focused("control:0:id:q".into()))
+            Some(ControlEffect::SelectionChanged {
+                key: "control:0:id:q".into(),
+                selection: ControlSelection::collapsed(0),
+            })
         );
         assert!(matches!(
             session.control_text_input("!", &pipeline),
-            Some(ControlEffect::ValueChanged { value, .. }) if value == "go!"
+            Some(ControlEffect::ValueChanged { value, .. }) if value == "!go"
         ));
         assert_eq!(
             session.focus_control(false, &pipeline),
@@ -4308,7 +4736,7 @@ mod tests {
                 checked: true,
             })
         );
-        assert_eq!(session.controls().controls()[0].value, "go!");
+        assert_eq!(session.controls().controls()[0].value, "!go");
         assert!(session.controls().controls()[2].checked);
         let off =
             positioned_by_id(&session.viewport().unwrap().page().paint.positioned, "off").unwrap();
@@ -4328,6 +4756,89 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec!["control:0:id:q", "control:1:id:off", "control:2:id:check"]
         );
+    }
+
+    #[test]
+    fn session_projects_editor_geometry_pointer_clipboard_blink_and_ime_state() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<textarea id='notes' cols='8' rows='2'>abcdef\nsecond line</textarea>".to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(420.0, 160.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/", 160.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let region = session.viewport().unwrap().page().paint.controls[0].clone();
+
+        session
+            .control_pointer_down(
+                region.x + CONTROL_TEXT_METRICS.inset_x + 8.0,
+                region.y + CONTROL_TEXT_METRICS.inset_y + 1.0,
+                &pipeline,
+            )
+            .unwrap();
+        session
+            .control_pointer_drag(
+                region.x + CONTROL_TEXT_METRICS.inset_x + 24.0,
+                region.y + CONTROL_TEXT_METRICS.inset_y + 1.0,
+                &pipeline,
+            )
+            .unwrap();
+        session.control_pointer_up();
+        assert_eq!(session.control_copy().as_deref(), Some("bc"));
+        assert_eq!(session.control_cut(&pipeline).as_deref(), Some("bc"));
+        session.control_paste("BC", &pipeline).unwrap();
+        assert_eq!(
+            session
+                .controls()
+                .control("control:0:id:notes")
+                .unwrap()
+                .value,
+            "aBCdef\nsecond line"
+        );
+
+        session.control_update_composition("界", &pipeline).unwrap();
+        let candidate = session.focused_ime_candidate_rect().unwrap();
+        assert!(candidate.width > 0.0 && candidate.height > 0.0);
+        let overlay = session
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .scene
+            .instructions
+            .iter()
+            .find_map(|instruction| match instruction {
+                PaintInstruction::Group(group)
+                    if group
+                        .base
+                        .id
+                        .as_deref()
+                        .is_some_and(|id| id.starts_with(EDITOR_OVERLAY_PREFIX)) =>
+                {
+                    Some(group)
+                }
+                _ => None,
+            })
+            .unwrap();
+        assert!(
+            overlay.children.len() >= 2,
+            "caret and composition underline"
+        );
+        assert!(session.control_advance_caret_blink(500));
     }
 
     #[test]
@@ -4373,6 +4884,17 @@ mod tests {
             (control.x + 1.0, control.y + 1.0)
         }
 
+        fn node_by_id<'a>(
+            nodes: &'a [BrowserRenderNode],
+            id: &str,
+        ) -> Option<&'a BrowserRenderNode> {
+            nodes.iter().find_map(|node| {
+                (node.id.as_deref() == Some(id))
+                    .then_some(node)
+                    .or_else(|| node_by_id(&node.children, id))
+            })
+        }
+
         let fetcher = FormFetcher {
             requests: RefCell::new(Vec::new()),
         };
@@ -4395,6 +4917,21 @@ mod tests {
             .activate_control_and_submit(submit.0, submit.1, &pipeline, &fetcher)
             .unwrap();
         assert_eq!(session.form_diagnostics()[0].code, "value-missing");
+        assert_eq!(session.controls().focused_key(), Some("control:0:id:q"));
+        assert_eq!(
+            session
+                .controls()
+                .editor("control:0:id:q")
+                .and_then(|editor| editor.invalid_message.as_deref()),
+            Some("required control has no value")
+        );
+        let query_node = node_by_id(
+            &session.viewport().unwrap().page().render_tree.children,
+            "q",
+        )
+        .unwrap();
+        assert!(query_node.control_focused);
+        assert_eq!(query_node.aria_invalid.as_deref(), Some("true"));
         assert_eq!(session.history().back_stack().len(), 0);
         assert_eq!(fetcher.requests.borrow().len(), 1);
 
@@ -4403,6 +4940,15 @@ mod tests {
             .activate_control_and_submit(query.0, query.1, &pipeline, &fetcher)
             .unwrap();
         session.control_text_input("venture", &pipeline).unwrap();
+        assert!(session.form_diagnostics().is_empty());
+        assert_eq!(
+            session
+                .controls()
+                .editor("control:0:id:q")
+                .unwrap()
+                .invalid_message,
+            None
+        );
         let reset = control_point(&session, "control:1:id:reset");
         session
             .activate_control_and_submit(reset.0, reset.1, &pipeline, &fetcher)

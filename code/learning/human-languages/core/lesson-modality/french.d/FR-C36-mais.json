@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C36-mais",
+    "language": "french",
+    "chapter": 40,
+    "sequence": 1480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24c47fa4a18f5645"
+  },
+  "findings": []
+}

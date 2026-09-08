@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   `WindowEvent::Scroll` callbacks.
 - Primary-button translation with top-left logical pointer coordinates.
 - Named navigation-key and modifier translation into shared key events.
+- UTF-8 character-key translation into `WindowEvent::TextInput` for native
+  retained text controls.
 - Main-thread event-handler registration on `AppKitWindow`.
 
 ## [0.1.0] - 2026-04-18

@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-033-SI-E-NO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "canDo": "I can answer yes or no on its own, accept and decline an offer with sì, grazie and no, grazie, agree with d'accordo, and hang vero? on the end of a statement.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C29-si",
+    "IT-C29-no",
+    "IT-C29-si-no-grazie",
+    "IT-C29-daccordo",
+    "IT-C29-vero"
+  ]
+}

@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_cynefin, parse_event_modeling, parse_ishikawa, parse_radar, parse_sequence_diagram, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart,
+    parse_cynefin, parse_event_modeling, parse_ishikawa, parse_radar, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -11,6 +11,10 @@ use serde_json::Value;
 const COMPATIBILITY_MANIFEST: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/compatibility.json"
+));
+const SWIMLANE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
 ));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -835,4 +839,29 @@ fn treeview_dispatches_to_dedicated_tree_ir() {
         _ => panic!("treeview should lower to dedicated tree IR"),
     }
     assert!(parse_treeview("treeView-beta\n\"unterminated").is_err());
+}
+
+#[test]
+fn swimlane_dispatches_to_dedicated_ownership_ir() {
+    let source = "swimlane-beta LR\ntitle Support flow\naccTitle: Support handoff\nsubgraph customer [Customer]\n  request([Request])\n  receive((Update))\nend\nsubgraph support [Support]\n  triage{Known?}\n  answer[Answer]\nend\nrequest --> triage\ntriage -->|Yes| answer ==> receive";
+    let diagram = parse_any_mermaid(source).expect("swimlane subset should parse");
+    match diagram {
+        mermaid_parser::MermaidDiagram::Swimlane(diagram) => {
+            assert_eq!(diagram.lanes.len(), 2); assert_eq!(diagram.lanes[0].node_ids, ["request", "receive"]);
+            assert_eq!(diagram.nodes.len(), 4); assert_eq!(diagram.edges.len(), 3);
+            assert_eq!(diagram.edges[1].label.as_deref(), Some("Yes"));
+            assert_eq!(diagram.edges[2].kind, diagram_ir::SwimlaneEdgeKind::Thick);
+        }
+        _ => panic!("swimlane should lower to dedicated ownership IR"),
+    }
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one[One]").is_err());
+}
+
+#[test]
+fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
+    let corpus: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus must be JSON");
+    for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
+        let source = fixture["source"].as_str().expect("fixture source must be a string");
+        assert!(parse_swimlane(source).is_ok(), "fixture {:?} should parse", fixture["name"]);
+    }
 }

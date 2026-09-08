@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C39-quoi",
+    "language": "french",
+    "chapter": 43,
+    "sequence": 1650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5c60c067f8a6fcf"
+  },
+  "findings": []
+}

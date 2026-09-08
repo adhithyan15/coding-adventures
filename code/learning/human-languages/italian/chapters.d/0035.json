@@ -1,0 +1,25 @@
+{
+  "chapter": 35,
+  "title": "Knowing, and How Much",
+  "label": "ch:it-sapere",
+  "canDo": "I can say that I know a fact and that I know a person, say that I do not know, place today and yesterday beside tomorrow, and put something on the scale from molto through abbastanza to un po'.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "IT-C35-abbastanza",
+    "kind": "task",
+    "summary": "The chapter's last lesson completes the quantity scale and gives Come stai? — a question from Chapter 2 — its middle answer: abbastanza bene.",
+    "assesses": [
+      "IT-LEX-SAPERE-02",
+      "IT-GRAMMAR-SAPERE-03",
+      "IT-PRAGMATIC-NON-SO-02",
+      "IT-LEX-OGGI-IERI-02",
+      "IT-ETYMON-OGGI-IERI-03",
+      "IT-LEX-MOLTO-POCO-02",
+      "IT-GRAMMAR-MOLTO-POCO-03",
+      "IT-LEX-ABBASTANZA-02",
+      "IT-ETYMON-ABBASTANZA-03"
+    ]
+  }
+}

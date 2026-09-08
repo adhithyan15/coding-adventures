@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-034-NON",
+  "stage": "A2",
+  "kind": "required",
+  "canDo": "I can put non in front of any verb I know, say non capisco, build a doubled negative with né … né and neanche, and say c'è and ci sono.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C30-non",
+    "IT-C30-non-capisco",
+    "IT-C30-ne",
+    "IT-C30-anche",
+    "IT-C30-ce"
+  ]
+}

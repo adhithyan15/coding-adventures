@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:ec9458b8b7a5102b",
+  "lessonIds": [
+    "IT-C35-sapere",
+    "IT-C35-non-so",
+    "IT-C35-oggi-ieri",
+    "IT-C35-molto-poco",
+    "IT-C35-abbastanza"
+  ],
+  "tex": "italian/book/chapters/ch35-sapere.tex"
+}

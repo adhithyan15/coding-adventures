@@ -68,7 +68,7 @@ whole.
 
 | answer | sense |
 |---|---|
-| **(Molto) bene, grazie** | (very) well, thanks |
+| **Bene, grazie** | well, thanks |
 | **Così così** | so-so |
 
 The cross-track shrug set, now five deep: Italian **così così** ("so, so"),

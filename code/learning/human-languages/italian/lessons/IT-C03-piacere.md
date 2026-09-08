@@ -70,8 +70,7 @@ everywhere:
 <!-- hl-knowledge: introduces=[IT-GRAMMAR-PIACERE-04]; assesses=[] -->
 
 *Piacere* stands alone — you just say it, with a small nod, as you shake hands.
-For a touch more you can say *molto piacere* ("much pleasure") or *piacere di
-conoscerti* ("pleasure to know you").
+For a touch more you can say *piacere di conoscerti* ("pleasure to know you").
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-COME-TI-CHIAMI-02, IT-SOUND-PIACERE-02, IT-ETYMON-PIACERE-03, IT-GRAMMAR-PIACERE-04] -->

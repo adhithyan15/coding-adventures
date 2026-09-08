@@ -41,6 +41,13 @@ through `browser-form-submission`. Invalid forms retain bounded diagnostics;
 valid GET and URL-encoded POST plans use the same transactional load, history,
 visited-link, control-state, and subresource lifecycle as ordinary navigation.
 
+The session also owns editor presentation. It appends stable backend-neutral
+overlay groups for selection, caret, composition, and invalid feedback after
+every retained reflow; routes pointer placement and drag selection; exposes
+explicit copy/cut/paste methods; advances caret blink from deterministic host
+ticks; and returns an IME candidate rectangle without handing editing state to
+a native toolkit. Password selection never crosses the clipboard boundary.
+
 `NavigationHistory` is re-exported from the reusable `browser-navigation`
 package and implements the BR01 in-memory navigation model: navigate, Back,
 Forward, Home, Reload, and redirect replacement. The same package owns
@@ -79,9 +86,12 @@ reload, Back, and Forward all project the retained state into blue/purple link
 styling without coupling browser history to HTML layout.
 
 `BrowserControlModel` owns focus, values, checked/radio state, select indexes,
-and disabled/read-only policy. Pointer and semantic keyboard input synchronize
-the retained render tree and reflow through the same backend-neutral page
-pipeline, so native surfaces never instantiate toolkit-specific controls.
+character-indexed selection/caret state, composition text, validation feedback,
+and disabled/read-only policy. Pointer, keyboard, text, and IME input
+synchronize the retained render tree and reflow through the same
+backend-neutral page pipeline. Failed validation focuses the first invalid
+control and projects `aria-invalid` plus accessible diagnostics, so native
+surfaces never instantiate toolkit-specific controls or own editing policy.
 
 `BrowserChromeController` is the matching host-neutral reducer for the shared
 Mosaic `VentureChrome` package. It preserves address edits as a draft, maps

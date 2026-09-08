@@ -40,10 +40,23 @@ your slave" (← Latin *sclavus*, English *slave*/*Slav*).
   always grammatically feminine, whoever it names); and the rest of the body
   Chapter 17 promised (*il cuore*, *l'occhio*, *l'orecchio*, *la bocca*, *il
   naso*, *lo stomaco*, *la gola*).
+- **Chapters 26–28**: the ordinals, *primo* through *decimo* as ten inherited
+  words, then `-esimo` as the rule that builds every ordinal above ten, closing
+  with *prima* and *dopo*.
+- **Chapters 29–35**: thirty-five lessons chosen by points-per-item against the
+  uncovered list in [`core/exam-inventory-italian-a1.json`](../core/exam-inventory-italian-a1.json),
+  not by topic. *Sì* and *no* and the courtesies that hang off them; **`non`**,
+  the one word that turns every sentence in the book over and that the track had
+  carried since Chapter 2 inside a single frozen phrase; `che` as relative,
+  complementizer, interrogative and exclamative; the joining words *ma*, *o*,
+  *perché* and *quando*; the demonstratives *questo* and *quello*; the
+  possessives and the article Italian keeps with them; and *sapere*, *molto*,
+  *poco* and *abbastanza*. Exam coverage goes **114/292 to 164/292**, and four
+  columns close outright.
 
 ## Book
 
-Chapters 2–25 are generated from the canonical lessons by `npm run
+Chapters 2–35 are generated from the canonical lessons by `npm run
 generate:books` in the `human-language-data` package; do not edit those chapter
 files by hand.
 
@@ -63,7 +76,7 @@ entry states, in the reader's own voice, what finishing that chapter lets them
 knowledge atoms that payoff exercises. It is authored intent, not a derived
 cache — no validator may rewrite it.
 
-Chapters **2–25** are authored, which is every Italian chapter that owns a
+Chapters **2–35** are authored, which is every Italian chapter that owns a
 `core/book-generation.json` target. Chapter **1** is deliberately absent: its
 lessons are still schema v1 with no declared `practises.knowledge`, so there is
 no honest payoff to point at, and stubbing one would destroy the signal the HL05

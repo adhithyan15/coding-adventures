@@ -1,0 +1,16 @@
+{
+  "id": "IT-PATH-035",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "IT-C31-che",
+    "IT-C31-penso-che",
+    "IT-C31-chi",
+    "IT-C31-che-cosa",
+    "IT-C31-che-buono"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "IT-EXT-035-CHE"
+  ]
+}

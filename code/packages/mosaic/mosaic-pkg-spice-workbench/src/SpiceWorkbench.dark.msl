@@ -22,6 +22,16 @@ style SpiceWorkbench {
   part result-table { background : "#0d1117" ; border-width : 1 ; border-color : "#33465c" ; }
   part result-header { background : "#202a36" ; color : "#d2e7ff" ; font-weight : bold ; padding : 6 ; }
   part result-cell { color : "#b9d8f5" ; padding : 6 ; font-family : "monospace" ; }
+  part waveforms { gap : 6 ; }
+  part waveform-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
+  part waveform-options { gap : 6 ; }
+  part waveform-option { background : "#202a36" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 6 ; }
+  part selected-waveform { color : "#5eead4" ; font-weight : bold ; }
+  part waveform-axis { color : "#9fb3c8" ; font-size : 12 ; }
+  part waveform-plot { width : 360 ; min-height : 220 ; background : "#0d1117" ; border-width : 1 ; border-color : "#33465c" ; }
+  part waveform-axis-x { border-color : "#64748b" ; border-width : 1 ; }
+  part waveform-axis-y { border-color : "#64748b" ; border-width : 1 ; }
+  part waveform-segment { border-color : "#5eead4" ; border-width : 2 ; }
   part raw-result-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
   part result-output { min-height : 160 ; background : "#0d1117" ; color : "#b9d8f5" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 4 ; padding : 10 ; font-family : "monospace" ; white-space : "pre-wrap" ; }
 }

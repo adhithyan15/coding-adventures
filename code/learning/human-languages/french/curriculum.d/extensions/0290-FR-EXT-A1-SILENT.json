@@ -1,0 +1,18 @@
+{
+  "id": "FR-EXT-A1-SILENT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can explain the silent final consonant, the silent plural, the audible feminine, the -x plural and the bare de after a negative.",
+  "prerequisites": [
+    "FR-EXT-A1-VERB-WAYS"
+  ],
+  "lessons": [
+    "FR-C38-consonne-finale",
+    "FR-C38-pluriel-s",
+    "FR-C38-feminin-e",
+    "FR-C38-pluriel-x",
+    "FR-C38-pas-de",
+    "FR-R38-ce-quon-nentend-pas"
+  ]
+}

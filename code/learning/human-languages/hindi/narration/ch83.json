@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Sixth to Tenth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:da036a6ebb4aa610",
+  "sourceHash": "fnv1a64:059792dac3e3fc81",
   "lessons": [
     {
       "id": "HI-C76-sixth",
@@ -363,16 +363,16 @@
       "id": "HI-C76-eighth",
       "sequence": 3230,
       "title": "आठवाँ (āṭhvā̃) — eighth",
-      "headword": "आठवाँ",
-      "romanization": "āṭhvā̃",
-      "gloss": "eighth — the ending on a number that ends in a consonant cluster",
+      "headword": "आठवाँ / आठवीं",
+      "romanization": "āṭhvā̃ / āṭhvī̃",
+      "gloss": "eighth / feminine eighth — the ending on a number that ends in a consonant cluster",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63e3a97bc5299ad0",
+      "sourceHash": "fnv1a64:7fee3b53d9039227",
       "notice": null,
       "blocks": [
         {
@@ -501,6 +501,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "āṭhvī̃ kitāb — the eighth book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭhvī̃ kitāb* — the eighth book]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "chaṭhā against āṭhvā̃ — one is a word, one is a sum",
               "spoken": true,
               "scored": false,
@@ -522,7 +531,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the eighth day. (आठवाँ दिन.) What happened to the ṭh of āṭh? (Nothing — the ending follows it.) And which of chaṭhā and āṭhvā̃ had to be memorised? (Chaṭhā.)"
+              "text": "Say the eighth day. (आठवाँ (āṭhvā̃) दिन.) What happened to the ṭh of āṭh? (Nothing — the ending follows it.) What changes for a feminine noun? (आठवीं.) And which of chaṭhā and āṭhvā̃ had to be memorised? (Chaṭhā.)"
             }
           ]
         }
@@ -532,16 +541,16 @@
       "id": "HI-C76-ninth",
       "sequence": 3240,
       "title": "नौवाँ (nauvā̃) — ninth",
-      "headword": "नौवाँ",
-      "romanization": "nauvā̃",
-      "gloss": "ninth — a cardinal ending in a vowel, and the ending still just follows",
+      "headword": "नौवाँ / नौवीं",
+      "romanization": "nauvā̃ / nauvī̃",
+      "gloss": "ninth / feminine ninth — a cardinal ending in a vowel, and the ending still just follows",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61300863c85ceba9",
+      "sourceHash": "fnv1a64:7f1122ededde7af3",
       "notice": null,
       "blocks": [
         {
@@ -670,6 +679,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "nauvī̃ kitāb — the ninth book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nauvī̃ kitāb* — the ninth book]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "cauthā is fused; nauvā̃ is added",
               "spoken": true,
               "scored": false,
@@ -691,7 +709,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the ninth day. (नौवाँ दिन.) What does नौ end in, and does the ending care? (A vowel, and no.) And which of cauthā and nauvā̃ was fused rather than added? (Cauthā.)"
+              "text": "Say the ninth day. (नौवाँ (nauvā̃) दिन.) What does नौ end in, and does the ending care? (A vowel, and no.) What changes for a feminine noun? (नौवीं.) And which of cauthā and nauvā̃ was fused rather than added? (Cauthā.)"
             }
           ]
         }

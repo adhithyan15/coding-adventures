@@ -2,7 +2,8 @@
   "segments": [
     "FR-PATH-007",
     "FR-PATH-009",
-    "FR-PATH-026"
+    "FR-PATH-026",
+    "FR-PATH-A1-PRONOUNS"
   ],
   "omits": [
     "QUESTION-WHAT",

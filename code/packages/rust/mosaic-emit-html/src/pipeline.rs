@@ -616,11 +616,11 @@ root.addEventListener("input", event => {
 });
 
 root.addEventListener("change", event => {
-  const target = closestEventTarget(event.target, "[data-on-toggle], [data-on-select]");
+  const target = closestEventTarget(event.target, "[data-on-toggle], [data-on-select], input[type=range][data-on-commit]");
   if (target === null || !root.contains(target)) {
     return;
   }
-  const emitName = target.dataset.onToggle ?? target.dataset.onSelect;
+  const emitName = target.dataset.onToggle ?? target.dataset.onSelect ?? target.dataset.onCommit;
   void dispatchMosaicEvent(emitName, target);
 });
 
@@ -1634,6 +1634,10 @@ fn emit_html_tree(
         out.push_str(&emit_host_radio(node, indent, part_styles));
         return Ok(out);
     }
+    if node.tag == "HostSlider" {
+        out.push_str(&emit_host_slider(node, indent, part_styles));
+        return Ok(out);
+    }
 
     // UI29-4 — `HostLink` lowers to `<a href ...>label</a>`.
     // `target="_blank"` always pairs with `rel="noopener
@@ -1677,6 +1681,14 @@ fn emit_html_tree(
     }
     if node.tag == "HostDropTarget" {
         out.push_str(&emit_host_drop_target(node, indent, part_styles)?);
+        return Ok(out);
+    }
+
+    // UI39 — real vector geometry for web hosts. Path is deliberately
+    // parameterized rather than accepting raw SVG path-data, so authored
+    // coordinate bindings remain part of the Mosaic layout contract.
+    if node.tag == "Path" {
+        out.push_str(&emit_path_html(node, indent, part_styles)?);
         return Ok(out);
     }
 
@@ -2314,6 +2326,55 @@ fn emit_host_radio(
         Some(body) => format!("{pad}<label><input{attrs}{style_attr}> {body}</label>\n"),
         None => format!("{pad}<input{attrs}{style_attr}>\n"),
     }
+}
+
+/// Lower `HostSlider` to the browser's native adjustable range input.
+///
+/// Static HTML preserves dynamic values and events as mustache/data
+/// markers for the same hydration pass used by the other host controls.
+fn emit_host_slider(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::from(" type=\"range\"");
+
+    for prop_name in ["value", "min", "max", "step"] {
+        match find_prop(node, prop_name) {
+            Some(LayoutPropValue::SlotRef(slot)) => {
+                write!(attrs, " {prop_name}=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+            }
+            Some(LayoutPropValue::Number(value)) => {
+                write!(attrs, " {prop_name}=\"{value}\"").unwrap();
+            }
+            _ => {}
+        }
+    }
+
+    match find_prop(node, "disabled") {
+        Some(LayoutPropValue::Keyword(value)) if value == "true" => attrs.push_str(" disabled"),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            write!(attrs, " data-disabled=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+        }
+        _ => {}
+    }
+
+    match find_prop(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => {
+            write!(attrs, " aria-label=\"{}\"", escape_html_attr(label)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            write!(attrs, " aria-label=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+        }
+        _ => {}
+    }
+
+    append_emit_marker(&mut attrs, node, "onChange", "data-on-change");
+    append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
+
+    let style_attr = build_style_attr(node, "", part_styles);
+    format!("{pad}<input{attrs}{style_attr}>\n")
 }
 
 // =====================================================================
@@ -3371,6 +3432,100 @@ fn append_drag_flag(attrs: &mut String, node: &LayoutNode, prop: &str, attr: &st
         }
         _ => {}
     }
+}
+
+fn path_coordinate_html(node: &LayoutNode, prop_name: &str) -> Result<String, PipelineEmitError> {
+    match find_prop(node, prop_name) {
+        Some(LayoutPropValue::Number(value)) if value.is_finite() => Ok(value.to_string()),
+        Some(LayoutPropValue::SlotRef(slot)) => Ok(format!("{{{{{}}}}}", camel(slot))),
+        Some(LayoutPropValue::Expr(expression)) => {
+            Ok(format!("{{{{{}}}}}", expr_to_mustache_path(expression)))
+        }
+        Some(LayoutPropValue::Number(_)) => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path prop `{prop_name}:` must be a finite number"
+        ))),
+        _ => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path missing required numeric prop `{prop_name}:`"
+        ))),
+    }
+}
+
+fn css_value<'a>(style: &'a str, property: &str) -> Option<&'a str> {
+    style.split(';').find_map(|declaration| {
+        let (name, value) = declaration.trim().split_once(':')?;
+        (name.trim() == property).then_some(value.trim())
+    })
+}
+
+fn emit_path_html(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let style = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(String::as_str)
+        .unwrap_or("");
+    let fill = css_value(style, "background").unwrap_or("none");
+    let stroke = css_value(style, "border-color").unwrap_or("currentColor");
+    let stroke_width = css_value(style, "border-width").unwrap_or("1");
+    let common = format!(
+        " fill=\"{}\" stroke=\"{}\" stroke-width=\"{}\"",
+        escape_html_attr(fill),
+        escape_html_attr(stroke),
+        escape_html_attr(stroke_width),
+    );
+    let svg_open = format!(
+        "{pad}<svg aria-hidden=\"true\" focusable=\"false\" style=\"position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none\">"
+    );
+    let kind = match find_prop(node, "kind") {
+        Some(LayoutPropValue::Keyword(kind)) => kind.as_str(),
+        _ => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "Path missing required prop `kind:`".to_owned(),
+            ))
+        }
+    };
+
+    let geometry = match kind {
+        "circle" => format!(
+            "<circle cx=\"{}\" cy=\"{}\" r=\"{}\"{common}></circle>",
+            path_coordinate_html(node, "cx")?,
+            path_coordinate_html(node, "cy")?,
+            path_coordinate_html(node, "r")?,
+        ),
+        "line" => format!(
+            "<line x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\"{common}></line>",
+            path_coordinate_html(node, "x1")?,
+            path_coordinate_html(node, "y1")?,
+            path_coordinate_html(node, "x2")?,
+            path_coordinate_html(node, "y2")?,
+        ),
+        "curve" => format!(
+            "<path d=\"M {} {} Q {} {} {} {}\"{common}></path>",
+            path_coordinate_html(node, "x1")?,
+            path_coordinate_html(node, "y1")?,
+            path_coordinate_html(node, "cx")?,
+            path_coordinate_html(node, "cy")?,
+            path_coordinate_html(node, "x2")?,
+            path_coordinate_html(node, "y2")?,
+        ),
+        "arc" => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "Path kind `arc` is not yet supported by the HTML emitter".to_owned(),
+            ))
+        }
+        other => {
+            return Err(PipelineEmitError::UnknownPrimitive(format!(
+                "Path kind `{other}` is not a recognized shape kind (expected circle, line, curve, or arc)"
+            )))
+        }
+    };
+
+    Ok(format!("{svg_open}{geometry}</svg>\n"))
 }
 
 /// Shared helper: build the `style="..."` attribute for a node by
@@ -6673,6 +6828,77 @@ mod tests {
         assert!(
             out.contains("data-on-change=\"onSet\""),
             "expected data-on-change=\"onSet\" marker, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_slider_preserves_range_bindings_accessibility_and_events() {
+        let model = component_with_emits(
+            "X",
+            vec![],
+            vec![
+                emit("onAdjust", vec![param("value", EmitPayloadType::Number)]),
+                emit("onCommit", vec![param("value", EmitPayloadType::Number)]),
+            ],
+        );
+        let l = layout(
+            "X",
+            node_with_props(
+                "HostSlider",
+                vec![
+                    prop_slot("value", "current-value"),
+                    LayoutProp {
+                        name: "min".into(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    prop_slot("max", "maximum-value"),
+                    LayoutProp {
+                        name: "step".into(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                    prop_slot("disabled", "is-disabled"),
+                    prop_string("a11y-label", "Volume"),
+                    prop_emit("onChange", "onAdjust"),
+                    prop_emit("onCommit", "onCommit"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&model, &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        for expected in [
+            "type=\"range\"",
+            "value=\"{{currentValue}}\"",
+            "min=\"0\"",
+            "max=\"{{maximumValue}}\"",
+            "step=\"5\"",
+            "data-disabled=\"{{isDisabled}}\"",
+            "aria-label=\"Volume\"",
+            "data-on-change=\"onAdjust\"",
+            "data-on-commit=\"onCommit\"",
+        ] {
+            assert!(out.contains(expected), "missing {expected}:\n{out}");
+        }
+
+        let mut options = EmitOptions::default();
+        options.emit_project = true;
+        let project = from_pipeline_with_options(
+            &model,
+            &l,
+            &empty_style("X"),
+            &options,
+        )
+        .unwrap()
+        .project
+        .expect("project shell");
+        assert!(
+            project
+                .main_js
+                .contains("input[type=range][data-on-commit]")
+                && project.main_js.contains("target.dataset.onCommit")
+                && project.main_js.contains("\"type\": \"number\""),
+            "range change must dispatch the numeric commit payload:\n{}",
+            project.main_js
         );
     }
 

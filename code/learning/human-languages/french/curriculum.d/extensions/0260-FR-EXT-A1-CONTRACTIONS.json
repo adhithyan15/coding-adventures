@@ -1,0 +1,18 @@
+{
+  "id": "FR-EXT-A1-CONTRACTIONS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use a and de, contract them with le and les into au, aux, du and des, and use the full partitive.",
+  "prerequisites": [
+    "FR-EXT-A1-POINTING"
+  ],
+  "lessons": [
+    "FR-C35-a",
+    "FR-C35-de",
+    "FR-C35-au-aux",
+    "FR-C35-de-la",
+    "FR-C35-des",
+    "FR-R35-au-cafe"
+  ]
+}

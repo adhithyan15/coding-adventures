@@ -1,0 +1,18 @@
+{
+  "id": "FR-EXT-A1-QUANTITY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use beaucoup, un peu, tres and assez, and address somebody as Monsieur or Madame.",
+  "prerequisites": [
+    "FR-EXT-A1-PRONOUNS"
+  ],
+  "lessons": [
+    "FR-C40-beaucoup",
+    "FR-C40-un-peu",
+    "FR-C40-tres",
+    "FR-C40-assez",
+    "FR-C40-monsieur",
+    "FR-R40-combien"
+  ]
+}

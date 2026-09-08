@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:3a89e65fdb2ec3dd",
+  "lessonIds": [
+    "FR-C37-imperatif",
+    "FR-C37-futur-proche",
+    "FR-C37-finir",
+    "FR-C37-ne-chute",
+    "FR-C37-on",
+    "FR-R37-on-y-va"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch41.txt",
+  "json": "french/narration/ch41.json",
+  "textHash": "fnv1a64:8250be5b8b571cd1",
+  "jsonHash": "fnv1a64:34f1944de77380c8",
+  "findings": []
+}

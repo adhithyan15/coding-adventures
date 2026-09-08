@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.302.0 — 2026-09-08 — tracked-real arithmetic powered ALGOL standard results
+
+The seven-backend ALGOL matrix now proves that finite arithmetic over
+initialized tracked local real snapshots may bound a power around a
+path-independent pure built-in result while its runtime selector remains.
+
 ## 0.301.0 — 2026-09-08 — tracked-real powered ALGOL standard results
 
 The seven-backend ALGOL matrix now proves that an exact integral tracked local
@@ -5786,3 +5792,14 @@ loop regression verifies output and the surviving return value. These proofs
 cover the ASCII characters used by FLOW-MATIC's integer printer; broader byte
 I/O and the four input/EOF cases remain separate work. FLOW-MATIC has 60
 declared cells: four rows on eight backends and four input rows on seven.
+
+
+### Initial COBOL output on BEAM (VM-040)
+
+Four COBOL programs now execute on BEAM: literal DISPLAY, numeric MOVE,
+integer arithmetic and scaled-decimal ADD. Binary integer arithmetic accepts
+IIR integer literals directly as BEAM operands, preserving register operands
+and existing u4/u8 result narrowing. A real-Erlang regression covers all five
+arithmetic operations with immediate/immediate and mixed register/immediate
+sources, including negative values (15 executions). Remaining COBOL programs
+have not been promoted. The matrix declares 410 COBOL cells across 58 rows.

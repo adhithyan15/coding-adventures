@@ -473,6 +473,44 @@ pub enum ValueType {
     /// `0x6A` is one less than `StructRefAny`'s `0x6B`, matching the real
     /// spec's own adjacent byte assignment for the two hierarchy tops.
     ArrayRefAny,
+
+    /// `(ref any)` -- NON-NULL reference to the abstract TOP of the `any`
+    /// hierarchy (W39 slice 4 Correction 3: `code/specs/
+    /// W39-wasm-gc-ref-eq-cast-br-on-cast.md`), the `any`-hierarchy
+    /// counterpart of [`ValueType::NonNullArrayAny`]/[`ValueType::
+    /// NonNullStructRef`] one level up: [`ValueType::Anyref`] is already
+    /// the NULLABLE top, and until this slice there was no distinct
+    /// non-null spelling at all (`parse_value_type`'s non-null `(ref X)`
+    /// branch fell through to `resolve_idx` for `any`, same gap `eq`/
+    /// `struct`/`func`/`extern` still have -- see Correction 3's own
+    /// direct-corpus-read note: only `(ref any)` is proven needed by the
+    /// six-file W39 cluster, so only this ONE variant is added, matching
+    /// this campaign's "don't build untested surface" discipline).
+    ///
+    /// Needed for a genuine FUNCTION SIGNATURE / block-result type
+    /// declaration (`br_on_cast.wast`'s own `(func (param (ref any))
+    /// (result (ref $t)) ...)`), not merely as `ref.test`/`ref.cast`/
+    /// `br_on_cast`'s own LOCAL instruction-immediate parsing (Correction
+    /// 2's fix) -- a function param type has no "parse it locally, inside
+    /// one instruction's own encoder" escape hatch, so this DOES widen the
+    /// shared `parse_value_type`, unlike Correction 2's five abstract
+    /// non-null forms. This surfaced a real, separate risk during
+    /// implementation: `ref_eq.wast`'s own `assert_invalid` case
+    /// (`(param $r (ref any)) ... (ref.eq ...)`, expecting "type
+    /// mismatch") relied ENTIRELY on `(ref any)` failing to PARSE at all
+    /// -- once it parses, `wasm-validator`'s `0xD3` (`ref.eq`) arm needed
+    /// a real, narrow check added (a `NonNullAnyref`-typed operand is
+    /// never assignable to `eqref`: `any` sits strictly ABOVE `eq` in the
+    /// hierarchy, not below or beside it) to keep rejecting that same
+    /// case for the RIGHT reason instead of accidentally accepting it —
+    /// see that arm's own doc comment.
+    ///
+    /// Binary: `0x64 0x6E` (the function-references proposal's non-null
+    /// reftype-constructor byte, same `0x64` `NonNullArrayAny` already
+    /// uses, followed by `any`'s own single-byte abstract heap-type tag —
+    /// `Anyref`'s own `0x6E` — exactly mirroring `NonNullArrayAny`'s
+    /// `[0x64, 0x66]` shape one hierarchy over).
+    NonNullAnyref,
 }
 
 impl ValueType {
@@ -520,6 +558,9 @@ impl ValueType {
             // W38 slice 0: single-byte abstract hierarchy top, same shape
             // as `StructRefAny`/`Eqref`/`I31ref` immediately above.
             ValueType::ArrayRefAny => Some(0x6A),
+            // W39 slice 4 Correction 3: multi-byte, same shape as
+            // `NonNullArrayAny` just below in `encode()`.
+            ValueType::NonNullAnyref => None,
         }
     }
 
@@ -604,6 +645,10 @@ impl ValueType {
             // W38 slice 0: single-byte abstract hierarchy top -- see
             // `byte_tag()`.
             ValueType::ArrayRefAny => vec![0x6A],
+            // W39 slice 4 Correction 3: same `0x64` non-null reftype-
+            // constructor byte `NonNullArrayAny` uses above, followed by
+            // `any`'s own abstract heap-type tag (`Anyref`'s `0x6E`).
+            ValueType::NonNullAnyref => vec![0x64, 0x6E],
         }
     }
 
@@ -713,6 +758,45 @@ impl ValueType {
                 // documented "no transitive closure" contract).
                 | (ValueType::NonNullArrayRef(_), ValueType::NonNullArrayAny)
                 | (ValueType::NonNullArrayAny, ValueType::Anyref)
+                // W39 slice 4 Correction 3: `NonNullAnyref` <: `Anyref` --
+                // `any` is already the TOP of its own hierarchy (unlike
+                // `array`'s `NonNullArrayAny`, there is no further hop
+                // needed ABOVE it) -- but see the three edges just below
+                // for what flows INTO it from below.
+                | (ValueType::NonNullAnyref, ValueType::Anyref)
+                // W39 slice 4 Correction 3 addendum: every existing
+                // non-null source that already flows into the NULLABLE
+                // `Anyref` top (the three arms directly above -- struct,
+                // array, and the array hierarchy's own non-null top) must
+                // ALSO flow into the new NON-NULL `NonNullAnyref` top, for
+                // the identical structural reason -- none of these values
+                // is ever null to begin with (`NonNullStructRef`/
+                // `NonNullArrayRef`/`NonNullArrayAny` are all "non-null" AT
+                // THE TYPE LEVEL already), so there is no genuine nullable-
+                // vs-non-null distinction blocking this hop, only the
+                // pre-this-slice absence of a non-null `any` top to name as
+                // the target. Corpus-verified need: `type-subtyping.wast`'s
+                // own `$f2`/`$f3` function-subtype chain (`(result (ref
+                // any))` <- `(result (ref $s))`) requires exactly the
+                // `NonNullStructRef` arm for real spec covariant-result
+                // subtyping to validate; the other two are added for the
+                // SAME structural reason, matching this function's own
+                // "complete the hierarchy per the real rules, not just
+                // today's one proven case" precedent already set by
+                // `StructRefAny`/`ArrayRefAny`'s own arms in `wasm-
+                // validator::is_assignable`. `I31ref` is deliberately
+                // EXCLUDED here (unlike its own `<: Anyref`/`<: Eqref`
+                // edges) -- this crate's `I31ref` variant collapses BOTH
+                // the nullable (`i31ref`) and non-null (`(ref i31)`)
+                // spellings into one variant (see that variant's own doc
+                // comment), so treating it as unconditionally `<:` a
+                // NON-NULL top would incorrectly accept a genuinely-
+                // nullable-typed value wherever a non-null slot is
+                // required -- no vendored corpus case needs this, so it
+                // stays unmodeled rather than risk a false acceptance.
+                | (ValueType::NonNullStructRef(_), ValueType::NonNullAnyref)
+                | (ValueType::NonNullArrayRef(_), ValueType::NonNullAnyref)
+                | (ValueType::NonNullArrayAny, ValueType::NonNullAnyref)
         ) || matches!(
             (self, other),
             (ValueType::NonNullConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if i == j
@@ -2802,6 +2886,11 @@ fn canonicalize_value_type(
         // nullability instead of `false` (mirrors `StructRefAny`'s own
         // `true` vs. its non-null-less struct hierarchy one line up).
         ValueType::ArrayRefAny => (CanonicalValType::Ref(true, Abstract(A::Array)), CanonicalCost::LEAF),
+        // W39 slice 4 Correction 3: the NON-NULL counterpart of `Anyref`
+        // above -- same `Abstract(A::Any)` heap kind, `false` nullability
+        // instead of `true`, mirroring `NonNullArrayAny`'s own `false` vs.
+        // `ArrayRefAny`'s `true` one hierarchy over.
+        ValueType::NonNullAnyref => (CanonicalValType::Ref(false, Abstract(A::Any)), CanonicalCost::LEAF),
         ValueType::StructRef(i) => {
             let (r, c) = resolve(i)?;
             (CanonicalValType::Ref(true, r), c)

@@ -3420,6 +3420,15 @@ impl WasmRuntime {
                 // path placeholder group -- same reasoning as `Eqref`/
                 // `StructRefAny` above.
                 | ValueType::ArrayRefAny
+                // W39 slice 4 Correction 3: `NonNullAnyref` joins this same
+                // lossy-legacy-path placeholder group -- same reasoning as
+                // `Eqref`/`StructRefAny`/`ArrayRefAny` above (no vendored
+                // corpus directive passes one as a top-level `invoke`
+                // argument; `br_on_cast.wast`'s own `(param (ref any))`
+                // function is only ever reached via a nested `call`
+                // instruction inside another function body, never a
+                // top-level `invoke`).
+                | ValueType::NonNullAnyref
                 | ValueType::Funcref
                 | ValueType::Externref
                 | ValueType::Exnref

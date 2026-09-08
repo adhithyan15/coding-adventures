@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Expose a sparse whole-workbook content query that includes authored formulas,
+  even before calculation, without confusing a blank viewport with an empty file.
+
 ## Unreleased — 2026-08-18
 
 Brought under CI: the crate had no `BUILD` file, so nothing ever ran its tests

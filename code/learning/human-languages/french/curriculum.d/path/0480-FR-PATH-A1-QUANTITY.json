@@ -1,0 +1,17 @@
+{
+  "id": "FR-PATH-A1-QUANTITY",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "FR-C40-beaucoup",
+    "FR-C40-un-peu",
+    "FR-C40-tres",
+    "FR-C40-assez",
+    "FR-C40-monsieur",
+    "FR-R40-combien"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-A1-QUANTITY"
+  ],
+  "after": []
+}

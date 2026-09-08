@@ -1,0 +1,17 @@
+{
+  "id": "FR-PATH-A1-POINTING",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "FR-C34-il-y-a",
+    "FR-C34-cest",
+    "FR-C34-ici-la",
+    "FR-C34-voici",
+    "FR-C34-ce-cette",
+    "FR-R34-voici-tout"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-A1-POINTING"
+  ],
+  "after": []
+}

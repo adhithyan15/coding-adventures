@@ -1,0 +1,22 @@
+{
+  "chapter": 42,
+  "title": "What the Ear Cannot Hear",
+  "label": "ch:fr-silent",
+  "canDo": "I know why a written consonant at the end of a French word is silent, what the plural and the feminine do about it, and what happens to some after a negative.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-R38-ce-quon-nentend-pas",
+    "kind": "production",
+    "summary": "One sound rule and the four spellings that hang off it. The chapter names the thing the reader has been working around since the numbers -- a final consonant is silent -- and then shows the plural, the feminine, the -x plural and the negative partitive as four consequences of it rather than four separate facts.",
+    "assesses": [
+      "FR-PHON-CONSONNE-FINALE-01",
+      "FR-GRAM-PLURIEL-S-01",
+      "FR-GRAM-FEMININ-E-01",
+      "FR-GRAM-PLURIEL-X-01",
+      "FR-GRAM-PAS-DE-01"
+    ],
+    "note": "chevaux is the payoff of a fact planted three chapters earlier: the u inside au was an l, and the same twelfth-century softening turns chevals into chevaux -- so a plural that every grammar calls irregular is regular twice over."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 39,
+  "title": "Where Two Words Melt Into One",
+  "label": "ch:fr-contractions",
+  "canDo": "I can say to, at, of and from, and I know which four combinations of preposition and article melt into a single word.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FR-R35-au-cafe",
+    "kind": "production",
+    "summary": "Every noun the book owns is put in somebody's hands and put somewhere. Two prepositions and four articles make eight combinations, four of which melt -- and the rule that decides which is the one du already showed: le and les contract, la and l' do not. The u inside au was an l, which is the same eight-century-old change that made chevaux out of cheval.",
+    "assesses": [
+      "FR-LEX-A-PREP-01",
+      "FR-LEX-DE-PREP-01",
+      "FR-GRAM-AU-AUX-01",
+      "FR-GRAM-DE-LA-01",
+      "FR-GRAM-DES-01"
+    ],
+    "note": "de la and des were never missing from the language, only from the food chapter's table: every noun on it happened to be a le-word or a vowel-word. des then closes a second point for free, because it is also the plural of un -- the word English never built."
+  }
+}

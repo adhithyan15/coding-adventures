@@ -1,0 +1,17 @@
+{
+  "id": "FR-PATH-A1-VERB-WAYS",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "FR-C37-imperatif",
+    "FR-C37-futur-proche",
+    "FR-C37-finir",
+    "FR-C37-ne-chute",
+    "FR-C37-on",
+    "FR-R37-on-y-va"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-A1-VERB-WAYS"
+  ],
+  "after": []
+}

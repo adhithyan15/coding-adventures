@@ -135,11 +135,22 @@ model-card parameter, or a UI artifact is not a completion signal.
      legacy multiline `Input` contract because `HostInput` is intentionally
      single-line across web hosts. Schematic capture, table rendering, and
      waveform interaction stay after this first workbench is usable.
-   - Current UI priority: render the existing stable result records as
-     selectable tables with source-span diagnostics. Follow with waveform/axis
-     interaction built from the same records; schematic capture stays after the
-     text-deck workflow is proven, because it must emit the canonical netlist
-     rather than introduce a parallel circuit model.
+   - Result-table and source-span-diagnostic interaction is complete in PR
+     #14652. This coherent UI phase delivers web waveform/axis interaction
+     from the existing `BerkeleyAppWaveformSeries` contract: select a result
+     series, normalize its adjacent-point line segments in the Rust app
+     adapter, and render those segments with axes in the HTML and React Mosaic
+     backends. It includes the missing HTML/React `Path` lowering, because a
+     workbench-only series selector would leave the trace invisible.
+   - Native XAML waveform bindings are complete: `Path kind: line` owns the
+     workbench trace contract because its `x1`/`y1`/`x2`/`y2` properties bind
+     directly. The package's `list<list<number>>` segments flow through typed
+     `For` row projections and generated `double` indexer helpers. Circle and
+     curve coordinates remain explicit literal-only gaps until a broader
+     derived-geometry binding contract exists; they are not required to render
+     the SPICE trace. Schematic capture remains after the text-deck workflow is
+     proven, because it must emit the canonical netlist rather than introduce a
+     parallel circuit model.
 
 ### Operating rules
 

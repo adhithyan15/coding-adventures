@@ -1,0 +1,11 @@
+[package]
+name = "aarch64-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "Exact 526,469-DFF gate-level AArch64 simulator"
+license = "MIT"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+aarch64-simulator = { path = "../aarch64-simulator" }

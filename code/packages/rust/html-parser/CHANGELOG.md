@@ -6,6 +6,8 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Textarea value and form-control descriptors preserve authored line breaks so
+  retained multiline editing does not collapse content into spaces.
 - Browser content/render nodes retain control names, textarea rows/columns,
   and mutable focus state for host-neutral form interaction and reflow.
 - Browser content and render nodes now retain the authored `style` attribute

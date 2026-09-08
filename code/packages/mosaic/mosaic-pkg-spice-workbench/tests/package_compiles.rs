@@ -39,7 +39,15 @@ fn manifest_and_component_contract_are_complete() {
         .slots
         .iter()
         .any(|slot| slot.name == "diagnostic-rows"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "waveform-segments"));
     assert!(component.emits.iter().any(|emit| emit.name == "onRun"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onSelectWaveform"));
 }
 
 #[test]
@@ -51,6 +59,8 @@ fn multiline_workbench_compiles_in_both_themes() {
     assert!(source("SpiceWorkbench.mll").contains("Input [ netlist-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("multiline : true"));
     assert!(source("SpiceWorkbench.mll").contains("HostTable [ result-table ]"));
+    assert!(source("SpiceWorkbench.mll").contains("Path [ waveform-segment ]"));
+    assert!(source("SpiceWorkbench.mll").contains("segment[0]"));
     assert!(source("SpiceWorkbench.mll").contains("slot: diagnostic-rows"));
     assert!(source("SpiceWorkbench.mll").contains("onClick : emit: onRun"));
     for theme in ["SpiceWorkbench.dark.msl", "SpiceWorkbench.light.msl"] {
@@ -81,10 +91,14 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
         match backend {
             Backend::Html => {
                 assert!(output.contains("<table"));
+                assert!(output.contains("<svg"));
+                assert!(output.contains("x1=\"{{segment.0}}\""));
                 assert!(output.contains("data-on-change=\"onNetlistChange\""));
                 assert!(output.contains("data-on-click=\"onRun\""));
             }
             Backend::React => {
+                assert!(output.contains("<svg aria-hidden=\"true\""));
+                assert!(output.contains("x1={( segment [ 0 ] )}"));
                 assert!(output.contains("type: \"netlistChange\""));
                 assert!(output.contains("type: \"run\""));
             }

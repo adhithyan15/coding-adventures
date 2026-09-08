@@ -53,7 +53,7 @@ swap is automatic. This slots between your greetings (Ch. 1–2) and farewells
 
 > — Buongiorno. **Come si chiama?**
 > — Mi chiamo Marco Rossi. E Lei?
-> — Rossi. **Molto piacere.**
+> — Rossi. **Piacere.**
 
 ## What you've built this chapter
 <!-- hl-knowledge: introduces=[IT-NOTICE-C03-PRACTICE-03]; assesses=[] -->

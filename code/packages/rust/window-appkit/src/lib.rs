@@ -22,7 +22,7 @@ use std::ffi::{c_int, c_schar, c_ulong};
 use std::{
     cell::RefCell,
     collections::HashMap,
-    ffi::{c_void, CString},
+    ffi::{c_void, CStr, CString},
 };
 
 #[cfg(target_vendor = "apple")]
@@ -573,6 +573,19 @@ extern "C" fn key_up(view: Id, _sel: Sel, event: Id) {
 fn dispatch_key_event(view: Id, event: Id, state: ElementState) {
     let key_code = unsafe { msg_usize!(event, "keyCode") };
     let modifier_flags = unsafe { msg_usize!(event, "modifierFlags") };
+    let characters = if state == ElementState::Pressed {
+        let value = unsafe { msg_usize!(event, "characters") as Id };
+        let utf8 = unsafe { msg_usize!(value, "UTF8String") as *const std::ffi::c_char };
+        (!utf8.is_null())
+            .then(|| {
+                unsafe { CStr::from_ptr(utf8) }
+                    .to_string_lossy()
+                    .into_owned()
+            })
+            .filter(|text| !text.is_empty())
+    } else {
+        None
+    };
     EVENT_HANDLERS.with(|handlers| {
         let mut handlers = handlers.borrow_mut();
         if let Some(entry) = handlers.get_mut(&(view as usize)) {
@@ -580,6 +593,11 @@ fn dispatch_key_event(view: Id, event: Id, state: ElementState) {
                 normalized_key_event(entry.window_id, key_code, modifier_flags, state)
             {
                 (entry.callback)(event);
+            } else if let Some(text) = characters {
+                (entry.callback)(WindowEvent::TextInput {
+                    window_id: entry.window_id,
+                    text,
+                });
             }
         }
     });

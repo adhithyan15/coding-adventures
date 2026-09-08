@@ -39,6 +39,13 @@ private interface VentureNative : Library {
     fun venture_browser_compose_apply_props(host: Pointer): Pointer?
     fun venture_browser_compose_handle_event(host: Pointer, name: String, value: String): Pointer?
     fun venture_browser_compose_scroll(host: Pointer, deltaY: Double): Byte
+    fun venture_browser_compose_control_key(host: Pointer, key: String, shift: Byte): Byte
+    fun venture_browser_compose_control_text(host: Pointer, text: String): Byte
+    fun venture_browser_compose_control_copy(host: Pointer): Pointer?
+    fun venture_browser_compose_control_cut(host: Pointer): Pointer?
+    fun venture_browser_compose_control_paste(host: Pointer, text: String): Byte
+    fun venture_browser_compose_caret_tick(host: Pointer, elapsedMilliseconds: Long): Byte
+    fun venture_browser_compose_ime_candidate_rect(host: Pointer): Pointer?
     fun venture_browser_compose_activate_link(host: Pointer, x: Double, y: Double): Byte
     fun venture_browser_compose_update_hover(host: Pointer, x: Double, y: Double): Byte
     fun venture_browser_compose_scroll_metrics(
@@ -140,6 +147,22 @@ class MosaicHost private constructor(
 
     fun scrollBy(deltaY: Double) {
         if (native.venture_browser_compose_scroll(handle, deltaY).toInt() != 0) surfaceChanged()
+    }
+
+    fun controlKey(key: String, shift: Boolean = false): Boolean {
+        val changed = native.venture_browser_compose_control_key(
+            handle,
+            key,
+            (if (shift) 1 else 0).toByte(),
+        ).toInt() != 0
+        if (changed) surfaceChanged()
+        return changed
+    }
+
+    fun controlText(text: String): Boolean {
+        val changed = native.venture_browser_compose_control_text(handle, text).toInt() != 0
+        if (changed) surfaceChanged()
+        return changed
     }
 
     fun updateHover(x: Double, y: Double) {

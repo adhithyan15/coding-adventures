@@ -177,6 +177,16 @@ const DEFINITE_ARTICLES: Partial<Record<string, Set<string>>> = {
 };
 
 /**
+ * Tracks whose headwords use ` y ` as the conjunction "and".
+ *
+ * A census of the committed corpus, not a grammar of the languages: exactly two
+ * headwords anywhere contain ` y `, and both are Spanish. A track absent from
+ * this set keeps its ` y ` inside the headword, which is what French needs for
+ * `il y a` — see the note inside `taughtWords`.
+ */
+const SPLITS_ON_Y = new Set(["spanish"]);
+
+/**
  * Headwords, normalised for matching, that a lesson teaches.
  *
  * A multi-word headword ("buenos días") is kept whole: matching its parts
@@ -187,8 +197,27 @@ function taughtWords(lesson: ParsedLesson): string[] {
   const headword = lesson.realization.headword ?? "";
   // A headword may hold alternatives — "hola / buenas", "sí, no" — or a RANGE,
   // written with a dash: "dieciséis — diecinueve", "once — quince".
+  //
+  // The ` y ` alternative is SPANISH-ONLY, and for the same reason the article
+  // allowlist below is per-language: `y` means "and" in Spanish and something
+  // else everywhere it appears in this corpus. A census of every headword in
+  // every track finds exactly two that contain ` y `, and both are Spanish —
+  // "negar y preguntar" and the lesson on the word `y` itself.
+  //
+  // French `il y a` is the case that surfaced it. There `y` is a PRONOUN, Latin
+  // `ibi`, and splitting on it registers the lesson as teaching the headword
+  // `il` — after which 44 earlier lessons that say `il est` or `il fait` report
+  // as forward references to a chapter-38 lesson about existence. The failure is
+  // silent, it is in the flattering direction for nobody, and the documented fix
+  // for its Spanish twin (`así que`, where `que` was being registered) was to
+  // rename the lesson. Renaming a lesson to work around a measurement is what
+  // the article allowlist below exists to stop; this is the same repair applied
+  // to the same splitter.
+  const splitter = SPLITS_ON_Y.has(lesson.language)
+    ? /[/,]|\s+y\s+|\s*[—–-]\s*/
+    : /[/,]|\s*[—–-]\s*/;
   const parts = headword
-    .split(/[/,]|\s+y\s+|\s*[—–-]\s*/)
+    .split(splitter)
     .map((part) => part.trim().toLowerCase())
     .filter((part) => part.length > 0);
 

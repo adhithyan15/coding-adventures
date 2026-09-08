@@ -1,0 +1,24 @@
+{
+  "chapter": 30,
+  "title": "Not",
+  "label": "ch:it-non",
+  "canDo": "I can turn any sentence in this book over with non, say that I do not understand, use né … né and neanche, and say that something is or is not there.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "IT-C30-ce",
+    "kind": "task",
+    "summary": "The chapter's last lesson takes non c'è male apart, twenty-eight chapters after Chapter 2 handed it over whole and said its negation and its c'è would come back on their own ramps. Both have.",
+    "assesses": [
+      "IT-GRAMMAR-NON-02",
+      "IT-ETYMON-NON-03",
+      "IT-PRAGMATIC-NON-CAPISCO-02",
+      "IT-GRAMMAR-NE-02",
+      "IT-LEX-ANCHE-02",
+      "IT-GRAMMAR-ANCHE-03",
+      "IT-GRAMMAR-CE-02",
+      "IT-NOTICE-CE-03"
+    ]
+  }
+}

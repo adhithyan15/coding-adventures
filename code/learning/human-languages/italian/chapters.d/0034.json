@@ -1,0 +1,26 @@
+{
+  "chapter": 34,
+  "title": "Mine and Yours",
+  "label": "ch:it-possessivi",
+  "canDo": "I can say whose something is, keep the article Italian keeps and drop it where Italian drops it, address somebody as signore or signora, and put a pronoun after a preposition.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "IT-C34-per-me",
+    "kind": "task",
+    "summary": "The chapter's last lesson gives the stressed pronouns somewhere to stand. No preposition in this book had ever taken a pronoun after it, and per — Chapter 32's — is what makes per me sayable.",
+    "assesses": [
+      "IT-LEX-MIO-TUO-SUO-02",
+      "IT-ETYMON-MIO-TUO-SUO-03",
+      "IT-LEX-NOSTRO-VOSTRO-02",
+      "IT-NOTICE-NOSTRO-VOSTRO-03",
+      "IT-GRAMMAR-IL-MIO-NOME-02",
+      "IT-NOTICE-IL-MIO-NOME-03",
+      "IT-LEX-SIGNORE-SIGNORA-02",
+      "IT-GRAMMAR-SIGNORE-SIGNORA-03",
+      "IT-LEX-PER-ME-02",
+      "IT-GRAMMAR-PER-ME-03"
+    ]
+  }
+}

@@ -38,6 +38,8 @@ pub enum MetadataViolation {
     GrantType,
     /// Public-client token endpoint authentication method `none` was not advertised.
     TokenAuthentication,
+    /// JWT client authentication omitted valid signing-algorithm metadata.
+    TokenAuthenticationSigningAlgorithm,
     /// PKCE method `S256` was not explicitly advertised.
     Pkce,
     /// RFC 9207 response-issuer mode was selected but not advertised.
@@ -134,6 +136,7 @@ pub struct AuthorizationServerMetadata {
     response_types_supported: Vec<String>,
     grant_types_supported: Vec<String>,
     token_endpoint_auth_methods_supported: Vec<String>,
+    token_endpoint_auth_signing_alg_values_supported: Vec<String>,
     code_challenge_methods_supported: Vec<String>,
     authorization_response_iss_parameter_supported: bool,
 }
@@ -177,6 +180,11 @@ impl AuthorizationServerMetadata {
     /// Borrow the exact token authentication methods retained in the cache record.
     pub fn token_endpoint_auth_methods_supported(&self) -> &[String] {
         &self.token_endpoint_auth_methods_supported
+    }
+
+    /// Borrow the exact JWT client-authentication algorithms retained in the cache record.
+    pub fn token_endpoint_auth_signing_alg_values_supported(&self) -> &[String] {
+        &self.token_endpoint_auth_signing_alg_values_supported
     }
 
     /// Borrow the exact PKCE methods retained in the cache record.
@@ -260,6 +268,10 @@ impl Debug for AuthorizationServerMetadata {
             .field(
                 "token_auth_method_count",
                 &self.token_endpoint_auth_methods_supported.len(),
+            )
+            .field(
+                "token_auth_signing_algorithm_count",
+                &self.token_endpoint_auth_signing_alg_values_supported.len(),
             )
             .field(
                 "pkce_method_count",
@@ -406,6 +418,21 @@ fn parse_metadata_object(
         "none",
         MetadataViolation::TokenAuthentication,
     )?;
+    let token_endpoint_auth_signing_alg_values_supported =
+        optional_string_array(fields, "token_endpoint_auth_signing_alg_values_supported")?
+            .unwrap_or_default();
+    let jwt_client_authentication = token_endpoint_auth_methods_supported
+        .iter()
+        .any(|method| matches!(method.as_str(), "private_key_jwt" | "client_secret_jwt"));
+    if (jwt_client_authentication && token_endpoint_auth_signing_alg_values_supported.is_empty())
+        || token_endpoint_auth_signing_alg_values_supported
+            .iter()
+            .any(|algorithm| algorithm == "none")
+    {
+        return Err(invalid(
+            MetadataViolation::TokenAuthenticationSigningAlgorithm,
+        ));
+    }
 
     let code_challenge_methods_supported =
         required_string_array(fields, "code_challenge_methods_supported")?;
@@ -433,6 +460,7 @@ fn parse_metadata_object(
         response_types_supported,
         grant_types_supported,
         token_endpoint_auth_methods_supported,
+        token_endpoint_auth_signing_alg_values_supported,
         code_challenge_methods_supported,
         authorization_response_iss_parameter_supported,
     })
@@ -608,7 +636,8 @@ mod tests {
                 "revocation_endpoint":"https://login.example/revoke",
                 "response_types_supported":["code"],
                 "grant_types_supported":["authorization_code","refresh_token"],
-                "token_endpoint_auth_methods_supported":["none","client_secret_basic"],
+                "token_endpoint_auth_methods_supported":["none","client_secret_basic","private_key_jwt"],
+                "token_endpoint_auth_signing_alg_values_supported":["EdDSA","RS256"],
                 "code_challenge_methods_supported":["S256"],
                 "authorization_response_iss_parameter_supported":true,
                 "signed_metadata":"unverified-and-ignored",
@@ -708,7 +737,11 @@ mod tests {
         assert_eq!(metadata.response_types_supported(), &["code"]);
         assert_eq!(
             metadata.token_endpoint_auth_methods_supported(),
-            &["none", "client_secret_basic"]
+            &["none", "client_secret_basic", "private_key_jwt"]
+        );
+        assert_eq!(
+            metadata.token_endpoint_auth_signing_alg_values_supported(),
+            &["EdDSA", "RS256"]
         );
         assert!(metadata.authorization_response_iss_parameter_supported());
         assert!(!format!("{metadata:?}").contains(issuer));
@@ -782,7 +815,7 @@ mod tests {
                 MetadataViolation::GrantType,
             ),
             (
-                r#"["none","client_secret_basic"]"#,
+                r#"["none","client_secret_basic","private_key_jwt"]"#,
                 r#"["client_secret_basic"]"#,
                 MetadataViolation::TokenAuthentication,
             ),
@@ -805,7 +838,7 @@ mod tests {
     fn missing_public_auth_or_pkce_advertisement_does_not_assume_support() {
         let issuer = "https://login.example";
         for field in [
-            r#""token_endpoint_auth_methods_supported":["none","client_secret_basic"],"#,
+            r#""token_endpoint_auth_methods_supported":["none","client_secret_basic","private_key_jwt"],"#,
             r#""code_challenge_methods_supported":["S256"],"#,
         ] {
             let body = String::from_utf8(valid_body(issuer))
@@ -814,6 +847,58 @@ mod tests {
                 .into_bytes();
             assert!(!decode(issuer, body).is_success());
         }
+    }
+
+    #[test]
+    fn jwt_client_authentication_requires_safe_explicit_signing_algorithms() {
+        let issuer = "https://login.example";
+        let field = r#""token_endpoint_auth_signing_alg_values_supported":["EdDSA","RS256"],"#;
+        for method in ["private_key_jwt", "client_secret_jwt"] {
+            let missing = String::from_utf8(valid_body(issuer))
+                .unwrap()
+                .replace("private_key_jwt", method)
+                .replace(field, "")
+                .into_bytes();
+            assert_eq!(
+                decode(issuer, missing)
+                    .publish_then_release(&mut Sink::default())
+                    .unwrap_err(),
+                invalid(MetadataViolation::TokenAuthenticationSigningAlgorithm)
+            );
+        }
+
+        let unsecured = String::from_utf8(valid_body(issuer))
+            .unwrap()
+            .replace(r#"["EdDSA","RS256"]"#, r#"["none"]"#)
+            .into_bytes();
+        assert_eq!(
+            decode(issuer, unsecured)
+                .publish_then_release(&mut Sink::default())
+                .unwrap_err(),
+            invalid(MetadataViolation::TokenAuthenticationSigningAlgorithm)
+        );
+    }
+
+    #[test]
+    fn non_jwt_profile_does_not_invent_signing_algorithms() {
+        let issuer = "https://login.example";
+        let body = String::from_utf8(valid_body(issuer))
+            .unwrap()
+            .replace(
+                r#"["none","client_secret_basic","private_key_jwt"]"#,
+                r#"["none","client_secret_basic"]"#,
+            )
+            .replace(
+                r#""token_endpoint_auth_signing_alg_values_supported":["EdDSA","RS256"],"#,
+                "",
+            )
+            .into_bytes();
+        let metadata = decode(issuer, body)
+            .publish_then_release(&mut Sink::default())
+            .unwrap();
+        assert!(metadata
+            .token_endpoint_auth_signing_alg_values_supported()
+            .is_empty());
     }
 
     #[test]

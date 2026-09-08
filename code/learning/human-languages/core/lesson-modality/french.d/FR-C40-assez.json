@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C40-assez",
+    "language": "french",
+    "chapter": 44,
+    "sequence": 1720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8ae2b051d3e0b6b"
+  },
+  "findings": []
+}

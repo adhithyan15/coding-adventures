@@ -4,9 +4,19 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- Bind numeric font sizes on Text, HostButton, HostInput and HostTable after
+  authored styles. Invalid live values preserve the fallback; invalid literal
+  shapes and unsupported placements fail compilation.
+
 - Preserve Text accessibility in the compiler pipeline: level-two headings,
   literal/slot accessible names, and hidden/decorative text. Heading defaults
   retain authored typography without browser-added margins.
+
+### Added - native browser HostSlider
+
+- Lower `HostSlider` to a controlled native range input with slot-backed
+  value/bounds, disabled and accessibility bindings, continuous numeric
+  changes, and pointer/key/blur numeric commit dispatches.
 
 - Support authored table focus and accessible names. Preserve focus in nested
   controls and return to the table when Enter/Escape removes a cell editor.

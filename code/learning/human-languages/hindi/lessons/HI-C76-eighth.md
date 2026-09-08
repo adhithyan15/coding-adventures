@@ -8,9 +8,9 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 3230
 chapter: 83
 type: word
-headword: "आठवाँ"
-gloss: "eighth — the ending on a number that ends in a consonant cluster"
-romanization: "āṭhvā̃"
+headword: "आठवाँ / आठवीं"
+gloss: "eighth / feminine eighth — the ending on a number that ends in a consonant cluster"
+romanization: "āṭhvā̃ / āṭhvī̃"
 concept_tag: HI-ORDINAL-EIGHTH
 prerequisites: [HI-C76-seventh, HI-C75-third, HI-C72-kab, HI-C69-station, HI-C21-numbers-6-10, HI-C30-dopahar-widened]
 sounds: []
@@ -66,11 +66,12 @@ and in the eighth it belongs to the cardinal and the ordinal borrowed nothing.
 [PAUSE 1s]
 - [YOU SAY: *āṭhvā̃*]
 - [YOU SAY: the rule — *āṭh* + *-vā̃*]
+- [YOU SAY: *āṭhvī̃ kitāb* — the eighth book]
 - [YOU SAY: *chaṭhā* against *āṭhvā̃* — one is a word, one is a sum]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C76-ORDINAL-01, HI-LEX-C76-ORDINAL-02, HI-LEX-C76-ORDINAL-03] -->
 
-[PAUSE 3s] Say the eighth day. (**आठवाँ दिन**.) What happened to the *ṭh* of *āṭh*?
-(**Nothing** — the ending follows it.) And which of *chaṭhā* and *āṭhvā̃* had to be
-memorised? (***Chaṭhā***.)
+[PAUSE 3s] Say the eighth day. (**आठवाँ** (*āṭhvā̃*) **दिन**.) What happened to the *ṭh* of *āṭh*?
+(**Nothing** — the ending follows it.) What changes for a feminine noun? (**आठवीं**.)
+And which of *chaṭhā* and *āṭhvā̃* had to be memorised? (***Chaṭhā***.)
