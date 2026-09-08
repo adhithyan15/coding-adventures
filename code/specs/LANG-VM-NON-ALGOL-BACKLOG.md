@@ -8,6 +8,30 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-039c CLR contract (selected after #14544 merged)
+
+Main is `a355f64a2a`. JVM PR #14544 merged after every applicable check
+passed on its final head. No newly confirmed defect outranks the remaining
+CLR input/EOF adapter. Preserve the four existing FLOW-MATIC sources, stdin
+and expected output; re-enumerate indices on this main before probing.
+
+First establish real CoreCLR execution and reproduce the missing input_more
+lowering. On this Windows host the framework ilasm at
+`C:/Windows/Microsoft.NET/Framework64/v4.0.30319/ilasm.exe`, added only to the
+process PATH, assembled the existing BASIC numeric-input cell for execution
+by real dotnet successfully. No NuGet ILAsm pack was found locally. This
+avoids changing tool detection before the adapter behavior is established.
+
+Implement non-consuming input_more through the same Console input reader as
+numeric/string reads, with stable repeated EOF. Inspect encoded and textual
+CIL paths. Probe numeric EOF independently: current textual ReadLine + Parse
+contradicts its zero-at-EOF comment; record the concrete failure and bounded
+repair contract before changing parsing. Preserve destination widths and
+zero-filled partial records, and propagate I/O failures. Add each CLR matrix
+column only after real execution; validate four source cases, stable peeks,
+existing BASIC input, backend tests and focused Clippy. Security review
+precedes a ready PR. VM/JIT callbacks remain the final VM-039 slice.
+
 ## VM-039c implementation contract (selected after #14511 merged)
 
 Refreshed main is `53795b6fe5`. VM-039b merged after every applicable
