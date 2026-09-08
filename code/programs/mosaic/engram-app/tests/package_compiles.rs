@@ -2015,17 +2015,17 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&xaml_markup, "MaxWidth=\"980\"");
     assert_contains(
         &xaml_markup,
-        // Indentation is one level deeper than it used to be, and that is
-        // correct rather than incidental. engram-app depends on
-        // mosaic-pkg-card-browser, which uses the toolkit's Input; Input.size
-        // became a real `one-of` axis (UI49/#14036), so XAML now has to lower
-        // that slot-state -- emitting a StringEqualsConverter and a
-        // VisualStateManager wrapper, which nests this subtree once more.
-        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">\n                                                    <StackPanel Orientation=\"Vertical\">",
+        // Dependency-owned axes that are absent from EngramApp must not add a
+        // VisualStateManager wrapper or bind a nonexistent consumer property.
+        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">\n                                                <StackPanel Orientation=\"Vertical\">",
     );
     assert_contains(
         &xaml_markup,
-        "<DataTemplate x:DataType=\"local:EngramApp_ItemVm\">\n                                                        <StackPanel Orientation=\"Vertical\">",
+        "<DataTemplate x:DataType=\"local:EngramApp_ItemVm\">\n                                                    <StackPanel Orientation=\"Vertical\">",
+    );
+    assert!(
+        !xaml_markup.contains("{x:Bind Size") && !xaml_markup.contains("{x:Bind Variant"),
+        "dependency style axes must not bind properties absent from EngramApp"
     );
     for invalid in [
         "Property=\"Gap\"",
