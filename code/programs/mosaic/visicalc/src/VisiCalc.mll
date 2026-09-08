@@ -6,7 +6,12 @@ layout VisiCalc {
         Text [title] (content: "VisiCalc", a11y-role: heading)
       }
       Text [subtitle] (content: "A little room for big ideas.")
+    }
+    Row [file-toolbar] {
       HostButton [new-button] (label: "New workbook", onClick: emit: onNewWorkbook)
+      HostButton [open-button] (label: "Open", onClick: emit: onOpenWorkbook)
+      HostButton [save-button] (label: "Save", onClick: emit: onSaveWorkbook)
+      Text [file-status] (content: slot: file-status)
     }
     Row [formula-bar] {
       Text [address-label] (content: slot: cell-address)

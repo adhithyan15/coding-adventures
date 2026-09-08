@@ -5,7 +5,11 @@ style VisiCalc {
   part eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #a3b6aa; }
   part title { font-family: serif; font-size: 38px; font-weight: 400; letter-spacing: 1px; }
   part subtitle { font-size: 13px; color: #a3b6aa; flex: 1; }
-  part new-button { padding: 12px 18px; border-radius: 8px; border: 1px solid #9bd3ad; background: #9bd3ad; color: #14221e; font-size: 13px; font-weight: 600; cursor: pointer; }
+  part file-toolbar { padding: 0px 0px 16px; gap: 8px; align-items: center; flex-wrap: wrap; }
+  part new-button { padding: 10px 14px; border-radius: 8px; border: 1px solid #32463b; background: #1b2c25; color: #e3eee4; font-size: 13px; font-weight: 600; cursor: pointer; }
+  part open-button { padding: 10px 14px; border-radius: 8px; border: 1px solid #32463b; background: #1b2c25; color: #e3eee4; font-size: 13px; font-weight: 600; cursor: pointer; }
+  part save-button { padding: 10px 18px; border-radius: 8px; border: 1px solid #9bd3ad; background: #9bd3ad; color: #14221e; font-size: 13px; font-weight: 600; cursor: pointer; }
+  part file-status { font-size: 12px; color: #a3b6aa; flex: 1; min-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   part formula-bar { padding: 10px; gap: 12px; background: #1b2c25; border: 1px solid #32463b; border-radius: 10px; align-items: center; }
   part address-label { font-family: monospace; min-width: 52px; text-align: center; font-size: 14px; font-weight: 700; color: #9bd3ad; }
   part formula-symbol { font-family: serif; font-size: 22px; color: #a3b6aa; }

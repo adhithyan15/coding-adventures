@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-08
+
+- Add shared Open/Save controls and a compact file-status toolbar in both themes.
+  The standard Rust adapter owns snapshot validation and file-operation outcomes.
+
 ## Unreleased
 
 - Add a compact, themed selection readout with overflow truncation and complete
