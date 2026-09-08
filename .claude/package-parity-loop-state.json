@@ -2742,13 +2742,13 @@
     {
       "id": "ocaml-capability-analyzer",
       "title": "Enforce OCaml capability declarations with compiler-libs ASTs",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "ocaml-representative-core",
         "capability-schema-category-action-constraints"
       ],
       "branch": "codex/ocaml-capability-analyzer",
-      "pr_number": null,
+      "pr_number": 14519,
       "selected_at": "2026-09-08T01:41:00Z",
       "selection_revision": "f05c7b88f38e772255cd565cd83868b2a984f56f",
       "selection_notes": "Selected after PR #14393 completed all final-head checks acceptably and merged through guarded squash auto-merge as f05c7b88f38e772255cd565cd83868b2a984f56f. The refreshed schema-3 inventory on exact merged main contains 15 established lanes, 1,415 implementation identities, 4,631 slots, 1,454 all-reported identities, bands 175/265, 123/934, 172/2,165, and 945/13,230, 756 Rust singletons, four emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The two newly exposed Rust singletons, base64 and vault-import-keepass, are registered under separate portable conformance/classification owners before selection. Prior parallel audits froze this compiler-libs analyzer's taxonomy, schema, fixture, CI, dependency, and validation boundaries. With representative core and category-action schema now merged, this owner is dependency-ready and gates the OCaml build tool plus final lane promotion; it is the highest-leverage bounded authority-free OCaml critical-path item even though broader host-security and native-sandbox owners have larger global descendant counts and remain excluded from parity selection. The fresh branch and clean worktree start from exact merged main and this tranche does not absorb package-specific three-platform execution or native build-tool execution.",
@@ -2760,6 +2760,8 @@
       "rebase_notes": "The completed implementation slice was rebased onto origin/main 6e1a0d747beafe2cc1dd02adc4f416aa1fef6e1b. The sole additive lessons.md conflict was resolved by retaining both main's rebuild-validation lesson and this slice's independent-gate aggregation lesson; conflict-marker and unmerged-path sweeps were clean, and the complete focused validation set passed again on the rewritten head. Two subsequent one-commit main advances were incorporated conflict-free, ending at exact origin/main f22b6a2c1ac6ed2e22619171ba88a630812534bf before publication.",
       "security_review_revision": "cfa36544c617dd34d456e87814441a178079947d",
       "security_review_notes": "Independent adversarial review passed on the final pre-rebase implementation. It verified strict manifest schema typing and regular-file identity, bounded reads/traversal, first-class and nested local/recursive sensitive-module handling, repository-wide workspace routing and symlink rejection, fail-closed Dune include/generator/flags/instrumentation/native surfaces including comments, escapes and indirection, and the shell-free aggregate coverage command.",
+      "publication_revision": "430d77a5ac3934c048ef13f82b00851a44d7ee16",
+      "publication_notes": "Opened ready-for-review PR #14519 from the clean validated branch after rebasing onto exact origin/main f22b6a2c1ac6ed2e22619171ba88a630812534bf. No other parity PR was active, and the remote branch did not exist before the normal push. The PR body records the complete local validation, independent release and security passes, and the hosted Linux coverage and native-link evidence still required before auto-merge.",
       "release_review_revision": "d420d980073537fa35138a0bc8e69f14a940d00c",
       "release_review_notes": "Independent release review passed after verifying the package-only Git archive, real CLI subprocess behavior, instrumentation of both production files, cross-platform aggregation of every bisect process file, dual 95% thresholds, opam lint, workflow/registry/toolchain gates, and clean packaging. The later security-only hardening did not alter release structure; focused post-rebase tests pass.",
       "notes": "Cover the full relevant OCaml stdlib, Unix, Dynlink, Marshal, and Obj surface across the repository taxonomy: filesystem, network, process, environment, FFI/native loading, time, stdin, stdout, unsafe marshaling, and Obj.magic. Require all-source compiler-libs AST subset checking, explicit reviewed exceptions, BUILD integration, and an independent publication gate under the governing capability-security contract."
