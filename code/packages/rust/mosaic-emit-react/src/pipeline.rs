@@ -3687,6 +3687,21 @@ fn emit_host_table_jsx(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
+    // A focusable table is one keyboard stop; native controls inside it keep
+    // their own focus. Editor removal after Enter/Escape returns to the table.
+    let focus_attrs = if find_keyword_prop(node, "focusable") == Some("true") {
+        " tabIndex={0} onClick={event => { if (event.target instanceof Element && !event.target.closest('input, textarea, select, button, a, [contenteditable]')) event.currentTarget.focus({ preventScroll: true }); }} onKeyDownCapture={event => { if ((event.key === 'Enter' || event.key === 'Escape') && event.target instanceof Element && event.target.closest('input, textarea')) { const table = event.currentTarget; requestAnimationFrame(() => { if (table.isConnected && document.activeElement === document.body) table.focus({ preventScroll: true }); }); } }}"
+    } else { "" };
+    let label_attr = match node.props.iter().find(|p| p.name == "a11y-label").map(|p| &p.value) {
+        Some(LayoutPropValue::String(label)) => jsx_string_attr("aria-label", label),
+        Some(LayoutPropValue::SlotRef(label)) => {
+            let label = to_camel_case_first_lower(label);
+            validate_slot_or_field_name(&label).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!(" aria-label={{{label}}}")
+        }
+        _ => String::new(),
+    };
+
     let mut virtual_window = false;
     let mut selection_ref = if let (Some(row), Some(col)) = (
         find_slot_ref_prop(node, "selected-row"),
@@ -3801,10 +3816,10 @@ fn emit_host_table_jsx(
     // Empty table — no sections present. Emit a single-line
     // `<table></table>` (still respecting any part-style attribute).
     if colgroup.is_none() && thead.is_none() && tbody.is_none() && tfoot.is_none() {
-        return Ok(format!("{pad}<table{style_attr}{dir_attr}{selection_ref}></table>\n"));
+        return Ok(format!("{pad}<table{style_attr}{dir_attr}{focus_attrs}{label_attr}{selection_ref}></table>\n"));
     }
 
-    let mut out = format!("{pad}<table{style_attr}{dir_attr}{selection_ref}>\n");
+    let mut out = format!("{pad}<table{style_attr}{dir_attr}{focus_attrs}{label_attr}{selection_ref}>\n");
 
     if let Some(cg) = colgroup {
         out.push_str(&emit_host_table_colgroup_jsx(cg, indent + 2, part_styles)?);
@@ -10013,6 +10028,24 @@ mod tests {
         assert_eq!(table_cell_wrapper(&header, "td", &styles).unwrap(), ("td", String::new()));
         header.props.push(keyword_prop("table-cell-role", "button"));
         assert!(table_cell_wrapper(&header, "td", &styles).is_err());
+    }
+
+    #[test]
+    fn host_table_focus_is_authored_and_keeps_native_controls_independent() {
+        let mut layout = host_table_layout(vec![]);
+        let model = component("X", vec![], vec![]);
+        let legacy = from_pipeline(&model, &layout, &empty_style("X")).unwrap().output;
+        assert!(!legacy.contains("tabIndex"));
+        layout.root.props.extend([
+            LayoutProp { name: "focusable".into(), value: LayoutPropValue::Keyword("true".into()) },
+            LayoutProp { name: "a11y-label".into(), value: LayoutPropValue::String("Data table".into()) },
+        ]);
+        let output = from_pipeline(&model, &layout, &empty_style("X")).unwrap().output;
+        assert!(output.contains("tabIndex={0}"));
+        assert!(output.contains("aria-label=\"Data table\""));
+        assert!(output.contains("onKeyDownCapture"));
+        assert!(output.contains("table.isConnected && document.activeElement === document.body"));
+        assert!(output.contains("preventScroll: true"));
     }
 
     #[test]

@@ -1,0 +1,18 @@
+{
+  "language": "italian",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:d58eb46beaa05f4b",
+  "lessonIds": [
+    "IT-C28-undicesimo",
+    "IT-C28-prima",
+    "IT-C28-dopo",
+    "IT-C28-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "italian/narration/ch28.txt",
+  "json": "italian/narration/ch28.json",
+  "textHash": "fnv1a64:410a0ce4635a9cc6",
+  "jsonHash": "fnv1a64:9d2e62a18760c401",
+  "findings": []
+}

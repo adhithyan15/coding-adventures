@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 16,
+  "output": "persian/book/chapters/ch16-count-five.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

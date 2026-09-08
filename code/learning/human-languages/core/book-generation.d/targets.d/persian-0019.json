@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 19,
+  "output": "persian/book/chapters/ch19-digits.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

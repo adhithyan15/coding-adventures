@@ -10,6 +10,10 @@ use std::collections::HashMap;
 
 use coding_adventures_css_parser::create_css_parser;
 use coding_adventures_html_parser::{BrowserRenderNode, BrowserRenderTree};
+use layout_backgrounds::{
+    BackgroundBox, BackgroundColor, BackgroundLayer, BackgroundRepeat, BackgroundSize,
+    BackgroundSource, BackgroundStyle, BoxEdges, CornerRadius, GradientStop, LengthPercent,
+};
 use layout_effects::{
     multiply, rotation, scale, translation, EffectBlendMode, EffectColor, EffectFilter,
     EffectStyle, OriginComponent, Transform2D, TransformOrigin, IDENTITY,
@@ -42,7 +46,7 @@ use layout_table::{
 use lexer::token::TokenType;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.7.0";
 
 /// A parsed author stylesheet ready for deterministic cascade evaluation.
 ///
@@ -192,6 +196,7 @@ pub struct HtmlComputedStyle {
     pub effects: EffectStyle,
     pub box_shadow: Option<EffectFilter>,
     pub text_shadow: Option<EffectFilter>,
+    pub background_properties: HashMap<String, Vec<String>>,
     pub generated_content: Option<Vec<ContentPart>>,
     pub list_style_type: Option<CounterStyle>,
     pub list_style_position: MarkerPosition,
@@ -330,6 +335,10 @@ where
     if !effects.is_default() {
         root.ext.insert("effects".into(), effects.to_ext());
     }
+    let backgrounds = background_style_for_layout(&style, root.padding.unwrap_or_default());
+    if !backgrounds.layers.is_empty() || backgrounds.corners != [CornerRadius::default(); 4] {
+        root.ext.insert("backgrounds".into(), backgrounds.to_ext());
+    }
     root
 }
 
@@ -436,6 +445,12 @@ where
     let effects = effect_style_for_layout(&style, matches!(layout.content, Some(Content::Text(_))));
     if !effects.is_default() {
         layout.ext.insert("effects".into(), effects.to_ext());
+    }
+    let backgrounds = background_style_for_layout(&style, layout.padding.unwrap_or_default());
+    if !backgrounds.layers.is_empty() || backgrounds.corners != [CornerRadius::default(); 4] {
+        layout
+            .ext
+            .insert("backgrounds".into(), backgrounds.to_ext());
     }
     layout.ext.insert("html".into(), html_ext(node));
     layout
@@ -641,6 +656,10 @@ fn generated_text_box(
     if !effects.is_default() {
         node.ext.insert("effects".into(), effects.to_ext());
     }
+    let backgrounds = background_style_for_layout(style, node.padding.unwrap_or_default());
+    if !backgrounds.layers.is_empty() || backgrounds.corners != [CornerRadius::default(); 4] {
+        node.ext.insert("backgrounds".into(), backgrounds.to_ext());
+    }
     node.ext
         .insert("generated".into(), generated_ext(kind, position));
     node.ext.insert("block".into(), display_ext("inline-text"));
@@ -780,6 +799,7 @@ where
     style.positioned = PositionedStyle::default();
     style.effects = EffectStyle::default();
     style.box_shadow = None;
+    style.background_properties.clear();
     style.generated_content = None;
     style.counter_reset.clear();
     style.counter_set.clear();
@@ -944,6 +964,7 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         effects: EffectStyle::default(),
         box_shadow: None,
         text_shadow: None,
+        background_properties: HashMap::new(),
         generated_content: None,
         list_style_type: None,
         list_style_position: MarkerPosition::Outside,
@@ -1032,6 +1053,7 @@ where
     style.corner_radius = None;
     style.effects = EffectStyle::default();
     style.box_shadow = None;
+    style.background_properties.clear();
     style.generated_content = None;
     style.counter_reset.clear();
     style.counter_set.clear();
@@ -1127,7 +1149,19 @@ fn apply_declaration_winners(
                     style.color = color;
                 }
             }
-            "background" | "background-color" => style.background = parse_color(&value),
+            "background-color" => style.background = parse_color(&value),
+            "background" => {
+                style.background = parse_color(&value);
+                style.background_properties.insert(property, value);
+            }
+            "background-image"
+            | "background-position"
+            | "background-size"
+            | "background-repeat"
+            | "background-origin"
+            | "background-clip" => {
+                style.background_properties.insert(property, value);
+            }
             "opacity" => {
                 if let Some(opacity) = value.first().and_then(|value| value.parse::<f64>().ok()) {
                     style.effects.opacity = opacity.clamp(0.0, 1.0);
@@ -1454,6 +1488,7 @@ fn apply_declaration_winners(
             "border-bottom-color" => apply_border_color(style, EdgeSide::Bottom, &value),
             "border-left-color" => apply_border_color(style, EdgeSide::Left, &value),
             "border-radius" => {
+                style.background_properties.insert(property, value.clone());
                 style.corner_radius = parse_box_length(
                     value.split(|token| token == "/").next().unwrap_or_default(),
                     style,
@@ -1479,6 +1514,293 @@ fn apply_declaration_winners(
             _ => {}
         }
     }
+}
+
+fn background_style_for_layout(style: &HtmlComputedStyle, padding: Edges) -> BackgroundStyle {
+    let source_value = style
+        .background_properties
+        .get("background-image")
+        .or_else(|| style.background_properties.get("background"));
+    let mut layers = source_value
+        .map(|value| {
+            split_top_level(&css_component_text(value), ',')
+                .into_iter()
+                .filter_map(|source| parse_background_source(&source))
+                .map(BackgroundLayer::new)
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    apply_background_list(style, "background-position", &mut layers, |layer, value| {
+        let parts = value.split_whitespace().collect::<Vec<_>>();
+        layer.position_x = parse_background_position(parts.first().copied(), true, style);
+        layer.position_y = parse_background_position(parts.get(1).copied(), false, style);
+    });
+    apply_background_list(style, "background-size", &mut layers, |layer, value| {
+        layer.size = match value.trim() {
+            "cover" => BackgroundSize::Cover,
+            "contain" => BackgroundSize::Contain,
+            "auto" => BackgroundSize::Auto,
+            value => {
+                let parts = value.split_whitespace().collect::<Vec<_>>();
+                BackgroundSize::Explicit {
+                    width: parse_background_length(parts.first().copied(), style),
+                    height: parts
+                        .get(1)
+                        .and_then(|value| parse_background_length(Some(value), style)),
+                }
+            }
+        }
+    });
+    apply_background_list(style, "background-repeat", &mut layers, |layer, value| {
+        let parts = value.split_whitespace().collect::<Vec<_>>();
+        if parts.first() == Some(&"repeat-x") {
+            layer.repeat_x = BackgroundRepeat::Repeat;
+            layer.repeat_y = BackgroundRepeat::NoRepeat;
+            return;
+        }
+        if parts.first() == Some(&"repeat-y") {
+            layer.repeat_x = BackgroundRepeat::NoRepeat;
+            layer.repeat_y = BackgroundRepeat::Repeat;
+            return;
+        }
+        layer.repeat_x = parse_background_repeat(parts.first().copied());
+        layer.repeat_y = parts
+            .get(1)
+            .map(|value| parse_background_repeat(Some(value)))
+            .unwrap_or(layer.repeat_x);
+    });
+    apply_background_list(style, "background-origin", &mut layers, |layer, value| {
+        layer.origin = parse_background_box(value, BackgroundBox::Padding)
+    });
+    apply_background_list(style, "background-clip", &mut layers, |layer, value| {
+        layer.clip = parse_background_box(value, BackgroundBox::Border)
+    });
+    let corners = style
+        .background_properties
+        .get("border-radius")
+        .map(|value| parse_corner_radii(&css_component_text(value), style))
+        .unwrap_or_default();
+    let color_clip = style
+        .background_properties
+        .get("background-clip")
+        .map(|value| split_top_level(&css_component_text(value), ','))
+        .filter(|values| !values.is_empty())
+        .map(|values| {
+            let index = layers.len().saturating_sub(1) % values.len();
+            parse_background_box(&values[index], BackgroundBox::Border)
+        })
+        .unwrap_or(BackgroundBox::Border);
+    BackgroundStyle {
+        layers,
+        color_clip,
+        corners,
+        border: BoxEdges {
+            top: style.border_width.top,
+            right: style.border_width.right,
+            bottom: style.border_width.bottom,
+            left: style.border_width.left,
+        },
+        padding: BoxEdges {
+            top: padding.top,
+            right: padding.right,
+            bottom: padding.bottom,
+            left: padding.left,
+        },
+    }
+}
+
+fn apply_background_list(
+    style: &HtmlComputedStyle,
+    property: &str,
+    layers: &mut [BackgroundLayer],
+    mut apply: impl FnMut(&mut BackgroundLayer, &str),
+) {
+    let Some(value) = style.background_properties.get(property) else {
+        return;
+    };
+    let values = split_top_level(&css_component_text(value), ',');
+    if values.is_empty() {
+        return;
+    }
+    for (index, layer) in layers.iter_mut().enumerate() {
+        apply(layer, &values[index % values.len()]);
+    }
+}
+
+fn parse_background_source(source: &str) -> Option<BackgroundSource> {
+    let source = source.trim();
+    if source == "none" {
+        return None;
+    }
+    if let Some(inner) = function_inner(source, "url") {
+        return Some(BackgroundSource::Image(
+            inner.trim().trim_matches(['\'', '"']).to_string(),
+        ));
+    }
+    if let Some(inner) = function_inner(source, "linear-gradient") {
+        let mut parts = split_top_level(inner, ',');
+        let angle = if let Some(angle) = parts.first().and_then(|value| parse_angle(value.trim())) {
+            parts.remove(0);
+            angle
+        } else {
+            180.0
+        };
+        let stops = parts
+            .iter()
+            .filter_map(|value| parse_gradient_stop(value))
+            .collect();
+        return Some(BackgroundSource::LinearGradient {
+            angle_degrees: angle,
+            stops,
+        });
+    }
+    if let Some(inner) = function_inner(source, "radial-gradient") {
+        let stops = split_top_level(inner, ',')
+            .iter()
+            .filter_map(|value| parse_gradient_stop(value))
+            .collect();
+        return Some(BackgroundSource::RadialGradient { stops });
+    }
+    None
+}
+
+fn parse_gradient_stop(value: &str) -> Option<GradientStop> {
+    let mut parts = value.split_whitespace().collect::<Vec<_>>();
+    let offset = parts.last().and_then(|part| {
+        part.strip_suffix('%')
+            .and_then(|value| value.parse::<f64>().ok())
+            .map(|value| value / 100.0)
+    });
+    if offset.is_some() {
+        parts.pop();
+    }
+    let color = parse_color(&[parts.join(" ")])?;
+    Some(GradientStop {
+        color: BackgroundColor {
+            r: color.r,
+            g: color.g,
+            b: color.b,
+            a: color.a,
+        },
+        offset,
+    })
+}
+
+fn parse_background_position(
+    value: Option<&str>,
+    horizontal: bool,
+    style: &HtmlComputedStyle,
+) -> LengthPercent {
+    match (value, horizontal) {
+        (Some("left" | "top"), _) => LengthPercent::percent(0.0),
+        (Some("center"), _) | (None, _) => LengthPercent::percent(0.5),
+        (Some("right" | "bottom"), _) => LengthPercent::percent(1.0),
+        (Some(value), _) => parse_background_length(Some(value), style).unwrap_or_default(),
+    }
+}
+
+fn parse_background_length(
+    value: Option<&str>,
+    style: &HtmlComputedStyle,
+) -> Option<LengthPercent> {
+    let value = value?;
+    if value == "auto" {
+        return None;
+    }
+    if let Some(percent) = value.strip_suffix('%') {
+        return percent
+            .parse::<f64>()
+            .ok()
+            .map(|value| LengthPercent::percent(value / 100.0));
+    }
+    let length = if let Some(value) = value.strip_suffix("px") {
+        value.parse::<f64>().ok()
+    } else if let Some(value) = value.strip_suffix("em") {
+        value
+            .parse::<f64>()
+            .ok()
+            .map(|value| value * style.font.size)
+    } else if value == "0" {
+        Some(0.0)
+    } else {
+        value.parse::<f64>().ok()
+    };
+    length.map(LengthPercent::length)
+}
+
+fn parse_background_repeat(value: Option<&str>) -> BackgroundRepeat {
+    match value {
+        Some("no-repeat") => BackgroundRepeat::NoRepeat,
+        Some("space") => BackgroundRepeat::Space,
+        Some("round") => BackgroundRepeat::Round,
+        _ => BackgroundRepeat::Repeat,
+    }
+}
+
+fn parse_background_box(value: &str, default: BackgroundBox) -> BackgroundBox {
+    match value.trim() {
+        "border-box" => BackgroundBox::Border,
+        "padding-box" => BackgroundBox::Padding,
+        "content-box" => BackgroundBox::Content,
+        _ => default,
+    }
+}
+
+fn parse_corner_radii(source: &str, style: &HtmlComputedStyle) -> [CornerRadius; 4] {
+    let halves = split_top_level(source, '/');
+    let horizontal = expand_four(
+        halves.first().map(String::as_str).unwrap_or_default(),
+        style,
+    );
+    let vertical = halves
+        .get(1)
+        .map(|value| expand_four(value, style))
+        .unwrap_or(horizontal);
+    std::array::from_fn(|index| CornerRadius {
+        x: horizontal[index],
+        y: vertical[index],
+    })
+}
+
+fn expand_four(source: &str, style: &HtmlComputedStyle) -> [LengthPercent; 4] {
+    let values = source
+        .split_whitespace()
+        .filter_map(|value| parse_background_length(Some(value), style))
+        .collect::<Vec<_>>();
+    match values.as_slice() {
+        [a] => [*a; 4],
+        [a, b] => [*a, *b, *a, *b],
+        [a, b, c] => [*a, *b, *c, *b],
+        [a, b, c, d, ..] => [*a, *b, *c, *d],
+        _ => [LengthPercent::default(); 4],
+    }
+}
+
+fn function_inner<'a>(source: &'a str, name: &str) -> Option<&'a str> {
+    let source = source.trim();
+    source
+        .strip_prefix(name)?
+        .strip_prefix('(')?
+        .strip_suffix(')')
+}
+
+fn split_top_level(source: &str, separator: char) -> Vec<String> {
+    let mut depth = 0usize;
+    let mut start = 0usize;
+    let mut out = Vec::new();
+    for (index, character) in source.char_indices() {
+        match character {
+            '(' => depth += 1,
+            ')' => depth = depth.saturating_sub(1),
+            character if character == separator && depth == 0 => {
+                out.push(source[start..index].trim().to_string());
+                start = index + character.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    out.push(source[start..].trim().to_string());
+    out.into_iter().filter(|value| !value.is_empty()).collect()
 }
 
 fn effect_style_for_layout(style: &HtmlComputedStyle, text: bool) -> EffectStyle {
@@ -3763,6 +4085,37 @@ mod tests {
             Some(ExtValue::Map(values))
                 if values.get("cornerRadius") == Some(&ExtValue::Float(6.0))
         ));
+    }
+
+    #[test]
+    fn computed_background_layers_project_to_the_shared_contract() {
+        let render = parse_browser_render_tree("<div id='card'>Background</div>").unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            [
+                "#card { width: 120px; height: 60px; padding: 4px; border: 2px solid black; \
+              background-image: linear-gradient(90deg, red 0%, blue 100%), url(checker.gif); \
+              background-position: center, 10px 20%; background-size: cover, 16px 12px; \
+              background-repeat: no-repeat, repeat-x; background-origin: padding-box, content-box; \
+              background-clip: border-box, padding-box; border-radius: 12px 8px / 6px 4px; }",
+            ],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let card = find_by_id(&layout, "card").unwrap();
+        let backgrounds = BackgroundStyle::from_layout(card);
+        assert_eq!(backgrounds.layers.len(), 2);
+        assert!(matches!(
+            backgrounds.layers[0].source,
+            BackgroundSource::LinearGradient { .. }
+        ));
+        assert_eq!(backgrounds.layers[1].repeat_x, BackgroundRepeat::Repeat);
+        assert_eq!(backgrounds.layers[1].repeat_y, BackgroundRepeat::NoRepeat);
+        assert_eq!(backgrounds.layers[1].origin, BackgroundBox::Content);
+        assert_eq!(backgrounds.color_clip, BackgroundBox::Padding);
+        assert_eq!(backgrounds.corners[0].x, LengthPercent::length(12.0));
+        assert_eq!(backgrounds.corners[0].y, LengthPercent::length(6.0));
     }
 
     #[test]

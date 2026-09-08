@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 32,
+  "output": "marwadi/book/chapters/ch32-count-five.tex",
+  "scriptSet": "marwadi-main"
+}

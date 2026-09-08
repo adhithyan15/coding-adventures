@@ -1,0 +1,21 @@
+{
+  "chapter": 33,
+  "title": "More Than One",
+  "label": "ch:bn-more-than-one",
+  "canDo": "I can sort a noun into living or not, put the plural its group demands on it, and stand an adjective in front of it.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R22-more-than-one",
+    "kind": "production",
+    "summary": "One question about a noun — is it alive? — chooses between two plural endings, and every noun the book owns goes through the one its group demands. The adjective rule that thirty-two chapters used without stating is stated.",
+    "assesses": [
+      "BN-GRAMMAR-C22-ANIMACY-01",
+      "BN-GRAMMAR-C22-PLURAL-RA-01",
+      "BN-GRAMMAR-C22-PLURAL-GULO-01",
+      "BN-GRAMMAR-C22-ADJ-ORDER-01"
+    ],
+    "note": "গুলো had zero occurrences in 139 files and every raw match for রা was a substring of another word. A learner who owned four family words and five colours could not say more than one of any of them."
+  }
+}

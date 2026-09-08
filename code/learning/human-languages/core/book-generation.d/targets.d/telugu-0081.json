@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 81,
+  "output": "telugu/book/chapters/ch81-ordinals.tex",
+  "scriptSet": "telugu-comparisons"
+}

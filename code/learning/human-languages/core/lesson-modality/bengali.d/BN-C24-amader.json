@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C24-amader",
+    "language": "bengali",
+    "chapter": 35,
+    "sequence": 1820,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bec42e19bcb50539"
+  },
+  "findings": []
+}

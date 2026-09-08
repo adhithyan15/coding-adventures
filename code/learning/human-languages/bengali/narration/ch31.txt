@@ -1,0 +1,191 @@
+Bengali, chapter 31: The Letter in the Way.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 5.
+ট (ṭô) — the fourth corner.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ত, then দ, then ড. Say for each one where the tongue goes and whether the voice is on.
+[your turn — recall: two chapters back, the joiner that puts one event beside another — jôkhon]
+[pause 8 seconds for the answer]
+
+Script.
+ট (ṭô).
+You have been carrying three corners of a square without being shown the square.
+[a table of 2 rows, read aloud]
+tongue on the teeth. voice off: ত tô. voice on: দ dô.
+tongue curled back. voice off: ট ṭô. voice on: ড ḍô.
+Two switches, four letters. ট (ṭô) is the one the book never filled in: the tongue curled back to the ridge, exactly where you put it for ড, and the voice switched off, exactly as you do for ত. If you can make the other three you can already make this one — you have never been asked to.
+An English t lands between the two rows, which is the same trap দ and ড set. To an English ear ত and ট (ṭô) are one letter. They are not, and they spell different words.
+With the mātrā:
+ট (ṭô) + া becomes টা (-ṭā).
+Hold on to that syllable. It is the shape of the next four lessons, and it is the reason this letter could not wait any longer.
+
+Guided Practice.
+[once you have stopped driving — write: ট (ṭô)]
+[once you have stopped driving — write: টা (-ṭā)]
+[your turn — say: ত then ট (ṭô) — teeth, then curled back, voice off for both]
+[pause 8 seconds for the answer]
+[your turn — say: ট (ṭô) then ড — curled back for both, voice off then on]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: ত ট (ṭô) দ ড]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two switches make the square? (Where the tongue is, and whether the voice is on.) Which letter is ট (ṭô) with the voice switched on? (ড.) And which is it with the tongue brought forward onto the teeth? (ত.)
+Source: Unicode Bengali chart.
+
+
+Lesson 2 of 5.
+টা (-ṭā) — the ending that means "the".
+
+Warm-up.
+[pause 2 seconds]
+Write the letter from the lesson before, then write it with the mātrā. Then say জামা.
+
+You'll want to know: টা.
+জামা — jāmā — shirt.
+জামাটা — jāmāṭā — the shirt.
+চা — chā — tea.
+চাটা — chāṭā — the tea.
+Bengali has no word for the. Thirty chapters of this book have taught nouns that float free — shirt, tea, brother — with no way to say you mean that one, the one we are both thinking of. The way you say it is not a word in front. It is টা (-ṭā), stuck on the end.
+Nothing goes between the noun and it, and nothing comes before the noun. The noun and its ending are written as one word.
+
+Grammar Lens: why this is called a classifier and not an article.
+An article does one job: it says definite. টা (-ṭā) does that and one more. Bengali will not put a number directly on a noun, so টা (-ṭā) is also the piece a count has to pass through — you will meet that in the next lesson.
+There is a polite twin, টি, used for people and in careful writing:
+ভাইটা — bhāiṭā — the brother, plainly.
+ভাইটি — bhāiṭi — the brother, respectfully.
+Same slot, same job, different warmth. Learn টা (-ṭā) and recognise টি.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: jāmāṭā — the shirt]
+[pause 8 seconds for the answer]
+[your turn — say: chāṭā — the tea]
+[pause 8 seconds for the answer]
+[your turn — say: bhāiṭā, then the polite bhāiṭi]
+[pause 8 seconds for the answer]
+[your turn — say: the red one — lāl jāmāṭā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does টা (-ṭā) go — in front of the noun or on the end of it? (On the end, written as one word.) Does Bengali have a word for the? (No — this ending is what it has instead.) And which form would you use of a person you were being careful about? (টি.)
+Source: Unicode Bengali chart.
+
+
+Lesson 3 of 5.
+একটা (ekṭā) — a, one.
+
+Warm-up.
+[pause 2 seconds]
+Say the shirt. Then read এক.
+
+You'll want to know: একটা.
+একটা জামা — ekṭā jāmā — a shirt.
+একটা বন্ধু — ekṭā bôndhu — a friend.
+Chapter twenty-four taught you to count এক দুই তিন চার পাঁচ, and then gave you nothing to count. This is why. এক cannot sit next to a noun. Bengali makes a number reach its noun through the classifier, and এক plus টা (-ṭā) is একটা (ekṭā) — which then means both one and a, because in Bengali those are the same thought.
+So the ending you learned one lesson ago turns out to have been two doors:
+জামাটা — the shirt, the one we mean.
+একটা (ekṭā) জামা — a shirt, any one.
+Same টা (-ṭā). Nothing in front of it, or a number in front of it.
+
+Grammar Lens: where the ending goes, and it moves.
+Watch which word carries the suffix:
+[a table of 2 rows, read aloud]
+the shirt. Bengali: জামাটা. the ending is on: the noun.
+a shirt. Bengali: একটা (ekṭā) জামা. the ending is on: the number.
+When a number turns up, the classifier leaves the noun and attaches to the number instead. That is one rule, and it is the rule that will carry every count you ever make in this language.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ekṭā jāmā — a shirt]
+[pause 8 seconds for the answer]
+[your turn — say: ekṭā bôndhu — a friend]
+[pause 8 seconds for the answer]
+[your turn — say: the pair, back to back — jāmāṭā, then ekṭā jāmā]
+[pause 8 seconds for the answer]
+[your turn — say: a tea — ekṭā chā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Can এক stand next to a noun on its own? (No — it goes through the classifier.) When a number appears, which word carries টা (-ṭā)? (The number, not the noun.) And what two English words does একটা (ekṭā) cover? (A, and one.)
+Source: Unicode Bengali chart.
+
+
+Lesson 4 of 5.
+আরেকটা (ārekṭā) — another one.
+
+Warm-up.
+[pause 2 seconds]
+Say a shirt. Then say the joiner from chapter twenty-eight that means and.
+
+You'll want to know: আরেকটা.
+আরেকটা চা — ārekṭā chā — another tea.
+Take the word apart and it is already three things you own:
+আর (and) + এক (one) + টা (-ṭā) (the classifier) becomes আরেকটা (ārekṭā).
+Which is why it does not merely mean a different one. It means one more, with the and still inside it.
+
+Grammar Lens: the pair that hands things out one at a time.
+Bengali uses একটা … আরেকটা (ārekṭā) as a fixed pair to run down a list of things one by one, the way English uses one … another:
+একটা লাল, আরেকটা কালো — ekṭā lāl, ārekṭā kālo — one red, another black.
+This is the first time in this book that two things can be picked out and set side by side as separate items. Before the classifier existed there was no way to say one of anything, so there was no way to say another either.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ārekṭā chā — another tea]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — ekṭā lāl, ārekṭā kālo]
+[pause 8 seconds for the answer]
+[your turn — say: two shirts, one at a time — ekṭā jāmā, ārekṭā jāmā]
+[pause 8 seconds for the answer]
+[your turn — say: the three pieces inside the word — ār, ek, ṭā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What three pieces is আরেকটা (ārekṭā) built from? (আর, এক and টা (-ṭā).) What does the first piece add to the meaning? (And — so it is one more, rather than only a different one.) And what is the word it pairs with? (একটা.)
+Source: Unicode Bengali chart.
+
+
+Lesson 5 of 5.
+One, the one, and another — one ending, three jobs — and sixty nouns that could not be picked out until this chapter.
+
+Warm-up.
+[pause 4 seconds]
+One ending arrived in this chapter and did three different jobs. Name the three, and say for each one where the ending sits.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: ট (ṭô), then টা (-ṭā)]
+[your turn — say: jāmāṭā, ekṭā jāmā, ārekṭā jāmā]
+[pause 8 seconds for the answer]
+[your turn — recall: two chapters back, the joiner that opens a clause about a moment — jôkhon]
+[pause 8 seconds for the answer]
+
+Guided Practice: the distant band — every noun in the book, picked out one at a time.
+[pause 4 seconds]
+This is what the chapter bought. Chapters ten to fifteen taught a pantry, a family, a face and a wardrobe, and not one of those nouns could be pointed at as the one or counted as a one. Every one of them can now. Take them cold, from memory.
+[your turn — say: the four things you drink and eat, each as the one — chāṭā, jôlṭā, dudhṭā, bhātṭā]
+[pause 8 seconds for the answer]
+[your turn — say: the same four as a one — ekṭā chā, ekṭā jôl, ekṭā dudh, ekṭā bhāt]
+[pause 8 seconds for the answer]
+[your turn — say: the family, respectfully — bhāiṭi, bônṭi, bôndhuṭi]
+[pause 8 seconds for the answer]
+[your turn — say: the wardrobe and its colours — lāl jāmāṭā, kālo kāpôṛṭā, nīl jāmāṭā, shādā jāmāṭā]
+[pause 8 seconds for the answer]
+[your turn — say: the face, one part at a time — ekṭā chokh, ārekṭā chokh, then nākṭā, mukhṭā]
+[pause 8 seconds for the answer]
+[your turn — say: the whole family in one word — pôribārṭā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 4 seconds]
+Does Bengali have a word for the? (No — it has this ending.) When a number stands in front, which word carries the ending? (The number.) Which form is the careful one, for people? (টি.) And which letter had to be taught before any of this chapter could be written down? (ট (ṭô).)
+Source: Unicode Bengali chart.

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:e57985cf10aeb573",
+  "lessonIds": [
+    "FA-W19-digits-zero-one",
+    "FA-W19-digits-two-three",
+    "FA-W19-digits-four-five-six",
+    "FA-W19-digits-seven-eight-nine",
+    "FA-C19-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "persian/narration/ch19.txt",
+  "json": "persian/narration/ch19.json",
+  "textHash": "fnv1a64:359ee544802aa98b",
+  "jsonHash": "fnv1a64:2322f4485012323c",
+  "findings": []
+}

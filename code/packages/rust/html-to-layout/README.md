@@ -51,6 +51,9 @@ transforms and origins, filter chains, one box/text shadow, blend modes, and
 isolation into the producer-neutral `layout-effects` contract. Syntax remains
 at this CSS adapter boundary; shared layout, paint, and hit testing consume
 only typed metadata.
+Multiple image and linear/radial gradient backgrounds, per-layer position,
+size, repeat, origin and clip, plus four elliptical corner pairs map into the
+producer-neutral `layout-backgrounds` contract.
 Table display roles and HTML span/section metadata map to a typed table
 contract alongside computed layout mode, border model/spacing, caption side,
 and cell vertical alignment.

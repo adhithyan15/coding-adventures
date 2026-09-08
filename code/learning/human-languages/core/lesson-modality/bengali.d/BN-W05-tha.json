@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W05-tha",
+    "language": "bengali",
+    "chapter": 37,
+    "sequence": 1890,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:836d39fc45aa96c4",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W35-digits-three-four-five",
+    "language": "marwadi",
+    "chapter": 35,
+    "sequence": 2980,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1e4981e7238c88a3",
+    "detachableSegments": [
+      "Script — three more figures"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

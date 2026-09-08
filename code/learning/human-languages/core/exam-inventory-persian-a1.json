@@ -375,7 +375,27 @@
       "id": "FA-A1-Q-01",
       "category": "Adad (quantity and number)",
       "label": "cardinal numerals",
-      "probe": null,
+      "probe": [
+        "FA-LEX-YEK",
+        "FA-LEX-DO",
+        "FA-LEX-SE",
+        "FA-LEX-CHAHAR",
+        "FA-LEX-PANJ",
+        "FA-LEX-SHESH",
+        "FA-LEX-HAFT",
+        "FA-LEX-HASHT",
+        "FA-LEX-NOH",
+        "FA-LEX-DAH",
+        "FA-LEX-YAZDAH",
+        "FA-LEX-SIZDAH",
+        "FA-LEX-PANZDAH",
+        "FA-LEX-BIST",
+        "FA-LEX-SAD",
+        "FA-GRAMMAR-TEENS-DAH",
+        "FA-PERFORMANCE-COUNT-FIVE",
+        "FA-PERFORMANCE-COUNT-TEN",
+        "FA-PERFORMANCE-COUNT-TWENTY"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "FA-CORPUS",
@@ -386,13 +406,20 @@
         "A1-NG2-01",
         "A1-NE16-01"
       ],
-      "note": "THREE PROXY POINTS AND NOT ONE NUMERAL. yek, do, se, chahar all return ZERO occurrences in 71 files. A learner cannot give an age, a price, a telephone number, a quantity or a time."
+      "note": "CLOSED BY HL-C350, and the note it replaces is worth keeping: three proxy points landed here and yek, do, se and chahar all returned ZERO occurrences in 71 files, so a learner could not give an age, a price, a telephone number, a quantity or a time. Chapters 16-20 teach one to ten as words, then the teens AS A RULE rather than as nine words -- Persian puts the unit in front of dah, so the probe names FA-GRAMMAR-TEENS-DAH and three worked teens rather than nine lexical atoms, because that is what the track actually teaches and a probe naming nine would be claiming lessons that do not exist. bist and sad close the top. WHAT MADE IT AFFORDABLE, in a track whose etymology is its identity: nine of the ten cardinals have an everyday English cousin from the same Indo-European root, and one sound law -- Iranian turned word-initial s into h -- explains haft against septem and then a great deal else. The count is the CHEAPEST vocabulary in this track, not the dearest."
     },
     {
       "id": "FA-A1-Q-02",
       "category": "Adad (quantity and number)",
       "label": "ordinal numerals",
-      "probe": null,
+      "probe": [
+        "FA-LEX-AVVAL",
+        "FA-LEX-DOVVOM",
+        "FA-LEX-SEVVOM",
+        "FA-LEX-CHAHAROM",
+        "FA-MORPH-ORDINAL-OM",
+        "FA-PERFORMANCE-ORDINALS"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "FA-CORPUS",
@@ -401,7 +428,7 @@
       "derivedFrom": [
         "A1-Q-02"
       ],
-      "note": "Absent."
+      "note": "CLOSED BY HL-C350, and it cost one ending. Persian makes an ordinal by putting -om on the cardinal, so twelve cardinals and one suffix are twelve ordinals; only avval, 'first', is outside the rule, being an Arabic borrowing, exactly as English first and second sit outside third and fourth. Chapter 20 teaches avval, dovvom, sevvom and chaharom and has the reader BUILD fifth, tenth, twentieth and hundredth rather than recall them. Recorded here because ordinals are the weakest column in the whole corpus -- twenty tracks enumerate one and eighteen leave it uncovered -- and in Persian the column was cheap."
     },
     {
       "id": "FA-A1-Q-03",
@@ -3019,7 +3046,20 @@
       "id": "FA-A1-KH-11",
       "category": "Khatt (script and orthography)",
       "label": "the Persian digits",
-      "probe": null,
+      "probe": [
+        "FA-SCRIPT-DIGIT-ZERO",
+        "FA-SCRIPT-DIGIT-ONE",
+        "FA-SCRIPT-DIGIT-TWO",
+        "FA-SCRIPT-DIGIT-THREE",
+        "FA-SCRIPT-DIGIT-FOUR",
+        "FA-SCRIPT-DIGIT-FIVE",
+        "FA-SCRIPT-DIGIT-SIX",
+        "FA-SCRIPT-DIGIT-SEVEN",
+        "FA-SCRIPT-DIGIT-EIGHT",
+        "FA-SCRIPT-DIGIT-NINE",
+        "FA-SCRIPT-DIGITS-LTR",
+        "FA-PERFORMANCE-DIGITS-READ"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "FA-CORPUS",
@@ -3029,7 +3069,7 @@
         "A1-Q-02",
         "A1-O4-03"
       ],
-      "note": "The digits have their own signs and none is taught -- and no Latin digit either. The same hole as FA-A1-Q-01, seen from the script side."
+      "note": "CLOSED BY HL-C350. Chapter 19 teaches all ten signs across four writing lessons, grouped by what makes each set hard rather than by counting order: the reversed direction (a number runs LEFT TO RIGHT inside a right-to-left line, which no other chapter of this track has had to say), the one-tooth pair 2/3, the three shapes Persian draws differently from Arabic (4, 5, 6 -- where a reader trained on an Arabic book misreads an Iranian price and nowhere else), and the mirror pair 7/8. The probe names the direction rule as well as the ten signs, because a reader who knows the shapes and reads them right-to-left reads every two-digit price backwards."
     },
     {
       "id": "FA-A1-KH-12",

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C26-kothay",
+    "language": "bengali",
+    "chapter": 37,
+    "sequence": 1920,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5e81624ac1cf5ce3"
+  },
+  "findings": []
+}

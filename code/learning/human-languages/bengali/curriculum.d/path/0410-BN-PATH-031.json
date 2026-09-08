@@ -1,0 +1,16 @@
+{
+  "id": "BN-PATH-031",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "BN-C23-she",
+    "BN-C23-tini",
+    "BN-C23-o-pron",
+    "BN-C23-tar",
+    "BN-R23-somebody-else"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-032-THIRD-PERSON"
+  ],
+  "after": []
+}

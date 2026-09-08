@@ -538,9 +538,29 @@ fn tokenize(query: &str) -> Result<Vec<String>, SearchError> {
     Ok(tokens)
 }
 
+/// How deeply `(` and `-` may nest before the parser gives up.
+///
+/// This is a recursive-descent parser: every `(` costs a
+/// `parse_primary` -> `parse_or` -> `parse_and` -> `parse_unary` ->
+/// `parse_primary` cycle of stack frames, and every leading `-` costs a
+/// `parse_unary` frame. Without a bound, a query is a stack-depth dial that
+/// whoever supplies the query gets to turn.
+///
+/// That is not merely a bad error message. A stack overflow **aborts the
+/// process** -- it is not a panic, so `catch_unwind` cannot contain it, and the
+/// browser build's stack is roughly 1 MB, a few thousand frames. Engram renders
+/// browser props on every props build, including the one that follows a
+/// snapshot restore, so a saved query is parsed with no interaction at all: a
+/// hostile or merely corrupt snapshot would abort on open, and again on every
+/// subsequent launch, with no way back in.
+///
+/// 64 is far past any query a person writes and far short of any stack.
+const MAX_SEARCH_DEPTH: usize = 64;
+
 struct SearchParser {
     tokens: Vec<String>,
     position: usize,
+    depth: usize,
 }
 
 impl SearchParser {
@@ -548,7 +568,28 @@ impl SearchParser {
         Self {
             tokens,
             position: 0,
+            depth: 0,
         }
+    }
+
+    /// Charge one level of nesting, refusing past [`MAX_SEARCH_DEPTH`].
+    ///
+    /// The matching [`leave`](Self::leave) is only reached on the success path.
+    /// That is deliberate and safe: an error abandons the whole parse, so the
+    /// counter never has to unwind.
+    fn enter(&mut self, token: &str) -> Result<(), SearchError> {
+        self.depth += 1;
+        if self.depth > MAX_SEARCH_DEPTH {
+            return Err(SearchError {
+                message: format!("search expression nests deeper than {MAX_SEARCH_DEPTH} levels"),
+                token: token.to_string(),
+            });
+        }
+        Ok(())
+    }
+
+    fn leave(&mut self) {
+        self.depth = self.depth.saturating_sub(1);
     }
 
     fn parse_or(&mut self) -> Result<SearchExpr, SearchError> {
@@ -636,7 +677,10 @@ impl SearchParser {
                     token: operator,
                 });
             }
-            return Ok(SearchExpr::Not(Box::new(self.parse_unary()?)));
+            self.enter(&operator)?;
+            let operand = self.parse_unary()?;
+            self.leave();
+            return Ok(SearchExpr::Not(Box::new(operand)));
         }
 
         self.parse_primary()
@@ -649,7 +693,9 @@ impl SearchParser {
         })?;
 
         if token == "(" {
+            self.enter(&token)?;
             let expression = self.parse_or()?;
+            self.leave();
             if expression_is_empty(&expression) {
                 return Err(SearchError {
                     message: "parenthesized search expression is empty".to_string(),
@@ -1852,13 +1898,14 @@ fn anki_excluded_field_ids(source: &ExternalSourceRecord) -> Vec<String> {
     fields
         .iter()
         .enumerate()
-        .filter(|&(_index, field)| anki_field_excluded_from_search(field)).map(|(index, field)| {
-                let ordinal = field
-                    .get("ord")
-                    .and_then(Value::as_i64)
-                    .unwrap_or(index as i64);
-                format!("{}:field:{ordinal}", source.target_id)
-            })
+        .filter(|&(_index, field)| anki_field_excluded_from_search(field))
+        .map(|(index, field)| {
+            let ordinal = field
+                .get("ord")
+                .and_then(Value::as_i64)
+                .unwrap_or(index as i64);
+            format!("{}:field:{ordinal}", source.target_id)
+        })
         .collect()
 }
 
@@ -3063,6 +3110,61 @@ mod tests {
     use std::collections::BTreeMap;
 
     const NOW: u64 = 1_700_000_000_000;
+
+    /// Deep nesting is refused, not run off the end of the stack.
+    ///
+    /// This is the one failure mode in the parser that is not a panic: a stack
+    /// overflow aborts the process outright, so `catch_unwind` cannot contain it
+    /// and no caller can recover. It matters beyond a badly typed query because
+    /// the browser query is parsed on every props build, including the one after
+    /// a snapshot restore -- so a saved query is parsed with no interaction, and
+    /// a crash there would repeat on every launch.
+    ///
+    /// 10_000 is chosen to be past a browser's ~1 MB stack; it aborted before
+    /// the bound existed.
+    #[test]
+    fn deeply_nested_queries_are_refused_rather_than_overflowing_the_stack() {
+        for depth in [MAX_SEARCH_DEPTH + 1, 1_000, 10_000] {
+            let query = format!("{}hola{}", "(".repeat(depth), ")".repeat(depth));
+            let error = parse_query(&query)
+                .expect_err("nesting past the bound must be an error, not an abort");
+            assert!(
+                error.message.contains("nests deeper"),
+                "unexpected message at depth {depth}: {}",
+                error.message
+            );
+        }
+
+        // The other recursion site: `-` recurses through `parse_unary` without
+        // passing through `(`. The dashes must be SPACE-SEPARATED to be
+        // operators -- `---hola` tokenises as the single term `"---hola"`, so a
+        // fixture without the spaces would pass while testing nothing.
+        let negations = format!("{}hola", "- ".repeat(10_000));
+        assert_eq!(tokenize(&negations).unwrap().len(), 10_001);
+        let error = parse_query(&negations).expect_err("stacked negation must be bounded too");
+        assert!(error.message.contains("nests deeper"), "{}", error.message);
+    }
+
+    /// The bound does not reject anything a person would type.
+    ///
+    /// A limit that refuses ordinary queries would be a worse bug than the one
+    /// it fixes, so this pins the usable side of the boundary.
+    #[test]
+    fn ordinary_nesting_still_parses() {
+        assert!(parse_query("(hola or hello) and (tag:spanish or tag:tamil)").is_ok());
+        assert!(parse_query("-(-(hola))").is_ok());
+
+        // Exactly at the bound, still accepted.
+        let at_limit = format!(
+            "{}hola{}",
+            "(".repeat(MAX_SEARCH_DEPTH),
+            ")".repeat(MAX_SEARCH_DEPTH)
+        );
+        assert!(
+            parse_query(&at_limit).is_ok(),
+            "depth {MAX_SEARCH_DEPTH} is the limit, not one past it"
+        );
+    }
 
     fn deck(id: &str, name: &str) -> Deck {
         Deck {

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C27-sesto",
+    "language": "italian",
+    "chapter": 27,
+    "sequence": 940,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ba1055d080d50eed"
+  },
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": "TE-PATH-82-ORDINAL",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "TE-C82-sixth",
+    "TE-C82-seventh",
+    "TE-C82-eighth",
+    "TE-C82-ninth",
+    "TE-C82-tenth",
+    "TE-C82-eleventh"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-82-ORDINAL"
+  ],
+  "after": []
+}

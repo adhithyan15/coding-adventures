@@ -8,9 +8,9 @@ spine_node: SPINE-COURTESY-THANK
 sequence: 3100
 chapter: 80
 type: word
-headword: "पीना"
-gloss: "to drink"
-romanization: "pīnā"
+headword: "पीना / पीता / खाना / खाता"
+gloss: "to drink / masculine present form / to eat / masculine present form"
+romanization: "pīnā / pītā / khānā / khātā"
 concept_tag: VERB-DRINK
 prerequisites: [HI-C73-waiter, HI-C37-khaana]
 sounds: []
@@ -51,7 +51,7 @@ Now the pair. **खाना** you already own as "food" — and खाना is
 exactly as गाना was both the song and the singing. Put them together and Hindi
 has one of its most-used pairs:
 
-> **खाना** — food, and to eat. **पीना** — to drink.
+> **खाना** — food, and to eat. **पीना**, *pīnā* — to drink.
 
 **मैं चाय पीता हूँ** is "I drink tea", in the frame you have used all along. And
 **मैं खाना खाता हूँ** puts the word into one breath twice — once for the food,
@@ -60,7 +60,7 @@ once for the eating — with nothing between them but the ending.
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Five: होटल, नाश्ता, बिल, वेटर, पीना. A place, a meal, a bill, the person who
+Five: होटल, नाश्ता, बिल, वेटर, **पीना**, *pīnā*. A place, a meal, a bill, the person who
 brings it, and the two doing words that made you come in.
 
 ## Guided Practice
@@ -70,10 +70,10 @@ brings it, and the two doing words that made you come in.
 - [YOU SAY: *pīnā*]
 - [YOU SAY: *maiṁ chāy pītā hūṁ*]
 - [YOU CONTRAST: *khānā* as the food, and *khānā* as the eating]
-- [YOU WRITE: पीना, then say all five of this chapter in order]
+- [YOU WRITE: **पीना**, then say *pīnā* and all five of this chapter in order]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C37-KHAANA-01, HI-LEX-C73-EATING-05] -->
 
-[PAUSE 3s] What does पीना mean? ("to drink".) What two things can खाना mean?
+[PAUSE 3s] What does **पीना**, *pīnā*, mean? ("to drink".) What two things can खाना mean?
 ("food", and "to eat".)

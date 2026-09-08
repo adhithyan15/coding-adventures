@@ -1,0 +1,25 @@
+{
+  "language": "marwadi",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:b5952da225675d96",
+  "lessonIds": [
+    "MW-C34-hear-bees",
+    "MW-C34-bees",
+    "MW-C34-hear-so",
+    "MW-C34-so",
+    "MW-C34-hear-price-number",
+    "MW-C34-price-number",
+    "MW-C34-hear-counter-offer",
+    "MW-C34-counter-offer",
+    "MW-R34-round-recall",
+    "MW-C34-numbered-price",
+    "MW-R34-script-close"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch34.txt",
+  "json": "marwadi/narration/ch34.json",
+  "textHash": "fnv1a64:5e72d1adfd7666cd",
+  "jsonHash": "fnv1a64:ebdb05b1516da9c5",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+[package]
+name = "layout-backgrounds"
+version = "0.1.0"
+
+[capabilities]
+multiple_layers = "supported"
+images = "supported"
+linear_gradients = "supported"
+radial_gradients = "supported"
+position_size_repeat = "supported"
+origin_clip = "supported"
+elliptical_corner_radii = "supported"
+diagnostics = "supported"

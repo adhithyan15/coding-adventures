@@ -51,7 +51,10 @@ fn window_base(w: u32) -> usize {
 /// virt 24-31 (ins):            phys = window_base((cwp+1) % NWINDOWS) + (virt-24)
 /// ```
 pub fn virt_to_phys(virt: u32, cwp: u32) -> usize {
-    debug_assert!(virt < 32, "virt_to_phys: logical register {virt} out of range 0..31");
+    debug_assert!(
+        virt < 32,
+        "virt_to_phys: logical register {virt} out of range 0..31"
+    );
     let cwp = cwp % NWINDOWS;
     if virt < 8 {
         virt as usize
@@ -93,6 +96,16 @@ impl Default for RegisterWindowFile {
 impl RegisterWindowFile {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    /// Return all 56 physical registers in stable storage order.
+    pub fn physical_registers(&self) -> [u32; NUM_PHYS] {
+        self.phys
+    }
+
+    /// Replace the physical register bank after the caller validates it.
+    pub(crate) fn restore_physical(&mut self, phys: [u32; NUM_PHYS]) {
+        self.phys = phys;
     }
 
     /// Read a logical register in the current window.  `%g0` always

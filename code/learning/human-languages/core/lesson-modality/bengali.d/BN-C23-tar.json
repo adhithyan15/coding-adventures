@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C23-tar",
+    "language": "bengali",
+    "chapter": 34,
+    "sequence": 1770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9661005c3988b7ed"
+  },
+  "findings": []
+}

@@ -622,3 +622,20 @@ Acceptance includes native scroll-position changes across the actual Rust-backed
 VisiCalc workbook, pinned headers, A100 editing, bounded realization and spacer
 exclusion from coordinate and reveal tests. This does not establish native
 framework implementation, touch-drag acceptance or complete grid accessibility.
+
+
+## 12. Authored table focus (React)
+
+HostTable accepts focusable: true and a11y-label as a literal or text slot.
+React emits one tab stop and an accessible table name. Clicking noninteractive
+content focuses the table without scrolling; nested inputs, buttons, links and
+editable content retain their own focus. Native browser focus indication remains
+available. When Enter/Escape removes an inline editor, an animation-frame check
+returns focus only if the table is still connected and focus has fallen to the
+body. It must not steal focus from another control or change document scrolling.
+
+RowHeaderGrid opts in and Cell requests autofocus on its conditional editor.
+The host may translate keys from this focused surface into semantic app events;
+this does not install global worksheet shortcuts or claim full ARIA grid roles.
+Unsupported native table focus/naming is reported as
+accessibility.table-focus-unimplemented. Track remaining acceptance in #14278.

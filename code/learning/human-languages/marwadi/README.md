@@ -29,7 +29,7 @@ adding nouns and teach one transaction instead, isolating a single new sign,
 
 ## What this starter edition can honestly claim
 
-Across the current twenty-two chapters, a learner can recognise, read, say, copy,
+Across the current thirty-six chapters, a learner can recognise, read, say, copy,
 and write the polite
 greeting **राम-राम सा**, answer it, and offer formal **आभार** after a kindness.
 They can also answer yes respectfully with **हां सा**, and retrieve **पाणी**
@@ -63,10 +63,23 @@ unchanged at a shop, a food stall, and a roadside, with only the noun moving.
 Along the way the reader gains **ये, कितणो, घणो, थोड़ु, आखरी** and five asking
 words, **दिखावो, करो, लो, दो, लावो**, each separated from the others by the job
 it does; **चाय लावो।** orders any of the seven food words. Only **ख** is new,
-isolated against **क** by breath one lesson before it is needed. Understanding
-a number a seller names, refusing a final price and walking away, asking for
-more, and naming a meal all stay untaught.
-The track now contains 257 canonical lessons and 71 distinct taught
+isolated against **क** by breath one lesson before it is needed. Refusing a
+final price and walking away, asking for more, and naming a meal all stay
+untaught.
+Chapters 32--36 then close the one that mattered most. Twelve cardinals --
+**एक, दो, तीन, चार, पांच, छ, सात, आठ, नो, दस, बीस, सो** -- arrive one to a
+lesson, each heard before it is written, and only **ए** is a sign the hand had
+not already made. **बीस** is taught before the numbers under it because Marwari
+builds nineteen by subtraction, *ughaṇīs*, one short of twenty, so the round
+number has to exist first. The ten digits **० १ २ ३ ४ ५ ६ ७ ८ ९** follow three
+at a time, with the four a Latin-trained eye misreads -- **४**, **५**, **७**,
+**८** -- drilled beside the six it guesses. A seller's **बीस।** can now be
+understood and answered with **दस करो।**, and the chapter-31 exchange runs again
+with six turns instead of five. Eleven to nineteen wait on four independent
+vowels and **ळ**; ordinals wait on a citable source rather than on a sign; and
+the track still has no word for no, which a course that can now name a price
+feels more sharply than one that could not.
+The track now contains 312 canonical lessons and 84 distinct taught
 headwords, five of them verbs. That is still a small pre-A1
 capability, not completion of pre-A1 and not exam readiness. The curriculum map
 records every untouched spine concept explicitly so the remaining work stays

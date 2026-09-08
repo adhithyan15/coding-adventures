@@ -1,0 +1,17 @@
+{
+  "id": "BN-EXT-034-OBJECT-CASE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can mark the person something is done to, say me and you as objects, and ask who?",
+  "prerequisites": [
+    "BN-EXT-033-PLURAL-PRONOUNS"
+  ],
+  "lessons": [
+    "BN-C25-ke-suffix",
+    "BN-C25-amake",
+    "BN-C25-tomake",
+    "BN-C25-ke-who",
+    "BN-R25-the-one-it-happens-to"
+  ]
+}

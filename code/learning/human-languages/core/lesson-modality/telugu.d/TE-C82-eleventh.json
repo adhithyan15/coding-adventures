@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C82-eleventh",
+    "language": "telugu",
+    "chapter": 82,
+    "sequence": 2980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa156723cfa4834d"
+  },
+  "findings": []
+}

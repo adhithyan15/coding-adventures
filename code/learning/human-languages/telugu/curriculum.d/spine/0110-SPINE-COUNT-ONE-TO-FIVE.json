@@ -1,7 +1,9 @@
 {
   "segments": [
     "TE-PATH-012",
-    "TE-PATH-022"
+    "TE-PATH-022",
+    "TE-PATH-81-ORDINAL",
+    "TE-PATH-82-ORDINAL"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"

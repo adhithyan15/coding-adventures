@@ -1,0 +1,25 @@
+{
+  "chapter": 17,
+  "title": "Six to Ten, and One Sound Law",
+  "label": "ch:fa-count-ten",
+  "canDo": "I can say, hear and recognise every Persian number from one to ten, write the two of them made only of letters I have been taught, and explain why haft begins with h where septem begins with s.",
+  "payoff": {
+    "lesson": "FA-C17-practice",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Five more numbers, the Iranian s-to-h rule that explains one of them, the analogy that explains the next, and the whole run of ten shuffled.",
+    "assesses": [
+      "FA-LEX-SHESH",
+      "FA-ETYMON-SHESH",
+      "FA-LEX-HAFT",
+      "FA-ETYMON-HAFT",
+      "FA-SOUND-IRANIAN-S-TO-H",
+      "FA-LEX-HASHT",
+      "FA-ETYMON-HASHT",
+      "FA-LEX-NOH",
+      "FA-ETYMON-NOH",
+      "FA-LEX-DAH",
+      "FA-ETYMON-DAH",
+      "FA-PERFORMANCE-COUNT-TEN"
+    ]
+  }
+}

@@ -1,11 +1,12 @@
 [package]
 name = "layout-to-paint"
-version = "0.4.0"
+version = "0.6.0"
 edition = "2021"
 description = "UI04 — walks a PositionedNode tree and emits a PaintScene with PaintGlyphRun instructions pre-shaped via a caller-supplied TXT00 shaper trio. The device-dependent amendment: shaping happens once here, the paint backend only rasterizes."
 
 [dependencies]
 layout-effects = { path = "../layout-effects" }
+layout-backgrounds = { path = "../layout-backgrounds" }
 layout-ir = { path = "../layout-ir" }
 layout-positioned = { path = "../layout-positioned" }
 layout-replaced = { path = "../layout-replaced" }

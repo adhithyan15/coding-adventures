@@ -348,6 +348,30 @@ reintroduced 91 `Missing character` errors, and which Chapter 22's first pass
 repeated with a stray Arabic script aside before it was caught and replaced
 with a plain romanization.
 
+## What the track can do, as of chapters 31–37
+
+A learner can now **pick a noun out** — *the* shirt, *a* shirt, *another* shirt
+— using টা, the ending Bengali has instead of an article; **point** at what is
+near and what is not (এই / ওই), with the pointer at the front of the phrase and
+the classifier at the back; **ask what something is** (এটা কী?); **pluralise**
+any noun in the book by the ending its group demands (রা for the living, গুলো for
+things); **talk about somebody else** at the right level of respect (সে / তিনি /
+ও) and about groups (আমরা, তোমরা, তারা); **say what is whose** for all six
+persons; **mark the person a thing is done to** (-কে), which fills the dative
+frame chapter sixteen taught with nothing to put in it; and **say where
+something is** and **ask where it is** (এখানে / ওখানে / কোথায়).
+
+Two letters were bought to make that writable: **ট**, which six exam points sat
+behind, and **থ**, without which কোথায় cannot be printed. Both are consonants,
+and no stroke-order source exists for any Bengali consonant (HL-C212), so neither
+lesson claims a pen path — they teach place of articulation and cite the Unicode
+chart, exactly as this track's other consonant lessons do.
+
+Three words that would have covered further ground were left out because the
+letters they need have no lesson yet: **কারণ** needs ণ and **অনেক** needs অ. Each
+is written down in `core/exam-inventory-bengali-a1.json` beside the point it
+blocks, which turns a vocabulary gap into a named script lesson.
+
 ## What the track can do, as of chapters 27–30
 
 A learner who reaches the end of the book can now **deny** any sentence it

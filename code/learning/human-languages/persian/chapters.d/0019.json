@@ -1,0 +1,25 @@
+{
+  "chapter": 19,
+  "title": "The Ten Persian Digits",
+  "label": "ch:fa-digits",
+  "canDo": "I can read and write the ten Persian digits, read a price, a page number and a telephone number off an Iranian page, and say which way a number runs inside a right-to-left line.",
+  "payoff": {
+    "lesson": "FA-C19-practice",
+    "kind": "writing",
+    "summary": "Ten signs across four lessons, grouped by what makes each pair hard: the reversed direction, the one-tooth pair, the three Arabic draws differently, and the mirror pair.",
+    "assesses": [
+      "FA-SCRIPT-DIGIT-ZERO",
+      "FA-SCRIPT-DIGIT-ONE",
+      "FA-SCRIPT-DIGIT-TWO",
+      "FA-SCRIPT-DIGIT-THREE",
+      "FA-SCRIPT-DIGIT-FOUR",
+      "FA-SCRIPT-DIGIT-FIVE",
+      "FA-SCRIPT-DIGIT-SIX",
+      "FA-SCRIPT-DIGIT-SEVEN",
+      "FA-SCRIPT-DIGIT-EIGHT",
+      "FA-SCRIPT-DIGIT-NINE",
+      "FA-SCRIPT-DIGITS-LTR",
+      "FA-PERFORMANCE-DIGITS-READ"
+    ]
+  }
+}

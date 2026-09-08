@@ -66,3 +66,12 @@ remained 375px, and editing A1 from 15 to 20 recomputed E5 to 174. Text scaling,
 loading/error/empty presentation, keyboard focus and native appearance remain
 acceptance work under #14273 and #14278. Negative outline offsets exposed the
 shared signed-dimension limitation tracked in #14327.
+
+Keyboard focus now enters the named Data table with Tab or a cell click. Plain
+arrows navigate cells; Home/End select the first/final column of the current row.
+F2, Enter or a printable character opens the inline editor with focus; Enter or
+Escape returns focus to the table when that editor is removed. Shortcuts belong
+to this app's table, so keys elsewhere on the page and formula-editor caret keys
+do not navigate the workbook. Modified navigation and IME composition are left
+alone. Complete grid roles/selected-cell announcements, native focus and broader
+assistive-technology acceptance remain under #14278.

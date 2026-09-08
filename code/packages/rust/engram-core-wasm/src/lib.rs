@@ -3599,10 +3599,21 @@ fn selected_deck_id_with_override(
     {
         return selected_deck_id.to_string();
     }
+    // The active session's deck gets the same existence check as the override
+    // above. `active_session` is part of `AppState`, so it arrives from whatever
+    // wrote the collection -- a snapshot, an import, a merge -- and without the
+    // filter a collection naming a deck it does not contain resolves to that
+    // phantom id, which then becomes the target of writes such as
+    // `rebuild_filtered_deck`. Falling through to the first real deck is the
+    // same thing that happens when there is no active session at all.
+    //
+    // In-app this is a no-op: `DeleteDeck` clears `active_session` when it
+    // targets the deleted deck, so a live session always names a live deck.
     state
         .active_session
         .as_ref()
         .map(|active| active.deck_id.clone())
+        .filter(|deck_id| state.decks.iter().any(|deck| deck.id == *deck_id))
         .or_else(|| state.decks.first().map(|deck| deck.id.clone()))
         .unwrap_or_default()
 }
@@ -4007,9 +4018,18 @@ fn new_note_editor_selection(
     now: u64,
     current_deck_id: Option<&str>,
 ) -> BrowserSelection {
+    // A draft marked NEW may not adopt an id an existing note already holds.
+    //
+    // `draft_is_new` and `draft_note_id` are set together by `start_new`, which
+    // mints a fresh id, so the two cannot disagree by any route through the
+    // event surface. They are separate fields, though, so any writer that sets
+    // them independently makes "create" save over an existing note instead --
+    // replacing its fields and its deck. Minting a fresh id when the supplied
+    // one is taken keeps the "new" in `draft_is_new` meaning what it says.
     let note_id = editor
         .draft_note_id
         .clone()
+        .filter(|id| !state.notes.iter().any(|note| note.id == *id))
         .unwrap_or_else(|| unique_note_id(state, now));
     let note_type_id = editor
         .draft_note_type_id
@@ -4291,6 +4311,30 @@ fn note_from_editor_selection(
             .map(|note| note.deck_id.clone())
             .unwrap_or_default()
     };
+    // The note type is checked just above; the deck was not, and both arrive
+    // from the same editor draft.
+    //
+    // The *editor* path upheld this on its own -- `NoteEditorSelectDeck`
+    // resolves an *index* into `state.decks` and errors with "cannot select
+    // missing deck" -- so no draft could name a deck that did not exist. That
+    // makes this guard cheap insurance today and load-bearing the moment any
+    // other writer reaches a draft, which is exactly what persisting one would
+    // do. Without it, a deck id nothing carries plus one Save writes the note
+    // *and its generated cards* into a deck that does not exist: unreachable
+    // from every deck list, and the editor renders a selected-deck index of -1,
+    // so the UI cannot even say where they went.
+    //
+    // Note the narrower claim: the *editor* path, not every path.
+    // `EngramAppEvent::SaveNote` takes `deckId` straight from its payload and
+    // checks neither the deck nor the note type, so a host that fabricates that
+    // event can still do this. That is a wider surface than this change is
+    // about, and is left alone rather than silently widened into.
+    //
+    // An empty id is deliberately left alone -- that is the "inherit the
+    // existing note's deck" case above, not a claim about a deck.
+    if !deck_id.is_empty() && !state.decks.iter().any(|deck| deck.id == deck_id) {
+        return Err("selected deck does not exist".to_string());
+    }
     let draft_active = editor.draft_note_id.as_deref() == Some(selection.note_id.as_str());
     let fields = if selection.fields.is_empty() {
         existing_note
@@ -4414,7 +4458,17 @@ fn note_type_editor_selected_note_type(
 ) -> Option<engram_core::NoteType> {
     let mut note_type = if editor.draft_is_new {
         let mut draft = default_note_type_model(editor.draft_created_at.unwrap_or(now));
-        if let Some(note_type_id) = editor.draft_note_type_id.as_ref() {
+        // Same rule as a new note draft, and this is the more damaging of the
+        // two. `default_note_type_model` is a blank two-field model, so a NEW
+        // draft carrying an existing note type's id would save that blank over
+        // a real note type -- discarding its fields and templates, and taking
+        // every note built on it with them. Keeping the freshly minted id makes
+        // it a genuinely new note type, which is what the flag claims.
+        if let Some(note_type_id) = editor
+            .draft_note_type_id
+            .as_ref()
+            .filter(|id| !state.note_types.iter().any(|kind| kind.id == **id))
+        {
             draft.id = note_type_id.clone();
         }
         draft
@@ -6953,6 +7007,149 @@ mod tests {
 
         assert_eq!(loaded["ok"], true);
         assert_eq!(loaded["state"]["decks"][0]["id"], "deck");
+    }
+
+    /// A draft naming a deck the collection lacks cannot write a note into it.
+    ///
+    /// The note type was already checked here and the deck was not, even though
+    /// both come from the same editor draft.
+    #[test]
+    fn a_draft_deck_the_collection_lacks_is_refused_like_a_missing_note_type() {
+        // The demo collection, because the note type has to be REAL for the
+        // deck check to be reached at all -- the note-type guard runs first, so
+        // a fixture with a phantom note type would fail there and prove nothing
+        // about the deck.
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+        let state = session.state().clone();
+        assert!(
+            state.note_types.iter().any(|kind| kind.id == "basic-story"),
+            "the fixture's note type must exist, or this tests the wrong guard"
+        );
+
+        let real_note_type = BrowserSelection {
+            note_id: "note-1".to_string(),
+            note_type_id: "basic-story".to_string(),
+            ..BrowserSelection::default()
+        };
+
+        // A phantom deck is refused.
+        let phantom = BrowserSelection {
+            deck_id: "deck-that-does-not-exist".to_string(),
+            ..real_note_type.clone()
+        };
+        let error =
+            note_from_editor_selection(&state, &phantom, &NoteEditorSessionState::default(), NOW)
+                .expect_err("a deck the collection does not contain must be refused");
+        assert!(
+            error.contains("deck does not exist"),
+            "expected a deck error, got: {error}"
+        );
+
+        // The guard is not simply refusing everything: a real deck still saves.
+        let real_deck = BrowserSelection {
+            deck_id: "tamil-script".to_string(),
+            ..real_note_type
+        };
+        let note =
+            note_from_editor_selection(&state, &real_deck, &NoteEditorSessionState::default(), NOW)
+                .expect("a deck the collection does contain must still save");
+        assert_eq!(note.deck_id, "tamil-script");
+    }
+
+    /// A "new" draft cannot adopt the id of something that already exists.
+    ///
+    /// `draft_is_new` and the draft id are set together by `start_new`, which
+    /// mints a fresh id, so they cannot disagree by any route through the event
+    /// surface. Set independently, `draft_is_new` beside an existing id turns
+    /// "create" into "overwrite" -- for a note type especially, since the
+    /// new-draft model is a blank two-field one that would replace a real note
+    /// type's fields and templates and break every note built on it.
+    #[test]
+    fn a_new_draft_cannot_overwrite_an_existing_note_or_note_type() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+        let state = session.state().clone();
+
+        let existing_note_id = state.notes[0].id.clone();
+        let existing_note_fields = state.notes[0].fields.clone();
+        let existing_type = state.note_types[0].clone();
+        assert!(
+            !existing_type.fields.is_empty(),
+            "the fixture note type must have fields to lose"
+        );
+
+        // A "new" note draft pointed at an existing note gets a fresh id.
+        let editor = NoteEditorSessionState {
+            draft_is_new: true,
+            draft_note_id: Some(existing_note_id.clone()),
+            ..NoteEditorSessionState::default()
+        };
+        assert_ne!(
+            new_note_editor_selection(&state, &editor, NOW, None).note_id,
+            existing_note_id,
+            "a new draft must not save over the existing note"
+        );
+
+        // A "new" note-type draft pointed at an existing note type likewise.
+        let type_editor = NoteTypeEditorSessionState {
+            draft_is_new: true,
+            draft_note_type_id: Some(existing_type.id.clone()),
+            ..NoteTypeEditorSessionState::default()
+        };
+        let drafted = note_type_editor_selected_note_type(&state, &type_editor, NOW)
+            .expect("a new note-type draft should still produce a model");
+        assert_ne!(
+            drafted.id, existing_type.id,
+            "a blank new note type must not take over an existing one's id"
+        );
+
+        // And the guard did not break the ordinary case: an id nothing holds is
+        // still honoured, so a caller can still choose its own new id.
+        let fresh = NoteEditorSessionState {
+            draft_is_new: true,
+            draft_note_id: Some("genuinely-new-note".to_string()),
+            ..NoteEditorSessionState::default()
+        };
+        assert_eq!(
+            new_note_editor_selection(&state, &fresh, NOW, None).note_id,
+            "genuinely-new-note"
+        );
+        assert_eq!(session.state().notes[0].fields, existing_note_fields);
+    }
+
+    /// An active session naming a deck the collection lacks does not resolve to it.
+    ///
+    /// `active_session` is part of `AppState`, so it arrives from whatever wrote
+    /// the collection. Without the filter this fallback hands back a phantom id
+    /// that later becomes the target of writes such as `rebuild_filtered_deck`.
+    #[test]
+    fn an_active_session_deck_the_collection_lacks_falls_through() {
+        let mut session = EngramSession::new();
+        session.dispatch(
+            r#"{
+                "type": "createDeck",
+                "id": "deck-a",
+                "name": "Tamil",
+                "description": "Script",
+                "createdAt": 1700000000000
+            }"#,
+        );
+        let mut state = session.state().clone();
+        state.active_session = Some(engram_core::ActiveSessionState {
+            session_id: "session-1".to_string(),
+            deck_id: "deck-that-does-not-exist".to_string(),
+            queue: Vec::new(),
+            current_index: 0,
+            current_card_started_at: None,
+            revealed: false,
+        });
+
+        assert_eq!(
+            selected_deck_id_with_override(&state, "", None),
+            "deck-a",
+            "a phantom active-session deck must fall through to a real one"
+        );
     }
 
     #[test]
@@ -12231,11 +12428,15 @@ mod tests {
         let json = ok_with("state", &Unserialisable);
         let parsed: Value = serde_json::from_str(&json).expect("still valid JSON");
         assert_eq!(
-            parsed["ok"], Value::Bool(false),
+            parsed["ok"],
+            Value::Bool(false),
             "a failed serialisation must not report ok:true -- got {json}"
         );
         assert!(
-            parsed["error"].as_str().unwrap_or_default().contains("state"),
+            parsed["error"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("state"),
             "the error should name what failed: {json}"
         );
     }
@@ -12248,7 +12449,12 @@ mod tests {
             data: Vec<u8>,
         }
         let bytes: Vec<u8> = (0..=255u8).cycle().take(4096).collect();
-        let json = ok_with("state", &Wrapper { data: bytes.clone() });
+        let json = ok_with(
+            "state",
+            &Wrapper {
+                data: bytes.clone(),
+            },
+        );
         let parsed: Value = serde_json::from_str(&json).unwrap();
         let read_back: Vec<u8> = parsed["state"]["data"]
             .as_array()

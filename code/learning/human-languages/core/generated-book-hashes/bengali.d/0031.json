@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:f701b0af7eb6c4ee",
+  "lessonIds": [
+    "BN-W05-tta",
+    "BN-C20-tta-classifier",
+    "BN-C20-ekta",
+    "BN-C20-arekta",
+    "BN-R20-one-and-another"
+  ],
+  "tex": "bengali/book/chapters/ch31-the-letter-in-the-way.tex"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-76-ORDINAL",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "HI-C76-sixth",
+    "HI-C76-seventh",
+    "HI-C76-eighth",
+    "HI-C76-ninth",
+    "HI-C76-tenth"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-76-ORDINAL"
+  ],
+  "after": []
+}

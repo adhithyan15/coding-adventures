@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:aa582bde5e86f70c",
+  "lessonIds": [
+    "BN-C21-ei",
+    "BN-C21-oi",
+    "BN-C21-dem-order",
+    "BN-C21-eta",
+    "BN-R21-pointing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch32.txt",
+  "json": "bengali/narration/ch32.json",
+  "textHash": "fnv1a64:9cd94db24572a2e1",
+  "jsonHash": "fnv1a64:fc535ec2ed6092e2",
+  "findings": []
+}

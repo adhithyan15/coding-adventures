@@ -1,0 +1,869 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 35,
+  "title": "All of Us",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:1bc3c9b78a6f1dce",
+  "lessons": [
+    {
+      "id": "BN-C24-amra",
+      "sequence": 1790,
+      "title": "আমরা (āmrā) — we",
+      "headword": "আমরা",
+      "romanization": "āmrā",
+      "gloss": "we — আমি carrying the very plural ending taught two chapters ago, because a pronoun is a living noun like any other",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32ac589ec1e9024b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I. Then make ভাই plural, and say which group of nouns is allowed that ending."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the word that asks what is this? — eṭā ki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the word that asks *what is this?* — *eṭā ki*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আমরা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমরা ভালো — āmrā bhālo — we are well."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what has happened. আমি plus the living plural -রা is আমরা (āmrā), and there is nothing else to learn: a pronoun is a living noun, so it takes the living noun's ending."
+            },
+            {
+              "kind": "speech",
+              "text": "English cannot show you this. I becomes we, two words with no letter in common, and a learner has to memorise the pair. Bengali charges you nothing, because you paid two chapters ago."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: exclusive or inclusive? Bengali does not say",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Some languages have two words for we — one that includes the person you are talking to and one that shuts them out. Bengali has one, exactly as English does, and leaves it to context:"
+            },
+            {
+              "kind": "speech",
+              "text": "আমরা (āmrā) ভালো can mean we (you and I) are well or we (my family, not you) are well."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing marks the difference. When it matters, a Bengali speaker names the group: আমরা (āmrā), and then who."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmrā bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmrā bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the singular and the plural — āmi bhālo, āmrā bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the singular and the plural — *āmi bhālo*, *āmrā bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same ending on a noun — bhāirā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same ending on a noun — *bhāirā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naming the group — āmrā, āmār pôribār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: naming the group — *āmrā*, *āmār pôribār*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two pieces is আমরা (āmrā) made of? (আমি and the living plural -রা.) Why that ending and not the other one? (A person is জীব.) And does Bengali have two words for we? (No — one, like English.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C24-tomra",
+      "sequence": 1800,
+      "title": "তোমরা (tomrā) — you, more than one",
+      "headword": "তোমরা",
+      "romanization": "tomrā",
+      "gloss": "you, more than one — and the respect ladder keeps its second rung in the plural, which English lost entirely",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f31f3082dc23822",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say we. Then say the plain word for you and the careful one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তোমরা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তোমরা ভালো — tomrā bhālo — you are all well."
+            },
+            {
+              "kind": "speech",
+              "text": "Same ending again. তুমি plus -রা, with the vowel settling to তোম-, and Bengali has a word English lacks: you, plural, unambiguously."
+            },
+            {
+              "kind": "speech",
+              "text": "The careful rung pluralises too:"
+            },
+            {
+              "kind": "speech",
+              "text": "তুমি becomes তোমরা (tomrā) — you, plainly."
+            },
+            {
+              "kind": "speech",
+              "text": "আপনি becomes আপনারা — you, respectfully."
+            },
+            {
+              "kind": "speech",
+              "text": "Four words where English has one, and every one of them is that same -রা."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the grid, complete for two of three persons",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "one",
+                "more than one"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "I. one: আমি. more than one: আমরা (āmrā).",
+                "you, plainly. one: তুমি. more than one: তোমরা (tomrā).",
+                "you, carefully. one: আপনি. more than one: আপনারা."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One ending, applied without exception. Nothing here is irregular, which is worth saying out loud because the equivalent English table is nothing but exceptions."
+            },
+            {
+              "kind": "speech",
+              "text": "The third row is the next lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomrā bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomrā bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "singular then plural — tumi bhālo, tomrā bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: singular then plural — *tumi bhālo*, *tomrā bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the careful pair — āpni, āpnārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the careful pair — *āpni*, *āpnārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to a room of friends — tomrā, āmār bôndhurā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to a room of friends — *tomrā*, *āmār bôndhurā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the plural of আপনি? (আপনারা.) How many words does Bengali need where English says you? (Four — two rungs, two numbers.) And which ending builds every one of them? (-রা.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C24-tara",
+      "sequence": 1810,
+      "title": "তারা (tārā) — they",
+      "headword": "তারা",
+      "romanization": "tārā",
+      "gloss": "they — the last row of the pronoun grid, and the sixth person this book can finally talk about",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:53646218cc7bec9b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say you, all of you. Then say he is well, plainly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তারা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তারা ভালো — tārā bhālo — they are well."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem of সে is তা- — you saw it last chapter inside তার — and with the living plural on the end it is তারা (tārā). The careful form does what you would now expect: তাঁরা, with the moon-dot."
+            },
+            {
+              "kind": "speech",
+              "text": "That completes the grid. Six persons, in a language that spent thirty-three chapters able to talk about two:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "one",
+                "more than one"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "I. one: আমি. more than one: আমরা (āmrā).",
+                "you, plainly. one: তুমি. more than one: তোমরা (tomrā).",
+                "you, carefully. one: আপনি. more than one: আপনারা.",
+                "he, she, plainly. one: সে. more than one: তারা (tārā).",
+                "he, she, carefully. one: তিনি. more than one: তাঁরা."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one ending did all of it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the right-hand column downwards and every entry ends the same way. There is no irregular plural anywhere in the Bengali pronoun system — no I/we, no he/they, nothing to memorise as a pair."
+            },
+            {
+              "kind": "speech",
+              "text": "And it is the same -রা that pluralises ভাই and বোন. One rule, learned once, for people and for pronouns alike, because Bengali does not think those are different kinds of word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tārā bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tārā bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the careful one — tā̃rā bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the careful one — *tā̃rā bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three plurals in a row — āmrā, tomrā, tārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three plurals in a row — *āmrā*, *tomrā*, *tārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same ending on a noun — bônerā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same ending on a noun — *bônerā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "singular against plural, all three persons — āmi/āmrā, tumi/tomrā, she/tārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: singular against plural, all three persons — *āmi/āmrā*, *tumi/tomrā*, *she/tārā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What stem is তারা (tārā) built on? (তা-, the stem of সে.) Is there an irregular plural pronoun in Bengali? (No — every one takes -রা.) And what is the careful form? (তাঁরা.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C24-amader",
+      "sequence": 1820,
+      "title": "আমাদের (āmāder) — our",
+      "headword": "আমাদের",
+      "romanization": "āmāder",
+      "gloss": "our — the possessive ending on a plural pronoun, which finishes a column that had been two-sixths full since chapter two",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:bec42e19bcb50539",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say my, your and his. Then say we."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আমাদের",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমাদের পরিবার — āmāder pôribār — our family."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the piece that finishes the possessive column. Watch what happens to the plural ending:"
+            },
+            {
+              "kind": "speech",
+              "text": "আমরা becomes আমাদের (āmāder), not āmrār."
+            },
+            {
+              "kind": "speech",
+              "text": "The -রা does not survive. In its place comes -দের, which is the plural possessive ending and is used across the board:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "mine",
+                "ours"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "I / we. mine: আমার. ours: আমাদের (āmāder).",
+                "you, plainly. mine: তোমার. ours: তোমাদের.",
+                "he, she / they. mine: তার. ours: তাদের."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one suffix at a time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the first sight of a rule that governs the whole back end of a Bengali word: the slot holds one ending, and only one. Plural and possessive cannot both be there, so a single ending is used that carries both meanings at once."
+            },
+            {
+              "kind": "speech",
+              "text": "You have already seen the same economy without being told: গুলো does plural and definite, so it occupies the place টা would otherwise have taken. Bengali merges endings where English would stack them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmāder pôribār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmāder pôribār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole column — āmār, tomār, tār, āmāder, tomāder, tāder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole column — *āmār*, *tomār*, *tār*, *āmāder*, *tomāder*, *tāder*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ending that vanishes — āmrā, but āmāder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ending that vanishes — *āmrā*, but *āmāder*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "their brothers — tāder bhāirā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: their brothers — *tāder bhāirā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happens to -রা when a possessive is needed? (It is replaced by -দের.) How many endings may the back slot hold at once? (One.) And which ending you already knew does two jobs for the same reason? (গুলো — plural and definite.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R24-all-of-us",
+      "sequence": 1830,
+      "title": "All of us",
+      "headword": "আমরা · তোমরা · তারা · আমাদের",
+      "romanization": "āmrā · tomrā · tārā · āmāder",
+      "gloss": "six persons, one plural ending, and a possessive column that is full for the first time",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:cc5931bb55461269",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice: the distant band — four chapters back, and everything since"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice: the distant band — four chapters back, and everything since until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One ending made every plural pronoun in this chapter, and a different one made every plural possessive. Name both, and say why they cannot appear together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six persons — āmi, āmrā, tumi, tomrā, she, tārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six persons — *āmi*, *āmrā*, *tumi*, *tomrā*, *she*, *tārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the careful rungs — āpni, āpnārā, tini, tā̃rā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the careful rungs — *āpni*, *āpnārā*, *tini*, *tā̃rā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole possessive column — āmār, tomār, tār, āmāder, tomāder, tāder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole possessive column — *āmār*, *tomār*, *tār*, *āmāder*, *tomāder*, *tāder*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — four chapters back, and everything since",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four chapters ago the letter ট did not exist in this book and nothing could be pointed at, counted, pluralised or owned by anybody but you and the person in front of you. Run the whole distance, cold."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ট, then টা",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ট, then টা]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the classifier and the indefinite — jāmāṭā, ekṭā jāmā, ārekṭā jāmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the classifier and the indefinite — *jāmāṭā*, *ekṭā jāmā*, *ārekṭā jāmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pointing near and far — ei jāmāṭā, oi jāmāṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pointing near and far — *ei jāmāṭā*, *oi jāmāṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two plurals, sorted by group — bhāirā, jāmāgulo, chokhgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two plurals, sorted by group — *bhāirā*, *jāmāgulo*, *chokhgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an adjective that never changes — lāl jāmā, lāl jāmāgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an adjective that never changes — *lāl jāmā*, *lāl jāmāgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the third person, both rungs — she bhālo, tini bhālo, o bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the third person, both rungs — *she bhālo*, *tini bhālo*, *o bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whose, singular and plural — tār pôribār, āmāder pôribār, tāder bhāirā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whose, singular and plural — *tār pôribār*, *āmāder pôribār*, *tāder bhāirā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole queue, with an owner on the front — āmāder ei lāl jāmāṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole queue, with an owner on the front — *āmāder ei lāl jāmāṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asking about it — eṭā ki?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: asking about it — *eṭā ki?*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending makes every plural pronoun? (-রা.) What replaces it when the pronoun has to own something? (-দের.) Is any Bengali plural pronoun irregular? (No.) And which ending you met four chapters ago does two jobs for exactly the same reason? (গুলো.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

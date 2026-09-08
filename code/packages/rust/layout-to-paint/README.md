@@ -33,6 +33,7 @@ associated type constraint.
 | `border{Side}Width/Color` > 0        | Independent filled edge rectangles for each requested side   |
 | `ext["paint"]["cornerRadius"]`      | `corner_radius` field on the rect                              |
 | `ext["effects"]`                    | One subtree `PaintGroup`/`PaintLayer` with transform, opacity, filters, blend mode, and isolation |
+| `ext["backgrounds"]`                | Ordered gradient definitions, rounded paths, and clipped/repeated image tiles |
 | `Content::Text(tc)`                 | One `PaintGlyphRun` per wrapped line plus decoration `PaintRect`s; alignment (Start/Center/End) via `TextContent.text_align` |
 | `Content::Image(ic)`                | `PaintImage` with `src` unchanged                              |
 
@@ -58,6 +59,9 @@ native font-fallback subruns retain their own bindings in visual paint order.
   is composited once. Shadows use the shared drop-shadow layer filter, the CSS
   adapter currently keeps one shadow from each property, and exact filter
   fidelity follows each paint backend's advertised capabilities.
+- **Background images** — explicit and percentage sizes, positions, and repeat
+  tiling are resolved in shared geometry. Intrinsic `cover`/`contain` image
+  sizing remains host-resource-dependent; gradients fill their painting box.
 - **Host-owned image resources** — shared replaced metadata resolves fit and
   intrinsic-ratio geometry, while URI fetching and decoding remain outside
   this translator.

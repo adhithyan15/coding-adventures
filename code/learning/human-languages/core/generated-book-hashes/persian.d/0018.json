@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:90c325350bb177f4",
+  "lessonIds": [
+    "FA-C18-yazdah",
+    "FA-C18-sizdah",
+    "FA-C18-panzdah",
+    "FA-C18-bist-sad",
+    "FA-C18-practice"
+  ],
+  "tex": "persian/book/chapters/ch18-teens.tex"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "FA-PATH-018",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "FA-C17-shesh",
+    "FA-C17-haft",
+    "FA-C17-hasht",
+    "FA-C17-noh",
+    "FA-C17-dah",
+    "FA-C17-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "FA-EXT-025-COUNT-TEN"
+  ]
+}

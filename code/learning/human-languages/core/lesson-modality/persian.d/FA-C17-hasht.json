@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C17-hasht",
+    "language": "persian",
+    "chapter": 17,
+    "sequence": 780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85ad70e9922f7683"
+  },
+  "findings": []
+}

@@ -1,0 +1,601 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 19,
+  "title": "The Ten Persian Digits",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:e57985cf10aeb573",
+  "lessons": [
+    {
+      "id": "FA-W19-digits-zero-one",
+      "sequence": 870,
+      "title": "۰ ۱ (sefr yek) — two digits, and a direction that reverses",
+      "headword": "۰ ۱",
+      "romanization": "sefr yek",
+      "gloss": "two digits, and a direction that reverses inside the line",
+      "script": "perso-arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:764933aec5fc8bbf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shapes, and the direction",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes, and the direction and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which way does a Persian line run? Say yek."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shapes, and the direction",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "۰ — sefr, zero ۱ — yek, one."
+            },
+            {
+              "kind": "speech",
+              "text": "Persian has its own ten digit signs, and every price ticket, telephone number and page number in Iran is written in them. A reader who can say yek and cannot read ۱ still cannot read a price."
+            },
+            {
+              "kind": "speech",
+              "text": "۰ is a dot, not a ring. Fix that first, because a European eye reads a dot as a decimal point — and Persian's nine is the ring."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part no earlier chapter has had to say: numbers run left to right, inside a line that runs right to left. Ten is ۱۰ — one, then zero, in the European order — while the words around it move the other way. The page changes direction at the number and changes back after it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "۰ — a dot; ۱ — a stroke",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **۰** — a dot; **۱** — a stroke]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "۱۰ — dah, ten, left to right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **۱۰** — *dah*, ten, left to right]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Arabic chart; Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-W19-digits-zero-one-dir",
+              "prompt": "A Persian line runs right to left. Which way do the digits inside it run?",
+              "assesses": [
+                "FA-SCRIPT-DIGITS-LTR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "left to right",
+                "left-to-right",
+                "the other way, left to right"
+              ],
+              "feedback": {
+                "correct": "The number is the one place the direction flips.",
+                "incorrect": "Left to right — ۱۰ is one then zero."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-W19-digits-two-three",
+      "sequence": 880,
+      "title": "۲ ۳ (do se) — one tooth apart",
+      "headword": "۲ ۳",
+      "romanization": "do se",
+      "gloss": "two digits that differ by a single tooth",
+      "script": "perso-arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f032d3970965bdad",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shapes",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ۰ and ۱, then read ۱۰."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "۲ — do, two ۳ — se, three."
+            },
+            {
+              "kind": "speech",
+              "text": "۳ is ۲ with one more tooth. That is the whole difference, and it is small enough that the two have to be written as a pair rather than one at a time — say do and se aloud as the hand makes them and the shapes stop competing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "۲, then ۳ beside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **۲**, then **۳** beside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "۱۲, ۱۳, ۲۳, left to right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **۱۲**, **۱۳**, **۲۳**, left to right]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Arabic chart; Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-W19-digits-two-three-tooth",
+              "prompt": "Write the Persian digit for three, then the digit for two.",
+              "assesses": [
+                "FA-SCRIPT-DIGIT-TWO",
+                "FA-SCRIPT-DIGIT-THREE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "۳ ۲",
+                "۳، ۲",
+                "۳۲"
+              ],
+              "feedback": {
+                "correct": "Three has the extra tooth.",
+                "incorrect": "Three first, then two — three is two plus a tooth."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-W19-digits-four-five-six",
+      "sequence": 890,
+      "title": "۴ ۵ ۶ (chahâr panj shesh) — the three Persian keeps for itself",
+      "headword": "۴ ۵ ۶",
+      "romanization": "chahâr panj shesh",
+      "gloss": "the three digits Persian draws differently from Arabic",
+      "script": "perso-arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ef55e0fc9670bd17",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shapes",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ۲ and ۳, and say which has the extra tooth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "۴ — chahâr, four ۵ — panj, five ۶ — shesh, six."
+            },
+            {
+              "kind": "speech",
+              "text": "These three are the reason this chapter exists as more than a list."
+            },
+            {
+              "kind": "speech",
+              "text": "Seven of the ten digits are drawn the same way in Persian and in Arabic. ۴, ۵ and ۶ are not: Arabic writes those three with quite different shapes. A reader who picked up the digits from an Arabic book will read an Iranian price wrongly at exactly these three places and nowhere else."
+            },
+            {
+              "kind": "speech",
+              "text": "If you drill three of the ten harder than the rest, drill these."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "۴, ۵, ۶, saying chahâr, panj, shesh",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **۴**, **۵**, **۶**, saying *chahâr*, *panj*, *shesh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "۱۴, ۱۵, ۱۶, left to right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **۱۴**, **۱۵**, **۱۶**, left to right]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Arabic chart; Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-W19-digits-four-five-six-arabic",
+              "prompt": "Write the three Persian digits that Arabic draws differently.",
+              "assesses": [
+                "FA-SCRIPT-DIGIT-FOUR",
+                "FA-SCRIPT-DIGIT-FIVE",
+                "FA-SCRIPT-DIGIT-SIX"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "۴ ۵ ۶",
+                "۴، ۵، ۶",
+                "۴۵۶",
+                "four five six"
+              ],
+              "feedback": {
+                "correct": "Four, five and six — and no others.",
+                "incorrect": "۴, ۵ and ۶."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-W19-digits-seven-eight-nine",
+      "sequence": 900,
+      "title": "۷ ۸ ۹ (haft hasht noh) — a mirror pair, and the ring",
+      "headword": "۷ ۸ ۹",
+      "romanization": "haft hasht noh",
+      "gloss": "a mirror pair, a ring with a tail, and the set is closed",
+      "script": "perso-arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ff2f4384c369fe16",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shapes",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ۴, ۵, ۶ — the three Arabic draws differently."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "۷ — haft, seven ۸ — hasht, eight ۹ — noh, nine."
+            },
+            {
+              "kind": "speech",
+              "text": "۷ and ۸ are mirror images of each other, one opening upward and one downward. Write them as a pair, every time, and the mirror stops being a problem — the same trick that worked on ۲ and ۳."
+            },
+            {
+              "kind": "speech",
+              "text": "۹ is a ring with a tail, and this is where a dot-shaped zero pays off. Had ۰ been a ring too, the page would carry two rings and no way to separate them."
+            },
+            {
+              "kind": "speech",
+              "text": "Ten signs, four lessons. The set is closed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "۷ and ۸ as a pair, then ۹",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **۷** and **۸** as a pair, then **۹**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "۰ ۱ (sefr yek) ۲ ۳ (do se) ۴ ۵ ۶ (chahâr panj shesh) ۷ ۸ ۹ (haft hasht noh) (the ten Persian digits) once, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹** once, slowly]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Arabic chart; Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-W19-digits-seven-eight-nine-mirror",
+              "prompt": "Which two Persian digits are mirror images of each other?",
+              "assesses": [
+                "FA-SCRIPT-DIGIT-SEVEN",
+                "FA-SCRIPT-DIGIT-EIGHT"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "۷ and ۸",
+                "seven and eight",
+                "۷ ۸",
+                "haft and hasht"
+              ],
+              "feedback": {
+                "correct": "Write them as a pair and they stop competing.",
+                "incorrect": "Seven and eight — ۷ and ۸."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C19-practice",
+      "sequence": 910,
+      "title": "Payoff — reading the figures",
+      "headword": "۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹",
+      "romanization": "the ten Persian digits",
+      "gloss": "payoff — a price, a telephone number and a page number, read off the page",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96eec003f19d58f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to twenty, then say which way digits run inside a Persian line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read all ten signs shuffled and say each as a Persian word."
+            },
+            {
+              "kind": "speech",
+              "text": "Read ۱۰, ۱۱, ۲۰ and ۱۰۰ and say each — dah, yâzdah, bist, sad."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear ten amounts named and write each in Persian figures."
+            },
+            {
+              "kind": "speech",
+              "text": "Write the ten signs from dictation, out of order, and check ۴, ۵ and ۶ against the models rather than against memory."
+            },
+            {
+              "kind": "speech",
+              "text": "Say what a reader can now do that could not be done four chapters ago: read a price, a page number and a telephone number off an Iranian page."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Arabic chart; Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C19-practice-price",
+              "prompt": "Write a hundred in Persian figures.",
+              "assesses": [
+                "FA-PERFORMANCE-DIGITS-READ"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "۱۰۰",
+                "۱۰۰ sad",
+                "۱۰۰، sad"
+              ],
+              "feedback": {
+                "correct": "One and two zeros, left to right.",
+                "incorrect": "۱ then ۰ then ۰ — the digits run left to right."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

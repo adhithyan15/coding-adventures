@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:27357f4afefd27b1",
+  "lessonIds": [
+    "FA-C16-yek",
+    "FA-C16-do",
+    "FA-C16-se",
+    "FA-C16-chahar",
+    "FA-C16-panj",
+    "FA-C16-practice"
+  ],
+  "tex": "persian/book/chapters/ch16-count-five.tex"
+}

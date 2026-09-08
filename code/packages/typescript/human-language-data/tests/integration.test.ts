@@ -204,7 +204,12 @@ describe("real curriculum", () => {
       // khâhar, pesar, mard, zan, dust onto SPINE-EXCHANGE-NAMES, closing the tranche.
       // 14 -> 15: HL-C233, the track's first script chapter. Persian taught no letters
       // at all before it, in 59 lessons across 14 chapters.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+      // 15 -> 20: HL-C350, the numeral tranche. Persian taught NO numeral at all in 71
+      // lessons -- no age, no price, no telephone number, no time. Chapter 16 teaches
+      // one to five, 17 six to ten with the Iranian s-to-h rule behind haft, 18 the
+      // teens as a rule rather than nine words, 19 the ten Persian digits, and 20 the
+      // ordinals, which cost one ending.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
     expect(
       books.books
         .find((book) => book.language === "urdu")

@@ -3,7 +3,7 @@
   "language": "marwadi",
   "level": "A1",
   "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY EXAMINING OR LANGUAGE BODY. core/exam-levels.json records for marwadi that no suitable complete external pre-A1-to-C2 ladder has been identified, and this project has found none either: Marwadi may have no external syllabus at all, and this file must not be read as inventing one. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT MARWADI: they published a Spanish syllabus and have said nothing whatever about this language. READ THE THREE CLAIMS APART. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, this project's restatement of the A1 inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing here and all it establishes is a LEVEL: what an A1 candidate must be able to handle, asked as a language-neutral demand rather than as a piece of Spanish grammar. (2) THE MARWADI EXPONENTS are editorial throughout and are this project's judgement and nobody else's. Deciding that Spanish's three article points are answered by the single fact that Marwadi has none, that its four copula-and-attribute points land on one hai, that its politeness demand is answered by the enclitic particle saa rather than by a pronoun, and that eight separate past-tense points collapse into one absence -- all of that is chosen here. (3) THE COVERAGE NUMBER is a measure of the corpus against this list. It is not an exam-readiness claim and cannot become one while every scope dimension is partial. THE REGISTER COLUMN WAS MEASURED, NOT IMPORTED, because exam-levels.json's caveat for marwadi is about the missing ladder and says nothing about register. What the measurement found is that this track's frontmatter is UNUSUALLY INFORMATIVE: 39 of 257 lessons declare something other than neutral across six values, where latin and portuguese are uniformly neutral and had to be read entirely from bodies. THE CAVEAT ITSELF IS STALE, AND IN THE TRACK'S FAVOUR, AND IS RECORDED AS STALE RATHER THAN DEFERRED TO -- it says the mapping does not claim that the current STARTER CHAPTER reaches the destination, and the track now has 257 lessons across 31 chapters, an assessment spec, task shapes and four-skill scored practice. MW-A1-REG-04 records that. The rest of the caveat stands. WHAT THIS TRACK DOES DIFFERENTLY, said here because the numbers below do not show it: every item runs HEAR, then BUILD IN THE SCRIPT, then PERFORM ACROSS FOUR SCORED SKILLS, and the practice lessons re-run cumulative lists that GROW -- family four, seven, ten, twelve; shopping three, five, seven; food three, five, seven. Seven lessons in ten are a second, third or fourth pass over material already introduced. That is an expanding-interval retrieval schedule built into the curriculum shape rather than bolted on, and MW-A1-SAU-04 enumerates it. NOT SEARCHED, BY INSTRUCTION: no external search for a Marwadi syllabus was performed for this file; code/learning/human-languages/BACKLOG.d records the sourcing question as settled and directs that it not be repeated per track (HL-C287, HL-C290).",
-  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Marwadi is attributed to DELE, the Instituto Cervantes or the Plan Curricular. EXAM ENVELOPE: ONE EXISTS AND IT IS PROJECT-DEFINED. Like latin/ and persian/ and unlike italian/ and portuguese/, the marwadi/ track ships assessment-spec.md, assessment.json, task-shapes/ and track.json, so a project-internal contract does bound this file. It is a contract and not evidence. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.marwadi -- exam 'Coding Adventures Marwadi Assessment -- project-defined equivalent', basis 'editorial', mapping 'cefr', with the no-external-ladder caveat that MW-A1-REG-04 records as partly stale. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 257 lesson files in code/learning/human-languages/marwadi/lessons/, which introduce 228 distinct atoms between them -- 115 SCRIPT, 76 LEX, 25 PERFORMANCE, 3 DIALOGUE, and single-figure counts of ANSWER, QUESTION, COURTESY, FAREWELL, PHRASE, REGISTER and RESPONSE. All 257 declare variety: central-marwari-devanagari; track.json expands that to contemporary central Marwari in Devanagari, with regional variation named explicitly. NOT SEARCHED, BY INSTRUCTION: no external search for a Marwadi content syllabus was performed for this file. See `about`.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Marwadi is attributed to DELE, the Instituto Cervantes or the Plan Curricular. EXAM ENVELOPE: ONE EXISTS AND IT IS PROJECT-DEFINED. Like latin/ and persian/ and unlike italian/ and portuguese/, the marwadi/ track ships assessment-spec.md, assessment.json, task-shapes/ and track.json, so a project-internal contract does bound this file. It is a contract and not evidence. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.marwadi -- exam 'Coding Adventures Marwadi Assessment -- project-defined equivalent', basis 'editorial', mapping 'cefr', with the no-external-ladder caveat that MW-A1-REG-04 records as partly stale. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 312 lesson files in code/learning/human-languages/marwadi/lessons/, which introduce 272 distinct atoms between them -- 140 SCRIPT, 90 LEX, 30 PERFORMANCE, 3 DIALOGUE, and single-figure counts of ANSWER, QUESTION, COURTESY, FAREWELL, PHRASE, REGISTER and RESPONSE. All 312 declare variety: central-marwari-devanagari; track.json expands that to contemporary central Marwari in Devanagari, with regional variation named explicitly. NOT SEARCHED, BY INSTRUCTION: no external search for a Marwadi content syllabus was performed for this file. See `about`.",
   "anchors": [
     {
       "id": "ES-A1-PROXY",
@@ -397,7 +397,34 @@
       "id": "MW-A1-Q-01",
       "category": "Ginti (quantity and number)",
       "label": "cardinal numerals",
-      "probe": null,
+      "probe": [
+        "MW-LEX-EK-01",
+        "MW-LEX-DO-TWO-01",
+        "MW-LEX-TEEN-01",
+        "MW-LEX-CHAAR-01",
+        "MW-LEX-PAANCH-01",
+        "MW-LEX-CHHA-SIX-01",
+        "MW-LEX-SAAT-01",
+        "MW-LEX-AATH-01",
+        "MW-LEX-NO-NINE-01",
+        "MW-LEX-DAS-01",
+        "MW-LEX-BEES-01",
+        "MW-LEX-SO-01",
+        "MW-SCRIPT-EK-01",
+        "MW-SCRIPT-DO-TWO-01",
+        "MW-SCRIPT-TEEN-01",
+        "MW-SCRIPT-CHAAR-01",
+        "MW-SCRIPT-PAANCH-01",
+        "MW-SCRIPT-CHHA-SIX-01",
+        "MW-SCRIPT-SAAT-01",
+        "MW-SCRIPT-AATH-01",
+        "MW-SCRIPT-NO-NINE-01",
+        "MW-SCRIPT-DAS-01",
+        "MW-SCRIPT-BEES-01",
+        "MW-SCRIPT-SO-01",
+        "MW-PERFORMANCE-COUNT-FIVE-FOUR-SKILL-01",
+        "MW-PERFORMANCE-COUNT-TEN-FOUR-SKILL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -408,7 +435,7 @@
         "A1-NG2-01",
         "A1-NE16-01"
       ],
-      "note": "THE HEADLINE OF THIS FILE, AND NO COVERAGE PERCENTAGE WOULD HAVE FOUND IT. This track's whole curriculum is a market: chapters 26 to 31 teach how much is this?, how much is that altogether?, this is very expensive, make it a little cheaper, what final price will you give? and take the money. It does not teach ONE NUMBER. ek, do, teen, chaar, paanch all return ZERO occurrences in 257 files -- the seventeen raw matches for do are the imperative verb do, give. So a learner can ask a price four different ways and cannot understand the answer, cannot make a counter-offer, and cannot count out the money they have just been told to hand over. Three proxy points land here and every one of them is empty."
+      "note": "CLOSED BY HL-C350, AND THE NOTE IT REPLACED IS WORTH KEEPING IN VIEW: this file's headline used to be that a curriculum whose chapters 26-31 are a market -- how much is this?, how much altogether?, this is very expensive, make it a little cheaper, what final price will you give?, take the money -- taught NO NUMBER AT ALL, and that ek, do, teen, chaar and paanch returned zero across 257 files. Chapters 32-36 teach twelve cardinals: ek, do, teen, chaar, paanch, chha, saat, aath, no, das, bees, so. Each is heard, then written, then scored in four skills, and each has both a LEX and a SCRIPT atom, so the probe names twenty-four word atoms and the two counting payoffs. WHAT IT COST THE HAND: one letter. Every sign in all twelve words was already in the track except independent ए, isolated in MW-W32-e against the े matra it had been writing since chapter 9. That is why this point was affordable and why no per-track reading found it -- the block was never the script. NOT CLOSED, DELIBERATELY: the numbers between ten and twenty. Marwari builds nineteen as ughanis, one short of twenty (the comparative dictionary records ekuncalis, one short of forty, for thirty-nine), so twenty is taught FIRST and the teens wait on four independent vowels and one consonant the track has never taught -- इ for igyaara, अ for atharaa, उ for ughanis, and ळ for solaa. Those are five script lessons, not a numeral gap, and MW-A1-LIP-13 is where they belong."
     },
     {
       "id": "MW-A1-Q-02",
@@ -423,7 +450,7 @@
       "derivedFrom": [
         "A1-Q-02"
       ],
-      "note": "Absent. aakhri (final, last) is taught in chapter 29 and is the only ordering word in the corpus."
+      "note": "STILL ABSENT, and the reason is worth recording because it is NOT the reason it looks like. Marwari's first four ordinals -- pahlo, dujo, tijo, chautho -- need no sign this track has not taught: प ह ल ो, द ू ज ो, त ी ज ो and च ौ थ ो are all in the corpus already, so this is not a script debt and would cost the hand nothing. It was left uncovered by HL-C350 because no citable Marwari-specific source for the ordinal series was found: the Rajasthani numeral list this track cites for the cardinals prints no ordinals, and the comparative dictionary is a cognate list rather than a paradigm. Ordinals are the weakest column in the whole corpus -- twenty tracks enumerate one and eighteen leave it uncovered -- so this is a shared gap, and here it is a SOURCING gap rather than a teaching one. aakhri (final, last) is taught in chapter 29 and remains the only ordering word in the corpus."
     },
     {
       "id": "MW-A1-Q-03",
@@ -3239,7 +3266,19 @@
       "id": "MW-A1-LIP-13",
       "category": "Lipi (script and orthography)",
       "label": "the Devanagari digits",
-      "probe": null,
+      "probe": [
+        "MW-SCRIPT-DIGIT-ZERO-01",
+        "MW-SCRIPT-DIGIT-ONE-01",
+        "MW-SCRIPT-DIGIT-TWO-01",
+        "MW-SCRIPT-DIGIT-THREE-01",
+        "MW-SCRIPT-DIGIT-FOUR-01",
+        "MW-SCRIPT-DIGIT-FIVE-01",
+        "MW-SCRIPT-DIGIT-SIX-01",
+        "MW-SCRIPT-DIGIT-SEVEN-01",
+        "MW-SCRIPT-DIGIT-EIGHT-01",
+        "MW-SCRIPT-DIGIT-NINE-01",
+        "MW-PERFORMANCE-DIGIT-TICKET-FOUR-SKILL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -3248,7 +3287,7 @@
       "derivedFrom": [
         "A1-Q-02"
       ],
-      "note": "The digits have their own signs and the track teaches none of them -- and no Latin digit either. See MW-A1-Q-01: this is the same hole in the script column."
+      "note": "CLOSED BY HL-C350. Chapter 35 teaches all ten signs, three at a time across four writing lessons, each set cashed immediately against the words it writes. This is a READING gap as much as a counting one -- a price ticket, a fare and a form are written in these shapes and not in words -- so the chapter is built around the four that a Latin-trained eye reads wrongly: ४ is taken for an eight, ५ for a four, ७ for a nine and ८ for a letter. Those four are drilled beside ०, ३, ६ and ९, which a Latin eye guesses correctly, and they close alone in MW-R35-script-close. STILL OPEN in the script column, and named here rather than at MW-A1-Q-01 because they are letters: इ, अ, उ and ळ, which the numbers eleven to nineteen need."
     },
     {
       "id": "MW-A1-REG-01",

@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- Support authored table focus and accessible names. Preserve focus in nested
+  controls and return to the table when Enter/Escape removes a cell editor.
+
 - Give opted-in row windows a full-table physical scroll extent using measured,
   React-owned spacers. Preserve native scroll position and bounded realization;
   exclude spacer rows from capacity and selected-cell coordinates.

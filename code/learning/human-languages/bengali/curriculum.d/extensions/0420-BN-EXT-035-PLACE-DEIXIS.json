@@ -1,0 +1,17 @@
+{
+  "id": "BN-EXT-035-PLACE-DEIXIS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say where something is, ask where it is, and say that it is not there.",
+  "prerequisites": [
+    "BN-EXT-034-OBJECT-CASE"
+  ],
+  "lessons": [
+    "BN-W05-tha",
+    "BN-C26-ekhane",
+    "BN-C26-okhane",
+    "BN-C26-kothay",
+    "BN-R26-here-there-where"
+  ]
+}

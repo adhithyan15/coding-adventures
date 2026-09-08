@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C25-tomake",
+    "language": "bengali",
+    "chapter": 36,
+    "sequence": 1860,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cd512996923e76e1"
+  },
+  "findings": []
+}

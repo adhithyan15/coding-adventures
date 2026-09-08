@@ -16,10 +16,9 @@
 //! Format 3i (i=1): [op][rd][op3][rs1][1][simm13:13]     -- sign-extended 13-bit immediate
 //! ```
 //!
-//! This module is a straight transcription of the field tables in
-//! `code/packages/python/sparc-v8-simulator/src/sparc_v8_simulator/{state,simulator}.py`
-//! — see that module's docstring for the full instruction-format
-//! diagram and design rationale.
+//! Constants follow the six-bit field tables in the SPARC Architecture
+//! Manual Version 8. The older Python port is a behavioral oracle for the
+//! rest of the audit, but is not the encoding authority.
 
 // ===========================================================================
 // Top-level `op` field (bits 31:30)
@@ -120,13 +119,13 @@ pub const OP3_SAVE: u32 = 0x3C;
 /// `RESTORE rd, rs1, reg_or_imm` — procedure exit; rotates CWP forward.
 pub const OP3_RESTORE: u32 = 0x3D;
 /// `UMULcc`.
-pub const OP3_UMULCC: u32 = 0x5A;
+pub const OP3_UMULCC: u32 = 0x1A;
 /// `SMULcc`.
-pub const OP3_SMULCC: u32 = 0x5B;
+pub const OP3_SMULCC: u32 = 0x1B;
 /// `UDIVcc`.
-pub const OP3_UDIVCC: u32 = 0x5E;
+pub const OP3_UDIVCC: u32 = 0x1E;
 /// `SDIVcc`.
-pub const OP3_SDIVCC: u32 = 0x5F;
+pub const OP3_SDIVCC: u32 = 0x1F;
 
 // ===========================================================================
 // Format 3 `op3` field (bits 24:19) -- memory family (`op == OP_MEM`)

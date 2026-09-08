@@ -1,0 +1,891 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 33,
+  "title": "More Than One",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:44857e40524038cb",
+  "lessons": [
+    {
+      "id": "BN-C22-animacy",
+      "sequence": 1690,
+      "title": "জীব আর জিনিস (jīb ār jinish) — alive, and not",
+      "headword": "জীব আর জিনিস",
+      "romanization": "jīb ār jinish",
+      "gloss": "living against not-living — the split that decides which plural a Bengali noun takes and which classifier it counts with",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbe4ddc2774de00a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask what is this? Then say this shirt, with both ends."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the ending that turns a noun into the one — -ṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the ending that turns a noun into *the* one — *-ṭā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the split",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every noun you have learned belongs to one of two groups, and Bengali has been waiting to be told which:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "group",
+                "what is in it",
+                "examples from this book"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "group: জীব — living. what is in it: people and animals. examples from this book: ভাই, বোন, বন্ধু.",
+                "group: জিনিস — thing. what is in it: everything else. examples from this book: জামা, চা, জল, নাক."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "This is not decoration. It decides two things that are about to matter:"
+            },
+            {
+              "kind": "speech",
+              "text": "which ending makes it plural — the next two lessons."
+            },
+            {
+              "kind": "speech",
+              "text": "which classifier counts it — you have met one of them already."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish makes the same kind of demand and answers it with gender, which has to be learned word by word because a table has no visible femininity. Bengali's question — is it alive? — can be answered by looking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the borderline, and what to do about it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two warnings, and they are the whole difficulty:"
+            },
+            {
+              "kind": "speech",
+              "text": "Body parts are things. নাক and মুখ belong to a living person and are themselves জিনিস. The test is whether the noun names something alive, not whether it belongs to something alive."
+            },
+            {
+              "kind": "speech",
+              "text": "Respect can move a noun up. A person spoken of warmly takes the living endings even when a plain speaker might not bother. That is the same warmth টি carries, and it runs right through Bengali grammar."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which group — bhāi, bôn, bôndhu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which group — *bhāi*, *bôn*, *bôndhu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which group — jāmā, chā, jôl, nāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which group — *jāmā*, *chā*, *jôl*, *nāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two group names — jīb, jinish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two group names — *jīb*, *jinish*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the tricky one, and why — nāk is জিনিস",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the tricky one, and why — *nāk* is **জিনিস**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What question does Bengali ask about a noun that Spanish answers with gender? (Is it alive?) Which group does নাক belong to, and why? (জিনিস — the test is what the noun names, not what it is attached to.) And what two things does the answer decide? (The plural ending, and the classifier.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C22-ra",
+      "sequence": 1700,
+      "title": "রা (-rā) — more than one, and alive",
+      "headword": "রা",
+      "romanization": "-rā",
+      "gloss": "the living plural — the ending that turns one brother into brothers, and that only living nouns are allowed to take",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc17f72c19994816",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which group is ভাই in, and which is জামা in?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাই — bhāi — brother."
+            },
+            {
+              "kind": "speech",
+              "text": "ভাইরা — bhāirā — brothers."
+            },
+            {
+              "kind": "speech",
+              "text": "বন্ধু — bôndhu — friend."
+            },
+            {
+              "kind": "speech",
+              "text": "বন্ধুরা — bôndhurā — friends."
+            },
+            {
+              "kind": "speech",
+              "text": "Twenty chapters of family and friends, and every one of them has been strictly one person. রা (-rā) on the end makes them many — and it is allowed only on the living group. Put it on a shirt and a Bengali speaker will stop you."
+            },
+            {
+              "kind": "speech",
+              "text": "When the noun ends in a consonant, an এ appears to carry the ending:"
+            },
+            {
+              "kind": "speech",
+              "text": "বোন — bôn — sister."
+            },
+            {
+              "kind": "speech",
+              "text": "বোনেরা — bônerā — sisters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: Bengali does not insist",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English forces the choice on every noun in every sentence: it is brother or brothers, never neutral. Bengali does not. A bare ভাই is happy to mean one brother or several, and the ending goes on only when the plurality is the point."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why the ending has felt absent from this book: it has not been hiding. Bengali has not needed it yet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāi, then bhāirā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāi*, then *bhāirā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôndhu, then bôndhurā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôndhu*, then *bôndhurā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that needs the extra vowel — bôn, then bônerā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that needs the extra vowel — *bôn*, then *bônerā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pointing at them — ei bhāirā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pointing at them — *ei bhāirā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which group of nouns may take রা (-rā)? (The living one.) What appears before it after a consonant? (এ.) And must a Bengali noun be marked plural whenever it is plural? (No — only when it matters.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C22-gulo",
+      "sequence": 1710,
+      "title": "গুলো (-gulo) — more than one, and not alive",
+      "headword": "গুলো",
+      "romanization": "-gulo",
+      "gloss": "the plural for things — the other half of the split, and the ending that finally lets a learner own more than one shirt",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:f2b07bc438442242",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Make ভাই plural. Then try the same ending on জামা and say why it is wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গুলো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জামাগুলো — jāmāgulo — the shirts."
+            },
+            {
+              "kind": "speech",
+              "text": "চোখগুলো — chokhgulo — the eyes."
+            },
+            {
+              "kind": "speech",
+              "text": "The জিনিস half of the split gets its own ending, and it is a longer one. Where রা (-rā) only pluralises, গুলো (-gulo) pluralises and definitises: it means the shirts, the particular ones, not shirts in general."
+            },
+            {
+              "kind": "speech",
+              "text": "So this ending is doing the classifier's job as well as the plural's — which is exactly what you should expect from a language whose singular the is also a stuck-on piece."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the full table, finally",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "group and noun",
+                "one, definite",
+                "more than one"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "group and noun: জীব — ভাই. one, definite: ভাইটি. more than one: ভাইরা.",
+                "group and noun: জিনিস — জামা. one, definite: জামাটা. more than one: জামাগুলো."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read the last column and the split earns itself. Two endings, chosen by one question you can answer by looking, and the whole of Bengali's number system for an A1 learner is in that table."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a careful twin here too — গুলি, standing to গুলো (-gulo) as টি stands to টা. Recognise it; say গুলো (-gulo)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmāgulo — the shirts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmāgulo* — the shirts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two halves back to back — bhāirā, jāmāgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two halves back to back — *bhāirā*, *jāmāgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pointing — ei jāmāgulo, oi jāmāgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pointing — *ei jāmāgulo*, *oi jāmāgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with a colour in front — lāl jāmāgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with a colour in front — *lāl jāmāgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair of eyes — chokhgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair of eyes — *chokhgulo*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which group takes গুলো (-gulo)? (জিনিস — the not-living one.) What does it add beyond plurality? (Definiteness — the shirts.) And what is the careful form? (গুলি.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C22-adj-order",
+      "sequence": 1720,
+      "title": "লাল জামা (lāl jāmā) — a red shirt",
+      "headword": "লাল জামা",
+      "romanization": "lāl jāmā",
+      "gloss": "the adjective stands in front of its noun and never changes shape — a rule this book has used without once stating",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:baa9563ef597e9bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the shirts. Then say red."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: where the adjective goes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লাল জামা — lāl jāmā — a red shirt."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter twenty-six gave you five colours and used every one of them as a sentence on its own — the shirt is red. Not once did a colour stand in front of a noun, which is where an adjective actually lives most of the time."
+            },
+            {
+              "kind": "speech",
+              "text": "It goes in front, and — this is the part worth keeping — it never changes. Not for the group the noun is in, not for how many there are, not for anything:"
+            },
+            {
+              "kind": "speech",
+              "text": "লাল জামা (lāl jāmā) — a red shirt."
+            },
+            {
+              "kind": "speech",
+              "text": "লাল জামাগুলো — the red shirts."
+            },
+            {
+              "kind": "speech",
+              "text": "লাল জামাটা — the red shirt."
+            },
+            {
+              "kind": "speech",
+              "text": "One form of লাল, three phrases. Spanish would have made you write rojo, rojos and roja."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the queue, filled in",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chapter thirty-two laid out a queue and left a slot empty. This is the word that fills it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "slot",
+                "what goes there",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "slot: first. what goes there: pointer. example: এই.",
+                "slot: second. what goes there: number. example: একটা.",
+                "slot: third. what goes there: adjective. example: লাল.",
+                "slot: last. what goes there: noun + ending. example: জামা."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And ভালো, which you have had since chapter three as well and as good, is an adjective like any other and takes the same slot: ভালো বন্ধু — a good friend."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāl jāmā — a red shirt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāl jāmā* — a red shirt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five colours in front of the same noun — lāl, kālo, nīl, shādā, shôbuj jāmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five colours in front of the same noun — *lāl*, *kālo*, *nīl*, *shādā*, *shôbuj jāmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unchanged across number — lāl jāmā, lāl jāmāgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: unchanged across number — *lāl jāmā*, *lāl jāmāgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole queue — ei ekṭā lāl jāmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole queue — *ei ekṭā lāl jāmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhālo bôndhu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhālo bôndhu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which side of the noun does a Bengali adjective sit on? (In front.) Does it change for number or for the noun's group? (No — never.) And which slot of the queue is it? (The third, between the number and the noun.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R22-more-than-one",
+      "sequence": 1730,
+      "title": "More than one",
+      "headword": "রা · গুলো · লাল জামা",
+      "romanization": "-rā · -gulo · lāl jāmā",
+      "gloss": "one question about a noun, two endings that follow from it, and every noun in the book able to be more than one",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30709915e76b24ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One question decides which of two endings a noun takes. What is the question, and what are the two endings?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāirā, bônerā, bôndhurā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāirā*, *bônerā*, *bôndhurā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmāgulo, chokhgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmāgulo*, *chokhgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unchanged in front — lāl jāmā, lāl jāmāgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: unchanged in front — *lāl jāmā*, *lāl jāmāgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the ending that makes a noun the one — -ṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the ending that makes a noun *the* one — *-ṭā*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — the whole book, in the plural",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sort every noun this book owns into its group, then pluralise it the way its group demands. Cold, from memory."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the living ones — bhāirā, bônerā, bôndhurā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the living ones — *bhāirā*, *bônerā*, *bôndhurā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the things — jāmāgulo, kāpôṛgulo, chokhgulo, nākgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the things — *jāmāgulo*, *kāpôṛgulo*, *chokhgulo*, *nākgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two that catch people out, and why — nāk and hridôy are জিনিস",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two that catch people out, and why — *nāk* and *hridôy* are **জিনিস**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the food, definite and plural — bhātgulo, chāgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the food, definite and plural — *bhātgulo*, *chāgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with a colour and a pointer — ei lāl jāmāgulo, oi kālo kāpôṛgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with a colour and a pointer — *ei lāl jāmāgulo*, *oi kālo kāpôṛgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one, another, then all of them — ekṭā jāmā, ārekṭā jāmā, jāmāgulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one, another, then all of them — *ekṭā jāmā*, *ārekṭā jāmā*, *jāmāgulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family, singular and plural — pôribārṭā, then bhāirā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family, singular and plural — *pôribārṭā*, then *bhāirā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asking about a pile of them — eṭā ki?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: asking about a pile of them — *eṭā ki?*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending does a living noun take, and which does a thing take? (রা (-rā) and গুলো (-gulo).) Which of the two also means the? (গুলো (-gulo).) Where does an adjective stand, and does it change? (In front, and no.) And which letter, three lessons before this chapter, made all of it writable? (ট.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

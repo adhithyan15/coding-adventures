@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:358566807a983f74",
+  "lessonIds": [
+    "BN-C21-ei",
+    "BN-C21-oi",
+    "BN-C21-dem-order",
+    "BN-C21-eta",
+    "BN-R21-pointing"
+  ],
+  "tex": "bengali/book/chapters/ch32-pointing-at-things.tex"
+}

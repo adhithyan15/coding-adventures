@@ -1,0 +1,23 @@
+{
+  "chapter": 28,
+  "title": "Undicesimo, Prima e Dopo",
+  "label": "ch:it-ordinali-esimo",
+  "canDo": "I can build any ordinal above ten with -esimo, put two things in order with prima and dopo, and lay out the courses of a meal in sequence.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "IT-C28-practice",
+    "kind": "task",
+    "summary": "The ordinals and prima/dopo used on the same four things, so the difference between naming a place and naming a relation is worked rather than stated.",
+    "assesses": [
+      "IT-GRAMMAR-UNDICESIMO-02",
+      "IT-NOTICE-UNDICESIMO-03",
+      "IT-LEX-PRIMA-02",
+      "IT-ETYMON-PRIMA-03",
+      "IT-LEX-DOPO-02",
+      "IT-ETYMON-DOPO-03",
+      "IT-TASK-C28-ORDINE-02"
+    ]
+  }
+}

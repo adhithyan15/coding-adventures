@@ -80,7 +80,14 @@ jobs:
           set -euo pipefail
           # Emits both themes' TaskApp.tsx into the committed web host and
           # builds the wasm engine beside them.
-          code/programs/mosaic/task-app/scripts/build-web.sh
+          #
+          # Invoked through `bash` rather than executed directly, matching
+          # deploy-engram.yml. The first run of this workflow failed with exit
+          # 126 -- "found but not executable" -- because the script was
+          # committed 100644. The mode is fixed too, but the explicit
+          # interpreter means a future script arriving without the bit does not
+          # break the deploy.
+          bash code/programs/mosaic/task-app/scripts/build-web.sh
           cd code/programs/mosaic/task-app/host/web
           npm install
           npm run build

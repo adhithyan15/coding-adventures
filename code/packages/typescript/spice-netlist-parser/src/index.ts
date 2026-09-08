@@ -496,6 +496,11 @@ interface Statement {
   readonly fields: string[];
 }
 
+interface LogicalCard {
+  readonly lineNumber: number;
+  readonly text: string;
+}
+
 interface SubcktDefinition {
   readonly name: string;
   readonly pins: string[];
@@ -533,31 +538,14 @@ export function parseNetlist(text: string): ParsedNetlist {
   const statements: Statement[] = [];
   const subckts = new Map<string, SubcktDefinition>();
   let currentSubckt: SubcktDefinition | undefined;
-  let title: string | undefined;
-  let sawContent = false;
+  const { title, cards } = berkeleyLogicalCards(text);
 
-  const lines = text.split(/\r?\n/);
-  for (let index = 0; index < lines.length; index++) {
-    const lineNumber = index + 1;
-    const rawLine = lines[index];
-    const stripped = rawLine.trim();
-    if (stripped.length === 0) {
-      continue;
-    }
-    if (stripped.startsWith("*")) {
-      if (!sawContent && title === undefined) {
-        const candidate = stripped.slice(1).trim();
-        title = candidate.length > 0 ? candidate : undefined;
-      }
-      continue;
-    }
-    sawContent = true;
-
-    let fields: string[];
+  let fields: string[];
+  for (const card of cards) {
     try {
-      fields = splitFields(stripInlineComment(rawLine));
+      fields = splitFields(card.text);
     } catch (error) {
-      throw lineError(lineNumber, error);
+      throw lineError(card.lineNumber, error);
     }
     if (fields.length === 0) {
       continue;
@@ -574,25 +562,25 @@ export function parseNetlist(text: string): ParsedNetlist {
         } else if (headLower === ".subckt") {
           throw new NetlistParseError("nested .subckt definitions are not supported");
         } else {
-          currentSubckt.body.push({ lineNumber, fields });
+          currentSubckt.body.push({ lineNumber: card.lineNumber, fields });
         }
         continue;
       }
       if (headLower === ".subckt") {
-        currentSubckt = startSubckt(fields, lineNumber, subckts);
+        currentSubckt = startSubckt(fields, card.lineNumber, subckts);
         continue;
       }
       if (headLower === ".ends") {
         throw new NetlistParseError(".ends without matching .subckt");
       }
     } catch (error) {
-      throw lineError(lineNumber, error);
+      throw lineError(card.lineNumber, error);
     }
 
     if (headLower === ".end") {
       break;
     }
-    statements.push({ lineNumber, fields });
+    statements.push({ lineNumber: card.lineNumber, fields });
   }
 
   if (currentSubckt !== undefined) {
@@ -3284,6 +3272,52 @@ function splitFields(line: string): string[] {
 
 function stripInlineComment(line: string): string {
   return line.split(";", 1)[0];
+}
+
+function berkeleyLogicalCards(text: string): { title: string | undefined; cards: LogicalCard[] } {
+  const cards: LogicalCard[] = [];
+  let pending: LogicalCard | undefined;
+  let title: string | undefined;
+  let sawContent = false;
+
+  for (const [index, rawLine] of text.split(/\r?\n/).entries()) {
+    const lineNumber = index + 1;
+    const stripped = stripInlineComment(rawLine).trim();
+    if (stripped.length === 0) {
+      continue;
+    }
+    if (stripped.startsWith("*")) {
+      if (!sawContent && title === undefined) {
+        const candidate = stripped.slice(1).trim();
+        title = candidate.length > 0 ? candidate : undefined;
+      }
+      continue;
+    }
+    if (stripped.startsWith("+")) {
+      if (pending === undefined) {
+        throw new NetlistParseError(
+          `line ${lineNumber}: SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD: `
+          + "continuation line appears before any logical SPICE card",
+        );
+      }
+      const continuation = stripped.slice(1).trim();
+      if (continuation.length > 0) {
+        pending = { ...pending, text: `${pending.text} ${continuation}` };
+      }
+      continue;
+    }
+
+    sawContent = true;
+    if (pending !== undefined) {
+      cards.push(pending);
+    }
+    pending = { lineNumber, text: stripped };
+  }
+
+  if (pending !== undefined) {
+    cards.push(pending);
+  }
+  return { title, cards };
 }
 
 function lineError(lineNumber: number, error: unknown): NetlistParseError {

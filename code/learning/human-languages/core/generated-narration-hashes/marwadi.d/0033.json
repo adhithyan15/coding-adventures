@@ -1,0 +1,27 @@
+{
+  "language": "marwadi",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:45a1573913a1e7ec",
+  "lessonIds": [
+    "MW-C33-hear-chha",
+    "MW-C33-chha",
+    "MW-C33-hear-saat",
+    "MW-C33-saat",
+    "MW-C33-hear-aath",
+    "MW-C33-aath",
+    "MW-C33-hear-no-nine",
+    "MW-C33-no-nine",
+    "MW-C33-hear-das",
+    "MW-C33-das",
+    "MW-R33-count-recall",
+    "MW-C33-count-ten",
+    "MW-R33-script-close"
+  ],
+  "voiceLessons": 9,
+  "drivablePrefix": 3,
+  "text": "marwadi/narration/ch33.txt",
+  "json": "marwadi/narration/ch33.json",
+  "textHash": "fnv1a64:c37fd177fb601203",
+  "jsonHash": "fnv1a64:92b25cefbfb35667",
+  "findings": []
+}

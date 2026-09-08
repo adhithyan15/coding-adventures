@@ -1,0 +1,16 @@
+{
+  "id": "BN-PATH-034",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "BN-W05-tha",
+    "BN-C26-ekhane",
+    "BN-C26-okhane",
+    "BN-C26-kothay",
+    "BN-R26-here-there-where"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-035-PLACE-DEIXIS"
+  ],
+  "after": []
+}

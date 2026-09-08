@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-031-ORDINALI-AL-DECIMO",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can count in order all the way to tenth in Italian, and say how ottavo and nono each break the shape in a different way.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C27-sesto",
+    "IT-C27-settimo",
+    "IT-C27-ottavo",
+    "IT-C27-nono",
+    "IT-C27-decimo"
+  ]
+}

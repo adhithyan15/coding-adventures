@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R35-script-close",
+    "language": "marwadi",
+    "chapter": 35,
+    "sequence": 3050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16c38cfaf50ea01c"
+  },
+  "findings": []
+}

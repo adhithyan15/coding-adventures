@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:6ffd43824c33906a",
+  "lessonIds": [
+    "MW-R36-count-at-distance",
+    "MW-R36-shopping-numbered",
+    "MW-R36-food-numbered",
+    "MW-R36-transport-numbered",
+    "MW-R36-letters-close",
+    "MW-C36-numbered-exchange",
+    "MW-R36-script-close"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch36.txt",
+  "json": "marwadi/narration/ch36.json",
+  "textHash": "fnv1a64:232ef2ecdb2a20bd",
+  "jsonHash": "fnv1a64:792abba611b4a1ec",
+  "findings": []
+}

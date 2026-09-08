@@ -1,4 +1,12 @@
 {
   "version": 1,
-  "language": "bengali"
+  "language": "bengali",
+  "conceptAliases": {
+    "GRAMMAR-THE": [
+      "BN-GRAM-CLASSIFIER"
+    ],
+    "QUESTION-WHERE": [
+      "BN-LEX-KOTHAY"
+    ]
+  }
 }

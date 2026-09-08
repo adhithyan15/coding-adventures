@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:5d500e981be771fc",
+  "lessonIds": [
+    "BN-W05-tha",
+    "BN-C26-ekhane",
+    "BN-C26-okhane",
+    "BN-C26-kothay",
+    "BN-R26-here-there-where"
+  ],
+  "tex": "bengali/book/chapters/ch37-here-there-and-where.tex"
+}

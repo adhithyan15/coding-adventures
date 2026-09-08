@@ -1,0 +1,21 @@
+{
+  "chapter": 32,
+  "title": "Pointing at Things",
+  "label": "ch:bn-pointing-at-things",
+  "canDo": "I can point at something near me and something across the room, put a pointer and a classifier on the same phrase, and ask what is this?",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R21-pointing",
+    "kind": "speaking",
+    "summary": "The near and far heads arrive together, stack with the classifier at the opposite end of the phrase, and stand alone as এটা — which with the কী of chapter three makes the commonest beginner question in any language sayable for the first time.",
+    "assesses": [
+      "BN-LEX-C21-EI-01",
+      "BN-LEX-C21-OI-01",
+      "BN-GRAMMAR-C21-DEM-ORDER-01",
+      "BN-LEX-C21-ETA-01"
+    ],
+    "note": "এই and ওই both returned zero matches across 139 lessons before this chapter. A learner could not point at anything."
+  }
+}

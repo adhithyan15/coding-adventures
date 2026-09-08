@@ -379,9 +379,24 @@
       "id": "HI-A1-NUM-04",
       "category": "Sankhya-vachak (quantifiers and numerals)",
       "label": "the ordinals to tenth (pahla, dusra, tisra), and the distributive ek ... dusra",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C75-ORDINAL-01",
+        "HI-LEX-C75-ORDINAL-02",
+        "HI-LEX-C75-ORDINAL-03",
+        "HI-LEX-C75-ORDINAL-04",
+        "HI-LEX-C75-ORDINAL-05",
+        "HI-LEX-C75-ORDINAL-06",
+        "HI-GRAMMAR-C75-ORDINAL-07",
+        "HI-LEX-C76-ORDINAL-01",
+        "HI-LEX-C76-ORDINAL-02",
+        "HI-LEX-C76-ORDINAL-03",
+        "HI-LEX-C76-ORDINAL-04",
+        "HI-LEX-C76-ORDINAL-05",
+        "HI-GRAMMAR-C77-ORDER-01",
+        "HI-TASK-C77-ORDER-02"
+      ],
       "derivedFrom": "ES:A1-Q-02, ES:A1-NG2-01, ES:A1-CO-05, ES:A1-NG3-06",
-      "note": "Not one ordinal is introduced, so nothing can be put in sequence -- no first floor, no second platform, no 'one ... the other'."
+      "note": "CLOSED, both halves. The ordinals to tenth are taught one word a lesson in the order Hindi's own construction dictates: FOUR words go their own way (pahla from Sanskrit prathama with no ek in it; dusra and tisra sharing a -sra ending they share with nothing else; chautha with a third ending), the -van rule then arrives at FIVE, and it has exactly one hole -- chhatha, inherited whole from Sanskrit shashtha before the rule existed, which gets a lesson of its own. The distributive ek ... dusra needs no new word at all: dusra was taught with BOTH its senses, second and other, so the construction falls out of vocabulary the learner already has. Every word was checked against the union of Devanagari the track has already shown, and so were the worked examples -- kitab, din, admi, naya and purana are all taught headwords. NOT taught: the ordinal used as a noun, and the -van ending drilled above twenty beyond naming bisvan and sauvan."
     },
     {
       "id": "HI-A1-NUM-05",

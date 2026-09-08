@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:60539f2841a151b7",
+  "lessonIds": [
+    "BN-C23-she",
+    "BN-C23-tini",
+    "BN-C23-o-pron",
+    "BN-C23-tar",
+    "BN-R23-somebody-else"
+  ],
+  "tex": "bengali/book/chapters/ch34-somebody-else.tex"
+}

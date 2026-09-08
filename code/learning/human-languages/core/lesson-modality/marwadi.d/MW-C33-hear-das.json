@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C33-hear-das",
+    "language": "marwadi",
+    "chapter": 33,
+    "sequence": 2800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8c3f6a2d02ea82c"
+  },
+  "findings": []
+}

@@ -263,6 +263,61 @@ memory demand at a time.
 | S255 | `MW-R26-letters-close` | retrieve the nine least-drilled signs alone | independent sign and word dictation |
 | S256 | `MW-C26-counter-exchange` | hold one five-turn exchange at three counters | non-compensatory listening, speaking, reading, and writing |
 | S257 | `MW-R26-script-close` | close **ख** against **क** and every new word | independent sign and word dictation |
+| S258 | `MW-W32-e` | the letter behind a mark you have written since chapter 7 | independent sign dictation |
+| S259 | `MW-C32-hear-ek` | one — the first number this book has ever taught | listening and speaking |
+| S260 | `MW-C32-ek` | one, on the page — the new letter and an old consonant | reading and writing |
+| S261 | `MW-C32-hear-do-two` | two — a word this book already taught with a different job | listening and speaking |
+| S262 | `MW-C32-do-two` | two, on the page — a spelling the hand already owns | reading and writing |
+| S263 | `MW-C32-hear-teen` | three — the long ii the ear already knows from water | listening and speaking |
+| S264 | `MW-C32-teen` | three, on the page — three signs the hand has had for twenty chapters | reading and writing |
+| S265 | `MW-C32-hear-chaar` | four — the plain ch whose breathed partner becomes six | listening and speaking |
+| S266 | `MW-C32-chaar` | four, on the page — written with the very first sign this book taught | reading and writing |
+| S267 | `MW-C32-hear-paanch` | five — the only one of the first five that carries a nasal | listening and speaking |
+| S268 | `MW-C32-paanch` | five, on the page — and the count one to five is complete | reading and writing |
+| S269 | `MW-R32-count-recall` | the five, out of order and at a distance | mixed four-skill recall |
+| S270 | `MW-C32-count-five` | payoff — one to five in listening, speaking, reading, and writing | non-compensatory listening, speaking, reading, and writing |
+| S271 | `MW-R32-script-close` | delayed closure for the letter this chapter added and the two it leaned on | mixed four-skill recall |
+| S272 | `MW-C33-hear-chha` | six — four's opening consonant, with the breath added | listening and speaking |
+| S273 | `MW-C33-chha` | six, on the page — one sign, and a second spelling that ends a word you know | reading and writing |
+| S274 | `MW-C33-hear-saat` | seven — opening on the syllable this whole book opened on | listening and speaking |
+| S275 | `MW-C33-saat` | seven, on the page — three signs from the book's first four chapters | reading and writing |
+| S276 | `MW-C33-hear-aath` | eight — the one number that opens on a standing vowel the hand already had | listening and speaking |
+| S277 | `MW-C33-aath` | eight, on the page — two signs, and neither of them new | reading and writing |
+| S278 | `MW-C33-hear-no-nine` | nine — two sounds, and it rhymes with the two you learned first | listening and speaking |
+| S279 | `MW-C33-no-nine` | nine, on the page — the same two-sign shape as two, with a different consonant | reading and writing |
+| S280 | `MW-C33-hear-das` | ten — the first amount a market actually names | listening and speaking |
+| S281 | `MW-C33-das` | ten, on the page — built out of pieces of two other numbers | reading and writing |
+| S282 | `MW-R33-count-recall` | the second five, shuffled, and the first five brought back with them | mixed four-skill recall |
+| S283 | `MW-C33-count-ten` | payoff — one to ten in listening, speaking, reading, and writing | non-compensatory listening, speaking, reading, and writing |
+| S284 | `MW-R33-script-close` | delayed closure for the three consonants the second five lean on | mixed four-skill recall |
+| S285 | `MW-C34-hear-bees` | twenty — the round number Marwari counts DOWN from | listening and speaking |
+| S286 | `MW-C34-bees` | twenty, on the page — three signs, borrowed from three numbers below it | reading and writing |
+| S287 | `MW-C34-hear-so` | a hundred — the biggest number in this book and the shortest word in it | listening and speaking |
+| S288 | `MW-C34-so` | a hundred, on the page — two signs, and the pair that a mishearing turns into nine | reading and writing |
+| S289 | `MW-C34-hear-price-number` | the price question, and for the first time an answer this book can understand | listening and speaking |
+| S290 | `MW-C34-price-number` | the question and its answer, both on the page, with no new sign | reading and writing |
+| S291 | `MW-C34-hear-counter-offer` | make it ten — the bargaining turn that had no number to put in it | listening and speaking |
+| S292 | `MW-C34-counter-offer` | make it ten, on the page — an old verb with a number in front of it | reading and writing |
+| S293 | `MW-R34-round-recall` | the three amounts a stall actually names, against the twelve behind them | mixed four-skill recall |
+| S294 | `MW-C34-numbered-price` | payoff — ask a price, understand the answer, and name a figure back | non-compensatory listening, speaking, reading, and writing |
+| S295 | `MW-R34-script-close` | delayed closure for the two consonants and one mark the round numbers lean on | mixed four-skill recall |
+| S296 | `MW-W35-digits-zero-one-two` | the first three digit signs, and the head-line they hang from | independent sign dictation |
+| S297 | `MW-C35-read-ten-ticket` | the first price this book can read off a ticket instead of hearing it | mixed four-skill recall |
+| S298 | `MW-W35-digits-three-four-five` | one digit that looks like its Latin cousin, and two that lie about it | independent sign dictation |
+| S299 | `MW-C35-read-five-ticket` | the two trap digits, read against the words they stand for | mixed four-skill recall |
+| S300 | `MW-W35-digits-six-seven-eight` | the other two traps, and the digit that gives no trouble at all | independent sign dictation |
+| S301 | `MW-C35-read-eight-ticket` | a one-digit ticket and a two-digit ticket, read as amounts | mixed four-skill recall |
+| S302 | `MW-W35-digit-nine` | the last digit sign, and the one that closes the set | independent sign dictation |
+| S303 | `MW-C35-read-ticket` | one, two and three figures, read as the three amounts they name | mixed four-skill recall |
+| S304 | `MW-C35-ticket-four` | payoff — read and write a printed price in all four skills | non-compensatory listening, speaking, reading, and writing |
+| S305 | `MW-R35-script-close` | delayed closure for the four digit signs a Latin eye reads wrongly | mixed four-skill recall |
+| S306 | `MW-R36-count-at-distance` | twelve words and ten figures, retrieved four chapters after the first of them | mixed four-skill recall |
+| S307 | `MW-R36-shopping-numbered` | the seven shopping words, each given a price and a counter-offer | mixed four-skill recall |
+| S308 | `MW-R36-food-numbered` | the seven food words, ordered and paid for | mixed four-skill recall |
+| S309 | `MW-R36-transport-numbered` | the five transport words, with a fare named on both sides | mixed four-skill recall |
+| S310 | `MW-R36-letters-close` | the least-drilled signs of this slice, retrieved alone | mixed four-skill recall |
+| S311 | `MW-C36-numbered-exchange` | payoff — the counter exchange with an amount in it, run at three counters | non-compensatory listening, speaking, reading, and writing |
+| S312 | `MW-R36-script-close` | the whole numeral slice, written once more and closed | mixed four-skill recall |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

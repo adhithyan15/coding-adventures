@@ -1,0 +1,18 @@
+{
+  "glyph": "ج",
+  "sound": "j",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ج",
+    "initial": "جـ",
+    "medial": "ـجـ",
+    "final": "ـج"
+  },
+  "components": [
+    "hooked upper head",
+    "deep lower bowl",
+    "one dot BELOW"
+  ],
+  "strokeOrder": [],
+  "notes": "Recognition only for now: the number panj, five, needs it and no Persian lesson yet teaches the hand to make it. Its stroke order is deliberately left empty rather than borrowed from the separately sourced Arabic jeem, because this inventory records Persian-scoped provenance; it enters closure when a Persian-scoped, timestamped demonstration is cited. Shares its dotless body with the ح and خ family."
+}

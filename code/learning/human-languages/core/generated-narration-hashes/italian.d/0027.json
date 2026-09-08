@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:41251cd629daaf58",
+  "lessonIds": [
+    "IT-C27-sesto",
+    "IT-C27-settimo",
+    "IT-C27-ottavo",
+    "IT-C27-nono",
+    "IT-C27-decimo"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "italian/narration/ch27.txt",
+  "json": "italian/narration/ch27.json",
+  "textHash": "fnv1a64:a2657bde77d8ce2c",
+  "jsonHash": "fnv1a64:2f448515d76206c1",
+  "findings": []
+}

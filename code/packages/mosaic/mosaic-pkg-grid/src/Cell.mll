@@ -74,6 +74,7 @@ layout Cell {
       // normally.  When the user hits Enter, onCommit carries
       // the final value to the host's persistence layer.
       HostInput (
+        auto-focus: true ,
         value:    slot: edit-content ,
         onChange: emit: onChange ,
         onCommit: emit: onCommit ,

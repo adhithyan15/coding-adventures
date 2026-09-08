@@ -1,0 +1,17 @@
+{
+  "id": "BN-EXT-033-PLURAL-PRONOUNS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say we, you all and they, and say what belongs to each of those groups.",
+  "prerequisites": [
+    "BN-EXT-032-THIRD-PERSON"
+  ],
+  "lessons": [
+    "BN-C24-amra",
+    "BN-C24-tomra",
+    "BN-C24-tara",
+    "BN-C24-amader",
+    "BN-R24-all-of-us"
+  ]
+}

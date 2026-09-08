@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-030-ORDINALI",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can say first to fifth in Italian with the right ending, read the two courses on an Italian menu, and ask for a quarter of an hour.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C26-primo",
+    "IT-C26-secondo",
+    "IT-C26-terzo",
+    "IT-C26-quarto",
+    "IT-C26-quinto"
+  ]
+}

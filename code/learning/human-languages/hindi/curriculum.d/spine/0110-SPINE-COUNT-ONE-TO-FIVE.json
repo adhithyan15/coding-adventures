@@ -1,7 +1,10 @@
 {
   "segments": [
     "HI-PATH-010",
-    "HI-PATH-022"
+    "HI-PATH-022",
+    "HI-PATH-75-ORDINAL",
+    "HI-PATH-76-ORDINAL",
+    "HI-PATH-77-ORDER"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"

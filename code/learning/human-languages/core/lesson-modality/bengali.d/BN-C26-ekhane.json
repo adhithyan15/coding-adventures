@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C26-ekhane",
+    "language": "bengali",
+    "chapter": 37,
+    "sequence": 1900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63ceb1b7c18fb7ac"
+  },
+  "findings": []
+}

@@ -121,6 +121,8 @@ layout; deterministic real-page visual acceptance; and host-neutral flex,
 grid, positioned/clipped, table, float, fragmented inline-box, and intrinsic
 replaced formatting contexts; scoped generated content and marker boxes; and
 backend-neutral visual effects with transformed hit regions.
+The shared browser path also carries layered gradients/images, painting boxes,
+repeat geometry, and elliptical corner paths through `layout-backgrounds`.
 
 Generated/marker convergence is complete: `layout-generated` owns CSS counter
 scopes and formatting, content evaluation, typed extension metadata, and
@@ -175,6 +177,7 @@ Layer 6 — Platform Paint VMs
 Layer 5 — Layout & Paint Translation
   ├── html-to-layout
   ├── layout-effects
+  ├── layout-backgrounds
   ├── layout-block
   └── layout-to-paint
 

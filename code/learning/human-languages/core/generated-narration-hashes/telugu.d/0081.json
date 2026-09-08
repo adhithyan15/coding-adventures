@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:bf21901be859a69b",
+  "lessonIds": [
+    "TE-C81-first",
+    "TE-C81-second",
+    "TE-C81-third",
+    "TE-C81-fourth",
+    "TE-C81-fifth"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch81.txt",
+  "json": "telugu/narration/ch81.json",
+  "textHash": "fnv1a64:00dd61ddefb42ffb",
+  "jsonHash": "fnv1a64:e66f88104c20d875",
+  "findings": []
+}

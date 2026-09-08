@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C36-numbered-exchange",
+    "language": "marwadi",
+    "chapter": 36,
+    "sequence": 3110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc3f2c72c3462f97"
+  },
+  "findings": []
+}

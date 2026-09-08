@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## [0.7.0]
+
+- Project multiple image and linear/radial gradient layers, per-layer
+  position/size/repeat/origin/clip, and elliptical corner radii into the
+  reusable background contract.
+
+## [0.6.0]
 
 - Project computed opacity, affine transforms and origins, filters, one
   box/text shadow, blend modes, isolation, and uniform border radii into the

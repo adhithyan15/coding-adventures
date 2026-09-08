@@ -1,0 +1,19 @@
+{
+  "id": "MW-EXT-044-NUMBERED-EXCHANGE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can run a six-turn counter exchange in which both sides name an amount, at three different counters, in four separately scored skills.",
+  "prerequisites": [
+    "MW-EXT-043-DIGITS"
+  ],
+  "lessons": [
+    "MW-R36-count-at-distance",
+    "MW-R36-shopping-numbered",
+    "MW-R36-food-numbered",
+    "MW-R36-transport-numbered",
+    "MW-R36-letters-close",
+    "MW-C36-numbered-exchange",
+    "MW-R36-script-close"
+  ]
+}

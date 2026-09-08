@@ -1,0 +1,24 @@
+{
+  "chapter": 27,
+  "title": "Sesto al Decimo",
+  "label": "ch:it-ordinali-al-decimo",
+  "canDo": "I can count in order all the way to tenth in Italian, and say how ottavo and nono each break the shape in a different way.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "IT-C27-decimo",
+    "kind": "production",
+    "summary": "The tenth ordinal closes the inherited list, and the dieci/decimo split repeats the one cinque and quinto showed five lessons earlier.",
+    "assesses": [
+      "IT-LEX-SESTO-02",
+      "IT-LEX-SETTIMO-02",
+      "IT-ETYMON-SETTIMO-03",
+      "IT-LEX-OTTAVO-02",
+      "IT-ETYMON-OTTAVO-03",
+      "IT-LEX-NONO-02",
+      "IT-LEX-DECIMO-02",
+      "IT-NOTICE-DECIMO-03"
+    ]
+  }
+}

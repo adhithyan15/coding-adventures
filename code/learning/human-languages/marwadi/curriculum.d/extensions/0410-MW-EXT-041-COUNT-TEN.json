@@ -1,0 +1,25 @@
+{
+  "id": "MW-EXT-041-COUNT-TEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can hear, say, read, and write every cardinal number from one to ten, shuffled.",
+  "prerequisites": [
+    "MW-EXT-040-COUNT-FIVE"
+  ],
+  "lessons": [
+    "MW-C33-hear-chha",
+    "MW-C33-chha",
+    "MW-C33-hear-saat",
+    "MW-C33-saat",
+    "MW-C33-hear-aath",
+    "MW-C33-aath",
+    "MW-C33-hear-no-nine",
+    "MW-C33-no-nine",
+    "MW-C33-hear-das",
+    "MW-C33-das",
+    "MW-R33-count-recall",
+    "MW-C33-count-ten",
+    "MW-R33-script-close"
+  ]
+}

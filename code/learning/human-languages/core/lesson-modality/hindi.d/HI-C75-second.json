@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C75-second",
+    "language": "hindi",
+    "chapter": 82,
+    "sequence": 3170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f65e1e7d76d49337"
+  },
+  "findings": []
+}

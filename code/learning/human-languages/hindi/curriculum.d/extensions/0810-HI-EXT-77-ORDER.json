@@ -1,0 +1,11 @@
+{
+  "id": "HI-EXT-77-ORDER",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can say one thing and the other with ek and dusra, and tell that apart from naming a thing's place in a line.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C77-one-other",
+    "HI-C77-practice"
+  ]
+}

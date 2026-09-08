@@ -1,0 +1,26 @@
+{
+  "id": "MW-EXT-040-COUNT-FIVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can hear, say, read, and write the cardinal numbers one to five in four separately scored skills.",
+  "prerequisites": [
+    "MW-EXT-039-COUNTER-EXCHANGE"
+  ],
+  "lessons": [
+    "MW-W32-e",
+    "MW-C32-hear-ek",
+    "MW-C32-ek",
+    "MW-C32-hear-do-two",
+    "MW-C32-do-two",
+    "MW-C32-hear-teen",
+    "MW-C32-teen",
+    "MW-C32-hear-chaar",
+    "MW-C32-chaar",
+    "MW-C32-hear-paanch",
+    "MW-C32-paanch",
+    "MW-R32-count-recall",
+    "MW-C32-count-five",
+    "MW-R32-script-close"
+  ]
+}

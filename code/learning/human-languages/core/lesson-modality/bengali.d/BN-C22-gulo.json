@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C22-gulo",
+    "language": "bengali",
+    "chapter": 33,
+    "sequence": 1710,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f2b07bc438442242"
+  },
+  "findings": []
+}

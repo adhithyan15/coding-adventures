@@ -1,0 +1,12 @@
+{
+  "language": "persian",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:c71c9b86cac58455",
+  "lessonIds": [
+    "FA-C20-avval",
+    "FA-C20-dovvom-sevvom",
+    "FA-C20-chaharom",
+    "FA-C20-practice"
+  ],
+  "tex": "persian/book/chapters/ch20-ordinals.tex"
+}

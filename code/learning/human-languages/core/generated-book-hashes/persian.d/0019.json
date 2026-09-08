@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:83d8bd1c5dc0f71c",
+  "lessonIds": [
+    "FA-W19-digits-zero-one",
+    "FA-W19-digits-two-three",
+    "FA-W19-digits-four-five-six",
+    "FA-W19-digits-seven-eight-nine",
+    "FA-C19-practice"
+  ],
+  "tex": "persian/book/chapters/ch19-digits.tex"
+}

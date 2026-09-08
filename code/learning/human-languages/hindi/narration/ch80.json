@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "The Eating House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c1dbffce78546757",
+  "sourceHash": "fnv1a64:55798bd2b76cd145",
   "lessons": [
     {
       "id": "HI-C73-eating-house",
@@ -567,16 +567,16 @@
       "id": "HI-C73-drink",
       "sequence": 3100,
       "title": "पीना (pīnā) — to drink",
-      "headword": "पीना",
-      "romanization": "pīnā",
-      "gloss": "to drink",
+      "headword": "पीना / पीता / खाना / खाता",
+      "romanization": "pīnā / pītā / khānā / khātā",
+      "gloss": "to drink / masculine present form / to eat / masculine present form",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5f2decd8b765748",
+      "sourceHash": "fnv1a64:aebaa374b94f0a87",
       "notice": null,
       "blocks": [
         {
@@ -615,7 +615,7 @@
             },
             {
               "kind": "speech",
-              "text": "खाना — food, and to eat. पीना (pīnā) — to drink."
+              "text": "खाना — food, and to eat. पीना, pīnā — to drink."
             },
             {
               "kind": "speech",
@@ -630,7 +630,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Five: होटल (hoṭal), नाश्ता (nāshtā), बिल, वेटर (veṭar), पीना (pīnā). A place, a meal, a bill, the person who brings it, and the two doing words that made you come in."
+              "text": "Five: होटल (hoṭal), नाश्ता (nāshtā), बिल, वेटर (veṭar), पीना, pīnā. A place, a meal, a bill, the person who brings it, and the two doing words that made you come in."
             }
           ]
         },
@@ -675,11 +675,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "पीना (pīnā), then say all five of this chapter in order",
+              "instruction": "पीना, then say pīnā and all five of this chapter in order",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: पीना, then say all five of this chapter in order]"
+              "source": "[YOU WRITE: **पीना**, then say *pīnā* and all five of this chapter in order]"
             }
           ]
         },
@@ -696,7 +696,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does पीना (pīnā) mean? (\"to drink\".) What two things can खाना mean? (\"food\", and \"to eat\".)"
+              "text": "What does पीना, pīnā, mean? (\"to drink\".) What two things can खाना mean? (\"food\", and \"to eat\".)"
             }
           ]
         }

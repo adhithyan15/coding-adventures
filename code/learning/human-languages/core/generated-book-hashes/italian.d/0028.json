@@ -1,0 +1,12 @@
+{
+  "language": "italian",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:649868df317c7301",
+  "lessonIds": [
+    "IT-C28-undicesimo",
+    "IT-C28-prima",
+    "IT-C28-dopo",
+    "IT-C28-practice"
+  ],
+  "tex": "italian/book/chapters/ch28-ordinali-esimo.tex"
+}

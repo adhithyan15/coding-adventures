@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:1bc3c9b78a6f1dce",
+  "lessonIds": [
+    "BN-C24-amra",
+    "BN-C24-tomra",
+    "BN-C24-tara",
+    "BN-C24-amader",
+    "BN-R24-all-of-us"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "bengali/narration/ch35.txt",
+  "json": "bengali/narration/ch35.json",
+  "textHash": "fnv1a64:110f7313d8761f74",
+  "jsonHash": "fnv1a64:b931bb9f8eff48d1",
+  "findings": []
+}

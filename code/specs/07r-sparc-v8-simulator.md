@@ -221,12 +221,12 @@ Branch target: `PC + sign_extend(disp22) * 4`
 | 0x24 | MULScc   | ✓   | One step of signed multiply (Y:rd shift)          |
 | 0x0A | UMUL     |     | Y:rd = unsigned(rs1) × unsigned(rs2)              |
 | 0x0B | SMUL     |     | Y:rd = signed(rs1) × signed(rs2)                  |
-| 0x5A | UMULcc   | ✓   | Y:rd = unsigned(rs1) × unsigned(rs2); update cc   |
-| 0x5B | SMULcc   | ✓   | Y:rd = signed(rs1) × signed(rs2); update cc       |
+| 0x1A | UMULcc   | ✓   | Y:rd = unsigned(rs1) × unsigned(rs2); update cc   |
+| 0x1B | SMULcc   | ✓   | Y:rd = signed(rs1) × signed(rs2); update cc       |
 | 0x0E | UDIV     |     | rd = (Y:rs1) / unsigned(rs2) (64÷32 → 32)         |
 | 0x0F | SDIV     |     | rd = (Y:rs1) / signed(rs2)                        |
-| 0x5E | UDIVcc   | ✓   | Same as UDIV, update cc                           |
-| 0x5F | SDIVcc   | ✓   | Same as SDIV, update cc                           |
+| 0x1E | UDIVcc   | ✓   | Same as UDIV; N/Z from quotient, V on overflow    |
+| 0x1F | SDIVcc   | ✓   | Same as SDIV; N/Z from quotient, V on overflow    |
 
 **Ticc — Trap on integer condition (op3=0x3A):**
 Used for HALT sentinel.  `ta 0` (trap always, software trap 0) = 0x91D02000.

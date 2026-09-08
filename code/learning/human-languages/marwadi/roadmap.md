@@ -91,14 +91,29 @@ to show what closing that gap looks like. Its `SCRIPT` atoms moved from a mean
 of 7.59 reviews to 9.81, above its own `LEX` atoms at 9.64, and the
 least-drilled single sign went from three reviews to six.
 
-What the transaction still cannot do sets the next slice's shape. Nothing here
-understands a number, so no amount a seller names can be read; refusing a final
-price and walking away, thanking somebody for doing what you asked, and asking
-again more softly are untaught, and so are the earlier debts -- the contrasting
-no response before a complete yes/no exchange, okay, casual gratitude, a
-you're-welcome response, and a full request for water. The binding constraint
-remains the script rather than the vocabulary: **झ, ञ, ढ, ध, फ, ष, ळ**, the
-independent vowels other than **आ** and **ई**, and **ृ** are still untaught, so
-candidate sentences have to be checked against the taught set before they are
-scheduled. The digits are untaught as well, which is what puts numbers -- and
-therefore a priced answer -- out of reach for now.
+What the transaction could not do set the next slice's shape, and Chapters
+32--36 are that slice. Nothing in the transaction understood a number, so no
+amount a seller named could be read. Twelve cardinals and the ten Devanagari
+digits now close that, at a cost to the hand of ONE letter: independent **ए**,
+which **एक** needs and nothing else in the run does. The seller's **बीस।** and
+the buyer's **दस करो।** turn the five-turn exchange of Chapter 31 into a
+six-turn one with a figure on each side, and the strict report stays all-zero at
+312 lessons.
+
+Twenty is taught and the teens are not, and that ordering is the language's
+rather than the author's: Marwari counts DOWN to a round number -- *ughaṇīs*,
+one short of twenty -- so **बीस** has to exist first. What the teens now wait on
+is five script lessons and nothing else: **इ** for *igyārā*, **अ** for
+*aṭhārā*, **उ** for *ughaṇīs*, and **ळ** for *soḷā*. Ordinals wait on a source
+rather than a sign -- *pahlo, dūjo, tījo, chautho* are writable today.
+
+The rest of the earlier debt is unchanged and now matters more, not less.
+Refusing a final price and walking away is still untaught, and a course that can
+name a price and cannot decline one is a bargaining course with half a
+bargain: **the track still has no word for no.** Thanking somebody for doing
+what you asked, asking again more softly, the contrasting no response before a
+complete yes/no exchange, okay, casual gratitude, a you're-welcome response, and
+a full request for water all remain. The binding constraint remains the script
+rather than the vocabulary: **झ, ञ, ढ, ध, फ, ष, ळ**, the independent vowels
+other than **आ**, **ई** and **ए**, and **ृ** are still untaught, so candidate
+sentences have to be checked against the taught set before they are scheduled.

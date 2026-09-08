@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:b5e6dfe94f8be9bd",
+  "lessonIds": [
+    "MW-C34-hear-bees",
+    "MW-C34-bees",
+    "MW-C34-hear-so",
+    "MW-C34-so",
+    "MW-C34-hear-price-number",
+    "MW-C34-price-number",
+    "MW-C34-hear-counter-offer",
+    "MW-C34-counter-offer",
+    "MW-R34-round-recall",
+    "MW-C34-numbered-price",
+    "MW-R34-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch34-numbered-price.tex"
+}
