@@ -21,7 +21,7 @@ it("pins Russian lesson-content budgets", () =>
     // of five lessons each. The single new culture claim is that простите is
     // the heavier of the two apologies -- a fact about when a Russian reaches
     // for which word, which is a claim about people rather than about grammar.
-    lessons: 123,
+    lessons: 142,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

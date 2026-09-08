@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:416417f135f2e6bb",
+  "lessonIds": [
+    "RU-C26-pervyy",
+    "RU-C26-vtoroy-tretiy",
+    "RU-W26-ordinal-hyphen",
+    "RU-C26-practice",
+    "RU-R26-close"
+  ],
+  "tex": "russian/book/chapters/ch26-ordinals.tex"
+}

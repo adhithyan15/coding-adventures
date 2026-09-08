@@ -1,0 +1,16 @@
+{
+  "id": "RU-PATH-028",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "RU-C26-pervyy",
+    "RU-C26-vtoroy-tretiy",
+    "RU-W26-ordinal-hyphen",
+    "RU-C26-practice",
+    "RU-R26-close"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "RU-EXT-033-ORDINALS"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "RU-EXT-031-COUNT-TEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can count aloud from one to ten in Russian.",
+  "prerequisites": [
+    "RU-EXT-030-COUNT-FIVE"
+  ],
+  "lessons": [
+    "RU-C24-shest",
+    "RU-C24-sem",
+    "RU-C24-vosem",
+    "RU-C24-devyat",
+    "RU-C24-desyat",
+    "RU-C24-practice"
+  ]
+}

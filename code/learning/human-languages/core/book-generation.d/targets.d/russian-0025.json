@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 25,
+  "output": "russian/book/chapters/ch25-round-amounts.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

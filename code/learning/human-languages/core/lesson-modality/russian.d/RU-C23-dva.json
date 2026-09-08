@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C23-dva",
+    "language": "russian",
+    "chapter": 23,
+    "sequence": 1150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30bff7057db4be0b"
+  },
+  "findings": []
+}

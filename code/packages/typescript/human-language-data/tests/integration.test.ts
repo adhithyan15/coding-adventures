@@ -267,7 +267,12 @@ describe("real curriculum", () => {
       // verb; 21 is the repair kit the track had none of; 22 is the question
       // family and который. All seven are generated, all seven are Cyrillic,
       // and none of them needed a letter the track had not already taught.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
+      // 22 -> 26: HL-C350, the numeral tranche. Russian held exactly ONE numeral --
+      // odin, and it arrived as half of the odin ... drugoy joining pattern rather
+      // than as a number -- so the track could ask skolko and understand no answer.
+      // Chapters 23-24 teach one to ten, 25 twenty and a hundred with the
+      // centum/satem split the hundred names, and 26 the ordinals said and written.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]);
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

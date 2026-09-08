@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:03d6dc6b127541e0",
+  "lessonIds": [
+    "RU-C24-shest",
+    "RU-C24-sem",
+    "RU-C24-vosem",
+    "RU-C24-devyat",
+    "RU-C24-desyat",
+    "RU-C24-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch24.txt",
+  "json": "russian/narration/ch24.json",
+  "textHash": "fnv1a64:85d2256d70a9e51f",
+  "jsonHash": "fnv1a64:f7ce814603b87b58",
+  "findings": []
+}
