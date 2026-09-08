@@ -5803,3 +5803,14 @@ and existing u4/u8 result narrowing. A real-Erlang regression covers all five
 arithmetic operations with immediate/immediate and mixed register/immediate
 sources, including negative values (15 executions). Remaining COBOL programs
 have not been promoted. The matrix declares 410 COBOL cells across 58 rows.
+
+
+### COBOL control and rounding on BEAM (VM-040)
+
+Four more COBOL programs execute on real BEAM: IF/ELSE, rounded division,
+PERFORM TIMES and COMPUTE precedence. Integer comparisons and mov accept
+literal operands through the same checked conversion as arithmetic. A runtime
+regression exercises all six comparisons with less/equal/greater values and
+three literal/register combinations, including positive and negative literal
+moves (54 executions). Eight of 58 COBOL rows now declare BEAM, for 414 cells.
+Remaining COBOL features still require individual execution proofs.
