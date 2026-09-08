@@ -1,0 +1,8 @@
+[package]
+name = "riscv-rv64i-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked RISC-V RV64I plus M functional simulator"
+license = "MIT"
+
+[dependencies]

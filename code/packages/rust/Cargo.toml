@@ -402,6 +402,7 @@ members = [
     "r-runtime",
     "r-vector",
     "riscv-gatelevel",
+    "riscv-rv64i-simulator",
     "riscv-simulator",
     "x86-64-gatelevel",
     "x86-simulator",

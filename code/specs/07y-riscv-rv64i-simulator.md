@@ -227,18 +227,20 @@ Overflow (INT64_MIN / -1): DIV→INT64_MIN, REM→0.
 
 | imm[11:0] | Mnemonic | Effect |
 |-----------|----------|--------|
-| 000000000000 | ECALL  | Halt (treated as halt sentinel) |
+| 000000000000 | ECALL  | Architectural halt |
 | 000000000001 | EBREAK | Halt |
 
-All other CSR instructions are NOP in this simulator.
+All other SYSTEM and CSR encodings are outside this cell and fail closed as
+unknown instructions in the normative Rust implementation.
 
 ---
 
 ## Halt Sentinel
 
 A 32-bit zero word (`0x00000000`) fetched at PC causes an immediate halt.
-This is the `ECALL` encoding with all fields zeroed, which is architecturally
-invalid and unambiguously identifies the halt condition.
+This is an architecturally invalid 32-bit encoding, distinct from ECALL
+(`0x00000073`) and EBREAK (`0x00100073`). The Rust trace records the three halt
+paths separately as `zero-halt`, `ecall`, and `ebreak`.
 
 ---
 
@@ -248,7 +250,8 @@ invalid and unambiguously identifies the halt condition.
 |----------|-------|
 | Size | 65 536 bytes (64 KiB) |
 | Layout | Little-endian |
-| Wrapping | All addresses masked with `0xFFFF` |
+| Checked bounds | Fetches and data operations must fit wholly inside 64 KiB |
+| Alignment | PC and installed origin are 4-byte aligned; 16/32/64-bit data accesses use natural alignment |
 
 ---
 
@@ -265,34 +268,39 @@ invalid and unambiguously identifies the halt condition.
 
 ---
 
-## SIM00 Protocol
+## Checked lifecycle
 
-The simulator implements the standard SIM00 `Simulator[State]` protocol:
+The normative Rust simulator provides this deterministic lifecycle:
 
 | Method | Behaviour |
 |--------|-----------|
 | `reset()` | Zero all registers and memory; set SP=0xFFF8; PC=0 |
-| `load(program: bytes)` | Reset then copy program bytes to memory[0..] |
-| `step()` | Execute one instruction; return `StepTrace` |
-| `execute(program, max_steps=100_000)` | Load and run until halt or limit |
-| `get_state()` | Return frozen `RV64IState` snapshot |
-| `set_input_port(port, value)` | Stub (no I/O model) |
-| `get_output_port(port)` | Stub → returns 0 |
-| `interrupt(vector)` | Stub |
-| `nmi()` | Stub |
+| `load_checked(program)` | Validate, reset, and install at address zero |
+| `load_at_checked(program, origin)` | Validate, reset, install, and record the exact origin/range |
+| `restore(snapshot)` | Validate the entire snapshot before atomically replacing state |
+| `read/write_register`, `read/write_byte` | Checked direct architectural access; x0 writes are discarded |
+| `step_checked()` | Execute one transition atomically and return a complete before/after trace |
+| `run_checked(max_steps)` | Run transactionally until halt; faults or exhaustion restore pre-run state |
+| `get_state()` | Return an owned immutable-by-convention snapshot |
+
+The original Python package retains its compatibility SIM00 surface. The Rust
+boundary above is normative for checked lifecycle and fault behavior.
 
 ---
 
-## StepTrace
+## Step trace
 
-`StepTrace` is a locally defined frozen dataclass (not from `simulator_protocol`):
+Every successful Rust step records the fetched word and full state boundary:
 
-```python
-@dataclass(frozen=True)
-class StepTrace:
-    pc_before: int
-    pc_after:  int
-    halted:    bool
+```rust
+pub struct Rv64IStepTrace {
+    pub pc_before: u64,
+    pub pc_after: u64,
+    pub raw: u32,
+    pub mnemonic: &'static str,
+    pub state_before: Rv64IState,
+    pub state_after: Rv64IState,
+}
 ```
 
 ---
@@ -305,8 +313,10 @@ This simulator targets **behavioral correctness** for compiler testing:
 - M extension (integer multiply/divide, 64-bit and word variants)
 - No floating-point (F/D), no atomics (A), no compressed (C)
 - No privilege modes, CSRs, or MMU
-- FENCE is a NOP
+- FENCE and FENCE.I are ordering NOPs
 - ECALL/EBREAK halt the simulator
+- Reserved and unsupported encodings fail closed
+- Fetch, branch/jump targets, and data accesses are checked and never wrap
 
 ---
 
@@ -329,3 +339,9 @@ tests/
     ├── test_protocol.py
     └── test_instructions.py
 ```
+
+The completed checked implementation is in
+`code/packages/rust/riscv-rv64i-simulator/`. Its structured encoders and nine
+lifecycle/fault and encoder suites are joined by a reproducible 364-vector Python
+full-state corpus covering every supported decode family. All 14 Rust test
+functions pass with 97.09% package line coverage (700/721).
