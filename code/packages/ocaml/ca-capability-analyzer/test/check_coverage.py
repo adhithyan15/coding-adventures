@@ -14,9 +14,12 @@ def source_percentage(summary: str, source: str) -> float:
         normalized_line = line.replace("\\", "/")
         if normalized_source not in normalized_line:
             continue
-        percentages = re.findall(r"\(([0-9]+(?:\.[0-9]+)?)%\)", line)
-        if percentages:
-            return float(percentages[-1])
+        parenthesized = re.findall(r"\(([0-9]+(?:\.[0-9]+)?)%\)", line)
+        if parenthesized:
+            return float(parenthesized[-1])
+        per_file = re.match(r"\s*([0-9]+(?:\.[0-9]+)?)\s+%\s+", line)
+        if per_file:
+            return float(per_file.group(1))
     raise ValueError(f"coverage summary has no percentage for {source}")
 
 

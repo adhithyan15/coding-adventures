@@ -101,6 +101,21 @@ class OcamlCapabilityGateTest(unittest.TestCase):
                 summary, "src/coding_adventures_capability_analyzer.ml", 95.01
             )
 
+    def test_numeric_coverage_gate_accepts_bisect_per_file_output(self) -> None:
+        gate = load_coverage_gate()
+        summary = (
+            " 97.25 %   389/400   src/coding_adventures_capability_analyzer.ml\n"
+            "100.00 %     8/8     bin/main.ml\n"
+            " 97.31 %   397/408   Project coverage\n"
+        )
+        self.assertEqual(
+            gate.source_percentage(
+                summary, "src/coding_adventures_capability_analyzer.ml"
+            ),
+            97.25,
+        )
+        self.assertEqual(gate.source_percentage(summary, "bin/main.ml"), 100.0)
+
     def test_coverage_command_aggregates_every_process_file(self) -> None:
         gate = load_coverage_gate()
         with tempfile.TemporaryDirectory() as directory:
