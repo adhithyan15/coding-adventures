@@ -84,7 +84,7 @@ Warm-up.
 This one is not a verb. It is a noun with a verb attached — and once you spot the join, you can build hundreds more.
 
 The word, taken apart: मदद करना.
-मदद (madad) is a noun: "help, aid." On its own it does nothing. Bolt करना (karnā, "to do") on the end and you have the verb: मदद करना (madad karnā), literally "to do help."
+मदद (madad) is a noun: "help, aid." On its own it does nothing. Bolt करना (karnā, "to do") on the end and you have the verb मदद करना, madad karnā — literally "to do help."
 Only करना ever conjugates. The noun sits still:
 मैं मदद करता हूँ (m.) / मैं मदद करती हूँ (f.) — "I help."
 आप मदद करते हैं — "you (resp.) help."

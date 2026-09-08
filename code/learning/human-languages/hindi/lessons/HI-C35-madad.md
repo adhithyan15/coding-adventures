@@ -8,9 +8,9 @@ spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 920
 chapter: 35
 type: word
-headword: मदद करना
-gloss: to help — a noun plus करना, which is how Hindi turns almost anything into a verb
-romanization: "madad karnā"
+headword: मदद करना / मदद करता / मदद करती / मदद करते
+gloss: to help / masculine, feminine, and respectful-plural present forms — a noun plus करना, which is how Hindi turns almost anything into a verb
+romanization: "madad karnā / madad kartā / madad kartī / madad karte"
 concept_tag: VERB-HELP
 prerequisites: [HI-C35-puchna, HI-C09-maaf-kijiye, HI-C05-karna]
 sounds: [dental-da, dental-ma]
@@ -44,8 +44,8 @@ you spot the join, you can build hundreds more.
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C35-MADAD-01]; assesses=[HI-CONCEPT-C09-MAAF-KIJIYE-01] -->
 
 **मदद** (*madad*) is a **noun**: "**help, aid**." On its own it does nothing.
-Bolt **करना** (*karnā*, "to do") on the end and you have the verb: **मदद करना**,
-literally "**to do help**."
+Bolt **करना** (*karnā*, "to do") on the end and you have the verb **मदद करना**,
+*madad karnā* — literally "**to do help**."
 
 Only **करना** ever conjugates. The noun sits still:
 
