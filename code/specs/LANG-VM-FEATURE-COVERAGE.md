@@ -50,7 +50,7 @@ capstone, not a tenth universal backend.
 | [FLOW-MATIC lowerer](../packages/rust/flow-matic-iir-compiler/src/lib.rs) | MOVE, COMPARE/IF/OTHERWISE, GO TO/JUMP, STOP, READ-ITEM/EOF and WRITE-ITEM. Four unified rows prove scalar move/output, a taken EQUAL, false LESS/GREATER reaching OTHERWISE, and a jump chain. [JIT stream tests](../packages/rust/flow-matic-iir-compiler/tests/jit_e2e.rs) run read/process/write to EOF through custom `input_more`/`input_i64` builtins. | VM-037 adds terminating, output-discriminating control-flow rows; positive LESS/GREATER on nonzero input still requires VM-039. VM-039 provides portable EOF-aware input before promoting record streams to code-generation columns. TRANSFER and tape control are clean frontend rejections, not secretly implemented file I/O. |
 | [COBOL lowerer](../packages/rust/cobol-iir-compiler/src/lib.rs) | PICTURE/scaled arithmetic, DISPLAY/MOVE, condition names, IF/EVALUATE, PERFORM/GOTO, COMPUTE/power, size errors and signed/alphanumeric operations occur in the matrix, now expanded to 58 rows with ASCII reference modification: literal/computed bounds, comparisons, MOVE fitting and invalid-bound traps, plus STRING SIZE full-width copying, truncation and untouched tails, STRING delimiters and UNSTRING field fitting/empty fields/exhaustion, pointer/overflow branches, a self-referential `STRING` proof (VM-057), and INSPECT TALLYING/REPLACING BEFORE/AFTER region proofs including the not-found asymmetry and BEFORE+AFTER used together across one combined statement's independently-regioned halves (VM-047c). The [JIT/oracle suite](../packages/rust/cobol-iir-compiler/tests/jit_e2e.rs) additionally exercises reference modification, STRING, UNSTRING and INSPECT families. | VM-045 adds reference-modification rows; VM-046a/b/c add STRING SIZE, delimiter/splitting and pointer/overflow rows; VM-047a adds ALL/CHARACTERS/LEADING tallying proofs; VM-047b adds replacement including first-match/non-rechaining; VM-047c adds BEFORE/AFTER region proofs. A single delimiter phrase carrying BOTH `BEFORE` and `AFTER` together (the ISO two-delimiter intersection) parses but currently reads only the first region clause on both the oracle and the compiler (VM-D027); genuine intersection support is a separate follow-up. Validator acceptance is insufficient. Existing byte/character and category restrictions must remain explicit. |
 | [McCarthy lowerer](../packages/rust/mccarthy-lisp-iir-compiler/src/lib.rs) | Quote/cons/CAR/CDR/ATOM/EQ/COND, direct and higher-order lambdas, captured variables, LABEL recursion and closure values. [Capstone](../packages/rust/lang-aot/tests/conformance.rs) tests 19 integer-result programs; [frontend run tests](../packages/rust/mccarthy-lisp-iir-compiler/tests/run_e2e.rs), [JIT](../packages/rust/lang-aot/tests/jit_mccarthy.rs) and dedicated per-backend lambda suites cover further shapes. | VM-036 enables the native capstone on Linux/macOS/Windows, with a required native-only Windows CI run. The capstone is not a proof for every closure shape; preserve dedicated closure suites in normal BUILD. |
-| [Macsyma lowerer](../packages/rust/macsyma-iir-compiler/src/lower.rs) | v0 integers, unary/binary arithmetic, exact literal division, assignments, symbols and unevaluated symbolic Apply. [Oracle suite](../packages/rust/macsyma-iir-compiler/tests/oracle.rs) compares symbolic results with the evaluator. [Capstone](../packages/rust/lang-aot/tests/macsyma_conformance.rs) proves 21 integer-result programs on VM/JIT/WASM/CLR/JVM/LLVM/native when present. | No BEAM runner here (VM-038); symbolic result representation has VM oracle coverage, not portable capstone agreement (VM-048). Function definitions/calls, control flow, floats, lists, comparisons and power are explicit frontend rejections, outside implemented v0 parity. |
+| [Macsyma lowerer](../packages/rust/macsyma-iir-compiler/src/lower.rs) | v0 integers, unary/binary arithmetic, exact literal division, assignments, symbols and unevaluated symbolic Apply. [Oracle suite](../packages/rust/macsyma-iir-compiler/tests/oracle.rs) compares symbolic results with the evaluator. [Capstone](../packages/rust/lang-aot/tests/macsyma_conformance.rs) proves 21 integer-result programs on VM/JIT/WASM/CLR/JVM/LLVM/native when present; [`clr_real_macsyma.rs`](../packages/rust/lang-aot/tests/clr_real_macsyma.rs) additionally proves the same corpus on **real CoreCLR** (`dotnet`+`ilasm`), not only the in-repo CLR simulator (VM-049). | No BEAM runner here (VM-038); symbolic result representation has VM oracle coverage, not portable capstone agreement (VM-048). Function definitions/calls, control flow, floats, lists, comparisons and power are explicit frontend rejections, outside implemented v0 parity. |
 
 ## CI and host boundaries
 
@@ -73,17 +73,36 @@ executable smoke gate. A green Windows job does not imply every LANG test
 executes there. VM-036 adds the native-only McCarthy corpus to that actual Windows execution
 command, including the required-linker assertion.
 
+`lang-aot/BUILD` declares `# needs-toolchain: dotnet` (VM-049/VM-D028): its own
+bucket language is "rust", so without this declaration the planner never set
+CI's `needs_dotnet` flag for a PR touching only this crate, and
+`actions/setup-dotnet` plus the `ilasm` NuGet restore — both gated on that
+flag in `ci.yml` — never ran. The CLR-real tests (`clr_real_*.rs`,
+`clr_real_macsyma.rs`) always skipped *correctly* without the toolchain, but
+that meant the CLR-real column effectively never executed on its own PR
+merge-gate CI, only on a forced main-branch full build (which sets every
+toolchain flag). The declaration follows the exact pattern
+`java-to-semantic-ir/BUILD` already uses for its own extra Python dependency.
+
 Reproduce the dedicated capstones with:
 
 ```sh
-cargo test -p lang-aot --test conformance --test macsyma_conformance -- --nocapture
+cargo test -p lang-aot --test conformance --test macsyma_conformance --test clr_real_macsyma -- --nocapture
 ```
 
 McCarthy always runs VM/JIT/WASM/CLR simulator. Java, clang, Erlang and real
 CLR require their respective installed tools; native uses the host Linux/macOS/Windows compiler and linker.
 Macsyma always runs VM/JIT/WASM/CLR simulator, gates JVM/LLVM/native on tools,
-and has no real-CLR or BEAM runner. VM-049 adds a real-CLR arithmetic proof;
-simulator success alone does not claim .NET execution.
+and has no BEAM runner (VM-038). VM-049 added a real-CLR arithmetic proof
+(`tests/clr_real_macsyma.rs`, gated on `dotnet`+`ilasm`, over the identical
+21-program corpus the simulator column already agrees on) so simulator
+success is no longer the only claim of CLR execution; the simulator column
+itself is unchanged and remains the required always-on floor. VM-049 also
+fixed VM-D028: `lang-aot/BUILD` lacked a `needs-toolchain: dotnet` declaration,
+so no PR touching only this rust-bucketed crate ever made hosted CI install
+`ilasm`, and the CLR-real column — including McCarthy's pre-existing one —
+never actually executed on its own PR merge-gate CI, only on a forced
+main-branch full build.
 
 ## Executed audit validation
 
@@ -155,3 +174,20 @@ region clauses — promoted to VM-058 rather than fixed in this slice. The full
 non-ALGOL matrix passed 206 programs, 1256 cells exercised and 206 skipped
 (every program's CLR cell, matching the host-wide missing `ilasm`), zero
 failures, in 501.12 seconds.
+
+VM-049 added `clr_real_macsyma.rs`'s toolchain-independent
+`macsyma_emits_valid_cil_text_for_full_corpus` test, which locally compiles all
+21 Macsyma programs to textual CIL and passes (no lowering change was needed:
+`iir-builtin-lowering::dynamic_arith` already expands Macsyma's `call_builtin
+"+"/"-"/"*"/"/ "` to `unbox`/`add`/`box` before `emit_il` runs). The real-CoreCLR
+test itself reports the expected honest skip on this host (`dotnet`/`ilasm`
+both absent, consistent with VM-047c). Investigating why the pre-existing
+McCarthy `clr_real_*` lane's tool gate always reported a skip rather than a
+real pass exposed VM-D028 — `lang-aot/BUILD` never declared
+`needs-toolchain: dotnet`, so hosted CI's `ilasm` restore step never ran for a
+PR touching only this crate; confirmed against a recent merged PR's Linux job
+log (`needs_dotnet=false`). Fixed by adding the declaration, following the
+same pattern `java-to-semantic-ir/BUILD` already uses. Hosted CI on this PR
+is therefore the first actual proof (or disproof) that the CLR-real column —
+Macsyma's new lane and McCarthy's pre-existing one — executes on real CoreCLR
+rather than skipping.
