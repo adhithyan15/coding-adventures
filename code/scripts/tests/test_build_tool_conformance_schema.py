@@ -323,6 +323,28 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
                 record["input"]["options"][field] = []
                 self.assertEqual(list(validator.iter_errors(record)), [])
 
+    def test_graph_schema_is_closed_process_free_and_resource_bounded(self) -> None:
+        graph_input = self.pure_schema["$defs"]["graph_input"]
+        graph_options = graph_input["properties"]["options"]
+        graph_result = self.pure_schema["$defs"]["graph_result"]
+
+        self.assertFalse(graph_input["additionalProperties"])
+        self.assertFalse(graph_options["additionalProperties"])
+        self.assertEqual(set(graph_options["required"]), {"packages", "edges"})
+        self.assertEqual(
+            graph_options["properties"]["packages"],
+            {"$ref": "#/$defs/package_names"},
+        )
+        self.assertEqual(self.pure_schema["$defs"]["package_names"]["maxItems"], 4096)
+        self.assertEqual(graph_options["properties"]["edges"]["maxItems"], 16384)
+        self.assertFalse(graph_result["additionalProperties"])
+        self.assertEqual(graph_result["properties"]["edges"]["maxItems"], 16384)
+        self.assertEqual(graph_result["properties"]["levels"]["maxItems"], 4096)
+        self.assertEqual(
+            graph_result["properties"]["levels"]["items"]["maxItems"],
+            4096,
+        )
+
     def test_every_pure_domain_rejects_unknown_input_fields(self) -> None:
         import jsonschema
 
