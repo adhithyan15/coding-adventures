@@ -1,0 +1,19 @@
+{
+  "id": "BN-EXT-036-ORDINALS-ONE-TO-FIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say first to fifth in Bengali and say which layer of the language they come from.",
+  "prerequisites": [
+    "BN-EXT-035-PLACE-DEIXIS"
+  ],
+  "lessons": [
+    "BN-C27-ditiyo",
+    "BN-C27-tritiyo",
+    "BN-C27-choturtho",
+    "BN-C27-prothom",
+    "BN-W06-nya",
+    "BN-C27-ponchom",
+    "BN-R27-first-to-fifth"
+  ]
+}

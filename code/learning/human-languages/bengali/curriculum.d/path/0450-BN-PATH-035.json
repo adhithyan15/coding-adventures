@@ -1,0 +1,18 @@
+{
+  "id": "BN-PATH-035",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "BN-C27-ditiyo",
+    "BN-C27-tritiyo",
+    "BN-C27-choturtho",
+    "BN-C27-prothom",
+    "BN-W06-nya",
+    "BN-C27-ponchom",
+    "BN-R27-first-to-fifth"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-036-ORDINALS-ONE-TO-FIVE"
+  ],
+  "after": []
+}

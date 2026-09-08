@@ -115,6 +115,14 @@ before the whole; and a book you can read straight through.
   than through a shared ancient root), chôshmā (the payoff — glasses, built
   on the Persian word for "eye" চোখ's own lesson already named as its only
   cousin). In the book.
+- **Chapter 38 — Which One in the Line** ([`lessons/BN-C27-*`](./lessons/)):
+  prothom, ditiyô, tritiyô, choturthô, ponchom — the ordinals, every one of them
+  a **tatsama**, borrowed back out of Sanskrit rather than inherited. The chapter
+  opens on *second* because chapter 12 had already told the reader that the old
+  *dv-* survives only in re-borrowed words, and closes on *fifth* because Samsad
+  keeps পঞ্চ as a Bengali word for *five* and পাঁচ is that word with the nasal
+  worn down into the chandrabindu chapter 12 taught. It buys one letter, ঞ, and
+  spends it on that demonstration. In the book.
 
 ### The script strand, interleaved
 
