@@ -1597,6 +1597,15 @@ fn emit_html_tree(
         return Ok(out);
     }
 
+    // UI25's `Input` remains the portable multiline editing contract until
+    // the kernel grows a dedicated host-owned editor. It shares the text
+    // props and hydration markers of `HostInput`, but lowers to `<textarea>`
+    // when `multiline: true`.
+    if node.tag == "Input" {
+        out.push_str(&emit_input(node, indent, part_styles));
+        return Ok(out);
+    }
+
     // UI29 §2.1 — `HostInput` and `HostButton`. Both have custom prop
     // shapes (value/placeholder/read-only for input, label/disabled for
     // button) that the simple HtmlTag table cannot express.
@@ -1968,6 +1977,62 @@ fn emit_host_input(
 
     let style_attr = build_style_attr(node, "", part_styles);
     format!("{pad}<input type=\"text\"{attrs}{style_attr}>\n")
+}
+
+/// Lower the legacy `Input` primitive to an HTML text control.
+///
+/// `HostInput` is intentionally single-line; `Input(multiline: true)` is the
+/// current portable editor contract. Static HTML records callbacks as neutral
+/// hydration markers, matching `HostInput`.
+fn emit_input(node: &LayoutNode, indent: usize, part_styles: &HashMap<String, String>) -> String {
+    let pad = " ".repeat(indent);
+    let multiline =
+        matches!(find_prop(node, "multiline"), Some(LayoutPropValue::Keyword(k)) if k == "true");
+    let mut attrs = String::new();
+
+    match find_prop(node, "value") {
+        Some(LayoutPropValue::SlotRef(s)) if !multiline => {
+            write!(attrs, " value=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        Some(LayoutPropValue::String(lit)) if !multiline => {
+            write!(attrs, " value=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        _ => {}
+    }
+    match find_prop(node, "placeholder") {
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " placeholder=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " placeholder=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        _ => {}
+    }
+    match find_prop(node, "read-only") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" readonly"),
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-readonly=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+    if let Some(LayoutPropValue::Number(max_length)) = find_prop(node, "max-length") {
+        write!(attrs, " maxlength=\"{}\"", max_length).unwrap();
+    }
+    append_emit_marker(&mut attrs, node, "onChange", "data-on-change");
+    append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
+    append_emit_marker(&mut attrs, node, "onCancel", "data-on-cancel");
+
+    let style_attr = build_style_attr(node, "", part_styles);
+    if multiline {
+        let value = match find_prop(node, "value") {
+            Some(LayoutPropValue::SlotRef(s)) => format!("{{{{{}}}}}", camel(s)),
+            Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
+            _ => String::new(),
+        };
+        format!("{pad}<textarea{attrs}{style_attr}>{value}</textarea>\n")
+    } else {
+        format!("{pad}<input type=\"text\"{attrs}{style_attr}>\n")
+    }
 }
 
 /// Lower a UI29 `HostButton` node to a `<button>...</button>` block.
@@ -4619,6 +4684,31 @@ mod tests {
         assert!(out.contains("data-on-change=\"onQueryChange\""));
         assert!(out.contains("data-on-commit=\"onSearch\""));
         assert!(out.contains("data-on-cancel=\"onCancelSearch\""));
+    }
+
+    #[test]
+    fn legacy_multiline_input_emits_a_textarea_with_controlled_value() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "Input",
+                vec![
+                    prop_keyword("multiline", "true"),
+                    prop_slot("value", "deck-text"),
+                    prop_string("placeholder", "SPICE netlist"),
+                    prop_emit("onChange", "onNetlistChange"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<textarea placeholder=\"SPICE netlist\""),
+            "{out}"
+        );
+        assert!(out.contains("data-on-change=\"onNetlistChange\""), "{out}");
+        assert!(out.contains(">{{deckText}}</textarea>"), "{out}");
     }
 
     // -------------------------------------------------------------------
