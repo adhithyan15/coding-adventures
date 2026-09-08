@@ -20,6 +20,10 @@ engram-core = { path = "../engram-core", features = ["serde"] }
 engram-core-wasm = { path = "../engram-core-wasm" }
 serde_json = "1"
 
+# No third-party dev-dependencies. The SQLite fixtures the tests import are
+# built by our own `sqlite-file` writer, which is itself zero-dependency; the
+# cross-check against real C SQLite lives in that crate, where it belongs.
+# Keeping `rusqlite` here would have put a C amalgamation build back into the
+# test path of the crate that exists to avoid one.
 [dev-dependencies]
-rusqlite = { version = "0.32", features = ["bundled"] }
-tempfile = "3"
+sqlite-file = { path = "../sqlite-file" }
