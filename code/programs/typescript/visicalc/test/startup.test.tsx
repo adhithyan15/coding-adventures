@@ -27,6 +27,9 @@ it.each([false, true])("renders a generated startup screen in the preferred them
   try {
     await act(async () => root.render(<App load={() => pending.promise} />));
     expect(container.querySelector('[role="status"]')?.textContent).toContain("Opening your workbook");
+    expect(container.querySelector("h2")?.textContent).toBe("Opening your workbook");
+    expect((container.querySelector("h2") as HTMLElement).style.margin).toBe("0px");
+    expect((container.querySelector("h2") as HTMLElement).style.fontSize).toBe("19px");
     expect(container.querySelector("button")).toBeNull();
     const surface = container.querySelector('[role="status"] > div') as HTMLElement;
     expect(surface.style.background).toBe(dark ? "rgb(20, 34, 30)" : "rgb(244, 243, 237)");
@@ -47,6 +50,7 @@ it("retries a failed load and focuses the real workbook without reloading the pa
   try {
     await act(async () => root.render(<App load={load} />));
     expect(container.querySelector('[role="alert"]')?.textContent).toContain("Check your connection and try again");
+    expect(container.querySelector("h2")?.textContent).toBe("Your workbook couldn’t open");
     expect(container.textContent).not.toContain("low-level WASM failure");
     const retry = container.querySelector<HTMLButtonElement>("button")!;
     expect(retry.textContent).toBe("Try again");
@@ -56,6 +60,7 @@ it("retries a failed load and focuses the real workbook without reloading the pa
     expect(container.textContent).toContain("Opening your workbook");
     await act(async () => pending.resolve(host));
     expect(container.querySelector('input[placeholder="Enter a value or formula"]')).not.toBeNull();
+    expect(container.querySelector("h2")?.textContent).toBe("VisiCalc");
     expect(document.activeElement).toBe(container.querySelector('table[tabindex="0"]'));
   } finally { await act(async () => root.unmount()); container.remove(); }
 });
