@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R36-wer-ist-das",
+    "language": "german",
+    "chapter": 49,
+    "sequence": 1350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b28218844492d265"
+  },
+  "findings": []
+}

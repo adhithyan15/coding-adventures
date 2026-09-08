@@ -1,0 +1,18 @@
+{
+  "id": "GE-EXT-A1-OBJEKTPRONOMEN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use dich, ihn, uns, euch and sich as object pronouns, and build a reflexive sentence.",
+  "prerequisites": [
+    "GE-EXT-A1-POSSESSIV"
+  ],
+  "lessons": [
+    "GE-C37-dich",
+    "GE-C37-ihn",
+    "GE-C37-uns",
+    "GE-C37-euch",
+    "GE-C37-sich",
+    "GE-R37-mich-dich-sich"
+  ]
+}

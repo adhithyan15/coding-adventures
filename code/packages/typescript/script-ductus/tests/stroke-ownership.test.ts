@@ -170,19 +170,20 @@ describe("stroke ownership migration baseline", () => {
       // non-Tamil data hash. Tamil is untouched again, so its count and both
       // shared-identity values are unchanged.
       //
-      // Measured a third time for the Mandarin grammar tranche (chapters 22-28),
-      // which adds exactly ten glyphs: 的, 有, 个, 了, 呢, 对, 岁, 和, 喜 and 欢.
-      // Keys 361 -> 371, chinese 50 -> 60, the ordered key hash and the
-      // non-Tamil data hash. Tamil is untouched for the third time, so its count
-      // and both shared-identity values do not move — which is the property this
-      // assertion exists to prove, since a Chinese record sharing an object with
-      // a Tamil one would show up here and nowhere else.
+      // Measured for HL-C364: the native-count and counter lessons verify six
+      // independently written hiragana — の, ひ, ふ, ほ, む and や. Keys move
+      // 361 -> 367 and Japanese 17 -> 23; Tamil and both shared-identity values
+      // remain unchanged.
+      //
+      // Measured for HL-C366: the Chinese particles and joining lessons add
+      // ten source-verified glyphs. Keys move 367 -> 377 and Chinese 50 -> 60;
+      // Tamil and both shared-identity values remain unchanged.
     }).toEqual({
-      keys: 371,
+      keys: 377,
       keyHash:
-        "c13f9ff47f07a65509c6c6c676a26bdc2b282c613868c849419b8649e92685df",
+        "0d104030d4004205af40424784ccb0dd995ce006da5fce551ddda546292d117e",
       nonTamilDataHash:
-        "7ed03564998e2c8d1cc70bd115fa36f234f4c49037c73d1c4a199a7146c6beee",
+        "8842454d6b247a6941927ba010b781a422d129b17c128da8747ebaf74f39e133",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -193,7 +194,7 @@ describe("stroke ownership migration baseline", () => {
         devanagari: 44,
         gujarati: 44,
         hebrew: 22,
-        japanese: 17,
+        japanese: 23,
         kannada: 13,
         malayalam: 13,
         "perso-arabic": 24,

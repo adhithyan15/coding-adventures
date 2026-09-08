@@ -1,0 +1,25 @@
+{
+  "chapter": 17,
+  "title": "The Other Five, and Where the Count Stops",
+  "label": "ch:ja-native-count-six-to-ten",
+  "canDo": "I can count things from one to ten in the native Japanese series, write the three further signs it cost, and say why the series stops at ten when the borrowed count does not.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "JA-R17-the-other-ten",
+    "kind": "production",
+    "summary": "Run hitotsu to too in order, name the two numbers whose native word is used in both counts, and say what the two chapters cost in signs.",
+    "assesses": [
+      "JA-SCRIPT-MU-01",
+      "JA-LEX-MUTTSU",
+      "JA-LEX-NANATSU",
+      "JA-SCRIPT-YA-01",
+      "JA-LEX-YATTSU",
+      "JA-SCRIPT-NO-01",
+      "JA-LEX-KOKONOTSU",
+      "JA-LEX-TOO"
+    ],
+    "note": "Same ordering rule as chapter 16 and the same sign-before-word placement: nanatsu costs nothing because nana was already a word, and mu, ya and no are each bought one lesson before muttsu, yattsu and kokonotsu. The chapter ends on too, which is the ONLY word in the series with no tsu on it -- and that missing tsu is the edge of the count, which is what makes a counter necessary and sets up chapter 18. nanatsu is placed where the seam is legible: with yottsu it makes the two-member pattern the corpus calls JA-GRAMMAR-KUN-IN-THE-COUNT."
+  }
+}

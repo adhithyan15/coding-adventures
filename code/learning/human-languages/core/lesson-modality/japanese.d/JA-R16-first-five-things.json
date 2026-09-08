@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R16-first-five-things",
+    "language": "japanese",
+    "chapter": 16,
+    "sequence": 1390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec89fe31d8e66480"
+  },
+  "findings": []
+}

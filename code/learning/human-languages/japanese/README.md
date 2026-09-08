@@ -34,6 +34,19 @@ more time, please,” and “a little more slowly.” Chapters 11 and 12 add fou
 body words only after the required kana are available, with twelve interleaved
 retrieval lessons before the second body-map payoff.
 
+Chapters 14 to 18 are the numbers, and they are two counts rather than one.
+Chapters 14 and 15 teach the borrowed series **いち** to **じゅう**, which reaches
+ninety-nine out of ten words. Chapters 16 and 17 teach the NATIVE series
+**ひとつ** to **とお**, which reaches ten and stops — and the missing **つ** on
+**とお** is the reason a counter is needed at all. Chapter 18 says what a counter
+is, gives three of them chosen so that every example counts a noun the track
+already teaches, and shows that the reader had owned two counters all along
+without either being named: the **つ** itself, and the **ど** inside chapter 9's
+**いちど**. The seam between the two systems — the native word standing inside
+a borrowed count at **よん** and **なな**, and inside a borrowed counter at
+**ひとり** and **ふたり** — is one atom, introduced in chapter 14 and returned to
+three times.
+
 Writing is not postponed until the learner has “finished kana.” A new form moves
 through visible-model observation and tracing, guided copy, delayed copy, and
 dictation/transcription in small steps. Later levels add controlled composition,

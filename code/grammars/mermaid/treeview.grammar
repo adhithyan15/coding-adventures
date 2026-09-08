@@ -1,0 +1,5 @@
+# @version 1
+# Mermaid 11.16.1 TreeView parser grammar.
+
+document = { NEWLINE } HEADER { NEWLINE | metadata | NODE_LINE } EOF ;
+metadata = TITLE | ACC_TITLE | ACC_DESCR ;

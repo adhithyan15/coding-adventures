@@ -2524,10 +2524,10 @@ fn integer_output_builtin_accepts_no_destination() {
 }
 
 #[test]
-fn u8_operations_mask_but_i64_remains_unbounded() {
+fn narrow_operations_mask_but_i64_remains_unbounded() {
     for op in ["add", "sub", "mul", "neg", "not", "and", "or", "xor", "shl", "shr"] {
         let unary = matches!(op, "neg" | "not");
-        for ty in ["u8", "i64"] {
+        for ty in ["u4", "u8", "i64"] {
             let sources = if unary { vec![Operand::Var("a".into())] }
                 else { vec![Operand::Var("a".into()), Operand::Var("b".into())] };
             let module = make_module_fn("width", vec![("a", ty), ("b", ty)], ty, vec![
@@ -2536,7 +2536,7 @@ fn u8_operations_mask_but_i64_remains_unbounded() {
             ]);
             let beam = lower_iir_to_beam(&module, &cfg()).unwrap();
             assert_eq!(count_opcode(&beam, OP_GC_BIF2),
-                usize::from(!unary) + usize::from(ty == "u8"), "{op} {ty}");
+                usize::from(!unary) + usize::from(matches!(ty, "u4" | "u8")), "{op} {ty}");
         }
     }
 }

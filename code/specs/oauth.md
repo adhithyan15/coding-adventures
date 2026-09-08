@@ -121,9 +121,15 @@ The delivery order is:
    provider configuration. The storage-agnostic client-secret custody
    prerequisite is shipped: create, one-closure access, atomic rotation, and
    conditional deletion are all audit-bracketed with provider and trace while
-   secret ownership remains zeroizing. Binding `client_secret_basic` and
-   `client_secret_post` into token requests, plus a non-exporting signer for
-   `private_key_jwt`, remain next. Public native clients remain `none` + PKCE.
+   secret ownership remains zeroizing. Provider-driven `client_secret_basic`
+   and `client_secret_post` are now bound through that custody boundary into
+   authorization-code exchange, refresh, and revocation requests. Basic
+   credentials are form-encoded before standard Base64 and omitted from the
+   body; Post credentials remain only in the form body. Returned headers and
+   bodies are zeroizing, reject provider or client-identity mismatches before
+   secret access, and retain the provider/trace audit binding. A
+   non-exporting signer for `private_key_jwt` remains next. Public native
+   clients remain `none` + PKCE.
 7. **Device Authorization Grant:** RFC 8628 preparation and a caller-driven
    polling state machine with no internal sleep or network authority.
 8. **HTTPS transport:** provider-neutral request/response types over the
@@ -291,7 +297,7 @@ pub struct ProviderConfig {
 
     // Client identity
     pub client_id:             String,
-    pub client_secret:         Option<Zeroizing<String>>,  // None for public clients
+    pub client_authentication: ClientAuthentication,
 
     // Flow configuration
     pub redirect_uri:          String,            // e.g., http://localhost:53682/callback
@@ -308,6 +314,17 @@ pub struct ProviderConfig {
 pub enum TokenResponseFormat {
     Json,
     FormEncoded,        // legacy GitHub used this until 2014
+}
+
+pub enum ClientAuthentication {
+    None, // public client; PKCE S256 remains mandatory
+    ClientSecret {
+        method: ClientSecretAuthenticationMethod,
+        reference: ClientSecretReference, // opaque storage-agnostic key
+    },
+    PrivateKeyJwt {
+        signer_reference: PrivateKeySignerReference, // non-exporting authority
+    },
 }
 ```
 

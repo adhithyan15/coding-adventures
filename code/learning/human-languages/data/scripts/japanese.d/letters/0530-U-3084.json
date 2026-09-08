@@ -1,0 +1,23 @@
+{
+  "glyph": "や",
+  "sound": "ya",
+  "role": "hiragana",
+  "components": [
+    "a long sweep from the left curling into a hook on the right",
+    "a short tick at the top",
+    "a long descender crossing the sweep"
+  ],
+  "strokeOrder": [
+    "begin on the left and sweep right, curling clockwise into the hook",
+    "lift; add the short tick at the top",
+    "lift; draw the long descender from the upper left down across the sweep to the lower right"
+  ],
+  "strokeOrderNote": "Sirgazil's 28-frame animation draws the long sweep FIRST and the descender LAST, which is the reverse of what the finished shape suggests; the marker moves twice, so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%84_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana や stroke order animation.gif, hiragana や, 28 frames, 2.8 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws や as three strokes in the order sweep, tick, descender. KanjiVG's data for U+3084 holds three paths in the same order. The counter-intuitive part is the first stroke: the sweep and its hook are complete before the descender is begun."
+  },
+  "notes": "The ya of やっつ, eight things. Shares its first sound with よ and is built the other way round: よ begins with its crossing stroke, や ends with it."
+}

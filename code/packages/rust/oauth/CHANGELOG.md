@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Retained and exposed each prepared request's exact non-secret client ID and
+  trace for the audit-gated client-secret authentication adapter; revocation
+  requests now retain the same caller trace as exchange and refresh requests.
 - Replaced the generic JSON parser dependency with the repository-owned,
   zero-dependency `bounded-json` parser, retaining duplicate-field rejection,
   recursive scrubbing, and the existing 64-level OAuth nesting limit while

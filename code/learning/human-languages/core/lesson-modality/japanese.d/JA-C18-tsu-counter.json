@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C18-tsu-counter",
+    "language": "japanese",
+    "chapter": 18,
+    "sequence": 1490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36662ce9f6a62205"
+  },
+  "findings": []
+}

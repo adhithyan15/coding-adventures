@@ -1,0 +1,23 @@
+{
+  "chapter": 50,
+  "title": "The One It Happens To",
+  "label": "ch:ge-objektpronomen",
+  "canDo": "I can say who a verb is aimed at with all six object pronouns, and bend a verb back onto its own subject.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GE-R37-mich-dich-sich",
+    "kind": "production",
+    "summary": "Every verb of address in the book is pointed at every person, and the der-row is run six words deep -- den, einen, keinen, meinen, deinen and now ihn, all moving together. The reflexive costs one word rather than six, because mich, dich, uns and euch already did that job; and freut mich, said since the reader's first introduction as an unexplained block, turns out to have been a reflexive all along.",
+    "assesses": [
+      "GE-LEX-DICH-01",
+      "GE-LEX-IHN-01",
+      "GE-LEX-UNS-01",
+      "GE-LEX-EUCH-01",
+      "GE-LEX-SICH-01",
+      "GE-GRAMMAR-REFLEXIV-01"
+    ],
+    "note": "ihn is the point of the chapter and not sich: it is the sixth word to move on the der row, and it is where an English speaker most reliably goes wrong, because German picks the pronoun from the article rather than from whether the thing is alive."
+  }
+}

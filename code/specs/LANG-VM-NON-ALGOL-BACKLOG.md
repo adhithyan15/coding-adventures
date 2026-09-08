@@ -8,6 +8,34 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 FLOW-MATIC BEAM output probe (selected after #14646 merged)
+
+PR #14646 merged as `622208db64` after all46checks succeeded or skipped.
+Nib's26portable BEAM programs are complete. Select the four FLOW-MATIC
+output/control-flow rows next: they can reuse the proven integer-output path
+without conflating output with BEAM input/EOF, which remains a separate slice.
+
+Run the existing scalar output, taken EQUAL, false LESS/GREATER/OTHERWISE,
+and jump-chain sources on real Erlang. Current rows386-389 must be rechecked
+against source after refresh. Missing erl alone may skip; compile/runtime/output
+failures must remain hard. Commit a bounded contract for any newly exposed
+backend defect before changing it. Promote only executed cells; keep the four
+input/EOF rows explicitly undeclared on BEAM until a host-reader proof exists.
+
+## VM-040 Nib BEAM probe (selected after #14632 merged)
+
+PR #14632 merged as `9b04b74cb8` after all 46 checks succeeded or skipped.
+Oct's twelve portable BEAM cells are complete. Reprioritize Nib next because
+its u8 arithmetic shares the newly proven lowering, while its u4/BCD cases
+provide discriminating checks for remaining width and representation gaps.
+
+Probe the existing Nib corpus on real Erlang, verifying row/source identity on
+fresh main. Return values must match without process-exit masking; preserve
+hard failures after runtime detection. Separate any failing u4, checked
+arithmetic, or storage operation into a committed bounded contract before
+backend edits. Promote only executed cells. Retain VM-028's broader Intel-4004
+fidelity audit and VM-060b's host input design as separate backlog work.
+
 ## VM-040 Oct BEAM probe (selected after #14621 merged)
 
 PR #14621 merged as `df39688c62` after all 46 checks succeeded or skipped.
@@ -1408,3 +1436,42 @@ before the additional width regression; that regression passed20op/type cases.
 Clippy for iir-to-beam and lang-aot alltargets passed. Remaining VM040families
 are Twig strings/records/closures, Nib, BASIC, FLOW-MATIC and COBOL; re-audit
 current declarations before selection. VM060b hostinput and VM0138008 remain.
+
+### VM-040 Nib implementation contract: four-bit result width
+
+The real-BEAM corpus reached Nib's ~15 u4 comparison and returned0 instead
+of1: complement was not narrowed to four bits. Extend the existing u8 result
+mask to select15 for u4 in all three arithmetic/unary/bitwise families; preserve
+u8mask255 and wider integers. Extend the op/type regression to u4. Rerun all26
+Nib programs including BCD storage, then promote only proven BEAM cells.
+
+### VM-040 Nib validation
+
+All26NibBEAM cells (rows49-74 at this revision) passed in fresh processes
+with positive sentinels and no skips. The dedicated26program corpus passed,
+and all12OctBEAM programs passed again after widening the mask selection.
+The backend suite passed93tests (18unit70integration5doc), including30op/type
+width cases. No full seven-standard-column rerun is claimed. Broader4004
+fidelity remains VM028; remaining BEAM families are reprioritized after merge.
+
+### VM-040 FLOW-MATIC output implementation contract
+
+The first real probe refuses putchar in main and the generated integer-printer
+helpers. Add putchar by building one character list and calling io:put_chars/1,
+reserving two heap words and treating this builtin as an imported-call site
+for existing live-register spill/restore analysis. It has one value operand
+and no result. Validate actual recursive integer printing/control flow; input
+and Brainfuck tape parity remain outside this change.
+
+### VM-040 FLOW-MATIC output validation
+
+The four output/control-flow programs passed on real Erlang and in four fresh
+single-cell processes (rows 386-389), each with its positive execution sentinel.
+A separate 200-character loop preserved live state and returned 42. All 93
+backend tests (18 unit, 70 integration, 5 doc) and Clippy for both affected
+packages with all targets passed. FLOW-MATIC now declares 60 cells: four output
+programs across eight backends and four input programs across seven. No full
+rerun of the seven existing columns is claimed. This proves ASCII integer
+printing only; byte truncation/encoding, BEAM input/EOF, and Brainfuck tape
+semantics still need separate probes before promotion. Reprioritize the remaining
+VM-040 families against VM-060b host input and VM-013 Intel 8008 after merge.

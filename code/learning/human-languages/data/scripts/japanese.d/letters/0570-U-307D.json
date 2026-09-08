@@ -1,0 +1,15 @@
+{
+  "glyph": "ぽ",
+  "sound": "po",
+  "role": "hiragana",
+  "components": [
+    "ほ",
+    "the handakuten ゜"
+  ],
+  "strokeOrder": [
+    "ほ in full",
+    "a small circle at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "ほ with the handakuten. The one, six, eight and ten of いっぽん, ろっぽん, はっぽん and じゅっぽん — every place the counter for long thin things follows a held beat."
+}

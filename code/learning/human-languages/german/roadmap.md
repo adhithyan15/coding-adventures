@@ -415,11 +415,55 @@ Spanish and French where a contrast helps. The recurring decoder is the
   payoff) — a third instance of Grimm's law's *k → h* swap, alongside
   *hören*/*akoúein* (Ch. 39) and *Hund*/*canis* (Ch. 35). **Authored.**
 
+- **Ch. 45 — Not one, not a scrap**: ***kein*** (`GE-C32-kein`) — Old High
+  German *nihein*, "not one", built from exactly the two pieces English used
+  for *none* → ***keine*** (`GE-C32-keine`) → ***keinen*** (`GE-C32-keinen`),
+  which wears the *-en* `GE-C14-einen` handed over as a bare word → the choice
+  between the two negatives (`GE-C32-kein-oder-nicht`) → where *nicht* stands
+  (`GE-C32-nicht-stellung`), which was half owned from the wellbeing chapter
+  with the word taught and its placement never stated. **Authored.**
+- **Ch. 46 — When the verb steps to the front**: the polar question
+  (`GE-C33-ja-nein-frage`) — the word order English used before it invented
+  *do* → the bare-stem imperative (`GE-C33-imperativ`) → ***wer***
+  (`GE-C33-wer`), ***wann*** (`GE-C33-wann`) and ***warum***
+  (`GE-C33-warum`), which finish the W-set the track already half owned.
+  Grimm's law makes the last three predictable rather than memorised:
+  German *w-* against English *wh-*, five words for one rule. **Authored.**
+- **Ch. 47 — Which one, and the form the book owed you**: ***welcher***
+  (`GE-C34-welcher`), *what-like*, the same build as English *which* →
+  ***wie viel / wie viele*** (`GE-C34-wie-viel`) → ***den*** (`GE-C34-den`)
+  with the rule that only the *der* row moves → the adjective that stays bare
+  after *ist* (`GE-C34-praedikativ`) → ***es gibt*** (`GE-C34-es-gibt`, the
+  payoff), which demands the row the chapter just taught. This is the chapter
+  `GE-C14-einen` promised in plain text. **Authored.**
+- **Ch. 48 — Two thoughts, one sentence**: ***oder***, ***aber***,
+  ***sondern***, ***denn***, ***weil*** — the last of which sends the verb to
+  the end, the third thing the book has put in that slot after a separable
+  prefix and a cancelling *nicht*. *Sondern* earns its place on a pattern the
+  reader holds: German marks the correction of a negative twice, with *doch*
+  in an answer and *sondern* inside a sentence. **Authored.**
+- **Ch. 49 — Mine, yours, his, hers**: ***mein*** (`GE-C36-mein`), pulled out
+  of the phrase it had been hiding in, with the rule that six words share one
+  ending set → ***dein***, ***sein***, ***ihr*** → ***das ist***
+  (`GE-C36-das-ist`), whose *das* is the old pointing word rather than the
+  article, which is why it stays *das* in front of a *die*-word. **Authored.**
+- **Ch. 50 — The one it happens to**: ***dich***, ***ihn***, ***uns***,
+  ***euch***, ***sich***. *Ihn* is the point: the sixth word to move on the
+  *der* row, and where an English speaker most reliably goes wrong, because
+  German picks the pronoun from the article rather than from whether the thing
+  is alive. *Euch* is Old English *ēow*, the word that became *you*.
+  **Authored.**
+- **Ch. 51 — The bracket**: ***können***, ***müssen***, ***möchten***, the
+  verb bracket (`GE-C38-klammer`), and the strong participle in *-en*
+  (`GE-C38-partizip-en`). The bracket is named as the fourth instance of one
+  habit rather than a fourth rule, and *gegangen* — on the page since the
+  *sein*-perfect and never named — finally gets its family. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 34+ | Cases (der→den→dem) — owed since Ch. 38 had to route around the accusative article after *mögen* and the dative object of *helfen*, and Ch. 40 had to pick *die Hand* as its object for the same reason; then the rest of the separable verbs now that Ch. 40 has opened them, sprechen & the remaining irregular verbs — following the shared theme order |
+| 52+ | The dative — *dem*, *der*, and the prepositions that govern it. It is the one A1 column the track has not touched, and one lesson set unblocks two points at once: `A1-ART-05` (dative article forms) sits underneath `A1-PRAEP-02`. Then the accusative prepositions, the two-way *in*/*auf* rule, the tens above twenty, and the adverbs of time and place |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
 languages: Spanish *tú/usted* (from "your grace"), French *tu/vous* (the

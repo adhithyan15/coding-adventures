@@ -1,0 +1,23 @@
+{
+  "glyph": "ひ",
+  "sound": "hi",
+  "role": "hiragana",
+  "components": [
+    "a short high shoulder turning down at a corner",
+    "a long open curve down and left around a broad bottom",
+    "a rise up the right side ending in a short flick"
+  ],
+  "strokeOrder": [
+    "begin at the upper left and draw the short high shoulder to the right, turning down at the corner",
+    "without lifting, descend and swing left around the broad bottom",
+    "without lifting, rise up the right side and finish with a short flick outward at the top right"
+  ],
+  "strokeOrderNote": "Sirgazil's 33-frame animation writes ひ in a single pen-down run: the start marker never leaves the upper-left origin across all 33 frames.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%B2_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana ひ stroke order animation.gif, hiragana ひ, 33 frames, 3.3 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws ひ in one uninterrupted run: short shoulder rightward, a corner, a long open curve down and left around the bottom, then up the right side to a short outward flick. The learner path is fitted to the bundled Noto Sans JP subset; handwritten curve width and flick length vary, but the zero-lift order is the same."
+  },
+  "notes": "The hi of ひとつ, one thing. One stroke like ろ, and unlike ろ it never closes: the curve stays open and the pen finishes above where the shoulder began."
+}

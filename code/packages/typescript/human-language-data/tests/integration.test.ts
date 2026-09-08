@@ -542,12 +542,23 @@ describe("real curriculum", () => {
     // for the same reason those two do — each scores two separable things (the
     // run in order, and either where the two already-owned numbers came from or
     // how juu compounds), and collapsing them would score one and report both.
+    //
+    // 131 -> 157, chapters 16, 17 and 18: the NATIVE count, split at five for
+    // the same reason chapters 14 and 15 split there, and then the counters. The
+    // native series is THREE chapters' worth of atoms in two because
+    // `maxNewAtomsPerChapter` is 12 and the ten words plus five signs are 15;
+    // splitting at five puts 7 and 8 atoms in the two chapters and keeps the
+    // gentle-ramp atom-step finding at zero, where this track has always been.
+    // Each of the three payoffs carries two activities for the same reason
+    // chapter 13's checkpoints do -- each scores two separable things.
     const report = buildCurriculumGapReport({ registry, lessons, books });
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
-    expect(japanese).toHaveLength(131);
+    expect(japanese).toHaveLength(157);
     expect(
       new Set(japanese.map((lesson) => lesson.realization.chapter)),
-    ).toEqual(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]));
+    ).toEqual(
+      new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
+    );
     expect(
       japanese.every((lesson) => lesson.frontmatter.schema_version === "2"),
     ).toBe(true);
@@ -562,6 +573,10 @@ describe("real curriculum", () => {
         ["JA-C13-family-check", 2],
         ["JA-R14-one-to-five", 2],
         ["JA-R15-six-to-ten", 2],
+        ["JA-R16-first-five-things", 2],
+        ["JA-R17-the-other-ten", 2],
+        ["JA-C18-count-the-face", 2],
+        ["JA-R18-counting-things", 2],
       ]),
     );
     const twoActivityLessons = new Set([
@@ -569,6 +584,10 @@ describe("real curriculum", () => {
       "JA-C13-family-check",
       "JA-R14-one-to-five",
       "JA-R15-six-to-ten",
+      "JA-R16-first-five-things",
+      "JA-R17-the-other-ten",
+      "JA-C18-count-the-face",
+      "JA-R18-counting-things",
     ]);
     expect(
       japanese

@@ -1,6 +1,9 @@
 {
   "segments": [
-    "JA-PATH-014"
+    "JA-PATH-014",
+    "JA-PATH-015",
+    "JA-PATH-016",
+    "JA-PATH-017"
   ],
   "omits": [],
   "relocates": {}

@@ -1,0 +1,25 @@
+{
+  "glyph": "ふ",
+  "sound": "fu",
+  "role": "hiragana",
+  "components": [
+    "a short tick at the top",
+    "a body curving down and left",
+    "a short mark at the lower left",
+    "a short mark at the lower right"
+  ],
+  "strokeOrder": [
+    "draw the short tick at the top, sloping down to the right",
+    "lift; begin below the tick and curve down, round to the right and away down to the lower left",
+    "lift; draw the short mark at the lower left, sloping down and to the left",
+    "lift; draw the short mark at the lower right, sloping down and to the right"
+  ],
+  "strokeOrderNote": "Sirgazil's 31-frame animation moves the start marker three times, which is three pen lifts and four strokes; the two bottom marks are drawn left first, then right.",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%B5_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana ふ stroke order animation.gif, hiragana ふ, 31 frames, 3.1 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws ふ as four separate strokes in the order tick, body, lower-left mark, lower-right mark. KanjiVG's data for U+3075 holds four paths in the same order. Handwriting joins the body to one or both of the bottom marks in fast cursive; the four-stroke order taught here is the printed and taught one."
+  },
+  "notes": "The fu of ふたつ, two things. The first sign in this book that takes four strokes, and the two bottom marks are separate from each other and from the body."
+}

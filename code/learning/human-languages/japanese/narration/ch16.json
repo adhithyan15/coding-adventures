@@ -1,0 +1,1178 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 16,
+  "title": "The Other Way to Count",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:22a436e5626947c9",
+  "lessons": [
+    {
+      "id": "JA-W16-hi",
+      "sequence": 1320,
+      "title": "ひ (hi) — one stroke, and a second count begins",
+      "headword": "ひ",
+      "romanization": "hi",
+      "gloss": "the hiragana sign for the mora hi — one stroke, and the first sign of a second way to count",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f41cf511d9150085",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then one sign."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ろ — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ろ** — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ten, then build thirteen and thirty from it — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ten*, then build *thirteen* and *thirty* from it — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say more, again — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *more, again* — **R4**, eighty lessons back]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last chapter bought two signs for a count of ten. This chapter buys five, for a count of ten that Japanese runs beside the one you already have."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひ — hi."
+            },
+            {
+              "kind": "speech",
+              "text": "One stroke, and the KanjiVG stroke data for this sign holds exactly one path: start high on the left, run a short way to the right, then sweep down and far to the left in a long shallow curve and finish by turning up. The pen does not lift once."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare ろ, which you wrote five lessons ago: also one stroke, but ろ closes its loop and ひ never closes at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ひ (hi) once and copy it once, without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it; write it after ten seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "Write ろ and ひ (hi) side by side: one closes, one does not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many strokes? (One.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart; stroke count and order per KanjiVG."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W16-hi-write",
+              "prompt": "Write the hiragana sign for the mora hi.",
+              "assesses": [
+                "JA-SCRIPT-HI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひ",
+                "hi"
+              ],
+              "feedback": {
+                "correct": "Right: one stroke, and it stays open.",
+                "incorrect": "Short to the right, then one long sweep down and left."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C16-hitotsu",
+      "sequence": 1330,
+      "title": "ひとつ (hitotsu) — one thing",
+      "headword": "ひとつ",
+      "romanization": "hitotsu",
+      "gloss": "one thing — the first word of the count Japanese kept when it borrowed another one",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31a2b55b8759618e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then the first word of a second count."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ひ (hi) — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ひ** — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say six — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *six* — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write も — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **も** — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll Want to Know — hear and say",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひとつ (hitotsu) — hi-to-tsu — one thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Three beats, three signs: ひ (hi) from last lesson, と and つ long since yours."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have a word for one. It is いち, and it is borrowed. ひとつ (hitotsu) is the word Japanese had before it borrowed anything, and the two are not interchangeable:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what it is for"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: いち. what it is for: the number itself — one, counting aloud, a house number.",
+                "word: ひとつ (hitotsu). what it is for: one thing — a thing you are pointing at."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Wiktionary's usage note for ひとつ (hitotsu) is one sentence and it is the sentence this chapter turns on: it is used when the items counted have no specific counter category. Hold that. It will be the whole of the next chapter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — read, copy, recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write ひとつ. Say ichi, then hitotsu, and hear that they share nothing — not a beat, not a sound."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which of the two words is the borrowed one? (いち.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: hitotsu."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C16-hitotsu-recall",
+              "prompt": "You are pointing at one apple. Do you say ichi or hitotsu?",
+              "assesses": [
+                "JA-LEX-HITOTSU",
+                "JA-LEX-ICHI"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "hitotsu",
+                "ひとつ",
+                "hitotsu, because it is a thing"
+              ],
+              "feedback": {
+                "correct": "ichi is the number; hitotsu is one thing.",
+                "incorrect": "One is for counting aloud, the other for a thing in front of you."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W16-fu",
+      "sequence": 1340,
+      "title": "ふ (fu) — four strokes, and a counter you already own",
+      "headword": "ふ",
+      "romanization": "fu",
+      "gloss": "the hiragana sign for the mora fu — four separate strokes, and the sign that carries two of this count",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2d3e3a567420ccea",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then one sign."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say one thing — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *one thing* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write the small ゅ — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write the small **ゅ** — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say one time — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *one time* — **R4**, eighty lessons back]"
+            },
+            {
+              "kind": "speech",
+              "text": "いちど is worth stopping on. Its own lesson said do counts an occurrence — which is to say いちど is a number with a counter behind it, and you have been saying it since chapter nine without anyone calling it that. Two chapters from now that sentence is the whole point."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふ — fu."
+            },
+            {
+              "kind": "speech",
+              "text": "Four separate strokes, in this order, as KanjiVG records them: a short tick at the top; then the body, starting below it and curving down and to the left; then a small mark low on the left; then a small mark low on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything this book has taught you so far has been one, two or three strokes. This is the first sign with four, and the last two are easy to run together by accident. They are separate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ふ (fu) once, counting the four lifts aloud."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy it once; hide it; write it again."
+            },
+            {
+              "kind": "speech",
+              "text": "Check only one thing: are the bottom two marks separate?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many strokes? (Four.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart; stroke count and order per KanjiVG."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W16-fu-write",
+              "prompt": "Write the hiragana sign for the mora fu, and say how many strokes it takes.",
+              "assesses": [
+                "JA-SCRIPT-FU-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ふ, four strokes",
+                "fu, four",
+                "ふ"
+              ],
+              "feedback": {
+                "correct": "Four: tick, body, left mark, right mark.",
+                "incorrect": "Count the lifts: there are four."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C16-futatsu",
+      "sequence": 1350,
+      "title": "ふたつ (futatsu) — two things",
+      "headword": "ふたつ",
+      "romanization": "futatsu",
+      "gloss": "two things — and the beat that ties this count to a word you already say",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f962aa24d3449f13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four recalls, then the second thing."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ふ (fu), all four strokes — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ふ**, all four strokes — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ten, then twenty — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ten*, then *twenty* — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say please — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *please* — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll Want to Know — hear and say",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふたつ (futatsu) — fu-ta-tsu — two things."
+            },
+            {
+              "kind": "speech",
+              "text": "Three signs, and the only new one arrived last lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Now hear the two words together: ひとつ (hitotsu), ふたつ (futatsu). Both end in つ, and the part in front changes — hito-, futa-. That つ is not decoration. It is the piece doing the counting, and every word in this chapter but the last one carries it."
+            },
+            {
+              "kind": "speech",
+              "text": "に is two. ふたつ (futatsu) is two things. Same relation as いち and ひとつ (hitotsu), and again the two words share nothing at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — read, copy, recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write ふたつ. Say the pair: hitotsu, futatsu. Then say ichi, ni straight after, and hear two different counts running side by side."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What does the つ do? (It counts.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: futatsu."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C16-futatsu-recall",
+              "prompt": "Say one thing and two things, and name the piece both words share.",
+              "assesses": [
+                "JA-LEX-FUTATSU",
+                "JA-LEX-HITOTSU"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "hitotsu, futatsu — they share tsu",
+                "hitotsu futatsu, tsu",
+                "ひとつ ふたつ"
+              ],
+              "feedback": {
+                "correct": "The tsu is the counting piece.",
+                "incorrect": "Listen to the last beat of each word."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C16-mittsu",
+      "sequence": 1360,
+      "title": "みっつ (mittsu) — three things, for nothing",
+      "headword": "みっつ",
+      "romanization": "mittsu",
+      "gloss": "three things — the first word in the chapter that costs nothing at all",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba37621cef8ff757",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then a word that costs nothing."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say two things — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *two things* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "run the family reception — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: run the family reception — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say one more time, please — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *one more time, please* — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll Want to Know — hear and say",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みっつ (mittsu) — mi-t-tsu — three things."
+            },
+            {
+              "kind": "speech",
+              "text": "Every sign is already yours: み, the small っ, and つ."
+            },
+            {
+              "kind": "speech",
+              "text": "The small っ is the sign you met in ゆっくり: it holds the mouth shut for one beat. みっつ (mittsu) is three beats, and the middle one is silence."
+            },
+            {
+              "kind": "speech",
+              "text": "さん is three. みっつ (mittsu) is three things."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — read, copy, recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write みっつ. Say the run so far, slowly: hitotsu, futatsu, mittsu. Stop on the silent beat in the third one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many signs did this word cost? (None — all three were yours.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: mittsu."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C16-mittsu-recall",
+              "prompt": "Write three things in hiragana, and say what the small sign in the middle does.",
+              "assesses": [
+                "JA-LEX-MITTSU",
+                "JA-SCRIPT-SMALL-TSU-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "みっつ — the small tsu holds the mouth shut for one beat",
+                "mittsu, it doubles the consonant",
+                "みっつ"
+              ],
+              "feedback": {
+                "correct": "Three beats, and the middle one is silence.",
+                "incorrect": "You met that sign in yukkuri."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C16-yottsu",
+      "sequence": 1370,
+      "title": "よっつ (yottsu) — four things, and the seam opens",
+      "headword": "よっつ",
+      "romanization": "yottsu",
+      "gloss": "four things — and the seam the last chapter promised would come back",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:56204d02d47664fc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then the number that has been in both counts all along."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say three things — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *three things* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "run the nine family words — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: run the nine family words — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write せ — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **せ** — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll Want to Know — hear and say",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よっつ (yottsu) — yo-t-tsu — four things."
+            },
+            {
+              "kind": "speech",
+              "text": "No new sign. よ, the small っ, つ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens — the seam, from the other side",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chapter fourteen taught よん and said something that was left hanging: that split is coming back; it is the same seam the counters run along. Here it is."
+            },
+            {
+              "kind": "speech",
+              "text": "よん is a native word standing inside the borrowed count. よっつ (yottsu) is that same native word in the count it belongs to. They begin with the same beat, and that is not an accident — it is one word appearing twice:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "number",
+                "borrowed",
+                "native"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "number: one. borrowed: いち. native: ひと-.",
+                "number: two. borrowed: に. native: ふた-.",
+                "number: three. borrowed: さん. native: み-.",
+                "number: four. borrowed: shi. native: よ-."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every other line of the borrowed column is genuinely borrowed. At four, the native word came across into the borrowed count and stayed — which is why the number you actually say for four is よん and not shi. That is what chapter fourteen was pointing at, and you can now see both halves of it at once."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — read, copy, recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write よっつ. Say yon, then yottsu, and hear the shared beat. Then say shi and hear that it has none."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which two words share a beat? (よん and よっつ (yottsu).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: yottsu."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C16-yottsu-recall",
+              "prompt": "Which word in the borrowed count is really a native word, and which word in this chapter shows where it came from?",
+              "assesses": [
+                "JA-LEX-YOTTSU",
+                "JA-GRAMMAR-KUN-IN-THE-COUNT"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "yon is the native word inside the borrowed count; yottsu is it in its own count",
+                "yon, and yottsu",
+                "yon — yottsu"
+              ],
+              "feedback": {
+                "correct": "One word, standing in two counts.",
+                "incorrect": "Listen to the first beat of yon and of yottsu."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C16-itsutsu",
+      "sequence": 1380,
+      "title": "いつつ (itsutsu) — five things",
+      "headword": "いつつ",
+      "romanization": "itsutsu",
+      "gloss": "five things — three signs, two of them the same, and none of them new",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8846367e7d4943e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then five."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say four things — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *four things* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say one — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *one* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write お — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **お** — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll Want to Know — hear and say",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いつつ (itsutsu) — i-tsu-tsu — five things."
+            },
+            {
+              "kind": "speech",
+              "text": "Three signs, and two of them are the same one. い, つ, つ."
+            },
+            {
+              "kind": "speech",
+              "text": "A warning worth one sentence: いつつ (itsutsu) opens on the same beat as いち, and the two have nothing to do with each other. ご is five; いつつ (itsutsu) is five things; いち is one. The ear will try to pair the wrong two."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — read, copy, recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write いつつ. Say ichi and itsutsu back to back, then go and itsutsu, and fix which pair actually means the same number."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which number does いつつ (itsutsu) NOT mean? (One — however it starts.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: itsutsu."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C16-itsutsu-recall",
+              "prompt": "Which borrowed number means the same as itsutsu?",
+              "assesses": [
+                "JA-LEX-ITSUTSU",
+                "JA-LEX-GO"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "go",
+                "ご",
+                "go, five"
+              ],
+              "feedback": {
+                "correct": "Five, not one — the opening beat is a trap.",
+                "incorrect": "Count the things: itsutsu is five of them."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R16-first-five-things",
+      "sequence": 1390,
+      "title": "Five things, and five numbers",
+      "headword": "ひとつ ふたつ みっつ よっつ いつつ",
+      "romanization": "hitotsu futatsu mittsu yottsu itsutsu",
+      "gloss": "five things, run in order, against the five numbers you already had",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec89fe31d8e66480",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 30,
+              "perItem": false,
+              "source": "[PAUSE 30s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then the run."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say five things — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *five things* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say one thing — R2, six lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *one thing* — **R2**, six lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say I understood — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *I understood* — **R4**, eighty lessons back]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new arrives here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — the run",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ichi, hitotsu; ni, futatsu; san, mittsu; yon, yottsu; go, itsutsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ichi, hitotsu; ni, futatsu; san, mittsu; yon, yottsu; go, itsutsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ひ and ふ (fu) — the two signs this chapter bought",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ひ** and **ふ** — the two signs this chapter bought]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R16-first-five-things-run",
+              "prompt": "Count things from one to five in the native series.",
+              "assesses": [
+                "JA-LEX-HITOTSU",
+                "JA-LEX-FUTATSU",
+                "JA-LEX-MITTSU",
+                "JA-LEX-YOTTSU",
+                "JA-LEX-ITSUTSU"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "hitotsu futatsu mittsu yottsu itsutsu",
+                "ひとつ ふたつ みっつ よっつ いつつ"
+              ],
+              "feedback": {
+                "correct": "Five words, and only two of them cost a sign.",
+                "incorrect": "Three of the five are made only of signs you already had."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R16-first-five-things-pairs",
+              "prompt": "Say the two counts side by side to five, then name the ONE place where the same word appears in both.",
+              "assesses": [
+                "JA-GRAMMAR-KUN-IN-THE-COUNT",
+                "JA-LEX-YON",
+                "JA-LEX-YOTTSU",
+                "JA-LEX-ICHI",
+                "JA-LEX-HITOTSU"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "ichi ni san yon go; hitotsu futatsu mittsu yottsu itsutsu — four, yon and yottsu",
+                "four",
+                "yon and yottsu"
+              ],
+              "feedback": {
+                "correct": "Ten words, one shared piece.",
+                "incorrect": "Listen to the first beat of each pair."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built so far",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five words for two signs. ひ and ふ (fu) were bought in the lessons immediately before the words that needed them; みっつ (mittsu), よっつ (yottsu) and いつつ (itsutsu) cost nothing, because every sign in them was already yours."
+            },
+            {
+              "kind": "speech",
+              "text": "Two counts of five now run side by side, and they share exactly one thing: at four, よん and よっつ (yottsu) begin with the same beat. Everywhere else the two words have nothing in common — ichi and hitotsu, ni and futatsu, and so on down."
+            },
+            {
+              "kind": "speech",
+              "text": "Five more to go, and three more signs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many signs did these five words cost? (Two.) Where do the two counts touch? (At four.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

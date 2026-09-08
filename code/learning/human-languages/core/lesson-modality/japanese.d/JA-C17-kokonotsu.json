@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C17-kokonotsu",
+    "language": "japanese",
+    "chapter": 17,
+    "sequence": 1460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6516d001926c0715"
+  },
+  "findings": []
+}

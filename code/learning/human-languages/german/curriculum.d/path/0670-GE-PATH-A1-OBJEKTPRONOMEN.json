@@ -1,0 +1,17 @@
+{
+  "id": "GE-PATH-A1-OBJEKTPRONOMEN",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "GE-C37-dich",
+    "GE-C37-ihn",
+    "GE-C37-uns",
+    "GE-C37-euch",
+    "GE-C37-sich",
+    "GE-R37-mich-dich-sich"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-A1-OBJEKTPRONOMEN"
+  ],
+  "after": []
+}

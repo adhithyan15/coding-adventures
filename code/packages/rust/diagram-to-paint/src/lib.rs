@@ -33,13 +33,13 @@ use std::collections::HashMap;
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
-    LayoutedCynefinDiagram, LayoutedIshikawaDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
+    LayoutedCynefinDiagram, LayoutedIshikawaDiagram, LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
-    GanttTaskTags, SequenceProperty, TextAlign as GeoTextAlign,
+    GanttTaskTags, SequenceProperty, TextAlign as GeoTextAlign, TreeViewNodeKind,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -170,6 +170,62 @@ where
 
 fn format_treemap_value(value: f64) -> String {
     if value.fract() == 0.0 { format!("{value:.0}") } else { format!("{value:.2}") }
+}
+
+/// Lower a layouted TreeView into backend-neutral connectors, markers, and glyphs.
+pub fn diagram_to_paint_treeview<S, M, R>(diagram: &LayoutedTreeViewDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
+where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
+    let mut instructions = Vec::new();
+    let mut text_children = Vec::new();
+    let positions = diagram.nodes.iter().map(|node| (node.id.as_str(), (node.x, node.y))).collect::<HashMap<_, _>>();
+    for node in &diagram.nodes {
+        if let Some((parent_x, parent_y)) = node.parent_id.as_deref().and_then(|id| positions.get(id)).copied() {
+            let joint_x = node.x - 16.0;
+            instructions.push(PaintInstruction::Path(line_path(&[
+                Point { x: parent_x + 7.0, y: parent_y + 14.0 },
+                Point { x: joint_x, y: parent_y + 14.0 },
+                Point { x: joint_x, y: node.y + 14.0 },
+                Point { x: node.x, y: node.y + 14.0 },
+            ], "#64748b", 1.5)));
+        }
+    }
+    if let Some(title) = &diagram.title {
+        text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0, options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+    }
+    for node in &diagram.nodes {
+        if node.class_selector.as_deref() == Some("highlight") {
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.x - 5.0, y: node.y,
+                width: node.width, height: node.height, fill: Some("#fff7d6".into()), stroke: Some("#f59e0b".into()),
+                stroke_width: Some(1.0), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
+        }
+        let show_icon = node.icon.as_deref().is_some_and(|icon| icon != "none");
+        if show_icon {
+            let (fill, radius) = match node.kind { TreeViewNodeKind::Directory => ("#fbbf24", 3.0), TreeViewNodeKind::File => ("#bfdbfe", 1.0) };
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.x, y: node.y + 6.0,
+                width: 16.0, height: 16.0, fill: Some(fill.into()), stroke: Some("#475569".into()), stroke_width: Some(1.0),
+                corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None }));
+        }
+        let text_x = node.x + if show_icon { 23.0 } else { 0.0 };
+        let label_width = (node.label.chars().count() as f64 * options.label_font.size * 0.62 + 8.0).min(node.width * 0.6);
+        text_children.push(text_node_no_wrap(&node.label, text_x, node.y + 2.0, label_width, 24.0,
+            options.label_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+        if let Some(description) = &node.description {
+            let description_width = (description.chars().count() as f64 * options.label_font.size * 0.58 + 8.0).min(node.width * 0.4);
+            text_children.push(text_node_no_wrap(description, text_x + label_width + 10.0,
+                node.y + 2.0, description_width, 24.0, options.label_font.clone(), Color { r: 71, g: 102, b: 85, a: 255 }));
+        }
+    }
+    let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+        id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions { width: diagram.width,
+        height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
+        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver });
+    instructions.extend(text_scene.instructions);
+    let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
+    if let Some(description) = &diagram.accessibility_description { metadata.insert("accessibility.description".into(), description.clone()); }
+    PaintScene { width: diagram.width, height: diagram.height,
+        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
+        instructions, id: None, metadata: (!metadata.is_empty()).then_some(metadata) }
 }
 
 /// Lower Venn circle geometry into backend-neutral ellipses and glyph runs.
@@ -5098,6 +5154,27 @@ mod tests {
             scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")),
             Some(&"Allocation treemap".to_string())
         );
+    }
+
+    #[test]
+    fn treeview_lowers_to_backend_neutral_paths_rects_and_glyphs() {
+        let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedTreeViewDiagram {
+            width: 420.0, height: 100.0, title: None, accessibility_title: None, accessibility_description: None,
+            nodes: vec![
+                diagram_ir::LayoutedTreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(),
+                    kind: TreeViewNodeKind::Directory, class_selector: Some("highlight".into()), icon: Some("folder".into()),
+                    description: None, x: 26.0, y: 12.0, width: 376.0, height: 28.0 },
+                diagram_ir::LayoutedTreeViewNode { id: "child".into(), parent_id: Some("root".into()), depth: 1, label: "main.rs".into(),
+                    kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("entry".into()),
+                    x: 68.0, y: 46.0, width: 334.0, height: 28.0 },
+            ],
+        };
+        let scene = diagram_to_paint_treeview(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
     }
 
     #[test]

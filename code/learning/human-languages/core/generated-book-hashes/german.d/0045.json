@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:f033d6e2485f95ac",
+  "lessonIds": [
+    "GE-C32-kein",
+    "GE-C32-keine",
+    "GE-C32-keinen",
+    "GE-C32-kein-oder-nicht",
+    "GE-C32-nicht-stellung",
+    "GE-R32-nichts-davon"
+  ],
+  "tex": "german/book/chapters/ch45-negation.tex"
+}

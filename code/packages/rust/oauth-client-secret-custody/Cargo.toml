@@ -5,5 +5,6 @@ edition = "2021"
 description = "Audit-first storage-agnostic OAuth client-secret custody"
 
 [dependencies]
+coding_adventures_base64 = { path = "../base64" }
 coding_adventures_oauth = { path = "../oauth" }
 coding_adventures_zeroize = { path = "../zeroize" }

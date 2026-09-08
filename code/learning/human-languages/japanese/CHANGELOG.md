@@ -4,6 +4,145 @@ All notable changes to the Japanese curriculum track are recorded here.
 
 ## [Unreleased]
 
+### Added — chapters 16, 17 and 18: the other count, and what the tsu was doing all along
+
+`JA-A1-NUM-02` read "Japanese-specific and still absent." It is now covered, and
+it is the FIRST japaneseSpecific point in this file to close at all — it has no
+Spanish column behind it, because Spanish has no classifier system. Coverage
+66/179 → **67/179**. Twenty-six lessons in three chapters, twenty-three atoms,
+ten new glyphs.
+
+**CHAPTER 14 LEFT A SENTENCE HANGING AND THIS IS WHERE IT LANDS.** `JA-C14-yon`
+said of the native word standing inside the borrowed count: *that split is coming
+back; it is the same seam the counters run along.* The seam is now shown twice
+more and named as one thing:
+
+- **よん / なな** — the native word inside the borrowed COUNT (chapter 14; chapter
+  17 shows the other end of the same pair, **よっつ / ななつ**).
+- **ひとり / ふたり** — the native word inside a borrowed COUNTER, at exactly one
+  and two, with **さんにん** taking over from three.
+
+No new atom was invented for the second: it is `JA-GRAMMAR-KUN-IN-THE-COUNT`,
+introduced in chapter 14, doing the same job in a different place.
+
+**THE READER ALREADY OWNED TWO COUNTERS AND NOBODY HAD SAID SO.** The **つ** of
+the native series IS the general counter — which is why nine of its ten words
+carry it and **とお** does not — and the **ど** of chapter 9's **いちど** is a
+counter too. That lesson's own words were *ichi is one, and do counts an
+occurrence*; it never used the term. Chapter 18 cashes both, and no
+`JA-LEX-DO-COUNTER` atom was invented for the second. The test asserts none
+exists.
+
+**THE ORDER IS BY COST, AND IT DELIBERATELY DIFFERS FROM CHAPTER 15's.** Five of
+the ten native words — **みっつ よっつ いつつ ななつ とお** — cost no sign at all,
+and each of the five signs the others need is bought in the lesson **immediately
+before** the word that needs it, so the count grows contiguously. Chapter 15 did
+the opposite: it bought both its kana last and left the reader counting round an
+audible hole at six for three lessons. That was right there, because the borrowed
+count has an exception at six to make legible; it would be wrong here, because
+the native series has none and a hole would buy nothing.
+
+**THE SIGNS WERE PRICED FROM THE CORPUS, AND THE PRICE WAS FIVE, NOT FOUR.**
+Deriving the taught set at point of use rather than guessing: **ひ**, **ふ**,
+**む**, **や** — and **の**, which **ここのつ** needs and which is easy to miss.
+The **ここ** at that word's front is the shape of the word for *here* the reader
+has had since chapter 10; the lesson names that as an accident rather than
+explaining it, because an accident that gets explained is worse than one that
+gets named.
+
+**EVERY STROKE ORDER IS OBSERVED, AND THE FRAME COUNTS ARE IN THE INVENTORY.**
+Following the standard `ろ` set in chapter 15, each of the six new kana was taken
+from Sirgazil's CC0 Commons animations, downloaded and read frame by frame, and
+cross-checked against KanjiVG's path data for the same codepoint:
+
+    ひ  33 frames, 3.3 s   1 stroke,  0 pen lifts   marker never leaves the origin
+    ふ  31 frames, 3.1 s   4 strokes, 3 pen lifts   tick, body, lower-left, lower-right
+    む  32 frames, 3.2 s   3 strokes, 2 pen lifts   the right-hand mark is separate
+    や  28 frames, 2.8 s   3 strokes, 2 pen lifts   the SWEEP is first, not the descender
+    の  32 frames, 3.2 s   1 stroke,  0 pen lifts   crosses its own line at the end
+    ほ  37 frames, 3.7 s   4 strokes, 3 pen lifts   は plus one horizontal, drawn above
+
+**や** is the one worth having looked at: the finished shape says the long
+descender was drawn first, and the animation and KanjiVG agree that it is drawn
+**last**. That is a claim no author should make from memory.
+
+**THE COUNTERS ARE THE THREE THE CORPUS'S OWN NOUNS CAN EXERCISE.** Not the usual
+textbook set: **つ** on the face words of chapters 11-12, **にん** on the nine
+family words of chapter 13, and **ほん** on **あし** and **かみ**. Every example
+counts something the reader can already name, which is why **まい** — flat things
+— is *not* taught: the track has no flat noun, and a counter with nothing to
+count is a word rather than a skill.
+
+**ほん COST ONE SIGN AND ALMOST NONE.** The kanji it is written with is **本**,
+which the reader has been writing since chapter 5 inside **日本語**, and the
+chapter says so. What it had to buy was the kana **ほ** — which is **は** plus one
+horizontal — and then the **handakuten ゜**, a mark the script inventory has named
+since chapter one and no lesson had ever taught. **いっぽん** is what finally
+needed it.
+
+**THE NINE-FORM OF THE COUNTER IS LEFT OUT AND THE PAGE SAYS SO.** The
+**いっぽん** table prints one, two, three, four, five, six, seven, eight and ten;
+nine's everyday form needs **き**, a sign this book has not taught. Guessing it,
+or writing it in romanization inside a table of kana, would both have been worse
+than naming the gap.
+
+**REINFORCEMENT, DECOMPOSED ATOM BY ATOM RATHER THAN BY TOTALS:**
+
+    reinforcementWindowMisses          0 ->   0
+    reinforcementMissesByWindow-R1     0 ->   0
+    reinforcementMissesByWindow-R2     0 ->   0
+    reinforcementMissesByWindow-R3     0 ->   0
+    reinforcementMissesByWindow-R4     0 ->   0
+    atomsTaught                      125 -> 148
+    atomsNeverRevisited                0 ->   0
+    scriptClosureViolations            0 ->   0
+    neverTaughtGlyphs                  0 ->   0
+    taughtGlyphs                      50 ->  60
+
+**Zero to zero, in every window.** This is one of two tracks in the corpus with
+no reinforcement miss anywhere, and twenty-six lessons did not put one in it. The
+tranche's own twenty-three atoms create **zero** debt. Twenty-six lessons make
+**47** (atom, window) slots newly judgeable on OLDER atoms — five R2, sixteen R3,
+**twenty-six R4** — and all forty-seven are answered. The R4 payments are
+arithmetic rather than search: the twenty-six atoms introduced at positions 51-76
+have their fourth window open at exactly 131-156, so new lesson *n* services the
+atom introduced at *n*−80, one per lesson. Where a better pairing existed it was
+taken instead of the diagonal minimum — **いちど**'s R4 lands in the lesson that
+first says the word *counter* out loud, and the four body words of chapters 11-12
+land in the counting lessons where a reader would actually be counting them.
+
+**THE ATOM-STEP BUDGET FORCED THE SHAPE, AND THAT IS THE RIGHT OUTCOME.** The
+native count was authored as ONE chapter of fifteen atoms and
+`maxNewAtomsPerChapter` is **12**, so the gentle-ramp atom-step finding went from
+zero to one. The fix was not to raise the budget: the chapter was split at five,
+exactly where chapters 14 and 15 split the borrowed count, giving 7 and 8 atoms
+and restoring the finding to zero. This track has never carried a gentle-ramp
+finding of any kind and still does not.
+
+**TWO GATES CAUGHT REAL DEFECTS RATHER THAN NUMBERS.** The narration refusal
+count rose by one: `JA-C16-yottsu`'s two-system table was five columns with the
+number under no header — the exact shape the chapter policy calls unspeakable. It
+is now three labelled columns (number / borrowed / native) and the narrator reads
+it. The info-dump rule-statement count rose by one on a sentence in the final
+payoff beginning *the rule for a learner is…*; it was rewritten rather than
+absorbed, and the ceiling did not move.
+
+**THE SCRIPT COST WAS MEASURED PER LESSON, AND THAT CAUGHT A CLASS OF LEAK.**
+Because a script lesson teaches every target-script glyph in its body, a leak
+teaches a glyph by accident — and the aggregate cannot see it. A per-lesson walk
+found three kinds: the kanji **一 二 三 四 六 七 八 九 十** entering through
+**Wiktionary link labels**, a URL not being prose but a link label being one;
+**ぶ** and **ぷ** in a passing example; and the digit-one sign appearing in the
+zero lesson before its own. All were removed, and closure and never-taught both
+stayed at zero.
+
+**NOT CLAIMED, and the inventory and the tests both say so rather than leaving it
+to be inferred:** **まい**, **ひき**, **さつ**, **だい** and the rest of the
+counter set; the nine-form of **ほん**; and any lexical atom for the **ど** of
+**いちど**. `JA-A1-NUM-03`, the ordinals, changes from "blocked upstream" to
+ordinary vocabulary work, because a Japanese ordinal is a counter with **だい-**
+in front or **-め** behind and the counters now exist.
+
 ### Added — chapters 14 and 15: the cardinals one to ten, and the two signs they cost
 
 `JA-A1-NUM-01` was ticked on ONE numeral, and that one was inside a phrase. The

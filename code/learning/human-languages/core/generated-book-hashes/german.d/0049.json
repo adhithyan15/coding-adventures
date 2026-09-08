@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:fa0aa4d0eb175447",
+  "lessonIds": [
+    "GE-C36-mein",
+    "GE-C36-dein",
+    "GE-C36-sein-his",
+    "GE-C36-ihr-her",
+    "GE-C36-das-ist",
+    "GE-R36-wer-ist-das"
+  ],
+  "tex": "german/book/chapters/ch49-possessiv.tex"
+}

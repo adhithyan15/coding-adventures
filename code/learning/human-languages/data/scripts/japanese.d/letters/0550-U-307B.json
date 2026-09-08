@@ -1,0 +1,25 @@
+{
+  "glyph": "ほ",
+  "sound": "ho",
+  "role": "hiragana",
+  "components": [
+    "a left vertical with a hook at the foot",
+    "an upper horizontal on the right",
+    "a lower horizontal on the right",
+    "a right vertical looping at the foot"
+  ],
+  "strokeOrder": [
+    "draw the left vertical from the top, hooking left at the foot",
+    "lift; draw the upper horizontal on the right, left to right",
+    "lift; draw the lower horizontal on the right, left to right",
+    "lift; draw the right vertical down through both horizontals and loop it at the foot"
+  ],
+  "strokeOrderNote": "Sirgazil's 37-frame animation moves the start marker three times, which is three pen lifts and four strokes; the two horizontals are drawn top first, then bottom, before the right-hand vertical.",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%BB_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana ほ stroke order animation.gif, hiragana ほ, 37 frames, 3.7 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws ほ as four strokes in the order left vertical, upper horizontal, lower horizontal, right vertical-with-loop. KanjiVG's data for U+307B holds four paths in the same order. は is the same figure with only ONE horizontal; ほ is は plus the upper bar, and the extra bar is drawn before the lower one."
+  },
+  "notes": "The ho of ほん, the counter for long thin things. It is は with one more horizontal, and the kanji it writes, 本, is one the reader has been writing since chapter five."
+}

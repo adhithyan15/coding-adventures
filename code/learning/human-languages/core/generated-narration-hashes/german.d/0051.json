@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:63b4fd6e8b34e129",
+  "lessonIds": [
+    "GE-C38-koennen",
+    "GE-C38-moechten",
+    "GE-C38-muessen",
+    "GE-C38-klammer",
+    "GE-C38-partizip-en",
+    "GE-R38-was-kann-ich"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch51.txt",
+  "json": "german/narration/ch51.json",
+  "textHash": "fnv1a64:953321e7ef5e4c19",
+  "jsonHash": "fnv1a64:4fef72c2e2d2b117",
+  "findings": []
+}

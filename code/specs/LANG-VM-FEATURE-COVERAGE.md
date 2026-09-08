@@ -22,12 +22,12 @@ refusal also does not imply the complete driver refuses that feature.
 | Frontend | Unified rows | Declared standard cells | Additional proof boundary |
 |---|---:|---:|---|
 | Twig | 49 | 343 | 20 BEAM cells; dedicated heap/closure tests |
-| Nib | 26 | 182 | Intel 4004 BCD simulator proof, separate from standard targets |
+| Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
 | Brainfuck | 6 | 42 | Dedicated WASM/JVM/CLR and JIT execution |
 | Dartmouth BASIC | 51 | 357 | Random differential suite and frontend JIT tests |
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025 |
-| FLOW-MATIC | 8 | 56 | All output and input/EOF rows on seven standard columns; frontend JIT stream tests |
+| FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
 | COBOL-60 | 58 | 406 | Much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |

@@ -1,0 +1,23 @@
+{
+  "glyph": "の",
+  "sound": "no",
+  "role": "hiragana",
+  "components": [
+    "a descent from high centre-right",
+    "a turn round the bottom and up the left",
+    "a crossing sweep out to the right and down"
+  ],
+  "strokeOrder": [
+    "begin high, a little right of centre, and descend",
+    "without lifting, round the bottom and come up the left side",
+    "without lifting, cross your own line near the top and swing out to the right and down"
+  ],
+  "strokeOrderNote": "Sirgazil's 32-frame animation writes の in a single pen-down run: the start marker never leaves its high centre-right origin across all 32 frames.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%AE_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana の stroke order animation.gif, hiragana の, 32 frames, 3.2 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws の in one uninterrupted run: down, round the bottom, up the left, across its own line near the top, then out to the right and down. The learner path is fitted to the bundled Noto Sans JP subset; loop width varies in handwriting, but the zero-lift order is the same."
+  },
+  "notes": "The no of ここのつ, nine things. One stroke like ひ, and unlike ひ it crosses itself."
+}

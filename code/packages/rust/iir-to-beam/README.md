@@ -217,3 +217,21 @@ runner now preserves program stdout separately from the return marker, using
 the same outer-whitespace convention as the other text process runners.
 Coverage includes complement, wrapping, short circuit, globals and loops/calls.
 This does not implement Intel-8008 input, carry arithmetic or rotations.
+
+### Nib on BEAM (VM-040)
+
+All 26 existing portable Nib matrix programs now include real BEAM (208 declared
+cells across eight backends). Four-bit arithmetic, unary and bitwise results
+now use mask 15; u8 keeps 255 and wider integer lowering is unchanged. The
+executed corpus covers calls/loops, checked arithmetic, u4/u8 complement,
+globals and BCD storage. This does not establish full Intel-4004 fidelity.
+
+### FLOW-MATIC output on BEAM (VM-040)
+
+The four FLOW-MATIC output/control-flow matrix cases now run on real BEAM.
+Character output uses a one-character list and io:put_chars/1, with heap space
+reserved and live registers preserved across the imported call. A 200-character
+loop regression verifies output and the surviving return value. These proofs
+cover the ASCII characters used by FLOW-MATIC's integer printer; broader byte
+I/O and the four input/EOF cases remain separate work. FLOW-MATIC has 60
+declared cells: four rows on eight backends and four input rows on seven.

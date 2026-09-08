@@ -1,0 +1,25 @@
+{
+  "chapter": 46,
+  "title": "When the Verb Steps to the Front",
+  "label": "ch:ge-frage",
+  "canDo": "I can ask a question that expects yes or no, give a one-word command, and ask who, when and why.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GE-R33-frag-mich",
+    "kind": "production",
+    "summary": "Every statement in the book becomes a question and every verb becomes a command. Three of the six W-words were already owned, so the chapter buys the whole interrogative system for three new words plus two sentence shapes -- and the fourth, fifth and sixth W arrive predicted rather than memorised, because Grimm's law lines German w- up against English wh- one word at a time.",
+    "assesses": [
+      "GE-GRAMMAR-JA-NEIN-FRAGE-01",
+      "GE-GRAMMAR-IMPERATIV-DU-01",
+      "GE-LEX-WER-01",
+      "GE-ETYMON-WER-WHO-02",
+      "GE-LEX-WANN-01",
+      "GE-ETYMON-WANN-WHEN-02",
+      "GE-LEX-WARUM-01",
+      "GE-ETYMON-WARUM-WAR-UM-02"
+    ],
+    "note": "The polar question was the last shape in the book that put the verb somewhere it had never stood. It closes SPINE-NEGATE-AND-ASK's second concept, and the imperative closes A1-V-07, which nothing in 297 lessons had touched because every verb in the track had appeared with a subject in front of it."
+  }
+}

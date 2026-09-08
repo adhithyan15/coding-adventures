@@ -24,7 +24,7 @@ const corpus = defaultCurriculumRoot();
 const CONFIGS = [
   // 49 -> 51: HL-C360 adds ろ (U+308D) and ゅ (U+3085), the two hiragana the
   // Japanese cardinals one to ten needed — ろ for roku and ゅ for juu.
-  { language: "japanese", script: "japanese", letters: 51, marks: 3 },
+  { language: "japanese", script: "japanese", letters: 59, marks: 3 },
   // 24 -> 26: HL-C350 adds ج and ص as RECOGNITION-ONLY owners. panj (five) and
   // sad (a hundred) need them in a headword, and `uncoveredGlyphs` is a
   // headword check, so the numerals could not be taught without them. Both

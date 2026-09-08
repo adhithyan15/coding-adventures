@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:b508869b23439594",
+  "lessonIds": [
+    "GE-C33-ja-nein-frage",
+    "GE-C33-imperativ",
+    "GE-C33-wer",
+    "GE-C33-wann",
+    "GE-C33-warum",
+    "GE-R33-frag-mich"
+  ],
+  "tex": "german/book/chapters/ch46-frage.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:2716c0078dc452a6",
+  "lessonIds": [
+    "GE-C34-welcher",
+    "GE-C34-wie-viel",
+    "GE-C34-den",
+    "GE-C34-praedikativ",
+    "GE-C34-es-gibt",
+    "GE-R34-welchen"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch47.txt",
+  "json": "german/narration/ch47.json",
+  "textHash": "fnv1a64:66b2a8930bd37ad6",
+  "jsonHash": "fnv1a64:c71eced72cfbc3da",
+  "findings": []
+}
