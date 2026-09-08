@@ -7,6 +7,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 typedef _CreateNative = Pointer<Void> Function(Pointer<Char>, Double, Double);
 typedef _CreateDart = Pointer<Void> Function(Pointer<Char>, double, double);
@@ -22,6 +23,10 @@ typedef _PointNative = Uint8 Function(Pointer<Void>, Double, Double);
 typedef _PointDart = int Function(Pointer<Void>, double, double);
 typedef _ScalarNative = Uint8 Function(Pointer<Void>, Double);
 typedef _ScalarDart = int Function(Pointer<Void>, double);
+typedef _ControlKeyNative = Uint8 Function(Pointer<Void>, Pointer<Char>, Uint8);
+typedef _ControlKeyDart = int Function(Pointer<Void>, Pointer<Char>, int);
+typedef _ControlTextNative = Uint8 Function(Pointer<Void>, Pointer<Char>);
+typedef _ControlTextDart = int Function(Pointer<Void>, Pointer<Char>);
 typedef _MetricsNative =
     Uint8 Function(
       Pointer<Void>,
@@ -115,6 +120,12 @@ class _VentureBindings {
       scroll = library.lookupFunction<_ScalarNative, _ScalarDart>(
         'venture_browser_flutter_scroll',
       ),
+      controlKey = library.lookupFunction<_ControlKeyNative, _ControlKeyDart>(
+        'venture_browser_flutter_control_key',
+      ),
+      controlText = library.lookupFunction<_ControlTextNative, _ControlTextDart>(
+        'venture_browser_flutter_control_text',
+      ),
       activateLink = library.lookupFunction<_PointNative, _PointDart>(
         'venture_browser_flutter_activate_link',
       ),
@@ -139,6 +150,8 @@ class _VentureBindings {
   final _PropsDart props;
   final _EventDart event;
   final _ScalarDart scroll;
+  final _ControlKeyDart controlKey;
+  final _ControlTextDart controlText;
   final _PointDart activateLink;
   final _PointDart updateHover;
   final _MetricsDart metrics;
@@ -288,6 +301,29 @@ class MosaicHost {
     }
   }
 
+  bool controlKey(String key, {bool shift = false}) {
+    final value = _NativeString(key);
+    try {
+      final changed =
+          _bindings.controlKey(_host, value.pointer, shift ? 1 : 0) != 0;
+      if (changed) _surfaceChanged();
+      return changed;
+    } finally {
+      value.dispose();
+    }
+  }
+
+  bool controlText(String text) {
+    final value = _NativeString(text);
+    try {
+      final changed = _bindings.controlText(_host, value.pointer) != 0;
+      if (changed) _surfaceChanged();
+      return changed;
+    } finally {
+      value.dispose();
+    }
+  }
+
   String get statusText {
     final response = _decorate(_decodeResponse(_bindings.props(_host)));
     final props = response['props'];
@@ -419,6 +455,7 @@ class _VentureContentSurfaceState extends State<VentureContentSurface> {
   ui.Image? _image;
   bool _linkHover = false;
   int _renderGeneration = 0;
+  final FocusNode _focusNode = FocusNode(debugLabel: 'Venture page controls');
 
   @override
   void initState() {
@@ -470,32 +507,68 @@ class _VentureContentSurfaceState extends State<VentureContentSurface> {
     }
   }
 
+  KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    final key = switch (event.logicalKey) {
+      LogicalKeyboardKey.backspace => 'backspace',
+      LogicalKeyboardKey.delete => 'delete',
+      LogicalKeyboardKey.arrowLeft => 'arrow-left',
+      LogicalKeyboardKey.arrowRight => 'arrow-right',
+      LogicalKeyboardKey.arrowUp => 'arrow-up',
+      LogicalKeyboardKey.arrowDown => 'arrow-down',
+      LogicalKeyboardKey.home => 'home',
+      LogicalKeyboardKey.end => 'end',
+      LogicalKeyboardKey.enter => 'enter',
+      LogicalKeyboardKey.space => 'space',
+      _ => null,
+    };
+    if (key != null &&
+        widget.host.controlKey(
+          key,
+          shift: HardwareKeyboard.instance.isShiftPressed,
+        )) {
+      return KeyEventResult.handled;
+    }
+    final character = event.character;
+    if (character != null &&
+        character.isNotEmpty &&
+        widget.host.controlText(character)) {
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: MosaicHost.viewportWidth,
       height: MosaicHost.viewportHeight,
-      child: MouseRegion(
-        cursor: _linkHover
-            ? SystemMouseCursors.click
-            : SystemMouseCursors.basic,
-        onHover: _handleHover,
-        child: Listener(
-          behavior: HitTestBehavior.opaque,
-          onPointerSignal: _handlePointerSignal,
-          child: GestureDetector(
+      child: Focus(
+        focusNode: _focusNode,
+        onKeyEvent: _handleKey,
+        child: MouseRegion(
+          cursor: _linkHover
+              ? SystemMouseCursors.click
+              : SystemMouseCursors.basic,
+          onHover: _handleHover,
+          child: Listener(
             behavior: HitTestBehavior.opaque,
-            onTapUp: (details) => widget.host.activateLink(
-              details.localPosition.dx,
-              details.localPosition.dy,
+            onPointerDown: (_) => _focusNode.requestFocus(),
+            onPointerSignal: _handlePointerSignal,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTapUp: (details) => widget.host.activateLink(
+                details.localPosition.dx,
+                details.localPosition.dy,
+              ),
+              child: _image == null
+                  ? const ColoredBox(color: Colors.white)
+                  : RawImage(
+                      key: const Key('venture-content-image'),
+                      image: _image,
+                      fit: BoxFit.fill,
+                    ),
             ),
-            child: _image == null
-                ? const ColoredBox(color: Colors.white)
-                : RawImage(
-                    key: const Key('venture-content-image'),
-                    image: _image,
-                    fit: BoxFit.fill,
-                  ),
           ),
         ),
       ),
@@ -507,6 +580,7 @@ class _VentureContentSurfaceState extends State<VentureContentSurface> {
     widget.host._surfaceRevision.removeListener(_scheduleRefresh);
     _renderGeneration += 1;
     _image?.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 }

@@ -9,12 +9,16 @@ pub use browser_bookmarks::{
     Bookmark, BookmarkCatalog, BookmarkChange, BookmarkRepository, BookmarkRepositoryError,
     BookmarkUrl, MemoryBookmarkRepository,
 };
-pub use browser_form_controls::{BrowserControlModel, ControlEffect, ControlKey};
+pub use browser_form_controls::{
+    BrowserControlModel, ControlEditorState, ControlEffect, ControlKey, ControlSelection,
+};
 use browser_form_submission::{plan_activation, plan_implicit_submission};
 pub use browser_form_submission::{
     FormActivation, FormDiagnostic, FormEntry, FormMethod, FormNavigation, FormPlanningError,
 };
 pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
+#[cfg(test)]
+use coding_adventures_html_parser::BrowserRenderNode;
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
 use html_to_layout::{html_media_query_applies, HtmlAuthorStylesheet, HtmlStyleContext, HtmlTheme};
 use html_to_paint::{
@@ -1383,6 +1387,7 @@ impl BrowserSession {
             self.apply_form_activation(activation, pipeline, fetcher)?;
         } else {
             self.form_diagnostics.clear();
+            self.controls.clear_validation();
             self.reflow_controls(pipeline);
         }
         Ok(Some(effect))
@@ -1401,6 +1406,23 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        self.control_key_down_with_shift_and_submit(key, false, pipeline, fetcher)
+    }
+
+    pub fn control_key_down_with_shift_and_submit<F, M, S, FM, R>(
+        &mut self,
+        key: ControlKey,
+        shift: bool,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<Option<ControlEffect>, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
         let focused_key = self.controls.focused_key().map(str::to_owned);
         let focused_accepts_implicit = focused_key
             .as_deref()
@@ -1408,7 +1430,7 @@ impl BrowserSession {
             .is_some_and(|control| {
                 control.kind.accepts_text() && control.kind.name() != "textarea"
             });
-        let effect = self.controls.key_down(key);
+        let effect = self.controls.key_down_with_shift(key, shift);
         let activation = match &effect {
             Some(ControlEffect::Activated(activated)) => {
                 Some(self.plan_form_activation(activated)?)
@@ -1423,6 +1445,7 @@ impl BrowserSession {
             self.apply_form_activation(activation, pipeline, fetcher)?;
         } else if effect.is_some() {
             self.form_diagnostics.clear();
+            self.controls.clear_validation();
             self.reflow_controls(pipeline);
         }
         Ok(effect)
@@ -1471,6 +1494,7 @@ impl BrowserSession {
         match activation {
             FormActivation::None => {
                 self.form_diagnostics.clear();
+                self.controls.clear_validation();
                 self.reflow_controls(pipeline);
             }
             FormActivation::Reset {
@@ -1478,16 +1502,25 @@ impl BrowserSession {
                 form_index,
             } => {
                 self.form_diagnostics.clear();
+                self.controls.clear_validation();
                 self.controls
                     .reset_form(form_id.as_deref(), Some(form_index));
                 self.reflow_controls(pipeline);
             }
             FormActivation::Invalid(diagnostics) => {
+                self.controls.clear_validation();
+                for diagnostic in &diagnostics {
+                    if let Some(key) = &diagnostic.key {
+                        self.controls.set_invalid(key, diagnostic.message.clone());
+                    }
+                }
+                self.controls.focus_first_invalid();
                 self.form_diagnostics = diagnostics;
                 self.reflow_controls(pipeline);
             }
             FormActivation::Navigate(navigation) => {
                 self.form_diagnostics.clear();
+                self.controls.clear_validation();
                 self.execute_form_navigation(navigation, pipeline, fetcher)?;
             }
         }
@@ -1564,7 +1597,24 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.key_down(key)?;
+        self.control_key_down_with_shift(key, false, pipeline)
+    }
+
+    pub fn control_key_down_with_shift<M, S, FM, R>(
+        &mut self,
+        key: ControlKey,
+        shift: bool,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.key_down_with_shift(key, shift)?;
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -1581,6 +1631,74 @@ impl BrowserSession {
         R: FontResolver<Handle = S::Handle>,
     {
         let effect = self.controls.text_input(text)?;
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_set_selection<M, S, FM, R>(
+        &mut self,
+        key: &str,
+        anchor: usize,
+        focus: usize,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.set_selection(key, anchor, focus)?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_update_composition<M, S, FM, R>(
+        &mut self,
+        text: &str,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.update_composition(text)?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_commit_composition<M, S, FM, R>(
+        &mut self,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.commit_composition()?;
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_cancel_composition<M, S, FM, R>(
+        &mut self,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.cancel_composition()?;
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -4373,6 +4491,17 @@ mod tests {
             (control.x + 1.0, control.y + 1.0)
         }
 
+        fn node_by_id<'a>(
+            nodes: &'a [BrowserRenderNode],
+            id: &str,
+        ) -> Option<&'a BrowserRenderNode> {
+            nodes.iter().find_map(|node| {
+                (node.id.as_deref() == Some(id))
+                    .then_some(node)
+                    .or_else(|| node_by_id(&node.children, id))
+            })
+        }
+
         let fetcher = FormFetcher {
             requests: RefCell::new(Vec::new()),
         };
@@ -4395,6 +4524,21 @@ mod tests {
             .activate_control_and_submit(submit.0, submit.1, &pipeline, &fetcher)
             .unwrap();
         assert_eq!(session.form_diagnostics()[0].code, "value-missing");
+        assert_eq!(session.controls().focused_key(), Some("control:0:id:q"));
+        assert_eq!(
+            session
+                .controls()
+                .editor("control:0:id:q")
+                .and_then(|editor| editor.invalid_message.as_deref()),
+            Some("required control has no value")
+        );
+        let query_node = node_by_id(
+            &session.viewport().unwrap().page().render_tree.children,
+            "q",
+        )
+        .unwrap();
+        assert!(query_node.control_focused);
+        assert_eq!(query_node.aria_invalid.as_deref(), Some("true"));
         assert_eq!(session.history().back_stack().len(), 0);
         assert_eq!(fetcher.requests.borrow().len(), 1);
 
@@ -4403,6 +4547,15 @@ mod tests {
             .activate_control_and_submit(query.0, query.1, &pipeline, &fetcher)
             .unwrap();
         session.control_text_input("venture", &pipeline).unwrap();
+        assert!(session.form_diagnostics().is_empty());
+        assert_eq!(
+            session
+                .controls()
+                .editor("control:0:id:q")
+                .unwrap()
+                .invalid_message,
+            None
+        );
         let reset = control_point(&session, "control:1:id:reset");
         session
             .activate_control_and_submit(reset.0, reset.1, &pipeline, &fetcher)

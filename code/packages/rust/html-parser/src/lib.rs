@@ -14032,14 +14032,10 @@ fn collect_browser_facts(
                 collect_browser_facts(&element.children, summary, labels, id_texts, &[], body_root);
                 continue;
             }
-            "source" => {
-                if picture_sources.is_empty() {
-                    pending_picture_sources.push(browser_image_source_element(
-                        element,
-                        summary.base_href.as_deref(),
-                    ));
-                }
-            }
+            "source" if picture_sources.is_empty() => pending_picture_sources.push(
+                browser_image_source_element(element, summary.base_href.as_deref()),
+            ),
+            "source" => {}
             "img" => summary.images.push(browser_image_element(
                 element,
                 summary.base_href.as_deref(),
@@ -24722,7 +24718,7 @@ fn browser_control_submission_values(
         "input" if control_type == "file" => Vec::new(),
         "input" => vec![browser_input_value(element).unwrap_or_default()],
         "select" => selected_option_values(element),
-        "textarea" => vec![element_text(element)],
+        "textarea" => vec![element_raw_text(element)],
         _ => Vec::new(),
     }
 }
@@ -24772,7 +24768,7 @@ fn browser_content_value(element: &Element) -> Option<String> {
         "option" => Some(browser_option_value(element)),
         "output" => Some(element_text(element)),
         "select" => selected_option_value(&element.children),
-        "textarea" => Some(element_text(element)),
+        "textarea" => Some(element_raw_text(element)),
         _ => None,
     }
 }
@@ -27672,7 +27668,7 @@ fn browser_form_control(
     let control_labels = browser_control_labels(element, labels, current_label_text);
     let text = match element.name.as_str() {
         "button" | "output" | "select" => visible_text_for_nodes(&element.children),
-        "textarea" => element_text(element),
+        "textarea" => element_raw_text(element),
         _ => String::new(),
     };
     let autocomplete = browser_autocomplete(element);
@@ -27852,9 +27848,13 @@ fn collect_visible_text(nodes: &[Node], text: &mut String) {
 }
 
 fn element_text(element: &Element) -> String {
+    collapse_html_whitespace(&element_raw_text(element))
+}
+
+fn element_raw_text(element: &Element) -> String {
     let mut text = String::new();
     collect_browser_text_content(&element.children, &mut text);
-    collapse_html_whitespace(&text)
+    text
 }
 
 fn collect_browser_text_content(nodes: &[Node], text: &mut String) {

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add retained selection/caret and composition routing, first-invalid focus,
+  synchronized validation accessibility metadata, and common native control
+  key/text seams for the macOS, Windows, and Cairo hosts.
 - Add shared constraint validation, successful-control serialization,
   submit/reset and implicit Enter activation, transactional GET/URL-encoded
   POST navigation, history integration, and bounded form diagnostics.
