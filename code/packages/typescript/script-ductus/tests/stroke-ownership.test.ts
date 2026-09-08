@@ -163,12 +163,18 @@ describe("stroke ownership migration baseline", () => {
       // 七, 八, 九, 十 and 百, so it moves keys 353 -> 359, the ordered key hash,
       // the non-Tamil data hash, and Chinese 44 -> 50. Tamil is untouched,
       // which is why its own count and the shared-identity hashes do not move.
+      //
+      // Measured again for HL-C360, which adds exactly two glyphs — ろ (U+308D)
+      // and ゅ (U+3085), the two hiragana the Japanese cardinals one to ten
+      // needed. Keys 359 -> 361, japanese 15 -> 17, the ordered key hash and the
+      // non-Tamil data hash. Tamil is untouched again, so its count and both
+      // shared-identity values are unchanged.
     }).toEqual({
-      keys: 359,
+      keys: 361,
       keyHash:
-        "9441944f3f0ef47669be959a09c07d7779f15d537afafb4d8dcf3751ae97b4da",
+        "b466e5c4c8208f0e90d75827107fcfd932aefc87e831f00adfb5705d8914a4dd",
       nonTamilDataHash:
-        "0fe0f170e553ee974953386120f625d3aac1a3ec73d9cfaca0ba9357a215ab9b",
+        "541f8d23a76a6e1f352608d22d86d20432eefa8174632f8ae91807b81795e083",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -179,7 +185,7 @@ describe("stroke ownership migration baseline", () => {
         devanagari: 44,
         gujarati: 44,
         hebrew: 22,
-        japanese: 15,
+        japanese: 17,
         kannada: 13,
         malayalam: 13,
         "perso-arabic": 24,
