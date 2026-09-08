@@ -1,0 +1,4 @@
+(executable
+ (name main)
+ (modes byte native)
+ (libraries coding_adventures_capability_analyzer))

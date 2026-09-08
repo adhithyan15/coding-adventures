@@ -45,6 +45,27 @@
       "expected_banned": []
     },
     {
+      "id": "lexical-shadowing",
+      "source_kind": "implementation",
+      "source": "let apply print_endline = print_endline \"quiet\"\nlet choose = function Some read_line -> read_line | None -> \"none\"\n",
+      "expected_capabilities": [],
+      "expected_banned": []
+    },
+    {
+      "id": "shadowed-canonical-module",
+      "source_kind": "implementation",
+      "source": "module Unix = struct let getenv _ = \"local\" end\nlet value = Unix.getenv \"HOME\"\n",
+      "expected_capabilities": [],
+      "expected_banned": []
+    },
+    {
+      "id": "stdlib-prefix-and-file-flags",
+      "source_kind": "implementation",
+      "source": "let exists path = Stdlib.Sys.file_exists path\nlet open_any path = Unix.openfile path [] 0\n",
+      "expected_capabilities": ["fs:list:*", "fs:read:*", "fs:write:*"],
+      "expected_banned": []
+    },
+    {
       "id": "process-environment-time",
       "source_kind": "implementation",
       "source": "let run () = Sys.command \"tool\"\nlet home () = Sys.getenv_opt \"HOME\"\nlet cpu () = Sys.time ()\nlet stop pid = Unix.kill pid Sys.sigterm\n",
@@ -66,6 +87,13 @@
       "expected_banned": ["external"]
     },
     {
+      "id": "external-implementation",
+      "source_kind": "implementation",
+      "source": "external native_hash : bytes -> bytes = \"ca_native_hash\"\n",
+      "expected_capabilities": ["ffi:call:*"],
+      "expected_banned": ["external"]
+    },
+    {
       "id": "native-loading",
       "source_kind": "implementation",
       "source": "let load path = Dynlink.loadfile_private path\n",
@@ -78,6 +106,20 @@
       "source": "let decode bytes = Marshal.from_bytes bytes 0\nlet coerce value = Obj.magic value\n",
       "expected_capabilities": [],
       "expected_banned": ["Marshal.from_bytes", "Obj.magic"]
+    },
+    {
+      "id": "marshal-closures",
+      "source_kind": "implementation",
+      "source": "let encode value = Marshal.to_string value [Marshal.Closures]\n",
+      "expected_capabilities": [],
+      "expected_banned": ["Marshal.Closures"]
+    },
+    {
+      "id": "remaining-authority-actions",
+      "source_kind": "implementation",
+      "source": "let server socket address = Unix.bind socket address; Unix.listen socket 4\nlet child () = Unix.fork ()\nlet export key value = Unix.putenv key value\nlet wait () = Unix.sleep 1\n",
+      "expected_capabilities": ["env:write:*", "net:listen:*", "proc:fork:*", "time:sleep:*"],
+      "expected_banned": []
     }
   ]
 }

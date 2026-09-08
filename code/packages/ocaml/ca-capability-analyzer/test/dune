@@ -1,8 +1,6 @@
 (test
  (name test_capability_analyzer)
+ (modes byte)
  (libraries alcotest coding_adventures_capability_analyzer yojson unix)
  (instrumentation
-  (backend bisect_ppx))
- (action
-  (setenv CA_PACKAGE_ROOT %{workspace_root}
-   (run %{test}))))
+  (backend bisect_ppx)))

@@ -1,0 +1,6 @@
+(library
+ (name coding_adventures_capability_analyzer)
+ (wrapped false)
+ (libraries compiler-libs.common yojson unix)
+ (instrumentation
+  (backend bisect_ppx)))

@@ -4,12 +4,18 @@ let unwrap = function
   | Ok value -> value
   | Error message -> Alcotest.fail message
 
-let package_root () =
-  match Sys.getenv_opt "CA_PACKAGE_ROOT" with
-  | Some root -> root
-  | None -> Alcotest.fail "CA_PACKAGE_ROOT is not set"
-
-let code_root () = Filename.concat (package_root ()) "../../.." |> Unix.realpath
+let code_root () =
+  let rec search remaining directory =
+    let marker =
+      Filename.concat directory
+        "specs/fixtures/ocaml-capability-analyzer-v1/cases.json"
+    in
+    if Sys.file_exists marker then directory
+    else if remaining = 0 then
+      Alcotest.fail "could not locate the repository code root"
+    else search (remaining - 1) (Filename.dirname directory)
+  in
+  search 12 (Sys.getcwd ())
 
 let fixture_root () =
   Filename.concat (code_root ()) "specs/fixtures/ocaml-capability-analyzer-v1"
@@ -22,7 +28,9 @@ let detected_strings detections =
   |> sorted
 
 let banned_strings findings =
-  findings |> List.map (fun finding -> finding.construct) |> sorted
+  findings
+  |> List.map (fun (finding : banned_construct) -> finding.construct)
+  |> sorted
 
 let fixture_cases () =
   let path = Filename.concat (fixture_root ()) "cases.json" in
@@ -101,12 +109,6 @@ let ffi_manifest ~action ~construct =
     }|}
     action construct
 
-let expect_manifest_error fragment document =
-  match parse_manifest document with
-  | Ok _ -> Alcotest.failf "expected manifest error containing %S" fragment
-  | Error message ->
-      Alcotest.(check bool) message true (String.contains message fragment.[0])
-
 let test_manifest_zero_profile () =
   let manifest = unwrap (parse_manifest pure_manifest) in
   Alcotest.(check string) "package" "ocaml/example" manifest.package;
@@ -115,14 +117,16 @@ let test_manifest_zero_profile () =
 
 let test_manifest_closed_taxonomy () =
   let invalid_pair =
-    String.sub pure_manifest 0 (String.length pure_manifest - 4)
-    ^ {|,
+    {|{
+      "version": 1,
+      "package": "ocaml/example",
       "capabilities": [{
         "category": "fs",
         "action": "connect",
         "target": "*",
         "justification": "This invalid cross-pair must be rejected."
-      }]
+      }],
+      "justification": "This invalid cross-pair must be rejected."
     }|}
   in
   (match parse_manifest invalid_pair with
@@ -238,6 +242,21 @@ let test_ffi_dual_opt_in () =
     "CAP002" [ "CAP002" ]
     (List.map (fun violation -> violation.code) denied.violations)
 
+let test_dynlink_dual_opt_in () =
+  let detections, banned =
+    unwrap
+      (analyze_source ~filename:"plugin.ml" Implementation
+         "let load path = Dynlink.loadfile path\n")
+  in
+  let manifest =
+    unwrap
+      (parse_manifest
+         (ffi_manifest ~action:"load" ~construct:"Dynlink.loadfile"))
+  in
+  Alcotest.(check bool)
+    "Dynlink allowed" true
+    (evaluate ~dir:"." ~manifest ~detections ~banned |> passed)
+
 let test_hard_ban_cannot_be_exempted () =
   let detections, banned =
     unwrap
@@ -274,6 +293,12 @@ let test_directory_analysis () =
   Alcotest.(check (list string))
     "violation code" [ "CAP001" ]
     (List.map (fun violation -> violation.code) denied_result.violations);
+  Alcotest.(check (list string))
+    "deterministic relative paths"
+    [ "src/nested/violation.ml" ]
+    (denied_result.detected
+    |> List.map (fun (detection : detection) -> detection.file)
+    |> sorted);
   match analyze_directory broken with
   | Error _ -> ()
   | Ok _ -> Alcotest.fail "directory parse failure was ignored"
@@ -348,6 +373,8 @@ let () =
           Alcotest.test_case "declared capabilities" `Quick
             test_evaluate_undeclared_and_declared;
           Alcotest.test_case "FFI dual opt-in" `Quick test_ffi_dual_opt_in;
+          Alcotest.test_case "Dynlink dual opt-in" `Quick
+            test_dynlink_dual_opt_in;
           Alcotest.test_case "hard bans" `Quick test_hard_ban_cannot_be_exempted;
         ] );
       ( "integration",
