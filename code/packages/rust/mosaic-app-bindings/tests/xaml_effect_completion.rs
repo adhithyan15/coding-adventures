@@ -115,6 +115,10 @@ fn the_emitted_xaml_host_answers_effects() {
         project.join("WindowsColorStub.cs"),
     )
     .expect("copy the Windows.UI.Color stub");
+    // `ImportDirectoryBuild*` off: MSBuild otherwise walks UPWARD from the
+    // project for `Directory.Build.props`, and this project lives under the
+    // system temp directory, which on a shared host any local user can write.
+    // That would import their targets into this build.
     std::fs::write(
         project.join("XamlEffectDriver.csproj"),
         "<Project Sdk=\"Microsoft.NET.Sdk\">\n\
@@ -123,6 +127,8 @@ fn the_emitted_xaml_host_answers_effects() {
          \x20   <TargetFramework>net9.0</TargetFramework>\n\
          \x20   <ImplicitUsings>enable</ImplicitUsings>\n\
          \x20   <Nullable>enable</Nullable>\n\
+         \x20   <ImportDirectoryBuildProps>false</ImportDirectoryBuildProps>\n\
+         \x20   <ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>\n\
          \x20 </PropertyGroup>\n\
          </Project>\n",
     )
@@ -149,6 +155,7 @@ fn the_emitted_xaml_host_answers_effects() {
         "batch-mixed",
         "throwing",
         "runaway",
+        "closes",
         "deferred",
     ] {
         let stdout = run(
@@ -188,6 +195,8 @@ fn the_emitted_xaml_host_answers_effects() {
         "state still persists after a handler that threw",
         "a runaway chain returns instead of spinning forever",
         "a runaway chain is reported rather than abandoned quietly",
+        "a handler that closes the host does not kill the process",
+        "a closed host refuses further props rather than serving stale ones",
         "deferring an effect nothing awaits is refused",
         "the handler was offered the effect",
         "a deferred effect stays outstanding rather than being failed",

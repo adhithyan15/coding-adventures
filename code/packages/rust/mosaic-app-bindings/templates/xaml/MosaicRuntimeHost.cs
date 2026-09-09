@@ -248,6 +248,22 @@ public static class MosaicRuntimeHost
         /// </remarks>
         private string? settleError;
 
+        /// <summary>
+        /// Set when <see cref="Dispose"/> is reached from inside a settle.
+        /// </summary>
+        /// <remarks>
+        /// This host is the only one of the five that UNMAPS the runtime, and
+        /// this change gave it the first application callback that runs while
+        /// native code is live. `Monitor` is reentrant, so a handler is free to
+        /// call the public `Close()` from inside the settle -- after which the
+        /// loop would still drive `CompleteEffectOnce` and `PersistSnapshot`
+        /// through delegates holding raw addresses inside a freed module. An
+        /// `AccessViolationException` is uncatchable, so the good outcome is a
+        /// dead process and the bad one is a jump into whatever got mapped
+        /// there next. The unload therefore waits for the outermost frame.
+        /// </remarks>
+        private bool unloadPending;
+
         private Runtime(IntPtr library)
         {
             this.library = library;
@@ -594,6 +610,12 @@ public static class MosaicRuntimeHost
                             handlerErrors[effectId] = error.Message;
                         }
 
+                        // The handler may have closed the host. Qt makes the
+                        // same check with a QPointer for the same reason: every
+                        // line past here would drive native code through a
+                        // handle its owner has already destroyed.
+                        if (app == IntPtr.Zero) return current;
+
                         if (isAwait
                             && awaiting.Contains(effectId)
                             && !deferred.Contains(effectId))
@@ -654,6 +676,12 @@ public static class MosaicRuntimeHost
                 carriedEffects = outerEffects;
                 latestAnswer = outerAnswer;
                 answered = outerAnswered;
+                if (settling == 0 && unloadPending)
+                {
+                    unloadPending = false;
+                    if (library != IntPtr.Zero) NativeLibrary.Free(library);
+                    library = IntPtr.Zero;
+                }
             }
         }
 
@@ -699,6 +727,8 @@ public static class MosaicRuntimeHost
         private JsonElement? CompleteEffectOnce(ulong id, string reason)
         {
             if (completeEffect is not { } complete) return null;
+            // Never call through a delegate whose module may be gone.
+            if (app == IntPtr.Zero || library == IntPtr.Zero) return null;
             try
             {
                 var failed = new Dictionary<string, object?>
@@ -722,12 +752,35 @@ public static class MosaicRuntimeHost
         // `persistenceWarning` is cleared by the next successful write -- so
         // reading only the latter would announce that saving recovered while the
         // runtime is still refusing to snapshot.
+        /// <summary>
+        /// The status line the application shows, including anything that went
+        /// wrong that no other channel carries.
+        /// </summary>
+        /// <remarks>
+        /// Locked, because the fields it reads are written under the lock by
+        /// whichever thread is settling; an unlocked read could hand one
+        /// caller a guard failure belonging to another's dispatch, and this is
+        /// the ONLY channel by which a tripped guard reaches the caller here.
+        ///
+        /// <see cref="settleError"/> is consumed rather than merely read: it
+        /// describes one settle, so it is delivered once, to the caller of the
+        /// operation that tripped it. Leaving it set would decorate every later
+        /// unrelated `ApplyProps` with a stale reason. The warnings above it
+        /// are conditions rather than events, so those persist.
+        /// </remarks>
         public string Status(string message)
         {
-            var text = $"Status: {message}";
-            if ((effectWarning ?? persistenceWarning) is { } warning) text += $". {warning}";
-            if (settleError is { } failure) text += $". {failure}";
-            return text;
+            lock (gate)
+            {
+                var text = $"Status: {message}";
+                if ((effectWarning ?? persistenceWarning) is { } warning) text += $". {warning}";
+                if (settleError is { } failure)
+                {
+                    text += $". {failure}";
+                    settleError = null;
+                }
+                return text;
+            }
         }
 
         public void ApplyProps(
@@ -793,6 +846,14 @@ public static class MosaicRuntimeHost
             {
                 if (app != IntPtr.Zero) destroy(app);
                 app = IntPtr.Zero;
+                if (settling > 0)
+                {
+                    // A callback below us is still running, and its caller will
+                    // keep using these delegates. The outermost settle frame
+                    // does the unload instead.
+                    unloadPending = true;
+                    return;
+                }
                 if (library != IntPtr.Zero) NativeLibrary.Free(library);
                 library = IntPtr.Zero;
             }
@@ -841,6 +902,7 @@ public static class MosaicRuntimeHost
         {
             var path = StatePath();
             if (path is null) return;
+            if (app == IntPtr.Zero || library == IntPtr.Zero) return;
             try
             {
                 var value = Invoke(delegate(out MosaicBuffer output)

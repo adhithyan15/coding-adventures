@@ -234,6 +234,41 @@ internal static class Driver
             "a runaway chain is reported rather than abandoned quietly");
     }
 
+    /// A handler that closes the host from inside the settle.
+    ///
+    /// "The user shut the window while the import dialog was open." The lock is
+    /// a Monitor, so this re-enters and succeeds -- and this host is the only
+    /// one of the five that UNMAPS the runtime, so afterwards the settle loop
+    /// would drive `CompleteEffectOnce` and `PersistSnapshot` through delegates
+    /// pointing into a freed module. An AccessViolationException is uncatchable
+    /// in .NET, so there is no failure to assert on: the process simply dies
+    /// here. Reaching the next line at all is the assertion.
+    private static async Task CaseHandlerClosesHost()
+    {
+        MosaicRuntimeHost.EffectHandler = (id, kind, payload, delivery) =>
+        {
+            if (!IsAwait(delivery)) return;
+            MosaicRuntimeHost.Close();
+        };
+        var component = new EffectComponent();
+        var result = await MosaicRuntimeHost.HandleEvent(component, new RequestEffect(false));
+        Check(result is not null, "a handler that closes the host does not kill the process");
+        // And the host stays closed rather than half-open. It REFUSES by
+        // throwing -- the nullable return of `ApplyProps` means "no runtime was
+        // ever available", not "the one you had is gone" -- so the assertion is
+        // that it throws, not that it quietly hands back stale props.
+        var refused = false;
+        try
+        {
+            MosaicRuntimeHost.ApplyProps(new EffectComponent());
+        }
+        catch (ObjectDisposedException)
+        {
+            refused = true;
+        }
+        Check(refused, "a closed host refuses further props rather than serving stale ones");
+    }
+
     /// Take ownership, answer LATER, from another thread.
     ///
     /// The lock held across the handler is a Monitor, so answering inline is
@@ -298,6 +333,7 @@ internal static class Driver
             case "batch-mixed": await CaseBatchPartlyAnswered(); break;
             case "throwing": await CaseThrowingHandler(); break;
             case "runaway": await CaseRunawayChaining(); break;
+            case "closes": await CaseHandlerClosesHost(); break;
             case "deferred": await CaseDeferred(); break;
             default:
                 Console.WriteLine($"unknown MOSAIC_PROBE_CASE `{probeCase}`");
