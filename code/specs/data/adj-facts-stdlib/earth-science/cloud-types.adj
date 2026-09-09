@@ -38,20 +38,47 @@
 % "rainbow" — is NOT a row, so the engine stays silent rather than invent a
 % level. That honest-miss property is what makes the table safe to trust.
 %
-% Provenance: the seven cloud → level groupings are copied from NOAA's National
+% Provenance: the seven cloud → level groupings come from NOAA's National
 % Weather Service (Louisville, KY / LMK office) "Cloud Classification and
-% Characteristics" page. Its three "main types" sentences at the `locator` name
-% each cloud under its deck (see `source`, quoted verbatim): the high deck
-% lists cirrus, cirrostratus, and cirrocumulus; the mid-level deck lists
-% altostratus and altocumulus; and the low deck lists stratus and cumulus —
-% this table's OWN already-quoted `source` sentence names all seven, so
-% extending from four rows to seven required no new WebFetch, just reading the
-% span already captured here. `trust authoritative` — weather.gov (NOAA/NWS)
-% is a U.S. government (.gov) primary source. Nothing here is asserted from
-% memory. Distinct from the sibling `meteorology/cloud-type.adj`, which
+% Characteristics" page. The page carries THREE separate "main types"
+% sentences, one per deck, and each occurs exactly once in the page's text:
+% the high deck (cirrus, cirrostratus, cirrocumulus), the mid-level deck
+% (altostratus, altocumulus) and the low deck (stratus, cumulus). They are NOT
+% adjacent -- 1443 characters of other prose and photo captions sit between
+% the first and second, and 1446 between the second and third -- so the
+% `source` field now holds the HIGH-deck sentence alone, and the other two are
+% `cites` carrying the same locator. Each of the three is a real contiguous
+% span; the string that welded them was not.
+%
+% Worth knowing when reading an answer: a `table` has ONE citation block, and
+% the engine attaches the whole object -- `source` plus both corroborations --
+% to every row. So an `altostratus` or `stratus` answer's PRIMARY `source` is
+% the HIGH-deck sentence, which does not name that cloud; the sentence that
+% does is a corroboration. The union of the three covers all seven rows, and
+% nothing is fabricated, but the primary attribution alone does not support
+% every row and a reader should not have to discover that.
+%
+% Two things that look like defects and are not. FIRST, the mid-level sentence
+% reads "The two main TYPE of mid-level clouds", singular, and that is the
+% PAGE'S OWN WORDING -- the raw HTML reads `The two main type of <em>mid-level
+% clouds</em>`. Reproducing the slip is faithful; correcting it would be the
+% defect. SECOND, a tag-stripping extractor that replaces every tag with a
+% break scores all three sentences ZERO against this page, because each cloud
+% name is wrapped in `<font color>`/`<span style>` for colour -- so
+% `<span>cirrus</span>, ` becomes `cirrus , `, with a space before the comma
+% that no reader ever sees and that the document's text content never
+% contains. Extracting TEXT NODES and breaking only on BLOCK elements, which
+% is what a browser does, finds each sentence exactly once and byte-exact. The
+% zero was the instrument, not the artifact.
+%
+% `trust authoritative` -- weather.gov (NOAA/NWS) is a U.S. government (.gov)
+% primary source. Nothing here is asserted from memory.
+%
+% Distinct from the sibling `meteorology/cloud-type.adj`, which
 % answers a completely different question (what WEATHER does a cloud's
 % presence indicate?) from the SAME NWS page's separate weather-indication
-% sentences, not the altitude-deck sentence this table uses — the two tables
+% sentences, not the altitude-deck sentences this table uses (three of them
+% since installment 4k split the weld) — the two tables
 % do not overlap even though `altocumulus` happens to be named (as an
 % abstention target, for an unrelated reason) in both files. (See
 % ../README.md; feedback_nothing_human_authored,
@@ -69,7 +96,9 @@ table cloud_altitude {
     row (stratus, low)
     row (cumulus, low)
 
-    source "The three main types of high clouds are cirrus, cirrostratus, and cirrocumulus. The two main type of mid-level clouds are altostratus and altocumulus. The two main types of low clouds include stratus, which develop horizontally, and cumulus, which develop vertically."
+    source "The three main types of high clouds are cirrus, cirrostratus, and cirrocumulus."
     locator "https://www.weather.gov/lmk/cloud_classification"
+    cites "The two main type of mid-level clouds are altostratus and altocumulus." locator "https://www.weather.gov/lmk/cloud_classification"
+    cites "The two main types of low clouds include stratus, which develop horizontally, and cumulus, which develop vertically." locator "https://www.weather.gov/lmk/cloud_classification"
     trust authoritative
 }
