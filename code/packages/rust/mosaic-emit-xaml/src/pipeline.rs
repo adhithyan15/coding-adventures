@@ -8821,15 +8821,51 @@ fn emit_host_button(
         .and_then(|p| part_styles.get(p))
         .and_then(|entry| entry.elevation);
     let (shadow_attr, shadow_child) = theme_shadow_attr_and_child(elevation, "Button", indent + 4);
-    if shadow_child.is_empty() {
-        Ok(format!(
+    let content_child = host_content_control_children(node, &attrs, indent, part_styles, ctx)?;
+    let inner = match (&content_child, shadow_child.is_empty()) {
+        (None, true) => None,
+        (None, false) => Some(shadow_child.clone()),
+        (Some(children), true) => Some(children.clone()),
+        (Some(children), false) => Some(format!("{shadow_child}{children}")),
+    };
+    match inner {
+        None => Ok(format!(
             "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}/>\n"
-        ))
-    } else {
-        Ok(format!(
-            "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}>\n{shadow_child}{pad}</Button>\n"
-        ))
+        )),
+        Some(inner) => Ok(format!(
+            "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}>\n{inner}{pad}</Button>\n"
+        )),
     }
+}
+
+/// Render a content control's layout children as its `Content`, when it has
+/// children and no `Content` attribute already won.
+///
+/// `Button` and `HyperlinkButton` are both `ContentControl`s, so a nested
+/// subtree is expressible: it becomes the control's single content child.
+/// Both used to emit self-closing unconditionally, which silently discarded
+/// the subtree -- the whole point of wrapping a display component in an
+/// actionable container (#14717).
+///
+/// A `label:` prop still wins, matching the html emitter, because it has
+/// already been lowered into a `Content="..."` attribute and a control cannot
+/// carry both.
+fn host_content_control_children(
+    node: &LayoutNode,
+    attrs: &str,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<Option<String>, PipelineEmitError> {
+    if node.children.is_empty() || attrs.contains(" Content=") {
+        return Ok(None);
+    }
+    Ok(Some(emit_xaml_single_content_children(
+        &node.children,
+        indent + 4,
+        part_styles,
+        ctx,
+    )?))
 }
 
 fn host_button_click_payload_expr(emit_name: &str, ctx: &EmitContext<'_>) -> Option<String> {
@@ -10103,8 +10139,14 @@ fn emit_host_link(
             }
         },
         _ => {
-            // No label â€” fall back to href as the visible text.
-            if let Some(LayoutPropValue::String(s)) = find_prop_value(node, "href") {
+            // No label â€” fall back to href as the visible text, but only when
+            // there is nothing else to show. A link wrapping a subtree gets
+            // its content from the children; using the raw URL there would
+            // both hide the subtree and display a routing path as body text
+            // (#14717).
+            if let (true, Some(LayoutPropValue::String(s))) =
+                (node.children.is_empty(), find_prop_value(node, "href"))
+            {
                 content_attr.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
             }
         }
@@ -10135,9 +10177,14 @@ fn emit_host_link(
             });
             attrs.push_str(&format!(" Click=\"{handler}\""));
         }
-        Ok(format!(
-            "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}/>\n"
-        ))
+        match host_content_control_children(node, &attrs, indent, part_styles, ctx)? {
+            None => Ok(format!(
+                "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}/>\n"
+            )),
+            Some(children) => Ok(format!(
+                "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}>\n{children}{pad}</Button>\n"
+            )),
+        }
     } else {
         // Default external-open path: HyperlinkButton with NavigateUri.
         //
@@ -10183,9 +10230,14 @@ fn emit_host_link(
             _ => {}
         }
         attrs.push_str(&content_attr);
-        Ok(format!(
-            "{pad}<HyperlinkButton x:Name=\"{x_name}\"{attrs}{style}/>\n"
-        ))
+        match host_content_control_children(node, &attrs, indent, part_styles, ctx)? {
+            None => Ok(format!(
+                "{pad}<HyperlinkButton x:Name=\"{x_name}\"{attrs}{style}/>\n"
+            )),
+            Some(children) => Ok(format!(
+                "{pad}<HyperlinkButton x:Name=\"{x_name}\"{attrs}{style}>\n{children}{pad}</HyperlinkButton>\n"
+            )),
+        }
     }
 }
 
@@ -21229,4 +21281,128 @@ mod tests {
         // no stub to replace. A fixture must not become one.
         assert!(!cs.contains("Overdue"), "got:\n{cs}");
     }
+
+    // ---- content controls with children (#14717) ---------------------
+
+    fn wrapper_node(tag: &str, props: Vec<LayoutProp>, children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: Some("action".to_string()),
+            props,
+            children,
+        }
+    }
+
+    fn text_leaf(content: &str) -> LayoutNode {
+        LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String(content.to_string()),
+            }],
+            children: Vec::new(),
+        }
+    }
+
+    fn emit_wrapper(node: LayoutNode) -> String {
+        let c = component("X", Vec::new(), Vec::new());
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: node,
+        };
+        from_pipeline(&c, &l, &empty_style("X"), None, &opts())
+            .expect("emit ok")
+            .xaml
+    }
+
+    #[test]
+    fn host_button_renders_children_as_its_content() {
+        // Button is a ContentControl, so a nested subtree is expressible. It
+        // used to emit self-closing unconditionally and discard the subtree.
+        let xaml = emit_wrapper(wrapper_node(
+            "HostButton",
+            Vec::new(),
+            vec![text_leaf("Read more")],
+        ));
+
+        assert!(xaml.contains("Read more"), "got:\n{xaml}");
+        assert!(xaml.contains("</Button>"), "got:\n{xaml}");
+        assert!(!xaml.contains("<Button x:Name=\"button0\"/>"), "got:\n{xaml}");
+    }
+
+    #[test]
+    fn a_button_label_still_wins_over_children() {
+        // The label has already been lowered into Content="...", and a
+        // ContentControl cannot carry both.
+        let xaml = emit_wrapper(wrapper_node(
+            "HostButton",
+            vec![LayoutProp {
+                name: "label".to_string(),
+                value: LayoutPropValue::String("Open".to_string()),
+            }],
+            vec![text_leaf("Read more")],
+        ));
+
+        assert!(xaml.contains(r#"Content="Open""#), "got:\n{xaml}");
+        assert!(!xaml.contains("Read more"), "got:\n{xaml}");
+    }
+
+    #[test]
+    fn a_childless_button_still_self_closes() {
+        let xaml = emit_wrapper(wrapper_node(
+            "HostButton",
+            vec![LayoutProp {
+                name: "label".to_string(),
+                value: LayoutPropValue::String("Open".to_string()),
+            }],
+            Vec::new(),
+        ));
+        assert!(xaml.contains("/>"), "got:\n{xaml}");
+        assert!(!xaml.contains("</Button>"), "got:\n{xaml}");
+    }
+
+    #[test]
+    fn host_link_children_beat_the_href_fallback() {
+        // With no label the link falls back to showing the raw href. A link
+        // wrapping a subtree must not do that: it would hide the subtree AND
+        // display a routing path as body text.
+        let xaml = emit_wrapper(wrapper_node(
+            "HostLink",
+            vec![
+                LayoutProp {
+                    name: "href".to_string(),
+                    value: LayoutPropValue::String("https://example.com".to_string()),
+                },
+                LayoutProp {
+                    name: "external".to_string(),
+                    value: LayoutPropValue::Keyword("false".to_string()),
+                },
+            ],
+            vec![text_leaf("Read more")],
+        ));
+
+        assert!(xaml.contains("Read more"), "got:\n{xaml}");
+        assert!(
+            !xaml.contains(r#"Content="https://example.com""#),
+            "got:\n{xaml}"
+        );
+    }
+
+    #[test]
+    fn a_childless_link_still_falls_back_to_its_href() {
+        let xaml = emit_wrapper(wrapper_node(
+            "HostLink",
+            vec![LayoutProp {
+                name: "href".to_string(),
+                value: LayoutPropValue::String("https://example.com".to_string()),
+            }],
+            Vec::new(),
+        ));
+        assert!(
+            xaml.contains(r#"Content="https://example.com""#),
+            "got:\n{xaml}"
+        );
+    }
+
 }
