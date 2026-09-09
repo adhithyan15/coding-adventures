@@ -6,7 +6,7 @@ landed and why, not a semver-tracked API.
 ## Unreleased
 
 - **#13934 installment 4i: one value, three defects, and a disclosure the header had already
-  promised.** 1 value line, 1 `cites` line and 34 comment lines in **1** `.adj` file —
+  promised.** 1 value line, 1 `cites` line and 39 comment lines in **1** `.adj` file (42 added lines; the remaining one is the `trust consensus` line re-emitted unchanged, having lost its closing brace to the new `cites`) —
   `geometry/shape-composition` — plus one e2e test file. **Five mutations redden.**
 
   This is the sixth and last of 4g's shape: a real page sentence with other material welded on.
@@ -39,7 +39,7 @@ landed and why, not a semver-tracked API.
 
   ### Two claim strengths, kept apart
 
-  The diagonal sentence **is byte-exact against raw HTML**. The triangulation sentence is verbatim
+  The diagonal sentence **is byte-exact against the page tag-stripped text** — which is what this package contiguity contract has always measured. (Against literal raw HTML neither sentence is byte-exact: both are broken by anchor tags, and both appear byte-exact inside the page meta description attributes. That imprecision ran self-deprecating, but #13934 subject is precision about claim strength.) The triangulation sentence is verbatim
   only under whitespace collapse, because MathWorld wraps it across a newline — the weaker claim
   installment 4h learned to state rather than blur. Both are in the header, labelled.
 

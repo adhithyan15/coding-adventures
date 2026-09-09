@@ -81,7 +81,7 @@ fn triangle_decomposition_count_derives_two_with_full_audit_trail() {
     // drift back to citing the wrong document silently, which is the
     // defect this installment repaired.
     assert!(
-        out.contains("\"source\":\"A polygon diagonal is a line segment connecting two nonadjacent polygon vertices of a polygon.\",\"locator\":\"https://mathworld.wolfram.com/PolygonDiagonal.html\""),
+        out.contains("\"corroborations\":[{\"source\":\"A polygon diagonal is a line segment connecting two nonadjacent polygon vertices of a polygon.\",\"locator\":\"https://mathworld.wolfram.com/PolygonDiagonal.html\"}]"),
         "the corroboration keeps its own page: {out}"
     );
     assert!(
@@ -97,6 +97,13 @@ fn triangle_decomposition_count_derives_two_with_full_audit_trail() {
     // these, so they are joined too. Today nothing else in the import set
     // names either page, so the old form did still redden -- the hole was
     // latent, not open.
+    // The corroboration pin closes the array (`...}]`). Security review
+    // appended a SECOND `cites` carrying the exact authored sentence this
+    // installment deleted, and every test passed -- an open-ended
+    // `contains` bounds nothing, so the defect class 4i repaired could be
+    // re-added as an extra corroboration and ship green. The rule cites
+    // this and nothing else, so the pin says so.
+    //
     // Each leg pins TWO things, and they are not interchangeable: the joined
     // source+locator closes the wrong-page drift (round 1), and the
     // `kind` conjunct witnesses that a STEP exists at all. Round 1 replaced

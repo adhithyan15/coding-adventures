@@ -33,16 +33,21 @@
 %
 % (a) the TRIANGULATION sentence is a real span of the cited page — one
 % match, and the only one of the three that was ever correctly placed. It is
-% verbatim under whitespace collapse and NOT byte-exact against raw HTML,
-% because MathWorld wraps it across a newline; that is the weaker claim
-% installment 4h learned to state rather than blur.
+% verbatim under whitespace collapse and NOT byte-exact even against the
+% page's tag-stripped text, because MathWorld wraps it across a newline;
+% that is the weaker claim installment 4h learned to state rather than blur.
 %
 % (b) the DIAGONAL sentence had ONE WORD CHANGED inside quotation marks —
 % the page says "A polygon diagonal is", the field said "A polygonal
 % diagonal is" — and it is prose from a DIFFERENT PAGE
 % (PolygonDiagonal.html) than the locator named. It is now a `cites` in the
 % page's own words with its own locator, and in that form it IS byte-exact
-% against raw HTML. Naming the right page decides nothing about #14111's
+% against THE PAGE'S TAG-STRIPPED TEXT, which is what this package's
+% contiguity contract has always measured. (Against literal raw HTML neither
+% sentence is byte-exact — both are broken by `<a>` tags — and both appear
+% byte-exact inside the page's `<meta>` description attributes. Saying which
+% text is meant costs one clause and this effort's whole subject is claim
+% strength.) Naming the right page decides nothing about #14111's
 % canonical-vs-fetchable question: the sentence is simply on the page it is
 % on.
 %
