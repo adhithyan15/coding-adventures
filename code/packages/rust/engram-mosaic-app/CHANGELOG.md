@@ -2,6 +2,58 @@
 
 ## 0.1.0 - Unreleased
 
+### Added -- Anki import and export ride `Effect` (UI47 §5.4 step 5)
+
+The facade reports a needed file dialog as a `hostIntent`. This adapter now
+turns three of them into standard effects: `importAnki` and `exportAnki` as
+`Delivery::Await`, because neither can proceed without the host and the app has
+to know whether it happened, and `openCard` as `Delivery::Notify`, because
+opening a card elsewhere is fire-and-forget and waiting on an answer could only
+invent a way to wedge.
+
+`complete_effect` applies the answer: an import merges the returned package, an
+export records that it landed. Cancellation is a first-class outcome, not a
+failure -- Escape in a file dialog means "never mind" -- and each outcome
+reaches the reader as an `anki-transfer-status` prop, because the facade owns
+Engram's state and knows nothing about host dialogs, so "the file you chose was
+not a package" is a sentence only this crate can say.
+
+**The bytes travel, not the path.** An export builds the package here and sends
+it out in the payload for the host to write; an import comes back carrying what
+the host read. Every native target can be sandboxed -- macOS most strictly --
+and there a process may open only what the user picked in the host's own dialog,
+so keeping all filesystem access on the host side is the one arrangement that
+works on all five. The cost is that a cancelled export did work nobody used,
+which is cheap and recoverable; the alternative fails outright on the platform
+Engram most needs to ship to.
+
+Unblocked by the fifth generated host learning to answer effects (step 4).
+Before that, `Effect` was serialised onto the wire, no generated host read it,
+and the C header had no completion entry point -- so an `Await` could never be
+answered and emitting one would have left the app waiting forever.
+
+### Guarded -- nothing is minted below protocol 2
+
+The runtime does not merely ignore an `Await` from a v1 host: it fails the call
+with `EffectsRequireV2` and **poisons the instance**. Engram would therefore be
+bricked by its first import rather than degraded. Below v2 no effect is minted
+at all and the intents ride `hostIntent` to the hand-written adapters exactly as
+they did before, which is a working import rather than a broken one.
+
+Intents other than those three are likewise never minted as effects: an `Await`
+nothing answers wedges snapshot and restore for the life of the process, which
+is the exact failure the hosts' sweeps exist to prevent.
+
+Ids are minted monotonically, never reused, and bounded at 2^53-1 -- the id
+rides a JSON number to hosts whose only integer is a double, and one that
+arrived rounded would answer a *different* effect. An answered id is removed
+before the answer is applied, so a stray second answer cannot merge the same
+package twice.
+
+Mutation-tested: making `importAnki` a `Notify` fails
+`import_is_an_awaited_effect`, and letting an answered id survive its answer
+fails `an_answer_cannot_be_applied_twice` along with four other cases.
+
 Initial release: Engram behind the standard Mosaic application ABI.
 
 Implements `MosaicApp` over `EngramSession` and exports the standard C ABI via
