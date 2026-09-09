@@ -28,11 +28,11 @@ refusal also does not imply the complete driver refuses that feature.
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025 |
 | FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
-| COBOL-60 | 58 | 414 | Much larger frontend JIT/oracle suite |
+| COBOL-60 | 58 | 418 | Much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1474 cells.
+The normal non-ALGOL capstone therefore declares 210 programs and 1478 cells.
 The zeroes for McCarthy and Macsyma mean dedicated coverage, not absent support.
 CLR-real is an additional runner lane for the same CLR backend in McCarthy's
 capstone, not a tenth universal backend.

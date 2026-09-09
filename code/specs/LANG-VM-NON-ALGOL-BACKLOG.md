@@ -1,12 +1,101 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-05
+Status date: 2026-09-09
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
 `LANG-FULL-IMPLEMENTATION.md`; when the two disagree about landed behavior,
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
+
+## VM-040 COBOL BEAM signed/algebra probe (selected after #14684 merged)
+
+The previous top-of-queue entry here ("VM-040 FLOW-MATIC BEAM output probe,
+selected after #14646") had already been completed and superseded by the time
+this session picked up the file: PR #14665 (`9af6235015`) executed it, and two
+further COBOL BEAM slices — PR #14670 (`55f803c1ee`, initial COBOL output) and
+PR #14684 (`54cece75db`, COBOL control and rounding) — had already merged past
+it without this section being updated. `git log --oneline --all | grep -i
+beam` and `gh pr list --state open` confirmed no PR was in flight for this
+family; re-deriving the actual next item from the file's own "### VM-040 COBOL
+control and rounding validation" paragraph (the true most-recent entry,
+referencing #14684) and the live `lang_matrix.rs` corpus (all rows through
+COMPUTE precedence already declare `Beam`) selects the next bounded four-row
+COBOL slice: signed numeric overpunch, alphanumeric MOVE + comparison,
+COMPUTE exponentiation and nested COMPUTE division.
+
+Run all four on real Erlang using the established `.skip(N).take(4)` pattern
+over the `Cobol60` filter. Commit a bounded contract for any newly exposed
+backend defect before changing it. Promote only executed cells.
+
+### VM-040 COBOL BEAM str_slice contract
+
+The alphanumeric MOVE + comparison probe refused at validation:
+`UnsupportedType: … op "str_slice" has type_hint "str"; only the ASCII string
+subset is supported`. Every prior BEAM row's DISPLAY formatting used only
+`str_const`/`str_concat`/`putchar`; this is the first COBOL BEAM row whose
+`MOVE` truncation (`cobol-iir-compiler`'s `move_char_item`) needs a slice.
+Add `str_slice` to `iir-to-beam`'s accepted ASCII-string ops, lowering
+`[start, end)` to `lists:sublist(List, start+1, end-start)` via `call_ext`
+(BEAM strings are character lists; `lists:sublist` is 1-indexed and takes a
+count). Register it with the liveness pass that saves variables across a
+clobbering call, and stage its three arguments through scratch registers
+above `next_reg` before the call, mirroring `store_byte`/`array_set`'s
+existing parallel-move-hazard discipline. Then rerun the four selected
+programs before declaring BEAM coverage.
+
+### VM-040 COBOL BEAM large-literal sign contract (VM-D029)
+
+With `str_slice` fixed, the nested COMPUTE division probe (`R = A / B + C`,
+A=10 B=3 C=2, scale-12 intermediate) passed lowering and validation but
+returned the wrong VALUE: `000053` instead of the oracle's `000533` — exactly
+a factor of 10 short. Isolating the arithmetic chain in a standalone module
+found the actual corruption one step earlier: `const` with a large positive
+literal came back NEGATIVE on real `erl` whenever its minimal big-endian
+magnitude had its leading byte's high bit set (confirmed by table:
+`4_000_000_000` → `-294967296`, `2^31` → `-2147483648`, `2 * 10^12` →
+`-99511627776`; `10^10`, `10^11` and `2^32` — whose leading byte's high bit
+is clear — round-tripped correctly already). The bug is in the shared
+`ir-to-beam` compact-term encoder, not this crate's lowering:
+`encode_compact_term`'s "Large form" stripped every leading `0x00` byte
+regardless of the operand's `U`/`I` tag, which is correct for `U` (read back
+as a plain magnitude) but wrong for `I` (read back as two's complement, where
+the leading byte's high bit doubles as the sign).
+
+Fix `value_to_be_bytes` to take a `signed: bool` and, for the `I` path, find
+the minimal TWO'S-COMPLEMENT encoding directly — strip a leading `0x00` only
+while the next byte's high bit stays clear, and symmetrically strip a leading
+`0xFF` only while the next byte's high bit stays set — floored at 2 bytes
+(the "Large form" header cannot represent a length below 2, and the naive
+signed-minimal rule alone underflows `(length - 2) as u8` for a small
+negative literal like `-7`, whose full `u64` bit pattern is enormous and so
+reaches this branch purely by sign, not size). Add round-trip regressions
+covering the boundary values found above plus `i64::MIN`/`i64::MAX`, then
+rerun every existing BEAM row (Oct, Nib, all prior COBOL) to confirm no
+regression from the encoding change itself.
+
+### VM-040 COBOL signed/algebra validation
+
+All four selected programs (signed overpunch, alphanumeric MOVE + compare,
+COMPUTE exponentiation, nested COMPUTE division) pass on real Erlang and in a
+fresh matrix process with positive execution sentinels. Twelve of 58 COBOL
+rows now declare BEAM (418 total declared cells; non-ALGOL capstone total
+1478). All 12 Oct and 26 Nib BEAM programs, and the eight already-declared
+COBOL BEAM rows, pass again after both fixes. `iir-to-beam`'s suite passed 97
+tests (19 unit, 73 integration — including two new real-`erl` `str_slice`
+tests and one new real-`erl` large-const test — 5 doc), and `ir-to-beam`'s
+passed 70 tests (65 unit including new signed-encoding regressions, 5 doc)
+with all-target Clippy clean for `ir-to-beam`, `iir-to-beam` and `lang-aot`.
+No full seven-standard-column rerun is claimed.
+VM-D029 (the encoder sign bug) is filed above rather than as a separately
+ranked backlog item because it was fixed within this bounded slice; it is a
+general defect and could in principle have affected any prior BEAM row whose
+literal happened to land in the same byte-boundary range, but Oct, Nib and
+all eight prior COBOL BEAM programs re-passed unchanged, so no other row was
+actually affected in practice. Reprioritize the remaining ~40 undeclared
+COBOL rows (character/EVALUATE cascades, reference modification, STRING
+SIZE/delimiters, pointer/overflow) against Twig dynamic strings/records/
+closures and VM-060b host input after this merges.
 
 ## VM-040 FLOW-MATIC BEAM output probe (selected after #14646 merged)
 

@@ -1,5 +1,42 @@
 # Changelog — iir-to-beam
 
+## 0.9.0 - 2026-09-09 - `str_slice` (VM-040 COBOL BEAM signed/algebra probe)
+
+Added `str_slice` to the ASCII string subset: a fixed- or computed-bounds
+`[start, end)` byte range of an existing string, lowered to
+`lists:sublist(List, Start+1, Len)` via `call_ext` (BEAM strings are
+character lists — see `str_const` — and `lists:sublist` is 1-indexed and
+takes a count, not an end offset, so the call site converts both). Promoted
+by VM-040's COBOL signed/algebra BEAM probe, whose truncating `MOVE`
+(`cobol-iir-compiler`'s `move_char_item`) is the first COBOL BEAM row to emit
+`str_slice` — every prior BEAM row's DISPLAY-formatting used only
+`str_const`/`str_concat`/`putchar`.
+
+Like `str_concat`, `lists:sublist` is an ordinary exported function (not a
+loader-recognized BIF), so it goes through `call_ext`, which clobbers every
+x-register; `str_slice` is now registered with the liveness pass that saves
+variables across such calls (the same list `store_byte`/`array_set`/
+`call_closure` are on — an op emitting `call_ext` and missing from that list
+has its live variables silently destroyed, not crashed). Its three arguments
+are staged through scratch registers above `next_reg` before the call,
+mirroring `store_byte`/`array_set`'s existing parallel-move-hazard discipline
+(moving operands straight into x0/x1/x2 can clobber a source still needed for
+another argument).
+
+New tests (`test_70_real_erl_str_slice`, `test_71_real_erl_str_slice_survives_live_across_call`)
+run on real `erl`; `str_slice_wrong_arity_is_rejected` and an extended
+`ascii_string_subset_passes_validation` cover the validator's new shape
+check.
+
+### Fixed (transitively, via `ir-to-beam` 0.3.0)
+
+The same probe exposed — independently of `str_slice` — that large positive
+`const` literals could silently come back negative on real BEAM (a COBOL
+`COMPUTE`'s scale-12 intermediate, `2 * 1_000_000_000_000`, was the actual
+repro). The bug lives in `ir-to-beam`'s compact-term encoder, not in this
+crate's lowering; see `ir-to-beam`'s changelog for the fix. New end-to-end
+test `test_72_real_erl_large_positive_const_stays_positive` pins the observed
+behavior at this crate's `const`-lowering boundary.
 
 ## 0.8.0 - 2026-08-13 - mutable memory via `:atomics`
 

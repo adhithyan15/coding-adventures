@@ -5378,7 +5378,7 @@ const PROGRAMS: &[Prog] = &[
                000000     DISPLAY N.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("0K"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — character item MOVE + alphanumeric comparison (PL09 step 4).
     // W = "ABCD" moved into V PIC X(2) truncates to "AB" (str_slice); the
@@ -5399,7 +5399,7 @@ const PROGRAMS: &[Prog] = &[
                000000     IF W GREATER \"AB\" DISPLAY V.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("AB"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — COMPUTE exponentiation with a constant integer exponent (PL09
     // step 4). `A ** 3 = 4**3 = 64`, stored into `9(6)` → `000064`. A literal
@@ -5420,7 +5420,7 @@ const PROGRAMS: &[Prog] = &[
                000000     DISPLAY R.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("000064"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — nested COMPUTE division (PL09 step 4). `A / B + C = 10/3 + 2`;
     // the oracle carries the division at a fixed scale-12 intermediate, so the
@@ -5444,7 +5444,7 @@ const PROGRAMS: &[Prog] = &[
                000000     DISPLAY R.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("000533"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — level-88 condition-name (PL09 step 4). `88 IS-OK VALUE 1` over
     // `STATUS-CODE` (=1) makes `IF IS-OK` true → prints "OK". A condition-name
@@ -14525,6 +14525,22 @@ fn portable_text_stdout_cobol_beam_control_rounding() {
     }
     assert_eq!(executed, 4);
     eprintln!("COBOL BEAM control and rounding: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_cobol_beam_signed_and_algebra() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM signed/algebra: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(8).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM signed/algebra: {executed} programs executed");
 }
 
 #[test]
