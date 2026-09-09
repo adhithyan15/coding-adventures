@@ -8,6 +8,68 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 COBOL BEAM condition-name/EVALUATE probe (selected after #14700 merged)
+
+`git fetch origin && git merge origin/main` confirmed this worktree already sat
+at `1078ef0305` (PR #14700, "VM-040 COBOL BEAM signed/algebra probe"), merged
+`2026-09-09T14:10:30Z`. `gh pr list --state open` showed no LANG-VM PR in
+flight (`14713`, `14712`, `14711`, `14710`, `14707`, `14706`, `14705`,
+`14703`, `14702`, `14701`, plus dependabot `14699`/`14698`/`14467`/`7821`
+are Journal/Mosaic/human-languages/dependency work, not this backlog). This
+merge's own trailing paragraph explicitly named no single next item — it
+asked for a real reprioritization across three tracks (more COBOL BEAM rows,
+Twig dynamic strings/records/closures on BEAM, VM-060b host input) rather
+than an automatic continuation, so this section runs that comparison before
+selecting.
+
+Applying the "Prioritization policy" order first: skimming every section back
+through VM-046c (the oldest region re-read this session) found no red executed
+cell, no missing-CI-protection gap, and no stale roadmap claim — every trailing
+validation paragraph reports positive sentinels and passing suites, and
+VM-024/VM-032 already keep the non-ALGOL matrix and Windows execution in normal
+CI. So none of rungs 1–3 outrank the three candidate tracks; the choice is
+between rung 4 (missing backend parity for an already-implemented feature) and
+rung 5 (new frontend semantics/design). All three candidates are rung-4 shaped
+(COBOL, and Twig dynamic strings, are both already implemented on the seven
+standard backends — only BEAM parity is missing), except VM-060b, which its
+own three prior deferrals (VM-040 Oct, Nib and the FLOW-MATIC output probe
+sections above) already describe as needing "a separate reader/string/ABI
+design" before any input implementation can even be probed — that is rung-5
+design work, not a bounded proof-promotion slice, so it ranks last again here
+for the same reason it did each previous time.
+
+Between the remaining two rung-4 tracks: VM-041 ("isolate Twig captured/
+reassigned runtime-string lowering from existing source-local string
+metadata") is itself scoped as an isolation/design task — its own wording
+requires distinguishing two representations before a single proof can even be
+written, which is exploratory work with unknown surface area, not a slice with
+a pre-existing probe pattern. Twig records/closures on BEAM have no scoped
+backlog entry at all yet; a first probe there would need to establish what a
+closure or record even looks like as a BEAM term before any proof exists.
+Continuing the ~46 undeclared COBOL BEAM rows, by contrast, reuses the exact
+`.skip(N).take(4)`-over-`Cobol60`-filter pattern that has now succeeded
+three times running (rows 0–3, 4–7, 8–11), with a real dedicated single-cell
+probe test already wired (`portable_text_stdout_cobol_beam_signed_and_algebra`
+at `.skip(8)`), a real corpus of already-written, already-oracle-tested COBOL
+programs to draw from, and a demonstrated repair discipline (VM-D029, the
+`str_slice` contract) for whatever the next four rows expose. This is the
+narrower, lower-design-risk slice the backlog has consistently preferred over
+open-ended design work (the same reasoning that deferred VM-060b twice
+already), so COBOL BEAM rows are selected again.
+
+`awk` over `lang_matrix.rs`'s 58 `Cobol60` rows confirmed 12 already declare
+`Beam` (the first three probe batches, file-order rows 0–11) and 46 do not,
+matching the "~40 undeclared" estimate. Row order after the twelfth (file
+lines 5454, 5475, 5495, 5515) is: a level-88 condition-name `IF`, a level-88
+multi-value/THRU condition-name (first COBOL BEAM row needing bitwise `and`/
+`or` folding), `SET condition-name TO TRUE`, and a symbolic `>=` relational —
+all boolean/comparison lowering reusing already-BEAM-proven `cmp_*`/`const`/
+branch ops, not the character/EVALUATE/STRING/pointer families the merge
+paragraph listed as remaining (those appear later in file order). Run this
+next four-row slice (`.skip(12).take(4)`) on real Erlang, matching the
+established discipline: probe before declaring, commit a bounded contract for
+any newly exposed defect, promote only executed cells.
+
 ## VM-040 COBOL BEAM signed/algebra probe (selected after #14684 merged)
 
 The previous top-of-queue entry here ("VM-040 FLOW-MATIC BEAM output probe,
