@@ -47,14 +47,19 @@ on the emitted text:
   `completeEffect` called re-entrantly now hands its update back to the settle
   loop already running instead of starting a second one, and the loop adopts
   it.
-- **A partly-answered batch dropped the effects nobody answered.** Adoption and
+- **A partly-answered batch dropped effects, twice over.** First, adoption and
   the fail loop were alternatives, so a batch where a handler answered one
-  effect and ignored another left the ignored one neither answered nor cleared
-  -- and the runtime gates `snapshot` *and* `restore` on nothing being pending,
-  so one dropped effect disabled persistence for the rest of the process. That
-  is the exact silent hang this path exists to prevent, one branch away from the
-  code preventing it. The conformance fixture gained a two-effect batch event,
-  because no single-effect test can reach it.
+  effect and ignored another left the ignored one neither answered nor cleared.
+  Then, once that was fixed, the fail loop still *overwrote* the adopted
+  update -- and an `Update` carries only the effects produced by the call that
+  returned it, so a completion that produced a further effect (the "import
+  needing a second dialog" this code describes) had it dropped instead.
+  Effects now accumulate across a round rather than replacing one another.
+
+  Both are permanent: the runtime gates `snapshot` **and** `restore` on nothing
+  being pending, so one dropped effect disables persistence for the rest of the
+  process. The conformance fixture gained a two-effect batch event, because no
+  single-effect test can reach either.
 - **A handler calling back into the host recursed until the stack gave out.**
   The 64-round bound bounds iterations within a frame, not frames; a handler
   calling `handleEvent` rather than `completeEffect` re-entered one level
@@ -68,12 +73,22 @@ on the emitted text:
   conversion.
 
 A handler may also delete the host mid-emit, which the review reproduced as a
-use-after-free under ASan. Every member access after an emit is now gated on a
-`QPointer`, the depth guard no longer writes through freed memory, and the
-header says to use `deleteLater()`. Thread affinity is documented and asserted:
-`effectRequested` becomes a queued connection automatically for a receiver on
-another thread, and a queued handler answers an effect the host has already
-given up on.
+use-after-free under ASan. Liveness is carried across the `settleEffects` call
+boundary -- the first attempt gated only *inside* it, and every caller then went
+on to touch members of a freed object, which ASan reproduced again. The depth
+guard no longer writes through freed memory, and the header says to use
+`deleteLater()`.
+
+Thread affinity is a **refusal**, not only an assert: `Q_ASSERT_X` compiles to
+nothing under `QT_NO_DEBUG`, which is what a release build of a generated app
+defines, so the check was absent in every shipped app. It matters more than a
+stale result now that the re-entrancy slots are pointers into `settleEffects`'s
+stack frame -- a completion arriving on another thread would write into a live
+frame belonging to a different one.
+
+Both runaway guards -- the nesting bound and the round bound -- answer the
+effects they were handed before refusing. Giving up with awaited effects still
+pending swapped a crash for an app that can never snapshot again.
 
 ### Added -- an execution acceptance for the emitted Qt host
 

@@ -186,7 +186,8 @@ fn the_emitted_qt_host_answers_effects() {
         "snapshot still works after a partly-answered batch",
         "a non-integral effect id is refused, not truncated",
         "a negative effect id is refused, not wrapped",
-        "a handler that re-enters the host does not crash it",
+        "a bounded-out settle leaves nothing outstanding",
+        "snapshot still works after the nesting bound fires",
     ] {
         assert!(
             stdout.contains(expected),

@@ -96,10 +96,15 @@ int main(int argc, char **argv) {
             [&host, &answeredOne](const QVariant &id, const QString &, const QVariant &,
                                   const QString &delivery) {
                 if (delivery.compare(QStringLiteral("await"), Qt::CaseInsensitive) != 0) return;
-                if (answeredOne) return;   // ignore the first, answer the second
+                if (answeredOne) return;   // answer the FIRST, ignore the second
                 answeredOne = true;
+                // `chain` makes the completion produce ANOTHER effect. Its id
+                // lives only in the adopted update's `effects` list, so a host
+                // that overwrites that map instead of accumulating drops it --
+                // never emitted, never failed, pending forever.
                 host.completeEffect(id, QVariantMap{{QStringLiteral("ok"),
-                    QVariantMap{{QStringLiteral("amount"), 3}}}});
+                    QVariantMap{{QStringLiteral("amount"), 3},
+                                {QStringLiteral("chain"), true}}}});
             });
 
         QVariantMap event;
@@ -151,9 +156,16 @@ int main(int argc, char **argv) {
                              QVariantMap{{QStringLiteral("notify"), false}});
                 host.handleEvent(again);
             });
-        const auto result = requestAwait(host);
-        check(true, "a handler that re-enters the host does not crash it");
-        (void)result;
+        const auto props = requestAwait(host);
+        // NOT `check(true, ...)`, which is what this was and which cannot fail.
+        // Surviving the recursion is the easy half; the guard must also
+        // discharge what it gave up on, or it swaps a crash for an app that can
+        // never snapshot again.
+        check(awaited(props, "depth-bounded") == 0,
+              "a bounded-out settle leaves nothing outstanding");
+        const auto snap = host.snapshot();
+        check(snap.isValid() && !snap.toMap().contains(QStringLiteral("error")),
+              "snapshot still works after the nesting bound fires");
     }
 
     if (failures) {

@@ -97,7 +97,12 @@ MosaicHost::MosaicHost(QObject *parent)
                     .arg(QString::fromUtf8(exception.what())));
             latestUpdate_ = createApplication(QVariant());
         }
-        latestUpdate_ = withPersistenceWarning(settleEffects(latestUpdate_));
+        {
+            const QPointer<MosaicHost> self(this);
+            const auto settled = settleEffects(latestUpdate_);
+            if (!self) return;
+            latestUpdate_ = withPersistenceWarning(settled);
+        }
         if (!app_) throw std::runtime_error("Mosaic runtime returned a null application handle");
     } catch (const std::exception &exception) {
         if (app_ && destroy_) destroy_(app_);
@@ -189,7 +194,12 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
         // effect is outstanding -- deliberately, since a half-answered effect
         // is not a state worth restoring -- so persisting first produced a
         // spurious "could not persist" warning on every effect.
+        // A handler may delete this host during settleEffects. Liveness has to
+        // cross the call boundary, not stop inside it: settleEffects returning
+        // an empty map is not enough, because everything below touches members.
+        const QPointer<MosaicHost> self(this);
         const auto settled = settleEffects(update);
+        if (!self) return {};
         persistSnapshot();
         latestUpdate_ = withPersistenceWarning(settled);
         return latestUpdate_;
@@ -227,8 +237,11 @@ QVariantMap MosaicHost::restore(const QVariantMap &snapshot)
     Buffer output{};
     try {
         const auto status = restore_(app_, input, &output);
-        latestUpdate_ = settleEffects(
+        const QPointer<MosaicHost> self(this);
+        const auto settled = settleEffects(
             requireMap(consume(status, output), "restore update"));
+        if (!self) return {};
+        latestUpdate_ = settled;
         return latestUpdate_;
     } catch (const std::exception &exception) {
         return failure(QString::fromUtf8(exception.what()));
@@ -373,9 +386,23 @@ QVariantMap MosaicHost::completeEffect(const QVariant &effectId, const QVariantM
     // QUEUED connection automatically when the receiver lives on another
     // thread -- at which point the handler answers an effect this host already
     // gave up on and failed, while racing the settle loop besides.
+    // A REFUSAL, not just an assert. `Q_ASSERT_X` compiles to nothing under
+    // QT_NO_DEBUG, which is exactly what a release build of a generated app
+    // defines -- so in every shipped app the assert was absent.
+    //
+    // That matters more than a stale result now that the re-entrancy slots are
+    // raw pointers into settleEffects's stack frame: a completion arriving on
+    // another thread would write into a live frame belonging to a different
+    // thread. `Qt::AutoConnection` produces exactly that for a receiver with a
+    // different affinity, which is the default and easy to do by accident.
     Q_ASSERT_X(thread() == QThread::currentThread(), "MosaicHost::completeEffect",
                "must be called on the host's own thread; connect to "
                "effectRequested with Qt::DirectConnection");
+    if (thread() != QThread::currentThread()) {
+        return failure(QStringLiteral(
+            "completeEffect must be called on the host's own thread; connect to "
+            "effectRequested with Qt::DirectConnection"));
+    }
     if (completeEffect_ == nullptr) {
         return failure(QStringLiteral(
             "this Mosaic runtime does not support effect completion"));
@@ -417,7 +444,9 @@ QVariantMap MosaicHost::completeEffect(const QVariant &effectId, const QVariantM
             *reentrantFlag_ = true;
             return update;
         }
+        const QPointer<MosaicHost> self(this);
         const auto settled = settleEffects(update);
+        if (!self) return {};
         persistSnapshot();
         latestUpdate_ = withPersistenceWarning(settled);
         return latestUpdate_;
@@ -439,9 +468,14 @@ QVariantMap MosaicHost::settleEffects(QVariantMap update)
     constexpr int MaxDepth = 8;
 
     if (settling_ >= MaxDepth) {
-        return failure(QStringLiteral(
+        const auto reason = QStringLiteral(
             "effect settling nested more than %1 levels deep; an effect handler "
-            "is calling back into the host instead of answering").arg(MaxDepth));
+            "is calling back into the host instead of answering").arg(MaxDepth);
+        // Discharge before refusing. Returning a message while awaited effects
+        // stay pending swaps a crash for a permanently unsnapshottable app --
+        // a better failure, but still the one this path exists to prevent.
+        failOutstanding(update, reason);
+        return failure(reason);
     }
 
     // This frame's re-entrancy slot. Held per frame rather than per object so a
@@ -518,19 +552,36 @@ QVariantMap MosaicHost::settleEffects(QVariantMap update)
         // the process, since the runtime gates both on having no pending
         // effects. That is the exact silent hang this whole path exists to
         // prevent, reintroduced one branch away from the code preventing it.
+        // Effects ACCUMULATE across everything that happened this round; they
+        // do not replace one another.
+        //
+        // An `Update` carries only the effects produced by the call that
+        // returned it, so an adopted completion's new effects live in that map
+        // and nowhere else. Overwriting it with a later failure's update -- as
+        // the first version did -- dropped them: never emitted, never failed,
+        // and permanently pending, which kills `snapshot` and `restore` for the
+        // rest of the process. That is the "import needing a second dialog"
+        // this function's own comment describes.
         QVariantMap latest = update;
+        QVariantList carried;
         if (adoptedSet) {
+            carried += adopted.value(QStringLiteral("effects")).toList();
             latest = adopted;
             adopted.clear();
             adoptedSet = false;
         }
 
         if (unanswered.isEmpty()) {
-            // Nothing was ignored. If a handler answered, drain again from the
-            // newer update; otherwise this batch is settled.
+            // Nothing was ignored. If a handler answered, drain whatever its
+            // completion produced; otherwise this batch is settled.
+            //
+            // The comparison is safe because every Update from the runtime
+            // carries a distinct revision, so an adopted map can never equal
+            // the map it replaced.
             if (latest == update) {
                 return update;
             }
+            latest.insert(QStringLiteral("effects"), carried);
             update = latest;
             continue;
         }
@@ -539,6 +590,7 @@ QVariantMap MosaicHost::settleEffects(QVariantMap update)
         // answer. Failing them is the whole point of `Delivery::Await` being on
         // the wire: before it existed a host dropped every effect identically
         // and the app simply waited, with nothing anywhere reporting it.
+        QVariantMap firstError;
         for (const auto id : unanswered) {
             const auto reason =
                 QStringLiteral("no host handler answered effect %1").arg(id);
@@ -550,16 +602,51 @@ QVariantMap MosaicHost::settleEffects(QVariantMap update)
                 return {};
             }
             if (answered.contains(QStringLiteral("error"))) {
-                return answered;
+                // Keep going. Returning here left the REMAINING ids pending
+                // forever, which is the failure being fixed, triggered by the
+                // handling of it.
+                if (firstError.isEmpty()) firstError = answered;
+                continue;
             }
+            carried += answered.value(QStringLiteral("effects")).toList();
             latest = answered;
         }
+        if (!firstError.isEmpty()) {
+            return firstError;
+        }
+        latest.insert(QStringLiteral("effects"), carried);
         update = latest;
     }
 
-    return failure(QStringLiteral(
+    const auto exhausted = QStringLiteral(
         "effect completion did not settle after %1 rounds; the application is "
-        "requesting effects faster than they can be answered").arg(MaxRounds));
+        "requesting effects faster than they can be answered").arg(MaxRounds);
+    failOutstanding(update, exhausted);
+    return failure(exhausted);
+}
+
+void MosaicHost::failOutstanding(const QVariantMap &update, const QString &reason)
+{
+    // Answer every awaited effect still listed, so a guard that gives up does
+    // not leave the runtime waiting. `snapshot` and `restore` are both gated on
+    // nothing being pending, so an undischarged effect disables persistence for
+    // the life of the process.
+    if (completeEffect_ == nullptr) return;
+    const QPointer<MosaicHost> alive(this);
+    for (const auto &entry : update.value(QStringLiteral("effects")).toList()) {
+        const auto effect = entry.toMap();
+        bool parsed = false;
+        const auto id = effect.value(QStringLiteral("id")).toULongLong(&parsed);
+        if (!parsed) continue;
+        if (effect.value(QStringLiteral("delivery")).toString().compare(
+                QStringLiteral("await"), Qt::CaseInsensitive) != 0) {
+            continue;
+        }
+        awaiting_.remove(id);
+        completeEffectOnce(id, QVariantMap{{QStringLiteral("failed"),
+            QVariantMap{{QStringLiteral("message"), reason}}}});
+        if (!alive) return;
+    }
 }
 
 QVariantMap MosaicHost::completeEffectOnce(quint64 id, const QVariantMap &result)

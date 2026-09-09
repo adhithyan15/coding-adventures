@@ -90,6 +90,7 @@ private:
     QVariantMap withPersistenceWarning(const QVariantMap &update) const;
     QVariantMap settleEffects(QVariantMap update);
     QVariantMap completeEffectOnce(quint64 id, const QVariantMap &result);
+    void failOutstanding(const QVariantMap &update, const QString &reason);
     QString statePath() const;
 
     static constexpr quint32 ProtocolVersion = __MOSAIC_PROTOCOL_VERSION__;
