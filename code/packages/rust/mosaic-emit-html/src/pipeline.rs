@@ -3611,18 +3611,29 @@ fn build_part_style_map(
     for part in &style.parts {
         let mut props = part.base.clone();
         for slot in &interface.slots {
-            let SlotType::OneOf(legal_values) = &slot.r#type else {
-                continue;
-            };
             let Some(active_value) = slot_values.get(&slot.name) else {
                 continue;
             };
-            if !legal_values.contains(active_value) {
-                continue;
-            }
-            if let Some(state) = part.states.iter().find(|state| {
-                state.slot.as_deref() == Some(slot.name.as_str()) && state.state == *active_value
-            }) {
+            // html resolves states at emit time against the active fixture
+            // rather than emitting a runtime conditional, so activation is a
+            // question about the fixture's value, not about generated code.
+            let matched = match &slot.r#type {
+                SlotType::OneOf(legal_values) if legal_values.contains(active_value) => part
+                    .states
+                    .iter()
+                    .find(|state| {
+                        state.slot.as_deref() == Some(slot.name.as_str())
+                            && state.state == *active_value
+                    }),
+                // UI57 -- a bool slot activates the same-named built-in state
+                // when its fixture is truthy. Matching on the state NAME here
+                // would need the fixture to read `disabled: "disabled"`.
+                SlotType::Bool if html_truthy(active_value) => part.states.iter().find(|state| {
+                    state.slot_is_bool && state.slot.as_deref() == Some(slot.name.as_str())
+                }),
+                _ => None,
+            };
+            if let Some(state) = matched {
                 props.extend(state.props.iter().cloned());
             }
         }
@@ -3643,6 +3654,17 @@ fn build_part_style_map(
 /// validate values: the mosstyle compiler is upstream of us and is
 /// trusted to have parsed them. Any embedded `"` is HTML-attr-escaped to
 /// keep the attribute well-formed.
+/// Whether a fixture value counts as true for UI57 bool-slot activation.
+///
+/// Mirrors `truthy()` in the emitted `main.js` so a story previews exactly
+/// what the running page shows. Keeping the two in step matters: if they
+/// disagree, a component page and its own demo app disagree about whether a
+/// state is on.
+fn html_truthy(value: &str) -> bool {
+    let text = value.trim().to_ascii_lowercase();
+    !text.is_empty() && text != "false" && text != "0" && text != "off" && text != "no"
+}
+
 fn build_inline_css_fragment(props: &[StyleProp]) -> String {
     let mut parts: Vec<String> = Vec::with_capacity(props.len());
     for p in props {
@@ -4283,6 +4305,7 @@ mod tests {
                 states: vec![StateStyle {
                     state: "danger".to_string(),
                     slot: Some("variant".to_string()),
+                    slot_is_bool: false,
                     props: vec![StyleProp {
                         name: "background".to_string(),
                         value: "#dc3545".to_string(),
@@ -4333,6 +4356,7 @@ mod tests {
                 states: vec![StateStyle {
                     state: "danger".to_string(),
                     slot: Some("variant".to_string()),
+                    slot_is_bool: false,
                     props: vec![StyleProp {
                         name: "background".to_string(),
                         value: "#dc3545".to_string(),
@@ -4391,6 +4415,7 @@ mod tests {
                     StateStyle {
                         state: "compact".to_string(),
                         slot: Some("size".to_string()),
+                        slot_is_bool: false,
                         props: vec![StyleProp {
                             name: "background".to_string(),
                             value: "#222222".to_string(),
@@ -4400,6 +4425,7 @@ mod tests {
                     StateStyle {
                         state: "danger".to_string(),
                         slot: Some("variant".to_string()),
+                        slot_is_bool: false,
                         props: vec![StyleProp {
                             name: "background".to_string(),
                             value: "#dc3545".to_string(),
@@ -6991,6 +7017,7 @@ mod tests {
                     StateStyle {
                         state: "primary".to_string(),
                         slot: Some("variant".to_string()),
+                        slot_is_bool: false,
                         props: vec![StyleProp {
                             name: "background".to_string(),
                             value: "#0d6efd".to_string(),
@@ -7000,6 +7027,7 @@ mod tests {
                     StateStyle {
                         state: "danger".to_string(),
                         slot: Some("variant".to_string()),
+                        slot_is_bool: false,
                         props: vec![StyleProp {
                             name: "background".to_string(),
                             value: "#dc3545".to_string(),
@@ -7057,6 +7085,7 @@ mod tests {
                 states: vec![StateStyle {
                     state: "danger".to_string(),
                     slot: Some("variant".to_string()),
+                    slot_is_bool: false,
                     props: vec![StyleProp {
                         name: "background".to_string(),
                         value: "#dc3545".to_string(),
@@ -7839,6 +7868,75 @@ mod tests {
         ));
         assert!(out.contains(r#"<a href="https://example.com""#), "got:\n{out}");
         assert!(out.contains(">Example</a>"), "got:\n{out}");
+    }
+
+    // ---- UI57: built-in state bound to a bool slot -------------------
+
+    #[test]
+    fn ui57_bool_slot_state_activates_from_a_truthy_fixture() {
+        let m = component(
+            "X",
+            vec![
+                SlotDecl {
+                    name: "variant".to_string(),
+                    r#type: SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                    required: true,
+                    default: None,
+                },
+                SlotDecl {
+                    name: "disabled".to_string(),
+                    r#type: SlotType::Bool,
+                    required: true,
+                    default: None,
+                },
+            ],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#111111".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    state: "disabled".to_string(),
+                    slot: Some("disabled".to_string()),
+                    slot_is_bool: true,
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#adb5bd".to_string(),
+                    }],
+                    transitions: vec![],
+                }],
+            }],
+        };
+        let render = |value: &str| {
+            let fixtures = HashMap::from([("disabled".to_string(), value.to_string())]);
+            from_pipeline_with_slot_values(&m, &l, &s, &fixtures)
+                .expect("emit ok")
+                .output
+        };
+
+        // html resolves states at emit time against the fixture, so activation
+        // is a question about the fixture's value rather than about a runtime
+        // conditional in generated code.
+        assert!(render("true").contains("#adb5bd"), "truthy fixture activates");
+        assert!(!render("false").contains("#adb5bd"), "falsey does not");
+        assert!(!render("").contains("#adb5bd"), "empty does not");
+        // Matching on the state NAME would need the fixture to read
+        // `disabled: "disabled"`, which no story would ever write.
+        assert!(render("disabled").contains("#adb5bd"), "any truthy string");
     }
 
 }

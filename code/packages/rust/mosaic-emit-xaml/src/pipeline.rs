@@ -961,7 +961,11 @@ impl<'a> EmitContext<'a> {
 #[derive(Debug, Clone)]
 struct PartStateStyle {
     slot: Option<String>,
-    props: Vec<StyleProp>,
+    /// UI57 — the owning slot activates by truthiness rather than by equality
+    /// with the state name, so the trigger binds the property directly instead
+    /// of going through StringEqualsConverter.
+    slot_is_bool: bool,
+        props: Vec<StyleProp>,
     transitions: Vec<StyleTransition>,
 }
 
@@ -1259,6 +1263,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
                     state.state.clone(),
                     PartStateStyle {
                         slot: state.slot.clone(),
+                        slot_is_bool: state.slot_is_bool,
                         props: state.props.clone(),
                         transitions: state.transitions.clone(),
                     },
@@ -1415,11 +1420,19 @@ fn register_host_visual_states(
         )
     });
     for (state_name, slot_name, state_style) in slot_states.into_iter().rev() {
-        ctx.needs_string_equals_converter = true;
         let path = ctx.slot_xbind_path(slot_name);
-        let trigger_value = format!(
-            "{{x:Bind {path}, Mode=OneWay, Converter={{StaticResource StringEqualsConverter}}, ConverterParameter={state_name}}}"
-        );
+        // UI57 — a bool slot is already the boolean the trigger wants, so it
+        // binds directly. This is the same shape the automatic `pressed`
+        // trigger above uses. Running it through StringEqualsConverter would
+        // compare a bool to the string "disabled" and never fire.
+        let trigger_value = if state_style.slot_is_bool {
+            format!("{{x:Bind {path}, Mode=OneWay}}")
+        } else {
+            ctx.needs_string_equals_converter = true;
+            format!(
+                "{{x:Bind {path}, Mode=OneWay, Converter={{StaticResource StringEqualsConverter}}, ConverterParameter={state_name}}}"
+            )
+        };
         state_layers.push((state_name, trigger_value, state_style));
     }
 
@@ -19706,6 +19719,7 @@ mod tests {
                 transitions: Vec::new(),
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "selected".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -19753,6 +19767,7 @@ mod tests {
         let l = layout_with_root("VariantCard", root);
         let state = |slot: Option<&str>, name: &str, property: &str, value: &str| StateStyle {
             slot: slot.map(str::to_string),
+            slot_is_bool: false,
             state: name.to_string(),
             props: vec![StyleProp {
                 name: property.to_string(),
@@ -19835,6 +19850,7 @@ mod tests {
                     // This owner came from a flattened dependency component;
                     // Consumer itself does not declare a `size` slot.
                     slot: Some("size".to_string()),
+                    slot_is_bool: false,
                     state: "lg".to_string(),
                     props: vec![StyleProp {
                         name: "padding".to_string(),
@@ -19870,6 +19886,7 @@ mod tests {
                 transitions: vec![transition("background", "80ms", "ease-out")],
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "hover".to_string(),
                     props: vec![StyleProp {
                         name: "background".to_string(),
@@ -19934,6 +19951,7 @@ mod tests {
                 transitions: Vec::new(),
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "hover".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -19983,6 +20001,7 @@ mod tests {
                 transitions: Vec::new(),
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "hover".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -20022,6 +20041,7 @@ mod tests {
                 transitions: vec![transition("opacity", "80ms", "ease-out")],
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "pressed".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -20069,6 +20089,7 @@ mod tests {
                 transitions: Vec::new(),
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "pressed".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -20116,6 +20137,7 @@ mod tests {
                 transitions: vec![transition("border-color", "80ms", "ease-out")],
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "focused".to_string(),
                     props: vec![StyleProp {
                         name: "border-color".to_string(),
@@ -20200,6 +20222,7 @@ mod tests {
                 transitions: Vec::new(),
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "focused".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -20254,6 +20277,7 @@ mod tests {
                 transitions: Vec::new(),
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "focused".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -20300,6 +20324,7 @@ mod tests {
                 states: vec![
                     StateStyle {
                         slot: None,
+                        slot_is_bool: false,
                         state: "hover".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -20309,6 +20334,7 @@ mod tests {
                     },
                     StateStyle {
                         slot: None,
+                        slot_is_bool: false,
                         state: "focused".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -20346,6 +20372,7 @@ mod tests {
                 states: vec![
                     StateStyle {
                         slot: None,
+                        slot_is_bool: false,
                         state: "hover".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -20355,6 +20382,7 @@ mod tests {
                     },
                     StateStyle {
                         slot: None,
+                        slot_is_bool: false,
                         state: "focused".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -20364,6 +20392,7 @@ mod tests {
                     },
                     StateStyle {
                         slot: None,
+                        slot_is_bool: false,
                         state: "pressed".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -20411,6 +20440,7 @@ mod tests {
                 transitions: vec![transition("background", "80ms", "ease-out")],
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "selected".to_string(),
                     props: vec![StyleProp {
                         name: "background".to_string(),
@@ -20495,6 +20525,7 @@ mod tests {
                 transitions: vec![transition("opacity", "150ms", "ease-out")],
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "disabled".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -20558,6 +20589,7 @@ mod tests {
                 states: vec![
                     StateStyle {
                         slot: None,
+                        slot_is_bool: false,
                         state: "selected".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -20567,6 +20599,7 @@ mod tests {
                     },
                     StateStyle {
                         slot: None,
+                        slot_is_bool: false,
                         state: "disabled".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -20627,6 +20660,7 @@ mod tests {
                 transitions: vec![transition("opacity", "120ms", "ease-out")],
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "selected".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -20711,6 +20745,7 @@ mod tests {
                 transitions: Vec::new(),
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "selected".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -21116,6 +21151,85 @@ mod tests {
         assert!(
             matches!(err, PipelineEmitError::UnsupportedExpression(ref reason) if reason.contains("HostRadio")),
             "expected an UnsupportedExpression diagnostic naming HostRadio, got: {err:?}"
+        );
+    }
+
+    // ---- UI57: built-in state bound to a bool slot -------------------
+
+    #[test]
+    fn ui57_bool_slot_state_binds_the_trigger_directly() {
+        let c = component(
+            "X",
+            vec![
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                    true,
+                ),
+                slot("disabled", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#111111".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![
+                    StateStyle {
+                        state: "danger".to_string(),
+                        slot: Some("variant".to_string()),
+                        slot_is_bool: false,
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#dc3545".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                    StateStyle {
+                        state: "disabled".to_string(),
+                        slot: Some("disabled".to_string()),
+                        slot_is_bool: true,
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#adb5bd".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                ],
+            }],
+        };
+        let xaml = from_pipeline(&c, &l, &s, None, &opts()).expect("emit ok").xaml;
+
+        // A bool DP is already the boolean StateTrigger.IsActive wants, so it
+        // binds directly -- the same shape the automatic `pressed` trigger
+        // uses. Running it through StringEqualsConverter would compare a bool
+        // to the string "disabled" and never fire.
+        assert!(
+            xaml.contains(r#"<StateTrigger IsActive="{x:Bind Disabled, Mode=OneWay}"/>"#),
+            "got:\n{xaml}"
+        );
+        assert!(
+            !xaml.contains("ConverterParameter=disabled"),
+            "got:\n{xaml}"
+        );
+        // The enum axis must still go through the converter.
+        assert!(
+            xaml.contains("ConverterParameter=danger"),
+            "got:\n{xaml}"
         );
     }
 

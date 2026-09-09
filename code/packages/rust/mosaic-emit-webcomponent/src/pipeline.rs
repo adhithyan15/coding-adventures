@@ -2983,10 +2983,16 @@ fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> HashMap<String,
                 if state_css.is_empty() {
                     continue;
                 }
+                // UI57 -- see the react emitter: a bool slot activates by
+                // truthiness, not by equality with the state name.
+                let condition = if state.slot_is_bool {
+                    slot_ident.clone()
+                } else {
+                    format!(r#"{slot_ident} === "{}""#, escape_js_string(&state.state))
+                };
                 write!(
                     frag,
-                    r#"${{({slot_ident} === "{}") ? "{}" : ""}}"#,
-                    escape_js_string(&state.state),
+                    r#"${{({condition}) ? "{}" : ""}}"#,
                     escape_js_string(&format!("; {state_css}"))
                 )
                 .unwrap();
@@ -4529,12 +4535,14 @@ mod tests {
                 vec![
                     StateStyle {
                         slot: Some("size".to_string()),
+                        slot_is_bool: false,
                         state: "compact".to_string(),
                         transitions: vec![],
                         props: vec![prop("padding", "4px")],
                     },
                     StateStyle {
                         slot: Some("variant".to_string()),
+                        slot_is_bool: false,
                         state: "danger".to_string(),
                         transitions: vec![],
                         props: vec![prop("background", "#dc3545")],
@@ -6927,12 +6935,14 @@ mod tests {
                 vec![
                     StateStyle {
                         slot: None,
+                        slot_is_bool: false,
                         state: "selected".to_string(),
                         transitions: vec![],
                         props: vec![prop("background", "#264f78"), prop("color", "#ffffff")],
                     },
                     StateStyle {
                         slot: None,
+                        slot_is_bool: false,
                         state: "editing".to_string(),
                         transitions: vec![],
                         props: vec![prop("background", "#1f4f3f")],
@@ -7010,6 +7020,7 @@ mod tests {
                 vec![prop("padding", "2px")],
                 vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "selected".to_string(),
                     transitions: vec![],
                     props: vec![prop("background", "blue")],
@@ -7041,6 +7052,7 @@ mod tests {
                 ],
                 vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "selected".to_string(),
                     transitions: vec![],
                     props: vec![prop("border-width", "1")],
@@ -7079,4 +7091,73 @@ mod tests {
             Some("border-width: 1px")
         );
     }
+
+    // ---- UI57: built-in state bound to a bool slot -------------------
+
+    #[test]
+    fn ui57_bool_slot_state_activates_by_truthiness_not_by_name() {
+        let m = component(
+            "X",
+            vec![
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                    true,
+                ),
+                slot("disabled", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#111111".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![
+                    StateStyle {
+                        state: "danger".to_string(),
+                        slot: Some("variant".to_string()),
+                        slot_is_bool: false,
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#dc3545".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                    StateStyle {
+                        state: "disabled".to_string(),
+                        slot: Some("disabled".to_string()),
+                        slot_is_bool: true,
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#adb5bd".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                ],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+
+        assert!(out.contains(r#"(disabled) ?"#), "got:\n{out}");
+        // r#"disabled === "disabled""# is what the enum shape would emit for a bool slot. It is
+        // always false, which is the silent no-op UI57 fixes (#14639).
+        assert!(!out.contains(r#"disabled === "disabled""#), "got:\n{out}");
+        // The enum axis in the same component must be untouched.
+        assert!(out.contains(r#"variant === "danger""#), "got:\n{out}");
+    }
+
 }

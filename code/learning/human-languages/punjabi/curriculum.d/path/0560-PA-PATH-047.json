@@ -1,0 +1,14 @@
+{
+  "id": "PA-PATH-047",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "PA-C45-labels",
+    "PA-C45-form",
+    "PA-C45-pehla-paath"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-067-READING"
+  ],
+  "after": []
+}

@@ -1170,6 +1170,7 @@ mod tests {
                     StateStyle {
                         state: "primary".to_string(),
                         slot: Some("variant".to_string()),
+                        slot_is_bool: false,
                         props: vec![StyleProp {
                             name: "background".to_string(),
                             value: "#2255ff".to_string(),
@@ -1179,6 +1180,7 @@ mod tests {
                     StateStyle {
                         state: "danger".to_string(),
                         slot: Some("variant".to_string()),
+                        slot_is_bool: false,
                         props: vec![
                             StyleProp {
                                 name: "background".to_string(),
@@ -1202,6 +1204,7 @@ mod tests {
                     StateStyle {
                         state: "loud".to_string(),
                         slot: Some("tone".to_string()),
+                        slot_is_bool: false,
                         props: vec![StyleProp {
                             name: "background".to_string(),
                             value: "#ffcc00".to_string(),
@@ -1211,6 +1214,7 @@ mod tests {
                     StateStyle {
                         state: "hover".to_string(),
                         slot: None,
+                        slot_is_bool: false,
                         props: vec![StyleProp {
                             name: "background".to_string(),
                             value: "#00ff00".to_string(),
@@ -1301,6 +1305,7 @@ mod tests {
             &[mosstyle_compiler::SlotStateAxis {
                 slot: "variant".to_string(),
                 values: vec!["primary".to_string(), "danger".to_string()],
+                kind: mosstyle_compiler::SlotStateAxisKind::Enum,
             }],
         )
         .expect("style should compile");

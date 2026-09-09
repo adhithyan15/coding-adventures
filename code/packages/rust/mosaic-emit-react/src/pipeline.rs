@@ -5366,9 +5366,16 @@ fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> HashMap<String,
                 if state_fragment.is_empty() {
                     continue;
                 }
+                // UI57 -- a bool slot activates the built-in state sharing
+                // its name by truthiness. The enum shape would emit
+                // `disabled === "disabled"`, which is always false.
+                let condition = if state.slot_is_bool {
+                    slot_ident.clone()
+                } else {
+                    format!("{slot_ident} === {}", js_string_literal(&state.state))
+                };
                 fragments.push(format!(
-                    "...(({slot_ident} === {}) ? {{ {state_fragment} }} : {{}})",
-                    js_string_literal(&state.state)
+                    "...(({condition}) ? {{ {state_fragment} }} : {{}})"
                 ));
             }
         }
@@ -6842,6 +6849,7 @@ mod tests {
                 transitions: vec![],
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "hover".to_string(),
                     transitions: vec![],
                     props: vec![StyleProp {
@@ -6861,6 +6869,71 @@ mod tests {
             "state blocks must not leak into the inline style, got:\n{}",
             result.output
         );
+    }
+
+    #[test]
+    fn ui57_bool_slot_state_activates_by_truthiness_not_by_name() {
+        let m = component(
+            "X",
+            vec![
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                    true,
+                ),
+                slot("disabled", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "1".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![
+                    StateStyle {
+                        state: "danger".to_string(),
+                        slot: Some("variant".to_string()),
+                        slot_is_bool: false,
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#dc3545".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                    StateStyle {
+                        state: "disabled".to_string(),
+                        slot: Some("disabled".to_string()),
+                        slot_is_bool: true,
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "0.4".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                ],
+            }],
+        };
+        let output = from_pipeline(&m, &box_root(Some("panel")), &s)
+            .expect("emit ok")
+            .output;
+
+        assert!(
+            output.contains("...((disabled) ? { opacity: 0.4 } : {})"),
+            "got:\n{output}"
+        );
+        // `disabled === "disabled"` is what the enum shape would produce and
+        // is always false -- that silent no-op is the bug UI57 fixes.
+        assert!(
+            !output.contains(r#"disabled === "disabled""#),
+            "got:\n{output}"
+        );
+        // The enum axis in the same component must be untouched.
+        assert!(output.contains(r#"variant === "danger""#), "got:\n{output}");
     }
 
     #[test]
@@ -6897,6 +6970,7 @@ mod tests {
                     StateStyle {
                         state: "compact".to_string(),
                         slot: Some("size".to_string()),
+                        slot_is_bool: false,
                         props: vec![StyleProp {
                             name: "padding".to_string(),
                             value: "4px".to_string(),
@@ -6906,6 +6980,7 @@ mod tests {
                     StateStyle {
                         state: "danger".to_string(),
                         slot: Some("variant".to_string()),
+                        slot_is_bool: false,
                         props: vec![StyleProp {
                             name: "background".to_string(),
                             value: "#dc3545".to_string(),
@@ -6965,6 +7040,7 @@ mod tests {
                 states: vec![StateStyle {
                     state: "danger".to_string(),
                     slot: Some("variant".to_string()),
+                    slot_is_bool: false,
                     props: vec![StyleProp {
                         name: "background".to_string(),
                         value: "#dc3545".to_string(),
@@ -7419,6 +7495,7 @@ mod tests {
         if !even.is_empty() {
             states.push(StateStyle {
                 slot: None,
+                slot_is_bool: false,
                 state: "even".to_string(),
                 transitions: vec![],
                 props: even
@@ -7433,6 +7510,7 @@ mod tests {
         if !odd.is_empty() {
             states.push(StateStyle {
                 slot: None,
+                slot_is_bool: false,
                 state: "odd".to_string(),
                 transitions: vec![],
                 props: odd
@@ -9481,6 +9559,7 @@ mod tests {
                 transitions: vec![],
                 states: vec![StateStyle {
                     slot: None,
+                    slot_is_bool: false,
                     state: "hover".to_string(),
                     transitions: vec![],
                     props: vec![StyleProp {
