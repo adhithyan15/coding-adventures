@@ -1794,6 +1794,31 @@ fn swiftui_modifier_chain_with_transitions(
     indent: usize,
     injected_width: Option<&str>,
 ) -> String {
+    swiftui_modifier_chain_with_drops(
+        base_props,
+        base_transitions,
+        state_layers,
+        indent,
+        injected_width,
+    )
+    .0
+}
+
+/// The modifier chain, plus every style property this lowering had no
+/// expressible SwiftUI output for (issue #12022).
+///
+/// The drops are collected from the SAME `match` that does the lowering, not
+/// from a parallel list of supported names. That matters: a parallel list goes
+/// stale silently the moment a property stops being lowered, which is the exact
+/// failure mode being reported on.
+fn swiftui_modifier_chain_with_drops(
+    base_props: &[StyleProp],
+    base_transitions: &[StyleTransition],
+    state_layers: &[StateLayer],
+    indent: usize,
+    injected_width: Option<&str>,
+) -> (String, Vec<StyleProp>) {
+    let mut dropped: Vec<StyleProp> = Vec::new();
     let pad = " ".repeat(indent);
 
     // Only accept `Npx` (or unitless `N`) for numeric length values.
@@ -1970,9 +1995,20 @@ fn swiftui_modifier_chain_with_transitions(
                         text_align = Some(a);
                     }
                 }
-            // border-style, border-collapse, outline, etc. — silently
-            // skipped.  Matches the React emitter's v1 posture.
-            _ => {}
+            // border-style, border-collapse, outline, etc. Recorded rather
+            // than silently skipped (#12022) so a stylesheet that asks for
+            // something SwiftUI cannot express leaves a record instead of
+            // quietly rendering differently from the web.
+            //
+            // `text-align` in a STATE layer is excluded: it is deliberately
+            // base-only (see the guard above), not unsupported, and reporting
+            // a documented decision as a loss would train readers to ignore
+            // the list.
+            other => {
+                if !(other == "text-align" && layer_idx.is_some()) {
+                    dropped.push(p.clone());
+                }
+            }
         }
     };
 
@@ -2258,7 +2294,78 @@ fn swiftui_modifier_chain_with_transitions(
         );
     }
 
+    (out, dropped)
+}
+
+/// One mosstyle property, on one part, that SwiftUI lowering could not express
+/// at all — no modifier, no side channel, nothing. Public so
+/// `mosaic-package-artifact-builder`'s degradation analyzer (issue #12022) can
+/// surface these in `mosaic-degradations.json` instead of them vanishing
+/// silently. Mirrors `mosaic_emit_xaml::pipeline::DroppedStyleProperty`, which
+/// was the first backend to report them.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DroppedStyleProperty {
+    pub part: String,
+    pub name: String,
+    pub value: String,
+    pub reason: String,
+}
+
+/// Every property, across every part of `style`, that SwiftUI lowering drops.
+///
+/// Derived by running the real lowering over each part's base props and
+/// collecting what its `match` did not handle — not by diffing against a list
+/// of supported names, which would go stale silently the moment a property
+/// stopped being lowered.
+///
+/// State-layer props are not walked separately: a state block can only set a
+/// property the base lowering also understands, so a drop there is the same
+/// drop, reported once against the part.
+pub fn dropped_style_properties(style: &StyleDef) -> Vec<DroppedStyleProperty> {
+    let mut out = Vec::new();
+    for part in &style.parts {
+        let (_, drops) = swiftui_modifier_chain_with_drops(&part.base, &[], &[], 0, None);
+        for drop in drops {
+            out.push(DroppedStyleProperty {
+                part: part.name.clone(),
+                reason: swiftui_drop_reason(&drop.name).to_string(),
+                name: drop.name,
+                value: drop.value,
+            });
+        }
+    }
     out
+}
+
+/// Why a property has no SwiftUI lowering, in terms a reader can act on.
+///
+/// Generic text would make the report unreadable at scale, and several of
+/// these are genuinely different problems: some need a different view shape
+/// rather than a modifier, and some have no SwiftUI concept at all.
+fn swiftui_drop_reason(name: &str) -> &'static str {
+    match name {
+        "flex-direction" | "display" | "flex-wrap" | "justify-content" | "align-items"
+        | "align" => {
+            "SwiftUI expresses layout through the view shape (HStack/VStack/Spacer), not through \
+             modifiers, so this cannot be applied to an already-built view"
+        }
+        "flex-grow" | "flex-shrink" | "flex" => {
+            "no modifier equivalent; SwiftUI distributes space with Spacer and layoutPriority, \
+             chosen at view-construction time"
+        }
+        "position" | "top" | "left" => {
+            "absolute positioning has no modifier form; SwiftUI uses .offset/.position with a \
+             coordinate space"
+        }
+        "box-shadow" => "no direct equivalent; SwiftUI uses .shadow with separate arguments",
+        "border-style" => "SwiftUI .border draws a solid stroke only",
+        "border-collapse" | "text-overflow" | "white-space" | "overflow" | "cursor" => {
+            "no SwiftUI concept"
+        }
+        "letter-spacing" => "needs .tracking, which is not wired in this lowering",
+        "text-transform" => "needs a text transformation at content level, not a modifier",
+        _ => "not lowered by the SwiftUI style emitter",
+    }
 }
 
 /// Per-property "bucket" — collects the base value and per-state
@@ -14232,6 +14339,120 @@ mod tests {
         assert!(!out.contains(r#"disabled == "disabled""#), "got:\n{out}");
         // The enum axis in the same component must be untouched.
         assert!(out.contains(r#"variant == "danger""#), "got:\n{out}");
+    }
+
+
+    // ---- dropped style properties (#12022) ---------------------------
+
+    fn drops_for(props: Vec<(&str, &str)>) -> Vec<DroppedStyleProperty> {
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: props
+                    .into_iter()
+                    .map(|(name, value)| StyleProp {
+                        name: name.to_string(),
+                        value: value.to_string(),
+                    })
+                    .collect(),
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        dropped_style_properties(&style)
+    }
+
+    #[test]
+    fn lowered_properties_are_not_reported_as_drops() {
+        // These all reach a modifier, so reporting them would train readers
+        // to ignore the list.
+        let drops = drops_for(vec![
+            ("padding", "8"),
+            ("background", "#111111"),
+            ("color", "#ffffff"),
+            ("font-size", "14"),
+            ("width", "100"),
+            ("height", "40"),
+            ("border-width", "1"),
+        ]);
+        assert!(drops.is_empty(), "got: {drops:?}");
+    }
+
+    #[test]
+    fn unlowered_properties_are_reported_with_a_reason() {
+        let drops = drops_for(vec![("box-shadow", "0 1px 2px #000")]);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].part, "panel");
+        assert_eq!(drops[0].name, "box-shadow");
+        assert_eq!(drops[0].value, "0 1px 2px #000");
+        // The reason must say something actionable, not just "unsupported".
+        assert!(drops[0].reason.contains(".shadow"), "got: {drops:?}");
+    }
+
+    #[test]
+    fn layout_properties_explain_that_swiftui_uses_view_shape() {
+        // These are a different problem from a missing modifier: SwiftUI
+        // expresses them by choosing HStack/VStack/Spacer at construction
+        // time, so no modifier could ever apply them to a built view.
+        for name in ["flex-direction", "justify-content", "align-items"] {
+            let drops = drops_for(vec![(name, "center")]);
+            assert_eq!(drops.len(), 1, "{name}: {drops:?}");
+            assert!(
+                drops[0].reason.contains("view shape"),
+                "{name}: {drops:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn base_only_text_align_in_a_state_is_not_a_drop() {
+        // text-align is deliberately base-only (see the guard in the absorb
+        // match). Reporting a documented decision as a loss would be noise.
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![StyleProp {
+                    name: "text-align".to_string(),
+                    value: "center".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        assert!(dropped_style_properties(&style).is_empty());
+    }
+
+    #[test]
+    fn every_part_is_walked_not_just_the_first() {
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![
+                PartStyle {
+                    name: "a".to_string(),
+                    base: vec![StyleProp {
+                        name: "cursor".to_string(),
+                        value: "pointer".to_string(),
+                    }],
+                    transitions: vec![],
+                    states: vec![],
+                },
+                PartStyle {
+                    name: "b".to_string(),
+                    base: vec![StyleProp {
+                        name: "overflow".to_string(),
+                        value: "hidden".to_string(),
+                    }],
+                    transitions: vec![],
+                    states: vec![],
+                },
+            ],
+        };
+        let drops = dropped_style_properties(&style);
+        assert_eq!(drops.len(), 2, "got: {drops:?}");
+        assert_eq!(drops[0].part, "a");
+        assert_eq!(drops[1].part, "b");
     }
 
 }
