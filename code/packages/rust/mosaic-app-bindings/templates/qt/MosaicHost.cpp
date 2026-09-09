@@ -95,7 +95,7 @@ MosaicHost::MosaicHost(QObject *parent)
                     .arg(QString::fromUtf8(exception.what())));
             latestUpdate_ = createApplication(QVariant());
         }
-        latestUpdate_ = withPersistenceWarning(latestUpdate_);
+        latestUpdate_ = withPersistenceWarning(settleEffects(latestUpdate_));
         if (!app_) throw std::runtime_error("Mosaic runtime returned a null application handle");
     } catch (const std::exception &exception) {
         if (app_ && destroy_) destroy_(app_);
@@ -183,8 +183,13 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
         const auto status = dispatch_(app_, input, &output);
         const auto update = requireMap(consume(status, output), "event update");
         sequence_ = nextSequence;
+        // Settle BEFORE persisting. The runtime refuses to snapshot while an
+        // effect is outstanding -- deliberately, since a half-answered effect
+        // is not a state worth restoring -- so persisting first produced a
+        // spurious "could not persist" warning on every effect.
+        const auto settled = settleEffects(update);
         persistSnapshot();
-        latestUpdate_ = withPersistenceWarning(update);
+        latestUpdate_ = withPersistenceWarning(settled);
         return latestUpdate_;
     } catch (const std::exception &exception) {
         return failure(QString::fromUtf8(exception.what()));
@@ -220,8 +225,8 @@ QVariantMap MosaicHost::restore(const QVariantMap &snapshot)
     Buffer output{};
     try {
         const auto status = restore_(app_, input, &output);
-        latestUpdate_ = requireMap(consume(status, output),
-                                   "restore update");
+        latestUpdate_ = settleEffects(
+            requireMap(consume(status, output), "restore update"));
         return latestUpdate_;
     } catch (const std::exception &exception) {
         return failure(QString::fromUtf8(exception.what()));
@@ -242,6 +247,11 @@ bool MosaicHost::load()
             dispatch_ = resolve<Dispatch>(library_, "mosaic_app_dispatch");
             snapshot_ = resolve<Snapshot>(library_, "mosaic_app_snapshot");
             restore_ = resolve<Restore>(library_, "mosaic_app_restore");
+            // Protocol 2 only. Resolved leniently: a protocol 1 runtime does
+            // not export it and must still load, so the absence is reported
+            // when an effect actually arrives rather than at startup.
+            completeEffect_ = reinterpret_cast<CompleteEffect>(
+                library_.resolve("mosaic_app_complete_effect"));
             bufferFree_ = resolve<BufferFree>(library_, "mosaic_buffer_free");
             destroy_ = resolve<Destroy>(library_, "mosaic_app_destroy");
             return true;
@@ -306,6 +316,161 @@ QVariantMap MosaicHost::requireAndMapUpdate(const QVariantMap &update, const cha
     auto mappedUpdate = update;
     mappedUpdate.insert(QStringLiteral("props"), mappedProps);
     return mappedUpdate;
+}
+
+QVariantMap MosaicHost::completeEffect(const QVariant &effectId, const QVariantMap &result)
+{
+    requireRuntime();
+    if (completeEffect_ == nullptr) {
+        return failure(QStringLiteral(
+            "this Mosaic runtime does not support effect completion (protocol 1)"));
+    }
+
+    bool parsed = false;
+    const auto id = effectId.toULongLong(&parsed);
+    if (!parsed) {
+        return failure(QStringLiteral("effect id must be an integer"));
+    }
+
+    const auto encodedId = QByteArray::number(static_cast<qulonglong>(id));
+    const auto encodedResult =
+        QJsonDocument::fromVariant(QVariant(result)).toJson(QJsonDocument::Compact);
+    Bytes idBytes{reinterpret_cast<const unsigned char *>(encodedId.constData()),
+                  static_cast<size_t>(encodedId.size())};
+    Bytes resultBytes{reinterpret_cast<const unsigned char *>(encodedResult.constData()),
+                      static_cast<size_t>(encodedResult.size())};
+    Buffer output{};
+    try {
+        const auto status = completeEffect_(app_, idBytes, resultBytes, &output);
+        const auto update = requireMap(consume(status, output), "effect completion update");
+        // Cleared only once the runtime has accepted the answer. Clearing on
+        // the way in would drop the obligation if the call failed, which is the
+        // silent-hang this whole mechanism exists to prevent.
+        awaiting_.remove(id);
+        if (settling_ > 0) {
+            // Called from inside a handler during settleEffects. Hand the
+            // update back to the loop that is already running rather than
+            // starting a second one, and let it decide what to return.
+            reentrantUpdate_ = update;
+            reentered_ = true;
+            return update;
+        }
+        const auto settled = settleEffects(update);
+        persistSnapshot();
+        latestUpdate_ = withPersistenceWarning(settled);
+        return latestUpdate_;
+    } catch (const std::exception &exception) {
+        return failure(QString::fromUtf8(exception.what()));
+    }
+}
+
+QVariantMap MosaicHost::settleEffects(QVariantMap update)
+{
+    // A completion can itself produce effects -- an import that needs a second
+    // dialog is an ordinary flow -- so this drains rather than sweeping once.
+    // The bound is a runaway guard, not an expected limit; reaching it is a bug
+    // in the app, and saying so beats looping forever.
+    constexpr int MaxRounds = 64;
+
+    ++settling_;
+    struct Guard {
+        int &depth;
+        ~Guard() { --depth; }
+    } guard{settling_};
+
+    for (int round = 0; round < MaxRounds; ++round) {
+        const auto effects = update.value(QStringLiteral("effects")).toList();
+        if (effects.isEmpty()) {
+            return update;
+        }
+
+        QList<quint64> unanswered;
+        for (const auto &entry : effects) {
+            const auto effect = entry.toMap();
+            bool parsed = false;
+            const auto id = effect.value(QStringLiteral("id")).toULongLong(&parsed);
+            if (!parsed) {
+                continue;
+            }
+            const auto delivery = effect.value(QStringLiteral("delivery")).toString();
+            const auto awaited = delivery.compare(QStringLiteral("await"),
+                                                  Qt::CaseInsensitive) == 0;
+            if (awaited) {
+                awaiting_.insert(id);
+            }
+
+            // The application gets first refusal. A handler connected directly
+            // may call completeEffect() from inside this emit, which removes
+            // the id from awaiting_ before the check below.
+            emit effectRequested(effect.value(QStringLiteral("id")),
+                                 effect.value(QStringLiteral("kind")).toString(),
+                                 effect.value(QStringLiteral("payload")),
+                                 delivery);
+
+            if (awaited && awaiting_.contains(id)) {
+                unanswered.append(id);
+            }
+        }
+
+        // A handler answered during the emit, so the app has moved past the
+        // update this loop is holding. Continue from the newer one.
+        if (reentered_) {
+            reentered_ = false;
+            update = reentrantUpdate_;
+            reentrantUpdate_.clear();
+            continue;
+        }
+
+        if (unanswered.isEmpty()) {
+            return update;
+        }
+
+        // Nothing handled these, and the app will not progress without an
+        // answer. Failing them is the whole point of `Delivery::Await` being on
+        // the wire: before it existed a host dropped every effect identically
+        // and the app simply waited, with nothing anywhere reporting it. An
+        // explicit failure surfaces the missing handler instead.
+        QVariantMap latest = update;
+        for (const auto id : unanswered) {
+            const auto reason =
+                QStringLiteral("no host handler answered effect %1").arg(id);
+            const QVariantMap failed{
+                {QStringLiteral("failed"), QVariantMap{{QStringLiteral("message"), reason}}}};
+            awaiting_.remove(id);
+            const auto answered = completeEffectOnce(id, failed);
+            if (answered.contains(QStringLiteral("error"))) {
+                return answered;
+            }
+            latest = answered;
+        }
+        update = latest;
+    }
+
+    return failure(QStringLiteral(
+        "effect completion did not settle after %1 rounds; the application is "
+        "requesting effects faster than they can be answered").arg(MaxRounds));
+}
+
+QVariantMap MosaicHost::completeEffectOnce(quint64 id, const QVariantMap &result)
+{
+    if (completeEffect_ == nullptr) {
+        return failure(QStringLiteral(
+            "this Mosaic runtime does not support effect completion (protocol 1)"));
+    }
+    const auto encodedId = QByteArray::number(static_cast<qulonglong>(id));
+    const auto encodedResult =
+        QJsonDocument::fromVariant(QVariant(result)).toJson(QJsonDocument::Compact);
+    Bytes idBytes{reinterpret_cast<const unsigned char *>(encodedId.constData()),
+                  static_cast<size_t>(encodedId.size())};
+    Bytes resultBytes{reinterpret_cast<const unsigned char *>(encodedResult.constData()),
+                      static_cast<size_t>(encodedResult.size())};
+    Buffer output{};
+    try {
+        const auto status = completeEffect_(app_, idBytes, resultBytes, &output);
+        return requireMap(consume(status, output), "effect completion update");
+    } catch (const std::exception &exception) {
+        return failure(QString::fromUtf8(exception.what()));
+    }
 }
 
 QVariantMap MosaicHost::failure(const QString &message) const

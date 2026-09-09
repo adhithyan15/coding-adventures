@@ -2,6 +2,57 @@
 
 ## Unreleased
 
+### Added -- the Qt host answers effects (UI47 §5.4 step 4)
+
+`MosaicHost` resolves `mosaic_app_complete_effect`, drains `update.effects`
+after every create / dispatch / restore / completion, and declares **protocol
+2**.
+
+Before this, `Effect` rode the wire and was read by no native host at all: an
+`await` was dropped and the app waited forever, with nothing anywhere reporting
+it. The Qt host is the first to close that.
+
+- `effectRequested(id, kind, payload, delivery)` is emitted per effect;
+  a handler connected directly may call `completeEffect(id, result)` from
+  inside the emit to answer it.
+- An `await` **no handler answered** is completed as
+  `failed: no host handler answered effect N` rather than dropped. A missing
+  handler becomes a visible error instead of a hang.
+- `notify` needs no answer and is never failed.
+- Completion can produce further effects -- an import needing a second dialog
+  is an ordinary flow -- so settling drains rather than sweeping once, with a
+  64-round runaway guard that reports rather than looping.
+
+Protocol 2 is declared because the host now *implements* completion. Declaring
+it without that is the harmful direction, so the assertion that pins the version
+now pins the capability beside it. Per UI47 §5.3 the bump is safe in both
+directions, and the existing Qt app acceptance (`venture-browser`, a v1 app)
+still passes: a v2 host running a v1 app simply never sees an `await`.
+
+Two bugs found only by running it, which no amount of asserting on the emitted
+text would have surfaced:
+
+- **Persistence ran before settling.** The runtime refuses to snapshot while an
+  effect is outstanding -- correctly, since a half-answered effect is not a
+  state worth restoring -- so every effect produced a spurious "could not
+  persist Mosaic state" warning. Settling now happens first.
+- **A handler answering during the emit left the caller with a stale update.**
+  `completeEffect` called re-entrantly now hands its update back to the settle
+  loop already running instead of starting a second one, and the loop adopts
+  it.
+
+### Added -- an execution acceptance for the emitted Qt host
+
+`tests/qt_effect_completion.rs` emits the host, compiles it against Qt Core with
+CMake, links the real conformance runtime, and runs it. The other tests in this
+crate assert on the *text* of the emitted host, which cannot establish that it
+compiles, let alone that it behaves.
+
+It skips only when CMake cannot find Qt6 **Core** -- probed by configuring a
+throwaway project, not by looking for `qmake` on `PATH`. A Qt tool being present
+does not mean CMake can find the component this build needs, and conflating them
+turns "unavailable" into a red test rather than a skip.
+
 - When an application's prop envelope declares `storage-warning`, propagate the
   native host's existing persistence warning into that prop as well as the
   diagnostic top-level field. Generated UI can now show corrupt-state or write

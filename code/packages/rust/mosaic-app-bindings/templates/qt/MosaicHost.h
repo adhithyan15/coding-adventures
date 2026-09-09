@@ -3,6 +3,7 @@
 
 #include <QLibrary>
 #include <QObject>
+#include <QSet>
 #include <QStringList>
 #include <QVariant>
 #include <QVariantMap>
@@ -28,6 +29,27 @@ public:
     Q_INVOKABLE QVariant snapshot();
     Q_INVOKABLE QVariantMap restore(const QVariantMap &snapshot);
 
+    // Answer an effect the app is waiting on. `result` is one tagged outcome:
+    // {"ok": <value>}, {"cancelled": {}}, or {"failed": {"message": "..."}}.
+    //
+    // Cancellation is a first-class answer, not a failure: a file dialog
+    // dismissed with Escape is an ordinary user action, and an app that cannot
+    // tell it from an error shows an error banner for one.
+    Q_INVOKABLE QVariantMap completeEffect(const QVariant &effectId,
+                                           const QVariantMap &result);
+
+signals:
+    // Emitted once per effect the runtime asks for, before the host decides
+    // what to do with it. Connect synchronously and call `completeEffect` from
+    // the handler to answer an `await` effect; a `notify` effect needs no
+    // answer.
+    void effectRequested(const QVariant &effectId,
+                         const QString &kind,
+                         const QVariant &payload,
+                         const QString &delivery);
+
+public:
+
 private:
     struct Bytes {
         const unsigned char *ptr;
@@ -44,6 +66,7 @@ private:
     using Dispatch = quint32 (*)(void *, Bytes, Buffer *);
     using Snapshot = quint32 (*)(void *, Buffer *);
     using Restore = quint32 (*)(void *, Bytes, Buffer *);
+    using CompleteEffect = quint32 (*)(void *, Bytes, Bytes, Buffer *);
     using BufferFree = void (*)(Buffer);
     using Destroy = void (*)(void *);
 
@@ -56,6 +79,8 @@ private:
     void quarantinePersistedState(const QString &reason);
     void persistSnapshot();
     QVariantMap withPersistenceWarning(const QVariantMap &update) const;
+    QVariantMap settleEffects(QVariantMap update);
+    QVariantMap completeEffectOnce(quint64 id, const QVariantMap &result);
     QString statePath() const;
 
     static constexpr quint32 ProtocolVersion = __MOSAIC_PROTOCOL_VERSION__;
@@ -69,10 +94,20 @@ private:
     QStringList requiredProps_;
     QString error_;
     QString persistenceWarning_;
+    // Effect ids the runtime is waiting on and nothing has answered yet.
+    QSet<quint64> awaiting_;
+    // Re-entrancy: a handler connected to effectRequested may call
+    // completeEffect() from inside the emit, which produces a newer update than
+    // the one settleEffects is holding. Without adopting it the caller gets a
+    // stale map -- the app has moved on and the props say otherwise.
+    QVariantMap reentrantUpdate_;
+    bool reentered_ = false;
+    int settling_ = 0;
     Create create_ = nullptr;
     Dispatch dispatch_ = nullptr;
     Snapshot snapshot_ = nullptr;
     Restore restore_ = nullptr;
+    CompleteEffect completeEffect_ = nullptr;
     BufferFree bufferFree_ = nullptr;
     Destroy destroy_ = nullptr;
 };
