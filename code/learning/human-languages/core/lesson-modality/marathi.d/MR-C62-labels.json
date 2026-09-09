@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C62-labels",
+    "language": "marathi",
+    "chapter": 62,
+    "sequence": 2560,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:653a3a544ef8ed35"
+  },
+  "findings": []
+}

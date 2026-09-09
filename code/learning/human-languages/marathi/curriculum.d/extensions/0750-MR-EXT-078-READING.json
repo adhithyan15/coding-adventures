@@ -1,0 +1,15 @@
+{
+  "id": "MR-EXT-078-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Marathi form label, a short personal message, and a paragraph about someone's day, without translating word by word.",
+  "prerequisites": [
+    "MR-EXT-077-ORDINALS-SIX-TO-TEN"
+  ],
+  "lessons": [
+    "MR-C62-labels",
+    "MR-C62-message",
+    "MR-C62-pahila-paath"
+  ]
+}

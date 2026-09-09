@@ -1,0 +1,574 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 62,
+  "title": "Reading — Labels, a Message, and a First Paragraph",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:18029aa3b4cbc334",
+  "lessons": [
+    {
+      "id": "MR-C62-labels",
+      "sequence": 2560,
+      "title": "(reading) (mājhaṁ nāv aruṇ āhe. malā marāṭhī yete.) (namaskār mīrā. mājhaṁ nāv aruṇ āhe.) (nāv · śahar · bhāṣā · ghar · kholī · pāṇī) — six words, no sentence around them",
+      "headword": "(reading)",
+      "romanization": "nāv · śahar · bhāṣā · ghar · kholī · pāṇī",
+      "gloss": "six words off a form and a doorway — the first time the track asks you to read rather than to learn",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:653a3a544ef8ed35",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every word below you have already written. Not one is new."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is that nothing tells you which is coming."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाव शहर भाषा घर खोली पाणी."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down the list once. Do not sound out each letter — look at the whole word and let it arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again, and notice which came at once and which you had to assemble. Both are fine. The difference is what practice removes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: a word with nothing to lean on",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first three are form labels — the ones you filled in when you wrote your own profile. The last three are things."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A label gives you no sentence to lean on. There is no आहे at the end to tell you what is going on, and no verb to wait for. One word, and it carries everything."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is why six is enough for one sitting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six words down the list, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six words down the list, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C62-labels-room",
+              "prompt": "Which word is the room?",
+              "assesses": [
+                "MR-SKILL-READ-LABELS"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "kholi",
+                "खोली",
+                "room"
+              ],
+              "feedback": {
+                "correct": "खोली.",
+                "incorrect": "खोली -- room."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was new? (Nobody said them first. You read them.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C62-message",
+      "sequence": 2570,
+      "title": "(reading) (mājhaṁ nāv aruṇ āhe. malā marāṭhī yete.) (namaskār mīrā. mājhaṁ nāv aruṇ āhe.) (nāv · śahar · bhāṣā · ghar · kholī · pāṇī) — a message with your own sentences in it",
+      "headword": "(reading)",
+      "romanization": "namaskār mīrā. mājhaṁ nāv aruṇ āhe.",
+      "gloss": "a short message read whole — six lines you have written, met this time as a reader",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d49f4a5caa150807",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson gave you single words. This gives each one a sentence to stand in."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have written every line below. This time somebody wrote it to you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमस्कार मीरा. माझं नाव अरुण आहे. भेटून आनंद झाला. मला मराठी येते. मी मराठी वाचतो. धन्यवाद."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it through once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again — and notice you did not assemble it line by line the second time. You took it in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the same sentences, the other way round",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "These are the lines from your own six-field profile and your own message, in the order you wrote them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Writing them, you chose each one and had all the time you wanted. Reading them, they arrive in somebody else's order and at their pace. That is a different skill, and it is why this is a separate lesson rather than a review."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six lines is not much. Meeting them from the other side is the whole exercise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six lines, once, in order, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six lines, once, in order, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C62-message-who",
+              "prompt": "Who wrote this message?",
+              "assesses": [
+                "MR-SKILL-READ-MESSAGE"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "arun",
+                "अरुण"
+              ],
+              "feedback": {
+                "correct": "अरुण.",
+                "incorrect": "अरुण -- the name in the second line."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who is the message addressed to? (मीरा.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six lines were new? (None.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C62-pahila-paath",
+      "sequence": 2580,
+      "title": "(reading) (mājhaṁ nāv aruṇ āhe. malā marāṭhī yete.) (namaskār mīrā. mājhaṁ nāv aruṇ āhe.) (nāv · śahar · bhāṣā · ghar · kholī · pāṇī) — the first paragraph",
+      "headword": "(reading)",
+      "romanization": "mājhaṁ nāv aruṇ āhe. malā marāṭhī yete.",
+      "gloss": "the first passage — eighty-three words of Marathi in a row, and not one of them new",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f29aa48bb93cb64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six words, then six lines. Now a whole paragraph."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Eighty-three words, and the rule has not changed: not one of them is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माझं नाव अरुण आहे. मला मराठी येते. माझं घर मोठं आहे. घरामध्ये एक खोली आहे. खोली लहान आहे पण चांगली आहे. मी चहा पितो. मला दूध सुद्धा आवडतं. मला भाकरी आवडते. माझा भाऊ उंच आहे. माझा मित्र जवळ आहे. मित्राचे नाव मीरा आहे. मीरा हुशार आहे आणि खूप वाचते. मीरा मला मदत करते. मीरा माझ्याबरोबर चालते. मी मराठी वाचतो आणि लिहितो. मीरा म्हणते की मराठी सोपं आहे. मला पण सोपं वाटतं, कारण मी बोलतो. मीरा विचारते, किती? मी म्हणतो, दहा. उद्या भेटू. धन्यवाद."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read it again, and notice how little work it took."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: what is holding it together",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "आणि adds. पण holds two true things apart. कारण gives a reason. की hangs a whole sentence off another one. सुद्धा adds a thing to a list already made. Each of those was a chapter, and each was small."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Notice also that Marathi waits. मीरा म्हणते की मराठी सोपं आहे — you do not find out what Mira says until the end, and you held the beginning without being asked to."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first whole paragraph the track has asked you to hold at once, and it works because every piece was paid for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the paragraph aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the paragraph aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C62-pahila-paath-friend",
+              "prompt": "What is the friend's name?",
+              "assesses": [
+                "MR-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "mira",
+                "मीरा"
+              ],
+              "feedback": {
+                "correct": "मीरा.",
+                "incorrect": "मीरा -- मित्राचे नाव मीरा आहे."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words in that paragraph were new to you? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what made it readable? (Everything in it had already been paid for, one chapter at a time.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
