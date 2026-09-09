@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+### Fixed -- the collection member had no expansion budget
+
+`read_media_files` has budgeted media expansion for some time.
+`read_v11_collection_bytes` had no bound at all, and its only effective limit
+was the zip entry's declared uncompressed size -- a `u32`, so up to 4 GiB.
+
+A small archive can therefore declare a ~4 GiB `collection.anki2` and, with a
+compressible deflate stream, actually produce it. Both the CRC and the length
+check are satisfiable by whoever wrote the archive, so neither catches it. The
+allocation that follows does not fail recoverably: Rust's allocation error
+handler **aborts**, which neither `catch_json`'s `catch_unwind` nor the C ABI's
+can intercept, so the host process dies and takes the reader's unsaved
+collection with it. The modern branch was already safe -- zstd caps its own
+output.
+
+Pre-existing and reachable through `engram-capi`; found while giving Engram's
+Mosaic adapter a second route to it.
+
+**The bound is the absolute ceiling, deliberately not `media_budget`'s
+size-proportional ratio.** That ratio is calibrated for media, which is already
+compressed and barely expands. A collection is SQLite full of repetitive text
+and routinely expands sixty-fold, so applying the ratio would refuse ordinary
+decks: a 500 KiB archive holding a 30 MiB text-only collection is a real deck,
+and it would have failed against the 24 MiB the ratio allows. That case is
+pinned by a test, because reusing `media_budget` is the tempting fix and it is
+the wrong one. The ceiling still turns a 4 GiB allocation into a sentence.
+
+Checked against the declared size, before the read, because acting on the real
+one means having already made the allocation this prevents.
+
 ### Fixed -- an imported template could name a deck the file never declares (#14532)
 
 The deck-resolution added for #14559 covered cards, notes and sessions. It did
