@@ -62,15 +62,41 @@ slot body   : text ;
 slot footer : text ;
 ```
 
-**Where it fails.** Two things, one shallow and one not.
+**Where it fails.** One thing, and it is smaller than the first version of this
+audit claimed.
 
-- Shallow: Journal's card shows a date, which has to go in `footer` alongside
-  whatever else the footer is for. A `date`/`meta` slot would fit better.
-- **Not shallow: `Card` emits nothing, so it cannot be activated.** Every
-  Journal card navigates to its entry. A card that cannot be clicked is not a
-  card for this product, and this is the single clearest piece of demand
-  evidence in the audit: `Card` was built for Engram's read-only surfaces and
-  has never had a consumer that needed interaction.
+Journal's card shows a date, which has to go in `footer` alongside whatever else
+the footer is for. A `date`/`meta` slot would fit better.
+
+**Correction.** This audit originally led with "`Card` emits nothing, so it
+cannot be activated," and called it the clearest piece of demand evidence. That
+was wrong. It reasoned from `Card`'s interface without testing the alternative
+`Card.mil` itself prescribes:
+
+> Cards are display surfaces. Wrapping interaction (click to open a detail
+> view, etc.) belongs to the host's parent component … by placing the Card
+> inside an actionable container.
+
+That pattern works. Compiling a probe that wraps the real `mosaic-pkg-card`
+Card in a `HostButton`:
+
+```
+HostButton [ card-action ] ( onClick : emit: onOpen ) {
+  pkg::mosaic-pkg-card::Card ( title : slot: entry-title , ... )
+}
+```
+
+emits a real button with the card inside it and the handler on the button, on
+**seven of eight backends** — html, webcomponent, react, SwiftUI, Qt, Flutter,
+and Compose. `Card` needs no `emit`, and adding one would have broken a
+deliberate design decision to solve a problem that did not exist.
+
+What the test *did* find is a real defect, filed as
+[#14717](https://github.com/adhithyan15/coding-adventures/issues/14717): **XAML
+silently drops children nested inside `HostButton`**, emitting a self-closing
+`<Button/>` with the entire card subtree discarded and no diagnostic. So the
+prescribed pattern produces a working card everywhere and an empty button on
+Windows.
 
 ### 3. EntryEditor — split pane, markdown left, live preview right
 
@@ -131,8 +157,11 @@ Day One parity items from #14416 with no current home:
 
 ## Findings, ordered by how much evidence they carry
 
-1. **`Card` cannot be clicked.** One missing `emit` blocks the most common
-   interaction in the product. Smallest fix, clearest demand.
+1. **XAML drops children nested inside `HostButton`** ([#14717](https://github.com/adhithyan15/coding-adventures/issues/14717)).
+   The composition pattern `Card` documents for interaction works on seven
+   backends and silently produces an empty button on the eighth. This replaces
+   the original first finding, which claimed `Card` needed an `emit`; testing
+   the prescribed pattern showed it does not.
 2. **There is no list-of-records component.** Timeline, search results, and a
    tag browser all want rows with several fields and optional grouping.
    `ListGroup`'s `list<text>` cannot express it; `Grid`/`Calendar`'s
@@ -150,6 +179,12 @@ Day One parity items from #14416 with no current home:
 It does not propose new components, change any package, or decide the Journal
 data model. J2 (the Rust core) is unaffected by everything here: the findings
 are about presentation, and the engine question is separate.
+
+One finding in the first version of this document was wrong and is corrected
+above. The lesson is recorded rather than quietly edited out: an audit that
+reads a component's interface and stops has not tested what the component's own
+documentation tells you to do instead. Compiling the prescribed alternative
+took one probe component and replaced a wrong headline finding with a real bug.
 
 It also does not claim the mapping is complete. Journal has four screens today
 and Day One has considerably more; a second pass belongs after J3, when the
