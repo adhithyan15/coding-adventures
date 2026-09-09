@@ -9027,6 +9027,86 @@ fn matrix_every_proven_cell_agrees() {
     }
 }
 
+/// **VM-061**: `LANG-VM-FEATURE-COVERAGE.md`'s per-frontend row/cell table is
+/// hand-maintained prose sitting next to this file's own `PROGRAMS` corpus, so
+/// it can silently drift whenever a slice adds rows here without also
+/// touching the doc. That already happened once: Twig's doc cell count (343)
+/// was `49 rows × 7 standard backends`, silently dropping its 20 Beam cells
+/// from the total, while Nib/Oct/FLOW-MATIC/COBOL-60's doc numbers already
+/// used the OTHER convention — every declared backend, Beam included — with
+/// no comment anywhere explaining the inconsistency. This test pins the exact
+/// row count and total *declared* cell count (`sum(backends.len())`, Beam
+/// included, matching the majority convention) for every non-ALGOL language
+/// that has rows in `PROGRAMS` today, so a future change here fails loudly
+/// instead of quietly reopening the same drift.
+///
+/// A failure means `PROGRAMS` changed for one of these languages: update BOTH
+/// this test's expected tuple AND the matching row in
+/// `LANG-VM-FEATURE-COVERAGE.md` before merging — the same "update inventory
+/// counts" step nearly every slice in `LANG-VM-NON-ALGOL-BACKLOG.md` already
+/// performs by hand, now caught at compile-test time instead of trusted to
+/// memory. Recompute both numbers straight from `PROGRAMS` (do not hand-count
+/// or estimate from a text search) before changing either the expected tuple
+/// here or the doc.
+///
+/// ALGOL 60 is deliberately NOT asserted here: it is owned by a separate,
+/// actively developing campaign (see "Ownership boundary" in
+/// `LANG-VM-NON-ALGOL-BACKLOG.md`), and this backlog has no mandate to police
+/// its doc row or its row count in this shared corpus.
+///
+/// McCarthy Lisp and Macsyma are asserted at exactly zero rows: both
+/// intentionally have dedicated capstone files (`conformance.rs`,
+/// `macsyma_conformance.rs`) instead of rows here, and the doc's "0/0 means
+/// dedicated coverage, not absent support" reading depends on that staying
+/// true. A stray `Prog { lang: Language::McCarthyLisp | Language::Macsyma,
+/// .. }` slipping into this shared corpus would silently break that reading.
+#[test]
+fn feature_coverage_doc_counts_match_programs_source() {
+    fn rows_and_cells(lang: Language) -> (usize, usize) {
+        PROGRAMS
+            .iter()
+            .filter(|p| p.lang == lang)
+            .fold((0, 0), |(rows, cells), p| (rows + 1, cells + p.backends.len()))
+    }
+
+    // (language, expected rows, expected total declared cells — all backends
+    // including Beam). Order matches the doc table.
+    let expected = [
+        (Language::Twig, 49, 363),
+        (Language::Nib, 26, 208),
+        (Language::Brainfuck, 6, 42),
+        (Language::DartmouthBasic, 51, 357),
+        (Language::Oct, 12, 96),
+        (Language::FlowMatic, 8, 60),
+        (Language::Cobol60, 58, 422),
+    ];
+
+    for (lang, want_rows, want_cells) in expected {
+        let (got_rows, got_cells) = rows_and_cells(lang);
+        assert_eq!(
+            got_rows, want_rows,
+            "{lang:?}: PROGRAMS has {got_rows} rows, but LANG-VM-FEATURE-COVERAGE.md \
+             declares {want_rows} — recompute from source and update both together (VM-061)"
+        );
+        assert_eq!(
+            got_cells, want_cells,
+            "{lang:?}: PROGRAMS declares {got_cells} total cells (all backends, Beam \
+             included), but LANG-VM-FEATURE-COVERAGE.md declares {want_cells} — recompute \
+             from source and update both together (VM-061)"
+        );
+    }
+
+    for lang in [Language::McCarthyLisp, Language::Macsyma] {
+        let (got_rows, _) = rows_and_cells(lang);
+        assert_eq!(
+            got_rows, 0,
+            "{lang:?}: PROGRAMS unexpectedly has {got_rows} row(s); this language uses a \
+             dedicated capstone file instead of this shared corpus — see \
+             LANG-VM-FEATURE-COVERAGE.md"
+        );
+    }
+}
+
 #[test]
 fn algol_integer_output_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
