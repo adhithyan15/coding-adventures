@@ -1105,6 +1105,44 @@ fn conditional_color_expr(
     Some(expr)
 }
 
+/// A numeric property that a state layer may override, folded into the same
+/// nested-ternary shape [`conditional_color_expr`] produces for colours.
+///
+/// Kept separate rather than generalising the colour builder: that one quotes
+/// its output and validates hex, both of which would be wrong for a number.
+fn conditional_number_expr(
+    base: Option<String>,
+    layers: &[StateLayer<'_>],
+    name: &str,
+    default: &str,
+) -> Option<String> {
+    let overrides: Vec<(&str, String)> = layers
+        .iter()
+        .filter_map(|layer| {
+            style_prop(layer.props, name)
+                .and_then(qml_number_or_none)
+                .map(|value| (layer.cond_expr.as_str(), value))
+        })
+        .collect();
+    if base.is_none() && overrides.is_empty() {
+        return None;
+    }
+    let mut expr = base.unwrap_or_else(|| default.to_string());
+    for (condition, value) in overrides {
+        expr = format!("( {condition} ) ? {value} : {expr}");
+    }
+    Some(expr)
+}
+
+/// A bare number (`0.4`, `1`) for a QML numeric property. Rejects anything
+/// with a unit or shape this emitter cannot pass through verbatim, so a
+/// percentage or `calc()` becomes no output rather than invalid QML.
+fn qml_number_or_none(value: &str) -> Option<String> {
+    let trimmed = value.trim().trim_matches('"');
+    trimmed.parse::<f64>().ok().filter(|v| v.is_finite())?;
+    Some(trimmed.to_string())
+}
+
 /// The lowered QML for a styled cell `Box`: the Rectangle's own property
 /// lines plus the [`CellTextStyle`] to push down to the inner text.
 struct StyledBox {
@@ -1193,6 +1231,17 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
         "transparent",
     ) {
         rect_lines.push(format!("color: {expr}"));
+    }
+
+    // `opacity` composites the box and its children, which is what a dimmed
+    // `state disabled` part wants (#14708). Emitted here as well as in the two
+    // `qml_rectangle_paint_lines*` builders because Qt assembles Rectangle
+    // properties in three separate places -- a styled cell Box comes through
+    // this one, and adding it to only the other two left it silently dropped
+    // on exactly the parts most likely to declare it.
+    let base_opacity = style_prop(base, "opacity").and_then(qml_number_or_none);
+    if let Some(expr) = conditional_number_expr(base_opacity, &state_layers, "opacity", "1") {
+        rect_lines.push(format!("opacity: {expr}"));
     }
 
     // --- Inner text styling -------------------------------------------
@@ -1414,6 +1463,9 @@ fn qml_rectangle_paint_lines(props: &[StyleProp]) -> Vec<String> {
     if let Some(border_width) = style_prop(props, "border-width").and_then(qml_px_or_none) {
         lines.push(format!("border.width: {border_width}"));
     }
+    if let Some(opacity) = style_prop(props, "opacity").and_then(qml_number_or_none) {
+        lines.push(format!("opacity: {opacity}"));
+    }
     lines
 }
 
@@ -1447,6 +1499,14 @@ fn qml_rectangle_paint_lines_with_states(
     }
     if let Some(border_width) = style_prop(base, "border-width").and_then(qml_px_or_none) {
         lines.push(format!("border.width: {border_width}"));
+    }
+    // `opacity` is an Item property, so it composites the element AND its
+    // children -- which is the semantics a dimmed `state disabled` part wants
+    // (#14708). State-aware because that is the case it exists for: a base-only
+    // opacity would leave UI57's `state disabled { opacity: … }` unlowered.
+    let base_opacity = style_prop(base, "opacity").and_then(qml_number_or_none);
+    if let Some(opacity) = conditional_number_expr(base_opacity, layers, "opacity", "1") {
+        lines.push(format!("opacity: {opacity}"));
     }
     lines
 }
@@ -14112,4 +14172,99 @@ mod tests {
         );
         assert!(project.main_cpp.contains("mosaicHost.propsRequired()"));
     }
+
+    // ---- opacity (#14708) --------------------------------------------
+
+    fn opacity_qml(base: Vec<(&str, &str)>, disabled_state: Option<&str>) -> String {
+        let c = component(
+            "B",
+            vec![
+                slot("label", SlotType::Text, true),
+                slot("disabled", SlotType::Bool, false),
+            ],
+            vec![],
+        );
+        let mut states = Vec::new();
+        if let Some(value) = disabled_state {
+            states.push(StateStyle {
+                state: "disabled".to_string(),
+                slot: Some("disabled".to_string()),
+                slot_is_bool: true,
+                props: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: value.to_string(),
+                }],
+                transitions: vec![],
+            });
+        }
+        let s = StyleDef {
+            component_name: "B".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: base
+                    .into_iter()
+                    .map(|(n, v)| StyleProp {
+                        name: n.to_string(),
+                        value: v.to_string(),
+                    })
+                    .collect(),
+                transitions: vec![],
+                states,
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "B".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        from_pipeline(&c, &l, &s).expect("emit ok").output
+    }
+
+    #[test]
+    fn base_opacity_lowers_to_the_item_property() {
+        let out = opacity_qml(vec![("background", "#111111"), ("opacity", "0.4")], None);
+        assert!(out.contains("opacity: 0.4"), "got:\n{out}");
+    }
+
+    #[test]
+    fn a_bool_slot_state_drives_opacity() {
+        // The case this exists for: UI57's `state disabled { opacity: … }`.
+        // A base-only lowering would leave the disabled treatment unlowered,
+        // which is the gap #14639 is about.
+        let out = opacity_qml(vec![("opacity", "1")], Some("0.4"));
+        assert!(
+            out.contains("opacity: ( (disabled) ) ? 0.4 : 1"),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn a_state_opacity_with_no_base_falls_back_to_fully_opaque() {
+        let out = opacity_qml(vec![("background", "#111111")], Some("0.4"));
+        assert!(
+            out.contains("opacity: ( (disabled) ) ? 0.4 : 1"),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn a_part_without_opacity_emits_none() {
+        // Emitting `opacity: 1` everywhere would be noise and would defeat
+        // Qt's own default.
+        let out = opacity_qml(vec![("background", "#111111")], None);
+        assert!(!out.contains("opacity:"), "got:\n{out}");
+    }
+
+    #[test]
+    fn a_non_numeric_opacity_is_not_emitted() {
+        // A percentage or calc() has no QML form here; emitting it verbatim
+        // would produce invalid QML rather than a missing property.
+        let out = opacity_qml(vec![("opacity", "40%")], None);
+        assert!(!out.contains("opacity:"), "got:\n{out}");
+    }
+
 }
