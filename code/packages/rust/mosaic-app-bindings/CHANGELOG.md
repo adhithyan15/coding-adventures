@@ -2,6 +2,104 @@
 
 ## Unreleased
 
+### Added -- the Compose host answers effects (UI47 §5.4 step 4)
+
+The third of five host templates, after Qt and SwiftUI. `MosaicRuntimeHost`
+gains `effectHandler`, `completeEffect(id, result)`, `deferEffect(id)` and the
+same bounded settle loop; the JNA interface gains
+`mosaic_app_complete_effect`, and the emitted protocol version moves to
+`EFFECT_PROTOCOL_VERSION` alongside Qt and SwiftUI.
+
+Unlike SwiftUI, the deferred answer is **not** hopped to a particular thread.
+SwiftUI requires state mutation on the main thread; Compose writes
+`mutableStateOf` through the snapshot system, which accepts writes from any
+thread, so a hop here would impose a rule Compose does not have.
+
+Three defects this found, none of which the crate's text assertions could see:
+
+- **Three missing `kotlinx.serialization` imports.** The emitted host did not
+  compile at all. Every existing test asserts on the *text* of the emission and
+  passed; the first `kotlinc` invocation failed. Hence the new acceptance below.
+- **A handler that throws wedged persistence permanently.** The handler runs
+  inside the settle loop, so an escaping exception left the id in `awaiting`
+  with nothing left to discharge it -- and the runtime refuses to `snapshot` or
+  `restore` while anything is pending. It is not an exotic path:
+  `toJsonElement` throws on any value it has no case for, which is what a
+  handler returning the `File` a dialog gave it does on its first run. A
+  throwing handler is now treated as one that did not answer, so the sweep
+  still fails the effect, and the app is told which handler failed and why
+  rather than being handed a bare "no host handler answered".
+- **Malformed effect entries threw rather than being reported.**
+  `JsonElement.jsonObject` and `.jsonArray` throw on a wrong-typed element, and
+  two of the three call sites were in `failOutstanding` -- the recovery path,
+  where a throw aborts the very sweep that prevents the wedge. Parsing is now
+  total, matching Qt and SwiftUI, which already were. This path is defensive:
+  the runtime only ever emits well-formed effects, so it is **not** exercised
+  by the acceptance below.
+
+### Fixed -- the Compose host discarded its own "state cannot be saved" warning
+
+`effectWarning` was written and never read. It is set in exactly the two places
+where the host has lost the ability to persist for the rest of the process --
+an effect arrived with an id nothing can answer, or effects were still
+outstanding after the drain gave up -- and both messages say so in as many
+words. But `withPersistenceWarning` consulted only `persistenceWarning`, so the
+message went to a dead field: the user's data quietly stopped being durable
+with no indication in the props, the UI, or on stderr.
+
+A port omission rather than a decision -- the SwiftUI host it was derived from
+passes `effectWarning ?? persistenceWarning` at every settle site. The effect
+warning wins and is sticky, because `persistenceWarning` is cleared by the next
+successful write, and announcing that saving recovered while the runtime is
+still refusing to snapshot would be worse than saying nothing. It now also
+reaches stderr, like every other persistence failure.
+
+Neither condition is reachable through the conformance app, so this is fixed by
+inspection against SwiftUI rather than pinned by the acceptance.
+
+### Fixed -- `restore` returned the update that arrived, not the one it stored
+
+Settling answers effects, and answers move the app, so the raw update's props
+are the ones from before that happened and its `effects` list names effects
+already discharged. A caller rendering the return value would show state that
+`props()` disagrees with. Qt and SwiftUI both return the settled update; this
+host returned the raw one, and additionally skipped the persistence warning
+that `handleEvent` applies. Both now match.
+
+Not exercised by the acceptance: the conformance app's `restore` mints no
+effects, so the divergence is unreachable through that fixture. It is a
+consistency fix against the two shipped hosts, verified by compilation only.
+
+### Added -- an execution acceptance for the Compose host
+
+`tests/compose_effect_completion.rs` emits the host, compiles it with `kotlinc`
+against the real JNA and kotlinx-serialization jars, and runs it against the
+conformance runtime -- one JVM per scenario, each with its own state file,
+because the host reads `MOSAIC_APP_STATE_PATH` once at load and the JVM cannot
+change its own environment. Seven scenarios: an unanswered await, an answered
+one, a fully-answered chaining batch, a partly-answered batch, a throwing
+handler, an unconvertible result, a runaway chain, and
+defer-then-answer-from-another-thread.
+
+The runaway case pins the 64-round settle bound, which is what stops a handler
+that answers every effect by minting another from spinning inside a
+`@Synchronized` method while holding the monitor. The bound has to both stop
+**and** report: giving up quietly would leave the app looking settled while the
+runtime still waits.
+
+`consume` now bounds the native length below as well as above. `MosaicSizeT` is
+an unsigned `IntegerType`, so a 64-bit `size_t` with the high bit set arrives as
+a negative `Long` and sailed past the `<=` test into `getByteArray` with a
+negative count. JNA rejects that, so this was never an out-of-bounds read -- but
+the guard read as though it checked, and did not.
+
+It skips when `kotlinc`, `java` or the jars are absent, with environment
+overrides (`MOSAIC_JNA_JAR`, `MOSAIC_KOTLINX_JSON_JAR`,
+`MOSAIC_KOTLINX_CORE_JAR`, `MOSAIC_KOTLIN_STDLIB_JAR`) to point it at them.
+The stdlib is resolved separately because `kotlinc` supplies it at compile time
+and `java` does not at run time -- a host that compiles cleanly still dies with
+`NoClassDefFoundError: kotlin/Result` without it.
+
 ### Added -- an `Await` effect can be answered later (#14720)
 
 Both hosts called the effect handler synchronously and failed anything still
