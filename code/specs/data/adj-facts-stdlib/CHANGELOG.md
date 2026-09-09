@@ -6,7 +6,7 @@ landed and why, not a semver-tracked API.
 ## Unreleased
 
 - **#13934 installment 4h: two descriptions, two stripped indents, and a headline that understates
-  the round.** 4 value lines, 10 row lines and 155 comment lines across **3** `.adj` files —
+  the round.** 4 value lines, 10 row lines and 161 comment lines across **3** `.adj` files —
   `geometry/solid-vertices-edges` (two values), `biology/genetic-code` and `biology/start-codon` —
   plus three e2e test files. **Eight mutations redden.** Contiguity **60 → 58** over the full
   population of 563; the two that left are the two Platonic values, member for member, and none

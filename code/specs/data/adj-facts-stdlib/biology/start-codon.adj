@@ -120,11 +120,13 @@
 % The two look identical in a diff and are opposite in kind, which is why
 % each candidate gets its page read.
 %
-% Worth noting how long it went unseen: no instrument in this effort
-% compares a value to RAW HTML. The contiguity sweep compares against the
-% extractor's output, which normalises whitespace, and the CI pins compare
-% the engine's output to this field — the field to itself.
-% ============================================================================
+% Worth noting how long it went unseen: WHEN THIS DEFECT SHIPPED, no
+% instrument in this effort compared a value to the page at all. The
+% contiguity sweep compares against the extractor's output, which normalises
+% whitespace, and the CI pins compare the engine's output to this field —
+% the field to itself. That gap is what `tools/verify_ncbi_pre_span.py` was
+% added to close, so this paragraph is history rather than a description of
+% the present.
 
 table start_codon {
     columns codon, role

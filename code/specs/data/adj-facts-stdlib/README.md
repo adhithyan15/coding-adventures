@@ -404,8 +404,22 @@ nothing* instead of *the artifact is wrong*. That is the confusion the exit code
 in the direction that invites a reader to discount a real regression.
 
 Exit codes: **0** everything holds · **1** the artifact is wrong · **2** no verdict (the page could
-not be fetched) · **3** the instrument is broken. The routing is checked by mutating a copy of the
-libraries six ways and asserting the code each shape produces.
+not be fetched, or came back truncated) · **3** the instrument is broken.
+
+That routing is checked by the script itself:
+
+```bash
+python code/specs/data/adj-facts-stdlib/tools/verify_ncbi_pre_span.py --self-test
+```
+
+It perturbs each input in turn and asserts which code comes back — library mutations must reach
+**1**, page mutations **3**, fetch failures **2**, and the untouched pair **0** — and it fails if the
+run does not exercise all four. That last guard matters: an earlier version of this paragraph
+claimed the routing was "checked by mutating a copy of the libraries six ways", but once the
+controls were moved off the fields and onto the page, **no library mutation can reach 2 or 3 by
+construction**, so that check covered two of the four codes and could not touch the 1-vs-3 edge it
+was cited for. A check that cannot fail on the thing it certifies is the defect this package keeps
+finding in itself.
 
 ## Consuming a library
 
