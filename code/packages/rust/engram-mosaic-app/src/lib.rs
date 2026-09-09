@@ -101,10 +101,31 @@ const MAX_IMPORT_BASE64_LEN: usize = 512 * 1024 * 1024;
 fn reader_safe(message: &str) -> String {
     let trimmed: String = message
         .chars()
-        .filter(|c| !c.is_control())
+        .filter(|c| {
+            // Control characters, and the markup delimiters the doc comment
+            // above is actually about: `is_control` alone left `<`, `>` and `&`
+            // untouched, so a zip entry name of `<img src=...>` would reach the
+            // prop intact and be RENDERED by a toolkit that auto-detects rich
+            // text. A filter whose comment claims more than it does is worse
+            // than no filter.
+            //
+            // Format characters go too. `is_control` matches category Cc only,
+            // so U+202E RLO and the directional isolates survived it -- enough
+            // to make the status line appear to say something it does not,
+            // within the 200 characters below.
+            !c.is_control()
+                && !matches!(c, '<' | '>' | '&')
+                && !matches!(
+                    u32::from(*c),
+                    0x200B..=0x200F | 0x202A..=0x202E | 0x2066..=0x2069
+                )
+        })
+        // AFTER the filter, so padding cannot push markup past the window. If
+        // this ever becomes entity escaping rather than dropping, escape after
+        // truncating -- cutting `&amp;` in half produces new nonsense.
         .take(200)
         .collect();
-    if trimmed.is_empty() {
+    if trimmed.trim().is_empty() {
         "no details given".to_string()
     } else {
         trimmed
@@ -1301,7 +1322,13 @@ mod untrusted_input_tests {
         // A host -- or a package-layer error quoting a zip entry name -- can put
         // arbitrary bytes here. Five native toolkits render this prop, and at
         // least one interprets markup, so the boundary is enforced here.
-        let hostile = format!("line one\nline two\r\0{}", "x".repeat(5_000));
+        // Everything the doc comment claims to stop, in one string: control
+        // characters, the markup a rich-text toolkit would render, a bidi
+        // override that rewrites what the line appears to say, and length.
+        let hostile = format!(
+            "line one\nline two\r\0<img src=\"file:///etc/passwd\">&amp;\u{202E}\u{2066}{}",
+            "x".repeat(5_000)
+        );
         let update = app
             .complete_effect(
                 effect.id,
@@ -1312,6 +1339,14 @@ mod untrusted_input_tests {
         assert!(
             !reported.contains('\n') && !reported.contains('\r') && !reported.contains('\0'),
             "control characters must not reach the prop: {reported:?}"
+        );
+        assert!(
+            !reported.contains('<') && !reported.contains('>') && !reported.contains('&'),
+            "markup delimiters must not reach a toolkit that auto-detects rich text: {reported:?}"
+        );
+        assert!(
+            !reported.contains('\u{202E}') && !reported.contains('\u{2066}'),
+            "bidi overrides must not reach the prop: {reported:?}"
         );
         assert!(
             reported.chars().count() <= 220,

@@ -70,8 +70,12 @@ assumes whoever produced it meant harm.
   Package-layer errors interpolate names lifted out of the archive -- a zip
   entry name is up to 65535 arbitrary bytes -- and host failure messages are
   whatever the host wrote. Both land in a prop rendered by five native toolkits,
-  one of which interprets markup, so control characters go and the length is cut
-  at the boundary rather than trusted to five renderers.
+  one of which auto-detects rich text, so the length is cut and control
+  characters, the markup delimiters `<` `>` `&`, and the bidi format characters
+  go -- at the boundary, rather than trusted to five renderers. The first
+  version of this filter dropped control characters only, which left the very
+  markup its own comment was about; `is_control` is category Cc, so U+202E and
+  the directional isolates went through it too.
 - **The id bound is the runtime's own constant**, now `pub`, rather than a
   restated literal. A divergence would mint ids the runtime rejects, and it
   poisons the instance for one out of range.
