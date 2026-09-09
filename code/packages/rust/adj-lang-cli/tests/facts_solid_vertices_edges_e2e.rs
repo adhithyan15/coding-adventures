@@ -150,7 +150,15 @@ fn solid_vertices_source_is_the_pages_sentence_not_a_description() {
     );
 }
 
-/// Installment 4h (#13934): The edges half of the same repair. This sentence needs less care than the vertices one: it states its own solid order inline, with `=` marking the two pairs that share a count, so no re-ordering inference is involved. It carries the SAME weaker claim, though, and the assertion message below says "exactly" in the sense the vertices test spells out: verbatim under the extractor's whitespace collapse, NOT byte-exact against raw HTML. The page's own bytes wrap this sentence across TWO newlines (the vertices sentence has three). See #14111.
+/// Installment 4h (#13934): The edges half of the same repair. This
+/// sentence needs less care than the vertices one: it states its own solid
+/// order inline, with `=` marking the two pairs that share a count, so no
+/// re-ordering inference is involved. It carries the SAME weaker claim,
+/// though, and the assertion message below says "exactly" in the sense the
+/// vertices test spells out: verbatim under the extractor's whitespace
+/// collapse, NOT byte-exact against raw HTML. The page's own bytes wrap
+/// this sentence across TWO newlines (the vertices sentence has three). See
+/// #14111.
 ///
 /// FULL ANCHORED CITATION PIN -- anchored on the `"source":"` key and
 /// closed on the terminating quote, so head, tail, punctuation,

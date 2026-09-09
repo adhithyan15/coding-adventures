@@ -83,7 +83,7 @@ landed and why, not a semver-tracked API.
   are at 11, and the pins were **regenerated from the corrected fields** rather than patched.
 
   The prose describing the fix was wrong in the same direction — "false by eight characters" was
-  12, and *"indents every line after the first by two spaces"* is precisely the misreading that
+  12, and *"indents every line after the first by TWO SPACES"* is precisely the misreading that
   produced the incomplete repair. Also corrected: "five newlines" in the MathWorld note is
   **three** (I had counted a slice that ran past the sentence).
 

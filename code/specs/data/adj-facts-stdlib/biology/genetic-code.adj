@@ -160,8 +160,9 @@ table codon_amino_acid {
     % test.
     %
     % Restoring it decided none of the questions held on #14111. Whitespace
-    % inside a `<pre>` is RENDERED whitespace — the browser shows those two
-    % spaces — so carrying it is the same call as carrying a page's U+00A0. That
+    % inside a `<pre>` is RENDERED whitespace — the browser renders all
+    % twelve of them, four on line 1 and two on each line after — so
+    % carrying them is the same call as carrying a page's U+00A0. That
     % is NOT the case filed on #14111 the same day, where newlines turn up
     % inside an ordinary wrapped paragraph: those are HTML source formatting
     % that renders as a single space, and which reading of `source` governs them
