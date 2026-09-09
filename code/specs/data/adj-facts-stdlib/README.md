@@ -389,8 +389,10 @@ python code/specs/data/adj-facts-stdlib/tools/verify_ncbi_pre_span.py
 
 `verify_ncbi_pre_span.py` fetches NCBI's genetic-code page and checks the `source` fields of
 `biology/genetic-code.adj` and `biology/start-codon.adj` against it: byte-exact substring, unique
-occurrence, the match beginning at a line boundary, all five data columns at one offset, and `atg`
-decoding to `M`. It needs the standard library and network access, nothing else.
+occurrence, the match beginning at a line boundary, all five data columns at one offset, the `atg`
+decoding to `M`, and the block sitting under `transl_table=1` — the page carries 27 such
+blocks, one per translation table, and the other five checks pass on every one of them. It needs
+the standard library and network access, nothing else.
 
 Every arm is paired with a case that must FAIL — including a reconstruction of a real defect
 security review caught in installment 4h, which the script requires to fail exactly three of the
@@ -404,7 +406,8 @@ nothing* instead of *the artifact is wrong*. That is the confusion the exit code
 in the direction that invites a reader to discount a real regression.
 
 Exit codes: **0** everything holds · **1** the artifact is wrong · **2** no verdict (the page could
-not be fetched, or came back truncated) · **3** the instrument is broken.
+not be fetched, or came back truncated) · **3** the instrument is broken · **4** the self-test
+itself failed.
 
 That routing is checked by the script itself:
 
