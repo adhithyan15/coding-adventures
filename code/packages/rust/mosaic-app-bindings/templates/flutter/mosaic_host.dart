@@ -851,12 +851,19 @@ final class _MosaicRuntime {
     }
   }
 
+  /// Allocations inside the `try`, for the same reason as [_invokeInputs]: a
+  /// throw from a later `calloc` would otherwise leak the earlier ones, and
+  /// here the earlier one is the payload buffer, which is the arbitrarily large
+  /// allocation of the three.
   Object? _invokeInput(Object? value, _InputOperation operation) {
     final encoded = utf8.encode(jsonEncode(value));
-    final bytes = calloc<Uint8>(encoded.length);
-    final input = calloc<_MosaicBytes>();
-    final output = calloc<_MosaicBuffer>();
+    Pointer<Uint8>? bytes;
+    Pointer<_MosaicBytes>? input;
+    Pointer<_MosaicBuffer>? output;
     try {
+      bytes = calloc<Uint8>(encoded.length);
+      input = calloc<_MosaicBytes>();
+      output = calloc<_MosaicBuffer>();
       if (encoded.isNotEmpty) {
         bytes.asTypedList(encoded.length).setAll(0, encoded);
       }
@@ -866,20 +873,20 @@ final class _MosaicRuntime {
       final status = operation(input.ref, output);
       return _consume(status, output.ref);
     } finally {
-      calloc.free(output);
-      calloc.free(input);
-      calloc.free(bytes);
+      if (output != null) calloc.free(output);
+      if (input != null) calloc.free(input);
+      if (bytes != null) calloc.free(bytes);
     }
   }
 
   /// Two encoded inputs in one call, for `mosaic_app_complete_effect`.
   ///
   /// Every allocation is made INSIDE the `try` and freed only if it was
-  /// obtained. Allocating first and entering the `try` afterwards -- which is
-  /// what the single-input helper below still does -- leaks everything already
-  /// obtained if a later `calloc` throws, and `CallocAllocator` does throw when
-  /// the allocation returns null. Five allocations widen that window enough to
-  /// be worth closing.
+  /// obtained. Allocating first and entering the `try` afterwards leaks
+  /// everything already obtained if a later `calloc` throws, and
+  /// `CallocAllocator` does throw when the allocation returns null. Five
+  /// allocations make the window widest here; [_invokeInput] has the same
+  /// shape for the same reason.
   Object? _invokeInputs(
     Object? first,
     Object? second,

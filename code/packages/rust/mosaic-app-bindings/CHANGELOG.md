@@ -33,6 +33,11 @@ inside the `try` and freed only if obtained: allocating first and entering the
 everything already obtained if a later `calloc` throws, and five allocations
 widen that window enough to be worth closing.
 
+`_invokeInput`, the pre-existing single-input helper, gets the same treatment.
+It had the original shape, and its first allocation is the payload buffer --
+the arbitrarily large one of the three. Fixing the new helper and leaving its
+twin leaking beside it would have been the wrong half of the job.
+
 `_effectId` refuses a non-finite id. `double.infinity` is the one value that
 satisfies the integrality test and still cannot be converted -- infinity equals
 its own `roundToDouble()`, and `toInt()` then throws `UnsupportedError` -- and
