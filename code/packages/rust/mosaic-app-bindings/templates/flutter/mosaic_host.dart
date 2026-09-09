@@ -42,6 +42,20 @@ typedef _RestoreNative =
     Uint32 Function(Pointer<Void>, _MosaicBytes, Pointer<_MosaicBuffer>);
 typedef _Restore =
     int Function(Pointer<Void>, _MosaicBytes, Pointer<_MosaicBuffer>);
+typedef _CompleteEffectNative =
+    Uint32 Function(
+      Pointer<Void>,
+      _MosaicBytes,
+      _MosaicBytes,
+      Pointer<_MosaicBuffer>,
+    );
+typedef _CompleteEffect =
+    int Function(
+      Pointer<Void>,
+      _MosaicBytes,
+      _MosaicBytes,
+      Pointer<_MosaicBuffer>,
+    );
 typedef _BufferFreeNative = Void Function(_MosaicBuffer);
 typedef _BufferFree = void Function(_MosaicBuffer);
 typedef _DestroyNative = Void Function(Pointer<Void>);
@@ -79,6 +93,20 @@ external int _bundledSnapshot(
 external int _bundledRestore(
   Pointer<Void> app,
   _MosaicBytes input,
+  Pointer<_MosaicBuffer> output,
+);
+
+/// Protocol 2 only.
+///
+/// Unlike the dynamic path, this one cannot be resolved leniently: `@Native`
+/// binds against the runtime linked into the process, so a bundled protocol-1
+/// runtime is a generation-time mismatch rather than something to recover from
+/// here -- the same position the other six symbols are already in.
+@Native<_CompleteEffectNative>(symbol: 'mosaic_app_complete_effect')
+external int _bundledCompleteEffect(
+  Pointer<Void> app,
+  _MosaicBytes id,
+  _MosaicBytes result,
   Pointer<_MosaicBuffer> output,
 );
 
@@ -124,6 +152,23 @@ class MosaicHost {
   FutureOr<Map<String, Object?>?> handleEvent(Map<String, Object?> event) =>
       _runtime?.dispatch(event);
 
+  /// See `_MosaicRuntime.effectHandler`. Setting this on a host with no runtime
+  /// is a no-op rather than an error, matching every other accessor here.
+  set effectHandler(
+    void Function(int id, String kind, Object? payload, String delivery)?
+    handler,
+  ) {
+    _runtime?.effectHandler = handler;
+  }
+
+  /// Answer an effect the app is waiting on. See `_MosaicRuntime.completeEffect`.
+  Map<String, Object?>? completeEffect(int id, Map<String, Object?> result) =>
+      _runtime?.completeEffect(id, result);
+
+  /// Take ownership of an effect without answering it yet. False when the
+  /// runtime is not awaiting this id, or when there is no runtime at all.
+  bool deferEffect(int id) => _runtime?.deferEffect(id) ?? false;
+
   void setPropsChangedHandler(void Function()? handler) {
     _runtime?.propsChangedHandler = handler;
   }
@@ -151,7 +196,24 @@ final class _MosaicRuntime {
           'mosaic_buffer_free',
         ),
         library.lookupFunction<_DestroyNative, _Destroy>('mosaic_app_destroy'),
+        _lookupCompleteEffect(library),
       );
+
+  /// Resolve the completion symbol leniently.
+  ///
+  /// `lookupFunction` throws when the symbol is absent, and a protocol-1
+  /// runtime has no `mosaic_app_complete_effect`. Letting that escape would
+  /// stop such a runtime loading at all, which is a worse failure than the one
+  /// it prevents: the app works fine until an effect actually arrives.
+  static _CompleteEffect? _lookupCompleteEffect(DynamicLibrary library) {
+    try {
+      return library.lookupFunction<_CompleteEffectNative, _CompleteEffect>(
+        'mosaic_app_complete_effect',
+      );
+    } on Object {
+      return null;
+    }
+  }
 
   _MosaicRuntime.bundled()
     : this._(
@@ -161,6 +223,7 @@ final class _MosaicRuntime {
         _bundledRestore,
         _bundledBufferFree,
         _bundledDestroy,
+        _bundledCompleteEffect,
       );
 
   _MosaicRuntime._(
@@ -170,6 +233,7 @@ final class _MosaicRuntime {
     this._restore,
     this._bufferFree,
     this._destroy,
+    this._completeEffect,
   ) {
     final appOut = calloc<Pointer<Void>>();
     try {
@@ -223,11 +287,49 @@ final class _MosaicRuntime {
   final _Restore _restore;
   final _BufferFree _bufferFree;
   final _Destroy _destroy;
+
+  /// Null when the runtime predates protocol 2; see [_lookupCompleteEffect].
+  final _CompleteEffect? _completeEffect;
   Pointer<Void> _app = nullptr;
   int _sequence = 0;
   late Map<String, Object?> latestUpdate;
   String? _persistenceWarning;
   void Function()? propsChangedHandler;
+
+  /// Called once per effect the runtime asks for.
+  ///
+  /// A handler has two options, and choosing neither loses the effect: answer
+  /// inline with [completeEffect], or take ownership with [deferEffect] and
+  /// answer whenever the work finishes.
+  ///
+  /// Unlike the Qt, SwiftUI and Compose hosts, there is no lock here and no
+  /// advice against blocking: a Dart isolate is single-threaded, so an answer
+  /// never arrives concurrently with a settle -- it arrives on a later turn of
+  /// the event loop. That removes the deadlock those hosts have to warn about,
+  /// and it removes the need to marshal a deferred answer anywhere.
+  void Function(int id, String kind, Object? payload, String delivery)?
+  effectHandler;
+
+  /// Awaited effect ids nothing has answered yet.
+  final Set<int> _awaiting = <int>{};
+
+  /// Effects a handler has taken ownership of. Kept OUT of the fail sweep --
+  /// that is the point -- but left in [_awaiting], because the runtime is
+  /// still waiting on them.
+  final Set<int> _deferred = <int>{};
+
+  /// Per-call accumulation, saved and restored around each settle.
+  ///
+  /// Effects accumulate at the WRITE site: a round may have several answers and
+  /// each may mint more, so keeping only "the last update" drops every earlier
+  /// answer's effects. They then exist in no collection the host kept, are
+  /// never emitted, never failed, and stay pending -- and the runtime gates
+  /// `snapshot` and `restore` on nothing being pending, so that is permanent.
+  List<Object?>? _carriedEffects;
+  Map<String, Object?>? _latestAnswer;
+  bool _answered = false;
+  int _settling = 0;
+  String? _effectWarning;
 
   static _MosaicRuntime load() {
     final requested = Platform.environment['MOSAIC_APP_LIBRARY'];
@@ -284,9 +386,308 @@ final class _MosaicRuntime {
       'event update',
     );
     _sequence = nextSequence;
+    // Settle BEFORE persisting: the runtime refuses to snapshot while an effect
+    // is outstanding, so persisting first warns on every effect.
+    final settled = _settleEffects(update);
     _persistSnapshot();
-    latestUpdate = _withPersistenceWarning(update);
+    latestUpdate = _withPersistenceWarning(settled);
     return latestUpdate;
+  }
+
+  /// Answer an effect the app is waiting on.
+  ///
+  /// [result] is one tagged outcome: `{'ok': value}`, `{'cancelled': {}}`, or
+  /// `{'failed': {'message': '...'}}`. Cancellation is a first-class answer --
+  /// a file dialog dismissed with Escape is an ordinary user action.
+  Map<String, Object?> completeEffect(int id, Map<String, Object?> result) {
+    _ensureOpen();
+    final complete = _completeEffect;
+    if (complete == null) {
+      throw StateError(
+        'this Mosaic runtime predates effect completion (protocol 2)',
+      );
+    }
+    final update = _requireMap(
+      _invokeInputs(
+        id,
+        result,
+        (idBytes, resultBytes, output) =>
+            complete(_app, idBytes, resultBytes, output),
+      ),
+      'effect completion update',
+    );
+    // Cleared only once the runtime accepted the answer: clearing on the way in
+    // would drop the obligation if the call failed.
+    _awaiting.remove(id);
+    final wasDeferred = _deferred.remove(id);
+    final carrier = _carriedEffects;
+    if (_settling > 0 && carrier != null) {
+      // Inside a settle: hand this to the loop already running rather than
+      // starting a second one. APPEND -- several effects in one round may each
+      // be answered, and each answer may mint more.
+      carrier.addAll(_effectsOf(update));
+      _latestAnswer = update;
+      _answered = true;
+      return update;
+    }
+    final settled = _settleEffects(update);
+    _persistSnapshot();
+    latestUpdate = _withPersistenceWarning(settled);
+    // A deferred answer is the return value of no call the UI made, so the UI
+    // has to be told even though nothing asked.
+    if (wasDeferred) propsChangedHandler?.call();
+    return latestUpdate;
+  }
+
+  /// Take ownership of an effect without answering it yet.
+  ///
+  /// A deferred effect stays pending, so `snapshot` and `restore` stay refused
+  /// until it is answered -- correct, not a defect: a half-answered import is
+  /// not a state worth restoring. Abandoning one leaves the app waiting for
+  /// good, so a handler that defers owes an answer.
+  ///
+  /// Refuses an id the runtime is not awaiting. Ids are sequential, so an
+  /// off-by-one would otherwise switch the fail sweep off for an effect nothing
+  /// will ever answer -- wedging persistence for the life of the process.
+  bool deferEffect(int id) {
+    if (!_awaiting.contains(id)) return false;
+    _deferred.add(id);
+    return true;
+  }
+
+  List<Object?> _effectsOf(Map<String, Object?> update) {
+    final effects = update['effects'];
+    return effects is List ? effects : const <Object?>[];
+  }
+
+  /// Read an effect entry as an object, or null if it is not one.
+  ///
+  /// A cast would throw here instead, and a throw would escape the sweep that
+  /// discharges awaits, leaving ids in [_awaiting] that nothing will ever
+  /// remove -- which switches persistence off for the life of the process. The
+  /// runtime only sends objects, so nothing in normal operation reaches null.
+  Map<String, Object?>? _effectObject(Object? entry) =>
+      entry is Map ? _stringMap(entry) : null;
+
+  String _effectText(Map<String, Object?> effect, String key) {
+    final value = effect[key];
+    return value is String ? value : '';
+  }
+
+  /// Effect ids the runtime mints stay inside 2^53-1 so they survive a JSON
+  /// double. Anything outside that, negative, or non-integral is refused rather
+  /// than truncated -- truncating would answer a DIFFERENT outstanding effect.
+  int? _effectId(Object? value) {
+    if (value is! num) return null;
+    if (value is double && value != value.roundToDouble()) return null;
+    final raw = value.toInt();
+    if (raw < 0 || raw > 9007199254740991) return null;
+    return raw;
+  }
+
+  /// Drain the effects an update carries, answering what nothing else does.
+  Map<String, Object?> _settleEffects(Map<String, Object?> update) {
+    // A completion can itself produce effects -- an import needing a second
+    // dialog is an ordinary flow -- so this drains rather than sweeping once.
+    const maxRounds = 64;
+    // And a bound on NESTING, which the round bound does not give: a handler
+    // that dispatches an event rather than answering re-enters one frame
+    // deeper, and only the stack would stop it.
+    const maxDepth = 8;
+
+    if (_settling >= maxDepth) {
+      const reason =
+          'effect settling nested more than $maxDepth levels deep; an effect '
+          'handler is calling back into the host instead of answering';
+      _failOutstanding(update, reason);
+      return _reportingError(latestUpdate, reason);
+    }
+
+    final outerEffects = _carriedEffects;
+    final outerAnswer = _latestAnswer;
+    final outerAnswered = _answered;
+    final frameEffects = <Object?>[];
+    _carriedEffects = frameEffects;
+    _latestAnswer = null;
+    _answered = false;
+    _settling += 1;
+    try {
+      var current = update;
+      for (var round = 0; round < maxRounds; round += 1) {
+        final effects = _effectsOf(current);
+        if (effects.isEmpty) return current;
+
+        final unanswered = <int>[];
+        // Keyed by id: a round can carry one effect whose handler threw beside
+        // another the handler simply ignored, and telling the app the second
+        // one threw would be a lie.
+        final handlerErrors = <int, String>{};
+        var unreadable = 0;
+        for (final entry in effects) {
+          final effect = _effectObject(entry);
+          if (effect == null) {
+            // Not an object, so its delivery is unreadable too: it may be an
+            // await the runtime is blocked on, and no answer can name it.
+            unreadable += 1;
+            continue;
+          }
+          final id = _effectId(effect['id']);
+          final delivery = _effectText(effect, 'delivery');
+          final isAwait = delivery.toLowerCase() == 'await';
+          if (id == null) {
+            // An await nobody can name can never be answered, and the runtime
+            // is waiting on it. Counted rather than dropped.
+            if (isAwait) unreadable += 1;
+            continue;
+          }
+          if (isAwait) _awaiting.add(id);
+
+          // A handler that throws is one that did not answer, not one that ends
+          // the sweep. Letting the exception out would leave this id in
+          // `_awaiting` with nothing left to discharge it, and the runtime
+          // refuses to snapshot or restore while anything is pending -- so one
+          // throwing handler would cost the process its persistence.
+          try {
+            effectHandler?.call(
+              id,
+              _effectText(effect, 'kind'),
+              effect['payload'],
+              delivery,
+            );
+          } on Object catch (error) {
+            // Reported, not swallowed: the effect is about to be failed below,
+            // and the app is told why rather than being handed a bare "no host
+            // handler answered".
+            handlerErrors[id] = '$error';
+          }
+
+          if (isAwait && _awaiting.contains(id) && !_deferred.contains(id)) {
+            unanswered.add(id);
+          }
+        }
+        if (unreadable > 0) {
+          _recordEffectWarning(
+            '$unreadable Mosaic effect(s) arrived with an unreadable id and '
+            'cannot be answered; state cannot be saved for the rest of this '
+            'session',
+          );
+        }
+
+        final carried = <Object?>[...frameEffects];
+        frameEffects.clear();
+        var latest = current;
+        if (_answered) {
+          final answer = _latestAnswer;
+          if (answer != null) latest = answer;
+          _latestAnswer = null;
+          _answered = false;
+        }
+
+        if (unanswered.isEmpty) {
+          if (carried.isEmpty) return latest;
+          current = _withEffects(latest, carried);
+          continue;
+        }
+
+        // Nothing handled these, and the app will not progress without an
+        // answer. Failing them is the point of `await` being on the wire.
+        for (final id in unanswered) {
+          final failure = handlerErrors[id];
+          final reason = failure == null
+              ? 'no host handler answered effect $id'
+              : 'the host handler for effect $id failed: $failure';
+          _awaiting.remove(id);
+          _deferred.remove(id);
+          final answeredUpdate = _completeEffectOnce(id, reason);
+          if (answeredUpdate == null) continue;
+          carried.addAll(_effectsOf(answeredUpdate));
+          latest = answeredUpdate;
+        }
+        current = _withEffects(latest, carried);
+      }
+      const exhausted =
+          'effect completion did not settle after $maxRounds rounds; the '
+          'application is requesting effects faster than they can be answered';
+      _failOutstanding(current, exhausted);
+      return _reportingError(current, exhausted);
+    } finally {
+      _settling -= 1;
+      _carriedEffects = outerEffects;
+      _latestAnswer = outerAnswer;
+      _answered = outerAnswered;
+    }
+  }
+
+  /// Answer every awaited effect an update still lists, so a guard that gives
+  /// up does not leave the runtime waiting. Bounded, and the bound can be
+  /// outrun -- an app that keeps minting replacements past it leaves effects
+  /// pending and persistence off, which is reported rather than inferred.
+  void _failOutstanding(Map<String, Object?> update, String reason) {
+    var pending = _effectsOf(update);
+    const maxDrainRounds = 8;
+    for (var round = 0; round < maxDrainRounds; round += 1) {
+      if (pending.isEmpty) break;
+      final next = <Object?>[];
+      for (final entry in pending) {
+        final effect = _effectObject(entry);
+        if (effect == null) continue;
+        final id = _effectId(effect['id']);
+        if (id == null) continue;
+        if (_effectText(effect, 'delivery').toLowerCase() != 'await') continue;
+        _awaiting.remove(id);
+        _deferred.remove(id);
+        final answered = _completeEffectOnce(id, reason);
+        if (answered != null) next.addAll(_effectsOf(answered));
+      }
+      pending = next;
+    }
+    if (pending.isNotEmpty) {
+      _recordEffectWarning(
+        'Mosaic effects are still outstanding after $maxDrainRounds rounds of '
+        'clearing; state cannot be saved for the rest of this session',
+      );
+    }
+  }
+
+  Map<String, Object?>? _completeEffectOnce(int id, String reason) {
+    final complete = _completeEffect;
+    if (complete == null) return null;
+    try {
+      return _requireMap(
+        _invokeInputs(id, <String, Object?>{
+          'failed': <String, Object?>{'message': reason},
+        }, (idBytes, resultBytes, output) =>
+            complete(_app, idBytes, resultBytes, output)),
+        'effect failure update',
+      );
+    } on Object {
+      return null;
+    }
+  }
+
+  Map<String, Object?> _withEffects(
+    Map<String, Object?> update,
+    List<Object?> effects,
+  ) => <String, Object?>{...update, 'effects': effects};
+
+  /// Attach an error without discarding the props the update carries.
+  Map<String, Object?> _reportingError(
+    Map<String, Object?> update,
+    String message,
+  ) => <String, Object?>{
+    ...update,
+    'error': message,
+    'effects': const <Object?>[],
+  };
+
+  /// Record a lost effect, which costs the process its persistence.
+  ///
+  /// Kept out of [_persistenceWarning] because that field is cleared by the
+  /// next successful write, and this condition does not recover -- the runtime
+  /// keeps refusing to snapshot while it waits on an effect nothing can answer.
+  void _recordEffectWarning(String message) {
+    _effectWarning = message;
+    stderr.writeln(message);
   }
 
   Map<String, Object?>? snapshot() {
@@ -298,10 +699,11 @@ final class _MosaicRuntime {
 
   Map<String, Object?> restore(Map<String, Object?> snapshot) {
     _ensureOpen();
-    latestUpdate = _requireMap(
+    final update = _requireMap(
       _invokeInput(snapshot, (input, output) => _restore(_app, input, output)),
       'restore update',
     );
+    latestUpdate = _withPersistenceWarning(_settleEffects(update));
     propsChangedHandler?.call();
     return latestUpdate;
   }
@@ -388,7 +790,12 @@ final class _MosaicRuntime {
   }
 
   Map<String, Object?> _withPersistenceWarning(Map<String, Object?> update) {
-    final warning = _persistenceWarning;
+    // The effect warning wins, and it is sticky. Both conditions that set it
+    // mean persistence is off for the rest of the process, whereas
+    // [_persistenceWarning] is cleared by the next successful write -- so
+    // reading only the latter would announce that saving recovered while the
+    // runtime is still refusing to snapshot.
+    final warning = _effectWarning ?? _persistenceWarning;
     if (warning == null) return update;
     final augmented = <String, Object?>{...update, 'persistenceWarning': warning};
     final props = update['props'];
@@ -448,6 +855,47 @@ final class _MosaicRuntime {
       calloc.free(output);
       calloc.free(input);
       calloc.free(bytes);
+    }
+  }
+
+  /// Two encoded inputs in one call, for `mosaic_app_complete_effect`.
+  ///
+  /// Both allocations are freed on every path, including the one where the
+  /// runtime throws: the `finally` covers the call, and each buffer is freed
+  /// exactly once regardless of which stage failed.
+  Object? _invokeInputs(
+    Object? first,
+    Object? second,
+    int Function(_MosaicBytes, _MosaicBytes, Pointer<_MosaicBuffer>) operation,
+  ) {
+    final firstEncoded = utf8.encode(jsonEncode(first));
+    final secondEncoded = utf8.encode(jsonEncode(second));
+    final firstData = calloc<Uint8>(firstEncoded.length);
+    final secondData = calloc<Uint8>(secondEncoded.length);
+    final firstBytes = calloc<_MosaicBytes>();
+    final secondBytes = calloc<_MosaicBytes>();
+    final output = calloc<_MosaicBuffer>();
+    try {
+      if (firstEncoded.isNotEmpty) {
+        firstData.asTypedList(firstEncoded.length).setAll(0, firstEncoded);
+      }
+      if (secondEncoded.isNotEmpty) {
+        secondData.asTypedList(secondEncoded.length).setAll(0, secondEncoded);
+      }
+      firstBytes.ref
+        ..ptr = firstEncoded.isEmpty ? nullptr : firstData
+        ..len = firstEncoded.length;
+      secondBytes.ref
+        ..ptr = secondEncoded.isEmpty ? nullptr : secondData
+        ..len = secondEncoded.length;
+      final status = operation(firstBytes.ref, secondBytes.ref, output);
+      return _consume(status, output.ref);
+    } finally {
+      calloc.free(output);
+      calloc.free(secondBytes);
+      calloc.free(firstBytes);
+      calloc.free(secondData);
+      calloc.free(firstData);
     }
   }
 
