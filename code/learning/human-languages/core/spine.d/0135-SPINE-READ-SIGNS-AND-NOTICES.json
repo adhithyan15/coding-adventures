@@ -1,0 +1,13 @@
+{
+  "id": "SPINE-READ-SIGNS-AND-NOTICES",
+  "stage": "A1",
+  "strand": "TEXT",
+  "canDo": "I can read a short written text — a sign, a label, a notice, or a few sentences about someone's day — and understand it without translating word by word.",
+  "prerequisites": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "core": false,
+  "concepts": [
+    "CONNECTED-READING"
+  ]
+}

@@ -24,7 +24,13 @@ it("pins Hindi lesson-content budgets", () =>
     //
     // 343 -> 355: the ordinal tranche adds twelve lessons in three chapters
     // (82-84), one new item each, closing HI-A1-NUM-04.
-    lessons: 355,
+    //
+    // 355 -> 358: chapter 85, the reading rung — six signs, six notices, and a
+    // 78-word paragraph. It adds NO new word: every token in all three was
+    // checked to occur in a lesson with a lower sequence number, which is what
+    // lets the lessons claim nothing in them is new. The count moves because
+    // reading is its own skill, not because the track learned more Hindi.
+    lessons: 358,
     idioms: 21,
     // +2: HI-C70-song declares gana's singing sense and HI-C73-drink declares
     // khana's eating sense, which is what covers HI-A1-V-26.

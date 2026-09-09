@@ -266,7 +266,19 @@ describe("the committed corpus", () => {
     // claim on all 23 tracks, and this rung is justified by the Spanish A1 syllabus
     // (`A1-NG6-03`, `-08`, `-10`), so it asks nothing of anyone else. Its lessons carry
     // namespaced `ES-QUALITY-*` tags, exactly as tranche 7's did.
-    expect(summary.totalNodes).toBe(39);
+    // 39 -> 40. SPINE-READ-SIGNS-AND-NOTICES (TEXT, A1) — "I can read a short
+    // written text ... without translating word by word." Before it, the TEXT
+    // strand STARTED AT B1: the spine said working with text begins after A2,
+    // which is why 22 tracks had no reading lesson and an A1 reading lesson had
+    // nowhere to hang.
+    // It deliberately does NOT follow SPINE-DESCRIBE-QUALITIES above in taking an
+    // empty `concepts` list. That node stayed empty because its rung was justified
+    // by one track's syllabus and had no business asking anything of the other 22.
+    // CONNECTED-READING is the opposite case: reading a short text is an ability
+    // every track owes its learners, so the claim on all 23 is the honest one --
+    // and the 22 tracks that now write `omits: [CONNECTED-READING]` in their own
+    // ledger are stating a real gap out loud rather than being silent about it.
+    expect(summary.totalNodes).toBe(40);
 
     const byStrand = Object.fromEntries(summary.strands.map((s) => [s.strand, s.nodes]));
     expect(byStrand).toEqual({
@@ -277,7 +289,8 @@ describe("the committed corpus", () => {
       ETYMOLOGY: 0,
       CULTURE: 3,
       IDIOM: 0,
-      TEXT: 7,
+      // 7 -> 8: SPINE-READ-SIGNS-AND-NOTICES, and the first TEXT node below B1.
+      TEXT: 8,
     });
 
     // The measurement HL10 was written to make visible. SOUND, ETYMOLOGY and IDIOM

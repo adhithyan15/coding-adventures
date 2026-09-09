@@ -1,6 +1,6 @@
 {
   "id": "ES-PATH-A1-LECTURA",
-  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
     "ES-C67-primera-lectura",
     "ES-C67-segunda-lectura",
