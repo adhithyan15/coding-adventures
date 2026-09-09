@@ -63,8 +63,8 @@ landed and why, not a semver-tracked API.
   Six, one per thing the repair asserts: WELD (restore the three-sentence string), WORD (put
   `polygonal` back — the original defect), PAGE (point the corroboration's locator back at the wrong
   page, text untouched), AUTHORED (weld the invented sentence back on), and RULE-LOCATOR (repoint
-  the rule's OWN locator, text untouched), and EXTRA-CITES — append a second `cites` carrying the
-  exact authored sentence this installment deleted, under another page's locator.
+  the rule's OWN locator, text untouched), EXTRA-CITES — append a second `cites` carrying the exact
+  authored sentence this installment deleted, under another page's locator.
 
   **That last one is the strongest finding of the series, and it is the reviewer's.** Every pin was
   an open-ended `contains`, so nothing bounded the `corroborations` array: the defect class this
@@ -72,10 +72,10 @@ landed and why, not a semver-tracked API.
   against it. The corroboration pin now CLOSES the array (`...}]`), which kills the attack in both
   orderings because it is anchored at both ends. The pin therefore asserts something stronger than
   before — that the rule cites this and nothing else — so a future genuine corroboration will redden
-  it and require a deliberate test edit. That is the right trade for a provenance pin.
- **The PAGE mutant is why text and locator are
-  pinned together**: a corroboration with pinned text and an unpinned page could drift back to
-  citing the wrong document silently, which is half of what this installment repaired.
+  it and require a deliberate test edit. That is the right trade for a provenance pin. **The PAGE
+  mutant is why text and locator are pinned together**: a corroboration with pinned text and an
+  unpinned page could drift back to citing the wrong document silently, which is half of what this
+  installment repaired.
 
   Security review then turned that argument on the rest of the test. The rule's own citation and the
   underlying fact's were both asserted UNJOINED — `contains("kind":"rule") &&
