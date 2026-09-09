@@ -32,10 +32,16 @@ refusal also does not imply the complete driver refuses that feature.
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1482 cells.
-The zeroes for McCarthy and Macsyma mean dedicated coverage, not absent support.
-CLR-real is an additional runner lane for the same CLR backend in McCarthy's
-capstone, not a tenth universal backend.
+The normal non-ALGOL capstone therefore declares 210 programs. The table's
+per-frontend cell column undercounts the executed total for frontends other
+than COBOL-60 (verified accurate above): a fresh
+`non_algol_matrix_every_proven_cell_agrees` run reports 1338 cells exercised
+plus 210 skipped (missing local `ilasm`) = **1548 actual declared non-ALGOL
+cells**, not the sum of this table's rows. VM-D030 records this gap; a
+future bounded item should recompute every row from source rather than by
+hand. The zeroes for McCarthy and Macsyma mean dedicated coverage, not
+absent support. CLR-real is an additional runner lane for the same CLR
+backend in McCarthy's capstone, not a tenth universal backend.
 
 ## Implemented feature families and remaining proofs
 

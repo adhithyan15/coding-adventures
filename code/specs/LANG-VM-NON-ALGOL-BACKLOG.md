@@ -70,6 +70,49 @@ next four-row slice (`.skip(12).take(4)`) on real Erlang, matching the
 established discipline: probe before declaring, commit a bounded contract for
 any newly exposed defect, promote only executed cells.
 
+### VM-040 COBOL BEAM condition-name/EVALUATE validation
+
+All four selected programs pass on real Erlang in the new
+`portable_text_stdout_cobol_beam_condition_names_and_evaluate` test, with no
+new `iir-to-beam`/`ir-to-beam` defect: each reuses `cmp_*`/`const`/branch
+lowering already proven by earlier COBOL BEAM rows, so no production code
+changed this slice. All ten BEAM `lang_matrix` tests pass together (12 Oct,
+26 Nib, all 16 now-declared COBOL rows across four probe batches, plus the
+immediate-arithmetic/comparison/`putchar`-state regressions), 31.51s.
+`iir-to-beam`'s package suite is unchanged at 97 tests (19 unit, 73
+integration, 5 doc); focused Clippy on `lang-aot` and `iir-to-beam` with all
+targets and warnings denied is clean. Sixteen of 58 COBOL rows now declare
+BEAM (422 total declared cells). The full `non_algol_matrix_every_proven_cell_agrees`
+capstone passed: 210 programs, 1338 cells exercised, 210 skipped (every
+program's CLR cell, the same host-wide missing-`ilasm` pattern prior slices
+reported), zero failures, in 459.58s.
+
+That full run's own reported total (1338 + 210 = 1548 declared non-ALGOL
+cells) is **VM-D030**: `LANG-VM-FEATURE-COVERAGE.md`'s per-frontend table,
+last hand-updated for VM-047b/VM-057/VM-047c/VM-039b, undercounts the actual
+corpus by 66 cells even after this slice's COBOL correction (58 rows, 422
+cells — independently re-verified against source and left unchanged here).
+The other frontend rows (Twig, Nib, Brainfuck, BASIC, Oct, FLOW-MATIC) were
+not individually re-audited in this bounded slice; a text-based line count
+against `lang_matrix.rs` suggests several of their row counts have also
+drifted (the corpus grows across many unrelated PRs that do not each revisit
+this table), but confirming exact per-row figures needs careful multi-line-
+aware parsing, not a quick regex. Per this document's own authority rule
+("executed tests… are authoritative until the older roadmap is reconciled"),
+the grand-total line now cites the freshly measured 1548 rather than
+propagating the stale incremented figure. Fixing every row is out of this
+slice's bounded scope (rung 3 of the Prioritization policy — incorrect
+status documentation — but a distinct, separately schedulable item from
+COBOL BEAM parity); queued as **VM-061**: recompute every
+`LANG-VM-FEATURE-COVERAGE.md` frontend row/cell count from `lang_matrix.rs`
+source (ideally via a small checked script or test assertion instead of
+hand arithmetic, so it cannot drift silently again), reconciling Twig,
+Nib, Brainfuck, BASIC, Oct and FLOW-MATIC against the real corpus.
+
+Reprioritize the remaining ~42 undeclared COBOL rows against VM-061,
+VM-041 (Twig dynamic-string isolation) and VM-060b (host input design) after
+this merges, following the same policy comparison run above.
+
 ## VM-040 COBOL BEAM signed/algebra probe (selected after #14684 merged)
 
 The previous top-of-queue entry here ("VM-040 FLOW-MATIC BEAM output probe,
@@ -1329,6 +1372,7 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | 12 | VM-041 | Isolate Twig captured/reassigned runtime-string lowering from existing source-local string metadata; add one captured-string value proof before wider dynamic-string expansion. |
 | 13 | VM-048 | Define a representation-neutral observation for Macsyma's implemented inert symbolic Apply, then promote one oracle-derived symbolic result per backend; do not compare raw pointer/tag identities. |
 | 14 | VM-058 | Implement genuine COBOL INSPECT `BEFORE x AFTER y` two-delimiter window intersection on a single delimiter phrase (discovered as VM-D027): both the `cobol-runtime` oracle and the compiler currently read only the first of two grammar-legal `inspect_region` siblings. Touches all nine region-parsing call sites (TALLYING/REPLACING/CONVERTING, single- and multi-item) in both engines; add a discriminating two-distinct-delimiter proof (present/present, one absent) plus a matrix cell once implemented. |
+| 15 | VM-061 | Discovered as VM-D030: `LANG-VM-FEATURE-COVERAGE.md`'s per-frontend "Declared standard cells" table undercounts the real corpus by roughly 66 cells (a fresh full-matrix run reports 1548 declared non-ALGOL cells; the table's rows summed to 1478 before the COBOL-60 row's independent correction to 422). Recompute every frontend's row/cell count directly from `lang_matrix.rs` — ideally via a small checked script or test assertion so the table cannot silently drift again — reconciling Twig, Nib, Brainfuck, Dartmouth BASIC, Oct and FLOW-MATIC against source. |
 
 VM-047c (region proofs, including BEFORE/AFTER used together across a
 combined statement's independently-regioned TALLYING/REPLACING halves)
@@ -1354,6 +1398,18 @@ implementation item. The known DEF FN-global and print-zone semantics remain
 future frontend design scope, not missing proofs for already-implemented code.
 
 ## Discovery log
+
+- **VM-D030 — confirmed 2026-09-09:** while updating
+  `LANG-VM-FEATURE-COVERAGE.md`'s COBOL-60 row for the condition-name/
+  EVALUATE BEAM slice, a fresh `non_algol_matrix_every_proven_cell_agrees`
+  run reported 1338 cells exercised + 210 skipped = 1548 declared non-ALGOL
+  cells, versus the document's pre-existing rows summing to 1478 (already
+  short by 66 cells before this slice's own +4 COBOL cells). The COBOL-60
+  row itself is independently verified accurate (58 rows, 422 cells,
+  confirmed against source twice with different parsing approaches); the
+  other frontend rows were not re-audited here. The grand-total line is
+  corrected to the freshly measured 1548 per this document's own authority
+  rule. Queued as **VM-061**: recompute every row from source, not by hand.
 
 - **VM-D028 — confirmed 2026-09-07:** while adding a real-CoreCLR lane for
   Macsyma (VM-049), investigating why McCarthy's pre-existing `clr_real_*.rs`
