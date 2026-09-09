@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Fixed — `HostLink` dropped its children (#14717)
+
+A `HostLink` with no `label:` and a nested subtree emitted `<a ...></a>` and
+threw the subtree away. `HostButton` already rendered children in the same
+situation; the two disagreed, and only the link was wrong.
+
+That matters because wrapping a display component in an actionable container is
+the composition pattern `Card.mil` documents for interaction, so following the
+documented advice produced an empty link. HTML5 permits flow content inside
+`<a>`, so there was nothing to work around.
+
+An explicit `label:` still wins, matching `HostButton`: a control cannot show
+both, and the authored label is the more specific instruction.
+
 ### Added - native browser HostSlider
 
 `HostSlider` now lowers to `<input type="range">`, preserving literal and

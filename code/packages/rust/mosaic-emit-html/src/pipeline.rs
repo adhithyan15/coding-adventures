@@ -2474,6 +2474,17 @@ fn emit_host_link(
         Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
         Some(LayoutPropValue::SlotRef(s)) => format!("{{{{{}}}}}", camel(s)),
         Some(LayoutPropValue::Keyword(k)) => format!("{{{{{}}}}}", camel(k)),
+        // No label. Fall through to children, matching `HostButton` -- an
+        // anchor with a nested subtree is how a whole card becomes clickable,
+        // and HTML5 permits flow content inside `<a>`. Dropping them was
+        // silent: the link emitted, the content did not (#14717).
+        _ if !node.children.is_empty() => {
+            let mut out = String::new();
+            writeln!(out, "{pad}<a{attrs}{style_attr}>").unwrap();
+            out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+            writeln!(out, "{pad}</a>").unwrap();
+            return Ok(out);
+        }
         _ => String::new(),
     };
 
@@ -7762,6 +7773,101 @@ mod tests {
             !out.contains("<!-- mosaic-else -->"),
             "lone If must not emit a phantom else marker:\n{out}"
         );
+    }
+
+    // ---- HostLink with children (#14717) -----------------------------
+
+    fn link_node(props: Vec<LayoutProp>, children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostLink".to_string(),
+            part_name: Some("link".to_string()),
+            props,
+            children,
+        }
+    }
+
+    fn text_child(content: &str) -> LayoutNode {
+        LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String(content.to_string()),
+            }],
+            children: Vec::new(),
+        }
+    }
+
+    fn emit_link(node: LayoutNode) -> String {
+        let m = component("X", Vec::new());
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: node,
+        };
+        from_pipeline(&m, &l, &empty_style("X"))
+            .expect("emit ok")
+            .output
+    }
+
+    #[test]
+    fn host_link_renders_its_children_when_it_has_no_label() {
+        // Wrapping a display component in a link is how a whole card becomes
+        // clickable. The children used to be dropped silently: the anchor
+        // emitted, the content did not.
+        let out = emit_link(link_node(
+            vec![LayoutProp {
+                name: "href".to_string(),
+                value: LayoutPropValue::String("#/entry".to_string()),
+            }],
+            vec![text_child("Read more")],
+        ));
+
+        assert!(out.contains("Read more"), "got:\n{out}");
+        assert!(out.contains("<a "), "got:\n{out}");
+        assert!(out.contains("</a>"), "got:\n{out}");
+        // Not self-closed with the content thrown away.
+        assert!(!out.contains("></a>"), "got:\n{out}");
+    }
+
+    #[test]
+    fn an_explicit_label_still_wins_over_children() {
+        // Matches HostButton: a control cannot show both, and the authored
+        // label is the more specific instruction.
+        let out = emit_link(link_node(
+            vec![
+                LayoutProp {
+                    name: "href".to_string(),
+                    value: LayoutPropValue::String("#/entry".to_string()),
+                },
+                LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Open".to_string()),
+                },
+            ],
+            vec![text_child("Read more")],
+        ));
+
+        assert!(out.contains("Open"), "got:\n{out}");
+        assert!(!out.contains("Read more"), "got:\n{out}");
+    }
+
+    #[test]
+    fn a_childless_link_is_unchanged() {
+        let out = emit_link(link_node(
+            vec![
+                LayoutProp {
+                    name: "href".to_string(),
+                    value: LayoutPropValue::String("https://example.com".to_string()),
+                },
+                LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Example".to_string()),
+                },
+            ],
+            Vec::new(),
+        ));
+        assert!(out.contains(r#"<a href="https://example.com""#), "got:\n{out}");
+        assert!(out.contains(">Example</a>"), "got:\n{out}");
     }
 
     // ---- UI57: built-in state bound to a bool slot -------------------

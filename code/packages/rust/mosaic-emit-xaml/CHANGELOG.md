@@ -1,5 +1,29 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased]
+
+### Fixed — `HostButton` and `HostLink` dropped their children (#14717)
+
+Both emitted self-closing elements unconditionally, discarding any nested
+subtree with no error, no warning, and no degradation entry. A probe wrapping
+the real `mosaic-pkg-card` Card produced a 10-line file containing a lone
+`<Button/>` and zero occurrences of the card's title, body, or footer.
+
+`Button` and `HyperlinkButton` are both `ContentControl`s, so the subtree is
+expressible as the control's content — this was a missing case rather than a
+platform limit. A `label:` still wins, since it has already been lowered into a
+`Content="..."` attribute and a control cannot carry both.
+
+`HostLink` needed a second fix beyond rendering children. With no label it
+falls back to showing the raw `href` as visible text, which is reasonable for a
+bare link but wrong for one wrapping a subtree: it hid the subtree *and*
+displayed a routing path as body text. The fallback now applies only when there
+are no children.
+
+Found by testing the composition pattern `Card.mil` documents for interaction.
+It worked on seven backends and produced an empty button on this one, which
+made every product following that advice broken on Windows only.
+
 ## [Unreleased] — bind native XAML waveform line coordinates
 
 `Path kind: line` now accepts literal numbers, slot references, and numeric
