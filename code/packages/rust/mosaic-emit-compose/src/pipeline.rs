@@ -2364,6 +2364,15 @@ impl PropBucket {
     fn empty(&self) -> bool {
         self.base.is_none() && !self.any_state_set
     }
+    /// Whether two buckets resolve to the same value in every layer.
+    ///
+    /// Used to collapse four equal padding edges back to one `.padding(n.dp)`.
+    /// Comparing resolved values rather than "was it set" matters: an edge set
+    /// only by the `padding` shorthand and one set again to the same number by
+    /// `padding-top` are equivalent and should not force the per-edge form.
+    fn same_values_as(&self, other: &PropBucket) -> bool {
+        self.base == other.base && self.state_values == other.state_values
+    }
 }
 
 /// Fold a [`PropBucket`] into a Kotlin expression string.
@@ -2559,7 +2568,16 @@ fn compose_box_style(
     let layer_count = state_layers.len();
     let mut width = PropBucket::new(layer_count);
     let mut height = PropBucket::new(layer_count);
-    let mut padding = PropBucket::new(layer_count);
+    // One bucket per edge rather than one for `padding`. CSS directional
+    // padding OVERRIDES the shorthand for that edge, and Compose's
+    // `padding(start=, top=, end=, bottom=)` overload expresses exactly that,
+    // so the four edges are resolved here and emitted as one call. When all
+    // four agree -- the common case -- emission collapses back to
+    // `.padding(n.dp)`, byte-identical to previous output.
+    let mut padding_top = PropBucket::new(layer_count);
+    let mut padding_bottom = PropBucket::new(layer_count);
+    let mut padding_start = PropBucket::new(layer_count);
+    let mut padding_end = PropBucket::new(layer_count);
     let mut background = PropBucket::new(layer_count);
     let mut foreground = PropBucket::new(layer_count);
     let mut font_size = PropBucket::new(layer_count);
@@ -2588,9 +2606,39 @@ fn compose_box_style(
                     set(&mut height, v);
                 }
             }
+            // The shorthand seeds every edge. Authored order is preserved, so
+            // `padding-top: 12; padding: 8` gives 8 everywhere and
+            // `padding: 8; padding-top: 12` gives 12 on top -- both matching
+            // CSS, with no precedence table.
             "padding" => {
                 if let Some(v) = px_or_none(&p.value) {
-                    set(&mut padding, v);
+                    set(&mut padding_top, v.clone());
+                    set(&mut padding_bottom, v.clone());
+                    set(&mut padding_start, v.clone());
+                    set(&mut padding_end, v);
+                }
+            }
+            "padding-top" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut padding_top, v);
+                }
+            }
+            "padding-bottom" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut padding_bottom, v);
+                }
+            }
+            // left/right lower to start/end rather than fixed sides, so a
+            // right-to-left layout mirrors them the way every other Compose
+            // padding does.
+            "padding-left" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut padding_start, v);
+                }
+            }
+            "padding-right" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut padding_end, v);
                 }
             }
             "background" | "background-color" => {
@@ -2677,9 +2725,34 @@ fn compose_box_style(
     }
 
     // .padding — LAST so content insets inside the bordered box.
-    if !padding.empty() {
-        let expr = numeric_layer_value(&padding, state_layers, "0");
-        modifier.push_str(&format!("\n{cpad}.padding({expr}.dp)"));
+    let padding_edges = [
+        ("start", &padding_start),
+        ("top", &padding_top),
+        ("end", &padding_end),
+        ("bottom", &padding_bottom),
+    ];
+    if padding_edges
+        .iter()
+        .all(|(_, bucket)| bucket.same_values_as(&padding_top))
+    {
+        if !padding_top.empty() {
+            let expr = numeric_layer_value(&padding_top, state_layers, "0");
+            modifier.push_str(&format!("\n{cpad}.padding({expr}.dp)"));
+        }
+    } else {
+        // Named arguments, in Compose's own declaration order. An edge with no
+        // authored value is omitted rather than passed as 0.dp, because the
+        // overload already defaults it to zero and naming it would claim the
+        // stylesheet asked for something it did not.
+        let args: Vec<String> = padding_edges
+            .iter()
+            .filter(|(_, bucket)| !bucket.empty())
+            .map(|(name, bucket)| {
+                let expr = numeric_layer_value(bucket, state_layers, "0");
+                format!("{name} = {expr}.dp")
+            })
+            .collect();
+        modifier.push_str(&format!("\n{cpad}.padding({})", args.join(", ")));
     }
 
     // The foreground fall-back is the inherited sheet color when one is
@@ -9598,6 +9671,88 @@ mod tests {
         assert!(!out.contains(r#"disabled == "disabled""#), "got:\n{out}");
         // The enum axis in the same component must be untouched.
         assert!(out.contains(r#"variant == "danger""#), "got:\n{out}");
+    }
+
+
+    // ---- directional padding (#14709) --------------------------------
+
+    fn padding_kt(props: Vec<(&str, &str)>) -> String {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: props.into_iter().map(|(n, v)| sprop(n, v)).collect(),
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        from_pipeline(&m, &l, &s).expect("emit ok").output
+    }
+
+    #[test]
+    fn uniform_padding_still_collapses_to_one_argument() {
+        let out = padding_kt(vec![("padding", "8")]);
+        assert!(out.contains(".padding(8.dp)"), "got:\n{out}");
+        // The per-edge form must not appear for a symmetric part -- that is
+        // what keeps existing components byte-identical.
+        assert!(!out.contains(".padding(start"), "got:\n{out}");
+    }
+
+    #[test]
+    fn directional_padding_overrides_the_shorthand_per_css() {
+        let out = padding_kt(vec![("padding", "8"), ("padding-top", "20")]);
+        assert!(
+            out.contains(".padding(start = 8.dp, top = 20.dp, end = 8.dp, bottom = 8.dp)"),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn the_shorthand_wins_when_authored_after_a_directional_property() {
+        // Resolved by source order, exactly as CSS does.
+        let out = padding_kt(vec![("padding-top", "20"), ("padding", "8")]);
+        assert!(out.contains(".padding(8.dp)"), "got:\n{out}");
+        assert!(!out.contains("20"), "got:\n{out}");
+    }
+
+    #[test]
+    fn left_and_right_lower_to_start_and_end() {
+        let out = padding_kt(vec![("padding-left", "4"), ("padding-right", "12")]);
+        // Direction-aware, so a right-to-left layout mirrors them.
+        assert!(out.contains("start = 4.dp"), "got:\n{out}");
+        assert!(out.contains("end = 12.dp"), "got:\n{out}");
+    }
+
+    #[test]
+    fn an_unauthored_edge_is_omitted_rather_than_passed_as_zero() {
+        // The overload already defaults an unnamed edge to 0.dp; naming it
+        // would claim the stylesheet asked for something it did not.
+        let out = padding_kt(vec![("padding-top", "6")]);
+        assert!(out.contains(".padding(top = 6.dp)"), "got:\n{out}");
+        assert!(!out.contains("start ="), "got:\n{out}");
+        assert!(!out.contains("bottom ="), "got:\n{out}");
+    }
+
+    #[test]
+    fn four_equal_directional_values_collapse_to_the_uniform_form() {
+        let out = padding_kt(vec![
+            ("padding-top", "6"),
+            ("padding-bottom", "6"),
+            ("padding-left", "6"),
+            ("padding-right", "6"),
+        ]);
+        assert!(out.contains(".padding(6.dp)"), "got:\n{out}");
+        assert!(!out.contains("start ="), "got:\n{out}");
     }
 
 }
