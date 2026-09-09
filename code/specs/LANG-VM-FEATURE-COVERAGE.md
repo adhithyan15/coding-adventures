@@ -1,6 +1,6 @@
 # LANG VM feature and backend coverage
 
-Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c and VM-039b. This is an inventory of the implemented
+Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b and VM-061. This is an inventory of the implemented
 frontend families and their executable proof boundaries, not a claim that the
 historical languages or every backend are complete. Follow-up IDs live in the
 [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md).
@@ -19,29 +19,46 @@ useful checks, but neither establishes runtime behavior. The driver performs
 shared lowering passes after frontend compilation, so a raw frontend validator
 refusal also does not imply the complete driver refuses that feature.
 
-| Frontend | Unified rows | Declared standard cells | Additional proof boundary |
+| Frontend | Unified rows | Declared cells (all backends, Beam included) | Additional proof boundary |
 |---|---:|---:|---|
-| Twig | 49 | 343 | 20 BEAM cells; dedicated heap/closure tests |
+| Twig | 49 | 363 | 20 of those cells are BEAM; dedicated heap/closure tests |
 | Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
 | Brainfuck | 6 | 42 | Dedicated WASM/JVM/CLR and JIT execution |
 | Dartmouth BASIC | 51 | 357 | Random differential suite and frontend JIT tests |
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
-| ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025 |
+| ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
 | FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
 | COBOL-60 | 58 | 422 | Much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs. The table's
-per-frontend cell column undercounts the executed total for frontends other
-than COBOL-60 (verified accurate above): a fresh
-`non_algol_matrix_every_proven_cell_agrees` run reports 1338 cells exercised
-plus 210 skipped (missing local `ilasm`) = **1548 actual declared non-ALGOL
-cells**, not the sum of this table's rows. VM-D030 records this gap; a
-future bounded item should recompute every row from source rather than by
-hand. The zeroes for McCarthy and Macsyma mean dedicated coverage, not
-absent support. CLR-real is an additional runner lane for the same CLR
-backend in McCarthy's capstone, not a tenth universal backend.
+The normal non-ALGOL capstone therefore declares 210 programs and 1548
+declared cells (sum of the non-ALGOL rows above), which now matches a fresh
+`non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells exercised
+plus 210 skipped (missing local `ilasm`) = 1548. The "Declared cells" column
+counts every backend a row proves, Beam included — the convention Nib, Oct,
+FLOW-MATIC and COBOL-60's numbers already used. Twig was the one holdout:
+its old "343" was `49 rows × 7 standard backends`, silently excluding its 20
+Beam cells (VM-D030/**VM-061**), which is why this is the only cell count
+that changed in this pass. Every other non-ALGOL row's declared row count
+and cell count were independently re-derived from `PROGRAMS` in
+`lang_matrix.rs` (a `Prog { lang: Language::X, .., backends: &[..] }` per
+row; cells = `rows.map(|p| p.backends.len()).sum()`) via a brace-balanced
+parse of the whole array, not a hand count or a quick regex, and all six
+matched the doc exactly except Twig. That derivation is now also pinned as
+`feature_coverage_doc_counts_match_programs_source` in `lang_matrix.rs`: it
+asserts each of these seven non-ALGOL row/cell pairs against the live
+`PROGRAMS` corpus, plus that McCarthy Lisp and Macsyma still have zero rows
+there (both use the dedicated capstone files below instead), so a future
+slice that adds or removes a row without updating this table fails a normal
+`cargo test -p lang-aot --test lang_matrix` run instead of drifting silently
+again. ALGOL 60's row is intentionally left unrecomputed and unasserted: it
+is owned by a separate, actively developing campaign (see "Ownership
+boundary" in the completion backlog), and this table's own audit trail
+(VM-D030/VM-061) does not extend a mandate to correct or pin its count. The
+zeroes for McCarthy and Macsyma mean dedicated coverage, not absent support.
+CLR-real is an additional runner lane for the same CLR backend in McCarthy's
+capstone, not a tenth universal backend.
 
 ## Implemented feature families and remaining proofs
 

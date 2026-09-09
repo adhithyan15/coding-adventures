@@ -504,6 +504,14 @@ single-cell diagnostics remain available. Full ALGOL matrix CI is tracked as
 VM-025 in `LANG-VM-NON-ALGOL-BACKLOG.md`. The Windows Rust-only CI leg retains
 its dedicated native smoke gate; this BUILD command runs on Linux/macOS CI.
 
+`tests/lang_matrix.rs`'s `feature_coverage_doc_counts_match_programs_source`
+(VM-061) pins `../../specs/LANG-VM-FEATURE-COVERAGE.md`'s per-frontend row
+and declared-cell counts against a live count over `PROGRAMS` for every
+non-ALGOL language with rows there, plus a zero-rows check for
+`McCarthyLisp`/`Macsyma` (dedicated capstones instead). Adding or removing a
+row for one of those languages without updating both the test's expected
+tuple and the doc's matching row fails this test.
+
 
 The VM-047a INSPECT tallying corpus compares ALL, CHARACTERS and LEADING with
 frontend oracle output and the seven standard LANG matrix backends. It observes

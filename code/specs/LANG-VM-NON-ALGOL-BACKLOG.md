@@ -8,6 +8,109 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-061 feature-coverage recount (selected after #14714 merged)
+
+`git fetch origin && git merge origin/main` confirmed this worktree already
+sat at `9d62ab10c1` (PR #14714, "VM-040 COBOL BEAM condition-name/EVALUATE
+probe"), merged with all applicable checks green. `gh pr list --state open`
+showed no LANG-VM PR in flight — the six open PRs were Punjabi
+human-languages, a mosstyle bool-slot cascade, and four dependabot bumps
+(npm/GitHub Actions), none of which touch this backlog.
+
+Running the "Prioritization policy" order for real, not by habit: skimming
+back through the last several sections (VM-040's four COBOL BEAM slices,
+VM-060a, VM-059, VM-039a–d, VM-038, VM-049) found no red executed cell and no
+missing-CI-protection gap — every trailing validation paragraph reports
+positive sentinels, and VM-024/VM-032 already keep the non-ALGOL matrix and
+Windows execution in normal CI, so rungs 1 and 2 are clear again. Rung 3
+("incorrect roadmap/status documentation that could send work down a dead
+path") is where **VM-061** sits, per its own logging in the prior section:
+`LANG-VM-FEATURE-COVERAGE.md`'s per-frontend table was measured stale against
+a fresh `non_algol_matrix_every_proven_cell_agrees` run. That structurally
+outranks both remaining rung-4/5 candidates the prior section named for
+reprioritization — the ~42 undeclared COBOL BEAM rows (rung 4, missing
+backend parity for an already-implemented feature) and VM-041/VM-060b (rung
+5, new frontend semantics/design, and VM-060b is design work besides, as
+every prior deferral of it already found) — by the policy's own stated order,
+not by convenience. The only question worth checking before committing to
+that pick was whether VM-061 is actually the small, bounded task it looks
+like, or secretly a larger design problem in disguise (the prompt driving
+this session named exactly that risk); investigating first, before selecting
+anything, was the right call here.
+
+Investigation: a brace-balanced parse of every `Prog { lang: Language::X, ..,
+backends: &[..] }` literal in `PROGRAMS` (`lang_matrix.rs`, 455 entries)
+computed each language's exact row count and total declared-cell count
+(`sum(backends.len())` over its rows) directly from source — not a hand count,
+not a quick regex, matching the standard the prior section's own note asked
+for. Non-ALGOL rows summed to exactly 210 and non-ALGOL cells to exactly
+1548, matching the executed `1338 exercised + 210 skipped` total precisely,
+confirming the parse itself is trustworthy before trusting any per-row number
+it produced. Comparing every non-ALGOL row against the live doc found six of
+seven already exactly correct — Nib (26/208), Brainfuck (6/42), Dartmouth
+BASIC (51/357), Oct (12/96), FLOW-MATIC (8/60) and COBOL-60 (58/422, already
+independently reverified twice by the prior slice) all matched source with no
+drift at all. Only Twig was actually wrong: the doc's "343" was `49 rows × 7
+standard backends`, silently excluding its 20 Beam-declaring rows' extra
+cell each, while Nib/Oct/FLOW-MATIC/COBOL-60's numbers already used the OTHER
+convention (every declared backend, Beam included) with no comment anywhere
+recording that the two conventions disagreed. The true Twig total is 363.
+The prior section's "roughly 66 cells" undercount estimate was itself the
+rough guess it warned it might be — the real, source-verified gap is exactly
+Twig's missing 20 cells, and correcting only that one number makes the
+table's non-ALGOL rows sum to exactly 1548.
+
+This confirms the small-and-bounded reading: VM-061 was one wrong cell count
+plus a documentation-convention inconsistency, not a design problem, so it is
+correctly ranked and correctly picked over the rung-4/5 alternatives — a real
+comparison, not a coin flip dressed as one.
+
+While computing this, ALGOL 60's own doc row (233 rows / 1631 cells) was
+observed to no longer match the live corpus (245 rows today) — but ALGOL is
+owned by a separate, actively developing campaign per the "Ownership
+boundary" section below, and VM-061's own scope (as logged in VM-D030) never
+extended a mandate to correct or pin ALGOL's count. That row is left
+untouched here; noted for the record, not selected as work.
+
+### VM-061 contract
+
+Fix `LANG-VM-FEATURE-COVERAGE.md`'s Twig row (343 → 363 declared cells;
+row count and every other frontend's numbers are unchanged) and correct the
+surrounding prose that claimed a ~66-cell, broad-frontend undercount to
+instead state the real, narrower finding. Pin the fix against future drift:
+add `feature_coverage_doc_counts_match_programs_source` to `lang_matrix.rs`,
+asserting the exact (rows, total cells) pair for each of the seven non-ALGOL
+frontends that has rows in `PROGRAMS` today (Twig, Nib, Brainfuck, Dartmouth
+BASIC, Oct, FLOW-MATIC, COBOL-60) plus a zero-rows assertion for McCarthy
+Lisp and Macsyma (both use dedicated capstone files instead, and the doc's
+"0/0 means dedicated coverage" reading depends on that staying true). ALGOL
+60 is deliberately excluded from the new assertion, matching the doc's own
+scope decision above. A future slice that adds or removes a `Prog` for any
+asserted language must update both this test's expected tuple and the
+matching doc row together, or a normal `cargo test -p lang-aot --test
+lang_matrix` run fails — this is the "checked test assertion... so it cannot
+drift silently again" VM-061 asked for, not a script run by hand and then
+forgotten.
+
+### VM-061 validation
+
+`cargo test -p lang-aot --test lang_matrix feature_coverage_doc_counts_match_programs_source`
+passes against the corrected numbers (and was confirmed to actually exercise
+the check by first running it against the pre-fix Twig figure of 343, where
+it failed with the expected assertion message, before the doc was corrected
+to 363). The full `lang_matrix` test binary compiles clean under this change
+(a doc-only + test-only change; no production `lang-aot`, frontend or backend
+crate was touched). Focused Clippy on `lang-aot` with all targets and
+warnings denied is clean. No lowering or runtime code changed, so no backend
+regression is possible from this slice; the full non-ALGOL matrix is not
+separately rerun beyond the new test's own pass, since nothing it exercises
+changed the corpus's actual results, only the accounting of them.
+
+Reprioritize the remaining ~42 undeclared COBOL BEAM rows against VM-041
+(Twig dynamic-string isolation), VM-060b (host input design), VM-042
+(Brainfuck BEAM-refusal pin) and VM-058 (INSPECT BEFORE/AFTER intersection)
+after this merges, following the same real policy comparison run above.
+
 ## VM-040 COBOL BEAM condition-name/EVALUATE probe (selected after #14700 merged)
 
 `git fetch origin && git merge origin/main` confirmed this worktree already sat
@@ -1372,7 +1475,7 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | 12 | VM-041 | Isolate Twig captured/reassigned runtime-string lowering from existing source-local string metadata; add one captured-string value proof before wider dynamic-string expansion. |
 | 13 | VM-048 | Define a representation-neutral observation for Macsyma's implemented inert symbolic Apply, then promote one oracle-derived symbolic result per backend; do not compare raw pointer/tag identities. |
 | 14 | VM-058 | Implement genuine COBOL INSPECT `BEFORE x AFTER y` two-delimiter window intersection on a single delimiter phrase (discovered as VM-D027): both the `cobol-runtime` oracle and the compiler currently read only the first of two grammar-legal `inspect_region` siblings. Touches all nine region-parsing call sites (TALLYING/REPLACING/CONVERTING, single- and multi-item) in both engines; add a discriminating two-distinct-delimiter proof (present/present, one absent) plus a matrix cell once implemented. |
-| 15 | VM-061 | Discovered as VM-D030: `LANG-VM-FEATURE-COVERAGE.md`'s per-frontend "Declared standard cells" table undercounts the real corpus by roughly 66 cells (a fresh full-matrix run reports 1548 declared non-ALGOL cells; the table's rows summed to 1478 before the COBOL-60 row's independent correction to 422). Recompute every frontend's row/cell count directly from `lang_matrix.rs` — ideally via a small checked script or test assertion so the table cannot silently drift again — reconciling Twig, Nib, Brainfuck, Dartmouth BASIC, Oct and FLOW-MATIC against source. |
+| done (see PR below) | VM-061 | Discovered as VM-D030: `LANG-VM-FEATURE-COVERAGE.md`'s per-frontend "Declared standard cells" table undercounts the real corpus by roughly 66 cells (a fresh full-matrix run reports 1548 declared non-ALGOL cells; the table's rows summed to 1478 before the COBOL-60 row's independent correction to 422). Recompute every frontend's row/cell count directly from `lang_matrix.rs` — ideally via a small checked script or test assertion so the table cannot silently drift again — reconciling Twig, Nib, Brainfuck, Dartmouth BASIC, Oct and FLOW-MATIC against source. |
 
 VM-047c (region proofs, including BEFORE/AFTER used together across a
 combined statement's independently-regioned TALLYING/REPLACING halves)
@@ -1410,6 +1513,19 @@ future frontend design scope, not missing proofs for already-implemented code.
   other frontend rows were not re-audited here. The grand-total line is
   corrected to the freshly measured 1548 per this document's own authority
   rule. Queued as **VM-061**: recompute every row from source, not by hand.
+  **Resolved 2026-09-09** (see the top-of-file VM-061 section): a
+  brace-balanced parse of every `Prog` in `PROGRAMS` found only Twig's row
+  actually undercounted (343 vs. the true 363 — it had excluded its own 20
+  Beam cells, unlike Nib/Oct/FLOW-MATIC/COBOL-60, whose doc numbers already
+  counted Beam in their totals); every other non-ALGOL row's row/cell count
+  already matched source exactly, so the "roughly 66 cells" estimate above
+  was itself a rough text-search guess, not the real gap — the real gap was
+  exactly Twig's missing 20 Beam cells. Correcting only that one cell
+  (343 → 363) makes the table's non-ALGOL rows sum to exactly 1548, matching
+  the fresh full-matrix total precisely. A new
+  `feature_coverage_doc_counts_match_programs_source` test in
+  `lang_matrix.rs` now pins all seven non-ALGOL row/cell pairs (plus a
+  zero-rows check for McCarthy/Macsyma) against live source.
 
 - **VM-D028 — confirmed 2026-09-07:** while adding a real-CoreCLR lane for
   Macsyma (VM-049), investigating why McCarthy's pre-existing `clr_real_*.rs`
