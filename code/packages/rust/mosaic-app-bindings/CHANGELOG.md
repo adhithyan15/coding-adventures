@@ -29,9 +29,8 @@ Two things are genuinely different here rather than ported:
 `completeEffect` needs two encoded inputs in one call, which no existing helper
 covered, so `_invokeInputs` joins `_invokeInput`. Its allocations are made
 inside the `try` and freed only if obtained: allocating first and entering the
-`try` afterwards -- which the single-input helper still does -- leaks
-everything already obtained if a later `calloc` throws, and five allocations
-widen that window enough to be worth closing.
+`try` afterwards leaks everything already obtained if a later `calloc` throws,
+and five allocations make that window widest here.
 
 `_invokeInput`, the pre-existing single-input helper, gets the same treatment.
 It had the original shape, and its first allocation is the payload buffer --
