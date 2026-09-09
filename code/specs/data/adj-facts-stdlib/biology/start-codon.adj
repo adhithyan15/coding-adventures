@@ -24,8 +24,13 @@
 % the source's `Starts` line does not mark.
 %
 % DECODING THE SOURCE (no new WebFetch — the artifact is already quoted
-% verbatim inside `genetic-code.adj`'s own `source` field, reproduced again
-% here unchanged)
+% verbatim inside `genetic-code.adj`'s own `source` field, and in this
+% file's own `source` below. THE BLOCK DRAWN HERE IS RE-INDENTED FOR
+% READING and is NOT the page's own bytes: it pads `AAs` on the wrong side
+% so all five labels line up, where the page indents line 1 by four spaces
+% and puts two spaces after `AAs`. Its data columns are internally aligned,
+% so the decoding below is sound — but for the page's bytes read `source`,
+% not this drawing.)
 % ------------------------------------------------------------------------
 % NCBI's canonical 5-line block aligns four lines column-by-column; column i
 % names one codon (`Base1[i] Base2[i] Base3[i]`) and, when the `Starts` line
@@ -63,6 +68,65 @@
 % `genetic-code.adj` already carries. (See ../README.md;
 % feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts,
 % feedback_no_byte_arithmetic_for_llm.)
+%
+% INSTALLMENT 4h RESTORED THE PAGE'S INDENTATION, and until it did, the
+% claim above was false by TWELVE characters. NCBI serves this block inside
+% a `<pre>` that indents LINE 1 BY FOUR SPACES and every later line by two,
+% so all five data columns land at offset 11, and the shipped value had
+% every one of those twelve stripped. What broke verbatimness was the EIGHT
+% interior spaces on lines 2-5; the four on line 1 could not, which is why
+% the first attempt at this repair — restoring only eight — produced a value
+% that WAS still a byte-exact, unique substring of the page and was
+% nevertheless wrong: its span began four characters into line 1, so the
+% excerpt no longer stood on its own columns, and it was MORE misaligned
+% than the value it replaced. Security review caught that by decoding it,
+% not by matching it. This library reads the `Starts` line, and
+% Starts/Base1/Base2/Base3 stayed mutually aligned in every variant — only
+% `AAs` was ever displaced — so THIS table's three rows always decoded
+% correctly, before and after. The `atg`-decodes-to-T damage belongs to
+% `genetic-code.adj`, which reads the `AAs` line; an earlier draft of this
+% note copied that sentence over and claimed damage to a decode path this
+% file's own "This table deliberately does NOT pair these codons with an
+% amino acid" paragraph says it never uses.
+%
+% SO THE CHECK THAT MATTERS IS NOT "is it a substring". Stripping leading
+% whitespace from a span's first line always leaves one, so a substring test
+% passes the defective value; an earlier draft of this note credited exactly
+% that test, which could not have caught what it was cited for.
+%
+% THREE properties separate the shipped value from the first attempt, and
+% measurement rather than argument settles which: the match BEGINS AT A LINE
+% BOUNDARY, all five data columns land at ONE offset, and `atg` DECODES to M
+% on the `AAs` line. The first attempt failed all three while still passing
+% substring and uniqueness — which is why those two are asserted for their
+% own sake and credited with separating nothing. Two rounds got this wrong
+% in opposite directions: one credited uniqueness with power it lacks, the
+% next denied power to the column and decode arms that have it.
+% `tools/verify_ncbi_pre_span.py` in this package now runs the whole battery
+% on a reconstructed first attempt and asserts exactly which arms must fail,
+% so this paragraph reports a test that runs rather than standing beside
+% one. Installment 4g's recipe already had the anchoring — it wrote the
+% matched slice itself — and 4h's substring restatement lost it. CI pins the
+% field, and mutants that strip the interior indent OR line 1's anchor both
+% redden the test.
+%
+% Restoring it decided none of the questions held on #14111. Whitespace
+% inside a `<pre>` is RENDERED whitespace — the browser renders all twelve
+% of them, four on line 1 and two on each line after — so carrying them is
+% the same call as carrying a page's U+00A0. That is NOT the case filed on
+% #14111 the same day, where newlines turn up inside an ordinary wrapped
+% paragraph: those are HTML source formatting that renders as a single
+% space, and which reading of `source` governs them is the owner's call.
+% The two look identical in a diff and are opposite in kind, which is why
+% each candidate gets its page read.
+%
+% Worth noting how long it went unseen: WHEN THIS DEFECT SHIPPED, no
+% instrument in this effort compared a value to the page at all. The
+% contiguity sweep compares against the extractor's output, which normalises
+% whitespace, and the CI pins compare the engine's output to this field —
+% the field to itself. That gap is what `tools/verify_ncbi_pre_span.py` was
+% added to close, so this paragraph is history rather than a description of
+% the present.
 % ============================================================================
 
 table start_codon {
@@ -72,7 +136,7 @@ table start_codon {
     row (ctg, start)
     row (atg, start)
 
-    source "AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\nStarts = ---M------**--*----M---------------M----------------------------\nBase1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG\nBase2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG\nBase3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"
+    source "    AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\n  Starts = ---M------**--*----M---------------M----------------------------\n  Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG\n  Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG\n  Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"
     locator "https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi"
     trust authoritative
 }

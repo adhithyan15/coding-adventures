@@ -65,3 +65,40 @@ fn biology_genetic_code_recall_binds_amino_acid_with_citation() {
     // `xyz` is not a codon — honest abstention, never a fabricated amino acid.
     assert!(out.contains("\"abstained\":true"), "xyz abstains: {out}");
 }
+
+/// Installment 4h (#13934): NCBI serves this table inside a `<pre>` that
+/// indents LINE 1 BY FOUR SPACES and every later line by two, so all five
+/// data columns land at offset 11. Until installment 4h the field had all
+/// TWELVE of those characters stripped, so the LIBRARY header's claim that
+/// the block is "copied VERBATIM" was false (that phrase is
+/// `genetic-code.adj`'s; this test file makes no such claim) -- and the
+/// first attempt at the repair restored only eight, leaving the block MORE
+/// column-misaligned than it found it, which security review caught.
+/// Whitespace inside a `<pre>` is RENDERED whitespace, so restoring it
+/// settles none of the questions held on #14111 -- unlike newlines inside a
+/// wrapped `<p>`, which are source formatting and are the owner's call.
+///
+/// FULL ANCHORED CITATION PIN -- anchored on the `"source":"` key and
+/// closed on the terminating quote, so head, tail, punctuation,
+/// whitespace and length are pinned at once. The needle is generated
+/// FROM the .adj field rather than retyped, because a pin and a field
+/// that drift apart is a defect this effort has shipped twice.
+#[test]
+fn genetic_code_source_carries_the_pages_own_indentation() {
+    let dir = scratch("pre_indent");
+    let src = facts_stdlib().join("biology/genetic-code.adj");
+    std::fs::copy(&src, dir.join("genetic-code.adj")).expect("copy shipped genetic-code.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"genetic-code.adj\"\n\
+         ? codon_amino_acid(atg, $A)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"source\":\"    AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\\n  Starts = ---M------**--*----M---------------M----------------------------\\n  Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG\\n  Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG\\n  Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG\""),
+        "the citation is the page's own text, exactly: {out}"
+    );
+}

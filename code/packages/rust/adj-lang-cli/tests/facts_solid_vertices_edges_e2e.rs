@@ -113,3 +113,73 @@ fn the_three_libraries_together_satisfy_eulers_formula() {
     assert!(out.contains("\"E\":\"12\""), "cube E=12: {out}");
     assert!(out.contains("\"F\":\"6\""), "cube F=6: {out}");
 }
+
+/// Installment 4h (#13934): Until installment 4h this field held
+/// author-composed prose ABOUT the page -- "MathWorld's Platonic Solid
+/// table gives, for each solid, its number of vertices: tetrahedron 4, cube
+/// 8, ..." -- which names the source in the third person, a thing no
+/// verbatim span ever does. It is now the page's own sentence. NOTE the
+/// weaker claim than installment 4g's: this span is verbatim under the
+/// extractor's whitespace collapse, NOT byte-exact against raw HTML,
+/// because the page's own bytes carry THREE NEWLINES INSIDE THIS SENTENCE
+/// (the edges sentence carries two; the paragraph the two share carries 28,
+/// which is why the count has to name the sentence and not the paragraph).
+/// See #14111.
+///
+/// FULL ANCHORED CITATION PIN -- anchored on the `"source":"` key and
+/// closed on the terminating quote, so head, tail, punctuation,
+/// whitespace and length are pinned at once. The needle is generated
+/// FROM the .adj field rather than retyped, because a pin and a field
+/// that drift apart is a defect this effort has shipped twice.
+#[test]
+fn solid_vertices_source_is_the_pages_sentence_not_a_description() {
+    let dir = scratch("span_not_description");
+    with_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"solid-vertices-edges.adj\"\n\
+         ? solid_vertices(cube, $V)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"source\":\"The ordered number of faces for the Platonic solids are 4, 6, 8, 12, 20 (OEIS A053016; in the order tetrahedron, cube, octahedron, dodecahedron, icosahedron), which is also the ordered number of vertices (in the order tetrahedron, octahedron, cube, icosahedron, dodecahedron).\""),
+        "the citation is the page's own text, exactly: {out}"
+    );
+}
+
+/// Installment 4h (#13934): The edges half of the same repair. This
+/// sentence needs less care than the vertices one: it states its own solid
+/// order inline, with `=` marking the two pairs that share a count, so no
+/// re-ordering inference is involved. It carries the SAME weaker claim,
+/// though, and the assertion message below says "exactly" in the sense the
+/// vertices test spells out: verbatim under the extractor's whitespace
+/// collapse, NOT byte-exact against raw HTML. The page's own bytes wrap
+/// this sentence across TWO newlines (the vertices sentence has three). See
+/// #14111.
+///
+/// FULL ANCHORED CITATION PIN -- anchored on the `"source":"` key and
+/// closed on the terminating quote, so head, tail, punctuation,
+/// whitespace and length are pinned at once. The needle is generated
+/// FROM the .adj field rather than retyped, because a pin and a field
+/// that drift apart is a defect this effort has shipped twice.
+#[test]
+fn solid_edges_source_is_the_pages_sentence_not_a_description() {
+    let dir = scratch("edges_span_not_description");
+    with_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"solid-vertices-edges.adj\"\n\
+         ? solid_edges(cube, $E)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"source\":\"The ordered number of edges are 6, 12, 12, 30, 30 (OEIS A063722; in the order tetrahedron, octahedron = cube, dodecahedron = icosahedron).\""),
+        "the citation is the page's own text, exactly: {out}"
+    );
+}

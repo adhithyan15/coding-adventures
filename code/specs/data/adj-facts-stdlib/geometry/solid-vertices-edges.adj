@@ -19,13 +19,43 @@
 % are NUMBERS, a recalled count composes straight into a formula — the same
 % concrete RECALL -> COMPUTE bridge as its faces sibling.
 %
-% Provenance: the vertex and edge counts are read straight off the Wolfram
-% MathWorld "Platonic Solid" table, which lists for each solid its number of
-% vertices, edges, and faces. In the standard order (tetrahedron, cube,
-% octahedron, dodecahedron, icosahedron) the vertices are 4, 8, 6, 20, 12 and the
-% edges are 6, 12, 12, 30, 30. `trust authoritative` — a primary mathematics
-% reference. Nothing here is asserted from memory. (See ../README.md;
-% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% Provenance — both `source` fields are SENTENCES FROM THE PAGE, and until
+% installment 4h neither was. Each held author-composed prose ABOUT the page
+% instead: "MathWorld's Platonic Solid table gives, for each solid, its
+% number of vertices: tetrahedron 4, cube 8, ...". Accurate, and not a
+% quotation of anything — it names the source in the third person, which no
+% verbatim span of a page ever does. A field whose contract is a contiguous
+% span of its `locator` held a summary, and no reader could tell without
+% fetching.
+%
+% The counts did not need the page's TABLE, which is why this repair decides
+% none of the questions held on #14111. MathWorld states them in ordinary
+% prose, and the `source` of each table below is now that prose, verbatim
+% and contiguous.
+%
+% WHAT THE VERTICES SENTENCE GROUNDS, exactly. It gives the numbers in FACE
+% order — "4, 6, 8, 12, 20 ... in the order tetrahedron, cube, octahedron,
+% dodecahedron, icosahedron" — and then states the VERTEX order separately:
+% "which is also the ordered number of vertices (in the order tetrahedron,
+% octahedron, cube, icosahedron, dodecahedron)". The five rows are those two
+% read together, so each row is an INFERENCE the sentence licenses outright,
+% NOT a per-row verbatim claim. Every row below marks which position it
+% takes. The edges sentence needs no such care: it states its own order
+% inline, with `=` marking the two pairs that share a count.
+%
+% A CLAIM THIS FILE DOES NOT MAKE. Installment 4g's five repairs are
+% byte-exact against RAW HTML. These two are not, and cannot be: the page's
+% own bytes carry three newlines inside the vertices sentence and two
+% inside the edges sentence, because the HTML source wraps the single
+% paragraph they share. They are verbatim under the extractor's whitespace
+% collapse — the same standard every one of this stdlib's
+% currently-verbatim values already meets — and that is a WEAKER claim than
+% 4g's. The two look alike and are not; whether `source` means document text
+% or the page as rendered is filed on #14111 and is not decided here.
+%
+% `trust authoritative` — a primary mathematics reference. Nothing here is
+% asserted from memory. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -34,13 +64,13 @@
 table solid_vertices {
     columns solid, vertices
 
-    row (tetrahedron, 4)
-    row (cube, 8)
-    row (octahedron, 6)
-    row (dodecahedron, 20)
-    row (icosahedron, 12)
+    row (tetrahedron, 4)      % 1st of the vertex order, 1st number
+    row (cube, 8)             % 3rd of the vertex order, 3rd number
+    row (octahedron, 6)       % 2nd of the vertex order, 2nd number
+    row (dodecahedron, 20)    % 5th of the vertex order, 5th number
+    row (icosahedron, 12)     % 4th of the vertex order, 4th number
 
-    source "MathWorld's Platonic Solid table gives, for each solid, its number of vertices: tetrahedron 4, cube 8, octahedron 6, dodecahedron 20, icosahedron 12."
+    source "The ordered number of faces for the Platonic solids are 4, 6, 8, 12, 20 (OEIS A053016; in the order tetrahedron, cube, octahedron, dodecahedron, icosahedron), which is also the ordered number of vertices (in the order tetrahedron, octahedron, cube, icosahedron, dodecahedron)."
     locator "https://mathworld.wolfram.com/PlatonicSolid.html"
     trust authoritative
 }
@@ -51,13 +81,13 @@ table solid_vertices {
 table solid_edges {
     columns solid, edges
 
-    row (tetrahedron, 6)
-    row (cube, 12)
-    row (octahedron, 12)
-    row (dodecahedron, 30)
-    row (icosahedron, 30)
+    row (tetrahedron, 6)      % 1st in the sentence's own order
+    row (cube, 12)            % 3rd in the order, tied to octahedron by "="
+    row (octahedron, 12)      % 2nd in the order, tied to cube by "="
+    row (dodecahedron, 30)    % 4th in the order, tied to icosahedron by "="
+    row (icosahedron, 30)     % 5th in the order, tied to dodecahedron by "="
 
-    source "MathWorld's Platonic Solid table gives, for each solid, its number of edges: tetrahedron 6, cube 12, octahedron 12, dodecahedron 30, icosahedron 30."
+    source "The ordered number of edges are 6, 12, 12, 30, 30 (OEIS A063722; in the order tetrahedron, octahedron = cube, dodecahedron = icosahedron)."
     locator "https://mathworld.wolfram.com/PlatonicSolid.html"
     trust authoritative
 }
