@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "CONNECTED-READING"
+  "segments": [
+    "MW-PATH-033"
   ],
+  "omits": [],
   "relocates": {}
 }

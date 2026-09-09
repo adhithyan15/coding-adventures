@@ -222,8 +222,16 @@ describe("the corpus-wide super-gentle ramp", () => {
       forwardPrerequisites: 0,
       forwardReviews: 0,
     });
+    // marwadi drops out here, and the reason is worth stating rather than
+    // gaming. Its chapter 40 reading rung introduces three reading skills in the
+    // LAST chapter of the track, so nothing after them can retrieve them: five
+    // reinforcement windows come due and none can be met while chapter 40 is the
+    // end. That is a true statement about the curriculum, not a measurement
+    // artefact, and the finding is the instruction to whoever writes chapter 41.
+    // Suppressing it would have meant either introducing nothing (which makes
+    // the lessons unmeasurable instead) or pretending reading needs no recall.
     expect(
       report.tracks.filter((track) => track.findings.length === 0).map((track) => track.language),
-    ).toEqual(["japanese", "marwadi"]);
+    ).toEqual(["japanese"]);
   }, 30_000);
 });
