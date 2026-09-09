@@ -211,6 +211,13 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
         if (!self) return {};
         persistSnapshot();
         latestUpdate_ = withPersistenceWarning(settled);
+        if (deferredAnswered_) {
+            deferredAnswered_ = false;
+            const auto pushed = latestUpdate_;
+            const QPointer<MosaicHost> stillHere(this);
+            emit updated(pushed);
+            if (!stillHere) return {};
+        }
         return latestUpdate_;
     } catch (const std::exception &exception) {
         return failure(QString::fromUtf8(exception.what()));
@@ -454,6 +461,7 @@ QVariantMap MosaicHost::completeEffect(const QVariant &effectId, const QVariantM
         // the way in would drop the obligation if the call failed, which is the
         // silent-hang this whole mechanism exists to prevent.
         awaiting_.remove(id);
+        const bool wasDeferred = deferred_.remove(id) > 0;
         if (settling_ > 0 && carriedEffects_ != nullptr && latestAnswer_ != nullptr
             && reentrantFlag_ != nullptr) {
             // Called from inside a handler during settleEffects. Hand the
@@ -462,6 +470,9 @@ QVariantMap MosaicHost::completeEffect(const QVariant &effectId, const QVariantM
             // APPEND. Several effects in one round may each be answered, and
             // each answer may mint more; keeping only the newest map dropped
             // every earlier one's effects.
+            if (wasDeferred) {
+                deferredAnswered_ = true;
+            }
             *carriedEffects_ += update.value(QStringLiteral("effects")).toList();
             *latestAnswer_ = update;
             *reentrantFlag_ = true;
@@ -472,10 +483,73 @@ QVariantMap MosaicHost::completeEffect(const QVariant &effectId, const QVariantM
         if (!self) return {};
         persistSnapshot();
         latestUpdate_ = withPersistenceWarning(settled);
+        // A deferred answer is the return value of no call the UI made -- it
+        // arrives whenever the dialog closed -- so the UI has to be told.
+        //
+        // A COPY, and guarded. `updated` exists so the UI reacts to an
+        // unsolicited change, and tearing down the screen that owns this host
+        // is the ordinary reaction to "the import finished" -- so a slot
+        // deleting us mid-emit is more likely here than anywhere else. Passing
+        // the live member by reference also let a re-entering slot rewrite the
+        // argument under every later slot.
+        if (wasDeferred || deferredAnswered_) {
+            deferredAnswered_ = false;
+            const auto pushed = latestUpdate_;
+            const QPointer<MosaicHost> stillHere(this);
+            emit updated(pushed);
+            if (!stillHere) return {};
+        }
         return latestUpdate_;
     } catch (const std::exception &exception) {
         return failure(QString::fromUtf8(exception.what()));
     }
+}
+
+QVariantMap MosaicHost::deferEffect(const QVariant &effectId)
+{
+    // Same thread rule as every other entry point: `deferred_` is a QHash the
+    // settle loop reads concurrently, and a queued handler runs on the worker
+    // thread. Without this, TSan reports a rehash-under-reader race.
+    if (thread() != QThread::currentThread()) {
+        return failure(QStringLiteral(
+            "deferEffect must be called on the host's own thread"));
+    }
+    quint64 id = 0;
+    if (!parseEffectId(effectId, &id)) {
+        // Reported, not swallowed. Returning void meant a handler could believe
+        // it owned an effect the sweep then failed, and its eventual answer was
+        // rejected as already completed.
+        return failure(QStringLiteral(
+            "effect id must be a non-negative integer no larger than %1")
+            .arg(MaxSafeEffectId));
+    }
+    // Only an effect the runtime is actually waiting on. Deferring anything
+    // else -- an id never minted, an id already answered, a `notify` -- turns
+    // the fail sweep off for it and wedges the app permanently: the runtime
+    // gates `snapshot` and `restore` on nothing being pending, and nothing will
+    // ever answer it. Ids are sequential and this is Q_INVOKABLE, so an
+    // off-by-one in QML is enough.
+    if (!awaiting_.contains(id)) {
+        return failure(QStringLiteral(
+            "effect %1 is not awaiting an answer").arg(id));
+    }
+    // Left in `awaiting_` deliberately: the runtime is still waiting on it, and
+    // that is what keeps `snapshot` refused until the answer arrives.
+    // `deferred_` only excuses it from the fail sweep.
+    deferred_.insert(id);
+    return latestUpdate_;
+}
+
+void MosaicHost::answerDeferredEffect(const QVariant &effectId, const QVariantMap &result)
+{
+    // The thread-safe way to answer. `completeEffect` touches unguarded members
+    // and refuses off-thread, so a worker that finished a dialog had no route
+    // at all -- the whole point of deferring. This hops onto the host's thread
+    // and answers there.
+    QMetaObject::invokeMethod(
+        this,
+        [this, effectId, result]() { completeEffect(effectId, result); },
+        Qt::QueuedConnection);
 }
 
 QVariantMap MosaicHost::settleEffects(QVariantMap update)
@@ -567,7 +641,7 @@ QVariantMap MosaicHost::settleEffects(QVariantMap update)
                 return {};
             }
 
-            if (awaited && awaiting_.contains(id)) {
+            if (awaited && awaiting_.contains(id) && !deferred_.contains(id)) {
                 unanswered.append(id);
             }
         }
@@ -678,6 +752,7 @@ void MosaicHost::failOutstanding(const QVariantMap &update, const QString &reaso
             continue;
         }
         awaiting_.remove(id);
+        deferred_.remove(id);
         const auto answered = completeEffectOnce(id, QVariantMap{{QStringLiteral("failed"),
             QVariantMap{{QStringLiteral("message"), reason}}}});
         if (!alive) return;

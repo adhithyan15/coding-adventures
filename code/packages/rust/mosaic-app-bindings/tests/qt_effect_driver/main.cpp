@@ -205,6 +205,63 @@ int main(int argc, char **argv) {
               "snapshot still works after a fully-answered chaining batch");
     }
 
+
+    {
+        // The shape a real file dialog needs, and the one that could not be
+        // written before: the handler takes ownership and answers LATER.
+        //
+        // Previously the settle failed the effect the moment the handler
+        // returned, so a dialog that had not closed yet lost its effect and the
+        // late answer was rejected as already completed.
+        qputenv("MOSAIC_APP_STATE_PATH", qgetenv("MOSAIC_PROBE_STATE_G"));
+        MosaicHost host;
+        QVariant deferredId;
+        QObject::connect(&host, &MosaicHost::effectRequested,
+            [&host, &deferredId](const QVariant &id, const QString &, const QVariant &,
+                                 const QString &delivery) {
+                if (delivery.compare(QStringLiteral("await"), Qt::CaseInsensitive) != 0) return;
+                deferredId = id;
+                host.deferEffect(id);       // "the dialog is open"
+            });
+
+        // The UI is told about updates it did not ask for.
+        QVariantMap pushed;
+        int pushes = 0;
+        QObject::connect(&host, &MosaicHost::updated,
+            [&pushed, &pushes](const QVariantMap &update) { pushed = update; pushes++; });
+
+        const auto afterRequest = requestAwait(host);
+        check(deferredId.isValid(), "the handler was offered the effect");
+        check(awaited(afterRequest, "deferred") == 1,
+              "a deferred effect stays outstanding rather than being failed");
+        check(afterRequest.value(QStringLiteral("status")).toString()
+                  != QStringLiteral("failed: no host handler answered effect 1"),
+              "a deferred effect is not failed behind the handler's back");
+
+        // Deferring something the runtime is NOT waiting on must be refused.
+        // Ids are sequential and this is Q_INVOKABLE, so an off-by-one in QML
+        // would otherwise turn the fail sweep off for an effect nothing will
+        // ever answer -- wedging snapshot for the life of the process.
+        const auto bogus = host.deferEffect(QVariant::fromValue(quint64{99999}));
+        check(bogus.value(QStringLiteral("error")).toString().contains(
+                  QStringLiteral("not awaiting")),
+              "deferring an effect nothing awaits is refused");
+
+        // ...the dialog closes, on whatever thread, whenever.
+        host.completeEffect(deferredId, QVariantMap{{QStringLiteral("ok"),
+            QVariantMap{{QStringLiteral("amount"), 9}}}});
+
+        check(pushes == 1, "the late answer reached the UI as an update");
+        const auto finalProps = pushed.value(QStringLiteral("props")).toMap();
+        check(awaited(finalProps, "answered-late") == 0,
+              "answering a deferred effect settles it");
+        check(finalProps.value(QStringLiteral("count")).toInt() == 9,
+              "the deferred answer's value reached the app");
+        const auto snap = host.snapshot();
+        check(snap.isValid() && !snap.toMap().contains(QStringLiteral("error")),
+              "snapshot works again once the deferred effect is answered");
+    }
+
     if (failures) {
         std::printf("\n%d check(s) failed\n", failures);
         return 1;

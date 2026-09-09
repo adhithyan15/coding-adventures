@@ -36,21 +36,19 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   /// to do with it. Answer an `await` by calling `completeEffect` from inside
   /// the handler; a `notify` needs no answer.
   ///
-  /// **The handler must answer synchronously, on the thread that called it, and
-  /// must not block on another thread.** The lock is recursive, so answering
-  /// inline is safe. Neither alternative works:
+  /// A handler has two options, and choosing neither loses the effect:
   ///
-  /// - Answering from another thread *later* is too late. This settle fails the
-  ///   effect as unanswered before the answer arrives, and the runtime then
-  ///   rejects it as already completed.
-  /// - Blocking on another thread deadlocks. The lock is held across this call,
-  ///   so a handler doing `DispatchQueue.main.sync { … }` while the settle runs
-  ///   off-main wedges against any main-thread `applyProps()` -- which SwiftUI
-  ///   does every frame.
+  /// - **Answer inline** with `completeEffect`. The lock is recursive, so this
+  ///   is safe from within the handler on the same thread.
+  /// - **Take ownership** with `deferEffect`, and answer whenever the work
+  ///   finishes, from any thread. That is what an asynchronous file dialog
+  ///   needs, and the answer reaches the UI through `propsChangedHandler`,
+  ///   because it is the return value of no call the UI made.
   ///
-  /// That rules out an asynchronous file dialog, which is the motivating case
-  /// for `await` effects, so this shape is not yet sufficient for one. Tracked
-  /// separately; do not design around it as though it were.
+  /// Do **not** block on another thread from inside the handler. The lock is
+  /// held across this call, so `DispatchQueue.main.sync { … }` while the settle
+  /// runs off-main wedges against any main-thread `applyProps()` -- which
+  /// SwiftUI does every frame. Defer instead; that is what it is for.
   ///
   /// Capture the host **weakly**. A strong capture cycles through this property,
   /// so `deinit` never runs, the Rust app handle is never destroyed, and the
@@ -59,6 +57,10 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
 
   /// Awaited effect ids the runtime is waiting on and nothing has answered.
   private var awaiting: Set<UInt64> = []
+  /// Effects a handler has taken ownership of. Kept OUT of the fail sweep --
+  /// that is the point -- but left in `awaiting`, because the runtime is still
+  /// waiting on them.
+  private var deferred: Set<UInt64> = []
   /// Per-frame accumulation, saved and restored around each settle.
   ///
   /// Effects accumulate at the WRITE site: a round may have several answers and
@@ -206,7 +208,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         let settled = settleEffects(update)
         persistSnapshot()
         latestUpdate = Self.withPersistenceWarning(settled, effectWarning ?? persistenceWarning)
-        propsChangedHandler?()
+        schedulePropsChanged()
         return latestUpdate as NSDictionary
       } catch {
         return ["error": error.localizedDescription] as NSDictionary
@@ -232,6 +234,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         // Cleared only once the runtime accepted the answer. Clearing on the
         // way in would drop the obligation if the call failed.
         awaiting.remove(id)
+        deferred.remove(id)
         // Gated on `carriedEffects` alone. `latestAnswer` starts nil each
         // frame and is only set BY this branch, so requiring it non-nil made
         // the condition unreachable -- a direct port of Qt's pointer check into
@@ -248,7 +251,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         let settled = settleEffects(update)
         persistSnapshot()
         latestUpdate = Self.withPersistenceWarning(settled, effectWarning ?? persistenceWarning)
-        propsChangedHandler?()
+        schedulePropsChanged()
         return latestUpdate as NSDictionary
       } catch {
         return ["error": error.localizedDescription] as NSDictionary
@@ -264,6 +267,43 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     reported["error"] = message
     reported["effects"] = [[String: Any]]()
     return reported
+  }
+
+  /// Take ownership of an effect without answering it yet.
+  ///
+  /// A deferred effect is left pending, so `snapshot` and `restore` stay
+  /// refused until it is answered -- correct, not a defect: a half-answered
+  /// import is not a state worth restoring. Abandoning one leaves the app
+  /// waiting for good, so a handler that defers owes an answer.
+  @discardableResult
+  public func deferEffect(_ id: UInt64) -> Bool {
+    lock.withLock {
+      // Only an effect the runtime is actually waiting on. Deferring anything
+      // else -- an id never minted, one already answered, a `notify` -- turns
+      // the fail sweep off for it and wedges the app permanently: nothing will
+      // ever answer it, and the runtime gates `snapshot` and `restore` on
+      // nothing being pending.
+      guard awaiting.contains(id) else { return false }
+      deferred.insert(id)
+      return true
+    }
+  }
+
+  /// Tell the UI, off the lock and on the main thread.
+  ///
+  /// Calling the handler while holding `lock` deadlocked the flow this feature
+  /// exists for: a background `completeEffect` held the lock and the handler
+  /// hopped to main, while main sat in `applyProps()` waiting for the lock --
+  /// and SwiftUI calls `applyProps()` every frame. Mutating observed state off
+  /// the main thread is undefined besides, so the hop belongs here rather than
+  /// being left to every app to remember.
+  private func schedulePropsChanged() {
+    guard let handler = propsChangedHandler else { return }
+    if Thread.isMainThread {
+      handler()
+    } else {
+      DispatchQueue.main.async { handler() }
+    }
   }
 
   private static func effects(of update: [String: Any]) -> [[String: Any]] {
@@ -329,7 +369,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         effectHandler?(id, (effect["kind"] as? String) ?? "",
                        effect["payload"] ?? NSNull(), delivery)
 
-        if isAwait, awaiting.contains(id) { unanswered.append(id) }
+        if isAwait, awaiting.contains(id), !deferred.contains(id) { unanswered.append(id) }
       }
 
       var carried = carriedEffects ?? []
@@ -360,6 +400,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
       for id in unanswered {
         let reason = "no host handler answered effect \(id)"
         awaiting.remove(id)
+        deferred.remove(id)
         guard let runtime, let app,
               let answeredUpdate = try? Self.invokeCompleteEffect(
                 runtime: runtime, app: app, id: id,
@@ -393,6 +434,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         guard let id = Self.effectId(effect["id"]),
               ((effect["delivery"] as? String) ?? "").lowercased() == "await" else { continue }
         awaiting.remove(id)
+        deferred.remove(id)
         guard let answeredUpdate = try? Self.invokeCompleteEffect(
           runtime: runtime, app: app, id: id,
           result: ["failed": ["message": reason]]) else { continue }
@@ -454,7 +496,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
           mosaic_binding_restore(runtime, app, bytes, output)
         }
         latestUpdate = Self.withPersistenceWarning(settleEffects(update), effectWarning)
-        propsChangedHandler?()
+        schedulePropsChanged()
         return latestUpdate as NSDictionary
       } catch {
         return ["error": error.localizedDescription] as NSDictionary
