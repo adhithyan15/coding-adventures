@@ -24,8 +24,13 @@
 % the source's `Starts` line does not mark.
 %
 % DECODING THE SOURCE (no new WebFetch — the artifact is already quoted
-% verbatim inside `genetic-code.adj`'s own `source` field, reproduced again
-% here unchanged)
+% verbatim inside `genetic-code.adj`'s own `source` field, and in this
+% file's own `source` below. THE BLOCK DRAWN HERE IS RE-INDENTED FOR
+% READING and is NOT the page's own bytes: it pads `AAs` on the wrong side
+% so all five labels line up, where the page indents line 1 by four spaces
+% and puts two spaces after `AAs`. Its data columns are internally aligned,
+% so the decoding below is sound — but for the page's bytes read `source`,
+% not this drawing.)
 % ------------------------------------------------------------------------
 % NCBI's canonical 5-line block aligns four lines column-by-column; column i
 % names one codon (`Base1[i] Base2[i] Base3[i]`) and, when the `Starts` line
@@ -81,12 +86,12 @@
 % Restoring it decided none of the questions held on #14111. Whitespace
 % inside a `<pre>` is RENDERED whitespace — the browser renders all twelve
 % of them, four on line 1 and two on each line after — so carrying them is
-% the same call as carrying a page's U+00A0. That
-% is NOT the case filed on #14111 the same day, where newlines turn up
-% inside an ordinary wrapped paragraph: those are HTML source formatting
-% that renders as a single space, and which reading of `source` governs them
-% is the owner's call. The two look identical in a diff and are opposite in
-% kind, which is why each candidate gets its page read.
+% the same call as carrying a page's U+00A0. That is NOT the case filed on
+% #14111 the same day, where newlines turn up inside an ordinary wrapped
+% paragraph: those are HTML source formatting that renders as a single
+% space, and which reading of `source` governs them is the owner's call.
+% The two look identical in a diff and are opposite in kind, which is why
+% each candidate gets its page read.
 %
 % Worth noting how long it went unseen: no instrument in this effort
 % compares a value to RAW HTML. The contiguity sweep compares against the

@@ -162,12 +162,13 @@ table codon_amino_acid {
     % Restoring it decided none of the questions held on #14111. Whitespace
     % inside a `<pre>` is RENDERED whitespace — the browser renders all
     % twelve of them, four on line 1 and two on each line after — so
-    % carrying them is the same call as carrying a page's U+00A0. That
-    % is NOT the case filed on #14111 the same day, where newlines turn up
-    % inside an ordinary wrapped paragraph: those are HTML source formatting
-    % that renders as a single space, and which reading of `source` governs them
-    % is the owner's call. The two look identical in a diff and are opposite in
-    % kind, which is why each candidate gets its page read.
+    % carrying them is the same call as carrying a page's U+00A0. That is
+    % NOT the case filed on #14111 the same day, where newlines turn up
+    % inside an ordinary wrapped paragraph: those are HTML source
+    % formatting that renders as a single space, and which reading of
+    % `source` governs them is the owner's call. The two look identical in
+    % a diff and are opposite in kind, which is why each candidate gets
+    % its page read.
     %
     % Worth noting how long it went unseen: no instrument in this effort
     % compares a value to RAW HTML. The contiguity sweep compares against the
