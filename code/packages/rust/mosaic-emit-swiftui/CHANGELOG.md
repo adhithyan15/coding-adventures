@@ -4,6 +4,26 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `border-radius` and `max-width` lowering (#12022, #14728)
+
+Both were dropped entirely. `border-radius` is the most-authored property this
+emitter was losing — 254 occurrences in Engram alone — so every rounded surface
+rendered square on macOS.
+
+`.cornerRadius` is emitted between `.background` and the border, because the
+order is load-bearing: applied before the background it rounds an unfilled view
+and leaves square fill, applied after the border it clips the stroke instead of
+curving it. A part with both a radius and a border now strokes an overlaid
+`RoundedRectangle` rather than calling `.border`, which always draws a
+rectangle — otherwise the corners were round and the outline square.
+
+`max-width` emits its own chained `.frame(maxWidth:)`, which SwiftUI composes
+with the sizing frame, and correctly overrides the `.infinity` stretch the
+alignment path emits when there is no width.
+
+Both were found by the drop reporting added in the same change: making the
+losses visible immediately showed which were one match arm away.
+
 ### Added — report style properties SwiftUI cannot lower (#12022)
 
 `dropped_style_properties` returns every mosstyle property, per part, that this

@@ -1887,6 +1887,8 @@ fn swiftui_modifier_chain_with_drops(
     let mut font_weight = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
+    let mut border_radius = PropBucket::new(layer_count);
+    let mut max_width = PropBucket::new(layer_count);
     let mut opacity = PropBucket::new(layer_count);
 
     // `text-align` is a static layout concern — we deliberately do NOT
@@ -1949,6 +1951,16 @@ fn swiftui_modifier_chain_with_drops(
             "padding-right" => {
                 if let Some(v) = px_or_none(&p.value) {
                     set(&mut padding_trailing, v);
+                }
+            }
+            "max-width" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut max_width, v);
+                }
+            }
+            "border-radius" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut border_radius, v);
                 }
             }
             "background" | "background-color" => {
@@ -2204,6 +2216,22 @@ fn swiftui_modifier_chain_with_drops(
             }
         }
     }
+    // A ceiling, applied as its own `.frame` after the sizing one. Chaining is
+    // how SwiftUI composes these: the second frame constrains the first, and
+    // an explicit ceiling correctly overrides the `.infinity` stretch the
+    // alignment path emits when there is no width.
+    if !max_width.empty() {
+        let expr = layer_value(&max_width, state_layers, "0");
+        out.push_str(&format!("\n{pad}.frame(maxWidth: {expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "max-width",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
+    }
     if let Some(value) = animated_width {
         push_swiftui_animation(
             &mut out,
@@ -2254,6 +2282,26 @@ fn swiftui_modifier_chain_with_drops(
     // If color is unset, default to `Color.gray` so the modifier emits a
     // visible (and predictable) stroke rather than nothing.  Each
     // argument is layered independently.
+    // 6b. .cornerRadius — clips the background before the edge is stroked.
+    //
+    // Ordering matters and is why this sits between background and border: a
+    // radius applied before the background would round an unfilled view and
+    // leave square fill, and one applied after the border would clip the
+    // stroke rather than curve it.
+    let radius_expr = (!border_radius.empty())
+        .then(|| layer_value(&border_radius, state_layers, "0"));
+    if let Some(expr) = &radius_expr {
+        out.push_str(&format!("\n{pad}.cornerRadius({expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "border-radius",
+            expr,
+            base_transitions,
+            state_layers,
+        );
+    }
+
     if !border_width.empty() {
         let w_expr = layer_value(&border_width, state_layers, "0");
         let c_expr = if border_color.empty() {
@@ -2261,7 +2309,15 @@ fn swiftui_modifier_chain_with_drops(
         } else {
             layer_value(&border_color, state_layers, "Color.gray")
         };
-        out.push_str(&format!("\n{pad}.border({c_expr}, width: {w_expr})"));
+        // `.border` always strokes a rectangle, so a rounded part needs the
+        // stroke drawn as an overlaid RoundedRectangle instead -- otherwise
+        // the corners are round and the outline is square.
+        match &radius_expr {
+            Some(r) => out.push_str(&format!(
+                "\n{pad}.overlay(RoundedRectangle(cornerRadius: {r}).stroke({c_expr}, lineWidth: {w_expr}))"
+            )),
+            None => out.push_str(&format!("\n{pad}.border({c_expr}, width: {w_expr})")),
+        }
         push_swiftui_animation(
             &mut out,
             &pad,
@@ -14453,6 +14509,91 @@ mod tests {
         assert_eq!(drops.len(), 2, "got: {drops:?}");
         assert_eq!(drops[0].part, "a");
         assert_eq!(drops[1].part, "b");
+    }
+
+
+    // ---- border-radius and max-width (#12022, #14728) ----------------
+
+    fn chain_for(props: Vec<(&str, &str)>) -> String {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: props
+                    .into_iter()
+                    .map(|(name, value)| StyleProp {
+                        name: name.to_string(),
+                        value: value.to_string(),
+                    })
+                    .collect(),
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        from_pipeline(&m, &l, &s).expect("emit ok").output
+    }
+
+    #[test]
+    fn border_radius_clips_the_background() {
+        let out = chain_for(vec![("background", "#111111"), ("border-radius", "6")]);
+        assert!(out.contains(".cornerRadius(6)"), "got:\n{out}");
+        // Ordering: the radius must come AFTER the background, or it rounds an
+        // unfilled view and leaves square fill.
+        let bg = out.find(".background(").expect("background");
+        let radius = out.find(".cornerRadius(").expect("radius");
+        assert!(bg < radius, "got:\n{out}");
+    }
+
+    #[test]
+    fn a_rounded_border_is_stroked_as_a_rounded_rectangle() {
+        let out = chain_for(vec![("border-radius", "6"), ("border-width", "1")]);
+        // `.border` always strokes a rectangle, so a rounded part with a
+        // border would otherwise have round corners and a square outline.
+        assert!(
+            out.contains("RoundedRectangle(cornerRadius: 6).stroke("),
+            "got:\n{out}"
+        );
+        assert!(!out.contains(".border("), "got:\n{out}");
+    }
+
+    #[test]
+    fn a_square_border_still_uses_the_plain_modifier() {
+        let out = chain_for(vec![("border-width", "1")]);
+        assert!(out.contains(".border("), "got:\n{out}");
+        assert!(!out.contains("RoundedRectangle"), "got:\n{out}");
+    }
+
+    #[test]
+    fn max_width_emits_its_own_frame() {
+        let out = chain_for(vec![("max-width", "980px")]);
+        assert!(out.contains(".frame(maxWidth: 980)"), "got:\n{out}");
+    }
+
+    #[test]
+    fn max_width_constrains_a_fixed_width_rather_than_replacing_it() {
+        let out = chain_for(vec![("width", "100"), ("max-width", "980px")]);
+        // Two chained frames: SwiftUI composes them, the second constraining
+        // the first. Losing either would change the layout.
+        assert!(out.contains(".frame(width: 100"), "got:\n{out}");
+        assert!(out.contains(".frame(maxWidth: 980)"), "got:\n{out}");
+    }
+
+    #[test]
+    fn border_radius_and_max_width_are_no_longer_reported_as_drops() {
+        // Both were on the Engram gate's allowlist candidates until they were
+        // mapped; a regression must show up here rather than as a silent drop.
+        let drops = drops_for(vec![("border-radius", "6"), ("max-width", "980px")]);
+        assert!(drops.is_empty(), "got: {drops:?}");
     }
 
 }
