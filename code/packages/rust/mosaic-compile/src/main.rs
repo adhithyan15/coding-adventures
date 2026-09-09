@@ -1188,6 +1188,9 @@ fn run_pipeline(
             // so --emit-project activates the SwiftPM macOS shell.
             // Bare invocation is byte-identical to pre-UI32.
             let sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions {
+                // Fixtures replace the generated fallback the app uses before a
+                // host attaches, so a story changes what a demo app shows (#14459).
+                slot_values: pipeline_slot_values(fixtures_path),
                 emit_project,
                 ..Default::default()
             };
