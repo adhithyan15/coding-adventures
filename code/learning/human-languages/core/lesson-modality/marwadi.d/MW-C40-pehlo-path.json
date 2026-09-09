@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C40-pehlo-path",
+    "language": "marwadi",
+    "chapter": 40,
+    "sequence": 3440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfbba07a1679d922"
+  },
+  "findings": []
+}

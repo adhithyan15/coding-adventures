@@ -58,7 +58,7 @@ type Component struct {
 	// which is the thing that makes an inert axis obvious at a glance and is
 	// how six components shipped variant slots that did nothing (#14036).
 	Previews []Preview
-	HasDark    bool
+	HasDark  bool
 }
 
 // Preview is one rendered story: a name and the project that renders it.
@@ -110,6 +110,9 @@ func main() {
 	root := flag.String("root", ".", "Repository root to scan for Mosaic packages")
 	out := flag.String("out", "public-mosaic", "Directory to write the site into")
 	compiler := flag.String("compiler", "mosaic-compile", "Path to the mosaic-compile binary")
+	// The coverage matrix costs a few hundred extra compiler invocations, so
+	// it is opt-in for a quick local run and on for the published site.
+	withCoverage := flag.Bool("coverage", true, "Measure and publish per-backend style coverage")
 	flag.Parse()
 
 	comps, err := discover(*root, *compiler, *out)
@@ -124,7 +127,11 @@ func main() {
 		fmt.Fprintf(os.Stderr, "mosaic-docs: no components found under %s\n", *root)
 		os.Exit(1)
 	}
-	if err := render(comps, *out); err != nil {
+	coverage := CoverageReport{Skipped: "not measured: run without -coverage=false to include it"}
+	if *withCoverage {
+		coverage = measureCoverage(*compiler, *root)
+	}
+	if err := render(comps, *out, coverage); err != nil {
 		fmt.Fprintf(os.Stderr, "mosaic-docs: %v\n", err)
 		os.Exit(1)
 	}

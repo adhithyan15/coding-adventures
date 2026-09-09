@@ -972,6 +972,7 @@ fn run_pipeline(
         "xaml" => {
             let opts = mosaic_emit_xaml::EmitOptions {
                 emit_project,
+                slot_values: pipeline_slot_values(fixtures_path),
                 ..Default::default()
             };
             // Build the component registry: auto-register every name
@@ -1248,6 +1249,7 @@ fn run_pipeline(
             // Bare invocation is byte-identical to pre-UI32.
             let qt_opts = mosaic_emit_qt::pipeline::EmitOptions {
                 emit_project,
+                slot_values: pipeline_slot_values(fixtures_path),
                 ..Default::default()
             };
             let result = mosaic_emit_qt::pipeline::from_pipeline_with_options(

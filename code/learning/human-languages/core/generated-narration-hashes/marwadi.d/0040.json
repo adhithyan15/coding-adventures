@@ -1,0 +1,17 @@
+{
+  "language": "marwadi",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:2bffa6bedcd3593b",
+  "lessonIds": [
+    "MW-C40-signs",
+    "MW-C40-notices",
+    "MW-C40-pehlo-path"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "marwadi/narration/ch40.txt",
+  "json": "marwadi/narration/ch40.json",
+  "textHash": "fnv1a64:b89c8d8209dc5806",
+  "jsonHash": "fnv1a64:5da7704cf5261ca0",
+  "findings": []
+}

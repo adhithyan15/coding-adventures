@@ -44,3 +44,43 @@ go run . --root <repo-root> --out public-mosaic --compiler <path-to-mosaic-compi
 
 A component that cannot be emitted gets its page with the compiler's own error
 on it, rather than being silently absent from the catalog.
+
+## Backend style coverage
+
+`coverage.html` records which mosstyle properties each backend actually lowers.
+It exists because mosstyle properties are freeform — the compiler declares an
+`UnknownProperty` error kind it never raises — so each emitter translates the
+subset it knows and silently drops the rest. Nothing warns, so the gap is
+invisible unless something goes and looks.
+
+It is measured on every build rather than written down, because a number
+maintained by hand stops being a measurement the day after it is written.
+
+**Method.** Differential: emit the same probe component with and without a
+property and compare the whole generated output. If nothing changes, the
+backend does not lower it. Text-matching the authored value fails in both
+directions — SwiftUI writes `#abcdef` as `Color(red: 0.671, …)`, so colours
+read as unsupported; and a short value like `3` matches unrelated output, so
+unsupported properties read as supported.
+
+Two things the method has to get right, both found by disagreeing with a
+hand-run measurement:
+
+- **Probe shape.** `gap` on Qt and `align` on XAML lower only inside a `Row`,
+  and font properties only reach a text part. Each property is tried on a `Box`
+  probe and a `Row` probe, and counts as lowered if either changes.
+- **Probe value.** A value equal to the backend's own default changes nothing
+  even where support is complete. The most-authored `background` in this
+  repository is `transparent`, which on its own reported Qt and Flutter as
+  unable to paint a background. Up to three authored values are tried.
+
+Both the property list and the probe values are censused from the repository's
+own `.msl` files, so the report cannot test a property nobody declares or a
+value nobody writes, and rows are ordered by real usage.
+
+**Limits.** A mark means the declaration changes the generated output. It does
+not prove the result is visually correct, and it does not cover value-level
+gaps — a backend may lower `border-style` but honour only `solid`.
+
+Pass `-coverage=false` to skip it; it costs a few hundred extra compiler
+invocations.
