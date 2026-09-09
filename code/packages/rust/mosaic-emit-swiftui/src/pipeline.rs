@@ -225,11 +225,20 @@ pub struct EmitOptions {
     /// generated component compatible with emitted tooltip/help
     /// modifiers while still covering currently supported devices.
     pub pinned_ios_min: String,
+
+    /// Author-supplied slot values — a story's fixtures (#14459).
+    ///
+    /// The generated SwiftUI app reads its values from the host at runtime and
+    /// falls back to a generated sample when the host supplies nothing.
+    /// Fixtures replace that fallback, which is what a demo app or a component
+    /// page actually shows before any host is attached.
+    pub slot_values: HashMap<String, String>,
 }
 
 impl Default for EmitOptions {
     fn default() -> Self {
         Self {
+            slot_values: HashMap::new(),
             emit_project: false,
             require_runtime: false,
             pinned_swift_tools: "5.10".to_string(),
@@ -355,7 +364,12 @@ fn build_swiftui_project_files(
 
     Ok(ProjectFiles {
         package_swift: build_package_swift(options),
-        app_swift: build_app_swift(name, &interface.slots, options.require_runtime),
+        app_swift: build_app_swift(
+            name,
+            &interface.slots,
+            options.require_runtime,
+            &options.slot_values,
+        ),
         readme: build_swiftui_platform_readme(name, options.require_runtime),
     })
 }
@@ -401,12 +415,17 @@ fn build_package_swift(options: &EmitOptions) -> String {
     )
 }
 
-fn build_app_swift(component_name: &str, slots: &[SlotDecl], require_runtime: bool) -> String {
+fn build_app_swift(
+    component_name: &str,
+    slots: &[SlotDecl],
+    require_runtime: bool,
+    slot_values: &HashMap<String, String>,
+) -> String {
     // The Mosaic SwiftUI emitter produces a `View` struct named
     // `{component_name}View` (per pipeline.rs:120 doc comment), so
     // mount that here.
     let root_view =
-        build_root_view_initializer(component_name, slots, "host.props", "host", require_runtime);
+        build_root_view_initializer(component_name, slots, "host.props", "host", require_runtime, slot_values);
     let mut out = String::new();
     write!(
         out,
@@ -441,11 +460,12 @@ fn build_root_view_initializer(
     props_expr: &str,
     host_expr: &str,
     require_runtime: bool,
+    slot_values: &HashMap<String, String>,
 ) -> String {
     let mut out = format!("{component_name}View(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = host_value_for_slot(slot, props_expr, host_expr, require_runtime);
+        let value = host_value_for_slot(slot, props_expr, host_expr, require_runtime, slot_values);
         writeln!(out, "        {field}: {value},").unwrap();
     }
     out.push_str("        dispatch: { event in\n");
@@ -460,12 +480,19 @@ fn host_value_for_slot(
     props_expr: &str,
     host_expr: &str,
     require_runtime: bool,
+    slot_values: &HashMap<String, String>,
 ) -> String {
     if require_runtime {
         return runtime_required_host_value_for_slot(slot, props_expr, host_expr);
     }
     let key = escape_swift_string(&slot.name);
-    let fallback = sample_value_for_slot(slot);
+    // A fixture wins over the generated sample. Without this a story that sets
+    // `variant: danger` shows the sample's `primary` until a host attaches,
+    // which is what a demo app or component page displays (#14459).
+    let fallback = match slot_values.get(&slot.name) {
+        Some(fixture) => swift_literal_for_fixture(&slot.r#type, fixture),
+        None => sample_value_for_slot(slot),
+    };
     match &slot.r#type {
         SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
             format!("MosaicHostValue.string({props_expr}, \"{key}\", fallback: {fallback})")
@@ -817,6 +844,28 @@ private enum MosaicHostValue {
 "#,
     );
     out
+}
+
+/// Render a fixture value as a Swift literal for the slot's declared type.
+///
+/// The fallback is passed to `MosaicHostValue.double`/`.bool`, so a numeric
+/// slot must emit `42` and not `"42"` or the generated app will not compile.
+/// A value that does not parse for its type falls back to a quoted string
+/// rather than emitting invalid Swift; rejecting it belongs to fixture
+/// validation (#14435).
+fn swift_literal_for_fixture(slot_type: &SlotType, value: &str) -> String {
+    match slot_type {
+        SlotType::Number => match value.parse::<f64>() {
+            Ok(n) if n.is_finite() => format!("{n}"),
+            _ => format!("\"{}\"", escape_swift_string(value)),
+        },
+        SlotType::Bool => match value {
+            "true" => "true".to_string(),
+            "false" => "false".to_string(),
+            _ => format!("\"{}\"", escape_swift_string(value)),
+        },
+        _ => format!("\"{}\"", escape_swift_string(value)),
+    }
 }
 
 fn sample_value_for_slot(slot: &SlotDecl) -> String {
@@ -7184,6 +7233,36 @@ mod tests {
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::EmitParam;
     use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp, StyleTransition};
+
+    // --- Story fixtures (#14459) ---------------------------------------
+
+    /// A fixture value is written as a Swift literal of the slot's declared
+    /// type. The fallback is passed to `MosaicHostValue.double`/`.bool`, so a
+    /// numeric slot emitting `"42"` would not compile in the generated app.
+    #[test]
+    fn fixtures_render_as_typed_swift_literals() {
+        assert_eq!(swift_literal_for_fixture(&SlotType::Bool, "true"), "true");
+        assert_eq!(swift_literal_for_fixture(&SlotType::Number, "42"), "42");
+        assert_eq!(
+            swift_literal_for_fixture(&SlotType::Text, "hi"),
+            "\"hi\"".to_string()
+        );
+        // Unparseable for its type becomes a quoted string rather than invalid
+        // Swift. Rejecting it belongs to fixture validation (#14435).
+        assert_eq!(
+            swift_literal_for_fixture(&SlotType::Number, "abc"),
+            "\"abc\"".to_string()
+        );
+    }
+
+    /// A fixture containing a quote must be escaped, or it breaks out of the
+    /// generated string literal.
+    #[test]
+    fn fixtures_are_escaped_in_swift_literals() {
+        let out = swift_literal_for_fixture(&SlotType::Text, "a\"b");
+        assert!(!out.contains("a\"b"), "raw quote must not survive: {out}");
+    }
+
 
     // ---------------------------------------------------------------------
     // Test helpers — keep tests short by hiding the construction noise.
