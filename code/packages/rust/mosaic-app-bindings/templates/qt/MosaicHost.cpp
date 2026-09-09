@@ -687,9 +687,20 @@ void MosaicHost::failOutstanding(const QVariantMap &update, const QString &reaso
         pending += answered.value(QStringLiteral("effects")).toList();
     }
 
-    // Bounded: this runs from a guard that has already given up, so the job is
-    // to leave nothing pending, not to let the app keep going.
-    for (int round = 0; round < 8 && !pending.isEmpty(); ++round) {
+    // Bounded, and the bound can be outrun.
+    //
+    // This runs from a guard that has already given up, and each failure may
+    // mint a replacement effect. An app that keeps minting past the bound --
+    // measured at 73 chained failures with no handler connected, or 9 when the
+    // nesting guard is what fired -- leaves effects pending, and the runtime
+    // gates `snapshot` and `restore` on nothing being pending. So persistence
+    // is then off for the life of the process.
+    //
+    // That is a fallback of a fallback and not worth an unbounded loop, but it
+    // is a real terminal state, so it is *reported* rather than inferred from a
+    // later snapshot quietly failing.
+    constexpr int MaxDrainRounds = 8;
+    for (int round = 0; round < MaxDrainRounds && !pending.isEmpty(); ++round) {
         const auto batch = pending;
         pending.clear();
         for (const auto &entry : batch) {
@@ -707,6 +718,13 @@ void MosaicHost::failOutstanding(const QVariantMap &update, const QString &reaso
             if (!alive) return;
             pending += answered.value(QStringLiteral("effects")).toList();
         }
+    }
+
+    if (!pending.isEmpty()) {
+        persistenceWarning_ = QStringLiteral(
+            "Mosaic effects are still outstanding after %1 rounds of clearing; "
+            "state cannot be saved for the rest of this session")
+            .arg(MaxDrainRounds);
     }
 }
 

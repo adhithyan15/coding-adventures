@@ -91,8 +91,14 @@ stack frame -- a completion arriving on another thread would write into a live
 frame belonging to a different one.
 
 Both runaway guards -- the nesting bound and the round bound -- answer the
-effects they were handed before refusing, and drain what those answers mint in
-turn. Giving up with awaited effects still pending swapped a crash for an app
+effects they were handed before refusing, and drain what those answers mint for
+up to 8 further rounds. That bound can be outrun: an app that keeps minting
+replacements past it (measured at 73 chained failures with no handler, or 9 when
+the nesting guard fired) leaves effects pending, and persistence is then off for
+the rest of the session. It is a fallback of a fallback rather than something
+worth an unbounded loop, so the host *states* that terminal condition in its
+persistence warning instead of leaving it to be inferred from a later snapshot
+quietly failing. Giving up with awaited effects still pending swapped a crash for an app
 that can never snapshot again. The error path out of the fail loop discharges
 what the round accumulated for the same reason.
 
