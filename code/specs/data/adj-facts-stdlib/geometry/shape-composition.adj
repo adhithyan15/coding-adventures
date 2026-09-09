@@ -43,13 +43,14 @@
 % (PolygonDiagonal.html) than the locator named. It is now a `cites` in the
 % page's own words with its own locator, and in that form it IS byte-exact
 % against THE PAGE'S TAG-STRIPPED TEXT, which is what this package's
-% contiguity contract has always measured. (Against literal raw HTML neither
-% sentence is byte-exact — both are broken by `<a>` tags — and both appear
-% byte-exact inside the page's `<meta>` description attributes. Saying which
-% text is meant costs one clause and this effort's whole subject is claim
-% strength.) Naming the right page decides nothing about #14111's
-% canonical-vs-fetchable question: the sentence is simply on the page it is
-% on.
+% contiguity contract has always measured. (Against the page's PROSE neither
+% sentence is byte-exact — both are broken by `<a>` tags, and the
+% triangulation sentence is wrapped across a newline besides — though both
+% DO occur byte-exact four times each in their page's raw HTML, inside the
+% `<meta>` description attributes. That is exactly why the text being
+% measured has to be named.) Naming the right page decides nothing about
+% #14111's canonical-vs-fetchable question: the sentence is simply on the
+% page it is on.
 %
 % (c) the QUADRILATERAL sentence appears on NEITHER page. It is this rule's
 % own conclusion — a quadrilateral has exactly one diagonal per
