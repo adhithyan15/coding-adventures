@@ -39,11 +39,25 @@ iframe.preview { background:var(--card); border:1px solid var(--line); border-ra
 .note { color:var(--muted); font-size:13px; margin:8px 0 0; }
 .err { background:var(--code); border:1px solid var(--line); border-radius:8px;
        padding:12px; white-space:pre-wrap; font-size:12.5px; }
+table.cov td, table.cov th { padding:5px 7px; font-size:13px; }
+table.cov td.y { color:var(--accent); font-weight:700; text-align:center; }
+table.cov td.n { color:var(--muted); text-align:center; }
+table.cov td.u { text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
+table.cov th.b { writing-mode:vertical-rl; text-orientation:mixed; height:78px;
+                 padding:4px 2px; text-align:left; }
+.score { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 20px; }
+.score div { background:var(--card); border:1px solid var(--line); border-radius:9px;
+             padding:9px 12px; min-width:118px; }
+.score .p { font-size:19px; font-weight:700; }
+.score .l { color:var(--muted); font-size:12px; text-transform:uppercase;
+            letter-spacing:.06em; }
 </style>
 <div class="wrap">
 <h1>Mosaic components</h1>
 <p class="sub">56 components across 22 packages. Every page on this site is
 generated from the packages themselves, so it republishes whenever a component ships.</p>
+<p class="sub"><a href="coverage.html">Backend style coverage →</a> which mosstyle properties each
+backend actually lowers, measured on every build.</p>
 
 <h2>mosaic-pkg-calendar</h2>
 <div class="grid">

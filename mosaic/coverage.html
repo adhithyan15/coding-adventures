@@ -1,0 +1,164 @@
+<!doctype html>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Backend style coverage — Mosaic</title><style>
+:root { --bg:#faf8f5; --fg:#1f1d1b; --muted:#6b645c; --line:#e6ded3;
+        --card:#ffffff; --accent:#b4601a; --code:#f3efe9; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#17150f; --fg:#f1ece3; --muted:#a49b8e; --line:#332e26;
+          --card:#201d17; --accent:#e0942a; --code:#262119; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--fg); font-size:15px; line-height:1.55;
+       font-family:-apple-system,Segoe UI,system-ui,Helvetica Neue,Arial,sans-serif; }
+.wrap { max-width:1040px; margin:0 auto; padding:32px 24px 72px; }
+a { color:var(--accent); }
+h1 { font-size:28px; margin:0 0 6px; letter-spacing:-.01em; }
+h2 { font-size:15px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
+     margin:34px 0 10px; font-weight:600; }
+.sub { color:var(--muted); margin:0 0 26px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; }
+.card { display:block; padding:12px 14px; background:var(--card); border:1px solid var(--line);
+        border-radius:10px; text-decoration:none; color:var(--fg); }
+.card:hover { border-color:var(--accent); }
+.card .n { font-weight:600; }
+.card .m { color:var(--muted); font-size:13px; }
+table { border-collapse:collapse; width:100%; margin:6px 0 18px; }
+th,td { text-align:left; padding:7px 10px; border-bottom:1px solid var(--line); font-size:14px; }
+th { color:var(--muted); font-weight:600; font-size:12px; text-transform:uppercase;
+     letter-spacing:.06em; }
+code,.pill { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; }
+.pill { background:var(--code); border:1px solid var(--line); border-radius:5px;
+        padding:1px 6px; margin-right:4px; display:inline-block; }
+iframe.preview { background:var(--card); border:1px solid var(--line); border-radius:10px;
+           width:100%; height:150px; display:block; }
+.gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+.shot { margin:0; }
+.shot figcaption { font-size:12px; color:var(--muted); text-transform:uppercase;
+                   letter-spacing:.06em; margin:0 0 6px; font-weight:600; }
+.preview > * { max-width:100%; }
+.note { color:var(--muted); font-size:13px; margin:8px 0 0; }
+.err { background:var(--code); border:1px solid var(--line); border-radius:8px;
+       padding:12px; white-space:pre-wrap; font-size:12.5px; }
+table.cov td, table.cov th { padding:5px 7px; font-size:13px; }
+table.cov td.y { color:var(--accent); font-weight:700; text-align:center; }
+table.cov td.n { color:var(--muted); text-align:center; }
+table.cov td.u { text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
+table.cov th.b { writing-mode:vertical-rl; text-orientation:mixed; height:78px;
+                 padding:4px 2px; text-align:left; }
+.score { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 20px; }
+.score div { background:var(--card); border:1px solid var(--line); border-radius:9px;
+             padding:9px 12px; min-width:118px; }
+.score .p { font-size:19px; font-weight:700; }
+.score .l { color:var(--muted); font-size:12px; text-transform:uppercase;
+            letter-spacing:.06em; }
+</style>
+<div class="wrap">
+<p class="sub"><a href="index.html">← All components</a></p>
+<h1>Backend style coverage</h1>
+
+<p class="sub">Which mosstyle properties each backend actually lowers. A component keeps every
+property marked below and <strong>silently loses the rest</strong> — mosstyle properties are
+freeform, so nothing in the pipeline knows what a backend can express, and nothing warns when an
+authored declaration reaches nobody.</p>
+
+<div class="score">
+<div><div class="p">98%</div><div class="l">react</div>
+<div class="l">62/63</div></div><div><div class="p">100%</div><div class="l">html</div>
+<div class="l">63/63</div></div><div><div class="p">100%</div><div class="l">webcomponent</div>
+<div class="l">63/63</div></div><div><div class="p">15%</div><div class="l">swiftui</div>
+<div class="l">10/63</div></div><div><div class="p">28%</div><div class="l">qt</div>
+<div class="l">18/63</div></div><div><div class="p">19%</div><div class="l">flutter</div>
+<div class="l">12/63</div></div><div><div class="p">15%</div><div class="l">compose</div>
+<div class="l">10/63</div></div><div><div class="p">46%</div><div class="l">xaml</div>
+<div class="l">29/63</div></div>
+</div>
+
+<h2>Method</h2>
+<p class="note">Differential, not text-matching. Each property is emitted twice — once with it and
+once without — and the whole generated output is compared. If nothing changes, the backend does not
+lower it. Grepping for the authored value would be wrong in both directions: SwiftUI writes
+<code>#abcdef</code> as <code>Color(red: 0.671, …)</code> so colours would read as unsupported, and a
+short value like <code>3</code> matches unrelated output so unsupported properties would read as
+supported.</p>
+<p class="note">Each property is tried on both a <code>Box</code> probe and a <code>Row</code> probe,
+because shape changes the answer — <code>gap</code> on Qt and <code>align</code> on XAML lower only
+inside a row. Probe values are real values taken from this repository's own stylesheets, and up to
+three are tried per property, because a value that equals a backend's own default changes nothing
+even where support is complete: the most-authored <code>background</code> here is
+<code>transparent</code>, which alone would report Qt and Flutter as unable to paint a background.
+Rows are ordered by how often the property is actually authored, and everything is re-measured on
+every build, so it cannot drift from the emitters.</p>
+<p class="note">A mark means the authored declaration <em>changes the generated output</em>. It does
+not prove the result is visually correct, and it does not cover value-level gaps — a backend may
+lower <code>border-style</code> but honour only <code>solid</code>.</p>
+
+<h2>Matrix</h2>
+<table class="cov"><tr><th>Property</th><th class="u">Uses</th>
+<th class="b">react</th><th class="b">html</th><th class="b">webcomponent</th><th class="b">swiftui</th><th class="b">qt</th><th class="b">flutter</th><th class="b">compose</th><th class="b">xaml</th></tr>
+<tr><td><code>color</code></td><td class="u">986</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td></tr><tr><td><code>background</code></td><td class="u">721</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td></tr><tr><td><code>padding</code></td><td class="u">714</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td></tr><tr><td><code>font-size</code></td><td class="u">697</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td></tr><tr><td><code>border-radius</code></td><td class="u">553</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>border-width</code></td><td class="u">514</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td></tr><tr><td><code>font-weight</code></td><td class="u">453</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>border-color</code></td><td class="u">413</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>padding-bottom</code></td><td class="u">209</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>width</code></td><td class="u">142</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td></tr><tr><td><code>gap</code></td><td class="u">132</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>padding-top</code></td><td class="u">120</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>height</code></td><td class="u">78</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td></tr><tr><td><code>padding-left</code></td><td class="u">60</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>padding-right</code></td><td class="u">58</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>align</code></td><td class="u">54</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>text-align</code></td><td class="u">43</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td></tr><tr><td><code>box-shadow</code></td><td class="u">34</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>elevation</code></td><td class="u">32</td>
+<td class="n">·</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td></tr><tr><td><code>letter-spacing</code></td><td class="u">24</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>text-transform</code></td><td class="u">22</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-style</code></td><td class="u">19</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>flex-shrink</code></td><td class="u">18</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>flex-grow</code></td><td class="u">17</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>max-width</code></td><td class="u">16</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>border-bottom-color</code></td><td class="u">14</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-bottom-width</code></td><td class="u">14</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-bottom-style</code></td><td class="u">12</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-right-color</code></td><td class="u">12</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-right-style</code></td><td class="u">12</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-right-width</code></td><td class="u">12</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>left</code></td><td class="u">12</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>position</code></td><td class="u">12</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>top</code></td><td class="u">12</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>font-family</code></td><td class="u">11</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="y">Y</td></tr><tr><td><code>border-left-color</code></td><td class="u">10</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-left-style</code></td><td class="u">10</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-left-width</code></td><td class="u">10</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>min-height</code></td><td class="u">9</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>flex-wrap</code></td><td class="u">8</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>outline</code></td><td class="u">8</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-top-color</code></td><td class="u">7</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-top-width</code></td><td class="u">7</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-top-style</code></td><td class="u">6</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>min-width</code></td><td class="u">6</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>align-items</code></td><td class="u">4</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>cursor</code></td><td class="u">4</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>transform</code></td><td class="u">4</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-collapse</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-top-left-radius</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>border-top-right-radius</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>display</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>flex</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>flex-direction</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>justify-content</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>margin-bottom</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>margin-left</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>margin-right</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="y">Y</td></tr><tr><td><code>overflow</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>text-overflow</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>white-space</code></td><td class="u">2</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr><tr><td><code>direction</code></td><td class="u">1</td>
+<td class="y">Y</td><td class="y">Y</td><td class="y">Y</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td><td class="n">·</td></tr>
+</table>
+
+</div>
