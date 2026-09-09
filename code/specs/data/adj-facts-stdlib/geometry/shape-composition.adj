@@ -20,14 +20,46 @@
 %      quadrilaterals (4-sided polygons).
 %   2. The general definitions of TRIANGULATION ("the division of a...
 %      polygon into a set of triangles") and a POLYGON DIAGONAL ("a line
-%      segment connecting two nonadjacent polygon vertices"), both quoted
-%      verbatim from MathWorld in the rule's own `source` below.
+%      segment connecting two nonadjacent polygon vertices"). These live on
+%      DIFFERENT MathWorld pages, so they are cited separately below: the
+%      triangulation sentence as the rule's `source`, the diagonal sentence
+%      as a `cites` carrying its own locator.
 %
-% The RULE's `source` states plainly which part is the verbatim MathWorld
-% quote and which part is the elementary reasoning step built on top of it
-% (a quadrilateral has exactly one diagonal per opposite-vertex pair;
-% drawing it splits the 4-sided region into exactly two 3-sided regions) —
-% so the inference is auditable end to end: a query's `steps` trail shows
+% Provenance, and what installment 4i had to repair. This paragraph used to
+% say the rule's `source` "states plainly which part is the verbatim
+% MathWorld quote and which part is the elementary reasoning step" — and the
+% field marked nothing at all. It welded THREE sentences into one quotation
+% under one locator, and only the first belonged there:
+%
+% (a) the TRIANGULATION sentence is a real span of the cited page — one
+% match, and the only one of the three that was ever correctly placed. It is
+% verbatim under whitespace collapse and NOT byte-exact even against the
+% page's tag-stripped text, because MathWorld wraps it across a newline;
+% that is the weaker claim installment 4h learned to state rather than blur.
+%
+% (b) the DIAGONAL sentence had ONE WORD CHANGED inside quotation marks —
+% the page says "A polygon diagonal is", the field said "A polygonal
+% diagonal is" — and it is prose from a DIFFERENT PAGE
+% (PolygonDiagonal.html) than the locator named. It is now a `cites` in the
+% page's own words with its own locator, and in that form it IS byte-exact
+% against THE PAGE'S TAG-STRIPPED TEXT, which is what this package's
+% contiguity contract has always measured. (Against the page's PROSE neither
+% sentence is byte-exact — both are broken by `<a>` tags, and the
+% triangulation sentence is wrapped across a newline besides — though both
+% DO occur byte-exact four times each in their page's raw HTML, inside the
+% `<meta>` description attributes. That is exactly why the text being
+% measured has to be named.) Naming the right page decides nothing about
+% #14111's canonical-vs-fetchable question: the sentence is simply on the
+% page it is on.
+%
+% (c) the QUADRILATERAL sentence appears on NEITHER page. It is this rule's
+% own conclusion — a quadrilateral has exactly one diagonal per
+% opposite-vertex pair, and drawing it splits the 4-sided region into
+% exactly two 3-sided regions — and it was presented as though quoted. It is
+% no longer inside the quotation; it is stated here, as the derivation the
+% `trust consensus` tier already existed to mark.
+%
+% So the inference is auditable end to end: a query's `steps` trail shows
 % BOTH the rule's citation (the general triangulation/diagonal definitions)
 % AND the underlying table fact's citation (the quadrilateral's own defining
 % property), and a human can independently check each link. `trust
@@ -54,6 +86,7 @@ import "quadrilateral-types.adj"
 
 rule { head: triangle_decomposition_count($Shape, 2)
        when: quadrilateral_property($Shape, $Property)
-       source "Triangulation is the division of a surface or plane polygon into a set of triangles, usually with the restriction that each triangle side is entirely shared by two adjacent triangles. A polygonal diagonal is a line segment connecting two nonadjacent polygon vertices of a polygon. A quadrilateral has exactly two diagonals, each splitting it into two triangles; drawing either one divides the quadrilateral into exactly two triangular regions."
+       source "Triangulation is the division of a surface or plane polygon into a set of triangles, usually with the restriction that each triangle side is entirely shared by two adjacent triangles."
        locator "https://mathworld.wolfram.com/Triangulation.html"
-       trust consensus }
+       trust consensus
+       cites "A polygon diagonal is a line segment connecting two nonadjacent polygon vertices of a polygon." locator "https://mathworld.wolfram.com/PolygonDiagonal.html" }

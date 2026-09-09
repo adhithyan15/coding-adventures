@@ -1,9 +1,16 @@
 # Publish the Mosaic component documentation site.
 #
 # The site must republish AS SOON AS a component ships (#14026), so this runs
-# on every merge that touches a Mosaic package, the compiler, or the emitters
-# the previews are built with. A hand-maintained catalog drifts the moment a
-# component lands, and a stale catalog is worse than none.
+# on every merge that touches a Mosaic package, the compiler, or ANY emitter.
+# A hand-maintained catalog drifts the moment a component lands, and a stale
+# catalog is worse than none.
+#
+# Every emitter, not just html: the previews are html, but `coverage.html`
+# (#14709) measures what all eight backends lower, so a fix in any of them
+# changes the published numbers. Watching only html left the page reporting
+# pre-fix coverage for SwiftUI and Qt after their fixes had merged -- a
+# measurement that silently stops tracking is worse than one that was never
+# claimed to.
 name: Deploy Mosaic docs
 
 on:
@@ -12,7 +19,14 @@ on:
     paths:
       - "code/packages/mosaic/**"
       - "code/packages/rust/mosaic-compile/**"
+      - "code/packages/rust/mosaic-emit-compose/**"
+      - "code/packages/rust/mosaic-emit-flutter/**"
       - "code/packages/rust/mosaic-emit-html/**"
+      - "code/packages/rust/mosaic-emit-qt/**"
+      - "code/packages/rust/mosaic-emit-react/**"
+      - "code/packages/rust/mosaic-emit-swiftui/**"
+      - "code/packages/rust/mosaic-emit-webcomponent/**"
+      - "code/packages/rust/mosaic-emit-xaml/**"
       - "code/packages/rust/mosmodel-compiler/**"
       - "code/packages/rust/moslayout-compiler/**"
       - "code/packages/rust/mosstyle-compiler/**"

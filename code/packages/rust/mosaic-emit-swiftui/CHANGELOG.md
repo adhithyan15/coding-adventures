@@ -4,6 +4,53 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `border-radius` and `max-width` lowering (#12022, #14728)
+
+Both were dropped entirely. `border-radius` is the most-authored property this
+emitter was losing — 254 occurrences in Engram alone — so every rounded surface
+rendered square on macOS.
+
+`.cornerRadius` is emitted between `.background` and the border, because the
+order is load-bearing: applied before the background it rounds an unfilled view
+and leaves square fill, applied after the border it clips the stroke instead of
+curving it. A part with both a radius and a border now strokes an overlaid
+`RoundedRectangle` rather than calling `.border`, which always draws a
+rectangle — otherwise the corners were round and the outline square.
+
+`max-width` emits its own chained `.frame(maxWidth:)`, which SwiftUI composes
+with the sizing frame, and correctly overrides the `.infinity` stretch the
+alignment path emits when there is no width.
+
+Both were found by the drop reporting added in the same change: making the
+losses visible immediately showed which were one match arm away.
+
+### Added — report style properties SwiftUI cannot lower (#12022)
+
+`dropped_style_properties` returns every mosstyle property, per part, that this
+emitter had no expressible SwiftUI output for. `mosaic-package-artifact-builder`
+surfaces them in `mosaic-degradations.json` under `styleDegradations`, the same
+channel XAML has used since #12022 opened.
+
+SwiftUI is the second backend of eight to report. Until now the emitter's own
+comment said the quiet part outright — "border-style, border-collapse, outline,
+etc. — silently skipped" — and a package could carry `nativeComplete: true`
+with `styleDegradations: []` while losing most of its styling.
+
+The drops are collected from the **same `match` that does the lowering**, via a
+`_with_drops` variant, not from a parallel list of supported names. A parallel
+list goes stale silently the moment a property stops being lowered, which is
+the exact failure mode being reported on.
+
+Each drop carries a reason a reader can act on rather than a generic
+"unsupported", because these are genuinely different problems: `flex-direction`
+and `justify-content` cannot be applied to an already-built view at all
+(SwiftUI chooses HStack/VStack/Spacer at construction time), while `box-shadow`
+simply needs `.shadow` with different arguments.
+
+`text-align` inside a state layer is excluded. It is deliberately base-only,
+not unsupported, and reporting a documented decision as a loss would train
+readers to ignore the list.
+
 ### Added — UI49 slot-owned style states
 
 `one-of` slot values now activate their matching `.msl` state blocks in

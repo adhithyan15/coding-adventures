@@ -119,6 +119,7 @@ pub fn from_pipeline(
     // already imports; widen that import gate rather than duplicating
     // an unconditional second import.
     let uses_progress_ring = layout_contains_tag(&layout.root, "HostProgressRing");
+    let uses_scroll = layout_contains_tag(&layout.root, "HostScroll");
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
     let uses_checkbox_indeterminate = layout_has_checkbox_indeterminate(&layout.root);
@@ -193,6 +194,10 @@ pub fn from_pipeline(
     if uses_path {
         writeln!(out, "import androidx.compose.foundation.layout.offset").unwrap();
         writeln!(out, "import androidx.compose.foundation.layout.size").unwrap();
+    }
+    if uses_scroll {
+        writeln!(out, "import androidx.compose.foundation.rememberScrollState").unwrap();
+        writeln!(out, "import androidx.compose.foundation.verticalScroll").unwrap();
     }
     writeln!(
         out,
@@ -1195,16 +1200,43 @@ fn emit_composable_function(
 }
 
 fn should_split_root_sections(layout_root: &LayoutNode) -> bool {
+    is_splittable_container(layout_root) && layout_root.children.len() > 1
+}
+
+/// Whether a node is a container whose children can become their own section
+/// functions -- it keeps its frame and styles, and its children move out.
+///
+/// `HostScroll` belongs here because it lowers to a `Column` with a scroll
+/// modifier, so it splits exactly like one. Leaving it out made a single
+/// scroll wrapper a hard stop for the recursion below: TaskApp's oversized
+/// section sat directly under one, and splitting halted at the wrapper with
+/// 80,000 characters still inside it (#14736).
+/// The modifier `HostScroll` prefixes onto a container's chain.
+///
+/// Shared by `emit_container` (the ordinary path) and `emit_container_frame`
+/// (the split path). Keeping one source matters: when only `emit_container`
+/// applied it, a `HostScroll` that got large enough to be SPLIT silently lost
+/// its scrolling -- the generated file still carried the import, so nothing
+/// looked wrong, and the viewport simply stopped scrolling (#14736).
+fn host_scroll_modifier_prefix(node: &LayoutNode, chain_indent: usize) -> Option<String> {
+    (node.tag == "HostScroll").then(|| {
+        let cpad = " ".repeat(chain_indent);
+        format!("\n{cpad}.verticalScroll(rememberScrollState())")
+    })
+}
+
+fn is_splittable_container(node: &LayoutNode) -> bool {
     matches!(
-        layout_root.tag.as_str(),
+        node.tag.as_str(),
         "Box"
             | "Row"
             | "Column"
+            | "HostScroll"
             | "HostTable"
             | "HostTableHead"
             | "HostTableBody"
             | "HostTableFoot"
-    ) && layout_root.children.len() > 1
+    )
 }
 
 fn emit_split_composable_function(
@@ -1270,46 +1302,170 @@ fn emit_split_composable_function(
     }
     writeln!(out, "}}").unwrap();
 
+    let ctx = SectionCtx {
+        component_name,
+        slots,
+        emits,
+        part_styles,
+        grouped,
+    };
     for (index, range) in ranges.into_iter().enumerate() {
-        writeln!(out).unwrap();
-        writeln!(out, "@OptIn(ExperimentalFoundationApi::class)").unwrap();
-        writeln!(out, "@Composable").unwrap();
-        let receiver = if root_composable == "Row" {
-            "RowScope."
-        } else {
-            ""
-        };
-        writeln!(out, "private fun {receiver}{component_name}Section{index}(").unwrap();
-        // The sections carry the same arity problem as the root, and worse:
-        // there is one per top-level child, so a component that overflows once
-        // overflows eight times. Fixing only the root leaves the class
-        // unloadable, which is exactly what the first attempt at this did.
-        if grouped {
-            writeln!(out, "    props: {component_name}Props,").unwrap();
-            writeln!(out, "    dispatch: ({component_name}Event) -> Unit,").unwrap();
-        } else {
-            emit_composable_parameters(&mut out, slots, component_name)?;
-        }
-        writeln!(out, ") {{").unwrap();
-        if grouped {
-            emit_props_destructuring(&mut out, slots)?;
-        }
-        out.push_str(&emit_children_compose(
+        emit_section_fn(
+            &mut out,
+            &ctx,
+            &format!("{component_name}Section{index}"),
             &layout_root.children[range],
-            1,
-            component_name,
-            emits,
-            part_styles,
+            root_composable == "Row",
             table_context.as_ref(),
             frame.child_text.as_ref(),
-            None,
-            None,
-            root_composable == "Row",
-        )?);
-        writeln!(out, "}}").unwrap();
+        )?;
     }
 
     Ok(out)
+}
+
+/// The shared inputs every section function needs, so the recursion below does
+/// not thread eight parameters through each level.
+struct SectionCtx<'a> {
+    component_name: &'a str,
+    slots: &'a [SlotDecl],
+    emits: &'a [EmitDecl],
+    part_styles: &'a PartStyleMap,
+    grouped: bool,
+}
+
+/// How much generated Kotlin a single section may hold before it is split
+/// again.
+///
+/// The real limit is the JVM's 64KB of **bytecode** per method, which cannot be
+/// computed here -- only the Kotlin compiler knows it. Source length is the
+/// closest proxy available at emit time, so this is set well below the
+/// observed failure point rather than near it: TaskApp's single oversized
+/// section was ~113,000 characters when the compiler rejected it, so 40,000
+/// leaves roughly a 2.5x margin for a source/bytecode ratio that varies with
+/// what the section contains.
+///
+/// Being wrong in the conservative direction costs an extra private function;
+/// being wrong the other way costs an internal compiler error with no pointer
+/// to the layout that caused it (#14736).
+const MAX_SECTION_SOURCE_CHARS: usize = 40_000;
+
+/// Emit one section function, splitting it into sub-sections when its body is
+/// too large for one JVM method.
+///
+/// Splitting is driven by the size of the **emitted body**, not by the shape of
+/// the IR. A child-count or depth heuristic is wrong in both directions: a
+/// deep-but-small tree would split needlessly, and a shallow-but-wide one --
+/// which is exactly what TaskApp is -- would not split at all.
+#[allow(clippy::too_many_arguments)]
+fn emit_section_fn(
+    out: &mut String,
+    ctx: &SectionCtx<'_>,
+    name: &str,
+    children: &[LayoutNode],
+    in_row_scope: bool,
+    table_context: Option<&TableContext>,
+    child_text: Option<&TextStyleCtx>,
+) -> Result<(), PipelineEmitError> {
+    let component_name = ctx.component_name;
+    let body = emit_children_compose(
+        children,
+        1,
+        component_name,
+        ctx.emits,
+        ctx.part_styles,
+        table_context,
+        child_text,
+        None,
+        None,
+        in_row_scope,
+    )?;
+
+    // A section can be split further when it is a single container with any
+    // children: its children become sub-sections while the container keeps its
+    // frame and styles.
+    //
+    // Deliberately NOT requiring more than one child, unlike the root. A
+    // single-child wrapper -- a scroll viewport, a themed Box -- would
+    // otherwise be a hard stop with the whole subtree still inside it, which
+    // is exactly how TaskApp defeated the first version of this. Descending
+    // through it costs one extra function and lets the split reach the wide
+    // node underneath.
+    let splittable = children.len() == 1
+        && is_splittable_container(&children[0])
+        && !children[0].children.is_empty()
+        && body.len() > MAX_SECTION_SOURCE_CHARS;
+
+    let mut nested = String::new();
+    let body = if splittable {
+        let node = &children[0];
+        let (composable, sub_table, sub_text) = root_container_context(node, ctx.part_styles);
+        // Inherit the caller's contexts rather than replacing them.
+        //
+        // `root_container_context` reports what THIS node establishes, which
+        // for a plain Column/Row/Box is nothing at all. Passing its `None`
+        // straight through severed the cascade at every split boundary: text
+        // that read `Text(err, color = Color(0xFFF1EBE1))` before the split
+        // came back as a bare `Text(text = err)`, losing an inherited colour
+        // that no longer had a path to it. A node that does establish its own
+        // (a HostTable's sheet text) still wins.
+        let sub_table = sub_table.as_ref().or(table_context);
+        let sub_text = sub_text.as_ref().or(child_text);
+        let frame = emit_container_frame(
+            node,
+            composable,
+            1,
+            ctx.part_styles,
+            sub_table,
+            sub_text,
+            None,
+        );
+        let sub_ranges = child_section_ranges(&node.children);
+        let mut inner = String::new();
+        inner.push_str(&frame.opener);
+        for index in 0..sub_ranges.len() {
+            write_named_section_call(&mut inner, &format!("{name}_{index}"), ctx.slots, 2)?;
+        }
+        inner.push_str(&frame.closer);
+        for (index, range) in sub_ranges.into_iter().enumerate() {
+            emit_section_fn(
+                &mut nested,
+                ctx,
+                &format!("{name}_{index}"),
+                &node.children[range],
+                composable == "Row",
+                sub_table,
+                frame.child_text.as_ref(),
+            )?;
+        }
+        inner
+    } else {
+        body
+    };
+
+    writeln!(out).unwrap();
+    writeln!(out, "@OptIn(ExperimentalFoundationApi::class)").unwrap();
+    writeln!(out, "@Composable").unwrap();
+    let receiver = if in_row_scope { "RowScope." } else { "" };
+    writeln!(out, "private fun {receiver}{name}(").unwrap();
+    // The sections carry the same arity problem as the root, and worse:
+    // there is one per top-level child, so a component that overflows once
+    // overflows eight times. Fixing only the root leaves the class
+    // unloadable, which is exactly what the first attempt at this did.
+    if ctx.grouped {
+        writeln!(out, "    props: {component_name}Props,").unwrap();
+        writeln!(out, "    dispatch: ({component_name}Event) -> Unit,").unwrap();
+    } else {
+        emit_composable_parameters(out, ctx.slots, component_name)?;
+    }
+    writeln!(out, ") {{").unwrap();
+    if ctx.grouped {
+        emit_props_destructuring(out, ctx.slots)?;
+    }
+    out.push_str(&body);
+    writeln!(out, "}}").unwrap();
+    out.push_str(&nested);
+    Ok(())
 }
 
 fn root_container_context<'a>(
@@ -1593,9 +1749,23 @@ fn write_section_call(
     slots: &[SlotDecl],
     depth: usize,
 ) -> Result<(), PipelineEmitError> {
+    write_named_section_call(out, &format!("{component_name}Section{index}"), slots, depth)
+}
+
+/// Call a section function by name.
+///
+/// Split out from [`write_section_call`] so nested sections, whose names carry
+/// their parent's (`…Section1_0`), reuse the same argument-forwarding rather
+/// than growing a second copy of it that could drift.
+fn write_named_section_call(
+    out: &mut String,
+    name: &str,
+    slots: &[SlotDecl],
+    depth: usize,
+) -> Result<(), PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
-    writeln!(out, "{pad}{component_name}Section{index}(").unwrap();
+    writeln!(out, "{pad}{name}(").unwrap();
     if needs_props_object(slots) {
         // The caller destructured `props` into locals, so rebuild it rather
         // than passing 254 locals back in -- which would reintroduce the very
@@ -3003,6 +3173,25 @@ fn emit_compose_tree(
             for_payload,
             injected_width,
         ),
+        // UI29 §3 `HostScroll`: a scrollable viewport. Compose has no
+        // scrolling container composable -- scrolling is a MODIFIER on an
+        // ordinary one -- so this lowers to a `Column` whose modifier chain
+        // starts with `.verticalScroll(...)`, applied in `emit_container`.
+        // Routing it through the same function keeps the viewport's own part
+        // styles working; a bespoke emitter would have dropped them.
+        "HostScroll" => emit_container(
+            node,
+            "Column",
+            depth,
+            component_name,
+            emits,
+            part_styles,
+            table_ctx,
+            text_ctx,
+            for_payload,
+            injected_width,
+            in_row_scope,
+        ),
         "Column" => emit_container(
             node,
             "Column",
@@ -3449,6 +3638,24 @@ fn emit_container_frame(
         None
     };
 
+    // UI29 §3 — a split `HostScroll` reaches this path instead of
+    // `emit_container`, and must still scroll.
+    let mut style = style;
+    if let Some(prefix) = host_scroll_modifier_prefix(node, chain_indent) {
+        match &mut style {
+            Some(style) => style.modifier.insert_str(0, &prefix),
+            None => {
+                style = Some(ComposeStyle {
+                    modifier: prefix,
+                    content_alignment: None,
+                    text_color: None,
+                    font_family_mono: false,
+                    font_size: None,
+                })
+            }
+        }
+    }
+
     let has_style_chain = style
         .as_ref()
         .map(|s| !s.modifier.is_empty())
@@ -3668,6 +3875,24 @@ fn emit_container(
     } else {
         None
     };
+
+    // UI29 §3 `HostScroll` — scrolling is a modifier in Compose, not a
+    // container, so it is prefixed onto whatever chain the part already has.
+    // First in the chain deliberately: the viewport must be able to scroll
+    // its content before padding or size constraints are applied to it.
+    if let Some(prefix) = host_scroll_modifier_prefix(node, chain_indent) {
+        if let Some(style) = &mut style {
+            style.modifier.insert_str(0, &prefix);
+        } else {
+            style = Some(ComposeStyle {
+                modifier: prefix,
+                content_alignment: None,
+                text_color: None,
+                font_family_mono: false,
+                font_size: None,
+            });
+        }
+    }
 
     // A direct Row child participates in RowScope measurement. Mosaic's
     // `flex-grow` and percentage-width idioms both mean "take the remaining
@@ -9673,6 +9898,281 @@ mod tests {
         assert!(out.contains(r#"variant == "danger""#), "got:\n{out}");
     }
 
+
+    // ---- HostScroll (#14732) -----------------------------------------
+
+    fn scroll_kt(part_props: Vec<(&str, &str)>) -> String {
+        let m = component("S", vec![slot("label", SlotType::Text, true)], vec![]);
+        let l = LayoutDef {
+            component_name: "S".to_string(),
+            root: LayoutNode {
+                tag: "HostScroll".to_string(),
+                part_name: Some("viewport".to_string()),
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::SlotRef("label".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            },
+        };
+        let s = StyleDef {
+            component_name: "S".to_string(),
+            parts: vec![PartStyle {
+                name: "viewport".to_string(),
+                base: part_props.into_iter().map(|(n, v)| sprop(n, v)).collect(),
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        from_pipeline(&m, &l, &s).expect("emit ok").output
+    }
+
+    #[test]
+    fn host_scroll_lowers_to_a_scrollable_column() {
+        let out = scroll_kt(vec![]);
+        assert!(
+            out.contains(".verticalScroll(rememberScrollState())"),
+            "got:\n{out}"
+        );
+        // Compose has no scrolling container composable -- scrolling is a
+        // modifier on an ordinary one.
+        assert!(out.contains("Column("), "got:\n{out}");
+    }
+
+    #[test]
+    fn host_scroll_imports_only_when_used() {
+        let with_scroll = scroll_kt(vec![]);
+        assert!(with_scroll.contains("import androidx.compose.foundation.verticalScroll"));
+        assert!(with_scroll.contains("import androidx.compose.foundation.rememberScrollState"));
+
+        // A component with no viewport must not gain unused imports.
+        let m = component("P", vec![], vec![]);
+        let l = layout("P", node("Box", vec![], vec![]));
+        let plain = from_pipeline(&m, &l, &empty_style("P"))
+            .expect("emit ok")
+            .output;
+        assert!(!plain.contains("verticalScroll"), "got:\n{plain}");
+        assert!(!plain.contains("rememberScrollState"), "got:\n{plain}");
+    }
+
+    #[test]
+    fn the_viewports_own_styles_survive_and_apply_after_the_scroll() {
+        // Routing HostScroll through emit_container rather than a bespoke
+        // emitter is what keeps these working; the scroll must come FIRST so
+        // the viewport can scroll its content before padding constrains it.
+        let out = scroll_kt(vec![("padding", "12"), ("background", "#111111")]);
+        let scroll = out.find(".verticalScroll(").expect("scroll");
+        let padding = out.find(".padding(12.dp)").expect("padding");
+        let background = out.find(".background(").expect("background");
+        assert!(scroll < background, "got:\n{out}");
+        assert!(scroll < padding, "got:\n{out}");
+    }
+
+
+    // ---- recursive section splitting (#14736) ------------------------
+
+    /// Build a container with `n` children, each carrying enough emitted
+    /// content that the section exceeds the split threshold.
+    fn wide_column(n: usize) -> LayoutNode {
+        LayoutNode {
+            tag: "Column".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: (0..n)
+                .map(|i| LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        // Long enough that a few dozen of these cross
+                        // MAX_SECTION_SOURCE_CHARS.
+                        value: LayoutPropValue::String("x".repeat(900) + &i.to_string()),
+                    }],
+                    children: Vec::new(),
+                })
+                .collect(),
+        }
+    }
+
+    fn split_output(root: LayoutNode) -> String {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root,
+        };
+        from_pipeline(&m, &l, &empty_style("X"))
+            .expect("emit ok")
+            .output
+    }
+
+    #[test]
+    fn an_oversized_section_splits_into_sub_sections() {
+        // Root Row with two children; the second is a wide Column big enough
+        // that its section would exceed one JVM method.
+        let root = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![
+                LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("small".to_string()),
+                    }],
+                    children: Vec::new(),
+                },
+                wide_column(60),
+            ],
+        };
+        let out = split_output(root);
+
+        assert!(out.contains("XSection1("), "got no Section1");
+        assert!(
+            out.contains("XSection1_0("),
+            "oversized section did not split, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn a_small_section_is_not_split() {
+        // The split must be driven by size, not by shape: a container with
+        // many small children stays one function.
+        let root = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![
+                LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("a".to_string()),
+                    }],
+                    children: Vec::new(),
+                },
+                LayoutNode {
+                    tag: "Column".to_string(),
+                    part_name: None,
+                    props: Vec::new(),
+                    children: (0..30)
+                        .map(|_| LayoutNode {
+                            tag: "Text".to_string(),
+                            part_name: None,
+                            props: vec![LayoutProp {
+                                name: "content".to_string(),
+                                value: LayoutPropValue::String("b".to_string()),
+                            }],
+                            children: Vec::new(),
+                        })
+                        .collect(),
+                },
+            ],
+        };
+        let out = split_output(root);
+        assert!(out.contains("XSection1("), "got:\n{out}");
+        assert!(!out.contains("XSection1_0("), "small section should not split");
+    }
+
+    #[test]
+    fn splitting_descends_through_a_single_child_wrapper() {
+        // A scroll viewport wrapping the wide content is exactly TaskApp's
+        // shape. Requiring more than one child here made the wrapper a hard
+        // stop with the whole subtree still inside it (#14736).
+        let root = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![
+                LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("small".to_string()),
+                    }],
+                    children: Vec::new(),
+                },
+                LayoutNode {
+                    tag: "HostScroll".to_string(),
+                    part_name: None,
+                    props: Vec::new(),
+                    children: vec![wide_column(60)],
+                },
+            ],
+        };
+        let out = split_output(root);
+
+        assert!(
+            out.contains("XSection1_0("),
+            "did not descend through the scroll wrapper, got:\n{out}"
+        );
+        // The viewport keeps its scroll modifier while its children move out.
+        assert!(out.contains(".verticalScroll(rememberScrollState())"), "got:\n{out}");
+    }
+
+
+    #[test]
+    fn a_split_preserves_the_inherited_text_cascade() {
+        // A split boundary must not sever style inheritance. `HostTable`
+        // establishes a sheet text style for its descendants; if the
+        // sub-section is emitted with a fresh context instead of the
+        // inherited one, that colour silently stops reaching the text --
+        // which is exactly what CI's control-contract check caught, as
+        // `Text(err, color = …)` coming back as a bare `Text(text = err)`.
+        let sheet = LayoutNode {
+            tag: "HostTable".to_string(),
+            part_name: Some("sheet".to_string()),
+            props: Vec::new(),
+            children: vec![wide_column(60)],
+        };
+        let root = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![
+                LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("small".to_string()),
+                    }],
+                    children: Vec::new(),
+                },
+                sheet,
+            ],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root,
+        };
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "sheet".to_string(),
+                base: vec![sprop("color", "#f1ebe1")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+
+        assert!(out.contains("XSection1_0("), "expected the sheet to split");
+        // The inherited colour must still reach the text inside the split.
+        assert!(
+            out.contains("Color(0xFFF1EBE1)"),
+            "inherited text colour lost across the split, got:\n{out}"
+        );
+    }
 
     // ---- directional padding (#14709) --------------------------------
 
