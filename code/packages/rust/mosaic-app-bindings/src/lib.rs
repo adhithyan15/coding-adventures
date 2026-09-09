@@ -126,9 +126,12 @@ fn xaml_runtime_binding_source(namespace: &str, application_id: Option<&str>) ->
         include_str!("../templates/xaml/MosaicRuntimeHost.cs"),
         application_id,
     )
+    // Protocol 2, for the same reason as the other four hosts: this one
+    // implements effect completion. Declaring 2 without it is the harmful
+    // direction, so the tests pin the claim and the capability together.
     .replace(
         "__MOSAIC_PROTOCOL_VERSION__",
-        &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+        &mosaic_app_runtime::EFFECT_PROTOCOL_VERSION.to_string(),
     )
     .replace("__MOSAIC_NAMESPACE__", namespace)
 }
@@ -518,11 +521,29 @@ mod tests {
     fn xaml_binding_uses_shared_protocol_and_successful_sequences() {
         let source = xaml_runtime_binding("Acme.App");
         assert!(source.contains("namespace Acme.App;"));
+        // Protocol 2 because this host implements effect completion. Still
+        // from the shared constant rather than a literal, and the capability is
+        // asserted beside the claim -- declaring 2 without it makes the app
+        // emit into a void.
         assert!(source.contains(&format!(
             "private const int ProtocolVersion = {};",
-            mosaic_app_runtime::PROTOCOL_VERSION
+            mosaic_app_runtime::EFFECT_PROTOCOL_VERSION
         )));
         assert!(!source.contains("__MOSAIC_PROTOCOL_VERSION__"));
+        assert!(
+            source.contains("\"mosaic_app_complete_effect\""),
+            "a protocol 2 host must bind the completion symbol"
+        );
+        assert!(
+            source.contains("public static void CompleteEffect(")
+                && source.contains("public static bool DeferEffect("),
+            "a protocol 2 host must expose ways to answer and to defer"
+        );
+        assert!(
+            source.contains("NativeLibrary.TryGetExport"),
+            "the completion symbol must resolve leniently, or a protocol 1 \
+             runtime stops loading at all"
+        );
         let dispatch = source.find("dispatch(app, input, out output)").unwrap();
         let commit = source.find("sequence = nextSequence").unwrap();
         assert!(

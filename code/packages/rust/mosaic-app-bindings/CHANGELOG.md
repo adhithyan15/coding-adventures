@@ -2,6 +2,63 @@
 
 ## Unreleased
 
+### Added -- the XAML host answers effects (UI47 §5.4 step 4, last of five)
+
+The fifth and final host template. `MosaicRuntimeHost` gains `EffectHandler`,
+`CompleteEffect`, `DeferEffect` and the same bounded settle loop; the emitted
+protocol version moves to `EFFECT_PROTOCOL_VERSION`. **Every native backend now
+answers effects**, which is what step 5 was waiting on -- Engram's Anki import
+would otherwise have worked on some backends and silently broken on the rest.
+
+Three things specific to this host:
+
+- **`NativeLibrary.GetExport` throws on a missing symbol**, so the seventh
+  resolves through `TryGetExport` into a nullable delegate. Without that, a
+  protocol-1 runtime would stop loading at all -- a worse failure than the one
+  it prevents, since the application works right up until an effect arrives.
+- **`JsonElement` is immutable**, so `WithEffects` and `ReportingError` rebuild
+  the update through a dictionary rather than mutating one, the way the other
+  four do.
+- **The delegate had to be renamed.** A nested `delegate CompleteEffect` and a
+  static method `CompleteEffect` cannot coexist in one class; the delegate is
+  now `CompleteEffectNative`, matching Flutter's naming.
+
+### Fixed -- a tripped settle guard reached nothing in the XAML host
+
+The other four hosts return the settled update to their caller, so a guard that
+gives up arrives as an `error` key. This host's `Dispatch` returns void and
+projects props onto a component, and `error` is not a prop -- so the guard
+reported into `latestUpdate` and **nothing ever read it**. That is precisely the
+dead-field shape the Compose port shipped with `effectWarning`, in a different
+place, found this time by writing the test that would have to observe it.
+
+`Status()` now carries the reason. It is kept separate from `effectWarning`
+rather than folded in: that one means persistence is off for good, whereas a
+guard that trips and then drains successfully leaves nothing pending, so this
+one is cleared at the start of each top-level settle instead of being sticky.
+Nested frames leave it alone, so an inner guard's reason survives to the outer
+frame's caller.
+
+### Added -- an execution acceptance for the XAML host
+
+`tests/xaml_effect_completion.rs` emits the host into a temporary console
+project, compiles it against the same `Windows.UI.Color` value stub the
+conformance harness already uses -- so it builds without the Windows App SDK,
+on any platform -- and runs it against the conformance runtime, one process and
+one state file per scenario.
+
+Seven scenarios. Where the other hosts call `snapshot()` directly, this one has
+no such method: it persists internally after every settle. So the assertion is
+the user-visible consequence instead -- the runtime refuses to snapshot while an
+effect is pending, `PersistSnapshot` catches the refusal, and `Status` carries
+it. That is reached through the API this host actually has, rather than adding a
+public `Snapshot` for the test's benefit.
+
+Mutation-tested: removing the handler-throw guard fails the `throwing` case
+(and trips the vacuous-prop detector, because the escaping exception means props
+are never applied), and dropping the settle error from `Status` fails "a runaway
+chain is reported rather than abandoned quietly".
+
 ### Added -- the Flutter host answers effects (UI47 §5.4 step 4)
 
 The fourth of five host templates, after Qt, SwiftUI and Compose. The host
