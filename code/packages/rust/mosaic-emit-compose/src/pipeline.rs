@@ -119,6 +119,7 @@ pub fn from_pipeline(
     // already imports; widen that import gate rather than duplicating
     // an unconditional second import.
     let uses_progress_ring = layout_contains_tag(&layout.root, "HostProgressRing");
+    let uses_scroll = layout_contains_tag(&layout.root, "HostScroll");
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
     let uses_checkbox_indeterminate = layout_has_checkbox_indeterminate(&layout.root);
@@ -193,6 +194,10 @@ pub fn from_pipeline(
     if uses_path {
         writeln!(out, "import androidx.compose.foundation.layout.offset").unwrap();
         writeln!(out, "import androidx.compose.foundation.layout.size").unwrap();
+    }
+    if uses_scroll {
+        writeln!(out, "import androidx.compose.foundation.rememberScrollState").unwrap();
+        writeln!(out, "import androidx.compose.foundation.verticalScroll").unwrap();
     }
     writeln!(
         out,
@@ -2930,6 +2935,25 @@ fn emit_compose_tree(
             for_payload,
             injected_width,
         ),
+        // UI29 §3 `HostScroll`: a scrollable viewport. Compose has no
+        // scrolling container composable -- scrolling is a MODIFIER on an
+        // ordinary one -- so this lowers to a `Column` whose modifier chain
+        // starts with `.verticalScroll(...)`, applied in `emit_container`.
+        // Routing it through the same function keeps the viewport's own part
+        // styles working; a bespoke emitter would have dropped them.
+        "HostScroll" => emit_container(
+            node,
+            "Column",
+            depth,
+            component_name,
+            emits,
+            part_styles,
+            table_ctx,
+            text_ctx,
+            for_payload,
+            injected_width,
+            in_row_scope,
+        ),
         "Column" => emit_container(
             node,
             "Column",
@@ -3595,6 +3619,26 @@ fn emit_container(
     } else {
         None
     };
+
+    // UI29 §3 `HostScroll` — scrolling is a modifier in Compose, not a
+    // container, so it is prefixed onto whatever chain the part already has.
+    // First in the chain deliberately: the viewport must be able to scroll
+    // its content before padding or size constraints are applied to it.
+    if node.tag == "HostScroll" {
+        let cpad = " ".repeat(chain_indent);
+        let prefix = format!("\n{cpad}.verticalScroll(rememberScrollState())");
+        if let Some(style) = &mut style {
+            style.modifier.insert_str(0, &prefix);
+        } else {
+            style = Some(ComposeStyle {
+                modifier: prefix,
+                content_alignment: None,
+                text_color: None,
+                font_family_mono: false,
+                font_size: None,
+            });
+        }
+    }
 
     // A direct Row child participates in RowScope measurement. Mosaic's
     // `flex-grow` and percentage-width idioms both mean "take the remaining
@@ -9598,6 +9642,81 @@ mod tests {
         assert!(!out.contains(r#"disabled == "disabled""#), "got:\n{out}");
         // The enum axis in the same component must be untouched.
         assert!(out.contains(r#"variant == "danger""#), "got:\n{out}");
+    }
+
+
+    // ---- HostScroll (#14732) -----------------------------------------
+
+    fn scroll_kt(part_props: Vec<(&str, &str)>) -> String {
+        let m = component("S", vec![slot("label", SlotType::Text, true)], vec![]);
+        let l = LayoutDef {
+            component_name: "S".to_string(),
+            root: LayoutNode {
+                tag: "HostScroll".to_string(),
+                part_name: Some("viewport".to_string()),
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::SlotRef("label".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            },
+        };
+        let s = StyleDef {
+            component_name: "S".to_string(),
+            parts: vec![PartStyle {
+                name: "viewport".to_string(),
+                base: part_props.into_iter().map(|(n, v)| sprop(n, v)).collect(),
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        from_pipeline(&m, &l, &s).expect("emit ok").output
+    }
+
+    #[test]
+    fn host_scroll_lowers_to_a_scrollable_column() {
+        let out = scroll_kt(vec![]);
+        assert!(
+            out.contains(".verticalScroll(rememberScrollState())"),
+            "got:\n{out}"
+        );
+        // Compose has no scrolling container composable -- scrolling is a
+        // modifier on an ordinary one.
+        assert!(out.contains("Column("), "got:\n{out}");
+    }
+
+    #[test]
+    fn host_scroll_imports_only_when_used() {
+        let with_scroll = scroll_kt(vec![]);
+        assert!(with_scroll.contains("import androidx.compose.foundation.verticalScroll"));
+        assert!(with_scroll.contains("import androidx.compose.foundation.rememberScrollState"));
+
+        // A component with no viewport must not gain unused imports.
+        let m = component("P", vec![], vec![]);
+        let l = layout("P", node("Box", vec![], vec![]));
+        let plain = from_pipeline(&m, &l, &empty_style("P"))
+            .expect("emit ok")
+            .output;
+        assert!(!plain.contains("verticalScroll"), "got:\n{plain}");
+        assert!(!plain.contains("rememberScrollState"), "got:\n{plain}");
+    }
+
+    #[test]
+    fn the_viewports_own_styles_survive_and_apply_after_the_scroll() {
+        // Routing HostScroll through emit_container rather than a bespoke
+        // emitter is what keeps these working; the scroll must come FIRST so
+        // the viewport can scroll its content before padding constrains it.
+        let out = scroll_kt(vec![("padding", "12"), ("background", "#111111")]);
+        let scroll = out.find(".verticalScroll(").expect("scroll");
+        let padding = out.find(".padding(12.dp)").expect("padding");
+        let background = out.find(".background(").expect("background");
+        assert!(scroll < background, "got:\n{out}");
+        assert!(scroll < padding, "got:\n{out}");
     }
 
 }
