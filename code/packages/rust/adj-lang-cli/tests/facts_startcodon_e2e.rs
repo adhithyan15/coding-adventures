@@ -105,7 +105,14 @@ fn start_codon_abstains_honestly_on_an_unflagged_codon() {
     );
 }
 
-/// Installment 4h (#13934): The same NCBI `<pre>` block, cited by a second library that decodes a different line of it. Its header claimed the value \"reproduces, byte-for-byte, the SAME NCBI 'Genetic Codes' page\"; until installment 4h the indentation was stripped and the claim was false. The pin makes the claim checkable.
+/// Installment 4h (#13934): The same NCBI `<pre>` block, cited by a second
+/// library that decodes a different line of it. Its header claimed the
+/// value "reproduces, byte-for-byte, the SAME NCBI "Genetic Codes" page" --
+/// quoted with the header's own double quotes, because a doc comment needs
+/// no escaping and round 3's single quotes made the repaired quotation
+/// still not a contiguous span of what it cites. Until installment 4h the
+/// indentation was stripped and the claim was false. The pin makes the
+/// claim checkable.
 ///
 /// FULL ANCHORED CITATION PIN -- anchored on the `"source":"` key and
 /// closed on the terminating quote, so head, tail, punctuation,

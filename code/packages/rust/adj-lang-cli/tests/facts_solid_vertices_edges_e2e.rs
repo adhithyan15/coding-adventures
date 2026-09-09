@@ -121,7 +121,9 @@ fn the_three_libraries_together_satisfy_eulers_formula() {
 /// verbatim span ever does. It is now the page's own sentence. NOTE the
 /// weaker claim than installment 4g's: this span is verbatim under the
 /// extractor's whitespace collapse, NOT byte-exact against raw HTML,
-/// because the page's own bytes wrap the paragraph across three newlines.
+/// because the page's own bytes carry THREE NEWLINES INSIDE THIS SENTENCE
+/// (the edges sentence carries two; the paragraph the two share carries 28,
+/// which is why the count has to name the sentence and not the paragraph).
 /// See #14111.
 ///
 /// FULL ANCHORED CITATION PIN -- anchored on the `"source":"` key and

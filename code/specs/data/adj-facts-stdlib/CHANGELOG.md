@@ -6,7 +6,7 @@ landed and why, not a semver-tracked API.
 ## Unreleased
 
 - **#13934 installment 4h: two descriptions, two stripped indents, and a headline that understates
-  the round.** 4 value lines, 10 row lines and 93 comment lines across **3** `.adj` files —
+  the round.** 4 value lines, 10 row lines and 94 comment lines across **3** `.adj` files —
   `geometry/solid-vertices-edges` (two values), `biology/genetic-code` and `biology/start-codon` —
   plus three e2e test files. **Six mutations redden.** Contiguity **60 → 58** over the full
   population of 563; the two that left are the two Platonic values, member for member, and none
@@ -53,8 +53,8 @@ landed and why, not a semver-tracked API.
   those characters stripped. So neither is a dump of table cells: each is a genuine
   contiguous multi-line span with its indentation normalised away — 4f's NBSP defect, not 4g's weld.
 
-  Both headers **already claimed byte-fidelity**. `start-codon` said the value "reproduces,
-  byte-for-byte, the SAME NCBI 'Genetic Codes' page"; `genetic-code` called its field a "5-line
+  Both headers **already claimed byte-fidelity**. `start-codon` said the value
+  `reproduces, byte-for-byte, the SAME NCBI "Genetic Codes" page`; `genetic-code` called its field a "5-line
   block copied VERBATIM". Both were false, and had been for as long as they existed, because **no instrument here
   compares a value to raw HTML** — the sweep compares against the extractor's output, which
   normalises, and the CI pins compare the engine's output to the field, which is the field to itself.
