@@ -32,6 +32,51 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   private var persistenceWarning: String?
   private let lock = NSRecursiveLock()
 
+  /// Called once per effect the runtime asks for, before the host decides what
+  /// to do with it. Answer an `await` by calling `completeEffect` from inside
+  /// the handler; a `notify` needs no answer.
+  ///
+  /// **The handler must answer synchronously, on the thread that called it, and
+  /// must not block on another thread.** The lock is recursive, so answering
+  /// inline is safe. Neither alternative works:
+  ///
+  /// - Answering from another thread *later* is too late. This settle fails the
+  ///   effect as unanswered before the answer arrives, and the runtime then
+  ///   rejects it as already completed.
+  /// - Blocking on another thread deadlocks. The lock is held across this call,
+  ///   so a handler doing `DispatchQueue.main.sync { … }` while the settle runs
+  ///   off-main wedges against any main-thread `applyProps()` -- which SwiftUI
+  ///   does every frame.
+  ///
+  /// That rules out an asynchronous file dialog, which is the motivating case
+  /// for `await` effects, so this shape is not yet sufficient for one. Tracked
+  /// separately; do not design around it as though it were.
+  ///
+  /// Capture the host **weakly**. A strong capture cycles through this property,
+  /// so `deinit` never runs, the Rust app handle is never destroyed, and the
+  /// final persist never happens.
+  public var effectHandler: ((UInt64, String, Any, String) -> Void)?
+
+  /// Awaited effect ids the runtime is waiting on and nothing has answered.
+  private var awaiting: Set<UInt64> = []
+  /// Per-frame accumulation, saved and restored around each settle.
+  ///
+  /// Effects accumulate at the WRITE site: a round may have several answers and
+  /// each may mint more, so keeping only "the last update" drops every earlier
+  /// answer's effects -- they then exist in no map the host kept, are never
+  /// emitted, never failed, and stay pending. The runtime gates `snapshot` and
+  /// `restore` on nothing being pending, so that is permanent.
+  private var carriedEffects: [[String: Any]]?
+  private var latestAnswer: [String: Any]?
+  private var answered = false
+  private var settling = 0
+  /// Set when effects are abandoned. Kept separate from `persistenceWarning`
+  /// because `persistSnapshot()` clears that one on every successful write --
+  /// so a message written here was overwritten microseconds later and never
+  /// reached anyone. An abandoned effect is not a write failure; it is a
+  /// standing condition, and it outlives the next successful save.
+  private var effectWarning: String?
+
   private init(
     runtime: OpaquePointer,
     app: mosaic_binding_app,
@@ -156,13 +201,226 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
           mosaic_binding_dispatch(runtime, app, bytes, output)
         }
         sequence = nextSequence
+        // Settle BEFORE persisting: the runtime refuses to snapshot while an
+        // effect is outstanding, so persisting first warns on every effect.
+        let settled = settleEffects(update)
         persistSnapshot()
-        latestUpdate = Self.withPersistenceWarning(update, persistenceWarning)
+        latestUpdate = Self.withPersistenceWarning(settled, effectWarning ?? persistenceWarning)
         propsChangedHandler?()
-        return update as NSDictionary
+        return latestUpdate as NSDictionary
       } catch {
         return ["error": error.localizedDescription] as NSDictionary
       }
+    }
+  }
+
+  /// Answer an effect the app is waiting on.
+  ///
+  /// `result` is one tagged outcome: `["ok": value]`, `["cancelled": [:]]`, or
+  /// `["failed": ["message": "..."]]`. Cancellation is a first-class answer --
+  /// a file dialog dismissed with Escape is an ordinary user action, and an app
+  /// that cannot tell it from an error shows a banner for one.
+  @discardableResult
+  public func completeEffect(_ id: UInt64, _ result: [String: Any]) -> NSDictionary? {
+    lock.withLock {
+      guard let runtime, let app else {
+        return ["error": "Mosaic runtime is closed"] as NSDictionary
+      }
+      do {
+        let update = try Self.invokeCompleteEffect(runtime: runtime, app: app,
+                                                   id: id, result: result)
+        // Cleared only once the runtime accepted the answer. Clearing on the
+        // way in would drop the obligation if the call failed.
+        awaiting.remove(id)
+        // Gated on `carriedEffects` alone. `latestAnswer` starts nil each
+        // frame and is only set BY this branch, so requiring it non-nil made
+        // the condition unreachable -- a direct port of Qt's pointer check into
+        // Swift, where the value itself is the Optional.
+        if settling > 0, carriedEffects != nil {
+          // Inside a settle: hand the result to the loop already running rather
+          // than starting a second one. APPEND -- several effects in one round
+          // may each be answered, and each answer may mint more.
+          carriedEffects?.append(contentsOf: Self.effects(of: update))
+          latestAnswer = update
+          answered = true
+          return update as NSDictionary
+        }
+        let settled = settleEffects(update)
+        persistSnapshot()
+        latestUpdate = Self.withPersistenceWarning(settled, effectWarning ?? persistenceWarning)
+        propsChangedHandler?()
+        return latestUpdate as NSDictionary
+      } catch {
+        return ["error": error.localizedDescription] as NSDictionary
+      }
+    }
+  }
+
+  /// Attach an error to an update without discarding the props it carries.
+  private static func updateReportingError(
+    _ update: [String: Any], _ message: String
+  ) -> [String: Any] {
+    var reported = update
+    reported["error"] = message
+    reported["effects"] = [[String: Any]]()
+    return reported
+  }
+
+  private static func effects(of update: [String: Any]) -> [[String: Any]] {
+    (update["effects"] as? [[String: Any]]) ?? []
+  }
+
+  /// Drain the effects an update carries, answering what nothing else does.
+  private func settleEffects(_ update: [String: Any]) -> [String: Any] {
+    // A completion can itself produce effects -- an import needing a second
+    // dialog is an ordinary flow -- so this drains rather than sweeping once.
+    let maxRounds = 64
+    // And a bound on NESTING, which the round bound does not give: a handler
+    // that dispatches an event rather than answering re-enters one frame
+    // deeper, and only the stack would stop it.
+    let maxDepth = 8
+
+    if settling >= maxDepth {
+      let reason = "effect settling nested more than \(maxDepth) levels deep; "
+        + "an effect handler is calling back into the host instead of answering"
+      failOutstanding(update, reason)
+      // Report the error WITHOUT blanking the props. Returning an empty props
+      // map made every binding in the UI go blank until the next event -- a
+      // worse outcome than the runaway it is reporting.
+      return Self.updateReportingError(latestUpdate, reason)
+    }
+
+    let outerEffects = carriedEffects
+    let outerAnswer = latestAnswer
+    let outerAnswered = answered
+    carriedEffects = []
+    latestAnswer = nil
+    answered = false
+    settling += 1
+    defer {
+      settling -= 1
+      carriedEffects = outerEffects
+      latestAnswer = outerAnswer
+      answered = outerAnswered
+    }
+
+    var current = update
+    for _ in 0..<maxRounds {
+      let effects = Self.effects(of: current)
+      if effects.isEmpty { return current }
+
+      var unanswered: [UInt64] = []
+      var unreadable = 0
+      for effect in effects {
+        guard let id = Self.effectId(effect["id"]) else {
+          // An await whose id cannot be read can never be answered, and the
+          // runtime is waiting on it. Skipping in silence leaves it pending
+          // forever, which disables snapshot and restore -- so it is counted
+          // and surfaced rather than dropped.
+          if ((effect["delivery"] as? String) ?? "").lowercased() == "await" {
+            unreadable += 1
+          }
+          continue
+        }
+        let delivery = (effect["delivery"] as? String) ?? ""
+        let isAwait = delivery.lowercased() == "await"
+        if isAwait { awaiting.insert(id) }
+
+        effectHandler?(id, (effect["kind"] as? String) ?? "",
+                       effect["payload"] ?? NSNull(), delivery)
+
+        if isAwait, awaiting.contains(id) { unanswered.append(id) }
+      }
+
+      var carried = carriedEffects ?? []
+      carriedEffects = []
+      var latest = current
+      if answered, let adopted = latestAnswer {
+        latest = adopted
+        latestAnswer = nil
+        answered = false
+      }
+
+      if unreadable > 0 {
+        effectWarning = "\(unreadable) Mosaic effect(s) arrived with an "
+          + "unreadable id and cannot be answered; state cannot be saved for "
+          + "the rest of this session"
+      }
+
+      if unanswered.isEmpty {
+        if carried.isEmpty { return latest }
+        latest["effects"] = carried
+        current = latest
+        continue
+      }
+
+      // Nothing handled these, and the app will not progress without an
+      // answer. Failing them is the point of `await` being on the wire: before
+      // it, a host dropped every effect identically and the app simply waited.
+      for id in unanswered {
+        let reason = "no host handler answered effect \(id)"
+        awaiting.remove(id)
+        guard let runtime, let app,
+              let answeredUpdate = try? Self.invokeCompleteEffect(
+                runtime: runtime, app: app, id: id,
+                result: ["failed": ["message": reason]]) else { continue }
+        carried.append(contentsOf: Self.effects(of: answeredUpdate))
+        latest = answeredUpdate
+      }
+      latest["effects"] = carried
+      current = latest
+    }
+
+    let exhausted = "effect completion did not settle after \(maxRounds) rounds; "
+      + "the application is requesting effects faster than they can be answered"
+    failOutstanding(current, exhausted)
+    return Self.updateReportingError(current["props"] == nil ? latestUpdate : current, exhausted)
+  }
+
+  /// Answer every awaited effect an update still lists, so a guard that gives
+  /// up does not leave the runtime waiting. Bounded, and the bound can be
+  /// outrun -- an app that keeps minting replacements past it leaves effects
+  /// pending and persistence off, which is reported rather than inferred.
+  private func failOutstanding(_ update: [String: Any], _ reason: String) {
+    guard let runtime, let app else { return }
+    var pending = Self.effects(of: update)
+    let maxDrainRounds = 8
+    for _ in 0..<maxDrainRounds {
+      if pending.isEmpty { break }
+      let batch = pending
+      pending = []
+      for effect in batch {
+        guard let id = Self.effectId(effect["id"]),
+              ((effect["delivery"] as? String) ?? "").lowercased() == "await" else { continue }
+        awaiting.remove(id)
+        guard let answeredUpdate = try? Self.invokeCompleteEffect(
+          runtime: runtime, app: app, id: id,
+          result: ["failed": ["message": reason]]) else { continue }
+        pending.append(contentsOf: Self.effects(of: answeredUpdate))
+      }
+    }
+    if !pending.isEmpty {
+      effectWarning = "Mosaic effects are still outstanding after "
+        + "\(maxDrainRounds) rounds of clearing; state cannot be saved for the "
+        + "rest of this session"
+    }
+  }
+
+  /// Effect ids the runtime mints stay inside 2^53-1 so they survive a JSON
+  /// double. Anything outside that, negative, or non-integral is refused rather
+  /// than truncated -- truncating would answer a DIFFERENT outstanding effect.
+  private static func effectId(_ value: Any?) -> UInt64? {
+    switch value {
+    case let number as NSNumber:
+      // A JSON `true` bridges to NSNumber and would coerce to 1 -- answering
+      // effect 1. Numbers only.
+      if CFGetTypeID(number) == CFBooleanGetTypeID() { return nil }
+      let raw = number.doubleValue
+      guard raw.isFinite, raw >= 0, raw == raw.rounded(.towardZero),
+            raw <= 9_007_199_254_740_991 else { return nil }
+      return UInt64(raw)
+    default:
+      return nil
     }
   }
 
@@ -195,9 +453,9 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         let update = try Self.invoke(runtime: runtime, value: snapshot) { bytes, output in
           mosaic_binding_restore(runtime, app, bytes, output)
         }
-        latestUpdate = update
+        latestUpdate = Self.withPersistenceWarning(settleEffects(update), effectWarning)
         propsChangedHandler?()
-        return update as NSDictionary
+        return latestUpdate as NSDictionary
       } catch {
         return ["error": error.localizedDescription] as NSDictionary
       }
@@ -300,11 +558,66 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     return augmented
   }
 
+  /// Two byte spans, both alive for the duration of the call.
+  ///
+  /// Nested `withUnsafeBytes` rather than two sequential ones: a span taken and
+  /// released before the call would leave the runtime reading freed memory.
+  /// The shim's "this runtime cannot complete effects" sentinel.
+  private static let mosaicNoEffects: mosaic_binding_status = 0xFFFF_FFFF
+
+  private static func invokeCompleteEffect(
+    runtime: OpaquePointer,
+    app: mosaic_binding_app,
+    id: UInt64,
+    result: [String: Any]
+  ) throws -> [String: Any] {
+    let idData = Data(String(id).utf8)
+    // `JSONSerialization` raises an ObjC NSInvalidArgumentException -- NOT a
+    // Swift error -- for a URL, Date, Data, or a non-finite Double. Swift
+    // cannot catch that, so the surrounding do/catch is inert and the process
+    // aborts with the lock held.
+    //
+    // This is the first thing a real handler hits: the motivating case is a
+    // file dialog, and the obvious answer is `["ok": ["url": someURL]]`.
+    guard JSONSerialization.isValidJSONObject(result) else {
+      throw MosaicRuntimeError.invalidResponse(
+        "effect result is not JSON-serialisable; convert URLs, Dates and "
+          + "non-finite numbers to strings or numbers before answering")
+    }
+    let resultData = try JSONSerialization.data(withJSONObject: result)
+    return try idData.withUnsafeBytes { rawId in
+      try resultData.withUnsafeBytes { rawResult in
+        let idBytes = mosaic_binding_bytes(
+          ptr: rawId.bindMemory(to: UInt8.self).baseAddress, len: rawId.count)
+        let resultBytes = mosaic_binding_bytes(
+          ptr: rawResult.bindMemory(to: UInt8.self).baseAddress, len: rawResult.count)
+        var recognised: mosaic_binding_status = mosaicStatusOK
+        let update = try invoke(runtime: runtime) { output in
+          let status = mosaic_binding_complete_effect(runtime, app, idBytes, resultBytes, output)
+          recognised = status
+          return status
+        }
+        if recognised == mosaicNoEffects {
+          // Unreachable in practice -- `invoke` throws on a non-zero status --
+          // but stated so the sentinel is never read as success if that changes.
+          throw MosaicRuntimeError.unavailable(
+            "this Mosaic runtime predates effect completion")
+        }
+        return update
+      }
+    }
+  }
+
   private static func invoke(
     runtime: OpaquePointer,
     value: Any,
     operation: (mosaic_binding_bytes, UnsafeMutablePointer<mosaic_binding_buffer>) -> mosaic_binding_status
   ) throws -> [String: Any] {
+    // Same hazard as invokeCompleteEffect: an event payload comes from the app.
+    guard JSONSerialization.isValidJSONObject(value) else {
+      throw MosaicRuntimeError.invalidResponse(
+        "event payload is not JSON-serialisable")
+    }
     let data = try JSONSerialization.data(withJSONObject: value)
     return try data.withUnsafeBytes { raw in
       let bytes = mosaic_binding_bytes(

@@ -49,9 +49,13 @@ fn swift_runtime_binding_source(application_id: Option<&str>) -> SwiftRuntimeBin
             include_str!("../templates/swiftui/MosaicRuntimeHost.swift"),
             application_id,
         )
+        // Protocol 2, for the same reason as Qt: this host implements effect
+        // completion. Declaring 2 without it is the harmful direction -- the
+        // app emits into a void -- so the tests pin the claim and the
+        // capability together.
         .replace(
             "__MOSAIC_PROTOCOL_VERSION__",
-            &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+            &mosaic_app_runtime::EFFECT_PROTOCOL_VERSION.to_string(),
         ),
         header: include_str!("../templates/swiftui/CMosaicRuntime.h").to_string(),
         loader_c: include_str!("../templates/swiftui/CMosaicRuntime.c").to_string(),
@@ -394,12 +398,25 @@ mod tests {
 
     #[test]
     fn swift_binding_uses_the_shared_protocol_and_commits_successful_sequences() {
-        let source = swift_runtime_binding().host_swift;
+        let binding = swift_runtime_binding();
+        let source = binding.host_swift.clone();
+        // Protocol 2 because this host implements effect completion. Still from
+        // the shared constant rather than a literal -- the number moved, the
+        // rule did not -- and the capability is asserted beside the claim,
+        // since declaring 2 without it makes the app emit into a void.
         assert!(source.contains(&format!(
             "private let mosaicProtocolVersion = {}",
-            mosaic_app_runtime::PROTOCOL_VERSION
+            mosaic_app_runtime::EFFECT_PROTOCOL_VERSION
         )));
         assert!(!source.contains("__MOSAIC_PROTOCOL_VERSION__"));
+        assert!(
+            binding.loader_c.contains("mosaic_app_complete_effect"),
+            "a protocol 2 host must resolve the completion symbol"
+        );
+        assert!(
+            source.contains("public func completeEffect"),
+            "a protocol 2 host must expose a way to answer an effect"
+        );
         assert!(
             source.contains("let (nextSequence, overflow) = sequence.addingReportingOverflow(1)")
         );
