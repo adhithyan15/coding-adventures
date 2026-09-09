@@ -52,14 +52,18 @@ it("pins Punjabi lesson-content budgets", () =>
     // claims are unchanged at 6 / 3 / 9, and that is the claim worth making: an
     // ordinal is none of the three, and the Sanskrit etymologies the tranche
     // cites are etymology, which has its own strand.
-    lessons: 267,
+    //
+    // 267 -> 270: chapter 45, the reading rung -- six labels, a filled form, and
+    // the same six facts as a 44-word paragraph. No new word: every Gurmukhi
+    // token was checked to occur in a lesson with a lower sequence number.
+    lessons: 270,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 267-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 270-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -74,8 +78,8 @@ it("keeps Punjabi's 267-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(267);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 267 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(270);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 270 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -686,7 +690,14 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // not because reinforcement got worse. The serviced-debt assertions above still hold
   // exactly. The residue -- Chapter 4 and 5 atoms with no later lesson putting them
   // back in front of the reader -- is named in BACKLOG.d as the next tranche's work.
-  expect(report.summary.missedByWindow).toEqual({ R1: 54, R2: 127, R3: 215, R4: 111 });
+  // Chapter 45, the reading rung, moves four of these and the direction is not
+  // uniform: R4 FALLS by five and R2/R3 rise by four. The fall is the reading
+  // lessons pulling form labels, joiners and pronouns taught long ago back in
+  // front of the reader at a long interval, which is exactly what an R4 window
+  // is for. The rise is the three new reading skills, introduced in the last
+  // chapter with nothing after them yet to close their own R2 and R3. That
+  // residue is the instruction for chapter 46, not a reason to hold the rung.
+  expect(report.summary.missedByWindow).toEqual({ R1: 54, R2: 130, R3: 216, R4: 106 });
 });
 
 it("services Punjabi's three-field R4 debt without moving the boundary forward", () => {

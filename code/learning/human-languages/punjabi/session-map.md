@@ -1,4 +1,4 @@
-# Session Map — Punjabi Chapters 1–36
+# Session Map — Punjabi Chapters 1–45
 
 This is the authoritative book order. Every row is one session of at most five
 minutes. Sound and meaning come before load-bearing decoding; writing grows from
@@ -274,6 +274,9 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 265 | 44 | PA-C44-pahila | first, the one with no number inside it |
 | 266 | 44 | PA-C44-panjvan | fifth, where an inherited word turned into a rule |
 | 267 | 44 | PA-R44-first-to-fifth | the five run, and the ending that got a second life |
+| 268 | 45 | PA-C45-labels | read six form labels cold, with no blank after them |
+| 269 | 45 | PA-C45-form | read a form somebody else filled in |
+| 270 | 45 | PA-C45-pehla-paath | the same six facts as sentences, and ਹੈ said out loud |
 
-After session 267, the track continues through the dependency-linked backlog;
+After session 270, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

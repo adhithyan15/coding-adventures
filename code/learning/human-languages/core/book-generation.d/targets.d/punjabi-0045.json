@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 45,
+  "output": "punjabi/book/chapters/ch45-reading-labels-form-and-paragraph.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

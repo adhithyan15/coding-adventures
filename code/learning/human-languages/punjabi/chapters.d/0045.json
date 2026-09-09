@@ -1,0 +1,16 @@
+{
+  "chapter": 45,
+  "title": "Reading — Labels, a Form, and the Same Facts as Sentences",
+  "label": "ch:pa-pehla-paath",
+  "canDo": "I can read a Punjabi form label cold, read a form somebody else filled in, and follow a short paragraph without translating word by word.",
+  "payoff": {
+    "lesson": "PA-C45-pehla-paath",
+    "kind": "four-skill-function-map",
+    "summary": "The six facts of a form said again as sentences, so the colon the form leans on is replaced by the ਹੈ Punjabi puts last.",
+    "assesses": [
+      "PA-SKILL-CONNECTED-READING",
+      "PA-SKILL-READ-FORM",
+      "PA-SKILL-READ-LABELS"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "PA-EXT-067-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Punjabi form label, a completed form, and a short paragraph about someone, without translating word by word.",
+  "prerequisites": [
+    "PA-EXT-066-ORDINALS"
+  ],
+  "lessons": [
+    "PA-C45-labels",
+    "PA-C45-form",
+    "PA-C45-pehla-paath"
+  ]
+}

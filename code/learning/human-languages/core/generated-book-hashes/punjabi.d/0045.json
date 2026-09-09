@@ -1,0 +1,11 @@
+{
+  "language": "punjabi",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:3277224f8befd42e",
+  "lessonIds": [
+    "PA-C45-labels",
+    "PA-C45-form",
+    "PA-C45-pehla-paath"
+  ],
+  "tex": "punjabi/book/chapters/ch45-reading-labels-form-and-paragraph.tex"
+}
