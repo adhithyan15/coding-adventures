@@ -28,6 +28,13 @@ WHAT IT CHECKS.
   5. DECODES         `atg` read by raw column index gives `M` on the `AAs` line
                      (what `genetic-code.adj` reads) and on the `Starts` line
                      (what `start-codon.adj` reads).
+  6. IS TABLE 1      the nearest `transl_table=N` marker above the match says
+                     1. The page carries 27 of these blocks, one per
+                     translation table, and arms 1-5 pass on ALL of them --
+                     `atg` is `M` on every one -- so without this arm the field
+                     could cite the wrong genetic code and the script would
+                     report exit 0. Swapping in table 2 made four shipped rows
+                     stop decoding while every other arm stayed green.
 
 WHICH OF THESE ACTUALLY DISCRIMINATE, measured rather than asserted. The
 defective first attempt at 4h's repair restored eight of the twelve stripped
@@ -61,6 +68,7 @@ back truncated). 3 the INSTRUMENT is broken -- a control misbehaved, so nothing
 this run says about the artifact can be trusted.
 """
 import html
+import http.client
 import os
 import re
 import sys
@@ -142,7 +150,29 @@ def properties(value, page):
         "3 line-anchored": at >= 0 and (at == 0 or page[at - 1] == "\n"),
         "4 column-aligned": shaped and len(offsets) == 1,
         "5 decodes": decode(value, 0, "atg") == "M" and decode(value, 1, "atg") == "M",
+        "6 is table 1": at >= 0 and preceding_table(page, at) == "1",
     }
+
+
+def preceding_table(page, at):
+    """Which NCBI translation table the match sits under, or None.
+
+    THE ARM WITH THE LARGEST BLAST RADIUS. This page carries 27 five-line
+    AAs/Starts/Base blocks, one per translation table, and arms 1-5 pass on ALL
+    TWENTY-SEVEN: `atg` is `M` on every one, so decoding a single codon
+    separates nothing between tables. Swapping the field to table 2 (Vertebrate
+    Mitochondrial) left the script reporting exit 0 while four shipped rows --
+    tga, ata, aga, agg -- no longer decoded from the cited block.
+
+    Nothing claimed table identity was checked, so that was not a false claim;
+    it was the artifact-wrong shape this instrument most needed to see and
+    could not. The page writes `transl_table=N` immediately above each block,
+    so the nearest preceding marker names the table the span belongs to.
+    """
+    marker = None
+    for m in re.finditer(r"transl_table=(\d+)", page[:at]):
+        marker = m.group(1)
+    return marker
 
 
 def canonical_block(page):
@@ -161,6 +191,24 @@ def canonical_block(page):
     return "\n".join(lines)
 
 
+def other_table_block(page):
+    """A five-line block belonging to some OTHER translation table.
+
+    Arm 6 needs a case that must FAIL it, and this page supplies 26 of them.
+    Without one, arm 6 would be asserted rather than demonstrated -- the exact
+    shape of every screen this installment has had to repair.
+    """
+    for m in re.finditer(r"AAs  = ", page):
+        at = m.start()
+        if preceding_table(page, at) == "1":
+            continue
+        start = page.rfind("\n", 0, at) + 1
+        lines = page[start:].split("\n")[:5]
+        if len(lines) == 5 and all("= " in ln for ln in lines):
+            return "\n".join(lines)
+    return None
+
+
 def controls(page, report):
     """Cases that MUST fail. Returns True only if every one behaved."""
     ok = True
@@ -177,7 +225,7 @@ def controls(page, report):
             report(False, "control: the PAGE'S OWN block fails " + key)
             ok = False
     if ok:
-        report(True, "control: the page's own block passes all five arms")
+        report(True, "control: the page's own block passes every arm")
 
     # A one-letter alteration must fail arms 1 and 2 -- demonstrated through
     # `properties`, not merely asserted, so arm 2 has a must-fail case too.
@@ -194,9 +242,30 @@ def controls(page, report):
         report(False, "control: the page's block no longer opens with four "
                       "spaces, so the first-attempt control cannot be built")
         return False
+    other = other_table_block(page)
+    if other is None:
+        report(False, "control: no second translation-table block found, so "
+                      "arm 6 has no must-fail case")
+        ok = False
+    else:
+        got = properties(other, page)
+        if got["6 is table 1"] or not all(got[k] for k in
+                                         ("1 substring", "2 unique",
+                                          "3 line-anchored", "4 column-aligned")):
+            report(False, "control: another table's block did not behave as "
+                          "expected (arms 1-4 pass, arm 6 fails)")
+            ok = False
+        else:
+            report(True, "control: another translation table's block passes "
+                         "arms 1-4 and FAILS 6 is table 1")
+
     first = properties(block[4:], page)
+    # The first attempt is still table 1's block, four characters in -- so arm
+    # 6 must still PASS for it. A control that expected every arm to fail would
+    # be asserting the defect was worse than it was.
     expected = {"1 substring": True, "2 unique": True, "3 line-anchored": False,
-                "4 column-aligned": False, "5 decodes": False}
+                "4 column-aligned": False, "5 decodes": False,
+                "6 is table 1": True}
     for key, want in expected.items():
         label = ("control: the first attempt "
                  + ("passes " if want else "FAILS ") + key)
@@ -297,13 +366,27 @@ def self_test(page):
             dest = os.path.join(root, *rel.split("/"))
             os.makedirs(os.path.dirname(dest), exist_ok=True)
             shutil.copyfile(os.path.join(stdlib_dir(), *rel.split("/")), dest)
-        target = os.path.join(root, *LIBS[0].split("/"))
-        with open(target, encoding="utf-8") as handle:
-            pristine = handle.read()
+        # BOTH libraries, not just the first. `start-codon.adj` holds a
+        # SECOND copy of the block (its re-indented reading drawing), so a
+        # whole-file substitution would land on the drawing and go green --
+        # which is exactly what happened to a reviewer building their own
+        # mutants. Every mutation below is scoped to the `source` line.
+        targets = [os.path.join(root, *rel.split("/")) for rel in LIBS]
+        pristine_all = {}
+        for path in targets:
+            with open(path, encoding="utf-8") as handle:
+                pristine_all[path] = handle.read()
+        target = targets[0]
+        pristine = pristine_all[target]
 
-        def run(label, perturbs, want, text=None, use_page=page):
-            with open(target, "w", encoding="utf-8", newline="\n") as handle:
-                handle.write(pristine if text is None else text)
+        def run(label, perturbs, want, text=None, use_page=page, which=0):
+            for path in targets:                      # restore every library
+                with open(path, "w", encoding="utf-8", newline="\n") as handle:
+                    handle.write(pristine_all[path])
+            if text is not None:
+                with open(targets[which], "w", encoding="utf-8",
+                          newline="\n") as handle:
+                    handle.write(text)
             got = verdict(use_page, root, quiet=True)
             results.append((label, perturbs, want, got))
             return got == want
@@ -325,8 +408,16 @@ def self_test(page):
             ("page truncated", "fetch", 2, None, page[:500]),
             ("page unreachable", "fetch", 2, None, None),
         ]
-        for label, perturbs, want, text, use in cases:
-            if not run(label, perturbs, want, text, use):
+        second = pristine_all[targets[1]]
+        cases.append((
+            "start-codon's own field broken", "library", 1,
+            re.sub(r'^(\s*source ")    ', r"\1", second, count=1, flags=re.MULTILINE),
+            page, 1))
+
+        for case in cases:
+            label, perturbs, want, text, use = case[:5]
+            which = case[5] if len(case) > 5 else 0
+            if not run(label, perturbs, want, text, use, which):
                 ok = False
 
     print("SELF-TEST -- which input produces which exit code")
@@ -353,7 +444,14 @@ def main():
     want_self_test = "--self-test" in sys.argv[1:]
     try:
         page = fetch_flat(URL)
-    except (urllib.error.URLError, TimeoutError) as exc:
+    except (OSError, http.client.HTTPException) as exc:
+        # NOT just URLError/TimeoutError. The failure can be raised during
+        # `response.read()` -- ConnectionResetError, IncompleteRead, a
+        # mid-read OSError -- none of which are URLError. Those used to
+        # propagate and exit 1, the code this script defines as THE
+        # ARTIFACT IS WRONG: a network blip accusing the data. URLError
+        # and TimeoutError are both OSError subclasses, so this is a
+        # strict widening, not a replacement.
         if want_self_test:
             print("--self-test needs the page once to build its cases: " + str(exc))
             return 2

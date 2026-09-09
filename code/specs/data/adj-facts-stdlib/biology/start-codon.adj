@@ -127,6 +127,7 @@
 % the field to itself. That gap is what `tools/verify_ncbi_pre_span.py` was
 % added to close, so this paragraph is history rather than a description of
 % the present.
+% ============================================================================
 
 table start_codon {
     columns codon, role

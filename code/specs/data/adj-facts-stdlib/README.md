@@ -394,7 +394,7 @@ decoding to `M`. It needs the standard library and network access, nothing else.
 
 Every arm is paired with a case that must FAIL — including a reconstruction of a real defect
 security review caught in installment 4h, which the script requires to fail exactly three of the
-five arms.
+six arms.
 
 **The controls are built from the page, never from the fields under test**, and that is the whole
 design. An earlier version sliced its control out of the value it was checking, so any defect that
