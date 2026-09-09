@@ -424,6 +424,48 @@ construction**, so that check covered two of the four codes and could not touch 
 was cited for. A check that cannot fail on the thing it certifies is the defect this package keeps
 finding in itself.
 
+### `verify_seer_ol_span.py` — a citation whose page states it as *structure*
+
+```bash
+python code/specs/data/adj-facts-stdlib/tools/verify_seer_ol_span.py
+```
+
+The second instrument, for a sharper case. `biology/mitosis-phase-order` cites NCI SEER's cell-cycle
+page for the ORDER of the four phases of mitosis. The page does assert that order — but as an
+`<ol class="usa-list">`, not in any sentence. No contiguous span of its text names the four phases
+in sequence, because each phase's label is separated from the next by that phase's own nested
+sub-list. So the `source` field holds the page's lead-in paragraph, `The four phases of mitosis
+are`, quoted contiguously and nothing more, and the list is named in the file's header as where the
+ordering comes from.
+
+The field used to hold `The four phases of mitosis are Prophase ... Metaphase ... Anaphase ...
+Telophase.` — a string that occurs **zero** times on the page. Three things were invented: the
+`" ... "` separator (zero occurrences), the terminal period (the paragraph ends at `are`), and the
+bare word `Telophase` (the page's fourth item reads `Telophase (divided into parts I and II)`).
+
+This script exists so anyone can confirm that, and so the repair cannot silently rot. It fetches the
+page, confirms the four top-level `<li>` items are still what the artifact assumes, and checks the
+shipped `source` against the raw HTML. Its positive control is a **different** real span of the same
+page — the chromatin sentence `mitosis-phases.adj` ships — so an instrument that cannot confirm a
+value known to be byte-exact reports itself broken rather than reporting the artifact wrong.
+
+Exit codes: **0** everything holds · **1** the artifact is wrong · **2** no verdict (the page could
+not be READ or FETCHED, or has changed shape) · **3** the instrument is broken. Every failure to
+read routes to **2**, never to **1** — reporting a network problem or an unreadable file as a
+provenance defect is how a checker launders one into the other.
+
+```bash
+python code/specs/data/adj-facts-stdlib/tools/verify_seer_ol_span.py --self-test
+```
+
+The self-test drives the routing offline and fails if any of the four codes is unreachable. It also
+shells the script itself, because two guards live in `main()` and are not reachable from the pure
+checker: an unreadable `.adj` must reach **2** (a non-UTF-8 file raises `UnicodeDecodeError`, which
+is a `ValueError` and not an `OSError` — that distinction was a real bug), and `SystemExit` must
+pass through the catch-all so `--help` still exits 0. One property is deliberately **not** tested:
+whether the catch-all catches an exception nobody anticipated. No test can provoke that by
+construction, and the code says so rather than implying coverage it does not have.
+
 ## Consuming a library
 
 ```adj
