@@ -128,8 +128,14 @@ compatible: no stylesheet that compiles today changes meaning unless it also
 declares a matching bool slot.
 
 A slot of a non-bool type sharing a built-in state's name does **not** bind. It
-is a compile error naming both, because the author almost certainly meant the
-state to apply and silently ignoring it is how #14639 happened.
+is a compile error **only when a stylesheet also declares that state block**,
+because then the author has written a state that nothing can activate — the
+silence that produced #14639.
+
+Sharing the name alone is harmless and must stay legal. The toolkit's `Field`
+declares `slot error : text` as the error *message* and styles nothing; that
+is not a mistake and does not become one. This distinction was found by the
+toolkit's own native-complete gate rejecting an earlier draft of this rule.
 
 ### 4.2 Activation
 
@@ -194,9 +200,14 @@ activating rather than comparing it to the state name.
 
 ## 6. Scope
 
-**In:** the binding rule, the compile error for a same-named non-bool slot,
-activation on all nine backends, and the `opacity-disabled` token gaining its
-first caller.
+**In:** the binding rule, the compile error for an unactivatable state block,
+and activation on all eight code-generating backends plus paint's
+fixture-resolved path.
+
+**Also out:** `opacity` is not a lowered style property on Qt, Flutter, or
+Compose — measured, not assumed — so a treatment written only in `opacity`
+reaches five backends. That gap is its own issue and its own fix; UI57 does
+not work around it.
 
 **Out:** `hover`/`pressed`/`focused` wiring, which needs a runtime observer and
 is a separate problem. Authoring the toolkit's disabled treatment across the
@@ -217,7 +228,14 @@ mechanism, #14639 is the styling that consumes it.
    application would be §3.1's rejected emitter-invents-appearance path wearing
    a token.
 
-3. **What about a bool slot that is not forwarded to a host primitive?** It
+3. **Should a same-named non-bool slot always be an error?** No, and the
+   first draft of §4.1 said it should. The toolkit's native-complete gate
+   rejected it immediately: `Field` declares `slot error : text` for the error
+   *message*, `error` is a built-in state name, and nothing styles it. The
+   defect is an unactivatable state *block*, not a shared name, so the check
+   moved to where the state block is resolved.
+
+4. **What about a bool slot that is not forwarded to a host primitive?** It
    still binds. Nothing in the rule depends on the slot reaching a host
    property; a purely stylistic bool slot is exactly the "nowhere to go" case
    UI49 §7.3 described, and this gives it somewhere to go.
