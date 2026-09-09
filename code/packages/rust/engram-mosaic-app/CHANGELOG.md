@@ -50,6 +50,32 @@ arrived rounded would answer a *different* effect. An answered id is removed
 before the answer is applied, so a stray second answer cannot merge the same
 package twice.
 
+### Hardened -- the import path treats package bytes as untrusted
+
+They are: the bytes come from a file the reader was handed, so everything below
+assumes whoever produced it meant harm.
+
+- **The encoded payload is capped before it is decoded**, so the gate is a
+  string length rather than the allocation it prevents. The encoded string, the
+  JSON value holding it and the decoded bytes coexist at roughly three times the
+  file's size.
+- **Replies are no longer materialised as `Value`.** `merge_anki_apkg` answers
+  with the entire post-merge collection, media included as base64, and
+  `facade_error` was parsing all of it into a tree with a node per note field,
+  per card and per tag -- to read one boolean. Narrow deserialisers walk the
+  document and keep only what is consulted. The dispatch reply gets the same
+  treatment, since it carried the whole collection and the whole prop set past
+  a `Value` parse on *every* event.
+- **Text from outside the process is trimmed before it reaches a reader.**
+  Package-layer errors interpolate names lifted out of the archive -- a zip
+  entry name is up to 65535 arbitrary bytes -- and host failure messages are
+  whatever the host wrote. Both land in a prop rendered by five native toolkits,
+  one of which interprets markup, so control characters go and the length is cut
+  at the boundary rather than trusted to five renderers.
+- **The id bound is the runtime's own constant**, now `pub`, rather than a
+  restated literal. A divergence would mint ids the runtime rejects, and it
+  poisons the instance for one out of range.
+
 Mutation-tested: making `importAnki` a `Notify` fails
 `import_is_an_awaited_effect`, and letting an answered id survive its answer
 fails `an_answer_cannot_be_applied_twice` along with four other cases.

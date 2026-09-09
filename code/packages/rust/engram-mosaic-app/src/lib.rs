@@ -78,13 +78,38 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use engram_core_wasm::EngramSession;
 use mosaic_app_runtime::{
     AppUpdate, Delivery, Effect, EffectCompletionError, EffectId, EffectResult, Event, MosaicApp,
-    Snapshot, StartContext,
+    Snapshot, StartContext, MAX_EFFECT_ID,
 };
 use serde_json::{Map, Value};
 
-/// The largest id that survives a JSON double, which is what every host reads
-/// it as. Mirrors the runtime's own bound.
-const MAX_EFFECT_ID: EffectId = 9_007_199_254_740_991;
+/// The largest base64 payload this adapter will decode.
+///
+/// Sized against the package layer's own expansion ceiling, plus the 4/3 base64
+/// overhead and room for the archive around it. A package past this is refused
+/// with a sentence rather than by running out of memory.
+const MAX_IMPORT_BASE64_LEN: usize = 512 * 1024 * 1024;
+
+/// Trim text from outside this process before it reaches a reader.
+///
+/// Package-layer errors interpolate names lifted out of the archive -- a zip
+/// entry name is up to 65535 arbitrary bytes -- and host failure messages are
+/// whatever the host wrote. Both land in a prop rendered by five native
+/// toolkits, and at least one of them (Qt's `QLabel`, on `Qt::AutoText`)
+/// detects and interprets markup. Control characters go, and the length is cut
+/// to something a person would read, so the boundary is enforced HERE rather
+/// than trusted to five renderers.
+fn reader_safe(message: &str) -> String {
+    let trimmed: String = message
+        .chars()
+        .filter(|c| !c.is_control())
+        .take(200)
+        .collect();
+    if trimmed.is_empty() {
+        "no details given".to_string()
+    } else {
+        trimmed
+    }
+}
 
 /// Identifies the shape of [`EngramMosaicApp`]'s snapshot bytes.
 ///
@@ -227,20 +252,35 @@ fn now_millis() -> u64 {
 /// even parseable JSON is itself a failure worth surfacing, not something to
 /// treat as success.
 fn facade_error(reply: &str) -> Option<String> {
-    let value: Value = match serde_json::from_str(reply) {
-        Ok(value) => value,
-        Err(error) => return Some(format!("unparseable reply: {error}")),
-    };
-    if value.get("ok").and_then(Value::as_bool) == Some(false) {
-        return Some(
-            value
-                .get("error")
-                .and_then(Value::as_str)
-                .unwrap_or("unknown error")
-                .to_string(),
-        );
+    match serde_json::from_str::<FacadeAck>(reply) {
+        Err(error) => Some(format!("unparseable reply: {error}")),
+        Ok(ack) if !ack.ok => Some(ack.error.unwrap_or_else(|| "unknown error".to_string())),
+        Ok(_) => None,
     }
-    None
+}
+
+/// Just the acknowledgement fields, so a reply is never retained whole.
+///
+/// `merge_anki_apkg` answers with the ENTIRE post-merge collection, media
+/// included as base64. Parsing that into a `Value` to read one boolean
+/// materialises a tree with a node per note field, per card and per tag --
+/// hundreds of megabytes of `Value` for a reply that is being consulted for a
+/// single bit, and driven by a file the reader was handed. serde walks the
+/// document and keeps only these two fields.
+///
+/// The same reasoning as [`EngramMosaicApp::restore`]'s `AdapterHalf`, applied
+/// to the reply side.
+#[derive(serde::Deserialize)]
+struct FacadeAck {
+    #[serde(default = "yes")]
+    ok: bool,
+    #[serde(default)]
+    error: Option<String>,
+}
+
+/// A reply with no `ok` key is a success; only an explicit `false` is failure.
+fn yes() -> bool {
+    true
 }
 
 /// Take one named field out of a successful facade reply.
@@ -248,16 +288,27 @@ fn facade_error(reply: &str) -> Option<String> {
 /// Same contract as [`facade_props`]: the facade reports failure in the payload
 /// rather than by a Rust `Err`, so a reply has to be inspected before its
 /// contents are trusted.
-fn facade_value(reply: &str, key: &str) -> Result<Value, String> {
-    if let Some(message) = facade_error(reply) {
-        return Err(message);
+fn facade_package(reply: &str) -> Result<String, String> {
+    #[derive(serde::Deserialize)]
+    struct PackageReply {
+        #[serde(default = "yes")]
+        ok: bool,
+        #[serde(default)]
+        error: Option<String>,
+        #[serde(default)]
+        apkg: Option<String>,
     }
-    let value: Value =
+    // One pass, and the package string is MOVED out rather than cloned: it is
+    // the whole exported collection, so parsing twice and then copying it would
+    // hold three of them at once.
+    let reply: PackageReply =
         serde_json::from_str(reply).map_err(|error| format!("unparseable reply: {error}"))?;
-    value
-        .get(key)
-        .cloned()
-        .ok_or_else(|| format!("reply carried no `{key}`"))
+    if !reply.ok {
+        return Err(reply.error.unwrap_or_else(|| "unknown error".to_string()));
+    }
+    reply
+        .apkg
+        .ok_or_else(|| "reply carried no `apkg`".to_string())
 }
 
 /// Take the `props` object out of a facade reply.
@@ -313,6 +364,8 @@ impl EngramMosaicApp {
     /// safe direction to fail.
     fn mint_effect_id(&mut self) -> Option<EffectId> {
         if self.next_effect_id >= MAX_EFFECT_ID {
+            self.last_transfer =
+                Some("Too many file requests this session; restart Engram.".to_string());
             return None;
         }
         self.next_effect_id += 1;
@@ -330,6 +383,14 @@ impl EngramMosaicApp {
         let Some(encoded) = value.get("apkg").and_then(Value::as_str) else {
             return Err("Import failed: the file request came back with no package.".to_string());
         };
+        // Capped on the ENCODED length, before decoding, so the gate is a
+        // string comparison rather than the allocation it prevents. The encoded
+        // string, the JSON value holding it and the decoded bytes all coexist
+        // at roughly three times the file's size, and this is the trust
+        // boundary: the bytes came from a file the reader was handed.
+        if encoded.len() > MAX_IMPORT_BASE64_LEN {
+            return Err("Import failed: that package is too large to open.".to_string());
+        }
         let bytes = coding_adventures_base64::decode(encoded, &coding_adventures_base64::STANDARD)
             .map_err(|_| "Import failed: the package was not valid base64.".to_string())?;
         if bytes.is_empty() {
@@ -337,7 +398,7 @@ impl EngramMosaicApp {
         }
         let reply = self.session.merge_anki_apkg(&bytes);
         match facade_error(&reply) {
-            Some(message) => Err(format!("Import failed: {message}")),
+            Some(message) => Err(format!("Import failed: {}", reader_safe(&message))),
             None => Ok("Deck imported.".to_string()),
         }
     }
@@ -378,17 +439,17 @@ impl EngramMosaicApp {
         let mut payload = intent.clone();
         if pending == Some(PendingEffect::Export) {
             let reply = self.session.export_anki_apkg();
-            match facade_value(&reply, "apkg") {
+            match facade_package(&reply) {
                 Ok(apkg) => {
                     if let Value::Object(fields) = &mut payload {
-                        fields.insert("apkg".to_string(), apkg);
+                        fields.insert("apkg".to_string(), Value::String(apkg));
                     }
                 }
                 Err(message) => {
                     // No package, nothing for the host to write. Report it here
                     // rather than sending an effect whose answer could only be
                     // "there was nothing to save".
-                    self.last_transfer = Some(format!("Export failed: {message}"));
+                    self.last_transfer = Some(format!("Export failed: {}", reader_safe(&message)));
                     return None;
                 }
             }
@@ -461,9 +522,18 @@ impl MosaicApp for EngramMosaicApp {
 
         // A new request supersedes whatever the last one said. Leaving the old
         // message up would caption a fresh dialog with a stale outcome.
-        let intent: Option<Value> = serde_json::from_str::<Value>(&reply)
+        // Narrow, because the dispatch reply carries the whole collection under
+        // `state` and the whole prop set under `props`, on EVERY event. Parsing
+        // it into a `Value` to reach one optional field would rebuild all of
+        // that a second time per keystroke.
+        #[derive(serde::Deserialize)]
+        struct IntentOnly {
+            #[serde(default, rename = "hostIntent")]
+            host_intent: Option<Value>,
+        }
+        let intent: Option<Value> = serde_json::from_str::<IntentOnly>(&reply)
             .ok()
-            .and_then(|value| value.get("hostIntent").cloned())
+            .and_then(|reply| reply.host_intent)
             .filter(|intent| !intent.is_null());
         if intent.is_some() {
             self.last_transfer = None;
@@ -480,7 +550,10 @@ impl MosaicApp for EngramMosaicApp {
                 update.props = self.props_with_transfer()?;
                 update.effects.push(effect);
             } else {
-                // No effect, but building one may still have recorded why.
+                // No effect. Either the host is below protocol 2, where the
+                // intent rides `hostIntent` as before and there is nothing to
+                // say, or building one recorded why -- and `props_with_transfer`
+                // carries that.
                 update.props = self.props_with_transfer()?;
             }
         }
@@ -516,10 +589,10 @@ impl MosaicApp for EngramMosaicApp {
             (PendingEffect::Import, EffectResult::Cancelled(_)) => "Import cancelled.".to_string(),
             (PendingEffect::Export, EffectResult::Cancelled(_)) => "Export cancelled.".to_string(),
             (PendingEffect::Import, EffectResult::Failed(failure)) => {
-                format!("Import failed: {}", failure.message)
+                format!("Import failed: {}", reader_safe(&failure.message))
             }
             (PendingEffect::Export, EffectResult::Failed(failure)) => {
-                format!("Export failed: {}", failure.message)
+                format!("Export failed: {}", reader_safe(&failure.message))
             }
         });
         Ok(self.update()?)
@@ -1167,5 +1240,90 @@ mod protocol_gate_tests {
             "a v2 host must receive the import effect"
         );
         assert_eq!(update.effects[0].delivery, Delivery::Await);
+    }
+}
+
+#[cfg(test)]
+mod untrusted_input_tests {
+    use super::*;
+    use mosaic_app_runtime::{EffectFailure, Platform, EFFECT_PROTOCOL_VERSION};
+
+    fn started() -> EngramMosaicApp {
+        let mut context = StartContext::new("en-US", Platform::Linux);
+        context.protocol_version = EFFECT_PROTOCOL_VERSION;
+        let mut app = EngramMosaicApp::default();
+        app.start(context).expect("start must succeed");
+        app
+    }
+
+    fn import_effect(app: &mut EngramMosaicApp) -> Effect {
+        let update = app
+            .dispatch(Event::new(1, "importAnki", Value::Null))
+            .expect("import must dispatch");
+        update.effects[0].clone()
+    }
+
+    fn status(update: &AppUpdate) -> String {
+        update
+            .props
+            .get("anki-transfer-status")
+            .and_then(Value::as_str)
+            .unwrap_or("")
+            .to_string()
+    }
+
+    #[test]
+    fn an_oversized_package_is_refused_without_decoding_it() {
+        let mut app = started();
+        let effect = import_effect(&mut app);
+        // One byte past the cap. Built as a string rather than real base64
+        // because the point is that the length is checked BEFORE the decoder
+        // ever sees it -- if the order were wrong this would spend a second
+        // decoding half a gigabyte of 'A's first.
+        let oversized = "A".repeat(MAX_IMPORT_BASE64_LEN + 1);
+        let update = app
+            .complete_effect(
+                effect.id,
+                EffectResult::Ok(serde_json::json!({ "apkg": oversized })),
+            )
+            .expect("an oversized package is the reader's problem, not an Err");
+        assert!(
+            status(&update).contains("too large"),
+            "the reader is told, rather than the process running out of memory: {}",
+            status(&update)
+        );
+    }
+
+    #[test]
+    fn a_hostile_failure_message_cannot_carry_control_characters_to_the_ui() {
+        let mut app = started();
+        let effect = import_effect(&mut app);
+        // A host -- or a package-layer error quoting a zip entry name -- can put
+        // arbitrary bytes here. Five native toolkits render this prop, and at
+        // least one interprets markup, so the boundary is enforced here.
+        let hostile = format!("line one\nline two\r\0{}", "x".repeat(5_000));
+        let update = app
+            .complete_effect(
+                effect.id,
+                EffectResult::Failed(EffectFailure { message: hostile }),
+            )
+            .expect("a failure is an answer");
+        let reported = status(&update);
+        assert!(
+            !reported.contains('\n') && !reported.contains('\r') && !reported.contains('\0'),
+            "control characters must not reach the prop: {reported:?}"
+        );
+        assert!(
+            reported.chars().count() <= 220,
+            "an unbounded message must be cut to something readable: {} chars",
+            reported.chars().count()
+        );
+    }
+
+    #[test]
+    fn the_id_bound_is_the_runtimes_own() {
+        // Not a restated literal: a divergence here would mint ids the runtime
+        // rejects, and it poisons the instance for one out of range.
+        assert_eq!(MAX_EFFECT_ID, mosaic_app_runtime::MAX_EFFECT_ID);
     }
 }
