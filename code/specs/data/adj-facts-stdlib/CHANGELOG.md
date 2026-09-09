@@ -52,12 +52,20 @@ landed and why, not a semver-tracked API.
 
   ### Mutants
 
-  Four, one per thing the repair asserts: WELD (restore the three-sentence string), WORD (put
+  Five, one per thing the repair asserts: WELD (restore the three-sentence string), WORD (put
   `polygonal` back — the original defect), PAGE (point the corroboration's locator back at the
-  wrong page, text untouched), AUTHORED (weld the invented sentence back on). **The PAGE mutant is
-  why text and locator are pinned together**: a corroboration with pinned text and an unpinned page
-  could drift back to citing the wrong document silently, which is half of what this installment
-  repaired.
+  wrong page, text untouched), AUTHORED (weld the invented sentence back on), and RULE-LOCATOR
+  (repoint the rule's OWN locator, text untouched). **The PAGE mutant is why text and locator are
+  pinned together**: a corroboration with pinned text and an unpinned page could drift back to
+  citing the wrong document silently, which is half of what this installment repaired.
+
+  Security review then turned that argument on the rest of the test. The rule's own citation and
+  the underlying fact's were both asserted UNJOINED — `contains("kind":"rule") &&
+  contains("…Triangulation.html")`, two independent probes over the whole output, satisfiable by
+  an occurrence in any citation from any imported file. Nothing else in the import set names either
+  page today, so a locator-only mutation did still redden; the protection was incidental rather
+  than deliberate. Both are now joined the way the corroboration pin is, and RULE-LOCATOR is
+  written down so it stays checked.
 
   The harness caught one of its own mutants being vacuous first. `WORD` used `replace(..., 1)`, and
   4i's new header prose QUOTES the string it was searching for while explaining the defect — so the

@@ -88,16 +88,25 @@ fn triangle_decomposition_count_derives_two_with_full_audit_trail() {
         out.contains("\"N\":\"2\""),
         "a square decomposes into 2 triangles: {out}"
     );
+    // Installment 4i, security review: these two used to be UNJOINED --
+    // `contains("kind":"rule") && contains("...Triangulation.html")`,
+    // two independent probes over the whole output, satisfiable by an
+    // occurrence in ANY citation from ANY imported file. 4i's own
+    // corroboration pin exists because an unjoined text-and-page pair can
+    // drift to the wrong document silently; the same argument condemned
+    // these, so they are joined too. Today nothing else in the import set
+    // names either page, so the old form did still redden -- the hole was
+    // latent, not open.
     // The audit trail names BOTH steps: the rule's own citation (the general
     // triangulation/diagonal definitions) and the underlying quadrilateral
     // fact's citation (the square's own defining property) — an inspectable
     // two-step inference, not a single opaque answer.
     assert!(
-        out.contains("\"kind\":\"rule\"") && out.contains("mathworld.wolfram.com/Triangulation.html"),
+        out.contains("\"source\":\"Triangulation is the division of a surface or plane polygon into a set of triangles, usually with the restriction that each triangle side is entirely shared by two adjacent triangles.\",\"locator\":\"https://mathworld.wolfram.com/Triangulation.html\""),
         "carries the rule's own citation: {out}"
     );
     assert!(
-        out.contains("\"kind\":\"fact\"") && out.contains("mathworld.wolfram.com/Square.html"),
+        out.contains("\"source\":\"a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above. In other words, a square is a regular polygon with four sides.\",\"locator\":\"https://mathworld.wolfram.com/Square.html\""),
         "carries the underlying quadrilateral fact's citation: {out}"
     );
     assert!(
