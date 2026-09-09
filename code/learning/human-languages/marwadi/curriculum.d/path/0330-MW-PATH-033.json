@@ -1,0 +1,14 @@
+{
+  "id": "MW-PATH-033",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "MW-C40-signs",
+    "MW-C40-notices",
+    "MW-C40-pehlo-path"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-047-READING"
+  ],
+  "after": []
+}

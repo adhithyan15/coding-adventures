@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C40-signs",
+    "language": "marwadi",
+    "chapter": 40,
+    "sequence": 3420,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9981095a66a812d0"
+  },
+  "findings": []
+}
