@@ -68,8 +68,21 @@ fn triangle_decomposition_count_derives_two_with_full_audit_trail() {
     // it, because `contains` on a fragment cannot see what precedes or
     // follows it. See issue #13918.
     assert!(
-        out.contains("\"source\":\"Triangulation is the division of a surface or plane polygon into a set of triangles, usually with the restriction that each triangle side is entirely shared by two adjacent triangles. A polygonal diagonal is a line segment connecting two nonadjacent polygon vertices of a polygon. A quadrilateral has exactly two diagonals, each splitting it into two triangles; drawing either one divides the quadrilateral into exactly two triangular regions.\""),
+        out.contains("\"source\":\"Triangulation is the division of a surface or plane polygon into a set of triangles, usually with the restriction that each triangle side is entirely shared by two adjacent triangles.\""),
         "the citation is the whole source sentence, exactly: {out}"
+    );
+
+    // Installment 4i (#13934): the diagonal definition used to sit
+    // INSIDE the source string, with one word altered ("polygonal"
+    // where MathWorld says "polygon") and under the WRONG page's
+    // locator. It is now a corroboration in the page's own words with
+    // its own locator, so text and locator are pinned TOGETHER -- a
+    // corroboration whose text is pinned but whose page is not could
+    // drift back to citing the wrong document silently, which is the
+    // defect this installment repaired.
+    assert!(
+        out.contains("\"source\":\"A polygon diagonal is a line segment connecting two nonadjacent polygon vertices of a polygon.\",\"locator\":\"https://mathworld.wolfram.com/PolygonDiagonal.html\""),
+        "the corroboration keeps its own page: {out}"
     );
     assert!(
         out.contains("\"N\":\"2\""),
