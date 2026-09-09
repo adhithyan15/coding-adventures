@@ -4011,7 +4011,24 @@ fn slot_state_axes(
             mosmodel_compiler::SlotType::OneOf(values) => Some(mosstyle_compiler::SlotStateAxis {
                 slot: slot.name.clone(),
                 values: values.clone(),
+                kind: mosstyle_compiler::SlotStateAxisKind::Enum,
             }),
+            // UI57 — a slot whose NAME is a built-in state participates too.
+            // A `bool` binds that state by truthiness; anything else cannot
+            // activate it, and is forwarded so the compiler reports it rather
+            // than leaving the state silently unwired (#14639).
+            _ if mosstyle_compiler::is_built_in_state(&slot.name) => {
+                Some(mosstyle_compiler::SlotStateAxis {
+                    slot: slot.name.clone(),
+                    values: Vec::new(),
+                    kind: match &slot.r#type {
+                        mosmodel_compiler::SlotType::Bool => {
+                            mosstyle_compiler::SlotStateAxisKind::Bool
+                        }
+                        _ => mosstyle_compiler::SlotStateAxisKind::Incompatible,
+                    },
+                })
+            }
             _ => None,
         })
         .collect()

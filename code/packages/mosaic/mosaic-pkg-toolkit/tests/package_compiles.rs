@@ -161,6 +161,7 @@ fn compile_component(name: &str) {
                 Some(mosstyle_compiler::SlotStateAxis {
                     slot: slot.name.clone(),
                     values: values.clone(),
+                    kind: mosstyle_compiler::SlotStateAxisKind::Enum,
                 })
             }
             _ => None,
@@ -250,6 +251,7 @@ fn button_themes_cover_typed_variant_and_size_states() {
                 Some(mosstyle_compiler::SlotStateAxis {
                     slot: slot.name.clone(),
                     values: values.clone(),
+                    kind: mosstyle_compiler::SlotStateAxisKind::Enum,
                 })
             }
             _ => None,
@@ -365,6 +367,7 @@ fn alert_themes_cover_typed_variant_states() {
             mosmodel_compiler::SlotType::OneOf(values) => Some(mosstyle_compiler::SlotStateAxis {
                 slot: slot.name.clone(),
                 values: values.clone(),
+                kind: mosstyle_compiler::SlotStateAxisKind::Enum,
             }),
             _ => None,
         })
@@ -482,6 +485,7 @@ fn badge_themes_cover_typed_variant_states() {
             mosmodel_compiler::SlotType::OneOf(values) => Some(mosstyle_compiler::SlotStateAxis {
                 slot: slot.name.clone(),
                 values: values.clone(),
+                kind: mosstyle_compiler::SlotStateAxisKind::Enum,
             }),
             _ => None,
         })

@@ -5916,8 +5916,14 @@ fn build_part_style_map(
                     continue;
                 }
                 let meta_key = format!("{SLOT_STATE_META_PREFIX}{}\0{owned_index}", part.name);
-                let condition =
-                    format!("({slot_ident} == \"{}\")", escape_dart_string(&state.state));
+                // UI57 -- a bool slot activates by truthiness, using the
+                // same helper the rest of the generated widget uses so a
+                // dynamic host value coerces identically.
+                let condition = if state.slot_is_bool {
+                    format!("(_mosaicTruthy({slot_ident}))")
+                } else {
+                    format!("({slot_ident} == \"{}\")", escape_dart_string(&state.state))
+                };
                 map.insert(meta_key, format!("{state_key}\0{condition}"));
                 owned_index += 1;
             }
@@ -7271,6 +7277,7 @@ mod tests {
                     transitions: vec![],
                     states: vec![mosstyle_compiler::StateStyle {
                         slot: Some("variant".into()),
+                        slot_is_bool: false,
                         state: "danger".into(),
                         transitions: vec![],
                         props: vec![StyleProp {
@@ -7297,6 +7304,7 @@ mod tests {
                     states: vec![
                         mosstyle_compiler::StateStyle {
                             slot: Some("size".into()),
+                            slot_is_bool: false,
                             state: "compact".into(),
                             transitions: vec![],
                             props: vec![
@@ -7312,6 +7320,7 @@ mod tests {
                         },
                         mosstyle_compiler::StateStyle {
                             slot: Some("variant".into()),
+                            slot_is_bool: false,
                             state: "danger".into(),
                             transitions: vec![],
                             props: vec![StyleProp {
@@ -7321,6 +7330,7 @@ mod tests {
                         },
                         mosstyle_compiler::StateStyle {
                             slot: None,
+                            slot_is_bool: false,
                             state: "selected".into(),
                             transitions: vec![],
                             props: vec![StyleProp {
@@ -11221,6 +11231,7 @@ mod tests {
                     states: vec![
                         mosstyle_compiler::StateStyle {
                             slot: None,
+                            slot_is_bool: false,
                             state: "selected".into(),
                             transitions: vec![],
                             props: vec![
@@ -11236,6 +11247,7 @@ mod tests {
                         },
                         mosstyle_compiler::StateStyle {
                             slot: None,
+                            slot_is_bool: false,
                             state: "editing".into(),
                             transitions: vec![],
                             props: vec![StyleProp {
@@ -12179,4 +12191,73 @@ mod tests {
         assert!(!out.contains("width:"), "got:\n{out}");
         assert!(!out.contains("height:"), "got:\n{out}");
     }
+
+    // ---- UI57: built-in state bound to a bool slot -------------------
+
+    #[test]
+    fn ui57_bool_slot_state_activates_by_truthiness_not_by_name() {
+        let m = component(
+            "X",
+            vec![
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                    true,
+                ),
+                slot("disabled", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#111111".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![
+                    mosstyle_compiler::StateStyle {
+                        state: "danger".to_string(),
+                        slot: Some("variant".to_string()),
+                        slot_is_bool: false,
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#dc3545".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                    mosstyle_compiler::StateStyle {
+                        state: "disabled".to_string(),
+                        slot: Some("disabled".to_string()),
+                        slot_is_bool: true,
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#adb5bd".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                ],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+
+        assert!(out.contains("_mosaicTruthy(disabled)"), "got:\n{out}");
+        // r#"disabled == "disabled""# is what the enum shape would emit for a bool slot. It is
+        // always false, which is the silent no-op UI57 fixes (#14639).
+        assert!(!out.contains(r#"disabled == "disabled""#), "got:\n{out}");
+        // The enum axis in the same component must be untouched.
+        assert!(out.contains(r#"variant == "danger""#), "got:\n{out}");
+    }
+
 }
