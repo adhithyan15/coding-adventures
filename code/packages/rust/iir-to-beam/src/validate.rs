@@ -314,7 +314,10 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
             //
             // Any other ref<…> type on any other op is rejected as before.
             if instr.type_hint == "str"
-                && !matches!(instr.op.as_str(), "str_const" | "str_concat" | "call" | "ret" | "mov")
+                && !matches!(
+                    instr.op.as_str(),
+                    "str_const" | "str_concat" | "str_slice" | "call" | "ret" | "mov"
+                )
             {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
@@ -399,6 +402,19 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                 {
                     errors.push(format!(
                         "InvalidString: function {:?}, str_concat requires dest and two string variables",
+                        func.name
+                    ));
+                }
+                "str_slice"
+                    if instr.dest.is_none()
+                        || !matches!(
+                            instr.srcs.as_slice(),
+                            [Operand::Var(_), Operand::Var(_), Operand::Var(_)]
+                        )
+                        || instr.type_hint != "str" =>
+                {
+                    errors.push(format!(
+                        "InvalidString: function {:?}, str_slice requires dest, a string variable, and two integer bound variables",
                         func.name
                     ));
                 }
@@ -611,9 +627,42 @@ mod tests {
                 vec![Operand::Var("a".into()), Operand::Var("b".into())],
                 "i64",
             ),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("two".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new(
+                "str_slice",
+                Some("head".into()),
+                vec![Operand::Var("word".into()), Operand::Var("z".into()), Operand::Var("two".into())],
+                "str",
+            ),
             IIRInstr::new("print_str", None, vec![Operand::Var("word".into())], "void"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("head".into())], "void"),
             IIRInstr::new("ret_void", None, vec![], "void"),
         ]));
         assert!(errs.is_empty(), "unexpected errors: {errs:?}");
+    }
+
+    #[test]
+    fn str_slice_wrong_arity_is_rejected() {
+        // str_slice with only one bound (missing the end index) must be a
+        // clear InvalidString error, not an UnsupportedType — VM-040's COBOL
+        // signed/algebra probe added str_slice support; this pins its shape
+        // check down the same way str_concat/str_eq/str_cmp already are.
+        let errs = validate_for_beam(&single_fn_module(vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("HE".into())], "str"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "str_slice",
+                Some("head".into()),
+                vec![Operand::Var("a".into()), Operand::Var("z".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("head".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().any(|e| e.contains("InvalidString") && e.contains("str_slice")),
+            "expected an InvalidString error naming str_slice; got: {errs:?}"
+        );
     }
 }

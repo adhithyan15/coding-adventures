@@ -1,5 +1,48 @@
 # Changelog — ir-to-beam
 
+## [0.3.0] — 2026-09-09
+
+### Fixed (large positive `I`-tagged literals silently went negative)
+
+- `encode_compact_term`'s "Large form" (`value >= 2048`) built the operand's
+  big-endian byte string with `value_to_be_bytes`, which stripped every
+  leading `0x00` byte regardless of the operand's tag. That rule is correct
+  for `U` (unsigned) operands — the loader reads them as a plain magnitude —
+  but wrong for `I` (signed) operands, which the loader reads as big-endian
+  **two's complement**: if the stripped leading byte's high bit ends up set,
+  a large positive literal is misread back as negative.
+  - Discovered by VM-040's COBOL BEAM signed/algebra probe: an ordinary
+    `COMPUTE`'s scale-12 intermediate multiplied a literal by `10^12`, and
+    `2 * 1_000_000_000_000`'s minimal 5-byte magnitude (`E8 D4 A5 10 00`) has
+    its leading byte's high bit set, so it came back as a large *negative*
+    number on real `erl` — corrupting every arithmetic result downstream.
+  - `value_to_be_bytes` now takes a `signed: bool`. The `U` path is
+    unchanged (strip every leading `0x00`). The new `I` path finds the
+    minimal two's-complement encoding directly: strip a leading `0x00` only
+    while the *next* byte's high bit is still clear (a positive value), and
+    symmetrically strip a leading `0xFF` only while the next byte's high bit
+    is still set (an already-negative value) — the same rule ASN.1 DER uses
+    for `INTEGER`. Values from `i32::MAX + 1` through the low bits of
+    `u32::MAX`, and every scale-12-style intermediate whose magnitude's
+    leading byte happened to have its high bit set, were affected; `2^32`
+    exactly and other top-bit-clear magnitudes already round-tripped
+    correctly and are unchanged.
+  - The compact-term "Large form" header can only express byte lengths
+    `2..=9` (`len_field = length - 2` in 3 bits), so the signed minimal
+    length is floored at 2 bytes even when the true minimal two's-complement
+    encoding of a SMALL magnitude (e.g. a small negative literal like `-7`,
+    whose full `u64` bit pattern is enormous and so reaches the Large form
+    purely by its sign, not its size) would otherwise fit in 1 — the naive
+    signed-minimal rule alone underflowed `(length - 2) as u8` for exactly
+    this case.
+- New tests: `test_signed_large_form_pads_high_bit`,
+  `test_signed_large_form_round_trips_via_i64_reader` (round-trips a table of
+  boundary values, including `i64::MIN`/`i64::MAX`, through a real
+  sign-extending big-endian reader), and
+  `test_encode_compact_term_small_negative_does_not_underflow` pin the fix
+  and its length floor. `test_value_to_be_bytes_zero`/`_256` updated for the
+  new `signed` parameter.
+
 ## [0.2.1] — 2026-06-02
 
 ### Fixed (atom table now loads on OTP 27 *and* 28)

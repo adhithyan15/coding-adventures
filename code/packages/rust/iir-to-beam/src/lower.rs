@@ -561,6 +561,21 @@ pub fn lower_iir_to_beam(
     let import_append = imports.intern(erlang_atom, atom_append, 2); // erlang:'++'/2
     let import_apply  = imports.intern(erlang_atom, atom_apply,  3); // erlang:apply/3
 
+    // ── String slicing: `lists:sublist/3` ─────────────────────────────────
+    //
+    // A v1 string is an Erlang character list (see `str_const` above), so
+    // `str_slice`'s half-open `[start, end)` byte range is exactly
+    // `lists:sublist/3`'s `(List, Start, Len)` — except `sublist` is
+    // 1-INDEXED (like `:atomics` above) where IIR's `start` is 0-based, and
+    // it takes a COUNT, not an end offset. Both conversions happen at the
+    // call site: `Start1 = start + 1`, `Len = end - start`. Unlike the
+    // arithmetic/bitwise BIFs above, `lists:sublist` is an ordinary exported
+    // function, not a BIF the loader recognizes for `gc_bif2` — it must go
+    // through `call_ext` like `str_concat`'s `erlang:'++'/2`.
+    let lists_atom = atoms.intern("lists");
+    let atom_sublist = atoms.intern("sublist");
+    let import_sublist = imports.intern(lists_atom, atom_sublist, 3); // lists:sublist/3
+
     // ── Step 4: first pass over all functions ─────────────────────────────
     //
     // We need to know:
@@ -849,6 +864,9 @@ pub fn lower_iir_to_beam(
                     // memory ops were added, so a variable live across a
                     // closure call was silently destroyed.
                     | "call_closure"
+                    // `str_slice` emits `lists:sublist/3` via call_ext (see
+                    // `import_sublist` above) — the same reasoning applies.
+                    | "str_slice"
             ) && !(instr.op == "call_builtin" && matches!(instr.srcs.first(),
                 Some(Operand::Var(name)) if name == "putchar")) {
                 continue;
@@ -1288,6 +1306,101 @@ pub fn lower_iir_to_beam(
                     instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
                         BEAMOperand::u(2),
                         BEAMOperand::u(import_append as u64),
+                    ]));
+                    if rd != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(rd),
+                        ]));
+                    }
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
+                // ── str_slice → lists:sublist(List, Start+1, End-Start) ─────
+                //
+                // IIR's `[start, end)` is 0-based and half-open (see
+                // `interpreter_ir::opcodes` and `vm-core`'s `handle_str_slice`).
+                // `lists:sublist/3` is 1-indexed and takes a COUNT, so the call
+                // site converts: `Start1 = start + 1`, `Len = end - start`.
+                //
+                // `lists:sublist` is a real function, not a loader-recognized
+                // BIF, so it goes through `call_ext` — which clobbers every
+                // x-register. Its three arguments are staged through scratch
+                // registers ABOVE `next_reg` first (mirroring `store_byte` /
+                // `array_set` above), because moving the operands straight
+                // into x0/x1/x2 is a parallel-move hazard: writing x1 can
+                // clobber a source register still needed for x2 (or vice
+                // versa) when an operand already sits in one of those slots.
+                "str_slice" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_slice must have a destination".into(),
+                        }),
+                    };
+                    let (src_reg, start_reg, end_reg) = match instr.srcs.as_slice() {
+                        [Operand::Var(s), Operand::Var(a), Operand::Var(b)] => {
+                            (var_reg!(s), var_reg!(a), var_reg!(b))
+                        }
+                        _ => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_slice requires a string variable and two integer bound variables".into(),
+                        }),
+                    };
+                    let cur_idx = instr_idx - 1;
+
+                    // Scratch registers are u8 and the bank tops out at 255;
+                    // guard the same way store_byte/array_set do above.
+                    let top = meta.next_reg.checked_add(2).filter(|t| *t < 255);
+                    let Some(_) = top else {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "str_slice: needs 3 scratch registers but only {} remain below x255",
+                                255u16 - meta.next_reg as u16
+                            ),
+                        });
+                    };
+                    let s_src = meta.next_reg;
+                    let s_start1 = meta.next_reg + 1;
+                    let s_len = meta.next_reg + 2;
+
+                    // Stage copies BEFORE any GC-capable instruction so every
+                    // scratch register holds a valid term once `live` covers
+                    // them (same discipline as store_byte/array_set above).
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(src_reg), BEAMOperand::x(s_src),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(start_reg), BEAMOperand::x(s_start1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(end_reg), BEAMOperand::x(s_len),
+                    ]));
+                    let live_staged = (s_len as u64) + 1;
+
+                    // s_start1 = start + 1 (0-based → 1-based).
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                        BEAMOperand::f(0), BEAMOperand::u(live_staged),
+                        BEAMOperand::u(import_add as u64),
+                        BEAMOperand::x(s_start1), BEAMOperand::i(1), BEAMOperand::x(s_start1),
+                    ]));
+                    // s_len = end - start (original start_reg, untouched above).
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                        BEAMOperand::f(0), BEAMOperand::u(live_staged),
+                        BEAMOperand::u(import_sub as u64),
+                        BEAMOperand::x(s_len), BEAMOperand::x(start_reg), BEAMOperand::x(s_len),
+                    ]));
+
+                    save_live_across_imported_call!(cur_idx);
+                    for (from, to) in [(s_src, 0u8), (s_start1, 1u8), (s_len, 2u8)] {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(from), BEAMOperand::x(to),
+                        ]));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(3),
+                        BEAMOperand::u(import_sublist as u64),
                     ]));
                     if rd != 0 {
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![

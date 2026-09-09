@@ -633,3 +633,33 @@ regression exercises all six comparisons with less/equal/greater values and
 three literal/register combinations, including positive and negative literal
 moves (54 executions). Eight of 58 COBOL rows now declare BEAM, for 414 cells.
 Remaining COBOL features still require individual execution proofs.
+
+### COBOL signed/algebra on BEAM (VM-040)
+
+Four more COBOL programs execute on real BEAM: signed numeric overpunch
+(`SUBTRACT` into `S9(2)`, DISPLAY overpunches the negative units digit),
+alphanumeric MOVE + comparison, `COMPUTE` exponentiation and nested `COMPUTE`
+division at the scale-12 intermediate precision the oracle uses. Twelve of 58
+COBOL rows now declare BEAM, for 418 cells.
+
+This probe found and fixed two `iir-to-beam`/`ir-to-beam` defects, both bounded
+to this slice before promotion:
+
+- **`str_slice` was unsupported.** The alphanumeric MOVE's truncating reshape
+  is the first COBOL BEAM row to emit `str_slice` (every prior row's DISPLAY
+  formatting used only `str_const`/`str_concat`/`putchar`). It now lowers to
+  `lists:sublist(List, start+1, end-start)` via `call_ext`, registered with the
+  liveness pass and staged through scratch registers exactly like
+  `store_byte`/`array_set` (`iir-to-beam` 0.9.0).
+- **Large positive `const` literals could silently come back negative.** The
+  nested-division row's scale-12 intermediate multiplies a literal by
+  `10^12`; `2 * 1_000_000_000_000`'s minimal 5-byte magnitude has its leading
+  byte's high bit set, and the compact-term encoder's "Large form" was
+  stripping down to that magnitude the same way regardless of the operand's
+  signed/unsigned tag — corrupting it into a large negative number when read
+  back as two's complement. Fixed in the shared BEAM bytecode encoder
+  (`ir-to-beam` 0.3.0); see that crate's changelog for the byte-level
+  explanation. All 12 Oct, 26 Nib and the eight already-declared COBOL BEAM
+  programs pass again after the fix.
+
+Remaining COBOL features still require individual execution proofs.
