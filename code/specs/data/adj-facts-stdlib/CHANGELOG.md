@@ -6,7 +6,7 @@ landed and why, not a semver-tracked API.
 ## Unreleased
 
 - **#13934 installment 4h: two descriptions, two stripped indents, and a headline that understates
-  the round.** 4 value lines, 10 row lines and 134 comment lines across **3** `.adj` files —
+  the round.** 4 value lines, 10 row lines and 153 comment lines across **3** `.adj` files —
   `geometry/solid-vertices-edges` (two values), `biology/genetic-code` and `biology/start-codon` —
   plus three e2e test files. **Six mutations redden.** Contiguity **60 → 58** over the full
   population of 563; the two that left are the two Platonic values, member for member, and none
@@ -40,24 +40,24 @@ landed and why, not a semver-tracked API.
   **A claim this installment does not make.** 4g's five repairs are byte-exact against RAW HTML.
   These two are not and cannot be: the page's own bytes carry three newlines inside the vertices
   sentence and two inside the edges sentence, because the HTML source wraps the single paragraph
-  they share. They are verbatim under the extractor's
-  whitespace collapse — the standard every currently-verbatim value in this stdlib already meets —
-  and that is **weaker** than 4g's claim. The two look alike and are not; the general question is
-  filed on #14111.
+  they share. They are verbatim under the extractor's whitespace collapse — the standard every
+  currently-verbatim value in this stdlib already meets — and that is **weaker** than 4g's claim.
+  The two look alike and are not; the general question is filed on #14111.
 
   ### Two values that were not table dumps at all
 
   `genetic-code` and `start-codon` were filed as "table dumps", which is shorthand for a lost cause.
   NCBI serves the genetic-code table inside a `<pre>` that indents **line 1 by four spaces and every
   later line by two**, so all five data columns land at offset 11. The shipped values had all 12 of
-  those characters stripped. So neither is a dump of table cells: each is a genuine
-  contiguous multi-line span with its indentation normalised away — 4f's NBSP defect, not 4g's weld.
+  those characters stripped. So neither is a dump of table cells: each is a genuine contiguous
+  multi-line span with its indentation normalised away — 4f's NBSP defect, not 4g's weld.
 
-  Both headers **already claimed byte-fidelity**. `start-codon` said the value
-  `reproduces, byte-for-byte, the SAME NCBI "Genetic Codes" page`; `genetic-code` called its field a "5-line
-  block copied VERBATIM". Both were false, and had been for as long as they existed, because **no instrument here
-  compares a value to raw HTML** — the sweep compares against the extractor's output, which
-  normalises, and the CI pins compare the engine's output to the field, which is the field to itself.
+  Both headers **already claimed byte-fidelity**. `start-codon` said the value `reproduces,
+  byte-for-byte, the SAME NCBI "Genetic Codes" page`; `genetic-code` called its field a "5-line
+  block copied VERBATIM". Both were false, and had been for as long as they existed, because **no
+  instrument here compares a value to raw HTML** — the sweep compares against the extractor's
+  output, which normalises, and the CI pins compare the engine's output to the field, which is the
+  field to itself.
 
   Restoring the whitespace decided no held question: whitespace inside a `<pre>` is **rendered**
   whitespace, so carrying it is the same call as carrying a page's U+00A0. That is *not* the case
@@ -67,8 +67,8 @@ landed and why, not a semver-tracked API.
 
   ### The repair shipped a fresh instance of its own defect, for the third installment running
 
-  The first attempt restored **8** of the 12 stripped characters and left line 1 flush.
-  Measured data-column offsets:
+  The first attempt restored **8** of the 12 stripped characters and left line 1 flush. Measured
+  data-column offsets:
 
   ```
   the page          11, 11, 11, 11, 11   aligned
@@ -77,43 +77,48 @@ landed and why, not a semver-tracked API.
   ```
 
   **It made the misalignment worse**, in the change whose entire subject is that block's whitespace.
-  And unlike 4f's and 4g's versions of this, the damage was not confined to prose: both headers tell
-  the reader to decode **by column**, and decoding `atg` that way yielded `T` from the shipped bytes
-  where the page gives `M`. Security review caught it. The four spaces are now restored, the columns
-  are at 11, and the pins were **regenerated from the corrected fields** rather than patched.
+  And unlike 4f's and 4g's versions of this, the damage was not confined to prose: `genetic-code`'s
+  header tells the reader to decode **by column**, and decoding `atg` that way yielded `T` from the
+  shipped bytes where the page gives `M`. Security review caught it. The four spaces are now
+  restored, the columns are at 11, and the pins were **regenerated from the corrected fields**
+  rather than patched.
 
-  The prose describing the fix was wrong in the same direction — "false by eight characters" was
-  12, and *"indents every line after the first by TWO SPACES"* is precisely the misreading that
-  produced the incomplete repair. Also corrected: "five newlines" in the MathWorld note is
+  The prose describing the fix was wrong in the same direction — "false by eight characters" was 12,
+  and *"indents every line after the first by TWO SPACES"* is precisely the misreading that produced
+  the incomplete repair. Also corrected: "five newlines" in the MathWorld note is
   **three** (I had counted a slice that ran past the sentence).
 
   ### The headline number understates this round
 
   The sweep still calls both NCBI values NOT CONTIGUOUS, because `extract_v4.blocks()` splits on
   newlines and a five-line `<pre>` span is five blocks to it. **They are byte-exact against the page
-  and still fail the screen.** Contiguity therefore moves 60 → 58, not 56 — and the two repairs
-  the headline cannot see are the two verified most strongly, against raw HTML. **Round 7 sharpened
-  what "most strongly" means here, and the first version of this sentence overclaimed.** A
-  substring test with a one-character negative control does NOT discriminate: the first attempt at
-  the indent repair was *also* a byte-exact, unique substring of the page, differing only in that
-  its span began four characters into line 1. The properties that separate them are that the match
-  **begins at a line boundary** and **occurs exactly once**, and those are what the verification
-  now asserts. A number is not a finding; this one is an instrument limitation wearing a number's
-  clothes — and a check can be one too.
+  and still fail the screen.** Contiguity therefore moves 60 → 58, not 56 — and the two repairs the
+  headline cannot see are the two verified most strongly, against raw HTML. **Round 7 sharpened what
+  "most strongly" means here, and the first version of this sentence overclaimed.** A substring test
+  with a one-character negative control does NOT discriminate: the first attempt at the indent
+  repair was *also* a byte-exact, unique substring of the page, differing only in that its span
+  began four characters into line 1. The property that separates them is that the match
+  **begins at a line boundary**; uniqueness holds for the defective value too and is asserted for
+  its own sake, not as a discriminator — round 8 caught round 7 claiming otherwise, which is the
+  same error one round later. Both are checked by `tools/verify_ncbi_pre_span.py`, committed in this
+  package so the claim is reproducible rather than reported (#14444). A number is not a finding;
+  this one is an instrument limitation wearing a number's clothes — and a check can be one too.
 
   Four pins added, because **none of these four values was pinned at all**. Six mutants killed, not
-  four: each NCBI value also gets an INDENT mutant that strips only the restored spaces and nothing
-  else — the entire subject of its repair, which a whole-value mutation would have covered by
-  accident rather than on purpose.
+  four: each NCBI value also gets an INDENT mutant that strips only the eight interior spaces on
+  lines 2-5, and an ANCHOR mutant that removes only line 1's four — the shape of the defect review
+  caught, which no mutant covered until round 8. Eight mutants, and nothing else — the entire
+  subject of its repair, which a whole-value mutation would have covered by accident rather than on
+  purpose.
 
   ### What is now held, and one correction to my own grouping
 
   `chemistry/atomic-weights:73` was investigated and is **held**, correcting this effort's earlier
   grouping of it with the two NCBI values. CIAAW's page has no tabs anywhere in the table — its
   cells are fused (`6Ccarbon` + U+00A0 + `12.011 ± 0.002`) — the value invents tabs between them,
-  and the two element
-  rows it welds **are not adjacent**: nitrogen sits between carbon and oxygen. That is the
-  invented-separator table-row class 4f established belongs to the owner, not a stripped indent.
+  and the two element rows it welds **are not adjacent**: nitrogen sits between carbon and oxygen.
+  That is the invented-separator table-row class 4f established belongs to the owner, not a stripped
+  indent.
 
   Also this round, and not shipped in any installment: the census's controls now name their subject
   by **content** rather than by line number. Its own comment recorded that a control had gone stale
