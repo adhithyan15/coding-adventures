@@ -208,7 +208,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         let settled = settleEffects(update)
         persistSnapshot()
         latestUpdate = Self.withPersistenceWarning(settled, effectWarning ?? persistenceWarning)
-        propsChangedHandler?()
+        schedulePropsChanged()
         return latestUpdate as NSDictionary
       } catch {
         return ["error": error.localizedDescription] as NSDictionary
@@ -251,7 +251,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         let settled = settleEffects(update)
         persistSnapshot()
         latestUpdate = Self.withPersistenceWarning(settled, effectWarning ?? persistenceWarning)
-        propsChangedHandler?()
+        schedulePropsChanged()
         return latestUpdate as NSDictionary
       } catch {
         return ["error": error.localizedDescription] as NSDictionary
@@ -275,8 +275,35 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   /// refused until it is answered -- correct, not a defect: a half-answered
   /// import is not a state worth restoring. Abandoning one leaves the app
   /// waiting for good, so a handler that defers owes an answer.
-  public func deferEffect(_ id: UInt64) {
-    lock.withLock { _ = deferred.insert(id) }
+  @discardableResult
+  public func deferEffect(_ id: UInt64) -> Bool {
+    lock.withLock {
+      // Only an effect the runtime is actually waiting on. Deferring anything
+      // else -- an id never minted, one already answered, a `notify` -- turns
+      // the fail sweep off for it and wedges the app permanently: nothing will
+      // ever answer it, and the runtime gates `snapshot` and `restore` on
+      // nothing being pending.
+      guard awaiting.contains(id) else { return false }
+      deferred.insert(id)
+      return true
+    }
+  }
+
+  /// Tell the UI, off the lock and on the main thread.
+  ///
+  /// Calling the handler while holding `lock` deadlocked the flow this feature
+  /// exists for: a background `completeEffect` held the lock and the handler
+  /// hopped to main, while main sat in `applyProps()` waiting for the lock --
+  /// and SwiftUI calls `applyProps()` every frame. Mutating observed state off
+  /// the main thread is undefined besides, so the hop belongs here rather than
+  /// being left to every app to remember.
+  private func schedulePropsChanged() {
+    guard let handler = propsChangedHandler else { return }
+    if Thread.isMainThread {
+      handler()
+    } else {
+      DispatchQueue.main.async { handler() }
+    }
   }
 
   private static func effects(of update: [String: Any]) -> [[String: Any]] {
@@ -373,6 +400,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
       for id in unanswered {
         let reason = "no host handler answered effect \(id)"
         awaiting.remove(id)
+        deferred.remove(id)
         guard let runtime, let app,
               let answeredUpdate = try? Self.invokeCompleteEffect(
                 runtime: runtime, app: app, id: id,
@@ -406,6 +434,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         guard let id = Self.effectId(effect["id"]),
               ((effect["delivery"] as? String) ?? "").lowercased() == "await" else { continue }
         awaiting.remove(id)
+        deferred.remove(id)
         guard let answeredUpdate = try? Self.invokeCompleteEffect(
           runtime: runtime, app: app, id: id,
           result: ["failed": ["message": reason]]) else { continue }
@@ -467,7 +496,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
           mosaic_binding_restore(runtime, app, bytes, output)
         }
         latestUpdate = Self.withPersistenceWarning(settleEffects(update), effectWarning)
-        propsChangedHandler?()
+        schedulePropsChanged()
         return latestUpdate as NSDictionary
       } catch {
         return ["error": error.localizedDescription] as NSDictionary

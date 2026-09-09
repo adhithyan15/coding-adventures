@@ -53,7 +53,17 @@ public:
     // correct, not a defect: a half-answered import is not a state worth
     // restoring. Abandoning a deferred effect leaves the app waiting for good,
     // so a handler that defers owes an answer.
-    Q_INVOKABLE void deferEffect(const QVariant &effectId);
+    Q_INVOKABLE QVariantMap deferEffect(const QVariant &effectId);
+
+    // Answer a deferred effect from ANY thread.
+    //
+    // `completeEffect` touches members no lock protects and refuses an
+    // off-thread call, so a worker that has just finished a dialog cannot use
+    // it -- which would defeat deferring entirely. This queues the answer onto
+    // the host's own thread. It returns nothing, because the update arrives
+    // later through `updated()`.
+    Q_INVOKABLE void answerDeferredEffect(const QVariant &effectId,
+                                          const QVariantMap &result);
 
 signals:
     // Emitted once per effect the runtime asks for, before the host decides
@@ -69,12 +79,16 @@ signals:
     // Do not `delete` this host from a handler; use `deleteLater()`. The emit
     // is synchronous and this object is mid-call underneath it.
     //
-    // The handler must also ANSWER SYNCHRONOUSLY, from inside the emit.
-    // Answering later is too late -- the settle has already failed the effect
-    // as unanswered, and the runtime rejects the late answer as completed. That
-    // rules out an asynchronous file dialog, which is the motivating case for
-    // `await` effects, so this shape is not yet sufficient for one. Tracked
-    // separately; do not design around it as though it were.
+    // A handler has two options, and choosing neither loses the effect:
+    //
+    //  * ANSWER INLINE with `completeEffect`, from inside this emit.
+    //  * TAKE OWNERSHIP with `deferEffect`, and answer whenever the work
+    //    finishes. From this thread use `completeEffect`; from any other use
+    //    `answerDeferredEffect`, which queues onto this one. That is what an
+    //    asynchronous file dialog needs.
+    //
+    // Do not block on another thread from inside the handler -- defer instead,
+    // which is what it is for.
     void effectRequested(const QVariant &effectId,
                          const QString &kind,
                          const QVariant &payload,
@@ -141,6 +155,10 @@ private:
     // that is the whole point -- but left in `awaiting_`, because the runtime
     // is still waiting on them.
     QSet<quint64> deferred_;
+    // A deferred answer that landed inside a nested settle. The emit cannot
+    // happen there -- that frame returns early -- so the frame that finishes
+    // the settle does it, or the UI is never told.
+    bool deferredAnswered_ = false;
     // Re-entrancy: a handler connected to effectRequested may call
     // completeEffect() from inside the emit, which produces a newer update than
     // the one settleEffects is holding. Without adopting it the caller gets a

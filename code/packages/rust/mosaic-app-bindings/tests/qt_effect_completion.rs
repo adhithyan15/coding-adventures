@@ -194,6 +194,7 @@ fn the_emitted_qt_host_answers_effects() {
         "a fully-answered chaining batch leaves nothing outstanding",
         "snapshot still works after a fully-answered chaining batch",
         "a deferred effect stays outstanding rather than being failed",
+        "deferring an effect nothing awaits is refused",
         "the late answer reached the UI as an update",
         "answering a deferred effect settles it",
         "the deferred answer's value reached the app",

@@ -156,9 +156,21 @@ if let host = makeHost("MOSAIC_PROBE_STATE_F") {
     host?.deferEffect(id)          // "the dialog is open"
   }
   var pushes = 0
-  host.setPropsChangedHandler { pushes += 1 }
+  var pushedOffMain = false
+  host.setPropsChangedHandler {
+    pushes += 1
+    // WHERE it arrives is the assertion, not just that it did. SwiftUI state
+    // must be mutated on the main thread, and a deferred answer comes from
+    // whatever thread finished the work.
+    if !Thread.isMainThread { pushedOffMain = true }
+  }
 
   let afterRequest = request(host)
+  let pushesBeforeAnswer = pushes
+  // Deferring something the runtime is not waiting on must be refused, or the
+  // fail sweep is switched off for an effect nothing will ever answer.
+  check(host.deferEffect(99999) == false,
+        "deferring an effect nothing awaits is refused")
   check(deferredId != nil, "the handler was offered the effect")
   check(awaited(afterRequest, "deferred") == 1,
         "a deferred effect stays outstanding rather than being failed")
@@ -172,7 +184,15 @@ if let host = makeHost("MOSAIC_PROBE_STATE_F") {
   check(done.wait(timeout: .now() + 5) == .success,
         "answering from another thread does not deadlock")
 
-  check(pushes >= 1, "the late answer reached the UI as a props change")
+  // The host hops to the main queue, which a command-line driver has to
+  // service. `>= 1` would have been satisfied by an earlier push from the
+  // request above -- the assertion has to be that THIS answer pushed.
+  let deadline = Date().addingTimeInterval(5)
+  while pushes == pushesBeforeAnswer, Date() < deadline {
+    RunLoop.main.run(mode: .default, before: Date().addingTimeInterval(0.05))
+  }
+  check(pushes > pushesBeforeAnswer, "the late answer reached the UI as a props change")
+  check(!pushedOffMain, "the UI is told on the main thread, not the answering one")
   let final = props(host.applyProps())
   check(awaited(final, "answered-late") == 0, "answering a deferred effect settles it")
   check((final["count"] as? NSNumber)?.intValue == 9,

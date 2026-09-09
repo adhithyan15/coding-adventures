@@ -158,8 +158,10 @@ fn the_emitted_swiftui_host_answers_effects() {
         "a non-serialisable effect result is refused, not aborted on",
         "a non-finite number is refused, not aborted on",
         "a deferred effect stays outstanding rather than being failed",
+        "deferring an effect nothing awaits is refused",
         "answering from another thread does not deadlock",
         "the late answer reached the UI as a props change",
+        "the UI is told on the main thread, not the answering one",
         "answering a deferred effect settles it",
         "the deferred answer's value reached the app",
     ] {

@@ -238,6 +238,15 @@ int main(int argc, char **argv) {
                   != QStringLiteral("failed: no host handler answered effect 1"),
               "a deferred effect is not failed behind the handler's back");
 
+        // Deferring something the runtime is NOT waiting on must be refused.
+        // Ids are sequential and this is Q_INVOKABLE, so an off-by-one in QML
+        // would otherwise turn the fail sweep off for an effect nothing will
+        // ever answer -- wedging snapshot for the life of the process.
+        const auto bogus = host.deferEffect(QVariant::fromValue(quint64{99999}));
+        check(bogus.value(QStringLiteral("error")).toString().contains(
+                  QStringLiteral("not awaiting")),
+              "deferring an effect nothing awaits is refused");
+
         // ...the dialog closes, on whatever thread, whenever.
         host.completeEffect(deferredId, QVariantMap{{QStringLiteral("ok"),
             QVariantMap{{QStringLiteral("amount"), 9}}}});
