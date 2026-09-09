@@ -15,6 +15,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.longOrNull
@@ -90,6 +91,18 @@ interface MosaicNativeApi : Library {
         snapshot: MosaicBytes.ByValue,
         update: MosaicBuffer,
     ): Int
+    /**
+     * Protocol 2 only. JNA resolves interface methods lazily, so a runtime
+     * without this symbol still loads; the UnsatisfiedLinkError surfaces only
+     * if an effect actually arrives.
+     */
+    fun mosaic_app_complete_effect(
+        app: Pointer,
+        id: MosaicBytes.ByValue,
+        result: MosaicBytes.ByValue,
+        update: MosaicBuffer,
+    ): Int
+
     fun mosaic_buffer_free(buffer: MosaicBuffer.ByValue)
     fun mosaic_app_destroy(app: Pointer)
 }
@@ -99,6 +112,56 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
     private var sequence = 0L
     private var latestUpdate: JsonObject
     private var propsChangedHandler: (() -> Unit)? = null
+
+    /**
+     * Called once per effect the runtime asks for, before the host decides what
+     * to do with it.
+     *
+     * A handler has two options, and choosing neither loses the effect:
+     *
+     *  - **Answer inline** with [completeEffect]. Every entry point is
+     *    `@Synchronized` and JVM monitors are reentrant, so this is safe from
+     *    within the handler on the same thread.
+     *  - **Take ownership** with [deferEffect], and answer whenever the work
+     *    finishes. That is what an asynchronous file dialog needs, and the
+     *    answer reaches the UI through the props-changed handler, because it is
+     *    the return value of no call the UI made.
+     *
+     * Do not block on another thread from inside the handler: this host's
+     * monitor is held across the call, so waiting on a thread that then calls
+     * back in deadlocks. Defer instead.
+     *
+     * The props-changed handler runs on whatever thread answered. Compose state
+     * must be written from the UI thread, so an app answering off-thread should
+     * marshal there itself -- there is no portable main-thread primitive here
+     * to do it for you.
+     */
+    var effectHandler: ((Long, String, Any?, String) -> Unit)? = null
+
+    /** Awaited effect ids nothing has answered yet. */
+    private val awaiting = mutableSetOf<Long>()
+
+    /**
+     * Effects a handler has taken ownership of. Kept OUT of the fail sweep --
+     * that is the point -- but left in [awaiting], because the runtime is still
+     * waiting on them.
+     */
+    private val deferred = mutableSetOf<Long>()
+
+    /**
+     * Per-call accumulation, saved and restored around each settle.
+     *
+     * Effects accumulate at the WRITE site: a round may have several answers
+     * and each may mint more, so keeping only "the last update" drops every
+     * earlier answer's effects. They then exist in no map the host kept, are
+     * never emitted, never failed, and stay pending -- and the runtime gates
+     * `snapshot` and `restore` on nothing being pending, so that is permanent.
+     */
+    private var carriedEffects: MutableList<JsonElement>? = null
+    private var latestAnswer: JsonObject? = null
+    private var answered = false
+    private var settling = 0
+    private var effectWarning: String? = null
     private var persistenceWarning: String? = null
 
     init {
@@ -158,10 +221,295 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
             invoke { output -> api.mosaic_app_dispatch(app, input, output) }
         }.jsonObject
         sequence = nextSequence
+        // Settle BEFORE persisting: the runtime refuses to snapshot while an
+        // effect is outstanding, so persisting first warns on every effect.
+        val settled = settleEffects(update)
         persistSnapshot()
-        latestUpdate = withPersistenceWarning(update)
+        latestUpdate = withPersistenceWarning(settled)
         propsChangedHandler?.invoke()
-        return update.toKotlinMap()
+        return latestUpdate.toKotlinMap()
+    }
+
+    /**
+     * Answer an effect the app is waiting on.
+     *
+     * [result] is one tagged outcome: `{"ok": value}`, `{"cancelled": {}}`, or
+     * `{"failed": {"message": "..."}}`. Cancellation is a first-class answer --
+     * a file dialog dismissed with Escape is an ordinary user action.
+     */
+    @Synchronized
+    fun completeEffect(id: Long, result: Map<String, Any?>): Map<String, Any?> {
+        val app = requireHandle()
+        val update = withJsonInput(result.toJsonElement()) { resultBytes ->
+            withJsonInput(JsonPrimitive(id)) { idBytes ->
+                invoke { output ->
+                    api.mosaic_app_complete_effect(app, idBytes, resultBytes, output)
+                }
+            }
+        }.jsonObject
+        // Cleared only once the runtime accepted the answer: clearing on the way
+        // in would drop the obligation if the call failed.
+        awaiting.remove(id)
+        val wasDeferred = deferred.remove(id)
+        val carrier = carriedEffects
+        if (settling > 0 && carrier != null) {
+            // Inside a settle: hand this to the loop already running rather than
+            // starting a second one. APPEND -- several effects in one round may
+            // each be answered, and each answer may mint more.
+            carrier.addAll(effectsOf(update))
+            latestAnswer = update
+            answered = true
+            return update.toKotlinMap()
+        }
+        val settled = settleEffects(update)
+        persistSnapshot()
+        latestUpdate = withPersistenceWarning(settled)
+        // A deferred answer is the return value of no call the UI made, so the
+        // UI has to be told even though nothing asked.
+        if (wasDeferred) propsChangedHandler?.invoke()
+        return latestUpdate.toKotlinMap()
+    }
+
+    /**
+     * Take ownership of an effect without answering it yet.
+     *
+     * A deferred effect stays pending, so `snapshot` and `restore` stay refused
+     * until it is answered -- correct, not a defect: a half-answered import is
+     * not a state worth restoring. Abandoning one leaves the app waiting for
+     * good, so a handler that defers owes an answer.
+     *
+     * Refuses an id the runtime is not awaiting. Ids are sequential, so an
+     * off-by-one would otherwise switch the fail sweep off for an effect nothing
+     * will ever answer -- wedging persistence for the life of the process.
+     */
+    @Synchronized
+    fun deferEffect(id: Long): Boolean {
+        if (!awaiting.contains(id)) return false
+        deferred.add(id)
+        return true
+    }
+
+    private fun effectsOf(update: JsonObject): List<JsonElement> =
+        (update["effects"] as? JsonArray) ?: emptyList()
+
+    /**
+     * Read an effect entry as an object, or `null` if it is not one.
+     *
+     * `JsonElement.jsonObject` would throw here instead. The runtime only ever
+     * sends objects, so nothing in normal operation reaches the null branch --
+     * but a throw would escape the sweep that discharges awaits, leaving ids in
+     * `awaiting` that nothing will ever remove, which switches persistence off
+     * for the life of the process. A malformed entry is reported, never thrown.
+     */
+    private fun effectObject(entry: JsonElement): JsonObject? = entry as? JsonObject
+
+    /** Read a string-valued effect field, tolerating a non-primitive. */
+    private fun effectText(effect: JsonObject, key: String): String =
+        (effect[key] as? JsonPrimitive)?.contentOrNull.orEmpty()
+
+    /** Drain the effects an update carries, answering what nothing else does. */
+    private fun settleEffects(update: JsonObject): JsonObject {
+        // A completion can itself produce effects -- an import needing a second
+        // dialog is an ordinary flow -- so this drains rather than sweeping once.
+        val maxRounds = 64
+        // And a bound on NESTING, which the round bound does not give: a handler
+        // that dispatches an event rather than answering re-enters one frame
+        // deeper, and only the stack would stop it.
+        val maxDepth = 8
+
+        if (settling >= maxDepth) {
+            val reason = "effect settling nested more than $maxDepth levels deep; " +
+                "an effect handler is calling back into the host instead of answering"
+            failOutstanding(update, reason)
+            return reportingError(latestUpdate, reason)
+        }
+
+        val outerEffects = carriedEffects
+        val outerAnswer = latestAnswer
+        val outerAnswered = answered
+        val frameEffects = mutableListOf<JsonElement>()
+        carriedEffects = frameEffects
+        latestAnswer = null
+        answered = false
+        settling += 1
+        try {
+            var current = update
+            repeat(maxRounds) {
+                val effects = effectsOf(current)
+                if (effects.isEmpty()) return current
+
+                val unanswered = mutableListOf<Long>()
+                // Keyed by id: a round can carry one effect whose handler threw
+                // beside another the handler simply ignored, and telling the app
+                // the second one threw would be a lie.
+                val handlerErrors = mutableMapOf<Long, String>()
+                var unreadable = 0
+                for (entry in effects) {
+                    val effect = effectObject(entry)
+                    if (effect == null) {
+                        // Not an object, so its delivery is unreadable too: it may
+                        // be an await the runtime is blocked on, and no answer can
+                        // name it. Counted with the other unanswerable ones.
+                        unreadable += 1
+                        continue
+                    }
+                    val id = effectId(effect["id"])
+                    val delivery = effectText(effect, "delivery")
+                    val isAwait = delivery.lowercase() == "await"
+                    if (id == null) {
+                        // An await nobody can name can never be answered, and the
+                        // runtime is waiting on it. Counted rather than dropped.
+                        if (isAwait) unreadable += 1
+                        continue
+                    }
+                    if (isAwait) awaiting.add(id)
+
+                    // A handler that throws is one that did not answer, not one
+                    // that ends the sweep. Letting the exception out would leave
+                    // this id in `awaiting` with nothing left to discharge it,
+                    // and the runtime refuses to snapshot or restore while
+                    // anything is pending -- so one throwing handler would cost
+                    // the process its persistence. It is not an exotic path:
+                    // `toJsonElement` throws on any value the payload converter
+                    // does not know, which is what a handler passing a `File` or
+                    // a `URI` straight through does on its first run.
+                    try {
+                        effectHandler?.invoke(
+                            id,
+                            effectText(effect, "kind"),
+                            effect["payload"]?.toKotlinValue(),
+                            delivery,
+                        )
+                    } catch (error: Throwable) {
+                        // Reported, not swallowed: the effect is about to be
+                        // failed below, and the app is told why rather than
+                        // being handed a bare "no host handler answered".
+                        handlerErrors[id] =
+                            error.message ?: error::class.qualifiedName ?: "unknown error"
+                    }
+
+                    if (isAwait && awaiting.contains(id) && !deferred.contains(id)) {
+                        unanswered.add(id)
+                    }
+                }
+                if (unreadable > 0) {
+                    effectWarning = "$unreadable Mosaic effect(s) arrived with an " +
+                        "unreadable id and cannot be answered; state cannot be saved " +
+                        "for the rest of this session"
+                }
+
+                val carried = frameEffects.toMutableList()
+                frameEffects.clear()
+                var latest = current
+                if (answered) {
+                    latestAnswer?.let { latest = it }
+                    latestAnswer = null
+                    answered = false
+                }
+
+                if (unanswered.isEmpty()) {
+                    if (carried.isEmpty()) return latest
+                    current = withEffects(latest, carried)
+                    return@repeat
+                }
+
+                // Nothing handled these, and the app will not progress without an
+                // answer. Failing them is the point of `await` being on the wire.
+                for (id in unanswered) {
+                    val reason = handlerErrors[id]
+                        ?.let { "the host handler for effect $id failed: $it" }
+                        ?: "no host handler answered effect $id"
+                    awaiting.remove(id)
+                    deferred.remove(id)
+                    val answeredUpdate = completeEffectOnce(id, reason) ?: continue
+                    carried.addAll(effectsOf(answeredUpdate))
+                    latest = answeredUpdate
+                }
+                current = withEffects(latest, carried)
+            }
+            val exhausted = "effect completion did not settle after $maxRounds rounds; " +
+                "the application is requesting effects faster than they can be answered"
+            failOutstanding(current, exhausted)
+            return reportingError(current, exhausted)
+        } finally {
+            settling -= 1
+            carriedEffects = outerEffects
+            latestAnswer = outerAnswer
+            answered = outerAnswered
+        }
+    }
+
+    /**
+     * Answer every awaited effect an update still lists, so a guard that gives
+     * up does not leave the runtime waiting. Bounded, and the bound can be
+     * outrun -- an app that keeps minting replacements past it leaves effects
+     * pending and persistence off, which is reported rather than inferred.
+     */
+    private fun failOutstanding(update: JsonObject, reason: String) {
+        var pending = effectsOf(update)
+        val maxDrainRounds = 8
+        repeat(maxDrainRounds) {
+            if (pending.isEmpty()) return@repeat
+            val batch = pending
+            val next = mutableListOf<JsonElement>()
+            for (entry in batch) {
+                val effect = effectObject(entry) ?: continue
+                val id = effectId(effect["id"]) ?: continue
+                if (effectText(effect, "delivery").lowercase() != "await") {
+                    continue
+                }
+                awaiting.remove(id)
+                deferred.remove(id)
+                completeEffectOnce(id, reason)?.let { next.addAll(effectsOf(it)) }
+            }
+            pending = next
+        }
+        if (pending.isNotEmpty()) {
+            effectWarning = "Mosaic effects are still outstanding after " +
+                "$maxDrainRounds rounds of clearing; state cannot be saved for " +
+                "the rest of this session"
+        }
+    }
+
+    private fun completeEffectOnce(id: Long, reason: String): JsonObject? = try {
+        val app = requireHandle()
+        val failed = buildJsonObject {
+            put("failed", buildJsonObject { put("message", reason) })
+        }
+        withJsonInput(failed) { resultBytes ->
+            withJsonInput(JsonPrimitive(id)) { idBytes ->
+                invoke { output ->
+                    api.mosaic_app_complete_effect(app, idBytes, resultBytes, output)
+                }
+            }
+        }.jsonObject
+    } catch (error: Throwable) {
+        null
+    }
+
+    private fun withEffects(update: JsonObject, effects: List<JsonElement>): JsonObject =
+        JsonObject(update.toMutableMap().apply { put("effects", JsonArray(effects)) })
+
+    /** Attach an error without discarding the props the update carries. */
+    private fun reportingError(update: JsonObject, message: String): JsonObject =
+        JsonObject(
+            update.toMutableMap().apply {
+                put("error", JsonPrimitive(message))
+                put("effects", JsonArray(emptyList()))
+            },
+        )
+
+    /**
+     * Effect ids the runtime mints stay inside 2^53-1 so they survive a JSON
+     * double. Anything outside that, negative, or non-integral is refused rather
+     * than truncated -- truncating would answer a DIFFERENT outstanding effect.
+     */
+    private fun effectId(value: JsonElement?): Long? {
+        val primitive = value as? JsonPrimitive ?: return null
+        if (primitive.isString) return null
+        val raw = primitive.longOrNull ?: return null
+        if (raw < 0 || raw > 9_007_199_254_740_991L) return null
+        return raw
     }
 
     @Synchronized
@@ -182,9 +530,15 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
                 api.mosaic_app_restore(requireHandle(), input, output)
             }
         }.jsonObject
-        latestUpdate = update
+        // Return what was stored, not the update that arrived. Settling answers
+        // effects, and answers move the app -- so the raw update's props are the
+        // ones from before that happened, and its `effects` list names effects
+        // already discharged. A caller that renders the return value would show
+        // state `props()` disagrees with. Qt and SwiftUI both return the settled
+        // update; this host returned the raw one.
+        latestUpdate = withPersistenceWarning(settleEffects(update))
         propsChangedHandler?.invoke()
-        return update.toKotlinMap()
+        return latestUpdate.toKotlinMap()
     }
 
     @Synchronized
