@@ -77,7 +77,14 @@ export const CONTENT_TYPES = new Set(["word", "phrase"]);
 // (The remaining known case is POLITENESS-STRATEGY against a `practice-mix`
 // synthesis; that one is left open deliberately, because a synthesis realizing a
 // concept is a larger claim than a teaching lesson doing so. See HL-C174.)
-export const REALIZING_TYPES = new Set(["word", "phrase", "grammar", "etymology"]);
+// `reading` joins the realizing types because a reading lesson teaches a
+// cross-language ABILITY, not a session label. The exempt list below is for
+// types that name a recap (`practice`, `review`) or an orthographic nuance
+// (`writing`); connected reading is neither. Until this was added, a spine node
+// whose concept is CONNECTED-READING could never be satisfied by the only kind
+// of lesson that teaches it, so the node was unsatisfiable by construction --
+// the same shape as the `comprehension` block type that no heading produced.
+export const REALIZING_TYPES = new Set(["word", "phrase", "grammar", "etymology", "reading"]);
 
 /**
  * Lesson types that carry a session/orthography label, not a cross-language

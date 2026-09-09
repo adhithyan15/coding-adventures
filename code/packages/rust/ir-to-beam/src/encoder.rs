@@ -193,8 +193,16 @@ pub fn encode_compact_term(tag: BEAMTag, value: u64) -> Vec<u8> {
         let lo = (value & 0xFF) as u8;
         vec![hi | 0x08 | t, lo]
     } else {
-        // Large form: header byte + big-endian bytes
-        let bytes = value_to_be_bytes(value);
+        // Large form: header byte + big-endian bytes.
+        //
+        // `I` (signed) and `U` (unsigned) need DIFFERENT minimal-byte rules:
+        // an unsigned large-form literal is read back as a plain magnitude,
+        // so leading zero bytes are pure waste and always safe to strip; a
+        // signed large-form literal is read back as two's complement, so
+        // the leading byte's high bit IS the sign — stripping down to fewer
+        // bytes than that requires corrupts a large positive value into a
+        // negative one. See `value_to_be_bytes` for the bug this fixes.
+        let bytes = value_to_be_bytes(value, tag == BEAMTag::I);
         let n = bytes.len();
         if n <= 8 {
             // (len - 2) encoded in 3 bits
@@ -216,16 +224,72 @@ pub fn encode_compact_term(tag: BEAMTag, value: u64) -> Vec<u8> {
     }
 }
 
-/// Return the big-endian byte representation of `value`, minimum 1 byte,
-/// no leading zero bytes.
-fn value_to_be_bytes(value: u64) -> Vec<u8> {
-    if value == 0 {
-        return vec![0];
+/// Return the big-endian byte representation of `value`, minimum 1 byte.
+///
+/// # The sign-bit bug this fixes (VM-040 COBOL BEAM signed/algebra probe)
+///
+/// BEAM's compact-term "large form" stores a THEORETICALLY minimal byte
+/// string, but what "minimal" means depends on the tag:
+///
+/// * **`U` (unsigned, `signed = false`)** — the loader reads the bytes as a
+///   plain non-negative magnitude, so leading `0x00` bytes carry no
+///   information and can always be stripped down to the shortest string
+///   with a nonzero (or, for `value == 0`, the single `0x00`) leading byte.
+///   This is the ORIGINAL behavior, unaffected by this fix.
+///
+/// * **`I` (signed, `signed = true`)** — the loader reads the bytes as
+///   big-endian TWO'S COMPLEMENT, so the leading byte's high bit doubles as
+///   the sign. Naively stripping every leading `0x00` (the original,
+///   BROKEN behavior for this tag) can leave a leading byte with its high
+///   bit set — turning a large POSITIVE literal into a negative one on
+///   load. E.g. `4_000_000_000` (`0x00_00_00_00_EE_6B_28_00`) naively
+///   strips to 4 bytes `EE 6B 28 00`; read back as signed, that is
+///   `-294967296`, not `4000000000`. This was VM-040's actual discovery:
+///   `2 * 1_000_000_000_000` — an ordinary COBOL `COMPUTE`'s scale-12
+///   intermediate — silently became a large negative number on real BEAM,
+///   corrupting every COMPUTE whose scale-12 arithmetic happened to cross a
+///   4- or 5-byte magnitude boundary with its top bit set. The fix mirrors
+///   the rule ASN.1 DER uses for `INTEGER`: strip a leading `0x00` only
+///   while the NEXT byte's high bit is still clear (else that next byte
+///   becomes the new leading byte and misreads as negative), and
+///   symmetrically strip a leading `0xFF` (already-negative values, whose
+///   full 64-bit two's-complement form the same `n as u64` cast produces)
+///   only while the next byte's high bit is still set.
+fn value_to_be_bytes(value: u64, signed: bool) -> Vec<u8> {
+    let raw = value.to_be_bytes(); // 8 bytes, full two's-complement width
+    if !signed {
+        if value == 0 {
+            return vec![0];
+        }
+        let first = raw.iter().position(|&b| b != 0).unwrap_or(7);
+        return raw[first..].to_vec();
     }
-    let raw = value.to_be_bytes(); // 8 bytes
-    // Strip leading zeros
-    let first = raw.iter().position(|&b| b != 0).unwrap_or(7);
-    raw[first..].to_vec()
+    // The compact-term "Large form" header can only represent lengths 2..=9
+    // (its 3-bit `len_field` is `length - 2`) — it exists specifically for
+    // values too big for the Small/Medium forms, which already cover every
+    // magnitude that fits in 1 byte. So the signed minimal length must never
+    // drop below 2, even though a small negative value (e.g. -7, whose u64
+    // bit pattern is huge and so reaches this "Large form" branch purely
+    // because of ITS SIGN, not its magnitude) can strip to 1 byte under the
+    // same rule that fixes the positive-overflow case above. `start < 6`
+    // (not `< 7`) keeps at least 2 bytes: `raw[start..]` has length
+    // `8 - start`, so `start <= 6` guarantees length `>= 2`.
+    let negative = (value as i64) < 0;
+    let mut start = 0usize;
+    while start < 6 {
+        let this = raw[start];
+        let next_high_bit_set = raw[start + 1] & 0x80 != 0;
+        let can_drop = if negative {
+            this == 0xFF && next_high_bit_set
+        } else {
+            this == 0x00 && !next_high_bit_set
+        };
+        if !can_drop {
+            break;
+        }
+        start += 1;
+    }
+    raw[start..].to_vec()
 }
 
 // ===========================================================================
@@ -535,12 +599,100 @@ mod tests {
 
     #[test]
     fn test_value_to_be_bytes_zero() {
-        assert_eq!(value_to_be_bytes(0), vec![0x00]);
+        assert_eq!(value_to_be_bytes(0, false), vec![0x00]);
+        // The signed path never returns fewer than 2 bytes — the "Large
+        // form" header's `len_field` (`length - 2`) cannot represent a
+        // length below 2 — so 0 pads to a 2-byte `00 00` here, unlike the
+        // unsigned path's single `0x00`.
+        assert_eq!(value_to_be_bytes(0, true), vec![0x00, 0x00]);
     }
 
     #[test]
     fn test_value_to_be_bytes_256() {
-        assert_eq!(value_to_be_bytes(256), vec![0x01, 0x00]);
+        assert_eq!(value_to_be_bytes(256, false), vec![0x01, 0x00]);
+        // 256's minimal byte (0x01) already has a clear high bit, so the
+        // signed and unsigned rules agree here.
+        assert_eq!(value_to_be_bytes(256, true), vec![0x01, 0x00]);
+    }
+
+    // ------------------------------------------------------------------
+    // VM-040 regression: signed large-form literals must not flip sign.
+    //
+    // Each case's naive (unsigned-style) stripped form has a leading byte
+    // with its high bit set; the signed rule must insert a 0x00 pad byte
+    // so the value round-trips as the SAME positive number when read back
+    // as two's complement — see `value_to_be_bytes`'s doc comment.
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn test_signed_large_form_pads_high_bit() {
+        // 4_000_000_000 = 0xEE_6B_28_00 unsigned-minimal (4 bytes, top bit
+        // set) — the signed form must pad to 5 bytes: 00 EE 6B 28 00.
+        assert_eq!(
+            value_to_be_bytes(4_000_000_000u64, true),
+            vec![0x00, 0xEE, 0x6B, 0x28, 0x00]
+        );
+        // 2^31 exactly: unsigned-minimal is 0x80 00 00 00 (top bit set).
+        assert_eq!(
+            value_to_be_bytes(1u64 << 31, true),
+            vec![0x00, 0x80, 0x00, 0x00, 0x00]
+        );
+        // Every encoded leading byte for a POSITIVE value must have its
+        // high bit clear — that is the whole invariant this function
+        // restores. Check it directly (rather than by hand-computed hex)
+        // for a COBOL COMPUTE scale-12 intermediate, VM-040's actual
+        // discovery case.
+        let encoded = value_to_be_bytes(2_000_000_000_000u64, true);
+        assert_eq!(
+            encoded[0] & 0x80, 0,
+            "leading byte {:#04x} has its high bit set for a positive value", encoded[0]
+        );
+    }
+
+    #[test]
+    fn test_encode_compact_term_small_negative_does_not_underflow() {
+        // A small negative i64 (e.g. -7) has a HUGE `u64` bit pattern, so it
+        // reaches the "Large form" branch purely because of magnitude-as-
+        // unsigned-bits, not true magnitude. Before the `start < 6` floor
+        // was added, the signed rule's minimal encoding stripped this to a
+        // single byte — one below the "Large form" header's minimum
+        // representable length of 2 — and `(n - 2) as u8` panicked with
+        // "attempt to subtract with overflow" in a debug build. This is
+        // the exact crash VM-040's COBOL signed/algebra probe hit.
+        let enc = encode_compact_term(BEAMTag::I, (-7i64) as u64);
+        assert!(enc.len() >= 3, "header byte + at least 2 payload bytes");
+    }
+
+    #[test]
+    fn test_signed_large_form_round_trips_via_i64_reader() {
+        // For every value in this table, re-reading the encoded bytes as
+        // big-endian two's complement (sign-extended to 64 bits) must
+        // recover the exact original i64 — this is what the real BEAM
+        // loader does.
+        for value in [
+            0i64,
+            1,
+            -1,
+            2_147_483_647,       // i32::MAX
+            2_147_483_648,       // i32::MAX + 1 (needs 5 bytes, was corrupted)
+            4_000_000_000,       // > i32::MAX, < u32::MAX (needs 5 bytes, was corrupted)
+            4_294_967_295,       // u32::MAX (needs 5 bytes, was corrupted)
+            4_294_967_296,       // 2^32 exactly (already worked before this fix)
+            1_000_000_000_000,   // 10^12 (needs 6 bytes, was corrupted)
+            -7,
+            -1_000_000_000_000,
+            i64::MIN,
+            i64::MAX,
+        ] {
+            let encoded = value_to_be_bytes(value as u64, true);
+            assert!(encoded.len() <= 8, "value {value} encoded to {} bytes", encoded.len());
+            let mut buf = if value < 0 { [0xFFu8; 8] } else { [0u8; 8] };
+            buf[8 - encoded.len()..].copy_from_slice(&encoded);
+            assert_eq!(
+                i64::from_be_bytes(buf), value,
+                "value {value} encoded as {encoded:02x?} did not round-trip"
+            );
+        }
     }
 
     // ------------------------------------------------------------------

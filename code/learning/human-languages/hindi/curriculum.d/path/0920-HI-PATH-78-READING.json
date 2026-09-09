@@ -1,0 +1,14 @@
+{
+  "id": "HI-PATH-78-READING",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "HI-C78-signs",
+    "HI-C78-notices",
+    "HI-C78-pehla-paath"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-78-READING"
+  ],
+  "after": []
+}

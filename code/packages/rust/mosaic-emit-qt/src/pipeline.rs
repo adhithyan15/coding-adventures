@@ -219,6 +219,20 @@ pub struct EmitOptions {
 
     /// CMake C++ standard. Default `"17"` — Qt6's documented minimum.
     pub pinned_cxx_standard: String,
+
+    /// Story fixture values keyed by slot name. The generated `main.cpp`
+    /// passes these to `QQuickView::setInitialProperties`, so a demo app or a
+    /// component page shows the story's own values instead of the component's
+    /// declared property defaults.
+    ///
+    /// They are set from the *shell*, never written into the component `.qml`:
+    /// the component artifact is reusable and must stay identical whichever
+    /// story is being previewed.
+    ///
+    /// `require_runtime` ignores this. That shell builds its initial
+    /// properties from `mosaicHost.propsRequired()` and is defined to take
+    /// every value from the runtime.
+    pub slot_values: HashMap<String, String>,
 }
 
 impl Default for EmitOptions {
@@ -229,6 +243,7 @@ impl Default for EmitOptions {
             pinned_qt_version: "6.8".to_string(),
             pinned_cmake_min: "3.21".to_string(),
             pinned_cxx_standard: "17".to_string(),
+            slot_values: HashMap::new(),
         }
     }
 }
@@ -325,6 +340,7 @@ fn build_qt_project_files(
             slots,
             native_table_count,
             options.require_runtime,
+            &options.slot_values,
         ),
         qmldir: build_qmldir(name, &module_name),
         readme: build_qt_readme(name, &module_name, options.require_runtime),
@@ -489,6 +505,7 @@ fn build_main_cpp(
     slots: &[SlotDecl],
     native_table_count: usize,
     require_runtime: bool,
+    slot_values: &HashMap<String, String>,
 ) -> String {
     let module_name_slash = module_name.replace('.', "/");
     let mut out = String::new();
@@ -597,9 +614,19 @@ fn build_main_cpp(
     writeln!(out, "  view.setTitle(QStringLiteral(\"{name}\"));").unwrap();
     out.push_str("  view.resize(1100, 800);\n\n");
     push_native_table_model_setup(&mut out, "  ", native_table_count);
-    if native_table_count > 0 {
+    // Fixture values reach the component the same way the table models do --
+    // as initial properties on the view, set from the shell. Writing them into
+    // the component .qml instead would make the reusable artifact differ per
+    // story (#14459).
+    let fixture_lines = fixture_initial_property_lines(slots, slot_values);
+    if native_table_count > 0 || !fixture_lines.is_empty() {
         out.push_str("  QVariantMap initialProperties;\n");
-        out.push_str("  initialProperties.insert(QStringLiteral(\"mosaicNativeTableModels\"), mosaicNativeTableModels);\n");
+        if native_table_count > 0 {
+            out.push_str("  initialProperties.insert(QStringLiteral(\"mosaicNativeTableModels\"), mosaicNativeTableModels);\n");
+        }
+        for line in &fixture_lines {
+            out.push_str(line);
+        }
         out.push_str("  view.setInitialProperties(initialProperties);\n\n");
     }
     out.push_str("  // Load the Item component into a visible Qt Quick view from the\n");
@@ -6412,6 +6439,61 @@ fn find_number_prop(node: &LayoutNode, prop_name: &str) -> Option<f64> {
 /// property of the given type. The QML engine accepts `""` for `string`
 /// and `url`; `0` for `real`; `false` for `bool`; `"#000000"` for `color`;
 /// `[]` for `var`; and `null` for `Component`.
+/// Build the `initialProperties.insert(...)` lines that carry story fixtures
+/// into the generated Qt shell.
+///
+/// Emitted in slot-declaration order so output is deterministic. A fixture
+/// naming a slot the component does not declare is skipped rather than
+/// emitted: `setInitialProperties` warns at runtime for unknown properties,
+/// and a silent warning in a demo app is worse than simply not showing the
+/// value. Fixture validation (#14435) is where a bad name should be reported.
+fn fixture_initial_property_lines(
+    slots: &[SlotDecl],
+    slot_values: &HashMap<String, String>,
+) -> Vec<String> {
+    let mut lines = Vec::new();
+    for slot in slots {
+        let Some(fixture) = slot_values.get(&slot.name) else {
+            continue;
+        };
+        let camel = to_camel_case_first_lower(&slot.name);
+        let value = qvariant_literal_for_fixture(&slot.r#type, fixture);
+        lines.push(format!(
+            "  initialProperties.insert(QStringLiteral(\"{camel}\"), {value});\n"
+        ));
+    }
+    lines
+}
+
+/// Render a fixture as the C++ expression for its slot's declared type.
+///
+/// QML properties are typed (`property real count`), so a number slot handed
+/// a `QStringLiteral` would be coerced or rejected at load. A value that does
+/// not parse for its type falls back to a string literal rather than invalid
+/// C++ -- rejecting it belongs to fixture validation (#14435), and emitting
+/// uncompilable C++ would hide a bad fixture behind a build failure.
+fn qvariant_literal_for_fixture(slot_type: &SlotType, fixture: &str) -> String {
+    match slot_type {
+        SlotType::Number => match fixture.trim().parse::<f64>() {
+            Ok(value) if value.is_finite() => {
+                let text = value.to_string();
+                if text.contains('.') || text.contains('e') || text.contains('E') {
+                    text
+                } else {
+                    format!("{text}.0")
+                }
+            }
+            _ => format!("QStringLiteral(\"{}\")", escape_qml_string(fixture)),
+        },
+        SlotType::Bool => match fixture.trim() {
+            "true" => "true".to_string(),
+            "false" => "false".to_string(),
+            _ => format!("QStringLiteral(\"{}\")", escape_qml_string(fixture)),
+        },
+        _ => format!("QStringLiteral(\"{}\")", escape_qml_string(fixture)),
+    }
+}
+
 fn slot_type_to_qml(t: &SlotType) -> (&'static str, &'static str) {
     match t {
         SlotType::Text => ("string", "\"\""),
@@ -13828,4 +13910,206 @@ mod tests {
         assert!(out.contains(r#"variant === "danger""#), "got:\n{out}");
     }
 
+    // ---- story fixtures (#14459) -------------------------------------
+
+    fn fixture_project(
+        slots: Vec<SlotDecl>,
+        values: &[(&str, &str)],
+        require_runtime: bool,
+    ) -> ProjectFiles {
+        let m = component("Badge", slots, vec![]);
+        from_pipeline_with_options(
+            &m,
+            &single_box_layout("Badge"),
+            &empty_style("Badge"),
+            &EmitOptions {
+                emit_project: true,
+                require_runtime,
+                slot_values: values
+                    .iter()
+                    .map(|(k, v)| (k.to_string(), v.to_string()))
+                    .collect(),
+                ..EmitOptions::default()
+            },
+        )
+        .unwrap()
+        .project
+        .unwrap()
+    }
+
+    #[test]
+    fn fixtures_become_initial_properties_on_the_view() {
+        let project = fixture_project(
+            vec![
+                slot("label", SlotType::Text, true),
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".into(), "danger".into()]),
+                    false,
+                ),
+            ],
+            &[("label", "Overdue"), ("variant", "danger")],
+            false,
+        );
+
+        assert!(
+            project.main_cpp.contains(
+                r#"initialProperties.insert(QStringLiteral("label"), QStringLiteral("Overdue"));"#
+            ),
+            "got:\n{}",
+            project.main_cpp
+        );
+        assert!(
+            project.main_cpp.contains(
+                r#"initialProperties.insert(QStringLiteral("variant"), QStringLiteral("danger"));"#
+            ),
+            "got:\n{}",
+            project.main_cpp
+        );
+        assert!(
+            project
+                .main_cpp
+                .contains("view.setInitialProperties(initialProperties);"),
+            "got:\n{}",
+            project.main_cpp
+        );
+    }
+
+    #[test]
+    fn fixtures_do_not_change_the_reusable_component_qml() {
+        let slots = || {
+            vec![slot(
+                "variant",
+                SlotType::OneOf(vec!["primary".into(), "danger".into()]),
+                false,
+            )]
+        };
+        let m = component("Badge", slots(), vec![]);
+        let render = |values: &[(&str, &str)]| {
+            from_pipeline_with_options(
+                &m,
+                &single_box_layout("Badge"),
+                &empty_style("Badge"),
+                &EmitOptions {
+                    emit_project: true,
+                    slot_values: values
+                        .iter()
+                        .map(|(k, v)| (k.to_string(), v.to_string()))
+                        .collect(),
+                    ..EmitOptions::default()
+                },
+            )
+            .unwrap()
+            .output
+        };
+
+        // The component artifact is shared by every story and by real hosts.
+        // Only the shell may differ per story.
+        assert_eq!(
+            render(&[("variant", "danger")]),
+            render(&[("variant", "primary")])
+        );
+        assert_eq!(render(&[("variant", "danger")]), render(&[]));
+    }
+
+    #[test]
+    fn fixtures_render_as_typed_cpp_literals() {
+        let project = fixture_project(
+            vec![
+                slot("count", SlotType::Number, false),
+                slot("disabled", SlotType::Bool, false),
+            ],
+            &[("count", "42"), ("disabled", "true")],
+            false,
+        );
+
+        // `property real count` / `property bool disabled` are typed, so a
+        // QStringLiteral here would be coerced or rejected at load.
+        assert!(
+            project
+                .main_cpp
+                .contains(r#"initialProperties.insert(QStringLiteral("count"), 42.0);"#),
+            "got:\n{}",
+            project.main_cpp
+        );
+        assert!(
+            project
+                .main_cpp
+                .contains(r#"initialProperties.insert(QStringLiteral("disabled"), true);"#),
+            "got:\n{}",
+            project.main_cpp
+        );
+    }
+
+    #[test]
+    fn unparseable_fixtures_stay_valid_cpp() {
+        let project = fixture_project(
+            vec![slot("count", SlotType::Number, false)],
+            &[("count", "lots")],
+            false,
+        );
+
+        // A bare `lots` would not compile, hiding the bad fixture behind a
+        // build failure in generated output.
+        assert!(
+            project.main_cpp.contains(
+                r#"initialProperties.insert(QStringLiteral("count"), QStringLiteral("lots"));"#
+            ),
+            "got:\n{}",
+            project.main_cpp
+        );
+    }
+
+    #[test]
+    fn fixtures_are_escaped_in_cpp_literals() {
+        let project = fixture_project(
+            vec![slot("label", SlotType::Text, true)],
+            &[("label", "say \"hi\"")],
+            false,
+        );
+
+        assert!(
+            project.main_cpp.contains(r#"QStringLiteral("say \"hi\"")"#),
+            "got:\n{}",
+            project.main_cpp
+        );
+    }
+
+    #[test]
+    fn fixtures_for_undeclared_slots_are_skipped() {
+        let project = fixture_project(
+            vec![slot("label", SlotType::Text, true)],
+            &[("label", "Overdue"), ("nonesuch", "ignored")],
+            false,
+        );
+
+        // setInitialProperties warns at runtime for an unknown property. A
+        // silent warning in a demo app is worse than not showing the value;
+        // reporting the bad name is fixture validation's job (#14435).
+        assert!(
+            !project.main_cpp.contains("nonesuch"),
+            "got:\n{}",
+            project.main_cpp
+        );
+        assert!(project.main_cpp.contains(r#"QStringLiteral("Overdue")"#));
+    }
+
+    #[test]
+    fn require_runtime_ignores_fixtures() {
+        let project = fixture_project(
+            vec![slot("label", SlotType::Text, true)],
+            &[("label", "Overdue")],
+            true,
+        );
+
+        // The strict shell builds its initial properties from
+        // mosaicHost.propsRequired() and is defined to take every value from
+        // the runtime. A fixture must not become a value it cannot have.
+        assert!(
+            !project.main_cpp.contains("Overdue"),
+            "got:\n{}",
+            project.main_cpp
+        );
+        assert!(project.main_cpp.contains("mosaicHost.propsRequired()"));
+    }
 }

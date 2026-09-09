@@ -2507,6 +2507,146 @@ fn test_69_real_erl_tape_loop_preserves_pointer_across_iterations() {
         "the tape pointer must survive every iteration");
 }
 
+/// VM-040 COBOL BEAM signed/algebra probe: a truncating `MOVE` (COBOL's
+/// `move_char_item`, PL09 step 4) lowers to a fixed-bounds `str_slice`, which
+/// this backend previously rejected outright (`UnsupportedType`). `"ABCD"`
+/// sliced to `[0, 2)` must read back `"AB"` on real BEAM.
+#[test]
+fn test_70_real_erl_str_slice() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "str", vec![
+        IIRInstr::new("str_const", Some("w".into()), vec![Operand::Str("ABCD".into())], "str"),
+        IIRInstr::new("const", Some("start".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("end".into()), vec![Operand::Int(2)], "i64"),
+        IIRInstr::new("str_slice", Some("v".into()),
+            vec![Operand::Var("w".into()), Operand::Var("start".into()), Operand::Var("end".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("v".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "str_slice module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_str_slice_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_str_slice_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("iir_str_slice_test:main(),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(output.status.success(),
+        "erl exited non-zero; stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "AB",
+        "str_slice([0,2)) of \"ABCD\" must read \"AB\"");
+}
+
+/// A `str_slice` live across another call (so it must survive Y-register
+/// spill/restore, exactly like `str_concat`) and starting mid-string with a
+/// non-literal length — the reference-modification shape COBOL emits for a
+/// computed substring, not just a fixed-bounds truncating MOVE.
+#[test]
+fn test_71_real_erl_str_slice_survives_live_across_call() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "str", vec![
+        IIRInstr::new("str_const", Some("w".into()), vec![Operand::Str("HELLO".into())], "str"),
+        IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+        // A str_concat (call_ext) between the bounds being computed and the
+        // slice itself, so `w` must survive a clobbering call.
+        IIRInstr::new("str_const", Some("pad".into()), vec![Operand::Str("".into())], "str"),
+        IIRInstr::new("str_concat", Some("w2".into()),
+            vec![Operand::Var("w".into()), Operand::Var("pad".into())], "str"),
+        IIRInstr::new("str_slice", Some("v".into()),
+            vec![Operand::Var("w2".into()), Operand::Var("start".into()), Operand::Var("end".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("v".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "str_slice-after-call module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_str_slice_live_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_str_slice_live_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("iir_str_slice_live_test:main(),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(output.status.success(),
+        "erl exited non-zero; stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "ELL",
+        "str_slice([1,4)) of \"HELLO\" must read \"ELL\"");
+}
+
+/// VM-040 COBOL BEAM signed/algebra probe's actual discovery: a `const`
+/// literal too large for the compact-term Medium form (`>= 2048`) whose
+/// minimal-byte magnitude has its top bit set was silently corrupted into a
+/// negative number — `2 * 1_000_000_000_000` (an ordinary COBOL `COMPUTE`
+/// scale-12 intermediate) came back negative on real BEAM. See
+/// `ir_to_beam::encoder::value_to_be_bytes`'s doc comment for the encoding
+/// bug this pins down at the `iir-to-beam` → real-`erl` boundary.
+#[test]
+fn test_72_real_erl_large_positive_const_stays_positive() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        // 2 * 10^12: minimal unsigned bytes are `E8 D4 A5 10 00` (top bit
+        // of the leading byte set) — exactly the corrupted case.
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2_000_000_000_000)], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "large-const module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_large_const_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_large_const_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w\",[iir_large_const_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(output.status.success(),
+        "erl exited non-zero; stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "2000000000000",
+        "a large positive const must not come back negative");
+}
+
 #[test]
 fn integer_output_builtin_accepts_no_destination() {
     let m = make_module_single(vec![

@@ -1,0 +1,17 @@
+{
+  "language": "hindi",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:17ef77670702c027",
+  "lessonIds": [
+    "HI-C78-signs",
+    "HI-C78-notices",
+    "HI-C78-pehla-paath"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "hindi/narration/ch85.txt",
+  "json": "hindi/narration/ch85.json",
+  "textHash": "fnv1a64:5723989ddc91e18e",
+  "jsonHash": "fnv1a64:a1ff5e69df4c2634",
+  "findings": []
+}

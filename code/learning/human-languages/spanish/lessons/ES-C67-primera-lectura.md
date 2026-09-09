@@ -1,13 +1,13 @@
 ---
 schema_version: 2
 id: ES-C67-primera-lectura
-spine_node: SPINE-DEFINITE-REFERENCE
+spine_node: SPINE-READ-SIGNS-AND-NOTICES
 sequence: 2567
 chapter: 266
 type: reading
 headword: (reading)
 gloss: the first paragraph — forty-seven words of Spanish in a row, and not one of them new
-concept_tag: ES-FIRST-PASSAGE
+concept_tag: CONNECTED-READING
 prerequisites: [ES-C67-repaso-a1]
 sounds: []
 roots: []
