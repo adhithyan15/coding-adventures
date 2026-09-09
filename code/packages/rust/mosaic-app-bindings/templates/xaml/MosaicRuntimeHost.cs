@@ -81,6 +81,27 @@ public static class MosaicRuntimeHost
             new MosaicRuntimeResult(runtime.Status($"Mosaic runtime handled {name}")));
     }
 
+    /// <summary>
+    /// Called once per effect the runtime asks for. See the runtime's own
+    /// documentation; setting it with no runtime loaded is a no-op, matching
+    /// every other accessor here.
+    /// </summary>
+    public static Action<ulong, string, JsonElement, string>? EffectHandler
+    {
+        get => State.Value?.EffectHandler;
+        set { if (State.Value is { } runtime) runtime.EffectHandler = value; }
+    }
+
+    /// <summary>Answer an effect the app is waiting on.</summary>
+    public static void CompleteEffect(ulong id, object result) =>
+        RequiredRuntime().CompleteEffect(id, result);
+
+    /// <summary>
+    /// Take ownership of an effect without answering it yet. False when the
+    /// runtime is not awaiting this id, or when there is no runtime at all.
+    /// </summary>
+    public static bool DeferEffect(ulong id) => State.Value?.DeferEffect(id) ?? false;
+
     public static void Close() => State.Value?.Dispose();
 
     private static Runtime RequiredRuntime() => State.Value
@@ -133,10 +154,20 @@ public static class MosaicRuntimeHost
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate uint Restore(IntPtr app, MosaicBytes snapshot, out MosaicBuffer update);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate uint CompleteEffectNative(
+        IntPtr app,
+        MosaicBytes id,
+        MosaicBytes result,
+        out MosaicBuffer update);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void BufferFree(MosaicBuffer buffer);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void Destroy(IntPtr app);
     private delegate uint InputOperation(MosaicBytes input, out MosaicBuffer output);
+    private delegate uint InputPairOperation(
+        MosaicBytes first,
+        MosaicBytes second,
+        out MosaicBuffer output);
     private delegate uint OutputOperation(out MosaicBuffer output);
 
     private sealed class Runtime : IDisposable
@@ -154,6 +185,85 @@ public static class MosaicRuntimeHost
         private readonly BufferFree bufferFree;
         private readonly Destroy destroy;
 
+        /// <summary>Null when the runtime predates protocol 2.</summary>
+        private readonly CompleteEffectNative? completeEffect;
+
+        /// <summary>
+        /// Called once per effect the runtime asks for, before the host decides
+        /// what to do with it.
+        /// </summary>
+        /// <remarks>
+        /// A handler has two options, and choosing neither loses the effect:
+        /// answer inline with <c>CompleteEffect</c>, or take ownership with
+        /// <c>DeferEffect</c> and answer whenever the work finishes. The lock
+        /// held across the handler is a <see cref="Monitor"/>, which is
+        /// reentrant on the same thread, so answering inline is safe -- but
+        /// blocking on another thread that then calls back in deadlocks. Defer
+        /// instead.
+        /// </remarks>
+        public Action<ulong, string, JsonElement, string>? EffectHandler { get; set; }
+
+        /// <summary>Awaited effect ids nothing has answered yet.</summary>
+        private readonly HashSet<ulong> awaiting = new();
+
+        /// <summary>
+        /// Effects a handler has taken ownership of. Kept OUT of the fail sweep
+        /// -- that is the point -- but left in <see cref="awaiting"/>, because
+        /// the runtime is still waiting on them.
+        /// </summary>
+        private readonly HashSet<ulong> deferred = new();
+
+        /// <summary>
+        /// Per-call accumulation, saved and restored around each settle.
+        /// </summary>
+        /// <remarks>
+        /// Effects accumulate at the WRITE site: a round may have several
+        /// answers and each may mint more, so keeping only "the last update"
+        /// drops every earlier answer's effects. They then exist in no
+        /// collection the host kept, are never emitted, never failed, and stay
+        /// pending -- and the runtime gates snapshot and restore on nothing
+        /// being pending, so that is permanent.
+        /// </remarks>
+        private List<JsonElement>? carriedEffects;
+        private JsonElement? latestAnswer;
+        private bool answered;
+        private int settling;
+        private string? effectWarning;
+
+        /// <summary>
+        /// Why the last settle gave up, if it did.
+        /// </summary>
+        /// <remarks>
+        /// The other four hosts return the settled update to their caller, so a
+        /// tripped guard reaches the application as an <c>error</c> key. This
+        /// host's <c>Dispatch</c> returns void and projects props onto a
+        /// component, and <c>error</c> is not a prop -- so without this the
+        /// guard would report into <see cref="latestUpdate"/> and nothing would
+        /// ever read it, exactly the dead-field bug the Compose port shipped.
+        ///
+        /// Not folded into <see cref="effectWarning"/>: that one means
+        /// persistence is off for good, whereas a guard that trips and then
+        /// drains successfully leaves nothing pending. So this is cleared at the
+        /// start of each top-level settle rather than being sticky.
+        /// </remarks>
+        private string? settleError;
+
+        /// <summary>
+        /// Set when <see cref="Dispose"/> is reached from inside a settle.
+        /// </summary>
+        /// <remarks>
+        /// This host is the only one of the five that UNMAPS the runtime, and
+        /// this change gave it the first application callback that runs while
+        /// native code is live. `Monitor` is reentrant, so a handler is free to
+        /// call the public `Close()` from inside the settle -- after which the
+        /// loop would still drive `CompleteEffectOnce` and `PersistSnapshot`
+        /// through delegates holding raw addresses inside a freed module. An
+        /// `AccessViolationException` is uncatchable, so the good outcome is a
+        /// dead process and the bad one is a jump into whatever got mapped
+        /// there next. The unload therefore waits for the outermost frame.
+        /// </remarks>
+        private bool unloadPending;
+
         private Runtime(IntPtr library)
         {
             this.library = library;
@@ -163,6 +273,8 @@ public static class MosaicRuntimeHost
             restore = Symbol<Restore>(library, "mosaic_app_restore");
             bufferFree = Symbol<BufferFree>(library, "mosaic_buffer_free");
             destroy = Symbol<Destroy>(library, "mosaic_app_destroy");
+            completeEffect = SymbolOrNull<CompleteEffectNative>(
+                library, "mosaic_app_complete_effect");
 
             var persisted = LoadPersistedSnapshot();
             persistenceWarning = persisted.Warning;
@@ -244,8 +356,11 @@ public static class MosaicRuntimeHost
                     return dispatch(app, input, out output);
                 });
                 sequence = nextSequence;
+                // Settle BEFORE persisting: the runtime refuses to snapshot
+                // while an effect is outstanding, so persisting first warns on
+                // every effect.
+                latestUpdate = SettleEffects(update);
                 PersistSnapshot();
-                latestUpdate = update;
             }
         }
 
@@ -267,16 +382,412 @@ public static class MosaicRuntimeHost
             lock (gate)
             {
                 EnsureOpen();
-                latestUpdate = Invoke(value, delegate(MosaicBytes input, out MosaicBuffer output)
+                var update = Invoke(value, delegate(
+                    MosaicBytes input, out MosaicBuffer output)
                 {
                     return restore(app, input, out output);
                 });
+                latestUpdate = SettleEffects(update);
             }
         }
 
-        public string Status(string message) => persistenceWarning is null
-            ? $"Status: {message}"
-            : $"Status: {message}. {persistenceWarning}";
+        /// <summary>Answer an effect the app is waiting on.</summary>
+        /// <remarks>
+        /// <paramref name="result"/> is one tagged outcome: <c>{"ok": value}</c>,
+        /// <c>{"cancelled": {}}</c>, or <c>{"failed": {"message": "..."}}</c>.
+        /// Cancellation is a first-class answer -- a file dialog dismissed with
+        /// Escape is an ordinary user action.
+        /// </remarks>
+        public void CompleteEffect(ulong id, object result)
+        {
+            lock (gate)
+            {
+                EnsureOpen();
+                var complete = completeEffect
+                    ?? throw new InvalidOperationException(
+                        "this Mosaic runtime predates effect completion (protocol 2)");
+                var update = Invoke(id, result, delegate(
+                    MosaicBytes idBytes, MosaicBytes resultBytes, out MosaicBuffer output)
+                {
+                    return complete(app, idBytes, resultBytes, out output);
+                });
+                // Cleared only once the runtime accepted the answer: clearing on
+                // the way in would drop the obligation if the call failed.
+                awaiting.Remove(id);
+                deferred.Remove(id);
+                if (settling > 0 && carriedEffects is { } carrier)
+                {
+                    // Inside a settle: hand this to the loop already running
+                    // rather than starting a second one. ADD -- several effects
+                    // in one round may each be answered, and each may mint more.
+                    carrier.AddRange(EffectsOf(update));
+                    latestAnswer = update;
+                    answered = true;
+                    return;
+                }
+                latestUpdate = SettleEffects(update);
+                PersistSnapshot();
+            }
+        }
+
+        /// <summary>Take ownership of an effect without answering it yet.</summary>
+        /// <remarks>
+        /// A deferred effect stays pending, so snapshot and restore stay refused
+        /// until it is answered -- correct, not a defect: a half-answered import
+        /// is not a state worth restoring. Abandoning one leaves the app waiting
+        /// for good, so a handler that defers owes an answer.
+        ///
+        /// Refuses an id the runtime is not awaiting. Ids are sequential, so an
+        /// off-by-one would otherwise switch the fail sweep off for an effect
+        /// nothing will ever answer -- wedging persistence for the life of the
+        /// process.
+        /// </remarks>
+        public bool DeferEffect(ulong id)
+        {
+            lock (gate)
+            {
+                if (!awaiting.Contains(id)) return false;
+                deferred.Add(id);
+                return true;
+            }
+        }
+
+        private static List<JsonElement> EffectsOf(JsonElement update) =>
+            update.ValueKind == JsonValueKind.Object
+            && update.TryGetProperty("effects", out var effects)
+            && effects.ValueKind == JsonValueKind.Array
+                ? effects.EnumerateArray().ToList()
+                : new List<JsonElement>();
+
+        /// <summary>Read a string-valued effect field, tolerating anything else.</summary>
+        private static string EffectText(JsonElement effect, string key) =>
+            effect.TryGetProperty(key, out var value)
+            && value.ValueKind == JsonValueKind.String
+                ? value.GetString() ?? string.Empty
+                : string.Empty;
+
+        /// <summary>
+        /// Effect ids the runtime mints stay inside 2^53-1 so they survive a
+        /// JSON double. Anything outside that, negative, or non-integral is
+        /// refused rather than truncated -- truncating would answer a DIFFERENT
+        /// outstanding effect. <c>TryGetUInt64</c> refuses all three without
+        /// throwing, which matters because the callers are the sweep that keeps
+        /// awaits from wedging persistence.
+        /// </summary>
+        private static ulong? EffectId(JsonElement effect)
+        {
+            if (!effect.TryGetProperty("id", out var value)) return null;
+            if (value.ValueKind != JsonValueKind.Number) return null;
+            if (!value.TryGetUInt64(out var raw)) return null;
+            return raw > 9007199254740991UL ? null : raw;
+        }
+
+        private static JsonElement WithProperty(JsonElement update, string key, object? value)
+        {
+            var map = new Dictionary<string, object?>();
+            if (update.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var property in update.EnumerateObject())
+                    map[property.Name] = property.Value;
+            }
+            map[key] = value;
+            return JsonSerializer.SerializeToElement(map);
+        }
+
+        private static JsonElement WithEffects(JsonElement update, List<JsonElement> effects) =>
+            WithProperty(update, "effects", effects);
+
+        /// <summary>Attach an error without discarding the props the update carries.</summary>
+        private static JsonElement ReportingError(JsonElement update, string message) =>
+            WithProperty(
+                WithProperty(update, "error", message),
+                "effects",
+                new List<JsonElement>());
+
+        /// <summary>
+        /// Record a lost effect, which costs the process its persistence.
+        /// </summary>
+        /// <remarks>
+        /// Kept out of <see cref="persistenceWarning"/> because that field is
+        /// cleared by the next successful write, and this condition does not
+        /// recover -- the runtime keeps refusing to snapshot while it waits on
+        /// an effect nothing can answer.
+        /// </remarks>
+        private void RecordEffectWarning(string message)
+        {
+            effectWarning = message;
+            Debug.WriteLine(message);
+        }
+
+        /// <summary>Drain the effects an update carries, answering what nothing else does.</summary>
+        private JsonElement SettleEffects(JsonElement update)
+        {
+            // A completion can itself produce effects -- an import needing a
+            // second dialog is an ordinary flow -- so this drains rather than
+            // sweeping once.
+            const int maxRounds = 64;
+            // And a bound on NESTING, which the round bound does not give: a
+            // handler that dispatches an event rather than answering re-enters
+            // one frame deeper, and only the stack would stop it.
+            const int maxDepth = 8;
+
+            if (settling >= maxDepth)
+            {
+                var nested = $"effect settling nested more than {maxDepth} levels deep; "
+                    + "an effect handler is calling back into the host instead of answering";
+                settleError = nested;
+                // Also written out here, not only left for `Status`: `Restore`
+                // and `CompleteEffect` both reach a top-level settle and neither
+                // has a `Status` reader, so a guard tripped by a worker thread
+                // answering a deferred effect would otherwise reach nobody.
+                Debug.WriteLine(nested);
+                FailOutstanding(update, nested);
+                return ReportingError(latestUpdate, nested);
+            }
+
+            // A fresh top-level settle: whatever the last one reported is
+            // history. Nested frames leave it alone, so an inner guard's reason
+            // survives to the outer frame's caller.
+            if (settling == 0) settleError = null;
+
+            var outerEffects = carriedEffects;
+            var outerAnswer = latestAnswer;
+            var outerAnswered = answered;
+            var frameEffects = new List<JsonElement>();
+            carriedEffects = frameEffects;
+            latestAnswer = null;
+            answered = false;
+            settling += 1;
+            try
+            {
+                var current = update;
+                for (var round = 0; round < maxRounds; round += 1)
+                {
+                    var effects = EffectsOf(current);
+                    if (effects.Count == 0) return current;
+
+                    var unanswered = new List<ulong>();
+                    // Keyed by id: a round can carry one effect whose handler
+                    // threw beside another the handler simply ignored, and
+                    // telling the app the second one threw would be a lie.
+                    var handlerErrors = new Dictionary<ulong, string>();
+                    var unreadable = 0;
+                    foreach (var entry in effects)
+                    {
+                        if (entry.ValueKind != JsonValueKind.Object)
+                        {
+                            // Not an object, so its delivery is unreadable too:
+                            // it may be an await the runtime is blocked on, and
+                            // no answer can name it.
+                            unreadable += 1;
+                            continue;
+                        }
+                        var id = EffectId(entry);
+                        var delivery = EffectText(entry, "delivery");
+                        var isAwait = string.Equals(
+                            delivery, "await", StringComparison.OrdinalIgnoreCase);
+                        if (id is not { } effectId)
+                        {
+                            // An await nobody can name can never be answered,
+                            // and the runtime is waiting on it.
+                            if (isAwait) unreadable += 1;
+                            continue;
+                        }
+                        if (isAwait) awaiting.Add(effectId);
+
+                        // A handler that throws is one that did not answer, not
+                        // one that ends the sweep. Letting the exception out
+                        // would leave this id in `awaiting` with nothing left to
+                        // discharge it, and the runtime refuses to snapshot or
+                        // restore while anything is pending -- so one throwing
+                        // handler would cost the process its persistence.
+                        try
+                        {
+                            entry.TryGetProperty("payload", out var payload);
+                            EffectHandler?.Invoke(
+                                effectId, EffectText(entry, "kind"), payload, delivery);
+                        }
+                        catch (Exception error)
+                        {
+                            // Reported, not swallowed: the effect is about to be
+                            // failed below, and the app is told why rather than
+                            // being handed a bare "no host handler answered".
+                            handlerErrors[effectId] = error.Message;
+                        }
+
+                        // The handler may have closed the host. Qt makes the
+                        // same check with a QPointer for the same reason: every
+                        // line past here would drive native code through a
+                        // handle its owner has already destroyed.
+                        if (app == IntPtr.Zero) return current;
+
+                        if (isAwait
+                            && awaiting.Contains(effectId)
+                            && !deferred.Contains(effectId))
+                        {
+                            unanswered.Add(effectId);
+                        }
+                    }
+                    if (unreadable > 0)
+                    {
+                        RecordEffectWarning(
+                            $"{unreadable} Mosaic effect(s) arrived with an unreadable id "
+                            + "and cannot be answered; state cannot be saved for the rest "
+                            + "of this session");
+                    }
+
+                    var carried = new List<JsonElement>(frameEffects);
+                    frameEffects.Clear();
+                    var latest = current;
+                    if (answered)
+                    {
+                        if (latestAnswer is { } answer) latest = answer;
+                        latestAnswer = null;
+                        answered = false;
+                    }
+
+                    if (unanswered.Count == 0)
+                    {
+                        if (carried.Count == 0) return latest;
+                        current = WithEffects(latest, carried);
+                        continue;
+                    }
+
+                    // Nothing handled these, and the app will not progress
+                    // without an answer. Failing them is the point of `await`
+                    // being on the wire.
+                    foreach (var id in unanswered)
+                    {
+                        var reason = handlerErrors.TryGetValue(id, out var failure)
+                            ? $"the host handler for effect {id} failed: {failure}"
+                            : $"no host handler answered effect {id}";
+                        awaiting.Remove(id);
+                        deferred.Remove(id);
+                        if (CompleteEffectOnce(id, reason) is not { } answeredUpdate) continue;
+                        carried.AddRange(EffectsOf(answeredUpdate));
+                        latest = answeredUpdate;
+                    }
+                    current = WithEffects(latest, carried);
+                }
+                var exhausted = $"effect completion did not settle after {maxRounds} rounds; "
+                    + "the application is requesting effects faster than they can be answered";
+                settleError = exhausted;
+                Debug.WriteLine(exhausted);
+                FailOutstanding(current, exhausted);
+                return ReportingError(current, exhausted);
+            }
+            finally
+            {
+                settling -= 1;
+                carriedEffects = outerEffects;
+                latestAnswer = outerAnswer;
+                answered = outerAnswered;
+                if (settling == 0 && unloadPending)
+                {
+                    unloadPending = false;
+                    if (library != IntPtr.Zero) NativeLibrary.Free(library);
+                    library = IntPtr.Zero;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Answer every awaited effect an update still lists, so a guard that
+        /// gives up does not leave the runtime waiting. Bounded, and the bound
+        /// can be outrun -- an app that keeps minting replacements past it
+        /// leaves effects pending and persistence off, which is reported rather
+        /// than inferred.
+        /// </summary>
+        private void FailOutstanding(JsonElement update, string reason)
+        {
+            var pending = EffectsOf(update);
+            const int maxDrainRounds = 8;
+            for (var round = 0; round < maxDrainRounds; round += 1)
+            {
+                if (pending.Count == 0) break;
+                var next = new List<JsonElement>();
+                foreach (var entry in pending)
+                {
+                    if (entry.ValueKind != JsonValueKind.Object) continue;
+                    if (EffectId(entry) is not { } id) continue;
+                    if (!string.Equals(
+                        EffectText(entry, "delivery"), "await", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                    awaiting.Remove(id);
+                    deferred.Remove(id);
+                    if (CompleteEffectOnce(id, reason) is { } answeredUpdate)
+                        next.AddRange(EffectsOf(answeredUpdate));
+                }
+                pending = next;
+            }
+            if (pending.Count > 0)
+            {
+                RecordEffectWarning(
+                    $"Mosaic effects are still outstanding after {maxDrainRounds} rounds "
+                    + "of clearing; state cannot be saved for the rest of this session");
+            }
+        }
+
+        private JsonElement? CompleteEffectOnce(ulong id, string reason)
+        {
+            if (completeEffect is not { } complete) return null;
+            // Never call through a delegate whose module may be gone.
+            if (app == IntPtr.Zero || library == IntPtr.Zero) return null;
+            try
+            {
+                var failed = new Dictionary<string, object?>
+                {
+                    ["failed"] = new Dictionary<string, object?> { ["message"] = reason },
+                };
+                return Invoke(id, failed, delegate(
+                    MosaicBytes idBytes, MosaicBytes resultBytes, out MosaicBuffer output)
+                {
+                    return complete(app, idBytes, resultBytes, out output);
+                });
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        // The effect warning wins, and it is sticky. Both conditions that set it
+        // mean persistence is off for the rest of the process, whereas
+        // `persistenceWarning` is cleared by the next successful write -- so
+        // reading only the latter would announce that saving recovered while the
+        // runtime is still refusing to snapshot.
+        /// <summary>
+        /// The status line the application shows, including anything that went
+        /// wrong that no other channel carries.
+        /// </summary>
+        /// <remarks>
+        /// Locked, because the fields it reads are written under the lock by
+        /// whichever thread is settling; an unlocked read could hand one
+        /// caller a guard failure belonging to another's dispatch, and this is
+        /// the ONLY channel by which a tripped guard reaches the caller here.
+        ///
+        /// <see cref="settleError"/> is consumed rather than merely read: it
+        /// describes one settle, so it is delivered once, to the caller of the
+        /// operation that tripped it. Leaving it set would decorate every later
+        /// unrelated `ApplyProps` with a stale reason. The warnings above it
+        /// are conditions rather than events, so those persist.
+        /// </remarks>
+        public string Status(string message)
+        {
+            lock (gate)
+            {
+                var text = $"Status: {message}";
+                if ((effectWarning ?? persistenceWarning) is { } warning) text += $". {warning}";
+                if (settleError is { } failure)
+                {
+                    text += $". {failure}";
+                    settleError = null;
+                }
+                return text;
+            }
+        }
 
         public void ApplyProps(
             object component,
@@ -341,6 +852,14 @@ public static class MosaicRuntimeHost
             {
                 if (app != IntPtr.Zero) destroy(app);
                 app = IntPtr.Zero;
+                if (settling > 0)
+                {
+                    // A callback below us is still running, and its caller will
+                    // keep using these delegates. The outermost settle frame
+                    // does the unload instead.
+                    unloadPending = true;
+                    return;
+                }
                 if (library != IntPtr.Zero) NativeLibrary.Free(library);
                 library = IntPtr.Zero;
             }
@@ -389,6 +908,7 @@ public static class MosaicRuntimeHost
         {
             var path = StatePath();
             if (path is null) return;
+            if (app == IntPtr.Zero || library == IntPtr.Zero) return;
             try
             {
                 var value = Invoke(delegate(out MosaicBuffer output)
@@ -441,6 +961,42 @@ public static class MosaicRuntimeHost
             finally { pinned.Free(); }
         }
 
+        /// <summary>
+        /// Two encoded inputs in one call, for <c>mosaic_app_complete_effect</c>.
+        /// </summary>
+        /// <remarks>
+        /// Each handle is freed in its own <c>finally</c>, so the first is
+        /// released even if pinning the second throws. Nesting rather than
+        /// pinning both up front is what makes that hold.
+        /// </remarks>
+        private JsonElement Invoke(object first, object second, InputPairOperation operation)
+        {
+            var firstEncoded = JsonSerializer.SerializeToUtf8Bytes(first);
+            var secondEncoded = JsonSerializer.SerializeToUtf8Bytes(second);
+            var firstPinned = GCHandle.Alloc(firstEncoded, GCHandleType.Pinned);
+            try
+            {
+                var secondPinned = GCHandle.Alloc(secondEncoded, GCHandleType.Pinned);
+                try
+                {
+                    var firstBytes = new MosaicBytes(
+                        firstEncoded.Length == 0
+                            ? IntPtr.Zero
+                            : firstPinned.AddrOfPinnedObject(),
+                        firstEncoded.Length);
+                    var secondBytes = new MosaicBytes(
+                        secondEncoded.Length == 0
+                            ? IntPtr.Zero
+                            : secondPinned.AddrOfPinnedObject(),
+                        secondEncoded.Length);
+                    var status = operation(firstBytes, secondBytes, out var output);
+                    return Consume(status, output);
+                }
+                finally { secondPinned.Free(); }
+            }
+            finally { firstPinned.Free(); }
+        }
+
         private JsonElement Invoke(OutputOperation operation)
         {
             var status = operation(out var output);
@@ -464,6 +1020,20 @@ public static class MosaicRuntimeHost
 
         private static T Symbol<T>(IntPtr library, string name) where T : Delegate =>
             Marshal.GetDelegateForFunctionPointer<T>(NativeLibrary.GetExport(library, name));
+
+        /// <summary>
+        /// Resolve a symbol that a protocol-1 runtime does not export.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="NativeLibrary.GetExport"/> throws when the symbol is
+        /// absent, which would stop such a runtime loading at all -- a worse
+        /// failure than the one it prevents, since the application works right
+        /// up until an effect actually arrives.
+        /// </remarks>
+        private static T? SymbolOrNull<T>(IntPtr library, string name) where T : Delegate =>
+            NativeLibrary.TryGetExport(library, name, out var address)
+                ? Marshal.GetDelegateForFunctionPointer<T>(address)
+                : null;
 
         private static string Normalize(string value) =>
             new(value.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());

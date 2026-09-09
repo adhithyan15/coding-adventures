@@ -2,6 +2,113 @@
 
 ## Unreleased
 
+### Added -- the XAML host answers effects (UI47 §5.4 step 4, last of five)
+
+The fifth and final host template. `MosaicRuntimeHost` gains `EffectHandler`,
+`CompleteEffect`, `DeferEffect` and the same bounded settle loop; the emitted
+protocol version moves to `EFFECT_PROTOCOL_VERSION`. **Every native backend now
+answers effects**, which is what step 5 was waiting on -- Engram's Anki import
+would otherwise have worked on some backends and silently broken on the rest.
+
+Three things specific to this host:
+
+- **`NativeLibrary.GetExport` throws on a missing symbol**, so the seventh
+  resolves through `TryGetExport` into a nullable delegate. Without that, a
+  protocol-1 runtime would stop loading at all -- a worse failure than the one
+  it prevents, since the application works right up until an effect arrives.
+- **`JsonElement` is immutable**, so `WithEffects` and `ReportingError` rebuild
+  the update through a dictionary rather than mutating one, the way the other
+  four do.
+- **The delegate had to be renamed.** A nested `delegate CompleteEffect` and a
+  static method `CompleteEffect` cannot coexist in one class; the delegate is
+  now `CompleteEffectNative`, matching Flutter's naming.
+
+### Fixed -- a tripped settle guard reached nothing in the XAML host
+
+The other four hosts return the settled update to their caller, so a guard that
+gives up arrives as an `error` key. This host's `Dispatch` returns void and
+projects props onto a component, and `error` is not a prop -- so the guard
+reported into `latestUpdate` and **nothing ever read it**. That is precisely the
+dead-field shape the Compose port shipped with `effectWarning`, in a different
+place, found this time by writing the test that would have to observe it.
+
+`Status()` now carries the reason, under the lock and consumed once: the
+fields are written by whichever thread is settling, so an unlocked read could
+hand one caller a guard failure belonging to another's dispatch, and leaving it
+set would decorate every later unrelated `ApplyProps` with a stale reason. The
+warnings beside it are conditions rather than events, so those persist.
+
+It is kept separate from `effectWarning`
+rather than folded in: that one means persistence is off for good, whereas a
+guard that trips and then drains successfully leaves nothing pending, so this
+one is cleared at the start of each top-level settle instead of being sticky.
+Nested frames leave it alone, so an inner guard's reason survives to the outer
+frame's caller.
+
+### Fixed -- a handler that closed the host could jump into a freed module
+
+Found by the security review, and the sharpest consequence of this whole arc:
+the effect handler is the **first application callback that runs while native
+code is live**, and `Monitor` is reentrant, so a handler is free to call the
+public `Close()` from inside the settle. This host is also the only one of the
+five that **unmaps** the runtime -- `Dispose` calls `NativeLibrary.Free` -- after
+which the settle loop would still drive `CompleteEffectOnce` and
+`PersistSnapshot` through delegates holding raw addresses inside that module.
+An `AccessViolationException` is uncatchable in .NET, so the good outcome is a
+dead process and the bad one is a jump into whatever got mapped there next.
+
+"The user shut the window while the import dialog was open" reaches it.
+
+The unload now waits for the outermost settle frame; the loop stops driving
+rounds once a handler has closed the host, the way Qt re-checks its `QPointer`
+for the same reason; and the two native call sites refuse a null handle. None
+of the other four hosts has the exposure -- Compose, Flutter and SwiftUI never
+unmap, and Qt only unloads from its destructor.
+
+**Not pinned by the acceptance, and worth being exact about why.** The new
+`closes` case exercises the path and asserts the process survives, but it does
+not discriminate the fix on macOS: `dlclose` there returns success while
+leaving the module mapped, so the dangerous call still lands on live code. That
+was measured, not assumed -- a C probe confirmed the symbol's first byte is
+still readable after a successful `dlclose`. Windows `FreeLibrary` does unmap,
+so the case should discriminate on the platform this host actually ships to.
+
+### Added -- an execution acceptance for the XAML host
+
+`tests/xaml_effect_completion.rs` emits the host into a temporary console
+project, compiles it against the same `Windows.UI.Color` value stub the
+conformance harness already uses -- so it builds without the Windows App SDK,
+on any platform -- and runs it against the conformance runtime, one process and
+one state file per scenario.
+
+Seven scenarios. Where the other hosts call `snapshot()` directly, this one has
+no such method: it persists internally after every settle. So the assertion is
+the user-visible consequence instead -- the runtime refuses to snapshot while an
+effect is pending, `PersistSnapshot` catches the refusal, and `Status` carries
+it. That is reached through the API this host actually has, rather than adding a
+public `Snapshot` for the test's benefit.
+
+The generated project writes an empty `Directory.Build.props` and `.targets`
+beside itself, to stop MSBuild's upward search. It looks in every ancestor
+directory, and the project lives under the system temp directory -- `/tmp`,
+mode 1777, on a Linux build host -- so any local user could pre-plant one and
+have their targets run as the build user.
+
+Setting `<ImportDirectoryBuildProps>false</ImportDirectoryBuildProps>` in the
+project body does **not** work and looks like it does, which is how the first
+attempt at this got it wrong: `Directory.Build.props` is imported by the
+implicit `Sdk.props` *before* the body is evaluated, so the property is read too
+late. Measured on 9.0.313 -- a hostile props file one directory up still landed
+with the property set, while the sentinel files and a command-line `-p:` both
+suppressed it. The `.targets` half of that same property does work, which is
+what makes the broken half easy to miss.
+
+Mutation-tested: removing the handler-throw guard fails the `throwing` case
+(and trips the vacuous-prop detector, because the escaping exception means props
+are never applied), and dropping the settle error from `Status` fails "a runaway
+chain is reported rather than abandoned quietly". Reverting the deferred unload
+does **not** fail anything on macOS, for the reason given above.
+
 ### Added -- the Flutter host answers effects (UI47 §5.4 step 4)
 
 The fourth of five host templates, after Qt, SwiftUI and Compose. The host
