@@ -148,12 +148,25 @@ struct TokenPaletteDocument {
 pub struct StateStyle {
     /// State name: `hover`, `pressed`, `focused`, `disabled`, `selected`, etc.
     pub state: String,
-    /// The `one-of` slot that owns this state, when it is model-declared.
+    /// The slot that owns this state, when it is model-declared.
     ///
     /// Built-in interaction and structural states omit this field so their
-    /// serialized IR remains byte-compatible with pre-UI49 output.
+    /// serialized IR remains byte-compatible with pre-UI49 output — unless
+    /// the component declares a same-named `bool` slot, which binds them
+    /// (UI57 §4.1) and sets [`StateStyle::slot_is_bool`].
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub slot: Option<String>,
+    /// Whether the owning slot activates this state by *truthiness* rather
+    /// than by equality with the state's name (UI57 §4.2).
+    ///
+    /// Emitters must branch on this: the enum path emits
+    /// `variant === "danger"`, and applying that shape to a bool slot would
+    /// emit `disabled === "disabled"`, which is always false.
+    ///
+    /// Defaults to `false` and is skipped when serializing, so pre-UI57 IR
+    /// round-trips byte-identically.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub slot_is_bool: bool,
     /// Properties that override the base in this state.
     pub props: Vec<StyleProp>,
     /// Transitions used when entering this state.
@@ -189,8 +202,34 @@ pub struct CompileOutput {
 pub struct SlotStateAxis {
     /// The owning slot name, for example `variant` or `size`.
     pub slot: String,
-    /// The legal state names declared by that slot.
+    /// The legal state names declared by that slot. Empty for every kind
+    /// except [`SlotStateAxisKind::Enum`], which is the only kind that
+    /// selects a state by *value*.
     pub values: Vec<String>,
+    /// How this slot selects a state.
+    pub kind: SlotStateAxisKind,
+}
+
+/// How a slot selects a mosstyle state.
+///
+/// UI49 introduced the `Enum` case: a `one-of` slot whose values name states.
+/// UI57 adds `Bool`, where the slot's *name* is the state and its *truth* is
+/// the selector.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum SlotStateAxisKind {
+    /// A `one-of` slot. Each entry in `values` is a state name, active when
+    /// the slot equals it (UI49 §4.2).
+    #[default]
+    Enum,
+    /// A `bool` slot whose name is a built-in state. That state is active
+    /// when the slot is truthy (UI57 §4.2). `values` is empty — the state
+    /// name is the slot name.
+    Bool,
+    /// A slot whose name is a built-in state but whose type is neither
+    /// `one-of` nor `bool`, so it cannot activate anything. Carried so the
+    /// compiler can report it instead of dropping the state silently
+    /// (UI57 §4.1).
+    Incompatible,
 }
 
 // ===========================================================================
@@ -217,6 +256,11 @@ pub enum ErrorKind {
     SlotStateBuiltInCollision,
     /// A model-declared state value is owned by more than one slot.
     AmbiguousSlotState,
+    /// A slot shares a built-in state's name but has a type that cannot
+    /// activate it (UI57 §4.1) — only `bool` binds by name. Reported rather
+    /// than silently leaving the state unwired, which is the failure mode
+    /// that produced #14639.
+    SlotStateTypeMismatch,
     /// A `$token-ref` has no definition in the token map.
     UnresolvedToken,
     /// A transition names a property that is not declared in the part's base style.
@@ -287,6 +331,15 @@ fn default_token_map() -> HashMap<String, String> {
     // Opacity
     m.insert("opacity-disabled".to_string(), "0.4".to_string());
     m
+}
+
+/// Whether `name` is one of mosstyle's built-in state names.
+///
+/// Exposed so callers building [`SlotStateAxis`] values from a model can tell
+/// which slots participate in UI57's name-based binding without duplicating
+/// the list. Duplicating it is how the two would drift.
+pub fn is_built_in_state(name: &str) -> bool {
+    VALID_STATES.contains(&name)
 }
 
 /// Resolve a `$token-ref` to its concrete value.
@@ -702,6 +755,7 @@ fn analyze_state(
             message: "state_block missing state name".to_string(),
         })?,
         slot: None,
+        slot_is_bool: false,
         props,
         transitions,
     })
@@ -973,7 +1027,27 @@ fn bind_slot_states(def: &mut StyleDef, axes: &[SlotStateAxis]) -> Result<(), Ve
     let mut errors = Vec::new();
     let mut owners: HashMap<&str, &str> = HashMap::new();
 
+    // UI57 — a bool slot binds the built-in state that shares its name, and a
+    // slot of any other type sharing that name is an error rather than a
+    // silent no-op.
+    let mut bool_owners: HashSet<&str> = HashSet::new();
+    let mut incompatible: HashSet<&str> = HashSet::new();
     for axis in axes {
+        match axis.kind {
+            SlotStateAxisKind::Bool => {
+                bool_owners.insert(axis.slot.as_str());
+                continue;
+            }
+            SlotStateAxisKind::Incompatible => {
+                // Reported below, and only if a stylesheet actually declares
+                // the state. Sharing a built-in's name is harmless on its own
+                // -- `Field` carries `slot error : text` as the error MESSAGE
+                // and styles nothing, which must keep compiling.
+                incompatible.insert(axis.slot.as_str());
+                continue;
+            }
+            SlotStateAxisKind::Enum => {}
+        }
         for value in &axis.values {
             if VALID_STATES.contains(&value.as_str()) {
                 errors.push(CompileError {
@@ -1007,7 +1081,28 @@ fn bind_slot_states(def: &mut StyleDef, axes: &[SlotStateAxis]) -> Result<(), Ve
     for part in &mut def.parts {
         for state in &mut part.states {
             if VALID_STATES.contains(&state.state.as_str()) {
-                state.slot = None;
+                // UI57 §4.1 — a built-in state binds to a same-named bool
+                // slot; with no such slot it keeps its pre-UI57 unwired
+                // behavior, so no stylesheet changes meaning on its own.
+                if bool_owners.contains(state.state.as_str()) {
+                    state.slot = Some(state.state.clone());
+                    state.slot_is_bool = true;
+                } else {
+                    if incompatible.contains(state.state.as_str()) {
+                        // The author wrote a state block that can never
+                        // activate: the slot that would drive it is the wrong
+                        // type. Silence here is what produced #14639.
+                        errors.push(CompileError {
+                            kind: ErrorKind::SlotStateTypeMismatch,
+                            message: format!(
+                                "Part '{}' declares 'state {}', but slot '{}' is neither a `bool` nor a `one-of` slot, so nothing can activate it; declare the slot `bool` or remove the state block",
+                                part.name, state.state, state.state
+                            ),
+                        });
+                    }
+                    state.slot = None;
+                    state.slot_is_bool = false;
+                }
             } else if let Some(owner) = owners.get(state.state.as_str()) {
                 state.slot = Some((*owner).to_string());
             } else {
@@ -2004,6 +2099,7 @@ mod tests {
             &[SlotStateAxis {
                 slot: "variant".to_string(),
                 values: vec!["primary".to_string(), "danger".to_string()],
+                kind: SlotStateAxisKind::Enum,
             }],
         )
         .expect("one-of state should compile");
@@ -2015,6 +2111,170 @@ mod tests {
         let json: serde_json::Value =
             serde_json::from_str(&result.style_map_json).expect("valid style JSON");
         assert_eq!(json["parts"][0]["states"][0]["slot"], "variant");
+    }
+
+    // ---- UI57: built-in states bound to a bool slot ----------------
+
+    const BOOL_STATE_SRC: &str = r#"
+          style Button {
+            part root {
+              opacity: 1 ;
+              state disabled { opacity: 0.4 ; }
+            }
+          }
+        "#;
+
+    #[test]
+    fn bool_slot_binds_the_built_in_state_sharing_its_name() {
+        let result = compile_with_slot_states(
+            BOOL_STATE_SRC,
+            None,
+            &[SlotStateAxis {
+                slot: "disabled".to_string(),
+                values: Vec::new(),
+                kind: SlotStateAxisKind::Bool,
+            }],
+        )
+        .expect("bool-bound state should compile");
+
+        let state = &result.def.parts[0].states[0];
+        assert_eq!(state.slot.as_deref(), Some("disabled"));
+        assert!(
+            state.slot_is_bool,
+            "emitters branch on this to avoid emitting `disabled == \"disabled\"`"
+        );
+    }
+
+    #[test]
+    fn built_in_state_without_a_matching_bool_slot_stays_unwired() {
+        // The pre-UI57 behavior, pinned: no stylesheet changes meaning just
+        // because UI57 exists. It only changes when the component also
+        // declares the matching bool slot.
+        let result = compile_with_slot_states(
+            BOOL_STATE_SRC,
+            None,
+            &[SlotStateAxis {
+                slot: "variant".to_string(),
+                values: vec!["primary".to_string()],
+                kind: SlotStateAxisKind::Enum,
+            }],
+        )
+        .expect("built-in state alone should still compile");
+
+        let state = &result.def.parts[0].states[0];
+        assert_eq!(state.slot, None);
+        assert!(!state.slot_is_bool);
+    }
+
+    #[test]
+    fn plain_compile_leaves_built_in_states_unwired() {
+        // The no-axes path must behave identically -- this is what every
+        // caller that has no model does.
+        let result = compile(BOOL_STATE_SRC, None).expect("should compile");
+        let state = &result.def.parts[0].states[0];
+        assert_eq!(state.slot, None);
+        assert!(!state.slot_is_bool);
+    }
+
+    #[test]
+    fn a_same_named_slot_of_the_wrong_type_is_an_error_not_a_silent_drop() {
+        let errs = compile_with_slot_states(
+            BOOL_STATE_SRC,
+            None,
+            &[SlotStateAxis {
+                slot: "disabled".to_string(),
+                values: Vec::new(),
+                kind: SlotStateAxisKind::Incompatible,
+            }],
+        )
+        .expect_err("a non-bool slot named after a built-in state must be reported");
+
+        assert!(errs
+            .iter()
+            .any(|e| e.kind == ErrorKind::SlotStateTypeMismatch));
+        // The message must name the slot, since that is what the author edits.
+        assert!(errs.iter().any(|e| e.message.contains("disabled")));
+    }
+
+    #[test]
+    fn a_same_named_slot_of_the_wrong_type_is_fine_when_nothing_styles_it() {
+        // The toolkit's `Field` carries `slot error : text` as the error
+        // MESSAGE and styles nothing. Sharing a built-in state's name is
+        // harmless on its own; only an unactivatable state BLOCK is a defect.
+        let src = r#"
+          style Field {
+            part root { opacity: 1 ; }
+          }
+        "#;
+        let result = compile_with_slot_states(
+            src,
+            None,
+            &[SlotStateAxis {
+                slot: "error".to_string(),
+                values: Vec::new(),
+                kind: SlotStateAxisKind::Incompatible,
+            }],
+        );
+        assert!(result.is_ok(), "got: {:?}", result.err());
+    }
+
+    #[test]
+    fn bool_binding_does_not_disturb_enum_binding_in_the_same_component() {
+        let src = r#"
+          style Button {
+            part root {
+              opacity: 1 ;
+              state danger { background: #ff0000 ; }
+              state disabled { opacity: 0.4 ; }
+            }
+          }
+        "#;
+        let result = compile_with_slot_states(
+            src,
+            None,
+            &[
+                SlotStateAxis {
+                    slot: "variant".to_string(),
+                    values: vec!["primary".to_string(), "danger".to_string()],
+                    kind: SlotStateAxisKind::Enum,
+                },
+                SlotStateAxis {
+                    slot: "disabled".to_string(),
+                    values: Vec::new(),
+                    kind: SlotStateAxisKind::Bool,
+                },
+            ],
+        )
+        .expect("both axes should compile");
+
+        let states = &result.def.parts[0].states;
+        let danger = states.iter().find(|s| s.state == "danger").unwrap();
+        let disabled = states.iter().find(|s| s.state == "disabled").unwrap();
+        assert_eq!(danger.slot.as_deref(), Some("variant"));
+        assert!(!danger.slot_is_bool);
+        assert_eq!(disabled.slot.as_deref(), Some("disabled"));
+        assert!(disabled.slot_is_bool);
+    }
+
+    #[test]
+    fn slot_is_bool_is_absent_from_serialized_ir_when_false() {
+        // Pre-UI57 IR must round-trip byte-identically, or every consumer
+        // that compares serialized style JSON sees spurious diffs.
+        let result = compile_with_slot_states(
+            BOOL_STATE_SRC,
+            None,
+            &[SlotStateAxis {
+                slot: "variant".to_string(),
+                values: vec!["primary".to_string()],
+                kind: SlotStateAxisKind::Enum,
+            }],
+        )
+        .expect("should compile");
+        assert!(
+            !result.style_map_json.contains("slot_is_bool"),
+            "got:\n{}",
+            result.style_map_json
+        );
     }
 
     #[test]
@@ -2030,6 +2290,7 @@ mod tests {
             &[SlotStateAxis {
                 slot: "variant".to_string(),
                 values: vec!["danger".to_string()],
+                kind: SlotStateAxisKind::Enum,
             }],
         )
         .expect_err("undeclared state should fail");
@@ -2049,6 +2310,7 @@ mod tests {
             &[SlotStateAxis {
                 slot: "variant".to_string(),
                 values: vec!["disabled".to_string()],
+                kind: SlotStateAxisKind::Enum,
             }],
         )
         .expect_err("built-in collision should fail");
@@ -2069,10 +2331,12 @@ mod tests {
                 SlotStateAxis {
                     slot: "variant".to_string(),
                     values: vec!["compact".to_string()],
+                    kind: SlotStateAxisKind::Enum,
                 },
                 SlotStateAxis {
                     slot: "size".to_string(),
                     values: vec!["compact".to_string()],
+                    kind: SlotStateAxisKind::Enum,
                 },
             ],
         )
