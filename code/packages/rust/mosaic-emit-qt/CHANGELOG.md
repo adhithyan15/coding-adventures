@@ -4,6 +4,34 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `opacity` lowering, base and state-driven (#14708)
+
+`opacity` was dropped entirely. It now lowers to QML's `Item.opacity`, which
+composites the element **and its children** — the semantics a dimmed
+`state disabled` part wants.
+
+State-aware, not base-only, because that is the case it exists for: UI57's
+`state disabled { opacity : $opacity-disabled ; }` would otherwise stay
+unlowered, which is the gap #14639 is about. A bool-slot state emits the same
+nested-ternary shape colours already use:
+
+```qml
+opacity: ( (disabled) ) ? 0.4 : 1
+```
+
+`conditional_number_expr` is deliberately separate from
+`conditional_color_expr` rather than a generalisation of it: that one quotes
+its output and validates hex, both wrong for a number.
+
+Emitted in **three** places, because Qt assembles `Rectangle` properties in
+three separate builders — `qml_rectangle_paint_lines`, its `_with_states`
+sibling, and `lower_styled_box`. Adding it to only the first two left it
+silently dropped on styled cell boxes, which are exactly the parts most likely
+to declare it. That scattering is worth noting for #12022: Qt has no single
+lowering path to derive dropped-property reporting from.
+
+A non-numeric value (`40%`, `calc(…)`) emits nothing rather than invalid QML.
+
 ### Added - activate one-of slot-owned mosstyle states (UI49, #14336)
 
 Qt now selects mosstyle states owned by `one-of` slots from the generated QML

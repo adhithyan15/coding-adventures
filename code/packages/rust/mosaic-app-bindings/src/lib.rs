@@ -157,9 +157,12 @@ fn flutter_runtime_binding_source(bundle_runtime: bool, application_id: Option<&
         include_str!("../templates/flutter/mosaic_host.dart"),
         application_id,
     )
+    // Protocol 2, for the same reason as Qt, SwiftUI and Compose: this host
+    // implements effect completion. Declaring 2 without it is the harmful
+    // direction, so the tests pin the claim and the capability together.
     .replace(
         "__MOSAIC_PROTOCOL_VERSION__",
-        &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+        &mosaic_app_runtime::EFFECT_PROTOCOL_VERSION.to_string(),
     )
     .replace(
         "__MOSAIC_BUNDLED_RUNTIME__",
@@ -576,11 +579,24 @@ mod tests {
     #[test]
     fn flutter_binding_uses_shared_protocol_and_successful_sequences() {
         let source = flutter_runtime_binding();
+        // Protocol 2 because this host implements effect completion. Still
+        // from the shared constant rather than a literal, and the capability
+        // is asserted beside the claim -- declaring 2 without it makes the app
+        // emit into a void.
         assert!(source.contains(&format!(
             "static const int _protocolVersion = {};",
-            mosaic_app_runtime::PROTOCOL_VERSION
+            mosaic_app_runtime::EFFECT_PROTOCOL_VERSION
         )));
         assert!(!source.contains("__MOSAIC_PROTOCOL_VERSION__"));
+        assert!(
+            source.contains("symbol: 'mosaic_app_complete_effect'"),
+            "a protocol 2 host must bind the completion symbol"
+        );
+        assert!(
+            source.contains("Map<String, Object?> completeEffect(")
+                && source.contains("bool deferEffect("),
+            "a protocol 2 host must expose ways to answer and to defer"
+        );
         let dispatch = source.find("_dispatch(_app, input, output)").unwrap();
         let commit = source.find("_sequence = nextSequence").unwrap();
         assert!(

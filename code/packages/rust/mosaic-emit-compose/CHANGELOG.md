@@ -5,6 +5,42 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — root-section splitting recurses, and is driven by emitted size (#14736)
+
+`should_split_root_sections` split only the **root's direct children** into
+section functions and did not recurse. TaskApp's root `Row` has two children,
+so one section held the entire main column — 112,912 characters of generated
+Kotlin against the other section's 6,468. It compiled only because it sat just
+under the JVM's hard 64KB-per-method bytecode limit, and adding a single
+`HostScroll` node crossed it:
+
+```
+Method too large: TaskAppKt.TaskAppSection1
+```
+
+Sections now split recursively until each fits, driven by the size of the
+**emitted body** rather than the shape of the IR. A child-count or depth
+heuristic is wrong in both directions: a deep-but-small tree would split
+needlessly, and a shallow-but-wide one — exactly what TaskApp is — would not
+split at all.
+
+The threshold is source length, because bytecode size is knowable only to the
+Kotlin compiler. It is set at 40,000 characters, well below the ~113,000 that
+actually failed, so the proxy has roughly 2.5x of margin.
+
+Two details this needed that were not obvious:
+
+- **Descent through single-child wrappers.** Requiring more than one child (as
+  the root check does) made a scroll viewport a hard stop, with 80,000
+  characters still inside it. A wrapper costs one extra function to pass
+  through and lets the split reach the wide node underneath.
+- **`HostScroll` keeps its modifier when split.** The split path builds its
+  frame through `emit_container_frame`, which never applied the
+  `.verticalScroll` prefix that `emit_container` adds — so a viewport large
+  enough to be split silently stopped scrolling while the generated file still
+  carried the import. Both paths now share one helper. Caught by a test
+  asserting the viewport keeps its modifier, not by reading the code.
+
 ### Added — `HostScroll` lowering (#14732)
 
 Compose was the only backend of eight with no `HostScroll` arm, so a generated
