@@ -477,9 +477,23 @@ final class _MosaicRuntime {
   /// Effect ids the runtime mints stay inside 2^53-1 so they survive a JSON
   /// double. Anything outside that, negative, or non-integral is refused rather
   /// than truncated -- truncating would answer a DIFFERENT outstanding effect.
+  /// Infinity is checked FIRST, and separately, because it is the one value
+  /// that satisfies the integrality test and still cannot be converted:
+  /// `double.infinity.roundToDouble()` is infinity, so it compares equal to
+  /// itself, and `double.infinity.toInt()` then throws `UnsupportedError`.
+  /// `jsonDecode` produces it from `1e999` without complaint.
+  ///
+  /// A throw here would escape the round loop, `_settleEffects`, and `dispatch`
+  /// -- leaving every id already added to `_awaiting` in that round with
+  /// nothing to discharge it, and skipping the warning that would have said so.
+  /// `_failOutstanding`, the last-ditch clearing path, calls this too. Qt and
+  /// SwiftUI both guard finiteness explicitly; this port had dropped it.
   int? _effectId(Object? value) {
     if (value is! num) return null;
-    if (value is double && value != value.roundToDouble()) return null;
+    if (value is double) {
+      if (!value.isFinite) return null;
+      if (value != value.roundToDouble()) return null;
+    }
     final raw = value.toInt();
     if (raw < 0 || raw > 9007199254740991) return null;
     return raw;
@@ -860,9 +874,12 @@ final class _MosaicRuntime {
 
   /// Two encoded inputs in one call, for `mosaic_app_complete_effect`.
   ///
-  /// Both allocations are freed on every path, including the one where the
-  /// runtime throws: the `finally` covers the call, and each buffer is freed
-  /// exactly once regardless of which stage failed.
+  /// Every allocation is made INSIDE the `try` and freed only if it was
+  /// obtained. Allocating first and entering the `try` afterwards -- which is
+  /// what the single-input helper below still does -- leaks everything already
+  /// obtained if a later `calloc` throws, and `CallocAllocator` does throw when
+  /// the allocation returns null. Five allocations widen that window enough to
+  /// be worth closing.
   Object? _invokeInputs(
     Object? first,
     Object? second,
@@ -870,12 +887,17 @@ final class _MosaicRuntime {
   ) {
     final firstEncoded = utf8.encode(jsonEncode(first));
     final secondEncoded = utf8.encode(jsonEncode(second));
-    final firstData = calloc<Uint8>(firstEncoded.length);
-    final secondData = calloc<Uint8>(secondEncoded.length);
-    final firstBytes = calloc<_MosaicBytes>();
-    final secondBytes = calloc<_MosaicBytes>();
-    final output = calloc<_MosaicBuffer>();
+    Pointer<Uint8>? firstData;
+    Pointer<Uint8>? secondData;
+    Pointer<_MosaicBytes>? firstBytes;
+    Pointer<_MosaicBytes>? secondBytes;
+    Pointer<_MosaicBuffer>? output;
     try {
+      firstData = calloc<Uint8>(firstEncoded.length);
+      secondData = calloc<Uint8>(secondEncoded.length);
+      firstBytes = calloc<_MosaicBytes>();
+      secondBytes = calloc<_MosaicBytes>();
+      output = calloc<_MosaicBuffer>();
       if (firstEncoded.isNotEmpty) {
         firstData.asTypedList(firstEncoded.length).setAll(0, firstEncoded);
       }
@@ -891,11 +913,11 @@ final class _MosaicRuntime {
       final status = operation(firstBytes.ref, secondBytes.ref, output);
       return _consume(status, output.ref);
     } finally {
-      calloc.free(output);
-      calloc.free(secondBytes);
-      calloc.free(firstBytes);
-      calloc.free(secondData);
-      calloc.free(firstData);
+      if (output != null) calloc.free(output);
+      if (secondBytes != null) calloc.free(secondBytes);
+      if (firstBytes != null) calloc.free(firstBytes);
+      if (secondData != null) calloc.free(secondData);
+      if (firstData != null) calloc.free(firstData);
     }
   }
 

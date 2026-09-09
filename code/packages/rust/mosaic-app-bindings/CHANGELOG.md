@@ -27,8 +27,24 @@ Two things are genuinely different here rather than ported:
   were already in.
 
 `completeEffect` needs two encoded inputs in one call, which no existing helper
-covered, so `_invokeInputs` joins `_invokeInput`. Every allocation is freed on
-every path, including the one where the runtime throws.
+covered, so `_invokeInputs` joins `_invokeInput`. Its allocations are made
+inside the `try` and freed only if obtained: allocating first and entering the
+`try` afterwards -- which the single-input helper still does -- leaks
+everything already obtained if a later `calloc` throws, and five allocations
+widen that window enough to be worth closing.
+
+`_effectId` refuses a non-finite id. `double.infinity` is the one value that
+satisfies the integrality test and still cannot be converted -- infinity equals
+its own `roundToDouble()`, and `toInt()` then throws `UnsupportedError` -- and
+`jsonDecode` produces it from `1e999` without complaint. A throw there escapes
+the round loop, `_settleEffects` and `dispatch`, leaving every id already added
+to `_awaiting` in that round with nothing to discharge it, and skipping the
+warning that would have said so. `_failOutstanding`, the last-ditch clearing
+path, calls it too. Qt and SwiftUI both guard finiteness explicitly and this
+port had dropped it; NaN was already refused, because NaN compares unequal to
+itself. Found by the security review. Reaching it needs a substituted or
+corrupt library, since `EffectId` is a `u64` and serde_json emits integers, so
+it is **not** exercised by the acceptance.
 
 `_withPersistenceWarning` prefers the sticky effect warning over
 `_persistenceWarning`, the fix Compose needed after review: the effect warning
