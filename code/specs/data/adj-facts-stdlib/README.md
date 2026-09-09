@@ -61,7 +61,7 @@ per rotation, in parallel):
 | `geometry/` | circle part → its defining description (radius → center_to_perimeter, diameter → maximum_distance_across, chord → ends_on_circle) | Wolfram MathWorld (authoritative) |
 | `geometry/` | shape → what "radius" measures for it (`radius_definition(shape, description)`, circle → center_to_perimeter, sphere → center_to_surface) — a sibling to `circle-parts.adj`, decoding the second clause of a sentence that table's own `source` field already quotes in full; honest abstention on any solid the cited sentence does not name | Wolfram MathWorld (authoritative; see `radius-definition.adj`'s header — same source `circle-parts.adj` already cites) |
 | `geometry/` | angle-pair relationship → its defining condition (complementary → sum_to_90, supplementary → sum_to_180, vertical → equal, adjacent → share_side_and_vertex) | OpenStax / Mathematics LibreTexts (consensus) |
-| `geometry/` | **DERIVED, not looked up** — how many triangles a named quadrilateral decomposes into (`triangle_decomposition_count(shape, 2)`), by a `rule` combining the `quadrilateral_property` table with the general definitions of triangulation and a polygon diagonal — no single source states the composite fact directly | Wolfram MathWorld (consensus; see `shape-composition.adj`'s header for why this earns `consensus` rather than `authoritative`) |
+| `geometry/` | **DERIVED, not looked up** — how many triangles a named quadrilateral decomposes into (`triangle_decomposition_count(shape, 2)`), by a `rule` combining the `quadrilateral_property` table with the general definitions of triangulation (`source`) and a polygon diagonal (`cites`, on its own MathWorld page) — no single source states the composite fact directly | Wolfram MathWorld (consensus; see `shape-composition.adj`'s header for why this earns `consensus` rather than `authoritative`) |
 | `astronomy/` | planet → order from the Sun | NASA |
 | `astronomy/` | stellar spectral class letter → the color NASA assigns it (o → blue, g → yellow, m → red) | NASA Science (authoritative) |
 | `astronomy/` | stellar spectral class letter → its rank in the hottest-to-coolest sequence, per the same NASA sentence (`spectral_class_order(spectral_class, order)`, o → 1, b → 2, a → 3, f → 4, g → 5, k → 6, m → 7) — a sibling to `spectral-classes.adj`, decoding the order half of an already-cited quote; full 7/7 coverage, no abstention needed | NASA Science (authoritative; see `spectral-class-order.adj`'s header — same source `spectral-classes.adj` already cites) |
@@ -531,10 +531,17 @@ composing cited PRIMITIVES:
 ```adj
 rule { head: triangle_decomposition_count($Shape, 2)
        when: quadrilateral_property($Shape, $Property)
-       source "…the general definitions this rule's own reasoning is built on…"
-       locator "https://mathworld.wolfram.com/…"
-       trust consensus }
+       source "…the TRIANGULATION definition…"
+       locator "https://mathworld.wolfram.com/Triangulation.html"
+       trust consensus
+       cites "…the POLYGON DIAGONAL definition…" locator "https://mathworld.wolfram.com/PolygonDiagonal.html" }
 ```
+
+**One citation per page.** The two primitives this rule composes live on two different MathWorld
+pages, so they take two annotations: the first as `source`, the second as a `cites` carrying its
+own `locator` (the grammar requires one). Installment 4i repaired exactly the opposite of that —
+the field had welded both sentences, plus an authored conclusion, into a single `source` under a
+single `locator`, which meant two thirds of a "quotation" was not a span of the page it named.
 
 The bar is **human-auditability**, not a verbatim match: a query's `steps` trail names BOTH the
 rule's own citation (the general definitions) and the underlying fact's citation (the specific

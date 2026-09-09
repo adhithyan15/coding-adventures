@@ -68,23 +68,60 @@ fn triangle_decomposition_count_derives_two_with_full_audit_trail() {
     // it, because `contains` on a fragment cannot see what precedes or
     // follows it. See issue #13918.
     assert!(
-        out.contains("\"source\":\"Triangulation is the division of a surface or plane polygon into a set of triangles, usually with the restriction that each triangle side is entirely shared by two adjacent triangles. A polygonal diagonal is a line segment connecting two nonadjacent polygon vertices of a polygon. A quadrilateral has exactly two diagonals, each splitting it into two triangles; drawing either one divides the quadrilateral into exactly two triangular regions.\""),
+        out.contains("\"source\":\"Triangulation is the division of a surface or plane polygon into a set of triangles, usually with the restriction that each triangle side is entirely shared by two adjacent triangles.\""),
         "the citation is the whole source sentence, exactly: {out}"
+    );
+
+    // Installment 4i (#13934): the diagonal definition used to sit
+    // INSIDE the source string, with one word altered ("polygonal"
+    // where MathWorld says "polygon") and under the WRONG page's
+    // locator. It is now a corroboration in the page's own words with
+    // its own locator, so text and locator are pinned TOGETHER -- a
+    // corroboration whose text is pinned but whose page is not could
+    // drift back to citing the wrong document silently, which is the
+    // defect this installment repaired.
+    assert!(
+        out.contains("\"corroborations\":[{\"source\":\"A polygon diagonal is a line segment connecting two nonadjacent polygon vertices of a polygon.\",\"locator\":\"https://mathworld.wolfram.com/PolygonDiagonal.html\"}]"),
+        "the corroboration keeps its own page: {out}"
     );
     assert!(
         out.contains("\"N\":\"2\""),
         "a square decomposes into 2 triangles: {out}"
     );
+    // Installment 4i, security review: these two used to be UNJOINED --
+    // `contains("kind":"rule") && contains("...Triangulation.html")`,
+    // two independent probes over the whole output, satisfiable by an
+    // occurrence in ANY citation from ANY imported file. 4i's own
+    // corroboration pin exists because an unjoined text-and-page pair can
+    // drift to the wrong document silently; the same argument condemned
+    // these, so they are joined too. Today nothing else in the import set
+    // names either page, so the old form did still redden -- the hole was
+    // latent, not open.
+    // The corroboration pin closes the array (`...}]`). Security review
+    // appended a SECOND `cites` carrying the exact authored sentence this
+    // installment deleted, and every test passed -- an open-ended
+    // `contains` bounds nothing, so the defect class 4i repaired could be
+    // re-added as an extra corroboration and ship green. The rule cites
+    // this and nothing else, so the pin says so.
+    //
+    // Each leg pins TWO things, and they are not interchangeable: the joined
+    // source+locator closes the wrong-page drift (round 1), and the
+    // `kind` conjunct witnesses that a STEP exists at all. Round 1 replaced
+    // the second with the first on the fact leg, and its joined needle also
+    // occurs in the answer-level `citations` array OUTSIDE `steps` -- so an
+    // empty `steps` would still have satisfied it. The rule leg was never
+    // affected: its needle occurs once, inside `steps`.
     // The audit trail names BOTH steps: the rule's own citation (the general
     // triangulation/diagonal definitions) and the underlying quadrilateral
     // fact's citation (the square's own defining property) — an inspectable
     // two-step inference, not a single opaque answer.
     assert!(
-        out.contains("\"kind\":\"rule\"") && out.contains("mathworld.wolfram.com/Triangulation.html"),
+        out.contains("\"source\":\"Triangulation is the division of a surface or plane polygon into a set of triangles, usually with the restriction that each triangle side is entirely shared by two adjacent triangles.\",\"locator\":\"https://mathworld.wolfram.com/Triangulation.html\""),
         "carries the rule's own citation: {out}"
     );
     assert!(
-        out.contains("\"kind\":\"fact\"") && out.contains("mathworld.wolfram.com/Square.html"),
+        out.contains("\"source\":\"a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above. In other words, a square is a regular polygon with four sides.\",\"locator\":\"https://mathworld.wolfram.com/Square.html\"")
+            && out.contains("\"kind\":\"fact\""),
         "carries the underlying quadrilateral fact's citation: {out}"
     );
     assert!(
