@@ -1837,7 +1837,17 @@ fn swiftui_modifier_chain_with_transitions(
     // [`layer_value`] can fold them into a nested ternary.
     let mut width = PropBucket::new(layer_count);
     let mut height = PropBucket::new(layer_count);
-    let mut padding = PropBucket::new(layer_count);
+    // One bucket per edge rather than one for `padding`, because CSS
+    // directional padding OVERRIDES the shorthand for that edge while
+    // SwiftUI's `.padding(10).padding(.top, 5)` ADDS to it. Resolving the
+    // four edges here and emitting explicit per-edge insets is the only way
+    // to preserve CSS meaning. When all four agree -- the overwhelmingly
+    // common case -- emission collapses back to a single `.padding(n)`, so
+    // output for existing components is unchanged.
+    let mut padding_top = PropBucket::new(layer_count);
+    let mut padding_bottom = PropBucket::new(layer_count);
+    let mut padding_leading = PropBucket::new(layer_count);
+    let mut padding_trailing = PropBucket::new(layer_count);
     let mut background = PropBucket::new(layer_count);
     let mut foreground = PropBucket::new(layer_count);
     let mut font_size = PropBucket::new(layer_count);
@@ -1874,9 +1884,39 @@ fn swiftui_modifier_chain_with_transitions(
                     set(&mut height, v);
                 }
             }
+            // The shorthand seeds every edge. Authored order is preserved,
+            // so `padding-top: 12; padding: 8` gives 8 on every edge and
+            // `padding: 8; padding-top: 12` gives 12 on top -- both matching
+            // CSS, without a precedence table.
             "padding" => {
                 if let Some(v) = px_or_none(&p.value) {
-                    set(&mut padding, v);
+                    set(&mut padding_top, v.clone());
+                    set(&mut padding_bottom, v.clone());
+                    set(&mut padding_leading, v.clone());
+                    set(&mut padding_trailing, v);
+                }
+            }
+            "padding-top" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut padding_top, v);
+                }
+            }
+            "padding-bottom" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut padding_bottom, v);
+                }
+            }
+            // left/right lower to leading/trailing rather than to fixed
+            // sides, so a right-to-left layout mirrors them the way every
+            // other SwiftUI view does.
+            "padding-left" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut padding_leading, v);
+                }
+            }
+            "padding-right" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut padding_trailing, v);
                 }
             }
             "background" | "background-color" => {
@@ -2021,17 +2061,49 @@ fn swiftui_modifier_chain_with_transitions(
     }
 
     // 4. .padding — insets the content before the frame sizes it.
-    if !padding.empty() {
-        let expr = layer_value(&padding, state_layers, "0");
-        out.push_str(&format!("\n{pad}.padding({expr})"));
-        push_swiftui_animation(
-            &mut out,
-            &pad,
-            "padding",
-            &expr,
-            base_transitions,
-            state_layers,
-        );
+    //
+    // Uniform padding collapses to `.padding(n)`, which is both the idiomatic
+    // SwiftUI form and byte-identical to what this emitter produced before
+    // directional padding was supported. Only a genuinely asymmetric part
+    // pays for the per-edge form.
+    let padding_edges = [
+        (".top", &padding_top),
+        (".bottom", &padding_bottom),
+        (".leading", &padding_leading),
+        (".trailing", &padding_trailing),
+    ];
+    let uniform = padding_edges
+        .iter()
+        .all(|(_, bucket)| bucket.same_values_as(&padding_top));
+    if uniform {
+        if !padding_top.empty() {
+            let expr = layer_value(&padding_top, state_layers, "0");
+            out.push_str(&format!("\n{pad}.padding({expr})"));
+            push_swiftui_animation(
+                &mut out,
+                &pad,
+                "padding",
+                &expr,
+                base_transitions,
+                state_layers,
+            );
+        }
+    } else {
+        for (edge, bucket) in padding_edges {
+            if bucket.empty() {
+                continue;
+            }
+            let expr = layer_value(bucket, state_layers, "0");
+            out.push_str(&format!("\n{pad}.padding({edge}, {expr})"));
+            push_swiftui_animation(
+                &mut out,
+                &pad,
+                "padding",
+                &expr,
+                base_transitions,
+                state_layers,
+            );
+        }
     }
 
     // 5. .frame(width:, height:, alignment:) — the cell's box.
@@ -2215,6 +2287,16 @@ impl PropBucket {
     /// emit no modifier line at all.
     fn empty(&self) -> bool {
         self.base.is_none() && !self.any_state_set
+    }
+    /// Whether two buckets resolve to the same value in every layer.
+    ///
+    /// Used to collapse four equal padding edges back to one `.padding(n)`.
+    /// Comparing the resolved values rather than `any_state_set` matters: a
+    /// bucket set only via the `padding` shorthand and one set again to the
+    /// same number by `padding-top` are equivalent, and should not force the
+    /// per-edge form.
+    fn same_values_as(&self, other: &PropBucket) -> bool {
+        self.base == other.base && self.state_values == other.state_values
     }
 }
 
@@ -3114,6 +3196,7 @@ fn emit_view_struct(
         writeln!(out, "    private func _mosaicForegroundColor(_ view: AnyView, _ color: Color) -> AnyView {{ AnyView(view.foregroundColor(color)) }}").unwrap();
         writeln!(out, "    private func _mosaicFont(_ view: AnyView, _ font: Font) -> AnyView {{ AnyView(view.font(font)) }}").unwrap();
         writeln!(out, "    private func _mosaicPadding(_ view: AnyView, _ length: CGFloat) -> AnyView {{ AnyView(view.padding(length)) }}").unwrap();
+        writeln!(out, "    private func _mosaicPaddingEdge(_ view: AnyView, _ edges: Edge.Set, _ length: CGFloat) -> AnyView {{ AnyView(view.padding(edges, length)) }}").unwrap();
         writeln!(out, "    private func _mosaicBackground(_ view: AnyView, _ color: Color) -> AnyView {{ AnyView(view.background(color)) }}").unwrap();
         writeln!(out, "    private func _mosaicBorder(_ view: AnyView, _ color: Color, width: CGFloat) -> AnyView {{ AnyView(view.border(color, width: width)) }}").unwrap();
         writeln!(out, "    private func _mosaicOpacity(_ view: AnyView, _ opacity: Double) -> AnyView {{ AnyView(view.opacity(opacity)) }}").unwrap();
@@ -3673,6 +3756,18 @@ fn wrap_swiftui_any_view(source: &str, indent: usize, use_concrete_modifiers: bo
 }
 
 fn concrete_swiftui_modifier_call(previous: &str, modifier: &str) -> Option<String> {
+    // Per-edge padding is checked first and keeps its leading dot: the
+    // argument is an `Edge.Set` token, so `_mosaicPaddingEdge(view, top, 8)`
+    // would not compile. Folding it into the generic table below is not
+    // possible, because that table strips the matched prefix and `.padding(.`
+    // would swallow the dot.
+    if let Some(arguments) = modifier
+        .strip_prefix(".padding(")
+        .and_then(|value| value.strip_suffix(')'))
+        .filter(|arguments| arguments.starts_with('.'))
+    {
+        return Some(format!("_mosaicPaddingEdge({previous}, {arguments})"));
+    }
     let mappings = [
         (".foregroundColor(", "_mosaicForegroundColor"),
         (".font(", "_mosaicFont"),
@@ -13949,4 +14044,107 @@ mod tests {
             "expected standalone width frame on unstyled cell, got:\n{out}"
         );
     }
+
+    // ---- directional padding (#14709) --------------------------------
+
+    fn padding_output(props: Vec<(&str, &str)>) -> String {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: props
+                    .into_iter()
+                    .map(|(name, value)| StyleProp {
+                        name: name.to_string(),
+                        value: value.to_string(),
+                    })
+                    .collect(),
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        from_pipeline(&m, &l, &s).expect("emit ok").output
+    }
+
+    #[test]
+    fn uniform_padding_still_collapses_to_one_modifier() {
+        let out = padding_output(vec![("padding", "8")]);
+        assert!(out.contains(".padding(8)"), "got:\n{out}");
+        // Per-edge form must not appear for a symmetric part -- this is what
+        // keeps output for existing components unchanged.
+        assert!(!out.contains(".padding(."), "got:\n{out}");
+    }
+
+    #[test]
+    fn directional_padding_overrides_the_shorthand_per_css() {
+        let out = padding_output(vec![("padding", "8"), ("padding-top", "20")]);
+
+        // CSS: top is 20, the other three stay 8. SwiftUI's
+        // `.padding(8).padding(.top, 20)` would ADD, giving 28 -- which is
+        // why the edges are resolved here rather than chained.
+        assert!(out.contains(".padding(.top, 20)"), "got:\n{out}");
+        assert!(out.contains(".padding(.bottom, 8)"), "got:\n{out}");
+        assert!(out.contains(".padding(.leading, 8)"), "got:\n{out}");
+        assert!(out.contains(".padding(.trailing, 8)"), "got:\n{out}");
+        assert!(!out.contains(".padding(8)"), "got:\n{out}");
+    }
+
+    #[test]
+    fn the_shorthand_wins_when_authored_after_a_directional_property() {
+        // CSS resolves by source order, and so does this: no precedence
+        // table, just the order the props arrive in.
+        let out = padding_output(vec![("padding-top", "20"), ("padding", "8")]);
+        assert!(out.contains(".padding(8)"), "got:\n{out}");
+        assert!(!out.contains("20"), "got:\n{out}");
+    }
+
+    #[test]
+    fn left_and_right_lower_to_leading_and_trailing() {
+        let out = padding_output(vec![("padding-left", "4"), ("padding-right", "12")]);
+
+        // Direction-aware, so a right-to-left layout mirrors them the way
+        // every other SwiftUI view does.
+        assert!(out.contains(".padding(.leading, 4)"), "got:\n{out}");
+        assert!(out.contains(".padding(.trailing, 12)"), "got:\n{out}");
+        assert!(!out.contains(".left"), "got:\n{out}");
+        assert!(!out.contains(".right"), "got:\n{out}");
+    }
+
+    #[test]
+    fn four_equal_directional_values_collapse_to_the_uniform_form() {
+        let out = padding_output(vec![
+            ("padding-top", "6"),
+            ("padding-bottom", "6"),
+            ("padding-left", "6"),
+            ("padding-right", "6"),
+        ]);
+        assert!(out.contains(".padding(6)"), "got:\n{out}");
+        assert!(!out.contains(".padding(."), "got:\n{out}");
+    }
+
+    #[test]
+    fn the_concrete_helper_path_keeps_the_edge_token_dot() {
+        // Stripping the `.padding(.` prefix would yield
+        // `_mosaicPaddingEdge(view, top, 8)`, which is not valid Swift --
+        // the argument is an Edge.Set token.
+        let call = concrete_swiftui_modifier_call("view", ".padding(.top, 8)")
+            .expect("per-edge padding should map to a helper");
+        assert_eq!(call, "_mosaicPaddingEdge(view, .top, 8)");
+
+        // The uniform form must still reach the uniform helper.
+        let uniform = concrete_swiftui_modifier_call("view", ".padding(8)")
+            .expect("uniform padding should map to a helper");
+        assert_eq!(uniform, "_mosaicPadding(view, 8)");
+    }
+
 }
