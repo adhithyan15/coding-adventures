@@ -39,6 +39,22 @@ public:
     Q_INVOKABLE QVariantMap completeEffect(const QVariant &effectId,
                                            const QVariantMap &result);
 
+    // Take ownership of an effect without answering it yet.
+    //
+    // This is what makes an asynchronous host capability possible. Without it a
+    // handler had exactly one option -- answer inline, on the settle thread,
+    // without blocking -- because anything still unanswered when the handler
+    // returned was failed. A file dialog is asynchronous by construction, and
+    // it is the motivating case for `await`, so the shape could not express the
+    // thing it was built for.
+    //
+    // A deferred effect is left pending. The app is genuinely waiting, so
+    // `snapshot` and `restore` stay refused until it is answered -- which is
+    // correct, not a defect: a half-answered import is not a state worth
+    // restoring. Abandoning a deferred effect leaves the app waiting for good,
+    // so a handler that defers owes an answer.
+    Q_INVOKABLE void deferEffect(const QVariant &effectId);
+
 signals:
     // Emitted once per effect the runtime asks for, before the host decides
     // what to do with it. Call `completeEffect` from the handler to answer an
@@ -63,6 +79,14 @@ signals:
                          const QString &kind,
                          const QVariant &payload,
                          const QString &delivery);
+
+    // A new update the UI did not ask for.
+    //
+    // Emitted when a deferred effect is answered later, because that update is
+    // the return value of no call the UI made -- it arrives from whenever the
+    // dialog closed. Without this a deferred answer would update the app and
+    // the screen would keep showing the state from before it.
+    void updated(const QVariantMap &update);
 
 public:
 
@@ -113,6 +137,10 @@ private:
     QString persistenceWarning_;
     // Effect ids the runtime is waiting on and nothing has answered yet.
     QSet<quint64> awaiting_;
+    // Effects a handler has taken ownership of. Kept OUT of the fail sweep --
+    // that is the whole point -- but left in `awaiting_`, because the runtime
+    // is still waiting on them.
+    QSet<quint64> deferred_;
     // Re-entrancy: a handler connected to effectRequested may call
     // completeEffect() from inside the emit, which produces a newer update than
     // the one settleEffects is holding. Without adopting it the caller gets a

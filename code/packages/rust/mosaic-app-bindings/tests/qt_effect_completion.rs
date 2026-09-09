@@ -167,7 +167,8 @@ fn the_emitted_qt_host_answers_effects() {
             .env("MOSAIC_PROBE_STATE_C", project.join("state-c.json"))
             .env("MOSAIC_PROBE_STATE_D", project.join("state-d.json"))
             .env("MOSAIC_PROBE_STATE_E", project.join("state-e.json"))
-            .env("MOSAIC_PROBE_STATE_F", project.join("state-f.json")),
+            .env("MOSAIC_PROBE_STATE_F", project.join("state-f.json"))
+            .env("MOSAIC_PROBE_STATE_G", project.join("state-g.json")),
         "qt effect driver",
     );
 
@@ -192,6 +193,11 @@ fn the_emitted_qt_host_answers_effects() {
         "the handler answered both effects of the batch",
         "a fully-answered chaining batch leaves nothing outstanding",
         "snapshot still works after a fully-answered chaining batch",
+        "a deferred effect stays outstanding rather than being failed",
+        "the late answer reached the UI as an update",
+        "answering a deferred effect settles it",
+        "the deferred answer's value reached the app",
+        "snapshot works again once the deferred effect is answered",
     ] {
         assert!(
             stdout.contains(expected),

@@ -141,5 +141,46 @@ if let host = makeHost("MOSAIC_PROBE_STATE_E") {
 // parses ids out of the runtime's own updates, and that is exercised by every
 // check above.
 
+
+// The shape a real file dialog needs, and the one that could not be written
+// before: take ownership, answer LATER, from another thread.
+//
+// Previously the settle failed the effect the moment the handler returned, so a
+// dialog that had not closed yet lost its effect and the late answer was
+// rejected as already completed. Blocking instead deadlocked.
+if let host = makeHost("MOSAIC_PROBE_STATE_F") {
+  var deferredId: UInt64?
+  host.effectHandler = { [weak host] id, _, _, delivery in
+    guard delivery.lowercased() == "await" else { return }
+    deferredId = id
+    host?.deferEffect(id)          // "the dialog is open"
+  }
+  var pushes = 0
+  host.setPropsChangedHandler { pushes += 1 }
+
+  let afterRequest = request(host)
+  check(deferredId != nil, "the handler was offered the effect")
+  check(awaited(afterRequest, "deferred") == 1,
+        "a deferred effect stays outstanding rather than being failed")
+
+  // ...the dialog closes, on another thread, whenever.
+  let done = DispatchSemaphore(value: 0)
+  DispatchQueue.global().async {
+    host.completeEffect(deferredId!, ["ok": ["amount": 9]])
+    done.signal()
+  }
+  check(done.wait(timeout: .now() + 5) == .success,
+        "answering from another thread does not deadlock")
+
+  check(pushes >= 1, "the late answer reached the UI as a props change")
+  let final = props(host.applyProps())
+  check(awaited(final, "answered-late") == 0, "answering a deferred effect settles it")
+  check((final["count"] as? NSNumber)?.intValue == 9,
+        "the deferred answer's value reached the app")
+  let snapshot = host.snapshot() as? [String: Any]
+  check(snapshot != nil && snapshot?["error"] == nil,
+        "snapshot works again once the deferred effect is answered")
+}
+
 print(failures == 0 ? "\nall checks passed" : "\n\(failures) check(s) failed")
 exit(failures == 0 ? 0 : 1)

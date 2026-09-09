@@ -454,6 +454,7 @@ QVariantMap MosaicHost::completeEffect(const QVariant &effectId, const QVariantM
         // the way in would drop the obligation if the call failed, which is the
         // silent-hang this whole mechanism exists to prevent.
         awaiting_.remove(id);
+        const bool wasDeferred = deferred_.remove(id) > 0;
         if (settling_ > 0 && carriedEffects_ != nullptr && latestAnswer_ != nullptr
             && reentrantFlag_ != nullptr) {
             // Called from inside a handler during settleEffects. Hand the
@@ -472,10 +473,27 @@ QVariantMap MosaicHost::completeEffect(const QVariant &effectId, const QVariantM
         if (!self) return {};
         persistSnapshot();
         latestUpdate_ = withPersistenceWarning(settled);
+        // A deferred answer is the return value of no call the UI made -- it
+        // arrives whenever the dialog closed -- so the UI has to be told.
+        if (wasDeferred) {
+            emit updated(latestUpdate_);
+        }
         return latestUpdate_;
     } catch (const std::exception &exception) {
         return failure(QString::fromUtf8(exception.what()));
     }
+}
+
+void MosaicHost::deferEffect(const QVariant &effectId)
+{
+    quint64 id = 0;
+    if (!parseEffectId(effectId, &id)) {
+        return;
+    }
+    // Left in `awaiting_` deliberately: the runtime is still waiting on it, and
+    // that is what keeps `snapshot` refused until the answer arrives.
+    // `deferred_` only excuses it from the fail sweep.
+    deferred_.insert(id);
 }
 
 QVariantMap MosaicHost::settleEffects(QVariantMap update)
@@ -567,7 +585,7 @@ QVariantMap MosaicHost::settleEffects(QVariantMap update)
                 return {};
             }
 
-            if (awaited && awaiting_.contains(id)) {
+            if (awaited && awaiting_.contains(id) && !deferred_.contains(id)) {
                 unanswered.append(id);
             }
         }
