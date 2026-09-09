@@ -190,6 +190,15 @@ pub struct EmitOptions {
     /// per §3.6.2 Flutter row; the prefix avoids collisions with
     /// Dart's own packages).
     pub package_name: Option<String>,
+
+    /// Story fixture values keyed by slot name. The generated preview shell
+    /// reads props from the host at runtime and falls back to a generated
+    /// sample when none arrive; a fixture replaces that fallback, so a demo
+    /// app or component page shows the story's own values before any host
+    /// attaches. Only the permissive shell has a fallback to replace --
+    /// `require_runtime` emits `mosaicRequiredValue`, which by design has no
+    /// preview value at all. Default empty keeps the generated sample.
+    pub slot_values: HashMap<String, String>,
 }
 
 impl Default for EmitOptions {
@@ -200,6 +209,7 @@ impl Default for EmitOptions {
             pinned_flutter_sdk: ">=3.32.0 <4.0.0".to_string(),
             pinned_dart_sdk: ">=3.5.0 <4.0.0".to_string(),
             package_name: None,
+            slot_values: HashMap::new(),
         }
     }
 }
@@ -315,7 +325,12 @@ fn build_flutter_project_files(
     Ok(ProjectFiles {
         pubspec_yaml: build_pubspec_yaml(&pub_name, options),
         analysis_options_yaml: build_analysis_options_yaml(),
-        main_dart: build_main_dart(name, &interface.slots, options.require_runtime),
+        main_dart: build_main_dart(
+            name,
+            &interface.slots,
+            options.require_runtime,
+            &options.slot_values,
+        ),
         mosaic_host_dart: build_mosaic_host_dart(options.require_runtime),
         widget_test_dart: build_widget_test_dart(&pub_name, options.require_runtime),
         readme: format!(
@@ -385,15 +400,24 @@ fn build_widget_test_dart(pub_name: &str, require_runtime: bool) -> String {
     )
 }
 
-fn build_main_dart(component_name: &str, slots: &[SlotDecl], require_runtime: bool) -> String {
+fn build_main_dart(
+    component_name: &str,
+    slots: &[SlotDecl],
+    require_runtime: bool,
+    slot_values: &HashMap<String, String>,
+) -> String {
     if require_runtime {
         return build_runtime_required_main_dart(component_name, slots);
     }
-    build_permissive_main_dart(component_name, slots)
+    build_permissive_main_dart(component_name, slots, slot_values)
 }
 
-fn build_permissive_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
-    let root_widget = build_root_widget_constructor(component_name, slots);
+fn build_permissive_main_dart(
+    component_name: &str,
+    slots: &[SlotDecl],
+    slot_values: &HashMap<String, String>,
+) -> String {
+    let root_widget = build_root_widget_constructor(component_name, slots, slot_values);
     let host_props_field = if slots.is_empty() {
         String::new()
     } else {
@@ -1058,11 +1082,15 @@ fn runtime_required_host_value_for_slot(slot: &SlotDecl) -> String {
     }
 }
 
-fn build_root_widget_constructor(component_name: &str, slots: &[SlotDecl]) -> String {
+fn build_root_widget_constructor(
+    component_name: &str,
+    slots: &[SlotDecl],
+    slot_values: &HashMap<String, String>,
+) -> String {
     let mut out = format!("{component_name}(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = host_value_for_slot(slot);
+        let value = host_value_for_slot(slot, slot_values);
         writeln!(out, "            {field}: {value},").unwrap();
     }
     out.push_str("            dispatch: (event) {\n");
@@ -1078,9 +1106,15 @@ fn build_root_widget_constructor(component_name: &str, slots: &[SlotDecl]) -> St
     out
 }
 
-fn host_value_for_slot(slot: &SlotDecl) -> String {
+fn host_value_for_slot(slot: &SlotDecl, slot_values: &HashMap<String, String>) -> String {
     let slot_name = escape_dart_string(&slot.name);
-    let fallback = sample_value_for_slot(slot);
+    // A fixture wins over the generated sample. Without this a story that sets
+    // `variant: danger` still previews the sample's `primary` until a host
+    // attaches -- and no host attaches on a component page (#14459).
+    let fallback = match slot_values.get(&slot.name) {
+        Some(fixture) => dart_literal_for_fixture(&slot.r#type, fixture),
+        None => sample_value_for_slot(slot),
+    };
     match &slot.r#type {
         SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
             format!("mosaicString(_hostProps, \"{slot_name}\", {fallback})")
@@ -1161,6 +1195,29 @@ fn sample_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> String {
         SlotType::Node => "const SizedBox.shrink()".to_string(),
         SlotType::Component(_) => "throw UnimplementedError()".to_string(),
         SlotType::List(_) => "const []".to_string(),
+    }
+}
+
+/// Render a fixture as a Dart literal of the slot's declared type.
+///
+/// The fallback is an argument to `mosaicDouble`/`mosaicBoolean`, whose
+/// parameters are typed: a number slot emitting `"42"` would not compile.
+/// A value that does not parse for its type becomes a quoted string rather
+/// than invalid Dart -- rejecting it is fixture validation's job (#14435),
+/// and emitting code that fails `flutter analyze` would hide that error
+/// behind a build failure in generated output.
+fn dart_literal_for_fixture(slot_type: &SlotType, fixture: &str) -> String {
+    match slot_type {
+        SlotType::Number => match fixture.trim().parse::<f64>() {
+            Ok(value) if value.is_finite() => dart_double_literal(value),
+            _ => format!("\"{}\"", escape_dart_string(fixture)),
+        },
+        SlotType::Bool => match fixture.trim() {
+            "true" => "true".to_string(),
+            "false" => "false".to_string(),
+            _ => format!("\"{}\"", escape_dart_string(fixture)),
+        },
+        _ => format!("\"{}\"", escape_dart_string(fixture)),
     }
 }
 
@@ -12179,4 +12236,136 @@ mod tests {
         assert!(!out.contains("width:"), "got:\n{out}");
         assert!(!out.contains("height:"), "got:\n{out}");
     }
+
+    // ---- story fixtures (#14459) -------------------------------------
+
+    fn fixture_main_dart(slots: Vec<SlotDecl>, values: &[(&str, &str)]) -> String {
+        let m = component("Badge", slots, vec![]);
+        from_pipeline_with_options(
+            &m,
+            &layout("Badge", node("Box")),
+            &empty_style("Badge"),
+            &EmitOptions {
+                emit_project: true,
+                slot_values: values
+                    .iter()
+                    .map(|(k, v)| (k.to_string(), v.to_string()))
+                    .collect(),
+                ..EmitOptions::default()
+            },
+        )
+        .unwrap()
+        .project
+        .unwrap()
+        .main_dart
+    }
+
+    #[test]
+    fn fixtures_replace_the_generated_sample_fallback() {
+        let main_dart = fixture_main_dart(
+            vec![
+                slot("label", SlotType::Text, true),
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".into(), "danger".into()]),
+                    false,
+                ),
+            ],
+            &[("label", "Overdue"), ("variant", "danger")],
+        );
+
+        assert!(
+            main_dart.contains(r#"mosaicString(_hostProps, "label", "Overdue")"#),
+            "got:\n{main_dart}"
+        );
+        assert!(
+            main_dart.contains(r#"mosaicString(_hostProps, "variant", "danger")"#),
+            "got:\n{main_dart}"
+        );
+        // The sample the fixture displaced must be gone, not merely outranked.
+        assert!(!main_dart.contains("Sample Label"), "got:\n{main_dart}");
+        assert!(!main_dart.contains(r#""primary""#), "got:\n{main_dart}");
+    }
+
+    #[test]
+    fn fixtures_render_as_typed_dart_literals() {
+        let main_dart = fixture_main_dart(
+            vec![
+                slot("count", SlotType::Number, false),
+                slot("disabled", SlotType::Bool, false),
+            ],
+            &[("count", "42"), ("disabled", "true")],
+        );
+
+        // Typed, not quoted: these are arguments to mosaicDouble/mosaicBoolean,
+        // so "42" and "true" as strings would not compile.
+        assert!(
+            main_dart.contains(r#"mosaicDouble(_hostProps, "count", 42.0)"#),
+            "got:\n{main_dart}"
+        );
+        assert!(
+            main_dart.contains(r#"mosaicBoolean(_hostProps, "disabled", true)"#),
+            "got:\n{main_dart}"
+        );
+    }
+
+    #[test]
+    fn unparseable_fixtures_stay_valid_dart() {
+        let main_dart = fixture_main_dart(
+            vec![slot("count", SlotType::Number, false)],
+            &[("count", "lots")],
+        );
+
+        // Emitting a bare `lots` would be a compile error in generated output,
+        // which hides the bad fixture behind a build failure.
+        assert!(
+            main_dart.contains(r#"mosaicDouble(_hostProps, "count", "lots")"#),
+            "got:\n{main_dart}"
+        );
+    }
+
+    #[test]
+    fn fixtures_are_escaped_in_dart_literals() {
+        let main_dart = fixture_main_dart(
+            vec![slot("label", SlotType::Text, true)],
+            &[("label", r#"say "hi""#)],
+        );
+
+        assert!(
+            main_dart.contains(r#"mosaicString(_hostProps, "label", "say \"hi\"")"#),
+            "got:\n{main_dart}"
+        );
+    }
+
+    #[test]
+    fn require_runtime_ignores_fixtures() {
+        let m = component("Badge", vec![slot("label", SlotType::Text, true)], vec![]);
+        let main_dart = from_pipeline_with_options(
+            &m,
+            &layout("Badge", node("Box")),
+            &empty_style("Badge"),
+            &EmitOptions {
+                emit_project: true,
+                require_runtime: true,
+                slot_values: [("label".to_string(), "Overdue".to_string())]
+                    .into_iter()
+                    .collect(),
+                ..EmitOptions::default()
+            },
+        )
+        .unwrap()
+        .project
+        .unwrap()
+        .main_dart;
+
+        // The strict shell demands every value from the host and has no
+        // fallback to replace. A fixture must not become one, or the strict
+        // build would silently gain a preview value it is defined not to have.
+        assert!(!main_dart.contains("Overdue"), "got:\n{main_dart}");
+        assert!(
+            main_dart.contains(r#"mosaicRequiredString(_hostProps, "label")"#),
+            "got:\n{main_dart}"
+        );
+    }
+
 }
