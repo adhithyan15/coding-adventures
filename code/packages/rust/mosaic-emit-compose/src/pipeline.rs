@@ -1400,13 +1400,24 @@ fn emit_section_fn(
     let body = if splittable {
         let node = &children[0];
         let (composable, sub_table, sub_text) = root_container_context(node, ctx.part_styles);
+        // Inherit the caller's contexts rather than replacing them.
+        //
+        // `root_container_context` reports what THIS node establishes, which
+        // for a plain Column/Row/Box is nothing at all. Passing its `None`
+        // straight through severed the cascade at every split boundary: text
+        // that read `Text(err, color = Color(0xFFF1EBE1))` before the split
+        // came back as a bare `Text(text = err)`, losing an inherited colour
+        // that no longer had a path to it. A node that does establish its own
+        // (a HostTable's sheet text) still wins.
+        let sub_table = sub_table.as_ref().or(table_context);
+        let sub_text = sub_text.as_ref().or(child_text);
         let frame = emit_container_frame(
             node,
             composable,
             1,
             ctx.part_styles,
-            sub_table.as_ref(),
-            sub_text.as_ref(),
+            sub_table,
+            sub_text,
             None,
         );
         let sub_ranges = child_section_ranges(&node.children);
@@ -1423,7 +1434,7 @@ fn emit_section_fn(
                 &format!("{name}_{index}"),
                 &node.children[range],
                 composable == "Row",
-                sub_table.as_ref(),
+                sub_table,
                 frame.child_text.as_ref(),
             )?;
         }
@@ -10032,6 +10043,62 @@ mod tests {
         );
         // The viewport keeps its scroll modifier while its children move out.
         assert!(out.contains(".verticalScroll(rememberScrollState())"), "got:\n{out}");
+    }
+
+
+    #[test]
+    fn a_split_preserves_the_inherited_text_cascade() {
+        // A split boundary must not sever style inheritance. `HostTable`
+        // establishes a sheet text style for its descendants; if the
+        // sub-section is emitted with a fresh context instead of the
+        // inherited one, that colour silently stops reaching the text --
+        // which is exactly what CI's control-contract check caught, as
+        // `Text(err, color = …)` coming back as a bare `Text(text = err)`.
+        let sheet = LayoutNode {
+            tag: "HostTable".to_string(),
+            part_name: Some("sheet".to_string()),
+            props: Vec::new(),
+            children: vec![wide_column(60)],
+        };
+        let root = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![
+                LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("small".to_string()),
+                    }],
+                    children: Vec::new(),
+                },
+                sheet,
+            ],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root,
+        };
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "sheet".to_string(),
+                base: vec![sprop("color", "#f1ebe1")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+
+        assert!(out.contains("XSection1_0("), "expected the sheet to split");
+        // The inherited colour must still reach the text inside the split.
+        assert!(
+            out.contains("Color(0xFFF1EBE1)"),
+            "inherited text colour lost across the split, got:\n{out}"
+        );
     }
 
 }
