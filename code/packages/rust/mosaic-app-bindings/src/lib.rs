@@ -229,10 +229,20 @@ pub fn qt_runtime_binding_for_application(application_id: &str) -> QtRuntimeBind
 
 fn qt_runtime_binding_source(application_id: Option<&str>) -> QtRuntimeBinding {
     QtRuntimeBinding {
+        // The Qt host declares protocol 2 because it implements the effect
+        // completion path -- it resolves `mosaic_app_complete_effect`, answers
+        // awaited effects, and fails the ones no handler took.
+        //
+        // UI47 §5.3 makes this an opt-in per host, and it is safe in both
+        // directions: a v2 host running a v1 app never sees an `Await`, so the
+        // completion path simply goes unused. Declaring 2 without implementing
+        // completion would be the harmful direction -- the app would emit
+        // effects into a void, which is the failure the protocol field exists
+        // to make impossible.
         header: bind_application(include_str!("../templates/qt/MosaicHost.h"), application_id)
             .replace(
                 "__MOSAIC_PROTOCOL_VERSION__",
-                &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+                &mosaic_app_runtime::EFFECT_PROTOCOL_VERSION.to_string(),
             ),
         source: bind_application(
             include_str!("../templates/qt/MosaicHost.cpp"),
@@ -591,11 +601,29 @@ mod tests {
     #[test]
     fn qt_binding_uses_shared_protocol_and_successful_sequences() {
         let binding = qt_runtime_binding();
+        // The Qt host declares protocol 2 because it IMPLEMENTS effect
+        // completion. Still taken from the shared constant rather than written
+        // as a literal, which is what this assertion has always been about --
+        // the number moved, the rule did not.
         assert!(binding.header.contains(&format!(
             "static constexpr quint32 ProtocolVersion = {};",
-            mosaic_app_runtime::PROTOCOL_VERSION
+            mosaic_app_runtime::EFFECT_PROTOCOL_VERSION
         )));
         assert!(!binding.header.contains("__MOSAIC_PROTOCOL_VERSION__"));
+        // Declaring 2 without being able to answer an effect is the harmful
+        // direction: the app emits into a void, which is the exact failure the
+        // protocol field exists to prevent. So the claim and the capability are
+        // asserted together.
+        assert!(
+            binding.source.contains("mosaic_app_complete_effect"),
+            "a protocol 2 host must resolve the completion symbol"
+        );
+        assert!(
+            binding
+                .header
+                .contains("Q_INVOKABLE QVariantMap completeEffect"),
+            "a protocol 2 host must expose a way to answer an effect"
+        );
         let dispatch = binding
             .source
             .find("dispatch_(app_, input, &output)")
