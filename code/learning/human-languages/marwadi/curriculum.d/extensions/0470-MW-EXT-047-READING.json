@@ -1,0 +1,15 @@
+{
+  "id": "MW-EXT-047-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can read a Marwadi signboard, a counter notice, and a whole bargain on the page, without translating word by word.",
+  "prerequisites": [
+    "MW-EXT-046-REFUSAL"
+  ],
+  "lessons": [
+    "MW-C40-signs",
+    "MW-C40-notices",
+    "MW-C40-pehlo-path"
+  ]
+}

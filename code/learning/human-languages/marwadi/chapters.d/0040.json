@@ -1,0 +1,16 @@
+{
+  "chapter": 40,
+  "title": "Reading — Signs, a Counter, and the Whole Bargain",
+  "label": "ch:mw-pehlo-path",
+  "canDo": "I can read Marwadi off a signboard and off a counter, and follow a whole bargain on the page without translating it word by word.",
+  "payoff": {
+    "lesson": "MW-C40-pehlo-path",
+    "kind": "four-skill-function-map",
+    "summary": "The market exchange the track has practised out loud since chapter 13, read in order on the page for the first time, with no new word in it.",
+    "assesses": [
+      "MW-SKILL-CONNECTED-READING",
+      "MW-SKILL-READ-NOTICE",
+      "MW-SKILL-READ-SIGNBOARD"
+    ]
+  }
+}

@@ -1,5 +1,11 @@
 {
   "language": "marwadi",
   "kind": "reinforcement",
-  "finding": null
+  "finding": {
+    "language": "marwadi",
+    "kind": "reinforcement",
+    "count": 5,
+    "unit": "missed window(s)",
+    "detail": "add retrieval at the expanding R1-R4 intervals"
+  }
 }

@@ -36,6 +36,7 @@
 //!   defensively. A follow-up swaps in `<ContentPresenter>` when no
 //!   `Background`/`BorderThickness`/`Padding` are set.
 
+use std::collections::HashMap;
 use std::fmt::Write as _;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
@@ -272,6 +273,19 @@ pub struct EmitOptions {
     /// Treat the input as a UI29 userland package. PR-1 ignores this
     /// flag â€” `--package-mode` lands in PR-5.
     pub package_mode: bool,
+
+    /// Story fixture values keyed by slot name. The generated `MainWindow`
+    /// pre-populates the component instance with stub values; a fixture
+    /// replaces the stub for that slot, so a demo app or a component page
+    /// shows the story's own values.
+    ///
+    /// Only the host window takes these. The component `.xaml`/`.xaml.cs`
+    /// artifact is shared by every story and by real hosts, so it stays
+    /// identical whichever story is previewed.
+    ///
+    /// `require_runtime` ignores this: that MainWindow takes every value from
+    /// the Mosaic runtime and has no stub to replace.
+    pub slot_values: HashMap<String, String>,
 }
 
 impl Default for EmitOptions {
@@ -283,6 +297,7 @@ impl Default for EmitOptions {
             windows_app_sdk: "1.8.260710003".to_string(),
             use_community_datagrid: false,
             package_mode: false,
+            slot_values: HashMap::new(),
         }
     }
 }
@@ -6774,7 +6789,7 @@ fn emit_main_window_cs(
     }
 
     let ns = &options.namespace;
-    let component_ctor = build_component_constructor(name, slots);
+    let component_ctor = build_component_constructor(name, slots, &options.slot_values);
     let dispatch_match = build_dispatch_match(name, emits);
     let host_helpers = build_optional_host_helpers(name, ns);
 
@@ -6877,7 +6892,7 @@ fn emit_main_window_cs(
                  \n    \
                      {host_helpers}\n\
                  }}\n",
-                component_ctor_inline = build_component_inline_setup(slots),
+                component_ctor_inline = build_component_inline_setup(slots, &options.slot_values),
             )
         }
     }
@@ -7146,7 +7161,11 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
 
 /// Build a `new ComponentName { Slot = default, ... }` initializer
 /// for the ContentDialog-rooted MainWindow path.
-fn build_component_constructor(name: &str, slots: &[SlotDecl]) -> String {
+fn build_component_constructor(
+    name: &str,
+    slots: &[SlotDecl],
+    slot_values: &HashMap<String, String>,
+) -> String {
     if slots.is_empty() {
         return format!("new {name}()");
     }
@@ -7159,7 +7178,7 @@ fn build_component_constructor(name: &str, slots: &[SlotDecl]) -> String {
         } else {
             kebab_to_pascal_case(&slot.name)
         };
-        let value = stub_value_for_slot(&slot.r#type, &slot.name);
+        let value = shell_value_for_slot(slot, slot_values);
         out.push_str(&format!("                {pascal} = {value},\n"));
     }
     out.push_str("            }");
@@ -7168,14 +7187,17 @@ fn build_component_constructor(name: &str, slots: &[SlotDecl]) -> String {
 
 /// Build `this.Component.Slot = default;` statements for the
 /// UserControl-rooted MainWindow path.
-fn build_component_inline_setup(slots: &[SlotDecl]) -> String {
+fn build_component_inline_setup(
+    slots: &[SlotDecl],
+    slot_values: &HashMap<String, String>,
+) -> String {
     if slots.is_empty() {
         return String::from("// (no slots)");
     }
     let mut lines: Vec<String> = Vec::with_capacity(slots.len());
     for slot in slots {
         let pascal = kebab_to_pascal_case(&slot.name);
-        let value = stub_value_for_slot(&slot.r#type, &slot.name);
+        let value = shell_value_for_slot(slot, slot_values);
         lines.push(format!("this.Component.{pascal} = {value};"));
     }
     lines.join("\n        ")
@@ -7183,9 +7205,59 @@ fn build_component_inline_setup(slots: &[SlotDecl]) -> String {
 
 /// Pick a reasonable stub literal for a slot's C# value. Used to
 /// pre-populate the host MainWindow's component instance.
+/// Pick the value the generated host window assigns to one slot.
+///
+/// A story fixture wins over the stub. Without this a story that sets
+/// `variant: danger` still shows the stub until a host attaches -- and no
+/// host attaches on a component page (#14459).
+fn shell_value_for_slot(slot: &SlotDecl, slot_values: &HashMap<String, String>) -> String {
+    match slot_values.get(&slot.name) {
+        Some(fixture) => csharp_literal_for_fixture(&slot.r#type, fixture),
+        None => stub_value_for_slot(&slot.r#type, &slot.name),
+    }
+}
+
+/// Render a fixture as a C# literal of the slot's declared type.
+///
+/// The generated assignment targets a typed dependency property, so a `double`
+/// slot handed `"42"` would not compile. A value that does not parse for its
+/// type becomes a quoted string rather than invalid C# -- rejecting it belongs
+/// to fixture validation (#14435), and emitting uncompilable C# would hide a
+/// bad fixture behind a build failure in generated output.
+fn csharp_literal_for_fixture(t: &SlotType, fixture: &str) -> String {
+    match t {
+        SlotType::Number => match fixture.trim().parse::<f64>() {
+            Ok(value) if value.is_finite() => {
+                let text = value.to_string();
+                if text.contains('.') || text.contains('e') || text.contains('E') {
+                    text
+                } else {
+                    format!("{text}.0")
+                }
+            }
+            _ => format!("\"{}\"", escape_csharp_string(fixture)),
+        },
+        SlotType::Bool => match fixture.trim() {
+            "true" => "true".to_string(),
+            "false" => "false".to_string(),
+            _ => format!("\"{}\"", escape_csharp_string(fixture)),
+        },
+        _ => format!("\"{}\"", escape_csharp_string(fixture)),
+    }
+}
+
 fn stub_value_for_slot(t: &SlotType, slot_name: &str) -> String {
     match t {
         SlotType::Text => format!("\"Sample {}\"", kebab_to_pascal_case(slot_name)),
+        // A one-of slot lowers to `string` (see slot_type_to_csharp), so it
+        // fell to the `_ => "null!"` arm below and the generated host assigned
+        // null to a string property. Every style keyed on that slot then
+        // matched nothing. Its stub is a real member of the closed set, as on
+        // Qt and Flutter.
+        SlotType::OneOf(values) => values
+            .first()
+            .map(|v| format!("\"{}\"", escape_csharp_string(v)))
+            .unwrap_or_else(|| "\"\"".to_string()),
         SlotType::Number => "0".to_string(),
         SlotType::Bool => "false".to_string(),
         SlotType::Color => "Microsoft.UI.Colors.Gray".to_string(),
@@ -21109,4 +21181,166 @@ mod tests {
         );
     }
 
+    // ---- story fixtures (#14459) -------------------------------------
+
+    fn fixture_main_window(
+        slots: Vec<SlotDecl>,
+        values: &[(&str, &str)],
+        require_runtime: bool,
+    ) -> String {
+        let c = component("Badge", slots, vec![]);
+        from_pipeline(
+            &c,
+            &layout_with_root("Badge", box_root()),
+            &empty_style("Badge"),
+            None,
+            &EmitOptions {
+                emit_project: true,
+                require_runtime,
+                slot_values: values
+                    .iter()
+                    .map(|(k, v)| (k.to_string(), v.to_string()))
+                    .collect(),
+                ..EmitOptions::default()
+            },
+        )
+        .expect("emit ok")
+        .project
+        .expect("project")
+        .main_window_cs
+    }
+
+    #[test]
+    fn fixtures_replace_the_generated_stub_in_the_host_window() {
+        let cs = fixture_main_window(
+            vec![
+                slot("label", SlotType::Text, true),
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".into(), "danger".into()]),
+                    false,
+                ),
+            ],
+            &[("label", "Overdue"), ("variant", "danger")],
+            false,
+        );
+
+        assert!(cs.contains(r#"Label = "Overdue""#), "got:\n{cs}");
+        assert!(cs.contains(r#"Variant = "danger""#), "got:\n{cs}");
+        // The stub the fixture displaced must be gone, not merely outranked.
+        assert!(!cs.contains("Sample Label"), "got:\n{cs}");
+        assert!(!cs.contains(r#""primary""#), "got:\n{cs}");
+    }
+
+    #[test]
+    fn fixtures_do_not_change_the_reusable_component_artifact() {
+        let c = component(
+            "Badge",
+            vec![slot(
+                "variant",
+                SlotType::OneOf(vec!["primary".into(), "danger".into()]),
+                false,
+            )],
+            vec![],
+        );
+        let render = |values: &[(&str, &str)]| {
+            let r = from_pipeline(
+                &c,
+                &layout_with_root("Badge", box_root()),
+                &empty_style("Badge"),
+                None,
+                &EmitOptions {
+                    emit_project: true,
+                    slot_values: values
+                        .iter()
+                        .map(|(k, v)| (k.to_string(), v.to_string()))
+                        .collect(),
+                    ..EmitOptions::default()
+                },
+            )
+            .expect("emit ok");
+            (r.xaml, r.code_behind, r.events)
+        };
+
+        // The component is shared by every story and by real hosts. Only the
+        // host window may differ per story.
+        assert_eq!(
+            render(&[("variant", "danger")]),
+            render(&[("variant", "primary")])
+        );
+        assert_eq!(render(&[("variant", "danger")]), render(&[]));
+    }
+
+    #[test]
+    fn fixtures_render_as_typed_csharp_literals() {
+        let cs = fixture_main_window(
+            vec![
+                slot("count", SlotType::Number, false),
+                slot("disabled", SlotType::Bool, false),
+            ],
+            &[("count", "42"), ("disabled", "true")],
+            false,
+        );
+
+        // The assignment targets a typed dependency property (double / bool),
+        // so quoting these would not compile.
+        assert!(cs.contains("Count = 42.0"), "got:\n{cs}");
+        assert!(cs.contains("Disabled = true"), "got:\n{cs}");
+    }
+
+    #[test]
+    fn unparseable_fixtures_stay_valid_csharp() {
+        let cs = fixture_main_window(
+            vec![slot("count", SlotType::Number, false)],
+            &[("count", "lots")],
+            false,
+        );
+
+        // A bare `lots` would not compile, hiding the bad fixture behind a
+        // build failure in generated output.
+        assert!(cs.contains(r#"Count = "lots""#), "got:\n{cs}");
+    }
+
+    #[test]
+    fn fixtures_are_escaped_in_csharp_literals() {
+        let cs = fixture_main_window(
+            vec![slot("label", SlotType::Text, true)],
+            &[("label", "say \"hi\"")],
+            false,
+        );
+
+        assert!(cs.contains(r#"Label = "say \"hi\"""#), "got:\n{cs}");
+    }
+
+    #[test]
+    fn one_of_stub_is_a_member_of_its_closed_set() {
+        let cs = fixture_main_window(
+            vec![slot(
+                "variant",
+                SlotType::OneOf(vec!["primary".into(), "danger".into()]),
+                false,
+            )],
+            &[],
+            false,
+        );
+
+        // A one-of slot lowers to `string`, but it used to fall through to the
+        // `null!` arm -- so with no fixture the generated host assigned null to
+        // a string property and every style keyed on `variant` matched nothing.
+        assert!(cs.contains(r#"Variant = "primary""#), "got:\n{cs}");
+        assert!(!cs.contains("Variant = null!"), "got:\n{cs}");
+    }
+
+    #[test]
+    fn require_runtime_ignores_fixtures() {
+        let cs = fixture_main_window(
+            vec![slot("label", SlotType::Text, true)],
+            &[("label", "Overdue")],
+            true,
+        );
+
+        // The strict window takes every value from the Mosaic runtime and has
+        // no stub to replace. A fixture must not become one.
+        assert!(!cs.contains("Overdue"), "got:\n{cs}");
+    }
 }

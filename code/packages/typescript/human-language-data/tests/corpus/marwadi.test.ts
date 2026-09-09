@@ -13,7 +13,10 @@ it("pins Marwadi continuity", () => expectLanguageContinuity("marwadi"));
 it("pins Marwadi modality", () => expectLanguageModality("marwadi"));
 it("pins Marwadi lesson-content budgets", () =>
   expectLanguageLessonBudgets("marwadi", {
-    lessons: 341,
+    // 341 -> 344: chapter 40, the reading rung. Three lessons and NO new word --
+    // every Devanagari token in all three was checked to occur in a lesson with
+    // a lower sequence number. The count moves because reading is its own skill.
+    lessons: 344,
     idioms: 7,
     senses: 3,
     cultureClaims: 5,
@@ -202,12 +205,12 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
-  expect(lessons).toHaveLength(341);
+  expect(lessons).toHaveLength(344);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set(Array.from({ length: 39 }, (unused, index) => index + 1)),
+    new Set(Array.from({ length: 40 }, (unused, index) => index + 1)),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
-  expect(activities).toHaveLength(341);
+  expect(activities).toHaveLength(344);
   expect(lessons.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
   expect(activities.map((activity) => activity.id).sort()).toEqual([
     "MW-C01-practice-answer",
@@ -437,6 +440,9 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C39-hear-koni-pair",
     "MW-C39-koni-build",
     "MW-C39-refusal-four-close",
+    "MW-C40-notices-refuse",
+    "MW-C40-pehlo-path-hinge",
+    "MW-C40-signs-drink",
     "MW-R08-family-foundation-three",
     "MW-R08-family-map-four",
     "MW-R08-script-close-three",
@@ -550,13 +556,13 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W37-i-recall",
     "MW-W38-a-recall",
     "MW-W38-lla-recall",
-    "MW-W38-u-recall",
+    "MW-W38-u-recall"
   ]);
 
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 341,
+    lessonCount: 344,
     neverTaughtGlyphs: 0,
     violations: 0,
   });

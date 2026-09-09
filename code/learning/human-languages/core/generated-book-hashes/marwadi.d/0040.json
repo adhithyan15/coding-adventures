@@ -1,0 +1,11 @@
+{
+  "language": "marwadi",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:c832151fee35292b",
+  "lessonIds": [
+    "MW-C40-signs",
+    "MW-C40-notices",
+    "MW-C40-pehlo-path"
+  ],
+  "tex": "marwadi/book/chapters/ch40-reading-signs-and-the-bargain.tex"
+}

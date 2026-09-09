@@ -54,6 +54,18 @@ iframe.preview { background:var(--card); border:1px solid var(--line); border-ra
 .note { color:var(--muted); font-size:13px; margin:8px 0 0; }
 .err { background:var(--code); border:1px solid var(--line); border-radius:8px;
        padding:12px; white-space:pre-wrap; font-size:12.5px; }
+table.cov td, table.cov th { padding:5px 7px; font-size:13px; }
+table.cov td.y { color:var(--accent); font-weight:700; text-align:center; }
+table.cov td.n { color:var(--muted); text-align:center; }
+table.cov td.u { text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
+table.cov th.b { writing-mode:vertical-rl; text-orientation:mixed; height:78px;
+                 padding:4px 2px; text-align:left; }
+.score { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 20px; }
+.score div { background:var(--card); border:1px solid var(--line); border-radius:9px;
+             padding:9px 12px; min-width:118px; }
+.score .p { font-size:19px; font-weight:700; }
+.score .l { color:var(--muted); font-size:12px; text-transform:uppercase;
+            letter-spacing:.06em; }
 `
 
 var indexTmpl = template.Must(template.New("index").Parse(`<!doctype html>
@@ -63,6 +75,8 @@ var indexTmpl = template.Must(template.New("index").Parse(`<!doctype html>
 <h1>Mosaic components</h1>
 <p class="sub">{{.Count}} components across {{.PkgCount}} packages. Every page on this site is
 generated from the packages themselves, so it republishes whenever a component ships.</p>
+<p class="sub"><a href="coverage.html">Backend style coverage →</a> which mosstyle properties each
+backend actually lowers, measured on every build.</p>
 {{range .Packages}}
 <h2>{{.Name}}</h2>
 <div class="grid">
@@ -122,12 +136,61 @@ slot's own name for text, because this component has no stories yet.
 </div>
 `))
 
+var coverageTmpl = template.Must(template.New("coverage").Parse(`<!doctype html>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Backend style coverage — Mosaic</title><style>` + baseCSS + `</style>
+<div class="wrap">
+<p class="sub"><a href="index.html">← All components</a></p>
+<h1>Backend style coverage</h1>
+{{if .Skipped}}<div class="err">This report was not produced.
+
+{{.Skipped}}</div>
+{{else}}
+<p class="sub">Which mosstyle properties each backend actually lowers. A component keeps every
+property marked below and <strong>silently loses the rest</strong> — mosstyle properties are
+freeform, so nothing in the pipeline knows what a backend can express, and nothing warns when an
+authored declaration reaches nobody.</p>
+
+<div class="score">
+{{range .Backends}}<div><div class="p">{{.Percent}}%</div><div class="l">{{.Name}}</div>
+<div class="l">{{.Lowered}}/{{.Total}}</div></div>{{end}}
+</div>
+
+<h2>Method</h2>
+<p class="note">Differential, not text-matching. Each property is emitted twice — once with it and
+once without — and the whole generated output is compared. If nothing changes, the backend does not
+lower it. Grepping for the authored value would be wrong in both directions: SwiftUI writes
+<code>#abcdef</code> as <code>Color(red: 0.671, …)</code> so colours would read as unsupported, and a
+short value like <code>3</code> matches unrelated output so unsupported properties would read as
+supported.</p>
+<p class="note">Each property is tried on both a <code>Box</code> probe and a <code>Row</code> probe,
+because shape changes the answer — <code>gap</code> on Qt and <code>align</code> on XAML lower only
+inside a row. Probe values are real values taken from this repository's own stylesheets, and up to
+three are tried per property, because a value that equals a backend's own default changes nothing
+even where support is complete: the most-authored <code>background</code> here is
+<code>transparent</code>, which alone would report Qt and Flutter as unable to paint a background.
+Rows are ordered by how often the property is actually authored, and everything is re-measured on
+every build, so it cannot drift from the emitters.</p>
+<p class="note">A mark means the authored declaration <em>changes the generated output</em>. It does
+not prove the result is visually correct, and it does not cover value-level gaps — a backend may
+lower <code>border-style</code> but honour only <code>solid</code>.</p>
+
+<h2>Matrix</h2>
+<table class="cov"><tr><th>Property</th><th class="u">Uses</th>
+{{range .Backends}}<th class="b">{{.Name}}</th>{{end}}</tr>
+{{range .Props}}<tr><td><code>{{.Name}}</code></td><td class="u">{{.Uses}}</td>
+{{range .Lowered}}{{if .}}<td class="y">Y</td>{{else}}<td class="n">·</td>{{end}}{{end}}</tr>{{end}}
+</table>
+{{end}}
+</div>
+`))
+
 type pkgGroup struct {
 	Name       string
 	Components []Component
 }
 
-func render(comps []Component, outDir string) error {
+func render(comps []Component, outDir string, coverage CoverageReport) error {
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		return err
 	}
@@ -168,6 +231,16 @@ func render(comps []Component, outDir string) error {
 		if err != nil {
 			return err
 		}
+	}
+
+	cov, err := os.Create(filepath.Join(outDir, "coverage.html"))
+	if err != nil {
+		return err
+	}
+	err = coverageTmpl.Execute(cov, coverage)
+	cov.Close()
+	if err != nil {
+		return err
 	}
 
 	// Pages' Jekyll pass drops files beginning with an underscore. Nothing
