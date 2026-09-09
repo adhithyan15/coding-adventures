@@ -41,14 +41,36 @@ speaks its own linear-memory ABI over the same facade. That is why reading the
 clock from `std::time` is fine here — the one target where it would be
 unavailable never loads this library.
 
+## Anki import and export, as effects
+
+Engram's import and export need a file dialog, which only the host can open. The
+facade reports that need as a `hostIntent`, and this adapter turns three of them
+into standard `Effect`s: `importAnki` and `exportAnki` as `Delivery::Await`,
+because neither can proceed without the host and the app has to know whether it
+happened; `openCard` as `Delivery::Notify`, because opening a card elsewhere is
+fire-and-forget.
+
+That became possible when the fifth generated host learned to answer effects
+(UI47 §5.4 step 4). Until then the two mechanisms did not meet: `Effect` was
+serialised onto the wire, no generated host read it, and the C header had no
+completion entry point — so an `Await` could never be answered.
+
+The bytes travel, not the path: an export builds the package here and sends it
+out in the payload for the host to write, and an import comes back carrying what
+the host read. Every native target can be sandboxed — macOS most strictly — and
+there a process may open only what the user picked in the host's own dialog.
+
+Nothing is minted below protocol 2. The runtime does not merely ignore an
+`Await` from a v1 host; it fails with `EffectsRequireV2` and poisons the
+instance, so the intents ride `hostIntent` to the hand-written adapters there,
+exactly as before.
+
 ## What it does not do
 
-It does **not** replace `engram-capi` or the seven hand-written host adapters,
-and it cannot at protocol v1. Engram's Anki import and export return `hostIntent`
-payloads so a host can open a file picker. The standard ABI's `Effect` is
-serialised onto the wire, but no generated host reads it and the C header has no
-effect-completion entry point, so an effect could never be answered. The two
-mechanisms do not meet. This crate sits alongside the existing adapters.
+It does **not** replace `engram-capi` or the seven hand-written host adapters.
+Moving the generated hosts onto the standard runtime is #13728, and until that
+lands each host still binds to `engram-capi` through this package's
+`host_assets` override.
 
 ## How the slot contract is pinned
 

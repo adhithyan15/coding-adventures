@@ -195,14 +195,22 @@ app framework (`UI38-mosaic-native-application-runtime.md`), not a
 vision algorithm, and can start in parallel at any point.
 
 Mosaic's host-effects model (`UI38` §6) has **no camera effect defined
-at all**, and its already-specified *files* effect — the closest thing
-to a gallery/picture picker — isn't wired into any of the five native
-backends yet either (confirmed via `engram-mosaic-app`'s own README,
-which documents exactly this gap: effect payloads serialize onto the
-wire but no generated host reads them yet). Both a live-camera-preview
-effect and a pick-existing-picture effect are genuinely new surface
-area, needed on however many of SwiftUI/XAML/Qt/Compose/Flutter this
-work targets.
+at all**. The *files* half of this has since been built: all five
+native hosts answer effects as of UI47 §5.4 step 4, and Engram emits
+its Anki import/export as `Await` effects through the standard adapter
+(#14747), file dialog and all. So a gallery/picture picker is no longer
+new plumbing — it is a new *effect kind* over a completion path that
+exists and is exercised on Qt, SwiftUI, Compose, Flutter and XAML.
+
+A live-camera-preview effect is still genuinely new surface area: a
+one-shot request-and-answer is what the `Await` shape models, and a
+continuous preview stream is not that.
+
+(This paragraph previously cited `engram-mosaic-app`'s README as
+evidence that no generated host read effects. That was true when
+written and the README has since been corrected; the citation is
+updated here rather than left pointing at a claim that no longer
+holds.)
 
 `task-mosaic-app` is a real, working reference app running on all five
 native backends today, but only exercises local-storage persistence —
