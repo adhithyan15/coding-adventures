@@ -972,6 +972,7 @@ fn run_pipeline(
         "xaml" => {
             let opts = mosaic_emit_xaml::EmitOptions {
                 emit_project,
+                slot_values: pipeline_slot_values(fixtures_path),
                 ..Default::default()
             };
             // Build the component registry: auto-register every name
