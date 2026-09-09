@@ -237,6 +237,34 @@ private fun caseUnconvertibleResult() {
 }
 
 /**
+ * A handler that answers every effect by minting another one, forever.
+ *
+ * The settle loop is bounded at 64 rounds precisely so this terminates. Without
+ * the bound the host spins until the stack or the heap gives out, inside a
+ * `@Synchronized` method, holding the monitor -- the UI thread never comes back.
+ * The bound has to both stop AND report: giving up quietly would leave the app
+ * looking settled while the runtime still waits.
+ */
+private fun caseRunawayChaining() {
+    val host = host()
+    host.use {
+        host.effectHandler = { id, _, _, delivery ->
+            if (isAwait(delivery)) {
+                host.completeEffect(id, mapOf("ok" to mapOf("amount" to 0, "chain" to true)))
+            }
+        }
+        val update = host.handleEvent(
+            mapOf("event" to "requestEffect", "notify" to false),
+        )
+        check(update != null, "a runaway chain returns instead of spinning forever")
+        check(
+            (update?.get("error") as? String ?: "").contains("did not settle"),
+            "a runaway chain is reported rather than abandoned quietly",
+        )
+    }
+}
+
+/**
  * The shape a real file dialog needs, and the one that could not be written
  * before: take ownership, answer LATER, from another thread.
  *
@@ -301,6 +329,7 @@ fun main() {
         "batch-mixed" -> caseBatchPartlyAnswered()
         "throwing" -> caseThrowingHandler()
         "unconvertible" -> caseUnconvertibleResult()
+        "runaway" -> caseRunawayChaining()
         "deferred" -> caseDeferred()
         else -> {
             println("unknown MOSAIC_PROBE_CASE `$case`")

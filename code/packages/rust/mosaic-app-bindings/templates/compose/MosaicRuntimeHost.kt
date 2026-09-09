@@ -393,9 +393,11 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
                     }
                 }
                 if (unreadable > 0) {
-                    effectWarning = "$unreadable Mosaic effect(s) arrived with an " +
-                        "unreadable id and cannot be answered; state cannot be saved " +
-                        "for the rest of this session"
+                    recordEffectWarning(
+                        "$unreadable Mosaic effect(s) arrived with an unreadable id " +
+                            "and cannot be answered; state cannot be saved for the " +
+                            "rest of this session",
+                    )
                 }
 
                 val carried = frameEffects.toMutableList()
@@ -465,9 +467,11 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
             pending = next
         }
         if (pending.isNotEmpty()) {
-            effectWarning = "Mosaic effects are still outstanding after " +
-                "$maxDrainRounds rounds of clearing; state cannot be saved for " +
-                "the rest of this session"
+            recordEffectWarning(
+                "Mosaic effects are still outstanding after $maxDrainRounds " +
+                    "rounds of clearing; state cannot be saved for the rest of " +
+                    "this session",
+            )
         }
     }
 
@@ -635,8 +639,26 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
         System.err.println(message)
     }
 
+    /**
+     * Record a lost effect, which costs the process its persistence.
+     *
+     * Kept out of [persistenceWarning] because that field is cleared by the next
+     * successful write, and this condition does not recover -- the runtime keeps
+     * refusing to snapshot while it waits on an effect nothing can answer.
+     */
+    private fun recordEffectWarning(message: String) {
+        effectWarning = message
+        System.err.println(message)
+    }
+
     private fun withPersistenceWarning(update: JsonObject): JsonObject {
-        val warning = persistenceWarning ?: return update
+        // The effect warning wins, and it is sticky. Both conditions that set it
+        // mean persistence is off for the rest of the process -- an effect the
+        // host can never answer, or effects still outstanding after the drain
+        // gave up -- whereas `persistenceWarning` is cleared by the next
+        // successful write. Reading only the latter would announce that saving
+        // recovered while the runtime is still refusing to snapshot.
+        val warning = effectWarning ?: persistenceWarning ?: return update
         val augmented = update.toMutableMap()
         augmented["persistenceWarning"] = JsonPrimitive(warning)
         val props = update["props"] as? JsonObject
@@ -673,8 +695,14 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
         buffer.read()
         try {
             val length = buffer.len.toLong()
-            require(length <= Int.MAX_VALUE) {
-                "Mosaic output exceeds the JVM array limit"
+            // Bounded BELOW as well: `MosaicSizeT` is an unsigned `IntegerType`,
+            // so a 64-bit `size_t` with the high bit set arrives as a negative
+            // `Long` and would sail past a `<=` test into `getByteArray` with a
+            // negative count. JNA rejects that, so this was never an out-of-
+            // bounds read -- but the guard read as though it checked, and did
+            // not.
+            require(length in 0..Int.MAX_VALUE.toLong()) {
+                "Mosaic output length is outside the JVM array range"
             }
             return if (buffer.ptr == null || length == 0L) {
                 ByteArray(0)

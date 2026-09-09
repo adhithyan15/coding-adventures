@@ -37,6 +37,26 @@ Three defects this found, none of which the crate's text assertions could see:
   the runtime only ever emits well-formed effects, so it is **not** exercised
   by the acceptance below.
 
+### Fixed -- the Compose host discarded its own "state cannot be saved" warning
+
+`effectWarning` was written and never read. It is set in exactly the two places
+where the host has lost the ability to persist for the rest of the process --
+an effect arrived with an id nothing can answer, or effects were still
+outstanding after the drain gave up -- and both messages say so in as many
+words. But `withPersistenceWarning` consulted only `persistenceWarning`, so the
+message went to a dead field: the user's data quietly stopped being durable
+with no indication in the props, the UI, or on stderr.
+
+A port omission rather than a decision -- the SwiftUI host it was derived from
+passes `effectWarning ?? persistenceWarning` at every settle site. The effect
+warning wins and is sticky, because `persistenceWarning` is cleared by the next
+successful write, and announcing that saving recovered while the runtime is
+still refusing to snapshot would be worse than saying nothing. It now also
+reaches stderr, like every other persistence failure.
+
+Neither condition is reachable through the conformance app, so this is fixed by
+inspection against SwiftUI rather than pinned by the acceptance.
+
 ### Fixed -- `restore` returned the update that arrived, not the one it stored
 
 Settling answers effects, and answers move the app, so the raw update's props
@@ -58,7 +78,20 @@ conformance runtime -- one JVM per scenario, each with its own state file,
 because the host reads `MOSAIC_APP_STATE_PATH` once at load and the JVM cannot
 change its own environment. Seven scenarios: an unanswered await, an answered
 one, a fully-answered chaining batch, a partly-answered batch, a throwing
-handler, an unconvertible result, and defer-then-answer-from-another-thread.
+handler, an unconvertible result, a runaway chain, and
+defer-then-answer-from-another-thread.
+
+The runaway case pins the 64-round settle bound, which is what stops a handler
+that answers every effect by minting another from spinning inside a
+`@Synchronized` method while holding the monitor. The bound has to both stop
+**and** report: giving up quietly would leave the app looking settled while the
+runtime still waits.
+
+`consume` now bounds the native length below as well as above. `MosaicSizeT` is
+an unsigned `IntegerType`, so a 64-bit `size_t` with the high bit set arrives as
+a negative `Long` and sailed past the `<=` test into `getByteArray` with a
+negative count. JNA rejects that, so this was never an out-of-bounds read -- but
+the guard read as though it checked, and did not.
 
 It skips when `kotlinc`, `java` or the jars are absent, with environment
 overrides (`MOSAIC_JNA_JAR`, `MOSAIC_KOTLINX_JSON_JAR`,

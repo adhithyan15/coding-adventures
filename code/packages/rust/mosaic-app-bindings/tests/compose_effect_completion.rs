@@ -96,10 +96,17 @@ fn jar(prefix: &str, environment_override: &str) -> Option<PathBuf> {
         return path.is_file().then_some(path);
     }
     let home = std::env::var_os("HOME").map(PathBuf::from)?;
+    // The version must follow the prefix directly. A bare `starts_with` on
+    // `jna-` also matches `jna-platform-*.jar`, which is a different artifact
+    // and does not carry `Native` -- the same over-broad-prefix trap that
+    // `kotlin-stdlib-jdk8.jar` sets for `kotlin_stdlib` below.
     let owned = prefix.to_string();
     find_jar(
         &home.join(".gradle"),
-        &move |name: &str| name.starts_with(&owned),
+        &move |name: &str| {
+            name.strip_prefix(&owned)
+                .is_some_and(|rest| rest.starts_with(|c: char| c.is_ascii_digit()))
+        },
         10,
     )
 }
@@ -243,6 +250,7 @@ fn the_emitted_compose_host_answers_effects() {
         "batch-mixed",
         "throwing",
         "unconvertible",
+        "runaway",
         "deferred",
     ] {
         let stdout = run(
@@ -283,6 +291,8 @@ fn the_emitted_compose_host_answers_effects() {
         "an unconvertible effect result does not wedge persistence",
         "the app is told the result value could not be converted",
         "snapshot survives an unconvertible effect result",
+        "a runaway chain returns instead of spinning forever",
+        "a runaway chain is reported rather than abandoned quietly",
         "deferring an effect nothing awaits is refused",
         "the handler was offered the effect",
         "a deferred effect stays outstanding rather than being failed",
