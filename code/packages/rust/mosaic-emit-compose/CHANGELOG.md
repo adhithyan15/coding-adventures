@@ -5,6 +5,26 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — `HostScroll` lowering (#14732)
+
+Compose was the only backend of eight with no `HostScroll` arm, so a generated
+Compose app could not scroll at all: content past the viewport was simply
+unreachable, with no error and no degradation entry.
+
+Compose has no scrolling *container* composable — scrolling is a **modifier**
+on an ordinary one — so this lowers to a `Column` whose chain starts with
+`.verticalScroll(rememberScrollState())`.
+
+Routed through `emit_container` rather than a bespoke emitter, so the
+viewport's own part styles keep working. The scroll modifier is prefixed onto
+whatever chain the part already has, and deliberately comes first: the viewport
+must be able to scroll its content before padding or size constraints are
+applied to it.
+
+The two imports are conditional on the layout actually containing a
+`HostScroll`, matching how `Path` and drag imports are handled, so components
+without one are unchanged.
+
 ### Fixed — state-dependent dimensions keep their Compose units
 
 Numeric state expressions are now parenthesized before applying `.dp` or
