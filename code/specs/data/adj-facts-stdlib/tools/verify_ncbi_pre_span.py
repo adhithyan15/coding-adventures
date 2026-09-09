@@ -38,20 +38,27 @@ spaces and left line 1 flush. Running the whole battery on it:
     first attempt   True       1       False     [7, 11]   T        M
 
 So (1) and (2) hold for BOTH and discriminate nothing; (3), (4) and (5) each
-separate them. Two earlier rounds got this wrong in opposite directions --
-round 7 credited uniqueness with discriminating power it does not have, and
-round 8 over-corrected by naming line-anchoring as THE single separator when
-column alignment and the `AAs` decode separate them too. The `controls()`
-function below runs the full battery on the reconstructed first attempt and
-requires exactly the properties above to fail, so this docstring cannot drift
-from what the code demonstrates.
+separate them. Two rounds got this wrong in opposite directions -- round 7
+credited uniqueness with power it does not have, and round 8 over-corrected by
+naming line-anchoring as THE single separator. `controls()` runs the full
+battery on a reconstructed first attempt and asserts exactly which arms must
+fail, so this docstring reports a test that runs rather than a claim beside one.
 
-CONTROLS. A screen that only looks for what it expects passes on a file where
-nothing was fixed. So: a one-letter alteration must not be found anywhere, and
-the reconstructed first attempt must pass (1) and (2) while failing (3), (4)
-and (5). If any control misbehaves the script reports that its verdict proves
-nothing and exits non-zero -- distinctly from a property failure, because
-"the artifact is wrong" and "the instrument is broken" are different news.
+THE CONTROLS ARE BUILT FROM THE PAGE, NOT FROM THE FIELD, and that is the whole
+design. An earlier version sliced the control out of the value under test, so
+any defect that broke a property broke the control too -- and because `main()`
+weighed controls first, TWELVE OF THIRTEEN defect shapes, including the exact
+round-1 defect this instrument was written to catch, announced "the instrument
+is broken, this verdict proves nothing" instead of "the artifact is wrong".
+That is the confusion the exit codes exist to prevent, in the more dangerous
+direction: it invites a reader to discount a real regression. Reconstructing
+the control from the page makes control failure mean what it says -- the page
+moved, or this script is wrong -- independent of whatever the field contains.
+
+EXIT CODES. 0 every property holds and every control behaved. 1 the ARTIFACT is
+wrong -- a property failed. 2 no verdict (the page could not be fetched, or came
+back truncated). 3 the INSTRUMENT is broken -- a control misbehaved, so nothing
+this run says about the artifact can be trusted.
 """
 import html
 import os
@@ -62,6 +69,7 @@ import urllib.request
 
 URL = "https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi"
 LIBS = ["biology/genetic-code.adj", "biology/start-codon.adj"]
+MAX_BYTES = 8 * 1024 * 1024
 BS = chr(92)
 
 
@@ -83,19 +91,21 @@ def unquote(s):
     return "".join(out)
 
 
-def source_field(path):
+def source_fields(path):
+    """Every `source` field in a file, so a second table cannot go unnoticed."""
     with open(path, encoding="utf-8") as handle:
         text = handle.read()
-    m = re.search(r'^\s*source "(.*)"\s*$', text, re.MULTILINE)
-    if not m:
-        raise SystemExit("!!! no source field in " + path)
-    return unquote(m.group(1))
+    found = re.findall(r'^\s*source "(.*)"\s*$', text, re.MULTILINE)
+    if len(found) != 1:
+        raise SystemExit("!!! expected exactly one source field in " + path
+                         + ", found " + str(len(found)))
+    return unquote(found[0])
 
 
 def fetch_flat(url):
     req = urllib.request.Request(url, headers={"User-Agent": "adj-facts-stdlib/verify"})
     with urllib.request.urlopen(req, timeout=60) as response:
-        raw = response.read().decode("utf-8", "replace")
+        raw = response.read(MAX_BYTES).decode("utf-8", "replace")
     return html.unescape(re.sub(r"<[^>]+>", "", raw))
 
 
@@ -129,32 +139,63 @@ def properties(value, page):
     }
 
 
-def controls(value, page, report):
-    """Every arm gets a case that must fail. Returns True if all behaved."""
+def canonical_block(page):
+    """The five-line block AS THE PAGE HAS IT, sliced from the page itself.
+
+    Independent of any `.adj` field, so the controls built from it keep working
+    when a field is broken -- which is precisely when their verdict matters.
+    """
+    marker = page.find("AAs  = FFLL")
+    if marker < 0:
+        return None
+    start = page.rfind("\n", 0, marker) + 1
+    lines = page[start:].split("\n")[:5]
+    if len(lines) != 5:
+        return None
+    return "\n".join(lines)
+
+
+def controls(page, report):
+    """Cases that MUST fail. Returns True only if every one behaved."""
     ok = True
-
-    altered = value.replace("Starts", "Startz", 1)
-    if altered in page:
-        report(False, "control: a one-letter alteration must NOT be found")
-        ok = False
-    else:
-        report(True, "control: a one-letter alteration is not found")
-
-    if not value.startswith("    "):
-        report(False, "control: value no longer opens with the four-space "
-                      "indent, so the first-attempt control cannot be built")
+    block = canonical_block(page)
+    if block is None:
+        report(False, "control: the canonical five-line block is not locatable "
+                      "on the page -- the page changed shape")
         return False
 
+    # The page's own block must pass everything. If it does not, this script's
+    # idea of the block is wrong, not the repository's.
+    for key, passed in properties(block, page).items():
+        if not passed:
+            report(False, "control: the PAGE'S OWN block fails " + key)
+            ok = False
+    if ok:
+        report(True, "control: the page's own block passes all five arms")
+
+    # A one-letter alteration must fail arms 1 and 2 -- demonstrated through
+    # `properties`, not merely asserted, so arm 2 has a must-fail case too.
+    altered = properties(block.replace("Starts", "Startz", 1), page)
+    if altered["1 substring"] or altered["2 unique"]:
+        report(False, "control: a one-letter alteration still passes "
+                      "substring/uniqueness")
+        ok = False
+    else:
+        report(True, "control: a one-letter alteration fails 1 substring and 2 unique")
+
     # The defective first attempt: line 1 flush, interior indents intact.
-    first = properties(value[4:], page)
+    if not block.startswith("    "):
+        report(False, "control: the page's block no longer opens with four "
+                      "spaces, so the first-attempt control cannot be built")
+        return False
+    first = properties(block[4:], page)
     expected = {"1 substring": True, "2 unique": True, "3 line-anchored": False,
                 "4 column-aligned": False, "5 decodes": False}
     for key, want in expected.items():
-        got = first[key]
-        label = ("control: the first attempt " + ("passes " if want else "FAILS ")
-                 + key)
-        if got != want:
-            report(False, label + "  -- but it " + ("failed" if want else "passed"))
+        label = ("control: the first attempt "
+                 + ("passes " if want else "FAILS ") + key)
+        if first[key] != want:
+            report(False, label + " -- but it " + ("failed" if want else "passed"))
             ok = False
         else:
             report(True, label)
@@ -174,24 +215,26 @@ def main():
         print("No verdict -- refusing to verify against a partial fetch.")
         return 2
 
-    bad_props, bad_controls = [], []
+    bad_controls = []
 
+    def report(ok, label):
+        print(("  ctrl  " if ok else "  CTRL  ") + label)
+        if not ok:
+            bad_controls.append(label)
+
+    print("controls (built from the page, not from the fields)")
+    controls(page, report)
+    print()
+
+    bad_props = []
     for rel in LIBS:
         name = rel.split("/")[-1]
         print(name)
-        value = source_field(os.path.join(stdlib_dir(), *rel.split("/")))
-
+        value = source_fields(os.path.join(stdlib_dir(), *rel.split("/")))
         for key, ok in properties(value, page).items():
             print(("  PASS  " if ok else "  FAIL  ") + name + ": (" + key + ")")
             if not ok:
                 bad_props.append(name + ": " + key)
-
-        def report(ok, label, _name=name):
-            print(("  ctrl  " if ok else "  CTRL  ") + _name + ": " + label)
-            if not ok:
-                bad_controls.append(_name + ": " + label)
-
-        controls(value, page, report)
         print()
 
     if bad_controls:
@@ -201,7 +244,8 @@ def main():
             print("   " + entry)
         return 3
     if bad_props:
-        print("VERIFICATION FAILED on " + str(len(bad_props)) + " property check(s):")
+        print("THE ARTIFACT IS WRONG: " + str(len(bad_props))
+              + " property check(s) failed.")
         for entry in bad_props:
             print("   " + entry)
         return 1

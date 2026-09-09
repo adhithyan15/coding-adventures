@@ -394,9 +394,18 @@ decoding to `M`. It needs the standard library and network access, nothing else.
 
 Every arm is paired with a case that must FAIL — including a reconstruction of a real defect
 security review caught in installment 4h, which the script requires to fail exactly three of the
-five arms. A control that misbehaves is reported separately from a property that fails, and exits
-with a different code: **the artifact is wrong** and **the instrument is broken** are different
-news.
+five arms.
+
+**The controls are built from the page, never from the fields under test**, and that is the whole
+design. An earlier version sliced its control out of the value it was checking, so any defect that
+broke a property broke the control too — and twelve of thirteen defect shapes, including the exact
+defect the instrument exists to catch, announced *the instrument is broken, this verdict proves
+nothing* instead of *the artifact is wrong*. That is the confusion the exit codes exist to prevent,
+in the direction that invites a reader to discount a real regression.
+
+Exit codes: **0** everything holds · **1** the artifact is wrong · **2** no verdict (the page could
+not be fetched) · **3** the instrument is broken. The routing is checked by mutating a copy of the
+libraries six ways and asserting the code each shape produces.
 
 ## Consuming a library
 

@@ -110,9 +110,10 @@ landed and why, not a semver-tracked API.
   Four pins added, because **none of these four values was pinned at all**. Eight mutants killed,
   not four: each NCBI value also gets an INDENT mutant that strips only the eight interior spaces on
   lines 2-5, and an ANCHOR mutant that removes only line 1's four — the shape of the defect review
-  caught, which no mutant covered until round 8. Eight mutants, and nothing else — the entire
-  subject of its repair, which a whole-value mutation would have covered by accident rather than on
-  purpose.
+  caught, which no mutant covered until round 8. Each of those two strips exactly the characters
+  whose absence defines one defect and nothing else, which is the point: a whole-value mutation
+  would redden the pin too, but by accident rather than on purpose, and it could not tell the two
+  failure shapes apart.
 
   ### What is now held, and one correction to my own grouping
 
