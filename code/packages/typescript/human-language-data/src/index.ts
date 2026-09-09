@@ -414,6 +414,8 @@ export {
   type GlossedNotTaughtReport,
 } from "./glossed-not-taught.js";
 export { runGentleRampReport } from "./gentle-ramp-cli.js";
+export * from "./reading-reach.js";
+export { runReadingReachReport } from "./reading-reach-cli.js";
 export { runCompletionPlan } from "./plan-cli.js";
 export {
   measureGlyphCoverage,

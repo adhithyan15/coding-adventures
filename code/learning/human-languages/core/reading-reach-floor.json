@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "about": "A ratchet, not a snapshot. Each entry is the number of published reading parts a track's longest passage ALREADY reaches; `reading-reach.test.ts` fails if the measured value drops below it. Absent entries floor at zero, so a track with no passage costs nothing here and only a track that has actually gained reading is ever edited. Raise an entry when a track's reading grows; never lower one to make a red test green -- a falling number means a passage was shortened or deleted, which is the regression this file exists to catch.",
+  "floors": {
+    "spanish/A1": 2,
+    "spanish/pre-A1": 2
+  }
+}
