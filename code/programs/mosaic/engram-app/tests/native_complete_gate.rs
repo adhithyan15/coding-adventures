@@ -92,6 +92,33 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // `border-bottom-style: solid` has no XAML equivalent and needs none --
     // solid is the only kind of border WinUI draws.
     (Backend::Xaml, "border-bottom-style"),
+    // ---- SwiftUI (#14728) ----
+    //
+    // These became visible when SwiftUI started reporting its drops (#12022);
+    // they are pre-existing gaps, not regressions. The two that were a single
+    // match arm each -- `border-radius` (254 occurrences here) and `max-width`
+    // -- were mapped in the same change rather than listed.
+    //
+    // Layout properties: NOT missing mappings. SwiftUI expresses these through
+    // the view shape chosen at construction (`HStack(spacing:alignment:)`,
+    // `Spacer`, `.layoutPriority`), and this emitter appends modifiers to an
+    // already-built view, so no match arm could apply them. Fixing them means
+    // the container emitter reading the part's style before emitting children.
+    (Backend::SwiftUI, "gap"),
+    (Backend::SwiftUI, "align"),
+    (Backend::SwiftUI, "align-items"),
+    (Backend::SwiftUI, "justify-content"),
+    (Backend::SwiftUI, "flex-grow"),
+    // No SwiftUI equivalent before the `Layout` protocol; a wrapping stack has
+    // to be written. The closest thing to a genuine platform limit here.
+    (Backend::SwiftUI, "flex-wrap"),
+    // The same defect as XAML's entries above, on another backend (#14132's
+    // shape, tracked for SwiftUI in #14728): `.overlay(alignment: .bottom)`
+    // draws a bottom rule perfectly well, the emitter simply has no mapping.
+    (Backend::SwiftUI, "border-bottom-width"),
+    (Backend::SwiftUI, "border-bottom-color"),
+    // Needs no mapping -- solid is the only stroke SwiftUI draws.
+    (Backend::SwiftUI, "border-bottom-style"),
 ];
 
 #[test]

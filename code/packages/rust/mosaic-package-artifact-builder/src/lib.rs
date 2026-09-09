@@ -1228,20 +1228,35 @@ fn analyze_package_degradations_with_runtime_and_tokens(
             // `DegradationReport::style_degradations` doc comment for why
             // this is a separate, non-gating list rather than folded into
             // `degradations` — and why other backends aren't wired yet).
-            if opts.backend == Backend::Xaml {
-                let backend_name = opts.backend.dir_name();
-                for dropped in mosaic_emit_xaml::pipeline::dropped_style_properties(&composed.style)
-                {
-                    style_degradations.push(Degradation {
-                        code: "style.property-dropped".to_string(),
-                        backend: backend_name.to_string(),
-                        component: component.clone(),
-                        variant: variant.clone(),
-                        layout_path: format!("$style.{}", dropped.part),
-                        primitive: Some(dropped.name),
-                        reason: format!("{} (value: {:?})", dropped.reason, dropped.value),
-                    });
+            let backend_name = opts.backend.dir_name();
+            let mut push_drop = |part: String, name: String, value: String, reason: String| {
+                style_degradations.push(Degradation {
+                    code: "style.property-dropped".to_string(),
+                    backend: backend_name.to_string(),
+                    component: component.clone(),
+                    variant: variant.clone(),
+                    layout_path: format!("$style.{part}"),
+                    primitive: Some(name),
+                    reason: format!("{reason} (value: {value:?})"),
+                });
+            };
+            match opts.backend {
+                Backend::Xaml => {
+                    for d in mosaic_emit_xaml::pipeline::dropped_style_properties(&composed.style) {
+                        push_drop(d.part, d.name, d.value, d.reason);
+                    }
                 }
+                Backend::SwiftUI => {
+                    for d in
+                        mosaic_emit_swiftui::pipeline::dropped_style_properties(&composed.style)
+                    {
+                        push_drop(d.part, d.name, d.value, d.reason);
+                    }
+                }
+                // The remaining backends do not report their drops yet, so an
+                // empty `styleDegradations` means "nobody looked" there rather
+                // than "nothing was lost" (#12022).
+                _ => {}
             }
         }
     }
@@ -7611,11 +7626,13 @@ layout NativeEvents {
         assert_eq!(style_degradations[0]["layoutPath"], "$style.root");
     }
 
-    /// Style-drop detection is XAML-only for now — SwiftUI's own style
-    /// lowering hasn't been audited, so it must not gain new degradations
-    /// as a side effect of this change.
+    /// SwiftUI now reports its own style drops (#12022). This test used to
+    /// assert the opposite -- that only XAML reported -- which was correct
+    /// when SwiftUI's lowering had not been audited. `box-shadow` has no
+    /// SwiftUI modifier equivalent, so it is a genuine drop and must be
+    /// recorded rather than vanishing.
     #[test]
-    fn non_xaml_backend_does_not_report_style_drops() {
+    fn swiftui_reports_its_own_style_drops() {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(
             pkg.path().join("src/Card.msl"),
@@ -7628,6 +7645,42 @@ layout NativeEvents {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
                 backend: Backend::SwiftUI,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("analysis");
+
+        let drops = &report.style_degradations;
+        assert_eq!(drops.len(), 1, "got: {report:?}");
+        assert_eq!(drops[0].code, "style.property-dropped");
+        assert_eq!(drops[0].primitive.as_deref(), Some("box-shadow"));
+        assert_eq!(drops[0].backend, "swiftui");
+        assert_eq!(drops[0].layout_path, "$style.root");
+        // A drop must not affect the native-complete verdict: these are
+        // recorded, not gating (see DegradationReport::style_degradations).
+        assert!(report.native_complete, "got: {report:?}");
+    }
+
+    /// A backend with no drop reporting yet must stay empty rather than
+    /// inheriting another backend's list -- an empty `styleDegradations`
+    /// there means "nobody looked", and conflating the two would hide real
+    /// losses behind a green field (#12022).
+    #[test]
+    fn a_backend_without_drop_reporting_stays_empty() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.msl"),
+            "style Card { part root { box-shadow: \"0 1px 2px #000\" ; } }\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
                 emit_project: false,
                 theme: None,
             },
