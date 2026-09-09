@@ -94,20 +94,21 @@
 % passes the defective value; an earlier draft of this note credited exactly
 % that test, which could not have caught what it was cited for.
 %
-% The load-bearing property is that the match BEGINS AT A LINE BOUNDARY —
-% the character before it is a newline. That is what separates the two: the
-% first attempt's span began four characters into line 1. UNIQUENESS (the
-% span occurs exactly once on the page) is asserted too, but it is NOT a
-% discriminator — it holds for the defective value as well, and an earlier
-% draft of this note claimed both properties failed for the first attempt,
-% which is the same error one round later: crediting a property with work it
-% cannot do. Installment 4g's recipe already had the anchoring — it wrote
-% the matched slice itself — and 4h's substring restatement lost it.
-% `tools/verify_ncbi_pre_span.py` in this package checks all five properties
-% against the live page with negative controls, including one that rebuilds
-% the first attempt's span and requires it to fail the anchor test while
-% passing the substring and uniqueness tests. CI pins the field, and mutants
-% that strip the interior indent OR line 1's anchor both redden the test.
+% THREE properties separate the shipped value from the first attempt, and
+% measurement rather than argument settles which: the match BEGINS AT A LINE
+% BOUNDARY, all five data columns land at ONE offset, and `atg` DECODES to M
+% on the `AAs` line. The first attempt failed all three while still passing
+% substring and uniqueness — which is why those two are asserted for their
+% own sake and credited with separating nothing. Two rounds got this wrong
+% in opposite directions: one credited uniqueness with power it lacks, the
+% next denied power to the column and decode arms that have it.
+% `tools/verify_ncbi_pre_span.py` in this package now runs the whole battery
+% on a reconstructed first attempt and asserts exactly which arms must fail,
+% so this paragraph reports a test that runs rather than standing beside
+% one. Installment 4g's recipe already had the anchoring — it wrote the
+% matched slice itself — and 4h's substring restatement lost it. CI pins the
+% field, and mutants that strip the interior indent OR line 1's anchor both
+% redden the test.
 %
 % Restoring it decided none of the questions held on #14111. Whitespace
 % inside a `<pre>` is RENDERED whitespace — the browser renders all twelve

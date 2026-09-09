@@ -377,6 +377,27 @@ Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume,
 in `adj-formula-stdlib/<subject>/` using the `formula` construct — simple ones first, growing
 more complex — and are consumed the same way.
 
+## `tools/` — checking a citation against its own page
+
+Most of this package's provenance checking has lived in throwaway scripts, which means the figures
+its changelog publishes are *reported* rather than reproducible (#14444). `tools/` is where that
+gets undone, one instrument at a time.
+
+```bash
+python code/specs/data/adj-facts-stdlib/tools/verify_ncbi_pre_span.py
+```
+
+`verify_ncbi_pre_span.py` fetches NCBI's genetic-code page and checks the `source` fields of
+`biology/genetic-code.adj` and `biology/start-codon.adj` against it: byte-exact substring, unique
+occurrence, the match beginning at a line boundary, all five data columns at one offset, and `atg`
+decoding to `M`. It needs the standard library and network access, nothing else.
+
+Every arm is paired with a case that must FAIL — including a reconstruction of a real defect
+security review caught in installment 4h, which the script requires to fail exactly three of the
+five arms. A control that misbehaves is reported separately from a property that fails, and exits
+with a different code: **the artifact is wrong** and **the instrument is broken** are different
+news.
+
 ## Consuming a library
 
 ```adj

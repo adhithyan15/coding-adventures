@@ -6,9 +6,9 @@ landed and why, not a semver-tracked API.
 ## Unreleased
 
 - **#13934 installment 4h: two descriptions, two stripped indents, and a headline that understates
-  the round.** 4 value lines, 10 row lines and 153 comment lines across **3** `.adj` files —
+  the round.** 4 value lines, 10 row lines and 155 comment lines across **3** `.adj` files —
   `geometry/solid-vertices-edges` (two values), `biology/genetic-code` and `biology/start-codon` —
-  plus three e2e test files. **Six mutations redden.** Contiguity **60 → 58** over the full
+  plus three e2e test files. **Eight mutations redden.** Contiguity **60 → 58** over the full
   population of 563; the two that left are the two Platonic values, member for member, and none
   entered.
 
@@ -97,15 +97,18 @@ landed and why, not a semver-tracked API.
   "most strongly" means here, and the first version of this sentence overclaimed.** A substring test
   with a one-character negative control does NOT discriminate: the first attempt at the indent
   repair was *also* a byte-exact, unique substring of the page, differing only in that its span
-  began four characters into line 1. The property that separates them is that the match
-  **begins at a line boundary**; uniqueness holds for the defective value too and is asserted for
-  its own sake, not as a discriminator — round 8 caught round 7 claiming otherwise, which is the
-  same error one round later. Both are checked by `tools/verify_ncbi_pre_span.py`, committed in this
-  package so the claim is reproducible rather than reported (#14444). A number is not a finding;
-  this one is an instrument limitation wearing a number's clothes — and a check can be one too.
+  began four characters into line 1. **Three** properties separate them, measured rather than
+  argued: the match begins at a line boundary, all five data columns land at one offset, and `atg`
+  decodes to `M` on the `AAs` line. Substring and uniqueness hold for the defective value too and
+  separate nothing. Round 7 credited uniqueness with power it lacks; round 8 corrected that by
+  naming anchoring as the *only* separator, denying power to two arms that have it — the same error
+  in opposite directions, one round apart. Both are checked by `tools/verify_ncbi_pre_span.py`,
+  committed in this package so the claim is reproducible rather than reported (#14444). A number is
+  not a finding; this one is an instrument limitation wearing a number's clothes — and a check can
+  be one too.
 
-  Four pins added, because **none of these four values was pinned at all**. Six mutants killed, not
-  four: each NCBI value also gets an INDENT mutant that strips only the eight interior spaces on
+  Four pins added, because **none of these four values was pinned at all**. Eight mutants killed,
+  not four: each NCBI value also gets an INDENT mutant that strips only the eight interior spaces on
   lines 2-5, and an ANCHOR mutant that removes only line 1's four — the shape of the defect review
   caught, which no mutant covered until round 8. Eight mutants, and nothing else — the entire
   subject of its repair, which a whole-value mutation would have covered by accident rather than on
