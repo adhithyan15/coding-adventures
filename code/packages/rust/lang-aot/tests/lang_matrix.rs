@@ -5464,7 +5464,7 @@ const PROGRAMS: &[Prog] = &[
                000000     IF IS-OK DISPLAY \"OK\" ELSE DISPLAY \"NO\".\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — level-88 condition-name with multiple values and a THRU range
     // (PL09 step 4). `88 COND VALUE 1 5 THRU 7 9` over N=6 → 6 is in 5 THRU 7, so
@@ -5485,7 +5485,7 @@ const PROGRAMS: &[Prog] = &[
                000000     IF COND DISPLAY \"OK\" ELSE DISPLAY \"NO\".\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — SET a level-88 condition-name TRUE (PL09 step 4). `SET IS-DONE TO
     // TRUE` stores 9 (`88 IS-DONE VALUE 9`) into STATUS-CODE (PIC 9), which then
@@ -5506,7 +5506,7 @@ const PROGRAMS: &[Prog] = &[
                000000     DISPLAY STATUS-CODE.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("9"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — symbolic relational operator (PL09 step 4). `IF N >= 5` on N=5
     // holds (boundary), printing "GE". A symbol lowers to the same `cmp_*` a word
@@ -5524,7 +5524,7 @@ const PROGRAMS: &[Prog] = &[
                000000     IF N >= 5 DISPLAY \"GE\" ELSE DISPLAY \"LT\".\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("GE"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — compound condition with AND/OR and parentheses (PL09 step 4).
     // `(N > 1 OR N > 9) AND N < 8` on N=5 = (true OR false) AND true = true →
@@ -14586,4 +14586,20 @@ fn portable_text_stdout_beam_comparison_and_move_immediates() {
     }
     assert_eq!(executed, 54);
     eprintln!("BEAM comparison/move immediates: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_cobol_beam_condition_names_and_evaluate() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM condition-name/EVALUATE: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(12).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM condition-name/EVALUATE: {executed} programs executed");
 }

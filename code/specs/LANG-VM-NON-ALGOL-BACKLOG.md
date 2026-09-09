@@ -8,6 +8,111 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 COBOL BEAM condition-name/EVALUATE probe (selected after #14700 merged)
+
+`git fetch origin && git merge origin/main` confirmed this worktree already sat
+at `1078ef0305` (PR #14700, "VM-040 COBOL BEAM signed/algebra probe"), merged
+`2026-09-09T14:10:30Z`. `gh pr list --state open` showed no LANG-VM PR in
+flight (`14713`, `14712`, `14711`, `14710`, `14707`, `14706`, `14705`,
+`14703`, `14702`, `14701`, plus dependabot `14699`/`14698`/`14467`/`7821`
+are Journal/Mosaic/human-languages/dependency work, not this backlog). This
+merge's own trailing paragraph explicitly named no single next item — it
+asked for a real reprioritization across three tracks (more COBOL BEAM rows,
+Twig dynamic strings/records/closures on BEAM, VM-060b host input) rather
+than an automatic continuation, so this section runs that comparison before
+selecting.
+
+Applying the "Prioritization policy" order first: skimming every section back
+through VM-046c (the oldest region re-read this session) found no red executed
+cell, no missing-CI-protection gap, and no stale roadmap claim — every trailing
+validation paragraph reports positive sentinels and passing suites, and
+VM-024/VM-032 already keep the non-ALGOL matrix and Windows execution in normal
+CI. So none of rungs 1–3 outrank the three candidate tracks; the choice is
+between rung 4 (missing backend parity for an already-implemented feature) and
+rung 5 (new frontend semantics/design). All three candidates are rung-4 shaped
+(COBOL, and Twig dynamic strings, are both already implemented on the seven
+standard backends — only BEAM parity is missing), except VM-060b, which its
+own three prior deferrals (VM-040 Oct, Nib and the FLOW-MATIC output probe
+sections above) already describe as needing "a separate reader/string/ABI
+design" before any input implementation can even be probed — that is rung-5
+design work, not a bounded proof-promotion slice, so it ranks last again here
+for the same reason it did each previous time.
+
+Between the remaining two rung-4 tracks: VM-041 ("isolate Twig captured/
+reassigned runtime-string lowering from existing source-local string
+metadata") is itself scoped as an isolation/design task — its own wording
+requires distinguishing two representations before a single proof can even be
+written, which is exploratory work with unknown surface area, not a slice with
+a pre-existing probe pattern. Twig records/closures on BEAM have no scoped
+backlog entry at all yet; a first probe there would need to establish what a
+closure or record even looks like as a BEAM term before any proof exists.
+Continuing the ~46 undeclared COBOL BEAM rows, by contrast, reuses the exact
+`.skip(N).take(4)`-over-`Cobol60`-filter pattern that has now succeeded
+three times running (rows 0–3, 4–7, 8–11), with a real dedicated single-cell
+probe test already wired (`portable_text_stdout_cobol_beam_signed_and_algebra`
+at `.skip(8)`), a real corpus of already-written, already-oracle-tested COBOL
+programs to draw from, and a demonstrated repair discipline (VM-D029, the
+`str_slice` contract) for whatever the next four rows expose. This is the
+narrower, lower-design-risk slice the backlog has consistently preferred over
+open-ended design work (the same reasoning that deferred VM-060b twice
+already), so COBOL BEAM rows are selected again.
+
+`awk` over `lang_matrix.rs`'s 58 `Cobol60` rows confirmed 12 already declare
+`Beam` (the first three probe batches, file-order rows 0–11) and 46 do not,
+matching the "~40 undeclared" estimate. Row order after the twelfth (file
+lines 5454, 5475, 5495, 5515) is: a level-88 condition-name `IF`, a level-88
+multi-value/THRU condition-name (first COBOL BEAM row needing bitwise `and`/
+`or` folding), `SET condition-name TO TRUE`, and a symbolic `>=` relational —
+all boolean/comparison lowering reusing already-BEAM-proven `cmp_*`/`const`/
+branch ops, not the character/EVALUATE/STRING/pointer families the merge
+paragraph listed as remaining (those appear later in file order). Run this
+next four-row slice (`.skip(12).take(4)`) on real Erlang, matching the
+established discipline: probe before declaring, commit a bounded contract for
+any newly exposed defect, promote only executed cells.
+
+### VM-040 COBOL BEAM condition-name/EVALUATE validation
+
+All four selected programs pass on real Erlang in the new
+`portable_text_stdout_cobol_beam_condition_names_and_evaluate` test, with no
+new `iir-to-beam`/`ir-to-beam` defect: each reuses `cmp_*`/`const`/branch
+lowering already proven by earlier COBOL BEAM rows, so no production code
+changed this slice. All ten BEAM `lang_matrix` tests pass together (12 Oct,
+26 Nib, all 16 now-declared COBOL rows across four probe batches, plus the
+immediate-arithmetic/comparison/`putchar`-state regressions), 31.51s.
+`iir-to-beam`'s package suite is unchanged at 97 tests (19 unit, 73
+integration, 5 doc); focused Clippy on `lang-aot` and `iir-to-beam` with all
+targets and warnings denied is clean. Sixteen of 58 COBOL rows now declare
+BEAM (422 total declared cells). The full `non_algol_matrix_every_proven_cell_agrees`
+capstone passed: 210 programs, 1338 cells exercised, 210 skipped (every
+program's CLR cell, the same host-wide missing-`ilasm` pattern prior slices
+reported), zero failures, in 459.58s.
+
+That full run's own reported total (1338 + 210 = 1548 declared non-ALGOL
+cells) is **VM-D030**: `LANG-VM-FEATURE-COVERAGE.md`'s per-frontend table,
+last hand-updated for VM-047b/VM-057/VM-047c/VM-039b, undercounts the actual
+corpus by 66 cells even after this slice's COBOL correction (58 rows, 422
+cells — independently re-verified against source and left unchanged here).
+The other frontend rows (Twig, Nib, Brainfuck, BASIC, Oct, FLOW-MATIC) were
+not individually re-audited in this bounded slice; a text-based line count
+against `lang_matrix.rs` suggests several of their row counts have also
+drifted (the corpus grows across many unrelated PRs that do not each revisit
+this table), but confirming exact per-row figures needs careful multi-line-
+aware parsing, not a quick regex. Per this document's own authority rule
+("executed tests… are authoritative until the older roadmap is reconciled"),
+the grand-total line now cites the freshly measured 1548 rather than
+propagating the stale incremented figure. Fixing every row is out of this
+slice's bounded scope (rung 3 of the Prioritization policy — incorrect
+status documentation — but a distinct, separately schedulable item from
+COBOL BEAM parity); queued as **VM-061**: recompute every
+`LANG-VM-FEATURE-COVERAGE.md` frontend row/cell count from `lang_matrix.rs`
+source (ideally via a small checked script or test assertion instead of
+hand arithmetic, so it cannot drift silently again), reconciling Twig,
+Nib, Brainfuck, BASIC, Oct and FLOW-MATIC against the real corpus.
+
+Reprioritize the remaining ~42 undeclared COBOL rows against VM-061,
+VM-041 (Twig dynamic-string isolation) and VM-060b (host input design) after
+this merges, following the same policy comparison run above.
+
 ## VM-040 COBOL BEAM signed/algebra probe (selected after #14684 merged)
 
 The previous top-of-queue entry here ("VM-040 FLOW-MATIC BEAM output probe,
@@ -1267,6 +1372,7 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | 12 | VM-041 | Isolate Twig captured/reassigned runtime-string lowering from existing source-local string metadata; add one captured-string value proof before wider dynamic-string expansion. |
 | 13 | VM-048 | Define a representation-neutral observation for Macsyma's implemented inert symbolic Apply, then promote one oracle-derived symbolic result per backend; do not compare raw pointer/tag identities. |
 | 14 | VM-058 | Implement genuine COBOL INSPECT `BEFORE x AFTER y` two-delimiter window intersection on a single delimiter phrase (discovered as VM-D027): both the `cobol-runtime` oracle and the compiler currently read only the first of two grammar-legal `inspect_region` siblings. Touches all nine region-parsing call sites (TALLYING/REPLACING/CONVERTING, single- and multi-item) in both engines; add a discriminating two-distinct-delimiter proof (present/present, one absent) plus a matrix cell once implemented. |
+| 15 | VM-061 | Discovered as VM-D030: `LANG-VM-FEATURE-COVERAGE.md`'s per-frontend "Declared standard cells" table undercounts the real corpus by roughly 66 cells (a fresh full-matrix run reports 1548 declared non-ALGOL cells; the table's rows summed to 1478 before the COBOL-60 row's independent correction to 422). Recompute every frontend's row/cell count directly from `lang_matrix.rs` — ideally via a small checked script or test assertion so the table cannot silently drift again — reconciling Twig, Nib, Brainfuck, Dartmouth BASIC, Oct and FLOW-MATIC against source. |
 
 VM-047c (region proofs, including BEFORE/AFTER used together across a
 combined statement's independently-regioned TALLYING/REPLACING halves)
@@ -1292,6 +1398,18 @@ implementation item. The known DEF FN-global and print-zone semantics remain
 future frontend design scope, not missing proofs for already-implemented code.
 
 ## Discovery log
+
+- **VM-D030 — confirmed 2026-09-09:** while updating
+  `LANG-VM-FEATURE-COVERAGE.md`'s COBOL-60 row for the condition-name/
+  EVALUATE BEAM slice, a fresh `non_algol_matrix_every_proven_cell_agrees`
+  run reported 1338 cells exercised + 210 skipped = 1548 declared non-ALGOL
+  cells, versus the document's pre-existing rows summing to 1478 (already
+  short by 66 cells before this slice's own +4 COBOL cells). The COBOL-60
+  row itself is independently verified accurate (58 rows, 422 cells,
+  confirmed against source twice with different parsing approaches); the
+  other frontend rows were not re-audited here. The grand-total line is
+  corrected to the freshly measured 1548 per this document's own authority
+  rule. Queued as **VM-061**: recompute every row from source, not by hand.
 
 - **VM-D028 — confirmed 2026-09-07:** while adding a real-CoreCLR lane for
   Macsyma (VM-049), investigating why McCarthy's pre-existing `clr_real_*.rs`

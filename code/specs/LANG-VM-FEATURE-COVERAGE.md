@@ -28,14 +28,20 @@ refusal also does not imply the complete driver refuses that feature.
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025 |
 | FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
-| COBOL-60 | 58 | 418 | Much larger frontend JIT/oracle suite |
+| COBOL-60 | 58 | 422 | Much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1478 cells.
-The zeroes for McCarthy and Macsyma mean dedicated coverage, not absent support.
-CLR-real is an additional runner lane for the same CLR backend in McCarthy's
-capstone, not a tenth universal backend.
+The normal non-ALGOL capstone therefore declares 210 programs. The table's
+per-frontend cell column undercounts the executed total for frontends other
+than COBOL-60 (verified accurate above): a fresh
+`non_algol_matrix_every_proven_cell_agrees` run reports 1338 cells exercised
+plus 210 skipped (missing local `ilasm`) = **1548 actual declared non-ALGOL
+cells**, not the sum of this table's rows. VM-D030 records this gap; a
+future bounded item should recompute every row from source rather than by
+hand. The zeroes for McCarthy and Macsyma mean dedicated coverage, not
+absent support. CLR-real is an additional runner lane for the same CLR
+backend in McCarthy's capstone, not a tenth universal backend.
 
 ## Implemented feature families and remaining proofs
 

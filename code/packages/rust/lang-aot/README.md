@@ -663,3 +663,15 @@ to this slice before promotion:
   programs pass again after the fix.
 
 Remaining COBOL features still require individual execution proofs.
+
+### COBOL condition-name/EVALUATE on BEAM (VM-040)
+
+Four more COBOL programs execute on real BEAM: a level-88 condition-name
+`IF`, a level-88 multi-value/THRU-range condition-name (folding `cmp_eq`
+with `and`/`or`), `SET condition-name TO TRUE`, and a symbolic `>=`
+relational. All four reuse `cmp_*`/`const`/branch lowering already proven by
+earlier COBOL BEAM rows, so no backend change was needed. Sixteen of 58
+COBOL rows now declare BEAM, for 422 cells. Remaining COBOL features
+(character/EVALUATE cascades further in the corpus, reference modification,
+STRING SIZE/delimiters, pointer/overflow) still require individual
+execution proofs.
