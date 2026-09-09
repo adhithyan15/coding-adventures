@@ -536,6 +536,11 @@ public static class MosaicRuntimeHost
                 var nested = $"effect settling nested more than {maxDepth} levels deep; "
                     + "an effect handler is calling back into the host instead of answering";
                 settleError = nested;
+                // Also written out here, not only left for `Status`: `Restore`
+                // and `CompleteEffect` both reach a top-level settle and neither
+                // has a `Status` reader, so a guard tripped by a worker thread
+                // answering a deferred effect would otherwise reach nobody.
+                Debug.WriteLine(nested);
                 FailOutstanding(update, nested);
                 return ReportingError(latestUpdate, nested);
             }
@@ -667,6 +672,7 @@ public static class MosaicRuntimeHost
                 var exhausted = $"effect completion did not settle after {maxRounds} rounds; "
                     + "the application is requesting effects faster than they can be answered";
                 settleError = exhausted;
+                Debug.WriteLine(exhausted);
                 FailOutstanding(current, exhausted);
                 return ReportingError(current, exhausted);
             }

@@ -115,10 +115,6 @@ fn the_emitted_xaml_host_answers_effects() {
         project.join("WindowsColorStub.cs"),
     )
     .expect("copy the Windows.UI.Color stub");
-    // `ImportDirectoryBuild*` off: MSBuild otherwise walks UPWARD from the
-    // project for `Directory.Build.props`, and this project lives under the
-    // system temp directory, which on a shared host any local user can write.
-    // That would import their targets into this build.
     std::fs::write(
         project.join("XamlEffectDriver.csproj"),
         "<Project Sdk=\"Microsoft.NET.Sdk\">\n\
@@ -127,12 +123,28 @@ fn the_emitted_xaml_host_answers_effects() {
          \x20   <TargetFramework>net9.0</TargetFramework>\n\
          \x20   <ImplicitUsings>enable</ImplicitUsings>\n\
          \x20   <Nullable>enable</Nullable>\n\
-         \x20   <ImportDirectoryBuildProps>false</ImportDirectoryBuildProps>\n\
-         \x20   <ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>\n\
          \x20 </PropertyGroup>\n\
          </Project>\n",
     )
     .unwrap();
+
+    // Stop MSBuild's upward walk AT this project.
+    //
+    // It looks for `Directory.Build.props` in every ancestor directory, and this
+    // project lives under the system temp directory -- `/tmp`, mode 1777, on a
+    // Linux build host -- so any local user could pre-plant one and have their
+    // targets run as the build user. An empty file here terminates the search.
+    //
+    // Setting `<ImportDirectoryBuildProps>false` in the project body does NOT
+    // work and looks like it does: `Directory.Build.props` is imported by the
+    // implicit `Sdk.props` BEFORE the body is evaluated, so the property is read
+    // too late. Measured on 9.0.313 -- a hostile props file one directory up
+    // still landed, while these sentinels and a command-line `-p:` both
+    // suppressed it. The `.targets` half of that property does work, which is
+    // what makes the broken half easy to miss.
+    for sentinel in ["Directory.Build.props", "Directory.Build.targets"] {
+        std::fs::write(project.join(sentinel), "<Project />\n").unwrap();
+    }
 
     run(
         Command::new("dotnet")
