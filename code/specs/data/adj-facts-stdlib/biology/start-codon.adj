@@ -70,18 +70,35 @@
 % feedback_no_byte_arithmetic_for_llm.)
 %
 % INSTALLMENT 4h RESTORED THE PAGE'S INDENTATION, and until it did, the
-% claim above was false by TWELVE characters — and the first attempt at this
-% repair restored only eight, leaving it false by four and the block MORE
-% column-misaligned than it found it, which security review caught. NCBI
-% serves this block inside a `<pre>` that indents LINE 1 BY FOUR SPACES and
-% every later line by two, so all five data columns land at offset 11. The
-% shipped value had every one of those twelve characters stripped, so it was
-% verbatim only under a whitespace normalisation — and, worse for a block
-% the header tells you to read BY COLUMN, misaligned: decoding `atg` by
-% character index gave T where the page gives M. It is now an exact
-% substring of the tag-stripped page, verified against RAW HTML with a
-% negative-control arm and pinned in CI, where a mutation that strips the
-% indentation again reddens the test.
+% claim above was false by TWELVE characters. NCBI serves this block inside
+% a `<pre>` that indents LINE 1 BY FOUR SPACES and every later line by two,
+% so all five data columns land at offset 11, and the shipped value had
+% every one of those twelve stripped. What broke verbatimness was the EIGHT
+% interior spaces on lines 2-5; the four on line 1 could not, which is why
+% the first attempt at this repair — restoring only eight — produced a value
+% that WAS still a byte-exact, unique substring of the page and was
+% nevertheless wrong: its span began four characters into line 1, so the
+% excerpt no longer stood on its own columns, and it was MORE misaligned
+% than the value it replaced. Security review caught that by decoding it,
+% not by matching it. This library reads the `Starts` line, and
+% Starts/Base1/Base2/Base3 stayed mutually aligned in every variant — only
+% `AAs` was ever displaced — so THIS table's three rows always decoded
+% correctly, before and after. The `atg`-decodes-to-T damage belongs to
+% `genetic-code.adj`, which reads the `AAs` line; an earlier draft of this
+% note copied that sentence over and claimed damage to a decode path line 55
+% of this file says it never uses.
+%
+% SO THE CHECK THAT MATTERS IS NOT "is it a substring". Stripping leading
+% whitespace from a span's first line always leaves one, so a substring test
+% passes the defective value; an earlier draft of this note credited exactly
+% that test, which could not have caught what it was cited for. The
+% load-bearing properties are that the match BEGINS AT A LINE BOUNDARY (the
+% character before it is a newline) and OCCURS EXACTLY ONCE on the page.
+% Both hold for the value below and both fail for the first attempt.
+% Installment 4g's recipe already had this — it wrote the matched slice
+% itself — and 4h's substring restatement lost it. `verify_4h.py` tests all
+% three properties, and CI pins the field so a mutation that strips the
+% indentation reddens the test.
 %
 % Restoring it decided none of the questions held on #14111. Whitespace
 % inside a `<pre>` is RENDERED whitespace — the browser renders all twelve

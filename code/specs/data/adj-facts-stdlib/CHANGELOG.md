@@ -6,7 +6,7 @@ landed and why, not a semver-tracked API.
 ## Unreleased
 
 - **#13934 installment 4h: two descriptions, two stripped indents, and a headline that understates
-  the round.** 4 value lines, 10 row lines and 104 comment lines across **3** `.adj` files —
+  the round.** 4 value lines, 10 row lines and 134 comment lines across **3** `.adj` files —
   `geometry/solid-vertices-edges` (two values), `biology/genetic-code` and `biology/start-codon` —
   plus three e2e test files. **Six mutations redden.** Contiguity **60 → 58** over the full
   population of 563; the two that left are the two Platonic values, member for member, and none
@@ -92,9 +92,14 @@ landed and why, not a semver-tracked API.
   The sweep still calls both NCBI values NOT CONTIGUOUS, because `extract_v4.blocks()` splits on
   newlines and a five-line `<pre>` span is five blocks to it. **They are byte-exact against the page
   and still fail the screen.** Contiguity therefore moves 60 → 58, not 56 — and the two repairs
-  the headline cannot see are the two verified most strongly, against raw HTML with a
-  negative-control arm. A number is not a finding; this one is an instrument limitation wearing a
-  number's clothes.
+  the headline cannot see are the two verified most strongly, against raw HTML. **Round 7 sharpened
+  what "most strongly" means here, and the first version of this sentence overclaimed.** A
+  substring test with a one-character negative control does NOT discriminate: the first attempt at
+  the indent repair was *also* a byte-exact, unique substring of the page, differing only in that
+  its span began four characters into line 1. The properties that separate them are that the match
+  **begins at a line boundary** and **occurs exactly once**, and those are what the verification
+  now asserts. A number is not a finding; this one is an instrument limitation wearing a number's
+  clothes — and a check can be one too.
 
   Four pins added, because **none of these four values was pinned at all**. Six mutants killed, not
   four: each NCBI value also gets an INDENT mutant that strips only the restored spaces and nothing
