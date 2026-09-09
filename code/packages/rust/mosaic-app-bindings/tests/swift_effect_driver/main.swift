@@ -116,6 +116,22 @@ if let host = makeHost("MOSAIC_PROBE_STATE_D") {
         "snapshot still works after a partly-answered batch")
 }
 
+// The shape a real file-dialog handler writes first.
+//
+// `JSONSerialization` raises an ObjC NSInvalidArgumentException for a URL --
+// not a Swift error, so the host's do/catch cannot see it and the PROCESS
+// ABORTS with the lock held. Without the guard this check does not fail, it
+// terminates the driver.
+if let host = makeHost("MOSAIC_PROBE_STATE_E") {
+  let refused = host.completeEffect(1, ["ok": ["url": URL(fileURLWithPath: "/tmp/x.apkg")]])
+    as? [String: Any]
+  check((refused?["error"] as? String ?? "").contains("JSON-serialisable"),
+        "a non-serialisable effect result is refused, not aborted on")
+  let nan = host.completeEffect(1, ["ok": ["amount": Double.nan]]) as? [String: Any]
+  check((nan?["error"] as? String ?? "").contains("JSON-serialisable"),
+        "a non-finite number is refused, not aborted on")
+}
+
 // No id-validation check here, deliberately, and the reason is worth recording.
 //
 // Qt needed one: `completeEffect` is `Q_INVOKABLE` and takes a `QVariant`, so

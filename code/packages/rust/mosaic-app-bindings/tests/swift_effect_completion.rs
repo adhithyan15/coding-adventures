@@ -134,7 +134,8 @@ fn the_emitted_swiftui_host_answers_effects() {
             .env("MOSAIC_PROBE_STATE_A", project.join("state-a.json"))
             .env("MOSAIC_PROBE_STATE_B", project.join("state-b.json"))
             .env("MOSAIC_PROBE_STATE_C", project.join("state-c.json"))
-            .env("MOSAIC_PROBE_STATE_D", project.join("state-d.json")),
+            .env("MOSAIC_PROBE_STATE_D", project.join("state-d.json"))
+            .env("MOSAIC_PROBE_STATE_E", project.join("state-e.json")),
         "swift effect driver",
     );
 
@@ -153,6 +154,8 @@ fn the_emitted_swiftui_host_answers_effects() {
         "a fully-answered chaining batch leaves nothing outstanding",
         "snapshot still works after a fully-answered chaining batch",
         "a partly-answered batch leaves nothing outstanding",
+        "a non-serialisable effect result is refused, not aborted on",
+        "a non-finite number is refused, not aborted on",
     ] {
         assert!(
             stdout.contains(expected),

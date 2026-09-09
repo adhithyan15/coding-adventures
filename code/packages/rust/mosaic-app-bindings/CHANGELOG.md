@@ -25,11 +25,38 @@ both are recorded because the difference is the interesting part:
   truncate to `4`, answering a *different* outstanding effect. Swift's signature
   is `UInt64`; the same mistake does not compile.
 
-One bug found by running it, which every text-level assertion passed straight
-over: the re-entrant branch was gated on `latestAnswer != nil`, but that starts
-`nil` each frame and is only set *by* that branch -- so it was unreachable and
-every handler's answer was discarded. A direct port of Qt's pointer-non-null
-check into Swift, where the value itself is the Optional.
+Bugs found by running it, none of which a text-level assertion could see:
+
+- The re-entrant branch was gated on `latestAnswer != nil`, but that starts
+  `nil` each frame and is only set *by* that branch -- so it was unreachable
+  and every handler's answer was discarded. A direct port of Qt's
+  pointer-non-null check into Swift, where the value itself is the Optional.
+- **Answering with a `URL` aborted the process.** `JSONSerialization` raises an
+  ObjC `NSInvalidArgumentException` for a `URL`, `Date`, `Data`, or a
+  non-finite `Double`. Swift cannot catch that, so the surrounding `do/catch`
+  was inert and the app terminated with the lock held -- on the first thing a
+  real file-dialog handler would write. Now refused with a message.
+- A JSON `true` bridges to `NSNumber` and coerced to id **1**, answering effect
+  1. Booleans are refused.
+- An `await` whose id could not be read was skipped in silence, leaving it
+  pending forever. It is now counted and surfaced.
+- Either runaway guard returned `["props": [:]]`, blanking every binding in the
+  UI until the next event. The error is now attached to the last known good
+  update instead of replacing it.
+- The warning about abandoned effects was written to `persistenceWarning`,
+  which `persistSnapshot()` clears on every successful write -- so it was
+  overwritten microseconds later and never reached anyone. It has its own
+  field now, because an abandoned effect is a standing condition rather than a
+  write failure.
+
+### Known gap -- an `Await` cannot be answered asynchronously (#14720)
+
+Both this host and Qt's call the handler synchronously and fail any `await` not
+answered by the time the call returns. Answering later is rejected as already
+completed; blocking on another thread deadlocks against the lock. That rules out
+an asynchronous file dialog, which is the motivating case for `await` effects --
+so **step 5 cannot be completed on this shape**. Both templates now state the
+constraint rather than implying a handler may answer whenever it likes.
 
 `tests/swift_effect_completion.rs` emits the host, compiles it with `clang` +
 `swiftc`, links the real conformance runtime and runs it -- eleven checks

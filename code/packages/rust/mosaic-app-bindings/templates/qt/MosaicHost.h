@@ -52,6 +52,13 @@ signals:
     //
     // Do not `delete` this host from a handler; use `deleteLater()`. The emit
     // is synchronous and this object is mid-call underneath it.
+    //
+    // The handler must also ANSWER SYNCHRONOUSLY, from inside the emit.
+    // Answering later is too late -- the settle has already failed the effect
+    // as unanswered, and the runtime rejects the late answer as completed. That
+    // rules out an asynchronous file dialog, which is the motivating case for
+    // `await` effects, so this shape is not yet sufficient for one. Tracked
+    // separately; do not design around it as though it were.
     void effectRequested(const QVariant &effectId,
                          const QString &kind,
                          const QVariant &payload,
