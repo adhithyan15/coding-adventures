@@ -111,6 +111,23 @@ impl MosaicApp for ConformanceApp {
     }
 
     fn dispatch(&mut self, event: Event) -> Result<AppUpdate, Self::Error> {
+        // Two awaited effects in ONE update.
+        //
+        // A host that treats "a handler answered" and "a handler ignored one"
+        // as alternatives passes every single-effect test and drops the ignored
+        // effect here -- which is permanent, because the runtime refuses to
+        // snapshot or restore while anything is pending. A batch is the only
+        // shape that can catch it, and the protocol has always allowed one.
+        if event.name == "requestEffectBatch" {
+            if self.protocol_version != EFFECT_PROTOCOL_VERSION {
+                return Err(ConformanceError::EffectsUnavailable);
+            }
+            let mut update = self.request_effect(false);
+            let second = self.request_effect(false);
+            update.effects.extend(second.effects);
+            update.props = self.props("requested");
+            return Ok(update);
+        }
         if event.name == "requestEffect" {
             if self.protocol_version != EFFECT_PROTOCOL_VERSION {
                 return Err(ConformanceError::EffectsUnavailable);

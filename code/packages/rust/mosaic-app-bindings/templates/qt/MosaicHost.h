@@ -3,6 +3,7 @@
 
 #include <QLibrary>
 #include <QObject>
+#include <QPointer>
 #include <QSet>
 #include <QStringList>
 #include <QVariant>
@@ -40,9 +41,17 @@ public:
 
 signals:
     // Emitted once per effect the runtime asks for, before the host decides
-    // what to do with it. Connect synchronously and call `completeEffect` from
-    // the handler to answer an `await` effect; a `notify` effect needs no
-    // answer.
+    // what to do with it. Call `completeEffect` from the handler to answer an
+    // `await` effect; a `notify` effect needs no answer.
+    //
+    // **Connect directly, on this object's own thread.** `Qt::AutoConnection`
+    // becomes queued when the receiver lives elsewhere, and a queued handler
+    // runs after this host has already given up on the effect and failed it --
+    // so every await silently fails and the members below are raced besides.
+    // `completeEffect` asserts the thread in debug builds.
+    //
+    // Do not `delete` this host from a handler; use `deleteLater()`. The emit
+    // is synchronous and this object is mid-call underneath it.
     void effectRequested(const QVariant &effectId,
                          const QString &kind,
                          const QVariant &payload,
@@ -100,8 +109,11 @@ private:
     // completeEffect() from inside the emit, which produces a newer update than
     // the one settleEffects is holding. Without adopting it the caller gets a
     // stale map -- the app has moved on and the props say otherwise.
-    QVariantMap reentrantUpdate_;
-    bool reentered_ = false;
+    // Per-FRAME, not per-object: a nested settle must not consume the update an
+    // outer frame adopted. The pointers are saved and restored around each
+    // frame, so each level answers only its own handler's completion.
+    QVariantMap *reentrantSlot_ = nullptr;
+    bool *reentrantFlag_ = nullptr;
     int settling_ = 0;
     Create create_ = nullptr;
     Dispatch dispatch_ = nullptr;

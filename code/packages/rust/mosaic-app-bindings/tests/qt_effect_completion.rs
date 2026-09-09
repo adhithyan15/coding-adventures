@@ -163,7 +163,10 @@ fn the_emitted_qt_host_answers_effects() {
         Command::new(&executable)
             .env("MOSAIC_APP_LIBRARY", conformance_runtime())
             .env("MOSAIC_APP_STATE_PATH", project.join("state-a.json"))
-            .env("MOSAIC_PROBE_STATE_B", project.join("state-b.json")),
+            .env("MOSAIC_PROBE_STATE_B", project.join("state-b.json"))
+            .env("MOSAIC_PROBE_STATE_C", project.join("state-c.json"))
+            .env("MOSAIC_PROBE_STATE_D", project.join("state-d.json"))
+            .env("MOSAIC_PROBE_STATE_E", project.join("state-e.json")),
         "qt effect driver",
     );
 
@@ -179,6 +182,11 @@ fn the_emitted_qt_host_answers_effects() {
         "the app is told why, rather than just waiting",
         "an answered await is settled",
         "the handler's value reached the app",
+        "a partly-answered batch leaves nothing outstanding",
+        "snapshot still works after a partly-answered batch",
+        "a non-integral effect id is refused, not truncated",
+        "a negative effect id is refused, not wrapped",
+        "a handler that re-enters the host does not crash it",
     ] {
         assert!(
             stdout.contains(expected),

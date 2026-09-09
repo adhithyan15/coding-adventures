@@ -25,12 +25,19 @@ it. The Qt host is the first to close that.
 
 Protocol 2 is declared because the host now *implements* completion. Declaring
 it without that is the harmful direction, so the assertion that pins the version
-now pins the capability beside it. Per UI47 §5.3 the bump is safe in both
-directions, and the existing Qt app acceptance (`venture-browser`, a v1 app)
-still passes: a v2 host running a v1 app simply never sees an `await`.
+now pins the capability beside it.
 
-Two bugs found only by running it, which no amount of asserting on the emitted
-text would have surfaced:
+Scope of that bump, stated accurately: a v2 host running a v1 **app** is fine --
+no `await` is ever emitted and the completion path goes unused, which the
+existing `venture-browser` Qt acceptance (a v1 app) confirms. A v2 host against
+an older **runtime** that only accepts protocol 1 is not: it is rejected at
+`mosaic_app_create`. Every runtime in this repository accepts both, so nothing
+here breaks, but a package pairing a newly emitted host with a stale
+`libmosaic_app` would.
+
+Five bugs found only by running it, three of them by the security review after
+the first version of this change. None would have been visible to any assertion
+on the emitted text:
 
 - **Persistence ran before settling.** The runtime refuses to snapshot while an
   effect is outstanding -- correctly, since a half-answered effect is not a
@@ -40,6 +47,33 @@ text would have surfaced:
   `completeEffect` called re-entrantly now hands its update back to the settle
   loop already running instead of starting a second one, and the loop adopts
   it.
+- **A partly-answered batch dropped the effects nobody answered.** Adoption and
+  the fail loop were alternatives, so a batch where a handler answered one
+  effect and ignored another left the ignored one neither answered nor cleared
+  -- and the runtime gates `snapshot` *and* `restore` on nothing being pending,
+  so one dropped effect disabled persistence for the rest of the process. That
+  is the exact silent hang this path exists to prevent, one branch away from the
+  code preventing it. The conformance fixture gained a two-effect batch event,
+  because no single-effect test can reach it.
+- **A handler calling back into the host recursed until the stack gave out.**
+  The 64-round bound bounds iterations within a frame, not frames; a handler
+  calling `handleEvent` rather than `completeEffect` re-entered one level
+  deeper, and the review reproduced a SIGSEGV at roughly 1600 levels. Nesting is
+  now bounded at 8 with a message.
+- **`toULongLong` was not validation.** It accepts `-1` (wrapping to 2^64-1),
+  `3.5` (truncating to **4**), and `1e30` (saturating) -- and `completeEffect`
+  is `Q_INVOKABLE`, so QML, where every number is a double, is the expected
+  caller. An id of 3.5 would have answered a *different* outstanding effect with
+  the wrong result. Ids are now range- and integrality-checked before
+  conversion.
+
+A handler may also delete the host mid-emit, which the review reproduced as a
+use-after-free under ASan. Every member access after an emit is now gated on a
+`QPointer`, the depth guard no longer writes through freed memory, and the
+header says to use `deleteLater()`. Thread affinity is documented and asserted:
+`effectRequested` becomes a queued connection automatically for a receiver on
+another thread, and a queued handler answers an effect the host has already
+given up on.
 
 ### Added -- an execution acceptance for the emitted Qt host
 
