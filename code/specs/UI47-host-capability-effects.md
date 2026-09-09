@@ -1,6 +1,6 @@
 # UI47 — Host capability effects: giving `Effect` a completion path
 
-**Status:** Steps 1-5 of §5.4 are done. The protocol core landed in #14547; all five native hosts answer effects (Qt #14705, SwiftUI #14721, Compose #14731, Flutter #14739, XAML #14744); and `engram-mosaic-app` emits Anki import/export as `Await` effects (#14747). Steps 6 (#13728, per-backend adapter migration) and 7 (`deleteNote` confirmation, closing §4.2) remain.
+**Status:** Steps 1-5 of §5.4 are done. The protocol core landed in #14547; all five native hosts answer effects (Qt #14705, SwiftUI #14721, Compose #14731, Flutter #14739, XAML #14744); and `engram-mosaic-app` emits Anki import/export as `Await` effects (#14747). Step 6 (#13728, per-backend adapter migration) is blocked on §5.4a — nothing generated connects an effect handler — and step 7 (`deleteNote` confirmation, closing §4.2) remain.
 
 §2 and §3 below describe the state this spec was written against, and are kept as the problem statement rather than rewritten — §3's "cannot meet at v1" is still true *of v1*, which is why nothing is minted below protocol 2.
 **Layer:** UI / standard Mosaic app ABI
@@ -223,12 +223,55 @@ Neither combination may fail silently. That rule is the whole lesson of §4.2.
 4. One host template at a time, Qt first — that is where the CI lane exists.
 5. `engram-mosaic-app` emits `importAnki` / `exportAnki` as `Await` effects and
    `openCard` as `Notify`.
-6. Per-backend adapter migration (#13728), Qt first.
+6. Per-backend adapter migration (#13728), Qt first. **Blocked on 5a.**
 7. `deleteNote` / `deleteNoteType` gain a real confirmation flow, closing §4.2.
 
 Steps 1–3 are the protocol; 4–7 are Engram's use of it. Splitting there matters
 because steps 1–3 benefit every future Mosaic app that needs a host capability,
 whether or not Engram's migration ever finishes.
+
+#### 5a — nothing generated connects a handler
+
+Discovered while starting step 6, and it is a prerequisite for it rather than
+part of it.
+
+Steps 4 and 5 built both ends and not the middle. Every host template can now
+*answer* an effect, and `engram-mosaic-app` now *emits* one — but no generator
+wires the two together. Searching every emitter and the artifact builder for
+`effectRequested`, `effectHandler` or `completeEffect` returns nothing; the only
+code in the repo that installs a handler is the five execution drivers in
+`mosaic-app-bindings/tests`, which are test harnesses, and the templates that
+declare the property. There is also no manifest section through which a package
+could supply one — Engram's `mosaic-package.toml` declares `[package]`,
+`[components]`, `[dependencies]`, `[host_assets]` and `[kernel]`, and none of
+those carries an effect handler.
+
+The consequence is specific. Dropping Engram's Qt `[host_assets]` override today
+would emit an app whose Import button raises an `importAnki` `Await` that
+nothing is connected to. The host's own fail sweep then does exactly what it was
+built to do — fails the effect with "no host handler answered effect N" and
+keeps persistence alive — so nothing crashes and nothing hangs. Anki import
+simply stops working, quietly, on every native backend.
+
+That is the same regression #13728 warns about, and it survives step 5: step 5
+moved the intent onto `Effect`, which settles that issue's open question, but
+moving a request onto a channel does not put anyone on the other end of it.
+
+So step 6 needs a hook first: a declared, per-backend way for a package to
+supply an effect handler that the emitters wire into the generated entry point.
+The seam differs per backend and all five are generated, so none can be reached
+from package code today —
+
+- **Qt**: `effectRequested` is a signal and `mosaicHost` is already a
+  `required property var` in the generated QML, so a `Connections` block could
+  reach it — but the QML root is generated too.
+- **SwiftUI / Compose / Flutter / XAML**: the handler is a closure or property
+  set in code, and each backend's entry point is generated.
+
+Whether the hook is a manifest section, an emitted extension point, or QML-level
+for Qt and code-level elsewhere is undecided. What is decided is that step 6
+cannot start until it exists, and that this is Mosaic work rather than Engram
+work — which is the forcing function doing its job.
 
 ---
 
