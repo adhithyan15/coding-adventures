@@ -1,11 +1,11 @@
 # UI47 — Host capability effects: giving `Effect` a completion path
 
-**Status:** Steps 1-5 of §5.4 are done. The protocol core landed in #14547; all five native hosts answer effects (Qt #14705, SwiftUI #14721, Compose #14731, Flutter #14739, XAML #14744); and `engram-mosaic-app` emits Anki import/export as `Await` effects (#14747). Step 6 (#13728, per-backend adapter migration) is blocked on §5.4a — nothing generated connects an effect handler — and step 7 (`deleteNote` confirmation, closing §4.2) remain.
+**Status:** Steps 1-5 of §5.4 are done. The protocol core landed in #14547; all five native hosts answer effects (Qt #14705, SwiftUI #14721, Compose #14731, Flutter #14739, XAML #14744); and `engram-mosaic-app` emits Anki import/export as `Await` effects (#14747). Two steps remain: step 6 (#13728, per-backend adapter migration), which is blocked on §5.4a — nothing generated connects an effect handler — and step 7 (`deleteNote` confirmation, closing §4.2).
 
 §2 and §3 below describe the state this spec was written against, and are kept as the problem statement rather than rewritten — §3's "cannot meet at v1" is still true *of v1*, which is why nothing is minted below protocol 2.
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI31 (host table), `mosaic-app-runtime`, `mosaic-app-capi`
-**Decides:** #13645. **Unblocks:** #13728, and through it #13640.
+**Decides:** #13645. **Unblocks:** #13728 once §5.4a lands, and through it #13640.
 
 ---
 
