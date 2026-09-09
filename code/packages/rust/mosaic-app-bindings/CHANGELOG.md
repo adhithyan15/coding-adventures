@@ -2,6 +2,40 @@
 
 ## Unreleased
 
+### Added -- the SwiftUI host answers effects (UI47 §5.4 step 4)
+
+The second of five host templates, after Qt. `MosaicRuntimeHost` gains
+`effectHandler`, `completeEffect(_:_:)` and a settle loop; the C shim resolves
+`mosaic_app_complete_effect` leniently and reports its absence as a distinct
+status, so "this runtime cannot complete effects" is not mistaken for "the
+completion failed". The host declares protocol 2, and the assertion pinning the
+version pins the capability beside it.
+
+Written with the failure modes the Qt template surfaced already in hand --
+accumulate at the write site, discharge on both runaway guards, bound the
+nesting -- so those did not have to be rediscovered. Two things differed, and
+both are recorded because the difference is the interesting part:
+
+- **`NSRecursiveLock` makes re-entrant completion safe** where Qt needed care:
+  a handler answering from inside the callback re-enters the lock on the same
+  thread. Answering from another thread is not useful -- that call blocks until
+  the settle finishes, by which point the effect has been failed as unanswered.
+- **No effect-id validation is needed.** Qt's `completeEffect` is `Q_INVOKABLE`
+  and takes a `QVariant`, so QML could hand it `3.5` and `toULongLong` would
+  truncate to `4`, answering a *different* outstanding effect. Swift's signature
+  is `UInt64`; the same mistake does not compile.
+
+One bug found by running it, which every text-level assertion passed straight
+over: the re-entrant branch was gated on `latestAnswer != nil`, but that starts
+`nil` each frame and is only set *by* that branch -- so it was unreachable and
+every handler's answer was discarded. A direct port of Qt's pointer-non-null
+check into Swift, where the value itself is the Optional.
+
+`tests/swift_effect_completion.rs` emits the host, compiles it with `clang` +
+`swiftc`, links the real conformance runtime and runs it -- eleven checks
+including a batch where the handler answers both effects with chaining, which is
+the shape that caught the equivalent Qt bug.
+
 ### Added -- the Qt host answers effects (UI47 §5.4 step 4)
 
 `MosaicHost` resolves `mosaic_app_complete_effect`, drains `update.effects`

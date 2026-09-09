@@ -42,6 +42,17 @@ mosaic_binding_status mosaic_binding_snapshot(
     mosaic_binding_runtime *runtime,
     mosaic_binding_app app,
     mosaic_binding_buffer *snapshot);
+/* Protocol 2 only. `id` is a JSON integer; `result` is one tagged outcome:
+ * {"ok": value}, {"cancelled": {}}, or {"failed": {"message": "..."}}.
+ * Returns MOSAIC_BINDING_NO_EFFECTS when the runtime does not export the
+ * symbol, which a caller must distinguish from a completion that failed. */
+#define MOSAIC_BINDING_NO_EFFECTS 0xFFFFFFFFu
+mosaic_binding_status mosaic_binding_complete_effect(
+    mosaic_binding_runtime *runtime,
+    mosaic_binding_app app,
+    mosaic_binding_bytes id,
+    mosaic_binding_bytes result,
+    mosaic_binding_buffer *update);
 mosaic_binding_status mosaic_binding_restore(
     mosaic_binding_runtime *runtime,
     mosaic_binding_app app,

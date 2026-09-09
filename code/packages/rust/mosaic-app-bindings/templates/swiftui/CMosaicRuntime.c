@@ -16,6 +16,9 @@ typedef mosaic_binding_status (*mosaic_snapshot_fn)(
     mosaic_binding_app, mosaic_binding_buffer *);
 typedef mosaic_binding_status (*mosaic_restore_fn)(
     mosaic_binding_app, mosaic_binding_bytes, mosaic_binding_buffer *);
+typedef mosaic_binding_status (*mosaic_complete_effect_fn)(
+    mosaic_binding_app, mosaic_binding_bytes, mosaic_binding_bytes,
+    mosaic_binding_buffer *);
 typedef void (*mosaic_buffer_free_fn)(mosaic_binding_buffer);
 typedef void (*mosaic_destroy_fn)(mosaic_binding_app);
 
@@ -25,6 +28,7 @@ struct mosaic_binding_runtime {
     mosaic_dispatch_fn dispatch;
     mosaic_snapshot_fn snapshot;
     mosaic_restore_fn restore;
+    mosaic_complete_effect_fn complete_effect;
     mosaic_buffer_free_fn buffer_free;
     mosaic_destroy_fn destroy;
     char error[MOSAIC_BINDING_ERROR_CAPACITY];
@@ -54,6 +58,15 @@ static int resolve_symbols(mosaic_binding_runtime *runtime) {
     RESOLVE(buffer_free, "mosaic_buffer_free");
     RESOLVE(destroy, "mosaic_app_destroy");
 #undef RESOLVE
+
+    /* Protocol 2 only, resolved WITHOUT the failure branch above: a runtime
+     * built before effect completion existed must still load, and the absence
+     * is reported when an effect actually arrives rather than at open time. */
+    dlerror();
+    *(void **)(&runtime->complete_effect) =
+        dlsym(runtime->library, "mosaic_app_complete_effect");
+    (void)dlerror();
+
     runtime->error[0] = '\0';
     return 1;
 }
@@ -63,6 +76,7 @@ static int try_library(mosaic_binding_runtime *runtime, const char *path) {
     runtime->dispatch = NULL;
     runtime->snapshot = NULL;
     runtime->restore = NULL;
+    runtime->complete_effect = NULL;
     runtime->buffer_free = NULL;
     runtime->destroy = NULL;
     runtime->library = dlopen(path, RTLD_NOW | RTLD_LOCAL);
@@ -143,6 +157,22 @@ mosaic_binding_status mosaic_binding_restore(
     mosaic_binding_buffer *update) {
     if (!mosaic_binding_is_ready(runtime)) return MOSAIC_BINDING_UNAVAILABLE;
     return runtime->restore(app, snapshot, update);
+}
+
+mosaic_binding_status mosaic_binding_complete_effect(
+    mosaic_binding_runtime *runtime,
+    mosaic_binding_app app,
+    mosaic_binding_bytes id,
+    mosaic_binding_bytes result,
+    mosaic_binding_buffer *update) {
+    if (runtime == NULL || runtime->complete_effect == NULL) {
+        /* Distinct from any status the runtime returns, so a caller can tell
+         * "this runtime cannot complete effects" from "the completion failed".
+         * Collapsing the two would make a protocol-1 runtime look like a
+         * rejected answer. */
+        return MOSAIC_BINDING_NO_EFFECTS;
+    }
+    return runtime->complete_effect(app, id, result, update);
 }
 
 void mosaic_binding_buffer_free(
