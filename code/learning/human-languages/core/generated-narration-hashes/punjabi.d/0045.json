@@ -1,0 +1,17 @@
+{
+  "language": "punjabi",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:3a41364c29036727",
+  "lessonIds": [
+    "PA-C45-labels",
+    "PA-C45-form",
+    "PA-C45-pehla-paath"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch45.txt",
+  "json": "punjabi/narration/ch45.json",
+  "textHash": "fnv1a64:3da20d70cf37a12a",
+  "jsonHash": "fnv1a64:725955ea00cc3dd3",
+  "findings": []
+}

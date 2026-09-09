@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C45-labels",
+    "language": "punjabi",
+    "chapter": 45,
+    "sequence": 2580,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bef752a0b4df452b"
+  },
+  "findings": []
+}
