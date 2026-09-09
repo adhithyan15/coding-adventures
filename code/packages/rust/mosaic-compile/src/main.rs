@@ -1295,6 +1295,7 @@ fn run_pipeline(
             // Bare invocation is byte-identical to pre-UI32.
             let fl_opts = mosaic_emit_flutter::pipeline::EmitOptions {
                 emit_project,
+                slot_values: pipeline_slot_values(fixtures_path),
                 ..Default::default()
             };
             let result = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
