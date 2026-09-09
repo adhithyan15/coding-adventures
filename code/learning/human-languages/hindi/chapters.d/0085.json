@@ -1,0 +1,17 @@
+{
+  "chapter": 85,
+  "title": "Reading — Signs, Notices, and a First Paragraph",
+  "label": "ch:hi-pehla-paath",
+  "canDo": "I can read Devanagari off a sign, a notice, and a short paragraph, without translating word by word.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "HI-C78-pehla-paath",
+    "kind": "task",
+    "summary": "Seventy-eight words of Hindi in a row, and not one of them new — the first time the track asks for a whole paragraph at once.",
+    "assesses": [
+      "HI-SKILL-CONNECTED-READING"
+    ]
+  }
+}

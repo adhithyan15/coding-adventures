@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-78-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Devanagari sign, a short notice, and a few sentences about someone's day, and understand them without translating word by word.",
+  "prerequisites": [
+    "HI-EXT-77-ORDER"
+  ],
+  "lessons": [
+    "HI-C78-signs",
+    "HI-C78-notices",
+    "HI-C78-pehla-paath"
+  ]
+}

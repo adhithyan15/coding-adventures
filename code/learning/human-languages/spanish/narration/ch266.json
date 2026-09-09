@@ -4,7 +4,7 @@
   "chapter": 266,
   "title": "Review --- Four Last Pieces, and the Thread",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3d43d903fdc6b620",
+  "sourceHash": "fnv1a64:200342da474de0b5",
   "lessons": [
     {
       "id": "ES-C67-repaso-a1",
@@ -480,7 +480,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b499629ab3bfd79b",
+      "sourceHash": "fnv1a64:7d900f0fe671993a",
       "notice": null,
       "blocks": [
         {
@@ -714,7 +714,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:217d918dc1d41230",
+      "sourceHash": "fnv1a64:a1e3c61e501f4157",
       "notice": null,
       "blocks": [
         {
@@ -919,7 +919,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d78c69c88c5409c",
+      "sourceHash": "fnv1a64:1dfffac998c87247",
       "notice": null,
       "blocks": [
         {

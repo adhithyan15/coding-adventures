@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C78-notices",
+    "language": "hindi",
+    "chapter": 85,
+    "sequence": 3290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:758a95e1444fdcfe"
+  },
+  "findings": []
+}

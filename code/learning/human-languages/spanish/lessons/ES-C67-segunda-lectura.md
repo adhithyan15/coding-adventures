@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C67-segunda-lectura
-spine_node: SPINE-DEFINITE-REFERENCE
+spine_node: SPINE-READ-SIGNS-AND-NOTICES
 sequence: 2568
 chapter: 266
 type: reading

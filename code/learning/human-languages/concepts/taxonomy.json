@@ -924,6 +924,12 @@
       "family": "STANCE",
       "gloss": "supposing, assuming — advancing a claim tentatively",
       "core": false
+    },
+    "CONNECTED-READING": {
+      "family": "DISCOURSE",
+      "gloss": "reading a short written text straight through — a sign, a notice, or a few connected sentences — without translating word by word",
+      "core": false,
+      "notes": "Distinct from decoding a script and from knowing the words: a learner can hold every word in a passage and still not read it as one stretch. Realizations differ in what a beginner can be shown first, because a track whose script is learned late reaches a sign long before it reaches a paragraph."
     }
   },
   "namespaced": {

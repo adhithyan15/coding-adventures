@@ -1,0 +1,675 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 85,
+  "title": "Reading — Signs, Notices, and a First Paragraph",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:17ef77670702c027",
+  "lessons": [
+    {
+      "id": "HI-C78-signs",
+      "sequence": 3280,
+      "title": "(reading) (praveś · nikās · khulā · band · dukān · sṭeśan) (merā nām aruṇ hai. maiṁ bhārat meṁ rahtā hūṁ.) (dukān band hai · sṭeśan khulā hai) — six signs",
+      "headword": "(reading)",
+      "romanization": "praveś · nikās · khulā · band · dukān · sṭeśan",
+      "gloss": "six signs you can already read — the first time the track asks you to read rather than to learn",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e306bd2645ef8903",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every word below, you have already been taught. Not one of them is new."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is that nobody is going to tell you which one is coming."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रवेश निकास खुला बंद दुकान स्टेशन."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down the list once. Do not sound each letter out — look at the whole word and let it arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now again, and notice which ones came instantly and which ones you had to assemble. Both are fine. The difference is what practice removes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "प्रवेश and निकास are the two you will meet at every door in India, and they are worth knowing by shape rather than by letter, because you usually read them while walking."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A sign is the one kind of Hindi that gives you no sentence to lean on — no verb at the end, no है to tell you what is going on. One word, and it has to carry everything."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is why this is the place reading starts. Six words is not much to hold, and holding them without help is the whole exercise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six words down the list, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six words down the list, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C78-signs-in",
+              "prompt": "Which sign sends you IN?",
+              "assesses": [
+                "HI-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "entrance",
+                "प्रवेश",
+                "pravesh"
+              ],
+              "feedback": {
+                "correct": "प्रवेश.",
+                "incorrect": "प्रवेश -- entrance."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C78-signs-shut",
+              "prompt": "The shop is shut. Which word is on the door?",
+              "assesses": [
+                "HI-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "closed",
+                "बंद",
+                "band"
+              ],
+              "feedback": {
+                "correct": "बंद.",
+                "incorrect": "बंद -- closed."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was new, then? (Nobody said them first. You read them.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C78-notices",
+      "sequence": 3290,
+      "title": "(reading) (praveś · nikās · khulā · band · dukān · sṭeśan) (merā nām aruṇ hai. maiṁ bhārat meṁ rahtā hūṁ.) (dukān band hai · sṭeśan khulā hai) — six notices",
+      "headword": "(reading)",
+      "romanization": "dukān band hai · sṭeśan khulā hai",
+      "gloss": "six notices — a word, then a word with a verb behind it, which is the smallest possible sentence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:758a95e1444fdcfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson gave you single words. This one gives each word something to stand on."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Still nothing new — the same signs, with है behind them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुकान बंद है। स्टेशन खुला है। यहाँ पानी है। टिकट यहाँ है। प्रवेश यहाँ है। कृपया धीरे।."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again — and this time notice you did not have to work out what was shut. The notice said so."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "दुकान बंद है। Three words, and the last one is the verb. Hindi puts it there every time, so the end of a notice is where you find out whether something is or is not."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth more than it looks. It means you can read the first two words of any notice, guess, and then have your guess confirmed or corrected by the last word — which is exactly how a fluent reader reads."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last line breaks the pattern: कृपया धीरे। No verb at all. Signs drop the verb when nobody could mistake the meaning, and please, slowly needs no help."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six notices, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six notices, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C78-notices-shop",
+              "prompt": "Is the shop open or shut?",
+              "assesses": [
+                "HI-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "shut",
+                "बंद",
+                "band",
+                "closed"
+              ],
+              "feedback": {
+                "correct": "दुकान बंद है।",
+                "incorrect": "Shut -- दुकान बंद है।"
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C78-notices-station",
+              "prompt": "And the station?",
+              "assesses": [
+                "HI-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "open",
+                "खुला",
+                "khula"
+              ],
+              "feedback": {
+                "correct": "स्टेशन खुला है।",
+                "incorrect": "Open -- स्टेशन खुला है।"
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C78-notices-verb",
+              "prompt": "Which line has no verb?",
+              "assesses": [
+                "HI-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "kripya dhire",
+                "कृपया धीरे",
+                "please slowly",
+                "the last one"
+              ],
+              "feedback": {
+                "correct": "कृपया धीरे।",
+                "incorrect": "कृपया धीरे -- please, slowly."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does a Hindi notice keep its verb? (At the end.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And how many new words were in these six lines? (None.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C78-pehla-paath",
+      "sequence": 3300,
+      "title": "(reading) (praveś · nikās · khulā · band · dukān · sṭeśan) (merā nām aruṇ hai. maiṁ bhārat meṁ rahtā hūṁ.) (dukān band hai · sṭeśan khulā hai) — the first paragraph",
+      "headword": "(reading)",
+      "romanization": "merā nām aruṇ hai. maiṁ bhārat meṁ rahtā hūṁ.",
+      "gloss": "the first paragraph — seventy-eight words of Hindi in a row, and not one of them new",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:796f40482d346975",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six words, then six lines. Now a whole paragraph."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Seventy-eight words, and the rule has not changed: not one of them is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेरा नाम अरुण है। मैं भारत में रहता हूँ। मेरा घर छोटा है, लेकिन अच्छा है। घर में एक कमरा, एक दरवाज़ा और दो खिड़की हैं। सुबह मैं चाय और दूध पीता हूँ। फिर मैं रोटी खाता हूँ। आज मैं बाज़ार जाता हूँ, क्योंकि मुझे फल पसंद हैं। बाज़ार में एक दुकान है। वहाँ एक आदमी काम करता है। वह मेरा दोस्त है। वह हिंदी बोलता है। फिर मैं घर आता हूँ। रात में मैं किताब पढ़ता हूँ।."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read it again, and notice how little work it took."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what is holding it together, because it is not vocabulary."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "और adds. लेकिन holds two true things apart. क्योंकि gives a reason. फिर puts one thing after another. Each of those was a chapter, and each was small."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first time the track has asked you to hold a whole paragraph at once — and the reason it can is that everything in it was paid for, one chapter at a time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the paragraph aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the paragraph aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C78-pehla-paath-where",
+              "prompt": "Where does Arun live?",
+              "assesses": [
+                "HI-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "india",
+                "भारत",
+                "bharat"
+              ],
+              "feedback": {
+                "correct": "भारत में.",
+                "incorrect": "India -- भारत में."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C78-pehla-paath-why",
+              "prompt": "Why does he go to the market today?",
+              "assesses": [
+                "HI-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "because he likes fruit",
+                "क्योंकि मुझे फल पसंद हैं",
+                "he likes fruit",
+                "fruit"
+              ],
+              "feedback": {
+                "correct": "क्योंकि मुझे फल पसंद हैं।",
+                "incorrect": "Because he likes fruit."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C78-pehla-paath-who",
+              "prompt": "The man in the shop — what does Arun call him?",
+              "assesses": [
+                "HI-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "my friend",
+                "मेरा दोस्त",
+                "दोस्त",
+                "friend"
+              ],
+              "feedback": {
+                "correct": "वह मेरा दोस्त है।",
+                "incorrect": "मेरा दोस्त -- my friend."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words in that paragraph were new to you? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what made it readable? (Everything in it had already been paid for, one chapter at a time.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
