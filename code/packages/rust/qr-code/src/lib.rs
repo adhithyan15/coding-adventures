@@ -23,7 +23,7 @@
 //!   → ModuleGrid
 //! ```
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 use barcode_2d::{layout, Barcode2DLayoutConfig, ModuleGrid, ModuleShape};
 use gf256::{multiply as gf_mul, power as gf_power};
@@ -85,6 +85,62 @@ fn ecc_idx(ecc: EccLevel) -> usize {
         EccLevel::Q => 2,
         EccLevel::H => 3,
     }
+}
+
+/// Inverse of `ecc_indicator`: map a 2-bit ECC indicator back to an
+/// [`EccLevel`], or `None` for a bit pattern no `EccLevel` produces (there
+/// are none — all 4 values of a 2-bit field are assigned — but the `Option`
+/// return keeps this symmetric with `read_format_info`/`read_version_info`,
+/// which do have genuinely-invalid inputs).
+pub fn ecc_from_indicator(bits: u16) -> Option<EccLevel> {
+    match bits {
+        0b01 => Some(EccLevel::L),
+        0b00 => Some(EccLevel::M),
+        0b11 => Some(EccLevel::Q),
+        0b10 => Some(EccLevel::H),
+        _ => None,
+    }
+}
+
+/// Decode a 15-bit format-info word read directly off the grid (raw bits,
+/// **before** the ISO masking XOR — this function applies that XOR
+/// internally, matching `write_format_info`'s own inverse). BCH-validates
+/// the recovered word against the `0x537` generator and returns
+/// `(ecc_level, mask)` on success, `None` if the parity check fails.
+///
+/// `bits15` must be assembled MSB-first: bit 14 is the value read at the
+/// *first* position of whichever copy (1 or 2) the caller is decoding, bit 0
+/// the value at the last — i.e. the same f14..f0 ordering
+/// `write_format_info`'s own doc comment documents for both copies.
+pub fn read_format_info(bits15: u32) -> Option<(EccLevel, u32)> {
+    let fmt = bits15 ^ 0x5412;
+    let mut rem = (fmt >> 10) << 10;
+    for i in (10u32..=14).rev() {
+        if (rem >> i) & 1 == 1 { rem ^= 0x537 << (i - 10); }
+    }
+    if (rem & 0x3ff) != (fmt & 0x3ff) { return None; }
+    let ecc_bits = ((fmt >> 13) & 0x3) as u16;
+    let mask = (fmt >> 10) & 0x7;
+    ecc_from_indicator(ecc_bits).map(|ecc| (ecc, mask))
+}
+
+/// Decode an 18-bit version-info word read directly off the grid (Copy 1 or
+/// Copy 2, per `write_version_info`'s own bit layout). Mirrors
+/// `compute_version_bits`'s BCH generator (`0x1F25`) in the read direction:
+/// the low 12 bits are the BCH parity of the high 6 bits (the version
+/// number itself, unmasked — version info, unlike format info, is not
+/// XOR-masked). Recomputes the parity from the version-number portion and
+/// compares against the stored parity; accepts only if they match *and* the
+/// recovered version falls in `7..=40` (version info only exists for V≥7).
+pub fn read_version_info(bits18: u32) -> Option<usize> {
+    let version = (bits18 >> 12) as usize;
+    if !(7..=40).contains(&version) { return None; }
+    let mut rem = (version as u32) << 12;
+    for i in (12u32..=17).rev() {
+        if (rem >> i) & 1 == 1 { rem ^= 0x1f25 << (i - 12); }
+    }
+    if (rem & 0xfff) != (bits18 & 0xfff) { return None; }
+    Some(version)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -163,12 +219,43 @@ static ALIGNMENT_POSITIONS: [&[u8]; 40] = [
 // Grid geometry
 // ─────────────────────────────────────────────────────────────────────────────
 
-fn symbol_size(version: usize) -> usize {
+/// Every function below that takes a bare `version: usize` requires it to be
+/// a real QR version, `1..=40` — out of that range there is no symbol size,
+/// no alignment-position table entry, and no ECC/block-count table entry to
+/// look up. These functions were private until this crate started exposing
+/// them for `qr-decoder` (MA04); their sole caller always passed an
+/// already-validated version, so the precondition was implicit. Now that
+/// they are public, callers must satisfy it themselves — checked here,
+/// explicitly, rather than left as a silent out-of-bounds table index or an
+/// unbounded allocation from an unvalidated size.
+///
+/// A pre-push security review flagged exactly this: indexing the
+/// alignment-position table by `version - 1` panics on `version == 0` or
+/// `version > 40`, and allocating a grid sized from `version` first would
+/// over-allocate before ever reaching that panic, for any of these entry
+/// points.
+fn assert_valid_version(version: usize) {
+    assert!(
+        (1..=40).contains(&version),
+        "QR version must be in 1..=40, got {version}"
+    );
+}
+
+/// The `(4V+17) × (4V+17)` side length of a QR Code symbol at `version`.
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
+pub fn symbol_size(version: usize) -> usize {
+    assert_valid_version(version);
     4 * version + 17
 }
 
 /// Total raw data+ECC bits (formula from Nayuki's reference, public domain).
-fn num_raw_data_modules(version: usize) -> usize {
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
+pub fn num_raw_data_modules(version: usize) -> usize {
+    assert_valid_version(version);
     let v = version as i64;
     let mut result = (16 * v + 128) * v + 64;
     if version >= 2 {
@@ -181,15 +268,43 @@ fn num_raw_data_modules(version: usize) -> usize {
     result as usize
 }
 
-fn num_data_codewords(version: usize, ecc: EccLevel) -> usize {
+/// Number of data (non-ECC) codewords available at `(version, ecc)`.
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
+pub fn num_data_codewords(version: usize, ecc: EccLevel) -> usize {
+    assert_valid_version(version);
     let e = ecc_idx(ecc);
     let raw_cw = num_raw_data_modules(version) / 8;
     let ecc_cw = (NUM_BLOCKS[e][version] * ECC_CODEWORDS_PER_BLOCK[e][version]) as usize;
     raw_cw - ecc_cw
 }
 
-fn num_remainder_bits(version: usize) -> usize {
+/// Number of leftover bits after packing `num_raw_data_modules(version)` into
+/// whole bytes — these trailing bits are zero-padding, not data.
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
+pub fn num_remainder_bits(version: usize) -> usize {
     num_raw_data_modules(version) % 8
+}
+
+/// Number of ECC codewords per block at `(ecc, version)` (ISO 18004 Table 9).
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
+pub fn ecc_codewords_per_block(ecc: EccLevel, version: usize) -> usize {
+    assert_valid_version(version);
+    ECC_CODEWORDS_PER_BLOCK[ecc_idx(ecc)][version] as usize
+}
+
+/// Number of error-correction blocks at `(ecc, version)` (ISO 18004 Table 9).
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
+pub fn num_blocks(ecc: EccLevel, version: usize) -> usize {
+    assert_valid_version(version);
+    NUM_BLOCKS[ecc_idx(ecc)][version] as usize
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -580,15 +695,18 @@ fn place_dark_module(g: &mut WorkGrid, version: usize) {
     g.set(4 * version + 9, 8, true, true);
 }
 
-fn place_bits(g: &mut WorkGrid, codewords: &[u8], version: usize) {
-    let sz = g.size;
-    let mut bits: Vec<bool> = Vec::new();
-    for &cw in codewords {
-        for b in (0u8..8).rev() { bits.push((cw >> b) & 1 == 1); }
-    }
-    bits.resize(bits.len() + num_remainder_bits(version), false);
-
-    let mut bit_idx = 0usize;
+/// The order data/ECC-carrying modules are filled, for a symbol of this
+/// version — the same two-column zigzag `place_bits` writes with, exposed so
+/// `qr_decoder` can read modules back in the identical order (one shared
+/// traversal source, not two independently-written loops that must happen to
+/// agree).
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40` (via `symbol_size`).
+pub fn data_module_order(version: usize) -> Vec<(usize, usize)> {
+    let sz = symbol_size(version);
+    let reserved = reserved_modules(version);
+    let mut order = Vec::new();
     let mut up = true;
     let mut col = sz - 1;
 
@@ -600,9 +718,8 @@ fn place_bits(g: &mut WorkGrid, codewords: &[u8], version: usize) {
                 if c < 0 { continue; }
                 let c = c as usize;
                 if c == 6 { continue; }
-                if g.reserved[row][c] { continue; }
-                g.modules[row][c] = bit_idx < bits.len() && bits[bit_idx];
-                bit_idx += 1;
+                if reserved[row][c] { continue; }
+                order.push((row, c));
             }
         }
         up = !up;
@@ -610,6 +727,32 @@ fn place_bits(g: &mut WorkGrid, codewords: &[u8], version: usize) {
         col -= 2;
         if col == 6 { col = 5; }
     }
+    order
+}
+
+fn place_bits(g: &mut WorkGrid, codewords: &[u8], version: usize) {
+    let mut bits: Vec<bool> = Vec::new();
+    for &cw in codewords {
+        for b in (0u8..8).rev() { bits.push((cw >> b) & 1 == 1); }
+    }
+    bits.resize(bits.len() + num_remainder_bits(version), false);
+
+    for (bit_idx, &(row, c)) in data_module_order(version).iter().enumerate() {
+        g.modules[row][c] = bit_idx < bits.len() && bits[bit_idx];
+    }
+}
+
+/// Which modules at this version are function patterns (finder, separator,
+/// timing, alignment, format info, version info, dark module) rather than
+/// data/ECC. `result[r][c] == true` means reserved. Shared by `build_grid`
+/// (encode's own grid setup) so encode and decode agree on reservations by
+/// construction.
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40` (via `symbol_size`, checked before
+/// any allocation proportional to `version` happens).
+pub fn reserved_modules(version: usize) -> Vec<Vec<bool>> {
+    build_grid(version).reserved
 }
 
 fn build_grid(version: usize) -> WorkGrid {
@@ -639,7 +782,10 @@ fn build_grid(version: usize) -> WorkGrid {
 // Masking and penalty
 // ─────────────────────────────────────────────────────────────────────────────
 
-fn mask_condition(mask: u32, r: usize, c: usize) -> bool {
+/// Evaluate mask pattern `mask` (0-7) at module `(r, c)`: `true` means the
+/// module should be flipped. Self-inverse (XOR), so `qr_decoder` calls this
+/// the same way `encode`'s own `apply_mask` does, to invert masking.
+pub fn mask_condition(mask: u32, r: usize, c: usize) -> bool {
     let (r, c) = (r as i64, c as i64);
     match mask {
         0 => (r + c) % 2 == 0,
@@ -903,6 +1049,71 @@ pub fn render_png(
 mod tests {
     use super::*;
 
+    // --- Version-range validation on newly-public geometry functions -------
+    // (pre-push security review: these were private and only ever called
+    // internally with an already-validated version; now that they are
+    // public, out-of-range input must fail loudly and before any
+    // allocation, not silently index out of bounds or over-allocate.)
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn symbol_size_rejects_version_zero() {
+        symbol_size(0);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn symbol_size_rejects_version_41() {
+        symbol_size(41);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn reserved_modules_rejects_out_of_range_version_before_allocating() {
+        // version=0 would underflow ALIGNMENT_POSITIONS[version - 1] if the
+        // guard were missing; a huge version would allocate a huge grid
+        // before ever reaching that index. Confirm the guard fires first.
+        reserved_modules(0);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn data_module_order_rejects_out_of_range_version() {
+        data_module_order(41);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn ecc_codewords_per_block_rejects_out_of_range_version() {
+        ecc_codewords_per_block(EccLevel::M, 41);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn num_blocks_rejects_out_of_range_version() {
+        num_blocks(EccLevel::M, 0);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn num_data_codewords_rejects_out_of_range_version() {
+        num_data_codewords(41, EccLevel::L);
+    }
+
+    #[test]
+    fn every_valid_version_is_accepted() {
+        for version in 1..=40 {
+            let _ = symbol_size(version);
+            let _ = reserved_modules(version);
+            let _ = data_module_order(version);
+            for ecc in [EccLevel::L, EccLevel::M, EccLevel::Q, EccLevel::H] {
+                let _ = num_data_codewords(version, ecc);
+                let _ = ecc_codewords_per_block(ecc, version);
+                let _ = num_blocks(ecc, version);
+            }
+        }
+    }
+
     // Helper: check finder pattern at (top, left)
     fn has_finder(mods: &[Vec<bool>], top: usize, left: usize) -> bool {
         for dr in 0..7usize {
@@ -916,11 +1127,12 @@ mod tests {
         true
     }
 
-    // Read copy-1 format bits (standard order: f14 at (8,0) → f0 at (0,8))
-    // and BCH-verify them.
-    fn format_info_valid(mods: &[Vec<bool>], _sz: usize) -> Option<(u32, u32)> {
-        // Standard ISO 18004 copy-1 positions, ordered f14 → f0.
-        // Each position i carries bit (14-i) of the format word.
+    // Read copy-1 raw format bits (standard order: f14 at (8,0) → f0 at
+    // (0,8)) off the grid and hand them to the promoted public
+    // `read_format_info` for BCH validation — this test module used to carry
+    // its own private duplicate of that validation logic (`format_info_valid`,
+    // pre-MA04); now it exercises the real public API instead.
+    fn read_copy1_format_info(mods: &[Vec<bool>]) -> Option<(EccLevel, u32)> {
         let positions: [(usize, usize); 15] = [
             (8,0),(8,1),(8,2),(8,3),(8,4),(8,5),(8,7),(8,8),
             (7,8),(5,8),(4,8),(3,8),(2,8),(1,8),(0,8),
@@ -929,21 +1141,12 @@ mod tests {
         for (i, &(r, c)) in positions.iter().enumerate() {
             if mods[r][c] { raw |= 1 << (14 - i); }  // f14 at i=0 → bit 14
         }
-        // raw is now the 15-bit format word; XOR off the ISO masking sequence.
-        let fmt = raw ^ 0x5412;
-        // BCH check: recompute the 10-bit parity from the 5-bit data portion
-        // and compare against the stored parity.
-        let mut rem = (fmt >> 10) << 10;
-        for i in (10u32..=14).rev() {
-            if (rem >> i) & 1 == 1 { rem ^= 0x537 << (i - 10); }
-        }
-        if (rem & 0x3ff) != (fmt & 0x3ff) { return None; }
-        Some(((fmt >> 13) & 0x3, (fmt >> 10) & 0x7))
+        read_format_info(raw)
     }
 
     #[test]
     fn version_constant() {
-        assert_eq!(VERSION, "0.2.0");
+        assert_eq!(VERSION, "0.3.0");
     }
 
     #[test]
@@ -1013,21 +1216,19 @@ mod tests {
     #[test]
     fn format_info_decodable_m() {
         let grid = encode("HELLO WORLD", EccLevel::M).unwrap();
-        let decoded = format_info_valid(&grid.modules, grid.rows as usize);
+        let decoded = read_copy1_format_info(&grid.modules);
         assert!(decoded.is_some());
-        let (ecc_bits, _mask) = decoded.unwrap();
-        assert_eq!(ecc_bits, 0b00); // M = 00
+        let (ecc, _mask) = decoded.unwrap();
+        assert_eq!(ecc, EccLevel::M);
     }
 
     #[test]
     fn format_info_ecc_bits_all_levels() {
-        let expected = [(EccLevel::L, 0b01), (EccLevel::M, 0b00),
-                        (EccLevel::Q, 0b11), (EccLevel::H, 0b10)];
-        for (ecc, bits) in expected {
+        for ecc in [EccLevel::L, EccLevel::M, EccLevel::Q, EccLevel::H] {
             let grid = encode("HELLO", ecc).unwrap();
-            let decoded = format_info_valid(&grid.modules, grid.rows as usize);
+            let decoded = read_copy1_format_info(&grid.modules);
             assert!(decoded.is_some(), "format info unreadable for {:?}", ecc);
-            assert_eq!(decoded.unwrap().0, bits, "wrong ECC bits for {:?}", ecc);
+            assert_eq!(decoded.unwrap().0, ecc, "wrong ECC level for {:?}", ecc);
         }
     }
 
@@ -1145,7 +1346,7 @@ mod tests {
             let grid = encode(input, ecc).unwrap();
             assert!(grid.rows >= 21);
             assert_eq!(grid.rows, grid.cols);
-            let decoded = format_info_valid(&grid.modules, grid.rows as usize);
+            let decoded = read_copy1_format_info(&grid.modules);
             assert!(decoded.is_some(), "bad format info for: {}", input);
         }
     }
@@ -1169,6 +1370,188 @@ mod tests {
             // Dark module still dark
             let version = (sz - 17) / 4;
             assert!(grid.modules[4 * version + 9][8]);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // MA04-qr-decoder.md §3 new pub surface — cheap early-warning sanity
+    // checks. The exhaustive correctness proof (every version × ECC level ×
+    // mode round-tripping through the real decoder) lives in the
+    // `qr-decoder` crate's own test suite, which is the actual consumer of
+    // this API; these just catch an obviously-broken extraction early.
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn reserved_modules_matches_encode_grid_reservations() {
+        // reserved_modules(version) must equal the same WorkGrid.reserved
+        // that encode()'s own build_grid produces — they now share one
+        // implementation, so this is really just confirming the accessor
+        // wires through correctly (finder + dark module cells reserved).
+        let reserved = reserved_modules(1);
+        let sz = symbol_size(1);
+        assert_eq!(reserved.len(), sz);
+        assert_eq!(reserved[0].len(), sz);
+        // Top-left finder pattern corner is always reserved.
+        assert!(reserved[0][0]);
+        assert!(reserved[6][6]); // inside TL finder border area (timing/finder overlap corner)
+        // Dark module for v1 is at (4*1+9, 8) = (13, 8).
+        assert!(reserved[13][8]);
+    }
+
+    #[test]
+    fn reserved_modules_count_matches_raw_data_modules_for_versions_without_alignment() {
+        // Every non-reserved module is a data/ECC module — so
+        // (total modules) - (reserved count) must equal num_raw_data_modules,
+        // for versions 1-6 (no alignment patterns at all for v1; for v2-6
+        // there's exactly one alignment position pair and it never lands on
+        // the timing row/column). See the test below for what happens at
+        // v7+, where this stops holding for a pre-existing, unrelated reason.
+        for version in [1usize, 2, 3, 4, 5, 6] {
+            let sz = symbol_size(version);
+            let reserved = reserved_modules(version);
+            let reserved_count: usize = reserved.iter().flatten().filter(|&&r| r).count();
+            let data_count = sz * sz - reserved_count;
+            assert_eq!(
+                data_count,
+                num_raw_data_modules(version),
+                "reserved/data module split mismatch at version {version}"
+            );
+        }
+    }
+
+    /// **Pre-existing `qr-code` quirk, discovered while adding this test (not
+    /// introduced by MA04's refactor — `build_grid`'s reservation logic is
+    /// untouched code, only newly exposed via `reserved_modules`)**:
+    /// `place_all_alignments` skips placing an alignment pattern whenever its
+    /// *center* cell is already `reserved` — intended to avoid finder-pattern
+    /// overlap — but for version ≥ 7, some alignment centers (e.g. v7's
+    /// `(6, 22)`) land on the *timing* pattern's row/column instead, which per
+    /// ISO 18004 the alignment pattern should override, not be skipped for.
+    /// The practical effect: `reserved_modules`/`data_module_order` report
+    /// more "free" modules than `num_raw_data_modules(version)` predicts for
+    /// every version ≥ 7 (confirmed here to hold across the full v7-v40
+    /// range). This does **not** break `qr-decoder`'s round-trip: `encode`'s
+    /// own `place_bits` only ever writes real bits into the first
+    /// `num_raw_data_modules(version)` traversal slots (by construction of
+    /// its bit buffer length) and explicitly zero-fills the rest, and
+    /// `qr_decoder::decode` mirrors that exact convention (MA04-qr-decoder.md
+    /// §4.2 step 6) — so encode and decode still agree byte-for-byte. It
+    /// *would* make the emitted grid non-ISO-conformant for a real scanner in
+    /// the affected region, which is a genuine `qr-code` encoder bug, just
+    /// one outside this decoder work's scope (see the spawned follow-up task).
+    #[test]
+    fn data_module_order_exceeds_formula_for_versions_with_timing_overlap_alignment() {
+        for version in 7usize..=40 {
+            let order_len = data_module_order(version).len();
+            let expected = num_raw_data_modules(version);
+            assert!(
+                order_len >= expected,
+                "expected order_len >= formula at version {version}, got {order_len} < {expected}"
+            );
+        }
+    }
+
+    #[test]
+    fn data_module_order_visits_every_data_module_exactly_once() {
+        // Traversal length must always match the reserved-complement count
+        // (self-consistency between reserved_modules and data_module_order),
+        // and never revisit a position — independent of whether that count
+        // happens to equal the num_raw_data_modules formula (see above).
+        for version in [1usize, 2, 7, 40] {
+            let sz = symbol_size(version);
+            let order = data_module_order(version);
+            let reserved = reserved_modules(version);
+            let reserved_count: usize = reserved.iter().flatten().filter(|&&r| r).count();
+            assert_eq!(
+                order.len(),
+                sz * sz - reserved_count,
+                "traversal length vs reserved-complement mismatch at version {version}"
+            );
+            let mut seen = std::collections::HashSet::new();
+            for &pos in &order {
+                assert!(seen.insert(pos), "position {pos:?} visited twice at version {version}");
+            }
+        }
+    }
+
+    #[test]
+    fn data_module_order_never_touches_reserved_modules() {
+        let version = 7;
+        let reserved = reserved_modules(version);
+        for (r, c) in data_module_order(version) {
+            assert!(!reserved[r][c], "traversal visited reserved module ({r},{c})");
+        }
+    }
+
+    #[test]
+    fn ecc_from_indicator_is_inverse_of_ecc_indicator() {
+        for ecc in [EccLevel::L, EccLevel::M, EccLevel::Q, EccLevel::H] {
+            let bits = ecc_indicator(ecc);
+            assert_eq!(ecc_from_indicator(bits), Some(ecc));
+        }
+        assert_eq!(ecc_from_indicator(0b1111), None); // out of 2-bit range
+    }
+
+    #[test]
+    fn read_format_info_round_trips_compute_format_bits() {
+        for ecc in [EccLevel::L, EccLevel::M, EccLevel::Q, EccLevel::H] {
+            for mask in 0u32..8 {
+                let fmt = compute_format_bits(ecc, mask);
+                let decoded = read_format_info(fmt);
+                assert_eq!(decoded, Some((ecc, mask)), "ecc={:?} mask={mask}", ecc);
+            }
+        }
+    }
+
+    #[test]
+    fn read_format_info_rejects_corrupted_word() {
+        let fmt = compute_format_bits(EccLevel::M, 3);
+        // Flip the low 8 bits — well beyond the 3-bit correction distance of
+        // this (15,5) BCH code. (Flipping *all* 15 bits, i.e. XOR 0x7FFF, is
+        // deliberately avoided: this particular code is linear and the
+        // all-ones word happens to itself be a valid codeword, so
+        // complementing every bit of any valid word yields another valid
+        // word — confirmed empirically, not a decoder bug, just a
+        // degenerate corruption pattern that isn't a useful test case.)
+        let corrupted = fmt ^ 0x00FF;
+        assert_eq!(read_format_info(corrupted), None);
+    }
+
+    #[test]
+    fn read_version_info_round_trips_compute_version_bits() {
+        for version in [7usize, 10, 25, 40] {
+            let bits = compute_version_bits(version);
+            assert_eq!(read_version_info(bits), Some(version));
+        }
+    }
+
+    #[test]
+    fn read_version_info_rejects_out_of_range_version() {
+        // Version field itself (top 6 bits) out of the valid 7..=40 range.
+        assert_eq!(read_version_info(41 << 12), None);
+        assert_eq!(read_version_info(0), None);
+    }
+
+    #[test]
+    fn read_version_info_rejects_corrupted_word() {
+        let bits = compute_version_bits(15);
+        let corrupted = bits ^ 0x3FFFF; // flip all 18 bits
+        assert_eq!(read_version_info(corrupted), None);
+    }
+
+    #[test]
+    fn ecc_codewords_per_block_and_num_blocks_match_private_tables() {
+        for ecc in [EccLevel::L, EccLevel::M, EccLevel::Q, EccLevel::H] {
+            for version in [1usize, 6, 20, 40] {
+                assert_eq!(
+                    ecc_codewords_per_block(ecc, version),
+                    ECC_CODEWORDS_PER_BLOCK[ecc_idx(ecc)][version] as usize
+                );
+                assert_eq!(
+                    num_blocks(ecc, version),
+                    NUM_BLOCKS[ecc_idx(ecc)][version] as usize
+                );
+            }
         }
     }
 }

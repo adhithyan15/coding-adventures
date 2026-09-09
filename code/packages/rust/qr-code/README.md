@@ -54,6 +54,18 @@ Encodes a UTF-8 string into a QR Code module grid.
 Encodes and converts to a pixel-resolved `PaintScene` via `barcode-2d`'s
 `layout()`. Accepts a `&Barcode2DLayoutConfig`.
 
+### Geometry, traversal, and format/version-info API (for decoders)
+
+Since 0.3.0, this crate also exposes the tables/geometry/traversal logic
+`encode()` itself is built on, so a decoder can invert the encoding
+process without duplicating it: `symbol_size`, `num_raw_data_modules`,
+`num_data_codewords`, `num_remainder_bits`, `ecc_codewords_per_block`,
+`num_blocks`, `mask_condition`, `reserved_modules`, `data_module_order`,
+`read_format_info`, `read_version_info`, `ecc_from_indicator`. See the
+[`qr-decoder`](../qr-decoder) crate, the first (and currently only)
+consumer of this surface, for how they compose into a full decode
+pipeline.
+
 ## ECC Levels
 
 | Level | Recovery | Notes                                  |

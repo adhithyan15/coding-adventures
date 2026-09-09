@@ -182,12 +182,52 @@ pub fn build_generator(n_check: usize) -> Result<Vec<u8>, RSError> {
             "n_check must be a positive even number, got {n_check}"
         )));
     }
+    build_generator_with_base(n_check, 1)
+}
+
+/// Build the RS generator polynomial with an arbitrary root base `b`.
+///
+/// The generator is the product of `n_check` linear factors starting at root
+/// `α^b` instead of the fixed `α¹` this crate's default convention uses:
+///
+/// ```text
+/// g(x) = (x + α^b)(x + α^{b+1})…(x + α^{b+n_check-1})
+/// ```
+///
+/// `build_generator(n_check)` is exactly `build_generator_with_base(n_check, 1)`
+/// — this package's documented b=1 convention. QR Code's own Reed-Solomon codes
+/// use `b=0` (roots `α⁰…α^{n_check-1}`); this is a real, load-bearing
+/// difference, not cosmetic — using the wrong base produces a generator with
+/// entirely different roots, so syndromes computed against it would be
+/// meaningless for codewords built under the other convention.
+///
+/// Unlike `build_generator`, this function does **not** require `n_check` to
+/// be even. That restriction in the b=1 wrapper is this crate's own original
+/// API choice, not a mathematical requirement of Reed-Solomon codes in
+/// general (`t = n_check/2` errors are still correctable via integer
+/// division when `n_check` is odd — one syndrome degree of freedom simply
+/// goes unused). QR Code's own ECC-codewords-per-block table
+/// (`ECC_CODEWORDS_PER_BLOCK` in `qr-code`) genuinely contains odd values —
+/// e.g. version 1 at ECC level L uses 7 check codewords per block — so a
+/// hard even-only requirement here would make `decode_with_base` unusable
+/// for some of the most common real QR codes.
+///
+/// ## Return value
+///
+/// A **little-endian** coefficient array (index = degree), length `n_check + 1`.
+/// The leading coefficient (last element) is always `1` (monic).
+pub fn build_generator_with_base(n_check: usize, b: u32) -> Result<Vec<u8>, RSError> {
+    if n_check == 0 {
+        return Err(RSError::InvalidInput(
+            "n_check must be a positive number, got 0".to_string(),
+        ));
+    }
 
     // Start with g(x) = 1.
     let mut g = vec![1u8];
 
-    for i in 1..=n_check {
-        let alpha_i = power(2, i as u32);
+    for i in b..(b + n_check as u32) {
+        let alpha_i = power(2, i);
         let mut new_g = vec![0u8; g.len() + 1];
         for (j, &coeff) in g.iter().enumerate() {
             new_g[j] ^= multiply(coeff, alpha_i);
@@ -407,9 +447,20 @@ pub fn encode(message: &[u8], n_check: usize) -> Result<Vec<u8>, RSError> {
 /// An error at position `p` (big-endian index) with magnitude `e` contributes
 /// `e · (αʲ)^{n-1-p} = e · Xₚʲ` where the **locator number** `Xₚ = α^{n-1-p}`.
 pub fn syndromes(received: &[u8], n_check: usize) -> Vec<u8> {
-    (1..=n_check)
+    syndromes_with_base(received, n_check, 1)
+}
+
+/// Compute the `n_check` syndromes of a received codeword with an arbitrary
+/// root base `b`: `Sⱼ = received(α^{b+j})` for `j = 0, …, n_check-1`.
+///
+/// `syndromes(received, n_check)` is exactly `syndromes_with_base(received,
+/// n_check, 1)` — this crate's default b=1 convention. QR Code's b=0
+/// convention needs `syndromes_with_base(received, n_check, 0)`, matching the
+/// root base its own `build_generator` uses (`for i in 0..n`).
+pub fn syndromes_with_base(received: &[u8], n_check: usize, b: u32) -> Vec<u8> {
+    (b..(b + n_check as u32))
         .map(|i| {
-            let alpha_i = power(2, i as u32);
+            let alpha_i = power(2, i);
             poly_eval_be(received, alpha_i)
         })
         .collect()
@@ -567,10 +618,25 @@ fn chien_search(lambda: &[u8], n: usize) -> Vec<usize> {
 /// **Error evaluator** `Ω(x) = (S(x) · Λ(x)) mod x^{2t}` (little-endian).
 /// Truncating to `2t` terms removes the high-degree part.
 ///
-/// **Forney formula** for position `p` with locator `Xₚ = α^{n-1-p}`:
+/// **Forney formula** for position `p` with locator `Xₚ = α^{n-1-p}`, for a
+/// syndrome sequence built from consecutive roots starting at `α^b`:
 /// ```text
-/// eₚ = Ω(Xₚ⁻¹) / Λ'(Xₚ⁻¹)
+/// eₚ = Xₚ^{1-b} · Ω(Xₚ⁻¹) / Λ'(Xₚ⁻¹)
 /// ```
+///
+/// The `Xₚ^{1-b}` factor is the general Forney correction for an arbitrary
+/// root base `b` (see e.g. the Forney algorithm article's generalized
+/// formula). At `b=1` — this crate's original, only-ever-used convention —
+/// the exponent `1-b` is `0`, so `Xₚ^{1-b} = 1` and the factor silently
+/// disappears: this is why the original, uncorrected formula (no `Xₚ`
+/// factor at all) was correct for every pre-existing test in this crate,
+/// all of which exercise only the implicit `b=1` default. QR Code's `b=0`
+/// convention makes the exponent `1-b = 1`, so the factor becomes `Xₚ`
+/// itself (the *forward* locator, not its inverse) and is no longer a
+/// silent no-op — omitting it produces a value that looks like a magnitude
+/// but is off by a factor of `Xₚ`, silently corrupting the "corrected"
+/// output instead of raising `TooManyErrors` (caught during this crate's own
+/// b=0 corruption-recovery tests, not by inspection alone).
 ///
 /// ## Formal derivative in characteristic 2
 ///
@@ -587,6 +653,7 @@ fn forney(
     syndromes: &[u8],
     positions: &[usize],
     n: usize,
+    b: u32,
 ) -> Result<Vec<u8>, RSError> {
     let two_t = syndromes.len();
 
@@ -622,7 +689,20 @@ fn forney(
             return Err(RSError::TooManyErrors);
         }
 
-        magnitudes.push(divide(omega_val, lambda_prime_val));
+        let mut mag = divide(omega_val, lambda_prime_val);
+
+        // General Forney correction factor Xₚ^{1-b}. At b=1 the exponent is 0
+        // (Xₚ^0 = 1), a no-op that exactly reproduces this crate's original
+        // b=1-only formula. At b=0 (QR Code's convention) the exponent is 1,
+        // so this multiplies by the forward locator Xₚ = α^{n-1-p} itself —
+        // NOT its inverse `xi_inv` computed above.
+        if b != 1 {
+            let exponent = (((n - 1 - pos) as i64) * (1i64 - b as i64)).rem_euclid(255) as u32;
+            let correction = power(2, exponent);
+            mag = multiply(mag, correction);
+        }
+
+        magnitudes.push(mag);
     }
 
     Ok(magnitudes)
@@ -656,6 +736,37 @@ pub fn decode(received: &[u8], n_check: usize) -> Result<Vec<u8>, RSError> {
             "n_check must be a positive even number, got {n_check}"
         )));
     }
+    decode_with_base(received, n_check, 1)
+}
+
+/// Decode a received Reed-Solomon codeword with an arbitrary root base `b`,
+/// correcting up to `t = n_check/2` errors.
+///
+/// `decode(received, n_check)` is exactly `decode_with_base(received,
+/// n_check, 1)` — this crate's default b=1 convention. QR Code's own RS codes
+/// use `b=0`; decoding real QR codewords requires `decode_with_base(received,
+/// n_check, 0)` to match the root base `qr-code`'s own `build_generator` uses.
+///
+/// Berlekamp-Massey and Chien search are unchanged and b-agnostic — they
+/// only ever consume already-computed syndromes and the error-locator
+/// polynomial, never a raw root index. Forney is *not* fully b-agnostic: its
+/// magnitude formula needs a base-dependent correction factor `Xₚ^{1-b}`
+/// that happens to vanish (become `1`) at this crate's original `b=1`
+/// convention — which is why the plain, uncorrected formula was correct for
+/// every pre-existing test — but not at `b=0`, so `forney` now takes `b`
+/// explicitly (see its own doc comment).
+///
+/// Like `build_generator_with_base`, this does **not** require `n_check` to
+/// be even (unlike the b=1-only `decode`) — QR Code's own ECC-per-block
+/// table contains odd values (e.g. 7 for version 1 / ECC level L), and
+/// `t = n_check/2` (integer division) is still well-defined and correct for
+/// odd `n_check`.
+pub fn decode_with_base(received: &[u8], n_check: usize, b: u32) -> Result<Vec<u8>, RSError> {
+    if n_check == 0 {
+        return Err(RSError::InvalidInput(
+            "n_check must be a positive number, got 0".to_string(),
+        ));
+    }
     if received.len() < n_check {
         return Err(RSError::InvalidInput(format!(
             "received length {} < n_check {}",
@@ -669,7 +780,7 @@ pub fn decode(received: &[u8], n_check: usize) -> Result<Vec<u8>, RSError> {
     let k = n - n_check;
 
     // --- Step 1: Syndromes ---
-    let synds = syndromes(received, n_check);
+    let synds = syndromes_with_base(received, n_check, b);
 
     if all_zero(&synds) {
         return Ok(received[..k].to_vec());
@@ -690,7 +801,7 @@ pub fn decode(received: &[u8], n_check: usize) -> Result<Vec<u8>, RSError> {
     }
 
     // --- Step 4: Forney ---
-    let magnitudes = forney(&lambda, &synds, &positions, n)?;
+    let magnitudes = forney(&lambda, &synds, &positions, n, b)?;
 
     // --- Step 5: Apply corrections ---
     let mut corrected = received.to_vec();

@@ -7,6 +7,54 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.2.0] — 2026-09-07
+
+Added per `code/specs/MA04-qr-decoder.md` §2, to support decoding QR
+Code's Reed-Solomon codewords (root base `b=0`) without reimplementing
+Berlekamp-Massey/Chien-search/Forney a second time.
+
+### Added
+
+- **`build_generator_with_base(n_check, b)`** — like `build_generator`, but
+  with an arbitrary root base `b` instead of the fixed `α¹`:
+  `g(x) = ∏(x + α^{b+i})` for `i = 0..n_check`. `build_generator(n_check)`
+  is now a thin wrapper calling this with `b=1`. Unlike `build_generator`,
+  does **not** require `n_check` to be even — QR Code's own
+  ECC-codewords-per-block table genuinely contains odd values (e.g. 7 at
+  version 1 / ECC level L), and the even-only restriction was never a
+  mathematical requirement of Reed-Solomon, just this crate's original API
+  choice (preserved unchanged in the b=1-only wrapper).
+- **`syndromes_with_base(received, n_check, b)`** — syndromes
+  `Sᵢ = r(α^{b+i})` for `i = 0..n_check`. `syndromes(received, n_check)` is
+  now a thin wrapper calling this with `b=1`.
+- **`decode_with_base(received, n_check, b)`** — full decode pipeline
+  parameterized on root base. `decode(received, n_check)` is now a thin
+  wrapper calling this with `b=1`. Like `build_generator_with_base`, does
+  not require even `n_check`.
+
+### Fixed
+
+- **Forney's error-magnitude formula was silently wrong for any base other
+  than `b=1`.** The general Forney algorithm needs a base-dependent
+  correction factor `Xₚ^{1-b}` that happens to equal `1` (a no-op) exactly
+  at `b=1` — which is why the original, uncorrected formula was correct for
+  every pre-existing test, all of which exercise only the implicit `b=1`
+  default — but becomes the *forward* locator `Xₚ` itself at `b=0`.
+  Without this factor, `decode_with_base(..., 0)` produced plausible-looking
+  but numerically wrong "corrected" bytes instead of erroring — caught by
+  a full single-error sweep across every codeword position at `b=0`, not
+  by a handful of spot-check corruptions (which can pass by coincidence at
+  small `t`).
+
+### Testing
+
+- 16 new tests covering the `_with_base` API: b=1-matches-default sanity
+  checks, b=0 generator root verification, b=0 round-trip/corruption-
+  recovery/beyond-capacity, a full single-error sweep across every
+  codeword position at b=0, and real QR-shaped odd-`n_check` (7) coverage.
+  All 53 pre-existing tests (the original public API's full suite) still
+  pass unchanged, proving this is a purely additive, non-breaking release.
+
 ## [0.1.0] — 2026-04-04
 
 ### Added

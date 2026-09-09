@@ -13,7 +13,10 @@
 //! 9. Edge cases (empty message, single byte, max-length message)
 //! 10. Input validation (odd n_check, zero n_check, oversized codeword)
 
-use reed_solomon::{build_generator, decode, encode, error_locator, syndromes, RSError};
+use reed_solomon::{
+    build_generator, build_generator_with_base, decode, decode_with_base, encode, error_locator,
+    syndromes, syndromes_with_base, RSError,
+};
 
 // =============================================================================
 // Helpers
@@ -601,4 +604,277 @@ fn validation_encode_exactly_at_limit() {
     let codeword = encode(&[0x42], 254).unwrap();
     assert_eq!(codeword.len(), 255);
     assert_syndromes_zero(&codeword, 254);
+}
+
+// =============================================================================
+// 11. `_with_base` API — base-parameterized generator/syndromes/decode
+//
+// MA04-qr-decoder.md §2 adds these so QR Code's b=0 Reed-Solomon convention
+// (roots α⁰…α^{n_check-1}) can be decoded without reimplementing
+// Berlekamp-Massey/Chien/Forney a second time. The default b=1 wrappers
+// (`build_generator`, `syndromes`, `decode`) must remain byte-for-byte
+// unchanged (covered by every test above, all still green); this section
+// covers the *new* b parameter itself.
+// =============================================================================
+
+/// A systematic base-`b` RS encoder built directly from
+/// `build_generator_with_base`, mirroring `reed_solomon::encode`'s own
+/// (private) big-endian polynomial long division exactly — same algorithm,
+/// generalized to an arbitrary root base instead of the hardcoded b=1. Used
+/// here purely to construct b=0 codewords to decode against
+/// `decode_with_base(..., 0)`; the direct cross-check against `qr-code`'s
+/// *actual* RS encoder (a second, independently written implementation)
+/// lives in the `qr-decoder` crate's own test suite instead, since only that
+/// crate depends on both `qr-code` and `reed-solomon`.
+fn rs_encode_with_base(data: &[u8], n_check: usize, b: u32) -> Vec<u8> {
+    use gf256::multiply;
+
+    let g_le = build_generator_with_base(n_check, b).unwrap();
+    let g_be: Vec<u8> = g_le.iter().rev().cloned().collect(); // g_be[0] = 1 (monic)
+
+    let n = data.len() + n_check;
+    let mut rem = data.to_vec();
+    rem.resize(n, 0);
+
+    let div_len = g_be.len();
+    if rem.len() >= div_len {
+        let steps = rem.len() - div_len + 1;
+        for i in 0..steps {
+            let coeff = rem[i];
+            if coeff == 0 {
+                continue;
+            }
+            for (j, &d) in g_be.iter().enumerate() {
+                rem[i + j] ^= multiply(coeff, d);
+            }
+        }
+    }
+    let remainder = rem[rem.len() - (div_len - 1)..].to_vec();
+
+    let mut codeword = data.to_vec();
+    let pad = n_check - remainder.len();
+    codeword.resize(codeword.len() + pad, 0);
+    codeword.extend_from_slice(&remainder);
+    codeword
+}
+
+#[test]
+fn with_base_b1_generator_matches_default() {
+    // build_generator_with_base(n, 1) must be byte-for-byte identical to
+    // build_generator(n) — the b=1 wrapper is a behavioral no-op.
+    for n_check in [2usize, 4, 6, 8, 20] {
+        assert_eq!(
+            build_generator_with_base(n_check, 1).unwrap(),
+            build_generator(n_check).unwrap(),
+            "b=1 generator diverged from default for n_check={n_check}"
+        );
+    }
+}
+
+#[test]
+fn with_base_b1_syndromes_match_default() {
+    let codeword = encode(b"base one check", 6).unwrap();
+    assert_eq!(
+        syndromes_with_base(&codeword, 6, 1),
+        syndromes(&codeword, 6)
+    );
+}
+
+#[test]
+fn with_base_b1_decode_matches_default() {
+    let message = b"base one decode path";
+    let mut codeword = encode(message, 6).unwrap();
+    codeword[2] ^= 0xAA;
+    assert_eq!(
+        decode_with_base(&codeword, 6, 1).unwrap(),
+        decode(&codeword, 6).unwrap()
+    );
+}
+
+#[test]
+fn with_base_b0_generator_roots_are_alpha_0_through_n_minus_1() {
+    // QR's own build_generator uses `for i in 0..n`: roots α⁰…α^{n_check-1}.
+    // build_generator_with_base(n_check, 0) must match this exactly, not the
+    // b=1 default's α¹…α^{n_check}.
+    use gf256::{add, multiply, power};
+
+    let n_check = 8;
+    let g = build_generator_with_base(n_check, 0).unwrap();
+    for i in 0u32..(n_check as u32) {
+        let root = power(2, i);
+        let val = g.iter().rev().fold(0u8, |acc, &c| add(multiply(acc, root), c));
+        assert_eq!(val, 0, "g(α^{i}) should be 0 for b=0, n_check={n_check}");
+    }
+}
+
+#[test]
+fn with_base_b0_generator_degree_matches_n_check() {
+    let g = build_generator_with_base(10, 0).unwrap();
+    assert_eq!(g.len(), 11);
+    assert_eq!(*g.last().unwrap(), 1, "generator must be monic");
+}
+
+#[test]
+fn with_base_b0_syndromes_zero_for_valid_codeword() {
+    let n_check = 8;
+    let codeword = rs_encode_with_base(b"qr b0 codeword", n_check, 0);
+    let s = syndromes_with_base(&codeword, n_check, 0);
+    assert!(
+        s.iter().all(|&x| x == 0),
+        "b=0 syndromes should be zero for an undamaged b=0 codeword, got {s:?}"
+    );
+}
+
+#[test]
+fn with_base_b0_syndromes_nonzero_after_corruption() {
+    let n_check = 8;
+    let mut codeword = rs_encode_with_base(b"qr b0 corrupt", n_check, 0);
+    codeword[0] ^= 0xFF;
+    let s = syndromes_with_base(&codeword, n_check, 0);
+    assert!(s.iter().any(|&x| x != 0));
+}
+
+#[test]
+fn with_base_b0_roundtrip_no_errors() {
+    let message = b"qr style b0 message";
+    let n_check = 10;
+    let codeword = rs_encode_with_base(message, n_check, 0);
+    let recovered = decode_with_base(&codeword, n_check, 0).unwrap();
+    assert_eq!(recovered.as_slice(), message.as_slice());
+}
+
+/// The most important test in this section (spec §7 item 9's sibling): proves
+/// `decode_with_base(..., 0)` actually corrects errors under the b=0
+/// convention, not merely that it round-trips on already-clean input (which
+/// a *wrong* root convention could still do, since no error is ever
+/// exercised in that case).
+#[test]
+fn with_base_b0_corruption_and_recovery_within_capacity() {
+    let message: Vec<u8> = (0u8..20).collect();
+    let n_check = 10; // t = 5
+    let codeword = rs_encode_with_base(&message, n_check, 0);
+
+    let mut corrupted = codeword.clone();
+    corrupt(&mut corrupted, &[0, 3, 7, 15, 24], 0x5A); // exactly t=5 errors
+    assert_eq!(corrupted.len(), codeword.len());
+
+    let recovered = decode_with_base(&corrupted, n_check, 0).unwrap(); // b=0, the QR convention
+    assert_eq!(recovered, message);
+}
+
+#[test]
+fn with_base_b0_beyond_capacity_rejected() {
+    let message: Vec<u8> = (0u8..20).collect();
+    let n_check = 8; // t = 4
+    let codeword = rs_encode_with_base(&message, n_check, 0);
+
+    let mut corrupted = codeword.clone();
+    corrupt(&mut corrupted, &[0, 2, 4, 6, 8], 0xFF); // 5 errors > t=4
+    assert_eq!(
+        decode_with_base(&corrupted, n_check, 0),
+        Err(RSError::TooManyErrors)
+    );
+}
+
+#[test]
+fn with_base_b0_correct_error_in_check_bytes() {
+    let message = b"check bytes b0";
+    let n_check = 6;
+    let mut codeword = rs_encode_with_base(message, n_check, 0);
+    codeword[message.len()] ^= 0x33; // first check byte
+    let recovered = decode_with_base(&codeword, n_check, 0).unwrap();
+    assert_eq!(recovered.as_slice(), message.as_slice());
+}
+
+#[test]
+fn with_base_b0_correct_error_at_first_and_last_byte() {
+    let message = b"edges b0";
+    let n_check = 4;
+    let clean = rs_encode_with_base(message, n_check, 0);
+
+    let mut first = clean.clone();
+    first[0] ^= 0xBB;
+    assert_eq!(
+        decode_with_base(&first, n_check, 0).unwrap().as_slice(),
+        message.as_slice()
+    );
+
+    let mut last = clean.clone();
+    let last_idx = last.len() - 1;
+    last[last_idx] ^= 0xCC;
+    assert_eq!(
+        decode_with_base(&last, n_check, 0).unwrap().as_slice(),
+        message.as_slice()
+    );
+}
+
+#[test]
+fn with_base_different_b_produce_different_generators() {
+    // Sanity check that b actually changes the roots (and thus the
+    // generator) — b=0 and b=1 must not coincidentally produce the same
+    // polynomial.
+    let g0 = build_generator_with_base(6, 0).unwrap();
+    let g1 = build_generator_with_base(6, 1).unwrap();
+    assert_ne!(g0, g1, "b=0 and b=1 generators must differ");
+}
+
+/// Mirrors `edge_case_correction_at_every_single_position` (b=1) for b=0:
+/// a single-error correction sweep across every byte position in the
+/// codeword. This is the class of test that actually exercises the Forney
+/// correction factor at every possible locator value `Xₚ`, so a wrong (or
+/// missing) `b`-dependent correction term would fail here even if a
+/// spot-check at only one or two positions happened to pass.
+#[test]
+fn with_base_b0_correction_at_every_single_position() {
+    let message = b"position b0";
+    let n_check = 6;
+    let clean = rs_encode_with_base(message, n_check, 0);
+
+    for pos in 0..clean.len() {
+        let mut corrupted = clean.clone();
+        corrupted[pos] ^= 0xAA;
+        let recovered = decode_with_base(&corrupted, n_check, 0)
+            .unwrap_or_else(|_| panic!("failed to correct b=0 error at position {pos}"));
+        assert_eq!(
+            recovered.as_slice(),
+            message.as_slice(),
+            "b=0 error at position {pos} was not corrected"
+        );
+    }
+}
+
+#[test]
+fn with_base_zero_n_check_still_rejected() {
+    // n_check=0 is rejected by every variant, base-parameterized or not —
+    // it's the one restriction that IS a genuine mathematical requirement
+    // (a zero-check-symbol "RS code" isn't a code at all).
+    assert!(build_generator_with_base(0, 0).is_err());
+    assert!(decode_with_base(&[0u8; 3], 0, 0).is_err());
+}
+
+#[test]
+fn with_base_odd_n_check_is_accepted_unlike_the_b1_wrapper() {
+    // Unlike build_generator/decode (the b=1-only wrappers, which keep the
+    // even-n_check restriction to stay byte-for-byte compatible with their
+    // pre-existing tested behavior), the _with_base variants accept odd
+    // n_check — QR Code's own ECC-per-block table genuinely uses odd values
+    // (e.g. 7 check codewords per block at version 1 / ECC level L), so a
+    // hard even-only restriction here would make decode_with_base unusable
+    // for some of the most common real QR codes.
+    assert!(build_generator_with_base(3, 0).is_ok());
+    assert!(build_generator(3).is_err()); // the b=1 wrapper still rejects it
+
+    let message = b"odd n_check b0";
+    let n_check = 7; // matches real QR V1-L block size
+    let codeword = rs_encode_with_base(message, n_check, 0);
+    assert_eq!(codeword.len(), message.len() + n_check);
+
+    let recovered = decode_with_base(&codeword, n_check, 0).unwrap();
+    assert_eq!(recovered.as_slice(), message.as_slice());
+
+    // t = n_check/2 = 3 for n_check=7: exactly 3 errors must still recover.
+    let mut corrupted = codeword.clone();
+    corrupt(&mut corrupted, &[0, 3, 6], 0x5A);
+    let recovered = decode_with_base(&corrupted, n_check, 0).unwrap();
+    assert_eq!(recovered.as_slice(), message.as_slice());
 }

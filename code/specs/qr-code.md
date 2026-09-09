@@ -20,9 +20,12 @@ Understanding how to build a QR Code encoder from scratch teaches:
 - why error correction level and version selection matter for reliability
 
 The encoder in this spec produces a **valid, scannable QR Code** for any input
-string that fits within QR version 40. It does not implement decoding —
-that is a separate, more complex problem involving image preprocessing and
-perspective correction.
+string that fits within QR version 40. It does not implement decoding itself,
+but as of `MA04-qr-decoder.md` this workspace has a `qr-decoder` crate that
+inverts it — given an already-located `ModuleGrid` (this crate's own output
+shape), it recovers the original string. Locating a QR code within an
+arbitrary raster image (pixel preprocessing, perspective correction) remains
+a separate, more complex, and still-deferred problem — see that spec's §6.
 
 ---
 
@@ -796,7 +799,9 @@ GF(256) multiplication in the RS encoder. It does **not** depend on MA02
 
 ## Future Extensions
 
-- **Decoder** (FNT-style — a separate, much more complex spec)
+- **Decoder** — `ModuleGrid` decoding shipped in `MA04-qr-decoder.md`.
+  Locating a QR code within an arbitrary image remains future work
+  (separate spec, separate issue).
 - **Mixed-mode encoding** — segment the input into numeric/alphanumeric/byte
   regions for maximum capacity
 - **ECI mode** — Explicit UTF-8 signal for scanners that default to Latin-1

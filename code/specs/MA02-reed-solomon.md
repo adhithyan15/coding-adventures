@@ -627,5 +627,21 @@ their test vectors against it.
 | MA00 | polynomial | Coefficient-array polynomial arithmetic |
 | MA01 | gf256 | GF(2^8) field arithmetic |
 | **MA02** | **reed-solomon** | **RS encoding and decoding (this spec)** |
-| MA03 | qr-encoder | QR code generation; calls MA02 for error correction codewords |
-| MA04 | qr-decoder | Inverse: recognise and decode a QR matrix back to a string |
+| MA03 | qr-code | QR code generation; precomputes its own b=0 generator rather than calling MA02 (see `qr-code.md`'s Dependency Stack) |
+| MA04 | qr-decoder | Inverse: decode a `ModuleGrid` back to a string. Locating a QR code within an arbitrary image is separate, later work — see `MA04-qr-decoder.md` §6. |
+
+### Addendum: base-parameterized decode (added for MA04)
+
+`build_generator`/`syndromes`/`decode` fix the root convention to
+**b=1** (`for i in 1..=n_check`), this package's own documented
+default. `MA04-qr-decoder.md` needs QR's **b=0** convention instead
+(`qr-code`'s own encoder builds `g(x) = ∏(x + αⁱ)` for `i in 0..n`) —
+a real mismatch, not cosmetic: calling this crate's b=1 `decode`
+directly on QR codewords computes wrong syndromes. Rather than fork
+Berlekamp-Massey/Chien-search/Forney a second time (they operate only
+on already-computed syndromes and the error-locator polynomial, never
+on a raw root index, so they are b-agnostic), this package gained
+`build_generator_with_base(n_check, b)`, `syndromes_with_base(received,
+n_check, b)`, and `decode_with_base(received, n_check, b)`; the
+existing `build_generator`/`syndromes`/`decode` are now thin `b=1`
+wrappers over these, unchanged in behavior.
