@@ -7,7 +7,7 @@ landed and why, not a semver-tracked API.
 
 - **#13934 installment 4i: one value, three defects, and a disclosure the header had already
   promised.** 1 value line, 1 `cites` line and 34 comment lines in **1** `.adj` file —
-  `geometry/shape-composition` — plus one e2e test file. **Four mutations redden.**
+  `geometry/shape-composition` — plus one e2e test file. **Five mutations redden.**
 
   This is the sixth and last of 4g's shape: a real page sentence with other material welded on.
   `shape-composition:57` carried THREE sentences in one `source` under ONE `locator`, and measured

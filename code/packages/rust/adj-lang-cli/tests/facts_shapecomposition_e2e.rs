@@ -97,6 +97,13 @@ fn triangle_decomposition_count_derives_two_with_full_audit_trail() {
     // these, so they are joined too. Today nothing else in the import set
     // names either page, so the old form did still redden -- the hole was
     // latent, not open.
+    // Each leg pins TWO things, and they are not interchangeable: the joined
+    // source+locator closes the wrong-page drift (round 1), and the
+    // `kind` conjunct witnesses that a STEP exists at all. Round 1 replaced
+    // the second with the first on the fact leg, and its joined needle also
+    // occurs in the answer-level `citations` array OUTSIDE `steps` -- so an
+    // empty `steps` would still have satisfied it. The rule leg was never
+    // affected: its needle occurs once, inside `steps`.
     // The audit trail names BOTH steps: the rule's own citation (the general
     // triangulation/diagonal definitions) and the underlying quadrilateral
     // fact's citation (the square's own defining property) — an inspectable
@@ -106,7 +113,8 @@ fn triangle_decomposition_count_derives_two_with_full_audit_trail() {
         "carries the rule's own citation: {out}"
     );
     assert!(
-        out.contains("\"source\":\"a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above. In other words, a square is a regular polygon with four sides.\",\"locator\":\"https://mathworld.wolfram.com/Square.html\""),
+        out.contains("\"source\":\"a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above. In other words, a square is a regular polygon with four sides.\",\"locator\":\"https://mathworld.wolfram.com/Square.html\"")
+            && out.contains("\"kind\":\"fact\""),
         "carries the underlying quadrilateral fact's citation: {out}"
     );
     assert!(
