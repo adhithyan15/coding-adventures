@@ -6,14 +6,15 @@ landed and why, not a semver-tracked API.
 ## Unreleased
 
 - **#13934 installment 4h: two descriptions, two stripped indents, and a headline that understates
-  the round.** 4 value lines and 93 comment lines across **3** `.adj` files —
+  the round.** 4 value lines, 10 row lines and 93 comment lines across **3** `.adj` files —
   `geometry/solid-vertices-edges` (two values), `biology/genetic-code` and `biology/start-codon` —
   plus three e2e test files. **Six mutations redden.** Contiguity **60 → 58** over the full
   population of 563; the two that left are the two Platonic values, member for member, and none
   entered.
 
-  **The triage was wrong about three of the four, all in the same direction**: it filed them behind
-  a held question when reading the page showed they needed none. That is the round's lesson, and it
+  **The triage was wrong about all four, in two groups and in the same direction**: it filed each
+  behind a held question when reading the page showed they needed none. That is the round's lesson,
+  and it
   is the standing "read each candidate's page before repairing it" rule paying for itself twice.
 
   ### Two values that described a table instead of quoting one
@@ -102,7 +103,8 @@ landed and why, not a semver-tracked API.
   ### What is now held, and one correction to my own grouping
 
   `chemistry/atomic-weights:73` was investigated and is **held**, correcting this effort's earlier
-  grouping of it with the two NCBI values. CIAAW's page has no tabs at all — its cells are fused
+  grouping of it with the two NCBI values. CIAAW's page has no tabs anywhere in the table — its
+  cells are fused
   (`6Ccarbon` + U+00A0 + `12.011 ± 0.002`) — the value invents tabs between them, and the two element
   rows it welds **are not adjacent**: nitrogen sits between carbon and oxygen. That is the
   invented-separator table-row class 4f established belongs to the owner, not a stripped indent.
