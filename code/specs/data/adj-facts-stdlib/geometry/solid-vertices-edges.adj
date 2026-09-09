@@ -46,8 +46,9 @@
 % A CLAIM THIS FILE DOES NOT MAKE. Installment 4g's five repairs are
 % byte-exact against RAW HTML. These two are not, and cannot be: the page's
 % own bytes carry three newlines inside the vertices sentence and two
-% inside the edges sentence, because the HTML source wraps both paragraphs. They are verbatim under the extractor's
-% whitespace collapse — the same standard every one of this stdlib's
+% inside the edges sentence, because the HTML source wraps the single
+% paragraph they share. They are verbatim under the extractor's whitespace
+% collapse — the same standard every one of this stdlib's
 % currently-verbatim values already meets — and that is a WEAKER claim than
 % 4g's. The two look alike and are not; whether `source` means document text
 % or the page as rendered is filed on #14111 and is not decided here.

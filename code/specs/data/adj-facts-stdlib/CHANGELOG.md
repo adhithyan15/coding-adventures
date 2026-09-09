@@ -14,8 +14,8 @@ landed and why, not a semver-tracked API.
 
   **The triage was wrong about all four, in two groups and in the same direction**: it filed each
   behind a held question when reading the page showed they needed none. That is the round's lesson,
-  and it
-  is the standing "read each candidate's page before repairing it" rule paying for itself twice.
+  and it is the standing "read each candidate's page before repairing it" rule paying for itself
+  twice.
 
   ### Two values that described a table instead of quoting one
 
@@ -39,7 +39,8 @@ landed and why, not a semver-tracked API.
 
   **A claim this installment does not make.** 4g's five repairs are byte-exact against RAW HTML.
   These two are not and cannot be: the page's own bytes carry three newlines inside the vertices
-  sentence, because the HTML source wraps the paragraph. They are verbatim under the extractor's
+  sentence and two inside the edges sentence, because the HTML source wraps the single paragraph
+  they share. They are verbatim under the extractor's
   whitespace collapse — the standard every currently-verbatim value in this stdlib already meets —
   and that is **weaker** than 4g's claim. The two look alike and are not; the general question is
   filed on #14111.
@@ -48,13 +49,13 @@ landed and why, not a semver-tracked API.
 
   `genetic-code` and `start-codon` were filed as "table dumps", which is shorthand for a lost cause.
   NCBI serves the genetic-code table inside a `<pre>` that indents **line 1 by four spaces and every
-  later line by two**, so all five data columns land at offset 11. The shipped values had all
-  12 of those characters stripped. So neither is a dump of table cells: each is a genuine
+  later line by two**, so all five data columns land at offset 11. The shipped values had all 12 of
+  those characters stripped. So neither is a dump of table cells: each is a genuine
   contiguous multi-line span with its indentation normalised away — 4f's NBSP defect, not 4g's weld.
 
   Both headers **already claimed byte-fidelity**. `start-codon` said the value "reproduces,
-  byte-for-byte, the SAME NCBI page"; `genetic-code` called its field a "5-line block copied
-  VERBATIM". Both were false, and had been for as long as they existed, because **no instrument here
+  byte-for-byte, the SAME NCBI 'Genetic Codes' page"; `genetic-code` called its field a "5-line
+  block copied VERBATIM". Both were false, and had been for as long as they existed, because **no instrument here
   compares a value to raw HTML** — the sweep compares against the extractor's output, which
   normalises, and the CI pins compare the engine's output to the field, which is the field to itself.
 
@@ -82,8 +83,8 @@ landed and why, not a semver-tracked API.
   are at 11, and the pins were **regenerated from the corrected fields** rather than patched.
 
   The prose describing the fix was wrong in the same direction — "false by eight characters" was
-  12, and *"indents every line after the first by two spaces"* is precisely the misreading
-  that produced the incomplete repair. Also corrected: "five newlines" in the MathWorld note is
+  12, and *"indents every line after the first by two spaces"* is precisely the misreading that
+  produced the incomplete repair. Also corrected: "five newlines" in the MathWorld note is
   **three** (I had counted a slice that ran past the sentence).
 
   ### The headline number understates this round
@@ -104,8 +105,8 @@ landed and why, not a semver-tracked API.
 
   `chemistry/atomic-weights:73` was investigated and is **held**, correcting this effort's earlier
   grouping of it with the two NCBI values. CIAAW's page has no tabs anywhere in the table — its
-  cells are fused
-  (`6Ccarbon` + U+00A0 + `12.011 ± 0.002`) — the value invents tabs between them, and the two element
+  cells are fused (`6Ccarbon` + U+00A0 + `12.011 ± 0.002`) — the value invents tabs between them,
+  and the two element
   rows it welds **are not adjacent**: nitrogen sits between carbon and oxygen. That is the
   invented-separator table-row class 4f established belongs to the owner, not a stripped indent.
 
