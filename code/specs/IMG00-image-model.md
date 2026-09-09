@@ -41,7 +41,10 @@ IMG03               Point operations — brightness, contrast, gamma, colour mat
 IMG04               Geometric transforms — affine, perspective, scale, rotate, sampling
 IMG05               Compositing — Porter-Duff operators, blend modes, alpha, layers
 IMG06               GPU acceleration bridge — Rust+wgpu core, TypeScript+WebGPU, C-ABI FFI
-IMG07               Morphological operations — erosion, dilation, opening, closing
+IMG07               Shared RAW colour pipeline (image-raw-pipeline) — took this slot instead;
+                    morphology moved to IMG08 below, corrected in VIS00-vision-roadmap.md
+IMG08               Morphological operations — erosion, dilation, opening, closing
+IMG09               Adaptive/local thresholding — Sauvola/Bradley, vs. IMG03's fixed cutoff
 ```
 
 Image I/O (encoding and decoding PNG, JPEG, BMP, QOI, PPM) is handled by the
