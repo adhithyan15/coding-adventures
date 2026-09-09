@@ -168,6 +168,43 @@ int main(int argc, char **argv) {
               "snapshot still works after the nesting bound fires");
     }
 
+
+    {
+        // The handler answers BOTH effects of the batch, each chaining.
+        //
+        // One re-entrancy slot holding "the last update" silently discarded the
+        // first answer's new effect: it existed only in a map nobody kept, so it
+        // was never emitted, never failed, and pending forever -- which kills
+        // snapshot and restore for the life of the process. Answering only one
+        // effect cannot reach it, which is why every earlier version of this
+        // file passed while it was broken.
+        qputenv("MOSAIC_APP_STATE_PATH", qgetenv("MOSAIC_PROBE_STATE_F"));
+        MosaicHost host;
+        int answers = 0;
+        QObject::connect(&host, &MosaicHost::effectRequested,
+            [&host, &answers](const QVariant &id, const QString &, const QVariant &,
+                              const QString &delivery) {
+                if (delivery.compare(QStringLiteral("await"), Qt::CaseInsensitive) != 0) return;
+                // Chain only the first two, or this never terminates.
+                const bool chain = answers < 2;
+                answers++;
+                host.completeEffect(id, QVariantMap{{QStringLiteral("ok"),
+                    QVariantMap{{QStringLiteral("amount"), 1},
+                                {QStringLiteral("chain"), chain}}}});
+            });
+
+        QVariantMap event;
+        event.insert(QStringLiteral("name"), QStringLiteral("requestEffectBatch"));
+        event.insert(QStringLiteral("payload"), QVariantMap{});
+        const auto props = host.handleEvent(event).value(QStringLiteral("props")).toMap();
+        check(answers >= 2, "the handler answered both effects of the batch");
+        check(awaited(props, "both-answered batch") == 0,
+              "a fully-answered chaining batch leaves nothing outstanding");
+        const auto snap = host.snapshot();
+        check(snap.isValid() && !snap.toMap().contains(QStringLiteral("error")),
+              "snapshot still works after a fully-answered chaining batch");
+    }
+
     if (failures) {
         std::printf("\n%d check(s) failed\n", failures);
         return 1;

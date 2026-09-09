@@ -157,6 +157,15 @@ QVariantMap MosaicHost::props() const
 
 QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
 {
+    // Same rule as completeEffect, and for the same reason: this installs
+    // pointers to its own stack frame for the duration of settleEffects, so a
+    // call from another thread would have a completion write into a live frame
+    // belonging to this one. Refusing only in completeEffect left the hazard
+    // reachable through the other Q_INVOKABLE entry points.
+    if (thread() != QThread::currentThread()) {
+        return failure(QStringLiteral(
+            "%1 must be called on the host's own thread").arg(QStringLiteral("handleEvent")));
+    }
     if (!app_) return failure(error_);
     const auto nameValue = event.contains(QStringLiteral("name"))
         ? event.value(QStringLiteral("name"))
@@ -230,6 +239,15 @@ QVariant MosaicHost::snapshot()
 
 QVariantMap MosaicHost::restore(const QVariantMap &snapshot)
 {
+    // Same rule as completeEffect, and for the same reason: this installs
+    // pointers to its own stack frame for the duration of settleEffects, so a
+    // call from another thread would have a completion write into a live frame
+    // belonging to this one. Refusing only in completeEffect left the hazard
+    // reachable through the other Q_INVOKABLE entry points.
+    if (thread() != QThread::currentThread()) {
+        return failure(QStringLiteral(
+            "%1 must be called on the host's own thread").arg(QStringLiteral("restore")));
+    }
     if (!app_) return failure(error_);
     const auto encoded = QJsonDocument::fromVariant(snapshot).toJson(QJsonDocument::Compact);
     Bytes input{reinterpret_cast<const unsigned char *>(encoded.constData()),
@@ -436,11 +454,16 @@ QVariantMap MosaicHost::completeEffect(const QVariant &effectId, const QVariantM
         // the way in would drop the obligation if the call failed, which is the
         // silent-hang this whole mechanism exists to prevent.
         awaiting_.remove(id);
-        if (settling_ > 0 && reentrantSlot_ != nullptr && reentrantFlag_ != nullptr) {
+        if (settling_ > 0 && carriedEffects_ != nullptr && latestAnswer_ != nullptr
+            && reentrantFlag_ != nullptr) {
             // Called from inside a handler during settleEffects. Hand the
             // update back to the loop that is already running rather than
             // starting a second one, and let it decide what to return.
-            *reentrantSlot_ = update;
+            // APPEND. Several effects in one round may each be answered, and
+            // each answer may mint more; keeping only the newest map dropped
+            // every earlier one's effects.
+            *carriedEffects_ += update.value(QStringLiteral("effects")).toList();
+            *latestAnswer_ = update;
             *reentrantFlag_ = true;
             return update;
         }
@@ -480,11 +503,14 @@ QVariantMap MosaicHost::settleEffects(QVariantMap update)
 
     // This frame's re-entrancy slot. Held per frame rather than per object so a
     // nested settle cannot consume the update an outer frame adopted.
+    QVariantList answeredEffects;
     QVariantMap adopted;
     bool adoptedSet = false;
-    auto *const outerSlot = reentrantSlot_;
+    auto *const outerEffects = carriedEffects_;
+    auto *const outerAnswer = latestAnswer_;
     auto *const outerFlag = reentrantFlag_;
-    reentrantSlot_ = &adopted;
+    carriedEffects_ = &answeredEffects;
+    latestAnswer_ = &adopted;
     reentrantFlag_ = &adoptedSet;
     ++settling_;
 
@@ -494,16 +520,18 @@ QVariantMap MosaicHost::settleEffects(QVariantMap update)
     const QPointer<MosaicHost> alive(this);
     struct DepthGuard {
         QPointer<MosaicHost> host;
-        QVariantMap *slot;
+        QVariantList *effects;
+        QVariantMap *answer;
         bool *flag;
         ~DepthGuard()
         {
             if (!host) return;
             --host->settling_;
-            host->reentrantSlot_ = slot;
+            host->carriedEffects_ = effects;
+            host->latestAnswer_ = answer;
             host->reentrantFlag_ = flag;
         }
-    } guard{alive, outerSlot, outerFlag};
+    } guard{alive, outerEffects, outerAnswer, outerFlag};
 
     for (int round = 0; round < MaxRounds; ++round) {
         const auto effects = update.value(QStringLiteral("effects")).toList();
@@ -563,9 +591,9 @@ QVariantMap MosaicHost::settleEffects(QVariantMap update)
         // rest of the process. That is the "import needing a second dialog"
         // this function's own comment describes.
         QVariantMap latest = update;
-        QVariantList carried;
+        QVariantList carried = answeredEffects;
+        answeredEffects.clear();
         if (adoptedSet) {
-            carried += adopted.value(QStringLiteral("effects")).toList();
             latest = adopted;
             adopted.clear();
             adoptedSet = false;
@@ -612,6 +640,12 @@ QVariantMap MosaicHost::settleEffects(QVariantMap update)
             latest = answered;
         }
         if (!firstError.isEmpty()) {
+            // The error path must not strand what this round accumulated: those
+            // ids are pending in the runtime and nothing else will answer them.
+            QVariantMap stranded;
+            stranded.insert(QStringLiteral("effects"), carried);
+            failOutstanding(stranded,
+                            QStringLiteral("abandoned after an effect completion failed"));
             return firstError;
         }
         latest.insert(QStringLiteral("effects"), carried);
@@ -633,6 +667,7 @@ void MosaicHost::failOutstanding(const QVariantMap &update, const QString &reaso
     // the life of the process.
     if (completeEffect_ == nullptr) return;
     const QPointer<MosaicHost> alive(this);
+    QVariantList pending;
     for (const auto &entry : update.value(QStringLiteral("effects")).toList()) {
         const auto effect = entry.toMap();
         bool parsed = false;
@@ -643,9 +678,35 @@ void MosaicHost::failOutstanding(const QVariantMap &update, const QString &reaso
             continue;
         }
         awaiting_.remove(id);
-        completeEffectOnce(id, QVariantMap{{QStringLiteral("failed"),
+        const auto answered = completeEffectOnce(id, QVariantMap{{QStringLiteral("failed"),
             QVariantMap{{QStringLiteral("message"), reason}}}});
         if (!alive) return;
+        // A completion may mint further effects even when it is being told the
+        // effect failed. Dropping those would leave exactly the pending id this
+        // function exists to clear, so they are queued and drained here.
+        pending += answered.value(QStringLiteral("effects")).toList();
+    }
+
+    // Bounded: this runs from a guard that has already given up, so the job is
+    // to leave nothing pending, not to let the app keep going.
+    for (int round = 0; round < 8 && !pending.isEmpty(); ++round) {
+        const auto batch = pending;
+        pending.clear();
+        for (const auto &entry : batch) {
+            const auto effect = entry.toMap();
+            bool parsed = false;
+            const auto id = effect.value(QStringLiteral("id")).toULongLong(&parsed);
+            if (!parsed) continue;
+            if (effect.value(QStringLiteral("delivery")).toString().compare(
+                    QStringLiteral("await"), Qt::CaseInsensitive) != 0) {
+                continue;
+            }
+            awaiting_.remove(id);
+            const auto answered = completeEffectOnce(id, QVariantMap{{QStringLiteral("failed"),
+                QVariantMap{{QStringLiteral("message"), reason}}}});
+            if (!alive) return;
+            pending += answered.value(QStringLiteral("effects")).toList();
+        }
     }
 }
 

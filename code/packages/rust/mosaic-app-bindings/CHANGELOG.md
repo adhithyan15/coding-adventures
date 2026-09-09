@@ -54,7 +54,11 @@ on the emitted text:
   update -- and an `Update` carries only the effects produced by the call that
   returned it, so a completion that produced a further effect (the "import
   needing a second dialog" this code describes) had it dropped instead.
-  Effects now accumulate across a round rather than replacing one another.
+  Effects now accumulate **at the write site** rather than being read back from
+  a slot: `completeEffect` appends to the round's list, so N answers in one
+  round contribute N effect lists. Accumulating at the read site was a third
+  version of the same bug -- it survived one answer per round and dropped every
+  earlier answer's effects when a handler answered two.
 
   Both are permanent: the runtime gates `snapshot` **and** `restore` on nothing
   being pending, so one dropped effect disables persistence for the rest of the
@@ -87,8 +91,15 @@ stack frame -- a completion arriving on another thread would write into a live
 frame belonging to a different one.
 
 Both runaway guards -- the nesting bound and the round bound -- answer the
-effects they were handed before refusing. Giving up with awaited effects still
-pending swapped a crash for an app that can never snapshot again.
+effects they were handed before refusing, and drain what those answers mint in
+turn. Giving up with awaited effects still pending swapped a crash for an app
+that can never snapshot again. The error path out of the fail loop discharges
+what the round accumulated for the same reason.
+
+The thread refusal covers `handleEvent` and `restore` as well as
+`completeEffect`. Those two are `Q_INVOKABLE` and both install the frame
+pointers, so guarding only the completion left the hazard the guard exists for
+reachable through the other entry points.
 
 ### Added -- an execution acceptance for the emitted Qt host
 

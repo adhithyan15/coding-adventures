@@ -110,10 +110,16 @@ private:
     // completeEffect() from inside the emit, which produces a newer update than
     // the one settleEffects is holding. Without adopting it the caller gets a
     // stale map -- the app has moved on and the props say otherwise.
-    // Per-FRAME, not per-object: a nested settle must not consume the update an
-    // outer frame adopted. The pointers are saved and restored around each
-    // frame, so each level answers only its own handler's completion.
-    QVariantMap *reentrantSlot_ = nullptr;
+    // Per-FRAME, not per-object: a nested settle must not consume what an outer
+    // frame's handler answered. Saved and restored around each frame.
+    //
+    // Effects accumulate at the WRITE site rather than being read back from a
+    // single slot. A round can have several answers, and one slot holding "the
+    // last update" silently discarded every earlier one's new effects -- those
+    // ids then existed only in a map nobody kept, so they were never emitted,
+    // never failed, and pending forever.
+    QVariantList *carriedEffects_ = nullptr;
+    QVariantMap *latestAnswer_ = nullptr;
     bool *reentrantFlag_ = nullptr;
     int settling_ = 0;
     Create create_ = nullptr;
