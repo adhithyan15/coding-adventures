@@ -800,8 +800,9 @@ GF(256) multiplication in the RS encoder. It does **not** depend on MA02
 ## Future Extensions
 
 - **Decoder** — `ModuleGrid` decoding shipped in `MA04-qr-decoder.md`.
-  Locating a QR code within an arbitrary image remains future work
-  (separate spec, separate issue).
+  Locating a QR code within an arbitrary image remains future work,
+  reframed as a general computer-vision investment rather than a
+  QR-specific build — see `VIS00-vision-roadmap.md`.
 - **Mixed-mode encoding** — segment the input into numeric/alphanumeric/byte
   regions for maximum capacity
 - **ECI mode** — Explicit UTF-8 signal for scanners that default to Latin-1

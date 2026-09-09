@@ -351,8 +351,10 @@ assumed here.
   eventual goal) full perspective/rotation/lighting robustness for
   photographed rather than screenshotted codes. This is what turns
   `qr_decoder::decode(&ModuleGrid)` into an actual `import otpauth-qr
-  FILE` CLI ceremony — genuinely separate, larger, and open-ended work
-  tracked in its own issue.
+  FILE` CLI ceremony — genuinely separate, larger, and open-ended work,
+  tracked in its own issue (#14456) and reframed as a general
+  computer-vision investment (not a QR-specific build) in
+  `VIS00-vision-roadmap.md`.
 - **Full format-info/version-info error correction** (nearest-valid-
   codeword search) — §4.3.
 - **Kanji mode, ECI, structured append, mixed-mode segments** — none
