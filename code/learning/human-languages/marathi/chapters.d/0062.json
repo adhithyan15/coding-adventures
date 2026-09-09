@@ -1,0 +1,16 @@
+{
+  "chapter": 62,
+  "title": "Reading — Labels, a Message, and a First Paragraph",
+  "label": "ch:mr-pahila-paath",
+  "canDo": "I can read Marathi off a form, off a short message, and through a whole paragraph, without translating word by word.",
+  "payoff": {
+    "lesson": "MR-C62-pahila-paath",
+    "kind": "four-skill-function-map",
+    "summary": "Eighty-three words of Marathi in a row with no new word in them — the first time the track asks for a whole paragraph at once.",
+    "assesses": [
+      "MR-SKILL-CONNECTED-READING",
+      "MR-SKILL-READ-MESSAGE",
+      "MR-SKILL-READ-LABELS"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-PATH-065",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "MR-C62-labels",
+    "MR-C62-message",
+    "MR-C62-pahila-paath"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-078-READING"
+  ],
+  "after": []
+}

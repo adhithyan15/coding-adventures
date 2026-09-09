@@ -1,0 +1,11 @@
+{
+  "language": "marathi",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:8ab8e91e5b4c4481",
+  "lessonIds": [
+    "MR-C62-labels",
+    "MR-C62-message",
+    "MR-C62-pahila-paath"
+  ],
+  "tex": "marathi/book/chapters/ch62-reading-labels-and-a-paragraph.tex"
+}

@@ -94,7 +94,12 @@ it("pins Marathi lesson-content budgets", () =>
     // declared for it, because the lesson teaches a set rather than a new
     // meaning of a word, and pahilaa's adverbial second life is named on the
     // page and deliberately not declared as a sense the reader is drilled on.
-    lessons: 334,
+    //
+    // 334 -> 337: chapter 62, the reading rung -- six form labels, a six-line
+    // message, and an 83-word paragraph. It declares NO new word: every
+    // Devanagari token in all three was checked to occur in a lesson with a
+    // lower sequence number. The count moves because reading is its own skill.
+    lessons: 337,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -329,6 +334,8 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // Six lessons each: five words and the chapter's own retrieval payoff.
     ["60", 6],
     ["61", 6],
+    // chapter 62 — the reading rung: labels, a message, and an 83-word paragraph
+    ["62", 3],
   ]);
 });
 

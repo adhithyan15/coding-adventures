@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:18029aa3b4cbc334",
+  "lessonIds": [
+    "MR-C62-labels",
+    "MR-C62-message",
+    "MR-C62-pahila-paath"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch62.txt",
+  "json": "marathi/narration/ch62.json",
+  "textHash": "fnv1a64:5da4aafbd63ce874",
+  "jsonHash": "fnv1a64:3f74e3b22db3faf5",
+  "findings": []
+}
