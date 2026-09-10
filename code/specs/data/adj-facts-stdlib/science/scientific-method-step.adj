@@ -41,10 +41,10 @@
 % The seven named steps, as a little truth table (the page's own text for
 % each step, verbatim, alongside the atom this table gives it):
 %
-%     step      action                                    heading (verbatim, NASA Space Place)
+%     step      action                                    page text (verbatim, NASA Space Place)
 %     --------  ----------------------------------------  -----------------------------------------------------------------------------------------------------------------------------
 %     step_1    ask_a_question_or_state_a_hypothesis       "Ask a question or make a statement that you can test by an experiment. This statement is called a hypothesis."
-%     step_2    define_variables_and_controls              "Define the parts of your experiment that will change. These are called variables. Define the parts of your experiment that will not change. These are called controls."
+%     step_2    define_variables_and_controls              "Define the parts of your experiment that will change. These are called variables." AND "Define the parts of your experiment that will not change. These are called controls." (two spans, four <p> apart)
 %     step_3    research_what_is_already_known             "Find out what people have already said or written about the subject."
 %     step_4    design_the_experiment                      "Think of an experiment to test the hypothesis."
 %     step_5    do_the_experiment_and_record_the_data      "Now do the experiment and carefully record the data."
@@ -55,16 +55,30 @@
 % not two rows: the source page groups both definitions ("Define the parts
 % of your experiment that will change. These are called variables." AND
 % "Define the parts of your experiment that will not change. These are
-% called controls.") under the SINGLE heading "Step 2.", the same way it
-% groups each of the other six steps under their own single heading. Every
-% other step on the page states exactly one instruction under its heading;
-% only step 2 states two, back to back, under the one heading. Splitting
-% that heading into a "step_2a" (variables) and "step_2b" (controls) would
-% assert a numbering the source itself never gives — it never calls either
-% half "Step 2a" or "Step 2b" — so this table keeps the source's own
-% grouping instead of inventing a finer one, the same discipline
-% `engineering/engineering-design-step.adj` already established for its own
-% `steps_5_7` row.
+% called controls.") under the SINGLE label "Step 2.", the same way it
+% groups each of the other six steps under its own single label.
+% Splitting that label into a "step_2a" (variables) and "step_2b"
+% (controls) would assert a numbering the source itself never gives — the
+% fetched capture carries exactly seven "Step N." labels, "Step 1." through
+% "Step 7.", each a `<p><strong>` paragraph rather than an `<h*>` element
+% (the only headings in it are two `<h2>`s), and no "Step 2a"/"Step 2b"
+% sub-label appears anywhere in its 4,302 bytes — so this
+% table keeps the source's own grouping instead of inventing a finer one,
+% the same discipline `engineering/engineering-design-step.adj` already
+% established for its own `steps_5_7` row.
+%
+% TWO CLAIMS THAT USED TO STAND HERE WERE WRONG, corrected by #13934
+% installment 4o. The first said the two definitions sit "back to back":
+% they do not. Counting `<p>` elements from 1, pair A is contained whole in
+% #7 and pair B in #12 of 35, with FOUR between them ("For example:",
+% "Variable 1: ...", "Variable 2: ...", and an empty one) and 235 raw
+% characters between the close of A's `<p>` and the open of B's. They are
+% under one "Step 2." label; they are not adjacent.
+% The second said "every other step states exactly one instruction under
+% its heading". Counting every `<p>` under each label except the label
+% itself, EMPTIES INCLUDED — the same rule as the FOUR above — the counts
+% are 4, 9, 1, 9, 1, 2, 2. "Instruction" is a judgement rather than
+% something countable, and the argument above does not need it.
 %
 % Provenance: quoted verbatim from NASA Space Place's "Steps in Scientific
 % Method" page (a NASA Science education resource for students, published
@@ -87,6 +101,49 @@
 % ABSTAINS rather than inventing a step. That honest-abstention property,
 % plus the `step_2` grouping decision above, is what makes this table safe
 % to reason from.
+%
+% ----------------------------------------------------------------------------
+% Measured against the page's bytes (#13934 installment 4o):
+%
+%   The step_2 `cites` used to hold FOUR sentences as one quotation. That
+%   166-character string occurs ZERO times on the page under either
+%   extractor. It is now two `cites` under the same locator, one per
+%   contained span, and the truth-table row above joins them with an
+%   explicit AND rather than presenting the weld as one verbatim quote.
+%
+%   BOTH ARE NEEDED, and the reason is worth stating precisely because the
+%   atom is a CONJUNCTION. `define_variables_and_controls` names two things.
+%   The first `cites` states the variables half and the second states the
+%   controls half; NEITHER ALONE STATES THE WHOLE ATOM, and together they do.
+%   Both sit in the citation envelope, so an answer carries the sentences
+%   that establish it — which is the condition #14758 is about.
+%
+%   THE FETCHED CAPTURE IS A CONTENT FRAGMENT: 4,302 bytes beginning at an
+%   `<h2>` and containing no `<html>`, `<head>`, `<title>`, `<body>` or
+%   doctype. That is a property of what the fetch returned, not a claim
+%   about what the site serves. It does mean a control built on the page
+%   title could not have been run against these bytes at all, and that
+%   every count below is scoped to them.
+%
+%   ONE INSTRUMENT NOTE, as a count with its scope rather than a rule
+%   (#14752). The census: every `<p>` in the capture, each tag replaced by
+%   NOTHING rather than by a space -- that choice inverts the result, since
+%   replacing tags with a space gives block 41 and crude 43 -- entities
+%   decoded, whitespace runs collapsed, split before a capital that follows a
+%   period, question or exclamation mark, keeping pieces of 25 to 200
+%   characters that contain a space, de-duplicated. That yields 43 body
+%   sentences. An extractor breaking only on BLOCK elements found 43 and the
+%   crude every-tag-is-a-break one found 41; both found 0 of the 43 negative
+%   controls (the same sentences with one word swapped). The two the crude
+%   extractor missed are "These are called variables." and "These are called
+%   controls." — the page writes `called <strong>variables</strong>.`, so
+%   those two also have a RAW count of zero. Both are 1 under the block
+%   extractor. A reading that used only the crude one would have called two
+%   real sentences missing.
+%
+%   The `source` was measured too and needed no repair: contained whole in
+%   one `<p>`, 1 occurrence under the block extractor, 0 in the raw bytes
+%   for the same `<strong>` reason.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -106,7 +163,8 @@ table scientific_method_step {
     locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
     trust authoritative
 
-    cites "Define the parts of your experiment that will change. These are called variables. Define the parts of your experiment that will not change. These are called controls." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
+    cites "Define the parts of your experiment that will change. These are called variables." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
+    cites "Define the parts of your experiment that will not change. These are called controls." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
     cites "Find out what people have already said or written about the subject." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
     cites "Think of an experiment to test the hypothesis." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
     cites "Now do the experiment and carefully record the data." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
