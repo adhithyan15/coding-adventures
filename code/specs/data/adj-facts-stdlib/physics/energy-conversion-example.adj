@@ -146,7 +146,6 @@
 % Measured against the pages' bytes (#13934 installment 4n):
 %
 %   The two "Forms of energy" sentences are SEPARATE SPANS. Each occurs once
-%   and each ENDS its own paragraph -- the first tag after either is `</p>` --
 %   and they sit 606 raw characters apart, six block-element tags between
 %   them, 471 characters apart in the collapsed rendered text, with the
 %   paragraphs on mechanical and nuclear energy in between. Until 4n a single
@@ -156,6 +155,23 @@
 %   each under the same locator, and both are needed: S1 states chemical ->
 %   thermal for burning wood in a fireplace, S2 states gravitational ->
 %   motion for the bicycle. Each says its row outright; neither is inferred.
+%
+%   WHERE EACH SITS IN ITS PARAGRAPH, corrected by #13934 installment 4o.
+%   S1 ENDS its paragraph: one space, then `</p>`. S2 DOES NOT -- 143
+%   characters of prose follow it inside the same `<p>` (a Hydropower
+%   sentence), and two sentences precede it there. 4n said BOTH end their
+%   paragraphs, on the evidence that "the first tag after either is `</p>`".
+%   That is true of both and proves neither: prose is not a tag, so the check
+%   cannot see those 143 characters. Run over the whole page it returns
+%   `</p>` for EVERY sentence of EVERY `<p>` on the page that it can be run
+%   on at all -- that is, every one the raw HTML contains verbatim. Why the
+%   rest are not verbatim is NOT claimed here: inline tags account for most,
+%   but at least one is a doubled space and two are HTML entities. Absolute
+%   counts are not quoted either, because two implementations of one written
+%   census disagreed by one. The two spans are
+%   still non-adjacent and the weld still occurs zero times, so what 4n
+%   shipped stands; only its description of where each sentence sat was
+%   wrong.
 %
 %   The "Laws of energy" `source` was measured too and needed no repair: 179
 %   characters, one occurrence BYTE-EXACT in the raw HTML, inside a single

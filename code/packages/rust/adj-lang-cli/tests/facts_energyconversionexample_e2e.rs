@@ -109,7 +109,7 @@ fn energy_conversion_example_recall_binds_the_conversion_directly() {
             "\"source\":\"A car engine burns gasoline, converting the chemical energy in gasoline into mechanical energy. Solar photovoltaic cells change radiant energy from the sun into electrical energy.\",\"locator\":\"https://www.eia.gov/energyexplained/what-is-energy/laws-of-energy.php\",\"trust\":\"authoritative\",\"corroborations\":[{\"source\":\"For example, chemical energy is converted to thermal energy when people burn wood in a fireplace or burn gasoline in a car's engine.\",\"locator\":\"https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php\"},{\"source\":\"When a person rides a bicycle down a steep hill and picks up speed, the gravitational energy is converting to motion energy.\",\"locator\":\"https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php\"}]"
         ),
         "carries the U.S. EIA citation with exactly these two corroborations, in this \
-         order, and nothing appended after the corroborations `]`: {out}"
+         order, with the corroborations `]` closing the set: {out}"
     );
 }
 
