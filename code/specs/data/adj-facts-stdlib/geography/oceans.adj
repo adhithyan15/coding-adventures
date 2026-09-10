@@ -17,16 +17,54 @@
 % composes into arithmetic (how many basins sit between the Pacific and the
 % Southern Ocean? 4 − 1 − 1 = 2).
 %
-% Provenance: NOAA's National Ocean Service states the full size ordering in
-% prose — "The Pacific Ocean is the largest and deepest of the world ocean
-% basins. The Atlantic basin is the second largest basin, followed by the Indian
-% Ocean basin, the Southern Ocean, and finally the Arctic Ocean basin." That one
-% span fixes all five ranks: pacific 1, atlantic 2, indian 3, southern 4,
-% arctic 5. The citable artifact is NOAA's "What is the largest ocean basin on
-% Earth?" page at the `locator`. `trust authoritative` — NOAA is the primary
-% U.S. federal ocean authority (a .gov source). Nothing here is asserted from
-% memory. The set of oceans is the five that the U.S. (NOAA) recognizes today,
-% including the Southern (Antarctic) Ocean. (See ../README.md;
+% Provenance: NOAA's National Ocean Service gives the size ordering in TWO
+% SENTENCES, not one, and this file used to present them welded into a single
+% quotation. They are 805 characters apart on the page, separated by an image
+% caption about the Pacific's "Ring of Fire" and other prose, so the welded
+% string occurs nowhere. The `source` is now the first alone and the second is a
+% `cites` under the same locator. Together they still fix all five ranks:
+% pacific 1, atlantic 2, indian 3, southern 4, arctic 5.
+%
+% The two are different KINDS of span, which is worth knowing before quoting
+% either. THE FIRST IS THE PAGE'S `<h2>` SUBHEADER — the one-line answer to
+% the page's own title question, "What is the largest ocean basin on Earth?"
+% — with `<span>` around "Pacific Ocean" for emphasis, so in the raw HTML it
+% is byte-exact only inside the two `<meta>` description attributes; the body
+% copy is broken by that span. The citable artifact is that NOAA page at the
+% `locator`.
+%
+% THE SECOND IS A `<p>`, and it is not byte-exact in the raw HTML either: the
+% QUOTED SENTENCE carries two DOUBLE-SPACE runs. Marked with a visible glyph
+% here because a comment re-wrap collapses whitespace and would silently
+% destroy the very evidence this sentence exhibits — which it already did
+% once:
+%
+%     followed by␣␣the Indian Ocean basin
+%     the Arctic Ocean␣␣basin.
+%
+% (␣ marks a literal space.) So the second sentence is verbatim under
+% whitespace collapsing, not byte-exact — which is what the shipped value was
+% already doing silently and is now said out loud.
+%
+% Both extractors agree on both sentences, so the instrument defect in #14752
+% does not bite here. The reason is specific to this page and is worth one
+% line: the `<span>` boundary in the `<h2>` falls where a space already sat
+% (`The <span>Pacific Ocean</span> is`), so the break a tag-stripping extractor
+% injects collapses into that space and changes nothing.
+%
+% NO GENERAL RULE about when that extractor fails is asserted here. Two
+% attempts at one were made and both were wrong — "only when the boundary
+% abuts punctuation" is falsified by `generally&nbsp;t</span>hick` on the
+% cloud-types page, and "whenever the boundary is not adjacent to whitespace"
+% is falsified by `Service.<br>Stewardship.` on THIS page, where `<br>` is a
+% real break and the injected space is correct. #14752 is where that question
+% lives; this file does not need it.
+%
+% `trust authoritative` — NOAA is the primary U.S. federal ocean authority (a
+% .gov source). Nothing here is asserted from memory. The set of oceans is the
+% five that the U.S. (NOAA) recognizes today, including the Southern
+% (Antarctic) Ocean.
+% (See ../README.md;
 % feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
@@ -39,7 +77,8 @@ table ocean_size_rank {
     row (southern, 4)
     row (arctic, 5)
 
-    source "The Pacific Ocean is the largest and deepest of the world ocean basins. The Atlantic basin is the second largest basin, followed by the Indian Ocean basin, the Southern Ocean, and finally the Arctic Ocean basin."
+    source "The Pacific Ocean is the largest and deepest of the world ocean basins."
     locator "https://oceanservice.noaa.gov/facts/biggestocean.html"
+    cites "The Atlantic basin is the second largest basin, followed by the Indian Ocean basin, the Southern Ocean, and finally the Arctic Ocean basin." locator "https://oceanservice.noaa.gov/facts/biggestocean.html"
     trust authoritative
 }
