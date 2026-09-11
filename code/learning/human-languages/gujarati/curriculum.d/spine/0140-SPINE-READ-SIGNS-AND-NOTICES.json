@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "CONNECTED-READING"
+  "segments": [
+    "GU-PATH-039"
   ],
+  "omits": [],
   "relocates": {}
 }

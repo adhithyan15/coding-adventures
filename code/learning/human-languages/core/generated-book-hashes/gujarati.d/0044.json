@@ -1,0 +1,11 @@
+{
+  "language": "gujarati",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:ebead3cbcf3714b4",
+  "lessonIds": [
+    "GU-C44-words",
+    "GU-C44-lines",
+    "GU-C44-pehli-vanchan"
+  ],
+  "tex": "gujarati/book/chapters/ch44-reading-words-lines-and-a-meeting.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "GU-PATH-039",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "GU-C44-words",
+    "GU-C44-lines",
+    "GU-C44-pehli-vanchan"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-051-READING"
+  ],
+  "after": []
+}
