@@ -15,6 +15,41 @@ Spec: `code/specs/UI58-hostinput-disabled.md` (#14786). Landed on all eight
 backends in one change — a partly-landed prop would make a disabled input
 *less* restricted on whichever backend lagged.
 
+### Fixed — every host control applies authored part styles (#14780)
+
+`host_button_style_qml_lines` read a part's styles and had exactly one caller.
+The other five host primitives never looked at `ctx.part_styles`, so authored
+padding, background and opacity were **silently dropped** on every checkbox,
+radio, text input, slider and number input.
+
+Qt alone. The same probe on react, SwiftUI and XAML styles all of them, so this
+was neither a platform limit nor a Mosaic-wide decision:
+
+| Primitive | before | after |
+| --- | :-: | :-: |
+| `HostButton` | styled | styled |
+| `HostCheckbox` | dropped | styled |
+| `HostRadio` | dropped | styled |
+| `HostInput` | dropped | styled |
+| `HostSlider` | dropped | padding only, deliberately |
+| `HostNumberInput` | dropped | styled |
+
+The builder is now `host_control_style_qml_lines`, taking a small
+`QmlControlStyle` describing what a given control can express. Qt Quick
+Controls do not share one surface: a `CheckBox` labels through
+`palette.windowText` rather than `palette.buttonText`, and a `Slider` renders no
+text at all. Emitting the wrong property would be inert rather than visibly
+wrong, which is harder to notice.
+
+A `Slider` keeps its groove. Its `background` **is** the groove, so replacing it
+with a filled rectangle would delete the control's visual rather than decorate
+it — padding still applies, since that is an ordinary `Control` property.
+
+The visible consequence was the toolkit's disabled treatment (#14774):
+`Checkbox`, `Radio`, `Input`, `NumberInput` and `Select` all declare
+`state disabled { opacity : … }` and none of them dimmed on Qt. Qt Quick
+Controls paint their own disabled state, so nothing looked broken — which is
+why it went unnoticed.
 ### Fixed — host controls honour `opacity` (#14775)
 
 #14741 added `opacity` to Qt's three `Rectangle` paint builders. Host controls

@@ -3809,6 +3809,13 @@ fn emit_text_input_qml(
     };
     writeln!(out, "{pad}{control_tag} {{").unwrap();
 
+    // Authored part styles. Without this the control read none at all, so
+    // padding, background and opacity were dropped on Qt while every other
+    // backend applied them (#14780).
+    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::TEXT_ENTRY) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+
     if let Some(part) = node.part_name.as_deref() {
         writeln!(
             out,
@@ -3838,6 +3845,7 @@ fn emit_text_input_qml(
     if let Some(line) = build_read_only_attribute(node) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
+
     // UI58 — a DIFFERENT affordance from `read-only`: a read-only field takes
     // keyboard focus and announces as editable-but-read-only; a disabled one
     // is skipped by focus and announces as unavailable (#14772).
@@ -3931,12 +3939,62 @@ fn emit_text_input_qml(
     Ok(out)
 }
 
-/// Lower a styled Mosaic button part into QML `Button` property lines.
+/// Which of a control's QML properties an authored part style can reach.
 ///
-/// This mirrors the conservative native-button subset used by the other
-/// backends: padding, foreground colour, background, border, and radius.
-/// Values pass through the same hex/pixel validators used by styled cells.
-fn host_button_style_qml_lines(node: &LayoutNode, ctx: &EmitCtx) -> Vec<String> {
+/// Qt Quick Controls do not share one surface: a `CheckBox` has no
+/// `palette.buttonText`, a `Slider` renders no text at all, and a `Slider`'s
+/// `background` is its GROOVE rather than a plain surface behind it, so
+/// replacing that with a filled rectangle would delete the control's own
+/// visual instead of decorating it.
+///
+/// Padding and opacity are `Control`/`Item` properties and apply to every one.
+#[derive(Debug, Clone, Copy)]
+struct QmlControlStyle {
+    /// The QML property carrying the control's text colour, when it has text.
+    text_color: Option<&'static str>,
+    /// Whether `font.*` applies.
+    font: bool,
+    /// Whether `background:` is a plain surface this may replace.
+    background: bool,
+}
+
+impl QmlControlStyle {
+    const BUTTON: Self = Self {
+        text_color: Some("palette.buttonText"),
+        font: true,
+        background: true,
+    };
+    /// `CheckBox` and `RadioButton` label through `palette.windowText`.
+    const CHECKABLE: Self = Self {
+        text_color: Some("palette.windowText"),
+        font: true,
+        background: true,
+    };
+    /// `TextField` and `SpinBox` expose the editor colour as `color`.
+    const TEXT_ENTRY: Self = Self {
+        text_color: Some("color"),
+        font: true,
+        background: true,
+    };
+    /// A `Slider` has no text, and its `background` is the groove.
+    const SLIDER: Self = Self {
+        text_color: None,
+        font: false,
+        background: false,
+    };
+}
+
+/// Lower a styled Mosaic control part into QML property lines.
+///
+/// Previously this was button-only, and five other host primitives read no
+/// part styles at all -- so authored padding, background and opacity were
+/// silently dropped on every checkbox, radio, text input, slider and number
+/// input, on Qt alone (#14780). React, SwiftUI and XAML all style them.
+fn host_control_style_qml_lines(
+    node: &LayoutNode,
+    ctx: &EmitCtx,
+    caps: QmlControlStyle,
+) -> Vec<String> {
     let Some(part) = node.part_name.as_deref() else {
         return Vec::new();
     };
@@ -3953,13 +4011,18 @@ fn host_button_style_qml_lines(node: &LayoutNode, ctx: &EmitCtx) -> Vec<String> 
         lines.push(format!("topPadding: {padding}"));
         lines.push(format!("bottomPadding: {padding}"));
     }
-    let foreground = style_prop(base, "color").and_then(qml_hex_color_or_none);
-    if let Some(foreground) = conditional_color_expr(foreground, &state_layers, &["color"], "black")
-    {
-        lines.push(format!("palette.buttonText: {foreground}"));
+    if let Some(property) = caps.text_color {
+        let foreground = style_prop(base, "color").and_then(qml_hex_color_or_none);
+        if let Some(foreground) =
+            conditional_color_expr(foreground, &state_layers, &["color"], "black")
+        {
+            lines.push(format!("{property}: {foreground}"));
+        }
     }
-    if let Some(is_bold) = style_prop(base, "font-weight").and_then(qml_font_weight_is_bold) {
-        lines.push(format!("font.bold: {is_bold}"));
+    if caps.font {
+        if let Some(is_bold) = style_prop(base, "font-weight").and_then(qml_font_weight_is_bold) {
+            lines.push(format!("font.bold: {is_bold}"));
+        }
     }
     // `opacity` on the CONTROL, not on its background Rectangle: it is an Item
     // property, so putting it here composites the control, its text and its
@@ -3993,7 +4056,11 @@ fn host_button_style_qml_lines(node: &LayoutNode, ctx: &EmitCtx) -> Vec<String> 
     );
     let border_width = style_prop(base, "border-width").and_then(qml_px_or_none);
     let radius = style_prop(base, "border-radius").and_then(qml_px_or_none);
-    if background.is_some() || border_color.is_some() || border_width.is_some() || radius.is_some()
+    if caps.background
+        && (background.is_some()
+            || border_color.is_some()
+            || border_width.is_some()
+            || radius.is_some())
     {
         lines.push("background: Rectangle {".to_string());
         if let Some(background) = background {
@@ -4101,7 +4168,7 @@ fn emit_host_button_qml(
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
-    for line in host_button_style_qml_lines(node, ctx) {
+    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::BUTTON) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
@@ -4318,6 +4385,13 @@ fn emit_host_checkbox_qml(
     let mut out = String::new();
     writeln!(out, "{pad}CheckBox {{").unwrap();
 
+    // Authored part styles. Without this the control read none at all, so
+    // padding, background and opacity were dropped on Qt while every other
+    // backend applied them (#14780).
+    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::CHECKABLE) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+
     // text: <label> — same builder as HostButton's label attr.
     if let Some(line) = build_label_attribute(node) {
         writeln!(out, "{inner_pad}{line}").unwrap();
@@ -4455,6 +4529,13 @@ fn emit_host_radio_qml(
 
     writeln!(out, "{pad}RadioButton {{").unwrap();
 
+    // Authored part styles. Without this the control read none at all, so
+    // padding, background and opacity were dropped on Qt while every other
+    // backend applied them (#14780).
+    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::CHECKABLE) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+
     // ButtonGroup.group: <id> — real exclusivity for a shared literal
     // group with 2+ members (#13007).
     if let Some(id) = button_group_id {
@@ -4535,6 +4616,13 @@ fn emit_host_slider_qml(
 
     let mut out = String::new();
     writeln!(out, "{pad}MosaicControls.Slider {{").unwrap();
+
+    // Authored part styles. Without this the control read none at all, so
+    // padding, background and opacity were dropped on Qt while every other
+    // backend applied them (#14780).
+    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::SLIDER) {
+        writeln!(out, "{inner}{line}").unwrap();
+    }
     writeln!(out, "{inner}value: {}", number_expr("value", "0")?).unwrap();
     writeln!(out, "{inner}from: {}", number_expr("min", "0")?).unwrap();
     writeln!(out, "{inner}to: {}", number_expr("max", "100")?).unwrap();
@@ -5034,6 +5122,13 @@ fn emit_host_number_input_qml(
     let validator_inner = "    ".repeat(depth + 2);
     let mut out = String::new();
     writeln!(out, "{pad}TextField {{").unwrap();
+
+    // Authored part styles. Without this the control read none at all, so
+    // padding, background and opacity were dropped on Qt while every other
+    // backend applied them (#14780).
+    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::TEXT_ENTRY) {
+        writeln!(out, "{inner}{line}").unwrap();
+    }
 
     // value:
     if let Some(slot) = find_slot_ref_prop(node, "value") {
@@ -14357,6 +14452,119 @@ mod tests {
         assert!(opacity_at < background_at, "got:\n{out}");
     }
 
+    // ---- host controls read part styles (#14780) ---------------------
+
+    fn styled_host(tag: &str, props: Vec<LayoutProp>) -> String {
+        let c = component(
+            "P",
+            vec![
+                slot("label", SlotType::Text, true),
+                slot("value", SlotType::Text, false),
+                slot("num", SlotType::Number, false),
+                slot("on", SlotType::Bool, false),
+            ],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "P".to_string(),
+            root: LayoutNode {
+                tag: tag.to_string(),
+                part_name: Some("ctl".to_string()),
+                props,
+                children: Vec::new(),
+            },
+        };
+        let s = StyleDef {
+            component_name: "P".to_string(),
+            parts: vec![PartStyle {
+                name: "ctl".to_string(),
+                base: vec![
+                    StyleProp {
+                        name: "padding".to_string(),
+                        value: "37".to_string(),
+                    },
+                    StyleProp {
+                        name: "background".to_string(),
+                        value: "#abcdef".to_string(),
+                    },
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        from_pipeline(&c, &l, &s).expect("emit ok").output
+    }
+
+    fn slot_prop(name: &str, slot_name: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::SlotRef(slot_name.to_string()),
+        }
+    }
+
+    #[test]
+    fn every_host_control_applies_authored_padding() {
+        // Before this, only HostButton read part styles: authored padding,
+        // background and opacity were silently dropped on five other host
+        // primitives, on Qt alone. React, SwiftUI and XAML style them all.
+        for (tag, props) in [
+            ("HostButton", vec![slot_prop("label", "label")]),
+            ("HostCheckbox", vec![slot_prop("checked", "on")]),
+            ("HostRadio", vec![slot_prop("checked", "on")]),
+            ("HostInput", vec![slot_prop("value", "value")]),
+            ("HostSlider", vec![slot_prop("value", "num")]),
+            ("HostNumberInput", vec![slot_prop("value", "num")]),
+        ] {
+            let out = styled_host(tag, props);
+            assert!(
+                out.contains("Padding: 37"),
+                "{tag} dropped authored padding, got:\n{out}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_slider_keeps_its_groove() {
+        // A Slider's `background` IS its groove. Replacing it with a filled
+        // rectangle would delete the control's own visual rather than
+        // decorate it, so background is deliberately not applied there --
+        // unlike padding, which is an ordinary Control property.
+        let out = styled_host("HostSlider", vec![slot_prop("value", "num")]);
+        assert!(out.contains("Padding: 37"), "got:\n{out}");
+        assert!(!out.to_lowercase().contains("abcdef"), "got:\n{out}");
+    }
+
+    #[test]
+    fn a_checkable_control_uses_its_own_text_colour_property() {
+        // `palette.buttonText` is a Button property; a CheckBox labels
+        // through `palette.windowText`. Emitting the button one here would
+        // be inert rather than wrong-looking, which is worse.
+        let c = component("P", vec![slot("on", SlotType::Bool, false)], vec![]);
+        let l = LayoutDef {
+            component_name: "P".to_string(),
+            root: LayoutNode {
+                tag: "HostCheckbox".to_string(),
+                part_name: Some("ctl".to_string()),
+                props: vec![slot_prop("checked", "on")],
+                children: Vec::new(),
+            },
+        };
+        let s = StyleDef {
+            component_name: "P".to_string(),
+            parts: vec![PartStyle {
+                name: "ctl".to_string(),
+                base: vec![StyleProp {
+                    name: "color".to_string(),
+                    value: "#123456".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&c, &l, &s).expect("emit ok").output;
+        assert!(out.contains("palette.windowText:"), "got:\n{out}");
+        assert!(!out.contains("palette.buttonText:"), "got:\n{out}");
+    }
 
     // -------- Test: HostInput `disabled` --------
 
