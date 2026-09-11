@@ -5,6 +5,39 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — `text-align` on a Row or Column emitted Kotlin that did not compile (#14839)
+
+`contentAlignment` was applied from `text-align` with no check on which
+composable was being emitted, so a `Row` part with `text-align: center`
+produced `Row(contentAlignment = Alignment.Center)`. `contentAlignment` is a
+**`Box`-only** parameter; `gradle compileKotlin` rejects it with
+*"No parameter with name 'contentAlignment' found."*
+
+Latent rather than absent: every shipped package authors `text-align` only on
+a `Box`, where the argument is valid, so CI was green. Emitted output for all
+five products is unchanged by this — VisiCalc's two `contentAlignment` uses are
+both Boxes and stay exactly as they were.
+
+`arrangement_argument` is replaced by `container_alignment_arguments`, which
+owns both `text-align` and `gap` for a reason: on a `Row` they both want
+`horizontalArrangement`, and emitting it twice is a duplicate named argument
+that also does not compile. Compose's two-argument
+`Arrangement.spacedBy(space, alignment)` is the resolution — reachable only if
+one place decides both.
+
+| composable | `text-align` | `gap` |
+| --- | --- | --- |
+| `Box` | `contentAlignment` (unchanged) | dropped — a Box stacks, so a gap is meaningless there |
+| `Column` | `horizontalAlignment` | `verticalArrangement` — different axes |
+| `Row` | `horizontalArrangement = Arrangement.Start/Center/End` | folded into `spacedBy(gap, alignment)` |
+
+Each row of that table was checked against `gradle compileKotlin` on a
+generated project before being written down.
+
+This is the first step of UI60 (#14828): swapping `Box` to a flow container
+makes every existing `contentAlignment` invalid, so the mapping has to exist
+before the swap can happen.
+
 ### Changed — the drop reason for `justify-content`/`align-items`/`align` (#14811)
 
 These three shared a match arm with `display`/`flex-direction`/`flex-wrap`,

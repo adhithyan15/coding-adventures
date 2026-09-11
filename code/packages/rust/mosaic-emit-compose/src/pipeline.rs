@@ -1280,19 +1280,88 @@ fn compose_font_weight(value: &str) -> Option<String> {
     };
     Some(format!("FontWeight.{named}"))
 }
-/// The `Arrangement.spacedBy` argument for an authored `gap`, or `None` where
-/// the composable has no arrangement to give it (#14804).
+/// The named arguments an authored `text-align` and `gap` become, for the
+/// composable actually being emitted (#14804, #14839).
 ///
-/// `Box` stacks its children and has no arrangement at all -- a gap there is
-/// meaningless rather than merely unsupported, so it is dropped deliberately.
-fn arrangement_argument(composable: &str, gap: Option<&str>) -> Option<String> {
-    let gap = gap?;
-    let axis = match composable {
-        "Column" => "verticalArrangement",
-        "Row" => "horizontalArrangement",
-        _ => return None,
-    };
-    Some(format!("{axis} = Arrangement.spacedBy({gap}.dp)"))
+/// This is one function rather than two because on a `Row` the two properties
+/// COLLIDE: both want `horizontalArrangement`, and emitting it twice is a
+/// duplicate named argument that does not compile. Compose's own answer is the
+/// two-argument `Arrangement.spacedBy(space, alignment)`, so the collision has
+/// a real resolution rather than a precedence rule -- but only if one place
+/// decides both. Split across two functions, neither could see the other.
+///
+/// | composable | `text-align` | `gap` |
+/// |------------|--------------|-------|
+/// | `Box`      | `contentAlignment = Alignment.CenterStart/Center/CenterEnd` | dropped -- a Box stacks its children and has no arrangement, so a gap there is meaningless rather than unsupported |
+/// | `Column`   | `horizontalAlignment = Alignment.Start/CenterHorizontally/End` | `verticalArrangement` -- different axes, no collision |
+/// | `Row`      | `horizontalArrangement = Arrangement.Start/Center/End` | `horizontalArrangement` -- SAME axis, folded together |
+///
+/// Before #14839 `contentAlignment` was emitted whatever the composable was,
+/// so `text-align` on a `Row` produced `Row(contentAlignment = ..)` --
+/// `contentAlignment` is Box-only and the Kotlin did not compile. Nothing
+/// caught it because no shipped package authors `text-align` on a Row; it was
+/// latent rather than absent.
+fn container_alignment_arguments(
+    composable: &str,
+    align: Option<&str>,
+    gap: Option<&str>,
+) -> Vec<String> {
+    let mut out = Vec::new();
+    match composable {
+        "Box" => {
+            if let Some(a) = align {
+                let v = match a {
+                    "start" => "Alignment.CenterStart",
+                    "center" => "Alignment.Center",
+                    _ => "Alignment.CenterEnd",
+                };
+                out.push(format!("contentAlignment = {v}"));
+            }
+        }
+        "Column" => {
+            if let Some(a) = align {
+                let v = match a {
+                    "start" => "Alignment.Start",
+                    "center" => "Alignment.CenterHorizontally",
+                    _ => "Alignment.End",
+                };
+                out.push(format!("horizontalAlignment = {v}"));
+            }
+            if let Some(gap) = gap {
+                out.push(format!(
+                    "verticalArrangement = Arrangement.spacedBy({gap}.dp)"
+                ));
+            }
+        }
+        "Row" => match (align, gap) {
+            (Some(a), Some(gap)) => {
+                let v = match a {
+                    "start" => "Alignment.Start",
+                    "center" => "Alignment.CenterHorizontally",
+                    _ => "Alignment.End",
+                };
+                out.push(format!(
+                    "horizontalArrangement = Arrangement.spacedBy({gap}.dp, {v})"
+                ));
+            }
+            (Some(a), None) => {
+                let v = match a {
+                    "start" => "Arrangement.Start",
+                    "center" => "Arrangement.Center",
+                    _ => "Arrangement.End",
+                };
+                out.push(format!("horizontalArrangement = {v}"));
+            }
+            (None, Some(gap)) => {
+                out.push(format!(
+                    "horizontalArrangement = Arrangement.spacedBy({gap}.dp)"
+                ));
+            }
+            (None, None) => {}
+        },
+        _ => {}
+    }
+    out
 }
 
 /// One authored style property that Compose lowering discards.
@@ -2941,11 +3010,16 @@ fn compose_box_style(
         }
     }
 
+    /// The normalised `text-align` keyword -- `start`, `center` or `end`.
+    ///
+    /// Deliberately NOT the rendered Compose argument. Which argument it
+    /// becomes depends on the composable, which this function cannot see
+    /// (#14839); rendering happens in `container_alignment_arguments`.
     fn content_alignment(v: &str) -> Option<&'static str> {
         match v.trim() {
-            "left" | "start" => Some("Alignment.CenterStart"),
-            "center" => Some("Alignment.Center"),
-            "right" | "end" => Some("Alignment.CenterEnd"),
+            "left" | "start" => Some("start"),
+            "center" => Some("center"),
+            "right" | "end" => Some("end"),
             _ => None,
         }
     }
@@ -4042,11 +4116,10 @@ fn emit_container_frame(
             write!(opener, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
         }
         writeln!(opener, ",").unwrap();
-        if let Some(a) = &content_alignment {
-            writeln!(opener, "{modifier_pad}contentAlignment = {a},").unwrap();
-        }
-        if let Some(arrangement) = arrangement_argument(composable, gap.as_deref()) {
-            writeln!(opener, "{modifier_pad}{arrangement},").unwrap();
+        for argument in
+            container_alignment_arguments(composable, content_alignment.as_deref(), gap.as_deref())
+        {
+            writeln!(opener, "{modifier_pad}{argument},").unwrap();
         }
         if node.children.is_empty() {
             writeln!(opener, "{pad}) {{ }}").unwrap();
@@ -4343,11 +4416,10 @@ fn emit_container(
             write!(out, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
         }
         writeln!(out, ",").unwrap();
-        if let Some(a) = &content_alignment {
-            writeln!(out, "{modifier_pad}contentAlignment = {a},").unwrap();
-        }
-        if let Some(arrangement) = arrangement_argument(composable, gap.as_deref()) {
-            writeln!(out, "{modifier_pad}{arrangement},").unwrap();
+        for argument in
+            container_alignment_arguments(composable, content_alignment.as_deref(), gap.as_deref())
+        {
+            writeln!(out, "{modifier_pad}{argument},").unwrap();
         }
         if node.children.is_empty() {
             writeln!(out, "{pad}) {{ }}").unwrap();
@@ -9753,6 +9825,91 @@ mod tests {
             ),
             "expected folded state background, got:\n{out}"
         );
+    }
+
+    // ===================================================================
+    // text-align per composable -- #14839.
+    //
+    // These test `container_alignment_arguments` directly rather than
+    // through a whole emit. The unit under test is a mapping from
+    // (composable, align, gap) to named arguments, and the thing that was
+    // wrong was the MAPPING, not the plumbing -- a full-emit assertion
+    // would have passed just as happily on `Row(contentAlignment = ..)`,
+    // which is what shipped.
+    //
+    // Every expectation here was checked against `gradle compileKotlin` on a
+    // generated project before being written down. `contentAlignment` on a
+    // Row analysed fine to the eye and only kotlinc rejected it.
+    // ===================================================================
+
+    #[test]
+    fn box_keeps_content_alignment() {
+        assert_eq!(
+            container_alignment_arguments("Box", Some("center"), None),
+            vec!["contentAlignment = Alignment.Center"]
+        );
+        assert_eq!(
+            container_alignment_arguments("Box", Some("start"), None),
+            vec!["contentAlignment = Alignment.CenterStart"]
+        );
+        assert_eq!(
+            container_alignment_arguments("Box", Some("end"), None),
+            vec!["contentAlignment = Alignment.CenterEnd"]
+        );
+    }
+
+    #[test]
+    fn a_box_drops_gap_rather_than_arranging_it() {
+        // A Box stacks its children, so a gap is meaningless there rather
+        // than unsupported -- and `Arrangement` is not a Box argument at all.
+        assert!(container_alignment_arguments("Box", None, Some("12")).is_empty());
+    }
+
+    #[test]
+    fn row_text_align_is_an_arrangement_not_content_alignment() {
+        // The #14839 regression in one line: `contentAlignment` is Box-only,
+        // and `Row(contentAlignment = ..)` does not compile.
+        let args = container_alignment_arguments("Row", Some("center"), None);
+        assert_eq!(args, vec!["horizontalArrangement = Arrangement.Center"]);
+        assert!(
+            !args.iter().any(|a| a.contains("contentAlignment")),
+            "got: {args:?}"
+        );
+    }
+
+    #[test]
+    fn row_folds_gap_and_text_align_into_one_argument() {
+        // Both want `horizontalArrangement`. Emitting it twice is a duplicate
+        // named argument and also does not compile, so the two-argument
+        // `spacedBy` form is the resolution rather than a precedence rule.
+        let args = container_alignment_arguments("Row", Some("center"), Some("12"));
+        assert_eq!(
+            args,
+            vec!["horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)"]
+        );
+        assert_eq!(args.len(), 1, "one argument, not two: {args:?}");
+    }
+
+    #[test]
+    fn column_alignment_and_gap_are_different_axes() {
+        // Unlike a Row these do not collide, so both are emitted.
+        assert_eq!(
+            container_alignment_arguments("Column", Some("center"), Some("8")),
+            vec![
+                "horizontalAlignment = Alignment.CenterHorizontally",
+                "verticalArrangement = Arrangement.spacedBy(8.dp)",
+            ]
+        );
+    }
+
+    #[test]
+    fn no_alignment_and_no_gap_emits_nothing() {
+        for composable in ["Box", "Row", "Column"] {
+            assert!(
+                container_alignment_arguments(composable, None, None).is_empty(),
+                "{composable} invented an argument"
+            );
+        }
     }
 
     /// Body cell is a `Box` with `contentAlignment = Alignment.CenterEnd`
