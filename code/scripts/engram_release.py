@@ -116,11 +116,33 @@ SWIFTUI_TARGETS = {"macos": "zip"}
 # a statically-linked payload would be checked if one returns.
 MIN_LINKED_ENGINE_SYMBOLS = 5
 
-# The standard Mosaic app ABI, in full: create, destroy, dispatch, snapshot,
-# restore, complete_effect. Exact rather than a floor -- a runtime missing any
-# one of them is broken, and `complete_effect` in particular is what every
-# `[host_effects]` handler answers through.
-MIN_BUNDLED_RUNTIME_SYMBOLS = 6
+# What the bundled runtime must export, BY NAME rather than by count.
+#
+# A count is the wrong shape here, and a count over `mosaic_app_*` was wrong
+# twice. `mosaic_buffer_free` carries no `_app` infix, so that filter missed a
+# symbol the loader resolves through its FAILING branch -- a runtime without it
+# is refused by `resolve_symbols`, `is_ready()` returns false, and every deck
+# operation reports UNAVAILABLE. Meanwhile a floor of six made
+# `mosaic_app_complete_effect` mandatory, which the loader deliberately
+# tolerates missing (protocol-1 hosts resolve it with a plain `dlsym` and carry
+# on). So the check required the optional symbol and ignored a required one.
+#
+# The first six are what `CMosaicRuntime.c`'s `RESOLVE` macro hard-requires.
+REQUIRED_RUNTIME_SYMBOLS = frozenset(
+    {
+        "mosaic_app_create",
+        "mosaic_app_dispatch",
+        "mosaic_app_snapshot",
+        "mosaic_app_restore",
+        "mosaic_buffer_free",
+        "mosaic_app_destroy",
+        # Optional to the LOADER, required to Engram: every `[host_effects]`
+        # handler answers through it, so a runtime without it ships an app whose
+        # Anki import and export can never complete -- and an unanswered
+        # `Await` disables snapshot and restore for the session.
+        "mosaic_app_complete_effect",
+    }
+)
 
 # Mach-O constants, from <mach-o/loader.h> and <mach-o/nlist.h>.
 MH_MAGIC_64 = 0xFEEDFACF
@@ -168,7 +190,7 @@ def linked_engine_symbols(binary: bytes, prefix: str = "eg_") -> tuple[set[str],
             else:
                 offset, size = struct.unpack_from(">II", binary, base + 8)
             slice_defined, slice_undefined = linked_engine_symbols(
-                binary[offset : offset + size]
+                binary[offset : offset + size], prefix
             )
             defined = slice_defined if index == 0 else defined & slice_defined
             undefined |= slice_undefined
@@ -1506,12 +1528,13 @@ def archive_swiftui(
             f"would fatal-error on launch on any machine but the builder's"
         )
 
-    defined, undefined = linked_engine_symbols(runtime.read_bytes(), "mosaic_app_")
-    if len(defined) < MIN_BUNDLED_RUNTIME_SYMBOLS:
+    defined, _ = linked_engine_symbols(runtime.read_bytes(), "mosaic_")
+    missing = REQUIRED_RUNTIME_SYMBOLS - defined
+    if missing:
         raise ValueError(
-            f"only {len(defined)} DEFINED mosaic_app_* symbols in "
-            f"{runtime.name}; the bundled runtime is not a usable engine, so "
-            f"the app would launch with every deck operation unavailable "
+            f"{runtime.name} does not define {', '.join(sorted(missing))}; the "
+            f"bundled runtime is not a usable engine, so the app would launch "
+            f"with every deck operation unavailable "
             f"(defined: {', '.join(sorted(defined)) or 'none'})"
         )
 

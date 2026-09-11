@@ -970,6 +970,9 @@ RUNTIME_SYMBOLS = [
     "mosaic_app_dispatch",
     "mosaic_app_snapshot",
     "mosaic_app_restore",
+    # No `_app` infix, which is exactly why a filter on `mosaic_app_*` could not
+    # see it -- and it is one the loader's RESOLVE macro hard-requires.
+    "mosaic_buffer_free",
     "mosaic_app_complete_effect",
 ]
 
@@ -1085,6 +1088,45 @@ class ArchiveSwiftUITests(unittest.TestCase):
             )
             self.assertTrue(archive.is_file())
 
+    def test_refuses_a_runtime_missing_mosaic_buffer_free(self) -> None:
+        # The symbol a `mosaic_app_*` filter cannot see.
+        #
+        # `CMosaicRuntime.c` resolves it through the branch that FAILS, so a
+        # runtime without it is refused by `resolve_symbols`, `is_ready()`
+        # returns false, and every deck operation reports UNAVAILABLE. It has no
+        # `_app` infix, so the first version of this gate counted six
+        # `mosaic_app_*` symbols, found six, and shipped a dead app.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root)
+            runtime = bundle / "App_App.bundle" / "Runtime" / "libmosaic_app.dylib"
+            without = [s for s in RUNTIME_SYMBOLS if s != "mosaic_buffer_free"]
+            self.assertEqual(
+                len(without), 6, "the fixture must still carry six mosaic_app_* symbols"
+            )
+            runtime.write_bytes(_mach_o(without))
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("mosaic_buffer_free", str(caught.exception))
+
+    def test_a_universal_runtime_is_scanned_for_the_right_symbols(self) -> None:
+        # The fat-binary path used to recurse into each slice WITHOUT the
+        # prefix, so it scanned a universal runtime for `eg_*` and found none.
+        # That failed both ways: a correct universal build was rejected, and one
+        # carrying only `eg_*` symbols was published.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root)
+            runtime = bundle / "App_App.bundle" / "Runtime" / "libmosaic_app.dylib"
+            slice_bytes = _mach_o(RUNTIME_SYMBOLS)
+            runtime.write_bytes(_fat_mach_o([slice_bytes, slice_bytes]))
+            archive = engram_release.archive_swiftui(
+                "0.4.0", "macos", bundle, root / "out", COMMIT
+            )
+            self.assertTrue(archive.is_file())
+
     def test_refuses_an_incomplete_runtime(self) -> None:
         # The bundled runtime is there but does not export the whole app ABI --
         # the shape a half-built or stale library would take. Five of six is
@@ -1098,7 +1140,9 @@ class ArchiveSwiftUITests(unittest.TestCase):
                 engram_release.archive_swiftui(
                     "0.4.0", "macos", bundle, root / "out", COMMIT
                 )
-            self.assertIn("only 5 DEFINED mosaic_app_* symbols", str(caught.exception))
+            # Named, not counted: the error says WHICH are missing.
+            self.assertIn("does not define", str(caught.exception))
+            self.assertIn("mosaic_buffer_free", str(caught.exception))
 
     def test_refuses_a_bundle_with_no_info_plist(self) -> None:
         # Without it macOS does not treat the directory as an application: it
@@ -1152,7 +1196,8 @@ class ArchiveSwiftUITests(unittest.TestCase):
                 engram_release.archive_swiftui(
                     "0.4.0", "macos", bundle, root / "out", COMMIT
                 )
-            self.assertIn("0 DEFINED mosaic_app_* symbols", str(caught.exception))
+            self.assertIn("does not define", str(caught.exception))
+            self.assertIn("defined: none", str(caught.exception))
 
     def test_refuses_a_bundle_with_no_runtime_at_all(self) -> None:
         # The failure the whole check exists for: an `.app` that builds,

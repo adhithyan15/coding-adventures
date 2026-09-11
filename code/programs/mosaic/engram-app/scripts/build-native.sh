@@ -398,17 +398,35 @@ PLIST
     fi
     # And it must be a real engine rather than an empty library, which is the
     # same contract the `engram-capi` export count checks at step [1/4].
-    # Six, not "at least five". The standard app ABI is exactly `create`,
-    # `destroy`, `dispatch`, `snapshot`, `restore` and `complete_effect`, so a
-    # threshold of 5 accepts a runtime missing one of them -- including
-    # `mosaic_app_complete_effect`, which is the symbol the `[host_effects]`
-    # work on this very branch depends on.
-    MOSAIC_EXPORTS="$(nm -gU "$RUNTIME_IN_BUNDLE" 2>/dev/null | grep -c ' _mosaic_app_' || true)"
-    if [[ "$MOSAIC_EXPORTS" -lt 6 ]]; then
-      echo "error: the bundled runtime exports only $MOSAIC_EXPORTS mosaic_app_* symbols" >&2
+    # By NAME, not by count -- and not filtered on `mosaic_app_`.
+    #
+    # A count over `mosaic_app_*` was wrong in both directions.
+    # `mosaic_buffer_free` has no `_app` infix, so that filter could not see a
+    # symbol `CMosaicRuntime.c` resolves through its FAILING branch: a runtime
+    # without it is rejected by `resolve_symbols`, `is_ready()` returns false,
+    # and every deck operation reports UNAVAILABLE. And a floor of six made
+    # `mosaic_app_complete_effect` mandatory, which the loader deliberately
+    # tolerates missing. The check demanded the optional symbol and ignored a
+    # required one.
+    #
+    # `complete_effect` is listed anyway, because Engram needs it even where the
+    # loader does not: every `[host_effects]` handler answers through it, and an
+    # unanswered `Await` takes the session's persistence with it.
+    MOSAIC_SYMBOLS="$(nm -gU "$RUNTIME_IN_BUNDLE" 2>/dev/null || true)"
+    MISSING=""
+    for symbol in mosaic_app_create mosaic_app_dispatch mosaic_app_snapshot \
+                  mosaic_app_restore mosaic_buffer_free mosaic_app_destroy \
+                  mosaic_app_complete_effect; do
+      if ! grep -q " _$symbol\$" <<<"$MOSAIC_SYMBOLS"; then
+        MISSING="${MISSING:+$MISSING }$symbol"
+      fi
+    done
+    if [[ -n "$MISSING" ]]; then
+      echo "error: the bundled runtime does not define: $MISSING" >&2
+      echo "       the app would launch with every deck operation unavailable" >&2
       exit 1
     fi
-    echo "  runtime bundled at $RUNTIME_IN_BUNDLE ($MOSAIC_EXPORTS mosaic_app_* symbols)"
+    echo "  runtime bundled at $RUNTIME_IN_BUNDLE (full app ABI present)"
 
     # Wrap it as a `.app`. `swift build` leaves a bare Mach-O executable, which
     # runs from a terminal but is not something a person can be handed: macOS
