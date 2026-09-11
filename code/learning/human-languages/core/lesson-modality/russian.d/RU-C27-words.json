@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C27-words",
+    "language": "russian",
+    "chapter": 27,
+    "sequence": 1340,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8a1432417f51a7cd"
+  },
+  "findings": []
+}

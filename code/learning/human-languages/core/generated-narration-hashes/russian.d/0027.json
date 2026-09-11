@@ -1,0 +1,17 @@
+{
+  "language": "russian",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:1e60e5758b3d3e06",
+  "lessonIds": [
+    "RU-C27-words",
+    "RU-C27-notices",
+    "RU-C27-pervoe-chtenie"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "russian/narration/ch27.txt",
+  "json": "russian/narration/ch27.json",
+  "textHash": "fnv1a64:64c8999e67aea8d0",
+  "jsonHash": "fnv1a64:49cce4b08834fa81",
+  "findings": []
+}

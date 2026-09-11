@@ -1,0 +1,16 @@
+{
+  "chapter": 27,
+  "title": "Reading — Six Words, Six Lines, and a First Passage",
+  "label": "ch:ru-pervoe-chtenie",
+  "canDo": "I can read Russian words off a board, read the lines I would say to a stranger, and hold a whole passage without translating it word by word.",
+  "payoff": {
+    "lesson": "RU-C27-pervoe-chtenie",
+    "kind": "four-skill-function-map",
+    "summary": "The introduction the book has been saying since chapter 2, read in order for the first time, with no new word in it.",
+    "assesses": [
+      "RU-SKILL-CONNECTED-READING",
+      "RU-SKILL-READ-NOTICES",
+      "RU-SKILL-READ-WORDS"
+    ]
+  }
+}
