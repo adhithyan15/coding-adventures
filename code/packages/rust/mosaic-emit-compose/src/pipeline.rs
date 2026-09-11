@@ -179,6 +179,7 @@ pub fn from_pipeline(
         .unwrap();
     }
     writeln!(out, "import androidx.compose.foundation.layout.Box").unwrap();
+    writeln!(out, "import androidx.compose.foundation.layout.Arrangement").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Column").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Row").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.RowScope").unwrap();
@@ -1211,6 +1212,24 @@ fn should_split_root_sections(layout_root: &LayoutNode) -> bool {
 /// scroll wrapper a hard stop for the recursion below: TaskApp's oversized
 /// section sat directly under one, and splitting halted at the wrapper with
 /// 80,000 characters still inside it (#14736).
+/// The `Arrangement.spacedBy` argument for an authored `gap`, or `None` where
+/// the composable has no arrangement to give it (#14804).
+///
+/// Compose names the axis in the argument, so a `gap` means a different thing
+/// to each container: `Column` spaces its children vertically, `Row`
+/// horizontally. `Box` stacks its children on top of one another and has no
+/// arrangement at all -- a gap there is meaningless rather than merely
+/// unsupported, so it is dropped deliberately instead of guessed at.
+fn arrangement_argument(composable: &str, gap: Option<&str>) -> Option<String> {
+    let gap = gap?;
+    let axis = match composable {
+        "Column" => "verticalArrangement",
+        "Row" => "horizontalArrangement",
+        _ => return None,
+    };
+    Some(format!("{axis} = Arrangement.spacedBy({gap}.dp)"))
+}
+
 /// The modifier `HostScroll` prefixes onto a container's chain.
 ///
 /// Shared by `emit_container` (the ordinary path) and `emit_container_frame`
@@ -2649,6 +2668,8 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
 struct ComposeStyle {
     modifier: String,
     content_alignment: Option<String>,
+    /// Authored `gap`, in dp, for a Column/Row `Arrangement.spacedBy` (#14804).
+    gap: Option<String>,
     text_color: Option<String>,
     font_family_mono: bool,
     font_size: Option<String>,
@@ -2717,6 +2738,8 @@ fn compose_box_style(
         }
     }
 
+    let mut gap: Option<String> = None;
+
     fn content_alignment(v: &str) -> Option<&'static str> {
         match v.trim() {
             "left" | "start" => Some("Alignment.CenterStart"),
@@ -2783,6 +2806,17 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
+            // #14804 — `gap` reached the lattice IR and died here, in the
+            // `_ => {}` arm below. 178 declarations across 27 stylesheets, and
+            // the strict native-complete profile still reported zero
+            // degradations, so every gap in every product was discarded in
+            // silence. It is why adjacent text ran together in the rendered
+            // app: two Texts in a row whose spacing was thrown away.
+            "gap" if layer_idx.is_none() => {
+                if let Some(v) = px_or_none(&p.value) {
+                    gap = Some(v);
+                }
+            }
             "text-align" if layer_idx.is_none() => {
                 if let Some(a) = content_alignment(&p.value) {
                     text_align = Some(a);
@@ -2870,6 +2904,7 @@ fn compose_box_style(
     ComposeStyle {
         modifier,
         content_alignment: text_align.map(str::to_string),
+        gap,
         text_color,
         font_family_mono: !font_family_mono.empty(),
         font_size: font_size_out,
@@ -3575,6 +3610,7 @@ fn emit_container_frame(
                 style = Some(ComposeStyle {
                     modifier: prefix,
                     content_alignment: None,
+                gap: None,
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
@@ -3596,6 +3632,7 @@ fn emit_container_frame(
     let has_chain =
         has_style_chain || semantic_modifier.is_some() || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
+    let gap = style.as_ref().and_then(|s| s.gap.clone());
     let child_text: Option<TextStyleCtx> = match &style {
         Some(s) => {
             let inherited = text_ctx.cloned().unwrap_or_default();
@@ -3604,7 +3641,12 @@ fn emit_container_frame(
         None => text_ctx.cloned(),
     };
 
-    if has_chain || content_alignment.is_some() {
+    // `gap` is an ARGUMENT, not a modifier, so it never sets `has_chain`. A
+    // part whose only property is a gap must still take the multi-line form --
+    // otherwise the arrangement has nowhere to be written and is dropped, and
+    // it would look like it worked on any part that happened to carry another
+    // property too (#14804).
+    if has_chain || content_alignment.is_some() || gap.is_some() {
         let modifier_pad = "    ".repeat(depth + 1);
         writeln!(opener, "{pad}{composable}(").unwrap();
         if has_style_chain {
@@ -3622,6 +3664,9 @@ fn emit_container_frame(
         writeln!(opener, ",").unwrap();
         if let Some(a) = &content_alignment {
             writeln!(opener, "{modifier_pad}contentAlignment = {a},").unwrap();
+        }
+        if let Some(arrangement) = arrangement_argument(composable, gap.as_deref()) {
+            writeln!(opener, "{modifier_pad}{arrangement},").unwrap();
         }
         if node.children.is_empty() {
             writeln!(opener, "{pad}) {{ }}").unwrap();
@@ -3814,6 +3859,7 @@ fn emit_container(
             style = Some(ComposeStyle {
                 modifier: prefix,
                 content_alignment: None,
+                gap: None,
                 text_color: None,
                 font_family_mono: false,
                 font_size: None,
@@ -3840,6 +3886,7 @@ fn emit_container(
                 style = Some(ComposeStyle {
                     modifier: prefix,
                     content_alignment: None,
+                gap: None,
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
@@ -3865,6 +3912,7 @@ fn emit_container(
     let has_chain =
         has_style_chain || semantic_modifier.is_some() || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
+    let gap = style.as_ref().and_then(|s| s.gap.clone());
 
     // The text style children inherit: a styled Box may override the
     // inherited (sheet) color / font for its own cell text.
@@ -3877,7 +3925,12 @@ fn emit_container(
     };
 
     // ---- opener -----------------------------------------------------
-    if has_chain || content_alignment.is_some() {
+    // `gap` is an ARGUMENT, not a modifier, so it never sets `has_chain`. A
+    // part whose only property is a gap must still take the multi-line form --
+    // otherwise the arrangement has nowhere to be written and is dropped, and
+    // it would look like it worked on any part that happened to carry another
+    // property too (#14804).
+    if has_chain || content_alignment.is_some() || gap.is_some() {
         // Multi-line styled opener.
         let modifier_pad = "    ".repeat(depth + 1);
         writeln!(out, "{pad}{composable}(").unwrap();
@@ -3901,6 +3954,9 @@ fn emit_container(
         writeln!(out, ",").unwrap();
         if let Some(a) = &content_alignment {
             writeln!(out, "{modifier_pad}contentAlignment = {a},").unwrap();
+        }
+        if let Some(arrangement) = arrangement_argument(composable, gap.as_deref()) {
+            writeln!(out, "{modifier_pad}{arrangement},").unwrap();
         }
         if node.children.is_empty() {
             writeln!(out, "{pad}) {{ }}").unwrap();
@@ -6674,8 +6730,20 @@ mod tests {
             out.matches(".weight(1f)").count() >= 2,
             "main flex-grow and title width must both become weights:\n{out}"
         );
+        // The `progress` part authors `gap: 10px`, so since #14804 it takes
+        // the multi-line form to carry its arrangement. The claim this test
+        // makes is about WIDTH, not about formatting, so assert the width:
+        // the group keeps a bare `Modifier` rather than gaining a fill.
+        let progress = out
+            .split("Arrangement.spacedBy(10.dp)")
+            .next()
+            .expect("progress group must emit its authored gap");
+        let opener = progress
+            .rfind("Row(")
+            .map(|i| &progress[i..])
+            .expect("gap must belong to a Row");
         assert!(
-            out.contains("Row(modifier = Modifier) {"),
+            opener.contains("modifier = Modifier,") && !opener.contains("fillMaxWidth"),
             "the progress group must keep intrinsic width:\n{out}"
         );
     }
@@ -10142,6 +10210,68 @@ mod tests {
         );
         let out = from_pipeline(&m, &l, &empty_style("F")).expect("emit ok").output;
         assert!(out.contains("enabled = !_mosaicTruthy(off)"), "got:\n{out}");
+    }
+
+
+    /// #14804 — `gap` reached the lattice IR and died at the emitter.
+    ///
+    /// 178 declarations across 27 stylesheets, dropped in silence: the strict
+    /// native-complete profile still reported zero degradations. In the
+    /// rendered app it showed up as adjacent text running together, because
+    /// two Texts sat in a row whose spacing had been thrown away.
+    #[test]
+    fn gap_lowers_to_a_column_arrangement() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Column", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("c".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part("c", vec![sprop("gap", "8px")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(
+            out.contains("verticalArrangement = Arrangement.spacedBy(8.dp)"),
+            "got:\n{out}"
+        );
+        assert!(
+            out.contains("import androidx.compose.foundation.layout.Arrangement"),
+            "Arrangement emitted without its import, got:\n{out}"
+        );
+    }
+
+    /// Compose names the AXIS in the argument, so the same authored `gap`
+    /// means a different argument per container.
+    #[test]
+    fn gap_lowers_to_a_row_arrangement_on_the_other_axis() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Row", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("r".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part("r", vec![sprop("gap", "12px")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(
+            out.contains("horizontalArrangement = Arrangement.spacedBy(12.dp)"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("verticalArrangement"), "got:\n{out}");
+    }
+
+    /// A `Box` stacks its children on top of one another and has no
+    /// arrangement at all, so a gap there is meaningless rather than merely
+    /// unsupported. Dropped deliberately instead of guessed at.
+    #[test]
+    fn gap_on_a_box_emits_no_arrangement() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("b".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part("b", vec![sprop("gap", "8px")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(!out.contains("Arrangement.spacedBy"), "got:\n{out}");
     }
 
 }
