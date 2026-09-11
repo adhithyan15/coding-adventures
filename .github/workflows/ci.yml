@@ -2139,12 +2139,32 @@ jobs:
           # diagnostic at all.
           grep -q 'installEngramEffects(mosaicEffectHost)' "$engram_swift_output/swiftui/Sources/App/App.swift"
           python3 - "$engram_swift_output/swiftui/Sources/App/App.swift" <<'PY'
+          import re
           import sys
+
           text = open(sys.argv[1]).read()
-          cls = text.index("class MosaicHostState")
-          assignment = text.index("self.bridge = ", cls)
           install = text.index("installEngramEffects(mosaicEffectHost)")
-          assert cls < assignment < install, "install must follow the bridge assignment inside the host class"
+
+          # "Inside MosaicHostState" means the nearest type declaration ABOVE the
+          # install is that class. Asserting `class_idx < install` instead would
+          # be near-vacuous -- the class is declared once, far up the file, so
+          # the ordering holds even if the call landed in a later type.
+          declarations = [
+              (m.start(), m.group(1))
+              for m in re.finditer(r"(?m)^[ \t]*(?:(?:private|fileprivate|internal|public|final)\s+)*"
+                                   r"(?:class|struct|enum|extension)\s+(\w+)", text)
+              if m.start() < install
+          ]
+          assert declarations, "no type declaration precedes the install"
+          enclosing = declarations[-1][1]
+          assert enclosing == "MosaicHostState", (
+              f"install landed in {enclosing}, not MosaicHostState"
+          )
+
+          # And after the bridge exists: installing onto a nil bridge compiles
+          # and silently does nothing.
+          assignment = text.index("self.bridge = ", declarations[-1][0])
+          assert assignment < install, "install must follow the bridge assignment"
           PY
 
           # The gate: it builds.

@@ -57,10 +57,32 @@ NEL — so `^...$` would accept `"apkg\n"`, and
 matching no file. The panel would open with a filter hiding everything and
 report no reason. The Qt handler had this exact bug; it is fixed there too.
 
-**A separate empty check after base64 decoding.** `Data(base64Encoded:)` reports
-success for input that decodes to nothing, so without it a zero-byte package
-would be written out as a real `.apkg` and reported as an ok outcome. This is
+**A zip-signature check after base64 decoding.** The first version of this was
+an is-it-empty check, and its comment was wrong about why it was needed —
+security review caught it. In strict mode the only input decoding to zero bytes
+is `""`, which the preceding guard already rejects, so that check was redundant.
+
+The case that actually slips through is padding-only input: `"===="` decodes
+*successfully* to a single zero byte (measured), clearing both a nil check and
+an empty check, and would be written out as a real `.apkg` reported `ok` — the
+person then hands Anki a file it cannot open, with nothing pointing back here.
+That is the same argument the strict-decode guard already makes for itself, and
 the same silent-success shape as Qt's `QFile` flush-on-destruction case.
+
+So the check is now `PK\x03\x04`, which an `.apkg` always starts with: cheap,
+unambiguous, and it catches every degenerate payload rather than the one shape
+that happened to be enumerated.
+
+#### A symlinked package is readable again
+
+`attributesOfItem` is `lstat`-based — it reports a symlink as a symlink and does
+not follow it — while `Data(contentsOf:)` does follow. So the first version
+inspected one file and read another, and rejected a symlink pointing at a
+perfectly good `.apkg` with "that is not a regular file", which the retired host
+read without complaint. The path is now resolved once and used for both, which
+removes the mismatch and restores the behaviour. It does not weaken the check:
+after resolution the stat describes the target, so a link pointing at a fifo
+still reports a fifo and is still refused.
 
 #### Verification
 
@@ -72,8 +94,14 @@ install lands at `App.swift:294`, immediately after the bridge assignment at
 rewrite produces, and the reason the emitter anchors on `self.bridge = ` rather
 than the whole call.
 
-A new CI step runs the same sequence on macOS and adds a positional assertion
-that the install sits inside `MosaicHostState` after the bridge assignment.
+A new CI step runs the same sequence on macOS and asserts the install sits
+inside `MosaicHostState`, after the bridge assignment. "Inside" is checked by
+finding the nearest type declaration *above* the install — the first version
+compared indices against the class declaration instead, which review pointed out
+was near-vacuous, since the class is declared once far up the file and the
+ordering holds even when the call lands in a later type. Demonstrated rather
+than assumed: splicing the install into `MosaicHostValue` passes the original
+assertion and fails the current one.
 That step is load-bearing rather than belt-and-braces: SwiftPM compiles every
 file under `Sources/App`, so a handler that is copied but never installed still
 compiles, links and ships, with no missing symbol and no diagnostic — the first

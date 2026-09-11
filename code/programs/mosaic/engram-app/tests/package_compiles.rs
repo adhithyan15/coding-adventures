@@ -2844,11 +2844,13 @@ fn source_tree_has_expected_shape() {
     // `^...$` would accept `"apkg\\n"` -- a glob that matches no file and
     // reports no reason. See the Qt handler, which had exactly this bug.
     assert_contains(&swiftui_effects, "\\\\A\\\\.?[A-Za-z0-9_-]{1,16}\\\\z");
-    // Strict base64, and the separate empty check: `Data(base64Encoded:)`
-    // reports SUCCESS for input that decodes to nothing, so without it a
-    // zero-byte package would be written out as a real `.apkg`.
+    // Strict base64 -- `options: []`, not `.ignoreUnknownCharacters`.
     assert_contains(&swiftui_effects, "Data(base64Encoded: encoded, options: [])");
-    assert_contains(&swiftui_effects, "decoded.isEmpty");
+    // And the decoded bytes must be a zip, which is what an `.apkg` is. An
+    // is-it-empty check does not cover this: `"===="` decodes SUCCESSFULLY to
+    // one zero byte, clearing both a nil check and an empty check, and would be
+    // written out as a real `.apkg` reported `ok`.
+    assert_contains(&swiftui_effects, "0x50, 0x4B, 0x03, 0x04");
     // The read is bounded before the file is opened, matching Qt and the
     // 256 MiB the package layer accepts on native targets.
     assert_contains(&swiftui_effects, "maxImportBytes");

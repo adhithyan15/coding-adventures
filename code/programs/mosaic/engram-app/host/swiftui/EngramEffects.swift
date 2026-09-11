@@ -169,12 +169,21 @@ private func runExport(_ payload: Any) -> [String: Any] {
   guard let decoded = Data(base64Encoded: encoded, options: []) else {
     return failedOutcome("the export package was not valid base64")
   }
-  // Separate from the nil check, and not redundant with the `encoded.isEmpty`
-  // guard above: `Data(base64Encoded:)` reports SUCCESS for input that decodes
-  // to nothing, so without this a zero-byte package would be written out as a
-  // real `.apkg` and reported as an ok outcome.
-  if decoded.isEmpty {
-    return failedOutcome("the export package was empty")
+  // Not "is it empty" -- that guard was redundant, and its first version of
+  // this comment was wrong about why. In strict mode the only input decoding to
+  // zero bytes is `""`, which `!encoded.isEmpty` above already rejects.
+  //
+  // The case that actually slips through is padding-only input: `"===="`
+  // decodes SUCCESSFULLY to a single zero byte (measured), so it clears both a
+  // nil check and an empty check and gets written out as a real `.apkg`,
+  // reported `ok`. The person then hands Anki a file it cannot open, with
+  // nothing pointing back here -- which is the same argument the strict-decode
+  // guard above already makes for itself.
+  //
+  // So check it is a zip, which is what an `.apkg` is. Cheap, unambiguous, and
+  // it catches every degenerate payload rather than the one shape enumerated.
+  guard decoded.count >= 4, decoded.prefix(4).elementsEqual([0x50, 0x4B, 0x03, 0x04]) else {
+    return failedOutcome("the export package was not a valid Anki package")
   }
 
   do {
@@ -202,10 +211,24 @@ private func runImport(_ payload: Any) -> [String: Any] {
     return cancelledOutcome()
   }
 
+  // Resolved first, then inspected and read through the SAME resolved URL.
+  //
+  // `attributesOfItem` is lstat-based: it reports `NSFileTypeSymbolicLink` for a
+  // link and does not follow it (measured), while `Data(contentsOf:)` does
+  // follow. Inspecting the link and reading the target would be two different
+  // files; worse, it rejected a symlink to a perfectly good `.apkg`, which the
+  // retired host read without complaint. Resolving once and using that path for
+  // both restores it and removes the mismatch.
+  //
+  // This does not weaken the check below: after resolution the stat describes
+  // the TARGET, so a link pointing at a fifo still reports a fifo and is still
+  // refused.
+  let resolved = url.resolvingSymlinksInPath()
+
   // Sized up before it is opened. A read on a fifo or a character device never
   // reaches EOF -- and reports no size -- so the regular-file test is doing
   // real work here, not restating the size test.
-  let attributes = try? FileManager.default.attributesOfItem(atPath: url.path)
+  let attributes = try? FileManager.default.attributesOfItem(atPath: resolved.path)
   guard (attributes?[.type] as? FileAttributeType) == .typeRegular else {
     return failedOutcome("that is not a regular file")
   }
@@ -219,7 +242,7 @@ private func runImport(_ payload: Any) -> [String: Any] {
 
   let data: Data
   do {
-    data = try Data(contentsOf: url)
+    data = try Data(contentsOf: resolved)
   } catch {
     return failedOutcome(error.localizedDescription)
   }
