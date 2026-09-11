@@ -703,3 +703,16 @@ is host input (VM-060b), the same gap every other frontend's BEAM input rows
 are deferred behind, not a Brainfuck- or tape-specific limitation. Brainfuck
 now declares 45 cells (was 42); `feature_coverage_doc_counts_match_programs_source`
 pins both the new row count and the frontend/backend refusal split.
+
+### COBOL boolean/EVALUATE on BEAM (VM-040)
+
+Four more COBOL programs execute on real BEAM: a compound `(N > 1 OR N > 9)
+AND N < 8` condition (folding `cmp_*` booleans with bitwise `and`/`or`), a
+`NOT (N < 3 OR N > 9)` negated group (the first COBOL BEAM row to emit
+`xor`), an `EVALUATE` case statement, and an `EVALUATE` with a multi-value/
+THRU-range `WHEN`. All four reuse `cmp_*`/`and`/`or`/`xor`/branch lowering
+already proven by earlier COBOL BEAM rows, so no backend change was needed.
+Twenty of 58 COBOL rows now declare BEAM, for 426 cells. Remaining COBOL
+features (alphanumeric EVALUATE subjects, reference modification, STRING
+SIZE/delimiters, pointer/overflow) still require individual execution
+proofs.
