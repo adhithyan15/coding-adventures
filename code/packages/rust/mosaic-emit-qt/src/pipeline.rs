@@ -3809,9 +3809,9 @@ fn emit_text_input_qml(
     };
     writeln!(out, "{pad}{control_tag} {{").unwrap();
 
-    // Authored part styles (#14780). Emitted before the cell-editor cascade
-    // below so a styled cell still wins for an in-place editor, which is the
-    // narrower and more specific context.
+    // Authored part styles. Without this the control read none at all, so
+    // padding, background and opacity were dropped on Qt while every other
+    // backend applied them (#14780).
     for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::TEXT_ENTRY) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
@@ -4008,6 +4008,19 @@ fn host_control_style_qml_lines(
         if let Some(is_bold) = style_prop(base, "font-weight").and_then(qml_font_weight_is_bold) {
             lines.push(format!("font.bold: {is_bold}"));
         }
+    }
+    // `opacity` on the CONTROL, not on its background Rectangle: it is an Item
+    // property, so putting it here composites the control, its text and its
+    // background together. On the Rectangle it would fade the fill and leave
+    // the label at full strength.
+    //
+    // #14741 added opacity to Qt's three Rectangle paint builders, and host
+    // controls are a fourth path none of them reach -- so a `Box` part honoured
+    // an authored opacity while a `HostButton` part silently ignored it on the
+    // same backend (#14775).
+    let base_opacity = style_prop(base, "opacity").and_then(qml_number_or_none);
+    if let Some(opacity) = conditional_number_expr(base_opacity, &state_layers, "opacity", "1") {
+        lines.push(format!("opacity: {opacity}"));
     }
 
     let base_background = style_prop(base, "background")
@@ -5095,8 +5108,9 @@ fn emit_host_number_input_qml(
     let mut out = String::new();
     writeln!(out, "{pad}TextField {{").unwrap();
 
-    // Authored part styles (#14780) -- the number input is a TextField too,
-    // so it takes the same text-entry surface as HostInput.
+    // Authored part styles. Without this the control read none at all, so
+    // padding, background and opacity were dropped on Qt while every other
+    // backend applied them (#14780).
     for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::TEXT_ENTRY) {
         writeln!(out, "{inner}{line}").unwrap();
     }
@@ -14360,6 +14374,68 @@ mod tests {
         assert!(!out.contains("opacity:"), "got:\n{out}");
     }
 
+
+    #[test]
+    fn a_host_control_honours_opacity_like_a_box_does() {
+        // #14741 added opacity to Qt's three Rectangle paint builders. Host
+        // controls are a fourth path none of them reach, so a `Box` part
+        // honoured an authored opacity while a `HostButton` part silently
+        // ignored it on the same backend (#14775).
+        let c = component(
+            "B",
+            vec![
+                slot("label", SlotType::Text, true),
+                slot("disabled", SlotType::Bool, false),
+            ],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "B".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::SlotRef("label".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let s = StyleDef {
+            component_name: "B".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "1".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    state: "disabled".to_string(),
+                    slot: Some("disabled".to_string()),
+                    slot_is_bool: true,
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.4".to_string(),
+                    }],
+                    transitions: vec![],
+                }],
+            }],
+        };
+        let out = from_pipeline(&c, &l, &s).expect("emit ok").output;
+
+        assert!(
+            out.contains("opacity: ( (disabled) ) ? 0.4 : 1"),
+            "got:\n{out}"
+        );
+        // On the control, not on its background Rectangle: opacity is an Item
+        // property, so here it composites the control, its text and its
+        // background. On the Rectangle it would fade the fill and leave the
+        // label at full strength.
+        let opacity_at = out.find("opacity:").expect("opacity");
+        let background_at = out.find("background: Rectangle").unwrap_or(usize::MAX);
+        assert!(opacity_at < background_at, "got:\n{out}");
+    }
 
     // ---- host controls read part styles (#14780) ---------------------
 
