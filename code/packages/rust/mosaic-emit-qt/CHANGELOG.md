@@ -4,6 +4,31 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — host controls honour `opacity` (#14775)
+
+#14741 added `opacity` to Qt's three `Rectangle` paint builders. Host controls
+are a **fourth** path none of them reach, so a `Box` part honoured an authored
+opacity while a `HostButton` part silently ignored it on the same backend — and
+`state disabled { opacity : … }` meant two different things depending on which
+primitive a component happened to use.
+
+Emitted on the **control**, not on its background `Rectangle`. `opacity` is an
+`Item` property, so on the control it composites the control, its text and its
+background together; on the Rectangle it would fade the fill and leave the label
+at full strength. A test pins that ordering.
+
+State-driven values keep working, reusing `conditional_number_expr`:
+
+```qml
+opacity: ( (disabled) ) ? 0.4 : 1
+```
+
+Only `HostButton` is covered here, because it is the only host control whose
+emitter reads part styles through `host_button_style_qml_lines`. Whether the
+sibling controls apply authored part styles at all is a separate and larger
+question — one measurement suggests `HostInput` does not — and is not answered
+by this change.
+
 ### Added — `opacity` lowering, base and state-driven (#14708)
 
 `opacity` was dropped entirely. It now lowers to QML's `Item.opacity`, which
