@@ -152,21 +152,9 @@ fn compile_component(name: &str) {
         "{name}.mll must declare layout for {name:?}"
     );
 
-    let slot_state_axes: Vec<_> = mil_out
-        .component
-        .slots
-        .iter()
-        .filter_map(|slot| match &slot.r#type {
-            mosmodel_compiler::SlotType::OneOf(values) => {
-                Some(mosstyle_compiler::SlotStateAxis {
-                    slot: slot.name.clone(),
-                    values: values.clone(),
-                    kind: mosstyle_compiler::SlotStateAxisKind::Enum,
-                })
-            }
-            _ => None,
-        })
-        .collect();
+    // One rule, shared with the real build, so a bool-slot state (UI57)
+    // binds here exactly as it does in production.
+    let slot_state_axes = mosaic_package_artifact_builder::slot_state_axes(&mil_out.component);
 
     // Both .msl files, validated against the .mll's part map and the
     // component's typed state axes.
@@ -242,21 +230,9 @@ fn button_themes_cover_typed_variant_and_size_states() {
         Some(&mil_out.descriptor_json),
     )
     .unwrap();
-    let axes: Vec<_> = mil_out
-        .component
-        .slots
-        .iter()
-        .filter_map(|slot| match &slot.r#type {
-            mosmodel_compiler::SlotType::OneOf(values) => {
-                Some(mosstyle_compiler::SlotStateAxis {
-                    slot: slot.name.clone(),
-                    values: values.clone(),
-                    kind: mosstyle_compiler::SlotStateAxisKind::Enum,
-                })
-            }
-            _ => None,
-        })
-        .collect();
+    // One rule, shared with the real build, so a bool-slot state (UI57)
+    // binds here exactly as it does in production.
+    let axes = mosaic_package_artifact_builder::slot_state_axes(&mil_out.component);
 
     for theme in THEMES {
         let filename = format!("Button.{theme}.msl");
@@ -290,6 +266,11 @@ fn button_themes_cover_typed_variant_and_size_states() {
         ]
         .into_iter()
         .map(|state| (state, Some("variant")))
+        // UI57 — a built-in state bound to the `disabled` BOOL slot, so it is
+        // owned by the slot itself rather than by an enum axis. This is the
+        // toolkit's disabled treatment (#14639); before it, the Disabled
+        // story rendered pixel-identical to Primary.
+        .chain(std::iter::once(("disabled", Some("disabled"))))
         .chain(
             ["sm", "md", "lg"]
                 .into_iter()
@@ -359,19 +340,10 @@ fn alert_themes_cover_typed_variant_states() {
     let mll_out =
         moslayout_compiler::compile(&read_source("Alert.mll"), Some(&mil_out.descriptor_json))
             .unwrap();
-    let axes: Vec<_> = mil_out
-        .component
-        .slots
-        .iter()
-        .filter_map(|slot| match &slot.r#type {
-            mosmodel_compiler::SlotType::OneOf(values) => Some(mosstyle_compiler::SlotStateAxis {
-                slot: slot.name.clone(),
-                values: values.clone(),
-                kind: mosstyle_compiler::SlotStateAxisKind::Enum,
-            }),
-            _ => None,
-        })
-        .collect();
+    // One rule, shared with the real build, so a bool-slot state (UI57)
+    // binds here exactly as it does in production rather than reading as
+    // unowned.
+    let axes = mosaic_package_artifact_builder::slot_state_axes(&mil_out.component);
     let expected: Vec<_> = [
         "primary",
         "secondary",
@@ -477,19 +449,10 @@ fn badge_themes_cover_typed_variant_states() {
     let mll_out =
         moslayout_compiler::compile(&read_source("Badge.mll"), Some(&mil_out.descriptor_json))
             .unwrap();
-    let axes: Vec<_> = mil_out
-        .component
-        .slots
-        .iter()
-        .filter_map(|slot| match &slot.r#type {
-            mosmodel_compiler::SlotType::OneOf(values) => Some(mosstyle_compiler::SlotStateAxis {
-                slot: slot.name.clone(),
-                values: values.clone(),
-                kind: mosstyle_compiler::SlotStateAxisKind::Enum,
-            }),
-            _ => None,
-        })
-        .collect();
+    // One rule, shared with the real build, so a bool-slot state (UI57)
+    // binds here exactly as it does in production rather than reading as
+    // unowned.
+    let axes = mosaic_package_artifact_builder::slot_state_axes(&mil_out.component);
     let expected: Vec<_> = [
         "primary",
         "secondary",

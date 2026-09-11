@@ -1,0 +1,15 @@
+{
+  "id": "UR-EXT-044-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read an Urdu word cold, read a meeting in the order it happens, and follow a paragraph without translating word by word.",
+  "prerequisites": [
+    "UR-EXT-043-ORDINALS"
+  ],
+  "lessons": [
+    "UR-C33-words",
+    "UR-C33-lines",
+    "UR-C33-pehla-sabaq"
+  ]
+}

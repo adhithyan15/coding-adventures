@@ -1,0 +1,583 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 33,
+  "title": "Reading — Six Words, Six Lines, and a First Paragraph",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:7ccba34ceef7629d",
+  "lessons": [
+    {
+      "id": "UR-C33-words",
+      "sequence": 1720,
+      "title": "(reading) (pānī · kām · shahr · kamra · mā̃ · lāhaur) (yih merī mā̃ hai. yih hamārā kamra hai.) (salām · āp kā nām kyā hai? · maiṅ yahāṅ hūṅ) — six words, nothing said first",
+      "headword": "(reading)",
+      "romanization": "pānī · kām · shahr · kamra · mā̃ · lāhaur",
+      "gloss": "six words read cold — every letter in them is one the book has taught you to write",
+      "script": "urdu-nastaliq",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:131433e147838b6e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have written every letter in every one of these. Not one word is new, and not one shape inside them is new either."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is that nobody says them before you read them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پانی کام شہر کمرہ ماں لاہور."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down the list once. Do not take each word apart — look at the whole shape and let it arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again, and notice which came at once and which you had to unpick. Both are fine. The difference is what practice removes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Urdu joins its letters, so a word is not five shapes standing in a row. It is one shape."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is why reading a word cold is a different skill from writing it. Writing, you make the joins one at a time and know what is coming. Reading, the joins are already made and the whole word has to land at once."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six is enough for one sitting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six words down the list, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six words down the list, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C33-words-city",
+              "prompt": "Which of the six is a city?",
+              "assesses": [
+                "UR-SKILL-READ-WORDS"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "lahore",
+                "لاہور"
+              ],
+              "feedback": {
+                "correct": "لاہور.",
+                "incorrect": "لاہور -- Lahore."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was new? (Nobody said them first. You read them.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C33-lines",
+      "sequence": 1730,
+      "title": "(reading) (pānī · kām · shahr · kamra · mā̃ · lāhaur) (yih merī mā̃ hai. yih hamārā kamra hai.) (salām · āp kā nām kyā hai? · maiṅ yahāṅ hūṅ) — six lines, in the order they happen",
+      "headword": "(reading)",
+      "romanization": "salām · āp kā nām kyā hai? · maiṅ yahāṅ hūṅ",
+      "gloss": "six lines of a meeting, read in the order they happen",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e962e7b7ca6cb11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson gave you single words. These are whole turns."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have said every one of them. None is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سلام آپ کا نام کیا ہے؟ آپ کیسے ہیں؟ میں یہاں ہوں۔ شکریہ نہیں."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again — and this time hear that these are not six separate lines. They are the opening of a meeting, in the order it happens."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two of these are questions and you can see it before you read a word of them, because the question mark sits at the end where Urdu puts it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spoken, a voice told you which turn was whose. On the page nothing does. You worked it out from where each line sits, which is most of what reading a conversation is."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six lines, and the order is the whole lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six lines, once, in order, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six lines, once, in order, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C33-lines-question",
+              "prompt": "How many of the six lines are questions?",
+              "assesses": [
+                "UR-SKILL-READ-LINES"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "two",
+                "2"
+              ],
+              "feedback": {
+                "correct": "Two -- both end with the question mark.",
+                "incorrect": "Two. The question mark sits at the end of each."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six lines were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What told you which were questions? (The mark at the end.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C33-pehla-sabaq",
+      "sequence": 1740,
+      "title": "(reading) (pānī · kām · shahr · kamra · mā̃ · lāhaur) (yih merī mā̃ hai. yih hamārā kamra hai.) (salām · āp kā nām kyā hai? · maiṅ yahāṅ hūṅ) — the first paragraph",
+      "headword": "(reading)",
+      "romanization": "yih merī mā̃ hai. yih hamārā kamra hai.",
+      "gloss": "the first passage — thirty-seven words of Urdu in a row, every letter of them already in your hand",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:926c76868f460751",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six words, then six lines. Now a whole paragraph."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Thirty-seven words, and every letter inside them is one you can already write."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "یہ میری ماں ہے۔ یہ ہمارا کمرہ ہے۔ کمرے میں پانی ہے۔ آسمان نیلا ہے۔ وہ کالا ہے۔ ہم لاہور میں ہیں۔ لاہور ایک شہر ہے۔ یہاں کام ہے۔ کیا یہ پرانا ہے؟ نہیں۔ سلام اور شکریہ۔."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read it again, and notice how little work it took."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Almost every line here is the same sentence: something is something. ہے ends nearly all of them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is what makes a first paragraph possible. You know the shape of each line before you reach it, so your attention goes to the two or three words in the middle that change."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then one line breaks the pattern, and you can see it break before you read it: the ninth ends in a question mark, and the tenth answers it in one word."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first whole paragraph the book has asked you to hold at once, and it works because every piece was paid for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the paragraph aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the paragraph aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C33-pehla-sabaq-city",
+              "prompt": "Which city are they in?",
+              "assesses": [
+                "UR-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "lahore",
+                "لاہور"
+              ],
+              "feedback": {
+                "correct": "لاہور۔",
+                "incorrect": "لاہور -- ہم لاہور میں ہیں۔"
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words in that paragraph were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word ends nearly every line? (ہے.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

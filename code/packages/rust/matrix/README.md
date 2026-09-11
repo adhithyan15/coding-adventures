@@ -51,6 +51,14 @@ m.transpose();         // swap rows and columns
 // Equality
 m.equals(&other);      // exact element-wise comparison
 m.close(&other, 1e-9); // approximate comparison within tolerance
+
+// Linear solve (VIS01) -- square matrices only, Gaussian elimination
+// with partial pivoting. Errs on non-square input, a length-mismatched
+// b, or a singular (or numerically indistinguishable from singular)
+// matrix -- never panics.
+a.solve(&[5.0, 10.0])?; // x such that a * x = b, for b as a plain &[f64]
+a.invert()?;            // the inverse matrix; a.dot(&a.invert()?) ~= identity
+a.determinant()?;       // 0.0 for a singular matrix, not an error
 ```
 
 ## Design Principles
@@ -69,4 +77,4 @@ cargo test --verbose
 ## Package Structure
 
 - `src/lib.rs` -- Matrix struct with all operations (35 unit tests inline)
-- `tests/matrix_tests.rs` -- Integration tests (5 tests)
+- `tests/matrix_tests.rs` -- Integration tests (33 tests: 5 original + 28 for `solve`/`invert`/`determinant`)

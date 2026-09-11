@@ -4278,7 +4278,14 @@ fn merge_dependency_styles(
     own
 }
 
-fn slot_state_axes(
+/// The slot-to-state axes a component's model declares.
+///
+/// Public so consumers that compile a stylesheet themselves -- package tests,
+/// tooling -- bind states the same way a real build does. When this lived
+/// privately here and callers rebuilt the rule inline, they only handled
+/// `one-of` slots, so a UI57 bool-slot state read as unbound in a test while
+/// binding correctly in production (#14639).
+pub fn slot_state_axes(
     model: &mosmodel_compiler::MosmodelComponent,
 ) -> Vec<mosstyle_compiler::SlotStateAxis> {
     model

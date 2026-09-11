@@ -1,0 +1,14 @@
+{
+  "id": "UR-PATH-034",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "UR-C33-words",
+    "UR-C33-lines",
+    "UR-C33-pehla-sabaq"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-044-READING"
+  ],
+  "after": []
+}
