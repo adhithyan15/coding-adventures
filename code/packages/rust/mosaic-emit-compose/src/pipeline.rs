@@ -185,6 +185,7 @@ pub fn from_pipeline(
     // #14793. An unused Kotlin import is a warning; a missing one is an error.
     writeln!(out, "import androidx.compose.foundation.shape.RoundedCornerShape").unwrap();
     writeln!(out, "import androidx.compose.ui.draw.clip").unwrap();
+    writeln!(out, "import androidx.compose.ui.text.font.FontWeight").unwrap();
     writeln!(out, "import androidx.compose.ui.draw.alpha").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Column").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Row").unwrap();
@@ -1238,6 +1239,46 @@ fn chain_sets_own_width(chain: &str) -> bool {
         || chain.contains(".widthIn(")
 }
 
+
+/// Map a CSS `font-weight` to a Compose `FontWeight`.
+///
+/// CSS spells weight as a number or one of a few keywords; Compose has named
+/// constants for the nine hundreds and a `FontWeight(Int)` constructor for
+/// anything else. The named constants are used where they exist because the
+/// generated Kotlin is meant to be readable.
+///
+/// `lighter`/`bolder` are deliberately unmapped: both are RELATIVE to the
+/// inherited weight, and this lowering has no inherited value to resolve them
+/// against. Guessing `Light`/`Bold` would be wrong for any parent that is not
+/// already normal, so they fall through to the drop report (#14810) and say so
+/// instead.
+fn compose_font_weight(value: &str) -> Option<String> {
+    let v = value.trim();
+    let numeric = match v {
+        "normal" => Some(400),
+        "bold" => Some(700),
+        other => other.parse::<u16>().ok(),
+    }?;
+    let named = match numeric {
+        100 => "Thin",
+        200 => "ExtraLight",
+        300 => "Light",
+        400 => "Normal",
+        500 => "Medium",
+        600 => "SemiBold",
+        700 => "Bold",
+        800 => "ExtraBold",
+        900 => "Black",
+        // Compose clamps out-of-range values itself; a weight outside 1..=1000
+        // is not a weight, so it is left to the drop report rather than
+        // silently coerced.
+        other if (1..=1000).contains(&other) => {
+            return Some(format!("FontWeight({other})"));
+        }
+        _ => return None,
+    };
+    Some(format!("FontWeight.{named}"))
+}
 /// The modifier `HostScroll` prefixes onto a container's chain.
 ///
 /// Shared by `emit_container` (the ordinary path) and `emit_container_frame`
@@ -2701,6 +2742,8 @@ struct ComposeStyle {
     text_color: Option<String>,
     font_family_mono: bool,
     font_size: Option<String>,
+    /// Compose `FontWeight.*` expression for an authored `font-weight` (#14810).
+    font_weight: Option<String>,
 }
 
 /// Build the [`ComposeStyle`] for a part from its base props + state
@@ -2801,6 +2844,7 @@ fn compose_box_style(
     // this v1 targets).
     let mut text_align: Option<&'static str> = None;
     let mut radius: Option<String> = None;
+    let mut font_weight: Option<String> = None;
 
     let mut absorb = |p: &StyleProp, layer_idx: Option<usize>| {
         let set = |bucket: &mut PropBucket, v: String| match layer_idx {
@@ -2879,6 +2923,15 @@ fn compose_box_style(
             "border-radius" if layer_idx.is_none() => {
                 if let Some(v) = px_or_none(&p.value) {
                     radius = Some(v);
+                }
+            }
+            // #14810 — 48 occurrences in TaskApp, every one discarded, so every
+            // bold label rendered at regular weight. This is NOT a missing
+            // modifier: Compose's Text takes fontWeight as an ARGUMENT, so it
+            // threads through the text style rather than the box chain.
+            "font-weight" if layer_idx.is_none() => {
+                if let Some(w) = compose_font_weight(&p.value) {
+                    font_weight = Some(w);
                 }
             }
             // #14708 — `opacity` is what UI57's `state disabled` treatment is
@@ -3040,6 +3093,7 @@ fn compose_box_style(
         text_color,
         font_family_mono: !font_family_mono.empty(),
         font_size: font_size_out,
+        font_weight,
     }
 }
 
@@ -3090,6 +3144,8 @@ struct TextStyleCtx {
     mono: bool,
     /// Font size in CSS px (unit-stripped), threaded as `N.sp`.
     size: Option<String>,
+    /// Compose `FontWeight.*` expression for an authored `font-weight`.
+    weight: Option<String>,
 }
 
 impl TextStyleCtx {
@@ -3107,6 +3163,9 @@ impl TextStyleCtx {
         if let Some(sz) = &self.size {
             s.push_str(&format!(", fontSize = {sz}.sp"));
         }
+        if let Some(w) = &self.weight {
+            s.push_str(&format!(", fontWeight = {w}"));
+        }
         s
     }
 
@@ -3120,6 +3179,9 @@ impl TextStyleCtx {
         }
         if let Some(sz) = &self.size {
             fields.push(format!("fontSize = {sz}.sp"));
+        }
+        if let Some(w) = &self.weight {
+            fields.push(format!("fontWeight = {w}"));
         }
         if fields.is_empty() {
             None
@@ -3163,6 +3225,9 @@ fn cell_text_style(inherited: &TextStyleCtx, style: &ComposeStyle) -> TextStyleC
     }
     if let Some(sz) = &style.font_size {
         ctx.size = Some(sz.clone());
+    }
+    if let Some(w) = &style.font_weight {
+        ctx.weight = Some(w.clone());
     }
     ctx
 }
@@ -3745,6 +3810,7 @@ fn emit_container_frame(
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
+                font_weight: None,
                 })
             }
         }
@@ -4000,6 +4066,7 @@ fn emit_container(
                 text_color: None,
                 font_family_mono: false,
                 font_size: None,
+                font_weight: None,
             });
         }
     }
@@ -4026,6 +4093,7 @@ fn emit_container(
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
+                font_weight: None,
                 });
             }
         }
@@ -10430,6 +10498,72 @@ mod tests {
         );
     }
 
+
+    /// #14810 — `font-weight` was discarded: 48 occurrences in TaskApp, every
+    /// bold label rendered at regular weight.
+    ///
+    /// Not a missing modifier. Compose's `Text` takes `fontWeight` as an
+    /// ARGUMENT, so it threads through the text style rather than the box
+    /// modifier chain -- the same shape as the `gap` problem in #14804.
+    #[test]
+    fn font_weight_threads_through_the_text_style() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("label".to_string());
+        let l = layout("F", n);
+
+        let mut sheet = empty_style("F");
+        sheet
+            .parts
+            .push(part("label", vec![sprop("font-weight", "bold")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(out.contains("fontWeight = FontWeight.Bold"), "got:\n{out}");
+        assert!(
+            out.contains("import androidx.compose.ui.text.font.FontWeight"),
+            "FontWeight emitted without its import, got:\n{out}"
+        );
+    }
+
+    /// CSS numbers map to Compose's named constants where they exist, because
+    /// the generated Kotlin is meant to be read.
+    #[test]
+    fn numeric_font_weights_map_to_named_constants() {
+        assert_eq!(
+            compose_font_weight("500").as_deref(),
+            Some("FontWeight.Medium")
+        );
+        assert_eq!(
+            compose_font_weight("600").as_deref(),
+            Some("FontWeight.SemiBold")
+        );
+        assert_eq!(
+            compose_font_weight("normal").as_deref(),
+            Some("FontWeight.Normal")
+        );
+        assert_eq!(
+            compose_font_weight("bold").as_deref(),
+            Some("FontWeight.Bold")
+        );
+        // Off the hundreds, but still a legal weight.
+        assert_eq!(
+            compose_font_weight("450").as_deref(),
+            Some("FontWeight(450)")
+        );
+    }
+
+    /// `lighter`/`bolder` are RELATIVE to the inherited weight, and this
+    /// lowering has no inherited value to resolve them against. Guessing
+    /// Light/Bold would be wrong for any parent that is not already normal, so
+    /// they stay unmapped and fall through to the drop report instead.
+    #[test]
+    fn relative_font_weights_are_not_guessed_at() {
+        assert_eq!(compose_font_weight("lighter"), None);
+        assert_eq!(compose_font_weight("bolder"), None);
+        assert_eq!(compose_font_weight("chunky"), None);
+        assert_eq!(compose_font_weight("0"), None);
+        assert_eq!(compose_font_weight("1200"), None);
+    }
 
     /// #14708 — `opacity` is what UI57's `state disabled` treatment is built
     /// on, so dropping it meant a disabled control dimmed on five backends and
