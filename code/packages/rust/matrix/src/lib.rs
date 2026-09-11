@@ -438,6 +438,190 @@ impl Matrix {
         }
         true
     }
+
+    // ─── Linear Solve (VIS01) ────────────────────────────────────────
+
+    /// Solve `self * x = b` for `x` via Gaussian elimination with partial
+    /// pivoting. `self` must be square and `b` must have one entry per row.
+    ///
+    /// Returns `Err` if `self` is not square, if `b`'s length does not
+    /// match, or if `self` is singular (or numerically indistinguishable
+    /// from singular) -- never panics, and never silently returns a
+    /// wrong-but-plausible answer for a system with no unique solution.
+    ///
+    /// ```
+    /// use matrix::Matrix;
+    /// let a = Matrix::new_2d(vec![vec![2.0, 1.0], vec![1.0, 3.0]]);
+    /// let x = a.solve(&[5.0, 10.0]).unwrap();
+    /// assert!((x[0] - 1.0).abs() < 1e-9);
+    /// assert!((x[1] - 3.0).abs() < 1e-9);
+    /// ```
+    pub fn solve(&self, b: &[f64]) -> Result<Vec<f64>, String> {
+        if self.rows != self.cols {
+            return Err(format!(
+                "solve requires a square matrix, got {}x{}",
+                self.rows, self.cols
+            ));
+        }
+        if b.len() != self.rows {
+            return Err(format!(
+                "solve: b has {} entries, matrix has {} rows",
+                b.len(),
+                self.rows
+            ));
+        }
+        let n = self.rows;
+        if n == 0 {
+            return Ok(Vec::new());
+        }
+
+        // Augmented working matrix [A | b], eliminated in place.
+        let mut aug: Vec<Vec<f64>> = (0..n)
+            .map(|i| {
+                let mut row = self.data[i].clone();
+                row.push(b[i]);
+                row
+            })
+            .collect();
+
+        eliminate_forward(&mut aug, n)?;
+        Ok(back_substitute(&aug, n))
+    }
+
+    /// The inverse of `self`. `self.dot(&self.invert()?)` is the identity
+    /// matrix, up to floating-point rounding.
+    ///
+    /// Implemented as `n` calls to `solve` (once per column of the
+    /// identity matrix) -- simple and correct at the small (roughly up to
+    /// 10x10) sizes this crate targets; a fused Gauss-Jordan pass is the
+    /// standard optimization at larger scale and is not needed here.
+    ///
+    /// ```
+    /// use matrix::Matrix;
+    /// let a = Matrix::new_2d(vec![vec![4.0, 7.0], vec![2.0, 6.0]]);
+    /// let inv = a.invert().unwrap();
+    /// assert!(a.dot(&inv).unwrap().close(&Matrix::identity(2), 1e-9));
+    /// ```
+    pub fn invert(&self) -> Result<Matrix, String> {
+        if self.rows != self.cols {
+            return Err(format!(
+                "invert requires a square matrix, got {}x{}",
+                self.rows, self.cols
+            ));
+        }
+        let n = self.rows;
+        let mut columns: Vec<Vec<f64>> = Vec::with_capacity(n);
+        for col in 0..n {
+            let mut e = vec![0.0; n];
+            e[col] = 1.0;
+            columns.push(self.solve(&e)?);
+        }
+        // columns[c][r] is the inverse's entry at (row r, col c).
+        let data: Vec<Vec<f64>> = (0..n)
+            .map(|r| (0..n).map(|c| columns[c][r]).collect())
+            .collect();
+        Ok(Matrix::new_2d(data))
+    }
+
+    /// The determinant of `self`, an n x n matrix.
+    ///
+    /// A near-free byproduct of the same elimination `solve` performs: the
+    /// product of the pivots actually used, negated once per row swap.
+    /// Returns `Err` only for a non-square matrix -- a singular matrix has
+    /// determinant exactly `0.0`, which is a valid `Ok` answer, not an
+    /// error (contrast `solve`/`invert`, which cannot produce a meaningful
+    /// result for a singular matrix and so do return `Err` for one).
+    ///
+    /// ```
+    /// use matrix::Matrix;
+    /// let a = Matrix::new_2d(vec![vec![2.0, 0.0], vec![0.0, 3.0]]);
+    /// assert!((a.determinant().unwrap() - 6.0).abs() < 1e-9);
+    /// ```
+    pub fn determinant(&self) -> Result<f64, String> {
+        if self.rows != self.cols {
+            return Err(format!(
+                "determinant requires a square matrix, got {}x{}",
+                self.rows, self.cols
+            ));
+        }
+        let n = self.rows;
+        if n == 0 {
+            return Ok(1.0);
+        }
+        let mut work: Vec<Vec<f64>> = self.data.clone();
+        let mut sign = 1.0f64;
+        for k in 0..n {
+            let pivot_row = (k..n)
+                .max_by(|&a, &b| work[a][k].abs().total_cmp(&work[b][k].abs()))
+                .unwrap();
+            if work[pivot_row][k].abs() < SINGULAR_EPSILON {
+                return Ok(0.0);
+            }
+            if pivot_row != k {
+                work.swap(pivot_row, k);
+                sign = -sign;
+            }
+            for r in (k + 1)..n {
+                let factor = work[r][k] / work[k][k];
+                if factor != 0.0 {
+                    for c in k..n {
+                        work[r][c] -= factor * work[k][c];
+                    }
+                }
+            }
+        }
+        let mut det = sign;
+        for k in 0..n {
+            det *= work[k][k];
+        }
+        Ok(det)
+    }
+}
+
+/// Below this magnitude, a pivot candidate is treated as zero: the matrix
+/// is singular (or numerically indistinguishable from singular) in that
+/// column, and no row swap can produce a usable pivot there.
+const SINGULAR_EPSILON: f64 = 1e-10;
+
+/// Forward-eliminate an augmented `n x (n+1)` matrix (`self` on the left,
+/// `b` as the last column) in place, with partial pivoting. On success,
+/// `aug` is in row-echelon form and ready for `back_substitute`.
+fn eliminate_forward(aug: &mut [Vec<f64>], n: usize) -> Result<(), String> {
+    for k in 0..n {
+        let pivot_row = (k..n)
+            .max_by(|&a, &b| aug[a][k].abs().total_cmp(&aug[b][k].abs()))
+            .unwrap();
+        if aug[pivot_row][k].abs() < SINGULAR_EPSILON {
+            return Err("matrix is singular (or numerically indistinguishable from singular)"
+                .to_string());
+        }
+        if pivot_row != k {
+            aug.swap(pivot_row, k);
+        }
+        for r in (k + 1)..n {
+            let factor = aug[r][k] / aug[k][k];
+            if factor != 0.0 {
+                for c in k..=n {
+                    aug[r][c] -= factor * aug[k][c];
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Back-substitute a row-echelon-form augmented `n x (n+1)` matrix (as
+/// produced by `eliminate_forward`) to recover the solution vector.
+fn back_substitute(aug: &[Vec<f64>], n: usize) -> Vec<f64> {
+    let mut x = vec![0.0; n];
+    for i in (0..n).rev() {
+        let mut sum = aug[i][n];
+        for j in (i + 1)..n {
+            sum -= aug[i][j] * x[j];
+        }
+        x[i] = sum / aug[i][i];
+    }
+    x
 }
 
 // ─── Tests ───────────────────────────────────────────────────────────

@@ -4,6 +4,66 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — every host control applies authored part styles (#14780)
+
+`host_button_style_qml_lines` read a part's styles and had exactly one caller.
+The other five host primitives never looked at `ctx.part_styles`, so authored
+padding, background and opacity were **silently dropped** on every checkbox,
+radio, text input, slider and number input.
+
+Qt alone. The same probe on react, SwiftUI and XAML styles all of them, so this
+was neither a platform limit nor a Mosaic-wide decision:
+
+| Primitive | before | after |
+| --- | :-: | :-: |
+| `HostButton` | styled | styled |
+| `HostCheckbox` | dropped | styled |
+| `HostRadio` | dropped | styled |
+| `HostInput` | dropped | styled |
+| `HostSlider` | dropped | padding only, deliberately |
+| `HostNumberInput` | dropped | styled |
+
+The builder is now `host_control_style_qml_lines`, taking a small
+`QmlControlStyle` describing what a given control can express. Qt Quick
+Controls do not share one surface: a `CheckBox` labels through
+`palette.windowText` rather than `palette.buttonText`, and a `Slider` renders no
+text at all. Emitting the wrong property would be inert rather than visibly
+wrong, which is harder to notice.
+
+A `Slider` keeps its groove. Its `background` **is** the groove, so replacing it
+with a filled rectangle would delete the control's visual rather than decorate
+it — padding still applies, since that is an ordinary `Control` property.
+
+The visible consequence was the toolkit's disabled treatment (#14774):
+`Checkbox`, `Radio`, `Input`, `NumberInput` and `Select` all declare
+`state disabled { opacity : … }` and none of them dimmed on Qt. Qt Quick
+Controls paint their own disabled state, so nothing looked broken — which is
+why it went unnoticed.
+### Fixed — host controls honour `opacity` (#14775)
+
+#14741 added `opacity` to Qt's three `Rectangle` paint builders. Host controls
+are a **fourth** path none of them reach, so a `Box` part honoured an authored
+opacity while a `HostButton` part silently ignored it on the same backend — and
+`state disabled { opacity : … }` meant two different things depending on which
+primitive a component happened to use.
+
+Emitted on the **control**, not on its background `Rectangle`. `opacity` is an
+`Item` property, so on the control it composites the control, its text and its
+background together; on the Rectangle it would fade the fill and leave the label
+at full strength. A test pins that ordering.
+
+State-driven values keep working, reusing `conditional_number_expr`:
+
+```qml
+opacity: ( (disabled) ) ? 0.4 : 1
+```
+
+Only `HostButton` is covered here, because it is the only host control whose
+emitter reads part styles through `host_button_style_qml_lines`. Whether the
+sibling controls apply authored part styles at all is a separate and larger
+question — one measurement suggests `HostInput` does not — and is not answered
+by this change.
+
 ### Added — `opacity` lowering, base and state-driven (#14708)
 
 `opacity` was dropped entirely. It now lowers to QML's `Item.opacity`, which

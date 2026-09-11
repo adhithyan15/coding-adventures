@@ -63,6 +63,12 @@ const fixturePath = join(
 const fixture = JSON.parse(readFileSync(fixturePath, "utf8")) as Fixture;
 
 describe("CBR01 portable conformance", () => {
+  // Walks all 55 portable fixture cases end to end (decode, re-encode,
+  // map/generated-value construction, error-path checks); that is
+  // meaningfully more work than every other test in this file and has been
+  // observed to take ~10s on a loaded CI runner, well past vitest's 5s
+  // default. A 15s ceiling still catches a genuine hang while giving this
+  // one test room the rest of the suite doesn't need.
   it("matches every language-neutral fixture case", () => {
     expect(fixture.schema_version).toBe(1);
     expect(fixture.profile).toBe("rfc8949-section-4.2.3-length-first");
@@ -96,7 +102,7 @@ describe("CBR01 portable conformance", () => {
         throw new Error(`unknown fixture operation: ${operation}`);
       }
     }
-  });
+  }, 15000);
 });
 
 describe("host-language safety edges", () => {

@@ -1,0 +1,16 @@
+{
+  "chapter": 33,
+  "title": "Reading — Six Words, Six Lines, and a First Paragraph",
+  "label": "ch:ur-pehla-sabaq",
+  "canDo": "I can read Urdu words cold, read a meeting in the order it happens, and hold a whole paragraph without translating it word by word.",
+  "payoff": {
+    "lesson": "UR-C33-pehla-sabaq",
+    "kind": "four-skill-function-map",
+    "summary": "Fifty-one words of Urdu in a row with no new word in them, carried by the one sentence shape the book has taught most: something is something, with ہے last.",
+    "assesses": [
+      "UR-SKILL-CONNECTED-READING",
+      "UR-SKILL-READ-LINES",
+      "UR-SKILL-READ-WORDS"
+    ]
+  }
+}

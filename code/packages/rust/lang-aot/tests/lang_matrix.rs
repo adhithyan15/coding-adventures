@@ -66,6 +66,13 @@
 //! NOTE: several per-cell comments below say "all seven engines". That phrasing
 //! predates this column and means the seven non-BEAM engines. The `backends`
 //! list on each `Prog` is the authority, not the prose.
+//!
+//! Brainfuck's three non-input rows also declare `Beam` (VM-042, correcting a
+//! stale premise — see the per-row comment below): its mutable tape lowers
+//! through the SAME `:atomics`-backed `store_byte`/`load_byte` every other
+//! byte-tape/array program on this column already uses, not through anything
+//! Brainfuck-specific. Its three STDIN rows do not: `iir-to-beam` has no
+//! `getchar` builtin, refused explicitly at validation (VM-060b host input).
 
 use lang_aot::Language;
 use std::process::Command;
@@ -4255,12 +4262,25 @@ const PROGRAMS: &[Prog] = &[
     // `load_byte`/`store_byte` over its flat `memory` (a cell is `memory[base+idx]`,
     // `store_byte` masks to a byte for the 8-bit wrap); `.` is the registered
     // `putchar` builtin capturing bytes (→ `A`). No per-language VM code.
+    // On BEAM (VM-042/VM-D031): `brainfuck-iir-compiler`'s README long claimed BEAM
+    // tape support was "intentionally not supported" because BEAM has no mutable
+    // memory — true when that section was written (2026-05-22), but stale since
+    // PR #11343 (2026-08-13) added `:atomics`-backed `alloc_bytes`/`store_byte`/
+    // `load_byte` to `iir-to-beam` GENERICALLY, explicitly "unblocking Brainfuck
+    // (which needs a mutable tape)" per that PR's own description — and its
+    // loop-carried-liveness fix (`iir-to-beam` test 69) was itself motivated by
+    // "the Brainfuck tape loop". Nobody had gone back and actually tried compiling
+    // a Brainfuck program to BEAM since. A real probe against `erl` (not a reading
+    // of the README) found this exact program executes correctly and prints "A",
+    // through the same `store_byte`/`putchar` lowering every other byte-tape
+    // program on this column already uses — no Brainfuck-specific BEAM code exists
+    // or was needed.
     Prog {
         lang: Language::Brainfuck,
         ext: "bf",
         src: "++++++++[>++++++++<-]>+.",
         expect: Expect::Stdout("A"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Brainfuck — a NESTED-loop, multi-output program (LANG-FULL B1). The classic
     // multiply-by-repeated-addition idiom `[>[->+>+<<]>>[-<<+>>]<<<-]` is a loop *inside*
@@ -4269,21 +4289,27 @@ const PROGRAMS: &[Prog] = &[
     // The matrix's other BF cell is a single loop printing one char — this proves the
     // backends lower **nested loops + multi-cell pointer movement + multiple `putchar`s**,
     // not just one loop. Output: "HA".
+    // BEAM (VM-042/VM-D031): a real `erl` probe confirms nested loops and multi-cell
+    // pointer movement over the `:atomics` tape also reproduce "HA" exactly, using
+    // only already-proven `store_byte`/`load_byte`/`putchar` lowering.
     Prog {
         lang: Language::Brainfuck,
         ext: "bf",
         src: "++++++++>+++++++++<[>[->+>+<<]>>[-<<+>>]<<<-]>>.-------.",
         expect: Expect::Stdout("HA"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Brainfuck — two sequential loops + two outputs (LANG-FULL B1). Builds 80 in a loop,
     // `-` → 79 (`O`), prints; `----` → 75 (`K`), prints. Distinct loop labels + multi-output.
+    // BEAM (VM-042/VM-D031): confirmed on real `erl`, two distinct loop labels and
+    // two `putchar`s in sequence both print correctly ("OK"), the third and last
+    // non-input row promoted this slice.
     Prog {
         lang: Language::Brainfuck,
         ext: "bf",
         src: "++++++++[>++++++++++<-]>-.----.",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Brainfuck — STDIN (LANG-FULL B1-stdin). The matrix proved every backend can *write*
     // output (`.`); these two prove every backend can *read* input (`,`). `,+.` reads one
@@ -4299,6 +4325,15 @@ const PROGRAMS: &[Prog] = &[
     // host return -1 → the cell wraps to 255). The classic cat `,[.,]` would loop forever on
     // the -1 backends, so normalising EOF across backends is a separate item; these programs
     // sidestep it by construction.
+    //
+    // No `Beam` here (VM-042/VM-D031): unlike the three tape-only rows above, `,` needs a
+    // `getchar` builtin, and `iir-to-beam` has none — `call_builtin_getchar_rejected_but_
+    // putchar_accepted` (iir-to-beam) and `brainfuck_beam_stdin_rows_refuse_at_backend_not_
+    // frontend` (this file) pin that it is REFUSED explicitly at BEAM validation, not
+    // silently miscompiled, and that `brainfuck-iir-compiler`'s own frontend compile step
+    // has no trouble with `,` at all — only the BEAM backend refuses it. This is host input
+    // (VM-060b), the same reader/ABI design gap every other frontend's BEAM input rows are
+    // deferred behind, not a Brainfuck-specific or tape-mutation limitation.
     Prog {
         lang: Language::Brainfuck,
         ext: "bf",
@@ -5543,7 +5578,7 @@ const PROGRAMS: &[Prog] = &[
                000000     IF (N > 1 OR N > 9) AND N < 8 DISPLAY \"Y\" ELSE DISPLAY \"N\".\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("Y"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — NOT over a parenthesised condition (PL09 step 4). `NOT (N<3 OR
     // N>9)` on N=5 = NOT (false OR false) = true → prints "Y". The negation inverts
@@ -5562,7 +5597,7 @@ const PROGRAMS: &[Prog] = &[
                000000     IF NOT (N < 3 OR N > 9) DISPLAY \"Y\" ELSE DISPLAY \"N\".\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("Y"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — EVALUATE case statement (PL09 step 4). `EVALUATE N` on N=5 with
     // `WHEN 1 / WHEN 5 / WHEN OTHER` matches the second WHEN → prints "FIVE". Lowers
@@ -5585,7 +5620,7 @@ const PROGRAMS: &[Prog] = &[
                000000     END-EVALUATE.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("FIVE"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — EVALUATE with a multi-value / THRU-range WHEN (PL09 step 4).
     // `EVALUATE N` on N=6 with `WHEN 1 5 THRU 7 9` matches (6 is in 5 THRU 7) →
@@ -5607,7 +5642,7 @@ const PROGRAMS: &[Prog] = &[
                000000     END-EVALUATE.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("Y"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — alphanumeric EVALUATE subject (PL09 step 4). `EVALUATE GRADE` on
     // GRADE="B" with `WHEN "A" THRU "M"` (byte-lexical) matches → prints "FIRST".
@@ -9060,6 +9095,17 @@ fn matrix_every_proven_cell_agrees() {
 /// dedicated coverage, not absent support" reading depends on that staying
 /// true. A stray `Prog { lang: Language::McCarthyLisp | Language::Macsyma,
 /// .. }` slipping into this shared corpus would silently break that reading.
+///
+/// Brainfuck's expected cell count changed again after VM-061 (42 → 45,
+/// VM-042/VM-D031): three of its six rows gained a real, `erl`-proven `Beam`
+/// declaration. That is exactly the "future slice" drift this test exists to
+/// catch, not evidence the test itself is unreliable.
+///
+/// COBOL-60's expected cell count changed again after VM-042 (422 → 426,
+/// this slice): four more rows (compound AND/OR/parenthesised conditions,
+/// NOT-over-parenthesised, EVALUATE case, and EVALUATE multi-value/THRU)
+/// gained a real, `erl`-proven `Beam` declaration, continuing the same
+/// bounded four-row-at-a-time promotion the prior COBOL BEAM slices used.
 #[test]
 fn feature_coverage_doc_counts_match_programs_source() {
     fn rows_and_cells(lang: Language) -> (usize, usize) {
@@ -9074,11 +9120,11 @@ fn feature_coverage_doc_counts_match_programs_source() {
     let expected = [
         (Language::Twig, 49, 363),
         (Language::Nib, 26, 208),
-        (Language::Brainfuck, 6, 42),
+        (Language::Brainfuck, 6, 45),
         (Language::DartmouthBasic, 51, 357),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
-        (Language::Cobol60, 58, 422),
+        (Language::Cobol60, 58, 426),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -14501,6 +14547,60 @@ fn portable_text_stdout_flow_matic_beam_output() {
     eprintln!("FLOW-MATIC BEAM output: {executed} programs executed");
 }
 
+/// VM-042/VM-D031: the three non-input Brainfuck rows execute correctly on real
+/// `erl` through the SAME `:atomics`-backed `store_byte`/`load_byte`/`putchar`
+/// lowering every other byte-tape/array BEAM program already uses — `README`'s
+/// long-standing "BEAM tape support is intentionally not supported" claim (written
+/// 2026-05-22) was stale from the moment PR #11343 (2026-08-13) added that generic
+/// mutable-memory lowering "unblocking Brainfuck" and nobody re-probed it since.
+/// The three STDIN rows are deliberately excluded here (`getchar` is unimplemented,
+/// VM-060b); see `brainfuck_beam_stdin_rows_refuse_at_backend_not_frontend` below.
+#[test]
+fn portable_text_stdout_brainfuck_beam_corpus() {
+    if !erl_ok() {
+        eprintln!("SKIP Brainfuck BEAM corpus: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p|
+        p.lang == Language::Brainfuck && !p.src.contains(',')) {
+        let result = run_beam(program).expect("detected erl must execute Brainfuck");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 3, "exactly the three non-input Brainfuck rows declare Beam");
+    eprintln!("Brainfuck BEAM corpus: {executed} programs executed");
+}
+
+/// VM-042/VM-D031: the three STDIN Brainfuck rows must refuse at the BEAM BACKEND
+/// (no `getchar` builtin), not at the Brainfuck FRONTEND — the exact "distinguish
+/// supported frontend compilation from backend refusal" VM-042 always asked for,
+/// now correctly scoped to input rather than the tape mutation the stale README
+/// blamed. `compile_source_to_iir` (frontend + shared IIR passes) must succeed for
+/// all three; only `compile_source_to_beam` (which additionally runs `iir-to-beam`
+/// validation) may fail, and only by naming `getchar` — not a panic, not a silent
+/// wrong answer.
+#[test]
+fn brainfuck_beam_stdin_rows_refuse_at_backend_not_frontend() {
+    let mut checked = 0;
+    for program in PROGRAMS.iter().filter(|p|
+        p.lang == Language::Brainfuck && p.src.contains(',')) {
+        lang_aot::compile_source_to_iir(program.lang, program.src, "bfstdin")
+            .unwrap_or_else(|e| panic!(
+                "Brainfuck frontend must compile a `,` program to IIR without error: {e:?}"
+            ));
+        let err = lang_aot::compile_source_to_beam(program.lang, program.src, "bfstdin")
+            .expect_err("a `,` program must be refused by the BEAM backend, not silently compiled");
+        let msg = format!("{err:?}");
+        assert!(
+            msg.contains("getchar"),
+            "refusal must name the missing `getchar` builtin, not some other cause: {msg}"
+        );
+        checked += 1;
+    }
+    assert_eq!(checked, 3, "exactly the three STDIN Brainfuck rows must be checked");
+}
+
 #[test]
 fn portable_text_stdout_beam_putchar_preserves_loop_state() {
     use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
@@ -14682,4 +14782,20 @@ fn portable_text_stdout_cobol_beam_condition_names_and_evaluate() {
     }
     assert_eq!(executed, 4);
     eprintln!("COBOL BEAM condition-name/EVALUATE: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_cobol_beam_boolean_and_evaluate() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM boolean/EVALUATE: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(16).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM boolean/EVALUATE: {executed} programs executed");
 }

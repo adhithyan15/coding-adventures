@@ -1,12 +1,286 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-09
+Status date: 2026-09-11
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
 `LANG-FULL-IMPLEMENTATION.md`; when the two disagree about landed behavior,
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
+
+## VM-040 COBOL BEAM boolean/EVALUATE probe (selected after #14770 merged)
+
+`git fetch origin && git merge origin/main` found this worktree already sat at
+`4dfa11af8d` (PR #14770, VM-042 Brainfuck BEAM parity correction) with nothing
+to fast-forward — that PR's own merge state is directly confirmed. `gh pr list
+--state open` showed ten open PRs: Qt/Compose/toolkit UI feature work, a
+Punjabi/Urdu human-languages PR, a CI shard-balancing fix, one Compose draft,
+and four dependabot bumps (npm/yarn ×3, GitHub Actions) — none touching this
+backlog or any `lang-*`/`iir-*`/`cobol-*`/BEAM path, so nothing was in flight
+to coordinate with.
+
+VM-042's own trailing note asked for a real reprioritization of the ~42
+undeclared COBOL BEAM rows against VM-041 (Twig dynamic-string isolation),
+VM-060b (host input design) and VM-058 (INSPECT BEFORE/AFTER intersection),
+restating that VM-058 was re-examined and confirmed to stay at rung 5, and
+that VM-041/VM-060b still have no scoped backlog entry. Rather than repeat
+that conclusion by habit, it was re-checked against current source, per this
+session's own mandate:
+
+**Did anything change the picture since VM-042 merged?** `git log --oneline
+4dfa11af8d..origin/main -- code/packages/rust/iir-to-beam code/packages/rust/ir-to-beam
+code/packages/rust/cobol-iir-compiler code/packages/rust/cobol-runtime
+code/packages/rust/lang-aot/tests/lang_matrix.rs` returned nothing — no commit
+by anyone touched any of these paths between VM-042's merge and this session's
+start, despite the repo's heavy concurrent activity (the fifteen most recent
+commits on `main` are all unrelated: vision, mosaic, human-languages and
+`adj-facts-stdlib` work). So VM-058's rung-5 status and VM-041/VM-060b's
+unscoped-design status are not stale; there was nothing new to find there.
+
+**Is the "~42 undeclared rows" figure still accurate?** Checked directly
+against source rather than trusted, per VM-061's own lesson that stated
+cell/row counts have been wrong before. A first naive whole-file
+brace-balanced parse of every `Prog { .. }` literal in `lang_matrix.rs`
+over-counted: it picked up a per-iteration differential-test helper
+(`t7_differential_random_u8_expressions_agree`, which constructs a `Prog`
+with `backends: &[]` inside a loop, reusing the same struct literal shape)
+and a boundary-assertion `Prog` local to
+`portable_text_stdout_preserves_content_and_brainfuck_bytes` (a
+one-off `Language::Brainfuck` `Prog` used only to prove text-normalization
+does not apply to Brainfuck's byte output) — neither is a row in the actual
+`PROGRAMS` corpus. Restricting the parse to the `PROGRAMS: &[Prog] = &[..]`
+static array specifically (lines 171–6530, found via `];` at column 0, since
+Brainfuck source strings contain literal `[`/`]` characters that break naive
+bracket-balancing across the whole file) produced exactly 455 entries — 210
+non-ALGOL rows, 1551 non-ALGOL declared cells, matching every number VM-061
+and VM-042 already pinned, including Twig's corrected 363 and Brainfuck's
+corrected 45. Against that trustworthy parse: 58 `Cobol60` rows, exactly 16
+declaring `Beam` and exactly 42 not — the "~42" estimate was, this time,
+exactly right.
+
+**Conclusion:** nothing outranks continuing the COBOL BEAM rows. Rungs 1–2
+are clear (every trailing validation paragraph back through VM-046c reports
+positive sentinels; VM-024/VM-032 keep the matrix and Windows execution in
+normal CI). Rung 3 found nothing stale this round — VM-058, VM-041 and
+VM-060b's statuses are all confirmed current, not just repeated. Between the
+rung-4 COBOL BEAM rows (bounded, proof-promotion, an established
+`.skip(N).take(4)` pattern with five successful prior slices) and rung-5
+VM-041/VM-060b (still genuinely open-ended design work), COBOL BEAM rows win
+again — this time on a freshly re-verified premise, not an assumed one.
+
+The next four rows in file order after the sixteen already declared (lines
+5568, 5587, 5606, 5629) are: a compound `(N > 1 OR N > 9) AND N < 8`
+condition (folding leaf `cmp_*` booleans with bitwise `and`/`or`), `NOT (N <
+3 OR N > 9)` (the first COBOL BEAM row to emit `xor`), an `EVALUATE` case
+statement (`cmp_eq` + branch cascade, the same ops `IF` already uses), and an
+`EVALUATE` with a multi-value/THRU-range `WHEN` (OR-folded `cmp_eq` and
+`and(cmp_ge, cmp_le)`, the level-88 ranges machinery). All four are
+boolean/comparison/branch lowering reusing already-BEAM-proven ops — no new
+opcode expected, matching the family the prior condition-name/EVALUATE slice
+already established. Run this slice (`.skip(16).take(4)`) on real Erlang,
+matching the established discipline: probe before declaring, commit a
+bounded contract for any newly exposed defect, promote only executed cells.
+
+### VM-040 COBOL BEAM boolean/EVALUATE validation
+
+All four selected programs passed on real Erlang on the first probe
+(`portable_text_stdout_cobol_beam_boolean_and_evaluate`), with no new
+`iir-to-beam`/`ir-to-beam` defect: each reuses `cmp_*`/`and`/`or`/`xor`/
+branch lowering already proven by earlier COBOL BEAM rows, so no production
+code changed this slice. All thirteen BEAM `lang_matrix` tests pass together
+(12 prior + the new one — Oct, Nib, Brainfuck, FLOW-MATIC and now twenty of
+58 COBOL rows across five probe batches, plus the immediate-arithmetic/
+comparison/`putchar`-state regressions and the Brainfuck frontend/backend
+refusal split), 12.43s. `iir-to-beam`'s package suite is unchanged at 98
+tests (19 unit, 74 integration, 5 doc) since no production code in that
+crate changed; focused Clippy on `lang-aot` and `iir-to-beam` with all
+targets and warnings denied is clean. Twenty of 58 COBOL rows now declare
+BEAM (426 total declared cells, up from 422).
+`feature_coverage_doc_counts_match_programs_source` was confirmed to
+actually exercise the check by first running it against the pre-fix COBOL-60
+figure of 422, where it failed with the expected assertion message naming
+the 426/422 mismatch, before the doc was corrected to match. The full
+`non_algol_matrix_every_proven_cell_agrees` capstone passed: 210 programs,
+**1345** cells exercised (was 1341), 210 skipped (the same host-wide missing
+`ilasm` pattern every prior slice reports), zero failures, in 516.04s —
+exactly the four newly-promoted COBOL cells accounted for, confirming the
+doc's corrected grand total (1551 → 1555) against a live run rather than
+arithmetic alone.
+
+Reprioritize the remaining ~38 undeclared COBOL BEAM rows against VM-041
+(Twig dynamic-string isolation), VM-060b (host input design) and VM-058
+(INSPECT BEFORE/AFTER intersection) after this merges, following the same
+real policy comparison run above — re-verifying premises against source,
+not repeating prior conclusions by habit.
+
+## VM-042 Brainfuck BEAM parity correction (selected after #14723 merged)
+
+`git fetch origin && git merge origin/main` fast-forwarded this worktree to
+`334182bc76` ("spec(UI47): design the effect-handler hook") with no conflicts;
+the prior head was `04d9e16ac9` (PR #14723, VM-061), confirming that PR's own
+merge state directly. `gh pr list --state open` showed six open PRs: a
+Compose directional-padding feature and five dependabot bumps (npm/yarn ×3,
+GitHub Actions), none touching this backlog or any LANG-VM path — nothing was
+in flight to coordinate with or wait on.
+
+VM-061's own trailing note asked for a real reprioritization of the ~42
+undeclared COBOL BEAM rows against VM-041 (Twig dynamic-string isolation),
+VM-060b (host input design), VM-042 (Brainfuck's BEAM-refusal pin) and VM-058
+(the INSPECT BEFORE/AFTER two-delimiter intersection defect) — the same four
+candidates every recent slice has compared, with COBOL BEAM rows winning each
+time on the same structural reasoning (rung 4, bounded proof-promotion vs.
+rung 5, open-ended design). Re-running the policy for real rather than
+repeating that conclusion by habit:
+
+**Rungs 1–2 (red cells / missing CI protection):** unchanged — every trailing
+validation paragraph back through VM-046c reports positive sentinels, and
+VM-024/VM-032 keep the matrix and Windows execution in normal CI.
+
+**VM-058, re-examined against rung 1 specifically** (the session's own
+mandate: don't trust the label already on it). VM-058 IS a genuine defect —
+both `cobol-runtime`'s oracle and `cobol-iir-compiler`'s nine
+`inspect_region` call sites silently read only the first of two grammar-legal
+sibling nodes when one delimiter phrase carries both `BEFORE` and `AFTER` —
+and its own discovery text (VM-D027) literally says "silently discarding a
+second [keyword]", language that echoes rung 1's "silent backend skip"
+closely enough to warrant checking. But rung 1 is specifically about a
+*currently executed* red cell or a skip that is masking one — and neither
+applies here: no matrix row exercises this two-delimiter construct (VM-047c
+deliberately scoped it out), and the regression VM-047c added pins the
+CURRENT incomplete behavior as its expected, passing result — a green test
+documenting a known gap, not a red one hiding it. The oracle and compiler
+also independently agree (non-diverging), so no executed conformance
+comparison is silently wrong; the gap was found by deliberately writing a new
+discriminating probe, which is what discovery work is for, not by a
+mechanism that should have caught it and didn't. Implementing genuine
+two-delimiter intersection also requires answering a real semantics question
+(exact intersection ordering across TALLYING/REPLACING/CONVERTING, both
+single- and multi-item forms, at nine call sites in two engines) rather than
+restoring a previously-correct behavior — that is design work, matching rung
+5's "new frontend semantics" exactly, not rung 1. **Conclusion: VM-058 is
+correctly ranked at rung 5**, though it is more tightly bounded (nine named
+call sites, an existing pinned regression to extend) than VM-041 or VM-060b's
+genuinely open-ended design gaps, so it would sort ahead of them within that
+rung if rung 5 were reached this round.
+
+**Rung 4 vs. rung 5, and where VM-042 actually belongs.** VM-042 was filed as
+"pin Brainfuck's intentional BEAM exclusion... for mutable tape operations" —
+itself implicitly rung 5/documentation-adjacent (formalizing an existing
+design decision). Before implementing it as written, its premise was checked
+against source rather than trusted: `brainfuck-iir-compiler/README.md`'s
+"Why no BEAM target?" section (written 2026-05-22) argues BEAM's immutable
+substrate makes a compiled mutable tape prohibitively expensive (O(N²·M) for
+a naive copy-on-write array) and calls the exclusion intentional and
+documented. But `iir-to-beam` PR #11343 (2026-08-13) — three weeks *after*
+that README section, and three weeks *before* VM-042's own backlog text was
+written on 2026-09-05 — added `alloc_bytes`/`store_byte`/`load_byte` backed
+by Erlang's `:atomics` module (fixed-size, off-heap, destructive O(1)
+get/put), with that PR's own description stating it was added explicitly
+"unblocking Brainfuck (which needs a mutable tape)". Nobody had gone back and
+actually tried compiling a Brainfuck program through it since — the README
+and `LANG-VM-FEATURE-COVERAGE.md` both kept the stale claim, and VM-042 was
+filed against that stale claim without re-checking it. That is rung 3
+("incorrect roadmap/status documentation that could send work down a dead
+path") hiding inside what looked like a rung-5 item: implementing VM-042 as
+literally scoped would have written a permanent regression test asserting a
+now-false claim.
+
+A real probe (not a re-reading of the README) settled it: a scratch
+integration test called `lang_aot::compile_source_to_beam` directly on all
+six Brainfuck matrix programs and ran the output under real `erl`. The three
+non-input programs (`++++++++[>++++++++<-]>+.` → `"A"`, the nested-loop
+`"HA"` program, and the two-loop `"OK"` program) all lowered and executed
+correctly, producing byte-identical stdout to every other backend — through
+the exact same `store_byte`/`load_byte`/`putchar` lowering every other
+byte-tape/array BEAM program on this column already uses; no Brainfuck-
+specific BEAM code exists or was needed. The three STDIN programs (`,+.`,
+`,.,.`, `,[.,]`) failed lowering with a clean, named `UnsupportedOp: …
+call_builtin Some(Var("getchar")) is not in the BEAM builtin set` — `getchar`
+was never added when the memory ops landed, because that PR's motivating
+workload (the tape loop) never needed it. So the real, narrower shape of
+VM-042 is rung 4 (missing backend parity for an already-implemented
+feature — three Brainfuck rows just needed their existing, already-working
+lowering promoted to a declared matrix cell) plus a correctly-scoped input
+refusal pin, not rung 5 design work and not a literal implementation of the
+stale premise. This outranks continuing the ~42 undeclared COBOL BEAM rows
+(also rung 4, but strictly a repeat of an already-proven pattern with no
+documentation-correctness angle) for the same reason VM-061 outranked its
+own rung-4/5 alternatives: a stale-documentation finding takes priority once
+found, per the policy's own ordering, and this one was hiding directly
+inside the very item the queue said to pick up next.
+
+### VM-042 discovery: VM-D031 — the Brainfuck BEAM exclusion was stale, not intentional
+
+Filed as its own discovery entry (see the Discovery log below) rather than
+folded silently into the contract: `brainfuck-iir-compiler/README.md` and
+`LANG-VM-FEATURE-COVERAGE.md`'s Brainfuck row both asserted, as settled fact,
+that BEAM tape mutation was unsupported by design. Three of six matrix rows
+already ran correctly against real `erl` by the time this was checked. The
+premise was correct for roughly three months (2026-05-22 to 2026-08-13) and
+silently wrong for the roughly four weeks after `:atomics` landed, because
+promoting a working capability to documentation and to a declared matrix
+cell is a step that has to happen deliberately — landing the generic backend
+capability does not, by itself, update every frontend's specific claims
+about it.
+
+### VM-042 contract
+
+Promote the three non-input Brainfuck matrix rows
+(`lang-aot/tests/lang_matrix.rs`) to declare `Beam` in their `backends` list,
+based on the real `erl` execution above (42 → 45 declared Brainfuck cells).
+Add a dedicated real-`erl` corpus test (`portable_text_stdout_brainfuck_beam_corpus`,
+mirroring the existing Oct/Nib/FLOW-MATIC BEAM corpus tests) asserting
+exactly those three cells execute with the expected stdout. Add an explicit
+frontend-vs-backend split test
+(`brainfuck_beam_stdin_rows_refuse_at_backend_not_frontend`) proving all
+three STDIN rows compile through `compile_source_to_iir` (the frontend, plus
+shared IIR passes) without error, and are refused ONLY by
+`compile_source_to_beam` (the BEAM backend specifically), with the refusal
+naming `getchar` — the exact "distinguish supported frontend compilation
+from backend refusal" VM-042 always asked for, now correctly scoped to the
+one thing that is actually unsupported. Pin the same refusal/acceptance
+split at the `iir-to-beam` layer directly
+(`call_builtin_getchar_rejected_but_putchar_accepted`): `getchar` must be
+named in the validator's rejection, and `putchar` — the same `call_builtin`
+allowlist check, and the builtin the three newly-promoted rows depend on —
+must remain accepted, as the control proving the refusal is targeted, not a
+side effect of a broken validation path. Correct
+`brainfuck-iir-compiler/README.md`'s "Why no BEAM target?" section and
+`LANG-VM-FEATURE-COVERAGE.md`'s Brainfuck row and grand-total prose to state
+the real, narrower finding, and update
+`feature_coverage_doc_counts_match_programs_source`'s expected Brainfuck
+tuple (6, 42) → (6, 45) together with the doc, per that test's own
+requirement. No `iir-to-beam` production code changes: the three promoted
+rows needed none, and the `getchar` refusal already existed via the generic
+`call_builtin` allowlist.
+
+### VM-042 validation
+
+The `iir-to-beam` package suite passed 98 tests (19 unit + 74 integration,
+including the new `call_builtin_getchar_rejected_but_putchar_accepted`, + 5
+doc) with all-target Clippy on `iir-to-beam` and `lang-aot` (warnings denied)
+clean. The three new/updated `lang_matrix.rs` tests
+(`feature_coverage_doc_counts_match_programs_source`,
+`portable_text_stdout_brainfuck_beam_corpus`,
+`brainfuck_beam_stdin_rows_refuse_at_backend_not_frontend`) pass, and all
+other BEAM tests (Oct/Nib/FLOW-MATIC/COBOL corpora, arithmetic/comparison/
+move immediates, the putchar loop-state proof) pass unchanged alongside
+them — twelve BEAM-tagged tests total, no regression. The full
+`non_algol_matrix_every_proven_cell_agrees` capstone passed: 210 programs,
+**1341** cells exercised (was 1338), 210 skipped (the same host-wide missing
+`ilasm` pattern every prior slice reports), zero failures, in 535.91s —
+exactly the three newly-promoted Brainfuck cells accounted for, confirming
+the doc's corrected grand total (1548 → 1551) against a live run rather than
+arithmetic alone.
+
+Reprioritize the remaining ~42 undeclared COBOL BEAM rows against VM-041,
+VM-060b and VM-058 after this merges, following the same real policy
+comparison run above. VM-058 was re-examined this round and confirmed to
+stay at rung 5 (see above) — nothing found here changes that. Twig
+records/closures on BEAM and the remaining Twig dynamic-string BEAM rows
+(VM-041) still have no scoped backlog entry establishing what a closure or
+record even looks like as a BEAM term, so they remain the least-bounded
+option until someone does that design work.
 
 ## VM-061 feature-coverage recount (selected after #14714 merged)
 
@@ -1471,7 +1745,7 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | done #14471 | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
 | done #14601 | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
 | 10 | VM-040 | Inventory remaining BEAM cells separately for Twig strings, Twig records/closures, Nib scalars, BASIC f64/I/O, Oct u8/I/O, FLOW-MATIC and COBOL. Each family first gets a discriminating probe; split actual lowering defects before implementation. Brainfuck remains the explicit excluded tape design. |
-| 11 | VM-042 | Pin Brainfuck's intentional BEAM exclusion with a driver-level error assertion for mutable tape operations; distinguish supported frontend compilation from backend refusal. |
+| done (see PR below) | VM-042 | ~~Pin Brainfuck's intentional BEAM exclusion with a driver-level error assertion for mutable tape operations~~ — the premise was stale (VM-D031): tape mutation already works via `iir-to-beam`'s `:atomics` ops. Promoted the three non-input rows to real BEAM cells instead, and pinned the genuinely remaining `getchar`/host-input refusal at both the `lang-aot` and `iir-to-beam` layers; distinguishes supported frontend compilation from backend refusal, correctly scoped to input only. |
 | 12 | VM-041 | Isolate Twig captured/reassigned runtime-string lowering from existing source-local string metadata; add one captured-string value proof before wider dynamic-string expansion. |
 | 13 | VM-048 | Define a representation-neutral observation for Macsyma's implemented inert symbolic Apply, then promote one oracle-derived symbolic result per backend; do not compare raw pointer/tag identities. |
 | 14 | VM-058 | Implement genuine COBOL INSPECT `BEFORE x AFTER y` two-delimiter window intersection on a single delimiter phrase (discovered as VM-D027): both the `cobol-runtime` oracle and the compiler currently read only the first of two grammar-legal `inspect_region` siblings. Touches all nine region-parsing call sites (TALLYING/REPLACING/CONVERTING, single- and multi-item) in both engines; add a discriminating two-distinct-delimiter proof (present/present, one absent) plus a matrix cell once implemented. |
@@ -1501,6 +1775,33 @@ implementation item. The known DEF FN-global and print-zone semantics remain
 future frontend design scope, not missing proofs for already-implemented code.
 
 ## Discovery log
+
+- **VM-D031 — confirmed 2026-09-10:** while checking VM-042's filed premise
+  ("Brainfuck's intentional BEAM exclusion... for mutable tape operations")
+  against source before implementing it as written, found `iir-to-beam` PR
+  #11343 (2026-08-13) had already added `:atomics`-backed `alloc_bytes`/
+  `store_byte`/`load_byte`, explicitly "unblocking Brainfuck (which needs a
+  mutable tape)" per that PR's own description — three weeks BEFORE VM-042's
+  backlog text was written (2026-09-05) and roughly four weeks after
+  `brainfuck-iir-compiler/README.md`'s "Why no BEAM target?" section
+  (2026-05-22) had declared the exclusion permanent and by-design. A scratch
+  probe compiling all six Brainfuck matrix programs through
+  `lang_aot::compile_source_to_beam` and executing the result on real `erl`
+  confirmed the three non-input programs already run correctly (byte-
+  identical stdout to every other backend) with zero backend code changes,
+  while the three STDIN programs cleanly refuse with `UnsupportedOp: …
+  "getchar" is not in the BEAM builtin set` — `getchar` was simply never
+  added when the memory ops landed, since that PR's motivating tape-loop
+  workload never needed it. So the exclusion was real and correctly
+  documented for about three months, then silently stale for about four
+  weeks, and nobody had re-probed it since. **Resolved 2026-09-10** (see the
+  top-of-file VM-042 section): promoted the three non-input rows to a real,
+  `erl`-executed `Beam` cell each (42 → 45 declared Brainfuck cells);
+  corrected the README and `LANG-VM-FEATURE-COVERAGE.md`; pinned the
+  genuinely-remaining `getchar` refusal as a targeted, named backend
+  rejection (not a generic or accidental one) at both the `lang-aot` and
+  `iir-to-beam` layers, distinct from the frontend, which compiles `,`
+  without complaint.
 
 - **VM-D030 — confirmed 2026-09-09:** while updating
   `LANG-VM-FEATURE-COVERAGE.md`'s COBOL-60 row for the condition-name/

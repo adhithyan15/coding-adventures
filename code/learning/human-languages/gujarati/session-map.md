@@ -82,6 +82,7 @@ canonical `sequence` order.
 | 259-263 | 41 | Who, Where, When, How Many | `GU-C37-kon` -> `GU-C37-kyaan` -> `GU-C37-kyaan-write` -> `GU-C37-kyaare` -> `GU-C37-ketla` |
 | 264-269 | 42 | Which One in the Line | `GU-C38-panchmu` -> `GU-C38-triju` -> `GU-C38-biju` -> `GU-C38-chothu` -> `GU-C38-pahelu` -> `GU-R38-first-to-fifth` |
 | 270-277 | 43 | Past Five, and the Balance Turns Over | `GU-C39-chha` -> `GU-C39-saat` -> `GU-W22-ttha` -> `GU-C39-aath` -> `GU-C39-nav` -> `GU-C39-das` -> `GU-C39-ordinal-reach` -> `GU-R39-one-to-ten` |
+| 278-280 | 44 | Reading — Six Words, Six Lines, and a Whole Meeting | `GU-C44-words` -> `GU-C44-lines` -> `GU-C44-pehli-vanchan` |
 
 ## Current boundary
 

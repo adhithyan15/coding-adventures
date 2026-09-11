@@ -32,7 +32,12 @@ it("pins Gujarati lesson-content budgets", () =>
     // writing lesson for the retroflex aspirate that eight needs, one rule
     // lesson naming both edges of the -mun exception list, and a payoff. Seven
     // atoms. Again no new idiom, sense or culture claim.
-    lessons: 277,
+    //
+    // 277 -> 280: chapter 44, the reading rung -- six signboard words, six lines
+    // the track had only ever said aloud, and a 35-word meeting. No new word:
+    // every Gujarati token was checked to occur in a lesson with a lower
+    // sequence number.
+    lessons: 280,
     idioms: 12,
     senses: 6,
     cultureClaims: 16,
@@ -200,6 +205,8 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     // exactly once, between the first lesson and the second. The writing lesson
     // is third, where chapters 35-41 already put theirs.
     ["43", 8],
+    // chapter 44 -- the reading rung: words, lines, and a whole meeting
+    ["44", 3],
   ]);
 });
 
@@ -804,7 +811,11 @@ it("closes Gujarati doorway R4 at position 134", () => {
   //        GU-SCRIPT-THA-01 reach their fourth window for the first time.
   // The doorway assertion below is unchanged and still passes, which is the
   // property this test actually owns.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(360);
+  // 360 -> 359. Chapter 44's reading rung closes one more window than it opens:
+  // its three lessons retrieve signboard words and the opening greetings at a
+  // long interval, and the three reading skills they introduce sit at the end of
+  // the track where only their R1 is judgeable yet.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(359);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),
@@ -991,6 +1002,9 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C39-ordinal-reach-edges",
     "GU-C39-ordinal-reach-month",
     "GU-C39-saat-ordinal",
+    "GU-C44-lines-answer",
+    "GU-C44-pehli-vanchan-who",
+    "GU-C44-words-shop",
     "GU-R03-doorway-three-r1-dictation",
     "GU-R03-doorway-three-r1-reading",
     "GU-R04-doorway-nine-r2-dictation",
@@ -1158,6 +1172,6 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-W07-uu-matra-recall",
     "GU-W20-gha-copy",
     "GU-W21-ai-matra-copy",
-    "GU-W22-ttha-recall",
+    "GU-W22-ttha-recall"
   ]);
 });

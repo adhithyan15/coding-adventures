@@ -1,0 +1,11 @@
+{
+  "language": "urdu",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:6c8cbac3bb40b42b",
+  "lessonIds": [
+    "UR-C33-words",
+    "UR-C33-lines",
+    "UR-C33-pehla-sabaq"
+  ],
+  "tex": "urdu/book/chapters/ch33-reading-words-lines-and-a-paragraph.tex"
+}

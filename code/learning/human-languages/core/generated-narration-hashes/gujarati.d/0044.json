@@ -1,0 +1,17 @@
+{
+  "language": "gujarati",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:fddb5ae70fb416d6",
+  "lessonIds": [
+    "GU-C44-words",
+    "GU-C44-lines",
+    "GU-C44-pehli-vanchan"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "gujarati/narration/ch44.txt",
+  "json": "gujarati/narration/ch44.json",
+  "textHash": "fnv1a64:8e5ba963ef87469e",
+  "jsonHash": "fnv1a64:e49b5c76453503b0",
+  "findings": []
+}

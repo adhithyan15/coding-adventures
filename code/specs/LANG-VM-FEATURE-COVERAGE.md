@@ -1,6 +1,6 @@
 # LANG VM feature and backend coverage
 
-Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b and VM-061. This is an inventory of the implemented
+Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE). This is an inventory of the implemented
 frontend families and their executable proof boundaries, not a claim that the
 historical languages or every backend are complete. Follow-up IDs live in the
 [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md).
@@ -10,9 +10,12 @@ historical languages or every backend are complete. Follow-up IDs live in the
 The [driver](../packages/rust/lang-aot/src/lib.rs) wires ten `Language` variants.
 The [unified corpus](../packages/rust/lang-aot/tests/lang_matrix.rs) has eight.
 Its seven standard columns are NativeAOT, LLVM, WASM, JVM, CLR, VM and JIT.
-Only 20 Twig rows additionally declare BEAM. All counts below are source
-**declarations**, not counts of executions on every host. External tools can be
-absent; actual runner failures must fail, rather than turn into skips.
+Twig, Nib, Oct, FLOW-MATIC, COBOL-60 and (as of VM-042) Brainfuck rows
+additionally declare BEAM, each only for the specific rows independently
+proven on real `erl` — see each row's "Additional proof boundary" below for
+the exact count. All counts below are source **declarations**, not counts of
+executions on every host. External tools can be absent; actual runner
+failures must fail, rather than turn into skips.
 
 Frontend `backend_compat` validators and `backend_encode` byte generation are
 useful checks, but neither establishes runtime behavior. The driver performs
@@ -23,42 +26,51 @@ refusal also does not imply the complete driver refuses that feature.
 |---|---:|---:|---|
 | Twig | 49 | 363 | 20 of those cells are BEAM; dedicated heap/closure tests |
 | Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
-| Brainfuck | 6 | 42 | Dedicated WASM/JVM/CLR and JIT execution |
+| Brainfuck | 6 | 45 | Dedicated WASM/JVM/CLR and JIT execution; 3 of 6 rows also real BEAM (VM-042) |
 | Dartmouth BASIC | 51 | 357 | Random differential suite and frontend JIT tests |
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
 | FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
-| COBOL-60 | 58 | 422 | Much larger frontend JIT/oracle suite |
+| COBOL-60 | 58 | 426 | 20 of those cells are BEAM (VM-040 COBOL BEAM slices); much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1548
-declared cells (sum of the non-ALGOL rows above), which now matches a fresh
-`non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells exercised
-plus 210 skipped (missing local `ilasm`) = 1548. The "Declared cells" column
-counts every backend a row proves, Beam included — the convention Nib, Oct,
-FLOW-MATIC and COBOL-60's numbers already used. Twig was the one holdout:
-its old "343" was `49 rows × 7 standard backends`, silently excluding its 20
-Beam cells (VM-D030/**VM-061**), which is why this is the only cell count
-that changed in this pass. Every other non-ALGOL row's declared row count
-and cell count were independently re-derived from `PROGRAMS` in
-`lang_matrix.rs` (a `Prog { lang: Language::X, .., backends: &[..] }` per
-row; cells = `rows.map(|p| p.backends.len()).sum()`) via a brace-balanced
-parse of the whole array, not a hand count or a quick regex, and all six
-matched the doc exactly except Twig. That derivation is now also pinned as
+The normal non-ALGOL capstone therefore declares 210 programs and 1555
+declared cells (sum of the non-ALGOL rows above). At VM-061 this matched a
+fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
+exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
+three real Beam cells to Brainfuck (42 → 45 declared), so a fresh run on a
+host with `erl` reported 1341 exercised + 210 skipped = 1551; this slice
+(VM-040 COBOL BEAM boolean/EVALUATE) added four more real Beam cells to
+COBOL-60 (422 → 426 declared), so a fresh run on a host with `erl` now
+reports 1345 exercised + 210 skipped = 1555; all seven new cells since
+VM-061 are exercised, not skipped, since `erl` was present when they were
+promoted. The "Declared cells" column counts every backend a row proves, Beam
+included — the convention Nib, Oct, FLOW-MATIC and COBOL-60's numbers already
+used. Twig was the one holdout at VM-061: its old "343" was `49 rows × 7
+standard backends`, silently excluding its 20 Beam cells (VM-D030/**VM-061**).
+Every other non-ALGOL row's declared row count and cell count were
+independently re-derived from `PROGRAMS` in `lang_matrix.rs` (a `Prog { lang:
+Language::X, .., backends: &[..] }` per row; cells = `rows.map(|p|
+p.backends.len()).sum()`) via a brace-balanced parse of the whole array, not
+a hand count or a quick regex, and all six matched the doc exactly except
+Twig at that time. That derivation is pinned as
 `feature_coverage_doc_counts_match_programs_source` in `lang_matrix.rs`: it
 asserts each of these seven non-ALGOL row/cell pairs against the live
 `PROGRAMS` corpus, plus that McCarthy Lisp and Macsyma still have zero rows
 there (both use the dedicated capstone files below instead), so a future
 slice that adds or removes a row without updating this table fails a normal
 `cargo test -p lang-aot --test lang_matrix` run instead of drifting silently
-again. ALGOL 60's row is intentionally left unrecomputed and unasserted: it
-is owned by a separate, actively developing campaign (see "Ownership
-boundary" in the completion backlog), and this table's own audit trail
-(VM-D030/VM-061) does not extend a mandate to correct or pin its count. The
-zeroes for McCarthy and Macsyma mean dedicated coverage, not absent support.
-CLR-real is an additional runner lane for the same CLR backend in McCarthy's
-capstone, not a tenth universal backend.
+again — VM-042's own Brainfuck change, and this slice's COBOL-60 change,
+each updated both the test's expected tuple and this row together, exactly as
+that test's own doc comment requires. ALGOL
+60's row is intentionally left unrecomputed and unasserted: it is owned by a
+separate, actively developing campaign (see "Ownership boundary" in the
+completion backlog), and this table's own audit trail (VM-D030/VM-061) does
+not extend a mandate to correct or pin its count. The zeroes for McCarthy and
+Macsyma mean dedicated coverage, not absent support. CLR-real is an
+additional runner lane for the same CLR backend in McCarthy's capstone, not a
+tenth universal backend.
 
 ## Implemented feature families and remaining proofs
 
@@ -66,7 +78,7 @@ capstone, not a tenth universal backend.
 |---|---|---|
 | [Twig lowerer](../packages/rust/twig-ir-compiler/src/compiler.rs) | Scalars, variadic arithmetic, lexical bindings, calls, cons/list operations, symbols, globals, records/unions, closures and source-inferred strings. Unified rows cover heap arithmetic, list helpers, quote equality, records/match, forward and boxed globals, capturing closures, literal/local/parameter strings and a bounds trap. | BEAM covers 20 selected rows, not all strings/records/closures. Dynamic or captured/reassigned strings exceed the source-local fast path. VM-040 inventories the remaining BEAM families; VM-041 isolates dynamic-string lowering from existing literal metadata. |
 | [Nib lowerer](../packages/rust/nib-iir-compiler/src/lib.rs) | Integer arithmetic, narrow masking, wrapping/saturating addition, bitwise/logical operations, branches/loops, calls, const/static initialization and BCD storage. Unified rows execute standard-backend cases. [JIT tests](../packages/rust/nib-iir-compiler/tests/jit_e2e.rs) independently exercise compiled functions. | Standard-target parity does not establish 4004 arithmetic/control-flow fidelity. Existing VM-028 owns that audit; VM-012 proves only its landed BCD storage slice. BEAM remains undeclared (VM-040). |
-| [Brainfuck compiler](../packages/rust/brainfuck-iir-compiler/src/compiler.rs) | All eight commands, wrapped tape cells/pointer movement, nested loops and input/EOF. Unified rows plus [WASM](../packages/rust/brainfuck-iir-compiler/tests/wasm_e2e.rs), [JVM](../packages/rust/brainfuck-iir-compiler/tests/jvm_e2e.rs), [CLR](../packages/rust/brainfuck-iir-compiler/tests/clr_e2e.rs) and [JIT](../packages/rust/brainfuck-iir-compiler/tests/jit_smoke.rs) execution. | BEAM tape support is intentionally excluded in the frontend README. Preserve that scope, but pin an actual driver refusal rather than treating a missing table cell as a refusal test (VM-042). |
+| [Brainfuck compiler](../packages/rust/brainfuck-iir-compiler/src/compiler.rs) | All eight commands, wrapped tape cells/pointer movement, nested loops and input/EOF. Unified rows plus [WASM](../packages/rust/brainfuck-iir-compiler/tests/wasm_e2e.rs), [JVM](../packages/rust/brainfuck-iir-compiler/tests/jvm_e2e.rs), [CLR](../packages/rust/brainfuck-iir-compiler/tests/clr_e2e.rs) and [JIT](../packages/rust/brainfuck-iir-compiler/tests/jit_smoke.rs) execution. | VM-042/VM-D031: the frontend README's "BEAM tape support intentionally excluded" claim was stale — `iir-to-beam`'s `:atomics`-backed mutable memory (added for this exact purpose) already lowers tape mutation and `.`; a real `erl` probe promoted the 3 non-input rows to a real Beam cell each. `,` still refuses explicitly (no `getchar` builtin), pinned by `call_builtin_getchar_rejected_but_putchar_accepted`; that gap is host input (VM-060b), shared with every other frontend's BEAM input rows, not a Brainfuck- or tape-specific limitation. |
 | [BASIC lowerer](../packages/rust/dartmouth-basic-iir-compiler/src/lib.rs) | f64 arithmetic/general power/transcendentals, deterministic RND, scalar/string input and output, branches, FOR, GOSUB/RETURN, DEF FN, numeric/string arrays, mixed DATA/READ/RESTORE. All 51 rows declare seven columns; random differential tests supplement fixed results. | DEF FN global access and historical print zones are frontend semantics, not already-implemented parity. BEAM remains undeclared (VM-040). Two-dimensional numeric DIM already has a seven-column matrix proof; the stale one-dimensional-only README wording is corrected in this audit. |
 | [Oct lowerer](../packages/rust/oct-iir-compiler/src/lib.rs) | u8 arithmetic/masking, bitwise/logical operations, functions, local/global state, if/while/loop/break and stdout `out`. Matrix covers output, wrap, short circuit, shared globals, loop-carried wrapping returned from a function, conditional break and nested break targets; [JIT suite](../packages/rust/oct-iir-compiler/tests/jit_e2e.rs) separately executes while loops and returned function values. | VM-044 adds observable loop/break and returned-call standard-column proofs. `in`, carry arithmetic and rotations are explicit intrinsic errors; VM-013 owns portable machine-state design. Body-local static and floats are not implemented parity gaps. |
 | [ALGOL lowerer](../packages/rust/algol-iir-compiler/src/lib.rs) | Scalar integer/boolean/real/string operations, arrays, procedures, by-name specializations, switches and nonlocal control flow have a substantial evolving corpus. [Frontend JIT](../packages/rust/algol-iir-compiler/tests/jit_e2e.rs) and [AOT smoke](../packages/rust/algol-iir-compiler/tests/aot_smoke.rs) are separate proofs. | Full LANG matrix remains excluded for the recorded native-array failure. VM-025 and the separate ALGOL owner control fixes and detailed feature expansion; 232 declarations do not mean 232 green Linux programs. |

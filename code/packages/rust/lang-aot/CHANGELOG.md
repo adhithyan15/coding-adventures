@@ -1,5 +1,75 @@
 # Changelog — `lang-aot`
 
+## 0.308.0 — 2026-09-11 — VM-040 COBOL BEAM boolean/EVALUATE probe
+
+Reprioritized the post-VM-042 queue (COBOL BEAM rows, VM-041, VM-060b,
+VM-058) by re-running the backlog's prioritization policy against current
+source rather than repeating the prior conclusion by habit: `git log` since
+VM-042 merged showed no commit touching `iir-to-beam`, `cobol-iir-compiler`,
+`cobol-runtime` or `lang_matrix.rs`'s COBOL rows, so nothing changed the
+picture VM-042's own trailing note described. A brace-balanced parse of
+`PROGRAMS` in `lang_matrix.rs`, restricted to the actual static array (not
+every `Prog {}` literal in the file — a naive whole-file parse over-counts
+by two: a per-iteration differential-test helper reusing the `Prog` struct
+with `backends: &[]`, and a boundary-assertion `Prog` local to a single
+`#[test]` function), confirmed the "~42 undeclared COBOL BEAM rows" figure
+precisely: exactly 42 of 58 `Cobol60` rows did not declare `Beam`, matching
+every non-ALGOL row/cell count already pinned by VM-061's own test. VM-058
+stays rung 5 (nothing found here changes that re-examination); VM-041 and
+VM-060b remain unscoped design work. COBOL BEAM rows remain the bounded,
+already-proven-pattern rung-4 pick.
+
+Continued the established `.skip(N).take(4)`-over-`Cobol60`-filter pattern
+(rows 16–19, immediately after the twelve already covered across four prior
+probe batches) on real Erlang: a compound `(N > 1 OR N > 9) AND N < 8`
+condition, a `NOT (N < 3 OR N > 9)` negated group (the first COBOL BEAM row
+to emit `xor`), an `EVALUATE` case statement, and an `EVALUATE` with a
+multi-value/THRU-range `WHEN`. All four passed on the first probe, reusing
+`cmp_*`/`and`/`or`/`xor`/branch lowering already proven by earlier COBOL BEAM
+rows — no `iir-to-beam`/`ir-to-beam` defect found, no production code
+changed. Promoted all four rows to declare `Beam` (16 → 20 of 58 COBOL rows;
+422 → 426 declared cells) and added
+`portable_text_stdout_cobol_beam_boolean_and_evaluate`, mirroring the
+existing COBOL BEAM probe tests. Updated
+`feature_coverage_doc_counts_match_programs_source`'s expected COBOL-60
+tuple (58, 422) → (58, 426) and confirmed it fails against the pre-fix
+figure before fixing it, and updated `LANG-VM-FEATURE-COVERAGE.md`'s
+COBOL-60 row and grand-total prose (1551 → 1555 declared cells) to match.
+
+## 0.307.0 — 2026-09-10 — VM-042 Brainfuck BEAM parity correction (VM-D031)
+
+Reprioritized the post-VM-061 queue (~42 undeclared COBOL BEAM rows, VM-041,
+VM-060b, VM-042, VM-058) by actually probing VM-042's premise instead of
+implementing it as filed. VM-042 asked to "pin Brainfuck's intentional BEAM
+exclusion... for mutable tape operations" — but `iir-to-beam` PR #11343
+(2026-08-13) had already added `:atomics`-backed mutable memory generically,
+explicitly to unblock Brainfuck, three weeks before VM-042's own text was
+written. A scratch probe against real `erl` confirmed all three non-input
+Brainfuck matrix rows (`++++++++[>++++++++<-]>+.`, the nested-loop `"HA"`
+program, and `"OK"`) already execute correctly through the existing
+`store_byte`/`putchar` lowering, with no `iir-to-beam` code change needed.
+
+This is **VM-D031**: `brainfuck-iir-compiler`'s README and
+`LANG-VM-FEATURE-COVERAGE.md` both carried a stale "BEAM tape support is
+intentionally not supported" claim, correct when written but never revisited
+after the generic memory-ops PR landed — rung 3 of the backlog's own
+prioritization policy (incorrect status documentation), which the original
+VM-042 filing did not catch either.
+
+Promoted the three non-input Brainfuck rows to declare `Beam` (42 → 45
+declared cells; `feature_coverage_doc_counts_match_programs_source`'s
+expected tuple updated to match). Added
+`portable_text_stdout_brainfuck_beam_corpus` (all three execute on real `erl`
+with the expected stdout) and
+`brainfuck_beam_stdin_rows_refuse_at_backend_not_frontend` (the three STDIN
+rows compile through `compile_source_to_iir` — the frontend — without error,
+and are refused only by `compile_source_to_beam` — the backend — naming the
+missing `getchar` builtin). That refusal/acceptance split is pinned at the
+`iir-to-beam` layer too; see that crate's 0.9.1 changelog entry. `getchar`
+remains real, separately-scoped host-input work (VM-060b), shared with every
+other frontend's undeclared BEAM input rows — not a Brainfuck- or
+tape-specific gap.
+
 ## 0.306.0 — 2026-09-09 — VM-061 feature-coverage recount
 
 `LANG-VM-FEATURE-COVERAGE.md`'s per-frontend row/cell table was measured

@@ -1,0 +1,9 @@
+[package]
+name = "vis-geometric-estimation"
+version = "0.1.0"
+edition = "2021"
+description = "VIS03 -- affine/homography estimation from point correspondences, via matrix::solve"
+license = "MIT"
+
+[dependencies]
+matrix = { path = "../matrix" }

@@ -1477,6 +1477,14 @@ jobs:
           set -euo pipefail
           python3 -m pip install --disable-pip-version-check --quiet fonttools
           python3 -c "import fontTools; print('fontTools', fontTools.version)"
+          # Pin the exact interpreter fontTools was just installed into.
+          # tests/fonttools_oracle.rs defaults to bare `python3` (see
+          # FONTTOOLS_PYTHON) and doesn't run until much later in this job,
+          # after dozens more toolchain-setup steps that can shift PATH --
+          # so a bare `python3` two hours from now is not guaranteed to be
+          # this one. Naming the literal path removes that dependency on
+          # PATH staying stable for the rest of the job.
+          echo "FONTTOOLS_PYTHON=$(command -v python3)" >> "$GITHUB_ENV"
 
       - name: Install qpdf for the PDF oracle tests
         if: needs.detect.outputs.needs_rust == 'true'

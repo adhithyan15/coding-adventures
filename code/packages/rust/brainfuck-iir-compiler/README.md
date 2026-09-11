@@ -147,46 +147,44 @@ asserts byte-identical output.  If they ever diverge, the JIT is wrong.
 
 ## Cross-backend compilation status
 
-Brainfuck flows through every universal IIR-to-* backend except BEAM:
+Brainfuck flows through every universal IIR-to-* backend, BEAM included for
+non-input programs:
 
 | Target  | Status | Lowering                                                                  | Test |
 |---------|--------|---------------------------------------------------------------------------|------|
 | WASM    | ✅     | `i32.load8_u` / `i32.store8` + `env.putchar` / `env.getchar` host imports | `tests/wasm_e2e.rs` |
 | JVM     | ✅     | `baload` / `bastore` + `invokestatic env/BFRuntime.{put,get}char`         | `tests/jvm_e2e.rs`  |
 | CLR     | ✅     | `ldelem.u1` / `stelem.i1` + `call env.BFRuntime::{put,get}char`           | `tests/clr_e2e.rs`  |
-| BEAM    | ❌     | *intentionally not supported — see below*                                 | —    |
+| BEAM    | ⚠️     | tape mutation + `.` ✅ (`:atomics`); `,` ❌ (no `getchar` builtin yet)     | `lang-aot`'s `lang_matrix.rs` (`portable_text_stdout_brainfuck_beam_corpus`) |
 
-### Why no BEAM target?
+### Why BEAM only handles the non-input half (VM-042/VM-D031)
 
-BEAM's substrate is **purely functional**.  Tuples, binaries, and process
-dictionary entries are all immutable — every write produces a fresh copy
-of the surrounding container.  Brainfuck's tape is the opposite shape:
-mutable byte cells in random-access addressing, with one write per cell
-per iteration of the program's main loop.
+This section used to say BEAM support was **intentionally not implemented at
+all**, because BEAM's substrate is purely functional — tuples, binaries, and
+process dictionary entries are all immutable, so a naive compiled tape would
+have to copy the whole 30,000-byte array on every write (O(N) per cell write
+× N cells × M loop iterations). That reasoning was correct when it was
+written, and is why the table above used to read a flat ❌.
 
-Compiled to vanilla BEAM bytecode, every `store_mem` would have to
-allocate a fresh copy of the entire 30,000-byte tape with the one byte
-changed.  That's O(N) per cell write × N cells × M loop iterations =
-O(N²·M).  A `,[.,]` `cat` over a 30 KB input would copy a 30 KB tape on
-every loop iteration — wall-clock seconds for a program that runs in
-microseconds on every other target.
+It went stale on 2026-08-13, when `iir-to-beam` (PR #11343) added
+`alloc_bytes`/`store_byte`/`load_byte` backed by Erlang's `:atomics` module —
+a fixed-size, off-heap, **destructive** O(1) integer array, explicitly added
+to "unblock Brainfuck", not something specific to this crate. Nobody had
+gone back and actually tried compiling a Brainfuck program through it since;
+the table above kept saying "not supported" for three weeks after it became
+false. A real probe against `erl` (VM-D031) found the three non-input matrix
+rows already execute correctly and byte-identically to every other backend,
+using this crate's ordinary IIR output — no Brainfuck-specific BEAM code
+exists or was needed.
 
-Alternative shapes do exist:
-
-- **ETS** (Erlang Term Storage): mutable side-store, but every read/write
-  is a function call with microsecond latency.  Defeats the point of a
-  compiled target.
-- **Process dictionary**: same shape; same problem.
-- **NIF** (Native Implemented Function): write the tape ops in C, link
-  the `.so` at load time.  This is C code wearing a BEAM costume —
-  you're not "compiling BF to BEAM bytecode" anymore.
-
-Each of those would technically work, but none honor the LANG VM
-promise of "any frontend compiles to vanilla code on any backend."
-Brainfuck's mutable byte cells are anti-BEAM, and the right call is a
-**documented rejection** — readers reach this section instead of
-silence, and future work that wants to revisit this has a clear starting
-point.
+What genuinely does NOT work is `,` (read): `iir-to-beam` has no `getchar`
+builtin, so a program using it is refused explicitly at validation — a clean
+compile-time error naming the missing builtin, not a silent miscompile or a
+crash (`iir-to-beam`'s `call_builtin_getchar_rejected_but_putchar_accepted`
+pins this). That is a real, separately-scoped gap in host input support
+(shared with every other frontend's BEAM input rows — the FLOW-MATIC,
+Oct, Nib and COBOL BEAM columns are all missing the same builtin family),
+tracked as VM-060b, not a Brainfuck- or tape-specific limitation.
 
 ## Running tests
 

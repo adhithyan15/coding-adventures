@@ -464,6 +464,8 @@ members = [
     "financial-core",
     "wave",
     "virtual-memory",
+    "vis-connected-components",
+    "vis-geometric-estimation",
     "tree",
     "radix-tree",
     "typescript-lexer",
