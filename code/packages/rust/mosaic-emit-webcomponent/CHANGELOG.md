@@ -4,6 +4,26 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — a doubled separator in merged inline styles (#14826)
+
+Every styled `Row` and `Column` emitted `flex-direction: row;; gap: 8px`.
+`merge_styles` joins with `"; "`, and some built-in styles already end in `;`
+(`"flex-direction: row;"`) while others do not (`"flex: 1"`), so the join
+doubled up on exactly the ones that did.
+
+Only the **join** is normalised — a built-in emitted on its own keeps its
+trailing `;` unchanged, which is what the existing output tests pin.
+
+Harmless to CSS parsers, but it is malformed output that a person reads, and it
+appeared in every flex container the backend emits.
+
+Worth noting how it survived: `row_builtin_style_merges_with_part_style`
+asserted the literal `"flex-direction: row;; height: 24px"` — the defect was
+**pinned by a test**, written from observed output rather than from the claim
+the test makes, which is about *order* (built-in first, so the author wins a
+collision). That claim is unchanged; the assertion now also rejects `;;`
+outright, so the whole class is covered rather than this one property.
+
 ### Added — `HostInput.disabled` (#14786)
 
 `HostInput` had `read-only` but no way to say *unavailable*. `disabled` now
