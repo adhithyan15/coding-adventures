@@ -69,7 +69,9 @@ fn biology_mitosis_phase_recall_binds_event_with_citation_and_abstains_on_interp
     // The answer carries the NCI SEER citation and the authoritative trust tier
     // as its proof (locator + trust).
     assert!(
-        out.contains("training.seer.cancer.gov/disease/cancer/biology/cycle.html")
+        out.contains(
+            "\"source\":\"Chromatin is transformed into chromosomes composed of pairs of filaments called chromatids (each is a complete genetic copy of its chromosome).\",\"locator\":\"https://training.seer.cancer.gov/disease/cancer/biology/cycle.html\",\"trust\":\"authoritative\",\"corroborations\":[]"
+        )
             && out.contains("\"trust\":\"authoritative\""),
         "carries the source citation: {out}"
     );

@@ -14,6 +14,11 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 engram-core-wasm = { path = "../engram-core-wasm" }
+# Host answers carry the package base64-encoded, because the payload is JSON and
+# a byte array would be four times the size for a file that can run to tens of
+# megabytes. No new crate reaches the graph: `engram-core-wasm` already encodes
+# its exports with this one.
+coding_adventures_base64 = { path = "../base64" }
 mosaic-app-capi = { path = "../mosaic-app-capi" }
 mosaic-app-runtime = { path = "../mosaic-app-runtime" }
 # `serde` is a direct edge only so `restore` can deserialise the ONE adapter

@@ -141,6 +141,48 @@
 % two of the four rows come from it. Both are primary U.S. government EIA
 % education pages (eia.gov), the same tier `energy-forms.adj` already uses,
 % so `trust authoritative`.
+%
+% ----------------------------------------------------------------------------
+% Measured against the pages' bytes (#13934 installment 4n):
+%
+%   The two "Forms of energy" sentences are SEPARATE SPANS. Each occurs once
+%   and they sit 606 raw characters apart, six block-element tags between
+%   them, 471 characters apart in the collapsed rendered text, with the
+%   paragraphs on mechanical and nuclear energy in between. Until 4n a single
+%   `cites` held both, and that welded 257-character string occurs ZERO times
+%   on the page. The evidence block above already quoted them separately, so
+%   only the machine-readable field welded them. They now have one `cites`
+%   each under the same locator, and both are needed: S1 states chemical ->
+%   thermal for burning wood in a fireplace, S2 states gravitational ->
+%   motion for the bicycle. Each says its row outright; neither is inferred.
+%
+%   WHERE EACH SITS IN ITS PARAGRAPH, corrected by #13934 installment 4o.
+%   S1 ENDS its paragraph: one space, then `</p>`. S2 DOES NOT -- 143
+%   characters of prose follow it inside the same `<p>` (a Hydropower
+%   sentence), and two sentences precede it there. 4n said BOTH end their
+%   paragraphs, on the evidence that "the first tag after either is `</p>`".
+%   That is true of both and proves neither: prose is not a tag, so the check
+%   cannot see those 143 characters. Run over the whole page it returns
+%   `</p>` for EVERY sentence of EVERY `<p>` on the page that it can be run
+%   on at all -- that is, every one the raw HTML contains verbatim. Why the
+%   rest are not verbatim is NOT claimed here: inline tags account for most,
+%   but at least one is a doubled space and two are HTML entities. Absolute
+%   counts are not quoted either, because two implementations of one written
+%   census disagreed by one. The two spans are
+%   still non-adjacent and the weld still occurs zero times, so what 4n
+%   shipped stands; only its description of where each sentence sat was
+%   wrong.
+%
+%   The "Laws of energy" `source` was measured too and needed no repair: 179
+%   characters, one occurrence BYTE-EXACT in the raw HTML, inside a single
+%   `<p>`, with no tag anywhere inside it.
+%
+%   One instrument note, as a count rather than a rule (#14752). Of twenty
+%   body sentences drawn from `<p>` elements on the "Forms of energy" page,
+%   an extractor breaking only on BLOCK elements found 20; the crude
+%   every-tag-is-a-break one found 18. Both found 0 of the twenty negative
+%   controls (the same sentences with one word swapped). Neither sentence
+%   quoted here is among the two the crude extractor missed.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -157,5 +199,6 @@ table energy_conversion_example {
     locator "https://www.eia.gov/energyexplained/what-is-energy/laws-of-energy.php"
     trust authoritative
 
-    cites "For example, chemical energy is converted to thermal energy when people burn wood in a fireplace or burn gasoline in a car's engine. When a person rides a bicycle down a steep hill and picks up speed, the gravitational energy is converting to motion energy." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    cites "For example, chemical energy is converted to thermal energy when people burn wood in a fireplace or burn gasoline in a car's engine." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    cites "When a person rides a bicycle down a steep hill and picks up speed, the gravitational energy is converting to motion energy." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
 }

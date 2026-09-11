@@ -2,6 +2,88 @@
 
 ## 0.1.0 - Unreleased
 
+### Added -- Anki import and export ride `Effect` (UI47 §5.4 step 5)
+
+The facade reports a needed file dialog as a `hostIntent`. This adapter now
+turns three of them into standard effects: `importAnki` and `exportAnki` as
+`Delivery::Await`, because neither can proceed without the host and the app has
+to know whether it happened, and `openCard` as `Delivery::Notify`, because
+opening a card elsewhere is fire-and-forget and waiting on an answer could only
+invent a way to wedge.
+
+`complete_effect` applies the answer: an import merges the returned package, an
+export records that it landed. Cancellation is a first-class outcome, not a
+failure -- Escape in a file dialog means "never mind" -- and each outcome
+reaches the reader as an `anki-transfer-status` prop, because the facade owns
+Engram's state and knows nothing about host dialogs, so "the file you chose was
+not a package" is a sentence only this crate can say.
+
+**The bytes travel, not the path.** An export builds the package here and sends
+it out in the payload for the host to write; an import comes back carrying what
+the host read. Every native target can be sandboxed -- macOS most strictly --
+and there a process may open only what the user picked in the host's own dialog,
+so keeping all filesystem access on the host side is the one arrangement that
+works on all five. The cost is that a cancelled export did work nobody used,
+which is cheap and recoverable; the alternative fails outright on the platform
+Engram most needs to ship to.
+
+Unblocked by the fifth generated host learning to answer effects (step 4).
+Before that, `Effect` was serialised onto the wire, no generated host read it,
+and the C header had no completion entry point -- so an `Await` could never be
+answered and emitting one would have left the app waiting forever.
+
+### Guarded -- nothing is minted below protocol 2
+
+The runtime does not merely ignore an `Await` from a v1 host: it fails the call
+with `EffectsRequireV2` and **poisons the instance**. Engram would therefore be
+bricked by its first import rather than degraded. Below v2 no effect is minted
+at all and the intents ride `hostIntent` to the hand-written adapters exactly as
+they did before, which is a working import rather than a broken one.
+
+Intents other than those three are likewise never minted as effects: an `Await`
+nothing answers wedges snapshot and restore for the life of the process, which
+is the exact failure the hosts' sweeps exist to prevent.
+
+Ids are minted monotonically, never reused, and bounded at 2^53-1 -- the id
+rides a JSON number to hosts whose only integer is a double, and one that
+arrived rounded would answer a *different* effect. An answered id is removed
+before the answer is applied, so a stray second answer cannot merge the same
+package twice.
+
+### Hardened -- the import path treats package bytes as untrusted
+
+They are: the bytes come from a file the reader was handed, so everything below
+assumes whoever produced it meant harm.
+
+- **The encoded payload is capped before it is decoded**, so the gate is a
+  string length rather than the allocation it prevents. The encoded string, the
+  JSON value holding it and the decoded bytes coexist at roughly three times the
+  file's size.
+- **Replies are no longer materialised as `Value`.** `merge_anki_apkg` answers
+  with the entire post-merge collection, media included as base64, and
+  `facade_error` was parsing all of it into a tree with a node per note field,
+  per card and per tag -- to read one boolean. Narrow deserialisers walk the
+  document and keep only what is consulted. The dispatch reply gets the same
+  treatment, since it carried the whole collection and the whole prop set past
+  a `Value` parse on *every* event.
+- **Text from outside the process is trimmed before it reaches a reader.**
+  Package-layer errors interpolate names lifted out of the archive -- a zip
+  entry name is up to 65535 arbitrary bytes -- and host failure messages are
+  whatever the host wrote. Both land in a prop rendered by five native toolkits,
+  one of which auto-detects rich text, so the length is cut and control
+  characters, the markup delimiters `<` `>` `&`, and the bidi format characters
+  go -- at the boundary, rather than trusted to five renderers. The first
+  version of this filter dropped control characters only, which left the very
+  markup its own comment was about; `is_control` is category Cc, so U+202E and
+  the directional isolates went through it too.
+- **The id bound is the runtime's own constant**, now `pub`, rather than a
+  restated literal. A divergence would mint ids the runtime rejects, and it
+  poisons the instance for one out of range.
+
+Mutation-tested: making `importAnki` a `Notify` fails
+`import_is_an_awaited_effect`, and letting an answered id survive its answer
+fails `an_answer_cannot_be_applied_twice` along with four other cases.
+
 Initial release: Engram behind the standard Mosaic application ABI.
 
 Implements `MosaicApp` over `EngramSession` and exports the standard C ABI via

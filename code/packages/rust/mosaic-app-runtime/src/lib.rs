@@ -16,7 +16,13 @@ pub const PROTOCOL_VERSION: u32 = 1;
 /// Opt-in protocol with dedicated awaited-effect completion.
 pub const EFFECT_PROTOCOL_VERSION: u32 = 2;
 pub type EffectId = u64;
-const MAX_EFFECT_ID: u64 = 9_007_199_254_740_991;
+/// The largest effect id that survives a JSON double.
+///
+/// Public because applications must not mint past it: an id that arrives
+/// rounded at a host whose only integer is a double answers a DIFFERENT effect,
+/// and [`MosaicRuntime`] poisons the instance for one out of range. An adapter
+/// restating the literal would silently diverge if this ever moved.
+pub const MAX_EFFECT_ID: u64 = 9_007_199_254_740_991;
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]

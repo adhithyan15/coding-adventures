@@ -21,9 +21,16 @@
 %
 % The four phases IN ORDER, with the defining event the source states, as a
 % little truth table (the ordering — prophase → metaphase → anaphase →
-% telophase — is itself asserted by the source's "The four phases of mitosis
-% are ..." list; the table stores the pairs, and the ordinal reading is the
-% top-to-bottom row order):
+% telophase — is asserted by the page as an ORDERED LIST. The page's own
+% words are the lead-in "The four phases of mitosis are", and the four
+% phases follow it as the top-level items of an <ol>. This used to read
+% `the source's "The four phases of mitosis are ..." list`, with an ellipsis
+% INSIDE the quotation marks — the same move installment 4j removed from
+% `mitosis-phase-order`'s shipped `source`, in miniature: an ellipsis is an
+% ordinary editorial mark until it sits inside quotation marks, where it
+% becomes a claim about what the page says. The page carries no ellipsis.
+% The table stores the pairs, and the ordinal reading is the top-to-bottom
+% row order):
 %
 %     phase       defining event          a beginner's cue
 %     ---------   ---------------------   -----------------------------------
@@ -65,8 +72,13 @@
 % row:
 %
 %   Source: NCI SEER Training Modules — "Cell Cycle" (U.S. National Cancer
-%   Institute, cancer.gov), which states: "The four phases of mitosis are
-%   Prophase ... Metaphase ... Anaphase ... Telophase".
+%   Institute, cancer.gov). The page states "The four phases of mitosis are"
+%   and then gives them as an ORDERED LIST whose four top-level items are
+%   Prophase, Metaphase, Anaphase and "Telophase (divided into parts I and
+%   II)". It does NOT state them in a sentence: the older wording here put a
+%   composite with invented " ... " separators after "which states", which
+%   attributed to the page a string the page has never carried. Each row
+%   below is fixed by its own verbatim span, quoted in full further down.
 %   https://training.seer.cancer.gov/disease/cancer/biology/cycle.html
 %
 %   prophase → chromatin_forms_chromosomes

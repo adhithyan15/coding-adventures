@@ -70,9 +70,46 @@ fn energy_conversion_example_recall_binds_the_conversion_directly() {
         out.contains("\"In\":\"gravitational\",\"Out\":\"motion\""),
         "riding a bicycle downhill converts gravitational energy to motion energy: {out}"
     );
+    // First, the welded value must not come back. This names the DEFECT
+    // rather than a citation, so no duplicate elsewhere in the output can
+    // satisfy it on the real one's behalf. It is asserted BEFORE the citation
+    // object deliberately: with the order the other way round a RESTORE mutant
+    // trips the citation assertion first and this one is never observed to
+    // fire at all, which makes it decoration rather than a test.
     assert!(
-        out.contains("eia.gov") && out.contains("\"trust\":\"authoritative\""),
-        "carries the U.S. EIA citation at authoritative trust: {out}"
+        !out.contains("in a car's engine. When a person rides a bicycle"),
+        "the two EIA spans are not welded back into one: {out}"
+    );
+    // The pin here used to be a HOSTNAME and a TRUST TIER:
+    // `contains("eia.gov") && contains(trust)`. Both were satisfied by the
+    // welded 257-character `cites` that #13934 installment 4n split -- a
+    // string that occurs ZERO times on the page it named -- exactly as happily
+    // as by the two real spans that replaced it. The oceans and reference-lines
+    // pins had the same shape and the same hole.
+    //
+    // The needle is the whole citation object as the serialiser actually emits
+    // it, taken from a real run rather than from memory of the format, and it
+    // CLOSES on the corroborations `]`. That bounds the source text, both
+    // locators, the trust tier, and the corroboration SET -- so a fabricated
+    // `cites` cannot be appended without reddening (#14735). What it does NOT
+    // bound is the NUMBER of citation objects in the output: nothing here
+    // asserts that `citations` holds exactly one, or that no other citation
+    // appears elsewhere. Both happen to hold today, and the lowerer rejects
+    // the inputs that would falsify them, which is why no mutant could ever
+    // be observed to trip such an assertion.
+    //
+    // Its string appears EIGHT times in this test's output, at eight distinct
+    // JSON paths: `recall/[n]/answers/[0]/citations/[0]` and `.../steps/[0]`
+    // for each of the four queries above. That was counted BEFORE trusting the
+    // needle, and six mutations of the `.adj` each drove all eight to zero
+    // together -- echoes of one field, not the independently-driftable copies
+    // of #14745.
+    assert!(
+        out.contains(
+            "\"source\":\"A car engine burns gasoline, converting the chemical energy in gasoline into mechanical energy. Solar photovoltaic cells change radiant energy from the sun into electrical energy.\",\"locator\":\"https://www.eia.gov/energyexplained/what-is-energy/laws-of-energy.php\",\"trust\":\"authoritative\",\"corroborations\":[{\"source\":\"For example, chemical energy is converted to thermal energy when people burn wood in a fireplace or burn gasoline in a car's engine.\",\"locator\":\"https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php\"},{\"source\":\"When a person rides a bicycle down a steep hill and picks up speed, the gravitational energy is converting to motion energy.\",\"locator\":\"https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php\"}]"
+        ),
+        "carries the U.S. EIA citation with exactly these two corroborations, in this \
+         order, with the corroborations `]` closing the set: {out}"
     );
 }
 

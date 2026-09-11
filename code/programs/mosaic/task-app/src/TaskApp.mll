@@ -214,149 +214,156 @@ layout TaskApp {
         }
       }
 
-      Column [ content ] {
-        If ( when: slot: timeline-mode ) {
-          Column [ timeline-card ] {
-            Text [ tl-scale ] ( content : slot: timeline-scale )
-            // The day-grid ruler — see code/specs/task-app-richer-gantt-v1.md's
-            // "Day-grid feasibility note" for why this is a strip above the
-            // bars rather than a per-row background (the kernel has no
-            // z-index/absolute-positioning primitive to composite one).
-            Row [ tl-grid ] {
-              For ( each: slot: timeline-grid , as: g , index: gi ) {
-                If ( when: ( g[2] ) ) {
-                  Box [ tl-grid-today ] ( width : ( g[0] ) )
-                }
-                Else {
-                  If ( when: ( g[1] ) ) {
-                    Box [ tl-grid-weekend ] ( width : ( g[0] ) )
+      // UI29 §3 — the view area scrolls. Every view below grows without a
+      // bound (tasks, board columns, sheet rows, calendar cells), and in a
+      // native window nothing scrolls unless the layout says so: content
+      // past the viewport is simply unreachable. The web host never showed
+      // this because a browser page scrolls by default. #14734
+      HostScroll [ content-scroll ] {
+        Column [ content ] {
+          If ( when: slot: timeline-mode ) {
+            Column [ timeline-card ] {
+              Text [ tl-scale ] ( content : slot: timeline-scale )
+              // The day-grid ruler — see code/specs/task-app-richer-gantt-v1.md's
+              // "Day-grid feasibility note" for why this is a strip above the
+              // bars rather than a per-row background (the kernel has no
+              // z-index/absolute-positioning primitive to composite one).
+              Row [ tl-grid ] {
+                For ( each: slot: timeline-grid , as: g , index: gi ) {
+                  If ( when: ( g[2] ) ) {
+                    Box [ tl-grid-today ] ( width : ( g[0] ) )
                   }
                   Else {
-                    Box [ tl-grid-day ] ( width : ( g[0] ) )
-                  }
-                }
-              }
-            }
-            // The legend — static copy, not data-bound (see TaskApp.mil's doc
-            // comment on why this isn't a slot).
-            Row [ tl-legend ] {
-              Row [ tl-legend-item ] {
-                Box [ tl-legend-swatch ] { }
-                Text [ tl-legend-label ] ( content : "On track" )
-              }
-              Row [ tl-legend-item2 ] {
-                Box [ tl-legend-swatch-crit ] { }
-                Text [ tl-legend-label2 ] ( content : "Critical path" )
-              }
-              Row [ tl-legend-item3 ] {
-                Box [ tl-legend-swatch-milestone ] { }
-                Text [ tl-legend-label3 ] ( content : "Milestone" )
-              }
-              Row [ tl-legend-item4 ] {
-                Box [ tl-legend-swatch-today ] { }
-                Text [ tl-legend-label4 ] ( content : "Today" )
-              }
-            }
-            For ( each: slot: timeline-rows , as: t , index: ti ) {
-              Row [ timeline-row ] {
-                Text [ tl-name ] ( content : ( t[0] ) )
-                // A real proportional bar: the leading pad and the bar take their
-                // widths from the row's data (UI36 data-driven sizing), both as
-                // percentages of the shared track, so every bar sits on one date
-                // scale. A milestone (t[5]) renders as a diamond instead of the
-                // usual bar; a non-milestone bar carries a percent-complete fill
-                // (t[6]) inside it. Every bar is wrapped in HostTooltip (t[7])
-                // for the hover detail the design calls for.
-                Row [ tl-track ] {
-                  Box [ tl-pad ] ( width : ( t[1] ) )
-                  If ( when: ( t[5] ) ) {
-                    // No width binding here, deliberately: a milestone is
-                    // zero-duration by definition, so it's a small FIXED-size
-                    // marker (see the .msl part), not a bar sized from t[2]
-                    // the way every other row's shape is. UI36's own
-                    // precedence rule (a bound size always beats a static
-                    // one) means binding width here would make a static
-                    // small-diamond style unreachable.
-                    HostTooltip ( text : ( t[7] ) ) {
-                      Box [ tl-bar-milestone ] { }
+                    If ( when: ( g[1] ) ) {
+                      Box [ tl-grid-weekend ] ( width : ( g[0] ) )
+                    }
+                    Else {
+                      Box [ tl-grid-day ] ( width : ( g[0] ) )
                     }
                   }
-                  Else {
-                    If ( when: ( t[4] ) ) {
+                }
+              }
+              // The legend — static copy, not data-bound (see TaskApp.mil's doc
+              // comment on why this isn't a slot).
+              Row [ tl-legend ] {
+                Row [ tl-legend-item ] {
+                  Box [ tl-legend-swatch ] { }
+                  Text [ tl-legend-label ] ( content : "On track" )
+                }
+                Row [ tl-legend-item2 ] {
+                  Box [ tl-legend-swatch-crit ] { }
+                  Text [ tl-legend-label2 ] ( content : "Critical path" )
+                }
+                Row [ tl-legend-item3 ] {
+                  Box [ tl-legend-swatch-milestone ] { }
+                  Text [ tl-legend-label3 ] ( content : "Milestone" )
+                }
+                Row [ tl-legend-item4 ] {
+                  Box [ tl-legend-swatch-today ] { }
+                  Text [ tl-legend-label4 ] ( content : "Today" )
+                }
+              }
+              For ( each: slot: timeline-rows , as: t , index: ti ) {
+                Row [ timeline-row ] {
+                  Text [ tl-name ] ( content : ( t[0] ) )
+                  // A real proportional bar: the leading pad and the bar take their
+                  // widths from the row's data (UI36 data-driven sizing), both as
+                  // percentages of the shared track, so every bar sits on one date
+                  // scale. A milestone (t[5]) renders as a diamond instead of the
+                  // usual bar; a non-milestone bar carries a percent-complete fill
+                  // (t[6]) inside it. Every bar is wrapped in HostTooltip (t[7])
+                  // for the hover detail the design calls for.
+                  Row [ tl-track ] {
+                    Box [ tl-pad ] ( width : ( t[1] ) )
+                    If ( when: ( t[5] ) ) {
+                      // No width binding here, deliberately: a milestone is
+                      // zero-duration by definition, so it's a small FIXED-size
+                      // marker (see the .msl part), not a bar sized from t[2]
+                      // the way every other row's shape is. UI36's own
+                      // precedence rule (a bound size always beats a static
+                      // one) means binding width here would make a static
+                      // small-diamond style unreachable.
                       HostTooltip ( text : ( t[7] ) ) {
-                        Column [ tl-bar-crit ] ( width : ( t[2] ) ) {
-                          Box [ tl-bar-fill-crit ] ( width : ( t[6] ) )
-                        }
+                        Box [ tl-bar-milestone ] { }
                       }
                     }
                     Else {
-                      HostTooltip ( text : ( t[7] ) ) {
-                        Column [ tl-bar ] ( width : ( t[2] ) ) {
-                          Box [ tl-bar-fill ] ( width : ( t[6] ) )
-                        }
-                      }
-                    }
-                  }
-                }
-                Text [ tl-window ] ( content : ( t[3] ) )
-              }
-            }
-          }
-        }
-        Else {
-        If ( when: slot: board-mode ) {
-          // The board is what the UI35 drag family exists for: each column is a drop
-          // target, each card a draggable. A drop dispatches a PROPOSAL — the engine
-          // decides whether the move is legal and performs it; the UI never moves a
-          // card itself.
-          Row [ board ] {
-            For ( each: slot: board-columns , as: col , index: ci ) {
-              Column [ board-col ] {
-                Row [ col-head-row ] {
-                  // `state-when-X` (UI28-1/Task #35) only accepts a fixed pseudo-
-                  // state vocabulary (hover/pressed/selected/…), not an arbitrary
-                  // per-column key — confirmed against the compiler's own
-                  // diagnostic. UI36's `background` binding (already extended for
-                  // the icon-assets progress ring) is the right tool instead: a
-                  // value that varies per `For`-loop row, exactly what it exists
-                  // for. `main.tsx` resolves `col[3]` to the theme-correct hex
-                  // (Root overrides it, same as `ringGradient` — the controller
-                  // that builds `board-columns` doesn't know the active theme).
-                  Box [ col-bar ] ( background : ( col[3] ) ) { }
-                  Text [ col-head ] ( content : ( col[0] ) )
-                  Text [ col-count ] ( content : ( col[2] ) )
-                }
-                HostDropTarget [ col-drop ] (
-                  drop-key : ( col[1] ) ,
-                  onDrop : emit: onCardDropped
-                ) {
-                  For ( each: slot: board-cards , as: card , index: cdi ) {
-                    // Place a card by comparing keys rather than nesting a list in a
-                    // list — one `If` says everything, and both loops stay flat.
-                    If ( when: ( card[1] == col[1] ) ) {
-                      // Two alternate parts (matching the pill-warn/pill-ok and
-                      // theme-toggle-sun/moon precedent) rather than a `state-
-                      // when-` on `board-card` itself: `HostDraggable`'s own
-                      // dedicated emitter doesn't build the conditional-style-
-                      // spread machinery `Box`/`Row`/`Column` do. The old text
-                      // chip is gone — overdue now reads as a border, per the
-                      // design-fidelity item's own wording.
-                      If ( when: ( card[3] ) ) {
-                        HostDraggable [ board-card-crit ] (
-                          drag-key : ( card[2] ) ,
-                          drag-kind : "task" ,
-                          drag-label : ( card[0] )
-                        ) {
-                          Text [ card-name-crit ] ( content : ( card[0] ) )
+                      If ( when: ( t[4] ) ) {
+                        HostTooltip ( text : ( t[7] ) ) {
+                          Column [ tl-bar-crit ] ( width : ( t[2] ) ) {
+                            Box [ tl-bar-fill-crit ] ( width : ( t[6] ) )
+                          }
                         }
                       }
                       Else {
-                        HostDraggable [ board-card ] (
-                          drag-key : ( card[2] ) ,
-                          drag-kind : "task" ,
-                          drag-label : ( card[0] )
-                        ) {
-                          Text [ card-name ] ( content : ( card[0] ) )
+                        HostTooltip ( text : ( t[7] ) ) {
+                          Column [ tl-bar ] ( width : ( t[2] ) ) {
+                            Box [ tl-bar-fill ] ( width : ( t[6] ) )
+                          }
+                        }
+                      }
+                    }
+                  }
+                  Text [ tl-window ] ( content : ( t[3] ) )
+                }
+              }
+            }
+          }
+          Else {
+          If ( when: slot: board-mode ) {
+            // The board is what the UI35 drag family exists for: each column is a drop
+            // target, each card a draggable. A drop dispatches a PROPOSAL — the engine
+            // decides whether the move is legal and performs it; the UI never moves a
+            // card itself.
+            Row [ board ] {
+              For ( each: slot: board-columns , as: col , index: ci ) {
+                Column [ board-col ] {
+                  Row [ col-head-row ] {
+                    // `state-when-X` (UI28-1/Task #35) only accepts a fixed pseudo-
+                    // state vocabulary (hover/pressed/selected/…), not an arbitrary
+                    // per-column key — confirmed against the compiler's own
+                    // diagnostic. UI36's `background` binding (already extended for
+                    // the icon-assets progress ring) is the right tool instead: a
+                    // value that varies per `For`-loop row, exactly what it exists
+                    // for. `main.tsx` resolves `col[3]` to the theme-correct hex
+                    // (Root overrides it, same as `ringGradient` — the controller
+                    // that builds `board-columns` doesn't know the active theme).
+                    Box [ col-bar ] ( background : ( col[3] ) ) { }
+                    Text [ col-head ] ( content : ( col[0] ) )
+                    Text [ col-count ] ( content : ( col[2] ) )
+                  }
+                  HostDropTarget [ col-drop ] (
+                    drop-key : ( col[1] ) ,
+                    onDrop : emit: onCardDropped
+                  ) {
+                    For ( each: slot: board-cards , as: card , index: cdi ) {
+                      // Place a card by comparing keys rather than nesting a list in a
+                      // list — one `If` says everything, and both loops stay flat.
+                      If ( when: ( card[1] == col[1] ) ) {
+                        // Two alternate parts (matching the pill-warn/pill-ok and
+                        // theme-toggle-sun/moon precedent) rather than a `state-
+                        // when-` on `board-card` itself: `HostDraggable`'s own
+                        // dedicated emitter doesn't build the conditional-style-
+                        // spread machinery `Box`/`Row`/`Column` do. The old text
+                        // chip is gone — overdue now reads as a border, per the
+                        // design-fidelity item's own wording.
+                        If ( when: ( card[3] ) ) {
+                          HostDraggable [ board-card-crit ] (
+                            drag-key : ( card[2] ) ,
+                            drag-kind : "task" ,
+                            drag-label : ( card[0] )
+                          ) {
+                            Text [ card-name-crit ] ( content : ( card[0] ) )
+                          }
+                        }
+                        Else {
+                          HostDraggable [ board-card ] (
+                            drag-key : ( card[2] ) ,
+                            drag-kind : "task" ,
+                            drag-label : ( card[0] )
+                          ) {
+                            Text [ card-name ] ( content : ( card[0] ) )
+                          }
                         }
                       }
                     }
@@ -365,280 +372,280 @@ layout TaskApp {
               }
             }
           }
-        }
-        Else {
-        If ( when: slot: sheet-mode ) {
-          // TaskApp wraps the Sheet with its own label composer, above the grid —
-          // deliberately NOT inside mosaic-pkg-sheet (see new-label-name's slot
-          // comment on TaskApp.mil for why). Every sheet-* slot/emit below is still
-          // a straight pass-through to the package itself.
-          Column [ sheet-view-wrap ] {
-            Row [ label-composer ] {
-              HostInput [ label-name-input ] (
-                value : slot: new-label-name ,
-                placeholder : "New label" ,
-                onChange : emit: onNewLabelNameChange
+          Else {
+          If ( when: slot: sheet-mode ) {
+            // TaskApp wraps the Sheet with its own label composer, above the grid —
+            // deliberately NOT inside mosaic-pkg-sheet (see new-label-name's slot
+            // comment on TaskApp.mil for why). Every sheet-* slot/emit below is still
+            // a straight pass-through to the package itself.
+            Column [ sheet-view-wrap ] {
+              Row [ label-composer ] {
+                HostInput [ label-name-input ] (
+                  value : slot: new-label-name ,
+                  placeholder : "New label" ,
+                  onChange : emit: onNewLabelNameChange
+                )
+                HostButton [ label-add-btn ] ( label : "+ Label" , onClick : emit: onAddLabel )
+              }
+              pkg::mosaic-pkg-sheet::Sheet (
+                viewport-rows : slot: sheet-viewport-rows ,
+                column-headers : slot: sheet-column-headers ,
+                column-widths : slot: sheet-column-widths ,
+                selected-row : slot: sheet-selected-row ,
+                selected-col : slot: sheet-selected-col ,
+                edit-row : slot: sheet-edit-row ,
+                edit-col : slot: sheet-edit-col ,
+                edit-content : slot: sheet-edit-content ,
+                filter-text : slot: sheet-filter-text ,
+                sort-field : slot: sheet-sort-field ,
+                sort-options : slot: sheet-sort-options ,
+                sort-open : slot: sheet-sort-open ,
+                sort-ascending : slot: sheet-sort-ascending ,
+                onNavigate : emit: onSheetNavigate ,
+                onFormulaChange : emit: onSheetFormulaChange ,
+                onEditCommit : emit: onSheetEditCommit ,
+                onEditCancel : emit: onSheetEditCancel ,
+                onFilterChange : emit: onSheetFilterChange ,
+                onSortFieldChange : emit: onSheetSortFieldChange ,
+                onToggleSortOpen : emit: onSheetToggleSortOpen ,
+                onToggleSortDirection : emit: onSheetToggleSortDirection
               )
-              HostButton [ label-add-btn ] ( label : "+ Label" , onClick : emit: onAddLabel )
             }
-            pkg::mosaic-pkg-sheet::Sheet (
-              viewport-rows : slot: sheet-viewport-rows ,
-              column-headers : slot: sheet-column-headers ,
-              column-widths : slot: sheet-column-widths ,
-              selected-row : slot: sheet-selected-row ,
-              selected-col : slot: sheet-selected-col ,
-              edit-row : slot: sheet-edit-row ,
-              edit-col : slot: sheet-edit-col ,
-              edit-content : slot: sheet-edit-content ,
-              filter-text : slot: sheet-filter-text ,
-              sort-field : slot: sheet-sort-field ,
-              sort-options : slot: sheet-sort-options ,
-              sort-open : slot: sheet-sort-open ,
-              sort-ascending : slot: sheet-sort-ascending ,
-              onNavigate : emit: onSheetNavigate ,
-              onFormulaChange : emit: onSheetFormulaChange ,
-              onEditCommit : emit: onSheetEditCommit ,
-              onEditCancel : emit: onSheetEditCancel ,
-              onFilterChange : emit: onSheetFilterChange ,
-              onSortFieldChange : emit: onSheetSortFieldChange ,
-              onToggleSortOpen : emit: onSheetToggleSortOpen ,
-              onToggleSortDirection : emit: onSheetToggleSortDirection
+          }
+          Else {
+          If ( when: slot: calendar-mode ) {
+            // Every calendar-* slot/emit is a straight pass-through to the
+            // package — TaskApp adds no shaping of its own, see Calendar.mil
+            // for the contract and task-app-calendar-v1.md for the scope.
+            pkg::mosaic-pkg-calendar::Calendar (
+              calendar-title : slot: calendar-title ,
+              calendar-cells : slot: calendar-cells ,
+              calendar-events : slot: calendar-events ,
+              onPrev : emit: onCalendarPrev ,
+              onNext : emit: onCalendarNext ,
+              onEventDropped : emit: onCalendarEventDropped
             )
           }
-        }
-        Else {
-        If ( when: slot: calendar-mode ) {
-          // Every calendar-* slot/emit is a straight pass-through to the
-          // package — TaskApp adds no shaping of its own, see Calendar.mil
-          // for the contract and task-app-calendar-v1.md for the scope.
-          pkg::mosaic-pkg-calendar::Calendar (
-            calendar-title : slot: calendar-title ,
-            calendar-cells : slot: calendar-cells ,
-            calendar-events : slot: calendar-events ,
-            onPrev : emit: onCalendarPrev ,
-            onNext : emit: onCalendarNext ,
-            onEventDropped : emit: onCalendarEventDropped
-          )
-        }
-        Else {
-        If ( when: slot: notes-mode ) {
-          // Every notes-* slot/emit is a straight pass-through to the
-          // package — TaskApp adds no shaping of its own, see Notes.mil
-          // for the contract and task-app-notes-ui-v1.md for the scope.
-          pkg::mosaic-pkg-notes::Notes (
-            notes-title : slot: notes-title ,
-            note-rows : slot: note-rows ,
-            selected-note-id : slot: selected-note-id ,
-            title-value : slot: note-title-value ,
-            body-value : slot: note-body-value ,
-            task-name-value : slot: note-task-value ,
-            onSelectNote : emit: onSelectNote ,
-            onNewNote : emit: onNewNote ,
-            onTitleChange : emit: onNoteTitleChange ,
-            onBodyChange : emit: onNoteBodyChange ,
-            onTaskNameChange : emit: onNoteTaskNameChange ,
-            onSave : emit: onSaveNote ,
-            onDelete : emit: onDeleteNote ,
-            onCancel : emit: onCancelNote
-          )
-        }
-        Else {
-          Column [ list-wrap ] {
-            Column [ composer-block ] {
-              Row [ composer ] {
-                // The dashed-box plus mark ahead of the inputs — decoration, not a
-                // button (the mock's own `.composer .plus` is `aria-hidden`); the
-                // real "add" action is the `add-btn` below. Two crossed bars in a
-                // Stack, no SVG (task-app-icon-assets-v1.md).
-                Stack [ composer-plus ] {
-                  Box [ plus-bar-h ] { }
-                  Box [ plus-bar-v ] { }
-                }
-                If ( when: slot: new-task-name-error ) {
-                  Box [ name-error-focus ] {
-                    HostInput [ name-input-error ] (
-                      value : slot: new-task-name ,
-                      placeholder : "What needs doing?" ,
-                      a11y-label : "Task name. Enter a task name." ,
-                      auto-focus : true ,
-                      onChange : emit: onNewTaskNameChange ,
-                      onCommit : emit: onAddTask
-                    )
+          Else {
+          If ( when: slot: notes-mode ) {
+            // Every notes-* slot/emit is a straight pass-through to the
+            // package — TaskApp adds no shaping of its own, see Notes.mil
+            // for the contract and task-app-notes-ui-v1.md for the scope.
+            pkg::mosaic-pkg-notes::Notes (
+              notes-title : slot: notes-title ,
+              note-rows : slot: note-rows ,
+              selected-note-id : slot: selected-note-id ,
+              title-value : slot: note-title-value ,
+              body-value : slot: note-body-value ,
+              task-name-value : slot: note-task-value ,
+              onSelectNote : emit: onSelectNote ,
+              onNewNote : emit: onNewNote ,
+              onTitleChange : emit: onNoteTitleChange ,
+              onBodyChange : emit: onNoteBodyChange ,
+              onTaskNameChange : emit: onNoteTaskNameChange ,
+              onSave : emit: onSaveNote ,
+              onDelete : emit: onDeleteNote ,
+              onCancel : emit: onCancelNote
+            )
+          }
+          Else {
+            Column [ list-wrap ] {
+              Column [ composer-block ] {
+                Row [ composer ] {
+                  // The dashed-box plus mark ahead of the inputs — decoration, not a
+                  // button (the mock's own `.composer .plus` is `aria-hidden`); the
+                  // real "add" action is the `add-btn` below. Two crossed bars in a
+                  // Stack, no SVG (task-app-icon-assets-v1.md).
+                  Stack [ composer-plus ] {
+                    Box [ plus-bar-h ] { }
+                    Box [ plus-bar-v ] { }
                   }
-                }
-                Else {
-                  // Keep the nested focus switch behind one stable flex item.
-                  // Flutter otherwise lowers the nested If/Else to a Column
-                  // containing an Expanded TextField, which is invalid under
-                  // the composer's unbounded vertical constraints.
-                  Column [ name-input-focus ] {
-                    If ( when: slot: new-task-name-focus ) {
-                      HostInput [ name-input-corrected ] (
+                  If ( when: slot: new-task-name-error ) {
+                    Box [ name-error-focus ] {
+                      HostInput [ name-input-error ] (
                         value : slot: new-task-name ,
                         placeholder : "What needs doing?" ,
-                        a11y-label : "Task name" ,
+                        a11y-label : "Task name. Enter a task name." ,
                         auto-focus : true ,
                         onChange : emit: onNewTaskNameChange ,
                         onCommit : emit: onAddTask
                       )
-                    }
-                    Else {
-                      HostInput [ name-input ] (
-                        value : slot: new-task-name ,
-                        placeholder : "What needs doing?" ,
-                        a11y-label : "Task name" ,
-                        auto-focus : true ,
-                        onChange : emit: onNewTaskNameChange ,
-                        onCommit : emit: onAddTask
-                      )
-                    }
-                  }
-                }
-                If ( when: slot: new-task-due-error ) {
-                  Box [ due-error-focus ] {
-                    HostInput [ due-input-error ] (
-                      value : slot: new-task-due ,
-                      placeholder : "Due (optional)" ,
-                      a11y-label : "Due date. Use a real date in YYYY-MM-DD format." ,
-                      auto-focus : true ,
-                      onChange : emit: onNewTaskDueChange ,
-                      onCommit : emit: onAddTask
-                    )
-                  }
-                }
-                Else {
-                  // As above, the fixed-width wrapper is the composer's direct
-                  // Row child while the focus switch remains internal.
-                  Box [ due-input-focus ] {
-                    If ( when: slot: new-task-due-focus ) {
-                      HostInput [ due-input-corrected ] (
-                        value : slot: new-task-due ,
-                        placeholder : "Due (optional)" ,
-                        a11y-label : "Due date (optional)" ,
-                        auto-focus : true ,
-                        onChange : emit: onNewTaskDueChange ,
-                        onCommit : emit: onAddTask
-                      )
-                    }
-                    Else {
-                      HostInput [ due-input ] (
-                        value : slot: new-task-due ,
-                        placeholder : "Due (optional)" ,
-                        a11y-label : "Due date (optional)" ,
-                        onChange : emit: onNewTaskDueChange ,
-                        onCommit : emit: onAddTask
-                      )
-                    }
-                  }
-                }
-                HostButton [ add-btn ] ( label : "Add task" , onClick : emit: onAddTask )
-              }
-              If ( when: slot: new-task-name-error ) {
-                Text [ composer-name-error ] ( content : slot: new-task-name-error )
-              }
-              If ( when: slot: new-task-due-error ) {
-                Text [ composer-due-error ] ( content : slot: new-task-due-error )
-              }
-            }
-
-            If ( when: slot: empty-list ) {
-              Column [ empty-state ] {
-                Text [ empty-title ] ( content : "Your Inbox is ready" , a11y-role : heading )
-                Text [ empty-body ] ( content : "Add your first task above. Scheduling stays out of the way until you need it." )
-              }
-            }
-
-            Column [ task-list ] {
-              For ( each: slot: task-rows , as: row , index: i ) {
-                // A group heading, present only on the row that opens a group — the
-                // engine decides the grouping, so the layout just prints the label
-                // where it is handed one. The count badge (row[14],
-                // task-app-icon-assets-v1.md) is co-present by construction but
-                // still gated by its own If, matching row[10]/row[11]'s discipline
-                // rather than assuming the pairing.
-                If ( when: ( row[9] ) ) {
-                  Row [ group-head-row ] {
-                    Text [ group-head ] ( content : ( row[9] ) )
-                    If ( when: ( row[14] ) ) {
-                      Text [ group-count ] ( content : ( row[14] ) )
-                    }
-                  }
-                }
-                Column [ task-card ] {
-                  If ( when: ( row[15] ) ) {
-                    Column [ edit-form ] {
-                      HostInput [ edit-name-input ] (
-                        value : slot: edit-task-name ,
-                        placeholder : "Task name" ,
-                        a11y-label : "Task name" ,
-                        auto-focus : true ,
-                        onChange : emit: onEditTaskNameChange ,
-                        onCommit : emit: onSaveTaskEdit
-                      )
-                      HostInput [ edit-due-input ] (
-                        value : slot: edit-task-due ,
-                        placeholder : "Due (optional)" ,
-                        a11y-label : "Due date (optional)" ,
-                        onChange : emit: onEditTaskDueChange ,
-                        onCommit : emit: onSaveTaskEdit
-                      )
-                      If ( when: slot: edit-task-name-error ) {
-                        Text [ edit-name-error ] ( content : slot: edit-task-name-error )
-                      }
-                      If ( when: slot: edit-task-due-error ) {
-                        Text [ edit-due-error ] ( content : slot: edit-task-due-error )
-                      }
-                      Row [ edit-action-row ] {
-                        HostButton [ edit-save-btn ] ( label : "Save" , onClick : emit: onSaveTaskEdit )
-                        HostButton [ edit-cancel-btn ] ( label : "Cancel" , onClick : emit: onCancelTaskEdit )
-                      }
                     }
                   }
                   Else {
-                    Row [ task-row ] {
-                      HostButton [ toggle ] (
-                        label : ( row[0] ) ,
-                        a11y-label : ( row[16] ) ,
-                        onClick : emit: onToggleTask
-                      )
-                      // The name is the disclosure control: it opens this row's detail.
-                      HostButton [ task-name ] ( label : ( row[1] ) , onClick : emit: onExpandTask )
-                      If ( when: ( row[2] ) ) {
-                        Text [ chip-due ] ( content : ( row[2] ) )
+                    // Keep the nested focus switch behind one stable flex item.
+                    // Flutter otherwise lowers the nested If/Else to a Column
+                    // containing an Expanded TextField, which is invalid under
+                    // the composer's unbounded vertical constraints.
+                    Column [ name-input-focus ] {
+                      If ( when: slot: new-task-name-focus ) {
+                        HostInput [ name-input-corrected ] (
+                          value : slot: new-task-name ,
+                          placeholder : "What needs doing?" ,
+                          a11y-label : "Task name" ,
+                          auto-focus : true ,
+                          onChange : emit: onNewTaskNameChange ,
+                          onCommit : emit: onAddTask
+                        )
                       }
-                      If ( when: ( row[3] ) ) {
-                        Text [ chip-sched ] ( content : ( row[3] ) )
+                      Else {
+                        HostInput [ name-input ] (
+                          value : slot: new-task-name ,
+                          placeholder : "What needs doing?" ,
+                          a11y-label : "Task name" ,
+                          auto-focus : true ,
+                          onChange : emit: onNewTaskNameChange ,
+                          onCommit : emit: onAddTask
+                        )
                       }
-                      If ( when: ( row[4] ) ) {
-                        Text [ chip-over ] ( content : ( row[4] ) )
-                      }
-                      If ( when: ( row[10] ) ) {
-                        Text [ chip-priority ] ( content : ( row[10] ) )
-                      }
-                      If ( when: ( row[11] ) ) {
-                        Text [ chip-labels ] ( content : ( row[11] ) )
-                      }
-                      HostButton [ edit-btn ] ( label : "Edit" , onClick : emit: onEditTask )
-                      HostButton [ del-btn ] ( label : "Delete" , onClick : emit: onDeleteTask )
                     }
-                    // Progressive disclosure: the scheduling detail exists for every
-                    // task but is rendered only for the open row.
-                    If ( when: ( row[5] ) ) {
-                      Column [ task-detail ] {
-                        If ( when: ( row[6] ) ) {
-                          Text [ detail-sched ] ( content : ( row[6] ) )
+                  }
+                  If ( when: slot: new-task-due-error ) {
+                    Box [ due-error-focus ] {
+                      HostInput [ due-input-error ] (
+                        value : slot: new-task-due ,
+                        placeholder : "Due (optional)" ,
+                        a11y-label : "Due date. Use a real date in YYYY-MM-DD format." ,
+                        auto-focus : true ,
+                        onChange : emit: onNewTaskDueChange ,
+                        onCommit : emit: onAddTask
+                      )
+                    }
+                  }
+                  Else {
+                    // As above, the fixed-width wrapper is the composer's direct
+                    // Row child while the focus switch remains internal.
+                    Box [ due-input-focus ] {
+                      If ( when: slot: new-task-due-focus ) {
+                        HostInput [ due-input-corrected ] (
+                          value : slot: new-task-due ,
+                          placeholder : "Due (optional)" ,
+                          a11y-label : "Due date (optional)" ,
+                          auto-focus : true ,
+                          onChange : emit: onNewTaskDueChange ,
+                          onCommit : emit: onAddTask
+                        )
+                      }
+                      Else {
+                        HostInput [ due-input ] (
+                          value : slot: new-task-due ,
+                          placeholder : "Due (optional)" ,
+                          a11y-label : "Due date (optional)" ,
+                          onChange : emit: onNewTaskDueChange ,
+                          onCommit : emit: onAddTask
+                        )
+                      }
+                    }
+                  }
+                  HostButton [ add-btn ] ( label : "Add task" , onClick : emit: onAddTask )
+                }
+                If ( when: slot: new-task-name-error ) {
+                  Text [ composer-name-error ] ( content : slot: new-task-name-error )
+                }
+                If ( when: slot: new-task-due-error ) {
+                  Text [ composer-due-error ] ( content : slot: new-task-due-error )
+                }
+              }
+
+              If ( when: slot: empty-list ) {
+                Column [ empty-state ] {
+                  Text [ empty-title ] ( content : "Your Inbox is ready" , a11y-role : heading )
+                  Text [ empty-body ] ( content : "Add your first task above. Scheduling stays out of the way until you need it." )
+                }
+              }
+
+              Column [ task-list ] {
+                For ( each: slot: task-rows , as: row , index: i ) {
+                  // A group heading, present only on the row that opens a group — the
+                  // engine decides the grouping, so the layout just prints the label
+                  // where it is handed one. The count badge (row[14],
+                  // task-app-icon-assets-v1.md) is co-present by construction but
+                  // still gated by its own If, matching row[10]/row[11]'s discipline
+                  // rather than assuming the pairing.
+                  If ( when: ( row[9] ) ) {
+                    Row [ group-head-row ] {
+                      Text [ group-head ] ( content : ( row[9] ) )
+                      If ( when: ( row[14] ) ) {
+                        Text [ group-count ] ( content : ( row[14] ) )
+                      }
+                    }
+                  }
+                  Column [ task-card ] {
+                    If ( when: ( row[15] ) ) {
+                      Column [ edit-form ] {
+                        HostInput [ edit-name-input ] (
+                          value : slot: edit-task-name ,
+                          placeholder : "Task name" ,
+                          a11y-label : "Task name" ,
+                          auto-focus : true ,
+                          onChange : emit: onEditTaskNameChange ,
+                          onCommit : emit: onSaveTaskEdit
+                        )
+                        HostInput [ edit-due-input ] (
+                          value : slot: edit-task-due ,
+                          placeholder : "Due (optional)" ,
+                          a11y-label : "Due date (optional)" ,
+                          onChange : emit: onEditTaskDueChange ,
+                          onCommit : emit: onSaveTaskEdit
+                        )
+                        If ( when: slot: edit-task-name-error ) {
+                          Text [ edit-name-error ] ( content : slot: edit-task-name-error )
                         }
-                        If ( when: ( row[7] ) ) {
-                          Text [ detail-slack ] ( content : ( row[7] ) )
+                        If ( when: slot: edit-task-due-error ) {
+                          Text [ edit-due-error ] ( content : slot: edit-task-due-error )
                         }
-                        If ( when: ( row[8] ) ) {
-                          Text [ detail-free ] ( content : ( row[8] ) )
+                        Row [ edit-action-row ] {
+                          HostButton [ edit-save-btn ] ( label : "Save" , onClick : emit: onSaveTaskEdit )
+                          HostButton [ edit-cancel-btn ] ( label : "Cancel" , onClick : emit: onCancelTaskEdit )
                         }
-                        If ( when: ( row[12] ) ) {
-                          Text [ detail-deps ] ( content : ( row[12] ) )
+                      }
+                    }
+                    Else {
+                      Row [ task-row ] {
+                        HostButton [ toggle ] (
+                          label : ( row[0] ) ,
+                          a11y-label : ( row[16] ) ,
+                          onClick : emit: onToggleTask
+                        )
+                        // The name is the disclosure control: it opens this row's detail.
+                        HostButton [ task-name ] ( label : ( row[1] ) , onClick : emit: onExpandTask )
+                        If ( when: ( row[2] ) ) {
+                          Text [ chip-due ] ( content : ( row[2] ) )
                         }
-                        If ( when: ( row[13] ) ) {
-                          Text [ detail-notes ] ( content : ( row[13] ) )
+                        If ( when: ( row[3] ) ) {
+                          Text [ chip-sched ] ( content : ( row[3] ) )
+                        }
+                        If ( when: ( row[4] ) ) {
+                          Text [ chip-over ] ( content : ( row[4] ) )
+                        }
+                        If ( when: ( row[10] ) ) {
+                          Text [ chip-priority ] ( content : ( row[10] ) )
+                        }
+                        If ( when: ( row[11] ) ) {
+                          Text [ chip-labels ] ( content : ( row[11] ) )
+                        }
+                        HostButton [ edit-btn ] ( label : "Edit" , onClick : emit: onEditTask )
+                        HostButton [ del-btn ] ( label : "Delete" , onClick : emit: onDeleteTask )
+                      }
+                      // Progressive disclosure: the scheduling detail exists for every
+                      // task but is rendered only for the open row.
+                      If ( when: ( row[5] ) ) {
+                        Column [ task-detail ] {
+                          If ( when: ( row[6] ) ) {
+                            Text [ detail-sched ] ( content : ( row[6] ) )
+                          }
+                          If ( when: ( row[7] ) ) {
+                            Text [ detail-slack ] ( content : ( row[7] ) )
+                          }
+                          If ( when: ( row[8] ) ) {
+                            Text [ detail-free ] ( content : ( row[8] ) )
+                          }
+                          If ( when: ( row[12] ) ) {
+                            Text [ detail-deps ] ( content : ( row[12] ) )
+                          }
+                          If ( when: ( row[13] ) ) {
+                            Text [ detail-notes ] ( content : ( row[13] ) )
+                          }
                         }
                       }
                     }
@@ -647,10 +654,10 @@ layout TaskApp {
               }
             }
           }
-        }
-        }
-        }
-        }
+          }
+          }
+          }
+          }
         }
       }
     }

@@ -23,26 +23,34 @@
 % the lookup above is the ordinary SLD binding query — the engine returns
 % the depth superlative WITH its source, on the CPU, with zero model calls,
 % and abstains on every other ocean `oceans.adj` carries, since the cited
-% sentence names a depth superlative for the Pacific alone — the rest of the
-% span ("The Atlantic basin is the second largest basin, followed by the
-% Indian Ocean basin, the Southern Ocean, and finally the Arctic Ocean
-% basin") states ONLY a size ranking, never a depth claim, for the other
-% four basins.
+% sentence names a depth superlative for the Pacific alone. The other four
+% basins are ranked by a SEPARATE sentence — "The Atlantic basin is the
+% second largest basin, followed by the Indian Ocean basin, the Southern
+% Ocean, and finally the Arctic Ocean basin" — which states ONLY a size
+% ranking, never a depth claim, and which `oceans.adj` carries as its own
+% `cites` under the same locator.
+%
+% This comment used to call that sentence "the rest of the span" of
+% `oceans.adj`'s `source`. That was true only while one `source` field held
+% both sentences; #13934 installment 4l (PR #14755) split them because they
+% are not one span on the page — measured under both extractors, each occurs
+% exactly once, 805 characters apart, and the welded string occurs zero
+% times.
 %
 % Only ONE of `oceans.adj`'s five ocean basins has a genuinely distinct
-% depth superlative in the ALREADY-cited span; this table is deliberately
+% depth superlative in the ALREADY-cited spans; this table is deliberately
 % narrow rather than inventing a depth rank the source does not state. The
 % query also runs BACKWARD — bind a superlative and recall which ocean it
 % names:
 %
 %     ? ocean_is_deepest($Ocean, deepest)   % pacific
 %
-% Provenance: reproduces, byte-for-byte, the SAME opening sentence already
-% quoted inside `oceans.adj`'s own `source` field, from the SAME NOAA
-% National Ocean Service page that table already cites — no new WebFetch,
-% only a different schema decoding the depth-superlative half of an
-% already-verified quote. `trust authoritative` — the same tier `oceans.adj`
-% already carries (NOAA, a U.S. federal .gov source).
+% Provenance: reproduces, byte-for-byte, the SAME sentence that
+% `oceans.adj`'s own `source` field holds, from the SAME NOAA National
+% Ocean Service page that table already cites — no new WebFetch, only a
+% different schema decoding the depth-superlative half of an
+% already-verified quote. `trust authoritative` — the same tier
+% `oceans.adj` already carries (NOAA, a U.S. federal .gov source).
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================

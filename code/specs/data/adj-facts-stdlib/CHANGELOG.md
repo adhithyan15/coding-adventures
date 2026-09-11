@@ -5,6 +5,608 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- **#13934 installment 4o: four sentences welded, and a check that could not fail.**
+  The LAST of the six actionable candidates. **1** value line rewritten into **2** `cites`,
+  alongside **86** comment lines added against **13** removed, across **2** `.adj` files (88 added /
+  14 removed lines in total) — `science/scientific-method-step` and, repaying 4n's debt,
+  `physics/energy-conversion-example` — plus two e2e test files, the second being 4n's, which
+  shares an assertion message the review found overclaiming. **Seven mutations redden.**
+
+  ### Part one: 4n's debt
+
+  4n wrote that both its EIA sentences "END their own paragraph", on the evidence that *the first
+  tag after either is `</p>`*. That parenthetical is **true of both and proves neither** — prose is
+  not a tag, so the check cannot see prose sitting between a sentence and the tag. Measured by
+  walking the `<p>` elements whole: S1 ends its paragraph, one space then the tag; **S2 does not**,
+  with 143 characters of prose after it inside the same `<p>` and two sentences before it.
+
+  Run over every `<p>` on the page, that check returns `</p>` for **every** sentence it *can* be
+  run on — that is, every one the raw HTML contains verbatim. Why the rest are not verbatim is not
+  claimed: inline tags account for most, but at least one is a doubled space and two are HTML
+  entities. Absolute counts are not quoted, because two implementations of one written census
+  disagreed by one. A check whose verdict is fixed by how it was built is
+  the mirror of 4n's other finding, the `<title>` control that could never pass.
+
+  Nothing 4n shipped is wrong — the spans really are non-adjacent, the weld really occurs zero
+  times. Two comments carried the false description and both are corrected here.
+
+  **Finding the two took three attempts.** A five-alternative search over `code/` returned one hit
+  and under-reported. Per-needle matching then missed `**ends** a different paragraph`, because
+  markdown emphasis sits inside the phrase. The third attempt normalises emphasis on both sides
+  **and gives the search harness its own positive and negative control** — without which a scan
+  that cannot find anything returns zeros that read as evidence.
+
+  ### Part two: `scientific-method-step:109`
+
+  A `cites` holding **four** sentences. Counted under both extractors, comments stripped in both:
+
+  | | block | crude | where |
+  |---|---|---|---|
+  | pair A "Define the parts of your experiment that will change. These are called variables." | **1** | 0 | contained whole in `<p>` #7 of 35 (counting from 1) |
+  | pair B "Define the parts … will not change. These are called controls." | **1** | 0 | contained whole in `<p>` #12, **four `<p>` elements** and **235 raw characters** later |
+  | **the shipped 166-character value** | **0** | **0** | — |
+
+  The crude zeros are the `<strong>` case below, not missing quotes; only the weld's zero holds under both extractors.
+
+  The four intervening elements are `For example:`, `Variable 1: …`, `Variable 2: …` and an empty
+  one. Each pair is now its own `cites` under the same locator, and the header's truth-table row —
+  which had quoted the weld as one verbatim string — now joins the two with an explicit `AND`.
+
+  **The atom is a conjunction, and that is said plainly.** `define_variables_and_controls` names two
+  things: A states the variables half, B the controls half, and **neither alone states the whole
+  atom**. Together they do, and both sit in the envelope, which is the condition
+  [#14758](https://github.com/adhithyan15/coding-adventures/issues/14758) is about.
+
+  Two further header claims were wrong and are corrected: the two definitions do **not** sit "back
+  to back" (four `<p>` between them), and "every other step states exactly one instruction under its
+  heading" is not supportable as anything countable — counting every `<p>` under each label except
+  the label itself, empties included, the counts per step are 4, 9, 1, 9, 1, 2, 2. The argument
+  they were supporting survives and is now the measured part: the capture carries exactly seven
+  `Step N.` labels, `Step 1.` through `Step 7.`, each a `<p><strong>` paragraph rather than an
+  `<h*>` element (its only headings are two `<h2>`s), and **no** `Step 2a`/`2b` sub-label anywhere
+  in its 4,302 bytes, so keeping `step_2` as one row still declines to invent a numbering the
+  source never gives.
+
+  ### The page is a fragment, and the crude extractor misses the two sentences that matter
+
+  The fetched capture is a content fragment — 4,302 bytes beginning at an `<h2>`, with no
+  `<html>`, `<head>`, `<title>`, `<body>` or doctype. That is a property of what the fetch
+  returned, not of what the site serves; it does mean a title-based control could not have been
+  run against these bytes at all. Census: every `<p>`, each tag replaced by **nothing** rather than by a
+  space (that choice inverts the result — with a space it is block 41, crude 43), entities
+  decoded, whitespace runs collapsed, split before a capital following a period, question or
+  exclamation mark, keeping 25–200 characters containing a space, de-duplicated — **43** body
+  sentences. The block extractor found **43** and the crude one
+  **41**; both found **0** of 43 negative controls. The two
+  the crude extractor missed are `These are called variables.` and `These are called controls.` —
+  because the page writes `called <strong>variables</strong>.`, which also makes their **raw** count
+  zero. A reading that used only the crude extractor would have called two real sentences missing.
+  No rule about *when* it misses is asserted; that population belongs to
+  [#14752](https://github.com/adhithyan15/coding-adventures/issues/14752).
+
+  ### Why it survived: the pin was a host and a trust tier
+
+  `contains("nasa.gov") && contains(trust)` — the same shape repaired in 4j, 4k, 4l, 4m and 4n
+  before it. (No count of *files* is given: 4j's own entry records repairing two.) The
+  needle is now the whole citation object as the serialiser emits it, closing on the corroborations
+  `]`, bounding the source text, every locator, the trust tier and the corroboration set. Its string
+  appears **eight** times at eight distinct JSON paths (`citations/[0]` and `steps/[0]` for each of
+  the four queries), counted before it was trusted. Six of the seven mutants touch a citation field
+  and drive all eight to zero together; the seventh, `DROP-ROW`, touches none — it drops the count
+  to six and is caught by the `step_2` assertion instead. What it does *not* bound is how many citation objects the output holds, and the comment
+  says so.
+
+  ### Mutants
+
+  `RESTORE` (the 166-character weld put back), `DROP-B`, `SWAP`, `WORD`, `LOCATOR-TAIL`,
+  `DROP-ROW`, `EXTRA-CITES` (under `https://evil.example/facts`). Each turns the real suite red;
+  none is vacuous; none crashes the CLI. `RESTORE` is caught by the no-weld assertion, `DROP-ROW`
+  by the new `step_2` assertion, and the other five by the citation object, so **each of the three
+  assertions has a live positive control**. The shipped `.adj` was restored byte-identically
+  afterwards (sha256 checked).
+
+  ### The review found eight things
+
+  Two `<p>` ordinals were **0-based against a 1-based total**, so "#6 of 35" pointed at the
+  `Step 2.` label and "#11" at the empty paragraph; they are #7 and #12. The per-step tally
+  counted `<p>` elements by a rule that **excluded empties**, four lines after a figure that
+  **included** one — step 2 is 9, not 8, under one consistent rule. "Exactly seven headings" was
+  false as an element count: the capture has two `<h2>`s and the seven `Step N.` labels are
+  `<p><strong>` paragraphs. "THE PAGE IS AN HTML FRAGMENT" attributed to NASA's page a property of
+  what the fetch returned, and scoped the load-bearing sub-label search to that capture without
+  saying so. And the occurrences table said "counted under both extractors" while giving one
+  number, when the two extractors disagree on both pairs — which the same entry said correctly
+  twenty-five lines later.
+
+  None of the counts could be re-derived from the descriptions, either. The censuses are now stated
+  with the elements walked, the splitter, the length filter, whether duplicates are dropped — and,
+  after round 3 caught the omission, what a stripped tag is replaced by, which on its own inverts
+  the block/crude figures.
+
+  The assertion message claimed the test proves "nothing appended after the corroborations `]`".
+  A `contains` needle that ENDS at `]` cannot verify that nothing follows it. That property does
+  hold — the serialiser emits `corroborations` last — but not because this test checks it, and a
+  change to the serialiser adding a trailing field would not redden. The same message shipped in
+  4n, so both files are corrected.
+
+  Last: **the row this installment exists to fix was never queried**. The direct test bound
+  `step_1`, `step_4` and `step_7`; the two new spans were covered only through the table-wide
+  envelope, so a regression dropping the `step_2` row would have left every assertion green. It is
+  queried now, and `DROP-ROW` is the mutant that earns the assertion.
+
+  **This exhausts the six actionable candidates.** What remains on #13934 is the seven held entries,
+  enumerated by locator in the loop ledger; none is to be decided by shipping.
+
+- **#13934 installment 4n: two sentences from two different paragraphs, welded.**
+  **1** value line rewritten into **2** `cites`, alongside **26** comment lines added against
+  **0** removed, in **1** `.adj` file (28 added / 1 removed lines in total) —
+  `physics/energy-conversion-example` — plus one e2e test file. **Six mutations redden.**
+
+  ### What line 160 held
+
+  Two sentences from the U.S. EIA "Forms of energy" page under one locator. Counted under both
+  extractors — text nodes breaking only on block elements, and the crude every-tag-is-a-break one —
+  with HTML comments stripped in both:
+
+  | | occurrences | where |
+  |---|---|---|
+  | S1 "For example, chemical energy is converted to thermal energy when people burn wood in a fireplace or burn gasoline in a car's engine." | 1 | **ends** its paragraph — the first tag after it is `</p>` |
+  | S2 "When a person rides a bicycle down a steep hill and picks up speed, the gravitational energy is converting to motion energy." | 1 | sits **mid-paragraph** in a different `<p>`, **606 raw characters** later, **6** block-element tags in between. (Corrected by 4o: this row read "ends a different paragraph"; 143 characters of prose follow S2 inside its `<p>`. The S1 row above is correct.) |
+  | **the shipped 257-character value** | **0** | — |
+
+  In the collapsed rendered text they are **471 characters** apart, with the paragraphs on
+  mechanical and nuclear energy between them. Each now has its own `cites` under the same locator,
+  and **both are needed**: S1 states chemical → thermal for burning wood in a fireplace, S2 states
+  gravitational → motion for the bicycle. Each says its row outright; neither is inferred — the
+  distinction [#14758](https://github.com/adhithyan15/coding-adventures/issues/14758) was filed
+  about, checked here rather than assumed.
+
+  **The header already had it separate.** Its evidence block quotes S1 and S2 as two distinct
+  quotations, at lines 39/41 and 115/117. Only the machine-readable field welded them.
+
+  The `source` on the sibling "Laws of energy" page was measured too and needed no repair: 179
+  characters, one occurrence **byte-exact in the raw HTML**, inside a single `<p>`, no tag anywhere
+  within it.
+
+  ### Why it survived: the pin was a host and a trust tier
+
+  `contains("eia.gov") && contains(trust)` — the same shape as the oceans and reference-lines pins
+  that 4l and 4m replaced, and satisfied by the welded string exactly as happily as by the two real
+  spans. The needle is now the whole citation object as the serialiser emits it, closing on the
+  corroborations `]`, so it bounds the source text, both locators, the trust tier and the
+  corroboration set at once.
+
+  Its string appears **eight** times, at eight distinct JSON paths — `citations/[0]` and `steps/[0]`
+  for each of the four queries. That was counted before the needle was trusted, and each of the six
+  mutants drove all eight to zero together: echoes of one field, not the independently-driftable
+  copies of [#14745](https://github.com/adhithyan15/coding-adventures/issues/14745).
+
+  ### One instrument note, as a count with its scope
+
+  Of **20** body sentences drawn from `<p>` elements on the "Forms of energy" page, the block
+  extractor found **20** and the crude one found **18**; both found **0** of the 20 negative
+  controls (the same sentences with one word swapped). Neither sentence quoted here is among the
+  two the crude extractor missed. No rule about *when* it misses is asserted —
+  [#14752](https://github.com/adhithyan15/coding-adventures/issues/14752) says that population is
+  to be measured, and this is one page's count.
+
+  The controls themselves needed two corrections before they could say anything. The first version
+  used each page's `<title>` as the positive needle — but both extractors drop `<head>`, so that
+  control could never pass on any page and read 0/0 where the real sentences all read 1/1. The
+  second used a single body sentence, which passed under `block` and failed under `crude` — and a
+  single needle cannot separate "the instrument is broken" from "the instrument is wrong about this
+  one string". Hence the population of twenty.
+
+  ### The review found the same shape in the assertion message
+
+  The message read "carries the U.S. EIA citation, its two corroborations, **and nothing else**".
+  The needle bounds the citation *object* — source text, both locators, trust tier, and the
+  corroboration set, closing on the `]` — but nothing asserts that `citations` holds exactly one
+  element, or that no other citation object appears in the output. The message described a property
+  the test does not check, which is what
+  [#14758](https://github.com/adhithyan15/coding-adventures/issues/14758) was filed about one
+  installment ago — here committed by an assertion message rather than a comment.
+
+  The fix says what is checked rather than adding an assertion. Pinning the count instead would be
+  a stronger test, but every input that could falsify it — a duplicate `source`, a second table with
+  the same relation name — is rejected by the lowerer before it reaches the output, so no mutant
+  could ever be observed to trip it, and an assertion never observed to fire is decoration. The
+  comment now also records what the needle does *not* bound.
+
+  ### Mutants
+
+  `RESTORE` (the 257-character weld put back), `DROP-S2`, `SWAP`, `WORD` (`wood` → `coal`),
+  `LOCATOR-TAIL`, `EXTRA-CITES` (under `https://evil.example/facts`). Each turns the real suite red;
+  none is vacuous; none crashes the CLI. `RESTORE` is caught by the no-weld assertion and the other
+  five by the citation object, so **both assertions have a live positive control** — the ordering
+  4m established, applied here from the start. The shipped `.adj` was restored byte-identically
+  afterwards (sha256 checked).
+
+- **#13934 installment 4m: three sentences welded, two of them adjacent — and a debt from 4l.**
+  **1** value line rewritten into **2** `cites`, alongside **41** comment lines added against
+  **12** removed, in **2** `.adj` files (43 added / 13 removed lines in total) —
+  `geography/reference-lines` and `geography/ocean-deepest` — plus one e2e test file.
+  **Six mutations redden.**
+
+  ### The candidate was not the value I went looking for
+
+  The backlog names `geography/reference-lines:109`. Line 109 is the NESDIS **`cites`**, not the
+  equator `source` four lines above it. The `source` was measured anyway: `"The equator is the most
+  well known parallel. At 0 degrees latitude, it equally divides the Earth into the Northern and
+  Southern hemispheres."` occurs **once, byte-exact in the raw HTML**, inside a single `<p>`, with
+  no tag between its two sentences. It is a contiguous span and needed no repair. The file has one
+  commit in its history and is 110 lines long in both revisions, so the backlog's line number and
+  today's line 109 are the same line.
+
+  ### What line 109 actually held
+
+  Three sentences from the NOAA NESDIS "What Is a Solstice?" page under one locator:
+
+  | | occurrences | where |
+  |---|---|---|
+  | S1 "In the Northern Hemisphere, the Summer Solstice occurs … usually June 21." | 1 | one `<p>` … |
+  | S2 "In the Southern Hemisphere, … usually December 21." | 1 | … the same `<p>`, no tag between them |
+  | S3 "Two other significant lines of latitude are the Arctic Circle (around the North Pole) and the Antarctic Circle (around the South Pole)." | 1 | a different `<p>`, **3,665 raw characters** later, with **48** block-element tags in between |
+  | **S1 + S2 as one string** | **1** | the contiguous pair |
+  | S2 + S3 as one string | **0** | — |
+  | **the shipped 392-character value** | **0** | — |
+
+  Counted under both extractors — text nodes breaking only on block elements, and the crude
+  every-tag-is-a-break one — with HTML comments stripped in both. The pair is now one `cites` and
+  S3 is a second `cites` under the same locator. **Both are needed:** the pair grounds the two
+  tropic rows and S3 grounds the two polar-circle rows, so this is not one span being trimmed.
+
+  **The header already had it right.** Its evidence block lists S3 separately for
+  `arctic_circle`/`antarctic_circle`, and marks the tropics quote's own join with `— and —`. Only
+  the machine-readable field welded. That asymmetry is recorded rather than smoothed over: the
+  comment a human reads and the field a program reads disagreed, and the program's was wrong.
+
+  ### Why it survived: the pin was a host and a trust tier
+
+  `contains("oceanservice.noaa.gov") && contains(trust)` — the same shape as 4l's oceans pin, and
+  satisfied by the welded string exactly as happily as by the two real spans. The needle is now the
+  whole citation object as the serialiser emits it, closing on the corroborations `]`, so it bounds
+  the source text, the locator, the trust tier and the corroboration set at once.
+
+  Its string appears **four** times in the test's output, at four distinct JSON paths —
+  `recall/[0]/answers/[0]/citations/[0]` and `…/steps/[0]`, and the same pair under `recall/[1]`
+  for the reverse query. That was counted before the needle was trusted, and each of the six
+  mutations drove all four to zero together: echoes of one field, not the independently-driftable
+  copies of #14745.
+
+  ### A finding about the test itself
+
+  A second assertion was added saying the weld must not come back. Run through `cargo test`, **all
+  six mutants were caught by the citation-object assertion and that one never fired** — it sat
+  second, so the test panicked before reaching it. An assertion never observed to fire is
+  decoration. It was moved **first**, and now `RESTORE` is caught by it while the other five are
+  caught by the citation object. Both have a live positive control instead of one having none.
+
+  ### 4l's debt, repaid
+
+  `ocean-deepest.adj` described the Atlantic sentence as "the rest of the span" of `oceans.adj`'s
+  `source` — true while one `source` held both sentences, stale since 4l split them. Two more
+  claims in that header had the same cause: "the ALREADY-cited span" (singular; that table now
+  cites two) and "the SAME **opening** sentence" (there is no longer a weld for it to open).
+  Nothing the file ships was wrong — its own `source` is the Pacific sentence and its one row is
+  grounded by it. The 805-character gap was **re-measured this session** from freshly fetched
+  bytes under both extractors rather than copied from 4l's note.
+
+  ### Mutants
+
+  `RESTORE` (the 392-character weld put back), `DROP-S3`, `SWAP` (the two corroborations
+  exchanged), `WORD` (`June 21` → `July 21`), `LOCATOR-TAIL`, `EXTRA-CITES` (an extra corroboration
+  under `https://evil.example/facts`). Each turns the real suite red; none is vacuous; none crashes
+  the CLI, so none reddens for the wrong reason. The shipped `.adj` was restored byte-identically
+  afterwards (sha256 checked).
+
+- **#13934 installment 4l: two real sentences, welded — and one of them is a heading.** **1** value
+  line rewritten into a `source` plus **1** `cites`, alongside **48** comment lines added against
+  **10** removed, in **1** `.adj` file (50 added / 11 removed lines in total) — `geography/oceans` —
+  plus one e2e test file. **Six mutations redden.**
+
+  `oceans:42` presented two sentences as one continuous quotation. Both are real and each occurs
+  exactly once; the weld does not, because they sit **805 characters apart**, separated by an image
+  caption about the Pacific's "Ring of Fire" and other prose. The `source` now keeps the first and
+  the second is a `cites` under the same locator. Together they still fix all five ranks.
+
+  ### The two are different kinds of span, which the header did not say
+
+  The old header called them "prose" and "that one span". They are neither one span nor both prose:
+
+  | | where it lives | byte-exact in raw HTML? |
+  |---|---|---|
+  | 1st | the page's `<h2>` **subheader** — the one-line answer to its own title question, with `<span>` around "Pacific Ocean" | only inside two `<meta>` description attributes; the body copy is broken by that span |
+  | 2nd | a `<p>` in the body | **no** — the quoted sentence carries two DOUBLE-SPACE runs, `followed by␣␣the` and `Arctic Ocean␣␣basin`. (␣ marks a literal space: markdown code spans render `white-space: normal`, so real double spaces would show here as single and the exhibit would prove nothing — which is what this row did until review caught it.) |
+
+  So the second is verbatim under whitespace collapsing, not byte-exact. The shipped value was
+  already collapsing those spaces silently; the header now says so. A `WHITESPACE` mutant that
+  restores the page's own double spaces reddens, which is what makes the distinction load-bearing
+  rather than decorative.
+
+  ### Both extractors agree here, and why that sharpens #14752
+
+  4k found that the sweep's every-tag-is-a-break extractor manufactures phantom spaces. It does not
+  bite here, and the reason is specific to this page: the `<span>` boundary in the `<h2>` falls
+  where a space already sat (`The <span>Pacific Ocean</span> is`), so the injected break collapses
+  into that space and changes nothing.
+
+  **No general rule about when that extractor fails is asserted.** Two were attempted and both were
+  wrong. The first — "only when the boundary abuts **punctuation**" — is falsified on the
+  cloud-types page by `generally&nbsp;t</span>hick`, which splits a word. The second — "whenever
+  the boundary is **not already adjacent to whitespace**" — is falsified on *this* page by
+  `Service.<br>Stewardship.`, where `<br>` is a real break and the injected space is correct.
+
+  The question belongs to #14752, which now carries a corrected statement. Nothing is inferred here
+  about how much of the backlog is affected — that is a measurement, and it has not been made.
+
+  ### Why it survived: the pin was a host and a trust tier
+
+  Third file in a row with that shape, after 4j's hostname and 4k's locator-and-trust. The suite
+  asserted `contains("oceanservice.noaa.gov") && contains(trust)` and never the `source` text, so
+  the welded string satisfied it exactly as happily as the real spans do.
+
+  The needle is now the whole citation object as the serialiser emits it, closing on the
+  corroborations `]`. Its string appears **four** times in this test's output — two sections per
+  answer, two binding queries — and that was checked before trusting it: mutating the `.adj` moves
+  all four together, so they are same-file echoes rather than the independently-driftable copies of
+  #14745.
+
+  ### Mutants
+
+  Six, one per thing the repair asserts: RESTORE (the welded string put back exactly as it
+  shipped), WHITESPACE (the page's own double spaces restored), DROP-CITES, EXTRA-CITES (a
+  fabricated corroboration under an attacker-controlled locator), LOCATOR-TAIL and WORD. All six
+  redden. **RESTORE earns the pin**; WHITESPACE earns the header's care about which representation
+  the second sentence is verbatim in.
+
+- **#13934 installment 4k: three real sentences, welded; and a zero that was the instrument.** **1**
+  value line rewritten into a `source` plus **2** `cites`, alongside **38** comment lines added
+  against **11** removed, in **1** `.adj` file (41 added / 12 removed lines in total) —
+  `earth-science/cloud-types` — plus one e2e test file. **Six mutations redden.**
+
+  `cloud-types:72` carried three sentences in one `source` under one `locator`. Measured against
+  the page, **each of the three is real and occurs exactly once** — this is not the mitosis case,
+  where the quoted string had been assembled out of a fragment and four list labels. What is not
+  real is the WELD: the three sit **1443 and 1446 characters apart**, separated by other prose and
+  photo captions, so the string as shipped occurs nowhere.
+
+  The repair is the house answer 4c established and 4i and 4j applied: the `source` keeps the
+  high-deck sentence, and the mid-level and low-deck sentences become `cites` carrying the same
+  locator, because they come from the same page.
+
+  ### Two things that look like defects and are not
+
+  **The singular is the page's.** The mid-level sentence reads `The two main type of mid-level
+  clouds` — singular — and the raw HTML reads exactly that: `The two main type of <em>mid-level
+  clouds</em>`. The value faithfully reproduces the NWS's own grammatical slip. Correcting it would
+  be the defect, and a mutant that quietly pluralises it now reddens.
+
+  **The zero was the instrument.** A tag-stripping extractor that replaces every tag with a break
+  scores all three sentences **0** against this page — in raw HTML, in stripped text, and after
+  whitespace collapsing. That is not a property of the value. This page wraps every cloud name in
+  `<font color>` / `<span style>` for colour, so `<span>cirrus</span>, ` becomes `cirrus , `, with
+  a space before the comma that **no reader ever sees and the document's text content never
+  contains**. Extracting text nodes and breaking only on BLOCK elements — what a browser does —
+  finds each sentence exactly once, byte-exact.
+
+  This matters past this one file: **the contiguity sweep can report a faithful quotation as
+  non-contiguous**, purely because of inline formatting. Filed separately; it bears on how the rest
+  of the backlog was measured, and no sweep figure is asserted here.
+
+  ### Why it survived: the pin was a locator and a trust tier
+
+  The suite asserted `contains(locator) && contains(trust)` and never the `source` text — so the
+  welded string satisfied it exactly as happily as the three real spans do. Same shape as 4j's
+  hostname pin, in a different file.
+
+  The needle is now the whole citation object as the serialiser actually emits it, taken from a
+  real run rather than from memory of the format, and it CLOSES on the corroborations `]` — which
+  bounds the source text, the locator, the trust tier and the corroboration SET together, so a
+  fabricated `cites` cannot be appended without reddening (#14735).
+
+  **The duplicate check was done before trusting that needle, not after.** Its string appears
+  **four** times in this test's output: the serialiser echoes each citation in `citations` and in
+  `steps` — two sections per answer — and the test's program issues three queries of which two
+  bind, so 2 × 2. None of the four is an independent copy; mutating the `.adj` takes the old string
+  4 → 0 and the new one 0 → 4. So a `contains` needle here does constrain the artifact — unlike
+  #14745, where a rule inlines a copy of a composed library's citation and the needle then
+  constrains the copy rather than the library.
+
+  This paragraph first said **twice**, in bold, as something "measured rather than assumed". Two is
+  what a ONE-QUERY probe returns; the shipping test has two binding queries. The mechanism was
+  right and the total was a probe's leftovers — which is the one kind of number a changelog like
+  this cannot afford, since its whole value is that the numbers can be checked.
+
+  ### Mutants
+
+  Six, one per thing the repair asserts: RESTORE (the welded string put back exactly as it
+  shipped), TYPE-PLURAL (the page's own singular quietly corrected), DROP-MID (one corroboration
+  removed), EXTRA-CITES (a fabricated corroboration appended under an attacker-controlled locator),
+  LOCATOR-TAIL (a look-alike suffix on the main locator) and WORD (one word of the source span
+  changed). All six redden. **RESTORE is the one that earns the pin** — it proves the new assertion
+  catches the defect this installment repaired, which the locator-and-trust probe did not. The
+  negative arm, the repaired artifact untouched, stays green.
+
+- **#13934 installment 4j: a quotation that quoted nothing.** **1** value line rewritten and **60**
+  comment lines added against **13** removed, across **2** `.adj` files (61 added / 14 removed lines
+  in total) — `biology/mitosis-phase-order` and `biology/mitosis-phases` — plus two e2e test files,
+  one new verification tool, and the README section that lists it. **Ten mutations redden; four
+  survive and are named below.**
+
+  `mitosis-phase-order:43` shipped this as a `source`:
+
+  ```
+  The four phases of mitosis are Prophase ... Metaphase ... Anaphase ... Telophase.
+  ```
+
+  That string occurs **zero times** on the page it cites — not in the raw HTML, not in the
+  tag-stripped text, not after whitespace collapsing. It is not a span that drifted or a span
+  quoted loosely. **Three separate things were invented**, and each is worth naming because each
+  is a different failure:
+
+  | # | invention | evidence |
+  |---|---|---|
+  | 1 | the `" ... "` separator | occurs **0** times in the raw HTML and **0** times in the stripped text |
+  | 2 | the terminal period | the page's paragraph is `<p>The four phases of mitosis are</p>` and ends at `are` |
+  | 3 | the bare word `Telophase` | the page's fourth item reads `Telophase (divided into parts I and II)` |
+
+  The first is the one that matters most. An ellipsis is an ordinary editorial mark, but placed
+  **inside quotation marks** it stops being editorial and becomes a claim about what the page
+  says. Three of them, standing in for four list items, turned a lead-in fragment into an
+  apparent sentence.
+
+  ### What the page actually does
+
+  It carries `<p>The four phases of mitosis are</p>` — byte-exact, one occurrence — followed
+  immediately by `<ol class="usa-list">` whose four top-level items are, in document order:
+  Prophase, Metaphase, Anaphase, and `Telophase (divided into parts I and II)`.
+
+  So the ordering this table encodes **is** asserted by the page. An `<ol>` is an ordered list and
+  the order of its items is exactly that claim. But it is asserted as **structure**, and the
+  `source` field holds **text**. No contiguous span of the page's text states the four phases in
+  sequence, because each phase's label is separated from the next by that phase's own nested
+  sub-list of events.
+
+  The repair is the house answer installment 4c established on solfège and 4i applied again on
+  `shape-composition`: **quote what the page says in one piece, and disclose the composition
+  instead of smuggling it inside the quotation marks.** The `source` is now the paragraph. The
+  header names the `<ol>`, its four items, and the fact that the ordering is read from list
+  structure rather than from prose.
+
+  ### What this does NOT decide
+
+  Whether an ordered-list item is a verbatim span is a question in the same family as the held
+  table-row one, and this installment does not answer it. The repair only removes what was
+  invented and quotes the paragraph, which is indisputably one real span. It is recorded as a
+  fourth case alongside table rows, for the owner.
+
+  ### A false attribution next door
+
+  `mitosis-phases.adj` said the page **"which states:"** the same composite. It does not. That
+  file's own shipped `source` is fine — the chromatin sentence, byte-exact — but its header
+  attributed to the page a string the page has never carried. **Two sites, not one**: the
+  `which states:` attribution, and forty lines above it a smaller version of the same move —
+  `the source's "The four phases of mitosis are ..." list`, an ellipsis inside quotation
+  marks. Review caught the second after the first was fixed and this entry already said
+  "Corrected."; `mitosis-phase-order`'s own header was quoting that stale sentence forward,
+  so it is corrected too. Both are now fixed. Both files' shipped
+  values are now byte-exact in the raw HTML; that is measured over these two files only, and no
+  package-wide sweep figure is asserted here because the sweep is a working-tree instrument
+  (#14444) and was not re-run.
+
+  ### Why it survived: the pin was a hostname
+
+  Nothing pinned this value's TEXT. The SEER assertion covering it was
+
+  ```rust
+  out.contains("training.seer.cancer.gov")
+  ```
+
+  a **host** — which the fabricated composite satisfied exactly as happily as the real span does.
+  A provenance value that no test constrains is a value that can say anything. It is now pinned as
+  text **joined to** its locator in one needle, so the two halves cannot drift into a text from one
+  citation and a locator from another — installment 4i's round-1 finding, applying unchanged here.
+
+  **Two corrections review made to this very paragraph.** It said *only*, and a second SEER
+  assertion existed all along in `facts_mitosisphases_e2e.rs` — pinning that file's citation by
+  **locator alone**, the same exposure one file over. It is now pinned as text too. And the joined
+  needle was still open at its right end and said nothing about the citation **set**: a fabricated
+  `cites` carrying the exact string this installment deleted passed all three assertions. Both
+  needles now close on `"trust":"authoritative","corroborations":[]`, taken from the serialiser's
+  real output rather than from memory of it. That is 4i's finding recurring, and the general layer
+  is #14735.
+
+  ### Mutants
+
+  **Ten redden.** Five are one per byte the repair turned on — RESTORE (the original composite put
+  back verbatim), PERIOD (the invented terminal period alone), WORD (one word of the real span
+  changed), TRUNCATE (the span cut one word short) and EXTEND (the span run past what the paragraph
+  contains). **RESTORE is the one that earns the pin**: it proves the new assertion catches the
+  defect this installment repaired, which the hostname probe did not.
+
+  Review added five more, aimed at the citation containers rather than the span: SEER-CITES (a
+  fabricated `cites` on the repaired library), SEER-LOC-TAIL (its locator given a look-alike
+  suffix, `cycle.html.attacker.example/`), SIBLING-CITES (a fabricated `cites` on
+  `mitosis-phases`), EF-CITES (one on the composed `ordinal-numbers` library) and RULE-CITES (one
+  on the rule itself). All five redden. The negative arm — the repaired tree, untouched — stays
+  green.
+
+  This count was **five** for three consecutive review rounds while mutants were being added, which
+  is precisely the staleness the "measure after the last edit" rule exists to stop. Two names are
+  deduplicated: round 2's EXTRA-CITES and round 3's SEER-CITES are the same mutation reached by
+  different anchors, as are LOCATOR-TAIL and SEER-LOC-TAIL. Counting those twice would inflate the
+  tally, which is the same sin pointing the other way.
+
+  ### Re-runnable, not a working-tree instrument
+
+  `tools/verify_seer_ol_span.py` ships with this change and is the second answer to #14444, after
+  `verify_ncbi_pre_span.py`. It fetches the page, confirms the four top-level `<li>` items are
+  still what the artifact assumes, and checks the shipped `source` against the raw HTML. Its exit
+  codes separate the three things a checker must never conflate: **1** the artifact is wrong,
+  **2** no verdict (the page could not be fetched, or has changed shape), **3** the instrument's
+  own controls failed. `--self-test` drives the routing offline and fails if any of the four codes
+  is unreachable. A fetch failure routes to **2**, never to **1** — reporting a network problem as
+  a provenance defect is how a checker launders one into the other.
+
+  ### A pin matched by a duplicate is a pin on the duplicate
+
+  The strongest thing review found in this installment is not about the page at all. Round 2 closed
+  the SEER needle and left the other composed library pinned by the bare host `ef.edu`; round 3
+  showed a fabricated `cites` on `ordinal-numbers.adj` — carrying the exact composite this
+  installment deleted, under an attacker-controlled locator — keeping every assertion green. So the
+  `ef.edu` half was closed the same way as the SEER half.
+
+  **That fix did not work, and the reason is the finding.**
+  `mitosis-phase-ordinal-position.adj:64` carries its OWN INLINE COPY of the ordinal-numbers
+  citation. A `contains` needle is satisfied by that copy, so it constrains the rule's duplicate and
+  says nothing whatever about the composed library. Both mutants aimed at `ordinal-numbers.adj`
+  SURVIVED the closed needle — including one that simply altered that library's own `source` text,
+  which a duplicate hides best of all. No amount of tightening a needle fixes this: the needle is
+  looking at the wrong copy.
+
+  What closes MOST of it is an assertion that names no citation at all — **no `"corroborations":[{`
+  anywhere in the derivation's output**. A duplicate cannot satisfy that, because it is a statement
+  about the whole output rather than about a string in it. It is the structural shape #14735 asks
+  for, and against fabricated `cites` it works on every library in the derivation: EF-CITES (the
+  composed ordinal library), SEER-CITES (the library this installment repaired) and RULE-CITES (the
+  rule itself) all redden.
+
+  **FOUR mutants still survive, and the first count of this was wrong.** This entry said *one*.
+  Measured with a positive control that reddens (the SEER locator, given the same look-alike
+  suffix, is caught), the survivors are:
+
+  | mutant | what it changes | suite |
+  |---|---|---|
+  | EF-DRIFT | the composed library's own `source` text | green |
+  | EF-LOCATOR-TAIL | the composed library's locator, `…numbers-english/.attacker.example/` | green |
+  | RULE-DRIFT | the rule's own `source` text | green |
+  | RULE-LOC-TAIL | the rule's own locator, same suffix | green |
+
+  The duplicate covers **symmetrically, in both directions**: the rule's inline copy satisfies the
+  needle when the library drifts, and the library's citation satisfies it when the rule drifts. So
+  the EF needle pins neither copy's text nor either copy's locator — both would have to be mutated
+  together to redden it. It constrains nothing on its own.
+
+  Which makes an earlier sentence in this entry false too: the EF half was **not** "closed the same
+  way as the SEER one". For SEER that is measurable — LOCATOR-TAIL reddens. For EF it is not, and
+  an attacker-controlled provenance locator on a library three other stdlib files import would ship
+  green. The structural corroborations bound is what saves the *addition* case; nothing here
+  constrains EF drift at all.
+
+  This is a disclosure fix, not a code fix. Closing the gap means de-duplicating the rule's inline
+  citation or asserting over parsed steps rather than over a flat string, which is #14745's
+  subject and a different change. But a disclosure that undercounts its own gap by four is worse
+  than the gap, because it tells the next reader the ground is firmer than it is.
+
+  ### A correction to the triage
+
+  The six remaining multi-block assemblies were characterised as values that assemble *complete
+  prose sentences* from non-adjacent blocks. That holds for five of them. It does not hold for
+  this one: the blocks here are a sentence **fragment** and four one-word list labels, which is
+  why the invented separators were needed to make it read as prose. The classification was right
+  about the class being actionable and wrong about what the class contains.
+
 - **#13934 installment 4i: one value, three defects, and a disclosure the header had already
   promised.** 1 value line, 1 `cites` line and 40 comment lines in **1** `.adj` file (43 added
   lines; the remaining one is the `trust consensus` line re-emitted unchanged, having lost its

@@ -88,6 +88,27 @@
 %      North Pole) and the Antarctic Circle (around the South Pole)."
 %     https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice
 %
+%
+% ----------------------------------------------------------------------------
+% Measured against the pages' bytes (#13934 installment 4m):
+%
+%   The two NESDIS sentences about the tropics sit inside ONE `<p>` — no tag
+%   falls between them — and the pair occurs once. The Arctic/Antarctic
+%   sentence is in a different `<p>`, 3,665 raw characters later, with 48
+%   block-element tags in between. Each now has its own `cites` below. Until
+%   4m one `cites` held all three sentences, and that welded string occurs
+%   ZERO times on the page. The evidence block above already listed the
+%   Arctic/Antarctic sentence separately for the two polar-circle rows, so
+%   only the machine-readable field welded them.
+%
+%   The longitude span occurs once under an extractor that breaks only on
+%   BLOCK elements, and ZERO times under one that treats every tag as a
+%   break. The zero is the instrument (#14752), not the quote.
+%
+%   The tropics quote above is verbatim under whitespace collapsing rather
+%   than byte-exact: the page writes the Capricorn figure as a minus sign
+%   followed by a SPACE before "23.5°", and the sentence beginning "At these
+%   latitudes" opens a new paragraph — the quote runs across `</p><p>`.
 % (See ../README.md.)
 % ============================================================================
 
@@ -106,5 +127,6 @@ table reference_line {
     trust authoritative
 
     cites "The prime meridian, which runs through Greenwich, England, has a longitude of 0 degrees. It divides the Earth into the eastern and western hemispheres." locator "https://oceanservice.noaa.gov/facts/longitude.html"
-    cites "In the Northern Hemisphere, the Summer Solstice occurs when the sun is directly above the Tropic of Cancer, usually June 21. In the Southern Hemisphere, the Summer Solstice occurs when the sun is directly above the Tropic of Capricorn, usually December 21. Two other significant lines of latitude are the Arctic Circle (around the North Pole) and the Antarctic Circle (around the South Pole)." locator "https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice"
+    cites "In the Northern Hemisphere, the Summer Solstice occurs when the sun is directly above the Tropic of Cancer, usually June 21. In the Southern Hemisphere, the Summer Solstice occurs when the sun is directly above the Tropic of Capricorn, usually December 21." locator "https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice"
+    cites "Two other significant lines of latitude are the Arctic Circle (around the North Pole) and the Antarctic Circle (around the South Pole)." locator "https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice"
 }
