@@ -261,7 +261,12 @@ describe("real curriculum", () => {
       // digits, and 32 the ordinals.
     ).toEqual([
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-      26, 27, 28, 29, 30, 31, 32]);
+      // 32 -> 33: the reading rung. Three lessons -- six words, six lines and a
+      // 37-word paragraph -- all built from the fifteen letters the script ladder
+      // has actually taught, which is why the passage says nothing about tea,
+      // shoes or goodbyes: چائے, جوتا and خدا حافظ each contain a letter this
+      // track has not reached.
+      26, 27, 28, 29, 30, 31, 32, 33]);
     expect(
       books.books
         .find((book) => book.language === "russian")
