@@ -62,6 +62,19 @@ Rust schedule, complete and reopen, delete, reject malformed input atomically, a
 restore a persisted task in a second process. Compose acceptance also requires the
 Rust-owned `100%` completion progress to remain displayed in the default desktop
 viewport rather than merely existing in an off-screen semantics tree.
+Those gates all assert the **semantics tree**, not appearance, and they can all
+pass while the app is unreadable — see #14798 for the first actual render and
+what it showed. `TaskAppScreenshots` in the same conformance directory writes
+PNGs of the empty inbox, one scheduled task, and that task completed, so a
+layout change can be looked at rather than inferred:
+
+```bash
+MOSAIC_SHOT_DIR=/tmp/shots gradle -p <generated>/compose test --tests TaskAppScreenshots
+```
+
+It is skipped unless `MOSAIC_SHOT_DIR` is set, and it is deliberately not a
+pixel-diff gate.
+
 The generated SwiftUI sources also compile for the iOS 16 deployment target; that
 gate is source portability rather than a claim that a macOS dylib can run on iOS.
 
