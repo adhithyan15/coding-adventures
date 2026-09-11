@@ -1,8 +1,8 @@
 [package]
 name = "image-point-ops"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "IMG03: Per-pixel point operations on PixelContainer (invert, gamma, LUTs, colour matrix, …)"
+description = "IMG03: Per-pixel point operations on PixelContainer (invert, gamma, LUTs, colour matrix, …); IMG09 adaptive threshold"
 
 [dependencies]
 pixel-container = { path = "../pixel-container" }
