@@ -5,6 +5,28 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — a `HostScroll` region now fills its viewport (#14798)
+
+`HostScroll` lowered to `.verticalScroll(rememberScrollState())` and nothing
+else, leaving the container wrapping its **content**. That is wrong twice over:
+a scroller sized to its own content has nothing to scroll within, and whatever
+the content does not cover stays unpainted.
+
+In TaskApp the whole UI rendered into roughly the top 250 px of a 900 px
+window, and the remaining two thirds were **white** — not the theme background,
+which is why it read as a broken app rather than an empty one. Found by
+rendering it (#14799); no semantics assertion could see it.
+
+The lowering now emits `.fillMaxSize()` before `.verticalScroll(...)`: fill the
+space, then scroll within it. Verified by rendering the real `native-complete`
+project — the themed background covers the window, and the acceptance lifecycle
+stays green.
+
+`fillMaxSize` joins the unconditional layout import block beside `fillMaxWidth`.
+Emitting a modifier without its import is Kotlin that does not compile, the
+same shape as the XAML `Not()` helper in #14793, so the test asserts the import
+as well as the modifier order.
+
 ### Added — `HostInput.disabled` (#14786)
 
 `HostInput` had `read-only` but no way to say *unavailable*. Compose spells
