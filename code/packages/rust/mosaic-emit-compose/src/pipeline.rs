@@ -1231,6 +1231,77 @@ fn chain_sets_own_width(chain: &str) -> bool {
         || chain.contains(".widthIn(")
 }
 
+/// One authored style property that Compose lowering discards.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DroppedStyleProperty {
+    pub part: String,
+    pub name: String,
+    pub value: String,
+    pub reason: String,
+}
+
+/// Every property, across every part of `style`, that Compose lowering drops.
+///
+/// Derived by running the real lowering over each part's base props and
+/// collecting what its `match` did not handle — not by diffing against a list
+/// of "properties Compose supports". A hand-maintained list is wrong the first
+/// time someone adds an arm and forgets the list, and #12022 exists precisely
+/// because nobody notices that kind of drift.
+///
+/// Until this existed, Compose reported nothing, so an empty
+/// `styleDegradations` meant "nobody looked" rather than "nothing was lost".
+/// TaskApp alone drops 43 distinct properties this way (#14810), including 318
+/// `border-radius` and 48 `font-weight` — every rounded corner square, every
+/// weight flattened — while the strict `native-complete` profile passed.
+pub fn dropped_style_properties(style: &StyleDef) -> Vec<DroppedStyleProperty> {
+    let mut out = Vec::new();
+    for part in &style.parts {
+        let built = compose_box_style(&part.base, &[], None, 0, None);
+        for (name, value) in built.dropped {
+            out.push(DroppedStyleProperty {
+                reason: compose_drop_reason(&name).to_string(),
+                part: part.name.clone(),
+                name,
+                value,
+            });
+        }
+    }
+    out
+}
+
+/// Why a property has no Compose lowering, in terms a reader can act on.
+///
+/// Generic text would make the report unreadable at the scale this reports at.
+/// These are genuinely different problems: some are missing work on a modifier
+/// that exists, some need the parent to lay out differently, and some have no
+/// Compose concept at all.
+fn compose_drop_reason(name: &str) -> &'static str {
+    match name {
+        "border-radius" => {
+            "Compose clips corners with Modifier.clip(RoundedCornerShape(..)), which this emitter              does not yet apply — every rounded surface renders square"
+        }
+        "font-weight" => {
+            "Text takes fontWeight as an argument rather than a modifier, so it has to be              threaded through the text style rather than the box chain"
+        }
+        "box-shadow" | "elevation" => {
+            "Compose spells this Modifier.shadow(elevation, shape); it needs the shape the              border-radius work would also supply"
+        }
+        "flex-grow" | "flex-shrink" | "flex" => {
+            "Compose distributes space with Modifier.weight inside a Row/Column scope, chosen at              the call site rather than applied to an already-built modifier chain"
+        }
+        "position" | "top" | "left" | "right" | "bottom" | "z-index" => {
+            "Compose has no absolute positioning on a plain container; this needs a Box with              alignment or an offset chosen by the parent"
+        }
+        "display" | "flex-direction" | "flex-wrap" | "justify-content" | "align-items" | "align" => {
+            "Compose expresses layout through the composable chosen (Row/Column/Box) and its              arrangement arguments, not through a modifier on a built view"
+        }
+        "border-style" | "border-collapse" | "outline" => {
+            "no Compose equivalent; Modifier.border takes a width, colour and shape only"
+        }
+        _ => "no Compose lowering in this emitter yet",
+    }
+}
+
 /// The modifier `HostScroll` prefixes onto a container's chain.
 ///
 /// Shared by `emit_container` (the ordinary path) and `emit_container_frame`
@@ -10346,75 +10417,5 @@ mod tests {
         );
     }
 
-/// One authored style property that Compose lowering discards.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct DroppedStyleProperty {
-    pub part: String,
-    pub name: String,
-    pub value: String,
-    pub reason: String,
-}
-
-/// Every property, across every part of `style`, that Compose lowering drops.
-///
-/// Derived by running the real lowering over each part's base props and
-/// collecting what its `match` did not handle — not by diffing against a list
-/// of "properties Compose supports". A hand-maintained list is wrong the first
-/// time someone adds an arm and forgets the list, and #12022 exists precisely
-/// because nobody notices that kind of drift.
-///
-/// Until this existed, Compose reported nothing, so an empty
-/// `styleDegradations` meant "nobody looked" rather than "nothing was lost".
-/// TaskApp alone drops 43 distinct properties this way (#14810), including 318
-/// `border-radius` and 48 `font-weight` — every rounded corner square, every
-/// weight flattened — while the strict `native-complete` profile passed.
-pub fn dropped_style_properties(style: &StyleDef) -> Vec<DroppedStyleProperty> {
-    let mut out = Vec::new();
-    for part in &style.parts {
-        let built = compose_box_style(&part.base, &[], None, 0, None);
-        for (name, value) in built.dropped {
-            out.push(DroppedStyleProperty {
-                reason: compose_drop_reason(&name).to_string(),
-                part: part.name.clone(),
-                name,
-                value,
-            });
-        }
-    }
-    out
-}
-
-/// Why a property has no Compose lowering, in terms a reader can act on.
-///
-/// Generic text would make the report unreadable at the scale this reports at.
-/// These are genuinely different problems: some are missing work on a modifier
-/// that exists, some need the parent to lay out differently, and some have no
-/// Compose concept at all.
-fn compose_drop_reason(name: &str) -> &'static str {
-    match name {
-        "border-radius" => {
-            "Compose clips corners with Modifier.clip(RoundedCornerShape(..)), which this emitter              does not yet apply — every rounded surface renders square"
-        }
-        "font-weight" => {
-            "Text takes fontWeight as an argument rather than a modifier, so it has to be              threaded through the text style rather than the box chain"
-        }
-        "box-shadow" | "elevation" => {
-            "Compose spells this Modifier.shadow(elevation, shape); it needs the shape the              border-radius work would also supply"
-        }
-        "flex-grow" | "flex-shrink" | "flex" => {
-            "Compose distributes space with Modifier.weight inside a Row/Column scope, chosen at              the call site rather than applied to an already-built modifier chain"
-        }
-        "position" | "top" | "left" | "right" | "bottom" | "z-index" => {
-            "Compose has no absolute positioning on a plain container; this needs a Box with              alignment or an offset chosen by the parent"
-        }
-        "display" | "flex-direction" | "flex-wrap" | "justify-content" | "align-items" | "align" => {
-            "Compose expresses layout through the composable chosen (Row/Column/Box) and its              arrangement arguments, not through a modifier on a built view"
-        }
-        "border-style" | "border-collapse" | "outline" => {
-            "no Compose equivalent; Modifier.border takes a width, colour and shape only"
-        }
-        _ => "no Compose lowering in this emitter yet",
-    }
-}
 
 }
