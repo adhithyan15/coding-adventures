@@ -124,95 +124,56 @@ echo "  $LIB_NAME exports $EXPORTS eg_* symbols"
 
 echo "[2/4] Emitting the Mosaic app for the $BACKEND backend..."
 rm -rf "$OUTPUT"
-( cd "$RUST" && cargo run -q -p mosaic-compile -- pkg "$HERE" \
-    --backend "$BACKEND" --output "$OUTPUT" --emit-project )
+
+EMIT_ARGS=(--backend "$BACKEND" --output "$OUTPUT" --emit-project)
+
+# SwiftUI reaches the engine through the STANDARD runtime now, not through
+# `engram-capi`.
+#
+# Its `MosaicHost.swift` override is retired: props, events, snapshot and
+# restore go through `engram-mosaic-app` and the generated binding, and the
+# file dialogs ride `Effect` through `[host_effects]`. So the app needs the
+# standard app-ABI cdylib bundled, which is what `--runtime-library` does, and
+# `native-complete` is the profile that makes the generated host REQUIRE it
+# rather than fall back to a reflection bridge that will not be there.
+#
+# Without this the emitted app compiles and launches with no engine at all --
+# the "runnable is not working" trap the rest of this script exists to catch.
+if [[ "$BACKEND" == "swiftui" ]]; then
+  ( cd "$RUST" && cargo build -q -p engram-mosaic-app --release )
+  case "$(uname -s)" in
+    Darwin) MOSAIC_LIB_NAME="libengram_mosaic_app.dylib" ;;
+    Linux)  MOSAIC_LIB_NAME="libengram_mosaic_app.so" ;;
+    *)      MOSAIC_LIB_NAME="engram_mosaic_app.dll" ;;
+  esac
+  MOSAIC_LIB="$RUST/target/release/$MOSAIC_LIB_NAME"
+  if [[ ! -f "$MOSAIC_LIB" ]]; then
+    echo "error: expected the standard runtime at $MOSAIC_LIB" >&2
+    exit 1
+  fi
+  echo "  standard runtime at $MOSAIC_LIB"
+  EMIT_ARGS+=(--profile native-complete --runtime-library "$MOSAIC_LIB")
+fi
+
+( cd "$RUST" && cargo run -q -p mosaic-compile -- pkg "$HERE" "${EMIT_ARGS[@]}" )
 
 APP="$OUTPUT/$BACKEND"
 
 echo "[3/4] Placing the engine where the emitted project expects it..."
 if [[ "$BACKEND" == "swiftui" ]]; then
-  # SwiftUI is the one backend that LINKS the engine rather than dlopen-ing it,
-  # so it needs the static archive and a header, not a dynamic library dropped
-  # beside the binary.
+  # Nothing to place. The standard runtime was bundled by `--runtime-library`
+  # at emit time, into `Sources/App/Runtime/`, where SwiftPM carries it as a
+  # resource and `Bundle.module` finds it.
   #
-  # Engram's `MosaicHost.swift` opens with `import CEngram`, and the emitted
-  # Package.swift declares only `CMosaicRuntime` -- the standard runtime shim.
-  # Nothing tells the emitter that this package's host asset needs a different
-  # module, so the emitted project fails immediately with:
-  #
-  #     error: no such module 'CEngram'
-  #
-  # This is the same root cause as UI47 (#13645): Engram routes through
-  # `engram-capi` because the standard ABI cannot express its host intents yet.
-  # Once #13728 moves the adapters onto the standard runtime, CEngram stops
-  # being needed and this block should be deleted rather than generalised --
-  # building emitter infrastructure for a configuration we intend to retire
-  # would be the wrong investment.
-  build_engram_capi
-  STATIC="$RUST/target/release/libengram_capi.a"
-  if [[ ! -f "$STATIC" ]]; then
-    echo "error: expected the static archive at $STATIC" >&2
-    exit 1
-  fi
-  mkdir -p "$APP/Sources/CEngram/include" "$APP/Sources/CEngram/lib"
-  cp "$RUST/engram-capi/include/engram.h" "$APP/Sources/CEngram/include/engram.h"
-  cp "$STATIC" "$APP/Sources/CEngram/lib/libengram_capi.a"
-  cat > "$APP/Sources/CEngram/module.modulemap" <<'MODULEMAP'
-module CEngram {
-  header "include/engram.h"
-  export *
-}
-MODULEMAP
-
-  python3 - "$APP/Package.swift" <<'PYPKG'
-import sys
-
-path = sys.argv[1]
-source = open(path).read()
-
-if 'name: "CEngram"' in source:
-    print("  CEngram already declared")
-    sys.exit(0)
-
-# Plain string surgery rather than regex: the emitted Package.swift is
-# generated from a fixed template, so the anchors below are exact, and a
-# regex here would only add escaping hazards for no extra robustness.
-SYSTEM_LIBRARY = (
-    "  targets: [\n"
-    "    .systemLibrary(\n"
-    '      name: "CEngram",\n'
-    '      path: "Sources/CEngram"\n'
-    "    ),\n"
-)
-if "  targets: [\n" not in source:
-    sys.exit("Package.swift did not contain the expected targets list")
-source = source.replace("  targets: [\n", SYSTEM_LIBRARY, 1)
-
-APP_TARGET = (
-    "    .executableTarget(\n"
-    '      name: "App",\n'
-    '      dependencies: ["CMosaicRuntime"],\n'
-    '      path: "Sources/App"\n'
-    "    ),\n"
-)
-APP_TARGET_LINKED = (
-    "    .executableTarget(\n"
-    '      name: "App",\n'
-    '      dependencies: ["CMosaicRuntime", "CEngram"],\n'
-    '      path: "Sources/App",\n'
-    "      linkerSettings: [\n"
-    '        .unsafeFlags(["-L", "Sources/CEngram/lib", "-lengram_capi"])\n'
-    "      ]\n"
-    "    ),\n"
-)
-if APP_TARGET not in source:
-    sys.exit("Package.swift's App target did not match the expected shape")
-source = source.replace(APP_TARGET, APP_TARGET_LINKED, 1)
-
-open(path, "w").write(source)
-print("  declared the CEngram system library in Package.swift")
-PYPKG
-  echo "  $APP/Sources/CEngram/{include/engram.h,lib/libengram_capi.a}"
+  # This is where the `CEngram` system-library block used to be: it built
+  # `engram-capi` as a static archive, wrote a module map, and patched the
+  # emitted `Package.swift` to link it, because Engram's `MosaicHost.swift`
+  # opened with `import CEngram`. Its own comment said to delete it rather than
+  # generalise it once the adapters moved to the standard runtime, "building
+  # emitter infrastructure for a configuration we intend to retire would be the
+  # wrong investment". That move has now happened for SwiftUI, so this is that
+  # deletion.
+  echo "  the standard runtime was bundled at emit time"
 else
   # This is the step whose absence makes an emitted native app inert. The
   # CMakeLists copies the library beside the binary post-build, but only if it
@@ -392,33 +353,46 @@ PLIST
       echo "error: swift build produced no executable at $BIN" >&2
       exit 1
     fi
-    # The engine is LINKED here rather than loaded at runtime, so the check is
-    # that its symbols actually made it into the binary -- the equivalent of
-    # Qt's "is the library beside the executable", one layer earlier.
+    # The engine is BUNDLED here, not linked.
     #
-    # DEFINED symbols specifically. The earlier form accepted an UNDEFINED
-    # `_eg_` symbol too, which is exactly the binary that does not contain the
-    # engine -- it expects to find it elsewhere at load time. Demonstrated with
-    # a two-line C program: `nm -u` reports `_eg_snapshot`, and the old
-    # condition passed it. A check that accepts the failure it exists to catch
-    # is worse than no check, because the build says "verified".
-    DEFINED="$(nm "$BIN" 2>/dev/null | grep -c ' T _eg_' || true)"
-    UNDEFINED="$(nm -u "$BIN" 2>/dev/null | grep -c '_eg_' || true)"
-    if [[ "$DEFINED" -eq 0 ]]; then
-      echo "error: no DEFINED eg_* symbols in $BIN; the engine did not link" >&2
-      echo "       ($UNDEFINED undefined eg_* symbols -- the engine is expected" >&2
-      echo "        from somewhere else at load time, which will not be there)" >&2
+    # This check used to count DEFINED `_eg_` symbols in the binary, because
+    # Engram's `MosaicHost.swift` linked `engram-capi` statically through a
+    # `CEngram` system library. That override is retired: SwiftUI reaches the
+    # engine through the standard runtime, which is `dlopen`ed from the app's
+    # resource bundle. So there are now zero `_eg_` symbols in a CORRECT build,
+    # and the old check failed the very configuration it was meant to protect.
+    #
+    # What replaces it asks the same question one layer out: did the runtime
+    # actually land in the bundle, and is it the library we just built? The
+    # failure it guards against is unchanged -- an app that builds, launches,
+    # and has no engine.
+    # `--show-bin-path`, not `.build/release`. That name is a SYMLINK to the
+    # architecture-specific directory SwiftPM really builds into
+    # (`.build/arm64-apple-macosx/release`), and `find` does not traverse
+    # symlinks without `-L` -- so searching it reports nothing on a build that
+    # is entirely correct. Asking SwiftPM where it put things is the same thing
+    # the TaskApp CI lane does.
+    BIN_ROOT="$( cd "$APP" && swift build -c release --show-bin-path )"
+    RUNTIME_IN_BUNDLE="$(find "$BIN_ROOT" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit || true)"
+    if [[ -z "$RUNTIME_IN_BUNDLE" ]]; then
+      echo "error: no Runtime/libmosaic_app.dylib under $BIN_ROOT" >&2
+      echo "       the app would launch with every deck operation unavailable" >&2
       exit 1
     fi
-    if [[ "$UNDEFINED" -gt 0 ]]; then
-      echo "error: $UNDEFINED eg_* symbols in $BIN are undefined; the engine" >&2
-      echo "       linked only partially and the app will fail at load" >&2
+    # Byte-identical, not merely present: a stale copy from an earlier build
+    # would satisfy an existence check and ship the wrong engine.
+    if ! cmp -s "$MOSAIC_LIB" "$RUNTIME_IN_BUNDLE"; then
+      echo "error: the bundled runtime differs from $MOSAIC_LIB" >&2
       exit 1
     fi
-    # Static linking pulls only the objects actually referenced, so this is the
-    # handful the SwiftUI host calls -- not the ~47 the cdylib exports. Counting
-    # up to the full export list here would fail on a correct build.
-    echo "  $DEFINED engine symbols linked into the binary"
+    # And it must be a real engine rather than an empty library, which is the
+    # same contract the `engram-capi` export count checks at step [1/4].
+    MOSAIC_EXPORTS="$(nm -gU "$RUNTIME_IN_BUNDLE" 2>/dev/null | grep -c ' _mosaic_app_' || true)"
+    if [[ "$MOSAIC_EXPORTS" -lt 5 ]]; then
+      echo "error: the bundled runtime exports only $MOSAIC_EXPORTS mosaic_app_* symbols" >&2
+      exit 1
+    fi
+    echo "  runtime bundled at $RUNTIME_IN_BUNDLE ($MOSAIC_EXPORTS mosaic_app_* symbols)"
 
     # Wrap it as a `.app`. `swift build` leaves a bare Mach-O executable, which
     # runs from a terminal but is not something a person can be handed: macOS
@@ -433,6 +407,18 @@ PLIST
     rm -rf "$BUNDLE"
     mkdir -p "$BUNDLE/Contents/MacOS" "$BUNDLE/Contents/Resources"
     cp "$BIN" "$BUNDLE/Contents/MacOS/$APP_NAME"
+
+    # The resource bundle carries the engine, so it has to come too.
+    #
+    # `swift build` leaves `App_App.bundle` beside the executable, and
+    # `Bundle.module` resolves it relative to `Bundle.main.resourceURL` in a
+    # packaged app -- so it belongs in `Contents/Resources`. Copying only the
+    # executable produced a `.app` that launched and had no engine, which is
+    # precisely the failure the assertion below exists to catch, and which the
+    # old `engram-capi` architecture could not hit because the engine was
+    # statically linked INTO the executable being copied.
+    RESOURCE_BUNDLE="$(dirname "$RUNTIME_IN_BUNDLE" | xargs dirname)"
+    cp -R "$RESOURCE_BUNDLE" "$BUNDLE/Contents/Resources/"
     printf 'APPL????' > "$BUNDLE/Contents/PkgInfo"
     cat > "$BUNDLE/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -455,10 +441,14 @@ PLIST
     # lose the engine -- the Compose backend shipped a distribution with no
     # engine in it exactly this way. So the assertion is repeated against the
     # artifact rather than inherited from the binary it came from.
-    SHIPPED="$(nm "$BUNDLE/Contents/MacOS/$APP_NAME" 2>/dev/null | grep -c ' T _eg_' || true)"
-    if [[ "$SHIPPED" -ne "$DEFINED" ]]; then
-      echo "error: the bundled executable has $SHIPPED engine symbols, the" >&2
-      echo "       built one had $DEFINED" >&2
+    SHIPPED_RUNTIME="$(find "$BUNDLE/Contents/Resources" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit || true)"
+    if [[ -z "$SHIPPED_RUNTIME" ]]; then
+      echo "error: the .app has no Runtime/libmosaic_app.dylib in Resources;" >&2
+      echo "       it would launch with every deck operation unavailable" >&2
+      exit 1
+    fi
+    if ! cmp -s "$MOSAIC_LIB" "$SHIPPED_RUNTIME"; then
+      echo "error: the runtime inside the .app differs from $MOSAIC_LIB" >&2
       exit 1
     fi
     echo "  $BUNDLE"

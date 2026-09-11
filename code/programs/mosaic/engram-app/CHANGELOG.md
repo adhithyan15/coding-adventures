@@ -84,6 +84,34 @@ removes the mismatch and restores the behaviour. It does not weaken the check:
 after resolution the stat describes the target, so a link pointing at a fifo
 still reports a fifo and is still refused.
 
+#### The release script had to move with it
+
+`scripts/build-native.sh` built the SwiftUI payload for the old architecture and
+broke the moment the override came off — caught by CI on this branch, not by
+reasoning. Three things were wrong, and all three were verifying a shape that no
+longer exists:
+
+1. **It wired a `CEngram` system library.** The block built `engram-capi` as a
+   static archive, wrote a module map, and patched the emitted `Package.swift`
+   to link it, because `MosaicHost.swift` opened with `import CEngram`. Its own
+   comment said to delete it rather than generalise it "once #13728 moves the
+   adapters onto the standard runtime" — so this is that deletion.
+2. **It asserted on linked `_eg_` symbols.** After the migration a *correct*
+   build has zero of them, so the check failed the exact configuration it
+   existed to protect. It now verifies the standard runtime landed in the
+   bundle, is byte-identical to the library just built, and exports
+   `mosaic_app_*` — the same question one layer out.
+3. **The `.app` shipped without an engine.** Bundling copied only the
+   executable, which was sufficient when `engram-capi` was statically linked
+   *into* it. The runtime is now a resource, so `App_App.bundle` has to be
+   copied into `Contents/Resources` — and this is precisely the "second chance
+   to lose the engine" the assertion beside it warns about, which the Compose
+   backend once shipped for real.
+
+The emit step also now passes `--profile native-complete --runtime-library`,
+without which the generated host falls back to a reflection bridge that is not
+there.
+
 #### Verification
 
 Built locally end to end, not only asserted over text: the emitted project
@@ -93,6 +121,10 @@ install lands at `App.swift:294`, immediately after the bridge assignment at
 `:292` — which is the `loadRequired(libraryPath:)` form the bundled-runtime
 rewrite produces, and the reason the emitter anchors on `self.bridge = ` rather
 than the whole call.
+
+The release script's own output was launched, not merely built: the `.app` runs
+for five seconds without dying and prints no runtime error, which is the check
+that separates "it compiled" from "it works".
 
 A new CI step runs the same sequence on macOS and asserts the install sits
 inside `MosaicHostState`, after the bridge assignment. "Inside" is checked by
