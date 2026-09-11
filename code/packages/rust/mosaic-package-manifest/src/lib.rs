@@ -70,12 +70,14 @@
 //! | `InvalidKernelVersion`  | `kernel.version` is anything other than `"1"`         |
 //! | `InvalidSemverString`   | `package.version` or a dependency value not semver-y  |
 //! | `InvalidStylePath`      | `[styles].token_palette` is not a safe relative JSON path |
+//! | `DuplicateHostEffectHandler` | two `[host_effects].handlers` for one backend |
+//! | `HostEffectFileWithoutHandler` | a `[host_effects].files` backend declares no handler |
 //!
 //! Each error is *one cause, one variant* — no compound errors, no batched
 //! collection.  The first thing wrong with the manifest is the only thing
 //! the caller hears about; fixing it and re-running is the workflow.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::Path;
 
@@ -97,6 +99,7 @@ pub struct MosaicPackage {
     pub dependencies: HashMap<String, String>,
     pub styles: StylesSection,
     pub host_assets: HostAssetsSection,
+    pub host_effects: HostEffectsSection,
     pub kernel: KernelSection,
 }
 
@@ -176,6 +179,58 @@ pub struct HostAsset {
     pub target: String,
 }
 
+/// Optional per-backend effect handlers, and the files that implement them.
+///
+/// `[host_assets]` already lets a package put a file into a generated project,
+/// but nothing generated ever *calls* into one. Every host template can answer
+/// an `Effect`, and an application can emit one, and until this section existed
+/// there was no way to connect the two: the entry point that would install a
+/// handler — `main.cpp`, `Main.kt` — is generated, so package code cannot reach
+/// it. See UI47 §5.4a for the gap and §5.5 for this design.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct HostEffectsSection {
+    /// Files copied into the backend output directory **and added to that
+    /// backend's build source list**.
+    ///
+    /// The second half matters on the backends whose builds name their sources
+    /// explicitly. Qt's generated `CMakeLists.txt` lists `main.cpp` and
+    /// `MosaicHost.cpp`/`.h`, and XAML's project is the same shape, so a file
+    /// merely copied in is never compiled there — and those are the backends a
+    /// handler has to reach.
+    ///
+    /// Not, as an earlier draft of this comment claimed, because `[host_assets]`
+    /// can never append a source: it can, on React and HTML through
+    /// `activate_react_host_asset` / `activate_html_host_asset`, and implicitly
+    /// wherever SwiftPM or Gradle compiles a directory.
+    pub files: Vec<HostEffectFile>,
+    /// At most one handler per backend.
+    pub handlers: Vec<HostEffectHandler>,
+}
+
+/// One package-relative file copy into one backend output directory, which the
+/// generated build is also told to compile.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HostEffectFile {
+    pub backend: String,
+    pub source: String,
+    pub target: String,
+}
+
+/// How one backend's generated entry point installs the package's handler.
+///
+/// `install` names the symbol the entry point calls. What it receives differs
+/// per backend, and deliberately: the host is passed where there is an instance
+/// to pass, and not where there is not — XAML's generated host is a static
+/// class, so its handler reaches it by name. UI47 §5.5.3 carries the table.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HostEffectHandler {
+    pub backend: String,
+    /// Optional, and backend-interpreted: a C++ `#include`, a Dart `import`,
+    /// or nothing at all where the symbol is already in scope.
+    pub include: Option<String>,
+    pub install: String,
+}
+
 /// The `[kernel]` table: which ABI version of the primitive kernel this
 /// package targets.  Currently only `"1"` is recognized.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -211,6 +266,38 @@ pub enum ManifestError {
     /// `[styles].token_palette` was not a safe, portable package-relative
     /// JSON path.
     InvalidStylePath(String),
+    /// A `[host_effects]` `install` symbol was not a plausible identifier.
+    ///
+    /// It is interpolated verbatim into generated source as a call expression,
+    /// so an unshaped string is an arbitrary statement in someone's entry point.
+    InvalidHostEffectSymbol(String),
+    /// A `[host_effects]` `include` was not a plausible header or import.
+    ///
+    /// It lands inside `#include "..."`, so a quote and a newline rewrite the
+    /// translation unit.
+    InvalidHostEffectInclude(String),
+    /// A `[host_effects]` entry used `*` as its backend.
+    ///
+    /// `[host_assets]` accepts `*` because copying one file to every backend is
+    /// meaningful. Installing one handler everywhere is not: the install
+    /// contract differs per backend by design -- the host is passed where there
+    /// is an instance and not where there is not -- so one symbol cannot serve
+    /// all five. Refused rather than silently matching nothing.
+    HostEffectWildcardBackend { section: String },
+    /// Two `[host_effects].files` entries write the same target for one backend.
+    ///
+    /// The later copy wins and the earlier file is silently not what gets
+    /// compiled -- the same last-wins hazard refused for handlers.
+    DuplicateHostEffectFile { backend: String, target: String },
+    /// Two `[host_effects].handlers` entries named the same backend.
+    ///
+    /// Refused rather than last-wins: both would be installed, the second would
+    /// overwrite the first's registration, and the first's effects would go
+    /// unanswered -- which is the failure the whole mechanism exists to prevent.
+    DuplicateHostEffectHandler { backend: String },
+    /// A `[host_effects].files` entry names a backend with no handler, so the
+    /// emitter would copy and compile a file nothing calls into.
+    HostEffectFileWithoutHandler { backend: String, source: String },
 }
 
 impl std::fmt::Display for ManifestError {
@@ -245,6 +332,39 @@ impl std::fmt::Display for ManifestError {
                 f,
                 "invalid style resource path `{path}` (must be a package-relative .json path without `.` or `..` components)"
             ),
+            Self::InvalidHostEffectSymbol(value) => write!(
+                f,
+                "invalid `[host_effects]` install symbol `{value}` (must be an \
+                 identifier, optionally qualified with `.` or `::`)"
+            ),
+            Self::InvalidHostEffectInclude(value) => write!(
+                f,
+                "invalid `[host_effects]` include `{value}` (must be a relative \
+                 header path or an import name, with no `..` component)"
+            ),
+            Self::HostEffectWildcardBackend { section } => write!(
+                f,
+                "`[host_effects].{section}` used `*` as a backend; one handler \
+                 cannot serve every backend, because what `install` receives \
+                 differs per backend"
+            ),
+            Self::DuplicateHostEffectFile { backend, target } => write!(
+                f,
+                "two `[host_effects].files` entries write `{target}` for backend \
+                 `{backend}`; the later copy would silently win"
+            ),
+            Self::DuplicateHostEffectHandler { backend } => write!(
+                f,
+                "two `[host_effects].handlers` entries for backend `{backend}`; \
+                 one backend installs one handler, and a second would overwrite \
+                 the first's registration"
+            ),
+            Self::HostEffectFileWithoutHandler { backend, source } => write!(
+                f,
+                "`[host_effects].files` entry `{source}` targets backend `{backend}`, \
+                 which declares no handler; the file would be copied and compiled \
+                 with nothing calling into it"
+            ),
         }
     }
 }
@@ -267,6 +387,7 @@ struct RawManifest {
     dependencies: Option<HashMap<String, String>>,
     styles: Option<RawStyles>,
     host_assets: Option<RawHostAssets>,
+    host_effects: Option<RawHostEffects>,
     kernel: Option<RawKernel>,
 }
 
@@ -290,6 +411,30 @@ struct RawComponents {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawHostEffects {
+    files: Option<Vec<RawHostEffectFile>>,
+    handlers: Option<Vec<RawHostEffectHandler>>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawHostEffectFile {
+    backend: Option<String>,
+    source: Option<String>,
+    target: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawHostEffectHandler {
+    backend: Option<String>,
+    include: Option<String>,
+    install: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct RawHostAssets {
     files: Option<Vec<RawHostAsset>>,
     dependencies: Option<Vec<RawHostAssetDependency>>,
@@ -340,6 +485,39 @@ fn pascal_case_re() -> &'static Regex {
     RE.get_or_init(|| Regex::new(r"^[A-Z][a-zA-Z0-9]*$").unwrap())
 }
 
+fn host_effect_symbol_re() -> &'static Regex {
+    static RE: OnceLock<Regex> = OnceLock::new();
+    // `install` is interpolated VERBATIM into generated source as a call
+    // expression -- `installProbeEffects(mosaicHost);` in C++, the equivalent in
+    // four other languages. Without a shape, TOML's `\"` and `\n` escape the
+    // slot: `install = "system(\"rm -rf /\"); dummy"` is an arbitrary statement
+    // in someone's `main.cpp`.
+    //
+    // A package can already ship compiled source through `[host_assets]`, so
+    // this is not a new privilege. It is the first place executable text lives
+    // in the MANIFEST STRING rather than in a file, which defeats any review
+    // that reads files, and it costs nothing to close.
+    //
+    // Dotted and double-coloned segments are allowed because Kotlin, Dart and
+    // C# name qualified symbols that way.
+    RE.get_or_init(|| {
+        Regex::new(r"^[A-Za-z_][A-Za-z0-9_]*([.:]{1,2}[A-Za-z_][A-Za-z0-9_]*)*$").unwrap()
+    })
+}
+
+fn host_effect_include_re() -> &'static Regex {
+    static RE: OnceLock<Regex> = OnceLock::new();
+    // The same reasoning one slot over: `include` lands inside `#include "..."`,
+    // so a `"` plus a newline rewrites the translation unit.
+    //
+    // A positive charset rather than a denylist of quote-and-newline, wide
+    // enough for every form the five backends use: a relative header path
+    // (`effects.h`), a dotted import (`com.example.Effects`), and Dart's
+    // `package:` scheme. `..` is excluded separately, since the regex cannot
+    // express "no dot-dot component" without becoming unreadable.
+    RE.get_or_init(|| Regex::new(r"^[A-Za-z0-9_][A-Za-z0-9_.:/-]*$").unwrap())
+}
+
 fn semver_re() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
     // Semver-like: MAJOR.MINOR.PATCH with an optional pre-release suffix.
@@ -381,6 +559,7 @@ pub fn parse(toml_source: &str) -> Result<MosaicPackage, ManifestError> {
     // but TOML conventionally lets you omit empty tables.  We accept either.
     let raw_deps = raw.dependencies.unwrap_or_default();
     let raw_host_assets = raw.host_assets;
+    let raw_host_effects = raw.host_effects;
 
     // Step 3: validate the `[package]` section field by field.
     let package = validate_package(raw_pkg)?;
@@ -397,6 +576,7 @@ pub fn parse(toml_source: &str) -> Result<MosaicPackage, ManifestError> {
 
     // Step 7: validate optional host asset declarations.
     let host_assets = validate_host_assets(raw_host_assets)?;
+    let host_effects = validate_host_effects(raw_host_effects)?;
 
     // Step 8: validate `[kernel]`.
     let kernel = validate_kernel(raw_kernel)?;
@@ -407,6 +587,7 @@ pub fn parse(toml_source: &str) -> Result<MosaicPackage, ManifestError> {
         dependencies,
         styles,
         host_assets,
+        host_effects,
         kernel,
     })
 }
@@ -533,8 +714,11 @@ fn validate_host_assets(raw: Option<RawHostAssets>) -> Result<HostAssetsSection,
     let mut dependencies = Vec::with_capacity(raw_dependencies.len());
     for dependency in raw_dependencies {
         let backend = require_non_empty(dependency.backend, "host_assets.dependencies", "backend")?;
-        let coordinate =
-            require_non_empty(dependency.coordinate, "host_assets.dependencies", "coordinate")?;
+        let coordinate = require_non_empty(
+            dependency.coordinate,
+            "host_assets.dependencies",
+            "coordinate",
+        )?;
         dependencies.push(HostAssetDependency {
             backend,
             coordinate,
@@ -545,6 +729,98 @@ fn validate_host_assets(raw: Option<RawHostAssets>) -> Result<HostAssetsSection,
         files,
         dependencies,
     })
+}
+
+fn validate_host_effects(raw: Option<RawHostEffects>) -> Result<HostEffectsSection, ManifestError> {
+    let Some(raw) = raw else {
+        return Ok(HostEffectsSection::default());
+    };
+
+    let raw_handlers = raw.handlers.unwrap_or_default();
+    let mut handlers: Vec<HostEffectHandler> = Vec::with_capacity(raw_handlers.len());
+    let mut handler_backends: HashSet<String> = HashSet::with_capacity(raw_handlers.len());
+    for handler in raw_handlers {
+        let backend = require_non_empty(handler.backend, "host_effects.handlers", "backend")?;
+        reject_wildcard_backend(&backend, "handlers")?;
+        // One per backend, refused rather than last-wins. Two would both be
+        // installed and the second would overwrite the first's registration, so
+        // the first's effects would go unanswered -- the exact failure this
+        // mechanism exists to prevent. Silently keeping one would hide it.
+        if !handler_backends.insert(backend.clone()) {
+            return Err(ManifestError::DuplicateHostEffectHandler { backend });
+        }
+        let include = match handler.include {
+            // Present-but-empty reads as "no include needed", which is what
+            // absent already means -- so accepting it would make a typo
+            // indistinguishable from a decision.
+            Some(include) => {
+                let include = require_non_empty(Some(include), "host_effects.handlers", "include")?;
+                if !host_effect_include_re().is_match(&include)
+                    || include.split('/').any(|part| part == "..")
+                {
+                    return Err(ManifestError::InvalidHostEffectInclude(include));
+                }
+                Some(include)
+            }
+            None => None,
+        };
+        let install = require_non_empty(handler.install, "host_effects.handlers", "install")?;
+        if !host_effect_symbol_re().is_match(&install) {
+            return Err(ManifestError::InvalidHostEffectSymbol(install));
+        }
+        handlers.push(HostEffectHandler {
+            backend,
+            include,
+            install,
+        });
+    }
+
+    let raw_files = raw.files.unwrap_or_default();
+    let mut files = Vec::with_capacity(raw_files.len());
+    let mut seen_targets: HashSet<(String, String)> = HashSet::with_capacity(raw_files.len());
+    for file in raw_files {
+        let backend = require_non_empty(file.backend, "host_effects.files", "backend")?;
+        reject_wildcard_backend(&backend, "files")?;
+        let source = require_non_empty(file.source, "host_effects.files", "source")?;
+        let target = require_non_empty(file.target, "host_effects.files", "target")?;
+        // A file whose backend declares no handler would be copied into the
+        // project and added to the build with nothing calling into it.
+        //
+        // Checked against the handler set rather than by scanning, which also
+        // keeps this linear: a manifest is small, but nothing bounds its length
+        // and quadratic validation over an unbounded input is a cost with no
+        // upside.
+        if !handler_backends.contains(&backend) {
+            return Err(ManifestError::HostEffectFileWithoutHandler { backend, source });
+        }
+        if !seen_targets.insert((backend.clone(), target.clone())) {
+            return Err(ManifestError::DuplicateHostEffectFile { backend, target });
+        }
+        files.push(HostEffectFile {
+            backend,
+            source,
+            target,
+        });
+    }
+
+    Ok(HostEffectsSection { files, handlers })
+}
+
+/// `[host_assets]` accepts `*`; this section does not, and the asymmetry is
+/// deliberate.
+///
+/// Copying one file to every backend is meaningful. Installing one handler
+/// everywhere is not: what `install` receives differs per backend by design --
+/// the host is passed where there is an instance to pass, and not where there is
+/// not -- so one symbol cannot serve all five. Accepting `*` would produce an
+/// entry that matches no backend at emission and quietly installs nothing.
+fn reject_wildcard_backend(backend: &str, section: &str) -> Result<(), ManifestError> {
+    if backend == "*" {
+        return Err(ManifestError::HostEffectWildcardBackend {
+            section: section.to_string(),
+        });
+    }
+    Ok(())
 }
 
 fn validate_kernel(raw: RawKernel) -> Result<KernelSection, ManifestError> {
@@ -1086,10 +1362,412 @@ exports = ["Demo"]
 version = "1"
 "#
             );
-            assert!(
-                parse(&toml).is_err(),
-                "expected rejection for: {body}"
-            );
+            assert!(parse(&toml).is_err(), "expected rejection for: {body}");
         }
+    }
+}
+
+#[cfg(test)]
+mod host_effects_tests {
+    use super::*;
+
+    fn manifest_with(host_effects: &str) -> String {
+        format!(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+{host_effects}
+
+[kernel]
+version = "1"
+"#
+        )
+    }
+
+    #[test]
+    fn absent_section_is_empty_rather_than_an_error() {
+        // Every package that does not need a host capability must keep parsing
+        // exactly as it did before this section existed.
+        let pkg = parse(&manifest_with("")).expect("a manifest without the section must parse");
+        assert!(pkg.host_effects.files.is_empty());
+        assert!(pkg.host_effects.handlers.is_empty());
+    }
+
+    #[test]
+    fn a_declared_handler_and_its_files_round_trip() {
+        let pkg = parse(&manifest_with(
+            r#"
+[host_effects]
+files = [
+  { backend = "qt", source = "host/qt/effects.h", target = "effects.h" },
+  { backend = "qt", source = "host/qt/effects.cpp", target = "effects.cpp" },
+]
+handlers = [
+  { backend = "qt", include = "effects.h", install = "installProbeEffects" },
+]
+"#,
+        ))
+        .expect("a well-formed section must parse");
+        assert_eq!(pkg.host_effects.files.len(), 2);
+        assert_eq!(pkg.host_effects.files[0].backend, "qt");
+        assert_eq!(pkg.host_effects.files[0].source, "host/qt/effects.h");
+        assert_eq!(pkg.host_effects.files[0].target, "effects.h");
+        assert_eq!(pkg.host_effects.handlers.len(), 1);
+        assert_eq!(pkg.host_effects.handlers[0].install, "installProbeEffects");
+        assert_eq!(
+            pkg.host_effects.handlers[0].include.as_deref(),
+            Some("effects.h")
+        );
+    }
+
+    #[test]
+    fn include_is_optional_because_not_every_backend_needs_one() {
+        // Swift's handler is in the same module and Kotlin's may be in the same
+        // package, so requiring an include would force those backends to invent
+        // a meaningless value.
+        let pkg = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "swiftui", install = "installProbeEffects" },
+]
+"#,
+        ))
+        .expect("a handler without an include must parse");
+        assert!(pkg.host_effects.handlers[0].include.is_none());
+    }
+
+    #[test]
+    fn two_handlers_for_one_backend_are_refused() {
+        // Last-wins would install both and let the second overwrite the first's
+        // registration, so the first's effects would go unanswered -- which is
+        // the failure this whole mechanism exists to prevent.
+        let err = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", install = "installA" },
+  { backend = "qt", install = "installB" },
+]
+"#,
+        ))
+        .expect_err("two handlers for one backend must be refused");
+        assert!(
+            matches!(err, ManifestError::DuplicateHostEffectHandler { ref backend } if backend == "qt"),
+            "unexpected error: {err}"
+        );
+        // And it names the backend, because a manifest may declare five.
+        assert!(err.to_string().contains("qt"), "{err}");
+    }
+
+    #[test]
+    fn two_handlers_for_different_backends_are_fine() {
+        // The guard above must bound the backend, not the section: a package
+        // wiring all five backends is the ordinary case.
+        let pkg = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", install = "installA" },
+  { backend = "swiftui", install = "installB" },
+]
+"#,
+        ))
+        .expect("one handler each for two backends must parse");
+        assert_eq!(pkg.host_effects.handlers.len(), 2);
+    }
+
+    #[test]
+    fn a_file_whose_backend_declares_no_handler_is_refused() {
+        // The emitter would copy it into the project and add it to the build,
+        // and nothing would ever call into it.
+        let err = parse(&manifest_with(
+            r#"
+[host_effects]
+files = [
+  { backend = "compose", source = "host/compose/Effects.kt", target = "Effects.kt" },
+]
+handlers = [
+  { backend = "qt", install = "installA" },
+]
+"#,
+        ))
+        .expect_err("a file with no handler for its backend must be refused");
+        assert!(
+            matches!(
+                err,
+                ManifestError::HostEffectFileWithoutHandler { ref backend, ref source }
+                    if backend == "compose" && source == "host/compose/Effects.kt"
+            ),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn an_empty_include_is_refused_rather_than_read_as_absent() {
+        // Absent means "no include needed". An empty string reads the same way
+        // but is almost certainly a typo, so accepting it would make a mistake
+        // indistinguishable from a decision.
+        let err = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", include = "", install = "installA" },
+]
+"#,
+        ))
+        .expect_err("an empty include must be refused");
+        assert!(
+            matches!(
+                err,
+                ManifestError::MissingField { ref section, ref field }
+                    if section == "host_effects.handlers" && field == "include"
+            ),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn a_handler_missing_its_install_symbol_is_refused() {
+        let err = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", include = "effects.h" },
+]
+"#,
+        ))
+        .expect_err("a handler with no install symbol must be refused");
+        assert!(
+            matches!(
+                err,
+                ManifestError::MissingField { ref section, ref field }
+                    if section == "host_effects.handlers" && field == "install"
+            ),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn an_unknown_key_is_refused_rather_than_ignored() {
+        // `deny_unknown_fields`, so a misspelled `instal` fails loudly instead
+        // of emitting a project with no handler wired and no complaint.
+        let err = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", instal = "installA" },
+]
+"#,
+        ))
+        .expect_err("an unknown key must be refused");
+        assert!(
+            matches!(err, ManifestError::TomlSyntax(_)),
+            "unexpected error: {err}"
+        );
+    }
+}
+
+#[cfg(test)]
+mod host_effects_injection_tests {
+    use super::*;
+
+    fn manifest_with(host_effects: &str) -> String {
+        format!(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+{host_effects}
+
+[kernel]
+version = "1"
+"#
+        )
+    }
+
+    #[test]
+    fn an_install_symbol_carrying_a_statement_is_refused() {
+        // The value is interpolated verbatim as a call expression, so without a
+        // shape this is an arbitrary statement in someone's `main.cpp`.
+        let err = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", install = "system(\"rm -rf /\"); dummy" },
+]
+"#,
+        ))
+        .expect_err("an install symbol containing a statement must be refused");
+        assert!(
+            matches!(err, ManifestError::InvalidHostEffectSymbol(_)),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn an_include_breaking_out_of_its_quotes_is_refused() {
+        // Lands inside `#include "..."`, so a quote and a newline rewrite the
+        // whole translation unit -- generated host code included.
+        let err = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", include = "e.h\"\n#define private public\n#include \"y.h", install = "installA" },
+]
+"#,
+        ))
+        .expect_err("an include with a quote and newline must be refused");
+        assert!(
+            matches!(err, ManifestError::InvalidHostEffectInclude(_)),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn an_include_climbing_out_of_the_project_is_refused() {
+        let err = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", include = "../../etc/passwd", install = "installA" },
+]
+"#,
+        ))
+        .expect_err("a `..` include must be refused");
+        assert!(
+            matches!(err, ManifestError::InvalidHostEffectInclude(_)),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn the_shapes_every_backend_actually_uses_are_accepted() {
+        // The guards above must bound the damage without refusing the real
+        // forms: a relative header, a qualified symbol, a dotted import, and
+        // Dart's `package:` scheme.
+        let pkg = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", include = "engram_effects.h", install = "installEngramEffects" },
+  { backend = "compose", include = "com.example.Effects", install = "com.example.install" },
+  { backend = "flutter", include = "package:engram/effects.dart", install = "installEffects" },
+  { backend = "xaml", install = "Engram.Effects.Install" },
+]
+"#,
+        ))
+        .expect("every real backend form must be accepted");
+        assert_eq!(pkg.host_effects.handlers.len(), 4);
+    }
+
+    #[test]
+    fn a_wildcard_backend_is_refused_rather_than_matching_nothing() {
+        // `[host_assets]` accepts `*` because copying one file everywhere is
+        // meaningful. One handler everywhere is not -- what `install` receives
+        // differs per backend -- so `*` here would match no backend at emission
+        // and quietly install nothing.
+        let err = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "*", install = "installA" },
+]
+"#,
+        ))
+        .expect_err("a wildcard backend must be refused");
+        assert!(
+            matches!(err, ManifestError::HostEffectWildcardBackend { ref section } if section == "handlers"),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn two_files_writing_one_target_are_refused() {
+        // The later copy wins and the earlier file is silently not what gets
+        // compiled -- the same last-wins hazard refused for handlers.
+        let err = parse(&manifest_with(
+            r#"
+[host_effects]
+files = [
+  { backend = "qt", source = "host/qt/a.cpp", target = "effects.cpp" },
+  { backend = "qt", source = "host/qt/b.cpp", target = "effects.cpp" },
+]
+handlers = [
+  { backend = "qt", install = "installA" },
+]
+"#,
+        ))
+        .expect_err("two files writing one target must be refused");
+        assert!(
+            matches!(
+                err,
+                ManifestError::DuplicateHostEffectFile { ref backend, ref target }
+                    if backend == "qt" && target == "effects.cpp"
+            ),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn one_source_may_still_serve_two_backends() {
+        // The duplicate guard keys on backend AND target, so sharing a file
+        // across backends stays legal -- Engram already ships one `.mjs` to
+        // both `html` and `webcomponent` through `[host_assets]`.
+        let pkg = parse(&manifest_with(
+            r#"
+[host_effects]
+files = [
+  { backend = "qt", source = "host/shared.cpp", target = "effects.cpp" },
+  { backend = "xaml", source = "host/shared.cpp", target = "effects.cpp" },
+]
+handlers = [
+  { backend = "qt", install = "installA" },
+  { backend = "xaml", install = "installB" },
+]
+"#,
+        ))
+        .expect("one source serving two backends must parse");
+        assert_eq!(pkg.host_effects.files.len(), 2);
+    }
+
+    #[test]
+    fn a_misspelled_section_key_is_refused_rather_than_silently_empty() {
+        // Without `deny_unknown_fields` on the CONTAINER, `fils` parses as an
+        // empty section: the package gets no handler wired, and nothing says so.
+        // The inner structs carried the attribute; the container did not.
+        let err = parse(&manifest_with(
+            r#"
+[host_effects]
+fils = [
+  { backend = "qt", source = "a.cpp", target = "a.cpp" },
+]
+handlers = [
+  { backend = "qt", install = "installA" },
+]
+"#,
+        ))
+        .expect_err("a misspelled section key must be refused");
+        assert!(
+            matches!(err, ManifestError::TomlSyntax(_)),
+            "unexpected error: {err}"
+        );
     }
 }

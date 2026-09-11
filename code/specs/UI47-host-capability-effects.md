@@ -315,9 +315,22 @@ handlers = [
 ```
 
 - `files` — copied into the backend output directory, **and added to that
-  backend's build source list**. This is the one thing `[host_assets]` cannot
-  already do: it only ever *replaces* files the emitter already generated and
-  therefore already listed, so nothing ever had to append a new source.
+  backend's build source list**.
+
+  An earlier draft of this section justified that second half by claiming
+  `[host_assets]` can never append a new build source, only replace a file the
+  emitter already generated and therefore already listed. **That is false**, and
+  it was generalised from Qt without checking the others.
+  `activate_react_host_asset` prepends an `import` to the generated `main.tsx`
+  for a newly-copied file, `activate_html_host_asset` inserts a `<script>` tag,
+  and SwiftPM and Gradle compile their source directories wholesale. Engram
+  already ships three brand-new files this way.
+
+  The true statement is narrower and still sufficient: **Qt and XAML list their
+  sources explicitly** — Qt's generated `CMakeLists.txt` names `main.cpp` in
+  `qt_add_executable` and `MosaicHost.cpp`/`.h` in `target_sources` — so on
+  those two backends a newly-copied file is never compiled. Those are precisely
+  the backends a handler has to reach.
 - `handlers` — at most one per backend. `install` names the symbol the generated
   entry point calls; `include` is optional and backend-interpreted (a C++
   `#include`, a Dart `import`, nothing at all where the handler is already in
