@@ -1224,6 +1224,20 @@ fn should_split_root_sections(layout_root: &LayoutNode) -> bool {
 /// scroll wrapper a hard stop for the recursion below: TaskApp's oversized
 /// section sat directly under one, and splitting halted at the wrapper with
 /// 80,000 characters still inside it (#14736).
+/// Whether a style chain already decides the container's width, in which case
+/// the emitter's default `fillMaxWidth()` must not be prepended.
+///
+/// `width` is an explicit size; `fillMaxWidth`/`fillMaxSize` already say it;
+/// `weight` makes the parent distribute the space instead (#14795).
+fn chain_sets_own_width(chain: &str) -> bool {
+    chain.contains(".width(")
+        || chain.contains(".fillMaxWidth(")
+        || chain.contains(".fillMaxSize(")
+        || chain.contains(".weight(")
+        || chain.contains(".requiredWidth(")
+        || chain.contains(".widthIn(")
+}
+
 /// The modifier `HostScroll` prefixes onto a container's chain.
 ///
 /// Shared by `emit_container` (the ordinary path) and `emit_container_frame`
@@ -3666,7 +3680,23 @@ fn emit_container_frame(
         writeln!(opener, "{pad}{composable}(").unwrap();
         if has_style_chain {
             let chain = style.as_ref().map(|s| s.modifier.as_str()).unwrap_or("");
-            write!(opener, "{modifier_pad}modifier = Modifier{chain}").unwrap();
+            // `fillMaxWidth()` is this emitter's DEFAULT width for a
+            // container, not an alternative to styling it. Writing the two as
+            // an either/or meant authoring any unrelated property -- a
+            // background, a border, a padding -- silently cancelled the
+            // default and let the container shrink to its content (#14795).
+            //
+            // It goes FIRST so an explicit `width`/`fillMaxWidth` later in the
+            // chain still wins: Compose resolves size modifiers in order.
+            if chain_sets_own_width(chain) {
+                write!(opener, "{modifier_pad}modifier = Modifier{chain}").unwrap();
+            } else {
+                write!(
+                    opener,
+                    "{modifier_pad}modifier = Modifier.fillMaxWidth(){chain}"
+                )
+                .unwrap();
+            }
         } else {
             write!(opener, "{modifier_pad}modifier = Modifier.fillMaxWidth()").unwrap();
         }
@@ -3940,7 +3970,20 @@ fn emit_container(
         writeln!(out, "{pad}{composable}(").unwrap();
         if has_style_chain {
             let chain = style.as_ref().map(|s| s.modifier.as_str()).unwrap_or("");
-            write!(out, "{modifier_pad}modifier = Modifier{chain}").unwrap();
+            // Same defaulting as `emit_container` (#14795). Keeping the two
+            // paths in step matters: a container only takes THIS one once its
+            // section grows large enough to be split, so fixing one alone
+            // would hold until a layout grew and then quietly stop -- exactly
+            // how the HostScroll modifier behaved in #14736.
+            if in_row_scope || chain_sets_own_width(chain) {
+                write!(out, "{modifier_pad}modifier = Modifier{chain}").unwrap();
+            } else {
+                write!(
+                    out,
+                    "{modifier_pad}modifier = Modifier.fillMaxWidth(){chain}"
+                )
+                .unwrap();
+            }
         } else {
             let modifier = if in_row_scope {
                 "Modifier"
@@ -10237,6 +10280,57 @@ mod tests {
         assert!(
             out.contains("import androidx.compose.foundation.layout.fillMaxSize"),
             "fillMaxSize emitted without its import, got:\n{out}"
+        );
+    }
+
+    /// #14795 — the width default is not an ALTERNATIVE to styling.
+    ///
+    /// `fillMaxWidth()` is what a container gets when nothing says otherwise.
+    /// Writing it as an either/or against the style chain meant authoring any
+    /// unrelated property -- a background, a border, a padding -- silently
+    /// cancelled the default and let the container shrink to its content. The
+    /// author asked for a colour and lost their layout.
+    #[test]
+    fn an_unrelated_style_property_does_not_cancel_fill_max_width() {
+        let m = component("F", vec![], vec![]);
+        let mut styled = node("Row", vec![], vec![node("Text", vec![], vec![])]);
+        styled.part_name = Some("r".to_string());
+        let l = layout("F", styled);
+
+        let mut sheet = empty_style("F");
+        sheet
+            .parts
+            .push(part("r", vec![sprop("background", "#ff0000")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        // Pin the Row's OWN chain, not merely that the string appears
+        // somewhere in the file -- the import line and any other container
+        // would satisfy a looser match.
+        assert!(
+            out.contains("modifier = Modifier.fillMaxWidth()\n            .background("),
+            "a background cancelled the width default, got:\n{out}"
+        );
+    }
+
+    /// The other half: a chain that DOES decide the width keeps its own answer,
+    /// and the default is not prepended in front of it.
+    #[test]
+    fn a_chain_that_sets_its_own_width_keeps_it() {
+        let m = component("F", vec![], vec![]);
+        let mut styled = node("Row", vec![], vec![node("Text", vec![], vec![])]);
+        styled.part_name = Some("r".to_string());
+        let l = layout("F", styled);
+
+        let mut sheet = empty_style("F");
+        sheet
+            .parts
+            .push(part("r", vec![sprop("width", "236px")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(out.contains(".width(236.dp)"), "got:\n{out}");
+        assert!(
+            !out.contains("fillMaxWidth().width("),
+            "the default was prepended in front of an explicit width, got:\n{out}"
         );
     }
 

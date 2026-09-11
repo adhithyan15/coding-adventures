@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C19-words",
+    "language": "japanese",
+    "chapter": 19,
+    "sequence": 1580,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:245106cef633a0ed"
+  },
+  "findings": []
+}

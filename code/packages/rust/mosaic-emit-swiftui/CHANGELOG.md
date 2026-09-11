@@ -4,6 +4,24 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — `gap` was dropped (#14804)
+
+`gap` reached the lattice IR and died at this emitter. SwiftUI emitted only
+`spacing: 0`, twice, against authored values of 2, 3, 5, 6, 7, 8, 10 and 22 —
+and the strict `native-complete` profile reported zero degradations throughout,
+because the degradation analyzer does not know the property exists. 178
+declarations across 27 stylesheets.
+
+`VStack` and `HStack` now take the authored `spacing:`. TaskApp emits **55**
+spacing arguments where it previously emitted 2.
+
+`ZStack` overlays its children along the depth axis and `ScrollView` delegates
+layout to its content, so a gap on either is meaningless rather than merely
+unsupported — dropped deliberately rather than guessed at, with a test for it.
+
+Verified by generating TaskApp's SwiftUI sources and running `swiftc -parse`
+over the result.
+
 ### Added — `HostInput.disabled` (#14786)
 
 SwiftUI has no read-only `TextField`, so this emitter already approximated

@@ -2112,6 +2112,64 @@ jobs:
           ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
           ! grep -E "missing required MIL prop|Mosaic runtime failed|Fatal error|Precondition failed" "$taskapp_log"
 
+          # Engram on SwiftUI, the mirror of the Qt Engram lane further down.
+          #
+          # `.dylib`, not `.so`: this block is macOS-gated, the inverse of the
+          # Qt lane, which runs on Linux.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
+          engram_swift_runtime="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.dylib"
+          test -f "$engram_swift_runtime"
+          engram_swift_output="$RUNNER_TEMP/mosaic-swiftui-engram"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend swiftui --output "$engram_swift_output" --emit-project --profile native-complete --runtime-library "$engram_swift_runtime"
+
+          # Pinned empty, exactly as the Qt lane pins it: SwiftUI's
+          # `MosaicHost.swift` override is retired, and a package that starts
+          # overriding the generated host again has undone that and must fail
+          # here rather than pass quietly.
+          jq -e '.replacedGeneratedFiles == []' "$engram_swift_output/swiftui/mosaic-degradations.json"
+          # `type == "array"` first: `null | length` is 0 in jq, so a report that
+          # lost the key entirely would satisfy a bare length check.
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_swift_output/swiftui/mosaic-degradations.json"
+
+          # The handler is wired into the generated app, and lands INSIDE the
+          # host class rather than ahead of it. This is the half no assertion
+          # over a source file can reach -- and it matters more here than on Qt,
+          # because SwiftPM compiles everything under `Sources/App`, so an
+          # uninstalled handler still compiles, links and ships with no
+          # diagnostic at all.
+          grep -q 'installEngramEffects(mosaicEffectHost)' "$engram_swift_output/swiftui/Sources/App/App.swift"
+          python3 - "$engram_swift_output/swiftui/Sources/App/App.swift" <<'PY'
+          import re
+          import sys
+
+          text = open(sys.argv[1]).read()
+          install = text.index("installEngramEffects(mosaicEffectHost)")
+
+          # "Inside MosaicHostState" means the nearest type declaration ABOVE the
+          # install is that class. Asserting `class_idx < install` instead would
+          # be near-vacuous -- the class is declared once, far up the file, so
+          # the ordering holds even if the call landed in a later type.
+          declarations = [
+              (m.start(), m.group(1))
+              for m in re.finditer(r"(?m)^[ \t]*(?:(?:private|fileprivate|internal|public|final)\s+)*"
+                                   r"(?:class|struct|enum|extension)\s+(\w+)", text)
+              if m.start() < install
+          ]
+          assert declarations, "no type declaration precedes the install"
+          enclosing = declarations[-1][1]
+          assert enclosing == "MosaicHostState", (
+              f"install landed in {enclosing}, not MosaicHostState"
+          )
+
+          # And after the bridge exists: installing onto a nil bridge compiles
+          # and silently does nothing.
+          assignment = text.index("self.bridge = ", declarations[-1][0])
+          assert assignment < install, "install must follow the bridge assignment"
+          PY
+
+          # The gate: it builds.
+          swift build --package-path "$engram_swift_output/swiftui"
+
           ios_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-source"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_output" --emit-project
           jq -e '.nativeComplete == false and ([.degradations[].code] == ["runtime.sample-fallback"])' "$ios_output/swiftui/mosaic-degradations.json"
