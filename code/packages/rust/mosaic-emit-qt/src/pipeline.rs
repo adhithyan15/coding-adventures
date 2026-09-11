@@ -3947,6 +3947,19 @@ fn host_button_style_qml_lines(node: &LayoutNode, ctx: &EmitCtx) -> Vec<String> 
     if let Some(is_bold) = style_prop(base, "font-weight").and_then(qml_font_weight_is_bold) {
         lines.push(format!("font.bold: {is_bold}"));
     }
+    // `opacity` on the CONTROL, not on its background Rectangle: it is an Item
+    // property, so putting it here composites the control, its text and its
+    // background together. On the Rectangle it would fade the fill and leave
+    // the label at full strength.
+    //
+    // #14741 added opacity to Qt's three Rectangle paint builders, and host
+    // controls are a fourth path none of them reach -- so a `Box` part honoured
+    // an authored opacity while a `HostButton` part silently ignored it on the
+    // same backend (#14775).
+    let base_opacity = style_prop(base, "opacity").and_then(qml_number_or_none);
+    if let Some(opacity) = conditional_number_expr(base_opacity, &state_layers, "opacity", "1") {
+        lines.push(format!("opacity: {opacity}"));
+    }
 
     let base_background = style_prop(base, "background")
         .or_else(|| style_prop(base, "background-color"))
@@ -14265,6 +14278,69 @@ mod tests {
         // would produce invalid QML rather than a missing property.
         let out = opacity_qml(vec![("opacity", "40%")], None);
         assert!(!out.contains("opacity:"), "got:\n{out}");
+    }
+
+
+    #[test]
+    fn a_host_control_honours_opacity_like_a_box_does() {
+        // #14741 added opacity to Qt's three Rectangle paint builders. Host
+        // controls are a fourth path none of them reach, so a `Box` part
+        // honoured an authored opacity while a `HostButton` part silently
+        // ignored it on the same backend (#14775).
+        let c = component(
+            "B",
+            vec![
+                slot("label", SlotType::Text, true),
+                slot("disabled", SlotType::Bool, false),
+            ],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "B".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::SlotRef("label".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let s = StyleDef {
+            component_name: "B".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "1".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    state: "disabled".to_string(),
+                    slot: Some("disabled".to_string()),
+                    slot_is_bool: true,
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.4".to_string(),
+                    }],
+                    transitions: vec![],
+                }],
+            }],
+        };
+        let out = from_pipeline(&c, &l, &s).expect("emit ok").output;
+
+        assert!(
+            out.contains("opacity: ( (disabled) ) ? 0.4 : 1"),
+            "got:\n{out}"
+        );
+        // On the control, not on its background Rectangle: opacity is an Item
+        // property, so here it composites the control, its text and its
+        // background. On the Rectangle it would fade the fill and leave the
+        // label at full strength.
+        let opacity_at = out.find("opacity:").expect("opacity");
+        let background_at = out.find("background: Rectangle").unwrap_or(usize::MAX);
+        assert!(opacity_at < background_at, "got:\n{out}");
     }
 
 }
