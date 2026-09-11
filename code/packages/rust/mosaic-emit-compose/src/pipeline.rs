@@ -1232,6 +1232,24 @@ fn chain_sets_own_width(chain: &str) -> bool {
         || chain.contains(".widthIn(")
 }
 
+/// The `Arrangement.spacedBy` argument for an authored `gap`, or `None` where
+/// the composable has no arrangement to give it (#14804).
+///
+/// Compose names the axis in the argument, so a `gap` means a different thing
+/// to each container: `Column` spaces its children vertically, `Row`
+/// horizontally. `Box` stacks its children on top of one another and has no
+/// arrangement at all -- a gap there is meaningless rather than merely
+/// unsupported, so it is dropped deliberately instead of guessed at.
+fn arrangement_argument(composable: &str, gap: Option<&str>) -> Option<String> {
+    let gap = gap?;
+    let axis = match composable {
+        "Column" => "verticalArrangement",
+        "Row" => "horizontalArrangement",
+        _ => return None,
+    };
+    Some(format!("{axis} = Arrangement.spacedBy({gap}.dp)"))
+}
+
 /// The modifier `HostScroll` prefixes onto a container's chain.
 ///
 /// Shared by `emit_container` (the ordinary path) and `emit_container_frame`
@@ -10407,22 +10425,5 @@ mod tests {
         assert!(!out.contains("Arrangement.spacedBy"), "got:\n{out}");
     }
 
-/// The `Arrangement.spacedBy` argument for an authored `gap`, or `None` where
-/// the composable has no arrangement to give it (#14804).
-///
-/// Compose names the axis in the argument, so a `gap` means a different thing
-/// to each container: `Column` spaces its children vertically, `Row`
-/// horizontally. `Box` stacks its children on top of one another and has no
-/// arrangement at all -- a gap there is meaningless rather than merely
-/// unsupported, so it is dropped deliberately instead of guessed at.
-fn arrangement_argument(composable: &str, gap: Option<&str>) -> Option<String> {
-    let gap = gap?;
-    let axis = match composable {
-        "Column" => "verticalArrangement",
-        "Row" => "horizontalArrangement",
-        _ => return None,
-    };
-    Some(format!("{axis} = Arrangement.spacedBy({gap}.dp)"))
-}
 
 }
