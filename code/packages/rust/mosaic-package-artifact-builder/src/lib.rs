@@ -1704,6 +1704,11 @@ fn build_package_inner(
     let backend_dir = opts.output_root.join(opts.backend.dir_name());
     create_dir_all(&backend_dir)?;
 
+    // Stamped here, before a single byte is written, so that "what this build
+    // emitted" can later be told apart from "what a previous build left". Into
+    // a fresh directory this is empty and costs one failed `read_dir`.
+    let pre_emission = pre_emission_stamps(&backend_dir);
+
     // ----- 4. Compile each component (× each variant) ----------------------
     //
     // UI30 multi-layout: for every component, discover its variants
@@ -1817,8 +1822,13 @@ fn build_package_inner(
         // step 5 still lands in `backend_dir`.
     }
 
-    let (host_asset_artifacts, replaced_generated_files) =
-        install_host_assets(&manifest, opts.backend, &opts.package_root, &backend_dir)?;
+    let (host_asset_artifacts, replaced_generated_files) = install_host_assets(
+        &manifest,
+        opts.backend,
+        &opts.package_root,
+        &backend_dir,
+        &pre_emission,
+    )?;
     artifacts.extend(host_asset_artifacts);
     // After the host assets, so a package that declares both gets the same
     // last-write-wins ordering it would get from two `[host_assets]` entries.
@@ -1827,6 +1837,7 @@ fn build_package_inner(
         opts.backend,
         &opts.package_root,
         &backend_dir,
+        &pre_emission,
     )?);
 
     // The explicitly selected engine is the final write to its conventional
@@ -1870,6 +1881,7 @@ fn install_host_effects(
     backend: Backend,
     package_root: &Path,
     backend_dir: &Path,
+    pre_emission: &HashMap<PathBuf, FileStamp>,
 ) -> Result<Vec<PathBuf>, BuildError> {
     let backend_name = backend.dir_name();
     // A `[host_effects]` file is a NEW build source by definition, never a
@@ -1897,7 +1909,7 @@ fn install_host_effects(
     {
         return Ok(Vec::new());
     }
-    let generated = generated_files_on_disk(backend_dir)?;
+    let generated = generated_files_on_disk(backend_dir, pre_emission)?;
     let canonical_root = package_root
         .canonicalize()
         .map_err(|e| BuildError::Io(format!("canonicalize {}: {e}", package_root.display())))?;
@@ -1979,6 +1991,7 @@ fn install_host_assets(
     backend: Backend,
     package_root: &Path,
     backend_dir: &Path,
+    pre_emission: &HashMap<PathBuf, FileStamp>,
 ) -> Result<(Vec<PathBuf>, Vec<String>), BuildError> {
     let backend_name = backend.dir_name();
     // Keyed on the *canonical* path, so the filesystem decides what collides
@@ -2001,7 +2014,7 @@ fn install_host_assets(
     //
     // The directory is the emitter's output, and a future emitter that forgets a
     // `push` cannot break this.
-    let generated = generated_files_on_disk(backend_dir)?;
+    let generated = generated_files_on_disk(backend_dir, pre_emission)?;
     let mut written = Vec::new();
     let mut replaced = Vec::new();
     for asset in &manifest.host_assets.files {
@@ -2037,11 +2050,31 @@ fn install_host_assets(
     Ok((written, replaced))
 }
 
-/// Every file currently under `backend_dir`, keyed by canonical path and valued
-/// by its name relative to that directory.
+/// What this build emitted under `backend_dir`, keyed by canonical path and
+/// valued by its name relative to that directory.
 ///
-/// Called immediately before host assets are installed, so what it finds is
-/// exactly what the build has emitted so far.
+/// `pre_emission` is the same directory stamped *before* emission began, and
+/// subtracting it is what makes the name honest. A bare walk answers "what is
+/// here", which equals "what this build emitted" only into a clean directory.
+/// Emitting twice into the same output — the ordinary local workflow, and what
+/// `create_dir_all` is deliberately tolerant of for incremental rebuilds — left
+/// the previous run's installed host files sitting here, and counting them as
+/// generated produced two bugs from one cause: `install_host_effects` refused a
+/// re-run outright, and `install_host_assets` reported a *replacement that never
+/// happened*, which is a false positive in the one field a reviewer reads to see
+/// whether a package took over the application boundary.
+///
+/// A file is this build's if it was absent before, or if its (mtime, length)
+/// changed. Comparing each file against its own earlier stamp rather than
+/// against a wall-clock fence keeps this independent of clock skew and of the
+/// filesystem's timestamp granularity.
+///
+/// Deliberately still a directory walk rather than a list the emitters push to.
+/// That was the fix for an earlier false negative — `emit_index_file` writes two
+/// files and returns one path, so overwriting the HTML app shell reported
+/// nothing — and a list someone has to remember to append to would reintroduce
+/// it. The walk catches a file written by any means; the subtraction only
+/// removes files this build did not touch.
 ///
 /// Keyed on the canonical path so the *filesystem* decides what counts as the
 /// same file: `mosaichost.cpp` collides with `MosaicHost.cpp` on macOS and
@@ -2053,10 +2086,14 @@ fn install_host_assets(
 /// The value is the *generated* file's relative name, not the manifest's
 /// spelling: a consumer checking that the standard binding survived looks for
 /// `MosaicHost.cpp` and would not recognise `mosaichost.cpp` as the same thing.
-fn generated_files_on_disk(backend_dir: &Path) -> Result<HashMap<PathBuf, String>, BuildError> {
+fn generated_files_on_disk(
+    backend_dir: &Path,
+    pre_emission: &HashMap<PathBuf, FileStamp>,
+) -> Result<HashMap<PathBuf, String>, BuildError> {
     fn walk(
         dir: &Path,
         root: &Path,
+        pre_emission: &HashMap<PathBuf, FileStamp>,
         found: &mut HashMap<PathBuf, String>,
     ) -> Result<(), BuildError> {
         let entries = match fs::read_dir(dir) {
@@ -2072,14 +2109,26 @@ fn generated_files_on_disk(backend_dir: &Path) -> Result<HashMap<PathBuf, String
                 .file_type()
                 .map_err(|e| BuildError::Io(format!("stat {}: {e}", path.display())))?;
             if file_type.is_dir() {
-                walk(&path, root, found)?;
+                walk(&path, root, pre_emission, found)?;
             } else {
                 let relative = path
                     .strip_prefix(root)
                     .map(path_to_web_src)
                     .unwrap_or_else(|_| path_to_web_src(&path));
                 if let Ok(canonical) = fs::canonicalize(&path) {
-                    found.insert(canonical, relative);
+                    // Untouched since before emission, so not this build's.
+                    //
+                    // An unreadable stamp counts as CHANGED rather than
+                    // unchanged: that keeps the failure direction the one this
+                    // field exists for -- over-reporting a replacement is
+                    // noisy, missing one is the silent false negative.
+                    let unchanged = match (pre_emission.get(&canonical), stamp_of(&path)) {
+                        (Some(before), Some(now)) => *before == now,
+                        _ => false,
+                    };
+                    if !unchanged {
+                        found.insert(canonical, relative);
+                    }
                 }
             }
         }
@@ -2087,8 +2136,52 @@ fn generated_files_on_disk(backend_dir: &Path) -> Result<HashMap<PathBuf, String
     }
 
     let mut found = HashMap::new();
-    walk(backend_dir, backend_dir, &mut found)?;
+    walk(backend_dir, backend_dir, pre_emission, &mut found)?;
     Ok(found)
+}
+
+/// Enough of a file's metadata to tell "rewritten" from "untouched".
+///
+/// Length alone misses a same-size rewrite; mtime alone misses a filesystem
+/// with coarse timestamps. Together they are wrong only if a rewrite lands on
+/// the same length AND the same timestamp tick, and the consequence of that is
+/// bounded: the file is treated as pre-existing, so a replacement of it goes
+/// unreported. That is why an unreadable stamp deliberately falls the other way.
+type FileStamp = (std::time::SystemTime, u64);
+
+fn stamp_of(path: &Path) -> Option<FileStamp> {
+    let metadata = fs::metadata(path).ok()?;
+    Some((metadata.modified().ok()?, metadata.len()))
+}
+
+/// Stamp every file under `dir`, before this build writes anything into it.
+///
+/// Missing or unreadable entries are simply absent from the map, which makes
+/// them "new" to the comparison — the safe direction, and the right one for the
+/// ordinary case of a directory that does not exist yet.
+fn pre_emission_stamps(dir: &Path) -> HashMap<PathBuf, FileStamp> {
+    fn walk(dir: &Path, found: &mut HashMap<PathBuf, FileStamp>) {
+        let Ok(entries) = fs::read_dir(dir) else {
+            return;
+        };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            match entry.file_type() {
+                Ok(file_type) if file_type.is_dir() => walk(&path, found),
+                Ok(_) => {
+                    if let (Ok(canonical), Some(stamp)) = (fs::canonicalize(&path), stamp_of(&path))
+                    {
+                        found.insert(canonical, stamp);
+                    }
+                }
+                Err(_) => {}
+            }
+        }
+    }
+
+    let mut found = HashMap::new();
+    walk(dir, &mut found);
+    found
 }
 
 fn activate_host_asset(
@@ -11523,9 +11616,14 @@ version = "1"
     fn an_ordinary_file_is_copied_into_the_project() {
         let root = scratch("ok");
         fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
-        let written =
-            install_host_effects(&probe_manifest(), Backend::Qt, &root, &root.join("out"))
-                .expect("an in-package source must be copied");
+        let written = install_host_effects(
+            &probe_manifest(),
+            Backend::Qt,
+            &root,
+            &root.join("out"),
+            &HashMap::new(),
+        )
+        .expect("an in-package source must be copied");
         assert_eq!(written.len(), 1);
         assert_eq!(
             fs::read_to_string(root.join("out/probe_effects.h")).expect("read the copy"),
@@ -11564,8 +11662,14 @@ version = "1"
             "SECRET\n"
         );
 
-        let error = install_host_effects(&probe_manifest(), Backend::Qt, &root, &root.join("out"))
-            .expect_err("a source resolving outside the package must be refused");
+        let error = install_host_effects(
+            &probe_manifest(),
+            Backend::Qt,
+            &root,
+            &root.join("out"),
+            &HashMap::new(),
+        )
+        .expect_err("a source resolving outside the package must be refused");
         let message = format!("{error:?}");
         assert!(
             message.contains("outside the package"),
@@ -11705,6 +11809,7 @@ version = "1"
             Backend::Qt,
             &root,
             &root.join("out"),
+            &HashMap::new(),
         )
         .expect_err("replacing a generated file must be refused");
         let message = format!("{error:?}");
@@ -11733,10 +11838,126 @@ version = "1"
             Backend::Qt,
             &root,
             &root.join("out"),
+            &HashMap::new(),
         )
         .expect("a new file must be allowed");
         assert_eq!(written.len(), 1);
         assert!(root.join("out/probe_effects.h").exists());
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    /// Emitting twice into the same directory must work.
+    ///
+    /// It did not. The second run found the FIRST run's installed handler
+    /// sitting in the output, counted it as a generated file because it was
+    /// simply there, and refused: "would replace a generated file". Every
+    /// existing test missed it by construction -- they all build a fresh
+    /// scratch directory -- and so does CI, which emits into a new
+    /// `$RUNNER_TEMP` every lane. The one place it reliably showed up was the
+    /// ordinary local workflow the output directory is explicitly built to
+    /// support ("not an error if the directory already exists, which is the
+    /// behaviour we want for incremental rebuilds").
+    #[test]
+    fn a_second_emit_into_the_same_directory_is_allowed() {
+        let root = scratch();
+        fs::create_dir_all(root.join("host/qt")).expect("create the package source directory");
+        fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
+        let out = root.join("out");
+        fs::create_dir_all(&out).expect("create the output directory");
+
+        // Run 1, into a directory holding nothing.
+        install_host_effects(
+            &manifest_targeting("probe_effects.h"),
+            Backend::Qt,
+            &root,
+            &out,
+            &HashMap::new(),
+        )
+        .expect("the first run must succeed");
+        assert!(out.join("probe_effects.h").exists());
+
+        // Run 2 stamps the directory BEFORE emitting, which is what tells the
+        // leftover from run 1 apart from anything this build wrote.
+        let pre_emission = pre_emission_stamps(&out);
+        assert!(
+            !pre_emission.is_empty(),
+            "run 1's output must be visible to run 2's snapshot, or this test \
+             proves nothing"
+        );
+        install_host_effects(
+            &manifest_targeting("probe_effects.h"),
+            Backend::Qt,
+            &root,
+            &out,
+            &pre_emission,
+        )
+        .expect("re-emitting into the same directory must be allowed");
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    /// And a genuine collision within one run is still refused.
+    ///
+    /// The pair matters: the fix above loosens what counts as "generated", so
+    /// this pins that it did not loosen it into uselessness. A file this build
+    /// actually wrote is still off limits.
+    #[test]
+    fn a_file_written_by_this_build_is_still_refused() {
+        let root = scratch();
+        fs::create_dir_all(root.join("host/qt")).expect("create the package source directory");
+        fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
+        let out = root.join("out");
+        fs::create_dir_all(&out).expect("create the output directory");
+
+        // Stamp an EMPTY directory, then write the generated file -- which is
+        // the ordering a real build has, and makes `main.cpp` this build's.
+        let pre_emission = pre_emission_stamps(&out);
+        fs::write(out.join("main.cpp"), b"// generated entry point\n")
+            .expect("write the generated file");
+
+        let error = install_host_effects(
+            &manifest_targeting("main.cpp"),
+            Backend::Qt,
+            &root,
+            &out,
+            &pre_emission,
+        )
+        .expect_err("a target this build generated must still be refused");
+        assert!(
+            format!("{error:?}").contains("would replace a generated file"),
+            "{error:?}"
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    /// A file left by a PREVIOUS build and untouched by this one is not this
+    /// build's to protect.
+    ///
+    /// This is the same shape as the re-run case, stated as the rule rather
+    /// than the symptom: presence is not authorship.
+    #[test]
+    fn a_file_this_build_did_not_touch_is_not_generated() {
+        let root = scratch();
+        let out = root.join("out");
+        fs::create_dir_all(&out).expect("create the output directory");
+        fs::write(out.join("leftover.h"), b"// from a previous run\n").expect("write it");
+
+        let pre_emission = pre_emission_stamps(&out);
+        let generated =
+            generated_files_on_disk(&out, &pre_emission).expect("walk the output directory");
+        assert!(
+            generated.is_empty(),
+            "an untouched leftover must not count as generated: {generated:?}"
+        );
+
+        // Rewrite it with different content, as an emitter would, and it counts.
+        fs::write(out.join("leftover.h"), b"// rewritten by this build\n").expect("rewrite it");
+        let generated =
+            generated_files_on_disk(&out, &pre_emission).expect("walk the output directory");
+        assert_eq!(
+            generated.len(),
+            1,
+            "a file this build rewrote must count as generated: {generated:?}"
+        );
         let _ = fs::remove_dir_all(&root);
     }
 }
