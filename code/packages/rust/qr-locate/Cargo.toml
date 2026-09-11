@@ -1,0 +1,20 @@
+[package]
+name = "qr-locate"
+version = "0.1.0"
+edition = "2021"
+description = "L3: locate and decode a QR code from a photographed image"
+license = "MIT"
+
+[dependencies]
+pixel-container = { path = "../pixel-container" }
+image-point-ops = { path = "../image-point-ops" }
+image-geometric-transforms = { path = "../image-geometric-transforms" }
+vis-pattern-scanning = { path = "../vis-pattern-scanning" }
+vis-connected-components = { path = "../vis-connected-components" }
+vis-geometric-estimation = { path = "../vis-geometric-estimation" }
+barcode-2d = { path = "../barcode-2d" }
+qr-decoder = { path = "../qr-decoder" }
+
+[dev-dependencies]
+qr-code = { path = "../qr-code" }
+matrix = { path = "../matrix" }
