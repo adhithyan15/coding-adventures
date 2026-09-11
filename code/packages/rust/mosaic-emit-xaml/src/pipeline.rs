@@ -8467,22 +8467,29 @@ fn emit_host_input(
         | None => {}
     }
 
-    // read-only: slot/keyword
+    // disabled: slot/keyword
     // UI58 — a DIFFERENT affordance from `read-only`: a read-only field takes
     // keyboard focus and announces as editable-but-read-only; a disabled one
     // is skipped by focus and announces as unavailable (#14772).
     //
-    // WinUI spells it `IsEnabled`, so a slot binding goes through the same
-    // Not() helper the other controls use for their `disabled` polarity flip.
+    // WinUI spells it `IsEnabled`, so the polarity flips. Route that through
+    // `disabled_slot_xbind_path` exactly as HostButton, HostCheckbox and
+    // HostRadio do, rather than writing `Not(...)` into the attribute here:
+    // that function REGISTERS the `Not(bool)` helper on the partial class, and
+    // emitting the call without registering it produces XAML that binds to a
+    // method the code-behind never declares (#14793). It also handles the
+    // `For`-template case, where WinUI's typed DataTemplate compiler rejects a
+    // bare function binding and a row-VM computed property is required.
     match find_prop_value(node, "disabled") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = ctx.slot_xbind_path(slot);
-            attrs.push_str(&format!(
-                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
-            ));
+            let path = disabled_slot_xbind_path(slot, ctx);
+            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {
+            attrs.push_str(" IsEnabled=\"True\"");
         }
         _ => {}
     }
@@ -21561,6 +21568,18 @@ mod tests {
             r.xaml.contains(" IsEnabled=\"{x:Bind Not(Off), Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
+        );
+        // #14793 — asserting the attribute alone is not enough. `Not` is a
+        // method on the partial class, and emitting the CALL without
+        // registering the METHOD produces XAML that binds to something the
+        // code-behind never declares: emitter tests pass, the generated C#
+        // does not compile, and the first thing to notice is a WinUI build on
+        // CI. This is the assertion that catches that.
+        assert!(
+            r.code_behind.contains("bool Not(bool b)"),
+            "HostInput emitted a Not() binding without registering the \
+             Not(bool) helper, got:\n{}",
+            r.code_behind
         );
     }
 
