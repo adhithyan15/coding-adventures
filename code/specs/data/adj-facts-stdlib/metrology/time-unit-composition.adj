@@ -14,7 +14,25 @@
 %     "1 h = 60 min = 3600 s"
 %
 %   day → 24 hours
-%     "1 d = 24 h = 86 400 s"
+%     "1 d = 24 h = 86 400s"
+%
+% NOT ONE SPAN, and said so here rather than left to be discovered. Each of
+% those two strings is byte-exact on the cited page and each occurs there
+% exactly once. The `source` field below joins them with a
+% ` | ` that occurs on the page ONLY as page chrome: FOUR times in the raw
+% HTML -- a `citation_title` meta, the <title>, and two footer link
+% separators -- which is THREE in the rendered text: once in the <title>
+% string, and twice inside the ONE footer line that reads
+% "Webmaster | Contact Us | Our Other Offices". NEVER between two
+% cells of Table 6. So the field AS A WHOLE occurs ZERO times.
+% That separator is #13934's held question -- is a table row a verbatim span?
+% -- and is left alone here, because answering it is the owner's call and not
+% a side effect of a repair. What was repaired: the day cell was written here
+% as "1 d = 24 h = 86 400 s"; the page writes "1 d = 24 h = 86 400s", with NO
+% space before the s. That was an alteration inside ONE cell, independent of
+% the separator, so the cells are now byte-exact and whichever way the held
+% question goes the pieces are already right. The same repair was made to
+% `time-units.adj`, which welds the same day cell into a three-cell `source`.
 %
 % Recall is a binding query:
 %
@@ -41,8 +59,9 @@
 %
 %     ? time_unit_composition($Unit, minute, 60)   % hour
 %
-% Provenance: reproduces, byte-for-byte, the SAME NIST Special Publication
-% 811 span already quoted inside `time-units.adj`'s own `source` field —
+% Provenance: reproduces the SAME NIST Special Publication 811 CELLS, each
+% byte-exact, that `time-units.adj`'s own `source` field already joins —
+% cells, not one span: see the NOT ONE SPAN paragraph above —
 % no new WebFetch, only a different schema decoding the unit-to-unit half
 % of an already-verified quote. `trust authoritative` — the same tier
 % `time-units.adj` already carries (NIST, a U.S. federal .gov source).
@@ -54,9 +73,9 @@ table time_unit_composition {
     columns unit, sub_unit, count
 
     row (hour, minute, 60)   % NIST SP 811: 1 h = 60 min = 3600 s
-    row (day, hour, 24)      % NIST SP 811: 1 d = 24 h = 86 400 s
+    row (day, hour, 24)      % NIST SP 811: 1 d = 24 h = 86 400s
 
-    source "1 h = 60 min = 3600 s | 1 d = 24 h = 86 400 s"
+    source "1 h = 60 min = 3600 s | 1 d = 24 h = 86 400s"
     locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-5-units-outside-si"
     trust authoritative
 }
