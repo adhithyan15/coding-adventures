@@ -60,8 +60,14 @@ Task-specific emitted-control acceptance additionally drives the same simple-tod
 lifecycle through the generated UI: create with an optional due date, reveal the
 Rust schedule, complete and reopen, delete, reject malformed input atomically, and
 restore a persisted task in a second process. Compose acceptance also requires the
-Rust-owned `100%` completion progress to remain displayed in the default desktop
-viewport rather than merely existing in an off-screen semantics tree.
+Rust-owned `100%` completion progress to remain displayed rather than merely
+existing in an off-screen semantics tree, and it measures that against a
+**declared** 1280 x 900 desktop window instead of whatever surface size the
+test framework happens to default to (#14771). The same test asserts directly
+that the one- and two-task lifecycle produces **zero** vertical scroll overflow
+in that window, so a layout change that pushes content below the fold fails
+saying so, in pixels, at the stage where it happened.
+
 Those gates all assert the **semantics tree**, not appearance, and they can all
 pass while the app is unreadable — see #14798 for the first actual render and
 what it showed. `TaskAppScreenshots` in the same conformance directory writes

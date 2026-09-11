@@ -3175,7 +3175,15 @@ fn merge_styles(builtin: &str, author: &str) -> String {
         (true, true) => String::new(),
         (false, true) => builtin.to_string(),
         (true, false) => author.to_string(),
-        (false, false) => format!("{builtin}; {author}"),
+        // Trim a separator the left side already carries before adding one
+        // (#14826). Some built-ins end in `;` (`"flex-direction: row;"`) and
+        // some do not (`"flex: 1"`), so joining unconditionally produced
+        // `flex-direction: row;; gap: 8px` on every styled Row and Column.
+        //
+        // Only the JOIN is normalised. A built-in emitted on its own keeps its
+        // trailing `;` exactly as before, which is what the existing output
+        // tests pin.
+        (false, false) => format!("{}; {author}", builtin.trim_end().trim_end_matches(';')),
     }
 }
 
@@ -6857,9 +6865,14 @@ mod tests {
             .unwrap()
             .output;
         assert!(
-            out.contains("display: flex; flex-direction: row;; height: 24px"),
+            out.contains("display: flex; flex-direction: row; height: 24px"),
             "Row built-in style must merge with the part style (built-in first):\n{out}"
         );
+        // The doubled separator this used to assert (`row;; height`) was the
+        // defect in #14826, pinned by reading emitted output rather than by
+        // intent. The claim here is ORDER -- built-in first, so the author
+        // wins a collision -- which is unchanged.
+        assert!(!out.contains(";;"), "doubled separator returned:\n{out}");
     }
 
     /// A `Col [col] ( width: ( w ) )` inside a `For (as: w)` must emit
