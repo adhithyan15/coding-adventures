@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostInput.disabled` (#14786)
+
+`HostInput` had `read-only` but no way to say *unavailable*, so a control the
+toolkit styled as disabled stayed fully interactive. `disabled` now binds as
+its own JSX attribute, separate from `readOnly`: a disabled input is skipped by
+focus and announced as unavailable, a read-only one is not.
+
+Spec: `code/specs/UI58-hostinput-disabled.md` (#14786). Landed on all eight
+backends in one change — a partly-landed prop would make a disabled input
+*less* restricted on whichever backend lagged.
+
 - Bind numeric font sizes on Text, HostButton, HostInput and HostTable after
   authored styles. Invalid live values preserve the fallback; invalid literal
   shapes and unsupported placements fail compilation.

@@ -1991,6 +1991,20 @@ fn emit_host_input(
         }
         _ => {}
     }
+    // disabled: the same shape as `read-only` above, and a DIFFERENT
+    // affordance. A read-only input takes keyboard focus, is selectable, and
+    // announces as "editable text, read only"; a disabled one is skipped by
+    // focus and announces as unavailable. The toolkit had to forward its
+    // `disabled` slot to `read-only` because this did not exist, so three
+    // components claimed disabled semantics and delivered read-only (#14772).
+    match find_prop(node, "disabled") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" disabled"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-disabled=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
     if matches!(find_prop(node, "auto-focus"), Some(LayoutPropValue::Keyword(k)) if k == "true") {
         attrs.push_str(" autofocus");
     }
@@ -7937,6 +7951,34 @@ mod tests {
         // Matching on the state NAME would need the fixture to read
         // `disabled: "disabled"`, which no story would ever write.
         assert!(render("disabled").contains("#adb5bd"), "any truthy string");
+    }
+
+
+    #[test]
+    fn host_input_disabled_is_distinct_from_read_only() {
+        // UI58 — a read-only field takes keyboard focus and announces as
+        // editable-but-read-only; a disabled one is skipped and announces as
+        // unavailable. HostInput had no `disabled` prop, so the toolkit
+        // forwarded its disabled slot to `read-only` (#14772).
+        let l = layout(
+            "F",
+            node_with_props("HostInput", vec![prop_keyword("disabled", "true")]),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(out.contains(" disabled"), "got:\n{out}");
+        // Emitting `readonly` too would be the old conflation.
+        assert!(!out.contains("readonly"), "got:\n{out}");
+
+        let l_false = layout(
+            "F",
+            node_with_props("HostInput", vec![prop_keyword("disabled", "false")]),
+        );
+        let out_false = from_pipeline(&component("F", vec![]), &l_false, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(!out_false.contains(" disabled"), "got:\n{out_false}");
     }
 
 }

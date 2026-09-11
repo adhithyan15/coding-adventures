@@ -3846,6 +3846,21 @@ fn emit_text_input_qml(
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
+    // UI58 — a DIFFERENT affordance from `read-only`: a read-only field takes
+    // keyboard focus and announces as editable-but-read-only; a disabled one
+    // is skipped by focus and announces as unavailable (#14772).
+    //
+    // QML spells it `enabled`, so the slot is negated -- the same polarity
+    // flip HostButton already uses.
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            writeln!(out, "{inner_pad}enabled: !{camel}").unwrap();
+        }
+    } else if find_keyword_prop(node, "disabled") == Some("true") {
+        writeln!(out, "{inner_pad}enabled: false").unwrap();
+    }
+
     match node
         .props
         .iter()
@@ -14549,6 +14564,44 @@ mod tests {
         let out = from_pipeline(&c, &l, &s).expect("emit ok").output;
         assert!(out.contains("palette.windowText:"), "got:\n{out}");
         assert!(!out.contains("palette.buttonText:"), "got:\n{out}");
+    }
+
+    // -------- Test: HostInput `disabled` --------
+
+    /// UI58 — Qt spells availability positively (`enabled`), so the bound
+    /// expression is negated. `readOnly` stays a separate prop: a read-only
+    /// TextInput still takes focus, a disabled one does not (#14772).
+    #[test]
+    fn host_input_disabled_emits_negated_enabled() {
+        let m = component(
+            "X",
+            vec![
+                slot("user-text", SlotType::Text, true),
+                slot("off", SlotType::Bool, false),
+            ],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "value".to_string(),
+                        value: LayoutPropValue::SlotRef("user-text".to_string()),
+                    },
+                    LayoutProp {
+                        name: "disabled".to_string(),
+                        value: LayoutPropValue::SlotRef("off".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("enabled: !off"), "got:\n{out}");
+        assert!(!out.contains("readOnly:"), "got:\n{out}");
     }
 
 }
