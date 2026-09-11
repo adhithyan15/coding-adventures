@@ -1708,6 +1708,7 @@ fn build_package_inner(
     // emitted" can later be told apart from "what a previous build left". Into
     // a fresh directory this is empty and costs one failed `read_dir`.
     let pre_emission = pre_emission_stamps(&backend_dir);
+    begin_write_recording();
 
     // ----- 4. Compile each component (× each variant) ----------------------
     //
@@ -1822,12 +1823,16 @@ fn build_package_inner(
         // step 5 still lands in `backend_dir`.
     }
 
+    // Everything the emitters wrote is recorded by now; the installers below
+    // write too, and their own writes must not count as generated.
+    let written_by_emitters = end_write_recording();
     let (host_asset_artifacts, replaced_generated_files) = install_host_assets(
         &manifest,
         opts.backend,
         &opts.package_root,
         &backend_dir,
         &pre_emission,
+        &written_by_emitters,
     )?;
     artifacts.extend(host_asset_artifacts);
     // After the host assets, so a package that declares both gets the same
@@ -1838,6 +1843,7 @@ fn build_package_inner(
         &opts.package_root,
         &backend_dir,
         &pre_emission,
+        &written_by_emitters,
     )?);
 
     // The explicitly selected engine is the final write to its conventional
@@ -1882,6 +1888,7 @@ fn install_host_effects(
     package_root: &Path,
     backend_dir: &Path,
     pre_emission: &HashMap<PathBuf, FileStamp>,
+    written: &HashSet<PathBuf>,
 ) -> Result<Vec<PathBuf>, BuildError> {
     let backend_name = backend.dir_name();
     // A `[host_effects]` file is a NEW build source by definition, never a
@@ -1909,7 +1916,7 @@ fn install_host_effects(
     {
         return Ok(Vec::new());
     }
-    let generated = generated_files_on_disk(backend_dir, pre_emission)?;
+    let generated = generated_files_on_disk(backend_dir, pre_emission, written)?;
     let canonical_root = package_root
         .canonicalize()
         .map_err(|e| BuildError::Io(format!("canonicalize {}: {e}", package_root.display())))?;
@@ -1992,6 +1999,7 @@ fn install_host_assets(
     package_root: &Path,
     backend_dir: &Path,
     pre_emission: &HashMap<PathBuf, FileStamp>,
+    written: &HashSet<PathBuf>,
 ) -> Result<(Vec<PathBuf>, Vec<String>), BuildError> {
     let backend_name = backend.dir_name();
     // Keyed on the *canonical* path, so the filesystem decides what collides
@@ -2014,7 +2022,7 @@ fn install_host_assets(
     //
     // The directory is the emitter's output, and a future emitter that forgets a
     // `push` cannot break this.
-    let generated = generated_files_on_disk(backend_dir, pre_emission)?;
+    let generated = generated_files_on_disk(backend_dir, pre_emission, written)?;
     let mut written = Vec::new();
     let mut replaced = Vec::new();
     for asset in &manifest.host_assets.files {
@@ -2089,11 +2097,13 @@ fn install_host_assets(
 fn generated_files_on_disk(
     backend_dir: &Path,
     pre_emission: &HashMap<PathBuf, FileStamp>,
+    written: &HashSet<PathBuf>,
 ) -> Result<HashMap<PathBuf, String>, BuildError> {
     fn walk(
         dir: &Path,
         root: &Path,
         pre_emission: &HashMap<PathBuf, FileStamp>,
+        written: &HashSet<PathBuf>,
         found: &mut HashMap<PathBuf, String>,
     ) -> Result<(), BuildError> {
         let entries = match fs::read_dir(dir) {
@@ -2109,24 +2119,41 @@ fn generated_files_on_disk(
                 .file_type()
                 .map_err(|e| BuildError::Io(format!("stat {}: {e}", path.display())))?;
             if file_type.is_dir() {
-                walk(&path, root, pre_emission, found)?;
+                walk(&path, root, pre_emission, written, found)?;
             } else {
                 let relative = path
                     .strip_prefix(root)
                     .map(path_to_web_src)
                     .unwrap_or_else(|_| path_to_web_src(&path));
                 if let Ok(canonical) = fs::canonicalize(&path) {
-                    // Untouched since before emission, so not this build's.
+                    // This build's if it WROTE the file, or if the file changed
+                    // under it. Two mechanisms, deliberately, because each
+                    // covers the other's blind spot:
+                    //
+                    //   - The write record misses a file written by something
+                    //     other than `write_file` -- which is nothing today,
+                    //     and the walk is what keeps that from mattering if it
+                    //     ever stops being nothing.
+                    //   - The stamp misses a rewrite the filesystem cannot
+                    //     distinguish. The emitters are deterministic, so a
+                    //     re-run writes byte-identical content and the length
+                    //     half of the stamp can never differ; mtime is doing
+                    //     all the work alone. On a 1-second-granularity mount
+                    //     (gRPC-FUSE, some NFS and overlay mounts) two
+                    //     back-to-back builds land in the same tick, and every
+                    //     generated file would read as pre-existing -- which
+                    //     would turn a real takeover into `[]`.
                     //
                     // An unreadable stamp counts as CHANGED rather than
                     // unchanged: that keeps the failure direction the one this
                     // field exists for -- over-reporting a replacement is
                     // noisy, missing one is the silent false negative.
+                    let written_by_this_build = written.contains(&canonical);
                     let unchanged = match (pre_emission.get(&canonical), stamp_of(&path)) {
                         (Some(before), Some(now)) => *before == now,
                         _ => false,
                     };
-                    if !unchanged {
+                    if written_by_this_build || !unchanged {
                         found.insert(canonical, relative);
                     }
                 }
@@ -2136,7 +2163,7 @@ fn generated_files_on_disk(
     }
 
     let mut found = HashMap::new();
-    walk(backend_dir, backend_dir, pre_emission, &mut found)?;
+    walk(backend_dir, backend_dir, pre_emission, written, &mut found)?;
     Ok(found)
 }
 
@@ -5182,7 +5209,47 @@ fn write_file(path: &Path, bytes: &[u8]) -> Result<(), BuildError> {
     if let Some(parent) = path.parent() {
         create_dir_all(parent)?;
     }
-    fs::write(path, bytes).map_err(|e| BuildError::Io(format!("write {}: {e}", path.display())))
+    fs::write(path, bytes).map_err(|e| BuildError::Io(format!("write {}: {e}", path.display())))?;
+    record_written(path);
+    Ok(())
+}
+
+thread_local! {
+    /// Canonical paths written during the build running on this thread.
+    ///
+    /// `None` outside a build, so nothing accumulates for callers that use the
+    /// emitters directly.
+    static WRITTEN_THIS_BUILD: std::cell::RefCell<Option<HashSet<PathBuf>>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// Note that this build wrote `path`.
+///
+/// Recorded HERE, in the single write primitive, rather than by each emitter
+/// appending to a returned list. That distinction is the whole point: a list an
+/// emitter has to remember to push to is what an earlier false negative came
+/// from -- `emit_index_file` writes two files and returns one path, so
+/// overwriting the HTML app shell reported nothing. An emitter cannot forget to
+/// do something it does not do.
+fn record_written(path: &Path) {
+    let Ok(canonical) = fs::canonicalize(path) else {
+        return;
+    };
+    WRITTEN_THIS_BUILD.with(|written| {
+        if let Some(set) = written.borrow_mut().as_mut() {
+            set.insert(canonical);
+        }
+    });
+}
+
+/// Start recording writes for a build, discarding anything a previous one left.
+fn begin_write_recording() {
+    WRITTEN_THIS_BUILD.with(|written| *written.borrow_mut() = Some(HashSet::new()));
+}
+
+/// Take what this build wrote, and stop recording.
+fn end_write_recording() -> HashSet<PathBuf> {
+    WRITTEN_THIS_BUILD.with(|written| written.borrow_mut().take().unwrap_or_default())
 }
 
 fn create_dir_all(path: &Path) -> Result<(), BuildError> {
@@ -11622,6 +11689,7 @@ version = "1"
             &root,
             &root.join("out"),
             &HashMap::new(),
+            &HashSet::new(),
         )
         .expect("an in-package source must be copied");
         assert_eq!(written.len(), 1);
@@ -11668,6 +11736,7 @@ version = "1"
             &root,
             &root.join("out"),
             &HashMap::new(),
+            &HashSet::new(),
         )
         .expect_err("a source resolving outside the package must be refused");
         let message = format!("{error:?}");
@@ -11810,6 +11879,7 @@ version = "1"
             &root,
             &root.join("out"),
             &HashMap::new(),
+            &HashSet::new(),
         )
         .expect_err("replacing a generated file must be refused");
         let message = format!("{error:?}");
@@ -11839,6 +11909,7 @@ version = "1"
             &root,
             &root.join("out"),
             &HashMap::new(),
+            &HashSet::new(),
         )
         .expect("a new file must be allowed");
         assert_eq!(written.len(), 1);
@@ -11872,6 +11943,7 @@ version = "1"
             &root,
             &out,
             &HashMap::new(),
+            &HashSet::new(),
         )
         .expect("the first run must succeed");
         assert!(out.join("probe_effects.h").exists());
@@ -11890,6 +11962,7 @@ version = "1"
             &root,
             &out,
             &pre_emission,
+            &HashSet::new(),
         )
         .expect("re-emitting into the same directory must be allowed");
         let _ = fs::remove_dir_all(&root);
@@ -11920,6 +11993,7 @@ version = "1"
             &root,
             &out,
             &pre_emission,
+            &HashSet::new(),
         )
         .expect_err("a target this build generated must still be refused");
         assert!(
@@ -11927,6 +12001,49 @@ version = "1"
             "{error:?}"
         );
         let _ = fs::remove_dir_all(&root);
+    }
+
+    /// A file this build WROTE counts, even when its stamp says otherwise.
+    ///
+    /// This pins the half of the union the stamp cannot cover. The emitters are
+    /// deterministic, so a re-run writes byte-identical content and only the
+    /// mtime distinguishes a rewrite -- and on a 1-second-granularity mount
+    /// (gRPC-FUSE, some NFS and overlay mounts) two back-to-back builds land in
+    /// the same tick. Every generated file would then read as pre-existing, and
+    /// a real takeover would be disclosed as `[]`.
+    ///
+    /// Simulated by handing the walk a stamp map that already matches what is
+    /// on disk, which is exactly what a coarse filesystem produces, rather than
+    /// by trying to force a timestamp collision.
+    #[test]
+    fn a_file_this_build_wrote_counts_even_if_its_stamp_looks_unchanged() {
+        let root = scratch();
+        let out = root.join("out");
+        fs::create_dir_all(&out).expect("create the output directory");
+        let generated_path = out.join("main.cpp");
+        fs::write(&generated_path, b"// generated\n").expect("write it");
+        let canonical = fs::canonicalize(&generated_path).expect("canonicalize");
+
+        // The stamp says nothing changed -- the coarse-filesystem case.
+        let mut pre_emission = HashMap::new();
+        pre_emission.insert(canonical.clone(), stamp_of(&generated_path).expect("stamp"));
+
+        let blind = generated_files_on_disk(&out, &pre_emission, &HashSet::new())
+            .expect("walk the output directory");
+        assert!(
+            blind.is_empty(),
+            "the stamp alone cannot see this rewrite -- that is the blind spot: {blind:?}"
+        );
+
+        // The write record can.
+        let written: HashSet<PathBuf> = [canonical].into_iter().collect();
+        let seen = generated_files_on_disk(&out, &pre_emission, &written)
+            .expect("walk the output directory");
+        assert_eq!(
+            seen.len(),
+            1,
+            "a file this build wrote must count regardless of its stamp: {seen:?}"
+        );
     }
 
     /// A file left by a PREVIOUS build and untouched by this one is not this
@@ -11942,17 +12059,26 @@ version = "1"
         fs::write(out.join("leftover.h"), b"// from a previous run\n").expect("write it");
 
         let pre_emission = pre_emission_stamps(&out);
-        let generated =
-            generated_files_on_disk(&out, &pre_emission).expect("walk the output directory");
+        let generated = generated_files_on_disk(&out, &pre_emission, &HashSet::new())
+            .expect("walk the output directory");
         assert!(
             generated.is_empty(),
             "an untouched leftover must not count as generated: {generated:?}"
         );
 
-        // Rewrite it with different content, as an emitter would, and it counts.
-        fs::write(out.join("leftover.h"), b"// rewritten by this build\n").expect("rewrite it");
-        let generated =
-            generated_files_on_disk(&out, &pre_emission).expect("walk the output directory");
+        // Rewritten with content of the SAME LENGTH, deliberately.
+        //
+        // The emitters are deterministic, so a re-run writes byte-identical
+        // content and the length half of the stamp can never differ -- mtime is
+        // the only half doing work. A fixture that changes the length passes on
+        // the inert half and leaves the real discriminator unpinned, which is
+        // what the first version of this test did.
+        let before = fs::metadata(out.join("leftover.h")).expect("stat").len();
+        fs::write(out.join("leftover.h"), b"// rewritten by build!\n").expect("rewrite it");
+        let after = fs::metadata(out.join("leftover.h")).expect("stat").len();
+        assert_eq!(before, after, "the rewrite must not change the length");
+        let generated = generated_files_on_disk(&out, &pre_emission, &HashSet::new())
+            .expect("walk the output directory");
         assert_eq!(
             generated.len(),
             1,

@@ -50,10 +50,29 @@ generated README tells people to do.
 
 #### The fix, and what it deliberately does not do
 
-The directory is stamped before emission begins; a file counts as this build's
-if it was absent then, or if its `(mtime, length)` changed. Each file is
-compared against **its own** earlier stamp rather than against a wall-clock
-fence, which keeps it independent of clock skew and of timestamp granularity.
+A file counts as this build's if **either** the build wrote it, or it changed
+under the build. Two mechanisms, because each covers the other's blind spot.
+
+The write record is kept in `write_file` itself, the single primitive every byte
+reaching the output goes through. The directory is also stamped before emission
+begins, and a file whose `(mtime, length)` is unchanged since then is excluded;
+each file is compared against **its own** earlier stamp rather than a wall-clock
+fence, which keeps that half free of clock skew.
+
+**The second mechanism is not redundant, and the first version of this shipped
+without it.** Security review pointed out that the `length` half of the stamp is
+inert: the emitters are deterministic, so a re-run writes byte-identical content
+and lengths match by construction. Mtime was doing the work alone — and on a
+1-second-granularity mount (gRPC-FUSE, some NFS and overlay mounts) two
+back-to-back builds land in the same tick, at which point *every* generated file
+reads as pre-existing and a genuine takeover would be disclosed as `[]`. Content
+hashing cannot help here for the same reason the length cannot: the bytes are
+supposed to be identical.
+
+Recording in `write_file` rather than having each emitter append to a returned
+list is the point, not an implementation detail. That list is where the earlier
+false negative came from, and an emitter cannot forget to do something it does
+not do.
 
 It stays a directory walk. Replacing the walk with a list the emitters push to
 was the obvious fix and is the wrong one: that list is what an earlier bug came
@@ -75,10 +94,18 @@ loosening as well as against reverting:
 | --- | --- |
 | presence means generated (the old behaviour) | the 2 re-run tests |
 | nothing counts as generated | 7 tests, including every replacement-refusal and disclosure test |
+| drop the write-record half of the union | `a_file_this_build_wrote_counts_even_if_its_stamp_looks_unchanged` |
 
-Three tests added, covering what no existing test could: a second emit into the
-same directory succeeds; a file this build actually wrote is still refused; and
-an untouched leftover is not generated while a rewritten one is.
+Four tests added, covering what no existing test could: a second emit into the
+same directory succeeds; a file this build actually wrote is still refused; an
+untouched leftover is not generated while a rewritten one is; and a file this
+build wrote counts even when its stamp claims otherwise.
+
+One of them was vacuous first time round and is worth recording as such: the
+leftover test rewrote its fixture from 23 bytes to 27, so it passed on the inert
+`length` half and never exercised the mtime comparison at all. It now rewrites
+to the same length with different content, which is the shape a real re-run
+produces.
 
 ### Added — SwiftUI wires a package's `[host_effects]` handler
 
