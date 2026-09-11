@@ -1,0 +1,15 @@
+{
+  "id": "GU-EXT-051-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Gujarati signboard word, a line I have only said aloud, and a whole meeting on the page, without translating word by word.",
+  "prerequisites": [
+    "GU-EXT-050-CARDINALS-SIX-TO-TEN"
+  ],
+  "lessons": [
+    "GU-C44-words",
+    "GU-C44-lines",
+    "GU-C44-pehli-vanchan"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "chapter": 44,
+  "title": "Reading — Six Words, Six Lines, and a Whole Meeting",
+  "label": "ch:gu-pehli-vanchan",
+  "canDo": "I can read Gujarati off a signboard, read six lines I have only ever said aloud, and follow a whole meeting on the page without translating it word by word.",
+  "payoff": {
+    "lesson": "GU-C44-pehli-vanchan",
+    "kind": "four-skill-function-map",
+    "summary": "The greetings, the repair and the parting the book taught first, read in the order two people would actually use them, with no new word in them.",
+    "assesses": [
+      "GU-SKILL-CONNECTED-READING",
+      "GU-SKILL-READ-LINES",
+      "GU-SKILL-READ-WORDS"
+    ]
+  }
+}

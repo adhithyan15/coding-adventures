@@ -4,7 +4,7 @@
   "finding": {
     "language": "gujarati",
     "kind": "reinforcement",
-    "count": 360,
+    "count": 359,
     "unit": "missed window(s)",
     "detail": "add retrieval at the expanding R1-R4 intervals"
   }
