@@ -145,11 +145,30 @@ fn manifest_declares_app_package_boundary() {
         .expect("Qt must declare an effect handler");
     assert_eq!(qt_handler.install, "installEngramEffects");
     assert_eq!(qt_handler.include.as_deref(), Some("engram_effects.h"));
-    assert!(host_assets.contains(&(
-        "swiftui",
-        "host/swiftui/MosaicHost.swift",
-        "Sources/App/MosaicHost.swift"
-    )));
+
+    let swiftui_handler = package
+        .host_effects
+        .handlers
+        .iter()
+        .find(|handler| handler.backend == "swiftui")
+        .expect("SwiftUI must declare an effect handler");
+    assert_eq!(swiftui_handler.install, "installEngramEffects");
+    // No `include`, unlike Qt: Swift has no header, and every file in the
+    // module is visible to every other.
+    assert_eq!(swiftui_handler.include, None);
+
+    // SwiftUI no longer declares a `[host_assets]` override. Asserted absent
+    // rather than simply deleted, for the same reason the CI lane pins
+    // `replacedGeneratedFiles` to `[]`: a package that starts overriding the
+    // generated host again has undone this migration, and that should fail
+    // here rather than pass quietly.
+    assert!(
+        !host_assets
+            .iter()
+            .any(|(backend, _, _)| *backend == "swiftui"),
+        "SwiftUI must not override a generated file; it reaches the engine \
+         through the standard runtime and answers dialogs through [host_effects]"
+    );
     assert!(host_assets.contains(&(
         "compose",
         "host/compose/MosaicHost.kt",
@@ -2014,14 +2033,24 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift_app, "@objc protocol MosaicHostBridgeObject");
     assert_contains(&swift_app, "[\"App.MosaicHost\", \"MosaicHost\"]");
     assert_contains(&swift_app, "NSClassFromString(className)");
+    // The override is gone; the effect handler is what ships now.
     assert!(
-        tmp.path()
+        !tmp.path()
             .join("swiftui")
             .join("Sources")
             .join("App")
             .join("MosaicHost.swift")
             .exists(),
-        "swiftui host adapter should be installed from manifest assets"
+        "the retired SwiftUI override must not be installed"
+    );
+    assert!(
+        tmp.path()
+            .join("swiftui")
+            .join("Sources")
+            .join("App")
+            .join("EngramEffects.swift")
+            .exists(),
+        "the SwiftUI effect handler should be installed from [host_effects]"
     );
     let swift_package = fs::read_to_string(tmp.path().join("swiftui").join("Package.swift"))
         .expect("Package.swift");
@@ -2675,7 +2704,9 @@ fn source_tree_has_expected_shape() {
         // Qt-specific file left is the effect handler below.
         "host/qt/engram_effects.h",
         "host/qt/engram_effects.cpp",
-        "host/swiftui/MosaicHost.swift",
+        // And SwiftUI's `MosaicHost.swift` used to be here, retired the same
+        // way and for the same reasons.
+        "host/swiftui/EngramEffects.swift",
         "host/compose/MosaicHost.kt",
         "host/flutter/mosaic_host.dart",
         "host/xaml/MosaicHost.cs",
@@ -2774,34 +2805,54 @@ fn source_tree_has_expected_shape() {
     assert_contains(&electron_host, "hostStatusProps(result.hostResult)");
     assert_contains(&electron_host, "hostStatusVisible: true");
 
-    let swiftui_host = fs::read_to_string(package_root().join("host/swiftui/MosaicHost.swift"))
-        .expect("swiftui host template");
-    assert_contains(&swiftui_host, "MosaicHostBridgeObject");
-    assert_contains(&swiftui_host, "eg_engram_app_props");
-    assert_contains(&swiftui_host, "eg_handle_engram_app_event");
-    assert_contains(&swiftui_host, "hostResponseDictionary");
-    assert_contains(&swiftui_host, "import AppKit");
-    assert_contains(&swiftui_host, "handleHostIntent");
-    assert_contains(&swiftui_host, "importAnkiPackage");
-    assert_contains(&swiftui_host, "exportAnkiPackage");
-    assert_contains(&swiftui_host, "NSOpenPanel");
-    assert_contains(&swiftui_host, "NSSavePanel");
-    assert_contains(&swiftui_host, "eg_merge_anki_apkg");
-    assert_contains(&swiftui_host, "eg_export_anki_apkg");
-    assert_contains(&swiftui_host, "\"hostIntent\"");
-    assert_contains(&swiftui_host, "\"hostResult\"");
-    assert_contains(&swiftui_host, "\"props\"");
-    assert_contains(&swiftui_host, "ENGRAM_SNAPSHOT_PATH");
-    assert_contains(&swiftui_host, "mosaic-snapshot.v1.json");
-    assert_contains(&swiftui_host, "hydrateSession");
-    assert_contains(&swiftui_host, "persistSnapshot");
-    assert_contains(&swiftui_host, "eg_snapshot");
-    assert_contains(&swiftui_host, "eg_load_snapshot");
-    assert_contains(&swiftui_host, "withHostStatusProps");
-    assert_contains(&swiftui_host, "\"host-status-visible\": true");
-    assert_contains(&swiftui_host, "hostResult[\"error\"] = error");
-    assert_contains(&swiftui_host, "Could not import \\(subject): \\(error)");
-    assert_contains(&swiftui_host, "Could not export Anki package: \\(error)");
+    // SwiftUI's 26 assertions used to read the `engram-capi` binding here,
+    // checking for `eg_engram_app_props`, `hydrateSession`, `ENGRAM_SNAPSHOT_PATH`
+    // and the rest. That file is retired for the same reasons Qt's was: props,
+    // events, snapshot and restore go through `engram-mosaic-app` and the
+    // standard binding, so asserting on it would have been testing text nothing
+    // builds.
+    //
+    // What replaces it is narrower because the file is: the handler answers two
+    // effects and does nothing else.
+    let swiftui_effects =
+        fs::read_to_string(package_root().join("host/swiftui/EngramEffects.swift"))
+            .expect("swiftui effect handler");
+    assert_contains(&swiftui_effects, "func installEngramEffects");
+    assert_contains(&swiftui_effects, "host.effectHandler =");
+    assert_contains(&swiftui_effects, "NSOpenPanel");
+    assert_contains(&swiftui_effects, "NSSavePanel");
+    assert_contains(&swiftui_effects, "importAnki");
+    assert_contains(&swiftui_effects, "exportAnki");
+    // All three outcomes, because a handler that only ever answers `ok` leaves
+    // a cancelled dialog looking like a hang.
+    assert_contains(&swiftui_effects, "completeEffect");
+    assert_contains(&swiftui_effects, "cancelledOutcome");
+    assert_contains(&swiftui_effects, "failedOutcome");
+    // DEFERRED, which is where SwiftUI parts company with Qt. Qt answers inline
+    // under `Qt::DirectConnection` because its settle runs on the event-loop
+    // thread. This host holds its lock across the handler call and does not
+    // guarantee the main thread, so a modal panel run inline would both be
+    // invalid (`runModal()` off-main) and block `applyProps()`, which SwiftUI
+    // calls every frame.
+    assert_contains(&swiftui_effects, "host.deferEffect(id)");
+    assert_contains(&swiftui_effects, "DispatchQueue.main.async");
+    // Weak capture: a strong one cycles through `effectHandler`, so `deinit`
+    // never runs, the Rust app handle is never destroyed, and the final persist
+    // never happens.
+    assert_contains(&swiftui_effects, "[weak host]");
+    // Absolute anchors. ICU's `$` concedes a trailing line terminator, so
+    // `^...$` would accept `"apkg\\n"` -- a glob that matches no file and
+    // reports no reason. See the Qt handler, which had exactly this bug.
+    assert_contains(&swiftui_effects, "\\\\A\\\\.?[A-Za-z0-9_-]{1,16}\\\\z");
+    // Strict base64, and the separate empty check: `Data(base64Encoded:)`
+    // reports SUCCESS for input that decodes to nothing, so without it a
+    // zero-byte package would be written out as a real `.apkg`.
+    assert_contains(&swiftui_effects, "Data(base64Encoded: encoded, options: [])");
+    assert_contains(&swiftui_effects, "decoded.isEmpty");
+    // The read is bounded before the file is opened, matching Qt and the
+    // 256 MiB the package layer accepts on native targets.
+    assert_contains(&swiftui_effects, "maxImportBytes");
+    assert_contains(&swiftui_effects, "FileAttributeType");
 
     // Qt's assertions used to read the 654-line `engram-capi` binding here,
     // checking for `eg_engram_app_props`, `QLibrary`, `mosaicPropName` and the

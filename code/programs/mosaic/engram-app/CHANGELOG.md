@@ -2,6 +2,84 @@
 
 ## Unreleased
 
+### Changed — SwiftUI reaches the engine through the standard Mosaic runtime
+
+The second backend to make this migration, after Qt (#13728). Engram's SwiftUI
+project no longer overrides the generated `MosaicHost`: props, events, snapshot
+and restore go through `engram-mosaic-app` and the standard binding, and the
+only SwiftUI-specific file left is `host/swiftui/EngramEffects.swift`, which
+answers the Anki import and export effects with `NSOpenPanel` and `NSSavePanel`.
+
+It emits with **`nativeComplete: true`, zero degradations, and an empty
+`replacedGeneratedFiles`**, and the emitted project builds — the same
+definition-of-done UI47 §5.5.5 sets for Qt.
+
+#### Deferred, not inline — where SwiftUI parts company with Qt
+
+The Qt handler answers effects in place under `Qt::DirectConnection`, and
+mirroring that here would have been wrong twice over. `settleEffects` is not
+guaranteed to run on the main thread and `runModal()` off-main is invalid; and
+the host's lock is **held across the handler call**, so a modal panel run inline
+would block `applyProps()` — which SwiftUI calls every frame — for as long as
+the dialog stayed open. The documented escape, `DispatchQueue.main.sync`, is
+precisely the wedge the host warns against.
+
+So each dialog takes ownership with `deferEffect`, which keeps the effect out of
+the fail sweep, and answers from the main thread when the person is done. Qt is
+the outlier here, not the template: SwiftUI, Compose, Flutter and XAML all hold
+a lock across the handler and all expose `deferEffect` for exactly this case.
+
+That inverts the risk, so the code is shaped for it. A deferred effect has left
+the fail sweep, so a path that forgets to answer no longer degrades to "failed"
+— it wedges the app permanently, because the runtime gates snapshot and restore
+on nothing being pending. The dialog functions therefore *return* an outcome
+rather than answering, so every path funnels to exactly one `completeEffect`.
+
+#### Twenty-six substring assertions retired with the file
+
+They read the `engram-capi` binding — `eg_engram_app_props`, `hydrateSession`,
+`ENGRAM_SNAPSHOT_PATH` and the rest. None of that ships for SwiftUI now, so
+they were testing text nothing builds, exactly as Qt's sixteen were.
+
+What replaces them is narrower because the file is. They cover all three
+outcomes (a handler that only ever answers `ok` leaves a cancelled dialog
+looking like a hang), the deferral pair, the weak capture, and the two checks
+below. The manifest test also asserts SwiftUI declares **no** `[host_assets]`
+override — asserted absent rather than merely deleted, for the same reason the
+CI lane pins `replacedGeneratedFiles` to `[]`.
+
+#### Two checks that came from the Qt handler's history
+
+**Absolute regex anchors.** The extension filter uses `\A`/`\z`, not `^`/`$`.
+ICU's `$` concedes a trailing line terminator — LF, CRLF, CR, U+2028, U+2029 and
+NEL — so `^...$` would accept `"apkg\n"`, and
+`UTType(filenameExtension: "apkg\n")` does not return nil but a *dynamic* type
+matching no file. The panel would open with a filter hiding everything and
+report no reason. The Qt handler had this exact bug; it is fixed there too.
+
+**A separate empty check after base64 decoding.** `Data(base64Encoded:)` reports
+success for input that decodes to nothing, so without it a zero-byte package
+would be written out as a real `.apkg` and reported as an ok outcome. This is
+the same silent-success shape as Qt's `QFile` flush-on-destruction case.
+
+#### Verification
+
+Built locally end to end, not only asserted over text: the emitted project
+compiles with `swift build`, `mosaic-degradations.json` reports
+`nativeComplete: true` with no degradations and no replaced files, and the
+install lands at `App.swift:294`, immediately after the bridge assignment at
+`:292` — which is the `loadRequired(libraryPath:)` form the bundled-runtime
+rewrite produces, and the reason the emitter anchors on `self.bridge = ` rather
+than the whole call.
+
+A new CI step runs the same sequence on macOS and adds a positional assertion
+that the install sits inside `MosaicHostState` after the bridge assignment.
+That step is load-bearing rather than belt-and-braces: SwiftPM compiles every
+file under `Sources/App`, so a handler that is copied but never installed still
+compiles, links and ships, with no missing symbol and no diagnostic — the first
+symptom would be an `Await` going unanswered at runtime and taking the session's
+persistence with it.
+
 ### Changed — Qt reaches the engine through the standard Mosaic runtime (#13728)
 
 Engram's Qt project no longer overrides the generated `MosaicHost`. Props,
