@@ -5,7 +5,7 @@
 //     HostInput [ field-input ] (
 //       value: slot: value ,
 //       placeholder: slot: placeholder ,
-//       read-only: slot: disabled ,
+//       disabled: slot: disabled ,
 //       onChange: emit: onChange ,
 //       onCommit: emit: onCommit ,
 //     )
@@ -29,7 +29,7 @@ layout Field {
     HostInput [ field-input ] (
       value : slot: value ,
       placeholder : slot: placeholder ,
-      read-only : slot: disabled ,
+      disabled : slot: disabled ,
       onChange : emit: onChange ,
       onCommit : emit: onCommit
     )
