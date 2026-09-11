@@ -2996,30 +2996,55 @@ fn line_anchored_find(haystack: &str, needle: &str) -> Option<usize> {
 const SWIFT_DECLARATION_MODIFIERS: [&str; 5] =
     ["private", "fileprivate", "internal", "public", "final"];
 
-/// Find a type declaration, rather than any mention of its name.
+/// Find a type declaration, rather than any mention of its name -- and refuse an
+/// ambiguous one.
 ///
 /// `line_anchored_find` is too strict for a declaration: `class MosaicHostState`
 /// is preceded on its line by `private final`. Accepting an arbitrary prefix is
 /// too loose -- that is a bare `find` again. So accept exactly a prefix made of
-/// declaration modifiers.
+/// declaration modifiers, and require the result to be UNIQUE.
 ///
-/// This matters more than it looks. Scoping the effect install to the host class
-/// is one of the two guards keeping author-controlled text from capturing the
-/// anchor, and until this existed that guard used a bare `find`. Its safety then
-/// rested on a fact in ANOTHER crate: `escape_swift_string` passes raw newlines
-/// through, so a line-leading decoy can only occur in a project that already
-/// fails to compile. True today, but nothing states it as a contract, and an
-/// emitter that adopted `"""` literals for slot defaults would quietly remove
-/// it. Anchoring here means this crate no longer depends on that.
-fn declaration_anchored_find(haystack: &str, needle: &str) -> Option<usize> {
-    find_anchored(haystack, needle, |prefix| {
+/// Uniqueness is the part that carries weight, and it is worth being precise
+/// about why, because the obvious claim is false. Anchoring alone does NOT make
+/// this crate independent of `mosaic-emit-swiftui`: `escape_swift_string` passes
+/// raw newlines through, so a package author whose slot default contains
+/// `"\npublic final class MosaicHostState"` produces a line whose prefix is
+/// `public final ` -- which this predicate accepts, exactly like the real one. A
+/// forged declaration is byte-identical to a genuine one, so no lexical test can
+/// tell them apart, and a stricter prefix rule would only move the bar again.
+///
+/// What uniqueness buys is the failure DIRECTION. A second acceptable
+/// declaration is refused rather than silently preferred, so the worst an author
+/// can do is fail their own build loudly -- never redirect the install into a
+/// location of their choosing. That is a property of this function, checkable
+/// here, rather than an assumption about another crate's escaping.
+fn declaration_anchored_find(
+    haystack: &str,
+    needle: &str,
+) -> Result<Option<usize>, DeclarationAmbiguity> {
+    // `split_ascii_whitespace`, matching `line_anchored_find`: `split_whitespace`
+    // splits on the Unicode White_Space set, which is the very set the sibling
+    // helper was tightened away from. Inheriting it here would have left the two
+    // disagreeing about what counts as a separator.
+    let matches = find_all_anchored(haystack, needle, |prefix| {
         prefix
-            .split_whitespace()
+            .split_ascii_whitespace()
             .all(|word| SWIFT_DECLARATION_MODIFIERS.contains(&word))
-    })
+    });
+    match matches.len() {
+        0 => Ok(None),
+        1 => Ok(Some(matches[0])),
+        count => Err(DeclarationAmbiguity { count }),
+    }
 }
 
-/// Find `needle` where the text before it on its own line satisfies `prefix_ok`.
+/// More than one acceptable declaration of the same type name.
+#[derive(Debug)]
+struct DeclarationAmbiguity {
+    count: usize,
+}
+
+/// Find every `needle` whose preceding text on its own line satisfies `prefix_ok`.
 ///
 /// A bare `find` takes the first occurrence anywhere, and these generators
 /// interleave scaffolding with AUTHOR text: a SwiftUI app embeds every slot
@@ -3028,19 +3053,27 @@ fn declaration_anchored_find(haystack: &str, needle: &str) -> Option<usize> {
 /// default containing that substring would match first, and the install would
 /// be spliced into the middle of a view-builder argument list.
 ///
-/// Constraining what may precede the match rules that out: an interpolated
-/// literal always carries something ahead of it on the same line.
-fn find_anchored(haystack: &str, needle: &str, prefix_ok: impl Fn(&str) -> bool) -> Option<usize> {
+/// Constraining what may precede the match rules out the common shape: an
+/// interpolated literal carries something ahead of it on the same line.
+fn find_all_anchored(haystack: &str, needle: &str, prefix_ok: impl Fn(&str) -> bool) -> Vec<usize> {
+    let mut found = Vec::new();
     let mut from = 0;
     while let Some(offset) = haystack[from..].find(needle) {
         let at = from + offset;
         let line_start = haystack[..at].rfind('\n').map_or(0, |index| index + 1);
         if prefix_ok(&haystack[line_start..at]) {
-            return Some(at);
+            found.push(at);
         }
         from = at + needle.len();
     }
-    None
+    found
+}
+
+/// The first `needle` whose preceding text on its own line satisfies `prefix_ok`.
+fn find_anchored(haystack: &str, needle: &str, prefix_ok: impl Fn(&str) -> bool) -> Option<usize> {
+    find_all_anchored(haystack, needle, prefix_ok)
+        .into_iter()
+        .next()
 }
 
 /// Install a package's effect handler in the generated Qt entry point.
@@ -3171,7 +3204,21 @@ fn swift_app_with_host_effects(
     // there as a Swift string literal escaped only for `\` and `"`. An author
     // string carrying this substring would match first, and the install would
     // land inside a view-builder argument list.
-    let Some(class_start) = declaration_anchored_find(generated, "class MosaicHostState") else {
+    let class_match =
+        declaration_anchored_find(generated, "class MosaicHostState").map_err(|ambiguity| {
+            // Refusing beats choosing. A second acceptable declaration means
+            // something other than the emitter produced one -- in practice a
+            // package author's slot default carrying a raw newline -- and
+            // picking either one would be silently installing the handler
+            // somewhere nobody chose.
+            BuildError::Io(format!(
+                "`[host_effects]` declares a SwiftUI handler `{}`, but the generated \
+                 app declares `MosaicHostState` {} times; refusing to guess which one \
+                 to install it in",
+                handler.install, ambiguity.count
+            ))
+        })?;
+    let Some(class_start) = class_match else {
         return Err(BuildError::Io(format!(
             "`[host_effects]` declares a SwiftUI handler `{}`, but the generated \
              app has no `MosaicHostState` to install it in",
@@ -12003,24 +12050,31 @@ version = "1"
         );
     }
 
-    /// An author string cannot forge the CLASS marker either.
+    /// A forged class marker cannot REDIRECT the install -- it fails the build.
     ///
-    /// This is the guard that used to be a bare `find`. Its safety then rested
-    /// on `escape_swift_string` (another crate) passing raw newlines through,
-    /// so that a line-leading decoy could only exist in a project that already
-    /// failed to compile. That is true today and stated nowhere, so this pins
-    /// it here instead of depending on it.
+    /// The honest framing, after a review corrected an earlier claim here.
+    /// `escape_swift_string` in `mosaic-emit-swiftui` passes raw newlines
+    /// through, so a slot default of `"\npublic final class MosaicHostState"`
+    /// puts a line into the generated app whose prefix is `public final ` --
+    /// which the declaration predicate accepts, exactly like the genuine one.
+    /// A forgery is byte-identical to the real thing; no lexical test separates
+    /// them, and tightening the prefix rule would only move the bar.
+    ///
+    /// So the guarantee is about DIRECTION, not detection: two acceptable
+    /// declarations are refused rather than silently preferred. The author can
+    /// break their own build; they cannot steer the install.
     #[test]
-    fn an_author_string_cannot_forge_the_class_marker() {
-        // Forging the class marker ALONE only widens the search window: the
-        // install still lands on the real assignment further down, so a
-        // one-decoy fixture cannot tell a bare `find` from an anchored one.
-        // The attack needs both halves -- a forged marker, and a line-leading
-        // assignment decoy inside the window it opens.
+    fn a_forged_class_marker_fails_the_build_rather_than_redirecting() {
         let app = concat!(
             "struct MosaicApp: App {\n",
-            "let note = class MosaicHostState fake\n",
+            "  var body: some Scene {\n",
+            // What a slot default carrying a raw newline produces. Note the
+            // prefix is a legitimate modifier run -- the predicate accepts it.
+            "    ProbeView(title: \"\n",
+            "public final class MosaicHostState\n",
             "self.bridge = decoy\n",
+            "\")\n",
+            "  }\n",
             "}\n",
             "\n",
             "private final class MosaicHostState: ObservableObject {\n",
@@ -12029,15 +12083,25 @@ version = "1"
             "  }\n",
             "}\n",
         );
-        let wired = swift_app_with_host_effects(app, &swiftui_handler())
-            .expect("the real declaration must still be found");
-        let real = wired
-            .find("private final class MosaicHostState")
-            .expect("real declaration");
-        let install = wired.find("installProbeEffects").expect("install");
+        let error = swift_app_with_host_effects(app, &swiftui_handler())
+            .expect_err("an ambiguous declaration must fail the build, not pick one");
+        let message = format!("{error:?}");
         assert!(
-            real < install,
-            "the install must follow the real declaration, not a forged marker:\n{wired}"
+            message.contains("2 times") && message.contains("installProbeEffects"),
+            "the error must say what was ambiguous and for which handler: {message}"
+        );
+    }
+
+    /// The forgery is accepted by the PREDICATE -- which is why uniqueness, not
+    /// the predicate, is what makes the guard hold.
+    #[test]
+    fn the_declaration_predicate_alone_does_not_detect_a_forgery() {
+        let forged = "public final class MosaicHostState\n";
+        assert!(
+            declaration_anchored_find(forged, "class MosaicHostState")
+                .expect("a single match is not ambiguous")
+                .is_some(),
+            "a forged declaration is byte-identical to a real one and IS accepted"
         );
     }
 
@@ -12047,15 +12111,27 @@ version = "1"
         for prefix in ["", "final ", "private ", "private final ", "public final "] {
             let text = format!("{prefix}class Host {{\n");
             assert!(
-                declaration_anchored_find(&text, "class Host").is_some(),
+                declaration_anchored_find(&text, "class Host")
+                    .expect("one match is not ambiguous")
+                    .is_some(),
                 "modifier prefix {prefix:?} must be accepted"
             );
         }
-        // And nothing that is not a modifier.
-        for prefix in ["let x = \"", "  return \"", "foo(", "// "] {
+        // And nothing that is not a modifier -- including the Unicode spaces
+        // the sibling helper was tightened away from, so the two agree.
+        for prefix in [
+            "let x = \"",
+            "  return \"",
+            "foo(",
+            "// ",
+            "\u{a0}",
+            "\u{2028}",
+        ] {
             let text = format!("{prefix}class Host\n");
             assert!(
-                declaration_anchored_find(&text, "class Host").is_none(),
+                declaration_anchored_find(&text, "class Host")
+                    .expect("one candidate is not ambiguous")
+                    .is_none(),
                 "non-declaration prefix {prefix:?} must be rejected"
             );
         }

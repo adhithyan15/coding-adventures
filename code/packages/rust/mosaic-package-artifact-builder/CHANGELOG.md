@@ -45,23 +45,45 @@ split — each mutation fails exactly one test and leaves the others green:
 
 | mutation | fails |
 | --- | --- |
-| drop the line-leading requirement | `a_non_line_leading_decoy_inside_the_class_is_skipped` |
+| drop the line-leading requirement | `a_non_line_leading_decoy_inside_the_class_is_skipped` (+2 unit tests) |
 | search the whole file, unscoped | `a_line_leading_decoy_before_the_class_is_skipped` |
-| find the class with a bare `find` | `an_author_string_cannot_forge_the_class_marker` |
+| find the class with a bare `find` | `a_forged_class_marker_fails_the_build_rather_than_redirecting` |
+| prefer the first declaration instead of refusing | `a_forged_class_marker_fails_the_build_rather_than_redirecting` |
 
-That third guard is new, and replaces a dependency with a check. The class was
-previously located by a bare `find`, whose safety rested on a fact in *another*
-crate: `mosaic-emit-swiftui`'s `escape_swift_string` passes raw newlines through,
-so a line-leading decoy can only occur in a project that already fails to
-compile. True today, stated nowhere as a contract, and silently removed by any
-emitter change adopting `"""` literals for slot defaults. `class MosaicHostState`
-is now required to be preceded on its line by nothing but Swift declaration
-modifiers, so this crate no longer rests on that.
+The last two coincide because a bare `find` discards both the prefix predicate
+and the uniqueness check, and it is uniqueness that the test is really pinning —
+which is the point of the paragraph above. Each row was run, not predicted; an
+earlier draft of this table attributed the third row to the wrong test.
 
-Forging the class marker alone only *widens* the search window rather than
-moving the install, so the test for it carries both halves of the attack — a
-forged marker and a line-leading assignment decoy inside the window it opens.
-The one-decoy version of that fixture passed against a bare `find`.
+That third guard is new, and the honest statement of what it buys is narrower
+than the one first written here.
+
+`class MosaicHostState` must now be preceded on its line by nothing but Swift
+declaration modifiers — but that does **not** make this crate independent of
+`mosaic-emit-swiftui`, which is what an earlier draft of this entry claimed. A
+security review caught it. `escape_swift_string` passes raw newlines through, so
+a package author whose slot default contains `"\npublic final class
+MosaicHostState"` puts a line into the generated app with the prefix
+`public final ` — accepted by the predicate, exactly like the genuine one. A
+forged declaration is byte-identical to a real one. No lexical test separates
+them, and a stricter prefix rule would only move the bar again.
+
+So the guarantee is about the failure **direction**, and it comes from requiring
+the declaration to be *unique*. A second acceptable declaration is refused rather
+than silently preferred, which means the worst a package author can do is fail
+their own build loudly — never redirect the install into a location of their
+choosing. That is a property of this crate, checkable here, instead of an
+assumption about another crate's escaping.
+
+Two tests carry the pair: one asserts the ambiguous app is refused and names both
+declarations in the error, the other asserts the predicate *does* accept the
+forgery — because the predicate is not what makes this hold, and a test implying
+otherwise would mislead the next reader.
+
+Forging the marker alone only *widens* the search window rather than moving the
+install, so a one-decoy fixture cannot tell a bare `find` from an anchored one;
+the first version of that test passed against the mutation it was written to
+catch.
 
 `line_anchored_find` also now uses `is_ascii_whitespace` rather than
 `char::is_whitespace`: the Unicode White_Space set includes U+2028, U+2029 and
