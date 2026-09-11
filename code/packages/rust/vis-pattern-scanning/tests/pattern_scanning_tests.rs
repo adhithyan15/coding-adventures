@@ -1,4 +1,4 @@
-use vis_pattern_scanning::{find_pattern_candidates, scan_line};
+use vis_pattern_scanning::{find_pattern_candidates, scan_line, MAX_TOLERANCE};
 
 // ---------------------------------------------------------------------
 // scan_line: exact and tolerant matches
@@ -131,6 +131,33 @@ fn scan_line_all_zero_ratio_yields_no_matches_not_division_by_zero() {
     let line = [true, false, true, true, true, false, true];
     let matches = scan_line(&line, &[0, 0, 0, 0, 0], 0.5);
     assert!(matches.is_empty());
+}
+
+#[test]
+fn scan_line_infinite_tolerance_yields_no_matches() {
+    // An unbounded tolerance would otherwise make every foreground-
+    // starting window "match" regardless of its actual proportions --
+    // a would-be algorithmic-complexity footgun for
+    // find_pattern_candidates on a large, caller-controlled bitmap.
+    // A line with several dark runs, none shaped like 1:1:3:1:1, to
+    // prove infinite tolerance isn't silently accepting everything.
+    let line = [true, true, true, true, true, true, true, true, true];
+    let matches = scan_line(&line, &[1, 1, 3, 1, 1], f64::INFINITY);
+    assert!(matches.is_empty());
+}
+
+#[test]
+fn scan_line_tolerance_above_max_yields_no_matches() {
+    let line = [true, false, true, true, true, false, true];
+    let matches = scan_line(&line, &[1, 1, 3, 1, 1], MAX_TOLERANCE + 1.0);
+    assert!(matches.is_empty());
+}
+
+#[test]
+fn scan_line_tolerance_at_max_still_matches() {
+    let line = [true, false, true, true, true, false, true];
+    let matches = scan_line(&line, &[1, 1, 3, 1, 1], MAX_TOLERANCE);
+    assert_eq!(matches.len(), 1);
 }
 
 // ---------------------------------------------------------------------

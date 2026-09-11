@@ -27,6 +27,18 @@
 // the spec's §2 for why that belongs to whatever assembles the full
 // pipeline (using `vis-connected-components`), not to this crate.
 
+/// The largest relative `tolerance` `scan_line` accepts. A `tolerance`
+/// this permissive already accepts a run four and a half times its
+/// expected length -- generous well past any real 2D-barcode use --
+/// so the bound exists only to keep `tolerance * expected` (and, in
+/// turn, how many windows "match") bounded by the input's own size,
+/// not by how large a value a caller happens to pass. Without this,
+/// `tolerance = f64::INFINITY` would make every foreground-starting
+/// window match regardless of its actual proportions, turning
+/// `find_pattern_candidates`' near-linear cost quadratic-or-worse on
+/// a caller-controlled bitmap.
+pub const MAX_TOLERANCE: f64 = 10.0;
+
 /// One ratio match found along a single scanned line, in that line's
 /// own coordinate (a column position for a horizontal scan, a row
 /// position for a vertical scan -- the caller knows which it passed
@@ -79,10 +91,13 @@ fn compute_runs(line: &[bool]) -> Vec<(bool, usize)> {
 /// A window matches only if its first run is foreground (`true`) --
 /// runs always alternate color by construction, so this alone fixes
 /// every other run's expected color too. Never panics: an empty
-/// `line`, an empty `ratio`, or a non-positive/NaN `tolerance` all
-/// simply yield no matches (the plain floating-point comparisons below
-/// are false, never a panic, for every one of those cases -- see the
-/// spec's §6 for why no special-casing is needed).
+/// `line`, an empty `ratio`, or a `tolerance` outside `(0.0,
+/// MAX_TOLERANCE]` (which covers non-positive, NaN, infinite, and
+/// unreasonably large values alike) all simply yield no matches
+/// rather than a panic -- see the spec's §6 for the full degenerate-
+/// input matrix, and `MAX_TOLERANCE`'s own docs for why an upper
+/// bound is enforced explicitly rather than left to fall out of the
+/// comparison arithmetic.
 ///
 /// # Examples
 ///
@@ -98,6 +113,18 @@ fn compute_runs(line: &[bool]) -> Vec<(bool, usize)> {
 pub fn scan_line(line: &[bool], ratio: &[u32], tolerance: f64) -> Vec<RatioMatch> {
     let mut matches = Vec::new();
     if ratio.is_empty() || line.is_empty() {
+        return matches;
+    }
+    // A tolerance of, say, `f64::INFINITY` would make every foreground-
+    // starting window "match" regardless of its actual run-length
+    // proportions -- `tolerance * expected` is `+inf`, and everything
+    // compares `<=` to it. That turns what should be a handful of real
+    // matches into O(line length) matches, which `find_pattern_candidates`
+    // then does O(bitmap height) work for *each of*, on a bitmap whose
+    // size the caller controls. Bounding tolerance keeps the amount of
+    // work proportional to the input size, not to how permissive a
+    // caller-supplied tolerance happens to be.
+    if !(0.0..=MAX_TOLERANCE).contains(&tolerance) {
         return matches;
     }
     let ratio_sum: u64 = ratio.iter().map(|&r| r as u64).sum();

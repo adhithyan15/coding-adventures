@@ -147,11 +147,16 @@ pub struct RatioMatch {
     pub module_size: f64,
 }
 
+/// The largest relative `tolerance` `scan_line` accepts (§4.2).
+pub const MAX_TOLERANCE: f64 = 10.0;
+
 /// Scan one line (a single row or column, already extracted by the
 /// caller) for windows matching `ratio` within `tolerance` (a
 /// relative fraction, e.g. `0.5` for QR's usual ±50%). Never panics:
-/// an empty `line`, an empty `ratio`, or a non-positive/NaN
-/// `tolerance` all simply yield no matches, not an error.
+/// an empty `line`, an empty `ratio`, or a `tolerance` outside
+/// `(0.0, MAX_TOLERANCE]` (covering non-positive, NaN, infinite, and
+/// unreasonably large values alike) all simply yield no matches, not
+/// an error.
 pub fn scan_line(line: &[bool], ratio: &[u32], tolerance: f64) -> Vec<RatioMatch>;
 
 /// Scan every row and column of `bitmap` for `ratio`, cross-checking
@@ -179,7 +184,27 @@ out of bounds. This is a documented degenerate-input behavior, not a
 claim that ragged input produces a meaningful answer — matching the
 precedent `VIS02` §4.2 already set for exactly this input shape.
 
-### 4.2 Why `Vec<Vec<bool>>`, not `PixelContainer`
+### 4.2 Why `tolerance` has an upper bound
+
+`unit` (§3.1) scales with the window's own run lengths, so an
+unbounded `tolerance` isn't just "generous" — a caller-supplied value
+like `f64::INFINITY` makes `tolerance * expected` infinite too, and
+every foreground-starting window in the line then satisfies the
+`<=` check regardless of its actual proportions. That turns a scan
+that should reject almost everything into one that accepts almost
+everything, and since `find_pattern_candidates` does an independent
+column scan for *every* horizontal match, the cost stops being
+bounded by the bitmap's own size and instead grows with how
+permissive a caller's `tolerance` happens to be — a caller-controlled
+algorithmic-complexity footgun, not merely a correctness one.
+`MAX_TOLERANCE` (`10.0`, already several times more permissive than
+any real use needs) closes this: `scan_line` rejects any `tolerance`
+outside `(0.0, MAX_TOLERANCE]` up front, the same way it already
+rejects non-positive and NaN values, rather than leaving the bound to
+fall out of comparison arithmetic that happens to work for the common
+case.
+
+### 4.3 Why `Vec<Vec<bool>>`, not `PixelContainer`
 
 Same reasoning as `VIS02` §4.1: pattern scanning is a pure binary-
 image algorithm, and coupling it to `pixel-container::PixelContainer`

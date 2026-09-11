@@ -22,7 +22,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   only when the two scans agree within one estimated module size.
 - `RatioMatch { center, module_size }` and
   `PatternCandidate { row, col, module_size }`.
-- 20 unit tests + 2 doc-tests: exact and within-tolerance ratio
+- `MAX_TOLERANCE` (`10.0`) — `scan_line` rejects any `tolerance`
+  outside `(0.0, MAX_TOLERANCE]`, not just non-positive/NaN values.
+  Caught in security review: an unbounded `tolerance` (e.g.
+  `f64::INFINITY`) made every foreground-starting window "match"
+  regardless of its actual proportions, turning
+  `find_pattern_candidates`' near-linear cost quadratic-or-worse on a
+  caller-controlled bitmap.
+- 23 unit tests + 2 doc-tests: exact and within-tolerance ratio
   matches, a just-outside-tolerance rejection, the dark-starting-run
   requirement (including a case that finds the real match rather than
   only rejecting a misaligned one), multiple non-overlapping matches,
