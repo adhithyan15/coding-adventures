@@ -558,11 +558,13 @@ describe("real curriculum", () => {
     // chapter 13's checkpoints do -- each scores two separable things.
     const report = buildCurriculumGapReport({ registry, lessons, books });
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
-    expect(japanese).toHaveLength(157);
+    // 157 -> 160: chapter 19, the reading rung. Three lessons, no new word and no
+    // new sign -- every kana in them is one the script ladder has taught.
+    expect(japanese).toHaveLength(160);
     expect(
       new Set(japanese.map((lesson) => lesson.realization.chapter)),
     ).toEqual(
-      new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
+      new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]),
     );
     expect(
       japanese.every((lesson) => lesson.frontmatter.schema_version === "2"),

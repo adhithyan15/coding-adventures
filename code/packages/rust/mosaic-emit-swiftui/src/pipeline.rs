@@ -3982,6 +3982,45 @@ fn wrap_swiftui_state_view(
 /// `If` immediately followed by an `Else` is paired into a single
 /// `if/else` block rather than two stray nodes. All other primitives go
 /// through `emit_view_tree` unchanged.
+/// The `spacing:` argument for an authored `gap`, or `None` where the view has
+/// no spacing to give it (#14804).
+///
+/// `gap` reached the lattice IR and died at this emitter: SwiftUI emitted only
+/// `spacing: 0`, twice, against authored values of 2, 3, 5, 6, 7, 8, 10 and 22.
+/// The build reported zero degradations throughout.
+///
+/// Only the stacks that lay children out along an axis take it. `ZStack`
+/// overlays its children along the depth axis and `ScrollView` delegates
+/// layout to its content, so a gap on either is meaningless rather than merely
+/// unsupported -- dropped deliberately instead of guessed at.
+fn container_spacing(
+    swiftui_view: &str,
+    node: &LayoutNode,
+    part_styles: &PartStyleMap,
+) -> Option<String> {
+    if !matches!(swiftui_view, "VStack" | "HStack") {
+        return None;
+    }
+    let part_name = node.part_name.as_deref()?;
+    let entry = part_styles.get(part_name)?;
+    // Last declaration wins, as everywhere else in the cascade.
+    let raw = entry
+        .props
+        .iter()
+        .rev()
+        .find(|p| p.name == "gap")
+        .map(|p| p.value.trim())?;
+    let stripped = strip_css_px(raw);
+    if stripped.is_empty()
+        || !stripped
+            .chars()
+            .all(|c| c.is_ascii_digit() || c == '.' || c == '-')
+    {
+        return None;
+    }
+    Some(stripped.to_string())
+}
+
 fn container(
     swiftui_view: &str,
     node: &LayoutNode,
@@ -3992,12 +4031,16 @@ fn container(
     for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
+    let opener = match container_spacing(swiftui_view, node, part_styles) {
+        Some(spacing) => format!("{swiftui_view}(spacing: {spacing})"),
+        None => swiftui_view.to_string(),
+    };
     if node.children.is_empty() {
         // Empty containers still need a body — SwiftUI's trailing-closure
         // syntax `Group { }` is valid Swift and renders nothing.
-        return Ok(format!("{pad}{swiftui_view} {{ }}\n"));
+        return Ok(format!("{pad}{opener} {{ }}\n"));
     }
-    let mut out = format!("{pad}{swiftui_view} {{\n");
+    let mut out = format!("{pad}{opener} {{\n");
     // A container's own children never receive the injected width — the
     // injection target is the container node itself, consumed in
     // [`emit_view_tree`]'s splice.  Pass `None` here.
@@ -14644,6 +14687,58 @@ mod tests {
         .output;
 
         assert!(out.contains(".disabled(off)"), "got:\n{out}");
+    }
+
+
+    /// #14804 — `gap` reached the lattice IR and died at this emitter.
+    ///
+    /// SwiftUI emitted only `spacing: 0`, twice, against authored values of
+    /// 2, 3, 5, 6, 7, 8, 10 and 22 -- and the strict native-complete profile
+    /// reported zero degradations throughout, because the analyzer does not
+    /// know the property exists. 178 declarations across 27 stylesheets.
+    #[test]
+    fn gap_lowers_to_vstack_spacing() {
+        let mut root = container_node("Column", vec![leaf("Text", vec![])]);
+        root.part_name = Some("c".to_string());
+        let out = from_pipeline(
+            &component("F", vec![], vec![]),
+            &layout_with("F", root),
+            &style_with_part("F", "c", vec![sp("gap", "8px")]),
+        )
+        .expect("emit ok")
+        .output;
+        assert!(out.contains("VStack(spacing: 8) {"), "got:\n{out}");
+    }
+
+    #[test]
+    fn gap_lowers_to_hstack_spacing() {
+        let mut root = container_node("Row", vec![leaf("Text", vec![])]);
+        root.part_name = Some("r".to_string());
+        let out = from_pipeline(
+            &component("F", vec![], vec![]),
+            &layout_with("F", root),
+            &style_with_part("F", "r", vec![sp("gap", "12px")]),
+        )
+        .expect("emit ok")
+        .output;
+        assert!(out.contains("HStack(spacing: 12) {"), "got:\n{out}");
+    }
+
+    /// `ZStack` overlays its children along the DEPTH axis, so a gap there is
+    /// meaningless rather than merely unsupported. Dropped deliberately.
+    #[test]
+    fn gap_on_a_stack_emits_no_spacing() {
+        let mut root = container_node("Stack", vec![leaf("Text", vec![])]);
+        root.part_name = Some("z".to_string());
+        let out = from_pipeline(
+            &component("F", vec![], vec![]),
+            &layout_with("F", root),
+            &style_with_part("F", "z", vec![sp("gap", "8px")]),
+        )
+        .expect("emit ok")
+        .output;
+        assert!(out.contains("ZStack {"), "got:\n{out}");
+        assert!(!out.contains("ZStack(spacing"), "got:\n{out}");
     }
 
 }

@@ -230,8 +230,21 @@ describe("the corpus-wide super-gentle ramp", () => {
     // artefact, and the finding is the instruction to whoever writes chapter 41.
     // Suppressing it would have meant either introducing nothing (which makes
     // the lessons unmeasurable instead) or pretending reading needs no recall.
+    // japanese was the last track with a clean sheet, and its chapter 19 reading
+    // rung takes it off the list for the same reason marwadi left: three reading
+    // skills introduced in the final chapter have nothing after them to retrieve
+    // them, so seven windows come due and none can be met. That is a true
+    // statement about the curriculum and the instruction for chapter 20.
+    //
+    // An empty list is a weak assertion on its own -- it holds however badly the
+    // corpus is doing -- so the shape of the remaining finding is pinned beside
+    // it. If a track ever gets back to zero, or japanese's finding turns into
+    // something other than reinforcement, this fails and someone looks.
     expect(
       report.tracks.filter((track) => track.findings.length === 0).map((track) => track.language),
-    ).toEqual(["japanese"]);
+    ).toEqual([]);
+    expect(
+      report.tracks.find((track) => track.language === "japanese")?.findings.map((f) => f.kind),
+    ).toEqual(["reinforcement"]);
   }, 30_000);
 });
