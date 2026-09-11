@@ -25,6 +25,22 @@ from the nine and the ten rather than from the track's vocabulary.
 
 pre-A1 reading moves 0/3 -> 3/3, floor raised. Persian declares no A1 shape yet.
 
+One thing the local gates could not see. The figures lesson first carried the
+Persian digits in its `romanization` field, and the book renderer puts
+romanization in the OPTIONAL argument of `\section` -- which is the PDF
+bookmark. Persian script there comes out as `\fa{...}`, and hyperref cannot
+expand a macro into a PDF string, so the build raised thirteen
+"Token not allowed in a PDF string" warnings against a track baseline of zero.
+
+The convention every other Persian chapter already follows is that the short
+title is Latin: `\section[avval]{\fa{اول} — first...}`. The romanization is now
+`sefr tâ noh, dah, bist, sad`, and no bookmark in the chapter contains a macro.
+
+Worth knowing for the next track: 27 generated chapter files across the corpus
+DO put `\ar{...}` and similar in bookmarks, and their books pass because those
+tracks carry a seeded warning baseline. Persian's baseline is zero, which is
+worth keeping rather than seeding.
+
 ## Numbers, at last — and they were the cheapest vocabulary in the track (HL-C350)
 
 Persian taught **no numeral at all** across 71 lessons. `yek`, `do`, `se` and

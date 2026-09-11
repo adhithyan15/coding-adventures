@@ -6,7 +6,7 @@ sequence: 980
 chapter: 21
 type: reading
 headword: "(reading)"
-romanization: "۰ ۱ ۲ ۳, ۴ ۵ ۶, ۷ ۸ ۹, ۱۰, ۲۰, ۱۰۰"
+romanization: "sefr tâ noh, dah, bist, sad"
 gloss: "the figures, read off a page — a price, a floor, a phone number"
 concept_tag: CONNECTED-READING
 prerequisites: [FA-C21-answers, FA-C19-practice]
