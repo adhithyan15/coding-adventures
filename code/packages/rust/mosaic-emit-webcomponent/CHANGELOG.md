@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostInput.disabled` (#14786)
+
+`HostInput` had `read-only` but no way to say *unavailable*. `disabled` now
+lowers to the boolean HTML attribute, emitted only when the bound slot is
+true, and stays separate from `readonly`.
+
+Spec: `code/specs/UI58-hostinput-disabled.md` (#14786). Landed on all eight
+backends in one change — a partly-landed prop would make a disabled input
+*less* restricted on whichever backend lagged.
+
 ### Added - native browser HostSlider
 
 Web Component templates now lower `HostSlider` to `<input type="range">` with
