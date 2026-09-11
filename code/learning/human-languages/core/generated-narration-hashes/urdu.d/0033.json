@@ -1,0 +1,17 @@
+{
+  "language": "urdu",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:7ccba34ceef7629d",
+  "lessonIds": [
+    "UR-C33-words",
+    "UR-C33-lines",
+    "UR-C33-pehla-sabaq"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "urdu/narration/ch33.txt",
+  "json": "urdu/narration/ch33.json",
+  "textHash": "fnv1a64:00c0cbe6b163b58c",
+  "jsonHash": "fnv1a64:e4167911f153d1f8",
+  "findings": []
+}

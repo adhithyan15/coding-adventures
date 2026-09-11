@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 33,
+  "output": "urdu/book/chapters/ch33-reading-words-lines-and-a-paragraph.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

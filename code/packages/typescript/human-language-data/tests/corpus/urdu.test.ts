@@ -36,7 +36,10 @@ it("pins Urdu lesson-content budgets", () =>
     // nisba, where a person's last name WAS their birthplace -- both state a fact
     // about how the language is used rather than a claim about a people, which is
     // pragmatics and etymology and both already have their own strands.
-    lessons: 159,
+    //
+    // 159 -> 162: chapter 33, the reading rung. No new word, and no new LETTER:
+    // every glyph in all three lessons is one the script ladder has taught.
+    lessons: 162,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,

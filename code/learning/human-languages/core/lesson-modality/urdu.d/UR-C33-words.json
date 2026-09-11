@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C33-words",
+    "language": "urdu",
+    "chapter": 33,
+    "sequence": 1720,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:131433e147838b6e"
+  },
+  "findings": []
+}
