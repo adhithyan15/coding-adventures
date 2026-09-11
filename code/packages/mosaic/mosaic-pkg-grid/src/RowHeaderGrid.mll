@@ -9,7 +9,19 @@ layout RowHeaderGrid {
       Row [header-row] {
         Text [row-corner] (content: "", table-cell-role: corner)
         For (each: slot: column-headers, as: h, index: ch) {
-          Text [header-cell] (content: (h), table-cell-role: column-header)
+          // The Box is load-bearing, not decoration (#14829). A HostTable's
+          // per-column width is threaded into the For body's modifier chain,
+          // and only a CONTAINER body receives it -- a bare Text leaf sizes to
+          // its own glyph. With the Text directly here, five headers spanned
+          // 45px while their five data columns spanned 338px, so no header sat
+          // above its column.
+          //
+          // This also restores the shape Grid.mll documents for the same row:
+          // `Box [ header-cell ] <- <th>` wrapping a Text, matching how
+          // `data-cell` below is built.
+          Box [header-cell] (table-cell-role: column-header) {
+            Text [header-cell-text] (content: (h))
+          }
         }
       }
     }
