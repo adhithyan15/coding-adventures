@@ -1,6 +1,6 @@
 # LANG VM feature and backend coverage
 
-Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE). This is an inventory of the implemented
+Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification). This is an inventory of the implemented
 frontend families and their executable proof boundaries, not a claim that the
 historical languages or every backend are complete. Follow-up IDs live in the
 [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md).
@@ -31,24 +31,27 @@ refusal also does not imply the complete driver refuses that feature.
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
 | FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
-| COBOL-60 | 58 | 426 | 20 of those cells are BEAM (VM-040 COBOL BEAM slices); much larger frontend JIT/oracle suite |
+| COBOL-60 | 58 | 430 | 24 of those cells are BEAM (VM-040 COBOL BEAM slices); much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1555
+The normal non-ALGOL capstone therefore declares 210 programs and 1559
 declared cells (sum of the non-ALGOL rows above). At VM-061 this matched a
 fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
 exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
 three real Beam cells to Brainfuck (42 → 45 declared), so a fresh run on a
-host with `erl` reported 1341 exercised + 210 skipped = 1551; this slice
-(VM-040 COBOL BEAM boolean/EVALUATE) added four more real Beam cells to
-COBOL-60 (422 → 426 declared), so a fresh run on a host with `erl` now
-reports 1345 exercised + 210 skipped = 1555; all seven new cells since
-VM-061 are exercised, not skipped, since `erl` was present when they were
-promoted. The "Declared cells" column counts every backend a row proves, Beam
-included — the convention Nib, Oct, FLOW-MATIC and COBOL-60's numbers already
-used. Twig was the one holdout at VM-061: its old "343" was `49 rows × 7
-standard backends`, silently excluding its 20 Beam cells (VM-D030/**VM-061**).
+host with `erl` reported 1341 exercised + 210 skipped = 1551; VM-040's
+boolean/EVALUATE slice added four more real Beam cells to COBOL-60
+(422 → 426 declared), reporting 1345 exercised + 210 skipped = 1555; this
+slice (VM-040 COBOL BEAM string ops/reference modification) added four more
+real Beam cells to COBOL-60 again (426 → 430 declared), so a fresh run on a
+host with `erl` now reports 1349 exercised + 210 skipped = 1559; all eleven
+new cells since VM-061 are exercised, not skipped, since `erl` was present
+when they were promoted. The "Declared cells" column counts every backend a
+row proves, Beam included — the convention Nib, Oct, FLOW-MATIC and
+COBOL-60's numbers already used. Twig was the one holdout at VM-061: its old
+"343" was `49 rows × 7 standard backends`, silently excluding its 20 Beam
+cells (VM-D030/**VM-061**).
 Every other non-ALGOL row's declared row count and cell count were
 independently re-derived from `PROGRAMS` in `lang_matrix.rs` (a `Prog { lang:
 Language::X, .., backends: &[..] }` per row; cells = `rows.map(|p|
@@ -61,9 +64,9 @@ asserts each of these seven non-ALGOL row/cell pairs against the live
 there (both use the dedicated capstone files below instead), so a future
 slice that adds or removes a row without updating this table fails a normal
 `cargo test -p lang-aot --test lang_matrix` run instead of drifting silently
-again — VM-042's own Brainfuck change, and this slice's COBOL-60 change,
-each updated both the test's expected tuple and this row together, exactly as
-that test's own doc comment requires. ALGOL
+again — VM-042's own Brainfuck change, and each COBOL BEAM slice's COBOL-60
+change, updated both the test's expected tuple and this row together, exactly
+as that test's own doc comment requires. ALGOL
 60's row is intentionally left unrecomputed and unasserted: it is owned by a
 separate, actively developing campaign (see "Ownership boundary" in the
 completion backlog), and this table's own audit trail (VM-D030/VM-061) does

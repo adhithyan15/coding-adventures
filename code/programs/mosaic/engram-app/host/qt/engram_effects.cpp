@@ -65,7 +65,30 @@ QString fileFilter(const QVariant &payload, const QString &key, const QStringLis
     // this application rather than a user today, but a filter that can be split
     // in two or widened to everything is not something to leave to that staying
     // true.
-    static const QRegularExpression shape(QStringLiteral("^\\.?[A-Za-z0-9_-]{1,16}$"));
+    //
+    // `\z`, NOT `$`. QRegularExpression is PCRE2, whose `$` matches before a
+    // subject-final newline unless `DollarEndOnlyOption` is set, so `^...$`
+    // accepted `"apkg\n"` and this check did not mean what the comment above
+    // says it means. `\Z` would not have helped: it makes the same concession.
+    //
+    // How wide the hole was depends on the PCRE2 build, not the language. Its
+    // newline convention is fixed at compile time; the build measured here
+    // conceded LF alone, but one built with `ANYCRLF` or `ANY` concedes `\r`,
+    // `\r\n`, NEL, LS and PS too. `\z` is end-of-subject absolutely, so it
+    // closes the hole at whatever width the linked PCRE2 gives it.
+    //
+    // The `^` -> `\A` half fixes nothing today: no `MultilineOption` is set, so
+    // `^` was already start-of-subject. It is there so enabling that option
+    // later cannot reopen the other end.
+    //
+    // The failure it allowed is silent, which is what makes it worth fixing
+    // rather than noting: a glob of `*apkg\n` is not rejected anywhere
+    // downstream, it simply matches no file, so the dialog opens showing nothing
+    // and reports no reason.
+    //
+    // `\A` and `\z` are absolute -- start and end of subject, with no
+    // line-terminator concession.
+    static const QRegularExpression shape(QStringLiteral("\\A\\.?[A-Za-z0-9_-]{1,16}\\z"));
     QStringList globs;
     globs.reserve(extensions.size());
     for (const QString &extension : extensions) {

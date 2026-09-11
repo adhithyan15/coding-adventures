@@ -5665,7 +5665,7 @@ const PROGRAMS: &[Prog] = &[
                000000     END-EVALUATE.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("FIRST"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL reference modification: literal bounds, omitted length and first/last character.
     Prog {
@@ -5684,7 +5684,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY WS(5:1).\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("BCD\nCDE\nA\nE"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL reference modification: live computed indices, mixed bounds and omitted length.
     Prog {
@@ -5706,7 +5706,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY WS(J:).\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("BCD\nBCD\nCDE"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL reference modification: computed slices drive both comparison branches and EVALUATE.
     Prog {
@@ -5729,7 +5729,7 @@ const PROGRAMS: &[Prog] = &[
                000000 END-EVALUATE.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("MATCH\nDIFF\nHIT"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL reference modification: constant MOVE pads and truncates; markers retain spaces.
     Prog {
@@ -9101,11 +9101,12 @@ fn matrix_every_proven_cell_agrees() {
 /// declaration. That is exactly the "future slice" drift this test exists to
 /// catch, not evidence the test itself is unreliable.
 ///
-/// COBOL-60's expected cell count changed again after VM-042 (422 → 426,
-/// this slice): four more rows (compound AND/OR/parenthesised conditions,
-/// NOT-over-parenthesised, EVALUATE case, and EVALUATE multi-value/THRU)
-/// gained a real, `erl`-proven `Beam` declaration, continuing the same
-/// bounded four-row-at-a-time promotion the prior COBOL BEAM slices used.
+/// COBOL-60's expected cell count changed again after VM-040's boolean/
+/// EVALUATE slice (422 → 426) and again in this slice (426 → 430): four more
+/// rows (alphanumeric EVALUATE subject via `str_cmp`, and three reference-
+/// modification rows built on the existing `str_slice` lowering) gained a
+/// real, `erl`-proven `Beam` declaration, continuing the same bounded
+/// four-row-at-a-time promotion the prior COBOL BEAM slices used.
 #[test]
 fn feature_coverage_doc_counts_match_programs_source() {
     fn rows_and_cells(lang: Language) -> (usize, usize) {
@@ -9124,7 +9125,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::DartmouthBasic, 51, 357),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
-        (Language::Cobol60, 58, 426),
+        (Language::Cobol60, 58, 430),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -14798,4 +14799,20 @@ fn portable_text_stdout_cobol_beam_boolean_and_evaluate() {
     }
     assert_eq!(executed, 4);
     eprintln!("COBOL BEAM boolean/EVALUATE: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_cobol_beam_string_ops_and_refmod() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM string ops/reference modification: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(20).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM string ops/reference modification: {executed} programs executed");
 }
