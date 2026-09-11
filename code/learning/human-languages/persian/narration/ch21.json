@@ -4,12 +4,12 @@
   "chapter": 21,
   "title": "Reading — Words, Answers, and the Figures",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3123937720d2300f",
+  "sourceHash": "fnv1a64:147c624e47c26966",
   "lessons": [
     {
       "id": "FA-C21-words",
       "sequence": 960,
-      "title": "(reading) (salām, mamnūn, bale, na, nān, māh) (bale, na, mamnūn, salām, avval, sevvom) (۰ ۱ ۲ ۳, ۴ ۵ ۶, ۷ ۸ ۹, ۱۰, ۲۰, ۱۰۰) — six words, nothing said first",
+      "title": "(reading) (salām, mamnūn, bale, na, nān, māh) (bale, na, mamnūn, salām, avval, sevvom) (sefr tâ noh, dah, bist, sad) — six words, nothing said first",
       "headword": "(reading)",
       "romanization": "salām, mamnūn, bale, na, nān, māh",
       "gloss": "six words read cold — every letter in them is one you can already write",
@@ -202,7 +202,7 @@
     {
       "id": "FA-C21-answers",
       "sequence": 970,
-      "title": "(reading) (salām, mamnūn, bale, na, nān, māh) (bale, na, mamnūn, salām, avval, sevvom) (۰ ۱ ۲ ۳, ۴ ۵ ۶, ۷ ۸ ۹, ۱۰, ۲۰, ۱۰۰) — the answers, on the page",
+      "title": "(reading) (salām, mamnūn, bale, na, nān, māh) (bale, na, mamnūn, salām, avval, sevvom) (sefr tâ noh, dah, bist, sad) — the answers, on the page",
       "headword": "(reading)",
       "romanization": "bale, na, mamnūn, salām, avval, sevvom",
       "gloss": "six lines you would answer with — read rather than said, for the first time",
@@ -388,9 +388,9 @@
     {
       "id": "FA-C21-adad",
       "sequence": 980,
-      "title": "(reading) (salām, mamnūn, bale, na, nān, māh) (bale, na, mamnūn, salām, avval, sevvom) (۰ ۱ ۲ ۳, ۴ ۵ ۶, ۷ ۸ ۹, ۱۰, ۲۰, ۱۰۰) — the figures",
+      "title": "(reading) (salām, mamnūn, bale, na, nān, māh) (bale, na, mamnūn, salām, avval, sevvom) (sefr tâ noh, dah, bist, sad) — the figures",
       "headword": "(reading)",
-      "romanization": "۰ ۱ ۲ ۳, ۴ ۵ ۶, ۷ ۸ ۹, ۱۰, ۲۰, ۱۰۰",
+      "romanization": "sefr tâ noh, dah, bist, sad",
       "gloss": "the figures, read off a page — a price, a floor, a phone number",
       "script": "perso-arabic",
       "modality": "voice",
@@ -398,7 +398,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4868aa1321eb57c5",
+      "sourceHash": "fnv1a64:15e5f93957d46b00",
       "notice": null,
       "blocks": [
         {
