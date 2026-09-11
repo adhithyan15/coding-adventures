@@ -38,6 +38,9 @@ existing COBOL BEAM probe tests. Updated
 tuple (58, 426) → (58, 430) and confirmed it fails against the pre-fix
 figure before fixing it, and updated `LANG-VM-FEATURE-COVERAGE.md`'s
 COBOL-60 row and grand-total prose (1555 → 1559 declared cells) to match.
+The full `non_algol_matrix_every_proven_cell_agrees` capstone confirmed the
+corrected total against a live run: 210 programs, 1349 cells exercised (was
+1345), 210 skipped, zero failures, 493.28s.
 
 ## 0.308.0 — 2026-09-11 — VM-040 COBOL BEAM boolean/EVALUATE probe
 

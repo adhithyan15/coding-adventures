@@ -96,7 +96,13 @@ now declare BEAM (430 total declared cells, up from 426).
 `feature_coverage_doc_counts_match_programs_source` was confirmed to
 actually exercise the check by first running it against the pre-fix COBOL-60
 figure of 426, where it failed with the expected assertion message naming
-the 430/426 mismatch, before the doc was corrected to match.
+the 430/426 mismatch, before the doc was corrected to match. The full
+`non_algol_matrix_every_proven_cell_agrees` capstone passed: 210 programs,
+**1349** cells exercised (was 1345), 210 skipped (the same host-wide missing
+`ilasm` pattern every prior slice reports), zero failures, in 493.28s —
+exactly the four newly-promoted COBOL cells accounted for, confirming the
+doc's corrected grand total (1555 → 1559) against a live run rather than
+arithmetic alone.
 
 Reprioritize the remaining ~34 undeclared COBOL BEAM rows against VM-041
 (Twig dynamic-string isolation), VM-060b (host input design) and VM-058
