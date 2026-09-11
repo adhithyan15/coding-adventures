@@ -4,7 +4,7 @@
   "finding": {
     "language": "russian",
     "kind": "reinforcement",
-    "count": 261,
+    "count": 274,
     "unit": "missed window(s)",
     "detail": "add retrieval at the expanding R1-R4 intervals"
   }

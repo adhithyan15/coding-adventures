@@ -1,0 +1,15 @@
+{
+  "id": "RU-EXT-034-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Russian word off a board, a line I would say to a stranger, and a short passage, without translating word by word.",
+  "prerequisites": [
+    "RU-EXT-033-ORDINALS"
+  ],
+  "lessons": [
+    "RU-C27-words",
+    "RU-C27-notices",
+    "RU-C27-pervoe-chtenie"
+  ]
+}
