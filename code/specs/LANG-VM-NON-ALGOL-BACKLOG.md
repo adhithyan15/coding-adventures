@@ -1,12 +1,117 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-10
+Status date: 2026-09-11
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
 `LANG-FULL-IMPLEMENTATION.md`; when the two disagree about landed behavior,
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
+
+## VM-040 COBOL BEAM boolean/EVALUATE probe (selected after #14770 merged)
+
+`git fetch origin && git merge origin/main` found this worktree already sat at
+`4dfa11af8d` (PR #14770, VM-042 Brainfuck BEAM parity correction) with nothing
+to fast-forward — that PR's own merge state is directly confirmed. `gh pr list
+--state open` showed ten open PRs: Qt/Compose/toolkit UI feature work, a
+Punjabi/Urdu human-languages PR, a CI shard-balancing fix, one Compose draft,
+and four dependabot bumps (npm/yarn ×3, GitHub Actions) — none touching this
+backlog or any `lang-*`/`iir-*`/`cobol-*`/BEAM path, so nothing was in flight
+to coordinate with.
+
+VM-042's own trailing note asked for a real reprioritization of the ~42
+undeclared COBOL BEAM rows against VM-041 (Twig dynamic-string isolation),
+VM-060b (host input design) and VM-058 (INSPECT BEFORE/AFTER intersection),
+restating that VM-058 was re-examined and confirmed to stay at rung 5, and
+that VM-041/VM-060b still have no scoped backlog entry. Rather than repeat
+that conclusion by habit, it was re-checked against current source, per this
+session's own mandate:
+
+**Did anything change the picture since VM-042 merged?** `git log --oneline
+4dfa11af8d..origin/main -- code/packages/rust/iir-to-beam code/packages/rust/ir-to-beam
+code/packages/rust/cobol-iir-compiler code/packages/rust/cobol-runtime
+code/packages/rust/lang-aot/tests/lang_matrix.rs` returned nothing — no commit
+by anyone touched any of these paths between VM-042's merge and this session's
+start, despite the repo's heavy concurrent activity (the fifteen most recent
+commits on `main` are all unrelated: vision, mosaic, human-languages and
+`adj-facts-stdlib` work). So VM-058's rung-5 status and VM-041/VM-060b's
+unscoped-design status are not stale; there was nothing new to find there.
+
+**Is the "~42 undeclared rows" figure still accurate?** Checked directly
+against source rather than trusted, per VM-061's own lesson that stated
+cell/row counts have been wrong before. A first naive whole-file
+brace-balanced parse of every `Prog { .. }` literal in `lang_matrix.rs`
+over-counted: it picked up a per-iteration differential-test helper
+(`t7_differential_random_u8_expressions_agree`, which constructs a `Prog`
+with `backends: &[]` inside a loop, reusing the same struct literal shape)
+and a boundary-assertion `Prog` local to
+`portable_text_stdout_preserves_content_and_brainfuck_bytes` (a
+one-off `Language::Brainfuck` `Prog` used only to prove text-normalization
+does not apply to Brainfuck's byte output) — neither is a row in the actual
+`PROGRAMS` corpus. Restricting the parse to the `PROGRAMS: &[Prog] = &[..]`
+static array specifically (lines 171–6530, found via `];` at column 0, since
+Brainfuck source strings contain literal `[`/`]` characters that break naive
+bracket-balancing across the whole file) produced exactly 455 entries — 210
+non-ALGOL rows, 1551 non-ALGOL declared cells, matching every number VM-061
+and VM-042 already pinned, including Twig's corrected 363 and Brainfuck's
+corrected 45. Against that trustworthy parse: 58 `Cobol60` rows, exactly 16
+declaring `Beam` and exactly 42 not — the "~42" estimate was, this time,
+exactly right.
+
+**Conclusion:** nothing outranks continuing the COBOL BEAM rows. Rungs 1–2
+are clear (every trailing validation paragraph back through VM-046c reports
+positive sentinels; VM-024/VM-032 keep the matrix and Windows execution in
+normal CI). Rung 3 found nothing stale this round — VM-058, VM-041 and
+VM-060b's statuses are all confirmed current, not just repeated. Between the
+rung-4 COBOL BEAM rows (bounded, proof-promotion, an established
+`.skip(N).take(4)` pattern with five successful prior slices) and rung-5
+VM-041/VM-060b (still genuinely open-ended design work), COBOL BEAM rows win
+again — this time on a freshly re-verified premise, not an assumed one.
+
+The next four rows in file order after the sixteen already declared (lines
+5568, 5587, 5606, 5629) are: a compound `(N > 1 OR N > 9) AND N < 8`
+condition (folding leaf `cmp_*` booleans with bitwise `and`/`or`), `NOT (N <
+3 OR N > 9)` (the first COBOL BEAM row to emit `xor`), an `EVALUATE` case
+statement (`cmp_eq` + branch cascade, the same ops `IF` already uses), and an
+`EVALUATE` with a multi-value/THRU-range `WHEN` (OR-folded `cmp_eq` and
+`and(cmp_ge, cmp_le)`, the level-88 ranges machinery). All four are
+boolean/comparison/branch lowering reusing already-BEAM-proven ops — no new
+opcode expected, matching the family the prior condition-name/EVALUATE slice
+already established. Run this slice (`.skip(16).take(4)`) on real Erlang,
+matching the established discipline: probe before declaring, commit a
+bounded contract for any newly exposed defect, promote only executed cells.
+
+### VM-040 COBOL BEAM boolean/EVALUATE validation
+
+All four selected programs passed on real Erlang on the first probe
+(`portable_text_stdout_cobol_beam_boolean_and_evaluate`), with no new
+`iir-to-beam`/`ir-to-beam` defect: each reuses `cmp_*`/`and`/`or`/`xor`/
+branch lowering already proven by earlier COBOL BEAM rows, so no production
+code changed this slice. All thirteen BEAM `lang_matrix` tests pass together
+(12 prior + the new one — Oct, Nib, Brainfuck, FLOW-MATIC and now twenty of
+58 COBOL rows across five probe batches, plus the immediate-arithmetic/
+comparison/`putchar`-state regressions and the Brainfuck frontend/backend
+refusal split), 12.43s. `iir-to-beam`'s package suite is unchanged at 98
+tests (19 unit, 74 integration, 5 doc) since no production code in that
+crate changed; focused Clippy on `lang-aot` and `iir-to-beam` with all
+targets and warnings denied is clean. Twenty of 58 COBOL rows now declare
+BEAM (426 total declared cells, up from 422).
+`feature_coverage_doc_counts_match_programs_source` was confirmed to
+actually exercise the check by first running it against the pre-fix COBOL-60
+figure of 422, where it failed with the expected assertion message naming
+the 426/422 mismatch, before the doc was corrected to match. The full
+`non_algol_matrix_every_proven_cell_agrees` capstone passed: 210 programs,
+**1345** cells exercised (was 1341), 210 skipped (the same host-wide missing
+`ilasm` pattern every prior slice reports), zero failures, in 516.04s —
+exactly the four newly-promoted COBOL cells accounted for, confirming the
+doc's corrected grand total (1551 → 1555) against a live run rather than
+arithmetic alone.
+
+Reprioritize the remaining ~38 undeclared COBOL BEAM rows against VM-041
+(Twig dynamic-string isolation), VM-060b (host input design) and VM-058
+(INSPECT BEFORE/AFTER intersection) after this merges, following the same
+real policy comparison run above — re-verifying premises against source,
+not repeating prior conclusions by habit.
 
 ## VM-042 Brainfuck BEAM parity correction (selected after #14723 merged)
 

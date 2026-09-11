@@ -5578,7 +5578,7 @@ const PROGRAMS: &[Prog] = &[
                000000     IF (N > 1 OR N > 9) AND N < 8 DISPLAY \"Y\" ELSE DISPLAY \"N\".\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("Y"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — NOT over a parenthesised condition (PL09 step 4). `NOT (N<3 OR
     // N>9)` on N=5 = NOT (false OR false) = true → prints "Y". The negation inverts
@@ -5597,7 +5597,7 @@ const PROGRAMS: &[Prog] = &[
                000000     IF NOT (N < 3 OR N > 9) DISPLAY \"Y\" ELSE DISPLAY \"N\".\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("Y"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — EVALUATE case statement (PL09 step 4). `EVALUATE N` on N=5 with
     // `WHEN 1 / WHEN 5 / WHEN OTHER` matches the second WHEN → prints "FIVE". Lowers
@@ -5620,7 +5620,7 @@ const PROGRAMS: &[Prog] = &[
                000000     END-EVALUATE.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("FIVE"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — EVALUATE with a multi-value / THRU-range WHEN (PL09 step 4).
     // `EVALUATE N` on N=6 with `WHEN 1 5 THRU 7 9` matches (6 is in 5 THRU 7) →
@@ -5642,7 +5642,7 @@ const PROGRAMS: &[Prog] = &[
                000000     END-EVALUATE.\n\
                000000     STOP RUN.",
         expect: Expect::Stdout("Y"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL-60 — alphanumeric EVALUATE subject (PL09 step 4). `EVALUATE GRADE` on
     // GRADE="B" with `WHEN "A" THRU "M"` (byte-lexical) matches → prints "FIRST".
@@ -9100,6 +9100,12 @@ fn matrix_every_proven_cell_agrees() {
 /// VM-042/VM-D031): three of its six rows gained a real, `erl`-proven `Beam`
 /// declaration. That is exactly the "future slice" drift this test exists to
 /// catch, not evidence the test itself is unreliable.
+///
+/// COBOL-60's expected cell count changed again after VM-042 (422 → 426,
+/// this slice): four more rows (compound AND/OR/parenthesised conditions,
+/// NOT-over-parenthesised, EVALUATE case, and EVALUATE multi-value/THRU)
+/// gained a real, `erl`-proven `Beam` declaration, continuing the same
+/// bounded four-row-at-a-time promotion the prior COBOL BEAM slices used.
 #[test]
 fn feature_coverage_doc_counts_match_programs_source() {
     fn rows_and_cells(lang: Language) -> (usize, usize) {
@@ -9118,7 +9124,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::DartmouthBasic, 51, 357),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
-        (Language::Cobol60, 58, 422),
+        (Language::Cobol60, 58, 426),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -14776,4 +14782,20 @@ fn portable_text_stdout_cobol_beam_condition_names_and_evaluate() {
     }
     assert_eq!(executed, 4);
     eprintln!("COBOL BEAM condition-name/EVALUATE: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_cobol_beam_boolean_and_evaluate() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM boolean/EVALUATE: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(16).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM boolean/EVALUATE: {executed} programs executed");
 }
