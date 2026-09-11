@@ -2285,12 +2285,11 @@ jobs:
           # backends, and pins the XAML style drops by property so a new one
           # cannot arrive unnoticed (#14132).
           #
-          # Note this does NOT contradict the comment above about Engram being
-          # unable to reach native-complete. That is about `--emit-project`,
-          # where the strict profile rewrites main.cpp into a binding shape
-          # Engram's [host_assets] override conflicts with. The gate analyses
-          # capability lowering with no project emission, so the two are
-          # different questions and both answers are true.
+          # That gate and the emission above now agree rather than needing to be
+          # reconciled: this comment used to explain why Engram could reach
+          # native-complete in capability analysis while failing it in project
+          # emission, which was true only while the [host_assets] override
+          # existed. It does not, for Qt, since #13728.
           cargo test --manifest-path code/programs/mosaic/engram-app/Cargo.toml
 
           toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
