@@ -1,0 +1,11 @@
+{
+  "language": "persian",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:620499c43861ba7a",
+  "lessonIds": [
+    "FA-C21-words",
+    "FA-C21-answers",
+    "FA-C21-adad"
+  ],
+  "tex": "persian/book/chapters/ch21-reading-words-answers-and-figures.tex"
+}

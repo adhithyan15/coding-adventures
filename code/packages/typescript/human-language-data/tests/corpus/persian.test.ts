@@ -12,7 +12,11 @@ it("pins Persian continuity", () => expectLanguageContinuity("persian"));
 it("pins Persian modality", () => expectLanguageModality("persian"));
 it("pins Persian lesson-content budgets", () =>
   expectLanguageLessonBudgets("persian", {
-    lessons: 97,
+    //
+    // 97 -> 100: chapter 21, the reading rung. Three lessons, no new word and no
+    // new letter -- every shape is one of the nine the script ladder has taught,
+    // which is why the passage is words, answers and figures rather than prose.
+    lessons: 100,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,
