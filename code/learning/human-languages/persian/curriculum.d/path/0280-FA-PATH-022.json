@@ -1,0 +1,14 @@
+{
+  "id": "FA-PATH-022",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "FA-C21-words",
+    "FA-C21-answers",
+    "FA-C21-adad"
+  ],
+  "before": [],
+  "inline": [
+    "FA-EXT-029-READING"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "language": "russian",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:38588f262563e737",
+  "lessonIds": [
+    "RU-C27-words",
+    "RU-C27-notices",
+    "RU-C27-pervoe-chtenie"
+  ],
+  "tex": "russian/book/chapters/ch27-reading-words-lines-and-a-passage.tex"
+}

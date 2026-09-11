@@ -21,7 +21,11 @@ it("pins Russian lesson-content budgets", () =>
     // of five lessons each. The single new culture claim is that простите is
     // the heavier of the two apologies -- a fact about when a Russian reaches
     // for which word, which is a claim about people rather than about grammar.
-    lessons: 142,
+    //
+    // 142 -> 145: chapter 27, the reading rung -- six words off a board, six
+    // lines you would say to a stranger, and a 27-word passage. No new word and
+    // no new letter: Russian had already taught its whole alphabet.
+    lessons: 145,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,
