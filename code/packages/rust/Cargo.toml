@@ -466,6 +466,7 @@ members = [
     "virtual-memory",
     "vis-connected-components",
     "vis-geometric-estimation",
+    "vis-pattern-scanning",
     "tree",
     "radix-tree",
     "typescript-lexer",
