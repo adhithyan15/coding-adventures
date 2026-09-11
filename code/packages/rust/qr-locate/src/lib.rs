@@ -45,7 +45,10 @@ const MODULE_PIXELS: u32 = 4;
 /// truncation `vis_pattern_scanning::MAX_MATCHES_PER_LINE` already
 /// established as this workspace's precedent -- so a pathological
 /// bitmap can't make the O(candidates) stamp-and-cluster step below
-/// scale with an unbounded `VIS04` output.
+/// scale with an unbounded `VIS04` output. This bounds `cluster_candidates`
+/// specifically, not `find_pattern_candidates`'s own scan cost -- that's
+/// already separately bounded by `vis_pattern_scanning::MAX_MATCHES_PER_LINE`
+/// (per scanline) within VIS04 itself, reviewed and fixed there.
 pub const MAX_RAW_CANDIDATES: usize = 4096;
 /// Cap on refined (post-clustering) candidates kept before the O(n^3)
 /// triangle search (§4.3). Truncated by descending group size (how
@@ -189,14 +192,25 @@ fn cluster_candidates(width: usize, height: usize, raw: &[PatternCandidate]) -> 
         let radius = c.module_size.round().max(1.0) as i64;
         let center_row = c.row.round() as i64;
         let center_col = c.col.round() as i64;
-        let row0 = (center_row - radius).max(0) as usize;
+        // saturating_add, not `+`: center_row/center_col/radius all come
+        // from a f64 `.round() as i64` cast, which saturates toward
+        // i64::MAX/MIN for a value far outside i64's range rather than
+        // panicking -- but a plain `+` on two already-saturated-near-MAX
+        // values would then overflow and panic (in a debug/overflow-
+        // checked build) or silently wrap (in release). This function's
+        // safety shouldn't depend on an implicit assumption that
+        // `vis_pattern_scanning`'s candidates always stay near the
+        // bitmap's own dimensions -- saturating_add keeps it true
+        // regardless, since the clamp below only needs the sum to not
+        // wrap past `height`/`width`'s own small range.
+        let row0 = center_row.saturating_sub(radius).max(0) as usize;
         // If (center_row + radius) is negative (candidate entirely off-
         // image), row1 clamps to 0 while row0 (from the branch above) can
         // exceed it, making `row0..=row1` an empty range -- safe in Rust,
         // not a panic -- rather than needing an explicit extra clamp.
-        let row1 = (center_row + radius).clamp(0, height as i64 - 1) as usize;
-        let col0 = (center_col - radius).max(0) as usize;
-        let col1 = (center_col + radius).clamp(0, width as i64 - 1) as usize;
+        let row1 = center_row.saturating_add(radius).clamp(0, height as i64 - 1) as usize;
+        let col0 = center_col.saturating_sub(radius).max(0) as usize;
+        let col1 = center_col.saturating_add(radius).clamp(0, width as i64 - 1) as usize;
         for r in row0..=row1 {
             if let Some(row) = stamp.get_mut(r) {
                 for cell in row.iter_mut().take(col1 + 1).skip(col0) {
