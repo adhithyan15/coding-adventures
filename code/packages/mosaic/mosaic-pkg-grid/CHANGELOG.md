@@ -6,6 +6,31 @@ the package follows semantic versioning.
 
 ## Unreleased
 
+### Fixed — column headers ignore the column widths (#14829)
+
+`RowHeaderGrid`'s header cells were bare `Text` leaves while its data cells are
+`Box` containers. A `HostTable`'s per-column width threads into the `For`
+body's modifier chain, and only a **container** body receives it — so headers
+sized to their own glyphs and none sat above its column.
+
+Measured on the rendered VisiCalc grid at 1280 x 900, five columns:
+
+| | span |
+| --- | --- |
+| headers, before | 24 → 69 (**45 px**, packed at glyph width) |
+| data | 95 → 433 (**338 px**) |
+| headers, after | 60 → 389 (**329 px**) |
+
+Fixed in the layout rather than the emitter, because `Grid.mll` already
+documents `Box [ header-cell ] ← <th>` wrapping a `Text` for this same row. The
+divergence *was* the bug.
+
+**Not fully aligned yet**, and the remainder is measured rather than assumed: a
+constant ~35–40 px offset persists and it is the first column — the corner cell
+measures `0 x 0` and the row heading 9 px, neither taking the colgroup's fixed
+`Col (width: 48)`. That width is not inside a `For`, so the index-based
+threading never reaches it. Distinct gap, tracked in #14829.
+
 - Make RowHeaderGrid a named keyboard focus target and autofocus inline editors.
 
 - Forward optional measured viewport-shift requests through RowHeaderGrid.
