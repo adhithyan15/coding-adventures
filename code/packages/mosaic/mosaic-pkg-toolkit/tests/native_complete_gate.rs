@@ -54,10 +54,6 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // emitter, so every rounded surface in the toolkit renders square. 31 of
     // the toolkit's 42 drops, and 318 in TaskApp alone.
     (Backend::Compose, "border-radius"),
-    // #14708 — `opacity` lowering for Compose and Flutter is still open. It is
-    // what UI57's `state disabled` treatment depends on, so a disabled toolkit
-    // control currently dims on some backends and not others.
-    (Backend::Compose, "opacity"),
     // #14810 — `font-weight` is an argument to Text rather than a modifier, so
     // it has to be threaded through the text style instead of the box chain.
     // Every bold label in the toolkit renders at regular weight on Compose.

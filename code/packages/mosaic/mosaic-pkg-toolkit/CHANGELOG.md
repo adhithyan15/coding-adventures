@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Changed — the style-drop allowlist loses its `opacity` entry (#14708)
+
+Compose lowers `opacity` since #14821, so the allowlist entry describes a drop
+that no longer happens. Removed rather than left to rot: an allowlist that
+lists things which are already fixed stops being a list of known problems.
+
+Verified by removing it and re-running the gate, which stays green — if Compose
+were still dropping `opacity`, taking the entry out would fail.
+
+Two of the original three entries remain, both tracked in #14810:
+`border-radius` and `font-weight`.
+
 ### Changed — the style-drop gate now tracks, rather than assumes (#14810)
 
 `native_complete_gate` asserted `style_degradations.is_empty()`, with the
