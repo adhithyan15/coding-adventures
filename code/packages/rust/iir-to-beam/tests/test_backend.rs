@@ -2647,6 +2647,104 @@ fn test_72_real_erl_large_positive_const_stays_positive() {
         "a large positive const must not come back negative");
 }
 
+/// VM-040 COBOL BEAM reference-modification MOVE/trap slice's discovery:
+/// `str_slice` lowered straight to `lists:sublist/3` with no bounds check of
+/// its own. `sublist(List, Start, Len)` is far more lenient than the
+/// documented `str_slice` contract (`vm-core::dispatch::handle_str_slice`:
+/// trap when `start < 0 || end < start || end > len`) — when `Start` is
+/// in-range but `Start + Len - 1` runs past the list, `sublist` silently
+/// returns a SHORT result instead of raising. `[1, 8)` of `"ABCDE"` (5 chars)
+/// used to come back `"BCDE"` (4 chars, silently truncated) instead of
+/// trapping; it must now raise before `sublist` ever runs.
+#[test]
+fn test_73_real_erl_str_slice_traps_end_past_length() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "str", vec![
+        IIRInstr::new("str_const", Some("w".into()), vec![Operand::Str("ABCDE".into())], "str"),
+        IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+        // end=8 is past "ABCDE"'s length (5) even though start=1 is in range —
+        // exactly the case `sublist` alone would NOT catch.
+        IIRInstr::new("const", Some("end".into()), vec![Operand::Int(8)], "i64"),
+        IIRInstr::new("str_slice", Some("v".into()),
+            vec![Operand::Var("w".into()), Operand::Var("start".into()), Operand::Var("end".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("v".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "str_slice module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_str_slice_trap_end_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_str_slice_trap_end_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .current_dir(&tmp)
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("iir_str_slice_trap_end_test:main(),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(!output.status.success(),
+        "an out-of-range str_slice must fail closed, not silently truncate; stdout: {:?}",
+        String::from_utf8_lossy(&output.stdout));
+}
+
+/// Positive control for [`test_73_real_erl_str_slice_traps_end_past_length`]:
+/// `end == length(source)` is the exact in-bounds boundary (not "past" it),
+/// so it must still succeed — proving the new check is `end > len`, not an
+/// off-by-one `end >= len`.
+#[test]
+fn test_74_real_erl_str_slice_end_equal_to_length_is_in_bounds() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "str", vec![
+        IIRInstr::new("str_const", Some("w".into()), vec![Operand::Str("ABCDE".into())], "str"),
+        IIRInstr::new("const", Some("start".into()), vec![Operand::Int(0)], "i64"),
+        // end=5 is exactly length("ABCDE") — the whole string, not past it.
+        IIRInstr::new("const", Some("end".into()), vec![Operand::Int(5)], "i64"),
+        IIRInstr::new("str_slice", Some("v".into()),
+            vec![Operand::Var("w".into()), Operand::Var("start".into()), Operand::Var("end".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("v".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "str_slice module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_str_slice_full_bounds_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_str_slice_full_bounds_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("iir_str_slice_full_bounds_test:main(),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(output.status.success(),
+        "erl exited non-zero; stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "ABCDE",
+        "str_slice([0,5)) of \"ABCDE\" (end == length) must not trap");
+}
+
 #[test]
 fn integer_output_builtin_accepts_no_destination() {
     let m = make_module_single(vec![

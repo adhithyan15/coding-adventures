@@ -729,3 +729,23 @@ COBOL BEAM rows, so no backend change was needed. Twenty-four of 58 COBOL
 rows now declare BEAM, for 430 cells. Remaining COBOL features (STRING
 SIZE/delimiters, pointer/overflow) still require individual execution
 proofs.
+
+### COBOL reference-modification MOVE and out-of-range trap on BEAM (VM-040)
+
+Four more COBOL programs execute on real BEAM: a constant reference-
+modification MOVE that pads and truncates into differently-sized receivers, a
+runtime MOVE that refits using a live computed slice length, and two computed
+reference modifications that must fail closed (a runtime `end` past the
+item's width; a runtime `start` of zero after the 1-based → 0-based
+conversion). The two trap rows exposed a real `iir-to-beam` defect: `str_slice`
+lowered straight to `lists:sublist/3`, which does not itself enforce the
+documented bounds-check contract (trap when `start < 0 || end < start || end
+> length(source)`) — an in-range `start` with an out-of-range `end` silently
+truncated instead of trapping. `str_slice` now checks all three predicates
+explicitly and raises before `sublist` ever runs (see `iir-to-beam`'s
+CHANGELOG 0.9.2). This is also the first COBOL BEAM row to reach `Expect::Trap`
+on this backend, so `run_beam` (this crate's own matrix runner) gained the
+same `Err`/nonzero-exit-means-`Trapped` handling every other backend's runner
+already had. Twenty-eight of 58 COBOL rows now declare BEAM, for 434 cells.
+Remaining COBOL features (STRING SIZE/delimiters, pointer/overflow) still
+require individual execution proofs.
