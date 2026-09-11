@@ -5,6 +5,25 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — `opacity` was dropped (#14708)
+
+`opacity` is what UI57's `state disabled` treatment is built on, so dropping it
+meant a disabled control dimmed on five backends and not on this one — it
+looked disabled on the web and XAML and SwiftUI, and fully normal on Compose.
+
+It now lowers to `Modifier.alpha(..)`, placed **first** among the drawing
+modifiers so it covers the background, the border and the content alike;
+applying it later would fade only what follows it in the chain.
+
+The Float suffix goes on each **value**, not on the assembled expression. A
+state-layered opacity becomes `(if (..) 0.4f else 1f)`, and Kotlin cannot
+suffix a parenthesised expression — `(...)f` does not parse. The first version
+did exactly that, every emitter string assertion passed, and it was the Kotlin
+compiler that caught it. There is now a test for the state-layered form, which
+is the one that matters: the value worth reading is almost always layered.
+
+The toolkit emits 8 alpha expressions where it emitted none, and its generated
+Compose project compiles.
 ### Fixed — any style property cancelled a container's width default (#14795)
 
 `emit_container` and `emit_container_frame` both wrote the width default and
