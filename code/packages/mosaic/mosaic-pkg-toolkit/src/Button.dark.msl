@@ -54,6 +54,21 @@ style Button {
       border-color : "#475569" ;
     }
 
+    // UI57 — `disabled` is a bool slot, so this activates on its truthiness.
+    //
+    // Every backend already lowers `disabled` to the native control property,
+    // but the ones that paint by DEFAULT styling (the DOM's `<button
+    // disabled>`) are overridden by the explicit background above, so the
+    // control went inert without looking it. Measured on the live component
+    // page: the Disabled story rendered pixel-identical to Primary. #14639
+    //
+    // `opacity` composites the control and its content, so it reads as
+    // unavailable whichever variant is active, without restating eight
+    // variants x two themes in muted colours.
+    state disabled {
+      opacity : $opacity-disabled ;
+    }
+
     state sm {
       padding       : 6 ;
       border-radius : 3 ;

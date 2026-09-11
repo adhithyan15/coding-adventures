@@ -3,6 +3,17 @@
 style Field {
   part field {
     padding : 8 ;
+    // UI57 — activates on the `disabled` bool slot's truthiness.
+    //
+    // `opacity` composites this part and everything inside it, so a compound
+    // control dims as one thing rather than needing every inner part restated
+    // in muted colours. The DOM backends need this: they lower `disabled` to
+    // the real control property, but an explicit `background` overrides the
+    // greying a browser would otherwise apply, so the control went inert
+    // without looking it. #14639
+    state disabled {
+      opacity : $opacity-disabled ;
+    }
   }
   part field-label {
     color       : "#212529" ;

@@ -2,6 +2,32 @@
 
 ## [Unreleased]
 
+### Added — a disabled treatment on every component that declares the slot (#14639)
+
+`state disabled { opacity : $opacity-disabled ; }` on `Button`, `Input`,
+`Field`, `Checkbox`, `InputGroup`, `NumberInput`, `Radio` and `Select`, in both
+themes.
+
+This is what #14639 asked for and the first real use of UI57: `disabled` is a
+`bool` slot, so the state activates on its truthiness rather than on a value
+match.
+
+`opacity` rather than muted colours, because it composites the control and
+everything inside it. A compound control (`Field`, `InputGroup`, `Select`) dims
+as one thing, and it reads as unavailable whichever variant is active — the
+alternative was restating eight variants x two themes x eight components in
+muted equivalents.
+
+The DOM backends are the ones that need it. All eight lower `disabled` to the
+native control property, but a browser greys a disabled control by changing its
+DEFAULT colours, and every styled Mosaic part sets `background` explicitly, so
+the control went inert without looking it. Verified in a browser before and
+after: `opacity` went from `1` to `0.4` on the Disabled story, with
+`button.disabled` true in both.
+
+`$opacity-disabled` has sat in the token table with no callers since tokens were
+introduced. This is its first.
+
 ### Added — stories for the six components with variant or size axes
 
 `Badge`, `Alert`, `Button`, `Spinner`, `Input`, and `Toast` now declare
