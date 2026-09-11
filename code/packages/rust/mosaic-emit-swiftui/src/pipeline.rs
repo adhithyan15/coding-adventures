@@ -4724,8 +4724,20 @@ fn emit_host_input(
     // line — Swift accepts chained modifiers without line breaks, and
     // the generated source stays compact and grep-friendly.
 
-    // `.disabled(...)` — true literal, false literal, or slot-bound bool.
-    if let Some(slot) = find_slot_ref_prop(node, "read-only") {
+    // UI58 — a real `disabled` prop. SwiftUI has no read-only TextField, so
+    // `read-only` below ALSO lowers to `.disabled(...)`: it over-restricts,
+    // stopping focus when the author asked only that the field not be edited
+    // (UI58 §4.3). `disabled` is checked first so a component that means
+    // disabled says so, and only the genuinely-read-only case approximates.
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        line.push_str(&format!(".disabled({camel})"));
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            line.push_str(&format!(".disabled({kw})"));
+        }
+    } else if let Some(slot) = find_slot_ref_prop(node, "read-only") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         line.push_str(&format!(".disabled({camel})"));
@@ -14594,6 +14606,44 @@ mod tests {
         // mapped; a regression must show up here rather than as a silent drop.
         let drops = drops_for(vec![("border-radius", "6"), ("max-width", "980px")]);
         assert!(drops.is_empty(), "got: {drops:?}");
+    }
+
+
+    #[test]
+    fn host_input_disabled_wins_over_the_read_only_approximation() {
+        // UI58 §4.3 — SwiftUI has no read-only TextField, so `read-only` also
+        // lowers to `.disabled(...)`, over-restricting. `disabled` is checked
+        // first so a component that MEANS disabled says so, and only the
+        // genuinely-read-only case is left approximating (#14772).
+        let layout = layout_with(
+            "F",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostInput",
+                    vec![
+                        prop_slot_ref("value", "q"),
+                        prop_slot_ref("disabled", "off"),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "F",
+                vec![
+                    slot("q", SlotType::Text, true),
+                    slot("off", SlotType::Bool, false),
+                ],
+                vec![],
+            ),
+            &layout,
+            &empty_style("F"),
+        )
+        .expect("emit ok")
+        .output;
+
+        assert!(out.contains(".disabled(off)"), "got:\n{out}");
     }
 
 }

@@ -5,6 +5,16 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — `HostInput.disabled` (#14786)
+
+`HostInput` had `read-only` but no way to say *unavailable*. Compose spells
+availability positively, so `disabled` lowers to a negated `enabled`
+argument, distinct from `readOnly`.
+
+Spec: `code/specs/UI58-hostinput-disabled.md` (#14786). Landed on all eight
+backends in one change — a partly-landed prop would make a disabled input
+*less* restricted on whichever backend lagged.
+
 ### Fixed — root-section splitting recurses, and is driven by emitted size (#14736)
 
 `should_split_root_sections` split only the **root's direct children** into

@@ -4,6 +4,18 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostInput.disabled` (#14786)
+
+SwiftUI has no read-only `TextField`, so this emitter already approximated
+`read-only` with `.disabled(...)` — over-restricting, but the only option.
+Adding a real `disabled` prop means a control that *means* disabled now says
+so directly. `disabled` is checked first, leaving only the genuinely
+read-only case approximating (#14772).
+
+Spec: `code/specs/UI58-hostinput-disabled.md` (#14786). Landed on all eight
+backends in one change — a partly-landed prop would make a disabled input
+*less* restricted on whichever backend lagged.
+
 ### Added — `border-radius` and `max-width` lowering (#12022, #14728)
 
 Both were dropped entirely. `border-radius` is the most-authored property this

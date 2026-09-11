@@ -1831,6 +1831,20 @@ fn emit_input_jsx(
     }
 
     // readOnly={slotName} OR readOnly={true|false} when given as a keyword.
+    // UI58 — `disabled` is a DIFFERENT affordance from `read-only` above: a
+    // read-only field takes keyboard focus, is selectable, and announces as
+    // editable-but-read-only; a disabled one is skipped by focus and
+    // announces as unavailable. The toolkit forwarded its `disabled` slot to
+    // `read-only` because this did not exist (#14772).
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" disabled={{{camel}}}"));
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            attrs.push_str(&format!(" disabled={{{kw}}}"));
+        }
+    }
     if let Some(slot) = find_slot_ref_prop(node, "read-only") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
@@ -1989,6 +2003,20 @@ fn emit_host_input_jsx(
         // matching the trust model UI29 §3.3 establishes for Expr
         // values (author-controlled, backend-language-flavoured).
         attrs.push_str(&format!(" value={{{expr_text}}}"));
+    }
+
+    // UI58 — `disabled` is a DIFFERENT affordance from `read-only` below: a
+    // read-only field takes keyboard focus and announces as
+    // editable-but-read-only; a disabled one is skipped by focus and
+    // announces as unavailable (#14772).
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" disabled={{{camel}}}"));
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            attrs.push_str(&format!(" disabled={{{kw}}}"));
+        }
     }
 
     // readOnly={slotName} OR readOnly={true|false} when given as a keyword.
@@ -12720,4 +12748,21 @@ mod tests {
             out
         );
     }
+
+    /// UI58 — `disabled` is its own prop, not a spelling of `read-only`.
+    /// React has both, so the two must not collapse into one attribute
+    /// (#14772): a disabled control is skipped by focus, a read-only one
+    /// is not.
+    #[test]
+    fn host_input_disabled_binds_separately_from_read_only() {
+        let m = component("X", vec![slot("off", SlotType::Bool, false)], vec![]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "disabled".to_string(),
+            value: LayoutPropValue::SlotRef("off".to_string()),
+        }]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("disabled={off}"), "got:\n{out}");
+        assert!(!out.contains("readOnly"), "got:\n{out}");
+    }
+
 }
