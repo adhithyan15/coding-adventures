@@ -2204,7 +2204,86 @@ pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
 /// Returns the source already indented to `indent` columns; the
 /// caller decides whether to wrap the expression in a return or pass
 /// it as a child.
+/// Wrap the emitted widget in `Opacity(..)` when its part authors one (#14708).
+///
+/// Flutter has no opacity *property* -- it is a widget that wraps a subtree, so
+/// unlike every other style this cannot be folded into `Container`'s arguments.
+/// Folding it into the colours instead would fade only the background and leave
+/// the children opaque, which is a different picture from the authored one.
+///
+/// This sits as a thin wrapper around the real emitter rather than at each
+/// `return` inside it: that function has nine-plus exit points, and wrapping
+/// them individually would have missed some silently. One wrapper covers every
+/// path by construction.
 fn emit_widget_tree(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    let inner = emit_widget_tree_inner(node, indent, part_styles, component, emits, ctx)?;
+    let Some(expr) = part_opacity_expr(node, part_styles) else {
+        return Ok(inner);
+    };
+    let pad = " ".repeat(indent);
+    let body = inner.trim_end_matches('\n');
+    Ok(format!(
+        "{pad}Opacity(\n{pad}  opacity: {expr},\n{pad}  child: {},\n{pad})\n",
+        body.trim_start()
+    ))
+}
+
+/// The `opacity:` argument for a part, or `None` when none is authored.
+///
+/// State-layered opacity is the shape that matters -- `state disabled {
+/// opacity : $opacity-disabled ; }` is what UI57's disabled treatment is built
+/// on -- so the layers are folded into a conditional expression, base value
+/// last as the fallback.
+fn part_opacity_expr(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+) -> Option<String> {
+    let part = node.part_name.as_deref()?;
+    let base = part_styles
+        .get(part)
+        .and_then(|props| parse_style_props(props).get("opacity").cloned());
+    let layers: Vec<(String, String)> = collect_cell_state_layers(node, part, part_styles)
+        .into_iter()
+        .filter_map(|layer| layer.opacity.clone().map(|value| (layer.cond, value)))
+        .collect();
+    if base.is_none() && layers.is_empty() {
+        return None;
+    }
+    let mut expr = dart_opacity_literal(&base.unwrap_or_else(|| "1".to_string()));
+    for (cond, value) in layers.into_iter().rev() {
+        let value = dart_opacity_literal(&value);
+        expr = format!("({cond}) ? {value} : {expr}");
+    }
+    Some(expr)
+}
+
+/// Render one authored opacity value as a Dart **double** literal.
+///
+/// `Opacity(opacity: ...)` is typed `double`. Dart accepts a bare integer
+/// LITERAL there -- `cond ? 0.4 : 1` analyzes clean, because an int literal in
+/// a double context is converted at compile time -- so the explicit `.0` is
+/// normalization rather than a fix: it matches how the rest of this emitter
+/// renders numbers (`dart_double_literal`) and keeps both arms of the
+/// conditional reading as the same type. What Dart does NOT accept is a
+/// `num`-typed expression, which is why the conversion happens per ARM and not
+/// once around the whole expression. A value that is not a finite number (an
+/// authored expression, say) is passed through untouched.
+fn dart_opacity_literal(value: &str) -> String {
+    let trimmed = value.trim();
+    match trimmed.parse::<f64>() {
+        Ok(number) if number.is_finite() => dart_double_literal(number),
+        _ => trimmed.to_string(),
+    }
+}
+
+fn emit_widget_tree_inner(
     node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
@@ -3449,6 +3528,10 @@ fn text_align_to_alignment(value: &str) -> &'static str {
 /// absent if the `state X { }` block didn't set them).
 struct StateLayer {
     cond: String,
+    /// Authored `opacity` for this state. Kept because Flutter expresses
+    /// opacity as a wrapping WIDGET rather than a container argument (#14708),
+    /// so it is consumed well away from the other fields here.
+    opacity: Option<String>,
     background: Option<String>,
     text_color: Option<String>,
     border_color: Option<String>,
@@ -3460,6 +3543,7 @@ fn state_layer(cond: String, style_props: &str) -> StateLayer {
     let m = parse_style_props(style_props);
     StateLayer {
         cond,
+        opacity: m.get("opacity").cloned(),
         background: m
             .get("background")
             .or_else(|| m.get("background-color"))
@@ -12458,6 +12542,125 @@ mod tests {
         );
     }
 
+
+    // ====================================================================
+    // opacity -- #14708.  Flutter has no opacity ARGUMENT; `Opacity` is a
+    // widget that wraps a subtree, so these pin the wrapper, not a property.
+    // ====================================================================
+
+    #[test]
+    fn authored_opacity_wraps_the_part_in_an_opacity_widget() {
+        let m = component("Ghost", vec![], vec![]);
+        let l = layout("Ghost", box_part("panel", vec![], vec![]));
+        let s = style_with_part(
+            "Ghost",
+            "panel",
+            vec![StyleProp {
+                name: "opacity".into(),
+                value: "0.5".into(),
+            }],
+        );
+
+        let r = from_pipeline(&m, &l, &s).expect("ok");
+        assert!(
+            r.output.contains("Opacity("),
+            "authored opacity must reach the tree, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("opacity: 0.5,"),
+            "got:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn a_part_with_no_authored_opacity_gains_no_opacity_widget() {
+        // The other direction: the wrapper sits around EVERY node, so a
+        // missing guard would wrap the whole tree in `Opacity(opacity: 1.0)`
+        // and quietly force a saveLayer on every component in the package.
+        let m = component("Plain", vec![], vec![]);
+        let l = layout("Plain", box_part("panel", vec![], vec![]));
+        let s = style_with_part(
+            "Plain",
+            "panel",
+            vec![StyleProp {
+                name: "background".into(),
+                value: "#222222".into(),
+            }],
+        );
+
+        let r = from_pipeline(&m, &l, &s).expect("ok");
+        assert!(!r.output.contains("Opacity("), "got:\n{}", r.output);
+    }
+
+    #[test]
+    fn state_opacity_lowers_to_a_conditional_with_both_arms_double_typed() {
+        // `state disabled { opacity : ... }` is the shape UI57's disabled
+        // treatment is actually built from -- the toolkit authors it on eight
+        // controls, and before #14708 every one of them dropped silently.
+        let m = component(
+            "Ctl",
+            vec![slot("disabled", SlotType::Bool, false)],
+            vec![],
+        );
+        let l = layout(
+            "Ctl",
+            box_part("control", vec![state_when("disabled", "( disabled )")], vec![]),
+        );
+        let mut s = style_with_part("Ctl", "control", vec![]);
+        s.parts[0].states = vec![mosstyle_compiler::StateStyle {
+            slot: None,
+            slot_is_bool: false,
+            state: "disabled".into(),
+            transitions: vec![],
+            props: vec![StyleProp {
+                name: "opacity".into(),
+                value: "0.4".into(),
+            }],
+        }];
+
+        let r = from_pipeline(&m, &l, &s).expect("ok");
+        assert!(
+            r.output.contains("? 0.4 : 1.0"),
+            "the unstated base is fully opaque, and BOTH arms render as \
+             doubles so the conditional cannot infer `num`, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("Opacity("),
+            "got:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn opacity_reaches_a_nested_child_not_only_the_root() {
+        // `emit_widget_tree` is a thin wrapper over `emit_widget_tree_inner`
+        // precisely so that recursion carries the wrapper too. Pin that: a
+        // child-only opacity is the case a per-return-site implementation
+        // would have missed.
+        let m = component("Nest", vec![], vec![]);
+        let l = layout(
+            "Nest",
+            box_part("outer", vec![], vec![box_part("inner", vec![], vec![])]),
+        );
+        let s = StyleDef {
+            component_name: "Nest".into(),
+            parts: vec![PartStyle {
+                name: "inner".into(),
+                base: vec![StyleProp {
+                    name: "opacity".into(),
+                    value: "0.25".into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+
+        let r = from_pipeline(&m, &l, &s).expect("ok");
+        assert!(r.output.contains("opacity: 0.25,"), "got:\n{}", r.output);
+    }
 
     #[test]
     fn host_input_disabled_lowers_to_enabled_false() {
