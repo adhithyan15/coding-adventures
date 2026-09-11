@@ -3,6 +3,7 @@ package plan
 import (
 	"fmt"
 	"sort"
+	"strings"
 )
 
 // ComputeShards splits a build plan into prerequisite-closed shards.
@@ -275,7 +276,32 @@ func packageCost(pkg PackageEntry) int {
 	case "elixir", "python", "ruby":
 		cost += 2
 	}
+
+	// cargo-tarpaulin recompiles the crate under coverage instrumentation on
+	// top of the normal build and test pass, which has been measured at
+	// several times the cost of a plain `cargo test`. The flat rust weight
+	// above treats every rust package alike, so the greedy balancer below
+	// (which only ever sees this single number) can unknowingly cluster
+	// several tarpaulin packages onto one shard -- CI has hit shards that
+	// blew the 150-minute build ceiling this way while sibling shards
+	// finished with time to spare. Weighting tarpaulin packages heavier
+	// gives the balancer the signal it needs to spread them out instead.
+	if usesTarpaulin(pkg) {
+		cost += 10
+	}
+
 	return cost
+}
+
+// usesTarpaulin reports whether any of a package's build commands invoke
+// cargo-tarpaulin, the coverage-instrumented test runner.
+func usesTarpaulin(pkg PackageEntry) bool {
+	for _, command := range pkg.BuildCommands {
+		if strings.Contains(command, "tarpaulin") {
+			return true
+		}
+	}
+	return false
 }
 
 func toolchainForLanguage(language string) string {

@@ -4,6 +4,18 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- `packageCost` now weighs a Rust package higher when its build commands
+  invoke `cargo tarpaulin`: coverage instrumentation measurably costs several
+  times a plain `cargo test`, but the shard cost model treated every Rust
+  package alike. The greedy load-balancer in `ComputeShards` only sees that
+  single number, so it could unknowingly cluster several tarpaulin packages
+  onto one CI shard -- main CI hit a shard that blew its 150-minute build
+  ceiling with `cargo-tarpaulin` still running at 936/946 packages while
+  sibling shards finished early. The extra weight gives the balancer the
+  signal it needs to spread tarpaulin packages across shards instead.
+
 ### Added
 
 - Site packages under `code/sites` now use the canonical TypeScript source-input

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+- Fixed: `flutter analyze lib` was failing the Flutter host build over an
+  `unnecessary_import` on `dart:typed_data` in `mosaic_host.dart` -- its only
+  use, `Uint8List`, is already re-exported transitively by
+  `package:flutter/services.dart`. `flutter analyze lib` has no severity
+  flags, so any reported issue, including this info-level one, failed the
+  step. Removed the redundant import.
 - Project retained editor state into backend-neutral caret, selection,
   composition, validation, viewport-scroll, and IME candidate geometry.
 - Add scalar-safe pointer drag selection, explicit clipboard transfers with
