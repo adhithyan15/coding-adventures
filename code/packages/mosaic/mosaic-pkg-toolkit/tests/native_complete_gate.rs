@@ -50,14 +50,14 @@ use tempfile::TempDir;
 ///
 /// Every entry must reference its tracking issue.
 const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
-    // #14810 — Compose has no `Modifier.clip(RoundedCornerShape(..))` in this
-    // emitter, so every rounded surface in the toolkit renders square. 31 of
-    // the toolkit's 42 drops, and 318 in TaskApp alone.
-    (Backend::Compose, "border-radius"),
-    // #14810 — `font-weight` is an argument to Text rather than a modifier, so
-    // it has to be threaded through the text style instead of the box chain.
-    // Every bold label in the toolkit renders at regular weight on Compose.
-    (Backend::Compose, "font-weight"),
+    // Empty, and that now MEANS something. When Compose gained reporting it
+    // immediately named 42 drops here across `border-radius`, `opacity` and
+    // `font-weight`; #14817, #14821 and #14818 fixed all three, and each
+    // removed its own entry rather than leaving it to rot.
+    //
+    // Before reporting existed this list could not have been written at all —
+    // the gate asserted emptiness and that emptiness meant "nobody looked".
+    // It is now measured.
 ];
 
 fn is_allowed_style_drop(backend: Backend, property: &str) -> bool {

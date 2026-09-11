@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Changed — the style-drop allowlist is empty, and now measured (#14810)
+
+Compose reporting named **42** drops in the toolkit when it first ran:
+31 `border-radius`, 8 `opacity`, 3 `font-weight`. All three are fixed
+(#14817, #14821, #14818) and each removed its own entry.
+
+The list is now empty — but for the first time that emptiness is a
+*measurement* rather than the absence of one. The gate previously asserted
+`style_degradations.is_empty()` and passed because no backend reported
+anything.
+
 ### Changed — the style-drop allowlist loses its `opacity` entry (#14708)
 
 Compose lowers `opacity` since #14821, so the allowlist entry describes a drop

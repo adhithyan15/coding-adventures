@@ -185,6 +185,7 @@ pub fn from_pipeline(
     // #14793. An unused Kotlin import is a warning; a missing one is an error.
     writeln!(out, "import androidx.compose.foundation.shape.RoundedCornerShape").unwrap();
     writeln!(out, "import androidx.compose.ui.draw.clip").unwrap();
+    writeln!(out, "import androidx.compose.ui.text.font.FontWeight").unwrap();
     writeln!(out, "import androidx.compose.ui.draw.alpha").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Column").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Row").unwrap();
@@ -1236,6 +1237,76 @@ fn chain_sets_own_width(chain: &str) -> bool {
         || chain.contains(".weight(")
         || chain.contains(".requiredWidth(")
         || chain.contains(".widthIn(")
+}
+
+
+/// Map a CSS `font-weight` to a Compose `FontWeight`.
+///
+/// CSS spells weight as a number or one of a few keywords; Compose has named
+/// constants for the nine hundreds and a `FontWeight(Int)` constructor for
+/// anything else. The named constants are used where they exist because the
+/// generated Kotlin is meant to be readable.
+///
+/// `lighter`/`bolder` are deliberately unmapped: both are RELATIVE to the
+/// inherited weight, and this lowering has no inherited value to resolve them
+/// against. Guessing `Light`/`Bold` would be wrong for any parent that is not
+/// already normal, so they fall through to the drop report (#14810) and say so
+/// instead.
+fn compose_font_weight(value: &str) -> Option<String> {
+    let v = value.trim();
+    let numeric = match v {
+        "normal" => Some(400),
+        "bold" => Some(700),
+        other => other.parse::<u16>().ok(),
+    }?;
+    let named = match numeric {
+        100 => "Thin",
+        200 => "ExtraLight",
+        300 => "Light",
+        400 => "Normal",
+        500 => "Medium",
+        600 => "SemiBold",
+        700 => "Bold",
+        800 => "ExtraBold",
+        900 => "Black",
+        // Compose clamps out-of-range values itself; a weight outside 1..=1000
+        // is not a weight, so it is left to the drop report rather than
+        // silently coerced.
+        other if (1..=1000).contains(&other) => {
+            return Some(format!("FontWeight({other})"));
+        }
+        _ => return None,
+    };
+    Some(format!("FontWeight.{named}"))
+}
+/// The value half of [`part_elevation_tier`], split out so the drop reporter
+/// can ask the SAME question the lowering asks (#14810).
+///
+/// Without this there were two lists: the lowering's, and the reporter's
+/// implicit assumption that anything not in its `match` was discarded. That
+/// made every handled `elevation` a false positive -- 16 reported dropped
+/// against 16 `.shadow(..)` calls actually emitted. A drop report that cries
+/// wolf is worse than none, because the real entries stop being read.
+fn elevation_tier_for_value(value: &str) -> Option<ElevationTier> {
+    match value.trim() {
+        "raised" => Some(ElevationTier::Raised),
+        "overlay" => Some(ElevationTier::Overlay),
+        _ => None,
+    }
+}
+
+/// The weight a `flex-grow` value resolves to, or `None` when it is unusable.
+///
+/// Split out so the drop reporter asks the SAME question the lowering asks
+/// (#14810). Invalid, non-finite, zero and negative values stay intrinsic and
+/// are therefore genuinely discarded; usable ones are consumed.
+fn flex_grow_weight(value: &str) -> Option<String> {
+    value
+        .trim()
+        .parse::<f64>()
+        .ok()
+        .filter(|v| v.is_finite() && *v > 0.0)
+        .map(|v| v.to_string())
 }
 
 /// One authored style property that Compose lowering discards.
@@ -2744,22 +2815,6 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
     elevation_tier_for_value(value)
 }
 
-/// The value half of [`part_elevation_tier`], split out so the drop reporter
-/// can ask the SAME question the lowering asks (#14810).
-///
-/// Without this there were two lists: the lowering's, and the reporter's
-/// implicit assumption that anything not in its `match` was discarded. That
-/// made every handled `elevation` a false positive -- 16 reported dropped
-/// against 16 `.shadow(..)` calls actually emitted. A drop report that cries
-/// wolf is worse than none, because the real entries stop being read.
-fn elevation_tier_for_value(value: &str) -> Option<ElevationTier> {
-    match value.trim() {
-        "raised" => Some(ElevationTier::Raised),
-        "overlay" => Some(ElevationTier::Overlay),
-        _ => None,
-    }
-}
-
 /// The Compose styling derived from a part's base props + state layers,
 /// split into the two places it lands:
 ///   * `modifier` — the `.background/.border/.width/.height/.padding`
@@ -2779,9 +2834,11 @@ struct ComposeStyle {
     ///
     /// Collected BY the builder rather than by a parallel list of "things
     /// Compose supports", because a parallel list drifts the moment a property
-    /// is added to one and not the other -- and the entire point of #12022 is
-    /// that a drop nobody records is a drop nobody knows about.
+    /// is added to one and not the other -- which is exactly the drift #12022
+    /// exists to catch.
     dropped: Vec<(String, String)>,
+    /// Compose `FontWeight.*` expression for an authored `font-weight` (#14810).
+    font_weight: Option<String>,
 }
 
 /// Build the [`ComposeStyle`] for a part from its base props + state
@@ -2847,8 +2904,6 @@ fn compose_box_style(
         }
     }
 
-    let mut dropped: Vec<(String, String)> = Vec::new();
-
     fn content_alignment(v: &str) -> Option<&'static str> {
         match v.trim() {
             "left" | "start" => Some("Alignment.CenterStart"),
@@ -2875,6 +2930,8 @@ fn compose_box_style(
     // this v1 targets).
     let mut text_align: Option<&'static str> = None;
     let mut radius: Option<String> = None;
+    let mut font_weight: Option<String> = None;
+    let mut dropped: Vec<(String, String)> = Vec::new();
 
     let mut absorb = |p: &StyleProp, layer_idx: Option<usize>| {
         let set = |bucket: &mut PropBucket, v: String| match layer_idx {
@@ -2923,6 +2980,15 @@ fn compose_box_style(
             "border-radius" if layer_idx.is_none() => {
                 if let Some(v) = px_or_none(&p.value) {
                     radius = Some(v);
+                }
+            }
+            // #14810 — 48 occurrences in TaskApp, every one discarded, so every
+            // bold label rendered at regular weight. This is NOT a missing
+            // modifier: Compose's Text takes fontWeight as an ARGUMENT, so it
+            // threads through the text style rather than the box chain.
+            "font-weight" if layer_idx.is_none() => {
+                if let Some(w) = compose_font_weight(&p.value) {
+                    font_weight = Some(w);
                 }
             }
             // `flex-grow` is consumed by `compose_row_weight`, not here, so
@@ -3085,6 +3151,7 @@ fn compose_box_style(
         text_color,
         font_family_mono: !font_family_mono.empty(),
         font_size: font_size_out,
+        font_weight,
     }
 }
 
@@ -3135,6 +3202,8 @@ struct TextStyleCtx {
     mono: bool,
     /// Font size in CSS px (unit-stripped), threaded as `N.sp`.
     size: Option<String>,
+    /// Compose `FontWeight.*` expression for an authored `font-weight`.
+    weight: Option<String>,
 }
 
 impl TextStyleCtx {
@@ -3152,6 +3221,9 @@ impl TextStyleCtx {
         if let Some(sz) = &self.size {
             s.push_str(&format!(", fontSize = {sz}.sp"));
         }
+        if let Some(w) = &self.weight {
+            s.push_str(&format!(", fontWeight = {w}"));
+        }
         s
     }
 
@@ -3165,6 +3237,9 @@ impl TextStyleCtx {
         }
         if let Some(sz) = &self.size {
             fields.push(format!("fontSize = {sz}.sp"));
+        }
+        if let Some(w) = &self.weight {
+            fields.push(format!("fontWeight = {w}"));
         }
         if fields.is_empty() {
             None
@@ -3208,6 +3283,9 @@ fn cell_text_style(inherited: &TextStyleCtx, style: &ComposeStyle) -> TextStyleC
     }
     if let Some(sz) = &style.font_size {
         ctx.size = Some(sz.clone());
+    }
+    if let Some(w) = &style.font_weight {
+        ctx.weight = Some(w.clone());
     }
     ctx
 }
@@ -3790,7 +3868,8 @@ fn emit_container_frame(
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
-                    dropped: Vec::new(),
+                dropped: Vec::new(),
+                font_weight: None,
                 })
             }
         }
@@ -3941,20 +4020,6 @@ pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> 
     result
 }
 
-/// The weight a `flex-grow` value resolves to, or `None` when it is unusable.
-///
-/// Split out so the drop reporter asks the SAME question the lowering asks
-/// (#14810). Invalid, non-finite, zero and negative values stay intrinsic and
-/// are therefore genuinely discarded; usable ones are consumed.
-fn flex_grow_weight(value: &str) -> Option<String> {
-    value
-        .trim()
-        .parse::<f64>()
-        .ok()
-        .filter(|v| v.is_finite() && *v > 0.0)
-        .map(|v| v.to_string())
-}
-
 /// Resolve a Mosaic Row child's request to consume remaining horizontal room.
 ///
 /// CSS-authored components commonly use either `flex-grow: N` or
@@ -4060,6 +4125,7 @@ fn emit_container(
                 font_family_mono: false,
                 font_size: None,
                 dropped: Vec::new(),
+                font_weight: None,
             });
         }
     }
@@ -4086,7 +4152,8 @@ fn emit_container(
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
-                    dropped: Vec::new(),
+                dropped: Vec::new(),
+                font_weight: None,
                 });
             }
         }
@@ -10491,47 +10558,72 @@ mod tests {
         );
     }
 
-    /// #14810 — before this, Compose reported nothing, so an empty
-    /// `styleDegradations` meant "nobody looked" rather than "nothing was
-    /// lost". TaskApp drops 43 distinct properties, including 318
-    /// `border-radius` and 48 `font-weight`, while the strict
-    /// `native-complete` profile passed.
+
+    /// #14810 — `font-weight` was discarded: 48 occurrences in TaskApp, every
+    /// bold label rendered at regular weight.
+    ///
+    /// Not a missing modifier. Compose's `Text` takes `fontWeight` as an
+    /// ARGUMENT, so it threads through the text style rather than the box
+    /// modifier chain -- the same shape as the `gap` problem in #14804.
     #[test]
-    fn dropped_properties_are_reported_with_a_reason() {
+    fn font_weight_threads_through_the_text_style() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("label".to_string());
+        let l = layout("F", n);
+
         let mut sheet = empty_style("F");
-        // `box-shadow` and `letter-spacing` have no Compose lowering at all,
-        // so this fixture does not go stale the moment another property is
-        // fixed. It did: it named `border-radius`, #14817 landed that, and the
-        // test then asserted a drop that no longer occurs.
-        sheet.parts.push(part(
-            "card",
-            vec![
-                sprop("box-shadow", "0 1px 2px #000"),
-                sprop("background", "#ff0000"),
-                sprop("letter-spacing", "0.07em"),
-            ],
-            vec![],
-        ));
+        sheet
+            .parts
+            .push(part("label", vec![sprop("font-weight", "bold")], vec![]));
 
-        let drops = dropped_style_properties(&sheet);
-        let names: Vec<&str> = drops.iter().map(|d| d.name.as_str()).collect();
-
-        assert!(names.contains(&"box-shadow"), "got: {names:?}");
-        assert!(names.contains(&"letter-spacing"), "got: {names:?}");
-        // `background` IS lowered, so it must not appear -- a reporter that
-        // named everything would be as useless as one that named nothing.
-        assert!(!names.contains(&"background"), "got: {names:?}");
-
-        let shadow = drops.iter().find(|d| d.name == "box-shadow").unwrap();
-        assert_eq!(shadow.part, "card");
-        assert_eq!(shadow.value, "0 1px 2px #000");
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(out.contains("fontWeight = FontWeight.Bold"), "got:\n{out}");
         assert!(
-            shadow.reason.contains("Modifier.shadow"),
-            "the reason must be actionable, got: {}",
-            shadow.reason
+            out.contains("import androidx.compose.ui.text.font.FontWeight"),
+            "FontWeight emitted without its import, got:\n{out}"
         );
     }
 
+    /// CSS numbers map to Compose's named constants where they exist, because
+    /// the generated Kotlin is meant to be read.
+    #[test]
+    fn numeric_font_weights_map_to_named_constants() {
+        assert_eq!(
+            compose_font_weight("500").as_deref(),
+            Some("FontWeight.Medium")
+        );
+        assert_eq!(
+            compose_font_weight("600").as_deref(),
+            Some("FontWeight.SemiBold")
+        );
+        assert_eq!(
+            compose_font_weight("normal").as_deref(),
+            Some("FontWeight.Normal")
+        );
+        assert_eq!(
+            compose_font_weight("bold").as_deref(),
+            Some("FontWeight.Bold")
+        );
+        // Off the hundreds, but still a legal weight.
+        assert_eq!(
+            compose_font_weight("450").as_deref(),
+            Some("FontWeight(450)")
+        );
+    }
+
+    /// `lighter`/`bolder` are RELATIVE to the inherited weight, and this
+    /// lowering has no inherited value to resolve them against. Guessing
+    /// Light/Bold would be wrong for any parent that is not already normal, so
+    /// they stay unmapped and fall through to the drop report instead.
+    #[test]
+    fn relative_font_weights_are_not_guessed_at() {
+        assert_eq!(compose_font_weight("lighter"), None);
+        assert_eq!(compose_font_weight("bolder"), None);
+        assert_eq!(compose_font_weight("chunky"), None);
+        assert_eq!(compose_font_weight("0"), None);
+        assert_eq!(compose_font_weight("1200"), None);
+    }
 
     /// #14708 — `opacity` is what UI57's `state disabled` treatment is built
     /// on, so dropping it meant a disabled control dimmed on five backends and
@@ -10661,6 +10753,48 @@ mod tests {
         assert!(!out.contains("RoundedCornerShape("), "got:\n{out}");
         assert!(!out.contains(".clip("), "got:\n{out}");
     }
+
+    /// #14810 — before this, Compose reported nothing, so an empty
+    /// `styleDegradations` meant "nobody looked" rather than "nothing was
+    /// lost". TaskApp drops 43 distinct properties, including 318
+    /// `border-radius` and 48 `font-weight`, while the strict
+    /// `native-complete` profile passed.
+    #[test]
+    fn dropped_properties_are_reported_with_a_reason() {
+        let mut sheet = empty_style("F");
+        // `box-shadow` and `letter-spacing` have no Compose lowering at all,
+        // so this fixture does not go stale the moment another property is
+        // fixed. It did: it named `border-radius`, #14817 landed that, and the
+        // test then asserted a drop that no longer occurs.
+        sheet.parts.push(part(
+            "card",
+            vec![
+                sprop("box-shadow", "0 1px 2px #000"),
+                sprop("background", "#ff0000"),
+                sprop("letter-spacing", "0.07em"),
+            ],
+            vec![],
+        ));
+
+        let drops = dropped_style_properties(&sheet);
+        let names: Vec<&str> = drops.iter().map(|d| d.name.as_str()).collect();
+
+        assert!(names.contains(&"box-shadow"), "got: {names:?}");
+        assert!(names.contains(&"letter-spacing"), "got: {names:?}");
+        // `background` IS lowered, so it must not appear -- a reporter that
+        // named everything would be as useless as one that named nothing.
+        assert!(!names.contains(&"background"), "got: {names:?}");
+
+        let shadow = drops.iter().find(|d| d.name == "box-shadow").unwrap();
+        assert_eq!(shadow.part, "card");
+        assert_eq!(shadow.value, "0 1px 2px #000");
+        assert!(
+            shadow.reason.contains("Modifier.shadow"),
+            "the reason must be actionable, got: {}",
+            shadow.reason
+        );
+    }
+
 
     /// #14810 — a property consumed OUTSIDE the style match must not be
     /// reported as dropped.
