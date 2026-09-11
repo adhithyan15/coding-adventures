@@ -1,6 +1,6 @@
 # UI47 — Host capability effects: giving `Effect` a completion path
 
-**Status:** Steps 1-5 of §5.4 are done. The protocol core landed in #14547; all five native hosts answer effects (Qt #14705, SwiftUI #14721, Compose #14731, Flutter #14739, XAML #14744); and `engram-mosaic-app` emits Anki import/export as `Await` effects (#14747). Two steps remain: step 6 (#13728, per-backend adapter migration), which is blocked on §5.4a — nothing generated connects an effect handler — and step 7 (`deleteNote` confirmation, closing §4.2).
+**Status:** Steps 1-5 of §5.4 are done. The protocol core landed in #14547; all five native hosts answer effects (Qt #14705, SwiftUI #14721, Compose #14731, Flutter #14739, XAML #14744); and `engram-mosaic-app` emits Anki import/export as `Await` effects (#14747). Two steps remain: step 6 (#13728, per-backend adapter migration), which is blocked on §5.4a — nothing generated connects an effect handler, whose fix is designed in §5.5 and not yet built — and step 7 (`deleteNote` confirmation, closing §4.2).
 
 §2 and §3 below describe the state this spec was written against, and are kept as the problem statement rather than rewritten — §3's "cannot meet at v1" is still true *of v1*, which is why nothing is minted below protocol 2.
 **Layer:** UI / standard Mosaic app ABI
@@ -268,12 +268,102 @@ from package code today —
 - **SwiftUI / Compose / Flutter / XAML**: the handler is a closure or property
   set in code, and each backend's entry point is generated.
 
-Whether the hook is a manifest section, an emitted extension point, or QML-level
-for Qt and code-level elsewhere is undecided. What is decided is that step 6
-cannot start until it exists, and that this is Mosaic work rather than Engram
-work — which is the forcing function doing its job.
+This is Mosaic work rather than Engram work — the forcing function doing its
+job — and step 6 cannot start until it exists. §5.5 settles the shape: a
+`[host_effects]` manifest section that the emitters wire into the generated
+entry point.
 
 ---
+
+### 5.5 The handler hook: `[host_effects]`
+
+§5.4a establishes that nothing generated connects a handler. This is the shape
+that closes it, and it is Mosaic work — the first application to need a host
+capability should not also have to invent the seam for one.
+
+#### 5.5.1 Why not the obvious alternatives
+
+- **Replace the entry point through `[host_assets]`.** This is what Engram does
+  today for `MosaicHost` itself, and it is the problem rather than the solution:
+  the override reimplements the whole application boundary per platform (654
+  lines for Qt) and, because it replaces the generated host, it unhooks the
+  standard runtime entirely. An entry-point override would do the same to
+  `main.cpp`.
+- **Handle it in QML for Qt.** `effectRequested` is a signal and `mosaicHost` is
+  already a `required property var`, so a `Connections` block could reach it —
+  but the QML root is generated too, so the package still cannot get a block in
+  there, and four of the five backends have no QML at all. It would make Qt's
+  story different for no structural reason.
+- **Teach the templates well-known effect kinds.** Putting "`importAnki` opens a
+  file dialog filtered to `.apkg`" in the generic host makes every generated
+  application carry one application's policy.
+
+#### 5.5.2 Shape
+
+A new optional manifest section, mirroring `[host_assets]`'s existing
+files-plus-metadata idiom rather than inventing a second one:
+
+```toml
+[host_effects]
+files = [
+  { backend = "qt", source = "host/qt/engram_effects.h",   target = "engram_effects.h" },
+  { backend = "qt", source = "host/qt/engram_effects.cpp", target = "engram_effects.cpp" },
+]
+handlers = [
+  { backend = "qt", include = "engram_effects.h", install = "installEngramEffects" },
+]
+```
+
+- `files` — copied into the backend output directory, **and added to that
+  backend's build source list**. This is the one thing `[host_assets]` cannot
+  already do: it only ever *replaces* files the emitter already generated and
+  therefore already listed, so nothing ever had to append a new source.
+- `handlers` — at most one per backend. `install` names the symbol the generated
+  entry point calls; `include` is optional and backend-interpreted (a C++
+  `#include`, a Dart `import`, nothing at all where the handler is already in
+  scope).
+
+#### 5.5.3 The install contract, per backend
+
+The host is passed where there is an instance to pass, and not where there is
+not — XAML's generated host is a static class, so its handler reaches it by
+name:
+
+| backend | signature |
+| --- | --- |
+| Qt | `void install(MosaicHost &host)` — connects to `effectRequested` |
+| SwiftUI | `func install(_ host: MosaicRuntimeHost)` — sets `effectHandler` |
+| Compose | `fun install(host: MosaicRuntimeHost)` |
+| Flutter | `void install(MosaicHost host)` |
+| XAML | `static void Install()` — sets `MosaicRuntimeHost.EffectHandler` |
+
+#### 5.5.4 Where the call goes, and what that costs
+
+Immediately after the host is constructed and before the UI is shown.
+
+**Effects raised by the startup update are therefore fail-swept, and that is a
+real limit rather than an oversight.** Every host creates the application inside
+its constructor and settles that first update there — `MosaicHost.cpp` line 102
+is the Qt instance — so an effect emitted at startup is discharged before any
+handler could exist. Nothing hangs and nothing crashes: the sweep fails it with
+"no host handler answered effect N" and the application is told, which is the
+behaviour §5.1 specifies for an unanswered `Await`.
+
+No application needs a startup effect today, and Engram does not — its effects
+come from the Import and Export buttons. Paying for one would mean two-phase
+construction across all five templates: construct, install, *then* create the
+application. That is the fix if a startup effect is ever genuinely needed, and
+it should not be paid for speculatively.
+
+What must not happen is the limit being discovered rather than read, which is
+why it is written here rather than left to whoever first tries it.
+
+#### 5.5.5 What tells you it worked
+
+Engram's Qt `[host_assets]` entries for `MosaicHost.h` / `MosaicHost.cpp` are
+deleted, its Anki import still opens a file dialog and still imports, and
+`replacedGeneratedFiles` for a Qt build stops containing that pair — which is
+the assertion #13728 is pinned to.
 
 ## 6. Why (A), and what is worse about it
 
