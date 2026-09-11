@@ -716,3 +716,16 @@ Twenty of 58 COBOL rows now declare BEAM, for 426 cells. Remaining COBOL
 features (alphanumeric EVALUATE subjects, reference modification, STRING
 SIZE/delimiters, pointer/overflow) still require individual execution
 proofs.
+
+### COBOL string ops/reference modification on BEAM (VM-040)
+
+Four more COBOL programs execute on real BEAM: an alphanumeric `EVALUATE`
+subject with a `THRU`-range `WHEN` (the first COBOL BEAM row to fold a
+`str_cmp`-derived range with `and`), and three reference-modification rows —
+literal bounds with an omitted length, live computed indices, and computed
+slices driving both an `IF` comparison and an `EVALUATE` subject. All four
+reuse `str_cmp`/`str_slice`/`and`/branch lowering already proven by earlier
+COBOL BEAM rows, so no backend change was needed. Twenty-four of 58 COBOL
+rows now declare BEAM, for 430 cells. Remaining COBOL features (STRING
+SIZE/delimiters, pointer/overflow) still require individual execution
+proofs.
