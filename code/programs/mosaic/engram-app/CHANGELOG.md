@@ -2,6 +2,110 @@
 
 ## Unreleased
 
+### Changed — Qt reaches the engine through the standard Mosaic runtime (#13728)
+
+Engram's Qt project no longer overrides the generated `MosaicHost`. Props,
+events, snapshot and restore go through `engram-mosaic-app` and the standard
+binding; the only Qt-specific file left is `host/qt/engram_effects.cpp`, which
+answers the Anki import and export effects with `QFileDialog`.
+
+The 654-line `host/qt/MosaicHost.h/.cpp` is retired. It bound to `engram-capi`
+— a bespoke ABI of 44 `eg_*` symbols — and reimplemented the entire application
+boundary: session lifecycle, prop camel-casing, snapshot persistence, JSON
+marshalling. None of that was Engram-specific; all of it is what the standard
+runtime already does.
+
+**What this unlocks, and what it cost to get here.** Qt could not reach
+`native-complete` while the override existed: that profile switches the
+generated `main.cpp` to the strict standard-binding shape — `registerTypes`,
+`requireRuntime`, `configureRequiredProps`, `attach` — and the override exposed
+`props`/`handleEvent`/`ensureLoaded` instead, so the combination did not
+compile at all. The CI lane said so in a comment and deliberately gated the
+weaker configuration.
+
+It now emits with **`nativeComplete: true`, zero degradations, and an empty
+`replacedGeneratedFiles`**, and the emitted project builds. That is an epic
+definition-of-done bullet, and UI47 §5.5.5's stated test of whether this
+migration worked.
+
+The path ran through the whole of UI47: `Effect` needed a completion path
+(steps 1–3), all five hosts needed to answer one (step 4), Engram needed to
+emit its Anki intents as `Await` effects (step 5), and a package needed a way
+to supply the handler that connects them (§5.5). Only then could the override
+come off.
+
+**Qt only.** SwiftUI, Compose, Flutter, XAML and the two web backends still
+ship their own `MosaicHost` through `[host_assets]`, unchanged — each still
+reimplements the boundary against `engram-capi`, and `engram-capi` itself stays
+for them and for the Anki entry points the standard app ABI does not model.
+
+#### The CI lane's pinned assertion, updated
+
+`replacedGeneratedFiles` was pinned to `["MosaicHost.cpp", "MosaicHost.h"]`
+specifically so this migration could not be forgotten. It is now pinned to `[]`
+— pinned rather than dropped, because a package that starts overriding the
+generated host again has undone this and should fail here rather than pass
+quietly. The lane also asserts zero degradations and greps the generated
+`main.cpp` for the install call, which is the half no assertion over a source
+file can reach.
+
+#### Sixteen substring assertions retired with the file
+
+Engram's own suite asserted that the Qt override contained `eg_engram_app_props`,
+`QLibrary`, `mosaicPropName`, `hydrateSession` and a dozen more. None of that
+ships for Qt now, so those assertions were testing text nothing builds — the
+"substring assertions over emitted text" problem the epic named, in its purest
+form.
+
+What replaces them is narrower because the file is: the handler answers two
+effects and does nothing else. The assertions cover all three outcomes, because
+a handler that only ever answers `ok` leaves a cancelled dialog looking like a
+hang, and they pin `Qt::DirectConnection` — a queued connection would return
+before the dialog answers, the sweep would fail the effect as unanswered, and
+the eventual answer would be rejected as already completed.
+
+#### From the security review of the handler
+
+**An exception could strand the effect and kill persistence for the process.**
+The handler runs inside the host's `settleEffects`, and the `emit` there has no
+handler around it: anything thrown unwinds past it, `failOutstanding` never
+runs, the id stays in `awaiting_`, and the runtime then refuses every snapshot
+and restore for the life of the process. That is the silent permanent failure
+the whole sweep mechanism exists to prevent, reached by throwing rather than by
+forgetting — and an exception leaving a directly-connected slot is undefined
+behaviour in Qt 6 besides. Both handlers are now wrapped, and the reason is
+answered as the effect's failure, which discharges it and keeps persistence
+alive.
+
+**The import read was unbounded.** `readAll` with no size check, then base64,
+then UTF-16, then the JSON envelope, then the runtime's own copy — roughly
+seven times the file's size in flight, with the application's cap sitting at the
+far end of all of it and so unable to prevent any of it. A multi-gigabyte file
+would OOM, and `readAll` on a fifo or character device never reaches EOF at all.
+
+Now sized up before it is opened, against the 256 MiB the package layer will
+accept on native targets, so a file that cannot import is refused before it is
+read rather than after. The regular-file test is separate work rather than a
+restatement, because `QFileInfo::size()` reports 0 for a fifo.
+
+The generic WebAssembly handler for this same protocol already bounded its read
+at 16 MiB. Qt was the outlier.
+
+**Two inputs are sanitised that the retired binding used to sanitise.**
+`suggestedName` is forced to a bare filename — `QDir::filePath` joins a relative
+path happily, so a suggestion carrying separators would open the save dialog in
+a different directory with only the basename visible — and extensions must look
+like extensions before reaching the dialog filter, where `)` and `;;` are
+structural and `*?[` are globs. Neither is reachable today: nothing sends
+`suggestedName`, and both extension lists are literals in the engine. The old
+binding scrubbed its deck-derived name anyway, so accepting either unchecked
+would be losing a check rather than never having had one.
+
+The CI lane's degradation assertion now checks the key is an array before its
+length, since `null | length` is `0` in jq and a report that lost the key would
+otherwise pass.
+
+
 - **Fixed: XAML layout variants generated duplicate partial classes.** The
   touch layout now emits its own `EngramAppTouch` class and event union, so the
   WinUI project can compile both layouts without duplicate members (#14234).
