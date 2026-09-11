@@ -960,18 +960,51 @@ ENGINE_SYMBOLS = [
 ]
 
 
+# The standard Mosaic app ABI, which the BUNDLED runtime exports. SwiftUI used
+# to link `engram-capi` statically and was checked for `eg_*` symbols in its
+# executable; its host now reaches the engine through this runtime instead, so
+# the fixtures below carry a resource bundle rather than a fat executable.
+RUNTIME_SYMBOLS = [
+    "mosaic_app_create",
+    "mosaic_app_destroy",
+    "mosaic_app_dispatch",
+    "mosaic_app_snapshot",
+    "mosaic_app_restore",
+    # No `_app` infix, which is exactly why a filter on `mosaic_app_*` could not
+    # see it -- and it is one the loader's RESOLVE macro hard-requires.
+    "mosaic_buffer_free",
+    "mosaic_app_complete_effect",
+]
+
+
 def _write_swiftui_bundle(
     root: Path,
     *,
     symbols: int = 9,
     undefined: int = 0,
     executable_name: str = "Engram",
+    runtime_symbols: int = len(RUNTIME_SYMBOLS),
+    runtime_at: str = "root",
 ) -> Path:
-    """A stand-in for the `.app` the SwiftUI build produces."""
+    """A stand-in for the `.app` the SwiftUI build produces.
+
+    `runtime_at` places the resource bundle where the shipped app puts it
+    ("root") or where an earlier version of the build script wrongly put it
+    ("resources"), which is the layout that fatal-errors on launch anywhere but
+    the build machine. "none" omits it entirely.
+    """
 
     bundle = root / "swiftui" / "Engram.app"
     (bundle / "Contents" / "MacOS").mkdir(parents=True)
     (bundle / "Contents" / "Resources").mkdir(parents=True)
+
+    if runtime_at != "none":
+        parent = bundle if runtime_at == "root" else bundle / "Contents" / "Resources"
+        runtime_dir = parent / "App_App.bundle" / "Runtime"
+        runtime_dir.mkdir(parents=True)
+        (runtime_dir / "libmosaic_app.dylib").write_bytes(
+            _mach_o(RUNTIME_SYMBOLS[:runtime_symbols])
+        )
     (bundle / "Contents" / "Info.plist").write_bytes(
         plistlib.dumps(
             {
@@ -1032,30 +1065,84 @@ class ArchiveSwiftUITests(unittest.TestCase):
                 mode = archive.getinfo(member).external_attr >> 16
             self.assertTrue(mode & 0o111, f"lost the executable bit: {mode:o}")
 
-    def test_refuses_a_binary_without_the_engine_linked(self) -> None:
-        # SwiftUI links the engine statically, so there is no library beside the
-        # binary to look for: the engine is inside the executable or every deck
-        # operation silently does nothing. This is the check that says so.
+    def test_accepts_an_executable_with_no_engine_symbols(self) -> None:
+        # The inverse of the check this replaced, and the reason it had to go.
+        #
+        # SwiftUI used to link `engram-capi` statically, so an executable with
+        # zero `eg_*` symbols meant a broken build and was refused. Its host now
+        # reaches the engine through the bundled standard runtime, so zero is
+        # what a CORRECT executable has -- and the old assertion rejected every
+        # good build. CI caught that; nothing here did, because every fixture
+        # was written for the old architecture.
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             bundle = _write_swiftui_bundle(root, symbols=0)
-            with self.assertRaises(ValueError) as caught:
-                engram_release.archive_swiftui(
-                    "0.4.0", "macos", bundle, root / "out", COMMIT
-                )
-            self.assertIn("engine did not link", str(caught.exception))
+            defined, _ = engram_release.linked_engine_symbols(
+                (bundle / "Contents" / "MacOS" / "Engram").read_bytes()
+            )
+            self.assertEqual(
+                defined, set(), "the fixture must have no eg_* symbols to prove anything"
+            )
+            archive = engram_release.archive_swiftui(
+                "0.4.0", "macos", bundle, root / "out", COMMIT
+            )
+            self.assertTrue(archive.is_file())
 
-    def test_refuses_a_partially_linked_binary(self) -> None:
-        # Below the floor but not zero -- the shape a link that pulled in some
-        # objects and not others would take.
+    def test_refuses_a_runtime_missing_mosaic_buffer_free(self) -> None:
+        # The symbol a `mosaic_app_*` filter cannot see.
+        #
+        # `CMosaicRuntime.c` resolves it through the branch that FAILS, so a
+        # runtime without it is refused by `resolve_symbols`, `is_ready()`
+        # returns false, and every deck operation reports UNAVAILABLE. It has no
+        # `_app` infix, so the first version of this gate counted six
+        # `mosaic_app_*` symbols, found six, and shipped a dead app.
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            bundle = _write_swiftui_bundle(root, symbols=2)
+            bundle = _write_swiftui_bundle(root)
+            runtime = bundle / "App_App.bundle" / "Runtime" / "libmosaic_app.dylib"
+            without = [s for s in RUNTIME_SYMBOLS if s != "mosaic_buffer_free"]
+            self.assertEqual(
+                len(without), 6, "the fixture must still carry six mosaic_app_* symbols"
+            )
+            runtime.write_bytes(_mach_o(without))
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_swiftui(
                     "0.4.0", "macos", bundle, root / "out", COMMIT
                 )
-            self.assertIn("only 2 DEFINED engine symbols", str(caught.exception))
+            self.assertIn("mosaic_buffer_free", str(caught.exception))
+
+    def test_a_universal_runtime_is_scanned_for_the_right_symbols(self) -> None:
+        # The fat-binary path used to recurse into each slice WITHOUT the
+        # prefix, so it scanned a universal runtime for `eg_*` and found none.
+        # That failed both ways: a correct universal build was rejected, and one
+        # carrying only `eg_*` symbols was published.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root)
+            runtime = bundle / "App_App.bundle" / "Runtime" / "libmosaic_app.dylib"
+            slice_bytes = _mach_o(RUNTIME_SYMBOLS)
+            runtime.write_bytes(_fat_mach_o([slice_bytes, slice_bytes]))
+            archive = engram_release.archive_swiftui(
+                "0.4.0", "macos", bundle, root / "out", COMMIT
+            )
+            self.assertTrue(archive.is_file())
+
+    def test_refuses_an_incomplete_runtime(self) -> None:
+        # The bundled runtime is there but does not export the whole app ABI --
+        # the shape a half-built or stale library would take. Five of six is
+        # the interesting case: the missing one could be
+        # `mosaic_app_complete_effect`, which every `[host_effects]` handler
+        # answers through, and a floor of five would have accepted it.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root, runtime_symbols=5)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            # Named, not counted: the error says WHICH are missing.
+            self.assertIn("does not define", str(caught.exception))
+            self.assertIn("mosaic_buffer_free", str(caught.exception))
 
     def test_refuses_a_bundle_with_no_info_plist(self) -> None:
         # Without it macOS does not treat the directory as an application: it
@@ -1092,35 +1179,72 @@ class ArchiveSwiftUITests(unittest.TestCase):
                 )
             self.assertIn(".app", str(caught.exception))
 
-    def test_refuses_a_binary_that_only_references_the_engine(self) -> None:
+    def test_refuses_a_runtime_that_only_references_the_symbols(self) -> None:
         # The case a byte scan cannot see, and the reason this reads the symbol
         # TABLE. Mach-O stores defined and undefined names identically in the
-        # string table, so searching the file for `eg_...` gives the same answer
-        # for a binary that CONTAINS the engine and one that merely expects it
-        # from a library that will not be there. Confirmed against a pair of
-        # compiled fixtures: the byte scan passed both.
+        # string table, so searching the file for `mosaic_app_...` gives the
+        # same answer for a library that CONTAINS the engine and one that merely
+        # expects it from somewhere else.
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            bundle = _write_swiftui_bundle(root, symbols=0, undefined=9)
+            bundle = _write_swiftui_bundle(root, runtime_symbols=0)
+            runtime = (
+                bundle / "App_App.bundle" / "Runtime" / "libmosaic_app.dylib"
+            )
+            runtime.write_bytes(_mach_o([], RUNTIME_SYMBOLS))
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_swiftui(
                     "0.4.0", "macos", bundle, root / "out", COMMIT
                 )
-            message = str(caught.exception)
-            self.assertIn("0 DEFINED engine symbols", message)
-            self.assertIn("undefined: eg_", message)
+            self.assertIn("does not define", str(caught.exception))
+            self.assertIn("defined: none", str(caught.exception))
 
-    def test_refuses_a_partially_linked_binary_with_undefined_symbols(self) -> None:
-        # Enough defined symbols to clear the floor, but some still undefined --
-        # the app would load part of the engine and fail on the rest.
+    def test_refuses_a_bundle_with_no_runtime_at_all(self) -> None:
+        # The failure the whole check exists for: an `.app` that builds,
+        # launches, and has no engine. Before the migration this could not
+        # happen for SwiftUI, because the engine was linked INTO the executable
+        # being copied; now it is a resource that the bundling step can simply
+        # fail to bring along, which is exactly what the first version did.
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            bundle = _write_swiftui_bundle(root, symbols=6, undefined=3)
+            bundle = _write_swiftui_bundle(root, runtime_at="none")
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_swiftui(
                     "0.4.0", "macos", bundle, root / "out", COMMIT
                 )
-            self.assertIn("leaves engine symbols undefined", str(caught.exception))
+            self.assertIn("App_App.bundle/Runtime/libmosaic_app.dylib", str(caught.exception))
+
+    def test_refuses_a_runtime_under_contents_resources(self) -> None:
+        # The layout the build script produced first, and the one that matters
+        # most to reject: SwiftPM's generated accessor resolves
+        # `Bundle.main.bundleURL/App_App.bundle` -- the `.app` ROOT -- and never
+        # looks in `Contents/Resources`. An app built this way runs on the
+        # machine that built it, because the accessor's baked-in absolute
+        # `.build` path still resolves there, and fatal-errors on every other
+        # machine with `could not load resource bundle`.
+        #
+        # So this is a placement the check must refuse even though the runtime
+        # is present, complete, and sitting somewhere entirely plausible.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root, runtime_at="resources")
+            self.assertTrue(
+                (
+                    bundle
+                    / "Contents"
+                    / "Resources"
+                    / "App_App.bundle"
+                    / "Runtime"
+                    / "libmosaic_app.dylib"
+                ).is_file(),
+                "the fixture must actually place a complete runtime, or this "
+                "test passes for the wrong reason",
+            )
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("Bundle.module looks", str(caught.exception))
 
     def test_scans_the_executable_the_plist_names(self) -> None:
         # A sorted glob takes whichever file sorts first, so a second file in

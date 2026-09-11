@@ -1,0 +1,17 @@
+{
+  "language": "japanese",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:c95a4b0cf6589563",
+  "lessonIds": [
+    "JA-C19-words",
+    "JA-C19-greetings",
+    "JA-C19-kyoushitsu"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "japanese/narration/ch19.txt",
+  "json": "japanese/narration/ch19.json",
+  "textHash": "fnv1a64:f606eb94b63ccb5d",
+  "jsonHash": "fnv1a64:d97855178ea59023",
+  "findings": []
+}

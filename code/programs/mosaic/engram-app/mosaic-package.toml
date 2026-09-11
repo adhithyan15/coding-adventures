@@ -26,7 +26,6 @@ files = [
   { backend = "react", source = "host/web/engram-host.ts", target = "src/engram-host.ts" },
   { backend = "react", source = "host/web/engram-mosaic-host-wasm.d.ts", target = "src/engram-mosaic-host-wasm.d.ts" },
   { backend = "electron", source = "host/electron/host.js", target = "electron/host.js" },
-  { backend = "swiftui", source = "host/swiftui/MosaicHost.swift", target = "Sources/App/MosaicHost.swift" },
   { backend = "compose", source = "host/compose/MosaicHost.kt", target = "src/main/kotlin/MosaicHost.kt" },
   { backend = "flutter", source = "host/flutter/mosaic_host.dart", target = "lib/mosaic_host.dart" },
   { backend = "xaml", source = "host/xaml/MosaicHost.cs", target = "MosaicHost.cs" },
@@ -69,9 +68,15 @@ dependencies = [
 files = [
   { backend = "qt", source = "host/qt/engram_effects.h", target = "engram_effects.h" },
   { backend = "qt", source = "host/qt/engram_effects.cpp", target = "engram_effects.cpp" },
+  # SwiftPM compiles everything under `Sources/App`, so the target is a path
+  # there rather than a bare filename, and no build-list entry is needed --
+  # unlike Qt, which names its sources and needs `target_sources`.
+  { backend = "swiftui", source = "host/swiftui/EngramEffects.swift", target = "Sources/App/EngramEffects.swift" },
 ]
 handlers = [
   { backend = "qt", include = "engram_effects.h", install = "installEngramEffects" },
+  # No `include`: Swift has no header, and every file in the module is visible.
+  { backend = "swiftui", install = "installEngramEffects" },
 ]
 
 [kernel]

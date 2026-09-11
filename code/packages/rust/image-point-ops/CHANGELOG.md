@@ -5,6 +5,31 @@ Dates in YYYY-MM-DD format.
 
 ---
 
+## [0.2.0] — 2026-09-11
+
+### Added
+
+- `adaptive_threshold_mean` (IMG09) — locally-adaptive threshold via the
+  Bradley/Roth integral-image method: a pixel is foreground when its
+  luminance falls more than a fraction `t` below the mean luminance of a
+  `window` x `window` neighbourhood around it, computed in O(1) per pixel
+  via a summed-area table. Unlike `threshold`/`threshold_luminance`'s
+  single scalar cutoff, this survives uneven lighting across an image
+  (e.g. a shadow across half a photographed document). See
+  `IMG09-adaptive-threshold.md`.
+- 5 new unit tests, including a test that first proves no single global
+  cutoff can solve a deliberately-constructed two-region image (before
+  showing the adaptive version does), an edges-don't-panic check, and a
+  full degenerate-input matrix (0-size images, `window = 0`, non-finite
+  `t`).
+
+### Fixed (caught by the tests above, before this ever shipped)
+
+- The naive left-to-right `br - tr - bl + tl` summed-area-table rectangle
+  formula can panic on unsigned subtraction overflow at an intermediate
+  step even though the fully-combined value is always non-negative;
+  reordered to add both positive terms first, subtract once.
+
 ## [0.1.0] — 2026-04-19
 
 ### Added

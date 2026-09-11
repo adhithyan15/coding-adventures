@@ -1217,75 +1217,18 @@ fn should_split_root_sections(layout_root: &LayoutNode) -> bool {
 /// scroll wrapper a hard stop for the recursion below: TaskApp's oversized
 /// section sat directly under one, and splitting halted at the wrapper with
 /// 80,000 characters still inside it (#14736).
-/// One authored style property that Compose lowering discards.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct DroppedStyleProperty {
-    pub part: String,
-    pub name: String,
-    pub value: String,
-    pub reason: String,
-}
-
-/// Every property, across every part of `style`, that Compose lowering drops.
+/// Whether a style chain already decides the container's width, in which case
+/// the emitter's default `fillMaxWidth()` must not be prepended.
 ///
-/// Derived by running the real lowering over each part's base props and
-/// collecting what its `match` did not handle — not by diffing against a list
-/// of "properties Compose supports". A hand-maintained list is wrong the first
-/// time someone adds an arm and forgets the list, and #12022 exists precisely
-/// because nobody notices that kind of drift.
-///
-/// Until this existed, Compose reported nothing, so an empty
-/// `styleDegradations` meant "nobody looked" rather than "nothing was lost".
-/// TaskApp alone drops 43 distinct properties this way (#14810), including 318
-/// `border-radius` and 48 `font-weight` — every rounded corner square, every
-/// weight flattened — while the strict `native-complete` profile passed.
-pub fn dropped_style_properties(style: &StyleDef) -> Vec<DroppedStyleProperty> {
-    let mut out = Vec::new();
-    for part in &style.parts {
-        let built = compose_box_style(&part.base, &[], None, 0, None);
-        for (name, value) in built.dropped {
-            out.push(DroppedStyleProperty {
-                reason: compose_drop_reason(&name).to_string(),
-                part: part.name.clone(),
-                name,
-                value,
-            });
-        }
-    }
-    out
-}
-
-/// Why a property has no Compose lowering, in terms a reader can act on.
-///
-/// Generic text would make the report unreadable at the scale this reports at.
-/// These are genuinely different problems: some are missing work on a modifier
-/// that exists, some need the parent to lay out differently, and some have no
-/// Compose concept at all.
-fn compose_drop_reason(name: &str) -> &'static str {
-    match name {
-        "border-radius" => {
-            "Compose clips corners with Modifier.clip(RoundedCornerShape(..)), which this emitter              does not yet apply — every rounded surface renders square"
-        }
-        "font-weight" => {
-            "Text takes fontWeight as an argument rather than a modifier, so it has to be              threaded through the text style rather than the box chain"
-        }
-        "box-shadow" | "elevation" => {
-            "Compose spells this Modifier.shadow(elevation, shape); it needs the shape the              border-radius work would also supply"
-        }
-        "flex-grow" | "flex-shrink" | "flex" => {
-            "Compose distributes space with Modifier.weight inside a Row/Column scope, chosen at              the call site rather than applied to an already-built modifier chain"
-        }
-        "position" | "top" | "left" | "right" | "bottom" | "z-index" => {
-            "Compose has no absolute positioning on a plain container; this needs a Box with              alignment or an offset chosen by the parent"
-        }
-        "display" | "flex-direction" | "flex-wrap" | "justify-content" | "align-items" | "align" => {
-            "Compose expresses layout through the composable chosen (Row/Column/Box) and its              arrangement arguments, not through a modifier on a built view"
-        }
-        "border-style" | "border-collapse" | "outline" => {
-            "no Compose equivalent; Modifier.border takes a width, colour and shape only"
-        }
-        _ => "no Compose lowering in this emitter yet",
-    }
+/// `width` is an explicit size; `fillMaxWidth`/`fillMaxSize` already say it;
+/// `weight` makes the parent distribute the space instead (#14795).
+fn chain_sets_own_width(chain: &str) -> bool {
+    chain.contains(".width(")
+        || chain.contains(".fillMaxWidth(")
+        || chain.contains(".fillMaxSize(")
+        || chain.contains(".weight(")
+        || chain.contains(".requiredWidth(")
+        || chain.contains(".widthIn(")
 }
 
 /// The modifier `HostScroll` prefixes onto a container's chain.
@@ -3710,7 +3653,23 @@ fn emit_container_frame(
         writeln!(opener, "{pad}{composable}(").unwrap();
         if has_style_chain {
             let chain = style.as_ref().map(|s| s.modifier.as_str()).unwrap_or("");
-            write!(opener, "{modifier_pad}modifier = Modifier{chain}").unwrap();
+            // `fillMaxWidth()` is this emitter's DEFAULT width for a
+            // container, not an alternative to styling it. Writing the two as
+            // an either/or meant authoring any unrelated property -- a
+            // background, a border, a padding -- silently cancelled the
+            // default and let the container shrink to its content (#14795).
+            //
+            // It goes FIRST so an explicit `width`/`fillMaxWidth` later in the
+            // chain still wins: Compose resolves size modifiers in order.
+            if chain_sets_own_width(chain) {
+                write!(opener, "{modifier_pad}modifier = Modifier{chain}").unwrap();
+            } else {
+                write!(
+                    opener,
+                    "{modifier_pad}modifier = Modifier.fillMaxWidth(){chain}"
+                )
+                .unwrap();
+            }
         } else {
             write!(opener, "{modifier_pad}modifier = Modifier.fillMaxWidth()").unwrap();
         }
@@ -3986,7 +3945,20 @@ fn emit_container(
         writeln!(out, "{pad}{composable}(").unwrap();
         if has_style_chain {
             let chain = style.as_ref().map(|s| s.modifier.as_str()).unwrap_or("");
-            write!(out, "{modifier_pad}modifier = Modifier{chain}").unwrap();
+            // Same defaulting as `emit_container` (#14795). Keeping the two
+            // paths in step matters: a container only takes THIS one once its
+            // section grows large enough to be split, so fixing one alone
+            // would hold until a layout grew and then quietly stop -- exactly
+            // how the HostScroll modifier behaved in #14736.
+            if in_row_scope || chain_sets_own_width(chain) {
+                write!(out, "{modifier_pad}modifier = Modifier{chain}").unwrap();
+            } else {
+                write!(
+                    out,
+                    "{modifier_pad}modifier = Modifier.fillMaxWidth(){chain}"
+                )
+                .unwrap();
+            }
         } else {
             let modifier = if in_row_scope {
                 "Modifier"
@@ -10286,6 +10258,57 @@ mod tests {
         );
     }
 
+    /// #14795 — the width default is not an ALTERNATIVE to styling.
+    ///
+    /// `fillMaxWidth()` is what a container gets when nothing says otherwise.
+    /// Writing it as an either/or against the style chain meant authoring any
+    /// unrelated property -- a background, a border, a padding -- silently
+    /// cancelled the default and let the container shrink to its content. The
+    /// author asked for a colour and lost their layout.
+    #[test]
+    fn an_unrelated_style_property_does_not_cancel_fill_max_width() {
+        let m = component("F", vec![], vec![]);
+        let mut styled = node("Row", vec![], vec![node("Text", vec![], vec![])]);
+        styled.part_name = Some("r".to_string());
+        let l = layout("F", styled);
+
+        let mut sheet = empty_style("F");
+        sheet
+            .parts
+            .push(part("r", vec![sprop("background", "#ff0000")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        // Pin the Row's OWN chain, not merely that the string appears
+        // somewhere in the file -- the import line and any other container
+        // would satisfy a looser match.
+        assert!(
+            out.contains("modifier = Modifier.fillMaxWidth()\n            .background("),
+            "a background cancelled the width default, got:\n{out}"
+        );
+    }
+
+    /// The other half: a chain that DOES decide the width keeps its own answer,
+    /// and the default is not prepended in front of it.
+    #[test]
+    fn a_chain_that_sets_its_own_width_keeps_it() {
+        let m = component("F", vec![], vec![]);
+        let mut styled = node("Row", vec![], vec![node("Text", vec![], vec![])]);
+        styled.part_name = Some("r".to_string());
+        let l = layout("F", styled);
+
+        let mut sheet = empty_style("F");
+        sheet
+            .parts
+            .push(part("r", vec![sprop("width", "236px")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(out.contains(".width(236.dp)"), "got:\n{out}");
+        assert!(
+            !out.contains("fillMaxWidth().width("),
+            "the default was prepended in front of an explicit width, got:\n{out}"
+        );
+    }
+
     /// #14810 — before this, Compose reported nothing, so an empty
     /// `styleDegradations` meant "nobody looked" rather than "nothing was
     /// lost". TaskApp drops 43 distinct properties, including 318
@@ -10322,5 +10345,76 @@ mod tests {
             radius.reason
         );
     }
+
+/// One authored style property that Compose lowering discards.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DroppedStyleProperty {
+    pub part: String,
+    pub name: String,
+    pub value: String,
+    pub reason: String,
+}
+
+/// Every property, across every part of `style`, that Compose lowering drops.
+///
+/// Derived by running the real lowering over each part's base props and
+/// collecting what its `match` did not handle — not by diffing against a list
+/// of "properties Compose supports". A hand-maintained list is wrong the first
+/// time someone adds an arm and forgets the list, and #12022 exists precisely
+/// because nobody notices that kind of drift.
+///
+/// Until this existed, Compose reported nothing, so an empty
+/// `styleDegradations` meant "nobody looked" rather than "nothing was lost".
+/// TaskApp alone drops 43 distinct properties this way (#14810), including 318
+/// `border-radius` and 48 `font-weight` — every rounded corner square, every
+/// weight flattened — while the strict `native-complete` profile passed.
+pub fn dropped_style_properties(style: &StyleDef) -> Vec<DroppedStyleProperty> {
+    let mut out = Vec::new();
+    for part in &style.parts {
+        let built = compose_box_style(&part.base, &[], None, 0, None);
+        for (name, value) in built.dropped {
+            out.push(DroppedStyleProperty {
+                reason: compose_drop_reason(&name).to_string(),
+                part: part.name.clone(),
+                name,
+                value,
+            });
+        }
+    }
+    out
+}
+
+/// Why a property has no Compose lowering, in terms a reader can act on.
+///
+/// Generic text would make the report unreadable at the scale this reports at.
+/// These are genuinely different problems: some are missing work on a modifier
+/// that exists, some need the parent to lay out differently, and some have no
+/// Compose concept at all.
+fn compose_drop_reason(name: &str) -> &'static str {
+    match name {
+        "border-radius" => {
+            "Compose clips corners with Modifier.clip(RoundedCornerShape(..)), which this emitter              does not yet apply — every rounded surface renders square"
+        }
+        "font-weight" => {
+            "Text takes fontWeight as an argument rather than a modifier, so it has to be              threaded through the text style rather than the box chain"
+        }
+        "box-shadow" | "elevation" => {
+            "Compose spells this Modifier.shadow(elevation, shape); it needs the shape the              border-radius work would also supply"
+        }
+        "flex-grow" | "flex-shrink" | "flex" => {
+            "Compose distributes space with Modifier.weight inside a Row/Column scope, chosen at              the call site rather than applied to an already-built modifier chain"
+        }
+        "position" | "top" | "left" | "right" | "bottom" | "z-index" => {
+            "Compose has no absolute positioning on a plain container; this needs a Box with              alignment or an offset chosen by the parent"
+        }
+        "display" | "flex-direction" | "flex-wrap" | "justify-content" | "align-items" | "align" => {
+            "Compose expresses layout through the composable chosen (Row/Column/Box) and its              arrangement arguments, not through a modifier on a built view"
+        }
+        "border-style" | "border-collapse" | "outline" => {
+            "no Compose equivalent; Modifier.border takes a width, colour and shape only"
+        }
+        _ => "no Compose lowering in this emitter yet",
+    }
+}
 
 }

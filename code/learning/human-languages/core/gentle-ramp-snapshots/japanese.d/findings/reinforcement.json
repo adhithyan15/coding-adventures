@@ -1,5 +1,11 @@
 {
   "language": "japanese",
   "kind": "reinforcement",
-  "finding": null
+  "finding": {
+    "language": "japanese",
+    "kind": "reinforcement",
+    "count": 7,
+    "unit": "missed window(s)",
+    "detail": "add retrieval at the expanding R1-R4 intervals"
+  }
 }

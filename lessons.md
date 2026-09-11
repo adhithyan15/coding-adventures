@@ -7245,3 +7245,54 @@ leaves the fail sweep, so a path that forgets to answer no longer degrades to
 "failed" — it wedges the app permanently, because the runtime gates snapshot and
 restore on nothing being pending. Have the dialog function RETURN an outcome so
 every path funnels to exactly one completion call.
+
+### 2026-09-11 — A migration's blast radius is every assertion written against the old shape
+
+Moving Engram's SwiftUI backend off its `engram-capi` override touched far more
+than the emitter, the manifest and the package tests. Three further places
+encoded the architecture being replaced, and each failed in a different way:
+
+- `scripts/build-native.sh` wired a `CEngram` static library and asserted that
+  the built binary contained defined `_eg_` symbols. After the migration a
+  CORRECT build has zero, so the check failed exactly the configuration it
+  existed to protect. CI caught this; reasoning had not.
+- `engram_release.py` had an INDEPENDENT copy of the same symbol gate, so the
+  publish step would have failed even with the build script fixed. Fixing one
+  copy of a duplicated check is not fixing the check.
+- Ten release tests built fixtures in the old shape. One of them asserted that
+  an executable without engine symbols must be refused — i.e. it required the
+  broken architecture and rejected every correct build.
+
+The worst consequence was in none of those: the `.app` bundling copied only the
+executable, which was sufficient while the engine was statically linked INTO it.
+With the engine now a resource, the shipped app contained no engine at all, and
+no assertion noticed, because the old check looked inside the binary where the
+engine used to live.
+
+Before migrating a backend, enumerate what asserts its current shape: the
+emitter, the manifest, the package tests, the CI lane, the release script, the
+release script's tests, and whatever validates the shipped artifact. Each one
+encodes an assumption the migration invalidates.
+
+### 2026-09-11 — Verifying a bundled-resource app in place cannot fail
+
+The SwiftUI `.app` was checked by launching it and confirming it stayed alive.
+It did, and the verification was worthless: SwiftPM's generated
+`resource_bundle_accessor.swift` looks for the resource bundle at
+`Bundle.main.bundleURL/App_App.bundle` and then falls back to an ABSOLUTE
+build-machine path baked in at compile time. Running the app where it was built
+resolves that fallback, so a bundle placed somewhere the accessor never looks
+still runs — on that machine, and nowhere else.
+
+The resource bundle belongs at the `.app` ROOT, not in `Contents/Resources`.
+The wrong placement fatal-errors with `could not load resource bundle` and exit
+133 on every other machine.
+
+Test it by copying the artifact away from its build tree and deleting the build
+directory first. A launch test that cannot fail is worse than none, because it
+reports success.
+
+The assertion guarding this missed it for the same reason: it used
+`find -path '*/Runtime/libmosaic_app.dylib'`, which matches at any depth and so
+cannot distinguish the layout that runs from the one that crashes. Assert the
+exact path when the layout is what matters.
