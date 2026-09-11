@@ -5,6 +5,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+<<<<<<< HEAD
 ### Fixed — `gap` was dropped entirely (#14804)
 
 `gap` reached the lattice IR and died in the property loop's `_ => {}` arm.
@@ -42,6 +43,33 @@ appears.
 Does not fix every case: the storage line still renders joined, so its gap sits
 on a container this does not reach. Tracked in #14804 with Flutter and SwiftUI,
 which drop `gap` the same way.
+=======
+### Fixed — `font-weight` was discarded (#14810)
+
+48 occurrences in TaskApp, 3 in the toolkit, every one thrown away — so every
+bold label rendered at regular weight, which is much of why the app read as
+flat.
+
+This is **not** a missing modifier. Compose's `Text` takes `fontWeight` as an
+**argument**, so it threads through the text style (beside `color`,
+`fontFamily` and `fontSize`) rather than the box modifier chain — the same
+shape as the `gap` problem in #14804, where an argument had no home in a
+chain-shaped lowering.
+
+CSS numbers map to Compose's named constants where they exist
+(`500` → `FontWeight.Medium`, `600` → `FontWeight.SemiBold`), because the
+generated Kotlin is meant to be read; other legal weights use
+`FontWeight(n)`.
+
+`lighter` and `bolder` stay **unmapped** on purpose: both are relative to the
+inherited weight, and this lowering has no inherited value to resolve them
+against. Guessing `Light`/`Bold` would be wrong for any parent that is not
+already normal, so they fall through to the drop report and say so.
+
+TaskApp emits 18 weights where it emitted none. Verified end to end: emitted,
+zero degradations, control contract, compiled, launched, rendered — bold labels
+now render bold — and the acceptance lifecycle stays green.
+>>>>>>> origin/main
 ### Fixed — `border-radius` was discarded entirely (#14810)
 
 318 occurrences in TaskApp alone, 31 in the toolkit, every one thrown away — so
