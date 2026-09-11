@@ -1,4 +1,6 @@
-use vis_pattern_scanning::{find_pattern_candidates, scan_line, MAX_MATCHES_PER_LINE, MAX_TOLERANCE};
+use vis_pattern_scanning::{
+    find_pattern_candidates, scan_line, MAX_MATCHES_PER_LINE, MAX_RATIO_LEN, MAX_TOLERANCE,
+};
 
 // ---------------------------------------------------------------------
 // scan_line: exact and tolerant matches
@@ -157,6 +159,29 @@ fn scan_line_tolerance_above_max_yields_no_matches() {
 fn scan_line_tolerance_at_max_still_matches() {
     let line = [true, false, true, true, true, false, true];
     let matches = scan_line(&line, &[1, 1, 3, 1, 1], MAX_TOLERANCE);
+    assert_eq!(matches.len(), 1);
+}
+
+#[test]
+fn scan_line_rejects_ratio_longer_than_max() {
+    let line = vec![true; 200];
+    let too_long_ratio = vec![1u32; MAX_RATIO_LEN + 1];
+    let matches = scan_line(&line, &too_long_ratio, 0.5);
+    assert!(matches.is_empty());
+}
+
+#[test]
+fn scan_line_accepts_ratio_at_max_len() {
+    // A ratio of MAX_RATIO_LEN alternating 1s, matched against a line
+    // built from exactly that many alternating dark/light runs of
+    // equal length -- proving MAX_RATIO_LEN is an inclusive bound,
+    // not an off-by-one exclusion of the boundary itself.
+    let ratio: Vec<u32> = vec![1; MAX_RATIO_LEN];
+    let mut line = Vec::new();
+    for i in 0..MAX_RATIO_LEN {
+        line.push(i % 2 == 0);
+    }
+    let matches = scan_line(&line, &ratio, 0.0);
     assert_eq!(matches.len(), 1);
 }
 

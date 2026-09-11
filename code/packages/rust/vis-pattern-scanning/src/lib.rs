@@ -56,6 +56,17 @@ pub const MAX_TOLERANCE: f64 = 10.0;
 /// windows on that line rather than continuing to accumulate more.
 pub const MAX_MATCHES_PER_LINE: usize = 256;
 
+/// The longest `ratio` `scan_line` accepts. Every window in the
+/// matching loop costs O(`ratio.len()`) (summing and checking that
+/// many runs), so an unbounded `ratio` would be a fourth caller-
+/// controlled way to inflate this crate's cost beyond what the
+/// line's own length suggests -- the same shape `MAX_TOLERANCE` and
+/// `MAX_MATCHES_PER_LINE` close for the other two. Every real 2D-
+/// barcode format's finder-pattern ratio is a short, fixed sequence
+/// (QR's is 5 elements); `32` stays generous past any of them while
+/// still bounding the cost.
+pub const MAX_RATIO_LEN: usize = 32;
+
 /// One ratio match found along a single scanned line, in that line's
 /// own coordinate (a column position for a horizontal scan, a row
 /// position for a vertical scan -- the caller knows which it passed
@@ -108,13 +119,15 @@ fn compute_runs(line: &[bool]) -> Vec<(bool, usize)> {
 /// A window matches only if its first run is foreground (`true`) --
 /// runs always alternate color by construction, so this alone fixes
 /// every other run's expected color too. Never panics: an empty
-/// `line`, an empty `ratio`, or a `tolerance` outside `(0.0,
-/// MAX_TOLERANCE]` (which covers non-positive, NaN, infinite, and
-/// unreasonably large values alike) all simply yield no matches
-/// rather than a panic -- see the spec's §6 for the full degenerate-
-/// input matrix, and `MAX_TOLERANCE`'s own docs for why an upper
-/// bound is enforced explicitly rather than left to fall out of the
-/// comparison arithmetic.
+/// `line`, an empty `ratio`, a `ratio` longer than `MAX_RATIO_LEN`, or
+/// a `tolerance` outside `(0.0, MAX_TOLERANCE]` (which covers
+/// non-positive, NaN, infinite, and unreasonably large values alike)
+/// all simply yield no matches rather than a panic -- see the spec's
+/// §6 for the full degenerate-input matrix, and `MAX_TOLERANCE`'s own
+/// docs for why these bounds are enforced explicitly rather than left
+/// to fall out of comparison arithmetic that happens to work for the
+/// common case. The result also never exceeds `MAX_MATCHES_PER_LINE`
+/// matches, regardless of `line`'s content.
 ///
 /// # Examples
 ///
@@ -129,7 +142,7 @@ fn compute_runs(line: &[bool]) -> Vec<(bool, usize)> {
 /// ```
 pub fn scan_line(line: &[bool], ratio: &[u32], tolerance: f64) -> Vec<RatioMatch> {
     let mut matches = Vec::new();
-    if ratio.is_empty() || line.is_empty() {
+    if ratio.is_empty() || line.is_empty() || ratio.len() > MAX_RATIO_LEN {
         return matches;
     }
     // A tolerance of, say, `f64::INFINITY` would make every foreground-

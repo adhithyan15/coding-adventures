@@ -154,13 +154,17 @@ pub const MAX_TOLERANCE: f64 = 10.0;
 /// regardless of `tolerance` (§4.3).
 pub const MAX_MATCHES_PER_LINE: usize = 256;
 
+/// The longest `ratio` `scan_line` accepts (§4.4).
+pub const MAX_RATIO_LEN: usize = 32;
+
 /// Scan one line (a single row or column, already extracted by the
 /// caller) for windows matching `ratio` within `tolerance` (a
 /// relative fraction, e.g. `0.5` for QR's usual ±50%). Never panics:
-/// an empty `line`, an empty `ratio`, or a `tolerance` outside
-/// `(0.0, MAX_TOLERANCE]` (covering non-positive, NaN, infinite, and
-/// unreasonably large values alike) all simply yield no matches, not
-/// an error.
+/// an empty `line`, an empty `ratio`, a `ratio` longer than
+/// `MAX_RATIO_LEN`, or a `tolerance` outside `(0.0, MAX_TOLERANCE]`
+/// (covering non-positive, NaN, infinite, and unreasonably large
+/// values alike) all simply yield no matches, not an error. The
+/// result never exceeds `MAX_MATCHES_PER_LINE` matches.
 pub fn scan_line(line: &[bool], ratio: &[u32], tolerance: f64) -> Vec<RatioMatch>;
 
 /// Scan every row and column of `bitmap` for `ratio`, cross-checking
@@ -230,7 +234,27 @@ at most a handful of true finder patterns in frame) closes this the
 same way: `scan_line` stops once it's reported that many matches on a
 line, rather than continuing to accumulate more.
 
-### 4.4 Why `Vec<Vec<bool>>`, not `PixelContainer`
+### 4.4 Why `ratio` also has a length bound
+
+Every window costs O(`ratio.len()`) to check (summing and comparing
+that many runs), and `find_pattern_candidates` calls `scan_line` up
+to O(bitmap height) times. A `ratio` whose length is a sizable
+fraction of the line's own length turns that into `O(line length²)`
+work per call, unconditionally — before any dark/light or tolerance
+check, so it doesn't even need adversarial content, just a long
+`ratio`. This is the same shape `MAX_TOLERANCE` and
+`MAX_MATCHES_PER_LINE` close for the other two caller-supplied
+parameters, so `ratio` gets the same treatment: `MAX_RATIO_LEN`
+(`32`) is generous past any real 2D-barcode format's finder-pattern
+ratio (QR's is 5 elements), and `scan_line` rejects anything longer
+up front. In every call site this crate itself constructs or tests
+against, `ratio` is a short, fixed, developer-chosen constant, not
+data derived from a photograph — but the bound costs nothing to
+enforce and keeps the "never costs more than the input's own size
+suggests" property true of all three parameters, not just two of
+them.
+
+### 4.5 Why `Vec<Vec<bool>>`, not `PixelContainer`
 
 Same reasoning as `VIS02` §4.1: pattern scanning is a pure binary-
 image algorithm, and coupling it to `pixel-container::PixelContainer`

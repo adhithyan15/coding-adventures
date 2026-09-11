@@ -36,7 +36,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   an adversarial construction) can satisfy the ratio check at a large
   fraction of its windows using an entirely ordinary tolerance, so
   `MAX_TOLERANCE` alone didn't bound the same underlying cost.
-- 24 unit tests + 2 doc-tests: exact and within-tolerance ratio
+- `MAX_RATIO_LEN` (`32`) — `scan_line` rejects a longer `ratio`.
+  Closes the third and last caller-controlled cost multiplier a
+  further security-review round identified: each window costs
+  O(`ratio.len()`) to check, unconditionally, regardless of content
+  or tolerance.
+- 26 unit tests + 2 doc-tests: exact and within-tolerance ratio
   matches, a just-outside-tolerance rejection, the dark-starting-run
   requirement (including a case that finds the real match rather than
   only rejecting a misaligned one), multiple non-overlapping matches,
