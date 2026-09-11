@@ -105,13 +105,22 @@ def compose_artifact_name(version: str, platform: str) -> str:
 # and macOS refuses an unsigned dmg with an error that reads like corruption.
 SWIFTUI_TARGETS = {"macos": "zip"}
 
-# Distinct DEFINED `eg_*` symbols that must be present in the packaged binary.
-# Five, not the ~47 the cdylib exports: SwiftUI is the one backend that LINKS
-# the engine statically, and a static link pulls in only the objects actually
-# referenced, so a correct build carries the nine the host calls and nothing
-# else. A check written against the full export list would fail on a working
-# app.
+# Distinct DEFINED `eg_*` symbols that must be present in a packaged binary
+# that links the engine statically. Five, not the ~47 the cdylib exports: a
+# static link pulls in only the objects actually referenced, so a correct build
+# carries the handful the host calls and nothing else. A check written against
+# the full export list would fail on a working app.
+#
+# No backend uses this any more -- SwiftUI was the last, and its host moved onto
+# the standard runtime. Kept because the parser it belongs to is still the way
+# a statically-linked payload would be checked if one returns.
 MIN_LINKED_ENGINE_SYMBOLS = 5
+
+# The standard Mosaic app ABI, in full: create, destroy, dispatch, snapshot,
+# restore, complete_effect. Exact rather than a floor -- a runtime missing any
+# one of them is broken, and `complete_effect` in particular is what every
+# `[host_effects]` handler answers through.
+MIN_BUNDLED_RUNTIME_SYMBOLS = 6
 
 # Mach-O constants, from <mach-o/loader.h> and <mach-o/nlist.h>.
 MH_MAGIC_64 = 0xFEEDFACF
@@ -125,7 +134,7 @@ N_SECT = 0x0E  # defined in a section of THIS file -- the bit that matters
 N_UNDF = 0x00  # undefined: expected from somewhere else at load time
 
 
-def linked_engine_symbols(binary: bytes) -> tuple[set[str], set[str]]:
+def linked_engine_symbols(binary: bytes, prefix: str = "eg_") -> tuple[set[str], set[str]]:
     """The `eg_*` symbols a Mach-O file defines, and the ones it leaves undefined.
 
     The symbol TABLE, not a string search. That distinction is the whole point:
@@ -177,7 +186,7 @@ def linked_engine_symbols(binary: bytes) -> tuple[set[str], set[str]]:
             symoff, nsyms, stroff, strsize = struct.unpack_from(
                 "<IIII", binary, offset + 8
             )
-            return _read_symtab(binary, symoff, nsyms, stroff, strsize)
+            return _read_symtab(binary, symoff, nsyms, stroff, strsize, prefix)
         offset += cmdsize
     raise ValueError("Mach-O binary has no symbol table")
 
@@ -421,9 +430,9 @@ def non_relocatable_dependencies(
 
 
 def _read_symtab(
-    binary: bytes, symoff: int, nsyms: int, stroff: int, strsize: int
+    binary: bytes, symoff: int, nsyms: int, stroff: int, strsize: int, prefix: str = "eg_"
 ) -> tuple[set[str], set[str]]:
-    """Walk `nlist_64` entries, splitting `eg_*` names by defined vs undefined."""
+    """Walk `nlist_64` entries, splitting `prefix*` names by defined vs undefined."""
 
     strings = binary[stroff : stroff + strsize]
     defined: set[str] = set()
@@ -439,7 +448,7 @@ def _read_symtab(
         if end < 0:
             continue
         name = strings[n_strx:end].decode("utf-8", "replace").lstrip("_")
-        if not name.startswith("eg_"):
+        if not name.startswith(prefix):
             continue
         if n_type & N_TYPE == N_SECT:
             defined.add(name)
@@ -1418,11 +1427,11 @@ def archive_swiftui(
 ) -> Path:
     """Archive the SwiftUI `.app` bundle for publication.
 
-    The engine check differs from every other backend's, because SwiftUI is the
-    one that links `engram-capi` statically instead of loading it at runtime.
-    There is no library file to look for beside the binary -- the engine either
-    is inside the executable or the app launches into a UI where every deck
-    operation silently does nothing.
+    The engine check differs from every other backend's, because SwiftUI
+    carries the runtime as a SwiftPM RESOURCE rather than beside the binary.
+    The engine is either inside `App_App.bundle` at the app's root -- where the
+    generated `Bundle.module` accessor looks -- or the app fatal-errors the
+    moment it starts.
 
     So the packaged executable is scanned for engine symbol *names*, by reading
     its bytes. Deliberately not `nm`: a toolchain check is one that can be
@@ -1468,19 +1477,42 @@ def archive_swiftui(
     if binary.is_symlink() or not binary.is_file():
         raise ValueError(f"bundle executable is not a regular file: {binary}")
 
-    defined, undefined = linked_engine_symbols(binary.read_bytes())
-    if len(defined) < MIN_LINKED_ENGINE_SYMBOLS:
+    # The engine is BUNDLED now, not linked into this executable.
+    #
+    # This check used to scan `binary` for defined `eg_*` symbols, because
+    # SwiftUI was the one backend that statically linked `engram-capi`. That
+    # stopped being true when Engram's SwiftUI host moved onto the standard
+    # Mosaic runtime: a correct executable now has zero `eg_*` symbols, so the
+    # old gate rejected every good build.
+    #
+    # The question is unchanged -- "does this artifact actually carry an
+    # engine?" -- and so is the method: parse the Mach-O symbol table rather
+    # than shell out to `nm`, because a toolchain check is one that can be
+    # absent. Only the file being parsed moved.
+    #
+    # At the bundle ROOT, deliberately, and asserted at that exact path.
+    # SwiftPM's generated accessor resolves
+    # `Bundle.main.bundleURL/App_App.bundle`, which for a packaged app is
+    # `Engram.app/App_App.bundle` -- NOT `Contents/Resources`. A bundle placed
+    # there is never consulted, and the app fatal-errors on launch on every
+    # machine except the one that built it, where the accessor's baked-in
+    # absolute `.build` path still resolves. Accepting it at any depth would
+    # make this assertion blind to precisely that.
+    runtime = source / "App_App.bundle" / "Runtime" / "libmosaic_app.dylib"
+    if runtime.is_symlink() or not runtime.is_file():
         raise ValueError(
-            f"only {len(defined)} DEFINED engine symbols in {binary.name}; the "
-            f"engine did not link, so the app would launch with every deck "
-            f"operation silently unavailable "
-            f"(defined: {', '.join(sorted(defined)) or 'none'}; "
-            f"undefined: {', '.join(sorted(undefined)) or 'none'})"
+            f"no App_App.bundle/Runtime/libmosaic_app.dylib at the root of "
+            f"{source.name}; that is where Bundle.module looks, so the app "
+            f"would fatal-error on launch on any machine but the builder's"
         )
-    if undefined:
+
+    defined, undefined = linked_engine_symbols(runtime.read_bytes(), "mosaic_app_")
+    if len(defined) < MIN_BUNDLED_RUNTIME_SYMBOLS:
         raise ValueError(
-            f"{binary.name} leaves engine symbols undefined, so it expects them "
-            f"from a library that will not be there: {', '.join(sorted(undefined))}"
+            f"only {len(defined)} DEFINED mosaic_app_* symbols in "
+            f"{runtime.name}; the bundled runtime is not a usable engine, so "
+            f"the app would launch with every deck operation unavailable "
+            f"(defined: {', '.join(sorted(defined)) or 'none'})"
         )
 
     name = swiftui_artifact_name(version, platform)

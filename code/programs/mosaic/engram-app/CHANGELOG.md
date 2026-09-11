@@ -103,10 +103,29 @@ longer exists:
    `mosaic_app_*` — the same question one layer out.
 3. **The `.app` shipped without an engine.** Bundling copied only the
    executable, which was sufficient when `engram-capi` was statically linked
-   *into* it. The runtime is now a resource, so `App_App.bundle` has to be
-   copied into `Contents/Resources` — and this is precisely the "second chance
-   to lose the engine" the assertion beside it warns about, which the Compose
-   backend once shipped for real.
+   *into* it. The runtime is now a resource, so `App_App.bundle` has to come
+   too — precisely the "second chance to lose the engine" the assertion beside
+   it warns about, which the Compose backend once shipped for real.
+
+   It goes at the **`.app` root**, not in `Contents/Resources`, and the first
+   version of this put it in the wrong place. SwiftPM's generated accessor
+   resolves `Bundle.main.bundleURL/App_App.bundle` — which for a packaged app
+   is `Engram.app` itself — and otherwise falls back to an *absolute
+   build-machine path* baked in at compile time. So the wrong placement runs
+   perfectly on the machine that built it and fatal-errors everywhere else
+   (`could not load resource bundle`, SIGTRAP, exit 133). Security review
+   caught it by building both layouts and running them.
+
+   Placing it correctly also removes that build-machine path from the shipped
+   binary's startup search, rather than leaving a released app that `dlopen`s
+   from a directory which happened to exist on a CI runner.
+
+4. **The release archiver had its own copy of the same stale gate.**
+   `engram_release.py` independently scans the packaged executable for defined
+   `eg_*` symbols, so the publish step would have failed even with
+   `build-native.sh` fixed. It now parses the *bundled runtime* for
+   `mosaic_app_*` instead — same question, same deliberate
+   parse-the-Mach-O-rather-than-shell-out-to-`nm` method, different file.
 
 The emit step also now passes `--profile native-complete --runtime-library`,
 without which the generated host falls back to a reflection bridge that is not
@@ -122,9 +141,18 @@ install lands at `App.swift:294`, immediately after the bridge assignment at
 rewrite produces, and the reason the emitter anchors on `self.bridge = ` rather
 than the whole call.
 
-The release script's own output was launched, not merely built: the `.app` runs
-for five seconds without dying and prints no runtime error, which is the check
-that separates "it compiled" from "it works".
+The release script's output was launched, not merely built — and launched in a
+way that could actually fail. The first attempt ran the `.app` in place, which
+proves nothing here: the resource accessor's baked-in `.build` fallback still
+resolved, so a bundle in the wrong place ran anyway.
+
+The check that means something is to copy the `.app` elsewhere and delete the
+build directory first. Done both ways: the shipped layout runs for five seconds
+with no runtime error, and the layout this initially produced dies immediately
+with `could not load resource bundle` and exit 133. Both assertions were
+tightened from a depth-agnostic `find` to the exact path, because the glob
+accepted the crashing layout — the "assertion that accepts the failure it exists
+to catch" shape this script argues against elsewhere and had reintroduced here.
 
 A new CI step runs the same sequence on macOS and asserts the install sits
 inside `MosaicHostState`, after the bridge assignment. "Inside" is checked by

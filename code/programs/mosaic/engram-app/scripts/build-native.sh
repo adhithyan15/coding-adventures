@@ -372,10 +372,21 @@ PLIST
     # symlinks without `-L` -- so searching it reports nothing on a build that
     # is entirely correct. Asking SwiftPM where it put things is the same thing
     # the TaskApp CI lane does.
+    # The EXACT path, not a `find` for it at any depth.
+    #
+    # A depth-agnostic glob cannot tell a correct layout from a broken one, and
+    # that is not hypothetical here: the first version of this check used one,
+    # and it passed a bundle placed where `Bundle.module` never looks. An
+    # assertion that accepts the failure it exists to catch is worse than none,
+    # because the build prints "verified" -- which is the argument this script
+    # makes elsewhere and did not follow here.
+    #
+    # SwiftPM's layout under `--show-bin-path` is fixed, so the literal path is
+    # available and the indirection bought nothing.
     BIN_ROOT="$( cd "$APP" && swift build -c release --show-bin-path )"
-    RUNTIME_IN_BUNDLE="$(find "$BIN_ROOT" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit || true)"
-    if [[ -z "$RUNTIME_IN_BUNDLE" ]]; then
-      echo "error: no Runtime/libmosaic_app.dylib under $BIN_ROOT" >&2
+    RUNTIME_IN_BUNDLE="$BIN_ROOT/App_App.bundle/Runtime/libmosaic_app.dylib"
+    if [[ ! -f "$RUNTIME_IN_BUNDLE" ]]; then
+      echo "error: no App_App.bundle/Runtime/libmosaic_app.dylib under $BIN_ROOT" >&2
       echo "       the app would launch with every deck operation unavailable" >&2
       exit 1
     fi
@@ -387,8 +398,13 @@ PLIST
     fi
     # And it must be a real engine rather than an empty library, which is the
     # same contract the `engram-capi` export count checks at step [1/4].
+    # Six, not "at least five". The standard app ABI is exactly `create`,
+    # `destroy`, `dispatch`, `snapshot`, `restore` and `complete_effect`, so a
+    # threshold of 5 accepts a runtime missing one of them -- including
+    # `mosaic_app_complete_effect`, which is the symbol the `[host_effects]`
+    # work on this very branch depends on.
     MOSAIC_EXPORTS="$(nm -gU "$RUNTIME_IN_BUNDLE" 2>/dev/null | grep -c ' _mosaic_app_' || true)"
-    if [[ "$MOSAIC_EXPORTS" -lt 5 ]]; then
+    if [[ "$MOSAIC_EXPORTS" -lt 6 ]]; then
       echo "error: the bundled runtime exports only $MOSAIC_EXPORTS mosaic_app_* symbols" >&2
       exit 1
     fi
@@ -408,17 +424,24 @@ PLIST
     mkdir -p "$BUNDLE/Contents/MacOS" "$BUNDLE/Contents/Resources"
     cp "$BIN" "$BUNDLE/Contents/MacOS/$APP_NAME"
 
-    # The resource bundle carries the engine, so it has to come too.
+    # The resource bundle carries the engine, so it has to come too -- and it
+    # goes at the `.app` ROOT, not in `Contents/Resources`.
     #
-    # `swift build` leaves `App_App.bundle` beside the executable, and
-    # `Bundle.module` resolves it relative to `Bundle.main.resourceURL` in a
-    # packaged app -- so it belongs in `Contents/Resources`. Copying only the
-    # executable produced a `.app` that launched and had no engine, which is
-    # precisely the failure the assertion below exists to catch, and which the
-    # old `engram-capi` architecture could not hit because the engine was
-    # statically linked INTO the executable being copied.
-    RESOURCE_BUNDLE="$(dirname "$RUNTIME_IN_BUNDLE" | xargs dirname)"
-    cp -R "$RESOURCE_BUNDLE" "$BUNDLE/Contents/Resources/"
+    # That is counter-intuitive and was wrong here first time round. SwiftPM's
+    # generated accessor does not use `Bundle.main.resourceURL`; it builds
+    # `Bundle.main.bundleURL.appendingPathComponent("App_App.bundle")` and falls
+    # back to an ABSOLUTE build-machine path baked in at compile time. For a
+    # packaged app `bundleURL` is `Engram.app` itself, so a bundle under
+    # `Contents/Resources` is never consulted.
+    #
+    # The failure that causes is total and silent on the build machine: the
+    # baked-in `.build` path still resolves there, so the app runs locally and
+    # fatal-errors ("could not load resource bundle", SIGTRAP) on every other
+    # machine. Placing it here is also what removes that absolute path from the
+    # startup search, rather than leaving a shipped binary that `dlopen`s from a
+    # directory that happened to exist on a CI runner.
+    RESOURCE_BUNDLE="$(dirname "$(dirname "$RUNTIME_IN_BUNDLE")")"
+    cp -R "$RESOURCE_BUNDLE" "$BUNDLE/"
     printf 'APPL????' > "$BUNDLE/Contents/PkgInfo"
     cat > "$BUNDLE/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -441,10 +464,14 @@ PLIST
     # lose the engine -- the Compose backend shipped a distribution with no
     # engine in it exactly this way. So the assertion is repeated against the
     # artifact rather than inherited from the binary it came from.
-    SHIPPED_RUNTIME="$(find "$BUNDLE/Contents/Resources" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit || true)"
-    if [[ -z "$SHIPPED_RUNTIME" ]]; then
-      echo "error: the .app has no Runtime/libmosaic_app.dylib in Resources;" >&2
-      echo "       it would launch with every deck operation unavailable" >&2
+    # Again the exact path, for the same reason: this is the assertion that let
+    # the wrong placement through, and a glob here cannot distinguish the layout
+    # that runs from the one that fatal-errors on launch.
+    SHIPPED_RUNTIME="$BUNDLE/App_App.bundle/Runtime/libmosaic_app.dylib"
+    if [[ ! -f "$SHIPPED_RUNTIME" ]]; then
+      echo "error: the .app has no App_App.bundle/Runtime/libmosaic_app.dylib" >&2
+      echo "       at its root, which is where Bundle.module looks; it would" >&2
+      echo "       fatal-error on launch on any machine but this one" >&2
       exit 1
     fi
     if ! cmp -s "$MOSAIC_LIB" "$SHIPPED_RUNTIME"; then
