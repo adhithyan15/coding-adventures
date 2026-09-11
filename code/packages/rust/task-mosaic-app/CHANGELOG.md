@@ -1,5 +1,32 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — render TaskApp to PNGs so it can be looked at (#14798)
+
+`TaskAppScreenshots` captures the empty inbox, one scheduled task, and that
+task completed, via `captureToImage()` against the real `native-complete`
+project and the real Rust runtime.
+
+Every other gate in `conformance/compose/` asserts the **semantics tree** —
+node exists, right accessible name, marked displayed — and all of them pass
+while the app is unreadable. The first render showed run-together text
+(`Saved locally on this deviceLocal only · ...`, `Up next1`), a `100% complete`
+label clipped mid-phrase, a duplicated and overlapping segmented control, an
+`On track` chip collapsed into a one-character-wide vertical column, and two
+thirds of the window left blank white.
+
+The sharpest example: the README claims the Compose gate "requires the
+Rust-owned `100%` completion progress to remain displayed rather than merely
+existing in an off-screen semantics tree". It passes — the node whose text is
+`100%` really is displayed. The word `complete` beside it is cut off. The gate
+measured exactly the thing it named and still missed the point.
+
+This is **not** a pixel-diff gate. It asserts only that rendering succeeds and
+produces a surface of the requested width; the images are for a person to look
+at. A strict pixel baseline needs a pinned font stack and renderer or it fails
+on every platform difference, and that is a separate decision (#14798).
+
+Skipped unless `MOSAIC_SHOT_DIR` is set, so it never slows the normal gates.
+
 ## [Unreleased] — expose native local-data guidance (#13690)
 
 The native adapter now publishes the shared storage status, location, and warning
