@@ -47,6 +47,14 @@ module NeuralFixtureConsumer
       array_class: Array,
       create_additions: false,
       allow_nan: false,
+      # Say this explicitly rather than leaning on StrictHash below. json 2.21
+      # detects duplicate keys inside the parser and, by default, only WARNS --
+      # it never assigns the key twice, so `StrictHash#[]=` is never reached and
+      # a duplicate sails through. Naming the option restores the rejection now
+      # and pins the behaviour across the json 3.0 default flip. StrictHash is
+      # kept as a second line of defence for any path that builds a hash
+      # without the parser.
+      allow_duplicate_key: false,
       max_nesting: 32
     )
   rescue Errno::ENOENT, Errno::EACCES => e
