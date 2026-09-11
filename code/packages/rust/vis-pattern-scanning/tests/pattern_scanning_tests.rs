@@ -1,4 +1,4 @@
-use vis_pattern_scanning::{find_pattern_candidates, scan_line, MAX_TOLERANCE};
+use vis_pattern_scanning::{find_pattern_candidates, scan_line, MAX_MATCHES_PER_LINE, MAX_TOLERANCE};
 
 // ---------------------------------------------------------------------
 // scan_line: exact and tolerant matches
@@ -158,6 +158,27 @@ fn scan_line_tolerance_at_max_still_matches() {
     let line = [true, false, true, true, true, false, true];
     let matches = scan_line(&line, &[1, 1, 3, 1, 1], MAX_TOLERANCE);
     assert_eq!(matches.len(), 1);
+}
+
+#[test]
+fn scan_line_caps_matches_on_a_periodic_line_at_an_ordinary_tolerance() {
+    // A periodic run structure -- real photographic texture (fabric,
+    // blinds, brick), not just an adversarial construction -- can
+    // satisfy the 1:1:3:1:1 check at a large fraction of its windows
+    // using an entirely ordinary tolerance, nowhere near
+    // MAX_TOLERANCE. Without a per-line cap, find_pattern_candidates
+    // would then do an O(bitmap height) vertical rescan for each of
+    // however many thousands of such matches a long line produces.
+    let mut line = Vec::new();
+    for _ in 0..400 {
+        line.extend([true, true, true, false, false, false]);
+    }
+    let matches = scan_line(&line, &[1, 1, 3, 1, 1], 0.6);
+    assert_eq!(
+        matches.len(),
+        MAX_MATCHES_PER_LINE,
+        "expected the cap to trigger on this periodic line"
+    );
 }
 
 // ---------------------------------------------------------------------

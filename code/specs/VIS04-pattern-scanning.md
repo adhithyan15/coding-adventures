@@ -150,6 +150,10 @@ pub struct RatioMatch {
 /// The largest relative `tolerance` `scan_line` accepts (§4.2).
 pub const MAX_TOLERANCE: f64 = 10.0;
 
+/// The largest number of matches `scan_line` reports for one line,
+/// regardless of `tolerance` (§4.3).
+pub const MAX_MATCHES_PER_LINE: usize = 256;
+
 /// Scan one line (a single row or column, already extracted by the
 /// caller) for windows matching `ratio` within `tolerance` (a
 /// relative fraction, e.g. `0.5` for QR's usual ±50%). Never panics:
@@ -204,7 +208,29 @@ rejects non-positive and NaN values, rather than leaving the bound to
 fall out of comparison arithmetic that happens to work for the common
 case.
 
-### 4.3 Why `Vec<Vec<bool>>`, not `PixelContainer`
+### 4.3 Why the match count per line also has a bound
+
+`MAX_TOLERANCE` only closes the *extreme* end. A line with a
+periodic, near-uniform run structure — real photographic texture
+(fabric, blinds, brick), not only an adversarial construction — can
+satisfy the ratio check at a large fraction of its windows using an
+entirely ordinary, in-range `tolerance`: working through the algebra
+for `[1, 1, 3, 1, 1]` with every run the same length, the tolerance
+needed for the middle (ratio-3) run to pass is `8/15 ≈ 0.53` — close
+to the `0.5` this crate's own docs and tests already call QR's usual
+value, not an exotic edge case. Since `find_pattern_candidates` does
+an independent O(bitmap height) vertical rescan per horizontal match,
+an unbounded match count on one line still lets a caller-controlled
+bitmap drive that function's total cost well past what its size alone
+would suggest — the same algorithmic-complexity shape `MAX_TOLERANCE`
+closes at the tolerance extreme, reachable instead through the
+bitmap's own content. `MAX_MATCHES_PER_LINE` (`256`, generous past
+what any real finder-pattern scan needs — a real 2D-barcode image has
+at most a handful of true finder patterns in frame) closes this the
+same way: `scan_line` stops once it's reported that many matches on a
+line, rather than continuing to accumulate more.
+
+### 4.4 Why `Vec<Vec<bool>>`, not `PixelContainer`
 
 Same reasoning as `VIS02` §4.1: pattern scanning is a pure binary-
 image algorithm, and coupling it to `pixel-container::PixelContainer`

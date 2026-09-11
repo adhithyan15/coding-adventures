@@ -73,6 +73,16 @@ length), and non-finite or negative `tolerance` all produce an empty
 (or, at `tolerance = 0.0`, exact-only) result — never a panic. See the
 spec's §6 for the full degenerate-input test matrix.
 
+## Bounded, not just correct
+
+Two constants keep a caller-controlled bitmap from driving this
+crate's cost past what its size alone would suggest:
+`MAX_TOLERANCE` (an unbounded `tolerance` would make every window
+"match," regardless of shape) and `MAX_MATCHES_PER_LINE` (a periodic,
+texture-like line can satisfy the ratio check at a large fraction of
+its windows using an entirely ordinary tolerance — real photographic
+content, not only an adversarial one). See the spec's §4.2/§4.3.
+
 ## Out of scope
 
 - Clustering/deduplicating nearby candidates.

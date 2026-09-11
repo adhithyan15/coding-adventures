@@ -39,6 +39,23 @@
 /// a caller-controlled bitmap.
 pub const MAX_TOLERANCE: f64 = 10.0;
 
+/// The largest number of matches `scan_line` will report for one
+/// line, regardless of `tolerance`. `MAX_TOLERANCE` alone only bounds
+/// the *extreme* case (a non-finite or absurdly large tolerance); a
+/// line with a periodic/checkerboard-like run structure -- real
+/// photographic texture, not just an adversarial construction -- can
+/// satisfy the ratio check at a large fraction of its windows using
+/// an entirely ordinary, in-range `tolerance`. Since
+/// `find_pattern_candidates` does an independent O(bitmap height)
+/// vertical rescan per horizontal match, an unbounded match count
+/// here still lets a caller-controlled bitmap drive that function's
+/// cost well past what its size alone would suggest. `256` is
+/// generous well past what any real finder-pattern scan needs (a
+/// real 2D barcode image has at most a handful of true finder
+/// patterns in frame); once hit, `scan_line` stops scanning further
+/// windows on that line rather than continuing to accumulate more.
+pub const MAX_MATCHES_PER_LINE: usize = 256;
+
 /// One ratio match found along a single scanned line, in that line's
 /// own coordinate (a column position for a horizontal scan, a row
 /// position for a vertical scan -- the caller knows which it passed
@@ -179,6 +196,23 @@ pub fn scan_line(line: &[bool], ratio: &[u32], tolerance: f64) -> Vec<RatioMatch
             center,
             module_size: unit,
         });
+        // A periodic/checkerboard-like line -- runs of nearly equal
+        // length throughout, the kind of texture a real photograph
+        // can genuinely contain (fabric, blinds, brick) -- can satisfy
+        // the ratio check at an entirely ordinary `tolerance` (nothing
+        // near `MAX_TOLERANCE`) at a large fraction of its windows,
+        // not just the handful a real finder pattern produces.
+        // `find_pattern_candidates` does an independent O(bitmap
+        // height) vertical rescan *per* horizontal match, so an
+        // unbounded match count here is the same algorithmic-
+        // complexity shape `MAX_TOLERANCE` closes at the tolerance
+        // extreme, just reachable through the bitmap's content
+        // instead. Capping matches per line bounds it regardless of
+        // content, the same way `MAX_TOLERANCE` bounds it regardless
+        // of the tolerance value.
+        if matches.len() >= MAX_MATCHES_PER_LINE {
+            break;
+        }
     }
 
     matches

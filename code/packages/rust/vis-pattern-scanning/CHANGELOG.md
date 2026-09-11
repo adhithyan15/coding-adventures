@@ -29,7 +29,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regardless of its actual proportions, turning
   `find_pattern_candidates`' near-linear cost quadratic-or-worse on a
   caller-controlled bitmap.
-- 23 unit tests + 2 doc-tests: exact and within-tolerance ratio
+- `MAX_MATCHES_PER_LINE` (`256`) — `scan_line` stops reporting matches
+  once it hits this many on one line. Also caught in security review,
+  as a follow-up to the `MAX_TOLERANCE` fix: a periodic, texture-like
+  line (real photographic content — fabric, blinds, brick — not only
+  an adversarial construction) can satisfy the ratio check at a large
+  fraction of its windows using an entirely ordinary tolerance, so
+  `MAX_TOLERANCE` alone didn't bound the same underlying cost.
+- 24 unit tests + 2 doc-tests: exact and within-tolerance ratio
   matches, a just-outside-tolerance rejection, the dark-starting-run
   requirement (including a case that finds the real match rather than
   only rejecting a misaligned one), multiple non-overlapping matches,
