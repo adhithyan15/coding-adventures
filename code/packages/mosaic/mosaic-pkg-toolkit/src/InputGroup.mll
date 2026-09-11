@@ -25,7 +25,7 @@ layout InputGroup {
     HostInput [ input-group-field ] (
       value : slot: value ,
       placeholder : slot: placeholder ,
-      read-only : slot: disabled ,
+      disabled : slot: disabled ,
       onChange : emit: onChange ,
       onCommit : emit: onCommit
     )

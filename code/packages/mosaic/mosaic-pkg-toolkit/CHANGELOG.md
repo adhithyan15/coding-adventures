@@ -2,6 +2,31 @@
 
 ## [Unreleased]
 
+### Fixed — the text inputs were disabled in appearance only (#14772)
+
+`Input`, `Field` and `InputGroup` bound `read-only : slot: disabled`. The
+`.msl` dimmed them through `state disabled` (#14639), so a disabled input
+*looked* disabled and still took keyboard focus and a caret, and still
+announced as editable-but-read-only.
+
+That was not a mistake so much as the only option: `HostInput` had no
+`disabled` prop until UI58 (#14786). Now it does, on all eight backends, so
+the three text inputs bind the real thing. The other five controls never had
+the problem — `HostButton`, `HostCheckbox`, `HostRadio` and `HostNumberInput`
+always had a real `disabled`.
+
+Verified in emitted output for all eight backends: the `disabled` slot reaches
+`disabled={disabled}` (react), `data-disabled` (html), `.disabled(disabled)`
+(swiftui), `enabled: !disabled` (qt), the negated `enabled` argument
+(flutter/compose) and `IsEnabled="{x:Bind Not(Disabled), Mode=OneWay}"`
+(xaml) — with no `readOnly`/`readonly` remnant anywhere.
+
+`package_compiles.rs` now pins it across the whole population rather than the
+three that were wrong: every layout declaring a `disabled` slot must spend it
+on a `disabled` prop, and none may reintroduce `read-only` as a stand-in. The
+assertion was falsified before being trusted — reverting `Input.mll` makes it
+fail naming that file.
+
 ### Added — a disabled treatment on every component that declares the slot (#14639)
 
 `state disabled { opacity : $opacity-disabled ; }` on `Button`, `Input`,

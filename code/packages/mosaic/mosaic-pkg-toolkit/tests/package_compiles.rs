@@ -960,3 +960,65 @@ fn select_interface_matches_spec() {
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onToggle", "onChange"]);
 }
+
+// ---------------------------------------------------------------------------
+// Every `disabled` slot reaches a real `disabled` prop (UI58, #14772)
+// ---------------------------------------------------------------------------
+
+/// A toolkit control whose `disabled` slot only drives *styling* is the bug
+/// this pins.
+///
+/// Input, Field and InputGroup used to bind `read-only : slot: disabled`,
+/// because until UI58 (#14786) `HostInput` had no way to say *unavailable* --
+/// only *not editable*. The `.msl` dimmed the control through `state
+/// disabled`, so it looked disabled and still took focus and a caret. The
+/// other five controls never had the problem: `HostButton`, `HostCheckbox`,
+/// `HostRadio` and `HostNumberInput` always had a real `disabled`.
+///
+/// This asserts the whole population rather than the three that were wrong:
+/// every layout carrying a `disabled` slot must spend it on a `disabled`
+/// prop, and no layout may reintroduce `read-only` as a stand-in.
+#[test]
+fn every_disabled_slot_binds_a_real_disabled_prop() {
+    // Enumerated from the manifest exports, not from the three components
+    // this change happened to touch.
+    let components = [
+        "Button",
+        "Checkbox",
+        "Field",
+        "Input",
+        "InputGroup",
+        "NumberInput",
+        "Radio",
+        "Select",
+    ];
+
+    for name in components {
+        let layout = read_source(&format!("{name}.mll"));
+        // Ignore comment lines: Field.mll and Select.mll narrate their own
+        // tree in a header block, and a doc line is not a binding.
+        // Whitespace-normalised: several layouts align their prop columns,
+        // so `disabled      : slot:` and `disabled : slot:` are the same
+        // binding and a literal match would only pin the ones formatted the
+        // way this test's author happened to look at.
+        let code: String = layout
+            .lines()
+            .filter(|line| !line.trim_start().starts_with("//"))
+            .map(|line| line.split_whitespace().collect::<Vec<_>>().join(" "))
+            .collect::<Vec<_>>()
+            .join("\n");
+
+        assert!(
+            code.contains("disabled : slot: disabled"),
+            "{name}.mll has a `disabled` slot that never reaches a \
+             `disabled` prop -- a control that only LOOKS disabled",
+        );
+        assert!(
+            !code.contains("read-only : slot: disabled"),
+            "{name}.mll approximates disabled with `read-only`. Those are \
+             different affordances: read-only keeps keyboard focus and \
+             announces as editable-but-read-only, disabled is skipped by \
+             focus entirely. `HostInput.disabled` exists since UI58 (#14786)",
+        );
+    }
+}
