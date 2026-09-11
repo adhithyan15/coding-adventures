@@ -5,6 +5,46 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed — the drop reason for `justify-content`/`align-items`/`align` (#14811)
+
+These three shared a match arm with `display`/`flex-direction`/`flex-wrap`,
+reported as *"Compose expresses layout through the composable chosen … and its
+arrangement arguments, not through a modifier on a built view"*. That sentence
+was being used to justify discarding them while describing the mechanism that
+would work: they are the `horizontalArrangement`/`verticalAlignment` arguments
+of Row and Column — the same argument slot `gap` already reaches as
+`Arrangement.spacedBy` (#14804).
+
+Split into two arms so the report says which kind of gap each property is.
+A pinned drop that misstates its own cause reads as settled when it is not
+(#14834).
+
+### Added — Compose reports the style properties it drops (#14810, #12022)
+
+Compose had no `dropped_style_properties`, so an empty `styleDegradations`
+meant "nobody looked" rather than "nothing was lost". Measuring it named **43
+distinct properties** in TaskApp alone, while the strict `native-complete`
+profile reported zero degradations:
+
+| count | property |
+| --- | --- |
+| 318 | `border-radius` — every rounded surface renders square |
+| 308 | directional `padding-*` (in flight, #14730) |
+| 172 | `gap` (fixed in #14805) |
+| 77 | `align` |
+| 48 | `font-weight` — every bold label renders at regular weight |
+| 48 / 46 | `box-shadow` / `elevation` |
+
+Drops are collected **by the builder**, in the `_` arm of its property match,
+rather than by diffing against a hand-kept list of "properties Compose
+supports". A parallel list is wrong the first time someone adds an arm and
+forgets to update it, which is exactly the drift #12022 exists to catch.
+
+Each drop carries an actionable reason rather than generic text — a missing
+modifier, a value that must be an argument, and a concept Compose does not have
+are genuinely different problems and want different fixes.
+
+Style drops do not gate `nativeComplete`; this makes them visible, not fatal.
 ### Fixed — `gap` was dropped entirely (#14804)
 
 `gap` reached the lattice IR and died in the property loop's `_ => {}` arm.
@@ -122,6 +162,34 @@ cannot quietly round everything.
 letters stacked one per line down the screen; clipping now hides them instead.
 The bug is unchanged, but a loud symptom became a silent one. Filed as #14815.
 ### Fixed — `opacity` was dropped (#14708)
+
+**A property consumed outside the style match is not a drop.** `elevation` is
+read by `part_elevation_tier` straight from the base props, so it never reaches
+the match — and the first version of this reporter counted all 16 of TaskApp's
+as dropped while the emitter was emitting 16 `.shadow(..)` calls. Exactly the
+same number, which is what gave it away.
+
+The value→tier mapping is now one shared function the reporter and the lowering
+both call, so there is no second list to drift. Both directions are tested:
+`elevation: raised` is not reported, `elevation: floaty` still is, and its
+genuinely-unlowered neighbour `box-shadow` stays reported either way.
+
+A drop report that cries wolf is worse than no report, because the real entries
+stop being read.
+
+`flex-grow` had the identical problem, found by asking whether `elevation` was
+structurally unique — it is not. `compose_row_weight` consumes it, so all 6 of
+TaskApp's usable values were reported against 6 `.weight(..)` calls actually
+emitted. Same fix: one shared predicate, `flex_grow_weight`.
+
+One known limit, stated rather than hidden: `compose_row_weight` applies only
+to Row children, and this reporter is per-part with no node context, so a
+usable `flex-grow` on a **non-Row** child is discarded without being reported.
+Under-reporting that narrow case is the lesser error against reporting every
+usable value as a drop.
+
+TaskApp's report: 532 → **510**, with 22 false entries removed and every
+genuine one (`flex-shrink` 9, `box-shadow` 17, …) still present.
 
 `opacity` is what UI57's `state disabled` treatment is built on, so dropping it
 meant a disabled control dimmed on five backends and not on this one — it

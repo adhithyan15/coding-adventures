@@ -40,6 +40,32 @@ use mosaic_package_artifact_builder::{
 use std::path::PathBuf;
 use tempfile::TempDir;
 
+/// (backend, property) — style properties a backend is known to discard.
+///
+/// Distinct from `ALLOWED_DEGRADATIONS` above: those are capability gaps the
+/// analyzer reports as blocking, these are authored style properties the
+/// emitter silently throws away. They do not gate `nativeComplete`, but they
+/// are the difference between a control that looks right and one that merely
+/// has the right accessibility tree.
+///
+/// Every entry must reference its tracking issue.
+const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
+    // Empty, and that now MEANS something. When Compose gained reporting it
+    // immediately named 42 drops here across `border-radius`, `opacity` and
+    // `font-weight`; #14817, #14821 and #14818 fixed all three, and each
+    // removed its own entry rather than leaving it to rot.
+    //
+    // Before reporting existed this list could not have been written at all —
+    // the gate asserted emptiness and that emptiness meant "nobody looked".
+    // It is now measured.
+];
+
+fn is_allowed_style_drop(backend: Backend, property: &str) -> bool {
+    ALLOWED_STYLE_DROPS
+        .iter()
+        .any(|(b, p)| *b == backend && *p == property)
+}
+
 fn package_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
 }
@@ -107,11 +133,28 @@ fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
              allowlist entry in this file pointing at a tracking issue: {unexpected:#?}"
         );
 
+        // The toolkit was never "clean" here — until #12022 reporting reached a
+        // backend, that backend said nothing, and silence read as cleanliness.
+        // Compose started reporting its drops (#14810) and immediately named 42
+        // drops across 3 properties. So this asserts what is TRACKED, not what is
+        // absent, the same way `ALLOWED_DEGRADATIONS` does above.
+        let unexpected_drops: Vec<_> = report
+            .style_degradations
+            .iter()
+            // A drop that does not even name its property cannot be matched
+            // against the allowlist, so it stays unexpected rather than
+            // slipping through as "not in the list".
+            .filter(|d| {
+                d.primitive
+                    .as_deref()
+                    .is_none_or(|p| !is_allowed_style_drop(backend, p))
+            })
+            .collect();
         assert!(
-            report.style_degradations.is_empty(),
+            unexpected_drops.is_empty(),
             "{backend:?}: style properties were dropped that this test's allowlist \
-             doesn't expect (the toolkit was clean here as of #12024): {:#?}",
-            report.style_degradations
+             doesn't expect — either fix them, or add an entry pointing at a \
+             tracking issue: {unexpected_drops:#?}"
         );
     }
 }

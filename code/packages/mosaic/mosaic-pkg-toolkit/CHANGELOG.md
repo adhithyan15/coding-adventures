@@ -2,6 +2,46 @@
 
 ## [Unreleased]
 
+### Changed — the style-drop allowlist is empty, and now measured (#14810)
+
+Compose reporting named **42** drops in the toolkit when it first ran:
+31 `border-radius`, 8 `opacity`, 3 `font-weight`. All three are fixed
+(#14817, #14821, #14818) and each removed its own entry.
+
+The list is now empty — but for the first time that emptiness is a
+*measurement* rather than the absence of one. The gate previously asserted
+`style_degradations.is_empty()` and passed because no backend reported
+anything.
+
+### Changed — the style-drop allowlist loses its `opacity` entry (#14708)
+
+Compose lowers `opacity` since #14821, so the allowlist entry describes a drop
+that no longer happens. Removed rather than left to rot: an allowlist that
+lists things which are already fixed stops being a list of known problems.
+
+Verified by removing it and re-running the gate, which stays green — if Compose
+were still dropping `opacity`, taking the entry out would fail.
+
+Two of the original three entries remain, both tracked in #14810:
+`border-radius` and `font-weight`.
+
+### Changed — the style-drop gate now tracks, rather than assumes (#14810)
+
+`native_complete_gate` asserted `style_degradations.is_empty()`, with the
+comment "the toolkit was clean here as of #12024". It was never clean — it was
+unmeasured. Only XAML and SwiftUI reported their drops, so every other backend
+contributed silence, and silence read as cleanliness.
+
+Compose now reports (#14810) and immediately named **42 drops across 3
+properties**: 31 `border-radius`, 8 `opacity`, 3 `font-weight`. Every rounded
+control in the toolkit renders square on Compose, and every bold label renders
+at regular weight.
+
+The assertion now works the way `ALLOWED_DEGRADATIONS` already did: an explicit
+list, each entry pointing at a tracking issue, and anything not on it fails. A
+drop that does not name its property cannot be matched and stays unexpected,
+rather than slipping through as "not in the list".
+
 ### Fixed — the text inputs were disabled in appearance only (#14772)
 
 `Input`, `Field` and `InputGroup` bound `read-only : slot: disabled`. The

@@ -1295,6 +1295,117 @@ fn arrangement_argument(composable: &str, gap: Option<&str>) -> Option<String> {
     Some(format!("{axis} = Arrangement.spacedBy({gap}.dp)"))
 }
 
+/// One authored style property that Compose lowering discards.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DroppedStyleProperty {
+    pub part: String,
+    pub name: String,
+    pub value: String,
+    pub reason: String,
+}
+
+/// Every property, across every part of `style`, that Compose lowering drops.
+///
+/// Derived by running the real lowering over each part's base props and
+/// collecting what its `match` did not handle — not by diffing against a list
+/// of "properties Compose supports". A hand-maintained list is wrong the first
+/// time someone adds an arm and forgets the list, and #12022 exists precisely
+/// because nobody notices that kind of drift.
+///
+/// Until this existed, Compose reported nothing, so an empty
+/// `styleDegradations` meant "nobody looked" rather than "nothing was lost".
+/// TaskApp alone drops 43 distinct properties this way (#14810), including 318
+/// `border-radius` and 48 `font-weight` — every rounded corner square, every
+/// weight flattened — while the strict `native-complete` profile passed.
+pub fn dropped_style_properties(style: &StyleDef) -> Vec<DroppedStyleProperty> {
+    let mut out = Vec::new();
+    for part in &style.parts {
+        let built = compose_box_style(&part.base, &[], None, 0, None);
+        for (name, value) in built.dropped {
+            out.push(DroppedStyleProperty {
+                reason: compose_drop_reason(&name).to_string(),
+                part: part.name.clone(),
+                name,
+                value,
+            });
+        }
+    }
+    out
+}
+
+/// Why a property has no Compose lowering, in terms a reader can act on.
+///
+/// Generic text would make the report unreadable at the scale this reports at.
+/// These are genuinely different problems: some are missing work on a modifier
+/// that exists, some need the parent to lay out differently, and some have no
+/// Compose concept at all.
+fn compose_drop_reason(name: &str) -> &'static str {
+    match name {
+        "border-radius" => {
+            "Compose clips corners with Modifier.clip(RoundedCornerShape(..)), which this emitter              does not yet apply — every rounded surface renders square"
+        }
+        "font-weight" => {
+            "Text takes fontWeight as an argument rather than a modifier, so it has to be              threaded through the text style rather than the box chain"
+        }
+        "box-shadow" | "elevation" => {
+            "Compose spells this Modifier.shadow(elevation, shape); it needs the shape the              border-radius work would also supply"
+        }
+        "flex-grow" | "flex-shrink" | "flex" => {
+            "Compose distributes space with Modifier.weight inside a Row/Column scope, chosen at              the call site rather than applied to an already-built modifier chain"
+        }
+        "position" | "top" | "left" | "right" | "bottom" | "z-index" => {
+            "Compose has no absolute positioning on a plain container; this needs a Box with              alignment or an offset chosen by the parent"
+        }
+        "display" | "flex-direction" | "flex-wrap" => {
+            "Compose expresses this through the composable chosen (Row/Column/Box/FlowRow) rather              than through any argument or modifier on a built view"
+        }
+        "justify-content" | "align-items" | "align" => {
+            // Deliberately NOT the same reason as `display`/`flex-direction`
+            // above, though they were one arm until #14811. These three ARE
+            // expressible: they are the `horizontalArrangement` /
+            // `verticalAlignment` arguments of Row and Column -- the same
+            // argument slot `gap` already reaches as `Arrangement.spacedBy`
+            // (#14804). Calling that inexpressible would tell a future reader
+            // the path does not exist when it is built and in use.
+            "Compose takes this as a Row/Column ARGUMENT (horizontalArrangement /              verticalAlignment) -- the slot `gap` already uses -- but this emitter does not              thread it yet (#14834)"
+        }
+        "border-style" | "border-collapse" | "outline" => {
+            "no Compose equivalent; Modifier.border takes a width, colour and shape only"
+        }
+        _ => "no Compose lowering in this emitter yet",
+    }
+}
+
+/// The value half of [`part_elevation_tier`], split out so the drop reporter
+/// can ask the SAME question the lowering asks (#14810).
+///
+/// Without this there were two lists: the lowering's, and the reporter's
+/// implicit assumption that anything not in its `match` was discarded. That
+/// made every handled `elevation` a false positive -- 16 reported dropped
+/// against 16 `.shadow(..)` calls actually emitted. A drop report that cries
+/// wolf is worse than none, because the real entries stop being read.
+fn elevation_tier_for_value(value: &str) -> Option<ElevationTier> {
+    match value.trim() {
+        "raised" => Some(ElevationTier::Raised),
+        "overlay" => Some(ElevationTier::Overlay),
+        _ => None,
+    }
+}
+
+/// The weight a `flex-grow` value resolves to, or `None` when it is unusable.
+///
+/// Split out so the drop reporter asks the SAME question the lowering asks
+/// (#14810). Invalid, non-finite, zero and negative values stay intrinsic and
+/// are therefore genuinely discarded; usable ones are consumed.
+fn flex_grow_weight(value: &str) -> Option<String> {
+    value
+        .trim()
+        .parse::<f64>()
+        .ok()
+        .filter(|v| v.is_finite() && *v > 0.0)
+        .map(|v| v.to_string())
+}
+
 /// The modifier `HostScroll` prefixes onto a container's chain.
 ///
 /// Shared by `emit_container` (the ordinary path) and `emit_container_frame`
@@ -2736,11 +2847,7 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
         .find(|p| p.name == "elevation")?
         .value
         .as_str();
-    match value {
-        "raised" => Some(ElevationTier::Raised),
-        "overlay" => Some(ElevationTier::Overlay),
-        _ => None,
-    }
+    elevation_tier_for_value(value)
 }
 
 /// The Compose styling derived from a part's base props + state layers,
@@ -2758,6 +2865,13 @@ struct ComposeStyle {
     text_color: Option<String>,
     font_family_mono: bool,
     font_size: Option<String>,
+    /// Properties this builder saw and did not lower, as `(name, value)`.
+    ///
+    /// Collected BY the builder rather than by a parallel list of "things
+    /// Compose supports" -- a parallel list drifts the moment a property is
+    /// added to one and not the other, which is the drift #12022 exists to
+    /// catch.
+    dropped: Vec<(String, String)>,
     /// Authored `gap`, in dp, for a Column/Row `Arrangement.spacedBy` (#14804).
     gap: Option<String>,
     /// Compose `FontWeight.*` expression for an authored `font-weight` (#14810).
@@ -2863,6 +2977,7 @@ fn compose_box_style(
     let mut text_align: Option<&'static str> = None;
     let mut radius: Option<String> = None;
     let mut font_weight: Option<String> = None;
+    let mut dropped: Vec<(String, String)> = Vec::new();
     let mut gap: Option<String> = None;
 
     let mut absorb = |p: &StyleProp, layer_idx: Option<usize>| {
@@ -2962,6 +3077,31 @@ fn compose_box_style(
                     gap = Some(v);
                 }
             }
+            // `flex-grow` is consumed by `compose_row_weight`, not here, so
+            // falling to `_` reported every usable one as a drop -- 6 against
+            // 6 `.weight(..)` calls actually emitted. Report only values the
+            // lowering cannot use.
+            //
+            // KNOWN LIMIT: `compose_row_weight` applies only to Row children.
+            // A usable `flex-grow` on a non-Row child IS discarded and is not
+            // reported here, because this reporter is per-part and has no node
+            // context to tell the two apart. Under-reporting that case is the
+            // lesser error -- see #14810.
+            "flex-grow" => {
+                if flex_grow_weight(&p.value).is_none() {
+                    dropped.push((p.name.clone(), p.value.clone()));
+                }
+            }
+            // `elevation` is consumed by `part_elevation_tier` straight from
+            // the base props, not through this match -- so falling to `_`
+            // below reported every handled one as a drop. Acknowledge the
+            // values the lowering recognises, and record only the rest, which
+            // genuinely are discarded (#14810).
+            "elevation" => {
+                if elevation_tier_for_value(&p.value).is_none() {
+                    dropped.push((p.name.clone(), p.value.clone()));
+                }
+            }
             // #14708 — `opacity` is what UI57's `state disabled` treatment is
             // built on, so dropping it meant a disabled control dimmed on five
             // backends and not on this one. A PropBucket (not a plain Option)
@@ -2984,7 +3124,7 @@ fn compose_box_style(
                 }
             }
             // border-style, border-collapse, outline, width:100% — skipped.
-            _ => {}
+            other => dropped.push((other.to_string(), p.value.clone())),
         }
     };
 
@@ -3118,6 +3258,7 @@ fn compose_box_style(
     ComposeStyle {
         modifier,
         content_alignment: text_align.map(str::to_string),
+        dropped,
         gap,
         text_color,
         font_family_mono: !font_family_mono.empty(),
@@ -3839,6 +3980,7 @@ fn emit_container_frame(
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
+                dropped: Vec::new(),
                 gap: None,
                 font_weight: None,
                 })
@@ -4005,10 +4147,9 @@ fn compose_row_weight(props: &[StyleProp]) -> Option<String> {
     if let Some(value) = props
         .iter()
         .find(|prop| prop.name == "flex-grow")
-        .and_then(|prop| prop.value.trim().parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value > 0.0)
+        .and_then(|prop| flex_grow_weight(&prop.value))
     {
-        return Some(value.to_string());
+        return Some(value);
     }
     props
         .iter()
@@ -4100,6 +4241,7 @@ fn emit_container(
                 text_color: None,
                 font_family_mono: false,
                 font_size: None,
+                dropped: Vec::new(),
                 gap: None,
                 font_weight: None,
             });
@@ -4128,6 +4270,7 @@ fn emit_container(
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
+                dropped: Vec::new(),
                 gap: None,
                 font_weight: None,
                 });
@@ -10887,6 +11030,139 @@ mod tests {
 
         let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
         assert!(!out.contains("Arrangement.spacedBy"), "got:\n{out}");
+    }
+
+    /// #14810 — before this, Compose reported nothing, so an empty
+    /// `styleDegradations` meant "nobody looked" rather than "nothing was
+    /// lost". TaskApp drops 43 distinct properties, including 318
+    /// `border-radius` and 48 `font-weight`, while the strict
+    /// `native-complete` profile passed.
+    #[test]
+    fn dropped_properties_are_reported_with_a_reason() {
+        let mut sheet = empty_style("F");
+        // `box-shadow` and `letter-spacing` have no Compose lowering at all,
+        // so this fixture does not go stale the moment another property is
+        // fixed. It did: it named `border-radius`, #14817 landed that, and the
+        // test then asserted a drop that no longer occurs.
+        sheet.parts.push(part(
+            "card",
+            vec![
+                sprop("box-shadow", "0 1px 2px #000"),
+                sprop("background", "#ff0000"),
+                sprop("letter-spacing", "0.07em"),
+            ],
+            vec![],
+        ));
+
+        let drops = dropped_style_properties(&sheet);
+        let names: Vec<&str> = drops.iter().map(|d| d.name.as_str()).collect();
+
+        assert!(names.contains(&"box-shadow"), "got: {names:?}");
+        assert!(names.contains(&"letter-spacing"), "got: {names:?}");
+        // `background` IS lowered, so it must not appear -- a reporter that
+        // named everything would be as useless as one that named nothing.
+        assert!(!names.contains(&"background"), "got: {names:?}");
+
+        let shadow = drops.iter().find(|d| d.name == "box-shadow").unwrap();
+        assert_eq!(shadow.part, "card");
+        assert_eq!(shadow.value, "0 1px 2px #000");
+        assert!(
+            shadow.reason.contains("Modifier.shadow"),
+            "the reason must be actionable, got: {}",
+            shadow.reason
+        );
+    }
+
+
+    /// #14810 — a property consumed OUTSIDE the style match must not be
+    /// reported as dropped.
+    ///
+    /// `elevation` is read by `part_elevation_tier` straight from the base
+    /// props, so it never reaches the match's `_` arm as "handled" — and the
+    /// reporter counted all 16 of TaskApp's as drops while the emitter was
+    /// happily producing 16 `.shadow(..)` calls. A drop report that cries wolf
+    /// is worse than no report, because the real entries stop being read.
+    #[test]
+    fn a_property_handled_elsewhere_is_not_reported_as_dropped() {
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part(
+            "card",
+            vec![sprop("elevation", "raised"), sprop("box-shadow", "0 1px 2px #000")],
+            vec![],
+        ));
+
+        let names: Vec<String> = dropped_style_properties(&sheet)
+            .into_iter()
+            .map(|d| d.name)
+            .collect();
+
+        assert!(
+            !names.iter().any(|n| n == "elevation"),
+            "`elevation: raised` IS lowered, via part_elevation_tier — got: {names:?}"
+        );
+        // …but the genuinely unlowered neighbour still is.
+        assert!(
+            names.iter().any(|n| n == "box-shadow"),
+            "box-shadow has no lowering and must still be reported — got: {names:?}"
+        );
+    }
+
+    /// The other half: an `elevation` value the lowering does NOT recognise is
+    /// a real drop, and must be reported. Both directions matter — the fix for
+    /// the false positive must not blanket-silence the property.
+    #[test]
+    fn an_unrecognised_elevation_value_is_still_reported() {
+        let mut sheet = empty_style("F");
+        sheet
+            .parts
+            .push(part("card", vec![sprop("elevation", "floaty")], vec![]));
+
+        let names: Vec<String> = dropped_style_properties(&sheet)
+            .into_iter()
+            .map(|d| d.name)
+            .collect();
+        assert!(
+            names.iter().any(|n| n == "elevation"),
+            "`elevation: floaty` is not a tier and IS discarded — got: {names:?}"
+        );
+    }
+
+
+    /// #14810 — the same false-positive class as `elevation`, found by
+    /// following the first one: `flex-grow` is consumed by
+    /// `compose_row_weight`, not by the style match, so every usable value was
+    /// reported as dropped — 6 against 6 `.weight(..)` calls emitted.
+    #[test]
+    fn a_usable_flex_grow_is_not_reported_as_dropped() {
+        let mut sheet = empty_style("F");
+        sheet
+            .parts
+            .push(part("row-child", vec![sprop("flex-grow", "1")], vec![]));
+        let names: Vec<String> = dropped_style_properties(&sheet)
+            .into_iter()
+            .map(|d| d.name)
+            .collect();
+        assert!(!names.iter().any(|n| n == "flex-grow"), "got: {names:?}");
+    }
+
+    /// And the other direction: a value the lowering cannot use stays
+    /// intrinsic, so it really is discarded and must be reported.
+    #[test]
+    fn an_unusable_flex_grow_is_still_reported() {
+        for bad in ["0", "-1", "wide"] {
+            let mut sheet = empty_style("F");
+            sheet
+                .parts
+                .push(part("row-child", vec![sprop("flex-grow", bad)], vec![]));
+            let names: Vec<String> = dropped_style_properties(&sheet)
+                .into_iter()
+                .map(|d| d.name)
+                .collect();
+            assert!(
+                names.iter().any(|n| n == "flex-grow"),
+                "`flex-grow: {bad}` stays intrinsic and IS discarded — got: {names:?}"
+            );
+        }
     }
 
 }
