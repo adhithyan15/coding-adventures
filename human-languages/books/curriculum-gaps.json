@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 6630,
+    "totalLessons": 6633,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 483,
+    "atomsNeverRevisited": 484,
     "forwardReferences": 756,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 87,
@@ -40,9 +40,9 @@
     "tracksWithoutWritingStageEvidence": 4,
     "missingWritingStagePairs": 519,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 5330,
+    "drivableLessons": 5332,
     "drivablePercent": 80,
-    "chaptersWithoutDrivablePrefix": 185,
+    "chaptersWithoutDrivablePrefix": 186,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -3832,7 +3832,8 @@
           15,
           16,
           17,
-          18
+          18,
+          19
         ],
         "bookChapters": [
           1,
@@ -3852,7 +3853,8 @@
           15,
           16,
           17,
-          18
+          18,
+          19
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -4041,9 +4043,9 @@
       {
         "language": "japanese",
         "status": "version-2",
-        "lessonCount": 157,
+        "lessonCount": 160,
         "versions": {
-          "2": 157
+          "2": 160
         }
       }
     ]
@@ -4727,8 +4729,8 @@
       },
       {
         "language": "japanese",
-        "bookChapters": 18,
-        "declaredChapters": 18,
+        "bookChapters": 19,
+        "declaredChapters": 19,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4847,8 +4849,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1484,
-      "declaredChapters": 1484,
+      "bookChapters": 1485,
+      "declaredChapters": 1485,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 87,
@@ -4860,10 +4862,10 @@
     }
   },
   "levels": {
-    "totalLessons": 6630,
+    "totalLessons": 6633,
     "byLevel": {
       "pre-A1": 3836,
-      "A1": 2088,
+      "A1": 2091,
       "A2": 622,
       "B1": 39,
       "B2": 17,
@@ -4995,10 +4997,10 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 157,
+        "lessonCount": 160,
         "byLevel": {
           "pre-A1": 117,
-          "A1": 40,
+          "A1": 43,
           "A2": 0,
           "B1": 0,
           "B2": 0,
@@ -6003,8 +6005,8 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 157,
-        "measurable": 157,
+        "lessonCount": 160,
+        "measurable": 160,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -6556,7 +6558,7 @@
           "language": "japanese",
           "script": "japanese",
           "latinScript": false,
-          "lessonCount": 157,
+          "lessonCount": 160,
           "totalGlyphs": 60,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -69848,6 +69850,76 @@
         "revisits": 6
       },
       {
+        "atom": "JA-LEX-HON",
+        "language": "japanese",
+        "introducedBy": "JA-C18-hon",
+        "introducedAt": 153,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-ITSUTSU",
+        "language": "japanese",
+        "introducedBy": "JA-C16-itsutsu",
+        "introducedAt": 137,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-ME-EYE",
+        "language": "japanese",
+        "introducedBy": "JA-C11-me-eye",
+        "introducedAt": 78,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "JA-PERFORMANCE-BODY-SEVEN-01",
+        "language": "japanese",
+        "introducedBy": "JA-C11-body-map",
+        "introducedAt": 79,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-SCRIPT-HANDAKUTEN-01",
+        "language": "japanese",
+        "introducedBy": "JA-W18-handakuten",
+        "introducedAt": 154,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-SCRIPT-HO-01",
+        "language": "japanese",
+        "introducedBy": "JA-W18-ho",
+        "introducedAt": 152,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-SCRIPT-MU-01",
+        "language": "japanese",
+        "introducedBy": "JA-W17-mu",
+        "introducedAt": 139,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "KA-ETYMON-C07-NUMBERS-6-10-03",
         "language": "kannada",
         "introducedBy": "KA-C07-entu",
@@ -86001,12 +86073,12 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 157,
+        "lessonCount": 160,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 148,
-        "atomsNeverRevisited": 0,
+        "atomsTaught": 151,
+        "atomsNeverRevisited": 1,
         "forwardReferences": 0
       },
       {
@@ -86155,14 +86227,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 8408,
-      "atomsNeverRevisited": 483,
+      "atomsTaught": 8411,
+      "atomsNeverRevisited": 484,
       "neverRevisitedPercent": 6,
       "missedByWindow": {
         "R1": 1680,
-        "R2": 3713,
-        "R3": 5285,
-        "R4": 3844
+        "R2": 3716,
+        "R3": 5287,
+        "R4": 3846
       },
       "forwardReferences": 756
     }
@@ -86237,7 +86309,7 @@
       {
         "language": "japanese",
         "script": "japanese",
-        "lessonCount": 157,
+        "lessonCount": 160,
         "scriptLessons": 57,
         "taughtGlyphs": 60,
         "shownGlyphs": 60,
@@ -105808,8 +105880,8 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 157,
-        "atomMeasurableLessons": 157,
+        "lessonCount": 160,
+        "atomMeasurableLessons": 160,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -105824,21 +105896,35 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 148,
-        "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 0,
+        "atomsTaught": 151,
+        "atomsNeverRevisited": 1,
+        "reinforcementWindowMisses": 7,
         "reinforcementMissesByWindow": {
           "R1": 0,
-          "R2": 0,
-          "R3": 0,
-          "R4": 0
+          "R2": 3,
+          "R3": 2,
+          "R4": 2
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 66,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
-        "findings": [],
-        "next": null
+        "findings": [
+          {
+            "language": "japanese",
+            "kind": "reinforcement",
+            "count": 7,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          }
+        ],
+        "next": {
+          "language": "japanese",
+          "kind": "reinforcement",
+          "count": 7,
+          "unit": "missed window(s)",
+          "detail": "add retrieval at the expanding R1-R4 intervals"
+        }
       },
       {
         "language": "kannada",
@@ -107502,6 +107588,13 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
+        "language": "japanese",
+        "kind": "reinforcement",
+        "count": 7,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
         "language": "marwadi",
         "kind": "reinforcement",
         "count": 5,
@@ -107672,11 +107765,11 @@
     ],
     "summary": {
       "tracks": 23,
-      "tracksWithDetectedCliffs": 22,
+      "tracksWithDetectedCliffs": 23,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
       "atomMeasurementBlindLessons": 59,
-      "findings": 108
+      "findings": 109
     }
   },
   "levelGate": {
@@ -108323,11 +108416,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 6630,
-    "voice": 4797,
-    "sight": 702,
+    "totalLessons": 6633,
+    "voice": 4799,
+    "sight": 703,
     "pen": 1131,
-    "coreVoice": 5330,
+    "coreVoice": 5332,
     "lessonsWithWritingSegments": 648,
     "drivablePercent": 80,
     "tracks": [
@@ -113800,11 +113893,11 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 157,
-        "voice": 88,
-        "sight": 11,
+        "lessonCount": 160,
+        "voice": 90,
+        "sight": 12,
         "pen": 58,
-        "coreVoice": 97,
+        "coreVoice": 99,
         "drivablePercent": 62,
         "drivablePrefixTotal": 34,
         "chapters": [
@@ -114083,6 +114176,21 @@
             ],
             "drivablePrefix": 4,
             "firstNonVoiceLesson": "JA-W18-ho"
+          },
+          {
+            "language": "japanese",
+            "chapter": 19,
+            "lessonCount": 3,
+            "voice": 2,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "JA-C19-words"
           }
         ]
       },
@@ -130700,7 +130808,7 @@
     "underspentPercent": 90
   },
   "infoDump": {
-    "lessons": 6630,
+    "lessons": 6633,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -130708,11 +130816,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 6630,
-    "measuredLessons": 3541,
-    "idiomMeasuredLessons": 3541,
-    "senseMeasuredLessons": 3541,
-    "cultureClaimMeasuredLessons": 3541,
+    "lessons": 6633,
+    "measuredLessons": 3544,
+    "idiomMeasuredLessons": 3544,
+    "senseMeasuredLessons": 3544,
+    "cultureClaimMeasuredLessons": 3544,
     "idioms": 101,
     "senses": 101,
     "cultureClaims": 207,
@@ -130721,8 +130829,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 6183,
-    "usesBeforeIntroduction": 20355,
+    "lessonsUsingTerms": 6186,
+    "usesBeforeIntroduction": 20360,
     "technicalUsesBeforeIntroduction": 5059,
     "technicalLessons": 2817,
     "worstTerms": [
@@ -130753,12 +130861,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 6630,
+    "lessonsScanned": 6633,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1553,
+    "filesScanned": 1554,
     "mainCharacters": 132,
     "scriptCharacters": 799,
     "gaps": 0
