@@ -12,6 +12,7 @@ crate covers every operation from the IMG03 specification:
 | Linear-light    | `contrast`, `gamma`, `exposure`, `greyscale`, `sepia`, `colour_matrix`, `saturate`, `hue_rotate` |
 | Colorspace      | `srgb_to_linear_image`, `linear_to_srgb_image` |
 | LUT             | `apply_lut1d_u8`, `build_lut1d_u8`, `build_gamma_lut` |
+| Adaptive (IMG09)| `adaptive_threshold_mean` — the one function here that looks at a neighbourhood, not just its own pixel; see below |
 
 ## Stack position
 
@@ -54,6 +55,17 @@ rationale.
 channel-manipulation ops are exactly correct in sRGB because they are
 monotone remappings that do not mix channel values.  These skip the
 decode/encode round-trip entirely.
+
+**`adaptive_threshold_mean` (IMG09)**: `threshold`/`threshold_luminance`
+apply one scalar cutoff to every pixel — exact for a clean, evenly-lit
+source, unusable on a real photo where a shadow across half the image
+pushes that half below any single cutoff regardless of where it's set.
+`adaptive_threshold_mean(src, window, t)` compares each pixel to the mean
+luminance of its own local neighbourhood instead, computed in O(1) per
+pixel via a summed-area table (Bradley & Roth, 2007) so the whole
+operation stays O(width × height). See `IMG09-adaptive-threshold.md` for
+the full design, including why this is the one function in the crate
+that isn't a pure per-pixel-independent point operation.
 
 ## Testing
 

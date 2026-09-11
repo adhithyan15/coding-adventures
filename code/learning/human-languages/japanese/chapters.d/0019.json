@@ -1,0 +1,16 @@
+{
+  "chapter": 19,
+  "title": "Reading — Words, Greetings, and the Cues You Have Only Heard",
+  "label": "ch:ja-yomu",
+  "canDo": "I can read Japanese words, greetings and classroom cues off a page, without anyone saying them first.",
+  "payoff": {
+    "lesson": "JA-C19-kyoushitsu",
+    "kind": "four-skill-function-map",
+    "summary": "The repair cues the book has only ever spoken, read in order, ending with the longest stretch of Japanese it has set on one page.",
+    "assesses": [
+      "JA-SKILL-CONNECTED-READING",
+      "JA-SKILL-READ-GREETINGS",
+      "JA-SKILL-READ-WORDS"
+    ]
+  }
+}

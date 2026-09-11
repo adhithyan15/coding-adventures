@@ -1,0 +1,11 @@
+{
+  "language": "japanese",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:17f90bcabe6e8704",
+  "lessonIds": [
+    "JA-C19-words",
+    "JA-C19-greetings",
+    "JA-C19-kyoushitsu"
+  ],
+  "tex": "japanese/book/chapters/ch19-reading-words-greetings-and-cues.tex"
+}
