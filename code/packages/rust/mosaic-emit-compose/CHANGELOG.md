@@ -42,6 +42,27 @@ appears.
 Does not fix every case: the storage line still renders joined, so its gap sits
 on a container this does not reach. Tracked in #14804 with Flutter and SwiftUI,
 which drop `gap` the same way.
+### Added — directional padding lowering (#14709)
+
+`padding-top/-bottom/-left/-right` were dropped entirely, so a part asking for
+asymmetric insets got none at all — not even the shorthand, if it never
+declared one. 391 uses across the repository.
+
+Compose's `padding(start=, top=, end=, bottom=)` overload overrides per edge,
+which is what CSS means, so the four edges are resolved at emit time and
+emitted as one call. Resolution is by source order, so no precedence table is
+needed: the shorthand seeds all four, a directional property overwrites its
+own, and `padding-top: 20; padding: 8` correctly yields 8 everywhere.
+
+When all four agree — the common case — emission collapses back to
+`.padding(n.dp)`, byte-identical to previous output. Verified across all 23
+toolkit components: 23 unchanged, 0 mismatches.
+
+`left`/`right` lower to `start`/`end` rather than fixed sides, so a
+right-to-left layout mirrors them the way every other Compose padding does. An
+edge with no authored value is omitted rather than passed as `0.dp`: the
+overload already defaults it to zero, and naming it would claim the stylesheet
+asked for something it did not.
 ### Fixed — `font-weight` was discarded (#14810)
 
 48 occurrences in TaskApp, 3 in the toolkit, every one thrown away — so every
