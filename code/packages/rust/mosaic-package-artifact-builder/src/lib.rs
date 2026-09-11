@@ -1988,8 +1988,8 @@ fn install_host_effects(
                 handler.install,
                 Backend::ALL
                     .iter()
-                    .filter(|backend| backend.installs_host_effects())
-                    .map(|backend| backend.dir_name())
+                    .filter(|candidate| candidate.installs_host_effects())
+                    .map(|candidate| candidate.dir_name())
                     .collect::<Vec<_>>()
                     .join(", ")
             )));
@@ -12164,6 +12164,50 @@ version = "1"
         }
     }
 
+    /// A Qt-only package building for Compose is untouched.
+    ///
+    /// The "does not fire" direction, which is the half a refactor is most
+    /// likely to break: a refusal keyed slightly too broadly would reject every
+    /// multi-backend package that happens to declare a handler for one of them,
+    /// and every such package in this repository declares exactly that shape.
+    ///
+    /// Engram is the only shipped manifest with `[host_effects]`, and it names
+    /// `qt` alone while shipping Compose, Flutter and XAML host ASSETS -- so
+    /// this is not a synthetic arrangement, it is the one that exists.
+    #[test]
+    fn a_qt_only_handler_does_not_refuse_a_compose_build() {
+        let root = scratch();
+        fs::create_dir_all(root.join("host/qt")).expect("create the source directory");
+        fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
+
+        let written = install_host_effects(
+            &manifest_targeting("probe_effects.h"),
+            Backend::Compose,
+            &root,
+            &root.join("out"),
+            &HashMap::new(),
+            &HashSet::new(),
+        )
+        .expect("a qt-only handler must not refuse a compose build");
+        assert!(
+            written.is_empty(),
+            "nothing should be installed for a backend the package does not target"
+        );
+        // And the same manifest IS installed when built for the backend it
+        // names, so the test above is not passing because the fixture is inert.
+        let installed = install_host_effects(
+            &manifest_targeting("probe_effects.h"),
+            Backend::Qt,
+            &root,
+            &root.join("out"),
+            &HashMap::new(),
+            &HashSet::new(),
+        )
+        .expect("the qt build must still install it");
+        assert_eq!(installed.len(), 1, "{installed:?}");
+        let _ = fs::remove_dir_all(&root);
+    }
+
     /// A handler declared with NO file of its own is refused as well.
     ///
     /// This is the half the first version missed. The refusal keyed on `files`
@@ -12226,10 +12270,17 @@ version = "1"
     /// Every backend is classified, and the two that claim to install really do.
     ///
     /// The `installs_host_effects` match is exhaustive, so a new `Backend`
-    /// variant cannot compile until someone decides. This pins the other half:
-    /// that the answer stays true of the emitters. A backend that says it
-    /// installs must actually have an emission function, or the refusal above
-    /// lets a dead handler through for exactly the reason it exists to stop.
+    /// variant cannot compile until someone decides.
+    ///
+    /// This does NOT verify the decision against the emitters, and an earlier
+    /// version of this comment claimed it did. There is no reference here to
+    /// `qt_main_with_host_effects` or `swift_app_with_host_effects`; the
+    /// assertion is a literal equality. What it actually provides is a
+    /// tripwire: a backend whose classification changes has to change this
+    /// line too, which is the moment to check whether an emitter really
+    /// exists. Worth having, and worth not overstating -- a backend that
+    /// wrongly claims to install lets a dead handler through for exactly the
+    /// reason the refusal exists, and nothing automated would catch it.
     #[test]
     fn only_the_backends_with_an_emitter_claim_to_install_handlers() {
         // `Backend::ALL`, not a hand-copied list of the variants.
