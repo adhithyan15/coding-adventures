@@ -5,7 +5,6 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-<<<<<<< HEAD
 ### Fixed — `gap` was dropped entirely (#14804)
 
 `gap` reached the lattice IR and died in the property loop's `_ => {}` arm.
@@ -43,7 +42,6 @@ appears.
 Does not fix every case: the storage line still renders joined, so its gap sits
 on a container this does not reach. Tracked in #14804 with Flutter and SwiftUI,
 which drop `gap` the same way.
-=======
 ### Fixed — `font-weight` was discarded (#14810)
 
 48 occurrences in TaskApp, 3 in the toolkit, every one thrown away — so every
@@ -69,7 +67,6 @@ already normal, so they fall through to the drop report and say so.
 TaskApp emits 18 weights where it emitted none. Verified end to end: emitted,
 zero degradations, control contract, compiled, launched, rendered — bold labels
 now render bold — and the acceptance lifecycle stays green.
->>>>>>> origin/main
 ### Fixed — `border-radius` was discarded entirely (#14810)
 
 318 occurrences in TaskApp alone, 31 in the toolkit, every one thrown away — so
