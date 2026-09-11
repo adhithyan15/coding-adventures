@@ -301,7 +301,11 @@ describe("real curriculum", () => {
       // than as a number -- so the track could ask skolko and understand no answer.
       // Chapters 23-24 teach one to ten, 25 twenty and a hundred with the
       // centum/satem split the hundred names, and 26 the ordinals said and written.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]);
+      // 26 -> 27: the reading rung. Russian is the first track whose passage was
+      // bounded by vocabulary rather than by the alphabet -- it had already
+      // taught every letter it needed, which is what twenty-six chapters of
+      // script work buys.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]);
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

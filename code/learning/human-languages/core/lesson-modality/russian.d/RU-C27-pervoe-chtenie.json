@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C27-pervoe-chtenie",
+    "language": "russian",
+    "chapter": 27,
+    "sequence": 1360,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b73d23aee3c7fa22"
+  },
+  "findings": []
+}

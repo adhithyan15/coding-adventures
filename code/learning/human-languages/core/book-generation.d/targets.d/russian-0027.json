@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 27,
+  "output": "russian/book/chapters/ch27-reading-words-lines-and-a-passage.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}
