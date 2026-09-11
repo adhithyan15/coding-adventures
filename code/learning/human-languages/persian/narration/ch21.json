@@ -1,0 +1,577 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 21,
+  "title": "Reading — Words, Answers, and the Figures",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:147c624e47c26966",
+  "lessons": [
+    {
+      "id": "FA-C21-words",
+      "sequence": 960,
+      "title": "(reading) (salām, mamnūn, bale, na, nān, māh) (bale, na, mamnūn, salām, avval, sevvom) (sefr tâ noh, dah, bist, sad) — six words, nothing said first",
+      "headword": "(reading)",
+      "romanization": "salām, mamnūn, bale, na, nān, māh",
+      "gloss": "six words read cold — every letter in them is one you can already write",
+      "script": "perso-arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e6f11ce72585bea7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have written every letter in every one of these. Not one word is new, and not one shape inside them is new either."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is that nobody says them before you read them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سلام ممنون بله نه نان ماه."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down the list once. Do not take each word apart — look at the whole shape and let it arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again, and notice which came at once and which you had to unpick. Both are fine. The difference is what practice removes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Persian joins its letters, so a word is not five shapes standing in a row. It is one shape."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is why reading a word cold is a different skill from writing it. Writing, you make the joins one at a time and know what is coming. Reading, the joins are already made and the whole word has to land at once."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Look at نان and نه. Both open with the same letter, and the difference is at the end, which is exactly where a reader is most likely to stop looking."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six words down the list, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six words down the list, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C21-words-bread",
+              "prompt": "Which word is bread?",
+              "assesses": [
+                "FA-SKILL-READ-WORDS"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "nan",
+                "نان",
+                "nān"
+              ],
+              "feedback": {
+                "correct": "نان.",
+                "incorrect": "نان -- bread."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two open with the same letter? (نان and نه.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C21-answers",
+      "sequence": 970,
+      "title": "(reading) (salām, mamnūn, bale, na, nān, māh) (bale, na, mamnūn, salām, avval, sevvom) (sefr tâ noh, dah, bist, sad) — the answers, on the page",
+      "headword": "(reading)",
+      "romanization": "bale, na, mamnūn, salām, avval, sevvom",
+      "gloss": "six lines you would answer with — read rather than said, for the first time",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:777928a552373f72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson gave you six words. These are six you would answer with."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing here is new. What is new is meeting them where nobody is speaking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بله نه ممنون سلام اول سوم."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again — and notice the list changes halfway. The first four are things you say to a person. The last two are things you read off a door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "اول and سوم are the two you are most likely to meet written before you ever meet them spoken: a floor, a platform, a queue."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the argument for reading them now. An answer you can only recognise by ear is one you can only give when somebody asks out loud. The same words on a sign do not wait for you."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six lines, and the last two are the ones a street will hand you first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six lines, once, in order, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six lines, once, in order, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C21-answers-first",
+              "prompt": "Which line would be on the first floor?",
+              "assesses": [
+                "FA-SKILL-READ-ANSWERS"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "avval",
+                "اول",
+                "first"
+              ],
+              "feedback": {
+                "correct": "اول.",
+                "incorrect": "اول -- first."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two would you read off a door? (اول and سوم.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C21-adad",
+      "sequence": 980,
+      "title": "(reading) (salām, mamnūn, bale, na, nān, māh) (bale, na, mamnūn, salām, avval, sevvom) (sefr tâ noh, dah, bist, sad) — the figures",
+      "headword": "(reading)",
+      "romanization": "sefr tâ noh, dah, bist, sad",
+      "gloss": "the figures, read off a page — a price, a floor, a phone number",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15e5f93957d46b00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six words, then six answers. These are not words at all."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You drew every one of them. Reading them is the same ten signs coming the other way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ ۱۰ ۲۰ ۱۰۰."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read across each line once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again — and this time read the last three as amounts rather than as signs. Ten. Twenty. A hundred."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "These ten signs are the only Persian most travellers read before they read any word at all. A price, a floor, a platform, a phone number: none of them waits for you to know the letters."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Notice also which way they run. The digits go left to right inside a number even though the words around them run right to left, so ۱۰۰ is a one and two zeros in the order you already expect."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole trick, and it is why a figure is the first thing a reader can take from a Persian page."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six lines aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six lines aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C21-adad-hundred",
+              "prompt": "What number is on the last line?",
+              "assesses": [
+                "FA-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "100",
+                "۱۰۰",
+                "hundred",
+                "sad"
+              ],
+              "feedback": {
+                "correct": "۱۰۰ -- a hundred.",
+                "incorrect": "۱۰۰ -- a hundred."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the ten signs were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which way does a Persian number run? (Left to right, inside a line that runs the other way.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

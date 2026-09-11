@@ -180,6 +180,7 @@ pub fn from_pipeline(
     }
     writeln!(out, "import androidx.compose.foundation.layout.Box").unwrap();
     writeln!(out, "import androidx.compose.ui.text.font.FontWeight").unwrap();
+    writeln!(out, "import androidx.compose.ui.draw.alpha").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Column").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Row").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.RowScope").unwrap();
@@ -2812,6 +2813,7 @@ fn compose_box_style(
     let mut font_family_mono = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
+    let mut opacity = PropBucket::new(layer_count);
 
     // `text-align` is a static layout concern — base-only (a per-state
     // alignment flip is never needed for the table/spreadsheet cases
@@ -2863,11 +2865,21 @@ fn compose_box_style(
             // #14810 — 48 occurrences in TaskApp, every one discarded, so every
             // bold label rendered at regular weight. This is NOT a missing
             // modifier: Compose's Text takes fontWeight as an ARGUMENT, so it
-            // threads through the text style rather than the box chain -- the
-            // same shape as the `gap` problem in #14804.
+            // threads through the text style rather than the box chain.
             "font-weight" if layer_idx.is_none() => {
                 if let Some(w) = compose_font_weight(&p.value) {
                     font_weight = Some(w);
+                }
+            }
+            // #14708 — `opacity` is what UI57's `state disabled` treatment is
+            // built on. A PropBucket because the value that matters is almost
+            // always state-layered.
+            "opacity" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    // The Float suffix goes on each VALUE, not on the
+                    // assembled expression: `(if (..) 0.4 else 1)f` does not
+                    // parse. Caught by compiling the generated Kotlin.
+                    set(&mut opacity, format!("{v}f"));
                 }
             }
             "text-align" if layer_idx.is_none() => {
@@ -2904,6 +2916,15 @@ fn compose_box_style(
     if !height.empty() {
         let expr = numeric_layer_value(&height, state_layers, "0");
         modifier.push_str(&format!("\n{cpad}.height({expr}.dp)"));
+    }
+
+    // .alpha — FIRST of the drawing modifiers, so it covers the background,
+    // the border and the content alike. Applying it later would fade only
+    // what follows it in the chain, which is a subtly different picture from
+    // the one the author asked for (#14708).
+    if !opacity.empty() {
+        let expr = numeric_layer_value(&opacity, state_layers, "1f");
+        modifier.push_str(&format!("\n{cpad}.alpha({expr})"));
     }
 
     // .shadow — UI41, #12028 item 1. Base-only (see `part_elevation_tier`);
@@ -10430,6 +10451,69 @@ mod tests {
         assert_eq!(compose_font_weight("chunky"), None);
         assert_eq!(compose_font_weight("0"), None);
         assert_eq!(compose_font_weight("1200"), None);
+    }
+
+    /// #14708 — `opacity` is what UI57's `state disabled` treatment is built
+    /// on, so dropping it meant a disabled control dimmed on five backends and
+    /// not on this one.
+    #[test]
+    fn opacity_lowers_to_alpha() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("b".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet
+            .parts
+            .push(part("b", vec![sprop("opacity", "0.4")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(out.contains(".alpha(0.4f)"), "got:\n{out}");
+        assert!(
+            out.contains("import androidx.compose.ui.draw.alpha"),
+            "alpha emitted without its import, got:\n{out}"
+        );
+    }
+
+    /// The Float suffix belongs on each VALUE, not on the assembled
+    /// expression.
+    ///
+    /// A state-layered opacity becomes `(if (..) 0.4 else 1)`, and Kotlin
+    /// cannot suffix a parenthesised expression — `(...)f` does not parse.
+    /// This is the form that matters, because the value worth reading is
+    /// almost always state-layered (`state disabled { opacity : .. }`), and
+    /// the bug was invisible to every string assertion until the generated
+    /// Kotlin was actually compiled.
+    #[test]
+    fn a_state_layered_opacity_suffixes_each_value_not_the_expression() {
+        let m = component("F", vec![slot("disabled", SlotType::Bool, false)], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("b".to_string());
+        let l = layout("F", n);
+
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part(
+            "b",
+            vec![sprop("opacity", "1")],
+            // Slot-bound, the way UI57 binds a built-in state name to a bool
+            // slot -- an unbound state produces no conditional at all, which
+            // is what this test needs to exercise.
+            vec![StateStyle {
+                slot: Some("disabled".to_string()),
+                slot_is_bool: true,
+                state: "disabled".to_string(),
+                transitions: vec![],
+                props: vec![sprop("opacity", "0.4")],
+            }],
+        ));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(out.contains("0.4f"), "got:\n{out}");
+        assert!(
+            !out.contains(")f)"),
+            "the Float suffix landed on the expression instead of the values, \
+             which is not valid Kotlin, got:\n{out}"
+        );
     }
 
 }
