@@ -1,5 +1,43 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — declare the Compose acceptance viewport (#14771)
+
+`TaskAppUiTest` used `createComposeRule()`, whose surface is whatever the test
+framework defaults to — 1024 x 768. Nobody chose that number, yet every
+`assertIsDisplayed()` in the test silently meant "fits in 1024 x 768". The
+first layout change that made TaskApp a few pixels taller (#14730, directional
+padding) pushed the freshly added task row to y = 768.0 and failed an assertion
+that was never about height, reported only as "is not displayed".
+
+The test now runs `runSkikoComposeUiTest` at a declared 1280 x 900 desktop
+window. No assertion was weakened: that is a real window, and content still has
+to be on screen in it without scrolling.
+
+It also now asserts the invariant **directly** rather than relying on one row
+happening to land above the fold. A scrollable that can scroll reports
+`VerticalScrollAxisRange.maxValue > 0`, and that value *is* the overflow in
+pixels, so the test asserts it is zero at three stages. Verified by falsifying
+it — at the old 1024 x 768 the new assertion fails with:
+
+```
+TaskApp overflows the 1024 x 768 acceptance viewport by 244.0px at stage
+'after first add' -- content below the fold is not reachable, because
+performScrollTo() hangs against the emitted scroll container.
+```
+
+Width, not height, was the real constraint: at 1024 the composer and list wrap
+and content grows to ~1012 px tall; at 1280 it reflows to ~538 px.
+
+Two defects this deliberately does not paper over, both filed:
+
+* **#14789** — the generated app's own `Window` takes Compose's 800 x 600
+  default, which is smaller than this test's window and smaller than the layout
+  needs, so a first launch buries the task list. Fixing that is a product
+  decision (should window size be authorable in Mosaic?), not a test change.
+* **#14790** — `performScrollTo()` hangs indefinitely against the emitted
+  scroll container, which is why "fit the viewport" is currently the only
+  option for reaching content at all.
+
 ## [Unreleased] — expose native local-data guidance (#13690)
 
 The native adapter now publishes the shared storage status, location, and warning
