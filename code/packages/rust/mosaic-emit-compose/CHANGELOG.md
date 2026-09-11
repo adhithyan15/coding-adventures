@@ -47,6 +47,20 @@ genuinely-unlowered neighbour `box-shadow` stays reported either way.
 A drop report that cries wolf is worse than no report, because the real entries
 stop being read.
 
+`flex-grow` had the identical problem, found by asking whether `elevation` was
+structurally unique — it is not. `compose_row_weight` consumes it, so all 6 of
+TaskApp's usable values were reported against 6 `.weight(..)` calls actually
+emitted. Same fix: one shared predicate, `flex_grow_weight`.
+
+One known limit, stated rather than hidden: `compose_row_weight` applies only
+to Row children, and this reporter is per-part with no node context, so a
+usable `flex-grow` on a **non-Row** child is discarded without being reported.
+Under-reporting that narrow case is the lesser error against reporting every
+usable value as a drop.
+
+TaskApp's report: 532 → **510**, with 22 false entries removed and every
+genuine one (`flex-shrink` 9, `box-shadow` 17, …) still present.
+
 `opacity` is what UI57's `state disabled` treatment is built on, so dropping it
 meant a disabled control dimmed on five backends and not on this one — it
 looked disabled on the web and XAML and SwiftUI, and fully normal on Compose.

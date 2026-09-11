@@ -2910,6 +2910,21 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
+            // `flex-grow` is consumed by `compose_row_weight`, not here, so
+            // falling to `_` reported every usable one as a drop -- 6 against
+            // 6 `.weight(..)` calls actually emitted. Report only values the
+            // lowering cannot use.
+            //
+            // KNOWN LIMIT: `compose_row_weight` applies only to Row children.
+            // A usable `flex-grow` on a non-Row child IS discarded and is not
+            // reported here, because this reporter is per-part and has no node
+            // context to tell the two apart. Under-reporting that case is the
+            // lesser error -- see #14810.
+            "flex-grow" => {
+                if flex_grow_weight(&p.value).is_none() {
+                    dropped.push((p.name.clone(), p.value.clone()));
+                }
+            }
             // `elevation` is consumed by `part_elevation_tier` straight from
             // the base props, not through this match -- so falling to `_`
             // below reported every handled one as a drop. Acknowledge the
@@ -3892,6 +3907,20 @@ pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> 
     result
 }
 
+/// The weight a `flex-grow` value resolves to, or `None` when it is unusable.
+///
+/// Split out so the drop reporter asks the SAME question the lowering asks
+/// (#14810). Invalid, non-finite, zero and negative values stay intrinsic and
+/// are therefore genuinely discarded; usable ones are consumed.
+fn flex_grow_weight(value: &str) -> Option<String> {
+    value
+        .trim()
+        .parse::<f64>()
+        .ok()
+        .filter(|v| v.is_finite() && *v > 0.0)
+        .map(|v| v.to_string())
+}
+
 /// Resolve a Mosaic Row child's request to consume remaining horizontal room.
 ///
 /// CSS-authored components commonly use either `flex-grow: N` or
@@ -3902,10 +3931,9 @@ fn compose_row_weight(props: &[StyleProp]) -> Option<String> {
     if let Some(value) = props
         .iter()
         .find(|prop| prop.name == "flex-grow")
-        .and_then(|prop| prop.value.trim().parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value > 0.0)
+        .and_then(|prop| flex_grow_weight(&prop.value))
     {
-        return Some(value.to_string());
+        return Some(value);
     }
     props
         .iter()
@@ -10582,6 +10610,44 @@ mod tests {
             names.iter().any(|n| n == "elevation"),
             "`elevation: floaty` is not a tier and IS discarded — got: {names:?}"
         );
+    }
+
+
+    /// #14810 — the same false-positive class as `elevation`, found by
+    /// following the first one: `flex-grow` is consumed by
+    /// `compose_row_weight`, not by the style match, so every usable value was
+    /// reported as dropped — 6 against 6 `.weight(..)` calls emitted.
+    #[test]
+    fn a_usable_flex_grow_is_not_reported_as_dropped() {
+        let mut sheet = empty_style("F");
+        sheet
+            .parts
+            .push(part("row-child", vec![sprop("flex-grow", "1")], vec![]));
+        let names: Vec<String> = dropped_style_properties(&sheet)
+            .into_iter()
+            .map(|d| d.name)
+            .collect();
+        assert!(!names.iter().any(|n| n == "flex-grow"), "got: {names:?}");
+    }
+
+    /// And the other direction: a value the lowering cannot use stays
+    /// intrinsic, so it really is discarded and must be reported.
+    #[test]
+    fn an_unusable_flex_grow_is_still_reported() {
+        for bad in ["0", "-1", "wide"] {
+            let mut sheet = empty_style("F");
+            sheet
+                .parts
+                .push(part("row-child", vec![sprop("flex-grow", bad)], vec![]));
+            let names: Vec<String> = dropped_style_properties(&sheet)
+                .into_iter()
+                .map(|d| d.name)
+                .collect();
+            assert!(
+                names.iter().any(|n| n == "flex-grow"),
+                "`flex-grow: {bad}` stays intrinsic and IS discarded — got: {names:?}"
+            );
+        }
     }
 
 }
