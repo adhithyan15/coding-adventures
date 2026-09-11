@@ -5,6 +5,37 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — `Box` overlaid its children instead of laying them out (UI60, #14828)
+
+`Box` and `Stack` both lowered to Compose's `Box`, which layers its children at
+a shared origin. That is `Stack`'s meaning; UI29 gives `Box` the generic opaque
+container — `<div>` on html, `Group { }` on SwiftUI, `Item { }` on Qt, all of
+which lay children out in flow. Compose was the only backend that disagreed.
+
+Engram's deck-stat chips drew the count on top of its label: `[0]` and
+`[Total]` both at `Rect.fromLTRB(49.0, 247.0, ..)`, eleven chips, every
+semantics gate green throughout — a node drawn over another node is still
+present, still named, and still "displayed".
+
+`Box` now lowers to `Column`; `Stack` keeps Compose's `Box`.
+
+Two things the spec did not anticipate, both fixed here:
+
+- **The composable is chosen in two places.** `emit_node`'s `match node.tag`
+  and `root_container_context`. Fixing one would have left a root `Box`
+  overlaying while every nested one flowed.
+- **A root `Stack` was not overlaying at all.** `root_container_context` never
+  named `Stack`, so it fell through to `_ => Column`. The defect UI60
+  describes and its mirror image were both live on the same primitive pair.
+
+Behaviour change worth naming: `gap` on a `Box` was silently dropped before —
+a Box had no arrangement — and is now real `verticalArrangement` spacing.
+
+Measured, not inferred: Engram's chips go from a shared origin to `[0]` bottom
+`271.0` / `[Total]` top `271.0`, and **all three Trestle renders are
+byte-identical** across 27 `Box`→`Column` swaps, because its multi-child Boxes
+render one child each.
+
 ### Fixed — `text-align` on a Row or Column emitted Kotlin that did not compile (#14839)
 
 `contentAlignment` was applied from `text-align` with no check on which
