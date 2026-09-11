@@ -106,7 +106,45 @@ fn manifest_declares_app_package_boundary() {
     )));
     assert!(host_assets.contains(&("react", "host/web/engram-host.ts", "src/engram-host.ts")));
     assert!(host_assets.contains(&("electron", "host/electron/host.js", "electron/host.js")));
-    assert!(host_assets.contains(&("qt", "host/qt/MosaicHost.cpp", "MosaicHost.cpp")));
+    // Qt is deliberately absent, and that absence is the assertion.
+    //
+    // Every other backend still overrides `MosaicHost` because each one
+    // reimplements the whole application boundary against `engram-capi`. Qt no
+    // longer does: props, events, snapshot and restore go through
+    // `engram-mosaic-app` and the generated binding, and the only thing left is
+    // the file dialog, which rides `[host_effects]` below. If a Qt entry comes
+    // back, the migration has been undone.
+    assert!(
+        !host_assets
+            .iter()
+            .any(|(backend, _, _)| *backend == "qt"),
+        "Qt must not override the generated host any more: {host_assets:?}"
+    );
+    let host_effects = package
+        .host_effects
+        .files
+        .iter()
+        .map(|file| {
+            (
+                file.backend.as_str(),
+                file.source.as_str(),
+                file.target.as_str(),
+            )
+        })
+        .collect::<BTreeSet<_>>();
+    assert!(host_effects.contains(&(
+        "qt",
+        "host/qt/engram_effects.cpp",
+        "engram_effects.cpp"
+    )));
+    let qt_handler = package
+        .host_effects
+        .handlers
+        .iter()
+        .find(|handler| handler.backend == "qt")
+        .expect("Qt must declare an effect handler");
+    assert_eq!(qt_handler.install, "installEngramEffects");
+    assert_eq!(qt_handler.include.as_deref(), Some("engram_effects.h"));
     assert!(host_assets.contains(&(
         "swiftui",
         "host/swiftui/MosaicHost.swift",
@@ -2632,8 +2670,11 @@ fn source_tree_has_expected_shape() {
         "host/web/engram-host.mjs",
         "host/web/engram-mosaic-host-wasm.d.ts",
         "host/electron/host.js",
-        "host/qt/MosaicHost.h",
-        "host/qt/MosaicHost.cpp",
+        // Qt's `MosaicHost.h/.cpp` used to be here. It was retired by #13728:
+        // Qt reaches the engine through the standard runtime now, and the only
+        // Qt-specific file left is the effect handler below.
+        "host/qt/engram_effects.h",
+        "host/qt/engram_effects.cpp",
         "host/swiftui/MosaicHost.swift",
         "host/compose/MosaicHost.kt",
         "host/flutter/mosaic_host.dart",
@@ -2762,35 +2803,40 @@ fn source_tree_has_expected_shape() {
     assert_contains(&swiftui_host, "Could not import \\(subject): \\(error)");
     assert_contains(&swiftui_host, "Could not export Anki package: \\(error)");
 
-    let qt_host = fs::read_to_string(package_root().join("host/qt/MosaicHost.cpp"))
-        .expect("qt host template");
-    assert_contains(&qt_host, "eg_engram_app_props");
-    assert_contains(&qt_host, "eg_handle_engram_app_event");
-    assert_contains(&qt_host, "QLibrary");
-    assert_contains(&qt_host, "mosaicPropName");
-    assert_contains(&qt_host, "hostResponseFromJson");
-    assert_contains(&qt_host, "hostIntent");
-    assert_contains(&qt_host, "QFileDialog");
-    assert_contains(&qt_host, "handleHostIntent");
-    assert_contains(&qt_host, "importAnkiPackage");
-    assert_contains(&qt_host, "exportAnkiPackage");
-    assert_contains(&qt_host, "eg_merge_anki_apkg");
-    assert_contains(&qt_host, "eg_export_anki_apkg");
-    assert_contains(&qt_host, "props");
-    assert_contains(&qt_host, "ENGRAM_SNAPSHOT_PATH");
-    assert_contains(&qt_host, "mosaic-snapshot.v1.json");
-    assert_contains(&qt_host, "hydrateSession");
-    assert_contains(&qt_host, "persistSnapshot");
-    assert_contains(&qt_host, "eg_snapshot");
-    assert_contains(&qt_host, "eg_load_snapshot");
-    assert_contains(&qt_host, "withHostStatusProps");
-    assert_contains(&qt_host, "QStringLiteral(\"hostStatusVisible\")");
-    assert_contains(
-        &qt_host,
-        "hostResult.insert(QStringLiteral(\"error\"), error)",
-    );
-    assert_contains(&qt_host, "Could not import %1: %2");
-    assert_contains(&qt_host, "Could not export Anki package: %1");
+    // Qt's assertions used to read the 654-line `engram-capi` binding here,
+    // checking for `eg_engram_app_props`, `QLibrary`, `mosaicPropName` and the
+    // rest. That file is retired (#13728) and none of it ships, so asserting on
+    // it would have been testing text nothing builds.
+    //
+    // What replaces it is narrower because the file is: the handler answers two
+    // effects and does nothing else. The CI lane compiles the emitted project
+    // and greps the generated `main.cpp` for the install call, which is the
+    // half no substring assertion over a source file can reach.
+    let qt_effects = fs::read_to_string(package_root().join("host/qt/engram_effects.cpp"))
+        .expect("qt effect handler");
+    assert_contains(&qt_effects, "MosaicHost::effectRequested");
+    assert_contains(&qt_effects, "QFileDialog::getOpenFileName");
+    assert_contains(&qt_effects, "QFileDialog::getSaveFileName");
+    assert_contains(&qt_effects, "importAnki");
+    assert_contains(&qt_effects, "exportAnki");
+    // All three outcomes, because a handler that only ever answers `ok` leaves
+    // a cancelled dialog looking like a hang.
+    assert_contains(&qt_effects, "completeEffect");
+    assert_contains(&qt_effects, "cancelledOutcome");
+    assert_contains(&qt_effects, "failedOutcome");
+    // Direct, not queued: a queued connection returns before the dialog
+    // answers, the sweep fails the effect as unanswered, and the eventual
+    // answer is rejected as already completed.
+    assert_contains(&qt_effects, "Qt::DirectConnection");
+    // Nothing may escape into the host's `emit`: it has no handler there, so an
+    // exception unwinds past `failOutstanding`, the id stays awaited, and every
+    // later snapshot is refused for the life of the process.
+    assert_contains(&qt_effects, "catch (const std::exception &error)");
+    assert_contains(&qt_effects, "catch (...)");
+    // Sized up before it is read. One import costs roughly seven times the
+    // file in flight, and `readAll` on a fifo never reaches EOF.
+    assert_contains(&qt_effects, "MaxImportBytes");
+    assert_contains(&qt_effects, "info.isFile()");
 
     let compose_host = fs::read_to_string(package_root().join("host/compose/MosaicHost.kt"))
         .expect("compose host template");

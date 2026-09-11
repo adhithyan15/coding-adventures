@@ -2227,30 +2227,48 @@ jobs:
           # substring assertions over emitted text, so a project that could not
           # build would have looked entirely healthy.
           #
-          # Deliberately NOT --profile native-complete and NOT --runtime-library,
-          # which is a correction: both switch the generated main.cpp to the
-          # strict standard-binding shape, calling registerTypes/requireRuntime/
-          # configureRequiredProps/attach. Engram replaces MosaicHost.h/.cpp via
-          # [host_assets] with its own engram-capi binding, which exposes
-          # props/handleEvent/ensureLoaded instead — a different API. Combining
-          # them emits a project that does not compile at all:
+          # NOW --profile native-complete WITH --runtime-library, which the
+          # comment here used to say was impossible.
+          #
+          # It was, and the reason is worth keeping: those flags switch the
+          # generated main.cpp to the strict standard-binding shape, calling
+          # registerTypes/requireRuntime/configureRequiredProps/attach, and
+          # Engram used to replace MosaicHost.h/.cpp through [host_assets] with
+          # its own engram-capi binding exposing props/handleEvent/ensureLoaded
+          # instead. Combining them emitted a project that did not compile:
           #
           #   main.cpp:26: error: 'registerTypes' is not a member of 'MosaicHost'
           #
-          # So Engram cannot reach native-complete until its adapters move onto
-          # the standard runtime (#13728). Emitting the way build-all.ps1 does is
-          # the configuration Engram actually ships, and compiling THAT is a real
-          # gate rather than a green check on an incoherent combination.
+          # #13728 removed that override for Qt. Props, events, snapshot and
+          # restore go through engram-mosaic-app and the generated binding now,
+          # and the file dialogs ride Effect through [host_effects] (UI47 §5.5).
+          # So the incoherent combination became the coherent one, and this lane
+          # gates the configuration Engram will actually ship.
           cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
 
           engram_output="$RUNNER_TEMP/mosaic-qt-engram"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend qt --output "$engram_output" --emit-project
+          # `.so` and absolute, matching the TaskApp lane above: this job runs on
+          # Linux, and `.dylib` would be a macOS-only path that fails here.
+          engram_runtime_library="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.so"
+          test -f "$engram_runtime_library"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend qt --output "$engram_output" --emit-project --profile native-complete --runtime-library "$engram_runtime_library"
 
-          # The override is pinned, not merely allowed: replacing main.cpp or
-          # CMakeLists.txt would also unhook the runtime, so a third entry here
-          # must fail rather than widen the gap silently. This assertion is also
-          # what #13728 has to update, so the migration cannot be forgotten.
-          jq -e '.replacedGeneratedFiles == ["MosaicHost.cpp", "MosaicHost.h"]' "$engram_output/qt/mosaic-degradations.json"
+          # Empty, and pinned empty. This assertion used to name
+          # ["MosaicHost.cpp", "MosaicHost.h"] precisely so #13728 could not be
+          # forgotten -- updating it was the migration's definition of done
+          # (UI47 §5.5.5). Pinned rather than dropped: a package that starts
+          # overriding the generated host again has undone this, and that must
+          # fail here rather than pass quietly.
+          jq -e '.replacedGeneratedFiles == []' "$engram_output/qt/mosaic-degradations.json"
+
+          # And native-complete means zero degradations, not merely few.
+          # `type == "array"` first: `null | length` is 0 in jq, so a report that
+          # lost the key entirely would satisfy a bare length check.
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_output/qt/mosaic-degradations.json"
+
+          # The handler is wired into the generated entry point, which is the
+          # half a text assertion over the manifest cannot see.
+          grep -q 'installEngramEffects(mosaicHost);' "$engram_output/qt/main.cpp"
 
           # The gate: it builds.
           cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release
