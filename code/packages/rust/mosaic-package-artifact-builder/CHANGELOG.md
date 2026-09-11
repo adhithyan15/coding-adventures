@@ -2,6 +2,49 @@
 
 ## Unreleased
 
+### Added — SwiftUI wires a package's `[host_effects]` handler
+
+The second backend, after Qt. The shapes differ in a way worth recording.
+
+**SwiftUI needs no build-list half.** SwiftPM's generated `Package.swift` gives
+the target `path: "Sources/App"` with no explicit `sources:`, so every `.swift`
+under it is compiled and a copied file is already in the build. Qt names its
+sources and needed `target_sources`; that asymmetry is the whole reason
+`[host_effects]` carries a build obligation at all, and it does not apply here.
+
+**The install is guarded by a downcast.** `MosaicHostState` holds its host as
+`MosaicHostBridgeObject?` — a protocol that deliberately knows nothing about
+effects — while `effectHandler` lives on the concrete `MosaicRuntimeHost`. The
+`if let` is also correct rather than merely necessary: when the standard host is
+absent the app falls back to a reflection bridge, and there is no host to
+install onto then.
+
+The call goes immediately after the host is assigned and before the first props
+refresh, which is the first thing that can produce an effect.
+
+Anchored on `self.bridge = ` rather than the whole call, because
+`--runtime-library` rewrites it to `MosaicRuntimeHost.load(libraryPath: …)` —
+anchoring on the plain form would silently emit no install in exactly the
+configuration that ships. A test pins the bundled form, and mutation-testing it
+confirms the narrower anchor fails.
+
+**The anchors are pinned against real emission, not only fixtures.** Both
+anchors — `class MosaicHostState` and `self.bridge = ` — are incidental details
+of `mosaic-emit-swiftui`, free to be renamed by someone who never reads this
+crate, and a fixture-only test would keep passing through such a rename while
+every real build broke. So `the_anchors_match_a_genuinely_emitted_swiftui_app`
+emits a project through the actual pipeline, applies the same runtime-binding
+rewrite the build applies, and wires that — in both the bundled and unbundled
+forms. Renaming the class in the emitter fails it.
+
+Two guards decide where the install lands: the search is scoped to the host
+class, and within it the match must begin its line. Each is pinned by its own
+test, because a fixture both guards reject proves only that at least one works.
+Mutation-testing confirms the split: dropping the line-leading requirement fails
+`a_non_line_leading_decoy_inside_the_class_is_skipped` and leaves the class-scope
+test green; searching the whole file fails
+`a_line_leading_decoy_before_the_class_is_skipped` and leaves the other green.
+
 ### Added — Qt wires a package's `[host_effects]` handler
 
 The emitter half of UI47 §5.5, for the first backend. `[host_effects]` parsed

@@ -2715,7 +2715,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     component,
                     host_effects,
                 );
-                let main_cpp = qt_main_with_host_effects(&proj.main_cpp, host_effects);
+                let main_cpp = qt_main_with_host_effects(&proj.main_cpp, host_effects)?;
                 let runtime_binding =
                     mosaic_app_bindings::qt_runtime_binding_for_application(package_name);
                 let contract = if require_runtime {
@@ -2776,10 +2776,13 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     &proj.package_swift,
                     bundle_runtime,
                 );
-                let app_swift = mosaic_app_bindings::swift_app_with_runtime_binding(
-                    &proj.app_swift,
-                    bundle_runtime,
-                );
+                let app_swift = swift_app_with_host_effects(
+                    &mosaic_app_bindings::swift_app_with_runtime_binding(
+                        &proj.app_swift,
+                        bundle_runtime,
+                    ),
+                    host_effects,
+                )?;
                 let runtime_binding =
                     mosaic_app_bindings::swift_runtime_binding_for_application(package_name);
                 let runtime_distribution = if bundle_runtime {
@@ -2968,6 +2971,30 @@ fn qt_cmake_with_host_effects(
     cmake
 }
 
+/// Find an anchor that is the first non-whitespace on its own line.
+///
+/// A bare `find` takes the first occurrence anywhere, and these generators
+/// interleave scaffolding with AUTHOR text: a SwiftUI app embeds every slot
+/// default and story fixture as a Swift string literal, escaped only for `\`
+/// and `"`, roughly 270 lines before the assignment being anchored on. A slot
+/// default containing that substring would match first, and the install would
+/// be spliced into the middle of a view-builder argument list.
+///
+/// Requiring the match to start its line rules that out: an interpolated
+/// literal is always preceded by something on the same line.
+fn line_anchored_find(haystack: &str, needle: &str) -> Option<usize> {
+    let mut from = 0;
+    while let Some(offset) = haystack[from..].find(needle) {
+        let at = from + offset;
+        let line_start = haystack[..at].rfind('\n').map_or(0, |index| index + 1);
+        if haystack[line_start..at].chars().all(char::is_whitespace) {
+            return Some(at);
+        }
+        from = at + needle.len();
+    }
+    None
+}
+
 /// Install a package's effect handler in the generated Qt entry point.
 ///
 /// The call goes immediately after the host is constructed, which is the
@@ -2984,20 +3011,31 @@ fn qt_cmake_with_host_effects(
 fn qt_main_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
-) -> String {
+) -> Result<String, BuildError> {
     let Some(handler) = host_effects
         .handlers
         .iter()
         .find(|handler| handler.backend == "qt")
     else {
-        return generated.to_string();
+        return Ok(generated.to_string());
     };
     const DECLARATION: &str = "MosaicHost mosaicHost;";
-    let Some(declaration_start) = generated.find(DECLARATION) else {
-        // No host in this shape, so there is nothing to install onto. Returning
-        // the input unchanged is right: the alternative is emitting a call to a
-        // symbol with no argument to pass it.
-        return generated.to_string();
+    let Some(declaration_start) = line_anchored_find(generated, DECLARATION) else {
+        // A declared handler that cannot be installed is a build failure, not a
+        // quiet no-op.
+        //
+        // Failing open here is worse than it looks: the handler source is
+        // copied and compiled either way, so there is no missing symbol and no
+        // diagnostic. The first symptom is at RUNTIME -- an `Await` effect
+        // arrives with no handler, goes unanswered, and the runtime's gate on
+        // nothing-pending disables snapshot and restore for the session. That
+        // is the silent permanent failure this whole mechanism exists to
+        // prevent, reached by the wiring quietly not happening.
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` declares a Qt handler `{}`, but the generated \
+             entry point has no `{DECLARATION}` to install it after",
+            handler.install
+        )));
     };
 
     let line_start = generated[..declaration_start]
@@ -3020,7 +3058,7 @@ fn qt_main_with_host_effects(
     out.push_str(&generated[line_end..]);
 
     let Some(include) = handler.include.as_deref() else {
-        return out;
+        return Ok(out);
     };
     // Includes are file-scope only, so this cannot sit beside the call. It goes
     // before `int main(`, and inside the same `#if` the rest of the host is
@@ -3046,10 +3084,90 @@ fn qt_main_with_host_effects(
             with_include.push_str(&out[..line_start]);
             with_include.push_str(&directive);
             with_include.push_str(&out[line_start..]);
-            with_include
+            Ok(with_include)
         }
-        None => out,
+        None => Ok(out),
     }
+}
+
+/// Install a package's effect handler in the generated SwiftUI app.
+///
+/// SwiftUI needs no build-list half. SwiftPM's generated `Package.swift` gives
+/// the target `path: "Sources/App"` with no explicit `sources:`, so every
+/// `.swift` under it is compiled and a copied file is already in the build --
+/// unlike Qt, which names its sources and needed `target_sources`.
+///
+/// The call goes immediately after the host is assigned, through a downcast:
+/// `MosaicHostState` holds its host as `MosaicHostBridgeObject?`, a protocol
+/// that deliberately knows nothing about effects, and the concrete
+/// `MosaicRuntimeHost` is what carries `effectHandler`. The `if let` also makes
+/// the generated code correct when the standard host is absent and the app
+/// falls back to the reflection bridge -- there is no host to install onto
+/// then, and nothing should be.
+fn swift_app_with_host_effects(
+    generated: &str,
+    host_effects: &mosaic_package_manifest::HostEffectsSection,
+) -> Result<String, BuildError> {
+    let Some(handler) = host_effects
+        .handlers
+        .iter()
+        .find(|handler| handler.backend == "swiftui")
+    else {
+        return Ok(generated.to_string());
+    };
+    // Scoped to the class body, THEN line-anchored within it.
+    //
+    // `self.bridge = ` is not a token only this generator produces: the file
+    // puts `MosaicApp` and its whole view builder ~270 lines ahead of
+    // `MosaicHostState`, and every slot default and story fixture is embedded
+    // there as a Swift string literal escaped only for `\` and `"`. An author
+    // string carrying this substring would match first, and the install would
+    // land inside a view-builder argument list.
+    let Some(class_start) = generated.find("class MosaicHostState") else {
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` declares a SwiftUI handler `{}`, but the generated \
+             app has no `MosaicHostState` to install it in",
+            handler.install
+        )));
+    };
+    // Matches whichever form the runtime-binding rewrite left behind: the plain
+    // load, or the bundled-runtime one carrying a library path.
+    let Some(relative) = line_anchored_find(&generated[class_start..], "self.bridge = ") else {
+        // Loud, for the same reason as Qt -- and more so here. SwiftPM compiles
+        // every file under `Sources/App`, so an uninstalled handler still
+        // compiles, links, and ships: there is no diagnostic at all until an
+        // `Await` effect goes unanswered at runtime and takes the session's
+        // persistence with it.
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` declares a SwiftUI handler `{}`, but \
+             `MosaicHostState` has no host assignment to install it after",
+            handler.install
+        )));
+    };
+    let assignment_start = class_start + relative;
+    let line_end = generated[assignment_start..]
+        .find('\n')
+        .map_or(generated.len(), |index| assignment_start + index + 1);
+    let line_start = generated[..assignment_start]
+        .rfind('\n')
+        .map_or(0, |index| index + 1);
+    let indent: String = generated[line_start..assignment_start].to_string();
+
+    let mut out = String::with_capacity(generated.len() + 256);
+    out.push_str(&generated[..line_end]);
+    writeln!(
+        out,
+        "{indent}// Package-declared effect handler, from `[host_effects]`."
+    )
+    .expect("write SwiftUI host-effect comment");
+    writeln!(
+        out,
+        "{indent}if let mosaicEffectHost = self.bridge as? MosaicRuntimeHost {{ {}(mosaicEffectHost) }}",
+        handler.install
+    )
+    .expect("write SwiftUI host-effect install");
+    out.push_str(&generated[line_end..]);
+    Ok(out)
 }
 
 fn build_electron_package_json(
@@ -11108,7 +11226,7 @@ version = "1"
         // capability must emit byte-identical output.
         let empty = section("");
         assert_eq!(
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &empty),
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &empty).expect("wiring must succeed"),
             NATIVE_COMPLETE_MAIN
         );
         assert_eq!(
@@ -11127,7 +11245,8 @@ handlers = [
 ]
 "#,
         );
-        let main = qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects);
+        let main =
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed");
         let declaration = main.find("MosaicHost mosaicHost;").expect("declaration");
         let install = main
             .find("installProbeEffects(mosaicHost);")
@@ -11162,7 +11281,8 @@ handlers = [
 ]
 "#,
         );
-        let guarded = qt_main_with_host_effects(GUARDED_MAIN, &effects);
+        let guarded =
+            qt_main_with_host_effects(GUARDED_MAIN, &effects).expect("wiring must succeed");
         assert!(
             guarded.contains("#if MOSAIC_HAS_HOST\n#include \"probe_effects.h\"\n#endif"),
             "the include must inherit the host's guard:\n{guarded}"
@@ -11176,7 +11296,8 @@ handlers = [
             "install must sit inside the guard:\n{guarded}"
         );
 
-        let plain = qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects);
+        let plain =
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed");
         assert!(
             plain.contains("#include \"probe_effects.h\"")
                 && !plain.contains("#if MOSAIC_HAS_HOST"),
@@ -11194,7 +11315,8 @@ handlers = [
 ]
 "#,
         );
-        let main = qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects);
+        let main =
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed");
         assert!(main.contains("installProbeEffects(mosaicHost);"), "{main}");
         assert!(!main.contains("#include \"\""), "{main}");
     }
@@ -11210,7 +11332,7 @@ handlers = [
 "#,
         );
         assert_eq!(
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects),
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed"),
             NATIVE_COMPLETE_MAIN
         );
     }
@@ -11599,6 +11721,407 @@ version = "1"
         assert!(
             mosaic_package_manifest::parse(manifest).is_ok(),
             "replacing a generated file through `[host_assets]` must stay legal"
+        );
+    }
+}
+
+#[cfg(test)]
+mod swiftui_host_effect_tests {
+    use super::*;
+
+    fn section(toml: &str) -> mosaic_package_manifest::HostEffectsSection {
+        let manifest = format!(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+{toml}
+
+[kernel]
+version = "1"
+"#
+        );
+        mosaic_package_manifest::parse(&manifest)
+            .expect("probe manifest must parse")
+            .host_effects
+    }
+
+    const APP_SWIFT: &str = concat!(
+        "private final class MosaicHostState: ObservableObject {\n",
+        "  private let bridge: MosaicHostBridgeObject?\n",
+        "\n",
+        "  init() {\n",
+        "    self.bridge = MosaicRuntimeHost.load() ?? MosaicHostBridge.load()\n",
+        "    bridge?.setPropsChangedHandler? { }\n",
+        "    refreshProps()\n",
+        "  }\n",
+        "}\n",
+    );
+
+    fn swiftui_handler() -> mosaic_package_manifest::HostEffectsSection {
+        section(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "swiftui", install = "installProbeEffects" },
+]
+"#,
+        )
+    }
+
+    #[test]
+    fn a_package_without_the_section_changes_nothing() {
+        assert_eq!(
+            swift_app_with_host_effects(APP_SWIFT, &section("")).expect("wiring must succeed"),
+            APP_SWIFT
+        );
+    }
+
+    #[test]
+    fn the_install_lands_after_the_host_is_assigned_and_before_it_is_used() {
+        let app = swift_app_with_host_effects(APP_SWIFT, &swiftui_handler())
+            .expect("wiring must succeed");
+        let assignment = app.find("self.bridge = ").expect("assignment");
+        let install = app
+            .find("installProbeEffects(mosaicEffectHost)")
+            .expect("install");
+        assert!(
+            assignment < install,
+            "the handler cannot be installed before the host exists:\n{app}"
+        );
+        // Before the first props refresh, which is the first thing that can
+        // produce an effect.
+        let refresh = app.find("refreshProps()").expect("refresh");
+        assert!(
+            install < refresh,
+            "install must precede the first refresh:\n{app}"
+        );
+        assert!(
+            app.contains("    if let mosaicEffectHost"),
+            "indentation must be taken from the assignment:\n{app}"
+        );
+    }
+
+    #[test]
+    fn the_install_is_guarded_by_a_downcast() {
+        // `bridge` is a `MosaicHostBridgeObject?` -- a protocol that knows
+        // nothing about effects -- and the app falls back to a reflection bridge
+        // when the standard host is absent. Installing unconditionally would not
+        // compile against the protocol, and would be wrong for the fallback
+        // even if it did: there is no host to install onto.
+        let app = swift_app_with_host_effects(APP_SWIFT, &swiftui_handler())
+            .expect("wiring must succeed");
+        assert!(
+            app.contains("if let mosaicEffectHost = self.bridge as? MosaicRuntimeHost"),
+            "the install must be guarded by a downcast:\n{app}"
+        );
+    }
+
+    #[test]
+    fn another_backends_handler_is_not_wired_into_swiftui() {
+        let qt_only = section(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "qt", install = "installProbeEffects" },
+]
+"#,
+        );
+        assert_eq!(
+            swift_app_with_host_effects(APP_SWIFT, &qt_only).expect("wiring must succeed"),
+            APP_SWIFT
+        );
+    }
+
+    #[test]
+    fn the_bundled_runtime_form_of_the_assignment_is_matched_too() {
+        // With `--runtime-library`, the binding rewrite turns the load into
+        // `MosaicRuntimeHost.load(libraryPath: ...)`. Anchoring on the whole
+        // plain call would silently miss that shape and emit no install at all.
+        let bundled = APP_SWIFT.replace(
+            "MosaicRuntimeHost.load() ?? MosaicHostBridge.load()",
+            "MosaicRuntimeHost.load(libraryPath: Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path) ?? MosaicHostBridge.load()",
+        );
+        let app =
+            swift_app_with_host_effects(&bundled, &swiftui_handler()).expect("wiring must succeed");
+        assert!(
+            app.contains("installProbeEffects(mosaicEffectHost)"),
+            "the bundled-runtime assignment must also be wired:\n{app}"
+        );
+    }
+}
+
+#[cfg(test)]
+mod host_effect_anchor_tests {
+    use super::*;
+
+    fn swiftui_handler() -> mosaic_package_manifest::HostEffectsSection {
+        mosaic_package_manifest::parse(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+[host_effects]
+handlers = [
+  { backend = "swiftui", install = "installProbeEffects" },
+]
+
+[kernel]
+version = "1"
+"#,
+        )
+        .expect("probe manifest must parse")
+        .host_effects
+    }
+
+    /// Only the CLASS SCOPING can catch this one.
+    ///
+    /// The decoy is line-leading, so the line anchor is satisfied by it — the
+    /// two guards are separated here deliberately, because a fixture that both
+    /// guards reject proves only that at least one works, and a later change
+    /// could remove either without a test noticing.
+    #[test]
+    fn a_line_leading_decoy_before_the_class_is_skipped() {
+        let app = concat!(
+            "struct MosaicApp: App {\n",
+            "  var body: some Scene {\n",
+            "    ProbeView(note: \"\"\"\n",
+            "self.bridge = decoy\n",
+            "\"\"\")\n",
+            "  }\n",
+            "}\n",
+            "\n",
+            "private final class MosaicHostState: ObservableObject {\n",
+            "  init() {\n",
+            "    self.bridge = MosaicRuntimeHost.load() ?? MosaicHostBridge.load()\n",
+            "  }\n",
+            "}\n",
+        );
+        let wired = swift_app_with_host_effects(app, &swiftui_handler())
+            .expect("the real assignment must still be found");
+        // `decoy < install` is NOT the assertion to make here: the decoy sits
+        // ahead of the class, so an install spliced onto the decoy satisfies it
+        // too. Only the class boundary discriminates.
+        let class = wired.find("class MosaicHostState").expect("class");
+        let install = wired.find("installProbeEffects").expect("install");
+        assert!(
+            class < install,
+            "a line-leading decoy outside the class must not capture it:\n{wired}"
+        );
+    }
+
+    /// Only the LINE ANCHOR can catch this one: the decoy is inside the class.
+    #[test]
+    fn a_non_line_leading_decoy_inside_the_class_is_skipped() {
+        let app = concat!(
+            "private final class MosaicHostState: ObservableObject {\n",
+            "  let note = \"self.bridge = decoy\"\n",
+            "  init() {\n",
+            "    self.bridge = MosaicRuntimeHost.load() ?? MosaicHostBridge.load()\n",
+            "  }\n",
+            "}\n",
+        );
+        let wired = swift_app_with_host_effects(app, &swiftui_handler())
+            .expect("the real assignment must still be found");
+        let decoy = wired.find("\"self.bridge = decoy\"").expect("decoy");
+        let install = wired.find("installProbeEffects").expect("install");
+        assert!(
+            decoy < install,
+            "a decoy inside a string literal must not capture it:\n{wired}"
+        );
+        // And it landed after the REAL assignment, not merely after the decoy.
+        let real = wired
+            .find("MosaicRuntimeHost.load()")
+            .expect("real assignment");
+        assert!(
+            real < install,
+            "install must follow the real assignment:\n{wired}"
+        );
+    }
+
+    /// The anchors must match what the SwiftUI emitter ACTUALLY emits.
+    ///
+    /// Every other test in this module feeds a hand-written fixture, which pins
+    /// the matching logic but says nothing about whether the strings it matches
+    /// on exist downstream. They do not have to: `class MosaicHostState` and
+    /// `self.bridge = ` are incidental details of another crate's emitter, free
+    /// to be renamed by someone who has never read this file. So emit a real
+    /// project through the real pipeline and wire THAT.
+    ///
+    /// A rename now fails here, at `expect`, naming the handler -- rather than
+    /// in a customer's build, or worse, not at all.
+    #[test]
+    fn the_anchors_match_a_genuinely_emitted_swiftui_app() {
+        let component = mosmodel_compiler::MosmodelComponent {
+            component: "Hello".to_string(),
+            slots: Vec::new(),
+            emits: Vec::new(),
+        };
+        let layout = moslayout_compiler::LayoutDef {
+            component_name: "Hello".to_string(),
+            root: moslayout_compiler::LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let style = mosstyle_compiler::StyleDef {
+            component_name: "Hello".to_string(),
+            parts: Vec::new(),
+        };
+        let options = mosaic_emit_swiftui::pipeline::EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
+        let emitted = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
+            &component, &layout, &style, &options,
+        )
+        .expect("the emitter must produce a project")
+        .project
+        .expect("emit_project: true must produce a shell");
+
+        // Through the same runtime-binding rewrite the build applies, because
+        // that rewrite edits the very line being anchored on.
+        for bundle_runtime in [false, true] {
+            let bound = mosaic_app_bindings::swift_app_with_runtime_binding(
+                &emitted.app_swift,
+                bundle_runtime,
+            );
+            let wired = swift_app_with_host_effects(&bound, &swiftui_handler()).unwrap_or_else(|e| {
+                panic!("the emitter's own output must be wirable (bundle_runtime={bundle_runtime}): {e:?}")
+            });
+            let class = wired
+                .find("class MosaicHostState")
+                .expect("emitted app must declare MosaicHostState");
+            let install = wired
+                .find("installProbeEffects")
+                .expect("the install must be present");
+            assert!(
+                class < install,
+                "install must land inside the host class, not ahead of it"
+            );
+            // And inside the initialiser, after the bridge exists -- installing
+            // onto a nil bridge would compile and silently do nothing.
+            let assignment = wired
+                .find("self.bridge = ")
+                .expect("emitted app must assign the bridge");
+            assert!(
+                assignment < install,
+                "install must follow the bridge assignment"
+            );
+        }
+    }
+
+    /// Both guards together, on the shape the generator actually produces.
+    #[test]
+    fn an_author_string_cannot_capture_the_swiftui_anchor() {
+        // The generated app puts `MosaicApp` and its whole view builder about
+        // 270 lines ahead of `MosaicHostState`, and embeds every slot default
+        // and story fixture there as a Swift string literal escaped only for
+        // `\` and `"`. A default carrying this substring used to match FIRST,
+        // splicing the install into a view-builder argument list.
+        let app = concat!(
+            "struct MosaicApp: App {\n",
+            "  var body: some Scene {\n",
+            "    ProbeView(\n",
+            "      title: MosaicHostValue.string(host.props, \"t\", fallback: \"self.bridge = x\"),\n",
+            "    )\n",
+            "  }\n",
+            "}\n",
+            "\n",
+            "private final class MosaicHostState: ObservableObject {\n",
+            "  init() {\n",
+            "    self.bridge = MosaicRuntimeHost.load() ?? MosaicHostBridge.load()\n",
+            "    refreshProps()\n",
+            "  }\n",
+            "}\n",
+        );
+        let wired = swift_app_with_host_effects(app, &swiftui_handler())
+            .expect("the real assignment must still be found");
+        let decoy = wired.find("fallback: \"self.bridge").expect("decoy");
+        let install = wired.find("installProbeEffects").expect("install");
+        assert!(
+            decoy < install,
+            "the install must land after the class, not in the view builder:\n{wired}"
+        );
+        // And inside the class, not merely after the decoy.
+        let class = wired.find("class MosaicHostState").expect("class");
+        assert!(
+            class < install,
+            "install must land inside the class:\n{wired}"
+        );
+    }
+
+    #[test]
+    fn a_declared_swiftui_handler_with_no_anchor_fails_the_build() {
+        // Failing open is worse here than it looks: SwiftPM compiles every file
+        // under `Sources/App`, so an uninstalled handler still compiles, links
+        // and ships. There is no diagnostic until an `Await` effect goes
+        // unanswered at runtime and takes the session's persistence with it.
+        let error = swift_app_with_host_effects("struct Nothing {}\n", &swiftui_handler())
+            .expect_err("a declared handler with nowhere to go must fail the build");
+        let message = format!("{error:?}");
+        assert!(
+            message.contains("installProbeEffects"),
+            "the error must name the handler: {message}"
+        );
+    }
+
+    #[test]
+    fn a_package_with_no_swiftui_handler_is_untouched_by_a_missing_anchor() {
+        // The failure above must be about a DECLARED handler, not about every
+        // app that happens not to look like the generated one.
+        let empty = mosaic_package_manifest::parse(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+[kernel]
+version = "1"
+"#,
+        )
+        .expect("probe manifest must parse")
+        .host_effects;
+        assert_eq!(
+            swift_app_with_host_effects("struct Nothing {}\n", &empty)
+                .expect("no handler means nothing to do"),
+            "struct Nothing {}\n"
+        );
+    }
+
+    #[test]
+    fn the_line_anchor_skips_a_match_that_is_not_line_leading() {
+        assert_eq!(line_anchored_find("  x = 1\n", "x = 1"), Some(2));
+        assert_eq!(line_anchored_find("let y = x = 1\n", "x = 1"), None);
+        // And keeps looking rather than giving up on the first bad match.
+        assert_eq!(
+            line_anchored_find("let y = x = 1\n  x = 1\n", "x = 1"),
+            Some(16)
         );
     }
 }
