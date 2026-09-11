@@ -1,7 +1,10 @@
 //! IMG03 — Point Operations on PixelContainer
 //!
 //! Every function in this crate transforms each pixel independently using
-//! the input at that position only (zero neighbourhood radius).
+//! the input at that position only (zero neighbourhood radius) -- with one
+//! documented exception: `adaptive_threshold_mean` (IMG09), whose output at
+//! a pixel depends on a local neighbourhood around it. See its own doc
+//! comment and `IMG09-adaptive-threshold.md` for why.
 //!
 //! The PixelContainer type stores RGBA8 in sRGB colour space (see IC00).
 //! Operations that require accurate arithmetic (contrast, gamma, exposure,
@@ -100,6 +103,88 @@ pub fn threshold_luminance(src: &PixelContainer, t: u8) -> PixelContainer {
         let v = if y >= t { 255 } else { 0 };
         (v, v, v, a)
     })
+}
+
+/// IMG09 — Locally-adaptive threshold via the Bradley/Roth integral-image
+/// method (Bradley & Roth, 2007): a pixel is foreground (dark) when its
+/// luminance falls more than a fraction `t` below the mean luminance of a
+/// `window` x `window` neighbourhood around it, computed in O(1) per pixel
+/// via a summed-area table -- the whole operation is O(width x height), not
+/// O(width x height x window^2). Unlike `threshold`/`threshold_luminance`'s
+/// single scalar cutoff, this adapts to uneven lighting (a shadow across
+/// half a photographed document doesn't push that whole half to the wrong
+/// side of one global cutoff). See `IMG09-adaptive-threshold.md`.
+///
+/// `window` is clamped to at least 1 (never a divide-by-zero); the
+/// neighbourhood is clipped at the image edges (a smaller effective window
+/// there), never a panic or a wrap-around. `t` is clamped to `[0.0, 1.0]`;
+/// `NaN` is treated as `0.0` since `f64::clamp` passes `NaN` through
+/// unchanged rather than clamping it. RGB is set to `0` (foreground/dark)
+/// or `255` (background/light), matching `threshold_luminance`'s output
+/// convention; alpha is unchanged. A `0`-width or `0`-height `src` returns
+/// an equally-empty result, never a panic.
+///
+/// This is the one function in this crate whose output at a pixel depends
+/// on its neighbours, not just its own value -- see the module doc.
+pub fn adaptive_threshold_mean(src: &PixelContainer, window: u32, t: f64) -> PixelContainer {
+    let width = src.width;
+    let height = src.height;
+    let mut out = PixelContainer::new(width, height);
+    if width == 0 || height == 0 {
+        return out;
+    }
+
+    let t = if t.is_nan() { 0.0 } else { t.clamp(0.0, 1.0) };
+    let radius = (window.max(1) / 2) as i64;
+
+    let w = width as usize;
+    let h = height as usize;
+
+    // BT.601 luminance per pixel, matching threshold_luminance's formula.
+    let mut lum = vec![0u32; w * h];
+    for y in 0..h {
+        for x in 0..w {
+            let (r, g, b, _a) = src.pixel_at(x as u32, y as u32);
+            lum[y * w + x] = (0.299 * r as f32 + 0.587 * g as f32 + 0.114 * b as f32).round() as u32;
+        }
+    }
+
+    // Summed-area table: (w+1) x (h+1), row 0 / column 0 are a zero border.
+    let stride = w + 1;
+    let mut integral = vec![0u64; stride * (h + 1)];
+    for y in 0..h {
+        let mut row_sum = 0u64;
+        for x in 0..w {
+            row_sum += lum[y * w + x] as u64;
+            integral[(y + 1) * stride + (x + 1)] = integral[y * stride + (x + 1)] + row_sum;
+        }
+    }
+
+    for y in 0..h {
+        let y0 = (y as i64 - radius).max(0) as usize;
+        let y1 = (y as i64 + radius).min(h as i64 - 1) as usize;
+        for x in 0..w {
+            let x0 = (x as i64 - radius).max(0) as usize;
+            let x1 = (x as i64 + radius).min(w as i64 - 1) as usize;
+            let area = ((x1 - x0 + 1) * (y1 - y0 + 1)) as u64;
+            // Add the two positive terms before subtracting the two negative
+            // ones: BR - TR - BL + TL is mathematically always >= 0 (it's a
+            // sum of non-negative luminance values), but evaluated strictly
+            // left-to-right in u64 the intermediate `BR - TR - BL` step can
+            // go negative and panic even though the final combined value
+            // never would -- TR and BL individually cover more rows/columns
+            // than the two positive terms restrict to on their own.
+            let sum = (integral[(y1 + 1) * stride + (x1 + 1)] + integral[y0 * stride + x0])
+                - (integral[y0 * stride + (x1 + 1)] + integral[(y1 + 1) * stride + x0]);
+            let mean = sum as f64 / area as f64;
+            let dark = (lum[y * w + x] as f64) < mean * (1.0 - t);
+            let v = if dark { 0 } else { 255 };
+            let (_, _, _, a) = src.pixel_at(x as u32, y as u32);
+            out.set_pixel(x as u32, y as u32, v, v, v, a);
+        }
+    }
+
+    out
 }
 
 /// Quantise each channel to `levels` distinct values.
@@ -506,5 +591,126 @@ mod tests {
         let img = PixelContainer::new(7, 13);
         assert_eq!(invert(&img).width, 7);
         assert_eq!(invert(&img).height, 13);
+    }
+
+    // ── adaptive_threshold_mean (IMG09) ─────────────────────────────────────
+
+    /// A small mark (a few dark pixels) inside a uniform-luminance patch.
+    fn patch_with_mark(w: u32, h: u32, bg: u8, mark_v: u8, mark_x: u32, mark_y: u32) -> PixelContainer {
+        let mut pc = PixelContainer::new(w, h);
+        pc.fill(bg, bg, bg, 255);
+        pc.set_pixel(mark_x, mark_y, mark_v, mark_v, mark_v, 255);
+        pc
+    }
+
+    #[test]
+    fn test_adaptive_threshold_solves_what_global_cannot() {
+        // Left half: bright background (220) with a moderately-dark mark
+        // (100). Right half: dark background (90) with a very dark mark
+        // (20). Crucially, the left mark (100) is *brighter* than the
+        // right background (90) -- so no single global cutoff t can
+        // satisfy "left mark < t" (needs t > 100) and "right background
+        // >= t" (needs t <= 90) at the same time; that range is empty.
+        // Adaptive thresholding, which compares each pixel to its own
+        // local mean rather than one global number, has no such
+        // contradiction.
+        let w = 20u32;
+        let h = 10u32;
+        let mut img = PixelContainer::new(w, h);
+        for y in 0..h {
+            for x in 0..w {
+                let bg = if x < w / 2 { 220 } else { 90 };
+                img.set_pixel(x, y, bg, bg, bg, 255);
+            }
+        }
+        let (left_mark_x, left_mark_y) = (3, 5);
+        let (right_mark_x, right_mark_y) = (16, 5);
+        img.set_pixel(left_mark_x, left_mark_y, 100, 100, 100, 255);
+        img.set_pixel(right_mark_x, right_mark_y, 20, 20, 20, 255);
+
+        // No global threshold works: prove it first.
+        let mut any_global_works = false;
+        for t in 0u16..=255 {
+            let out = threshold_luminance(&img, t as u8);
+            let left_dark = out.pixel_at(left_mark_x, left_mark_y).0 == 0;
+            let right_bg_light = out.pixel_at(w - 2, h / 2).0 == 255;
+            if left_dark && right_bg_light {
+                any_global_works = true;
+                break;
+            }
+        }
+        assert!(!any_global_works, "test setup should defeat every global cutoff");
+
+        let out = adaptive_threshold_mean(&img, 7, 0.15);
+        assert_eq!(out.pixel_at(left_mark_x, left_mark_y).0, 0, "left mark should be foreground");
+        assert_eq!(out.pixel_at(right_mark_x, right_mark_y).0, 0, "right mark should be foreground");
+        assert_eq!(out.pixel_at(1, 1).0, 255, "left background should stay background");
+        assert_eq!(out.pixel_at(w - 2, h / 2).0, 255, "right background should stay background");
+    }
+
+    #[test]
+    fn test_adaptive_threshold_uniform_image_matches_global_regression() {
+        let img = patch_with_mark(12, 12, 200, 30, 6, 6);
+        let adaptive = adaptive_threshold_mean(&img, 5, 0.15);
+        // On a uniformly-lit image a correctly-chosen global cutoff between
+        // the mark (30) and the background (200) should agree with adaptive.
+        let global = threshold_luminance(&img, 115);
+        for y in 0..12 {
+            for x in 0..12 {
+                assert_eq!(
+                    adaptive.pixel_at(x, y).0,
+                    global.pixel_at(x, y).0,
+                    "mismatch at ({x},{y})"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn test_adaptive_threshold_edges_do_not_panic() {
+        let img = patch_with_mark(9, 9, 180, 40, 0, 0);
+        let out = adaptive_threshold_mean(&img, 9, 0.15);
+        // Every corner and edge midpoint just needs to be a valid binary
+        // value (0 or 255), proving the clipped window didn't corrupt them.
+        let probes = [(0, 0), (8, 0), (0, 8), (8, 8), (4, 0), (0, 4), (8, 4), (4, 8)];
+        for (x, y) in probes {
+            let v = out.pixel_at(x, y).0;
+            assert!(v == 0 || v == 255, "({x},{y}) = {v} is not a valid binary value");
+        }
+    }
+
+    #[test]
+    fn test_adaptive_threshold_degenerate_inputs_do_not_panic() {
+        let empty_w = PixelContainer::new(0, 5);
+        let out = adaptive_threshold_mean(&empty_w, 5, 0.15);
+        assert_eq!((out.width, out.height), (0, 5));
+
+        let empty_h = PixelContainer::new(5, 0);
+        let out = adaptive_threshold_mean(&empty_h, 5, 0.15);
+        assert_eq!((out.width, out.height), (5, 0));
+
+        let both_zero = PixelContainer::new(0, 0);
+        let out = adaptive_threshold_mean(&both_zero, 5, 0.15);
+        assert_eq!((out.width, out.height), (0, 0));
+
+        let img = patch_with_mark(6, 6, 200, 30, 3, 3);
+        let _ = adaptive_threshold_mean(&img, 0, 0.15); // window=0 clamped to 1
+        let _ = adaptive_threshold_mean(&img, 5, f64::NAN);
+        let _ = adaptive_threshold_mean(&img, 5, -1.0);
+        let _ = adaptive_threshold_mean(&img, 5, 2.0);
+    }
+
+    #[test]
+    fn test_adaptive_threshold_window_zero_is_all_background() {
+        // window=0 clamps to 1: every pixel's "local mean" is itself, and
+        // lum < lum * (1.0 - t) is never true for t >= 0 and lum >= 0 --
+        // deterministically all-background, not a special case in the code.
+        let img = patch_with_mark(6, 6, 200, 30, 3, 3);
+        let out = adaptive_threshold_mean(&img, 0, 0.15);
+        for y in 0..6 {
+            for x in 0..6 {
+                assert_eq!(out.pixel_at(x, y).0, 255);
+            }
+        }
     }
 }
