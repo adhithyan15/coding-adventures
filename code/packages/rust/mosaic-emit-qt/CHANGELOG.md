@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostInput.disabled` (#14786)
+
+`HostInput` had `read-only` but no way to say *unavailable*. Qt spells
+availability positively, so `disabled` lowers to a negated `enabled`
+binding. `readOnly` stays separate: a read-only `TextInput` still takes
+focus, a disabled one does not.
+
+Spec: `code/specs/UI58-hostinput-disabled.md` (#14786). Landed on all eight
+backends in one change — a partly-landed prop would make a disabled input
+*less* restricted on whichever backend lagged.
+
 ### Fixed — host controls honour `opacity` (#14775)
 
 #14741 added `opacity` to Qt's three `Rectangle` paint builders. Host controls

@@ -3931,6 +3931,16 @@ fn emit_host_input(
     if let Some(read_only) = bool_prop_expression(node, "read-only")? {
         writeln!(out, "{input_pad}  readOnly: {read_only},").unwrap();
     }
+    // UI58 — `disabled` is a DIFFERENT affordance from `read-only` above: a
+    // read-only field takes keyboard focus, is selectable, and announces as
+    // editable-but-read-only; a disabled one is skipped by focus and
+    // announces as unavailable. The toolkit forwarded its `disabled` slot to
+    // `read-only` because this did not exist (#14772).
+    //
+    // Flutter spells it `enabled`, so the bound expression is negated.
+    if let Some(disabled) = bool_prop_expression(node, "disabled")? {
+        writeln!(out, "{input_pad}  enabled: !({disabled}),").unwrap();
+    }
     if find_keyword_prop(node, "auto-focus") == Some("true") {
         writeln!(out, "{input_pad}  autofocus: true,").unwrap();
     }
@@ -12446,6 +12456,41 @@ mod tests {
             main_dart.contains(r#"mosaicRequiredString(_hostProps, "label")"#),
             "got:\n{main_dart}"
         );
+    }
+
+
+    #[test]
+    fn host_input_disabled_lowers_to_enabled_false() {
+        // UI58 — Flutter spells it `enabled`, so the bound expression is
+        // negated. Distinct from `readOnly`, which keeps focus (#14772).
+        let m = component(
+            "F",
+            vec![
+                slot("q", SlotType::Text, true),
+                slot("off", SlotType::Bool, false),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "F",
+            node_with(
+                "HostInput",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::SlotRef("q".into()),
+                    },
+                    LayoutProp {
+                        name: "disabled".into(),
+                        value: LayoutPropValue::SlotRef("off".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("F")).expect("emit ok").output;
+        assert!(out.contains("enabled: !("), "got:\n{out}");
+        assert!(!out.contains("readOnly:"), "got:\n{out}");
     }
 
 }

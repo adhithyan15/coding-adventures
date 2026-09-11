@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+### Added — `HostInput.disabled` (#14786)
+
+`HostInput` accepted `read-only` but had no way to say *unavailable*. The
+toolkit's Input/Field/InputGroup therefore styled a disabled control — the
+`opacity` state landed in #14772 — while the emitted element stayed fully
+interactive. It looked disabled and behaved normally.
+
+`disabled` now lowers to the boolean HTML attribute, with `data-disabled` for
+the slot-bound form so authored `state disabled` styling and the real attribute
+come from the same slot.
+
+Spec: `code/specs/UI58-hostinput-disabled.md` (#14786). Landed on all eight
+backends in one change — a partly-landed prop would make a disabled input
+*less* restricted on whichever backend lagged.
+
 ### Fixed — `HostLink` dropped its children (#14717)
 
 A `HostLink` with no `label:` and a nested subtree emitted `<a ...></a>` and

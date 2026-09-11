@@ -4494,6 +4494,22 @@ fn emit_host_input(
     writeln!(out, "{field_pad}BasicTextField(").unwrap();
     writeln!(out, "{inner}value = {value_expr},").unwrap();
 
+    // UI58 — a DIFFERENT affordance from `read-only`: a read-only field takes
+    // keyboard focus and announces as editable-but-read-only; a disabled one
+    // is skipped by focus and announces as unavailable (#14772).
+    //
+    // Compose spells it `enabled`, so the bound expression is negated.
+    match find_prop_value(node, "disabled") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            writeln!(out, "{inner}enabled = !_mosaicTruthy({camel}),").unwrap();
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            writeln!(out, "{inner}enabled = false,").unwrap();
+        }
+        _ => {}
+    }
+
     let multiline = matches!(
         find_prop_value(node, "multiline"),
         Some(LayoutPropValue::Keyword(value)) if value == "true"
@@ -10099,6 +10115,33 @@ mod tests {
             out.contains("Color(0xFFF1EBE1)"),
             "inherited text colour lost across the split, got:\n{out}"
         );
+    }
+
+
+    #[test]
+    fn host_input_disabled_lowers_to_enabled_false() {
+        // UI58 — Compose spells it `enabled`, so the bound expression is
+        // negated. Distinct from `readOnly`, which keeps focus (#14772).
+        let m = component("F", vec![slot("off", SlotType::Bool, false)], vec![]);
+        let l = layout(
+            "F",
+            node(
+                "HostInput",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::String("q".into()),
+                    },
+                    LayoutProp {
+                        name: "disabled".into(),
+                        value: LayoutPropValue::SlotRef("off".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("F")).expect("emit ok").output;
+        assert!(out.contains("enabled = !_mosaicTruthy(off)"), "got:\n{out}");
     }
 
 }

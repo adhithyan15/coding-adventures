@@ -8468,6 +8468,24 @@ fn emit_host_input(
     }
 
     // read-only: slot/keyword
+    // UI58 — a DIFFERENT affordance from `read-only`: a read-only field takes
+    // keyboard focus and announces as editable-but-read-only; a disabled one
+    // is skipped by focus and announces as unavailable (#14772).
+    //
+    // WinUI spells it `IsEnabled`, so a slot binding goes through the same
+    // Not() helper the other controls use for their `disabled` polarity flip.
+    match find_prop_value(node, "disabled") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = ctx.slot_xbind_path(slot);
+            attrs.push_str(&format!(
+                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
+            ));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" IsEnabled=\"False\"");
+        }
+        _ => {}
+    }
     match find_prop_value(node, "read-only") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
@@ -21516,6 +21534,33 @@ mod tests {
         assert!(
             xaml.contains(r#"Content="https://example.com""#),
             "got:\n{xaml}"
+        );
+    }
+
+
+    /// UI58 — WinUI spells availability positively (`IsEnabled`), so the
+    /// x:Bind goes through the `Not` converter function. Mode=OneWay like
+    /// every other emitted binding.
+    #[test]
+    fn host_input_disabled_binds_negated_is_enabled() {
+        let c = component("Foo", vec![slot("off", SlotType::Bool, false)], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "disabled".to_string(),
+                    value: LayoutPropValue::SlotRef("off".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains(" IsEnabled=\"{x:Bind Not(Off), Mode=OneWay}\""),
+            "got:\n{}",
+            r.xaml
         );
     }
 

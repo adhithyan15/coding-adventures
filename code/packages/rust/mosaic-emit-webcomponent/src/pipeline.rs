@@ -1683,6 +1683,19 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
     // readonly attribute — three cases. The kebab-name `read-only` is
     // the moslayout-compiler-emitted form (the React backend uses the
     // same).
+    // UI58 — `disabled` is a DIFFERENT affordance from `read-only` above: a
+    // read-only field takes keyboard focus, is selectable, and announces as
+    // editable-but-read-only; a disabled one is skipped by focus and
+    // announces as unavailable. The toolkit forwarded its `disabled` slot to
+    // `read-only` because this did not exist (#14772).
+    if let Some(slot) = find_slot_ref(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#"${{{camel} ? " disabled" : ""}}"#));
+        }
+    } else if find_keyword(node, "disabled") == Some("true") {
+        attrs.push_str(" disabled");
+    }
     if let Some(slot) = find_slot_ref(node, "read-only") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
@@ -7158,6 +7171,29 @@ mod tests {
         assert!(!out.contains(r#"disabled === "disabled""#), "got:\n{out}");
         // The enum axis in the same component must be untouched.
         assert!(out.contains(r#"variant === "danger""#), "got:\n{out}");
+    }
+
+
+    /// UI58 — `disabled` lowers to the boolean HTML attribute, present only
+    /// when the bound slot is true. Distinct from `readonly` (#14772).
+    #[test]
+    fn host_input_disabled_emits_the_boolean_attribute() {
+        let m = component("X", vec![slot("off", SlotType::Bool, false)], vec![]);
+        let mut root = leaf("HostInput");
+        root.props.push(LayoutProp {
+            name: "disabled".to_string(),
+            value: LayoutPropValue::SlotRef("off".to_string()),
+        });
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root,
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains(r#"${off ? " disabled" : ""}"#),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("readonly"), "got:\n{out}");
     }
 
 }
