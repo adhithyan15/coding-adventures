@@ -180,8 +180,13 @@ private func runExport(_ payload: Any) -> [String: Any] {
   // nothing pointing back here -- which is the same argument the strict-decode
   // guard above already makes for itself.
   //
-  // So check it is a zip, which is what an `.apkg` is. Cheap, unambiguous, and
-  // it catches every degenerate payload rather than the one shape enumerated.
+  // So check it begins a zip local file header, which is what an `.apkg` does.
+  // Cheap and unambiguous, and it rejects payloads that are not archives at all
+  // rather than the one degenerate shape that happened to be enumerated. It is
+  // not a validity check: four bytes and nothing after them still pass. The
+  // exporter cannot produce an entry-less archive -- `write_legacy_apkg` adds
+  // the collection before it finishes, so `PK 05 06` at offset 0 is not
+  // reachable -- which is why this cannot reject a legitimate export.
   guard decoded.count >= 4, decoded.prefix(4).elementsEqual([0x50, 0x4B, 0x03, 0x04]) else {
     return failedOutcome("the export package was not a valid Anki package")
   }
@@ -211,18 +216,36 @@ private func runImport(_ payload: Any) -> [String: Any] {
     return cancelledOutcome()
   }
 
-  // Resolved first, then inspected and read through the SAME resolved URL.
+  // Resolved once, then inspected and read through the SAME URL.
   //
   // `attributesOfItem` is lstat-based: it reports `NSFileTypeSymbolicLink` for a
   // link and does not follow it (measured), while `Data(contentsOf:)` does
   // follow. Inspecting the link and reading the target would be two different
   // files; worse, it rejected a symlink to a perfectly good `.apkg`, which the
-  // retired host read without complaint. Resolving once and using that path for
-  // both restores it and removes the mismatch.
+  // retired host read without complaint.
   //
-  // This does not weaken the check below: after resolution the stat describes
-  // the TARGET, so a link pointing at a fifo still reports a fifo and is still
-  // refused.
+  // "Resolved" means CONSISTENT, not symlink-free -- the useful property here is
+  // that one string feeds both calls, so they cannot disagree.
+  // `resolvingSymlinksInPath()` also strips a leading `/private` when the
+  // shortened path exists (measured: `/private/tmp/x` -> `/tmp/x`), and `/tmp`
+  // is itself a symlink, so the result can have a link component put back.
+  //
+  // It does not weaken the check below. After resolution the stat describes the
+  // TARGET: a link to a character device reports `NSFileTypeCharacterSpecial`,
+  // and a link to a fifo reports `NSFileTypeUnknown` -- not a fifo type, but
+  // equally not `.typeRegular`, which is what the guard tests. A link chain is
+  // followed to its end; a loop or a dangling link resolves to the link path
+  // itself, whose lstat is `NSFileTypeSymbolicLink`, so both fail closed.
+  //
+  // It does WIDEN one thing, and deliberately: a symlink named `deck.apkg`
+  // pointing at any readable file now passes the panel's filter and is read,
+  // where before it was refused. That is accepted rather than overlooked. The
+  // person selected it in their own open panel, so it is a file they chose as
+  // surely as the target would have been; the previous refusal was a side
+  // effect of the lstat/read mismatch, not a protection anyone designed. The
+  // bytes go to Engram's own parser, which rejects anything that is not a
+  // package, and the failure message is sanitised and truncated before it
+  // reaches the UI.
   let resolved = url.resolvingSymlinksInPath()
 
   // Sized up before it is opened. A read on a fifo or a character device never
