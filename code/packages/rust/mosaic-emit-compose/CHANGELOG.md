@@ -5,6 +5,40 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — any style property cancelled a container's width default (#14795)
+
+`emit_container` and `emit_container_frame` both wrote the width default and
+the style chain as mutually exclusive:
+
+```rust
+if has_style_chain { "Modifier{chain}" } else { "Modifier.fillMaxWidth()" }
+```
+
+`fillMaxWidth()` is what a container gets when nothing says otherwise, not an
+alternative to styling one. As an either/or, authoring any unrelated property —
+a background, a border, a padding — silently cancelled it and let the container
+shrink to its content. The author asked for a colour and lost their layout.
+
+Verified on unmodified `main` with two identical `Row`s, the second adding only
+a background: `plain_has_fill=true styled_has_fill=false`.
+
+The default is now prepended when the chain says nothing about width, and goes
+**first** so an explicit `width`/`fillMaxWidth` later still wins — Compose
+resolves size modifiers in order. `chain_sets_own_width` covers `width`,
+`requiredWidth`, `widthIn`, `fillMaxWidth`, `fillMaxSize` and `weight`;
+`in_row_scope` children stay intrinsic as before.
+
+Both paths are fixed together. A container only takes the split path once its
+section grows past the size threshold, so fixing one alone would hold until a
+layout grew and then quietly stop — exactly how the `HostScroll` modifier
+behaved in #14736.
+
+Checked visually rather than inferred, using the screenshot harness from
+#14798: TaskApp's empty-state panel now spans the full width instead of
+stopping short, and the one-task and completed states are pixel-identical to
+before. That is the whole visible effect on TaskApp; it was not obvious from
+the emitted diff, which changes 22 containers.
+
 ### Added — `HostInput.disabled` (#14786)
 
 `HostInput` had `read-only` but no way to say *unavailable*. Compose spells
