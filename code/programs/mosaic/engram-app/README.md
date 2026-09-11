@@ -150,6 +150,28 @@ editing, and save/delete/cancel controls.
   per-rating counts, and first/last review timestamps from the shared Rust
   history summary.
 
+## Looking at it
+
+Engram is gated on SwiftUI and Qt, and both gates assert the **semantics
+tree** — that a node exists, is named, and is marked displayed. All of that can
+be true of an app that is unreadable, and for the deck-stat chips it was: the
+count was drawn on top of its label (#14828) and every gate stayed green.
+
+To render Engram on Compose Desktop and look at it:
+
+```bash
+scripts/render-compose.sh /tmp/engram-shots
+```
+
+That builds the Rust runtime, generates the Compose project under
+`native-complete` (asserted, so a degraded fallback cannot be mistaken for the
+product), runs `conformance/compose/EngramScreenshots.kt`, and writes PNGs.
+
+It is deliberately not a pixel-diff gate — a strict baseline needs a pinned
+font stack and renderer, which is a separate decision (#14798). Measure a
+defect against the semantics tree before filing it; the render tells you where
+to look, not what is wrong.
+
 ## Running the smoke test
 
 ```bash
