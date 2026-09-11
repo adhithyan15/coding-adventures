@@ -125,7 +125,13 @@ pub fn threshold_luminance(src: &PixelContainer, t: u8) -> PixelContainer {
 /// an equally-empty result, never a panic.
 ///
 /// This is the one function in this crate whose output at a pixel depends
-/// on its neighbours, not just its own value -- see the module doc.
+/// on its neighbours, not just its own value -- see the module doc. It's
+/// also the one function here with a peak memory footprint above its
+/// output size: one extra full-image summed-area-table buffer (8
+/// bytes/pixel, `u64`), inherent to the O(1)-per-pixel technique this
+/// algorithm is built on. A caller processing untrusted, unbounded image
+/// dimensions should size-check before calling, the same way it would
+/// before allocating the `PixelContainer` itself.
 pub fn adaptive_threshold_mean(src: &PixelContainer, window: u32, t: f64) -> PixelContainer {
     let width = src.width;
     let height = src.height;
@@ -141,13 +147,20 @@ pub fn adaptive_threshold_mean(src: &PixelContainer, window: u32, t: f64) -> Pix
     let h = height as usize;
 
     // BT.601 luminance per pixel, matching threshold_luminance's formula.
-    let mut lum = vec![0u32; w * h];
-    for y in 0..h {
-        for x in 0..w {
-            let (r, g, b, _a) = src.pixel_at(x as u32, y as u32);
-            lum[y * w + x] = (0.299 * r as f32 + 0.587 * g as f32 + 0.114 * b as f32).round() as u32;
-        }
-    }
+    // Computed inline (here and again in the classification pass below)
+    // rather than materialized into its own full-image buffer -- caught in
+    // security review: this function already needs one extra full-image
+    // scratch buffer beyond its output (the summed-area table itself, 8
+    // bytes/pixel, inherent to the O(1)-per-pixel technique) on top of the
+    // caller's own image; a second one (this luminance buffer, 4
+    // bytes/pixel) was avoidable extra peak-memory amplification for a
+    // caller-controlled image size, and cheap to avoid (BT.601 is three
+    // multiplies and two adds -- recomputing it is not a meaningful cost
+    // next to the integral-image lookups either pass already does).
+    let luminance = |x: u32, y: u32| -> u32 {
+        let (r, g, b, _a) = src.pixel_at(x, y);
+        (0.299 * r as f32 + 0.587 * g as f32 + 0.114 * b as f32).round() as u32
+    };
 
     // Summed-area table: (w+1) x (h+1), row 0 / column 0 are a zero border.
     let stride = w + 1;
@@ -155,7 +168,7 @@ pub fn adaptive_threshold_mean(src: &PixelContainer, window: u32, t: f64) -> Pix
     for y in 0..h {
         let mut row_sum = 0u64;
         for x in 0..w {
-            row_sum += lum[y * w + x] as u64;
+            row_sum += luminance(x as u32, y as u32) as u64;
             integral[(y + 1) * stride + (x + 1)] = integral[y * stride + (x + 1)] + row_sum;
         }
     }
@@ -177,7 +190,7 @@ pub fn adaptive_threshold_mean(src: &PixelContainer, window: u32, t: f64) -> Pix
             let sum = (integral[(y1 + 1) * stride + (x1 + 1)] + integral[y0 * stride + x0])
                 - (integral[y0 * stride + (x1 + 1)] + integral[(y1 + 1) * stride + x0]);
             let mean = sum as f64 / area as f64;
-            let dark = (lum[y * w + x] as f64) < mean * (1.0 - t);
+            let dark = (luminance(x as u32, y as u32) as f64) < mean * (1.0 - t);
             let v = if dark { 0 } else { 255 };
             let (_, _, _, a) = src.pixel_at(x as u32, y as u32);
             out.set_pixel(x as u32, y as u32, v, v, v, a);
