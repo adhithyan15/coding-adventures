@@ -185,6 +185,7 @@ pub fn from_pipeline(
     // #14793. An unused Kotlin import is a warning; a missing one is an error.
     writeln!(out, "import androidx.compose.foundation.shape.RoundedCornerShape").unwrap();
     writeln!(out, "import androidx.compose.ui.draw.clip").unwrap();
+    writeln!(out, "import androidx.compose.foundation.layout.Arrangement").unwrap();
     writeln!(out, "import androidx.compose.ui.text.font.FontWeight").unwrap();
     writeln!(out, "import androidx.compose.ui.draw.alpha").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Column").unwrap();
@@ -1279,34 +1280,19 @@ fn compose_font_weight(value: &str) -> Option<String> {
     };
     Some(format!("FontWeight.{named}"))
 }
-/// The value half of [`part_elevation_tier`], split out so the drop reporter
-/// can ask the SAME question the lowering asks (#14810).
+/// The `Arrangement.spacedBy` argument for an authored `gap`, or `None` where
+/// the composable has no arrangement to give it (#14804).
 ///
-/// Without this there were two lists: the lowering's, and the reporter's
-/// implicit assumption that anything not in its `match` was discarded. That
-/// made every handled `elevation` a false positive -- 16 reported dropped
-/// against 16 `.shadow(..)` calls actually emitted. A drop report that cries
-/// wolf is worse than none, because the real entries stop being read.
-fn elevation_tier_for_value(value: &str) -> Option<ElevationTier> {
-    match value.trim() {
-        "raised" => Some(ElevationTier::Raised),
-        "overlay" => Some(ElevationTier::Overlay),
-        _ => None,
-    }
-}
-
-/// The weight a `flex-grow` value resolves to, or `None` when it is unusable.
-///
-/// Split out so the drop reporter asks the SAME question the lowering asks
-/// (#14810). Invalid, non-finite, zero and negative values stay intrinsic and
-/// are therefore genuinely discarded; usable ones are consumed.
-fn flex_grow_weight(value: &str) -> Option<String> {
-    value
-        .trim()
-        .parse::<f64>()
-        .ok()
-        .filter(|v| v.is_finite() && *v > 0.0)
-        .map(|v| v.to_string())
+/// `Box` stacks its children and has no arrangement at all -- a gap there is
+/// meaningless rather than merely unsupported, so it is dropped deliberately.
+fn arrangement_argument(composable: &str, gap: Option<&str>) -> Option<String> {
+    let gap = gap?;
+    let axis = match composable {
+        "Column" => "verticalArrangement",
+        "Row" => "horizontalArrangement",
+        _ => return None,
+    };
+    Some(format!("{axis} = Arrangement.spacedBy({gap}.dp)"))
 }
 
 /// One authored style property that Compose lowering discards.
@@ -1378,6 +1364,36 @@ fn compose_drop_reason(name: &str) -> &'static str {
         }
         _ => "no Compose lowering in this emitter yet",
     }
+}
+
+/// The value half of [`part_elevation_tier`], split out so the drop reporter
+/// can ask the SAME question the lowering asks (#14810).
+///
+/// Without this there were two lists: the lowering's, and the reporter's
+/// implicit assumption that anything not in its `match` was discarded. That
+/// made every handled `elevation` a false positive -- 16 reported dropped
+/// against 16 `.shadow(..)` calls actually emitted. A drop report that cries
+/// wolf is worse than none, because the real entries stop being read.
+fn elevation_tier_for_value(value: &str) -> Option<ElevationTier> {
+    match value.trim() {
+        "raised" => Some(ElevationTier::Raised),
+        "overlay" => Some(ElevationTier::Overlay),
+        _ => None,
+    }
+}
+
+/// The weight a `flex-grow` value resolves to, or `None` when it is unusable.
+///
+/// Split out so the drop reporter asks the SAME question the lowering asks
+/// (#14810). Invalid, non-finite, zero and negative values stay intrinsic and
+/// are therefore genuinely discarded; usable ones are consumed.
+fn flex_grow_weight(value: &str) -> Option<String> {
+    value
+        .trim()
+        .parse::<f64>()
+        .ok()
+        .filter(|v| v.is_finite() && *v > 0.0)
+        .map(|v| v.to_string())
 }
 
 /// The modifier `HostScroll` prefixes onto a container's chain.
@@ -2842,10 +2858,12 @@ struct ComposeStyle {
     /// Properties this builder saw and did not lower, as `(name, value)`.
     ///
     /// Collected BY the builder rather than by a parallel list of "things
-    /// Compose supports", because a parallel list drifts the moment a property
-    /// is added to one and not the other -- which is exactly the drift #12022
-    /// exists to catch.
+    /// Compose supports" -- a parallel list drifts the moment a property is
+    /// added to one and not the other, which is the drift #12022 exists to
+    /// catch.
     dropped: Vec<(String, String)>,
+    /// Authored `gap`, in dp, for a Column/Row `Arrangement.spacedBy` (#14804).
+    gap: Option<String>,
     /// Compose `FontWeight.*` expression for an authored `font-weight` (#14810).
     font_weight: Option<String>,
 }
@@ -2950,6 +2968,7 @@ fn compose_box_style(
     let mut radius: Option<String> = None;
     let mut font_weight: Option<String> = None;
     let mut dropped: Vec<(String, String)> = Vec::new();
+    let mut gap: Option<String> = None;
 
     let mut absorb = |p: &StyleProp, layer_idx: Option<usize>| {
         let set = |bucket: &mut PropBucket, v: String| match layer_idx {
@@ -3037,6 +3056,15 @@ fn compose_box_style(
             "font-weight" if layer_idx.is_none() => {
                 if let Some(w) = compose_font_weight(&p.value) {
                     font_weight = Some(w);
+                }
+            }
+            // #14804 — `gap` reached the lattice IR and died here, in the
+            // `_ => {}` arm below. 178 declarations across 27 stylesheets,
+            // discarded in silence while the strict native-complete profile
+            // reported zero degradations.
+            "gap" if layer_idx.is_none() => {
+                if let Some(v) = px_or_none(&p.value) {
+                    gap = Some(v);
                 }
             }
             // `flex-grow` is consumed by `compose_row_weight`, not here, so
@@ -3221,6 +3249,7 @@ fn compose_box_style(
         modifier,
         content_alignment: text_align.map(str::to_string),
         dropped,
+        gap,
         text_color,
         font_family_mono: !font_family_mono.empty(),
         font_size: font_size_out,
@@ -3942,6 +3971,7 @@ fn emit_container_frame(
                     font_family_mono: false,
                     font_size: None,
                 dropped: Vec::new(),
+                gap: None,
                 font_weight: None,
                 })
             }
@@ -3961,6 +3991,7 @@ fn emit_container_frame(
     let has_chain =
         has_style_chain || semantic_modifier.is_some() || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
+    let gap = style.as_ref().and_then(|s| s.gap.clone());
     let child_text: Option<TextStyleCtx> = match &style {
         Some(s) => {
             let inherited = text_ctx.cloned().unwrap_or_default();
@@ -3969,7 +4000,7 @@ fn emit_container_frame(
         None => text_ctx.cloned(),
     };
 
-    if has_chain || content_alignment.is_some() {
+    if has_chain || content_alignment.is_some() || gap.is_some() {
         let modifier_pad = "    ".repeat(depth + 1);
         writeln!(opener, "{pad}{composable}(").unwrap();
         if has_style_chain {
@@ -4003,6 +4034,9 @@ fn emit_container_frame(
         writeln!(opener, ",").unwrap();
         if let Some(a) = &content_alignment {
             writeln!(opener, "{modifier_pad}contentAlignment = {a},").unwrap();
+        }
+        if let Some(arrangement) = arrangement_argument(composable, gap.as_deref()) {
+            writeln!(opener, "{modifier_pad}{arrangement},").unwrap();
         }
         if node.children.is_empty() {
             writeln!(opener, "{pad}) {{ }}").unwrap();
@@ -4198,6 +4232,7 @@ fn emit_container(
                 font_family_mono: false,
                 font_size: None,
                 dropped: Vec::new(),
+                gap: None,
                 font_weight: None,
             });
         }
@@ -4226,6 +4261,7 @@ fn emit_container(
                     font_family_mono: false,
                     font_size: None,
                 dropped: Vec::new(),
+                gap: None,
                 font_weight: None,
                 });
             }
@@ -4249,6 +4285,7 @@ fn emit_container(
     let has_chain =
         has_style_chain || semantic_modifier.is_some() || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
+    let gap = style.as_ref().and_then(|s| s.gap.clone());
 
     // The text style children inherit: a styled Box may override the
     // inherited (sheet) color / font for its own cell text.
@@ -4261,7 +4298,7 @@ fn emit_container(
     };
 
     // ---- opener -----------------------------------------------------
-    if has_chain || content_alignment.is_some() {
+    if has_chain || content_alignment.is_some() || gap.is_some() {
         // Multi-line styled opener.
         let modifier_pad = "    ".repeat(depth + 1);
         writeln!(out, "{pad}{composable}(").unwrap();
@@ -4298,6 +4335,9 @@ fn emit_container(
         writeln!(out, ",").unwrap();
         if let Some(a) = &content_alignment {
             writeln!(out, "{modifier_pad}contentAlignment = {a},").unwrap();
+        }
+        if let Some(arrangement) = arrangement_argument(composable, gap.as_deref()) {
+            writeln!(out, "{modifier_pad}{arrangement},").unwrap();
         }
         if node.children.is_empty() {
             writeln!(out, "{pad}) {{ }}").unwrap();
@@ -7071,10 +7111,23 @@ mod tests {
             out.matches(".weight(1f)").count() >= 2,
             "main flex-grow and title width must both become weights:\n{out}"
         );
+        // The `progress` part authors `gap: 10px`, so since #14804 it takes
+        // the multi-line form to carry its arrangement. The claim this test
+        // makes is about WIDTH, not about formatting, so assert the width:
+        // the group keeps a bare `Modifier` rather than gaining a fill.
+        let progress = out
+            .split("Arrangement.spacedBy(10.dp)")
+            .next()
+            .expect("progress group must emit its authored gap");
+        let opener = progress
+            .rfind("Row(")
+            .map(|i| &progress[i..])
+            .expect("gap must belong to a Row");
         assert!(
-            out.contains("Row(modifier = Modifier) {"),
+            opener.contains("modifier = Modifier,") && !opener.contains("fillMaxWidth"),
             "the progress group must keep intrinsic width:\n{out}"
         );
+
     }
 
     #[test]
@@ -10906,6 +10959,67 @@ mod tests {
         ]);
         assert!(out.contains(".padding(6.dp)"), "got:\n{out}");
         assert!(!out.contains("start ="), "got:\n{out}");
+    }
+
+    /// #14804 — `gap` reached the lattice IR and died at the emitter.
+    ///
+    /// 178 declarations across 27 stylesheets, dropped in silence: the strict
+    /// native-complete profile still reported zero degradations. In the
+    /// rendered app it showed up as adjacent text running together, because
+    /// two Texts sat in a row whose spacing had been thrown away.
+    #[test]
+    fn gap_lowers_to_a_column_arrangement() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Column", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("c".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part("c", vec![sprop("gap", "8px")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(
+            out.contains("verticalArrangement = Arrangement.spacedBy(8.dp)"),
+            "got:\n{out}"
+        );
+        assert!(
+            out.contains("import androidx.compose.foundation.layout.Arrangement"),
+            "Arrangement emitted without its import, got:\n{out}"
+        );
+    }
+
+    /// Compose names the AXIS in the argument, so the same authored `gap`
+    /// means a different argument per container.
+    #[test]
+    fn gap_lowers_to_a_row_arrangement_on_the_other_axis() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Row", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("r".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part("r", vec![sprop("gap", "12px")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(
+            out.contains("horizontalArrangement = Arrangement.spacedBy(12.dp)"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("verticalArrangement"), "got:\n{out}");
+    }
+
+    /// A `Box` stacks its children on top of one another and has no
+    /// arrangement at all, so a gap there is meaningless rather than merely
+    /// unsupported. Dropped deliberately instead of guessed at.
+    #[test]
+    fn gap_on_a_box_emits_no_arrangement() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("b".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part("b", vec![sprop("gap", "8px")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(!out.contains("Arrangement.spacedBy"), "got:\n{out}");
     }
 
     /// #14810 — before this, Compose reported nothing, so an empty

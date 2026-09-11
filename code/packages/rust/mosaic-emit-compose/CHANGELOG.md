@@ -31,6 +31,43 @@ modifier, a value that must be an argument, and a concept Compose does not have
 are genuinely different problems and want different fixes.
 
 Style drops do not gate `nativeComplete`; this makes them visible, not fatal.
+### Fixed — `gap` was dropped entirely (#14804)
+
+`gap` reached the lattice IR and died in the property loop's `_ => {}` arm.
+178 declarations across 27 stylesheets, discarded in silence — the strict
+`native-complete` profile still reported zero degradations, because the
+analyzer does not know the property exists.
+
+In the rendered app it showed as adjacent text running together (`Up next1`)
+and controls butting against each other. Not a string bug: two `Text` nodes in
+a row whose spacing had been thrown away.
+
+It now lowers to `Arrangement.spacedBy(n.dp)`, on the axis the container names:
+`verticalArrangement` for a `Column`, `horizontalArrangement` for a `Row`. A
+`Box` stacks its children and has no arrangement, so a gap there is meaningless
+rather than unsupported and is dropped deliberately.
+
+TaskApp emits 20 arrangements where it previously emitted none. Verified by
+rendering: `Up next 1` now has its space, and the header and sidebar have
+spacing.
+
+One subtlety the tests caught: `gap` is an **argument**, not a modifier, so it
+never sets `has_chain` — a part whose only property is a gap was still taking
+the single-line `Column(modifier = …)` form, where an argument has nowhere to
+go. It looked like it worked, because every part in TaskApp that authors a gap
+also carries another property. The multi-line form is now chosen when a gap is
+present.
+
+`row_children_use_weight_and_intrinsic_measurement_in_split_sections` asserted
+the exact string `Row(modifier = Modifier) {`. Its `progress` part authors
+`gap: 10px`, so it now takes the multi-line form. The claim that test makes is
+about **width**, not formatting, so it now asserts the width directly — bare
+`Modifier`, no fill — and was re-checked to confirm it still fails if a fill
+appears.
+
+Does not fix every case: the storage line still renders joined, so its gap sits
+on a container this does not reach. Tracked in #14804 with Flutter and SwiftUI,
+which drop `gap` the same way.
 ### Added — directional padding lowering (#14709)
 
 `padding-top/-bottom/-left/-right` were dropped entirely, so a part asking for
