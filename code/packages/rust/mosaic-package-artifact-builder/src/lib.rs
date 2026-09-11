@@ -266,6 +266,36 @@ impl Backend {
         }
     }
 
+    /// Whether this backend's emitter CONNECTS a declared `[host_effects]`
+    /// handler to the generated app.
+    ///
+    /// Copying a handler's source into the project is backend-agnostic;
+    /// installing it is not. Only Qt and SwiftUI emit the call that reaches it
+    /// -- `qt_main_with_host_effects` and `swift_app_with_host_effects`.
+    ///
+    /// Without this, a package declaring a handler for any other backend got
+    /// the file copied, compiled and shipped with nothing ever calling it, and
+    /// no diagnostic anywhere. That is the silent permanent failure the whole
+    /// section exists to prevent, reached through the one gap the section did
+    /// not check: Qt and SwiftUI both hard-fail when they cannot find their
+    /// anchor, and the other seven had no check at all.
+    ///
+    /// Exhaustive on purpose. A new backend cannot be added without deciding
+    /// this, because the match stops compiling until it is listed -- which is
+    /// the only version of "remember to update the supported set" that works.
+    fn installs_host_effects(self) -> bool {
+        match self {
+            Backend::Qt | Backend::SwiftUI => true,
+            Backend::React
+            | Backend::Electron
+            | Backend::WebComponent
+            | Backend::Html
+            | Backend::Xaml
+            | Backend::Flutter
+            | Backend::Compose => false,
+        }
+    }
+
     /// The file extension for the *primary* component file. Backends
     /// that emit multiple files per component (currently only XAML —
     /// `.xaml` + `.xaml.cs` + `.Event.cs`) use the extension of the
@@ -1929,6 +1959,40 @@ fn install_host_effects(
     {
         return Ok(Vec::new());
     }
+
+    // Refuse before copying anything, if this backend cannot install what it
+    // is about to copy.
+    //
+    // The failure this closes is the section's own worst case, reached through
+    // the one path it did not check. Copying is backend-agnostic; installing is
+    // not. A package declaring a Compose, Flutter or XAML handler got the
+    // source copied into the project, compiled, linked and shipped, with
+    // nothing ever calling it -- no missing symbol, no diagnostic. The first
+    // symptom is an `Await` effect arriving with no handler, going unanswered,
+    // and the runtime's gate on nothing-pending disabling snapshot AND restore
+    // for the life of the process.
+    //
+    // Qt and SwiftUI already fail loudly when they cannot find their anchor.
+    // This is the same refusal for the backends that have no anchor to look
+    // for, and it names the backend rather than the symptom, because the
+    // author's next question is "can I use this yet".
+    if !backend.installs_host_effects() {
+        if let Some(handler) = manifest
+            .host_effects
+            .handlers
+            .iter()
+            .find(|handler| handler.backend == backend_name)
+        {
+            return Err(BuildError::Io(format!(
+                "`[host_effects]` declares a {backend_name} handler `{}`, but the \
+                 {backend_name} backend cannot install one yet -- the file would be \
+                 copied and compiled with nothing calling it. Only qt and swiftui \
+                 connect a handler today.",
+                handler.install
+            )));
+        }
+    }
+
     let generated = generated_files_on_disk(backend_dir, pre_emission, written_by_emitters)?;
     let canonical_root = package_root
         .canonicalize()
@@ -12020,6 +12084,104 @@ version = "1"
             "{error:?}"
         );
         let _ = fs::remove_dir_all(&root);
+    }
+
+    /// A handler for a backend that cannot install one is refused.
+    ///
+    /// Not a hypothetical: the manifest accepts `backend = "compose"` in
+    /// `[host_effects]` -- it has a test declaring exactly that -- and
+    /// `install_host_effects` copies files for any backend at all. Only Qt and
+    /// SwiftUI emit the call that reaches the handler, so before this the file
+    /// was copied, compiled, linked and shipped with nothing calling it.
+    #[test]
+    fn a_handler_for_a_backend_that_cannot_install_one_is_refused() {
+        for backend in [Backend::Compose, Backend::Flutter, Backend::Xaml] {
+            let root = scratch();
+            fs::create_dir_all(root.join("host/qt")).expect("create the source directory");
+            fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
+
+            let manifest = mosaic_package_manifest::parse(&format!(
+                r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+[host_effects]
+files = [
+  {{ backend = "{name}", source = "host/qt/effects.h", target = "probe_effects.h" }},
+]
+handlers = [
+  {{ backend = "{name}", install = "installProbeEffects" }},
+]
+
+[kernel]
+version = "1"
+"#,
+                name = backend.dir_name()
+            ))
+            .expect("probe manifest must parse");
+
+            let error = install_host_effects(
+                &manifest,
+                backend,
+                &root,
+                &root.join("out"),
+                &HashMap::new(),
+                &HashSet::new(),
+            )
+            .expect_err("a backend with no install emission must refuse the handler");
+            let message = format!("{error:?}");
+            assert!(
+                message.contains(backend.dir_name()) && message.contains("installProbeEffects"),
+                "the error must name the backend and the handler: {message}"
+            );
+            // And nothing was copied -- refusing after writing would leave a
+            // file behind that the next run then reads as pre-existing.
+            assert!(
+                !root.join("out/probe_effects.h").exists(),
+                "the refusal must happen before anything is written"
+            );
+            let _ = fs::remove_dir_all(&root);
+        }
+    }
+
+    /// Every backend is classified, and the two that claim to install really do.
+    ///
+    /// The `installs_host_effects` match is exhaustive, so a new `Backend`
+    /// variant cannot compile until someone decides. This pins the other half:
+    /// that the answer stays true of the emitters. A backend that says it
+    /// installs must actually have an emission function, or the refusal above
+    /// lets a dead handler through for exactly the reason it exists to stop.
+    #[test]
+    fn only_the_backends_with_an_emitter_claim_to_install_handlers() {
+        let claiming: Vec<&str> = [
+            Backend::React,
+            Backend::Electron,
+            Backend::SwiftUI,
+            Backend::Qt,
+            Backend::WebComponent,
+            Backend::Html,
+            Backend::Xaml,
+            Backend::Flutter,
+            Backend::Compose,
+        ]
+        .into_iter()
+        .filter(|backend| backend.installs_host_effects())
+        .map(Backend::dir_name)
+        .collect();
+        assert_eq!(
+            claiming,
+            vec!["swiftui", "qt"],
+            "update this when a backend gains an install emission -- and when it \
+             does, `install_host_effects` stops refusing it"
+        );
     }
 
     /// A file an INSTALLER wrote is flagged too, by the stamp half.
