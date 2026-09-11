@@ -12177,46 +12177,77 @@ version = "1"
             component_name: "Hello".to_string(),
             parts: Vec::new(),
         };
-        let options = mosaic_emit_swiftui::pipeline::EmitOptions {
-            emit_project: true,
-            ..Default::default()
-        };
-        let emitted = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
-            &component, &layout, &style, &options,
-        )
-        .expect("the emitter must produce a project")
-        .project
-        .expect("emit_project: true must produce a shell");
+        // BOTH `require_runtime` shapes, because the emitter has two separate
+        // `MosaicHostState` templates and picks between them on that flag --
+        // `build_runtime_required_mosaic_host_state` declares `bridge` as
+        // non-optional and assigns `MosaicRuntimeHost.loadRequired()`.
+        //
+        // The runtime-required one is the shape that SHIPS: the builder sets
+        // this flag for `--profile native-complete` and for any build passing
+        // `--runtime-library`, which is exactly how Engram is built in CI. An
+        // earlier version of this test exercised only the default, leaving the
+        // shipping configuration unpinned -- the same mistake the anchor itself
+        // was written to avoid.
+        for require_runtime in [false, true] {
+            let options = mosaic_emit_swiftui::pipeline::EmitOptions {
+                emit_project: true,
+                require_runtime,
+                ..Default::default()
+            };
+            let emitted = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
+                &component, &layout, &style, &options,
+            )
+            .expect("the emitter must produce a project")
+            .project
+            .expect("emit_project: true must produce a shell");
 
-        // Through the same runtime-binding rewrite the build applies, because
-        // that rewrite edits the very line being anchored on.
-        for bundle_runtime in [false, true] {
-            let bound = mosaic_app_bindings::swift_app_with_runtime_binding(
-                &emitted.app_swift,
-                bundle_runtime,
+            // The flag must actually select a different shape. Without this the
+            // loop could run twice over identical text -- if `require_runtime`
+            // were ignored or renamed, every assertion below would still pass
+            // and the second iteration would be pinning nothing.
+            assert_eq!(
+                emitted
+                    .app_swift
+                    .contains("MosaicRuntimeHost.loadRequired()"),
+                require_runtime,
+                "require_runtime={require_runtime} must select the matching host template"
             );
-            let wired = swift_app_with_host_effects(&bound, &swiftui_handler()).unwrap_or_else(|e| {
-                panic!("the emitter's own output must be wirable (bundle_runtime={bundle_runtime}): {e:?}")
-            });
-            let class = wired
-                .find("class MosaicHostState")
-                .expect("emitted app must declare MosaicHostState");
-            let install = wired
-                .find("installProbeEffects")
-                .expect("the install must be present");
-            assert!(
-                class < install,
-                "install must land inside the host class, not ahead of it"
-            );
-            // And inside the initialiser, after the bridge exists -- installing
-            // onto a nil bridge would compile and silently do nothing.
-            let assignment = wired
-                .find("self.bridge = ")
-                .expect("emitted app must assign the bridge");
-            assert!(
-                assignment < install,
-                "install must follow the bridge assignment"
-            );
+
+            // Through the same runtime-binding rewrite the build applies,
+            // because that rewrite edits the very line being anchored on.
+            for bundle_runtime in [false, true] {
+                let bound = mosaic_app_bindings::swift_app_with_runtime_binding(
+                    &emitted.app_swift,
+                    bundle_runtime,
+                );
+                let wired =
+                    swift_app_with_host_effects(&bound, &swiftui_handler()).unwrap_or_else(|e| {
+                        panic!(
+                            "the emitter's own output must be wirable \
+                             (require_runtime={require_runtime}, \
+                             bundle_runtime={bundle_runtime}): {e:?}"
+                        )
+                    });
+                let class = wired
+                    .find("class MosaicHostState")
+                    .expect("emitted app must declare MosaicHostState");
+                let install = wired
+                    .find("installProbeEffects")
+                    .expect("the install must be present");
+                assert!(
+                    class < install,
+                    "install must land inside the host class, not ahead of it"
+                );
+                // And inside the initialiser, after the bridge exists --
+                // installing onto a nil bridge would compile and do nothing.
+                let assignment = wired
+                    .find("self.bridge = ")
+                    .expect("emitted app must assign the bridge");
+                assert!(
+                    assignment < install,
+                    "install must follow the bridge assignment"
+                );
+            }
         }
     }
 

@@ -34,8 +34,17 @@ of `mosaic-emit-swiftui`, free to be renamed by someone who never reads this
 crate, and a fixture-only test would keep passing through such a rename while
 every real build broke. So `the_anchors_match_a_genuinely_emitted_swiftui_app`
 emits a project through the actual pipeline, applies the same runtime-binding
-rewrite the build applies, and wires that — in both the bundled and unbundled
-forms. Renaming the class in the emitter fails it.
+rewrite the build applies, and wires that. Renaming the class in the emitter
+fails it.
+
+It covers all four combinations of `require_runtime` × `bundle_runtime`. The
+first of those matters more than it looks: the emitter keeps *two* separate
+`MosaicHostState` templates and picks between them on `require_runtime`, and the
+builder sets that flag for `--profile native-complete` and for any build passing
+`--runtime-library` — which is exactly how Engram is built in CI. The first
+version of this test exercised only the default, leaving the shipping shape
+unpinned. An assertion now also pins that the flag genuinely selects a different
+template, so the loop cannot silently run twice over identical text.
 
 Three guards decide where the install lands: the host class is found by its
 declaration, the search is scoped to it, and within that the assignment must
