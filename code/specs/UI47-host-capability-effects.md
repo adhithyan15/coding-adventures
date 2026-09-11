@@ -1,6 +1,10 @@
 # UI47 — Host capability effects: giving `Effect` a completion path
 
-**Status:** Steps 1-5 of §5.4 are done. The protocol core landed in #14547; all five native hosts answer effects (Qt #14705, SwiftUI #14721, Compose #14731, Flutter #14739, XAML #14744); and `engram-mosaic-app` emits Anki import/export as `Await` effects (#14747). Two steps remain: step 6 (#13728, per-backend adapter migration), which is blocked on §5.4a — nothing generated connects an effect handler, whose fix is designed in §5.5 and not yet built — and step 7 (`deleteNote` confirmation, closing §4.2).
+**Status:** Steps 1-5 of §5.4 are done. The protocol core landed in #14547; all five native hosts answer effects (Qt #14705, SwiftUI #14721, Compose #14731, Flutter #14739, XAML #14744); and `engram-mosaic-app` emits Anki import/export as `Await` effects (#14747). Two steps remain.
+
+**Step 6** (#13728, per-backend adapter migration) is unblocked and under way. §5.4a — nothing generated connects an effect handler — is designed in §5.5 and built: the manifest parses `[host_effects]`, and Qt and SwiftUI both wire the declared handler into the generated entry point. Engram's Qt and SwiftUI backends have made the migration and emit `nativeComplete: true` with zero degradations and an empty `replacedGeneratedFiles`. Compose, Flutter and XAML remain.
+
+**Step 7** (`deleteNote` confirmation) is smaller than §4.2 makes it sound, and that section is annotated accordingly. #13933 already fixed the silent no-op: the event falls back to the selected note and errors when it cannot identify one. What is left is the confirmation round trip — deleting is immediate, with nothing asked first — which is a missing safeguard rather than a shipped bug.
 
 §2 and §3 below describe the state this spec was written against, and are kept as the problem statement rather than rewritten — §3's "cannot meet at v1" is still true *of v1*, which is why nothing is minted below protocol 2.
 **Layer:** UI / standard Mosaic app ABI
@@ -103,8 +107,8 @@ divide into three kinds by what the app expects back:
 |---|---|---|---|
 | `importAnki` | capability request | **yes** — file bytes | all 7 adapters |
 | `exportAnki` | capability request | **yes** — a destination | all 7 adapters |
-| `deleteNote` | confirm / disambiguate | **yes** — which note, or cancel | **none** |
-| `deleteNoteType` | confirm / disambiguate | **yes** — which type, or cancel | **none** |
+| `deleteNote` | confirm / disambiguate | **yes** — confirmation, or cancel | **none** — no intent is minted since #13933 (see §4.2) |
+| `deleteNoteType` | confirm / disambiguate | **yes** — confirmation, or cancel | **none** — as above |
 | `openCard` | notification | **no** — carries data outward | **none** |
 
 A protocol that only models request/response would leave `openCard` awkwardly
@@ -112,17 +116,20 @@ shaped as a request nobody answers. A protocol that only models notifications
 cannot express the other four at all. **Both shapes are needed**, and
 distinguishing them is a design requirement, not a refinement.
 
-### 4.2 `deleteNote` is a broken user flow, not dead surface
+### 4.2 `deleteNote` was a broken user flow, not dead surface
 
-This is worse than the issue recorded, and it is the strongest argument
-against direction (B).
+> **Superseded in part by #13933.** The silent no-op described below is fixed
+> and is no longer the argument this section made it. What remains for UI47 is
+> narrower and is stated at the end. Kept rather than deleted because the
+> reasoning is still the strongest case against direction (B), and because the
+> shape of the mistake is worth having on the record.
 
-`host_intent_for_event` mints `deleteNote` **only when the event carries no
-explicit note id** — when the id *is* present it returns `None` and the
-reducer deletes directly. The intent exists precisely to ask the host *which
+`host_intent_for_event` minted `deleteNote` **only when the event carried no
+explicit note id** — when the id *was* present it returned `None` and the
+reducer deleted directly. The intent existed precisely to ask the host *which
 note, or confirm*.
 
-No host answers it. And the state path mirrors the guard:
+No host answered it. And the state path mirrored the guard:
 
 ```rust
 EngramAppEvent::DeleteNote => {
@@ -132,13 +139,25 @@ EngramAppEvent::DeleteNote => {
 }
 ```
 
-With no explicit id, **nothing mutates and no error surfaces**. The user
-clicks delete, the app emits an intent into a void, and the UI is unchanged.
-`deleteNoteType` is identical.
+With no explicit id, **nothing mutated and no error surfaced**. The user
+clicked delete, the app emitted an intent into a void, and the UI was
+unchanged. `deleteNoteType` was identical.
 
-So the missing effect channel is not only blocking a refactor. It is already
-producing a silent no-op in shipped software. Direction (B) would make that
-permanent by design rather than by omission.
+The two halves were individually reasonable and wrong together: the branch that
+minted the intent was exactly the branch that mutated nothing.
+
+**What #13933 changed.** The event now falls back to the currently selected
+note — which is how the Collection panel's button sends it, with no payload at
+all — and returns an **error** when it still cannot identify one. No intent is
+minted, because an intent alongside an error would be a request to a host that
+is also a failure. So the destructive action no longer fails quietly, and
+`NoteEditorDeleteNote`'s existing refusal is now matched rather than contradicted.
+
+**What is left for UI47.** Not a silent no-op, but the absence of a
+*confirmation*: deleting is immediate and irreversible, with no round trip to
+ask. That is step 7 in §5.4, and it is a smaller and less urgent item than this
+section originally described — worth saying plainly, because a reader who takes
+§4.2 at face value will schedule it as a shipped-bug fix that no longer exists.
 
 ---
 
@@ -223,8 +242,11 @@ Neither combination may fail silently. That rule is the whole lesson of §4.2.
 4. One host template at a time, Qt first — that is where the CI lane exists.
 5. `engram-mosaic-app` emits `importAnki` / `exportAnki` as `Await` effects and
    `openCard` as `Notify`.
-6. Per-backend adapter migration (#13728), Qt first. **Blocked on 5a.**
-7. `deleteNote` / `deleteNoteType` gain a real confirmation flow, closing §4.2.
+6. Per-backend adapter migration (#13728), Qt first. ~~Blocked on 5a.~~
+   Unblocked by §5.5; Qt and SwiftUI done, Compose / Flutter / XAML remain.
+7. `deleteNote` / `deleteNoteType` gain a real confirmation flow. This no
+   longer "closes §4.2" — #13933 did that half. What is left is the
+   confirmation itself, a missing safeguard rather than a shipped bug.
 
 Steps 1–3 are the protocol; 4–7 are Engram's use of it. Splitting there matters
 because steps 1–3 benefit every future Mosaic app that needs a host capability,

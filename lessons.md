@@ -7202,3 +7202,97 @@ rejected, the matrix runner discarded all stdout, and arbitrary-precision
 arithmetic returned -1/300 instead of u8 255/44. Fixing only builtin acceptance
 would hide both later defects. Compare real output as well as a return marker,
 and mask at operation boundaries rather than only when printing.
+
+### 2026-09-11 — Regex anchor semantics do not transfer between engines
+
+A validator built for one backend was copied to another with its `$` intact.
+Rust's `regex` treats `$` as end-of-haystack and refuses a trailing newline,
+which is what an injection analysis of `host_effect_symbol_re` rested on. PCRE2
+(Qt's `QRegularExpression`) and ICU (Swift's `NSRegularExpression`) both concede
+a subject-final terminator through `$`, so `^\.?[A-Za-z0-9_-]{1,16}$` accepted
+`"apkg\n"` in the shipped Qt handler. ICU concedes `\r\n`, `\r`, U+2028, U+2029
+and NEL as well; PCRE2's width is fixed by its build-time newline convention,
+so `ANYCRLF`/`ANY` builds concede more than an `LF` build does — measuring one
+machine does not establish the language's behaviour.
+
+Use `\A` and `\z`, which are absolute in both. Not `\Z`: in PCRE2 it makes the
+same concession `$` does, so it renames the hole rather than closing it.
+
+The failure this allowed was silent, which is what made it survive review: a
+glob of `*apkg\n` is rejected nowhere downstream, it simply matches no file, so
+the dialog opens empty and reports nothing. Having answered the anchor question
+once, for a different engine, is exactly what stopped it being re-asked. Ask it
+per engine, and prove the answer by running that engine.
+
+### 2026-09-11 — Read each host's threading contract; do not mirror the first one
+
+Engram's Qt effect handler answers file-dialog effects inline under
+`Qt::DirectConnection`, which is correct there because the settle runs on the
+event-loop thread. Mirroring that shape into the SwiftUI handler would have been
+wrong twice: `settleEffects` is not guaranteed to run on the main thread and
+`runModal()` off-main is invalid, and the host's lock is held across the handler
+call, so a modal dialog would block `applyProps()` — which SwiftUI calls every
+frame. The documented escape, `DispatchQueue.main.sync`, is the exact wedge the
+host warns against.
+
+Qt is the outlier, not the template. SwiftUI, Compose, Flutter and XAML all hold
+a lock or monitor across the handler and all expose `deferEffect` for precisely
+this case; each host's own documentation says so. A 4-to-1 split would have been
+gotten backwards three more times by copying whichever backend shipped first.
+
+Deferring inverts the risk and the code must be shaped for it: a deferred effect
+leaves the fail sweep, so a path that forgets to answer no longer degrades to
+"failed" — it wedges the app permanently, because the runtime gates snapshot and
+restore on nothing being pending. Have the dialog function RETURN an outcome so
+every path funnels to exactly one completion call.
+
+### 2026-09-11 — A migration's blast radius is every assertion written against the old shape
+
+Moving Engram's SwiftUI backend off its `engram-capi` override touched far more
+than the emitter, the manifest and the package tests. Three further places
+encoded the architecture being replaced, and each failed in a different way:
+
+- `scripts/build-native.sh` wired a `CEngram` static library and asserted that
+  the built binary contained defined `_eg_` symbols. After the migration a
+  CORRECT build has zero, so the check failed exactly the configuration it
+  existed to protect. CI caught this; reasoning had not.
+- `engram_release.py` had an INDEPENDENT copy of the same symbol gate, so the
+  publish step would have failed even with the build script fixed. Fixing one
+  copy of a duplicated check is not fixing the check.
+- Ten release tests built fixtures in the old shape. One of them asserted that
+  an executable without engine symbols must be refused — i.e. it required the
+  broken architecture and rejected every correct build.
+
+The worst consequence was in none of those: the `.app` bundling copied only the
+executable, which was sufficient while the engine was statically linked INTO it.
+With the engine now a resource, the shipped app contained no engine at all, and
+no assertion noticed, because the old check looked inside the binary where the
+engine used to live.
+
+Before migrating a backend, enumerate what asserts its current shape: the
+emitter, the manifest, the package tests, the CI lane, the release script, the
+release script's tests, and whatever validates the shipped artifact. Each one
+encodes an assumption the migration invalidates.
+
+### 2026-09-11 — Verifying a bundled-resource app in place cannot fail
+
+The SwiftUI `.app` was checked by launching it and confirming it stayed alive.
+It did, and the verification was worthless: SwiftPM's generated
+`resource_bundle_accessor.swift` looks for the resource bundle at
+`Bundle.main.bundleURL/App_App.bundle` and then falls back to an ABSOLUTE
+build-machine path baked in at compile time. Running the app where it was built
+resolves that fallback, so a bundle placed somewhere the accessor never looks
+still runs — on that machine, and nowhere else.
+
+The resource bundle belongs at the `.app` ROOT, not in `Contents/Resources`.
+The wrong placement fatal-errors with `could not load resource bundle` and exit
+133 on every other machine.
+
+Test it by copying the artifact away from its build tree and deleting the build
+directory first. A launch test that cannot fail is worse than none, because it
+reports success.
+
+The assertion guarding this missed it for the same reason: it used
+`find -path '*/Runtime/libmosaic_app.dylib'`, which matches at any depth and so
+cannot distinguish the layout that runs from the one that crashes. Assert the
+exact path when the layout is what matters.

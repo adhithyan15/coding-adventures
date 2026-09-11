@@ -183,6 +183,12 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.foundation.layout.Row").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.RowScope").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Spacer").unwrap();
+    // Unconditional, like every other layout import above: this block emits a
+    // fixed preamble rather than deciding per-tree. `fillMaxSize` is used by
+    // the HostScroll prefix (#14798); emitting the modifier without its import
+    // would produce Kotlin that does not compile, which is exactly how the
+    // XAML `Not()` helper went wrong in #14793.
+    writeln!(out, "import androidx.compose.foundation.layout.fillMaxSize").unwrap();
     writeln!(
         out,
         "import androidx.compose.foundation.layout.fillMaxWidth"
@@ -1221,7 +1227,20 @@ fn should_split_root_sections(layout_root: &LayoutNode) -> bool {
 fn host_scroll_modifier_prefix(node: &LayoutNode, chain_indent: usize) -> Option<String> {
     (node.tag == "HostScroll").then(|| {
         let cpad = " ".repeat(chain_indent);
-        format!("\n{cpad}.verticalScroll(rememberScrollState())")
+        // `.fillMaxSize()` comes first, and it is not decoration.
+        //
+        // `.verticalScroll` on its own leaves the container wrapping its
+        // CONTENT, which is the wrong shape twice over. Scrolling only means
+        // something against a bounded viewport -- a scroller sized to its own
+        // content has nothing to scroll within. And whatever the content does
+        // not cover stays unpainted: TaskApp rendered its whole UI into the top
+        // ~250px of a 900px window and left the remaining two thirds WHITE, not
+        // even the theme background (#14798).
+        //
+        // A scroll region fills the space it is given. That is what makes it a
+        // viewport rather than a tall column that happens to have a scroll
+        // modifier attached.
+        format!("\n{cpad}.fillMaxSize()\n{cpad}.verticalScroll(rememberScrollState())")
     })
 }
 
@@ -10215,6 +10234,45 @@ mod tests {
         );
         let out = from_pipeline(&m, &l, &empty_style("F")).expect("emit ok").output;
         assert!(out.contains("enabled = !_mosaicTruthy(off)"), "got:\n{out}");
+    }
+
+
+    /// #14798 — a scroll region fills the space it is given.
+    ///
+    /// `.verticalScroll` alone leaves the container wrapping its CONTENT,
+    /// which is wrong twice: a scroller sized to its own content has nothing
+    /// to scroll within, and whatever the content does not cover stays
+    /// unpainted. TaskApp rendered its whole UI into the top ~250px of a 900px
+    /// window and left the rest white -- not even the theme background.
+    #[test]
+    fn host_scroll_fills_its_viewport_before_scrolling() {
+        let m = component("F", vec![], vec![]);
+        let l = layout(
+            "F",
+            node("HostScroll", vec![], vec![node("Text", vec![], vec![])]),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("F"))
+            .expect("emit ok")
+            .output;
+
+        // Order matters: fill the space, THEN scroll within it.
+        let Some(fill) = out.find(".fillMaxSize()") else {
+            panic!("no fillMaxSize in:\n{out}")
+        };
+        let Some(scroll) = out.find(".verticalScroll(rememberScrollState())") else {
+            panic!("no verticalScroll in:\n{out}")
+        };
+        assert!(
+            fill < scroll,
+            "fillMaxSize must precede verticalScroll, got:\n{out}"
+        );
+
+        // Emitting the modifier without its import is Kotlin that does not
+        // compile -- the same shape as the XAML Not() helper in #14793.
+        assert!(
+            out.contains("import androidx.compose.foundation.layout.fillMaxSize"),
+            "fillMaxSize emitted without its import, got:\n{out}"
+        );
     }
 
     // ---- directional padding (#14709) --------------------------------
