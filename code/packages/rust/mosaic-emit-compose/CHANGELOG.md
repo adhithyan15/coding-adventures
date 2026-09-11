@@ -26,6 +26,39 @@ right-to-left layout mirrors them the way every other Compose padding does. An
 edge with no authored value is omitted rather than passed as `0.dp`: the
 overload already defaults it to zero, and naming it would claim the stylesheet
 asked for something it did not.
+### Fixed — `border-radius` was discarded entirely (#14810)
+
+318 occurrences in TaskApp alone, 31 in the toolkit, every one thrown away — so
+every rounded surface in Trestle rendered square while the strict
+`native-complete` profile reported zero degradations.
+
+The shape now reaches **every** modifier that takes one:
+
+```kotlin
+.shadow(4.dp, RoundedCornerShape(8.dp))
+.clip(RoundedCornerShape(8.dp))
+.background(Color(0xFFEAA63F), RoundedCornerShape(8.dp))
+```
+
+Passing it to only some is visibly wrong in a different way each time: a
+rounded background inside a square border, a rounded card casting a square
+shadow, or rounded chrome with content spilling past its corners. `.clip` sits
+after `.shadow` — clipping first would clip the shadow layer away — and bounds
+the children, which `background`/`border` do not.
+
+`RoundedCornerShape` and `clip` join the unconditional import block. An unused
+Kotlin import is a warning; a missing one does not compile, and that asymmetry
+is what went wrong with the XAML `Not()` helper in #14793.
+
+Verified end to end: emitted, zero degradations, control contract, compiled,
+launched, rendered. TaskApp emits 305 shapes, and the acceptance lifecycle
+stays green. A no-radius part stays byte-identical, with a test for it, so this
+cannot quietly round everything.
+
+**One behaviour change worth flagging.** The `On track` chip measures
+`0 x 168` — zero width, a defect that predates this. It used to render its
+letters stacked one per line down the screen; clipping now hides them instead.
+The bug is unchanged, but a loud symptom became a silent one. Filed as #14815.
 ### Fixed — `opacity` was dropped (#14708)
 
 `opacity` is what UI57's `state disabled` treatment is built on, so dropping it
