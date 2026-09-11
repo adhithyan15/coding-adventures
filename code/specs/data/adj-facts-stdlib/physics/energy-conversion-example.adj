@@ -165,10 +165,12 @@
 %   cannot see those 143 characters. Run over the whole page it returns
 %   `</p>` for EVERY sentence of EVERY `<p>` on the page that it can be run
 %   on at all -- that is, every one the raw HTML contains verbatim. Why the
-%   rest are not verbatim is NOT claimed here: inline tags account for most,
-%   but at least one is a doubled space and two are HTML entities. Absolute
-%   counts are not quoted either, because two implementations of one written
-%   census disagreed by one. The two spans are
+%   rest are not verbatim is NOT claimed here. Inspecting them turned up one
+%   blocked by a DOUBLED SPACE and two by HTML ENTITIES, alongside inline
+%   tags; the remainder were not examined one by one, so no cause is
+%   attributed to the set and NO PROPORTION IS ASSERTED. Absolute counts are
+%   not quoted either, and could not be: the population itself is what two
+%   implementations of one written census disagreed about. The two spans are
 %   still non-adjacent and the weld still occurs zero times, so what 4n
 %   shipped stands; only its description of where each sentence sat was
 %   wrong.

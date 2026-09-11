@@ -34,8 +34,8 @@
 %
 % Provenance: the units and their lengths are taken VERBATIM from NIST Special
 % Publication 811, "Units outside the SI" (Table 6, units accepted for use with the
-% SI). The `source` span below reproduces the three conversion cells of that table
-% that state 1 min = 60 s, 1 h = 3600 s, and 1 d = 86400 s. `trust authoritative`
+% SI). The `source` field below reproduces the three conversion cells of that
+% table that state 1 min = 60 s, 1 h = 3600 s, and 1 d = 86400 s. `trust authoritative`
 % — a primary U.S. standards reference (NIST, a .gov), re-fetchable at the
 % `locator`. Nothing here is asserted from memory: every unit→seconds pair is a
 % cell of the cited table. WEEK is deliberately OMITTED — NIST Table 6 does not
@@ -43,6 +43,23 @@
 % and is not shipped (only units whose length is confirmable on the cited page are
 % included). (See ../README.md; ADJ-TABLES.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
+%
+% NOT ONE SPAN, and said so here rather than left to be discovered. Each of the
+% three cells is byte-exact on the cited page and each occurs there exactly
+% once. The `source` field joins them with a
+% ` | ` that occurs on the page ONLY as page chrome: FOUR times in the raw
+% HTML -- a `citation_title` meta, the <title>, and two footer link
+% separators -- which is THREE in the rendered text: once in the <title>
+% string, and twice inside the ONE footer line that reads
+% "Webmaster | Contact Us | Our Other Offices". NEVER between two
+% cells of Table 6. So the field AS A WHOLE occurs ZERO times. That separator is
+% #13934's held question -- is a table row a verbatim span? -- and is left
+% alone here, because answering it is the owner's call and not a side effect of
+% a repair. What was repaired: the day cell was written here as
+% "1 d = 24 h = 86 400 s"; the page writes "1 d = 24 h = 86 400s", with NO
+% space before the s. That was an alteration inside ONE cell, independent of
+% the separator, so the cells are now byte-exact and whichever way the held
+% question goes the pieces are already right.
 % ============================================================================
 
 table time_unit_seconds {
@@ -52,7 +69,7 @@ table time_unit_seconds {
     row (hour, 3600)      % 1 h = 60 min = 3600 s
     row (day, 86400)      % 1 d = 24 h = 86400 s
 
-    source "1 min = 60 s | 1 h = 60 min = 3600 s | 1 d = 24 h = 86 400 s"
+    source "1 min = 60 s | 1 h = 60 min = 3600 s | 1 d = 24 h = 86 400s"
     locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-5-units-outside-si"
     trust authoritative
 }
