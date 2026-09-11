@@ -179,6 +179,12 @@ pub fn from_pipeline(
         .unwrap();
     }
     writeln!(out, "import androidx.compose.foundation.layout.Box").unwrap();
+    // #14810 — unconditional, like the layout imports around it. Emitting
+    // `RoundedCornerShape`/`clip` without their imports is Kotlin that does
+    // not compile, which is exactly how the XAML `Not()` helper went wrong in
+    // #14793. An unused Kotlin import is a warning; a missing one is an error.
+    writeln!(out, "import androidx.compose.foundation.shape.RoundedCornerShape").unwrap();
+    writeln!(out, "import androidx.compose.ui.draw.clip").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Arrangement").unwrap();
     writeln!(out, "import androidx.compose.ui.draw.alpha").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Column").unwrap();
@@ -2796,6 +2802,7 @@ fn compose_box_style(
     // alignment flip is never needed for the table/spreadsheet cases
     // this v1 targets).
     let mut text_align: Option<&'static str> = None;
+    let mut radius: Option<String> = None;
     let mut gap: Option<String> = None;
 
     let mut absorb = |p: &StyleProp, layer_idx: Option<usize>| {
@@ -2839,6 +2846,14 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
+            // #14810 — 318 occurrences in TaskApp alone, every one discarded,
+            // so every rounded surface rendered square while the strict
+            // native-complete profile reported zero degradations.
+            "border-radius" if layer_idx.is_none() => {
+                if let Some(v) = px_or_none(&p.value) {
+                    radius = Some(v);
+                }
+            }
             // #14804 — `gap` reached the lattice IR and died here, in the
             // `_ => {}` arm below. 178 declarations across 27 stylesheets, and
             // the strict native-complete profile still reported zero
@@ -2910,11 +2925,30 @@ fn compose_box_style(
         modifier.push_str(&format!("\n{cpad}.alpha({expr})"));
     }
 
+    // #14810 — the authored corner shape, threaded through every modifier
+    // that takes one: `background`, `border` and `shadow` each accept a
+    // shape, and `clip` bounds the CHILDREN. Passing it to only some of them
+    // is visibly wrong in a different way each time.
+    let shape = radius
+        .as_ref()
+        .map(|r| format!("RoundedCornerShape({r}.dp)"));
+    let shape_arg = shape
+        .as_ref()
+        .map(|s| format!(", {s}"))
+        .unwrap_or_default();
+
     // .shadow — UI41, #12028 item 1. Base-only (see `part_elevation_tier`);
     // must come before `.background`/`.border` so the shadow layer isn't
     // painted over by them (see the Modifier ORDER doc comment above).
     if let Some(tier) = part_elevation_tier(base_props) {
-        modifier.push_str(&format!("\n{cpad}.shadow({}.dp)", tier.dp()));
+        modifier.push_str(&format!("\n{cpad}.shadow({}.dp{shape_arg})", tier.dp()));
+    }
+
+    // .clip — bounds the children. `background`/`border` take the shape
+    // themselves, so this is about content not overflowing the rounded
+    // corners. After `.shadow`, because clipping first would clip the shadow.
+    if let Some(shape) = &shape {
+        modifier.push_str(&format!("\n{cpad}.clip({shape})"));
     }
 
     // .background — fills the sized box.  State that overrides
@@ -2922,7 +2956,7 @@ fn compose_box_style(
     // in the "no value" branch (the Compose default for an unstyled box).
     if !background.empty() {
         let expr = layer_value(&background, state_layers, "Color.Transparent");
-        modifier.push_str(&format!("\n{cpad}.background({expr})"));
+        modifier.push_str(&format!("\n{cpad}.background({expr}{shape_arg})"));
     }
 
     // .border — needs at least the width.  Default color `Color.Gray`
@@ -2934,7 +2968,7 @@ fn compose_box_style(
         } else {
             layer_value(&border_color, state_layers, "Color.Gray")
         };
-        modifier.push_str(&format!("\n{cpad}.border({w_expr}.dp, {c_expr})"));
+        modifier.push_str(&format!("\n{cpad}.border({w_expr}.dp, {c_expr}{shape_arg})"));
     }
 
     // .padding — LAST so content insets inside the bordered box.
@@ -10441,6 +10475,72 @@ mod tests {
             "the Float suffix landed on the expression instead of the values, \
              which is not valid Kotlin, got:\n{out}"
         );
+    }
+
+    /// #14810 — `border-radius` was discarded entirely: 318 occurrences in
+    /// TaskApp, every rounded surface rendered square, and the strict
+    /// native-complete profile reported zero degradations throughout.
+    ///
+    /// The shape must reach every modifier that takes one. Passing it to only
+    /// some is visibly wrong in a different way each time: a rounded
+    /// background inside a square border, a rounded card casting a square
+    /// shadow, or rounded chrome with content spilling past the corners.
+    #[test]
+    fn border_radius_reaches_every_modifier_that_takes_a_shape() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("card".to_string());
+        let l = layout("F", n);
+
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part(
+            "card",
+            vec![
+                sprop("border-radius", "8px"),
+                sprop("background", "#ff0000"),
+                sprop("border-width", "1px"),
+                sprop("border-color", "#00ff00"),
+            ],
+            vec![],
+        ));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(out.contains(".clip(RoundedCornerShape(8.dp))"), "got:\n{out}");
+        assert!(
+            out.contains("background(Color(0xFFFF0000), RoundedCornerShape(8.dp))"),
+            "a rounded box with a SQUARE background, got:\n{out}"
+        );
+        assert!(
+            out.contains("border(1.dp, Color(0xFF00FF00), RoundedCornerShape(8.dp))"),
+            "a rounded box with a SQUARE border, got:\n{out}"
+        );
+        // Emitting the shape without its import is Kotlin that does not
+        // compile -- the same shape as the XAML Not() helper in #14793.
+        assert!(
+            out.contains("import androidx.compose.foundation.shape.RoundedCornerShape")
+                && out.contains("import androidx.compose.ui.draw.clip"),
+            "shape emitted without its imports, got:\n{out}"
+        );
+    }
+
+    /// No authored radius means no shape argument anywhere -- the square case
+    /// must stay byte-identical, so this cannot quietly round everything.
+    #[test]
+    fn without_a_radius_nothing_gains_a_shape() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("plain".to_string());
+        let l = layout("F", n);
+
+        let mut sheet = empty_style("F");
+        sheet
+            .parts
+            .push(part("plain", vec![sprop("background", "#ff0000")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(out.contains(".background(Color(0xFFFF0000))"), "got:\n{out}");
+        assert!(!out.contains("RoundedCornerShape("), "got:\n{out}");
+        assert!(!out.contains(".clip("), "got:\n{out}");
     }
 
     /// #14804 — `gap` reached the lattice IR and died at the emitter.
