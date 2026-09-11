@@ -1,0 +1,8 @@
+[package]
+name = "vis-pattern-scanning"
+version = "0.1.0"
+edition = "2021"
+description = "VIS04 -- run-length ratio pattern scanning over a binary image, cross-checked horizontally and vertically"
+license = "MIT"
+
+[dependencies]
