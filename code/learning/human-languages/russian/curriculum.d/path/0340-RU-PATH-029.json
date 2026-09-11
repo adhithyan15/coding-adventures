@@ -1,0 +1,14 @@
+{
+  "id": "RU-PATH-029",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "RU-C27-words",
+    "RU-C27-notices",
+    "RU-C27-pervoe-chtenie"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-034-READING"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "FA-EXT-029-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Persian word, a short answer and a figure off a page without hearing it first.",
+  "prerequisites": [
+    "FA-EXT-028-ORDINALS"
+  ],
+  "lessons": [
+    "FA-C21-words",
+    "FA-C21-answers",
+    "FA-C21-adad"
+  ]
+}

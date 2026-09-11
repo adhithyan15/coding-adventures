@@ -585,6 +585,7 @@ members = [
     "micro-qr",
     "qr-code",
     "qr-decoder",
+    "qr-locate",
     "data-matrix",
     "pdf417",
     "image-raw-pipeline",
