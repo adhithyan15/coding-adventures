@@ -37,13 +37,36 @@ emits a project through the actual pipeline, applies the same runtime-binding
 rewrite the build applies, and wires that — in both the bundled and unbundled
 forms. Renaming the class in the emitter fails it.
 
-Two guards decide where the install lands: the search is scoped to the host
-class, and within it the match must begin its line. Each is pinned by its own
-test, because a fixture both guards reject proves only that at least one works.
-Mutation-testing confirms the split: dropping the line-leading requirement fails
-`a_non_line_leading_decoy_inside_the_class_is_skipped` and leaves the class-scope
-test green; searching the whole file fails
-`a_line_leading_decoy_before_the_class_is_skipped` and leaves the other green.
+Three guards decide where the install lands: the host class is found by its
+declaration, the search is scoped to it, and within that the assignment must
+begin its line. Each is pinned by its own test, because a fixture that several
+guards reject proves only that at least one works. Mutation-testing confirms the
+split — each mutation fails exactly one test and leaves the others green:
+
+| mutation | fails |
+| --- | --- |
+| drop the line-leading requirement | `a_non_line_leading_decoy_inside_the_class_is_skipped` |
+| search the whole file, unscoped | `a_line_leading_decoy_before_the_class_is_skipped` |
+| find the class with a bare `find` | `an_author_string_cannot_forge_the_class_marker` |
+
+That third guard is new, and replaces a dependency with a check. The class was
+previously located by a bare `find`, whose safety rested on a fact in *another*
+crate: `mosaic-emit-swiftui`'s `escape_swift_string` passes raw newlines through,
+so a line-leading decoy can only occur in a project that already fails to
+compile. True today, stated nowhere as a contract, and silently removed by any
+emitter change adopting `"""` literals for slot defaults. `class MosaicHostState`
+is now required to be preceded on its line by nothing but Swift declaration
+modifiers, so this crate no longer rests on that.
+
+Forging the class marker alone only *widens* the search window rather than
+moving the install, so the test for it carries both halves of the attack — a
+forged marker and a line-leading assignment decoy inside the window it opens.
+The one-decoy version of that fixture passed against a bare `find`.
+
+`line_anchored_find` also now uses `is_ascii_whitespace` rather than
+`char::is_whitespace`: the Unicode White_Space set includes U+2028, U+2029 and
+U+00A0, which Swift does not treat as code whitespace, so accepting them would
+let a prefix a compiler reads as content count as indentation.
 
 ### Added — Qt wires a package's `[host_effects]` handler
 

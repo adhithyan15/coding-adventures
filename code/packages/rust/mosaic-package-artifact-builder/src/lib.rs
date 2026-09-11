@@ -2983,11 +2983,59 @@ fn qt_cmake_with_host_effects(
 /// Requiring the match to start its line rules that out: an interpolated
 /// literal is always preceded by something on the same line.
 fn line_anchored_find(haystack: &str, needle: &str) -> Option<usize> {
+    // `is_ascii_whitespace`, not `char::is_whitespace`: the Unicode White_Space
+    // set includes U+2028, U+2029 and U+00A0, none of which Swift or C++ treat
+    // as code whitespace. Accepting them would let a prefix that a compiler
+    // reads as content count as indentation here.
+    find_anchored(haystack, needle, |prefix| {
+        prefix.chars().all(|c| c.is_ascii_whitespace())
+    })
+}
+
+/// Swift access-control and inheritance modifiers that may precede `class`.
+const SWIFT_DECLARATION_MODIFIERS: [&str; 5] =
+    ["private", "fileprivate", "internal", "public", "final"];
+
+/// Find a type declaration, rather than any mention of its name.
+///
+/// `line_anchored_find` is too strict for a declaration: `class MosaicHostState`
+/// is preceded on its line by `private final`. Accepting an arbitrary prefix is
+/// too loose -- that is a bare `find` again. So accept exactly a prefix made of
+/// declaration modifiers.
+///
+/// This matters more than it looks. Scoping the effect install to the host class
+/// is one of the two guards keeping author-controlled text from capturing the
+/// anchor, and until this existed that guard used a bare `find`. Its safety then
+/// rested on a fact in ANOTHER crate: `escape_swift_string` passes raw newlines
+/// through, so a line-leading decoy can only occur in a project that already
+/// fails to compile. True today, but nothing states it as a contract, and an
+/// emitter that adopted `"""` literals for slot defaults would quietly remove
+/// it. Anchoring here means this crate no longer depends on that.
+fn declaration_anchored_find(haystack: &str, needle: &str) -> Option<usize> {
+    find_anchored(haystack, needle, |prefix| {
+        prefix
+            .split_whitespace()
+            .all(|word| SWIFT_DECLARATION_MODIFIERS.contains(&word))
+    })
+}
+
+/// Find `needle` where the text before it on its own line satisfies `prefix_ok`.
+///
+/// A bare `find` takes the first occurrence anywhere, and these generators
+/// interleave scaffolding with AUTHOR text: a SwiftUI app embeds every slot
+/// default and story fixture as a Swift string literal, escaped only for `\`
+/// and `"`, roughly 270 lines before the assignment being anchored on. A slot
+/// default containing that substring would match first, and the install would
+/// be spliced into the middle of a view-builder argument list.
+///
+/// Constraining what may precede the match rules that out: an interpolated
+/// literal always carries something ahead of it on the same line.
+fn find_anchored(haystack: &str, needle: &str, prefix_ok: impl Fn(&str) -> bool) -> Option<usize> {
     let mut from = 0;
     while let Some(offset) = haystack[from..].find(needle) {
         let at = from + offset;
         let line_start = haystack[..at].rfind('\n').map_or(0, |index| index + 1);
-        if haystack[line_start..at].chars().all(char::is_whitespace) {
+        if prefix_ok(&haystack[line_start..at]) {
             return Some(at);
         }
         from = at + needle.len();
@@ -3123,7 +3171,7 @@ fn swift_app_with_host_effects(
     // there as a Swift string literal escaped only for `\` and `"`. An author
     // string carrying this substring would match first, and the install would
     // land inside a view-builder argument list.
-    let Some(class_start) = generated.find("class MosaicHostState") else {
+    let Some(class_start) = declaration_anchored_find(generated, "class MosaicHostState") else {
         return Err(BuildError::Io(format!(
             "`[host_effects]` declares a SwiftUI handler `{}`, but the generated \
              app has no `MosaicHostState` to install it in",
@@ -11953,6 +12001,73 @@ version = "1"
             real < install,
             "install must follow the real assignment:\n{wired}"
         );
+    }
+
+    /// An author string cannot forge the CLASS marker either.
+    ///
+    /// This is the guard that used to be a bare `find`. Its safety then rested
+    /// on `escape_swift_string` (another crate) passing raw newlines through,
+    /// so that a line-leading decoy could only exist in a project that already
+    /// failed to compile. That is true today and stated nowhere, so this pins
+    /// it here instead of depending on it.
+    #[test]
+    fn an_author_string_cannot_forge_the_class_marker() {
+        // Forging the class marker ALONE only widens the search window: the
+        // install still lands on the real assignment further down, so a
+        // one-decoy fixture cannot tell a bare `find` from an anchored one.
+        // The attack needs both halves -- a forged marker, and a line-leading
+        // assignment decoy inside the window it opens.
+        let app = concat!(
+            "struct MosaicApp: App {\n",
+            "let note = class MosaicHostState fake\n",
+            "self.bridge = decoy\n",
+            "}\n",
+            "\n",
+            "private final class MosaicHostState: ObservableObject {\n",
+            "  init() {\n",
+            "    self.bridge = MosaicRuntimeHost.load() ?? MosaicHostBridge.load()\n",
+            "  }\n",
+            "}\n",
+        );
+        let wired = swift_app_with_host_effects(app, &swiftui_handler())
+            .expect("the real declaration must still be found");
+        let real = wired
+            .find("private final class MosaicHostState")
+            .expect("real declaration");
+        let install = wired.find("installProbeEffects").expect("install");
+        assert!(
+            real < install,
+            "the install must follow the real declaration, not a forged marker:\n{wired}"
+        );
+    }
+
+    #[test]
+    fn the_declaration_anchor_accepts_modifiers_but_not_content() {
+        // Every modifier order the emitter could plausibly produce.
+        for prefix in ["", "final ", "private ", "private final ", "public final "] {
+            let text = format!("{prefix}class Host {{\n");
+            assert!(
+                declaration_anchored_find(&text, "class Host").is_some(),
+                "modifier prefix {prefix:?} must be accepted"
+            );
+        }
+        // And nothing that is not a modifier.
+        for prefix in ["let x = \"", "  return \"", "foo(", "// "] {
+            let text = format!("{prefix}class Host\n");
+            assert!(
+                declaration_anchored_find(&text, "class Host").is_none(),
+                "non-declaration prefix {prefix:?} must be rejected"
+            );
+        }
+    }
+
+    #[test]
+    fn the_line_anchor_does_not_count_unicode_separators_as_indentation() {
+        // U+2028 and U+00A0 are Unicode White_Space but are not code whitespace
+        // in Swift, so a prefix made of them is content, not indentation.
+        assert_eq!(line_anchored_find("\u{2028}x = 1\n", "x = 1"), None);
+        assert_eq!(line_anchored_find("\u{a0}x = 1\n", "x = 1"), None);
+        assert_eq!(line_anchored_find("\t x = 1\n", "x = 1"), Some(2));
     }
 
     /// The anchors must match what the SwiftUI emitter ACTUALLY emits.
