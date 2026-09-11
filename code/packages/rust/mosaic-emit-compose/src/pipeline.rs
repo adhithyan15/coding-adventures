@@ -1356,8 +1356,18 @@ fn compose_drop_reason(name: &str) -> &'static str {
         "position" | "top" | "left" | "right" | "bottom" | "z-index" => {
             "Compose has no absolute positioning on a plain container; this needs a Box with              alignment or an offset chosen by the parent"
         }
-        "display" | "flex-direction" | "flex-wrap" | "justify-content" | "align-items" | "align" => {
-            "Compose expresses layout through the composable chosen (Row/Column/Box) and its              arrangement arguments, not through a modifier on a built view"
+        "display" | "flex-direction" | "flex-wrap" => {
+            "Compose expresses this through the composable chosen (Row/Column/Box/FlowRow) rather              than through any argument or modifier on a built view"
+        }
+        "justify-content" | "align-items" | "align" => {
+            // Deliberately NOT the same reason as `display`/`flex-direction`
+            // above, though they were one arm until #14811. These three ARE
+            // expressible: they are the `horizontalArrangement` /
+            // `verticalAlignment` arguments of Row and Column -- the same
+            // argument slot `gap` already reaches as `Arrangement.spacedBy`
+            // (#14804). Calling that inexpressible would tell a future reader
+            // the path does not exist when it is built and in use.
+            "Compose takes this as a Row/Column ARGUMENT (horizontalArrangement /              verticalAlignment) -- the slot `gap` already uses -- but this emitter does not              thread it yet (#14834)"
         }
         "border-style" | "border-collapse" | "outline" => {
             "no Compose equivalent; Modifier.border takes a width, colour and shape only"

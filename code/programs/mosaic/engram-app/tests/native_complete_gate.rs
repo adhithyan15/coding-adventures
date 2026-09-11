@@ -79,6 +79,42 @@ const NATIVE_BACKENDS: &[Backend] = &[
 /// drop were fixed and a different one appeared, which is precisely the
 /// exchange worth noticing.
 const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
+    // ---- Compose (#14811) ----
+    //
+    // These 17 became visible the moment Compose started reporting its drops
+    // in #14811. They are pre-existing gaps, not regressions: Engram has been
+    // rendering without them on Compose since the parts were authored. Each is
+    // pinned to a filed issue rather than fixed here, because #14811 is the
+    // reporting mechanism and mapping four unrelated layout features inside it
+    // would make the change that everything else waits on far harder to judge.
+    //
+    // They are NOT all the same kind of gap, and the pins say which is which:
+    //
+    // #14833 -- `max-width` on all seven screen parts (760px-1100px). A plain
+    // `Modifier.widthIn(max = ..)`; `chain_sets_own_width` already anticipates
+    // it. The worst of the four by visible effect: Engram's study screen is
+    // authored as a 760px reading column and currently runs the full width of
+    // the window.
+    (Backend::Compose, "max-width"),
+    // #14834 -- NOT an expressiveness gap. `justify-content`/`align-items`/
+    // `align` are the `horizontalArrangement`/`verticalAlignment` ARGUMENTS of
+    // Row and Column, the same slot `gap` already reaches as
+    // `Arrangement.spacedBy` (#14804). The emitter simply does not thread
+    // them. #14811 splits the drop reason so it stops implying otherwise.
+    (Backend::Compose, "justify-content"),
+    (Backend::Compose, "align-items"),
+    (Backend::Compose, "align"),
+    // #14835 -- a real gap, and the same one XAML had above: `Modifier.border`
+    // draws all four edges and has no per-side form, so a bottom rule needs
+    // `drawBehind` or a divider. The deck list renders as an undivided run of
+    // rows until then.
+    (Backend::Compose, "border-bottom-width"),
+    (Backend::Compose, "border-bottom-color"),
+    (Backend::Compose, "border-bottom-style"),
+    // #14836 -- `FlowRow` exists, so unlike XAML below this is not a platform
+    // limit; it is a change of which composable a container lowers to, which
+    // is exactly what UI60 (#14828) is already changing. Sequenced after it.
+    (Backend::Compose, "flex-wrap"),
     // WinUI 3 genuinely has no WrapPanel, so `flex-wrap` has nowhere to go.
     // An inherent platform limit rather than a mapping we have not written.
     (Backend::Xaml, "flex-wrap"),

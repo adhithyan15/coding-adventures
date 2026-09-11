@@ -5,6 +5,20 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed — the drop reason for `justify-content`/`align-items`/`align` (#14811)
+
+These three shared a match arm with `display`/`flex-direction`/`flex-wrap`,
+reported as *"Compose expresses layout through the composable chosen … and its
+arrangement arguments, not through a modifier on a built view"*. That sentence
+was being used to justify discarding them while describing the mechanism that
+would work: they are the `horizontalArrangement`/`verticalAlignment` arguments
+of Row and Column — the same argument slot `gap` already reaches as
+`Arrangement.spacedBy` (#14804).
+
+Split into two arms so the report says which kind of gap each property is.
+A pinned drop that misstates its own cause reads as settled when it is not
+(#14834).
+
 ### Added — Compose reports the style properties it drops (#14810, #12022)
 
 Compose had no `dropped_style_properties`, so an empty `styleDegradations`
