@@ -1823,8 +1823,21 @@ fn build_package_inner(
         // step 5 still lands in `backend_dir`.
     }
 
-    // Everything the emitters wrote is recorded by now; the installers below
-    // write too, and their own writes must not count as generated.
+    // Taken here, so the set holds what the EMITTERS wrote and not what the
+    // installers below are about to write.
+    //
+    // That is a narrower claim than it first appears, and the earlier version
+    // of this comment overstated it. An installer's own output is flagged by
+    // the STAMP half regardless: a target absent before emission has no
+    // pre-emission entry, so it reads as changed and lands in `generated`
+    // anyway. Stopping the recording here therefore does not make host-asset
+    // output invisible to the host-effects walk -- nothing does.
+    //
+    // The consequence is worth knowing rather than papering over: a package
+    // declaring the SAME target in `[host_assets]` and `[host_effects]` is
+    // refused, not resolved last-write-wins. That predates this change and is
+    // arguably the better answer, but it is not what the ordering comment below
+    // promises.
     let written_by_emitters = end_write_recording();
     let (host_asset_artifacts, replaced_generated_files) = install_host_assets(
         &manifest,
@@ -1888,7 +1901,7 @@ fn install_host_effects(
     package_root: &Path,
     backend_dir: &Path,
     pre_emission: &HashMap<PathBuf, FileStamp>,
-    written: &HashSet<PathBuf>,
+    written_by_emitters: &HashSet<PathBuf>,
 ) -> Result<Vec<PathBuf>, BuildError> {
     let backend_name = backend.dir_name();
     // A `[host_effects]` file is a NEW build source by definition, never a
@@ -1916,7 +1929,7 @@ fn install_host_effects(
     {
         return Ok(Vec::new());
     }
-    let generated = generated_files_on_disk(backend_dir, pre_emission, written)?;
+    let generated = generated_files_on_disk(backend_dir, pre_emission, written_by_emitters)?;
     let canonical_root = package_root
         .canonicalize()
         .map_err(|e| BuildError::Io(format!("canonicalize {}: {e}", package_root.display())))?;
@@ -1999,7 +2012,7 @@ fn install_host_assets(
     package_root: &Path,
     backend_dir: &Path,
     pre_emission: &HashMap<PathBuf, FileStamp>,
-    written: &HashSet<PathBuf>,
+    written_by_emitters: &HashSet<PathBuf>,
 ) -> Result<(Vec<PathBuf>, Vec<String>), BuildError> {
     let backend_name = backend.dir_name();
     // Keyed on the *canonical* path, so the filesystem decides what collides
@@ -2022,7 +2035,7 @@ fn install_host_assets(
     //
     // The directory is the emitter's output, and a future emitter that forgets a
     // `push` cannot break this.
-    let generated = generated_files_on_disk(backend_dir, pre_emission, written)?;
+    let generated = generated_files_on_disk(backend_dir, pre_emission, written_by_emitters)?;
     let mut written = Vec::new();
     let mut replaced = Vec::new();
     for asset in &manifest.host_assets.files {
@@ -2097,13 +2110,13 @@ fn install_host_assets(
 fn generated_files_on_disk(
     backend_dir: &Path,
     pre_emission: &HashMap<PathBuf, FileStamp>,
-    written: &HashSet<PathBuf>,
+    written_by_emitters: &HashSet<PathBuf>,
 ) -> Result<HashMap<PathBuf, String>, BuildError> {
     fn walk(
         dir: &Path,
         root: &Path,
         pre_emission: &HashMap<PathBuf, FileStamp>,
-        written: &HashSet<PathBuf>,
+        written_by_emitters: &HashSet<PathBuf>,
         found: &mut HashMap<PathBuf, String>,
     ) -> Result<(), BuildError> {
         let entries = match fs::read_dir(dir) {
@@ -2119,7 +2132,7 @@ fn generated_files_on_disk(
                 .file_type()
                 .map_err(|e| BuildError::Io(format!("stat {}: {e}", path.display())))?;
             if file_type.is_dir() {
-                walk(&path, root, pre_emission, written, found)?;
+                walk(&path, root, pre_emission, written_by_emitters, found)?;
             } else {
                 let relative = path
                     .strip_prefix(root)
@@ -2148,7 +2161,7 @@ fn generated_files_on_disk(
                     // unchanged: that keeps the failure direction the one this
                     // field exists for -- over-reporting a replacement is
                     // noisy, missing one is the silent false negative.
-                    let written_by_this_build = written.contains(&canonical);
+                    let written_by_this_build = written_by_emitters.contains(&canonical);
                     let unchanged = match (pre_emission.get(&canonical), stamp_of(&path)) {
                         (Some(before), Some(now)) => *before == now,
                         _ => false,
@@ -2163,7 +2176,13 @@ fn generated_files_on_disk(
     }
 
     let mut found = HashMap::new();
-    walk(backend_dir, backend_dir, pre_emission, written, &mut found)?;
+    walk(
+        backend_dir,
+        backend_dir,
+        pre_emission,
+        written_by_emitters,
+        &mut found,
+    )?;
     Ok(found)
 }
 
@@ -11999,6 +12018,40 @@ version = "1"
         assert!(
             format!("{error:?}").contains("would replace a generated file"),
             "{error:?}"
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    /// A file an INSTALLER wrote is flagged too, by the stamp half.
+    ///
+    /// Pins the claim the call-site comment makes. Stopping the write recording
+    /// before the installers run does not make their output invisible to the
+    /// host-effects walk: a target absent before emission has no pre-emission
+    /// entry, so it reads as changed and lands in `generated` regardless.
+    ///
+    /// The consequence is that a package naming the same target in
+    /// `[host_assets]` and `[host_effects]` is REFUSED rather than resolved
+    /// last-write-wins. Pinned because it is surprising, not because it is
+    /// wrong -- refusing an ambiguous double-declaration is the better answer,
+    /// and a future reader deserves to find it asserted rather than inferred.
+    #[test]
+    fn an_installer_written_file_is_generated_without_the_write_record() {
+        let root = scratch();
+        let out = root.join("out");
+        fs::create_dir_all(&out).expect("create the output directory");
+
+        // Stamp the empty directory, as a real build does.
+        let pre_emission = pre_emission_stamps(&out);
+
+        // Then an installer writes, with the recording already stopped.
+        fs::write(out.join("from_host_assets.ts"), b"// installed\n").expect("write it");
+
+        let generated = generated_files_on_disk(&out, &pre_emission, &HashSet::new())
+            .expect("walk the output directory");
+        assert_eq!(
+            generated.len(),
+            1,
+            "an installer's output must still read as generated: {generated:?}"
         );
         let _ = fs::remove_dir_all(&root);
     }
