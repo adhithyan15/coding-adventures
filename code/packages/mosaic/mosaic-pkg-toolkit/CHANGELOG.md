@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+### Changed — the style-drop gate now tracks, rather than assumes (#14810)
+
+`native_complete_gate` asserted `style_degradations.is_empty()`, with the
+comment "the toolkit was clean here as of #12024". It was never clean — it was
+unmeasured. Only XAML and SwiftUI reported their drops, so every other backend
+contributed silence, and silence read as cleanliness.
+
+Compose now reports (#14810) and immediately named **42 drops across 3
+properties**: 31 `border-radius`, 8 `opacity`, 3 `font-weight`. Every rounded
+control in the toolkit renders square on Compose, and every bold label renders
+at regular weight.
+
+The assertion now works the way `ALLOWED_DEGRADATIONS` already did: an explicit
+list, each entry pointing at a tracking issue, and anything not on it fails. A
+drop that does not name its property cannot be matched and stays unexpected,
+rather than slipping through as "not in the list".
+
 ### Fixed — the text inputs were disabled in appearance only (#14772)
 
 `Input`, `Field` and `InputGroup` bound `read-only : slot: disabled`. The

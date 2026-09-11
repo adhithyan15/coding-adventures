@@ -40,6 +40,36 @@ use mosaic_package_artifact_builder::{
 use std::path::PathBuf;
 use tempfile::TempDir;
 
+/// (backend, property) — style properties a backend is known to discard.
+///
+/// Distinct from `ALLOWED_DEGRADATIONS` above: those are capability gaps the
+/// analyzer reports as blocking, these are authored style properties the
+/// emitter silently throws away. They do not gate `nativeComplete`, but they
+/// are the difference between a control that looks right and one that merely
+/// has the right accessibility tree.
+///
+/// Every entry must reference its tracking issue.
+const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
+    // #14810 — Compose has no `Modifier.clip(RoundedCornerShape(..))` in this
+    // emitter, so every rounded surface in the toolkit renders square. 31 of
+    // the toolkit's 42 drops, and 318 in TaskApp alone.
+    (Backend::Compose, "border-radius"),
+    // #14708 — `opacity` lowering for Compose and Flutter is still open. It is
+    // what UI57's `state disabled` treatment depends on, so a disabled toolkit
+    // control currently dims on some backends and not others.
+    (Backend::Compose, "opacity"),
+    // #14810 — `font-weight` is an argument to Text rather than a modifier, so
+    // it has to be threaded through the text style instead of the box chain.
+    // Every bold label in the toolkit renders at regular weight on Compose.
+    (Backend::Compose, "font-weight"),
+];
+
+fn is_allowed_style_drop(backend: Backend, property: &str) -> bool {
+    ALLOWED_STYLE_DROPS
+        .iter()
+        .any(|(b, p)| *b == backend && *p == property)
+}
+
 fn package_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
 }
@@ -107,11 +137,28 @@ fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
              allowlist entry in this file pointing at a tracking issue: {unexpected:#?}"
         );
 
+        // The toolkit was never "clean" here — until #12022 reporting reached a
+        // backend, that backend said nothing, and silence read as cleanliness.
+        // Compose started reporting its drops (#14810) and immediately named 42
+        // drops across 3 properties. So this asserts what is TRACKED, not what is
+        // absent, the same way `ALLOWED_DEGRADATIONS` does above.
+        let unexpected_drops: Vec<_> = report
+            .style_degradations
+            .iter()
+            // A drop that does not even name its property cannot be matched
+            // against the allowlist, so it stays unexpected rather than
+            // slipping through as "not in the list".
+            .filter(|d| {
+                d.primitive
+                    .as_deref()
+                    .is_none_or(|p| !is_allowed_style_drop(backend, p))
+            })
+            .collect();
         assert!(
-            report.style_degradations.is_empty(),
+            unexpected_drops.is_empty(),
             "{backend:?}: style properties were dropped that this test's allowlist \
-             doesn't expect (the toolkit was clean here as of #12024): {:#?}",
-            report.style_degradations
+             doesn't expect — either fix them, or add an entry pointing at a \
+             tracking issue: {unexpected_drops:#?}"
         );
     }
 }

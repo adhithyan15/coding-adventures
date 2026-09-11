@@ -1253,6 +1253,13 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                         push_drop(d.part, d.name, d.value, d.reason);
                     }
                 }
+                Backend::Compose => {
+                    for d in
+                        mosaic_emit_compose::pipeline::dropped_style_properties(&composed.style)
+                    {
+                        push_drop(d.part, d.name, d.value, d.reason);
+                    }
+                }
                 // The remaining backends do not report their drops yet, so an
                 // empty `styleDegradations` means "nobody looked" there rather
                 // than "nothing was lost" (#12022).

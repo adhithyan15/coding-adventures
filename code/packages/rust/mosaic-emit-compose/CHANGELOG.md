@@ -5,6 +5,33 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — Compose reports the style properties it drops (#14810, #12022)
+
+Compose had no `dropped_style_properties`, so an empty `styleDegradations`
+meant "nobody looked" rather than "nothing was lost". Measuring it named **43
+distinct properties** in TaskApp alone, while the strict `native-complete`
+profile reported zero degradations:
+
+| count | property |
+| --- | --- |
+| 318 | `border-radius` — every rounded surface renders square |
+| 308 | directional `padding-*` (in flight, #14730) |
+| 172 | `gap` (fixed in #14805) |
+| 77 | `align` |
+| 48 | `font-weight` — every bold label renders at regular weight |
+| 48 / 46 | `box-shadow` / `elevation` |
+
+Drops are collected **by the builder**, in the `_` arm of its property match,
+rather than by diffing against a hand-kept list of "properties Compose
+supports". A parallel list is wrong the first time someone adds an arm and
+forgets to update it, which is exactly the drift #12022 exists to catch.
+
+Each drop carries an actionable reason rather than generic text — a missing
+modifier, a value that must be an argument, and a concept Compose does not have
+are genuinely different problems and want different fixes.
+
+Style drops do not gate `nativeComplete`; this makes them visible, not fatal.
+
 ### Added — `HostInput.disabled` (#14786)
 
 `HostInput` had `read-only` but no way to say *unavailable*. Compose spells

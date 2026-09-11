@@ -1211,6 +1211,77 @@ fn should_split_root_sections(layout_root: &LayoutNode) -> bool {
 /// scroll wrapper a hard stop for the recursion below: TaskApp's oversized
 /// section sat directly under one, and splitting halted at the wrapper with
 /// 80,000 characters still inside it (#14736).
+/// One authored style property that Compose lowering discards.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DroppedStyleProperty {
+    pub part: String,
+    pub name: String,
+    pub value: String,
+    pub reason: String,
+}
+
+/// Every property, across every part of `style`, that Compose lowering drops.
+///
+/// Derived by running the real lowering over each part's base props and
+/// collecting what its `match` did not handle — not by diffing against a list
+/// of "properties Compose supports". A hand-maintained list is wrong the first
+/// time someone adds an arm and forgets the list, and #12022 exists precisely
+/// because nobody notices that kind of drift.
+///
+/// Until this existed, Compose reported nothing, so an empty
+/// `styleDegradations` meant "nobody looked" rather than "nothing was lost".
+/// TaskApp alone drops 43 distinct properties this way (#14810), including 318
+/// `border-radius` and 48 `font-weight` — every rounded corner square, every
+/// weight flattened — while the strict `native-complete` profile passed.
+pub fn dropped_style_properties(style: &StyleDef) -> Vec<DroppedStyleProperty> {
+    let mut out = Vec::new();
+    for part in &style.parts {
+        let built = compose_box_style(&part.base, &[], None, 0, None);
+        for (name, value) in built.dropped {
+            out.push(DroppedStyleProperty {
+                reason: compose_drop_reason(&name).to_string(),
+                part: part.name.clone(),
+                name,
+                value,
+            });
+        }
+    }
+    out
+}
+
+/// Why a property has no Compose lowering, in terms a reader can act on.
+///
+/// Generic text would make the report unreadable at the scale this reports at.
+/// These are genuinely different problems: some are missing work on a modifier
+/// that exists, some need the parent to lay out differently, and some have no
+/// Compose concept at all.
+fn compose_drop_reason(name: &str) -> &'static str {
+    match name {
+        "border-radius" => {
+            "Compose clips corners with Modifier.clip(RoundedCornerShape(..)), which this emitter              does not yet apply — every rounded surface renders square"
+        }
+        "font-weight" => {
+            "Text takes fontWeight as an argument rather than a modifier, so it has to be              threaded through the text style rather than the box chain"
+        }
+        "box-shadow" | "elevation" => {
+            "Compose spells this Modifier.shadow(elevation, shape); it needs the shape the              border-radius work would also supply"
+        }
+        "flex-grow" | "flex-shrink" | "flex" => {
+            "Compose distributes space with Modifier.weight inside a Row/Column scope, chosen at              the call site rather than applied to an already-built modifier chain"
+        }
+        "position" | "top" | "left" | "right" | "bottom" | "z-index" => {
+            "Compose has no absolute positioning on a plain container; this needs a Box with              alignment or an offset chosen by the parent"
+        }
+        "display" | "flex-direction" | "flex-wrap" | "justify-content" | "align-items" | "align" => {
+            "Compose expresses layout through the composable chosen (Row/Column/Box) and its              arrangement arguments, not through a modifier on a built view"
+        }
+        "border-style" | "border-collapse" | "outline" => {
+            "no Compose equivalent; Modifier.border takes a width, colour and shape only"
+        }
+        _ => "no Compose lowering in this emitter yet",
+    }
+}
+
 /// The modifier `HostScroll` prefixes onto a container's chain.
 ///
 /// Shared by `emit_container` (the ordinary path) and `emit_container_frame`
@@ -2652,6 +2723,13 @@ struct ComposeStyle {
     text_color: Option<String>,
     font_family_mono: bool,
     font_size: Option<String>,
+    /// Properties this builder saw and did not lower, as `(name, value)`.
+    ///
+    /// Collected BY the builder rather than by a parallel list of "things
+    /// Compose supports", because a parallel list drifts the moment a property
+    /// is added to one and not the other -- and the entire point of #12022 is
+    /// that a drop nobody records is a drop nobody knows about.
+    dropped: Vec<(String, String)>,
 }
 
 /// Build the [`ComposeStyle`] for a part from its base props + state
@@ -2716,6 +2794,8 @@ fn compose_box_style(
             None
         }
     }
+
+    let mut dropped: Vec<(String, String)> = Vec::new();
 
     fn content_alignment(v: &str) -> Option<&'static str> {
         match v.trim() {
@@ -2789,7 +2869,7 @@ fn compose_box_style(
                 }
             }
             // border-style, border-collapse, outline, width:100% — skipped.
-            _ => {}
+            other => dropped.push((other.to_string(), p.value.clone())),
         }
     };
 
@@ -2870,6 +2950,7 @@ fn compose_box_style(
     ComposeStyle {
         modifier,
         content_alignment: text_align.map(str::to_string),
+        dropped,
         text_color,
         font_family_mono: !font_family_mono.empty(),
         font_size: font_size_out,
@@ -3578,6 +3659,7 @@ fn emit_container_frame(
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
+                    dropped: Vec::new(),
                 })
             }
         }
@@ -3817,6 +3899,7 @@ fn emit_container(
                 text_color: None,
                 font_family_mono: false,
                 font_size: None,
+                dropped: Vec::new(),
             });
         }
     }
@@ -3843,6 +3926,7 @@ fn emit_container(
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
+                    dropped: Vec::new(),
                 });
             }
         }
@@ -10142,6 +10226,44 @@ mod tests {
         );
         let out = from_pipeline(&m, &l, &empty_style("F")).expect("emit ok").output;
         assert!(out.contains("enabled = !_mosaicTruthy(off)"), "got:\n{out}");
+    }
+
+
+    /// #14810 — before this, Compose reported nothing, so an empty
+    /// `styleDegradations` meant "nobody looked" rather than "nothing was
+    /// lost". TaskApp drops 43 distinct properties, including 318
+    /// `border-radius` and 48 `font-weight`, while the strict
+    /// `native-complete` profile passed.
+    #[test]
+    fn dropped_properties_are_reported_with_a_reason() {
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part(
+            "card",
+            vec![
+                sprop("border-radius", "8px"),
+                sprop("background", "#ff0000"),
+                sprop("font-weight", "700"),
+            ],
+            vec![],
+        ));
+
+        let drops = dropped_style_properties(&sheet);
+        let names: Vec<&str> = drops.iter().map(|d| d.name.as_str()).collect();
+
+        assert!(names.contains(&"border-radius"), "got: {names:?}");
+        assert!(names.contains(&"font-weight"), "got: {names:?}");
+        // `background` IS lowered, so it must not appear -- a reporter that
+        // named everything would be as useless as one that named nothing.
+        assert!(!names.contains(&"background"), "got: {names:?}");
+
+        let radius = drops.iter().find(|d| d.name == "border-radius").unwrap();
+        assert_eq!(radius.part, "card");
+        assert_eq!(radius.value, "8px");
+        assert!(
+            radius.reason.contains("RoundedCornerShape"),
+            "the reason must be actionable, got: {}",
+            radius.reason
+        );
     }
 
 }
