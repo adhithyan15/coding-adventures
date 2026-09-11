@@ -147,9 +147,17 @@ instruction with `type_hint` of `"any"`, `"polymorphic"`, or unsupported
 ordinary call/return/move transport, represented as proper Erlang character
 lists. `str_slice`'s `[start, end)` bounds lower to
 `lists:sublist(List, start+1, end-start)` (BEAM's `lists:sublist/3` is
-1-indexed and takes a count, not an end offset). Float constants are also
-rejected — BEAM integer arithmetic cannot hold IEEE-754 doubles without
-boxing.
+1-indexed and takes a count, not an end offset). `sublist` alone is more
+lenient than `str_slice`'s documented contract (trap when
+`start < 0 || end < start || end > length(source)`, matching every other
+backend's `str_slice` — see `vm-core::dispatch::handle_str_slice`): an
+in-range `start` with an `end` past the source length silently returns a
+SHORT result instead of raising. The lowering therefore checks all three
+predicates explicitly (`erlang:length/1` via `gc_bif1`, then `is_ge` branches
+reusing the same label-synthesis pattern as `cmp_*`) and calls
+`erlang:error(badarg)` on any violation, before `sublist` ever runs. Float
+constants are also rejected — BEAM integer arithmetic cannot hold IEEE-754
+doubles without boxing.
 
 ## OTP compatibility
 
@@ -260,3 +268,20 @@ regression exercises all six comparisons with less/equal/greater values and
 three literal/register combinations, including positive and negative literal
 moves (54 executions). Eight of 58 COBOL rows now declare BEAM, for 414 cells.
 Remaining COBOL features still require individual execution proofs.
+
+### COBOL reference-modification MOVE and out-of-range trap on BEAM (VM-040)
+
+Four more COBOL programs execute on real BEAM: a constant reference-
+modification MOVE that pads and truncates, a runtime MOVE that refits using a
+computed slice length, and two computed reference modifications that must
+fail closed (`end` past the item's width; `start` at zero after the 1-based
+→ 0-based conversion). Probing these last two exposed a real gap: `str_slice`
+lowered straight to `lists:sublist/3`, which does not itself implement
+`str_slice`'s documented bounds-check contract — an in-range start with an
+out-of-range end silently truncated instead of trapping. `str_slice` now
+checks `start < 0 || end < start || end > length(source)` explicitly (an
+`erlang:length/1` call plus `is_ge` branches, mirroring the label-synthesis
+`cmp_*` already uses) and raises `erlang:error(badarg)` on any violation,
+before `sublist` runs — see "Unsupported (validation rejects)" above and the
+CHANGELOG. 28 of 58 COBOL rows now declare BEAM, for 434 cells. Remaining
+COBOL features still require individual execution proofs.

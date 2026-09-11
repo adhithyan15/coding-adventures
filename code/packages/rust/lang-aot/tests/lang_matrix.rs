@@ -5750,7 +5750,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY NARROW \"|\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("BC   |\nBC|"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL reference modification: runtime MOVE uses the live slice length for fitting.
     Prog {
@@ -5774,7 +5774,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY NARROW \"|\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("BC   |\nBC|"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL reference modification: a runtime end past item width must trap.
     Prog {
@@ -5792,7 +5792,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY WS(J:K).\n\
                000000 STOP RUN.",
         expect: Expect::Trap,
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL reference modification: a runtime zero start must trap after one-based conversion.
     Prog {
@@ -5809,7 +5809,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY WS(J:2).\n\
                000000 STOP RUN.",
         expect: Expect::Trap,
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL STRING SIZE: item padding is copied; a literal separator and old tail stay visible.
     Prog {
@@ -8013,6 +8013,12 @@ fn run_beam(p: &Prog) -> Option<RunResult> {
         .expect("beam: write .beam");
 
     let out = Command::new("erl")
+        // A `str_slice` bounds trap (or any other uncaught error) makes `erl`
+        // write `erl_crash.dump` to its current directory during boot. Anchor
+        // that in the same disposable temp dir as the `.beam` file rather than
+        // the test binary's cwd (the repo checkout), so a legitimately-trapping
+        // cell leaves nothing behind — mirrors the `.beam` write above.
+        .current_dir(dir.path())
         .arg("-noshell")
         .arg("-pa")
         .arg(dir.path())
@@ -8031,7 +8037,21 @@ fn run_beam(p: &Prog) -> Option<RunResult> {
     let raw = String::from_utf8_lossy(&out.stdout);
     // A non-zero exit is a failure even when stdout happens to parse. OTP writes
     // `=ERROR REPORT` to stdout, not stderr, so the status is the reliable signal.
+    // A program that must fail closed (`Expect::Trap` — e.g. a COBOL reference
+    // modification with a computed index out of range, VM-040) is the ONE
+    // expected case: `str_slice`'s explicit bounds check (`iir-to-beam::lower`)
+    // raises `badarg` via `erlang:error/1`, which `-noshell -eval` surfaces as a
+    // nonzero exit during boot — the same "nonzero exit is the reliable signal"
+    // this comment already relies on, just intentional here. Every other
+    // backend's runner already has this exact `Err(_) if matches!(&p.expect,
+    // Expect::Trap) => Trapped` arm (native/LLVM via process exit status,
+    // WASM/VM/JIT via an in-process `Result::Err`); BEAM was the one runner
+    // with no way to represent it, because no COBOL BEAM row had reached a
+    // trapping construct until this reference-modification slice.
     if !out.status.success() {
+        if matches!(&p.expect, Expect::Trap) {
+            return Some(RunResult::Trapped);
+        }
         cell_failed(
             "Beam",
             p,
@@ -9125,7 +9145,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::DartmouthBasic, 51, 357),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
-        (Language::Cobol60, 58, 430),
+        (Language::Cobol60, 58, 434),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -14815,4 +14835,20 @@ fn portable_text_stdout_cobol_beam_string_ops_and_refmod() {
     }
     assert_eq!(executed, 4);
     eprintln!("COBOL BEAM string ops/reference modification: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_cobol_beam_refmod_move_and_trap() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM reference-modification MOVE/trap: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(24).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM reference-modification MOVE/trap: {executed} programs executed");
 }

@@ -1,5 +1,37 @@
 # Changelog — iir-to-beam
 
+## 0.9.2 - 2026-09-11 - `str_slice` fails closed on out-of-range bounds (VM-040 COBOL BEAM refmod MOVE/trap)
+
+Fixed a real defect found while probing the next COBOL BEAM reference-
+modification rows for promotion. `str_slice` lowered straight to
+`lists:sublist(List, Start+1, Len)`, which is NOT a faithful implementation
+of the documented `str_slice` contract every other backend already enforces
+(`vm-core::dispatch::handle_str_slice`: trap when `start < 0 || end < start
+|| end > len`). `lists:sublist` is far more lenient: when `Start` is in range
+but `Start + Len - 1` runs past the source list, it silently returns a SHORT
+result instead of raising — `sublist("ABCDE", 4, 5)` (asking for
+`[3, 8)` of a 5-character string) returned `"DE"` (2 characters) instead of
+failing closed. Only `Start =< 0` happened to raise on its own (a
+`function_clause` error, an accident of `sublist`'s own guard clauses, not a
+contract).
+
+`str_slice`'s lowering now computes `length(List)` (`erlang:length/1`, a
+recognized guard BIF, via the same `gc_bif1` pattern `neg`/`not` already use)
+and explicitly checks all three predicates with `is_ge` conditional
+branches — reusing the exact label-allocation/branch pattern `cmp_*` already
+established — before ever calling `sublist`. Any violation jumps to a shared
+trap block that calls `erlang:error(badarg)` (`call_ext` to `erlang:error/1`,
+which unconditionally raises); the in-bounds path falls through unchanged.
+
+Two new real-`erl` regressions pin this directly at the `iir-to-beam` level:
+`test_73_real_erl_str_slice_traps_end_past_length` (the exact silent-
+truncation case above, which must now fail closed) and
+`test_74_real_erl_str_slice_end_equal_to_length_is_in_bounds` (the boundary
+control — `end == length` is NOT past the end, so it must still succeed,
+proving the check is `end > len`, not an off-by-one `end >= len`). Both
+existing `str_slice` regressions (`test_70`, `test_71`) still pass unchanged,
+confirming no regression to in-bounds slicing.
+
 ## 0.9.1 - 2026-09-10 - pin the `getchar` refusal (VM-042/VM-D031)
 
 Test-only. `brainfuck-iir-compiler`'s README long claimed BEAM tape mutation

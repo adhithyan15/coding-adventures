@@ -8,6 +8,152 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 COBOL BEAM reference-modification MOVE/trap probe (selected after #14784 merged)
+
+`git fetch origin && git merge origin/main` reported "Already up to date" —
+this worktree already sat at `dd87a55d80` (PR #14784, VM-040 COBOL BEAM
+string ops/reference modification probe) with zero commits behind
+`origin/main` (`git rev-list --count dd87a55d80..origin/main` = 4, all four
+unrelated to this backlog: a toolkit appearance fix, a task-app PNG-render
+feature, an engram-app Qt path fix, and a lessons-doc entry). `gh pr list
+--state open` showed six open PRs: a Compose directional-padding draft,
+three npm/yarn dependabot bumps, one GitHub Actions dependabot bump, and one
+stale `paint-vm-canvas` dependabot bump from July — none touching this
+backlog or any `lang-*`/`iir-*`/`cobol-*`/BEAM path, so nothing was in flight
+to coordinate with.
+
+PR #14784's own trailing note asked for a real reprioritization of the ~34
+undeclared COBOL BEAM rows against VM-041 (Twig dynamic-string isolation),
+VM-060b (host input design) and VM-058 (INSPECT BEFORE/AFTER intersection).
+Re-checked against current source rather than repeated by habit:
+
+**Did anything change the picture since #14784 merged?** `git log --oneline
+dd87a55d80..origin/main -- code/packages/rust/iir-to-beam code/packages/rust/ir-to-beam
+code/packages/rust/cobol-iir-compiler code/packages/rust/cobol-runtime
+code/packages/rust/lang-aot/tests/lang_matrix.rs code/specs/LANG-VM-NON-ALGOL-BACKLOG.md
+code/specs/LANG-VM-FEATURE-COVERAGE.md` returned nothing — no commit by
+anyone touched any of these paths since the last slice merged. Grepping this
+file for `VM-041` and `VM-060b` still shows no dedicated scoped design entry
+for either beyond the same one-liner in the "Ranked backlog" table — nobody
+picked up either design task in the meantime.
+
+**Is the "~34 undeclared rows" figure still accurate?** Re-verified directly
+against source: a brace-balanced parse restricted to `PROGRAMS: &[Prog] =
+&[..]` (lines 171–6530) produced exactly 455 entries again — 210 non-ALGOL
+rows. Of the 58 `Cobol60` rows, exactly 24 declare `Beam` (matching every
+number pinned since the string ops/refmod slice) and exactly 34 do not — the
+"~34" estimate was, again, exactly right.
+
+**Conclusion:** nothing outranks continuing the COBOL BEAM rows. Rungs 1–2
+are clear (every trailing validation paragraph reports positive sentinels;
+VM-024/VM-032 keep the matrix and Windows execution in normal CI). Rung 3
+found nothing stale this round. Between the rung-4 COBOL BEAM rows (bounded,
+proof-promotion, an established `.skip(N).take(4)` pattern with seven
+successful prior slices) and rung-5 VM-041/VM-060b (still genuinely
+open-ended design work with no scoping progress since last checked), COBOL
+BEAM rows win again.
+
+The next four rows in file order after the twenty-four already declared
+(lines 5652, 5671, 5690, 5712) are: a constant reference-modification MOVE
+that pads and truncates into differently-sized receivers (`WS(2:2)`/`WS(2:4)`
+of a 5-character source into a 5-wide and a 2-wide receiver), a runtime MOVE
+that refits using a live computed slice length (`WS(J:K)` with `K` reassigned
+between two MOVEs), and two computed reference modifications that must fail
+closed — a runtime `end` past the item's width (`WS(4:5)` on a 5-character
+item) and a runtime `start` of zero after the 1-based → 0-based conversion
+(`WS(0:2)`). The first two reuse `str_slice`/MOVE-with-padding, already
+proven by the earlier COBOL BEAM alphanumeric MOVE/comparison slice. The
+last two are the first COBOL BEAM rows to reach `Expect::Trap` — no COBOL
+BEAM row, and no other language's BEAM row, had exercised a trapping
+construct before this slice.
+
+### VM-040 discovery: VM-D032 — `iir-to-beam`'s `str_slice` never enforced its own documented bounds-check contract
+
+Probing the two trap rows before declaring them (per this loop's own
+discipline) found a real defect rather than an already-solved case. A
+scratch integration test lowered both trap programs through
+`lang_aot::compile_source_to_beam` and ran the result on real `erl`,
+unmodified:
+
+- The `start`-past-zero row (`WS(J:2)` with `J=0`) DID trap — but only by
+  accident: `lists:sublist(List, Start, Len)`'s own guard clauses require
+  `Start >= 1`, so `Start=0` hits no matching clause and Erlang raises a
+  `function_clause` error. This is a side effect of `sublist`'s internal
+  structure, not a deliberate bounds check.
+- The `end`-past-width row (`WS(4:5)` on a 5-character `"ABCDE"`, so
+  `[start0=3, end=8)`) did NOT trap: `lists:sublist("ABCDE", 4, 5)` (1-based
+  `Start=4`, `Len=5`) has `Start` in range, so `sublist` just returns as much
+  as it can — `"DE"` (2 characters) — silently, with a zero exit code. This
+  contradicts the documented `str_slice` contract every other backend
+  enforces (`vm-core::dispatch::handle_str_slice`: trap when `start < 0 ||
+  end < start || end > len`) — `iir-to-beam`'s `str_slice` lowering had
+  never implemented that check itself; it relied entirely on `sublist`'s
+  incidental leniency, which only happens to match the contract for some
+  inputs and silently diverges for others. No matrix row had reached this
+  input shape before (every earlier `str_slice` row was in-bounds), so
+  nothing in CI had ever exercised the gap.
+
+### VM-040 repair contract
+
+Make `str_slice`'s BEAM lowering enforce the documented bounds-check
+predicate explicitly, before `lists:sublist` ever runs: compute
+`length(source)` via `erlang:length/1` (a recognized guard BIF, callable
+through the same `gc_bif1` pattern `neg`/`not` already use), then check
+`start < 0`, `end < start`, and `end > length` with `is_ge` conditional
+branches — reusing the same synthetic-label-allocation pattern `cmp_*`
+already established — jumping to a shared trap block on any violation that
+calls `erlang:error(badarg)` (`call_ext` to `erlang:error/1`, which
+unconditionally raises) before falling through to the existing `sublist`
+call on the in-bounds path. Add direct `iir-to-beam`-level regressions for
+both the exact silent-truncation defect (`end` past length, must now trap)
+and its boundary control (`end == length`, exactly full-length, must NOT
+trap — proving `end > len`, not an off-by-one `end >= len`). Extend
+`run_beam` in `lang_matrix.rs` with the same `Expect::Trap` handling every
+other backend's runner already has (a nonzero `erl` exit becomes
+`RunResult::Trapped` when the program expects a trap, `cell_failed`
+otherwise) — this is a harness gap, not a semantic change, matching the
+family of prior BEAM-runner-observability fixes (e.g. the very first VM-040
+probe's discarded-stdout fix). Anchor `erl`'s working directory in the
+disposable temp dir already used for the `.beam` file, so a legitimately-
+trapping cell's `erl_crash.dump` does not land in the repo checkout. Do not
+change `cobol-iir-compiler` or any other frontend — the defect and its fix
+are entirely within `iir-to-beam`'s `str_slice` lowering.
+
+### VM-040 COBOL BEAM reference-modification MOVE/trap validation
+
+After the repair, all four selected programs passed on real Erlang
+(`portable_text_stdout_cobol_beam_refmod_move_and_trap`). Two new
+`iir-to-beam` regressions pin the bounds-check contract directly:
+`test_73_real_erl_str_slice_traps_end_past_length` (the exact silent-
+truncation case — `[1, 8)` of `"ABCDE"`, previously returned `"BCDE"`
+silently, now traps) and `test_74_real_erl_str_slice_end_equal_to_length_is_in_bounds`
+(`[0, 5)` of `"ABCDE"`, the exact boundary, must NOT trap). Both pre-existing
+`str_slice` regressions (`test_70`, `test_71`) still pass unchanged. All
+fifteen BEAM `lang_matrix` tests pass together (14 prior + the new one — Oct,
+Nib, Brainfuck, FLOW-MATIC and now twenty-eight of 58 COBOL rows across seven
+probe batches, plus the immediate-arithmetic/comparison/`putchar`-state
+regressions and the Brainfuck frontend/backend refusal split), 13.11s.
+`iir-to-beam`'s package suite grew from 98 to 100 tests (19 unit, 76
+integration, 5 doc — the two new regressions), all passing; focused Clippy on
+`lang-aot` and `iir-to-beam` with all targets and warnings denied is clean.
+Twenty-eight of 58 COBOL rows now declare BEAM (434 total declared cells, up
+from 430). `feature_coverage_doc_counts_match_programs_source` was confirmed
+to actually exercise the check by first running it against the pre-fix
+COBOL-60 figure of 430, where it failed with the expected assertion message
+naming the 434/430 mismatch, before the doc was corrected to match. The full
+`non_algol_matrix_every_proven_cell_agrees` capstone passed: 210 programs,
+**1353** cells exercised (was 1349), 210 skipped (the same host-wide missing
+`ilasm` pattern every prior slice reports), zero failures, in 511.43s —
+exactly the four newly-promoted COBOL cells accounted for, confirming the
+doc's corrected grand total (1559 → 1563) against a live run rather than
+arithmetic alone.
+
+Reprioritize the remaining ~30 undeclared COBOL BEAM rows against VM-041
+(Twig dynamic-string isolation), VM-060b (host input design) and VM-058
+(INSPECT BEFORE/AFTER intersection) after this merges, following the same
+real policy comparison run above — re-verifying premises against source, not
+repeating prior conclusions by habit.
+
 ## VM-040 COBOL BEAM string ops/reference modification probe (selected after #14779 merged)
 
 `git fetch origin && git merge origin/main` reported "Already up to date" —
@@ -1877,6 +2023,33 @@ implementation item. The known DEF FN-global and print-zone semantics remain
 future frontend design scope, not missing proofs for already-implemented code.
 
 ## Discovery log
+
+- **VM-D032 — confirmed 2026-09-11:** while probing the next COBOL BEAM
+  reference-modification rows for promotion (the first two to require
+  `Expect::Trap` on BEAM), found `iir-to-beam`'s `str_slice` lowering never
+  enforced its own documented bounds-check contract. `str_slice` lowers to
+  `lists:sublist(List, Start+1, Len)`; `sublist` is far more lenient than
+  the contract every other backend's `str_slice` proves
+  (`vm-core::dispatch::handle_str_slice`: trap when `start < 0 || end <
+  start || end > len`) — when `Start` is in range but `Start + Len - 1` runs
+  past the source, `sublist` silently returns a SHORT list instead of
+  raising. A scratch probe against real `erl` confirmed it directly:
+  `sublist("ABCDE", 4, 5)` (asking for `[3, 8)` of a 5-character string)
+  returned `"DE"` (2 characters), exit 0, no error — not a bounds trap. Only
+  `Start =< 0` happened to raise on its own, an accident of `sublist`'s own
+  guard clauses (`Start >= 1` required), not a deliberate check. No COBOL
+  BEAM row, and no other language's BEAM row, had reached an out-of-bounds
+  `str_slice` input before this slice, so nothing in CI had ever exercised
+  the gap. **Resolved 2026-09-11** (see the top-of-file VM-040 reference-
+  modification MOVE/trap section): `str_slice`'s lowering now checks all
+  three predicates explicitly (`erlang:length/1` + `is_ge` branches,
+  reusing the `cmp_*` label-synthesis pattern) and raises
+  `erlang:error(badarg)` on any violation before `sublist` ever runs; two
+  direct `iir-to-beam` regressions pin both the exact silent-truncation case
+  and its exact-boundary control. `run_beam` in `lang_matrix.rs` also
+  gained `Expect::Trap` handling — the one BEAM-runner gap left after every
+  other backend's runner already had it, simply because no BEAM row had
+  ever needed it before.
 
 - **VM-D031 — confirmed 2026-09-10:** while checking VM-042's filed premise
   ("Brainfuck's intentional BEAM exclusion... for mutable tape operations")

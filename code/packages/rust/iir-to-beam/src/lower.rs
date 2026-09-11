@@ -576,6 +576,30 @@ pub fn lower_iir_to_beam(
     let atom_sublist = atoms.intern("sublist");
     let import_sublist = imports.intern(lists_atom, atom_sublist, 3); // lists:sublist/3
 
+    // ── String slicing bounds check: `erlang:length/1` + `erlang:error/1` ──
+    //
+    // `lists:sublist/3` is NOT a faithful implementation of `str_slice`'s
+    // documented contract (every other backend's `str_slice` — see
+    // `vm-core::dispatch::handle_str_slice` — traps when
+    // `start < 0 || end < start || end > len`). `sublist` is far more
+    // lenient: `sublist(List, Start, Len)` with `Start` in range but
+    // `Start + Len - 1 > length(List)` silently returns a SHORT list
+    // instead of raising — e.g. `sublist("ABCDE", 4, 5)` returns `"DE"`
+    // (2 chars), not a bounds error, even though `end` (8) is past the
+    // 5-character source. Only `Start =< 0` happens to raise on its own
+    // (a `function_clause` error, since `sublist`'s guards require
+    // `Start >= 1`), and only by accident of its clause structure — not by
+    // contract. Explicit checks make all three predicates behave alike:
+    // `erlang:length/1` is a recognized guard BIF (usable with `gc_bif1`,
+    // like `neg`/`not` above); `erlang:error/1` unconditionally raises,
+    // matching the fail-closed contract every other backend's `str_slice`
+    // already proves (VM-040 COBOL BEAM reference-modification trap slice).
+    let atom_length = atoms.intern("length");
+    let import_length = imports.intern(erlang_atom, atom_length, 1); // erlang:length/1
+    let atom_error = atoms.intern("error");
+    let import_error = imports.intern(erlang_atom, atom_error, 1); // erlang:error/1
+    let atom_badarg = atoms.intern("badarg");
+
     // ── Step 4: first pass over all functions ─────────────────────────────
     //
     // We need to know:
@@ -1350,13 +1374,15 @@ pub fn lower_iir_to_beam(
                     let cur_idx = instr_idx - 1;
 
                     // Scratch registers are u8 and the bank tops out at 255;
-                    // guard the same way store_byte/array_set do above.
-                    let top = meta.next_reg.checked_add(2).filter(|t| *t < 255);
+                    // guard the same way store_byte/array_set do above. Four
+                    // scratch registers now: the three `sublist` args plus
+                    // `s_width` for the bounds check below.
+                    let top = meta.next_reg.checked_add(3).filter(|t| *t < 255);
                     let Some(_) = top else {
                         return Err(IIRBeamError::UnsupportedOp {
                             function: fn_name.clone(),
                             op: format!(
-                                "str_slice: needs 3 scratch registers but only {} remain below x255",
+                                "str_slice: needs 4 scratch registers but only {} remain below x255",
                                 255u16 - meta.next_reg as u16
                             ),
                         });
@@ -1364,6 +1390,64 @@ pub fn lower_iir_to_beam(
                     let s_src = meta.next_reg;
                     let s_start1 = meta.next_reg + 1;
                     let s_len = meta.next_reg + 2;
+                    let s_width = meta.next_reg + 3;
+
+                    // ── Bounds check: trap when start<0 || end<start || end>length(src) ──
+                    //
+                    // `str_slice` is documented (see `cobol-iir-compiler::ref_mod_slice`
+                    // and `vm-core::dispatch::handle_str_slice`) to trap at run time
+                    // exactly on this predicate — the same contract the VM/WASM/native
+                    // backends already enforce. `lists:sublist/3` alone does NOT
+                    // implement it (it silently truncates when `end` runs past the
+                    // source length instead of raising), so the check is explicit here,
+                    // computed from the ORIGINAL (not yet staged/clobbered) registers,
+                    // before the `call_ext` below discards them.
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
+                        BEAMOperand::f(0), BEAMOperand::u(live),
+                        BEAMOperand::u(import_length as u64),
+                        BEAMOperand::x(src_reg), BEAMOperand::x(s_width),
+                    ]));
+                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "label counter overflow — too many str_slice bounds checks".into(),
+                        }
+                    })?;
+                    let trap_lbl = label_counter;
+                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "label counter overflow — too many str_slice bounds checks".into(),
+                        }
+                    })?;
+                    let ok_lbl = label_counter;
+                    // Fall through when start >= 0.
+                    instrs.push(BEAMInstruction::new(OP_IS_GE, vec![
+                        BEAMOperand::f(trap_lbl), BEAMOperand::x(start_reg), BEAMOperand::i(0),
+                    ]));
+                    // Fall through when end >= start.
+                    instrs.push(BEAMInstruction::new(OP_IS_GE, vec![
+                        BEAMOperand::f(trap_lbl), BEAMOperand::x(end_reg), BEAMOperand::x(start_reg),
+                    ]));
+                    // Fall through when length(src) >= end (i.e. end <= width).
+                    instrs.push(BEAMInstruction::new(OP_IS_GE, vec![
+                        BEAMOperand::f(trap_lbl), BEAMOperand::x(s_width), BEAMOperand::x(end_reg),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(ok_lbl)]));
+                    instrs.push(BEAMInstruction::new(
+                        OP_LABEL, vec![BEAMOperand::u(trap_lbl as u64)],
+                    ));
+                    // erlang:error(badarg) unconditionally raises — the runtime
+                    // fail-closed trap every other backend's str_slice already proves.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(atom_badarg), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(1), BEAMOperand::u(import_error as u64),
+                    ]));
+                    instrs.push(BEAMInstruction::new(
+                        OP_LABEL, vec![BEAMOperand::u(ok_lbl as u64)],
+                    ));
 
                     // Stage copies BEFORE any GC-capable instruction so every
                     // scratch register holds a valid term once `live` covers
