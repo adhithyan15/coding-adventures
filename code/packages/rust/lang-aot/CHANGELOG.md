@@ -57,6 +57,9 @@ Updated `feature_coverage_doc_counts_match_programs_source`'s expected
 COBOL-60 tuple (58, 430) → (58, 434) and confirmed it fails against the
 pre-fix figure before fixing it, and updated `LANG-VM-FEATURE-COVERAGE.md`'s
 COBOL-60 row and grand-total prose (1559 → 1563 declared cells) to match.
+The full `non_algol_matrix_every_proven_cell_agrees` capstone confirmed the
+corrected total against a live run: 210 programs, 1353 cells exercised (was
+1349), 210 skipped, zero failures, 511.43s.
 
 ## 0.309.0 — 2026-09-11 — VM-040 COBOL BEAM string ops/reference modification probe
 

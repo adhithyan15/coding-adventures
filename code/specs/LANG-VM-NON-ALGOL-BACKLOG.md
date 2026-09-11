@@ -143,7 +143,7 @@ COBOL-60 figure of 430, where it failed with the expected assertion message
 naming the 434/430 mismatch, before the doc was corrected to match. The full
 `non_algol_matrix_every_proven_cell_agrees` capstone passed: 210 programs,
 **1353** cells exercised (was 1349), 210 skipped (the same host-wide missing
-`ilasm` pattern every prior slice reports), zero failures, in 500.87s —
+`ilasm` pattern every prior slice reports), zero failures, in 511.43s —
 exactly the four newly-promoted COBOL cells accounted for, confirming the
 doc's corrected grand total (1559 → 1563) against a live run rather than
 arithmetic alone.
