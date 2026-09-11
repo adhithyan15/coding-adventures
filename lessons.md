@@ -7202,3 +7202,46 @@ rejected, the matrix runner discarded all stdout, and arbitrary-precision
 arithmetic returned -1/300 instead of u8 255/44. Fixing only builtin acceptance
 would hide both later defects. Compare real output as well as a return marker,
 and mask at operation boundaries rather than only when printing.
+
+### 2026-09-11 — Regex anchor semantics do not transfer between engines
+
+A validator built for one backend was copied to another with its `$` intact.
+Rust's `regex` treats `$` as end-of-haystack and refuses a trailing newline,
+which is what an injection analysis of `host_effect_symbol_re` rested on. PCRE2
+(Qt's `QRegularExpression`) and ICU (Swift's `NSRegularExpression`) both concede
+a subject-final terminator through `$`, so `^\.?[A-Za-z0-9_-]{1,16}$` accepted
+`"apkg\n"` in the shipped Qt handler. ICU concedes `\r\n`, `\r`, U+2028, U+2029
+and NEL as well; PCRE2's width is fixed by its build-time newline convention,
+so `ANYCRLF`/`ANY` builds concede more than an `LF` build does — measuring one
+machine does not establish the language's behaviour.
+
+Use `\A` and `\z`, which are absolute in both. Not `\Z`: in PCRE2 it makes the
+same concession `$` does, so it renames the hole rather than closing it.
+
+The failure this allowed was silent, which is what made it survive review: a
+glob of `*apkg\n` is rejected nowhere downstream, it simply matches no file, so
+the dialog opens empty and reports nothing. Having answered the anchor question
+once, for a different engine, is exactly what stopped it being re-asked. Ask it
+per engine, and prove the answer by running that engine.
+
+### 2026-09-11 — Read each host's threading contract; do not mirror the first one
+
+Engram's Qt effect handler answers file-dialog effects inline under
+`Qt::DirectConnection`, which is correct there because the settle runs on the
+event-loop thread. Mirroring that shape into the SwiftUI handler would have been
+wrong twice: `settleEffects` is not guaranteed to run on the main thread and
+`runModal()` off-main is invalid, and the host's lock is held across the handler
+call, so a modal dialog would block `applyProps()` — which SwiftUI calls every
+frame. The documented escape, `DispatchQueue.main.sync`, is the exact wedge the
+host warns against.
+
+Qt is the outlier, not the template. SwiftUI, Compose, Flutter and XAML all hold
+a lock or monitor across the handler and all expose `deferEffect` for precisely
+this case; each host's own documentation says so. A 4-to-1 split would have been
+gotten backwards three more times by copying whichever backend shipped first.
+
+Deferring inverts the risk and the code must be shaped for it: a deferred effect
+leaves the fail sweep, so a path that forgets to answer no longer degrades to
+"failed" — it wedges the app permanently, because the runtime gates snapshot and
+restore on nothing being pending. Have the dialog function RETURN an outcome so
+every path funnels to exactly one completion call.
