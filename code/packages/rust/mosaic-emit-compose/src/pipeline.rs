@@ -2735,7 +2735,19 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
         .find(|p| p.name == "elevation")?
         .value
         .as_str();
-    match value {
+    elevation_tier_for_value(value)
+}
+
+/// The value half of [`part_elevation_tier`], split out so the drop reporter
+/// can ask the SAME question the lowering asks (#14810).
+///
+/// Without this there were two lists: the lowering's, and the reporter's
+/// implicit assumption that anything not in its `match` was discarded. That
+/// made every handled `elevation` a false positive -- 16 reported dropped
+/// against 16 `.shadow(..)` calls actually emitted. A drop report that cries
+/// wolf is worse than none, because the real entries stop being read.
+fn elevation_tier_for_value(value: &str) -> Option<ElevationTier> {
+    match value.trim() {
         "raised" => Some(ElevationTier::Raised),
         "overlay" => Some(ElevationTier::Overlay),
         _ => None,
@@ -2898,6 +2910,16 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
+            // `elevation` is consumed by `part_elevation_tier` straight from
+            // the base props, not through this match -- so falling to `_`
+            // below reported every handled one as a drop. Acknowledge the
+            // values the lowering recognises, and record only the rest, which
+            // genuinely are discarded (#14810).
+            "elevation" => {
+                if elevation_tier_for_value(&p.value).is_none() {
+                    dropped.push((p.name.clone(), p.value.clone()));
+                }
+            }
             // #14708 — `opacity` is what UI57's `state disabled` treatment is
             // built on, so dropping it meant a disabled control dimmed on five
             // backends and not on this one. A PropBucket (not a plain Option)
@@ -10505,6 +10527,60 @@ mod tests {
             !out.contains(")f)"),
             "the Float suffix landed on the expression instead of the values, \
              which is not valid Kotlin, got:\n{out}"
+        );
+    }
+
+
+    /// #14810 — a property consumed OUTSIDE the style match must not be
+    /// reported as dropped.
+    ///
+    /// `elevation` is read by `part_elevation_tier` straight from the base
+    /// props, so it never reaches the match's `_` arm as "handled" — and the
+    /// reporter counted all 16 of TaskApp's as drops while the emitter was
+    /// happily producing 16 `.shadow(..)` calls. A drop report that cries wolf
+    /// is worse than no report, because the real entries stop being read.
+    #[test]
+    fn a_property_handled_elsewhere_is_not_reported_as_dropped() {
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part(
+            "card",
+            vec![sprop("elevation", "raised"), sprop("box-shadow", "0 1px 2px #000")],
+            vec![],
+        ));
+
+        let names: Vec<String> = dropped_style_properties(&sheet)
+            .into_iter()
+            .map(|d| d.name)
+            .collect();
+
+        assert!(
+            !names.iter().any(|n| n == "elevation"),
+            "`elevation: raised` IS lowered, via part_elevation_tier — got: {names:?}"
+        );
+        // …but the genuinely unlowered neighbour still is.
+        assert!(
+            names.iter().any(|n| n == "box-shadow"),
+            "box-shadow has no lowering and must still be reported — got: {names:?}"
+        );
+    }
+
+    /// The other half: an `elevation` value the lowering does NOT recognise is
+    /// a real drop, and must be reported. Both directions matter — the fix for
+    /// the false positive must not blanket-silence the property.
+    #[test]
+    fn an_unrecognised_elevation_value_is_still_reported() {
+        let mut sheet = empty_style("F");
+        sheet
+            .parts
+            .push(part("card", vec![sprop("elevation", "floaty")], vec![]));
+
+        let names: Vec<String> = dropped_style_properties(&sheet)
+            .into_iter()
+            .map(|d| d.name)
+            .collect();
+        assert!(
+            names.iter().any(|n| n == "elevation"),
+            "`elevation: floaty` is not a tier and IS discarded — got: {names:?}"
         );
     }
 

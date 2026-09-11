@@ -33,6 +33,20 @@ are genuinely different problems and want different fixes.
 Style drops do not gate `nativeComplete`; this makes them visible, not fatal.
 ### Fixed — `opacity` was dropped (#14708)
 
+**A property consumed outside the style match is not a drop.** `elevation` is
+read by `part_elevation_tier` straight from the base props, so it never reaches
+the match — and the first version of this reporter counted all 16 of TaskApp's
+as dropped while the emitter was emitting 16 `.shadow(..)` calls. Exactly the
+same number, which is what gave it away.
+
+The value→tier mapping is now one shared function the reporter and the lowering
+both call, so there is no second list to drift. Both directions are tested:
+`elevation: raised` is not reported, `elevation: floaty` still is, and its
+genuinely-unlowered neighbour `box-shadow` stays reported either way.
+
+A drop report that cries wolf is worse than no report, because the real entries
+stop being read.
+
 `opacity` is what UI57's `state disabled` treatment is built on, so dropping it
 meant a disabled control dimmed on five backends and not on this one — it
 looked disabled on the web and XAML and SwiftUI, and fully normal on Compose.
