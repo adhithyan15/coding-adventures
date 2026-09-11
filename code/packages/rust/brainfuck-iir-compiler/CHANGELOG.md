@@ -1,5 +1,26 @@
 # Changelog — brainfuck-iir-compiler
 
+## [0.4.1] — 2026-09-10 (VM-042/VM-D031 — correct the stale "BEAM unsupported" README claim)
+
+### Docs only — no compiler code changed
+
+The README's "Why no BEAM target?" section said BEAM tape support was
+**intentionally not implemented at all**. That was accurate when written
+(2026-05-22), for a BEAM backend with no mutable-memory primitive — but
+`iir-to-beam` PR #11343 (2026-08-13) added `:atomics`-backed `alloc_bytes`/
+`store_byte`/`load_byte`, explicitly "unblocking Brainfuck", and nobody had
+gone back to actually try compiling a Brainfuck program through it since. A
+real `erl` probe (VM-D031) found three of the six unified-matrix rows already
+execute correctly through this crate's ordinary IIR output — no change to
+this crate was needed for them to work.
+
+Rewrote that section: tape mutation and `.` (`putchar`) work on BEAM today;
+`,` (`getchar`) still refuses explicitly, because `iir-to-beam` has no
+`getchar` builtin — a real, separately-tracked host-input gap (VM-060b)
+shared with every other frontend's undeclared BEAM input rows, not a
+Brainfuck- or tape-specific one. See `lang-aot`'s and `iir-to-beam`'s
+changelogs for the promoted matrix rows and the pinning tests.
+
 ## [0.4.0] — 2026-06-17 (LANG-FULL B1-eof — `,` normalises EOF to 0, so cat runs cross-backend)
 
 ### Fixed — `,` stores 0 at end-of-input, on every backend

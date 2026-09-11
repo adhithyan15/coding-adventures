@@ -1,5 +1,27 @@
 # Changelog — iir-to-beam
 
+## 0.9.1 - 2026-09-10 - pin the `getchar` refusal (VM-042/VM-D031)
+
+Test-only. `brainfuck-iir-compiler`'s README long claimed BEAM tape mutation
+was intentionally unsupported; that was true when written (2026-05-22) but
+went stale the moment PR #11343 (2026-08-13) added `:atomics`-backed
+`alloc_bytes`/`store_byte`/`load_byte` here, explicitly to unblock Brainfuck.
+A real `erl` probe (VM-D031, logged in `LANG-VM-NON-ALGOL-BACKLOG.md`) found
+three of Brainfuck's six matrix rows already execute correctly through this
+crate's existing `store_byte`/`putchar` lowering — no code change was needed
+in this crate to support them.
+
+The one part of the old claim that IS still true: `,` (read) needs a
+`getchar` builtin, and this crate has none — `call_builtin` already refuses
+it with `UnsupportedOp: … "getchar" is not in the BEAM builtin set`. Added
+`call_builtin_getchar_rejected_but_putchar_accepted` to pin that refusal
+explicitly (naming `getchar`, not a generic failure) and, as its control,
+that `putchar` — the SAME `call_builtin` allowlist check, and the builtin the
+three newly-promoted Brainfuck rows depend on — remains accepted. This
+distinguishes the real, still-open gap (host input, VM-060b, shared with
+every other frontend's BEAM input rows) from the now-corrected "mutable tape
+doesn't work" premise.
+
 ## 0.9.0 - 2026-09-09 - `str_slice` (VM-040 COBOL BEAM signed/algebra probe)
 
 Added `str_slice` to the ASCII string subset: a fixed- or computed-bounds
