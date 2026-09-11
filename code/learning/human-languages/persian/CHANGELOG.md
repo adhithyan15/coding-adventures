@@ -1,5 +1,30 @@
 # Changelog
 
+## Chapter 21 — reading: words, answers, and the figures
+
+Persian's reading rung, and the smallest of the eight so far, because the
+alphabet is what bounds it.
+
+Persian has taught **nine letters** -- ا ب ت س ل م ن ه و -- and ten digits. Every
+other word in the track (چای, کلید, مادر, خورشید) needs a letter the script
+ladder has not reached, and the practice name سارا needs ر. A reading lesson
+cannot route around a letter the reader cannot decode, so the chapter was built
+from the nine and the ten rather than from the track's vocabulary.
+
+- **Words**: سلام, ممنون, بله, نه, نان, ماه. The lesson points at نان beside نه,
+  which open with the same letter and differ at the end -- where a reader is
+  most likely to stop looking.
+- **Answers**: بله, نه, ممنون, سلام, اول, سوم. The list changes halfway: the
+  first four are things you say to a person, the last two are things you read
+  off a door.
+- **Figures**: the ten digits, read as amounts. These are the only Persian most
+  travellers read before they read any word at all, and the lesson names the one
+  thing that surprises a beginner -- a number runs left to right inside a line
+  that runs right to left, so ۱۰۰ is a one and two zeros in the order already
+  expected.
+
+pre-A1 reading moves 0/3 -> 3/3, floor raised. Persian declares no A1 shape yet.
+
 ## Numbers, at last — and they were the cheapest vocabulary in the track (HL-C350)
 
 Persian taught **no numeral at all** across 71 lessons. `yek`, `do`, `se` and

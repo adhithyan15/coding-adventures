@@ -1,0 +1,16 @@
+{
+  "chapter": 21,
+  "title": "Reading — Words, Answers, and the Figures",
+  "label": "ch:fa-khandan",
+  "canDo": "I can read a Persian word, an answer and a figure off a page, without anyone saying them first.",
+  "payoff": {
+    "lesson": "FA-C21-adad",
+    "kind": "four-skill-function-map",
+    "summary": "The ten digits read as amounts rather than drawn as shapes — the first Persian a traveller can take off a page without knowing a single letter.",
+    "assesses": [
+      "FA-SKILL-CONNECTED-READING",
+      "FA-SKILL-READ-ANSWERS",
+      "FA-SKILL-READ-WORDS"
+    ]
+  }
+}

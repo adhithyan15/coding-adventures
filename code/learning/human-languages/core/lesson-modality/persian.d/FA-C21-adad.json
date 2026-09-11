@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C21-adad",
+    "language": "persian",
+    "chapter": 21,
+    "sequence": 980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4868aa1321eb57c5"
+  },
+  "findings": []
+}
