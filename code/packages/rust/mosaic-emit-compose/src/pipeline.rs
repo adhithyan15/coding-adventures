@@ -2211,6 +2211,9 @@ struct TableContext {
 struct NativeTableSemantics {
     row_count: String,
     column_count: String,
+    /// Whether column 0 is the fixed leading cell, so every `For`-produced
+    /// cell sits one column further right than its loop index (#14843).
+    leading_cell: bool,
 }
 
 #[derive(Clone, Default)]
@@ -2234,6 +2237,16 @@ enum TableSemanticScope {
 struct ComposeSemanticTableShape<'a> {
     header_cells: &'a LayoutNode,
     body_rows: &'a LayoutNode,
+    /// Whether each row opens with a fixed cell before the `For` -- the
+    /// corner cell in the header and the row-header cell in each body row
+    /// (#14843).
+    ///
+    /// `RowHeaderGrid` has this shape and `Grid` does not, and until now the
+    /// predicate required EXACTLY one child per row, so VisiCalc's table was
+    /// not recognised at all: no `collectionInfo`, no `collectionItemInfo`,
+    /// and `accessibility.table-semantics-missing` on the only HostTable in
+    /// the product.
+    leading_cell: bool,
 }
 
 fn compose_semantic_table_shape(host_table: &LayoutNode) -> Option<ComposeSemanticTableShape<'_>> {
@@ -2266,8 +2279,12 @@ fn compose_semantic_table_shape(host_table: &LayoutNode) -> Option<ComposeSemant
     let [header_row] = head.children.as_slice() else {
         return None;
     };
-    let [header_cells] = header_row.children.as_slice() else {
-        return None;
+    // One child is `Grid`; two is `RowHeaderGrid`, whose row opens with a
+    // fixed corner cell before the `For` (#14843).
+    let (header_leading, header_cells) = match header_row.children.as_slice() {
+        [cells] => (false, cells),
+        [leading, cells] if leading.tag == "Box" => (true, cells),
+        _ => return None,
     };
     let [header_cell] = header_cells.children.as_slice() else {
         return None;
@@ -2278,9 +2295,17 @@ fn compose_semantic_table_shape(host_table: &LayoutNode) -> Option<ComposeSemant
     let [body_row] = body_rows.children.as_slice() else {
         return None;
     };
-    let [body_cells] = body_row.children.as_slice() else {
-        return None;
+    let (body_leading, body_cells) = match body_row.children.as_slice() {
+        [cells] => (false, cells),
+        [leading, cells] if leading.tag == "Box" => (true, cells),
+        _ => return None,
     };
+    // Both rows must agree. A header with a corner cell and body rows without
+    // one (or the reverse) is a ragged table whose column indices would be off
+    // by one for half the cells -- worse than reporting no semantics at all.
+    if header_leading != body_leading {
+        return None;
+    }
     let [body_cell] = body_cells.children.as_slice() else {
         return None;
     };
@@ -2304,6 +2329,7 @@ fn compose_semantic_table_shape(host_table: &LayoutNode) -> Option<ComposeSemant
     Some(ComposeSemanticTableShape {
         header_cells,
         body_rows,
+        leading_cell: header_leading,
     })
 }
 
@@ -2364,9 +2390,18 @@ fn for_collection_expr(node: &LayoutNode) -> Option<String> {
 /// SwiftUI emitter's `extract_table_context`.
 fn extract_table_context(host_table: &LayoutNode) -> TableContext {
     let native_semantics = compose_semantic_table_shape(host_table).and_then(|shape| {
+        let headers = for_collection_expr(shape.header_cells)?;
         Some(NativeTableSemantics {
             row_count: format!("{}.size + 1", for_collection_expr(shape.body_rows)?),
-            column_count: format!("{}.size", for_collection_expr(shape.header_cells)?),
+            // The fixed leading cell is a real column and has to be counted,
+            // or a screen reader is told the sheet has one fewer column than
+            // it has cells in each row (#14843).
+            column_count: if shape.leading_cell {
+                format!("{headers}.size + 1")
+            } else {
+                format!("{headers}.size")
+            },
+            leading_cell: shape.leading_cell,
         })
     });
     for child in &host_table.children {
@@ -2436,6 +2471,19 @@ impl TableContext {
     }
 }
 
+/// A `For`-produced cell's column index, shifted past the fixed leading cell
+/// when the table has one (#14843).
+///
+/// The loop index counts data columns from zero; with a corner/row-header
+/// column present, data column 0 is the table's column 1.
+fn column_offset(semantics: &NativeTableSemantics, column_index: &str) -> String {
+    if semantics.leading_cell {
+        format!("{column_index} + 1")
+    } else {
+        column_index.to_string()
+    }
+}
+
 fn table_semantics_modifier(node: &LayoutNode, table_ctx: Option<&TableContext>) -> Option<String> {
     let ctx = table_ctx?;
     let semantics = ctx.native_semantics.as_ref()?;
@@ -2444,18 +2492,24 @@ fn table_semantics_modifier(node: &LayoutNode, table_ctx: Option<&TableContext>)
             "semantics {{ collectionInfo = CollectionInfo(rowCount = {}, columnCount = {}) }}",
             semantics.row_count, semantics.column_count
         )),
-        (TableSemanticScope::HeaderCell { column_index }, "Box") => Some(format!(
-            "semantics {{ collectionItemInfo = CollectionItemInfo(rowIndex = 0, rowSpan = 1, columnIndex = {column_index}, columnSpan = 1); heading() }}"
-        )),
+        (TableSemanticScope::HeaderCell { column_index }, "Box") => {
+            let column = column_offset(semantics, column_index);
+            Some(format!(
+                "semantics {{ collectionItemInfo = CollectionItemInfo(rowIndex = 0, rowSpan = 1, columnIndex = {column}, columnSpan = 1); heading() }}"
+            ))
+        }
         (
             TableSemanticScope::BodyCell {
                 row_index,
                 column_index,
             },
             "Box",
-        ) => Some(format!(
-            "semantics {{ collectionItemInfo = CollectionItemInfo(rowIndex = {row_index} + 1, rowSpan = 1, columnIndex = {column_index}, columnSpan = 1) }}"
-        )),
+        ) => {
+            let column = column_offset(semantics, column_index);
+            Some(format!(
+                "semantics {{ collectionItemInfo = CollectionItemInfo(rowIndex = {row_index} + 1, rowSpan = 1, columnIndex = {column}, columnSpan = 1) }}"
+            ))
+        }
         _ => None,
     }
 }
@@ -11446,6 +11500,126 @@ mod tests {
             out.contains("Box(modifier = Modifier.fillMaxWidth())"),
             "got:\n{out}"
         );
+    }
+
+    // ===================================================================
+    // A row-header table gets native collection semantics -- #14843.
+    // ===================================================================
+
+    /// A `RowHeaderGrid`-shaped HostTable: each row opens with a fixed cell
+    /// before the `For`, which the predicate used to reject outright.
+    fn row_header_table() -> LayoutNode {
+        let cell = || box_part_node("c", vec![node("Text", vec![], vec![])]);
+        let for_cells = |as_name: &str, idx: &str, coll: &str| LayoutNode {
+            tag: "For".into(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".into(),
+                    value: LayoutPropValue::SlotRef(coll.into()),
+                },
+                LayoutProp {
+                    name: "as".into(),
+                    value: LayoutPropValue::Keyword(as_name.into()),
+                },
+                LayoutProp {
+                    name: "index".into(),
+                    value: LayoutPropValue::Keyword(idx.into()),
+                },
+            ],
+            children: vec![cell()],
+        };
+        node(
+            "HostTable",
+            vec![],
+            vec![
+                node(
+                    "HostTableHead",
+                    vec![],
+                    vec![node(
+                        "Row",
+                        vec![],
+                        vec![cell(), for_cells("h", "ch", "column-headers")],
+                    )],
+                ),
+                node(
+                    "HostTableBody",
+                    vec![],
+                    vec![LayoutNode {
+                        tag: "For".into(),
+                        part_name: None,
+                        props: vec![
+                            LayoutProp {
+                                name: "each".into(),
+                                value: LayoutPropValue::SlotRef("viewport-rows".into()),
+                            },
+                            LayoutProp {
+                                name: "as".into(),
+                                value: LayoutPropValue::Keyword("row".into()),
+                            },
+                            LayoutProp {
+                                name: "index".into(),
+                                value: LayoutPropValue::Keyword("r".into()),
+                            },
+                        ],
+                        children: vec![node(
+                            "Row",
+                            vec![],
+                            vec![cell(), for_cells("v", "c", "row")],
+                        )],
+                    }],
+                ),
+            ],
+        )
+    }
+
+    fn box_part_node(part: &str, children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Box".into(),
+            part_name: Some(part.to_string()),
+            props: vec![],
+            children,
+        }
+    }
+
+    #[test]
+    fn a_row_header_table_is_recognised() {
+        // The predicate required EXACTLY one child per row, so VisiCalc's
+        // table -- the only HostTable in the product -- got no collectionInfo
+        // and no collectionItemInfo at all, and reported
+        // `accessibility.table-semantics-missing`.
+        assert!(host_table_has_native_semantics(&row_header_table()));
+    }
+
+    #[test]
+    fn the_leading_cell_is_counted_as_a_column() {
+        // A screen reader told the sheet has one fewer column than each row
+        // has cells is worse than one told nothing.
+        let table = row_header_table();
+        let shape = compose_semantic_table_shape(&table).expect("recognised");
+        assert!(shape.leading_cell);
+    }
+
+    #[test]
+    fn a_ragged_table_is_rejected_rather_than_indexed_wrongly() {
+        // A header with a corner cell and body rows without one would put
+        // half the cells one column off. Refusing is the honest answer.
+        let mut ragged = row_header_table();
+        let body_for = &mut ragged.children[1].children[0];
+        body_for.children[0].children.remove(0);
+        assert!(!host_table_has_native_semantics(&ragged));
+    }
+
+    #[test]
+    fn a_plain_grid_keeps_unoffset_column_indices() {
+        // The offset must be conditional: `Grid` has no leading cell and its
+        // loop index IS the column index. Widening that silently would move
+        // every cell in every plain table one column right.
+        let mut plain = row_header_table();
+        plain.children[0].children[0].children.remove(0);
+        plain.children[1].children[0].children[0].children.remove(0);
+        let shape = compose_semantic_table_shape(&plain).expect("recognised");
+        assert!(!shape.leading_cell);
     }
 
     // ===================================================================

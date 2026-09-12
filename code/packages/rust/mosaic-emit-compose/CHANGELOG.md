@@ -5,6 +5,40 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — a row-header table got no collection semantics at all (#14843)
+
+`compose_semantic_table_shape` required **exactly one** child per header and
+body row. `Grid` has that shape; `RowHeaderGrid` does not — each of its rows
+opens with a fixed cell (the corner, and the row-header) before the `For`.
+
+VisiCalc uses `RowHeaderGrid`, and it is the only `HostTable` in the product.
+So the table was not recognised at all: no `collectionInfo`, no
+`collectionItemInfo`, and `accessibility.table-semantics-missing` in the
+degradation report. Every accessibility gate passed the whole time, because
+each cell existed and was correctly named — a screen reader simply had no way
+to know it was a table.
+
+The predicate now accepts an optional leading `Box` before the `For`, and the
+counting follows:
+
+- `columnCount` becomes `columnHeaders.size + 1` — the fixed column is a real
+  column, and reporting one fewer than each row has cells is worse than
+  reporting nothing.
+- Every `For`-produced cell's `columnIndex` shifts by one, since the loop index
+  counts *data* columns from zero.
+- Both offsets are conditional. A plain `Grid` keeps unoffset indices, pinned
+  by a test — widening that silently would move every cell in every plain
+  table one column right.
+
+A **ragged** table — a corner cell in the header but not in the body rows, or
+the reverse — is rejected rather than indexed. Half its cells would be one
+column off, which is worse than reporting no semantics.
+
+VisiCalc's degradations go **8 → 7**, and its render harness pin moves with
+them. The remaining seven are `table-focus` (2), `table-wheel-shift` (1) and
+`authored-table-cell` (4), which are gated on `backend != React` with no
+per-backend predicate at all — a different problem from this one.
+
 ### Fixed — `max-width` reached nothing (#14833)
 
 Six of the eight backends already lower it — html, react, webcomponent,
