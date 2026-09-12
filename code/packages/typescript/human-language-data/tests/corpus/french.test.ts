@@ -166,7 +166,11 @@ it("pins French modality", () => expectLanguageModality("french"));
 // chapters 9-19 landed here.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 274,
+    //
+    // 274 -> 277: chapter 45, the reading rung -- six instructions, six lines
+    // off a form, and a 63-word paragraph. No new word: every token was checked
+    // to occur in a lesson with a lower sequence number.
+    lessons: 277,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,
@@ -192,9 +196,12 @@ it("pins French-owned objective activities without extending a global ledger", (
     .sort();
   expect(ids).toEqual([
     "FR-C18-oui-negative",
+    "FR-C45-details-age",
+    "FR-C45-instructions-listen",
+    "FR-C45-premiere-lecture-city",
     "FR-W01-salut-delayed-copy-check",
     "FR-W01-salut-dictation-answer",
     "FR-W01-salut-guided-copy-check",
-    "FR-W01-salut-observe-final",
+    "FR-W01-salut-observe-final"
   ]);
 });

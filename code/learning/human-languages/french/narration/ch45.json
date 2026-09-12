@@ -1,0 +1,580 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 45,
+  "title": "Reading — Instructions, a Form, and a First Paragraph",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:1a0ee2293de4448a",
+  "lessons": [
+    {
+      "id": "FR-C45-instructions",
+      "sequence": 1750,
+      "title": "(reading) — six things you would be told",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "six lines you would be told — read this time, with nobody saying them",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:128a13b99b9bd34f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every line below you have heard and said. Not one is new."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is that nobody says them first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Parle! Écoute! On y va! Un peu Beaucoup Merci."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down the list once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again, and notice that three of them end in an exclamation mark and three do not. French puts a space before it, which English does not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Parle! and Écoute! are the same verbs you conjugate, with the ending taken off and nothing put in its place. That is the whole imperative."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An instruction you can only recognise by ear is one somebody has to say to you. On a page it waits, which is why a classroom is the first place a beginner reads rather than listens."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six lines, and half of them are one word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six lines, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six lines, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FR-C45-instructions-listen",
+              "prompt": "Which line tells you to listen?",
+              "assesses": [
+                "FR-SKILL-READ-INSTRUCTIONS"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ecoute",
+                "écoute",
+                "écoute !",
+                "listen"
+              ],
+              "feedback": {
+                "correct": "Écoute!",
+                "incorrect": "Écoute! -- listen."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does French put before an exclamation mark? (A space.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C45-details",
+      "sequence": 1760,
+      "title": "(reading) — six lines off a form",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "six lines off a form — a name, an age, a day, and a length of time",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b25f3336c5b0d718",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson gave you things somebody says. These are things somebody writes down."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing here is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nom: Marie Âge: vingt ans Lundi: le travail Mardi: un livre Une heure Dix minutes."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again — and notice the colon. French puts a space before that too, and the space is the clearest signal on the page that a label has ended."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A form is the first thing a beginner can read end to end. It puts the label before the value every time, and it never asks for a verb."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is why the last two lines are the hardest, not the first four. Une heure and Dix minutes have no label in front of them, so nothing tells you what they are for until you have read them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six lines, and four of them do half your work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six lines, once, in order, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six lines, once, in order, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FR-C45-details-age",
+              "prompt": "How old is she?",
+              "assesses": [
+                "FR-SKILL-READ-DETAILS"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "twenty",
+                "vingt",
+                "vingt ans",
+                "20"
+              ],
+              "feedback": {
+                "correct": "Vingt ans.",
+                "incorrect": "Vingt ans -- twenty."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two lines have no label? (Une heure and Dix minutes.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does French put before a colon? (A space.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C45-premiere-lecture",
+      "sequence": 1770,
+      "title": "(reading) — the first paragraph",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "the first paragraph — sixty-three words of French in a row, and not one of them new",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bd1d511fa2bef85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six instructions, then six lines off a form. Now a whole paragraph."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sixty-three words, and not one of them is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bonjour! Je m'appelle Marie. J'habite à Paris. J'ai un frère et une sœur. Je bois du café et je mange du pain. Le jour, je vais au travail. Je travaille beaucoup, mais j'aime ça. Le soir, je lis un livre. Le livre est très bon. Je ne comprends pas tout, mais ça va. Demain, je vais parler français. Merci et au revoir."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read it again, and notice how little work it took."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what is holding it together, because it is not vocabulary."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Et adds. Mais holds two true things apart, and it does it twice here — once about work and once about understanding. Each of those was a chapter, and none of them is longer than four letters."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the tenth line especially. Je ne comprends pas tout, mais ça va. Somebody has admitted they did not follow everything, and the paragraph carries on. That is the most useful sentence on this page."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first whole paragraph the book has asked you to hold at once, and it works because everything in it was paid for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the paragraph aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the paragraph aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FR-C45-premiere-lecture-city",
+              "prompt": "Where does she live?",
+              "assesses": [
+                "FR-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "paris",
+                "à paris"
+              ],
+              "feedback": {
+                "correct": "À Paris.",
+                "incorrect": "À Paris -- J'habite à Paris."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words in that paragraph were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word appears twice and turns the sentence both times? (Mais.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
