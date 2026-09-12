@@ -5,6 +5,65 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — `justify-content` and `align-items` reached nothing, and the drop reporter could not tell where they applied (#14834)
+
+Engram authors `justify-content: space-between` and `align-items: center` on its
+header and status rows. Compose discarded both, while the drop reason already
+described the mechanism that would work: these ARE the `horizontalArrangement`
+and `verticalAlignment` arguments of Row and Column, the same slot `gap` reaches
+as `Arrangement.spacedBy` (#14804).
+
+Measured on Engram after the change: **1** `Arrangement.SpaceBetween` and **3**
+`Alignment.CenterVertically` now emitted where there were none.
+
+#### Two collisions, resolved explicitly
+
+Compose cannot express either pair, so each is decided rather than left to
+whichever branch runs last:
+
+- **`gap` vs `justify-content`** — both want the arrangement slot.
+  `Arrangement.spacedBy(n.dp, alignment)` takes an *Alignment*, while
+  `SpaceBetween`/`SpaceAround`/`SpaceEvenly` are *Arrangements*: they do not
+  compose. A plain `start`/`center`/`end` still folds the gap in through
+  `spacedBy`, so nothing is lost there. Only the **distributing** values
+  displace the gap, because an arrangement that already decides the spacing
+  makes a fixed gap contradictory rather than additive.
+- **`align` (from `text-align`) vs `align-items` on a Column** — both want
+  `horizontalAlignment`. The explicit cross-axis property wins over the text
+  property borrowed for layout.
+
+#### The reporter needed the layout
+
+`dropped_style_properties(&StyleDef)` walked parts only and never saw a
+`LayoutNode`, so it could not know whether a part sits on a Row, a Column or a
+`Text` — and `justify-content` lowers on the first two and genuinely has nowhere
+to go on the third. Lowering these without that context would have made the
+reporter **over-report**: still listing them as dropped in the very places they
+now apply.
+
+`dropped_style_properties_in_layout(style, Some(&root))` supplies it, and the
+artifact builder passes the layout it already had to hand. Measured on Engram:
+
+| property | blind reporter | layout-aware |
+| --- | --- | --- |
+| `justify-content` | 1 | **0** |
+| `align-items` | 2 | **0** |
+| total drops | 6 | **3** |
+
+The name-only entry point remains for callers that genuinely have no layout (a
+stylesheet linted on its own), where over-reporting is the safer error.
+
+**This does not fix #14843**, but it removes that issue's stated blocker: the
+same missing input — the layout node beside the part — was what stopped a
+per-backend predicate for `table-cell-role` and `onViewportShift`.
+
+#### A bug this caught in itself
+
+The first version routed `align-items` through the existing `align` path, which
+put it on the **main** axis on a Row. `align-items` is cross-axis. The test
+asserting `verticalAlignment = Alignment.CenterVertically` on a Row failed and
+the logic was rewritten so the two axes are computed separately and compose.
+
 ### Fixed — every authored button background was painted over by Material's default purple (#14912)
 
 Found by rendering Trestle and sampling the pixels. All 47 of its `HostButton`

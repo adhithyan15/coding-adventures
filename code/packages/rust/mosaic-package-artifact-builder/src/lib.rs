@@ -1284,9 +1284,14 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                     }
                 }
                 Backend::Compose => {
-                    for d in
-                        mosaic_emit_compose::pipeline::dropped_style_properties(&composed.style)
-                    {
+                    // With the layout the reporter can tell a Row from a
+                    // Text, so `justify-content` and `align-items` are only
+                    // reported where they genuinely have nowhere to go
+                    // (#14834).
+                    for d in mosaic_emit_compose::pipeline::dropped_style_properties_in_layout(
+                        &composed.style,
+                        Some(&composed.layout.def.root),
+                    ) {
                         push_drop(d.part, d.name, d.value, d.reason);
                     }
                 }
