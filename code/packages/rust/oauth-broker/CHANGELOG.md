@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added an injected static provider-data source boundary with durable
+  provider/trace audit before each read, exact requested-provider binding before
+  registry mutation, closed source errors, zeroizing profile bytes, and a
+  separately audited registration result.
 - Added bounded, exact-schema static public-provider decoding with caller-owned
   client IDs and redirect URIs, explicit mix-up defense and response format,
   closed errors for malformed or unknown provider data, and registry-enforced
