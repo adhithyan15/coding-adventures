@@ -359,7 +359,7 @@ impl WindowsBrowserHost {
             self.controller
                 .session()
                 .controls()
-                .selected_files(&key)
+                .selected_files(key)
                 .unwrap_or_default()
                 .to_vec()
         } else {
