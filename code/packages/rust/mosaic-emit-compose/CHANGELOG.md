@@ -5,6 +5,52 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — every authored button background was painted over by Material's default purple (#14912)
+
+Found by rendering Trestle and sampling the pixels. All 47 of its `HostButton`
+parts author a `background`; none of them reached the screen.
+
+| button | authored | rendered before | rendered after |
+| --- | --- | --- | --- |
+| `add-btn` | `#eaa63f` | `#6E14EF` | `#E09F3C` |
+| `del-btn` | `#252019` | `#6200EE` | `#252019` |
+| `seg-board-off` | `transparent` | `#690FE6` | `#38322A` |
+| page background (control) | `#1a1714` | `#1A1714` | `#1A1714` |
+
+`#6200EE` is exactly Material 2's default primary.
+
+**Why the emitted source looked correct.** The emitter did emit the authored
+colour — as `Modifier.background(..)`. A Material `Button` draws its own
+container from `ButtonDefaults.buttonColors()` and paints it over anything the
+modifier put down. The sibling `Text` colour worked, because that is set on the
+child, which made the whole thing read as a theming quirk rather than a dropped
+property. Any source-level grep for the colour passed, and
+`--profile native-complete` reported **0 degradations**.
+
+The authored background now goes to `ButtonDefaults.buttonColors(backgroundColor = ..)`
+and the inert modifier segment is removed, so the generated source says what
+actually happens. `backgroundColor` is Material 2's parameter name — this
+emitter imports `androidx.compose.material`, not material3, whose equivalent is
+`containerColor`.
+
+The colour expression is **moved, not re-derived**: `compose_box_style` already
+folds `state hover`/`state active` layers into one `if/else` chain, and reusing
+it verbatim keeps the two channels from drifting. A test asserts the full
+layered chain now appears inside `buttonColors`.
+
+**What this does not fix.** The rendered `add-btn` is `#E09F3C` against an
+authored `#EAA63F` — a uniform ~95% composite over the page, measured across
+2855 pixels of flat fill rather than inferred from one sample. No `.alpha(..)`
+is emitted anywhere and nothing authors an opacity, so this is a Material
+`Button` default (its own elevation) that the emitter does not currently
+control. Filed separately; it is a small residual on top of a colour that was
+previously not applied at all.
+
+Two tests were retargeted rather than deleted. Both asserted the background
+appears in the modifier, which is exactly what this changes; the rule they
+protect — that the authored background, including its state chain, reaches
+the button — is unchanged.
+
 ### Added — the fixed leading cell of each table row gets its own semantics (#14843)
 
 `RowHeaderGrid` authors four `table-cell-role` values. Compose expressed two:
