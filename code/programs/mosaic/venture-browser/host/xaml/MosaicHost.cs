@@ -50,9 +50,9 @@ public static class MosaicHost
             && Native.ControlFile(
                 browser, key, opaqueId, displayName, mediaType, bytes, (nuint)bytes.Length,
                 append ? (byte)1 : (byte)0) != 0;
-        if (changed && component is not null)
+        if (changed)
         {
-            _ = ApplyProps(component);
+            contentSurface?.Refresh();
         }
         return changed;
     }
