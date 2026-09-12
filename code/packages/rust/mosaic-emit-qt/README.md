@@ -116,6 +116,12 @@ names are mapped to their QML camel-case names, and events dispatch through the
 non-null host. Missing runtime state exits explicitly instead of displaying a
 sample or inert UI. Permissive builds retain the optional bridge above.
 
+Generated project shells default to the customization-capable Basic Controls
+style unless the host selects a style. Under Qt's headless `offscreen` platform,
+the shell also replaces only the platform plugin's unresolved `Sans Serif`
+placeholder with a family-free `QFont::SansSerif` hint before QML starts. Real
+platform fonts and explicit host font choices remain unchanged.
+
 ## Primitive lowering table
 
 | moslayout tag | QML element                                                                  |

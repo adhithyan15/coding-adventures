@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Resolve Qt's offscreen-only generic system font by style hint before QML
+  initialization, eliminating the macOS family-alias diagnostic without
+  changing generated QML or overriding host-selected fonts.
+
 - Add deterministic live output, meter, and progress acceptance, including
   shared reset/reflow semantics and every native host projection ABI.
 
