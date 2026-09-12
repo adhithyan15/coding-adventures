@@ -664,6 +664,8 @@ pub enum BrokerAuditAction {
     Refresh,
     /// Authenticate and send one client-secret refresh request.
     ClientSecretRefresh,
+    /// Refresh and atomically rotate one client-secret-authenticated credential.
+    ClientSecretRefreshCredentialRotate,
     /// Authenticate and send one client-secret authorization-code exchange.
     ClientSecretExchange,
     /// Authenticate, send, and classify one client-secret RFC 7009 revocation.
@@ -792,6 +794,19 @@ impl<T> OAuthClientSecretCredentialBrokerAuditSink for T where
 pub struct ClientSecretExchangeCredentialExecution<'a, C, T> {
     clock: &'a mut C,
     transport: &'a mut T,
+}
+
+/// Injected effect authorities for one confidential refresh-to-custody composition.
+pub struct ClientSecretRefreshCredentialExecution<'a, C, T> {
+    clock: &'a mut C,
+    transport: &'a mut T,
+}
+
+impl<'a, C, T> ClientSecretRefreshCredentialExecution<'a, C, T> {
+    /// Bind caller-owned time and transport authorities to one execution.
+    pub fn new(clock: &'a mut C, transport: &'a mut T) -> Self {
+        Self { clock, transport }
+    }
 }
 
 impl<'a, C, T> ClientSecretExchangeCredentialExecution<'a, C, T> {
@@ -1201,6 +1216,88 @@ impl<S: CredentialStore> OAuthBroker<S> {
             &provider,
             trace,
             BrokerAuditAction::ClientSecretRefresh,
+            result,
+        )
+    }
+
+    /// Refresh one stored credential through exact retained client-secret policy.
+    ///
+    /// The opaque account key selects the registered provider and credential
+    /// record. Its retained Basic/Post method and provider-bound secret key are
+    /// validated before credential custody releases the exact refresh token and
+    /// revision. The decoded response crosses the OAuth credential-release gate
+    /// into revision-bound custody rotation, so failures and stale revisions
+    /// retain the prior record. Time, transport, secret storage, and credential
+    /// storage remain injected authorities.
+    pub fn refresh_client_secret_and_rotate_credentials<SS, C, T, A>(
+        &self,
+        key: &CredentialKey,
+        authentication: &ClientSecretAuthentication,
+        trace: OAuthTraceId,
+        client_secret_custody: &ClientSecretCustody<SS>,
+        execution: ClientSecretRefreshCredentialExecution<'_, C, T>,
+        audit: &mut A,
+    ) -> Result<CredentialRevision, BrokerError>
+    where
+        SS: ClientSecretStore,
+        C: BrokerClock,
+        T: OAuthClientSecretTokenTransport,
+        A: OAuthClientSecretCredentialBrokerAuditSink,
+    {
+        let ClientSecretRefreshCredentialExecution { clock, transport } = execution;
+        let provider_id = key.provider().clone();
+        publish_broker(
+            audit,
+            &provider_id,
+            trace,
+            BrokerAuditAction::ClientSecretRefreshCredentialRotate,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            let provider = self.registered_provider(&provider_id)?.clone();
+            let expected =
+                provider.bind_client_secret_authentication(authentication.key().clone())?;
+            if &expected != authentication {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let material = self
+                .custody
+                .with_refresh_material(key, trace, audit, |token, revision, metadata| {
+                    RefreshMaterial {
+                        token: Zeroizing::new(token.to_owned()),
+                        revision,
+                        scopes: metadata.scopes().to_vec(),
+                    }
+                })
+                .map_err(map_custody_error)?;
+            let requested_scopes: Vec<&str> = material.scopes.iter().map(String::as_str).collect();
+            let request =
+                prepare_token_refresh(provider.config(), material.token, &requested_scopes, trace)
+                    .publish_then_release(audit)
+                    .map_err(map_oauth_error)?;
+            let response = self.send_client_secret_refresh(
+                authentication,
+                request,
+                client_secret_custody,
+                transport,
+                audit,
+            )?;
+            validate_response_binding(key, &response, trace)?;
+            let now = clock.now_unix_seconds().map_err(|_| BrokerError::Clock)?;
+            let metadata = response_metadata(&response, now, &material.scopes)?;
+            let credentials = response
+                .release_credentials()
+                .publish_then_release(audit)
+                .map_err(map_oauth_error)?;
+            self.custody
+                .rotate(key, material.revision, credentials, metadata, trace, audit)
+                .map_err(map_custody_error)
+        })();
+        finish_broker(
+            audit,
+            &provider_id,
+            trace,
+            BrokerAuditAction::ClientSecretRefreshCredentialRotate,
             result,
         )
     }
@@ -2224,6 +2321,18 @@ mod tests {
                     (BrokerAuditAction::ClientSecretRefresh, BrokerAuditOutcome::Failed(_)) => {
                         "refresh-failed"
                     }
+                    (
+                        BrokerAuditAction::ClientSecretRefreshCredentialRotate,
+                        BrokerAuditOutcome::Attempted,
+                    ) => "refresh-rotate-attempted",
+                    (
+                        BrokerAuditAction::ClientSecretRefreshCredentialRotate,
+                        BrokerAuditOutcome::Succeeded,
+                    ) => "refresh-rotate-succeeded",
+                    (
+                        BrokerAuditAction::ClientSecretRefreshCredentialRotate,
+                        BrokerAuditOutcome::Failed(_),
+                    ) => "refresh-rotate-failed",
                     (BrokerAuditAction::ClientSecretExchange, BrokerAuditOutcome::Attempted) => {
                         "exchange-attempted"
                     }
@@ -2334,6 +2443,15 @@ mod tests {
                     (CredentialAuditAction::RefreshToken, CredentialAuditOutcome::Failed(_)) => {
                         "refresh-token-access-failed"
                     }
+                    (CredentialAuditAction::Rotate, CredentialAuditOutcome::Attempted) => {
+                        "credential-rotate-attempted"
+                    }
+                    (CredentialAuditAction::Rotate, CredentialAuditOutcome::Succeeded) => {
+                        "credential-rotate-succeeded"
+                    }
+                    (CredentialAuditAction::Rotate, CredentialAuditOutcome::Failed(_)) => {
+                        "credential-rotate-failed"
+                    }
                     (CredentialAuditAction::Delete, CredentialAuditOutcome::Attempted) => {
                         "credential-delete-attempted"
                     }
@@ -2441,6 +2559,7 @@ mod tests {
     struct MockClientSecretTransport {
         response: Option<TokenEndpointResponse>,
         expected_authorization_header: bool,
+        expected_refresh: &'static str,
         calls: usize,
         order: Rc<RefCell<Vec<&'static str>>>,
     }
@@ -2461,7 +2580,9 @@ mod tests {
                 request.authorization_header().is_some(),
                 self.expected_authorization_header
             );
-            assert!(request.form_body().contains("refresh_token=refresh-secret"));
+            assert!(request
+                .form_body()
+                .contains(&format!("refresh_token={}", self.expected_refresh)));
             assert_eq!(
                 request.form_body().contains("client_secret=client+secret"),
                 !self.expected_authorization_header
@@ -3262,6 +3383,7 @@ mod tests {
                     .unwrap(),
                 ),
                 expected_authorization_header: expects_basic_header,
+                expected_refresh: "refresh-secret",
                 calls: 0,
                 order: order.clone(),
             };
@@ -4135,6 +4257,7 @@ mod tests {
         let mut transport = MockClientSecretTransport {
             response: None,
             expected_authorization_header: true,
+            expected_refresh: "refresh-secret",
             calls: 0,
             order: order.clone(),
         };
@@ -4191,6 +4314,254 @@ mod tests {
                 "secret-access-attempted",
                 "secret-access-succeeded",
             ]
+        );
+    }
+
+    #[test]
+    fn stored_client_secret_refresh_rotates_exact_revision_after_all_audit_gates() {
+        let provider_config = config("fixture-confidential");
+        let secret_key = ClientSecretKey::new(
+            provider_config.provider().clone(),
+            ClientSecretReference::new([0x7a; 32]),
+        );
+        let provider = BrokerProvider::new_confidential(
+            provider_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            Vec::new(),
+        )
+        .unwrap();
+        let authentication = provider
+            .bind_client_secret_authentication(secret_key.clone())
+            .unwrap();
+        let credential_key = key("fixture-confidential");
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        let response = decoded_refresh_response(
+            &provider_config,
+            trace(62),
+            r#"{"access_token":"access-one","refresh_token":"refresh-one","token_type":"Bearer","scope":"mail.read profile"}"#,
+            &mut audit,
+        );
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut audit)
+            .unwrap();
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let initial_revision = custody
+            .create(
+                &credential_key,
+                credentials,
+                CredentialMetadata::new(
+                    "Bearer",
+                    Some(2_000),
+                    vec!["mail.read".to_owned(), "profile".to_owned()],
+                )
+                .unwrap(),
+                trace(62),
+                &mut audit,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(provider, trace(62), &mut audit)
+            .unwrap();
+        let client_secret_custody = ClientSecretCustody::new(InMemoryClientSecretStore::new());
+        client_secret_custody
+            .create(
+                &secret_key,
+                Zeroizing::new("client secret".to_owned()),
+                trace(62),
+                &mut audit,
+            )
+            .unwrap();
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let secret_events_before = audit.client_secret.len();
+        let wrong_authentication = ClientSecretAuthentication::new(
+            secret_key.clone(),
+            ClientSecretAuthenticationMethod::ClientSecretPost,
+        );
+        let mut rejected_transport = MockClientSecretTransport {
+            response: None,
+            expected_authorization_header: true,
+            expected_refresh: "refresh-one",
+            calls: 0,
+            order: order.clone(),
+        };
+        let mut rejected_clock = CountingClock { now: 0, calls: 0 };
+        assert_eq!(
+            broker.refresh_client_secret_and_rotate_credentials(
+                &credential_key,
+                &wrong_authentication,
+                trace(63),
+                &client_secret_custody,
+                ClientSecretRefreshCredentialExecution::new(
+                    &mut rejected_clock,
+                    &mut rejected_transport,
+                ),
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        );
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(audit.client_secret.len(), secret_events_before);
+        assert_eq!(rejected_transport.calls, 0);
+        assert_eq!(rejected_clock.calls, 0);
+        assert_eq!(
+            order.borrow().as_slice(),
+            ["refresh-rotate-attempted", "refresh-rotate-failed"]
+        );
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let mut failed_transport = MockClientSecretTransport {
+            response: None,
+            expected_authorization_header: true,
+            expected_refresh: "refresh-one",
+            calls: 0,
+            order: order.clone(),
+        };
+        let mut unused_clock = CountingClock { now: 0, calls: 0 };
+        assert_eq!(
+            broker.refresh_client_secret_and_rotate_credentials(
+                &credential_key,
+                &authentication,
+                trace(64),
+                &client_secret_custody,
+                ClientSecretRefreshCredentialExecution::new(
+                    &mut unused_clock,
+                    &mut failed_transport,
+                ),
+                &mut audit,
+            ),
+            Err(BrokerError::Transport)
+        );
+        assert_eq!(failed_transport.calls, 1);
+        assert_eq!(unused_clock.calls, 0);
+        assert!(audit.custody[custody_events_before..]
+            .iter()
+            .all(|event| event.action() != CredentialAuditAction::Rotate));
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(64), &mut audit, str::to_owned)
+                .unwrap(),
+            "access-one"
+        );
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let mut transport = MockClientSecretTransport {
+            response: Some(
+                TokenEndpointResponse::new(
+                    200,
+                    Zeroizing::new(
+                        br#"{"access_token":"access-two","refresh_token":"refresh-two","token_type":"Bearer","expires_in":3600}"#.to_vec(),
+                    ),
+                )
+                .unwrap(),
+            ),
+            expected_authorization_header: true,
+            expected_refresh: "refresh-one",
+            calls: 0,
+            order: order.clone(),
+        };
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let revision = broker
+            .refresh_client_secret_and_rotate_credentials(
+                &credential_key,
+                &authentication,
+                trace(65),
+                &client_secret_custody,
+                ClientSecretRefreshCredentialExecution::new(&mut clock, &mut transport),
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_ne!(revision, initial_revision);
+        assert_eq!(transport.calls, 1);
+        assert_eq!(clock.calls, 1);
+        assert_eq!(
+            audit.custody[custody_events_before..]
+                .iter()
+                .map(|event| (event.action(), event.outcome()))
+                .collect::<Vec<_>>(),
+            vec![
+                (
+                    CredentialAuditAction::RefreshToken,
+                    CredentialAuditOutcome::Attempted,
+                ),
+                (
+                    CredentialAuditAction::RefreshToken,
+                    CredentialAuditOutcome::Succeeded,
+                ),
+                (
+                    CredentialAuditAction::Rotate,
+                    CredentialAuditOutcome::Attempted,
+                ),
+                (
+                    CredentialAuditAction::Rotate,
+                    CredentialAuditOutcome::Succeeded,
+                ),
+            ]
+        );
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "refresh-rotate-attempted",
+                "refresh-token-access-attempted",
+                "refresh-token-access-succeeded",
+                "refresh-attempted",
+                "secret-access-attempted",
+                "secret-access-succeeded",
+                "transport-attempted",
+                "transport-effect",
+                "transport-succeeded",
+                "refresh-succeeded",
+                "credential-rotate-attempted",
+                "credential-rotate-succeeded",
+                "refresh-rotate-succeeded",
+            ]
+        );
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(65), &mut audit, str::to_owned)
+                .unwrap(),
+            "access-two"
+        );
+        assert_eq!(
+            broker
+                .custody
+                .with_refresh_token(&credential_key, trace(65), &mut audit, |token, _| {
+                    token.to_owned()
+                })
+                .unwrap(),
+            "refresh-two"
+        );
+        assert_eq!(
+            broker
+                .custody
+                .with_metadata(&credential_key, trace(65), &mut audit, |metadata| {
+                    (
+                        metadata.expires_at_unix_seconds(),
+                        metadata.scopes().to_vec(),
+                    )
+                })
+                .unwrap(),
+            (
+                Some(4_600),
+                vec!["mail.read".to_owned(), "profile".to_owned()],
+            )
         );
     }
 

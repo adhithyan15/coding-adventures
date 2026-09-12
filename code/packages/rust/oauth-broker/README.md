@@ -47,11 +47,16 @@ revokes that token through the retained client-secret method, and conditionally
 deletes only that revision after exact HTTP 200 and every intervening audit gate.
 Provider failures, transport failures, missing refresh tokens, and binding
 failures leave the credential record intact. These boundaries add no concrete
-network implementation;
-exchange can either return its audit-gated response or compose it directly into
+network implementation. Exchange can either return its audit-gated response or
+compose it directly into
 an exact provider-bound opaque account key, crossing the OAuth credential
-release and custody-create audit gates without credential disclosure. Refresh
-does not rotate stored OAuth credentials.
+release and custody-create audit gates without credential disclosure. A stored
+refresh token can likewise cross exact retained Basic/Post authentication,
+injected transport, bounded response decoding, caller-owned time, OAuth
+credential release, and revision-bound custody rotation without leaving the
+broker. Authentication mismatch is rejected before credential access, and
+transport, provider, clock, release, or compare-and-swap failures retain the
+prior record.
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
@@ -89,8 +94,7 @@ dependency are sibling packages in this repository.
 - account identity proof and key selection, listing, access-token-only detach
   when no refresh token exists, device authorization UI, timing/sleep authority,
   and full device-flow loops;
-- full confidential credential-refresh rotation, private-key signing
-  orchestration, OIDC validation, and DPoP.
+- private-key signing orchestration, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
 

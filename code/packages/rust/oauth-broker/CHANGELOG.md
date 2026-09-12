@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added exact stored client-secret refresh composition: retained provider
+  authentication is validated before the selected credential's refresh token
+  is released, and an audit-gated bounded response is atomically retained or
+  rotated only at the loaded revision. All failure paths retain prior state.
 - Added one exact refresh-token detach composition: the registered provider and
   retained client-secret method are validated before credential access, the
   refresh token and revision come from the selected opaque account record, and
