@@ -2,6 +2,9 @@
 
 Issue: [#14828](https://github.com/adhithyan15/coding-adventures/issues/14828)
 
+**Status: implemented.** Option (1) was taken. Two things the spec did not
+anticipate, both recorded in §8 below.
+
 Extends [UI29](UI29-primitive-kernel.md)'s primitive kernel. `mosaic-emit-compose`
 gives `Box` the overlay behaviour the kernel assigns to `Stack`, so a `Box` with
 two or more children draws them on top of one another.
@@ -123,3 +126,39 @@ So any fix must decide what `text-align` means on a flow container:
 Other backends. swiftui, html and qt already lay `Box` children out in flow, as
 measured above. No change is required there, and making one without a
 measurement would be guessing.
+
+## 8. What implementation found that the spec did not
+
+### The composable is chosen in TWO places
+
+`emit_node`'s `match node.tag` is the obvious one. `root_container_context`
+is the other, and it decides the composable for a component's ROOT node. A fix
+to only the first would have left a root `Box` overlaying while every nested
+one flowed — from one source tree, with no test able to see the difference
+from a single-node fixture.
+
+### A root `Stack` was not overlaying at all
+
+Found by the same audit, and a separate bug: `root_container_context` never
+named `Stack`, so it fell through to `_ => ("Column", ..)`. A root-level
+`Stack` laid its children out in flow — the exact **opposite** of a nested
+`Stack`, in the same emitter. The defect this spec describes and its own
+mirror image were both live, on the same primitive pair.
+
+### `text-align` was already emitting Kotlin that did not compile
+
+§4 predicted that swapping the composable would invalidate `contentAlignment`.
+It was worse than that: `contentAlignment` was applied with no check on the
+composable at all, so `text-align` on a `Row` already emitted
+`Row(contentAlignment = ..)`, which kotlinc rejects. Latent only because every
+shipped package authored `text-align` on a `Box`. Fixed first, as #14839.
+
+## 9. Acceptance, as measured
+
+| requirement | result |
+| --- | --- |
+| two-child `Box` flows, asserted on bounds | Engram `[0]` bottom `271.0`, `[Total]` top `271.0` — was an identical origin of `247.0` for both |
+| `text-align` still positions content, naming the argument | `horizontalAlignment = Alignment.End` on the grid body cell (`text-align: right`) |
+| before/after renders of Engram | all eleven chips read as `0` above their label instead of over it |
+| before/after renders of Trestle | all three renders **byte-identical**; 27 `Box`→`Column` swaps, zero pixel change — its multi-child `Box`es render one child each, as §3 predicted |
+| `Stack` still overlays, distinguished from `Box` | asserted as a pair; identical output for the two is itself the failure |

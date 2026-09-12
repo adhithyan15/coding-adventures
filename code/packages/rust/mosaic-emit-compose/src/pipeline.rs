@@ -1760,8 +1760,20 @@ fn root_container_context<'a>(
             ("Column", Some(ctx), Some(sheet_text))
         }
         "HostTableHead" | "HostTableBody" | "HostTableFoot" => ("Column", None, None),
+        // The SECOND place a primitive picks its composable -- the first is
+        // the `match node.tag` in `emit_node`. UI60 (#14828) had to change
+        // both; fixing only one would have left a root `Box` overlaying while
+        // every nested one flowed.
+        //
+        // This arm also had a bug of its own that the same audit found: `Stack`
+        // fell through to `_ => Column`, so a root-level `Stack` laid its
+        // children out in flow and did not overlay AT ALL -- the exact
+        // opposite of the nested-`Stack` behaviour, from the same source tree.
         other => match other {
-            "Box" => ("Box", None, None),
+            // UI29's generic opaque container: children lay out in flow.
+            "Box" => ("Column", None, None),
+            // UI29's z-axis container: Compose's `Box` layers its children.
+            "Stack" => ("Box", None, None),
             "Row" => ("Row", None, None),
             _ => ("Column", None, None),
         },
@@ -3516,19 +3528,50 @@ fn emit_compose_tree(
     let pad = "    ".repeat(depth);
     match node.tag.as_str() {
         "HostSurface" => emit_host_surface_compose(node, depth),
+        // UI60 (#14828): `Box` is UI29's GENERIC OPAQUE CONTAINER -- `<div>`
+        // on html, `Group { }` on SwiftUI, `Item { }` on Qt -- so its children
+        // lay out in flow. It lowers to Compose's `Column`.
+        //
+        // Until #14828 it lowered to Compose's `Box`, which layers its
+        // children at a shared origin. That is `Stack`'s meaning, not `Box`'s,
+        // and it made Engram's deck-stat chips draw the count ON TOP of its
+        // label: `[0]` and `[Total]` both at
+        // Rect.fromLTRB(49.0, 247.0, ..), eleven chips, every semantics gate
+        // green throughout -- a node drawn over another node is still present,
+        // still named and still "displayed".
+        //
+        // Compose was the only backend giving `Box` `Stack` semantics; the
+        // other three were measured and already lay children out in flow, so
+        // none of them changed.
+        "Box" => emit_container(
+            node,
+            "Column",
+            depth,
+            component_name,
+            emits,
+            part_styles,
+            table_ctx,
+            text_ctx,
+            for_payload,
+            injected_width,
+            in_row_scope,
+        ),
         // `Stack` (UI29's `position: relative` + absolutely-positioned-children
-        // container) lowers to Compose's `Box` — the same composable `Box`
-        // itself already uses. Jetpack Compose's `Box` natively layers its
-        // children (later children paint over earlier ones at the same
-        // origin) so this is a close analog, not a degradation the way
-        // `HostDraggable`/`HostDropTarget` → `Column` below is. What v1
-        // doesn't yet do: turn a child's static `position: absolute` +
+        // container) keeps Compose's `Box`. Jetpack Compose's `Box` natively
+        // layers its children (later children paint over earlier ones at the
+        // same origin), so this is a close analog rather than a degradation
+        // the way `HostDraggable`/`HostDropTarget` → `Column` below is. What
+        // v1 doesn't yet do: turn a child's static `position: absolute` +
         // `top`/`left` into `Modifier.offset(...)`, so a Stack's children
         // currently all render at the Box's origin instead of the pixel
         // positions the web/Flutter backends place them at — the same
         // "anything else silently skipped" v1 posture `compose_box_style`
         // already documents for every other static prop it doesn't lower.
-        "Box" | "Stack" => emit_container(
+        //
+        // This arm and the `Box` one above lowering to the SAME composable was
+        // the #14828 bug. If they are ever merged back together, that is the
+        // bug returning.
+        "Stack" => emit_container(
             node,
             "Box",
             depth,
@@ -9912,14 +9955,19 @@ mod tests {
         }
     }
 
-    /// Body cell is a `Box` with `contentAlignment = Alignment.CenterEnd`
-    /// (from `text-align: right`).
+    /// Body cell is a flow container with `horizontalAlignment =
+    /// Alignment.End` (from `text-align: right`).
+    ///
+    /// Was `Box(contentAlignment = Alignment.CenterEnd)` until UI60 (#14828)
+    /// made `Box` lower to `Column`. Same authored intent -- the cell's
+    /// content is right-aligned -- expressed with the argument a Column
+    /// actually has.
     #[test]
     fn body_cell_uses_content_alignment_center_end() {
         let (m, l, s) = visicalc_grid_triple();
         let out = from_pipeline(&m, &l, &s).unwrap().output;
         assert!(
-            out.contains("contentAlignment = Alignment.CenterEnd,"),
+            out.contains("horizontalAlignment = Alignment.End,"),
             "expected CenterEnd alignment, got:\n{out}"
         );
     }
@@ -9935,7 +9983,7 @@ mod tests {
             "header bg:\n{out}"
         );
         assert!(
-            out.contains("contentAlignment = Alignment.Center,"),
+            out.contains("horizontalAlignment = Alignment.CenterHorizontally,"),
             "header align:\n{out}"
         );
         assert!(
@@ -9965,18 +10013,35 @@ mod tests {
         );
     }
 
-    /// Regression: a styled cell `Box` must NEVER fall back to the
-    /// styleless `Box(modifier = Modifier.fillMaxWidth())` shape, and a
-    /// styleless component must NEVER gain a spurious styled chain.
+    /// Regression: a styled cell container must NEVER fall back to the
+    /// styleless `Modifier.fillMaxWidth()` one-liner, and a styleless
+    /// component must NEVER gain a spurious styled chain.
+    ///
+    /// The composable is `Column` rather than `Box` since UI60 (#14828); the
+    /// claim is about the STYLE CHAIN and is unaffected by which container
+    /// carries it.
     #[test]
     fn styled_grid_never_emits_fillmaxwidth_box_but_styleless_passes_through() {
         let (m, l, s) = visicalc_grid_triple();
         let styled = from_pipeline(&m, &l, &s).unwrap().output;
-        // Every Box in the styled Grid is a styled multi-line opener, so
-        // no `Box(modifier = Modifier.fillMaxWidth())` one-liners remain.
+        // The CELL container specifically, anchored on the loop that produces
+        // cells. Before UI60 this could assert `!contains("Box(modifier =
+        // Modifier.fillMaxWidth())")` over the whole file, because every Box
+        // in the grid WAS a cell. Now cells are Columns, and so are the
+        // colgroup/thead/tbody wrappers, which have always been legitimately
+        // unstyled one-liners -- the file-wide string no longer names the
+        // population it is trying to measure.
+        let cell_opener = styled
+            .split("row.forEachIndexed { _kotlinIdxc, v ->")
+            .nth(1)
+            .expect("styled grid emits a cell loop");
         assert!(
-            !styled.contains("Box(modifier = Modifier.fillMaxWidth())"),
-            "styled grid leaked an unstyled Box, got:\n{styled}"
+            !cell_opener.starts_with("\n                    val c: Double = _kotlinIdxc.toDouble()\n                    Column(modifier = Modifier.fillMaxWidth())"),
+            "styled cell fell back to the unstyled one-liner, got:\n{styled}"
+        );
+        assert!(
+            cell_opener.contains(".background(") && cell_opener.contains(".padding("),
+            "styled cell lost its style chain, got:\n{styled}"
         );
 
         // A styleless pipeline (empty .msl) is byte-identical to the
@@ -9994,7 +10059,7 @@ mod tests {
             .unwrap()
             .output;
         assert!(
-            plain.contains("Box(modifier = Modifier.fillMaxWidth()) {"),
+            plain.contains("Column(modifier = Modifier.fillMaxWidth()) {"),
             "styleless Box should keep fillMaxWidth, got:\n{plain}"
         );
         assert!(
@@ -11173,13 +11238,131 @@ mod tests {
         assert!(!out.contains("verticalArrangement"), "got:\n{out}");
     }
 
-    /// A `Box` stacks its children on top of one another and has no
+    // ===================================================================
+    // UI60 (#14828) -- `Box` is a flow container, `Stack` is the z-axis one.
+    //
+    // The bug was that BOTH lowered to Compose's `Box`, which overlays. A
+    // fix that leaves them identical has not fixed anything, so every test
+    // here checks the pair rather than one of them.
+    // ===================================================================
+
+    #[test]
+    fn box_lowers_to_a_flow_container_and_stack_keeps_overlaying() {
+        let m = component("F", vec![], vec![]);
+
+        let flow = from_pipeline(
+            &m,
+            &layout(
+                "F",
+                node(
+                    "Box",
+                    vec![],
+                    vec![node("Text", vec![], vec![]), node("Text", vec![], vec![])],
+                ),
+            ),
+            &empty_style("F"),
+        )
+        .expect("emit ok")
+        .output;
+
+        let overlay = from_pipeline(
+            &m,
+            &layout(
+                "F",
+                node(
+                    "Stack",
+                    vec![],
+                    vec![node("Text", vec![], vec![]), node("Text", vec![], vec![])],
+                ),
+            ),
+            &empty_style("F"),
+        )
+        .expect("emit ok")
+        .output;
+
+        assert!(
+            flow.contains("Column(modifier = Modifier.fillMaxWidth())"),
+            "Box must lower to a flow container, got:\n{flow}"
+        );
+        assert!(
+            overlay.contains("Box(modifier = Modifier.fillMaxWidth())"),
+            "Stack must keep Compose's overlaying Box, got:\n{overlay}"
+        );
+        // The pair, not either alone. Identical output IS the bug.
+        assert_ne!(
+            flow, overlay,
+            "Box and Stack lowered to the same thing -- that is #14828"
+        );
+    }
+
+    #[test]
+    fn a_nested_box_flows_and_a_nested_stack_overlays() {
+        // The root and the nested paths pick their composable in TWO
+        // different places (`root_container_context` and the `match
+        // node.tag` in `emit_node`). Fixing one and not the other would
+        // leave a root Box overlaying while every nested one flowed, which
+        // no single-node test would catch.
+        let m = component("F", vec![], vec![]);
+        let out = from_pipeline(
+            &m,
+            &layout(
+                "F",
+                node(
+                    "Row",
+                    vec![],
+                    vec![
+                        node("Box", vec![], vec![node("Text", vec![], vec![])]),
+                        node("Stack", vec![], vec![node("Text", vec![], vec![])]),
+                    ],
+                ),
+            ),
+            &empty_style("F"),
+        )
+        .expect("emit ok")
+        .output;
+
+        assert!(out.contains("Column("), "nested Box must flow, got:\n{out}");
+        assert!(out.contains("Box("), "nested Stack must overlay, got:\n{out}");
+    }
+
+    #[test]
+    fn a_root_stack_overlays_rather_than_falling_through_to_column() {
+        // Found by the same audit, and a bug in its own right: `Stack` was
+        // not named in `root_container_context` at all, so it fell through
+        // to `_ => Column`. A root-level Stack laid its children out in flow
+        // -- the exact opposite of a nested Stack, from one source tree.
+        let m = component("F", vec![], vec![]);
+        let out = from_pipeline(
+            &m,
+            &layout(
+                "F",
+                node(
+                    "Stack",
+                    vec![],
+                    vec![node("Text", vec![], vec![]), node("Text", vec![], vec![])],
+                ),
+            ),
+            &empty_style("F"),
+        )
+        .expect("emit ok")
+        .output;
+        assert!(
+            out.contains("Box(modifier = Modifier.fillMaxWidth())"),
+            "got:\n{out}"
+        );
+    }
+
+    /// A `Stack` layers its children on top of one another and has no
     /// arrangement at all, so a gap there is meaningless rather than merely
     /// unsupported. Dropped deliberately instead of guessed at.
+    ///
+    /// This assertion used to name `Box`. UI60 (#14828) moved the stacking
+    /// meaning to `Stack`, where UI29 always had it -- so the claim is
+    /// unchanged and the primitive it is made about is the corrected one.
     #[test]
-    fn gap_on_a_box_emits_no_arrangement() {
+    fn gap_on_a_stack_emits_no_arrangement() {
         let m = component("F", vec![], vec![]);
-        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        let mut n = node("Stack", vec![], vec![node("Text", vec![], vec![])]);
         n.part_name = Some("b".to_string());
         let l = layout("F", n);
         let mut sheet = empty_style("F");
@@ -11187,6 +11370,33 @@ mod tests {
 
         let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
         assert!(!out.contains("Arrangement.spacedBy"), "got:\n{out}");
+    }
+
+    /// The other half of the same change: a `Box` IS a flow container after
+    /// UI60, so a gap on one is now real spacing rather than a discard.
+    ///
+    /// Worth pinning separately because it is a behaviour change nobody
+    /// asked for -- `gap` on a Box was silently dropped before and now
+    /// spaces the children apart. A package that authored one expecting
+    /// nothing to happen will move.
+    #[test]
+    fn gap_on_a_box_now_arranges_because_a_box_is_flow() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node(
+            "Box",
+            vec![],
+            vec![node("Text", vec![], vec![]), node("Text", vec![], vec![])],
+        );
+        n.part_name = Some("b".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part("b", vec![sprop("gap", "8px")], vec![]));
+
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(
+            out.contains("verticalArrangement = Arrangement.spacedBy(8.dp)"),
+            "got:\n{out}"
+        );
     }
 
     /// #14810 — before this, Compose reported nothing, so an empty
