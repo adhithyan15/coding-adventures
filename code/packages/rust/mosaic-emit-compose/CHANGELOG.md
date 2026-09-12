@@ -22,6 +22,14 @@ in Trestle (the calendar's).
 wraps, so a project that does not keeps a byte-identical header. A test
 asserts the opt-in is absent in that case.
 
+`@file:OptIn` is **not repeatable**, so the FlowRow opt-in is merged into the
+single annotation the file already emits for `ExperimentalComposeUiApi` rather
+than added beside it. Trestle is the product that needs both — drag-and-drop
+plus the calendar's wrapping row — and two annotations are a Kotlin compile
+error (`This annotation is not repeatable`). Caught by CI's Compose Desktop
+build, because the first round rendered Engram (which compiles) but only
+*generated* Trestle.
+
 #### Where the first attempt failed
 
 This was tried once and backed out. `root_container_context`'s comment calls
