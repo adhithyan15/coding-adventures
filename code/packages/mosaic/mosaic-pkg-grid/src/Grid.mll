@@ -137,7 +137,7 @@ layout Grid {
             // breaking any consumer .msl that styles `cell`.
             // Dropping the label lets Cell.mll's root `Box [cell]`
             // flow through after resolution.
-            Cell (
+            pkg::mosaic-pkg-grid::Cell (
               value:        ( v ) ,
               // row/col (v0.2.3, UI37): ride along on onClick so the host
               // can tell which cell was clicked. Same expression-in-slot-
