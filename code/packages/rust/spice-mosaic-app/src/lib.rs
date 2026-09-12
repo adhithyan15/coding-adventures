@@ -1,3 +1,5 @@
+#![recursion_limit = "256"]
+
 //! State and host protocol for the Berkeley SPICE Mosaic workbench.
 //!
 //! The UI is intentionally a thin editor and result viewer. Parsing and
@@ -294,6 +296,15 @@ impl SpiceMosaicApp {
             .unwrap_or_default()
     }
 
+    fn selected_schematic_component(&self) -> Option<&SchematicComponent> {
+        let reference = self.selected_schematic_component.as_deref()?;
+        self.schematic
+            .as_ref()?
+            .components
+            .iter()
+            .find(|component| component.reference == reference)
+    }
+
     fn schematic_grid_lines() -> Vec<[f64; 4]> {
         (0..=8)
             .flat_map(|index| {
@@ -353,6 +364,9 @@ impl SpiceMosaicApp {
 
     fn update(&self) -> AppUpdate {
         let (schematic_wire_segments, schematic_terminal_points) = self.schematic_geometry();
+        let selected_schematic_component = self.selected_schematic_component();
+        let schematic_value_disabled = selected_schematic_component
+            .is_none_or(|component| component.kind == SchematicComponentKind::Ground);
         let selected_label = self
             .analyses
             .get(self.selected_analysis_row)
@@ -409,6 +423,12 @@ impl SpiceMosaicApp {
             "schematic-wire-segments": schematic_wire_segments,
             "schematic-terminal-points": schematic_terminal_points,
             "selected-schematic-label": self.selected_schematic_component.as_deref().unwrap_or("No component selected"),
+            "schematic-properties-label": "Component properties",
+            "selected-schematic-kind-label": selected_schematic_component.map(|component| component.kind.palette_label()).unwrap_or("Select a component"),
+            "schematic-value-label": "SPICE value",
+            "schematic-value": selected_schematic_component.map(|component| component.value.as_str()).unwrap_or(""),
+            "schematic-value-placeholder": "Select a non-ground component",
+            "schematic-value-disabled": schematic_value_disabled,
             "route-schematic-label": "Route selected component to",
             "synchronize-schematic-label": "Sync netlist",
             "dark-theme": self.dark,
@@ -663,6 +683,25 @@ impl MosaicApp for SpiceMosaicApp {
                 }
                 self.selected_schematic_component = Some(reference.to_owned());
                 Ok(self.announced(format!("Selected {reference}.")))
+            }
+            "schematicValueChange" => {
+                let value = event.payload["value"]
+                    .as_str()
+                    .ok_or_else(|| invalid("schematicValueChange requires text value"))?;
+                let reference = self
+                    .selected_schematic_component
+                    .clone()
+                    .ok_or_else(|| invalid("schematicValueChange requires a selected component"))?;
+                let document = self
+                    .schematic
+                    .as_mut()
+                    .ok_or_else(|| invalid("schematicValueChange requires a loaded schematic"))?;
+                document
+                    .set_component_value(&reference, value)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.diagnostics =
+                    format!("Updated {reference} value. Sync the netlist when ready.");
+                Ok(self.announced(self.diagnostics.clone()))
             }
             "routeToSchematicComponent" => {
                 let target = event.payload["reference"]
@@ -925,6 +964,50 @@ mod tests {
             ))
             .unwrap_err();
         assert_eq!(duplicate.to_string(), "schematic wire is already connected");
+    }
+
+    #[test]
+    fn schematic_value_inspector_updates_the_canonical_component_before_sync() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let document = json!({
+            "title": "Editable host RC",
+            "components": [
+                {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":0,"y":20},{"x":40,"y":20}]},
+                {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+            ],
+            "wires": []
+        });
+        dispatch(&mut app, "schematicLoad", json!({"document": document}));
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"R1"}),
+        );
+        let edited = dispatch(&mut app, "onSchematicValueChange", json!({"value":"2k"}));
+        assert_eq!(edited.props["selected-schematic-kind-label"], "Resistor");
+        assert_eq!(edited.props["schematic-value"], "2k");
+        assert_eq!(edited.props["schematic-value-disabled"], false);
+        let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
+        assert!(synchronized.props["netlist-text"]
+            .as_str()
+            .unwrap()
+            .contains("R1 n1 n2 2k"));
+
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"G1"}),
+        );
+        let ground = app
+            .dispatch(Event::new(1, "schematicValueChange", json!({"value":"0"})))
+            .unwrap_err();
+        assert_eq!(
+            ground.to_string(),
+            "G1 ground symbol does not accept a SPICE value"
+        );
     }
 
     #[test]

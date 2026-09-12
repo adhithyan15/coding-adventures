@@ -21,6 +21,12 @@ component SpiceWorkbench {
   slot schematic-wire-segments : list<list<number>> ;
   slot schematic-terminal-points : list<list<number>> ;
   slot selected-schematic-label : text ;
+  slot schematic-properties-label : text ;
+  slot selected-schematic-kind-label : text ;
+  slot schematic-value-label : text ;
+  slot schematic-value : text ;
+  slot schematic-value-placeholder : text ;
+  slot schematic-value-disabled : bool ;
   slot route-schematic-label : text ;
   slot synchronize-schematic-label : text ;
   slot analysis-label : text ;
@@ -43,6 +49,7 @@ component SpiceWorkbench {
   emit onPlaceSchematicComponent ( kind : text ) ;
   emit onSelectSchematicAnalysis ( analysis : text ) ;
   emit onSelectSchematicComponent ( reference : text ) ;
+  emit onSchematicValueChange ( value : text ) ;
   emit onRouteToSchematicComponent ( reference : text ) ;
   emit onSynchronizeSchematic ;
   emit onSelectAnalysis ( index : number ) ;

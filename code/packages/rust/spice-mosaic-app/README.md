@@ -12,11 +12,12 @@ operating-point, DC sweep, AC sweep, or transient choice and lowers it
 deterministically to a Berkeley deck.
 This is not a second simulator or parser format; hosts pass the emitted text to
 the same parser and engine used by the deck editor. The workbench exposes a
-palette for deterministic grid placement, selected-component routing, and
-orthogonal wire/terminal geometry while retaining endpoint-only netlist
-semantics.
+palette for deterministic grid placement, selected-component routing, and a
+selected-component value inspector. Non-ground values are validated as one
+SPICE token before synchronization; orthogonal wire/terminal geometry retains
+endpoint-only netlist semantics.
 
-Hosts load, place, wire, select, route, and synchronize that document through
+Hosts load, place, wire, select, edit component values, route, and synchronize that document through
 the Mosaic app event contract. Synchronization replaces the text deck with the
 canonical emitted deck and refreshes its runnable Berkeley analysis plan.
 

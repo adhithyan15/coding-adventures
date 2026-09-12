@@ -333,6 +333,33 @@ impl SchematicDocument {
         Ok(())
     }
 
+    /// Update the SPICE value of one selected, non-ground component.
+    pub fn set_component_value(
+        &mut self,
+        reference: &str,
+        value: &str,
+    ) -> Result<(), SchematicError> {
+        let component = self
+            .components
+            .iter_mut()
+            .find(|component| component.reference == reference)
+            .ok_or_else(|| invalid("schematic component reference is unknown"))?;
+        if component.kind == SchematicComponentKind::Ground {
+            return Err(invalid(format!(
+                "{} ground symbol does not accept a SPICE value",
+                component.reference
+            )));
+        }
+        if value.is_empty() || value.chars().any(char::is_whitespace) {
+            return Err(invalid(format!(
+                "{} value must be one non-empty SPICE token",
+                component.reference
+            )));
+        }
+        component.value = value.to_owned();
+        Ok(())
+    }
+
     fn validate_wire_endpoints(&self, wire: &SchematicWire) -> Result<(), SchematicError> {
         if wire.start == wire.end {
             return Err(invalid("schematic wires must have distinct endpoints"));
@@ -797,6 +824,37 @@ mod tests {
         assert_eq!(
             document.connect_wire(duplicate).unwrap_err().to_string(),
             "schematic wire is already connected"
+        );
+    }
+
+    #[test]
+    fn edits_component_values_without_permitting_ground_or_whitespace() {
+        let mut document = rc_document();
+        document.set_component_value("R1", "2k").unwrap();
+        assert!(document
+            .to_berkeley_netlist()
+            .unwrap()
+            .contains("R1 n1 n2 2k"));
+        assert_eq!(
+            document
+                .set_component_value("R1", "2 k")
+                .unwrap_err()
+                .to_string(),
+            "R1 value must be one non-empty SPICE token"
+        );
+        assert_eq!(
+            document
+                .set_component_value("G1", "0")
+                .unwrap_err()
+                .to_string(),
+            "G1 ground symbol does not accept a SPICE value"
+        );
+        assert_eq!(
+            document
+                .set_component_value("X1", "1")
+                .unwrap_err()
+                .to_string(),
+            "schematic component reference is unknown"
         );
     }
 }

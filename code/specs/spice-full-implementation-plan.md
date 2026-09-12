@@ -172,7 +172,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      AC-voltage symbols plus persisted operating-point, DC-sweep, AC-sweep,
      and transient analysis selection. Each control must lower to the existing
      Berkeley parser syntax without adding a parallel circuit model.
-   - **Mosaic schematic connectivity integrity** (current phase): discovery after
+   - **Mosaic schematic connectivity integrity** (completed in PR #14922): discovery after
      PR #14908: raw host wires and loaded documents can currently introduce
      dangling or duplicate endpoint pairs, which would manufacture phantom
      canonical net nodes during deck lowering. Make the document own one
@@ -180,6 +180,14 @@ model-card parameter, or a UI artifact is not a completion signal.
      to serialized-document validation and `schematicConnect`, and lock the
      failure modes with canonical and host-contract regressions before adding
      more capture controls.
+   - **Mosaic schematic property inspector** (current phase): discovery after
+     PR #14922: palette placement and routing only expose fixed default values,
+     so a host must inject raw document JSON to author an actual circuit. Add a
+     selected-component inspector for all supported non-ground symbols, with a
+     canonical one-token value mutation boundary, persisted host event, Mosaic
+     input surface, and synchronization regressions. Keep analysis-card source
+     selection and sweep-parameter editing for the following analysis
+     configuration phase.
 
 ### Operating rules
 

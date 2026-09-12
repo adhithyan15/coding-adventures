@@ -51,6 +51,10 @@ fn manifest_and_component_contract_are_complete() {
         .slots
         .iter()
         .any(|slot| slot.name == "schematic-analysis-controls"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "schematic-value-disabled"));
     assert!(component.emits.iter().any(|emit| emit.name == "onRun"));
     assert!(component
         .emits
@@ -68,6 +72,10 @@ fn manifest_and_component_contract_are_complete() {
         .emits
         .iter()
         .any(|emit| emit.name == "onSelectSchematicAnalysis"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onSchematicValueChange"));
 }
 
 #[test]
@@ -83,6 +91,7 @@ fn multiline_workbench_compiles_in_both_themes() {
     assert!(source("SpiceWorkbench.mll").contains("Path [ schematic-wire-segment ]"));
     assert!(source("SpiceWorkbench.mll").contains("Path [ schematic-terminal ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-control ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-value-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("segment[0]"));
     assert!(source("SpiceWorkbench.mll").contains("slot: diagnostic-rows"));
     assert!(source("SpiceWorkbench.mll").contains("onClick : emit: onRun"));
@@ -120,6 +129,7 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("data-on-click=\"onRun\""));
                 assert!(output.contains("data-on-click=\"onPlaceSchematicComponent\""));
                 assert!(output.contains("data-on-click=\"onSelectSchematicAnalysis\""));
+                assert!(output.contains("data-on-change=\"onSchematicValueChange\""));
             }
             Backend::React => {
                 assert!(output.contains("<svg aria-hidden=\"true\""));
@@ -128,6 +138,7 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("type: \"run\""));
                 assert!(output.contains("type: \"placeSchematicComponent\""));
                 assert!(output.contains("type: \"selectSchematicAnalysis\""));
+                assert!(output.contains("type: \"schematicValueChange\""));
             }
             _ => unreachable!("the test only builds HTML and React artifacts"),
         }
