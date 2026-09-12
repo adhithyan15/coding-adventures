@@ -180,9 +180,9 @@ figure of 434, where it failed with the expected assertion message naming
 the 438/434 mismatch, before the doc was corrected to match. The full
 `non_algol_matrix_every_proven_cell_agrees` capstone passed: 210 programs,
 **1357** cells exercised (was 1353), 210 skipped (the same host-wide missing
-`ilasm` pattern every prior slice reports), zero failures — confirming the
-doc's corrected grand total (1563 → 1567) against a live run rather than
-arithmetic alone.
+`ilasm` pattern every prior slice reports), zero failures, in 478.98s —
+confirming the doc's corrected grand total (1563 → 1567) against a live run
+rather than arithmetic alone.
 
 Reprioritize the remaining ~26 undeclared COBOL BEAM rows against VM-041
 (Twig dynamic-string isolation), VM-060b (host input design) and VM-058
