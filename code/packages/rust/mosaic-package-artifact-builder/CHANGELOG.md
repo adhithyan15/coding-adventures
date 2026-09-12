@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Added — a colgroup `Col (width:)` is reported as inert (#14846)
+
+It reaches no backend at all, so it is reported on every backend rather than
+pinned on some. Compose emitted a comment that read like a lowering; html
+emitted a bare `<col>`. Neither said anything.
+
+Nothing authors one any more — the declarations in `mosaic-pkg-grid` were
+removed in the same change — so this reports zero today and exists to stop a
+new one being added silently.
+
 ### Fixed — a `[host_effects]` handler for a backend that cannot install one
 
 `install_host_effects` copies a declared handler's source for **any** backend.

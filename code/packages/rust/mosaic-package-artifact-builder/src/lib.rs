@@ -1503,6 +1503,32 @@ fn ignored_native_property(
             "interaction.table-wheel-shift-unimplemented",
             "measured table wheel routing is currently implemented only by React",
         )),
+        // #14846 -- `Col (width:)` reaches NOTHING, on any of the eight
+        // backends. Measured on a minimal colgroup probe, each emitted file
+        // opened rather than pattern-matched:
+        //
+        //   html    `<col>`                        -- bare, no width, on the
+        //                                             backend where `<col
+        //                                             width>` is the exact
+        //                                             native concept
+        //   XAML    `ColumnDefinition Width="Auto"`
+        //   Compose `// Col (column-width hint - no Compose analog)`
+        //   and the other five likewise emit nothing carrying the number.
+        //
+        // It went unnoticed because the one product with a colgroup declares
+        // the SAME width a second time in its `.msl`, and only that copy is
+        // load-bearing -- proved in #14845 by disabling the emitter path and
+        // re-measuring: identical result. A table that declared a column
+        // width only here would get nothing, silently.
+        //
+        // Reported on every backend rather than pinned, because there is no
+        // backend on which it works. What it should BECOME -- an html
+        // lowering, an advisory hint, or a removed primitive -- is #14846's
+        // question; this only stops it reading like a lowering.
+        ("Col", "width") => Some((
+            "layout.col-width-inert",
+            "a colgroup Col width is consumed by no backend; column widths reach cells through the column-widths slot or the stylesheet instead",
+        )),
         (_, "table-cell-role") if backend != Backend::React => Some((
             "accessibility.authored-table-cell-unimplemented",
             "authored table-cell roles and wrapper geometry are currently implemented only by React",

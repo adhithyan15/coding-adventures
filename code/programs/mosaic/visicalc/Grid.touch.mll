@@ -26,7 +26,15 @@ layout Grid {
   HostTable [ sheet ] {
     HostTableColGroup {
       For ( each: slot: column-widths , as: w , index: cw ) {
-        Col [ col ] ( width: ( w ) )
+        // No `width:` -- it reaches nothing on any of the eight backends
+        // (#14846), including html, where `<col width>` is the exact native
+        // concept and the emitter still writes a bare `<col>`.
+        //
+        // The Col NODE is still required: `extract_table_context` needs a
+        // `Col` child to recognise this `For` as a column loop, and reads the
+        // loop's `each:` slot -- never the width. Widths reach cells through
+        // that slot and the stylesheet.
+        Col [ col ]
       }
     }
     HostTableHead {

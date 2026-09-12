@@ -2,8 +2,21 @@
 layout RowHeaderGrid {
   HostTable [sheet] (focusable: true, a11y-label: "Data table", selected-row: slot: selected-row, selected-col: slot: selected-col, onViewportRows: emit: onViewportRows, viewport-offset: slot: viewport-offset, total-rows: slot: total-rows, onViewportShift: emit: onViewportShift) {
     HostTableColGroup {
-      Col (width: 48)
-      For (each: slot: column-widths, as: w, index: cw) { Col (width: (w)) }
+      // No `width:` on either Col. It reaches NOTHING -- measured on all
+      // eight backends (#14846), including html, where `<col width>` is the
+      // exact native concept and the emitter still writes a bare `<col>`.
+      //
+      // The Col NODES stay: `extract_table_context` requires a `Col` child to
+      // recognise the colgroup `For` as a column loop, and reads the loop's
+      // `each:` slot. It never reads the width. The real widths reach cells
+      // through the `column-widths` slot and the stylesheet -- proved in
+      // #14845 by disabling the emitter's width path and re-measuring:
+      // identical result.
+      //
+      // Declaring 48 here as well made the source claim a second, inert
+      // source of truth for the same number.
+      Col
+      For (each: slot: column-widths, as: w, index: cw) { Col }
     }
     HostTableHead [column-headings] {
       Row [header-row] {

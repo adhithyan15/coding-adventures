@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+### Removed — inert `Col (width:)` declarations (#14846)
+
+`Col (width:)` reaches **nothing**, on any of the eight backends. Measured on
+a minimal colgroup probe with each emitted file opened rather than
+pattern-matched:
+
+| backend | emits |
+| --- | --- |
+| html | `<col>` — bare, on the backend where `<col width>` is the exact native concept |
+| XAML | `ColumnDefinition Width="Auto"` |
+| Compose | `// Col (column-width hint — no Compose analog)` |
+| the other five | nothing carrying the number |
+
+It went unnoticed because `RowHeaderGrid` declares the same `48` a second time
+in VisiCalc's `.msl`, and only that copy is load-bearing — proved in #14845 by
+disabling the emitter's width path and re-measuring: identical result.
+
+The `Col` **nodes** stay. `extract_table_context` needs a `Col` child to
+recognise a colgroup `For` as a column loop, and reads the loop's `each:`
+slot — never the width. Widths reach cells through that slot and the
+stylesheet.
+
+The renders are unchanged, which is the claim.
+
+
 ### Fixed — the corner and row-header cells had no width (#14829)
 
 `row-corner` and `row-heading` were bare `Text` leaves. Both parts already
