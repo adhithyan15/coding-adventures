@@ -41,6 +41,14 @@
               <button data-on-click="onPlaceSchematicComponent" style="background: #ecfeff; color: #155e75; border-width: 1px; border-color: #67e8f9; border-radius: 3px; padding: 6px">{{kind}}</button>
             <!-- /mosaic-for -->
           </div>
+          <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicAnalysisLabel}}</span>
+          <div style="display: flex; flex-direction: row; gap: 6px">
+            <!-- mosaic-for each="schematicAnalysisControls" as="analysis" index="analysis-index" -->
+              <!-- emit "onSelectSchematicAnalysis" dropped: HTML is static -->
+              <button data-on-click="onSelectSchematicAnalysis" style="background: #f5f3ff; color: #5b21b6; border-width: 1px; border-color: #c4b5fd; border-radius: 3px; padding: 6px">{{analysis}}</button>
+            <!-- /mosaic-for -->
+          </div>
+          <span style="color: #6d28d9; font-weight: bold">{{selectedSchematicAnalysisLabel}}</span>
           <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicGridLabel}}</span>
           <div style="position: relative; width: 360px; min-height: 240px; background: #ffffff; border-width: 1px; border-color: #cbd5e1">
             <!-- mosaic-for each="schematicGridLines" as="line" index="line-index" -->
