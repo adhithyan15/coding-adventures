@@ -240,6 +240,16 @@ impl ProviderConfig {
     pub fn client_id(&self) -> &str {
         &self.client_id
     }
+
+    /// Return the exact redirect URI bound to this provider registration.
+    pub fn redirect_uri(&self) -> &str {
+        &self.redirect_uri
+    }
+
+    /// Return whether registry-wide redirect uniqueness is the mix-up defense.
+    pub const fn uses_distinct_redirect_uri(&self) -> bool {
+        matches!(self.mix_up_defense, Some(MixUpDefense::DistinctRedirectUri))
+    }
 }
 
 impl Debug for ProviderConfig {

@@ -180,9 +180,16 @@ The delivery order is:
    contract now drives synthetic public RFC 9207, distinct-redirect, device,
    confidential, user-defined, and fail-closed metadata profiles through the
    same decoder and audited derivation paths. The synthetic corpus explicitly
-   claims no live provider values. Verified Google, Microsoft, GitHub, Dropbox,
-   Slack, and Spotify snapshots remain to be added through this same suite;
-   provider quirks remain data and none creates a new OAuth implementation.
+   claims no live provider values. A bounded, exact-schema static public-client
+   profile decoder now creates broker registrations from caller-owned client
+   IDs and redirect URIs; endpoint, mix-up-defense, response-format,
+   refresh-lead, and authorization-parameter policy remain data while the host
+   retains file I/O and audit authority. The broker rejects redirect reuse when
+   either registration relies on distinct-redirect mix-up defense while allowing
+   shared redirects only when both providers validate RFC 9207 response issuers.
+   Verified Google, Microsoft, GitHub, Dropbox, Slack, and Spotify snapshots
+   remain to be added through this same suite; provider quirks remain data and
+   none creates a new OAuth implementation.
 10. **Later hardening:** DPoP and full OpenID
    Connect discovery/JWKS/ID-token validation.
 
