@@ -1,15 +1,17 @@
-//! Bounded static public-provider data decoding.
+//! Bounded static public- and confidential-provider data decoding.
 
 use super::{BrokerError, BrokerProvider};
 use coding_adventures_bounded_json::{parse_with_depth_limit, JsonNumber, JsonValue};
-use coding_adventures_oauth::{ProviderConfig, ProviderId, TokenResponseFormat};
+use coding_adventures_oauth::{
+    ConfidentialClientAuthenticationMethod, ProviderConfig, ProviderId, TokenResponseFormat,
+};
 use coding_adventures_zeroize::Zeroizing;
 use std::collections::{BTreeMap, BTreeSet};
 
 const SCHEMA_VERSION: i64 = 1;
 const MAX_PROVIDER_DATA_BYTES: usize = 64 * 1024;
 const MAX_PROVIDER_DATA_DEPTH: usize = 16;
-const MAX_PROVIDER_DATA_FIELDS: usize = 10;
+const MAX_PROVIDER_DATA_FIELDS: usize = 11;
 const MAX_EXTRA_PARAMETERS: usize = 32;
 
 impl BrokerProvider {
@@ -45,14 +47,51 @@ impl BrokerProvider {
         client_id: impl Into<String>,
         redirect_uri: impl Into<String>,
     ) -> Result<Self, BrokerError> {
-        decode_public_provider_data(&body, client_id.into(), redirect_uri.into())
+        decode_provider_data(
+            &body,
+            client_id.into(),
+            redirect_uri.into(),
+            ProviderProfileKind::Public,
+        )
+    }
+
+    /// Decode and validate one static confidential Authorization Code profile.
+    ///
+    /// This uses the public schema plus a required
+    /// `token_endpoint_auth_method` field. Its value must exactly name one
+    /// method in the stack's closed implemented set: `client_secret_basic`,
+    /// `client_secret_post`, or `private_key_jwt`. Public `none`, absent,
+    /// case-variant, and user-defined methods fail closed. `private_key_jwt`
+    /// additionally requires a bounded, unique, non-`none`
+    /// `token_endpoint_auth_signing_alg_values_supported` array; secret methods
+    /// reject that field. The exact algorithms are retained as data without
+    /// claiming a concrete signer. Credentials, opaque key references, and
+    /// signing remain separate injected boundaries.
+    pub fn from_confidential_provider_data(
+        body: Zeroizing<Vec<u8>>,
+        client_id: impl Into<String>,
+        redirect_uri: impl Into<String>,
+    ) -> Result<Self, BrokerError> {
+        decode_provider_data(
+            &body,
+            client_id.into(),
+            redirect_uri.into(),
+            ProviderProfileKind::Confidential,
+        )
     }
 }
 
-fn decode_public_provider_data(
+#[derive(Clone, Copy)]
+enum ProviderProfileKind {
+    Public,
+    Confidential,
+}
+
+fn decode_provider_data(
     body: &[u8],
     client_id: String,
     redirect_uri: String,
+    profile_kind: ProviderProfileKind,
 ) -> Result<BrokerProvider, BrokerError> {
     if body.is_empty() || body.len() > MAX_PROVIDER_DATA_BYTES {
         return Err(BrokerError::InvalidProviderData);
@@ -61,21 +100,28 @@ fn decode_public_provider_data(
     let root = parse_with_depth_limit(text, MAX_PROVIDER_DATA_DEPTH)
         .map_err(|_| BrokerError::InvalidProviderData)?;
     let fields = object(&root)?;
-    exact_fields(
-        fields,
-        &[
-            "schema_version",
-            "provider",
-            "authorization_endpoint",
-            "token_endpoint",
-            "revocation_endpoint",
-            "mix_up_defense",
-            "authorization_extra_parameters",
-            "token_response_format",
-            "refresh_lead_seconds",
-        ],
-        MAX_PROVIDER_DATA_FIELDS,
-    )?;
+    let common_fields = [
+        "schema_version",
+        "provider",
+        "authorization_endpoint",
+        "token_endpoint",
+        "revocation_endpoint",
+        "mix_up_defense",
+        "authorization_extra_parameters",
+        "token_response_format",
+        "refresh_lead_seconds",
+    ];
+    match profile_kind {
+        ProviderProfileKind::Public => {
+            exact_fields(fields, &common_fields, MAX_PROVIDER_DATA_FIELDS)?;
+        }
+        ProviderProfileKind::Confidential => {
+            let mut allowed = common_fields.to_vec();
+            allowed.push("token_endpoint_auth_method");
+            allowed.push("token_endpoint_auth_signing_alg_values_supported");
+            exact_fields(fields, &allowed, MAX_PROVIDER_DATA_FIELDS)?;
+        }
+    }
     if integer(fields, "schema_version")? != SCHEMA_VERSION {
         return Err(BrokerError::InvalidProviderData);
     }
@@ -110,8 +156,37 @@ fn decode_public_provider_data(
         _ => return Err(BrokerError::InvalidProviderData),
     };
     let refresh_lead_seconds = nonnegative_integer(fields, "refresh_lead_seconds")?;
-    BrokerProvider::new(config, response_format, refresh_lead_seconds)
-        .map_err(|_| BrokerError::InvalidProviderData)
+    match profile_kind {
+        ProviderProfileKind::Public => {
+            BrokerProvider::new(config, response_format, refresh_lead_seconds)
+        }
+        ProviderProfileKind::Confidential => {
+            let authentication_method =
+                confidential_authentication_method(string(fields, "token_endpoint_auth_method")?)?;
+            let signing_algorithms =
+                optional_string_array(fields, "token_endpoint_auth_signing_alg_values_supported")?
+                    .unwrap_or_default();
+            BrokerProvider::new_confidential(
+                config,
+                response_format,
+                refresh_lead_seconds,
+                authentication_method,
+                signing_algorithms,
+            )
+        }
+    }
+    .map_err(|_| BrokerError::InvalidProviderData)
+}
+
+fn confidential_authentication_method(
+    value: &str,
+) -> Result<ConfidentialClientAuthenticationMethod, BrokerError> {
+    match value {
+        "client_secret_basic" => Ok(ConfidentialClientAuthenticationMethod::ClientSecretBasic),
+        "client_secret_post" => Ok(ConfidentialClientAuthenticationMethod::ClientSecretPost),
+        "private_key_jwt" => Ok(ConfidentialClientAuthenticationMethod::PrivateKeyJwt),
+        _ => Err(BrokerError::InvalidProviderData),
+    }
 }
 
 fn apply_mix_up_defense(
@@ -201,6 +276,37 @@ fn optional_string<'a>(
     }
 }
 
+fn optional_string_array(
+    fields: &[(String, JsonValue)],
+    name: &str,
+) -> Result<Option<Vec<String>>, BrokerError> {
+    let Some(value) = optional_member(fields, name)? else {
+        return Ok(None);
+    };
+    let JsonValue::Array(values) = value else {
+        return Err(BrokerError::InvalidProviderData);
+    };
+    if values.is_empty() || values.len() > super::MAX_CLIENT_AUTHENTICATION_ALGORITHMS {
+        return Err(BrokerError::InvalidProviderData);
+    }
+    let mut result = Vec::with_capacity(values.len());
+    let mut seen = BTreeSet::new();
+    for value in values {
+        let JsonValue::String(value) = value else {
+            return Err(BrokerError::InvalidProviderData);
+        };
+        if value.is_empty()
+            || value.len() > super::MAX_CLIENT_AUTHENTICATION_ALGORITHM_BYTES
+            || !value.bytes().all(|byte| matches!(byte, 0x21..=0x7e))
+            || !seen.insert(value.as_str())
+        {
+            return Err(BrokerError::InvalidProviderData);
+        }
+        result.push(value.clone());
+    }
+    Ok(Some(result))
+}
+
 fn integer(fields: &[(String, JsonValue)], name: &str) -> Result<i64, BrokerError> {
     match member(fields, name)? {
         JsonValue::Number(JsonNumber::Integer(value)) => Ok(*value),
@@ -282,6 +388,28 @@ mod tests {
         )
     }
 
+    fn confidential_body(method: &str) -> String {
+        let signing_algorithms = if method == "private_key_jwt" {
+            r#","token_endpoint_auth_signing_alg_values_supported":["EdDSA","RS256"]"#
+        } else {
+            ""
+        };
+        VALID.replace(
+            r#""refresh_lead_seconds":300"#,
+            &format!(
+                r#""token_endpoint_auth_method":"{method}"{signing_algorithms},"refresh_lead_seconds":300"#
+            ),
+        )
+    }
+
+    fn decode_confidential(body: &str) -> Result<BrokerProvider, BrokerError> {
+        BrokerProvider::from_confidential_provider_data(
+            Zeroizing::new(body.as_bytes().to_vec()),
+            "deployment-client",
+            "https://service.example/oauth/callback",
+        )
+    }
+
     #[test]
     fn static_public_data_builds_the_generic_authorization_path() {
         let provider = decode(VALID).unwrap();
@@ -289,6 +417,7 @@ mod tests {
         assert_eq!(provider.config().client_id(), "deployment-client");
         assert_eq!(provider.response_format(), TokenResponseFormat::Json);
         assert_eq!(provider.refresh_lead_seconds(), 300);
+        assert_eq!(provider.confidential_authentication_method(), None);
         let debug = format!("{provider:?}");
         assert!(!debug.contains("deployment-client"));
         assert!(!debug.contains("login.static.example"));
@@ -307,6 +436,106 @@ mod tests {
             .starts_with("https://login.static.example/authorize?"));
         assert!(request.url().as_str().contains("access_type=offline"));
         assert!(request.url().as_str().contains("prompt=consent"));
+    }
+
+    #[test]
+    fn static_confidential_data_retains_each_closed_exact_method() {
+        for (name, expected) in [
+            (
+                "client_secret_basic",
+                ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            ),
+            (
+                "client_secret_post",
+                ConfidentialClientAuthenticationMethod::ClientSecretPost,
+            ),
+            (
+                "private_key_jwt",
+                ConfidentialClientAuthenticationMethod::PrivateKeyJwt,
+            ),
+        ] {
+            let provider = decode_confidential(&confidential_body(name)).unwrap();
+            assert_eq!(
+                provider.confidential_authentication_method(),
+                Some(expected)
+            );
+            let expected_algorithms: &[&str] = if name == "private_key_jwt" {
+                &["EdDSA", "RS256"]
+            } else {
+                &[]
+            };
+            assert_eq!(
+                provider
+                    .client_authentication_signing_algorithms()
+                    .iter()
+                    .map(String::as_str)
+                    .collect::<Vec<_>>(),
+                expected_algorithms
+            );
+            assert_eq!(provider.config().client_id(), "deployment-client");
+            assert_eq!(
+                provider.config().redirect_uri(),
+                "https://service.example/oauth/callback"
+            );
+        }
+    }
+
+    #[test]
+    fn static_profiles_do_not_cross_public_and_confidential_schemas() {
+        let confidential = confidential_body("client_secret_basic");
+        assert_eq!(
+            decode(&confidential).unwrap_err(),
+            BrokerError::InvalidProviderData
+        );
+        assert_eq!(
+            decode_confidential(VALID).unwrap_err(),
+            BrokerError::InvalidProviderData
+        );
+    }
+
+    #[test]
+    fn confidential_method_is_closed_exact_and_case_sensitive() {
+        for method in [
+            "none",
+            "client_secret_jwt",
+            "Client_Secret_Basic",
+            "urn:example:custom",
+            "",
+        ] {
+            assert_eq!(
+                decode_confidential(&confidential_body(method)).unwrap_err(),
+                BrokerError::InvalidProviderData
+            );
+        }
+    }
+
+    #[test]
+    fn jwt_authentication_requires_safe_exact_algorithm_data() {
+        let valid = confidential_body("private_key_jwt");
+        let cases = [
+            valid.replace(
+                r#","token_endpoint_auth_signing_alg_values_supported":["EdDSA","RS256"]"#,
+                "",
+            ),
+            valid.replace(r#"["EdDSA","RS256"]"#, r#"["none"]"#),
+            valid.replace(r#"["EdDSA","RS256"]"#, r#"["EdDSA","EdDSA"]"#),
+            valid.replace(r#"["EdDSA","RS256"]"#, "[]"),
+        ];
+        for body in cases {
+            assert_eq!(
+                decode_confidential(&body).unwrap_err(),
+                BrokerError::InvalidProviderData
+            );
+        }
+
+        let secret_with_algorithms = confidential_body("client_secret_basic").replace(
+            r#""token_endpoint_auth_method":"client_secret_basic""#,
+            r#""token_endpoint_auth_method":"client_secret_basic","token_endpoint_auth_signing_alg_values_supported":["RS256"]"#,
+        );
+        assert_eq!(
+            decode_confidential(&secret_with_algorithms).unwrap_err(),
+            BrokerError::InvalidProviderData
+        );
     }
 
     #[test]

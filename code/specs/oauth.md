@@ -203,10 +203,17 @@ The delivery order is:
    the source read, rejects a returned profile naming another provider before
    registry mutation, keeps profile bytes zeroizing, and records a closed
    source/decode result before separately audited registration. Concrete file,
-   vault, or embedded-resource lookup remains host-owned. The broker rejects
-   redirect reuse when
-   either registration relies on distinct-redirect mix-up defense while allowing
-   shared redirects only when both providers validate RFC 9207 response issuers.
+   vault, or embedded-resource lookup remains host-owned. An exact-schema
+   confidential profile variant retains one selected closed implemented method
+   (`client_secret_basic`, `client_secret_post`, or `private_key_jwt`) as
+   provider data. It rejects public `none`, absence, case variants, and
+   user-defined methods. JWT profiles require a bounded, unique, non-`none`
+   advertised algorithm set; secret methods reject algorithm data. Exact
+   algorithms remain provider data without claiming an implementation, and the
+   decoder acquires no secret, key, signer, or storage authority. The broker
+   rejects redirect reuse when either registration relies on distinct-redirect
+   mix-up defense while allowing shared redirects only when both providers
+   validate RFC 9207 response issuers.
    Verified Google, Microsoft, GitHub, Dropbox, Slack, and Spotify snapshots
    remain to be added through this same suite; provider quirks remain data and
    none creates a new OAuth implementation.

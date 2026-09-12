@@ -10,17 +10,17 @@
 use coding_adventures_oauth::{
     decode_device_authorization_response, decode_device_token_poll_response, decode_token_response,
     prepare_device_authorization, prepare_device_token_poll, prepare_token_refresh,
-    DeviceAuthorization, DeviceAuthorizationProfile, DeviceAuthorizationRequest, DevicePollResult,
-    DevicePollingSession, DeviceTokenPollRequest, OAuthAuditSink, OAuthError, OAuthTraceId,
-    ProviderConfig, ProviderId, TokenRefreshRequest, TokenResponse, TokenResponseFormat,
-    MAX_TOKEN_RESPONSE_BYTES,
+    ConfidentialClientAuthenticationMethod, DeviceAuthorization, DeviceAuthorizationProfile,
+    DeviceAuthorizationRequest, DevicePollResult, DevicePollingSession, DeviceTokenPollRequest,
+    OAuthAuditSink, OAuthError, OAuthTraceId, ProviderConfig, ProviderId, TokenRefreshRequest,
+    TokenResponse, TokenResponseFormat, MAX_TOKEN_RESPONSE_BYTES,
 };
 use coding_adventures_oauth_credential_custody::{
     CredentialAuditSink, CredentialCustody, CredentialKey, CredentialMetadata, CredentialRevision,
     CredentialStore, CustodyError,
 };
 use coding_adventures_zeroize::Zeroizing;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{self, Debug, Display, Formatter};
 
 mod provider_data;
@@ -28,12 +28,18 @@ mod provider_data;
 /// Largest accepted proactive-refresh window: one day.
 pub const MAX_REFRESH_LEAD_SECONDS: u64 = 24 * 60 * 60;
 
+const MAX_CLIENT_AUTHENTICATION_ALGORITHMS: usize = 128;
+
+const MAX_CLIENT_AUTHENTICATION_ALGORITHM_BYTES: usize = 256;
+
 /// Provider data plus broker-owned lifecycle policy.
 #[derive(Clone, PartialEq, Eq)]
 pub struct BrokerProvider {
     config: ProviderConfig,
     response_format: TokenResponseFormat,
     refresh_lead_seconds: u64,
+    confidential_authentication_method: Option<ConfidentialClientAuthenticationMethod>,
+    client_authentication_signing_algorithms: Vec<String>,
 }
 
 impl BrokerProvider {
@@ -50,7 +56,29 @@ impl BrokerProvider {
             config,
             response_format,
             refresh_lead_seconds,
+            confidential_authentication_method: None,
+            client_authentication_signing_algorithms: Vec::new(),
         })
+    }
+
+    /// Validate one confidential-provider registration without acquiring
+    /// credential, signer, storage, or I/O authority.
+    ///
+    /// `private_key_jwt` requires the exact non-empty provider-advertised
+    /// algorithm set. Client-secret methods must supply no algorithms. Retained
+    /// algorithm names are data and do not imply a concrete signer.
+    pub fn new_confidential(
+        config: ProviderConfig,
+        response_format: TokenResponseFormat,
+        refresh_lead_seconds: u64,
+        authentication_method: ConfidentialClientAuthenticationMethod,
+        signing_algorithms: Vec<String>,
+    ) -> Result<Self, BrokerError> {
+        validate_client_authentication_algorithms(authentication_method, &signing_algorithms)?;
+        let mut provider = Self::new(config, response_format, refresh_lead_seconds)?;
+        provider.confidential_authentication_method = Some(authentication_method);
+        provider.client_authentication_signing_algorithms = signing_algorithms;
+        Ok(provider)
     }
 
     /// Return the provider identifier.
@@ -72,6 +100,50 @@ impl BrokerProvider {
     pub const fn refresh_lead_seconds(&self) -> u64 {
         self.refresh_lead_seconds
     }
+
+    /// Return the selected closed confidential authentication method.
+    ///
+    /// `None` identifies the public-client profile selected by [`Self::new`].
+    pub const fn confidential_authentication_method(
+        &self,
+    ) -> Option<ConfidentialClientAuthenticationMethod> {
+        self.confidential_authentication_method
+    }
+
+    /// Borrow the exact provider-advertised JWT client-authentication algorithms.
+    ///
+    /// This is empty for public and client-secret profiles. Retention does not
+    /// imply that any algorithm has a concrete signing implementation.
+    pub fn client_authentication_signing_algorithms(&self) -> &[String] {
+        &self.client_authentication_signing_algorithms
+    }
+}
+
+fn validate_client_authentication_algorithms(
+    authentication_method: ConfidentialClientAuthenticationMethod,
+    algorithms: &[String],
+) -> Result<(), BrokerError> {
+    if authentication_method != ConfidentialClientAuthenticationMethod::PrivateKeyJwt {
+        return if algorithms.is_empty() {
+            Ok(())
+        } else {
+            Err(BrokerError::InvalidPolicy)
+        };
+    }
+    if algorithms.is_empty() || algorithms.len() > MAX_CLIENT_AUTHENTICATION_ALGORITHMS {
+        return Err(BrokerError::InvalidPolicy);
+    }
+    let mut seen = BTreeSet::new();
+    if algorithms.iter().any(|algorithm| {
+        algorithm == "none"
+            || algorithm.is_empty()
+            || algorithm.len() > MAX_CLIENT_AUTHENTICATION_ALGORITHM_BYTES
+            || !algorithm.bytes().all(|byte| matches!(byte, 0x21..=0x7e))
+            || !seen.insert(algorithm.as_str())
+    }) {
+        return Err(BrokerError::InvalidPolicy);
+    }
+    Ok(())
 }
 
 impl Debug for BrokerProvider {
@@ -81,6 +153,14 @@ impl Debug for BrokerProvider {
             .field("provider", self.provider())
             .field("response_format", &self.response_format)
             .field("refresh_lead_seconds", &self.refresh_lead_seconds)
+            .field(
+                "confidential_authentication_method",
+                &self.confidential_authentication_method,
+            )
+            .field(
+                "client_authentication_signing_algorithm_count",
+                &self.client_authentication_signing_algorithms.len(),
+            )
             .field("config", &"<redacted>")
             .finish()
     }
