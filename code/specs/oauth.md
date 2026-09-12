@@ -3,8 +3,8 @@
 **Status:** Phase 2 provider-neutral broker boundary implemented —
 installed-app Authorization Code + PKCE, RFC 8628 device-flow initiation and
 caller-driven polling classification and sequencing,
-token/error codecs, refresh rotation, revocation request and response
-classification, RFC 8414
+token/error codecs, refresh rotation, revocation request/response
+classification and exact refresh-token detach, RFC 8414
 metadata validation, and an audited
 literal-loopback callback host plus storage-agnostic audit-before-disclosure
 credential custody now compose through data-driven provider registration,
@@ -170,14 +170,18 @@ The delivery order is:
    exact operation endpoint, and retained Basic/Post method are checked before
    audited client-secret access; custody constructs the zeroizing request; and
    broker-audited injected transport plus bounded response decoding completes
-   before release. Revocation releases success only for exact HTTP 200, keeps
-   HTTP 503 retryable, and performs no local credential deletion. Initial
+   before release. Revocation releases success only for exact HTTP 200 and keeps
+   HTTP 503 retryable. The composed detach path reads the refresh token and
+   revision from the exact opaque account record, then conditionally deletes
+   only that revision after remote success and every audit gate; binding,
+   custody, transport, and provider failures retain local credentials. Initial
    client-secret exchange can now compose directly into an exact opaque account
    key: key/provider mismatch fails before secret, transport, clock, or storage
    access; OAuth credential release and custody creation remain separately
    audited; and only the opaque revision is returned. Stored OAuth credential
-   rotation and post-revocation local credential deletion remain separate
-   composition steps, and these boundaries add no concrete network authority.
+   rotation, account identity proof/key selection, and access-token-only detach
+   remain separate composition steps, and these boundaries add no concrete
+   network authority.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate

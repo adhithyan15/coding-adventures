@@ -41,7 +41,12 @@ Basic/Post method are checked before audited secret custody access; custody
 constructs zeroizing wire material; and broker-audited injected transport plus
 bounded response decoding completes before result release. Revocation accepts
 only exact HTTP 200 as confirmation, preserves HTTP 503 as a closed retryable
-failure, and never deletes a local credential. These boundaries add no concrete
+failure, and the lower-level send never deletes a local credential. A separate
+composition reads the exact opaque account record's refresh token and revision,
+revokes that token through the retained client-secret method, and conditionally
+deletes only that revision after exact HTTP 200 and every intervening audit gate.
+Provider failures, transport failures, missing refresh tokens, and binding
+failures leave the credential record intact. These boundaries add no concrete
 network implementation;
 exchange can either return its audit-gated response or compose it directly into
 an exact provider-bound opaque account key, crossing the OAuth credential
@@ -81,11 +86,11 @@ dependency are sibling packages in this repository.
 - concrete HTTPS, TLS, or socket authority;
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
-- account identity proof and key selection, listing, detach/revocation, device
-  authorization UI, timing/sleep authority, and full device-flow loops;
-- full confidential credential-refresh rotation, post-revocation local
-  credential deletion, private-key signing orchestration, OIDC validation, and
-  DPoP.
+- account identity proof and key selection, listing, access-token-only detach
+  when no refresh token exists, device authorization UI, timing/sleep authority,
+  and full device-flow loops;
+- full confidential credential-refresh rotation, private-key signing
+  orchestration, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
 
