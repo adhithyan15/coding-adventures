@@ -128,7 +128,7 @@
 use std::collections::HashMap;
 use std::fmt::Write as _;
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
@@ -1165,7 +1165,7 @@ fn emit_html_tree(
         close,
         self_closing,
         builtin_style,
-    } = primitive_to_html_tag(&node.tag)?;
+    } = primitive_to_html_tag(node)?;
 
     let mut open_with_attrs = open;
 
@@ -2682,7 +2682,8 @@ struct HtmlTag {
 /// than falling back to a default — silent fallback would lose layout
 /// semantics and is exactly the bug class we want to surface at
 /// compile time.
-fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
+fn primitive_to_html_tag(node: &LayoutNode) -> Result<HtmlTag, PipelineEmitError> {
+    let tag = node.tag.as_str();
     // Helper: a styled/plain container or leaf. The built-in CSS is kept
     // SEPARATE from the `open` tag (no inline `style="…"`) so the walker
     // can merge it with the author part style before composing the final
@@ -2748,7 +2749,20 @@ fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
         // `overflow: auto` becomes a scroll container for any content that
         // exceeds its bounds. (Some other backends still ship `Scroll`;
         // adding that alias is a separate cleanup PR — U29-X1.)
-        "HostScroll" => mk("<div>", "</div>", false, "overflow: auto;"),
+        // UI61 -- the axis decides which overflow shorthand is honest.
+        // `overflow: auto` scrolls BOTH axes, which is what this arm used
+        // to emit unconditionally; on a default-vertical HostScroll that
+        // is one scrollbar more than the author asked for.
+        "HostScroll" => mk(
+            "<div>",
+            "</div>",
+            false,
+            match ScrollAxis::of(node) {
+                ScrollAxis::Vertical => "overflow-y: auto; overflow-x: hidden;",
+                ScrollAxis::Horizontal => "overflow-x: auto; overflow-y: hidden;",
+                ScrollAxis::Both => "overflow: auto;",
+            },
+        ),
         // `HostTable` and its four sub-tags lower to the matching native
         // HTML table elements. The semantic structure
         // (colgroup/thead/tbody/tfoot) is preserved 1:1 so accessibility
@@ -4302,13 +4316,44 @@ mod tests {
     /// its bounds.
     #[test]
     fn host_scroll_primitive_lowers_to_overflow_auto_div() {
+        // UI61 — vertical is the default, so the bare `overflow: auto`
+        // this used to assert now over-scrolls by one axis.
         let m = component("X", vec![], vec![]);
-        let l = root_layout("X", leaf("HostScroll"));
-        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let render = |root: LayoutNode| {
+            from_pipeline(&m, &root_layout("X", root), &empty_style("X"))
+                .unwrap()
+                .output
+        };
+        let axis = |k: &str| LayoutNode {
+            tag: "HostScroll".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "axis".to_string(),
+                value: LayoutPropValue::Keyword(k.to_string()),
+            }],
+            children: Vec::new(),
+        };
+
+        let out = render(leaf("HostScroll"));
         assert!(
-            r.output.contains(r#"<div style="overflow: auto;"></div>"#),
-            "HostScroll must produce an overflow: auto div, got:\n{}",
-            r.output
+            out.contains(r#"<div style="overflow-y: auto; overflow-x: hidden;"></div>"#),
+            "the default axis is vertical, got:\n{out}"
+        );
+        assert!(
+            !out.contains(r#"style="overflow: auto;""#),
+            "a default HostScroll must not scroll both axes, got:\n{out}"
+        );
+
+        let out = render(axis("horizontal"));
+        assert!(
+            out.contains(r#"style="overflow-x: auto; overflow-y: hidden;""#),
+            "axis: horizontal, got:\n{out}"
+        );
+
+        let out = render(axis("both"));
+        assert!(
+            out.contains(r#"style="overflow: auto;""#),
+            "axis: both, got:\n{out}"
         );
     }
 
