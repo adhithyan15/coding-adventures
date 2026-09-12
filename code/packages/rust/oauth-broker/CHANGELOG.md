@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added audited confidential static provider-data source composition with
+  exact requested-provider binding, zeroizing profile bytes, closed source
+  errors, and separate registration audit. It reads provider policy only and
+  adds no credential, key, signer, or concrete source authority.
 - Added exact-schema static confidential-provider decoding that retains one
   closed implemented authentication method while rejecting public `none`,
   absent, case-variant, and user-defined methods. JWT profiles require bounded,

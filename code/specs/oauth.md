@@ -198,13 +198,16 @@ The delivery order is:
    profile decoder now creates broker registrations from caller-owned client
    IDs and redirect URIs; endpoint, mix-up-defense, response-format,
    refresh-lead, and authorization-parameter policy remain data. An injected
-   provider-data source now composes profile loading with registration: the
-   broker durably audits the exact requested provider and caller trace before
-   the source read, rejects a returned profile naming another provider before
-   registry mutation, keeps profile bytes zeroizing, and records a closed
-   source/decode result before separately audited registration. Concrete file,
-   vault, or embedded-resource lookup remains host-owned. An exact-schema
-   confidential profile variant retains one selected closed implemented method
+   provider-data source now composes public profile loading with registration:
+   the broker durably audits the exact requested provider and caller trace
+   before the source read, rejects a returned profile naming another provider
+   before registry mutation, keeps profile bytes zeroizing, and records a
+   closed source/decode result before separately audited registration. A
+   parallel confidential-only source contract now provides the same gates for
+   confidential static profiles while reading provider policy only, never a
+   client secret or signing key. Concrete file, vault, or embedded-resource
+   lookup remains host-owned. An exact-schema confidential profile variant
+   retains one selected closed implemented method
    (`client_secret_basic`, `client_secret_post`, or `private_key_jwt`) as
    provider data. It rejects public `none`, absence, case variants, and
    user-defined methods. JWT profiles require a bounded, unique, non-`none`

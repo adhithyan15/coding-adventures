@@ -190,6 +190,21 @@ pub trait PublicProviderDataSource {
     ) -> Result<Zeroizing<Vec<u8>>, ProviderDataSourceError>;
 }
 
+/// Caller-injected authority for reading one static confidential-provider profile.
+///
+/// Implementations may read a file, vault object, embedded resource, or other
+/// host-owned source. The broker publishes its provider- and trace-bound audit
+/// intent before invoking this method, and the returned bytes remain
+/// wipe-on-drop while they are decoded. This boundary reads provider policy,
+/// never a client secret or signing key.
+pub trait ConfidentialProviderDataSource {
+    /// Read the profile selected by the exact requested provider identity.
+    fn load_confidential_provider_data(
+        &mut self,
+        provider: &ProviderId,
+    ) -> Result<Zeroizing<Vec<u8>>, ProviderDataSourceError>;
+}
+
 /// Closed provider-data source failure without path or backend diagnostics.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct ProviderDataSourceError;
@@ -504,7 +519,7 @@ pub struct TokenTransportError;
 /// Broker boundary recorded durably around configuration and external effects.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum BrokerAuditAction {
-    /// Read and decode one provider-bound static public-provider profile.
+    /// Read and decode one provider-bound static provider profile.
     ProviderDataLoad,
     /// Register or idempotently confirm one provider definition.
     ProviderRegister,
@@ -611,7 +626,7 @@ pub struct BrokerAuditError;
 pub enum BrokerError {
     /// Broker lifecycle policy was outside its accepted bound.
     InvalidPolicy,
-    /// Static public-provider data was malformed, unknown, or failed validation.
+    /// Static provider data was malformed, unknown, or failed validation.
     InvalidProviderData,
     /// The injected provider-data source failed without releasing diagnostics.
     ProviderDataSource,
@@ -736,6 +751,59 @@ impl<S: CredentialStore> OAuthBroker<S> {
             .map_err(|_| BrokerError::ProviderDataSource)
             .and_then(|body| {
                 BrokerProvider::from_public_provider_data(body, client_id, redirect_uri)
+            })
+            .and_then(|provider| {
+                if provider.provider() == requested_provider {
+                    Ok(provider)
+                } else {
+                    Err(BrokerError::BindingMismatch)
+                }
+            });
+        let provider = finish_broker(
+            audit,
+            requested_provider,
+            trace,
+            BrokerAuditAction::ProviderDataLoad,
+            result,
+        )?;
+        self.register_provider(provider, trace, audit)
+    }
+
+    /// Audit, load, exactly bind, decode, and register one confidential profile.
+    ///
+    /// The requested provider identity selects the caller-owned source before
+    /// any read occurs. A profile naming another provider is rejected before
+    /// registry mutation. Deployment-specific client and redirect values stay
+    /// outside the static profile. The profile may select only the closed
+    /// confidential authentication methods accepted by
+    /// [`BrokerProvider::from_confidential_provider_data`]; this operation
+    /// acquires no client-secret, signing-key, signer, filesystem, or vault
+    /// authority.
+    pub fn load_and_register_confidential_provider<D, A>(
+        &mut self,
+        requested_provider: &ProviderId,
+        client_id: impl Into<String>,
+        redirect_uri: impl Into<String>,
+        trace: OAuthTraceId,
+        source: &mut D,
+        audit: &mut A,
+    ) -> Result<(), BrokerError>
+    where
+        D: ConfidentialProviderDataSource,
+        A: BrokerAuditSink,
+    {
+        publish_broker(
+            audit,
+            requested_provider,
+            trace,
+            BrokerAuditAction::ProviderDataLoad,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = source
+            .load_confidential_provider_data(requested_provider)
+            .map_err(|_| BrokerError::ProviderDataSource)
+            .and_then(|body| {
+                BrokerProvider::from_confidential_provider_data(body, client_id, redirect_uri)
             })
             .and_then(|provider| {
                 if provider.provider() == requested_provider {
@@ -1701,6 +1769,20 @@ mod tests {
         }
     }
 
+    impl ConfidentialProviderDataSource for MockProviderDataSource {
+        fn load_confidential_provider_data(
+            &mut self,
+            provider: &ProviderId,
+        ) -> Result<Zeroizing<Vec<u8>>, ProviderDataSourceError> {
+            self.calls += 1;
+            self.requested.push(provider.clone());
+            if let Some(order) = &self.order {
+                order.borrow_mut().push("source-read");
+            }
+            self.response.take().unwrap_or(Err(ProviderDataSourceError))
+        }
+    }
+
     fn trace(byte: u8) -> OAuthTraceId {
         OAuthTraceId::new([byte; 16])
     }
@@ -1746,6 +1828,26 @@ mod tests {
                     "mix_up_defense":{{"kind":"distinct_redirect_uri"}},
                     "authorization_extra_parameters":{{}},
                     "token_response_format":"json",
+                    "refresh_lead_seconds":300
+                }}"#
+            )
+            .into_bytes(),
+        )
+    }
+
+    fn confidential_provider_data(name: &str) -> Zeroizing<Vec<u8>> {
+        Zeroizing::new(
+            format!(
+                r#"{{
+                    "schema_version":1,
+                    "provider":"{name}",
+                    "authorization_endpoint":"https://auth.{name}.example/authorize",
+                    "token_endpoint":"https://token.{name}.example/token",
+                    "mix_up_defense":{{"kind":"authorization_response_issuer","issuer":"https://auth.{name}.example"}},
+                    "authorization_extra_parameters":{{}},
+                    "token_response_format":"json",
+                    "token_endpoint_auth_method":"private_key_jwt",
+                    "token_endpoint_auth_signing_alg_values_supported":["EdDSA","RS256"],
                     "refresh_lead_seconds":300
                 }}"#
             )
@@ -1961,6 +2063,157 @@ mod tests {
             .broker
             .iter()
             .all(|event| { event.provider() == &requested && event.trace() == trace(27) }));
+    }
+
+    #[test]
+    fn confidential_provider_data_load_retains_policy_after_audited_source_read() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let requested = ProviderId::new("fixture-confidential").unwrap();
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut source =
+            MockProviderDataSource::successful(confidential_provider_data("fixture-confidential"));
+        source.order = Some(Rc::clone(&order));
+        let mut audit = RecordingAudit {
+            order: Some(Rc::clone(&order)),
+            ..RecordingAudit::default()
+        };
+
+        broker
+            .load_and_register_confidential_provider(
+                &requested,
+                "fixture-service-client",
+                "https://service.fixture.example/oauth/callback",
+                trace(32),
+                &mut source,
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(source.calls, 1);
+        assert_eq!(
+            source.requested.as_slice(),
+            std::slice::from_ref(&requested)
+        );
+        let provider = broker.registered_provider(&requested).unwrap();
+        assert_eq!(provider.config().client_id(), "fixture-service-client");
+        assert_eq!(
+            provider.confidential_authentication_method(),
+            Some(ConfidentialClientAuthenticationMethod::PrivateKeyJwt)
+        );
+        assert_eq!(
+            provider.client_authentication_signing_algorithms(),
+            ["EdDSA", "RS256"]
+        );
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "load-attempted",
+                "source-read",
+                "load-succeeded",
+                "register-attempted",
+                "register-succeeded",
+            ]
+        );
+        assert!(audit
+            .broker
+            .iter()
+            .all(|event| { event.provider() == &requested && event.trace() == trace(32) }));
+    }
+
+    #[test]
+    fn confidential_provider_source_binding_and_audit_fail_closed_before_registration() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let requested = ProviderId::new("fixture-confidential").unwrap();
+
+        let mut source = MockProviderDataSource::failed();
+        let mut audit = RecordingAudit::default();
+        assert_eq!(
+            broker.load_and_register_confidential_provider(
+                &requested,
+                "fixture-service-client",
+                "https://service.fixture.example/oauth/callback",
+                trace(33),
+                &mut source,
+                &mut audit,
+            ),
+            Err(BrokerError::ProviderDataSource)
+        );
+        assert_eq!(source.calls, 1);
+        assert_eq!(broker.provider_count(), 0);
+        assert_eq!(
+            audit.broker.last().unwrap().outcome(),
+            BrokerAuditOutcome::Failed(BrokerFailureClass::ProviderData)
+        );
+
+        let mut source =
+            MockProviderDataSource::successful(confidential_provider_data("other-confidential"));
+        let mut audit = RecordingAudit::default();
+        assert_eq!(
+            broker.load_and_register_confidential_provider(
+                &requested,
+                "fixture-service-client",
+                "https://service.fixture.example/oauth/callback",
+                trace(34),
+                &mut source,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        );
+        assert_eq!(source.calls, 1);
+        assert_eq!(broker.provider_count(), 0);
+        assert_eq!(
+            audit.broker.last().unwrap().outcome(),
+            BrokerAuditOutcome::Failed(BrokerFailureClass::InvalidInput)
+        );
+        assert!(!audit.broker.iter().any(|event| {
+            event.trace() == trace(34) && event.action() == BrokerAuditAction::ProviderRegister
+        }));
+
+        let mut source =
+            MockProviderDataSource::successful(confidential_provider_data("fixture-confidential"));
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(1),
+            ..RecordingAudit::default()
+        };
+        assert_eq!(
+            broker.load_and_register_confidential_provider(
+                &requested,
+                "fixture-service-client",
+                "https://service.fixture.example/oauth/callback",
+                trace(35),
+                &mut source,
+                &mut audit,
+            ),
+            Err(BrokerError::Audit)
+        );
+        assert_eq!(source.calls, 0);
+        assert_eq!(broker.provider_count(), 0);
+
+        let mut source =
+            MockProviderDataSource::successful(confidential_provider_data("fixture-confidential"));
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(2),
+            ..RecordingAudit::default()
+        };
+        assert_eq!(
+            broker.load_and_register_confidential_provider(
+                &requested,
+                "fixture-service-client",
+                "https://service.fixture.example/oauth/callback",
+                trace(36),
+                &mut source,
+                &mut audit,
+            ),
+            Err(BrokerError::Audit)
+        );
+        assert_eq!(source.calls, 1);
+        assert_eq!(broker.provider_count(), 0);
+        assert!(!audit
+            .broker
+            .iter()
+            .any(|event| event.action() == BrokerAuditAction::ProviderRegister));
     }
 
     #[test]
