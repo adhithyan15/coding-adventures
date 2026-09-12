@@ -176,9 +176,13 @@ The delivery order is:
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.
-9. **Provider data fixtures:** Google, Microsoft, GitHub, Dropbox, Slack,
-   Spotify, and user-defined providers validated through the same conformance
-   suite. Provider quirks remain data; none creates a new OAuth implementation.
+9. **Provider data fixtures:** a language-neutral, zero-dependency conformance
+   contract now drives synthetic public RFC 9207, distinct-redirect, device,
+   confidential, user-defined, and fail-closed metadata profiles through the
+   same decoder and audited derivation paths. The synthetic corpus explicitly
+   claims no live provider values. Verified Google, Microsoft, GitHub, Dropbox,
+   Slack, and Spotify snapshots remain to be added through this same suite;
+   provider quirks remain data and none creates a new OAuth implementation.
 10. **Later hardening:** DPoP and full OpenID
    Connect discovery/JWKS/ID-token validation.
 
