@@ -3,6 +3,7 @@
 use coding_adventures_html_parser::{BrowserRenderNode, BrowserRenderTree};
 use layout_controls::{ControlAppearance, ControlKind, ControlState};
 use text_flow::graphemes;
+use url_parser::Url;
 
 const EDIT_HISTORY_LIMIT: usize = 100;
 
@@ -101,9 +102,37 @@ pub enum ControlAccessibilityAction {
     },
     SetSelection(ControlSelection),
     ReplaceSelection(String),
+    SetValue(String),
+    Increment,
+    Decrement,
     SelectAll,
     Undo,
     Redo,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct ControlValueDiagnostic {
+    pub code: &'static str,
+    pub message: &'static str,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct ControlValueState {
+    pub key: String,
+    pub value: String,
+    pub input_mode: Option<String>,
+    pub selection_supported: bool,
+    pub numeric_value: Option<f64>,
+    pub minimum: Option<f64>,
+    pub maximum: Option<f64>,
+    pub step: Option<f64>,
+    pub diagnostics: Vec<ControlValueDiagnostic>,
+}
+
+impl ControlValueState {
+    pub fn is_valid(&self) -> bool {
+        self.diagnostics.is_empty()
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -277,6 +306,8 @@ pub struct ControlBinding {
     pub max: Option<String>,
     pub minlength: Option<String>,
     pub maxlength: Option<String>,
+    pub step: Option<String>,
+    pub inputmode: Option<String>,
 }
 
 impl BrowserControlModel {
@@ -461,7 +492,7 @@ impl BrowserControlModel {
         match key {
             ControlKey::Undo => return self.undo(),
             ControlKey::Redo => return self.redo(),
-            ControlKey::SelectAll if kind.accepts_text() => {
+            ControlKey::SelectAll if kind.supports_selection() => {
                 let key = self.focused_key()?.to_string();
                 let length = self.focused()?.value.chars().count();
                 return self.set_selection(&key, 0, length);
@@ -476,6 +507,12 @@ impl BrowserControlModel {
         }
         if kind.accepts_text() {
             match key {
+                ControlKey::ArrowUp if kind == ControlKind::Number => {
+                    return self.step_focused_number(true)
+                }
+                ControlKey::ArrowDown if kind == ControlKind::Number => {
+                    return self.step_focused_number(false)
+                }
                 ControlKey::ArrowLeft => return self.move_caret(-1, shift, false),
                 ControlKey::ArrowRight => return self.move_caret(1, shift, false),
                 ControlKey::WordLeft => {
@@ -543,7 +580,7 @@ impl BrowserControlModel {
             .controls
             .iter()
             .position(|control| control.key == key)?;
-        if !self.controls[index].kind.accepts_text() {
+        if !self.controls[index].kind.supports_selection() {
             return None;
         }
         let length = self.controls[index].value.chars().count();
@@ -622,7 +659,7 @@ impl BrowserControlModel {
     pub fn copy_selection_payload(&self) -> Option<ControlClipboardPayload> {
         let index = self.focused_index()?;
         let control = &self.controls[index];
-        if control.kind == ControlKind::Password || !control.kind.accepts_text() {
+        if control.kind == ControlKind::Password || !control.kind.supports_selection() {
             return None;
         }
         let (start, end) = self.editors[index].selection.ordered();
@@ -778,6 +815,9 @@ impl BrowserControlModel {
             ControlAccessibilityAction::ReplaceSelection(value) => {
                 self.replace_focused_selection(&value)
             }
+            ControlAccessibilityAction::SetValue(value) => self.set_focused_value(&value),
+            ControlAccessibilityAction::Increment => self.step_focused_number(true),
+            ControlAccessibilityAction::Decrement => self.step_focused_number(false),
             ControlAccessibilityAction::SelectAll => self.key_down(ControlKey::SelectAll),
             ControlAccessibilityAction::Undo => self.undo(),
             ControlAccessibilityAction::Redo => self.redo(),
@@ -790,6 +830,17 @@ impl BrowserControlModel {
 
     pub fn redo(&mut self) -> Option<ControlEffect> {
         self.restore_history(false)
+    }
+
+    pub fn value_state(&self, key: &str) -> Option<ControlValueState> {
+        let index = self
+            .controls
+            .iter()
+            .position(|control| control.key == key)?;
+        Some(control_value_state(
+            &self.controls[index],
+            &self.bindings[index],
+        ))
     }
 
     pub fn pointer_release(&mut self) {
@@ -949,9 +1000,19 @@ impl BrowserControlModel {
         if start == end && text.is_empty() {
             return None;
         }
+        let text = constrained_replacement(
+            &self.controls[index],
+            &self.bindings[index],
+            start,
+            end,
+            text,
+        );
+        if text.is_empty() && start == end {
+            return None;
+        }
         self.record_history(index);
         let control = &mut self.controls[index];
-        replace_char_range(&mut control.value, start, end, text);
+        replace_char_range(&mut control.value, start, end, &text);
         let caret = start + text.chars().count();
         self.editors[index].selection = ControlSelection::collapsed(caret);
         self.editors[index].composition = None;
@@ -962,6 +1023,60 @@ impl BrowserControlModel {
             key: control.key.clone(),
             value: control.value.clone(),
         })
+    }
+
+    fn set_focused_value(&mut self, value: &str) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        let control = &self.controls[index];
+        if control.disabled || control.readonly || !control.kind.accepts_text() {
+            return None;
+        }
+        if control.value == value {
+            return None;
+        }
+        let length = control.value.chars().count();
+        self.editors[index].selection = ControlSelection {
+            anchor: 0,
+            focus: length,
+        };
+        self.replace_focused_selection(value)
+    }
+
+    fn step_focused_number(&mut self, forward: bool) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        let control = &self.controls[index];
+        if control.disabled || control.readonly || control.kind != ControlKind::Number {
+            return None;
+        }
+        let constraints = numeric_constraints(&self.bindings[index]);
+        let base = constraints.minimum.unwrap_or(0.0);
+        let mut next = match parse_finite(&control.value) {
+            Some(current) if step_mismatch(current, base, constraints.step) => {
+                let quotient = (current - base) / constraints.step;
+                base + if forward {
+                    quotient.ceil()
+                } else {
+                    quotient.floor()
+                } * constraints.step
+            }
+            Some(current) => {
+                current
+                    + if forward {
+                        constraints.step
+                    } else {
+                        -constraints.step
+                    }
+            }
+            None if forward => constraints.minimum.unwrap_or(constraints.step),
+            None => constraints.maximum.unwrap_or(-constraints.step),
+        };
+        if let Some(minimum) = constraints.minimum {
+            next = next.max(minimum);
+        }
+        if let Some(maximum) = constraints.maximum {
+            next = next.min(maximum);
+        }
+        self.set_focused_value(&format_number(next))
     }
 
     fn delete_from_focused(&mut self, backward: bool) -> Option<ControlEffect> {
@@ -1289,6 +1404,8 @@ fn collect_model_nodes(
                 max: node.max.clone(),
                 minlength: node.minlength.clone(),
                 maxlength: node.maxlength.clone(),
+                step: node.step.clone(),
+                inputmode: node.inputmode.clone(),
             });
         }
         collect_model_nodes(
@@ -1437,6 +1554,210 @@ fn char_range(value: &str, start: usize, end: usize) -> String {
         .skip(start)
         .take(end.saturating_sub(start))
         .collect()
+}
+
+fn constrained_replacement(
+    control: &ControlState,
+    binding: &ControlBinding,
+    start: usize,
+    end: usize,
+    replacement: &str,
+) -> String {
+    let Some(maximum) = binding
+        .maxlength
+        .as_deref()
+        .and_then(|value| value.parse::<usize>().ok())
+        .filter(|_| control.kind.supports_maxlength())
+    else {
+        return replacement.to_string();
+    };
+    let retained = control
+        .value
+        .chars()
+        .count()
+        .saturating_sub(end.saturating_sub(start));
+    replacement
+        .chars()
+        .take(maximum.saturating_sub(retained))
+        .collect()
+}
+
+#[derive(Clone, Copy, Debug)]
+struct NumericConstraints {
+    minimum: Option<f64>,
+    maximum: Option<f64>,
+    step: f64,
+    validates_step: bool,
+}
+
+fn numeric_constraints(binding: &ControlBinding) -> NumericConstraints {
+    let minimum = binding.min.as_deref().and_then(parse_finite);
+    let maximum = binding.max.as_deref().and_then(parse_finite);
+    let authored_step = binding.step.as_deref().map(str::trim);
+    let validates_step = authored_step != Some("any");
+    let step = authored_step
+        .and_then(parse_finite)
+        .filter(|step| *step > 0.0)
+        .unwrap_or(1.0);
+    NumericConstraints {
+        minimum,
+        maximum,
+        step,
+        validates_step,
+    }
+}
+
+fn parse_finite(value: &str) -> Option<f64> {
+    value
+        .trim()
+        .parse::<f64>()
+        .ok()
+        .filter(|value| value.is_finite())
+}
+
+fn format_number(value: f64) -> String {
+    let value = if value == -0.0 { 0.0 } else { value };
+    value.to_string()
+}
+
+fn step_mismatch(value: f64, base: f64, step: f64) -> bool {
+    let quotient = (value - base) / step;
+    (quotient - quotient.round()).abs() > f64::EPSILON * quotient.abs().max(1.0) * 8.0
+}
+
+fn valid_email_address(value: &str) -> bool {
+    let value = value.trim();
+    let Some((local, domain)) = value.split_once('@') else {
+        return false;
+    };
+    !local.is_empty()
+        && !domain.is_empty()
+        && !domain.starts_with('.')
+        && !domain.ends_with('.')
+        && !domain.contains('@')
+        && !value.chars().any(char::is_whitespace)
+}
+
+fn valid_url_value(value: &str) -> bool {
+    let value = value.trim();
+    if value.is_empty() || value.chars().any(char::is_whitespace) {
+        return false;
+    }
+    Url::parse(value).is_ok_and(|url| {
+        url.host.as_deref().is_none_or(|host| {
+            let bracketed = host.starts_with('[') || host.ends_with(']');
+            if bracketed {
+                host.strip_prefix('[')
+                    .and_then(|host| host.strip_suffix(']'))
+                    .is_some_and(|host| host.parse::<std::net::Ipv6Addr>().is_ok())
+            } else {
+                !host.is_empty() && !host.contains(['[', ']'])
+            }
+        })
+    })
+}
+
+fn control_value_state(control: &ControlState, binding: &ControlBinding) -> ControlValueState {
+    let mut diagnostics = Vec::new();
+    let length = control.value.chars().count();
+    if !control.value.is_empty() {
+        if binding
+            .minlength
+            .as_deref()
+            .and_then(|value| value.parse::<usize>().ok())
+            .is_some_and(|minimum| length < minimum)
+        {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "too-short",
+                message: "value is shorter than minlength",
+            });
+        }
+        if binding
+            .maxlength
+            .as_deref()
+            .and_then(|value| value.parse::<usize>().ok())
+            .filter(|_| control.kind.supports_maxlength())
+            .is_some_and(|maximum| length > maximum)
+        {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "too-long",
+                message: "value is longer than maxlength",
+            });
+        }
+    }
+
+    match control.kind {
+        ControlKind::Email if !control.value.is_empty() => {
+            let valid = if control.multiple {
+                control.value.split(',').all(valid_email_address)
+            } else {
+                valid_email_address(&control.value)
+            };
+            if !valid {
+                diagnostics.push(ControlValueDiagnostic {
+                    code: "type-mismatch",
+                    message: "email value is malformed",
+                });
+            }
+        }
+        ControlKind::Url if !control.value.is_empty() && !valid_url_value(&control.value) => {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "type-mismatch",
+                message: "URL value is malformed",
+            });
+        }
+        _ => {}
+    }
+
+    let constraints = numeric_constraints(binding);
+    let numeric_value = if control.kind == ControlKind::Number && !control.value.is_empty() {
+        match parse_finite(&control.value) {
+            Some(value) => {
+                if constraints.minimum.is_some_and(|minimum| value < minimum) {
+                    diagnostics.push(ControlValueDiagnostic {
+                        code: "range-underflow",
+                        message: "number is below min",
+                    });
+                }
+                if constraints.maximum.is_some_and(|maximum| value > maximum) {
+                    diagnostics.push(ControlValueDiagnostic {
+                        code: "range-overflow",
+                        message: "number is above max",
+                    });
+                }
+                if constraints.validates_step
+                    && step_mismatch(value, constraints.minimum.unwrap_or(0.0), constraints.step)
+                {
+                    diagnostics.push(ControlValueDiagnostic {
+                        code: "step-mismatch",
+                        message: "number is not aligned to step",
+                    });
+                }
+                Some(value)
+            }
+            None => {
+                diagnostics.push(ControlValueDiagnostic {
+                    code: "bad-input",
+                    message: "number value is malformed",
+                });
+                None
+            }
+        }
+    } else {
+        None
+    };
+
+    ControlValueState {
+        key: control.key.clone(),
+        value: control.value.clone(),
+        input_mode: binding.inputmode.clone(),
+        selection_supported: control.kind.supports_selection(),
+        numeric_value,
+        minimum: constraints.minimum,
+        maximum: constraints.maximum,
+        step: constraints.validates_step.then_some(constraints.step),
+        diagnostics,
+    }
 }
 
 fn grapheme_offsets(value: &str) -> Vec<usize> {
@@ -2101,5 +2422,87 @@ mod tests {
             model.control(key).unwrap().value,
             "one two three four five\nsecond line"
         );
+    }
+
+    #[test]
+    fn maxlength_is_live_unicode_aware_and_number_selection_is_restricted() {
+        let tree = parse_browser_render_tree(
+            "<input id='text' maxlength='4' value='é'>\
+             <input id='number' type='number' maxlength='1' inputmode='decimal' value='3'>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let text = "control:0:id:text";
+        let number = "control:1:id:number";
+
+        model.focus(text);
+        model.text_input("abcde");
+        assert_eq!(model.control(text).unwrap().value, "éabc");
+        model.set_selection(text, 1, 4);
+        model.text_input("xyzw");
+        assert_eq!(model.control(text).unwrap().value, "éxyz");
+
+        assert_eq!(model.set_selection(number, 0, 1), None);
+        let state = model.value_state(number).unwrap();
+        assert!(!state.selection_supported);
+        assert_eq!(state.input_mode.as_deref(), Some("decimal"));
+        assert_eq!(state.value, "3");
+    }
+
+    #[test]
+    fn typed_value_states_report_email_url_and_number_diagnostics() {
+        let tree = parse_browser_render_tree(
+            "<input id='mail' type='email' value='not mail'>\
+             <input id='site' type='url' value='http://['>\
+             <input id='count' type='number' value='3' min='0' max='10' step='2'>\
+             <input id='any' type='number' value='3.5' step='any'>",
+        )
+        .unwrap();
+        let model = BrowserControlModel::from_render_tree(&tree);
+
+        for key in ["control:0:id:mail", "control:1:id:site"] {
+            assert_eq!(
+                model.value_state(key).unwrap().diagnostics[0].code,
+                "type-mismatch"
+            );
+        }
+        let number = model.value_state("control:2:id:count").unwrap();
+        assert_eq!(number.numeric_value, Some(3.0));
+        assert_eq!(number.minimum, Some(0.0));
+        assert_eq!(number.maximum, Some(10.0));
+        assert_eq!(number.step, Some(2.0));
+        assert_eq!(number.diagnostics[0].code, "step-mismatch");
+        assert!(model.value_state("control:3:id:any").unwrap().is_valid());
+    }
+
+    #[test]
+    fn number_keyboard_and_accessibility_steps_align_clamp_and_undo() {
+        let tree = parse_browser_render_tree(
+            "<input id='count' type='number' value='3' min='0' max='6' step='2'>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let key = "control:0:id:count";
+        model.focus(key);
+
+        model.key_down(ControlKey::ArrowUp);
+        assert_eq!(model.control(key).unwrap().value, "4");
+        model.accessibility_action(ControlAccessibilityAction::Increment);
+        assert_eq!(model.control(key).unwrap().value, "6");
+        assert_eq!(
+            model.accessibility_action(ControlAccessibilityAction::Increment),
+            None
+        );
+        model.accessibility_action(ControlAccessibilityAction::Decrement);
+        assert_eq!(model.control(key).unwrap().value, "4");
+        model.accessibility_action(ControlAccessibilityAction::SetValue("invalid".into()));
+        assert_eq!(
+            model.value_state(key).unwrap().diagnostics[0].code,
+            "bad-input"
+        );
+        model.accessibility_action(ControlAccessibilityAction::Increment);
+        assert_eq!(model.control(key).unwrap().value, "0");
+        model.accessibility_action(ControlAccessibilityAction::Undo);
+        assert_eq!(model.control(key).unwrap().value, "invalid");
     }
 }

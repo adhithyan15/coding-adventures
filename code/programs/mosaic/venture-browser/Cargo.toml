@@ -8,6 +8,7 @@ description = "Compile and acceptance harness for Venture browser chrome"
 publish = false
 
 [dev-dependencies]
+coding-adventures-html-parser = { path = "../../../packages/rust/html-parser" }
 mosmodel-compiler = { path = "../../../packages/rust/mosmodel-compiler" }
 moslayout-compiler = { path = "../../../packages/rust/moslayout-compiler" }
 mosstyle-compiler = { path = "../../../packages/rust/mosstyle-compiler" }

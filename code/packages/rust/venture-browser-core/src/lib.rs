@@ -13,6 +13,7 @@ pub use browser_form_controls::{
     BrowserControlModel, ControlAccessibilityAction, ControlClipboardPayload,
     ControlEditorPresentation, ControlEditorState, ControlEffect, ControlKey,
     ControlNavigationUnit, ControlRect, ControlSelection, ControlTextMetrics,
+    ControlValueDiagnostic, ControlValueState,
 };
 use browser_form_submission::{plan_activation, plan_implicit_submission};
 pub use browser_form_submission::{
@@ -1353,6 +1354,18 @@ impl BrowserSession {
 
     pub fn controls(&self) -> &BrowserControlModel {
         &self.controls
+    }
+
+    /// Return reusable validation and accessibility value metadata for one
+    /// control without exposing host-specific widget state.
+    pub fn control_value_state(&self, key: &str) -> Option<ControlValueState> {
+        self.controls.value_state(key)
+    }
+
+    pub fn focused_control_value_state(&self) -> Option<ControlValueState> {
+        self.controls
+            .focused_key()
+            .and_then(|key| self.controls.value_state(key))
     }
 
     pub fn form_diagnostics(&self) -> &[FormDiagnostic] {
@@ -4994,6 +5007,55 @@ mod tests {
             .unwrap()
             .selection
             .is_collapsed());
+    }
+
+    #[test]
+    fn session_routes_typed_number_state_and_value_actions_through_reflow() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<input id='count' type='number' min='0' max='6' step='2' value='3'>".to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(320.0, 120.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/", 120.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let region = session.viewport().unwrap().page().paint.controls[0].clone();
+        session
+            .control_pointer_down(region.x + 1.0, region.y + 1.0, &pipeline)
+            .unwrap();
+
+        let initial = session.focused_control_value_state().unwrap();
+        assert_eq!(initial.diagnostics[0].code, "step-mismatch");
+        assert!(!initial.selection_supported);
+        session
+            .control_key_down(ControlKey::ArrowUp, &pipeline)
+            .unwrap();
+        let aligned = session.control_value_state("control:0:id:count").unwrap();
+        assert_eq!(aligned.value, "4");
+        assert!(aligned.is_valid());
+        session
+            .control_accessibility_action(ControlAccessibilityAction::Increment, &pipeline)
+            .unwrap();
+        assert_eq!(
+            session
+                .control_value_state("control:0:id:count")
+                .unwrap()
+                .numeric_value,
+            Some(6.0)
+        );
     }
 
     #[test]

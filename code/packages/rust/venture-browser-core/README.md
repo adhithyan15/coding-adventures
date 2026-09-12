@@ -51,6 +51,12 @@ drag autoscroll, bounded undo/redo, plain/HTML clipboard negotiation, and typed
 accessibility actions through the same retained reflow. Password selection
 never crosses the clipboard boundary.
 
+Typed inputs retain that single-owner design. The session exposes
+`ControlValueState` for live validity and accessibility projection, routes
+Arrow Up/Down and SetValue/Increment/Decrement through shared numeric
+min/max/step policy, and reflows after each accepted mutation. Native and web
+hosts do not parse values, enforce `maxlength`, or duplicate selection rules.
+
 `NavigationHistory` is re-exported from the reusable `browser-navigation`
 package and implements the BR01 in-memory navigation model: navigate, Back,
 Forward, Home, Reload, and redirect replacement. The same package owns

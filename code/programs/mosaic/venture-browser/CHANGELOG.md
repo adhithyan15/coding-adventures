@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Add shared typed input value semantics: live Unicode `maxlength`, email/URL
+  and numeric validity, aligned min/max/step number changes, number-selection
+  restrictions, reusable accessibility state, and deterministic submission
+  and retained-session acceptance.
+
 - Add generated-Unicode grapheme and shared word navigation, bounded undo/redo
   transactions, plain/HTML clipboard negotiation, click-count selection, drag
   autoscroll, and typed accessibility editing actions. SwiftUI, WinUI, Qt,

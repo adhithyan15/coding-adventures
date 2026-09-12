@@ -31,8 +31,10 @@ its name and value. Text line endings are normalized before encoding.
 ## Validation
 
 The first 32 failures are retained as typed diagnostics. Required controls,
-radio groups, email shape, length, pattern, and numeric min/max constraints are
-checked before request planning. Invalid forms do not mutate history or fetch.
+radio groups, email and URL syntax, length, pattern, finite numeric min/max,
+and step alignment are checked before request planning. Typed value checks
+consume the same `ControlValueState` used by live editing and accessibility;
+invalid forms do not mutate history or fetch.
 
 ## Navigation
 

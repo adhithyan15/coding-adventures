@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Expose typed control value state and route live length enforcement,
+  email/URL/numeric diagnostics, number stepping, and accessibility value
+  actions through retained session reflow.
+
 - Route grapheme/word navigation, click-count selection, drag autoscroll,
   bounded undo/redo, clipboard flavors, and typed accessibility actions through
   retained session reflow for every host adapter.

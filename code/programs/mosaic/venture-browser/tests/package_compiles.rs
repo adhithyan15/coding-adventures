@@ -444,7 +444,10 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "setPropsChangedHandler",
         "toComposeImageBitmap",
     ] {
-        assert!(compose_host.contains(symbol), "Compose live host omits {symbol}");
+        assert!(
+            compose_host.contains(symbol),
+            "Compose live host omits {symbol}"
+        );
     }
 
     let compose_acceptance = read_package_file("host/compose/VentureChromeInteractionTest.kt");
@@ -505,6 +508,53 @@ fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
         .controls
         .iter()
         .any(|control| control.disabled));
+}
+
+#[test]
+fn typed_input_fixture_uses_the_shared_host_neutral_value_contract() {
+    use venture_browser_core::{BrowserControlModel, ControlAccessibilityAction, ControlKey};
+
+    let tree = coding_adventures_html_parser::parse_browser_render_tree(
+        "<input id='name' maxlength='3' value='é'>\
+         <input id='mail' type='email' value='invalid'>\
+         <input id='site' type='url' value='http://['>\
+         <input id='count' type='number' min='0' max='6' step='2' value='3'>",
+    )
+    .expect("parse deterministic typed-input fixture");
+    let mut controls = BrowserControlModel::from_render_tree(&tree);
+
+    controls.focus("control:0:id:name");
+    controls.text_input("abcd");
+    assert_eq!(controls.control("control:0:id:name").unwrap().value, "éab");
+    assert_eq!(
+        controls
+            .value_state("control:1:id:mail")
+            .unwrap()
+            .diagnostics[0]
+            .code,
+        "type-mismatch"
+    );
+    assert_eq!(
+        controls
+            .value_state("control:2:id:site")
+            .unwrap()
+            .diagnostics[0]
+            .code,
+        "type-mismatch"
+    );
+
+    controls.focus("control:3:id:count");
+    assert!(
+        !controls
+            .value_state("control:3:id:count")
+            .unwrap()
+            .selection_supported
+    );
+    controls.key_down(ControlKey::ArrowUp);
+    controls.accessibility_action(ControlAccessibilityAction::Increment);
+    let number = controls.value_state("control:3:id:count").unwrap();
+    assert_eq!(number.numeric_value, Some(6.0));
+    assert!(number.is_valid());
 }
 
 #[test]
