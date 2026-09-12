@@ -34,6 +34,13 @@ client ID, token-endpoint audience, advertised algorithm set, and a
 provider-matched opaque private-key reference into the existing assertion
 profile. The selected algorithm must appear exactly in provider data; this
 pure construction invokes no signer and enables no concrete algorithm.
+One prepared refresh request can then cross a broker-level assertion boundary:
+the registered provider, client ID, token endpoint, retained method, and exact
+algorithm are checked before the existing audited non-exporting signer is
+invoked; an injected transport is separately audit-gated; and bounded response
+decoding completes before release. The caller still owns issued-at time and
+256-bit replay entropy, and no concrete signing or network implementation is
+added.
 For client-secret profiles, prepared authorization-code exchange, refresh, and
 RFC 7009 revocation requests can now cross the complete broker boundary: the
 registered provider, client ID, exact operation endpoint, and retained
@@ -94,7 +101,8 @@ dependency are sibling packages in this repository.
 - account identity proof and key selection, listing, access-token-only detach
   when no refresh token exists, device authorization UI, timing/sleep authority,
   and full device-flow loops;
-- private-key signing orchestration, OIDC validation, and DPoP.
+- private-key exchange, revocation, and credential-rotation orchestration,
+  concrete private-key algorithms, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
 

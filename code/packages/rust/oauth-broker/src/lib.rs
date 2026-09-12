@@ -26,8 +26,13 @@ use coding_adventures_oauth_credential_custody::{
     CredentialAuditSink, CredentialCustody, CredentialKey, CredentialMetadata, CredentialRevision,
     CredentialStore, CustodyError,
 };
-use coding_adventures_oauth_private_key_jwt::PrivateKeyJwtProfile;
-use coding_adventures_oauth_private_key_signer::{PrivateKeyId, PrivateKeyJwtAlgorithm};
+use coding_adventures_oauth_private_key_jwt::{
+    PrivateKeyJwtAuthenticatedRequest, PrivateKeyJwtError, PrivateKeyJwtProfile,
+};
+use coding_adventures_oauth_private_key_signer::{
+    AuditedPrivateKeySigner, PrivateKeyAuditSink, PrivateKeyId, PrivateKeyJwtAlgorithm,
+    PrivateKeySignerError, SigningAuthority,
+};
 use coding_adventures_zeroize::Zeroizing;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{self, Debug, Display, Formatter};
@@ -415,6 +420,15 @@ pub trait OAuthClientSecretTokenTransport {
     ) -> Result<TokenEndpointResponse, TokenTransportError>;
 }
 
+/// Authorized provider-neutral transport for one private-key-JWT-authenticated refresh.
+pub trait OAuthPrivateKeyJwtTokenTransport {
+    /// Send one assertion-authenticated, zeroizing refresh request.
+    fn send_private_key_jwt_refresh(
+        &mut self,
+        request: &PrivateKeyJwtAuthenticatedRequest,
+    ) -> Result<TokenEndpointResponse, TokenTransportError>;
+}
+
 /// Authorized provider-neutral transport for one client-secret-authenticated exchange.
 pub trait OAuthClientSecretTokenExchangeTransport {
     /// Send one custody-built, zeroizing authenticated authorization-code exchange.
@@ -664,6 +678,8 @@ pub enum BrokerAuditAction {
     Refresh,
     /// Authenticate and send one client-secret refresh request.
     ClientSecretRefresh,
+    /// Sign, send, and decode one private-key-JWT-authenticated refresh request.
+    PrivateKeyJwtRefresh,
     /// Refresh and atomically rotate one client-secret-authenticated credential.
     ClientSecretRefreshCredentialRotate,
     /// Authenticate and send one client-secret authorization-code exchange.
@@ -720,6 +736,8 @@ pub enum BrokerFailureClass {
     Custody,
     /// Client-secret custody failed.
     ClientSecretCustody,
+    /// Private-key JWT assertion construction or signing failed.
+    PrivateKeyJwt,
     /// The injected token transport failed.
     Transport,
     /// OAuth request preparation or response decoding failed.
@@ -774,6 +792,17 @@ pub trait OAuthClientSecretBrokerAuditSink:
 {
 }
 
+/// Audit sink capable of recording a broker-composed private-key JWT request.
+pub trait OAuthPrivateKeyJwtBrokerAuditSink:
+    BrokerAuditSink + OAuthAuditSink + PrivateKeyAuditSink
+{
+}
+
+impl<T> OAuthPrivateKeyJwtBrokerAuditSink for T where
+    T: BrokerAuditSink + OAuthAuditSink + PrivateKeyAuditSink
+{
+}
+
 impl<T> OAuthClientSecretBrokerAuditSink for T where
     T: BrokerAuditSink + OAuthAuditSink + ClientSecretAuditSink
 {
@@ -816,6 +845,31 @@ impl<'a, C, T> ClientSecretExchangeCredentialExecution<'a, C, T> {
     }
 }
 
+/// Injected authorities and one-use assertion inputs for a JWT refresh send.
+pub struct PrivateKeyJwtRefreshExecution<'a, S: SigningAuthority, T> {
+    signer: &'a AuditedPrivateKeySigner<S>,
+    issued_at: u64,
+    replay_entropy: Zeroizing<[u8; 32]>,
+    transport: &'a mut T,
+}
+
+impl<'a, S: SigningAuthority, T> PrivateKeyJwtRefreshExecution<'a, S, T> {
+    /// Bind a caller-owned signer, time, replay entropy, and transport.
+    pub fn new(
+        signer: &'a AuditedPrivateKeySigner<S>,
+        issued_at: u64,
+        replay_entropy: [u8; 32],
+        transport: &'a mut T,
+    ) -> Self {
+        Self {
+            signer,
+            issued_at,
+            replay_entropy: Zeroizing::new(replay_entropy),
+            transport,
+        }
+    }
+}
+
 /// Closed broker-audit publication failure.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct BrokerAuditError;
@@ -843,6 +897,8 @@ pub enum BrokerError {
     Custody(CustodyError),
     /// Client-secret custody failed with a closed class.
     ClientSecretCustody(ClientSecretCustodyError),
+    /// Private-key JWT construction or abstract signing failed with a closed class.
+    PrivateKeyJwt(PrivateKeyJwtError),
     /// OAuth protocol preparation or decoding failed with a closed class.
     Protocol(OAuthError),
     /// The injected token transport failed.
@@ -864,10 +920,12 @@ impl BrokerError {
             Self::Clock => Some(BrokerFailureClass::Clock),
             Self::Custody(CustodyError::Audit)
             | Self::ClientSecretCustody(ClientSecretCustodyError::Audit)
+            | Self::PrivateKeyJwt(PrivateKeyJwtError::Signing(PrivateKeySignerError::Audit))
             | Self::Protocol(OAuthError::Audit)
             | Self::Audit => None,
             Self::Custody(_) => Some(BrokerFailureClass::Custody),
             Self::ClientSecretCustody(_) => Some(BrokerFailureClass::ClientSecretCustody),
+            Self::PrivateKeyJwt(_) => Some(BrokerFailureClass::PrivateKeyJwt),
             Self::Protocol(_) => Some(BrokerFailureClass::Protocol),
             Self::Transport => Some(BrokerFailureClass::Transport),
         }
@@ -887,6 +945,7 @@ impl Debug for BrokerError {
             Self::Clock => "Clock",
             Self::Custody(_) => "Custody(<redacted>)",
             Self::ClientSecretCustody(_) => "ClientSecretCustody(<redacted>)",
+            Self::PrivateKeyJwt(_) => "PrivateKeyJwt(<redacted>)",
             Self::Protocol(_) => "Protocol(<redacted>)",
             Self::Transport => "Transport",
             Self::Audit => "Audit",
@@ -1216,6 +1275,44 @@ impl<S: CredentialStore> OAuthBroker<S> {
             &provider,
             trace,
             BrokerAuditAction::ClientSecretRefresh,
+            result,
+        )
+    }
+
+    /// Sign, send, and decode one prepared private-key-JWT refresh request.
+    ///
+    /// The registered provider's exact client ID, token endpoint, retained
+    /// `private_key_jwt` method, and advertised case-sensitive algorithm are
+    /// checked before the abstract signer is invoked. Signing and transport
+    /// are separately audit-gated; the broker releases only an audit-gated,
+    /// bounded token response and enables no concrete signing algorithm.
+    pub fn send_private_key_jwt_refresh<SA, T, A>(
+        &self,
+        profile: &PrivateKeyJwtProfile,
+        request: TokenRefreshRequest,
+        execution: PrivateKeyJwtRefreshExecution<'_, SA, T>,
+        audit: &mut A,
+    ) -> Result<TokenResponse, BrokerError>
+    where
+        SA: SigningAuthority,
+        T: OAuthPrivateKeyJwtTokenTransport,
+        A: OAuthPrivateKeyJwtBrokerAuditSink,
+    {
+        let provider = request.provider().clone();
+        let trace = request.trace();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PrivateKeyJwtRefresh,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = self.send_private_key_jwt_refresh_inner(profile, request, execution, audit);
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PrivateKeyJwtRefresh,
             result,
         )
     }
@@ -1914,6 +2011,52 @@ impl<S: CredentialStore> OAuthBroker<S> {
             .map_err(map_oauth_error)
     }
 
+    fn send_private_key_jwt_refresh_inner<SA, T, A>(
+        &self,
+        profile: &PrivateKeyJwtProfile,
+        request: TokenRefreshRequest,
+        execution: PrivateKeyJwtRefreshExecution<'_, SA, T>,
+        audit: &mut A,
+    ) -> Result<TokenResponse, BrokerError>
+    where
+        SA: SigningAuthority,
+        T: OAuthPrivateKeyJwtTokenTransport,
+        A: OAuthPrivateKeyJwtBrokerAuditSink,
+    {
+        let provider = self.registered_provider(request.provider())?;
+        if profile.provider() != provider.provider()
+            || provider.confidential_authentication_method()
+                != Some(ConfidentialClientAuthenticationMethod::PrivateKeyJwt)
+            || !provider
+                .client_authentication_signing_algorithms()
+                .iter()
+                .any(|algorithm| algorithm == profile.algorithm().as_str())
+            || request.client_id() != provider.config().client_id()
+            || request.endpoint() != provider.config().token_endpoint()
+        {
+            return Err(BrokerError::BindingMismatch);
+        }
+        let authenticated = profile
+            .authenticate_token_refresh(
+                execution.signer,
+                request,
+                execution.issued_at,
+                *execution.replay_entropy,
+                audit,
+            )
+            .map_err(map_private_key_jwt_error)?;
+        let context = authenticated.response_context().clone();
+        let wire_response = send_private_key_jwt_refresh_audited(
+            execution.transport,
+            authenticated.request(),
+            audit,
+        )?;
+        let (status, body) = wire_response.into_parts();
+        decode_token_response(context, status, provider.response_format(), body)
+            .publish_then_release(audit)
+            .map_err(map_oauth_error)
+    }
+
     fn send_client_secret_exchange_inner<SS, T, A>(
         &self,
         authentication: &ClientSecretAuthentication,
@@ -2100,6 +2243,30 @@ fn send_client_secret_refresh_audited<T: OAuthClientSecretTokenTransport, A: Bro
     )
 }
 
+fn send_private_key_jwt_refresh_audited<T: OAuthPrivateKeyJwtTokenTransport, A: BrokerAuditSink>(
+    transport: &mut T,
+    request: &PrivateKeyJwtAuthenticatedRequest,
+    audit: &mut A,
+) -> Result<TokenEndpointResponse, BrokerError> {
+    publish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::TokenTransport,
+        BrokerAuditOutcome::Attempted,
+    )?;
+    let result = transport
+        .send_private_key_jwt_refresh(request)
+        .map_err(|_| BrokerError::Transport);
+    finish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::TokenTransport,
+        result,
+    )
+}
+
 fn send_client_secret_exchange_audited<
     T: OAuthClientSecretTokenExchangeTransport,
     A: BrokerAuditSink,
@@ -2252,6 +2419,14 @@ fn map_client_secret_custody_error(error: ClientSecretCustodyError) -> BrokerErr
     }
 }
 
+fn map_private_key_jwt_error(error: PrivateKeyJwtError) -> BrokerError {
+    if error == PrivateKeyJwtError::Signing(PrivateKeySignerError::Audit) {
+        BrokerError::Audit
+    } else {
+        BrokerError::PrivateKeyJwt(error)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -2270,10 +2445,15 @@ mod tests {
         AccountId, CredentialAuditAction, CredentialAuditError, CredentialAuditEvent,
         CredentialAuditOutcome, InMemoryCredentialStore,
     };
-    use coding_adventures_oauth_private_key_signer::PrivateKeyReference;
+    use coding_adventures_oauth_private_key_signer::{
+        PrivateKeyAuditAction, PrivateKeyAuditError, PrivateKeyAuditEvent, PrivateKeyAuditOutcome,
+        PrivateKeyReference, PrivateKeySignature, SigningAuthorityError,
+    };
     use std::cell::RefCell;
     use std::collections::VecDeque;
     use std::rc::Rc;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::sync::Arc;
 
     #[derive(Default)]
     struct RecordingAudit {
@@ -2281,6 +2461,7 @@ mod tests {
         oauth: Vec<OAuthAuditEvent>,
         custody: Vec<CredentialAuditEvent>,
         client_secret: Vec<ClientSecretAuditEvent>,
+        private_key: Vec<PrivateKeyAuditEvent>,
         broker_calls: usize,
         fail_broker_on: Option<usize>,
         order: Option<Rc<RefCell<Vec<&'static str>>>>,
@@ -2320,6 +2501,15 @@ mod tests {
                     }
                     (BrokerAuditAction::ClientSecretRefresh, BrokerAuditOutcome::Failed(_)) => {
                         "refresh-failed"
+                    }
+                    (BrokerAuditAction::PrivateKeyJwtRefresh, BrokerAuditOutcome::Attempted) => {
+                        "private-key-refresh-attempted"
+                    }
+                    (BrokerAuditAction::PrivateKeyJwtRefresh, BrokerAuditOutcome::Succeeded) => {
+                        "private-key-refresh-succeeded"
+                    }
+                    (BrokerAuditAction::PrivateKeyJwtRefresh, BrokerAuditOutcome::Failed(_)) => {
+                        "private-key-refresh-failed"
                     }
                     (
                         BrokerAuditAction::ClientSecretRefreshCredentialRotate,
@@ -2492,6 +2682,27 @@ mod tests {
         }
     }
 
+    impl PrivateKeyAuditSink for RecordingAudit {
+        fn publish(&mut self, event: &PrivateKeyAuditEvent) -> Result<(), PrivateKeyAuditError> {
+            if let Some(order) = &self.order {
+                let label = match (event.action(), event.outcome()) {
+                    (PrivateKeyAuditAction::Sign, PrivateKeyAuditOutcome::Attempted) => {
+                        "sign-attempted"
+                    }
+                    (PrivateKeyAuditAction::Sign, PrivateKeyAuditOutcome::Succeeded) => {
+                        "sign-succeeded"
+                    }
+                    (PrivateKeyAuditAction::Sign, PrivateKeyAuditOutcome::Failed(_)) => {
+                        "sign-failed"
+                    }
+                };
+                order.borrow_mut().push(label);
+            }
+            self.private_key.push(event.clone());
+            Ok(())
+        }
+    }
+
     struct FixedClock(u64);
 
     impl BrokerClock for FixedClock {
@@ -2587,6 +2798,51 @@ mod tests {
                 request.form_body().contains("client_secret=client+secret"),
                 !self.expected_authorization_header
             );
+            self.response.take().ok_or(TokenTransportError)
+        }
+    }
+
+    #[derive(Clone, Default)]
+    struct RecordingSigningAuthority {
+        calls: Arc<AtomicUsize>,
+    }
+
+    impl SigningAuthority for RecordingSigningAuthority {
+        fn sign(
+            &self,
+            _key: &PrivateKeyId,
+            _algorithm: &PrivateKeyJwtAlgorithm,
+            _signing_input: &[u8],
+        ) -> Result<PrivateKeySignature, SigningAuthorityError> {
+            self.calls.fetch_add(1, Ordering::SeqCst);
+            PrivateKeySignature::new(vec![0x5a; 64]).map_err(|_| SigningAuthorityError::Backend)
+        }
+    }
+
+    struct MockPrivateKeyJwtRefreshTransport {
+        response: Option<TokenEndpointResponse>,
+        calls: usize,
+        order: Rc<RefCell<Vec<&'static str>>>,
+    }
+
+    impl OAuthPrivateKeyJwtTokenTransport for MockPrivateKeyJwtRefreshTransport {
+        fn send_private_key_jwt_refresh(
+            &mut self,
+            request: &PrivateKeyJwtAuthenticatedRequest,
+        ) -> Result<TokenEndpointResponse, TokenTransportError> {
+            self.calls += 1;
+            self.order.borrow_mut().push("transport-effect");
+            assert_eq!(request.provider().as_str(), "fixture-confidential");
+            assert_eq!(
+                request.endpoint(),
+                "https://token.fixture-confidential.example/token"
+            );
+            assert!(request.form_body().contains("refresh_token=refresh-secret"));
+            assert!(request.form_body().contains(concat!(
+                "&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3A",
+                "client-assertion-type%3Ajwt-bearer&client_assertion="
+            )));
+            assert!(!request.form_body().contains("client_secret="));
             self.response.take().ok_or(TokenTransportError)
         }
     }
@@ -3415,6 +3671,181 @@ mod tests {
                 ]
             );
         }
+    }
+
+    #[test]
+    fn private_key_jwt_refresh_uses_retained_algorithm_and_audit_order() {
+        let provider_config = config("fixture-confidential");
+        let provider = BrokerProvider::new_confidential(
+            provider_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::PrivateKeyJwt,
+            vec!["EdDSA".to_owned()],
+        )
+        .unwrap();
+        let key = PrivateKeyId::new(
+            provider_config.provider().clone(),
+            PrivateKeyReference::new([0x75; 32]),
+        );
+        let profile = provider
+            .bind_private_key_jwt_profile(
+                key,
+                PrivateKeyJwtAlgorithm::new("EdDSA").unwrap(),
+                Some("key-1".to_owned()),
+                60,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(provider, trace(55), &mut audit)
+            .unwrap();
+        let request = prepare_token_refresh(
+            &provider_config,
+            Zeroizing::new("refresh-secret".to_owned()),
+            &[],
+            trace(56),
+        )
+        .publish_then_release(&mut audit)
+        .unwrap();
+        order.borrow_mut().clear();
+        let authority = RecordingSigningAuthority::default();
+        let inspection = authority.clone();
+        let signer = AuditedPrivateKeySigner::from_audited_authority(authority);
+        let mut transport = MockPrivateKeyJwtRefreshTransport {
+            response: Some(
+                TokenEndpointResponse::new(
+                    200,
+                    Zeroizing::new(br#"{"access_token":"fresh","token_type":"Bearer"}"#.to_vec()),
+                )
+                .unwrap(),
+            ),
+            calls: 0,
+            order: order.clone(),
+        };
+
+        let response = broker
+            .send_private_key_jwt_refresh(
+                &profile,
+                request,
+                PrivateKeyJwtRefreshExecution::new(
+                    &signer,
+                    1_700_000_000,
+                    [0x31; 32],
+                    &mut transport,
+                ),
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(response.provider(), provider_config.provider());
+        assert_eq!(response.trace(), trace(56));
+        assert_eq!(response.token_type(), "Bearer");
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(transport.calls, 1);
+        assert_eq!(audit.private_key.len(), 2);
+        assert!(audit.private_key.iter().all(|event| {
+            event.key().provider() == provider_config.provider()
+                && event.algorithm().as_str() == "EdDSA"
+                && event.trace() == trace(56)
+        }));
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "private-key-refresh-attempted",
+                "sign-attempted",
+                "sign-succeeded",
+                "transport-attempted",
+                "transport-effect",
+                "transport-succeeded",
+                "private-key-refresh-succeeded",
+            ]
+        );
+    }
+
+    #[test]
+    fn private_key_jwt_refresh_rejects_unretained_algorithm_before_signing() {
+        let provider_config = config("fixture-confidential");
+        let provider = BrokerProvider::new_confidential(
+            provider_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::PrivateKeyJwt,
+            vec!["EdDSA".to_owned()],
+        )
+        .unwrap();
+        let key = PrivateKeyId::new(
+            provider_config.provider().clone(),
+            PrivateKeyReference::new([0x76; 32]),
+        );
+        let profile = PrivateKeyJwtProfile::new(
+            provider_config.provider().clone(),
+            provider_config.client_id(),
+            provider_config.token_endpoint(),
+            &["private_key_jwt".to_owned()],
+            &["RS256".to_owned()],
+            key,
+            PrivateKeyJwtAlgorithm::new("RS256").unwrap(),
+            None,
+            60,
+        )
+        .unwrap();
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(provider, trace(57), &mut audit)
+            .unwrap();
+        let request = prepare_token_refresh(
+            &provider_config,
+            Zeroizing::new("refresh-secret".to_owned()),
+            &[],
+            trace(58),
+        )
+        .publish_then_release(&mut audit)
+        .unwrap();
+        order.borrow_mut().clear();
+        let authority = RecordingSigningAuthority::default();
+        let inspection = authority.clone();
+        let signer = AuditedPrivateKeySigner::from_audited_authority(authority);
+        let mut transport = MockPrivateKeyJwtRefreshTransport {
+            response: None,
+            calls: 0,
+            order: order.clone(),
+        };
+
+        assert!(matches!(
+            broker.send_private_key_jwt_refresh(
+                &profile,
+                request,
+                PrivateKeyJwtRefreshExecution::new(
+                    &signer,
+                    1_700_000_000,
+                    [0x32; 32],
+                    &mut transport,
+                ),
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 0);
+        assert_eq!(transport.calls, 0);
+        assert!(audit.private_key.is_empty());
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "private-key-refresh-attempted",
+                "private-key-refresh-failed"
+            ]
+        );
     }
 
     #[test]
