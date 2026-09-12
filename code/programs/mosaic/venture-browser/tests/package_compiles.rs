@@ -536,6 +536,28 @@ fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
 }
 
 #[test]
+fn form_group_fixture_keeps_label_and_disabledness_policy_host_neutral() {
+    let page = venture_browser_visual_fixtures::load_form_groups_page("http://venture.test")
+        .expect("load Venture's deterministic form-group fixture");
+    let controls = venture_browser_core::BrowserControlModel::from_render_tree(&page.render_tree);
+
+    assert!(controls
+        .control("control:2:id:legend-control")
+        .is_some_and(|control| !control.disabled));
+    assert!(controls
+        .control("control:3:id:blocked-control")
+        .is_some_and(|control| control.disabled));
+    assert_eq!(
+        page.paint
+            .controls
+            .iter()
+            .filter(|region| region.label_activation)
+            .count(),
+        4
+    );
+}
+
+#[test]
 fn typed_input_fixture_uses_the_shared_host_neutral_value_contract() {
     use venture_browser_core::{BrowserControlModel, ControlAccessibilityAction, ControlKey};
 

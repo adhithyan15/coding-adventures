@@ -1864,7 +1864,9 @@ impl BrowserSession {
             .viewport
             .as_ref()?
             .control_local_point(viewport_x, viewport_y)?;
-        let effect = if region.kind.accepts_text() {
+        let effect = if region.label_activation {
+            self.controls.pointer_activate(&region.key)?
+        } else if region.kind.accepts_text() {
             self.controls.pointer_place(
                 &region.key,
                 x - CONTROL_TEXT_METRICS.inset_x,
@@ -1896,7 +1898,7 @@ impl BrowserSession {
             .viewport
             .as_ref()?
             .control_local_point(viewport_x, viewport_y)?;
-        if !region.kind.accepts_text() {
+        if region.label_activation || !region.kind.accepts_text() {
             return self.activate_control(viewport_x, viewport_y, pipeline);
         }
         let effect = self.controls.pointer_place(
@@ -1926,7 +1928,7 @@ impl BrowserSession {
             .viewport
             .as_ref()?
             .control_local_point(viewport_x, viewport_y)?;
-        if !region.kind.accepts_text() {
+        if region.label_activation || !region.kind.accepts_text() {
             return self.activate_control(viewport_x, viewport_y, pipeline);
         }
         let effect = self.controls.pointer_select(
@@ -2146,7 +2148,9 @@ impl BrowserSession {
             return Ok(None);
         };
         let key = region.key.clone();
-        let effect = if region.kind.accepts_text() {
+        let effect = if region.label_activation {
+            self.controls.pointer_activate(&key)
+        } else if region.kind.accepts_text() {
             self.controls.pointer_place(
                 &key,
                 x - CONTROL_TEXT_METRICS.inset_x,
@@ -2164,7 +2168,13 @@ impl BrowserSession {
                 .controls
                 .binding(&key)
                 .is_some_and(|binding| binding.control_type == "image")
-                .then(|| ImageSubmitCoordinates::from_local_point(x, y));
+                .then(|| {
+                    if region.label_activation {
+                        ImageSubmitCoordinates::KEYBOARD
+                    } else {
+                        ImageSubmitCoordinates::from_local_point(x, y)
+                    }
+                });
             let outcome = self.dispatch_form_activation_with_image_coordinates(
                 &key,
                 image_coordinates.unwrap_or(ImageSubmitCoordinates::KEYBOARD),
@@ -5479,6 +5489,80 @@ mod tests {
                 .map(|control| control.key.as_str())
                 .collect::<Vec<_>>(),
             vec!["control:0:id:q", "control:1:id:off", "control:2:id:check"]
+        );
+    }
+
+    #[test]
+    fn session_routes_label_activation_and_fieldset_disabledness_through_shared_controls() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<label for='q'>Search</label><input id='q' value='go'>\
+                  <label><input id='check' type='checkbox'> Accept</label>\
+                  <fieldset disabled><legend><label><input id='legend' type='checkbox'> Legend</label></legend>\
+                  <label for='blocked'>Blocked</label><input id='blocked'></fieldset>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(520.0, 180.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/", 180.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        let label = |session: &BrowserSession, key: &str| {
+            session
+                .viewport()
+                .unwrap()
+                .page()
+                .paint
+                .controls
+                .iter()
+                .find(|region| region.key == key && region.label_activation)
+                .cloned()
+                .unwrap()
+        };
+        let query_label = label(&session, "control:0:id:q");
+        assert_eq!(
+            session.activate_control(query_label.x + 1.0, query_label.y + 1.0, &pipeline),
+            Some(ControlEffect::Focused("control:0:id:q".into()))
+        );
+        assert_eq!(session.controls().focused_key(), Some("control:0:id:q"));
+
+        let checkbox_label = label(&session, "control:1:id:check");
+        assert_eq!(
+            session.activate_control(
+                checkbox_label.x + checkbox_label.width - 1.0,
+                checkbox_label.y + 1.0,
+                &pipeline,
+            ),
+            Some(ControlEffect::CheckedChanged {
+                key: "control:1:id:check".into(),
+                checked: true,
+            })
+        );
+        let legend_label = label(&session, "control:2:id:legend");
+        assert!(!legend_label.disabled);
+        assert!(session
+            .controls()
+            .control("control:2:id:legend")
+            .is_some_and(|control| !control.disabled));
+
+        let blocked_label = label(&session, "control:3:id:blocked");
+        assert!(blocked_label.disabled);
+        assert_eq!(
+            session.activate_control(blocked_label.x + 1.0, blocked_label.y + 1.0, &pipeline,),
+            None
         );
     }
 

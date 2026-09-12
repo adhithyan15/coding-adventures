@@ -38,6 +38,7 @@ pub const GENERATED_FIXTURE_PATH: &str = "/generated.html";
 pub const EFFECTS_FIXTURE_PATH: &str = "/effects.html";
 pub const BACKGROUNDS_FIXTURE_PATH: &str = "/backgrounds.html";
 pub const FORM_CONTROLS_FIXTURE_PATH: &str = "/form-controls.html";
+pub const FORM_GROUPS_FIXTURE_PATH: &str = "/form-groups.html";
 pub const FORM_SUBMISSION_FIXTURE_PATH: &str = "/form-submission.html";
 pub const FORM_SUBMISSION_RESULT_PATH: &str = "/form-result.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
@@ -150,6 +151,17 @@ pub const FORM_CONTROLS_FIXTURE_HTML: &str = r##"<!doctype html><html><body>
 <input id="color-control" type="color" value="#A0b1C2">
 <input id="file-control" type="file" accept="image/*,.txt" multiple>
 </body></html>"##;
+
+/// Explicit/implicit labels and disabled-fieldset inheritance with the legend exception.
+pub const FORM_GROUPS_FIXTURE_HTML: &str = r#"<!doctype html><html><body>
+<form id="preferences" action="/form-result.html">
+<label for="query-control">Query</label><input id="query-control" name="query" value="venture">
+<label><input id="check-control" name="enabled" type="checkbox" value="yes"> Enabled</label>
+<fieldset disabled><legend><label><input id="legend-control" name="legend" value="allowed"> Legend control</label></legend>
+<label for="blocked-control">Blocked</label><input id="blocked-control" name="blocked" required>
+</fieldset><button id="submit-control" type="submit">Submit</button>
+</form>
+</body></html>"#;
 
 /// Deterministic validation, successful-control, reset, and POST fixture.
 pub const FORM_SUBMISSION_FIXTURE_HTML: &str = r#"<!doctype html><html><head><title>Venture form fixture</title></head><body>
@@ -566,6 +578,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let effects_url = format!("{origin}{EFFECTS_FIXTURE_PATH}");
     let backgrounds_url = format!("{origin}{BACKGROUNDS_FIXTURE_PATH}");
     let form_controls_url = format!("{origin}{FORM_CONTROLS_FIXTURE_PATH}");
+    let form_groups_url = format!("{origin}{FORM_GROUPS_FIXTURE_PATH}");
     let form_submission_url = format!("{origin}{FORM_SUBMISSION_FIXTURE_PATH}");
     let form_result_url = format!("{origin}{FORM_SUBMISSION_RESULT_PATH}");
     match requested_url {
@@ -664,6 +677,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             FORM_CONTROLS_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == form_groups_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            FORM_GROUPS_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == form_submission_url => Ok(BrowserFetchResponse::new(
             url,
@@ -891,6 +910,23 @@ pub fn load_form_controls_page(origin: &str) -> Result<BrowserPage, String> {
         "{}{FORM_CONTROLS_FIXTURE_PATH}",
         origin.trim_end_matches('/')
     );
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_form_groups_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, 300.0, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{FORM_GROUPS_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1392,6 +1428,36 @@ mod tests {
         let pixels = paint_vm_cairo::render(&page.paint.scene).expect("control fixture cairo");
         assert_eq!((pixels.width, pixels.height), (VIEWPORT_WIDTH as u32, 504));
         assert!(pixels.data.iter().any(|channel| *channel != 0));
+    }
+
+    #[test]
+    fn form_groups_share_label_hits_and_effective_disabledness() {
+        let page = load_form_groups_page("http://venture.test").expect("form-group fixture");
+        let controls =
+            venture_browser_core::BrowserControlModel::from_render_tree(&page.render_tree);
+        assert!(controls
+            .control("control:2:id:legend-control")
+            .is_some_and(|control| !control.disabled));
+        assert!(controls
+            .control("control:3:id:blocked-control")
+            .is_some_and(|control| control.disabled));
+
+        let labels = page
+            .paint
+            .controls
+            .iter()
+            .filter(|region| region.label_activation)
+            .collect::<Vec<_>>();
+        assert_eq!(labels.len(), 4);
+        assert!(labels
+            .iter()
+            .any(|region| region.key == "control:0:id:query-control"));
+        assert!(labels
+            .iter()
+            .any(|region| region.key == "control:1:id:check-control"));
+        assert!(labels
+            .iter()
+            .any(|region| { region.key == "control:3:id:blocked-control" && region.disabled }));
     }
 
     #[test]
