@@ -34,12 +34,15 @@ client ID, token-endpoint audience, advertised algorithm set, and a
 provider-matched opaque private-key reference into the existing assertion
 profile. The selected algorithm must appear exactly in provider data; this
 pure construction invokes no signer and enables no concrete algorithm.
-For client-secret profiles, prepared authorization-code exchange and refresh
-requests can now cross the complete broker boundary: the registered provider,
-client ID, token endpoint, and retained Basic/Post method are checked before
-audited secret custody access; custody constructs zeroizing wire material; and
-broker-audited injected transport plus bounded response decoding completes
-before result release. These boundaries add no concrete network implementation;
+For client-secret profiles, prepared authorization-code exchange, refresh, and
+RFC 7009 revocation requests can now cross the complete broker boundary: the
+registered provider, client ID, exact operation endpoint, and retained
+Basic/Post method are checked before audited secret custody access; custody
+constructs zeroizing wire material; and broker-audited injected transport plus
+bounded response decoding completes before result release. Revocation accepts
+only exact HTTP 200 as confirmation, preserves HTTP 503 as a closed retryable
+failure, and never deletes a local credential. These boundaries add no concrete
+network implementation;
 exchange can either return its audit-gated response or compose it directly into
 an exact provider-bound opaque account key, crossing the OAuth credential
 release and custody-create audit gates without credential disclosure. Refresh
@@ -80,8 +83,9 @@ dependency are sibling packages in this repository.
 - concrete encrypted-vault credential storage;
 - account identity proof and key selection, listing, detach/revocation, device
   authorization UI, timing/sleep authority, and full device-flow loops;
-- full confidential credential-refresh rotation, private-key signing
-  orchestration, OIDC validation, and DPoP.
+- full confidential credential-refresh rotation, post-revocation local
+  credential deletion, private-key signing orchestration, OIDC validation, and
+  DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
 
