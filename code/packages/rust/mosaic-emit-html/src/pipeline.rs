@@ -2885,7 +2885,18 @@ fn emit_table_node(
             let inner_pad = " ".repeat(indent + 2);
             for child in &node.children {
                 if child.tag == "Col" {
-                    let col_style = build_style_attr(child, "", part_styles);
+                    // The authored `width:` is a builtin style rather than
+                    // being left to the part-style merge (#14846). html was
+                    // the only web backend dropping it: react emits
+                    // `style={{ width: "48px" }}` and webcomponent
+                    // `style="width: 48px"` for the same declaration, while
+                    // this wrote a bare `<col>` -- on the very backend where
+                    // `<col>` is the native concept.
+                    //
+                    // A part style still wins where both are present, because
+                    // `build_style_attr` appends it after the builtin.
+                    let builtin = static_col_width_style(child);
+                    let col_style = build_style_attr(child, &builtin, part_styles);
                     writeln!(out, "{inner_pad}<col{col_style}>").unwrap();
                 } else {
                     out.push_str(&emit_html_tree(child, indent + 2, part_styles)?);
@@ -3560,6 +3571,29 @@ fn emit_path_html(
 /// Extracted from `emit_html_tree` so the `HostInput` / `HostButton` /
 /// `HostTable*` paths can apply the same merge without duplicating the
 /// logic.
+/// The `width: Npx` builtin style for a `Col` that authors a literal width
+/// (#14846).
+///
+/// Literals only. A `For`-bound `Col (width: (w))` carries a runtime
+/// expression, and this backend emits a static template -- the loop itself
+/// becomes an `<!-- mosaic-for -->` comment rather than iterating -- so there
+/// is no value to write. react and webcomponent interpolate because their
+/// output is code; html's is not. That is a difference in what the format can
+/// express, not a gap in this emitter.
+fn static_col_width_style(col: &LayoutNode) -> String {
+    match col.props.iter().find(|p| p.name == "width").map(|p| &p.value) {
+        Some(LayoutPropValue::Number(n)) if n.is_finite() && *n > 0.0 => {
+            let n = *n;
+            if n.fract() == 0.0 {
+                format!("width: {}px", n as i64)
+            } else {
+                format!("width: {n}px")
+            }
+        }
+        _ => String::new(),
+    }
+}
+
 fn build_style_attr(
     node: &LayoutNode,
     builtin: &str,
@@ -5169,6 +5203,81 @@ mod tests {
             out.contains("<td>{{rowName}}</td>"),
             "expected <td>{{rowName}}</td>, got:\n{out}"
         );
+    }
+
+    // -------------------------------------------------------------------
+    // #14846 — an authored `Col (width:)` reaches the emitted `<col>`.
+    // -------------------------------------------------------------------
+    #[test]
+    fn a_literal_col_width_becomes_a_style_attribute() {
+        // html was the only web backend dropping this: react emits
+        // `style={{ width: "48px" }}` and webcomponent `style="width: 48px"`
+        // for the same declaration, while this wrote a bare `<col>` -- on the
+        // very backend where `<col>` is the native concept.
+        let col = node_with_props_and_children(
+            "Col",
+            vec![LayoutProp {
+                name: "width".into(),
+                value: LayoutPropValue::Number(48.0),
+            }],
+            vec![],
+        );
+        let colgroup = node_with_props_and_children("HostTableColGroup", vec![], vec![col]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![colgroup]);
+        let out = from_pipeline(
+            &component("T", vec![]),
+            &layout("T", table),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(r#"<col style="width: 48px">"#),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn a_col_with_no_width_stays_bare() {
+        let colgroup =
+            node_with_props_and_children("HostTableColGroup", vec![], vec![node("Col")]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![colgroup]);
+        let out = from_pipeline(
+            &component("T", vec![]),
+            &layout("T", table),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("<col>"), "got:\n{out}");
+        assert!(!out.contains("style="), "got:\n{out}");
+    }
+
+    #[test]
+    fn an_expression_col_width_emits_no_style() {
+        // A `For`-bound `Col (width: (w))` carries a runtime expression, and
+        // this backend emits a static template -- the loop becomes an
+        // `<!-- mosaic-for -->` comment rather than iterating. There is no
+        // value to write. react and webcomponent interpolate because their
+        // output is code; html's is not.
+        let col = node_with_props_and_children(
+            "Col",
+            vec![LayoutProp {
+                name: "width".into(),
+                value: LayoutPropValue::Expr("( w )".into()),
+            }],
+            vec![],
+        );
+        let colgroup = node_with_props_and_children("HostTableColGroup", vec![], vec![col]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![colgroup]);
+        let out = from_pipeline(
+            &component("T", vec![]),
+            &layout("T", table),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("<col>"), "got:\n{out}");
     }
 
     // -------------------------------------------------------------------
