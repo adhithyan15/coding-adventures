@@ -1390,7 +1390,7 @@ fn parse_packet_bit(token: &Token, raw: &str) -> Result<u32, ParseError> {
 
 /// Parse the grammar-backed flat Mermaid block subset into grid semantic IR.
 pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
-    let prepared = prepare_line_grammar_source(source)?;
+    let prepared = prepare_block_source(source)?;
     let tokens = try_tokenize_mermaid_block(&prepared).map_err(|message| ParseError {
         message,
         line: 1,
@@ -1444,7 +1444,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             continue;
         }
         if let Some((_, value)) = line.strip_prefix("accDescr").and_then(|line| line.split_once(':')) {
-            accessibility_description = Some(value.trim().to_string());
+            accessibility_description = Some(normalize_mermaid_line_breaks(value.trim()));
             continue;
         }
         if let Some(value) = line.strip_prefix("classDef ") {
@@ -1557,6 +1557,40 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         cells,
         connections,
     })
+}
+
+fn prepare_block_source(source: &str) -> Result<String, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let lines: Vec<_> = prepared.lines().collect();
+    let mut output = Vec::with_capacity(lines.len());
+    let mut index = 0usize;
+
+    while index < lines.len() {
+        if lines[index].trim() != "accDescr {" {
+            output.push(lines[index].to_string());
+            index += 1;
+            continue;
+        }
+
+        let start_line = index + 1;
+        index += 1;
+        let mut description = Vec::new();
+        while index < lines.len() && lines[index].trim() != "}" {
+            description.push(lines[index].trim());
+            index += 1;
+        }
+        if index == lines.len() {
+            return Err(ParseError {
+                message: "unterminated block accessibility description".into(),
+                line: start_line,
+                col: 1,
+            });
+        }
+        output.push(format!("accDescr: {}", description.join("<br/>")));
+        index += 1;
+    }
+
+    Ok(output.join("\n"))
 }
 
 fn parse_block_quoted_connection_label(token: &Token, source: &str) -> Result<(String, Option<String>), ParseError> {
@@ -9121,6 +9155,20 @@ mod tests_dg04 {
         let diagram = parse_block("block\nA>Flag shaped node]").unwrap();
         assert_eq!(diagram.cells[0].label.text, "Flag shaped node");
         assert_eq!(diagram.cells[0].shape, DiagramShape::Asymmetric);
+    }
+
+    #[test]
+    fn block_preserves_braced_multiline_accessibility_description() {
+        let diagram = parse_block(
+            "block\naccTitle: Block pipeline\naccDescr {\nGrammar to semantic IR\nthen PaintScene output\n}\nA B",
+        )
+        .unwrap();
+        assert_eq!(diagram.accessibility_title.as_deref(), Some("Block pipeline"));
+        assert_eq!(
+            diagram.accessibility_description.as_deref(),
+            Some("Grammar to semantic IR\nthen PaintScene output")
+        );
+        assert!(parse_block("block\naccDescr {\nmissing close\nA").is_err());
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.120.0
+
+- Validate multiline Block accessibility metadata through PaintScene and Metal-to-PNG.
+
 ## 0.119.0
 
 - Lower asymmetric Block nodes to backend-neutral five-point paths and validate them through Metal-to-PNG.

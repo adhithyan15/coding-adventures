@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.199.0
+
+- Parse braced multiline Block accessibility descriptions into semantic metadata.
+
 ## 0.198.0
 
 - Parse Mermaid Block asymmetric node delimiters and spaced labels.

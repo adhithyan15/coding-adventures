@@ -230,7 +230,7 @@ mod apple {
     #[test]
     fn render_mermaid_block_to_png() {
         let grid = parse_block(
-            "block-beta\ntitle Native block grid\ncolumns 3\nA{{Grammar}}:2 B([IR])\nspace:2 C(((Paint)))\nD[[Metal]] E[(PNG)] F>Backend flag]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass A,C pipeline\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E\nE --> F",
+            "block-beta\ntitle Native block grid\naccTitle: Native block pipeline\naccDescr {\nGrammar through semantic IR\ninto backend-neutral paint\n}\ncolumns 3\nA{{Grammar}}:2 B([IR])\nspace:2 C(((Paint)))\nD[[Metal]] E[(PNG)] F>Backend flag]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass A,C pipeline\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E\nE --> F",
         )
         .expect("block parse failed");
         let layout = layout_grid_diagram(&grid);
@@ -248,6 +248,12 @@ mod apple {
             resolver: &resolver,
         };
         let scene = diagram_to_paint(&layout, &opts);
+        let metadata = scene.metadata.as_ref().expect("block accessibility metadata missing");
+        assert_eq!(metadata["accessibility.title"], "Native block pipeline");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "Grammar through semantic IR\ninto backend-neutral paint"
+        );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
         let pixels = render(&scene);
