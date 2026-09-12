@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added audited composition from one caller-timed device poll into exact
+  opaque-key credential creation, returning only the custody revision after an
+  authorized response while continuation paths avoid clock and storage access.
 - Added an opaque caller-timed RFC 8628 polling sequence that rejects early and
   expired polls before request preparation or transport, performs at most one
   audited effect per step, preserves provider/client/endpoint/trace binding,

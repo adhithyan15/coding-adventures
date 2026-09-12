@@ -27,10 +27,13 @@ sequence additionally enforces the provider interval and relative expiry on an
 arbitrary monotonic timeline, performs at most one poll per step, applies each
 `slow_down` increase, and schedules from the actual attempt time so delayed
 callers cannot trigger catch-up polling. It preserves the opaque polling state
-after a transient transport failure. Refresh-token disclosure, request
-preparation, transport attempt/result, response decoding, credential release,
-compare-and-swap rotation, metadata reads, and final result release are all
-durable-audit gates.
+after a transient transport failure. A caller may supply an exact opaque
+account key so an authorized device response is stored through the existing
+credential-custody boundary and only its opaque revision is released; token
+bytes do not need to cross back into orchestration code. Refresh-token
+disclosure, request preparation, transport attempt/result, response decoding,
+credential release, compare-and-swap rotation, metadata reads, and final result
+release are all durable-audit gates.
 
 The transport trait is deliberately an authority seam, not an HTTP library.
 Concrete HTTPS and capability authorization remain separate packages. The
@@ -46,8 +49,8 @@ dependency are sibling packages in this repository.
 - concrete HTTPS, TLS, or socket authority;
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
-- account identity proof, listing, detach/revocation, device authorization UI,
-  timing/sleep authority, and full device-flow loops;
+- account identity proof and key selection, listing, detach/revocation, device
+  authorization UI, timing/sleep authority, and full device-flow loops;
 - confidential-client secrets, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.

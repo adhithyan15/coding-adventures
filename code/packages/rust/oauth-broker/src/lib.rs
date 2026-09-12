@@ -356,6 +356,55 @@ impl Debug for DeviceFlowStepResult {
     }
 }
 
+/// One audited caller-driven device-flow outcome whose authorized response is
+/// persisted under an exact opaque credential key before it can leave the broker.
+pub enum DeviceFlowCredentialStepResult {
+    /// The caller-provided time has not reached the minimum polling interval.
+    Waiting(DeviceFlowPollSequence),
+    /// The provider has not yet received the resource owner's decision.
+    Pending(DeviceFlowPollSequence),
+    /// The provider increased the minimum delay for every later poll.
+    SlowDown(DeviceFlowPollSequence),
+    /// A transient transport failure may be retried at the next scheduled instant.
+    TransportFailed(DeviceFlowPollSequence),
+    /// The authorized credential was durably stored without releasing token bytes.
+    Stored(CredentialRevision),
+    /// The resource owner denied authorization.
+    Denied,
+    /// The caller timeline or provider reported expiration.
+    Expired,
+}
+
+impl DeviceFlowCredentialStepResult {
+    /// Return the next absolute caller-timeline polling instant, when applicable.
+    pub const fn next_poll_at_seconds(&self) -> Option<u64> {
+        match self {
+            Self::Waiting(sequence)
+            | Self::Pending(sequence)
+            | Self::SlowDown(sequence)
+            | Self::TransportFailed(sequence) => Some(sequence.next_poll_at_seconds()),
+            Self::Stored(_) | Self::Denied | Self::Expired => None,
+        }
+    }
+}
+
+impl Debug for DeviceFlowCredentialStepResult {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Waiting(sequence) => formatter.debug_tuple("Waiting").field(sequence).finish(),
+            Self::Pending(sequence) => formatter.debug_tuple("Pending").field(sequence).finish(),
+            Self::SlowDown(sequence) => formatter.debug_tuple("SlowDown").field(sequence).finish(),
+            Self::TransportFailed(sequence) => formatter
+                .debug_tuple("TransportFailed")
+                .field(sequence)
+                .finish(),
+            Self::Stored(revision) => formatter.debug_tuple("Stored").field(revision).finish(),
+            Self::Denied => formatter.write_str("Denied"),
+            Self::Expired => formatter.write_str("Expired"),
+        }
+    }
+}
+
 impl Debug for BrokerDevicePollResult {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         match self {
@@ -395,6 +444,8 @@ pub enum BrokerAuditAction {
     DeviceAuthorizationTransport,
     /// Advance one caller-timed RFC 8628 polling sequence by at most one effect.
     DeviceFlowStep,
+    /// Persist an authorized device response under one opaque credential key.
+    DeviceCredentialCreate,
 }
 
 /// Closed privacy-safe broker result.
@@ -842,6 +893,70 @@ impl<S: CredentialStore> OAuthBroker<S> {
             &provider,
             trace,
             BrokerAuditAction::DeviceFlowStep,
+            result,
+        )
+    }
+
+    /// Advance one caller-timed device flow and persist an authorized response.
+    ///
+    /// The caller-selected opaque credential key must name the sequence provider
+    /// before any protocol or transport effect. Continuation outcomes retain only
+    /// the opaque sequence. An authorized token response crosses the existing
+    /// OAuth release and credential-custody audit gates, and this method returns
+    /// only the resulting opaque revision. The caller retains account-identity,
+    /// monotonic-time, clock, waiting, and transport authority.
+    pub fn advance_device_flow_and_store<T, C, A>(
+        &self,
+        key: &CredentialKey,
+        sequence: DeviceFlowPollSequence,
+        observed_at_seconds: u64,
+        transport: &mut T,
+        clock: &mut C,
+        audit: &mut A,
+    ) -> Result<DeviceFlowCredentialStepResult, BrokerError>
+    where
+        T: OAuthDeviceTokenTransport,
+        C: BrokerClock,
+        A: OAuthBrokerAuditSink,
+    {
+        let provider = sequence.provider().clone();
+        let trace = sequence.trace();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::DeviceCredentialCreate,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            if key.provider() != &provider {
+                return Err(BrokerError::BindingMismatch);
+            }
+            match self.advance_device_flow(sequence, observed_at_seconds, transport, audit)? {
+                DeviceFlowStepResult::Waiting(sequence) => {
+                    Ok(DeviceFlowCredentialStepResult::Waiting(sequence))
+                }
+                DeviceFlowStepResult::Pending(sequence) => {
+                    Ok(DeviceFlowCredentialStepResult::Pending(sequence))
+                }
+                DeviceFlowStepResult::SlowDown(sequence) => {
+                    Ok(DeviceFlowCredentialStepResult::SlowDown(sequence))
+                }
+                DeviceFlowStepResult::TransportFailed(sequence) => {
+                    Ok(DeviceFlowCredentialStepResult::TransportFailed(sequence))
+                }
+                DeviceFlowStepResult::Authorized(response) => self
+                    .store_initial_response(key, response, trace, clock, audit)
+                    .map(DeviceFlowCredentialStepResult::Stored),
+                DeviceFlowStepResult::Denied => Ok(DeviceFlowCredentialStepResult::Denied),
+                DeviceFlowStepResult::Expired => Ok(DeviceFlowCredentialStepResult::Expired),
+            }
+        })();
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::DeviceCredentialCreate,
             result,
         )
     }
@@ -1331,6 +1446,18 @@ mod tests {
     impl BrokerClock for FixedClock {
         fn now_unix_seconds(&mut self) -> Result<u64, BrokerClockError> {
             Ok(self.0)
+        }
+    }
+
+    struct CountingClock {
+        now: u64,
+        calls: usize,
+    }
+
+    impl BrokerClock for CountingClock {
+        fn now_unix_seconds(&mut self) -> Result<u64, BrokerClockError> {
+            self.calls += 1;
+            Ok(self.now)
         }
     }
 
@@ -2344,6 +2471,138 @@ mod tests {
                 .count(),
             10
         );
+    }
+
+    #[test]
+    fn authorized_device_response_is_stored_without_token_release() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let mut setup_audit = RecordingAudit::default();
+        broker
+            .register_provider(policy("fixture", 300), trace(46), &mut setup_audit)
+            .unwrap();
+        let session = device_session("fixture", trace(46), &mut setup_audit);
+        let sequence = DeviceFlowPollSequence::new(session, 0).unwrap();
+        let credential_key = key("fixture");
+        let mut transport = MockDeviceTransport::new(vec![MockDeviceTransport::json(
+            200,
+            r#"{"access_token":"device-access","refresh_token":"device-refresh","token_type":"Bearer","expires_in":3600}"#,
+        )]);
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let mut audit = RecordingAudit::default();
+
+        let result = broker
+            .advance_device_flow_and_store(
+                &credential_key,
+                sequence,
+                5,
+                &mut transport,
+                &mut clock,
+                &mut audit,
+            )
+            .unwrap();
+
+        assert!(matches!(result, DeviceFlowCredentialStepResult::Stored(_)));
+        assert_eq!(transport.calls, 1);
+        assert_eq!(clock.calls, 1);
+        assert!(!format!("{result:?}").contains("device-access"));
+        let access = broker
+            .with_access_token(
+                &credential_key,
+                trace(46),
+                &mut FixedClock(1_001),
+                &mut MockTransport::new("device-refresh", &[]),
+                &mut audit,
+                str::to_owned,
+            )
+            .unwrap();
+        assert_eq!(access, "device-access");
+        assert_eq!(
+            audit
+                .broker
+                .iter()
+                .filter(|event| event.action() == BrokerAuditAction::DeviceCredentialCreate)
+                .map(BrokerAuditEvent::outcome)
+                .collect::<Vec<_>>(),
+            vec![BrokerAuditOutcome::Attempted, BrokerAuditOutcome::Succeeded]
+        );
+    }
+
+    #[test]
+    fn device_credential_binding_precedes_transport_and_clock() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let mut setup_audit = RecordingAudit::default();
+        broker
+            .register_provider(policy("fixture", 300), trace(47), &mut setup_audit)
+            .unwrap();
+        let session = device_session("fixture", trace(47), &mut setup_audit);
+        let sequence = DeviceFlowPollSequence::new(session, 0).unwrap();
+        let mut transport = MockDeviceTransport::new(vec![]);
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let mut audit = RecordingAudit::default();
+
+        assert!(matches!(
+            broker.advance_device_flow_and_store(
+                &key("other"),
+                sequence,
+                5,
+                &mut transport,
+                &mut clock,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(transport.calls, 0);
+        assert_eq!(clock.calls, 0);
+        assert!(audit.oauth.is_empty());
+        assert!(audit.custody.is_empty());
+        assert_eq!(
+            audit.broker.last().unwrap().outcome(),
+            BrokerAuditOutcome::Failed(BrokerFailureClass::InvalidInput)
+        );
+    }
+
+    #[test]
+    fn device_credential_continuation_does_not_access_clock_or_custody() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let mut setup_audit = RecordingAudit::default();
+        broker
+            .register_provider(policy("fixture", 300), trace(48), &mut setup_audit)
+            .unwrap();
+        let session = device_session("fixture", trace(48), &mut setup_audit);
+        let sequence = DeviceFlowPollSequence::new(session, 0).unwrap();
+        let mut transport = MockDeviceTransport::new(vec![]);
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let mut audit = RecordingAudit::default();
+
+        let result = broker
+            .advance_device_flow_and_store(
+                &key("fixture"),
+                sequence,
+                4,
+                &mut transport,
+                &mut clock,
+                &mut audit,
+            )
+            .unwrap();
+
+        assert!(matches!(result, DeviceFlowCredentialStepResult::Waiting(_)));
+        assert_eq!(result.next_poll_at_seconds(), Some(5));
+        assert_eq!(transport.calls, 0);
+        assert_eq!(clock.calls, 0);
+        assert!(audit.oauth.is_empty());
+        assert!(audit.custody.is_empty());
     }
 
     #[test]
