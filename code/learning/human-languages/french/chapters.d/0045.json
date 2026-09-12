@@ -1,0 +1,16 @@
+{
+  "chapter": 45,
+  "title": "Reading — Instructions, a Form, and a First Paragraph",
+  "label": "ch:fr-premiere-lecture",
+  "canDo": "I can read a French instruction, a line off a form, and a whole paragraph, without translating word by word.",
+  "payoff": {
+    "lesson": "FR-C45-premiere-lecture",
+    "kind": "four-skill-function-map",
+    "summary": "Sixty-three words of French in a row with no new word in them, including the sentence that admits it did not follow everything and carries on anyway.",
+    "assesses": [
+      "FR-SKILL-CONNECTED-READING",
+      "FR-SKILL-READ-DETAILS",
+      "FR-SKILL-READ-INSTRUCTIONS"
+    ]
+  }
+}
