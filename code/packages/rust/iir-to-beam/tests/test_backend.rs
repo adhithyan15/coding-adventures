@@ -2745,6 +2745,178 @@ fn test_74_real_erl_str_slice_end_equal_to_length_is_in_bounds() {
         "str_slice([0,5)) of \"ABCDE\" (end == length) must not trap");
 }
 
+/// VM-040 COBOL BEAM STRING SIZE/delimiter slice: COBOL's `STRING ...
+/// DELIMITED BY delim` and `UNSTRING` both scan a sending field
+/// character-by-character with `str_len`/`str_index`. `str_len` is
+/// `erlang:length/1` — a recognized guard BIF with no failure mode.
+#[test]
+fn test_75_real_erl_str_len() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("str_const", Some("w".into()), vec![Operand::Str("HELLO".into())], "str"),
+        IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("w".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "str_len module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_str_len_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_str_len_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w\",[iir_str_len_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(output.status.success(),
+        "erl exited non-zero; stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "5",
+        "str_len(\"HELLO\") must be 5");
+}
+
+/// `str_index` reads one byte at a 0-based offset — the per-character scan
+/// UNSTRING and STRING's delimiter search both use. `lists:nth/2` is
+/// 1-indexed, so `idx + 1` is computed before the call.
+#[test]
+fn test_76_real_erl_str_index() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("str_const", Some("w".into()), vec![Operand::Str("HELLO".into())], "str"),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("str_index", Some("c".into()),
+            vec![Operand::Var("w".into()), Operand::Var("i".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "str_index module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_str_index_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_str_index_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w\",[iir_str_index_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(output.status.success(),
+        "erl exited non-zero; stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout), (b'E' as i64).to_string(),
+        "str_index(\"HELLO\", 1) must be the byte code for 'E'");
+}
+
+/// `str_index`'s documented contract (`vm-core::dispatch::handle_str_index`)
+/// traps when `idx >= length(source)`. Unlike `str_slice`'s `sublist` gap
+/// (VM-D032), `lists:nth/2`'s own clause structure already has no case for
+/// `N` past the list's end — it fails closed with no separate guard needed.
+/// `idx == len` ("HELLO" has length 5, so `idx=5` is one past the last valid
+/// index 4) is the exact boundary, matching `test_73`'s `str_slice` shape.
+#[test]
+fn test_77_real_erl_str_index_traps_at_length() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("str_const", Some("w".into()), vec![Operand::Str("HELLO".into())], "str"),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(5)], "i64"),
+        IIRInstr::new("str_index", Some("c".into()),
+            vec![Operand::Var("w".into()), Operand::Var("i".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "str_index module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_str_index_trap_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_str_index_trap_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .current_dir(&tmp)
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w\",[iir_str_index_trap_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(!output.status.success(),
+        "an out-of-range str_index must fail closed; stdout: {:?}",
+        String::from_utf8_lossy(&output.stdout));
+}
+
+/// Positive control for [`test_77_real_erl_str_index_traps_at_length`]:
+/// `idx == length(source) - 1` is the last valid index, not past it, so it
+/// must still succeed — proving the boundary is `idx >= len`, not an
+/// off-by-one `idx > len`.
+#[test]
+fn test_78_real_erl_str_index_last_valid_index_is_in_bounds() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("str_const", Some("w".into()), vec![Operand::Str("HELLO".into())], "str"),
+        // "HELLO" has length 5; index 4 is the last valid index ('O').
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(4)], "i64"),
+        IIRInstr::new("str_index", Some("c".into()),
+            vec![Operand::Var("w".into()), Operand::Var("i".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "str_index module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_str_index_last_valid_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_str_index_last_valid_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w\",[iir_str_index_last_valid_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(output.status.success(),
+        "erl exited non-zero; stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout), (b'O' as i64).to_string(),
+        "str_index(\"HELLO\", 4) (the last valid index) must not trap");
+}
+
 #[test]
 fn integer_output_builtin_accepts_no_destination() {
     let m = make_module_single(vec![
