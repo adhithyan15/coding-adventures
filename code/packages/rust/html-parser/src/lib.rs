@@ -827,7 +827,7 @@ pub fn parse_html_with_diagnostics_and_options(
         position: lexer.position(),
     });
 
-    let lexer_diagnostics = lexer.diagnostics().to_vec();
+    let lexer_diagnostics = parser.reconcile_cdata_lexer_diagnostics(lexer.diagnostics());
     let document = parser.finish_document();
 
     Ok(ParseOutput {
@@ -859,7 +859,7 @@ pub fn parse_html_fragment_with_diagnostics_and_options(
         position: lexer.position(),
     });
 
-    let lexer_diagnostics = lexer.diagnostics().to_vec();
+    let lexer_diagnostics = parser.reconcile_cdata_lexer_diagnostics(lexer.diagnostics());
     let document = parser.finish_document();
 
     Ok(FragmentOutput {
@@ -927,7 +927,7 @@ fn parse_html_fragment_for_context_parts_with_diagnostics_and_options(
         position: lexer.position(),
     });
 
-    let lexer_diagnostics = lexer.diagnostics().to_vec();
+    let lexer_diagnostics = parser.reconcile_cdata_lexer_diagnostics(lexer.diagnostics());
     let document = parser.finish_document();
 
     Ok(FragmentOutput {
@@ -4520,7 +4520,7 @@ pub struct HtmlParser {
     pending_table_text: String,
     strip_next_leading_noscript_literal: bool,
     form_element_pointer_set: bool,
-    foreign_cdata_text: Option<String>,
+    cdata_diagnostic_permissions: Vec<bool>,
     current_token_emission_position: Option<SourcePosition>,
     scripted_parser_suspended: bool,
     needs_table_cell_fostered_nobr_adoption_repair: bool,
@@ -4554,7 +4554,7 @@ impl Default for HtmlParser {
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
-            foreign_cdata_text: None,
+            cdata_diagnostic_permissions: Vec::new(),
             current_token_emission_position: None,
             scripted_parser_suspended: false,
             needs_table_cell_fostered_nobr_adoption_repair: false,
@@ -4619,7 +4619,7 @@ impl HtmlParser {
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
-            foreign_cdata_text: None,
+            cdata_diagnostic_permissions: Vec::new(),
             current_token_emission_position: None,
             scripted_parser_suspended: false,
             needs_table_cell_fostered_nobr_adoption_repair: false,
@@ -4671,7 +4671,7 @@ impl HtmlParser {
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set,
-            foreign_cdata_text: None,
+            cdata_diagnostic_permissions: Vec::new(),
             current_token_emission_position: None,
             scripted_parser_suspended: false,
             needs_table_cell_fostered_nobr_adoption_repair: false,
@@ -4815,9 +4815,6 @@ impl HtmlParser {
         self.process_initial_insertion_mode(&token);
         if self.process_document_tail_mode(&token) {
             return;
-        }
-        if matches!(token, Token::Eof) {
-            self.flush_foreign_cdata_text();
         }
         match token {
             Token::Text(text) => self.append_text(text),
@@ -5096,19 +5093,28 @@ impl HtmlParser {
         }
     }
 
-    fn process_lexer_token(&mut self, token: PositionedToken, final_drain: bool) {
+    fn process_lexer_token(
+        &mut self,
+        token: PositionedToken,
+        final_drain: bool,
+        has_new_cdata_diagnostic: bool,
+    ) -> bool {
         self.current_token_emission_position = Some(token.position);
         let token = token.token;
-        if self.foreign_cdata_text.is_some() {
-            self.consume_foreign_cdata_token(token);
-            self.current_token_emission_position = None;
-            return;
+
+        if has_new_cdata_diagnostic {
+            self.cdata_diagnostic_permissions
+                .push(self.current_namespace().is_some());
         }
 
         match token {
-            Token::Comment(comment) if self.current_namespace().is_some() => {
+            Token::Comment(comment)
+                if has_new_cdata_diagnostic && self.current_namespace().is_some() =>
+            {
                 if let Some(cdata) = comment.strip_prefix("[CDATA[") {
-                    self.start_foreign_cdata_text(cdata, final_drain);
+                    let needs_cdata_context = self.start_foreign_cdata_text(cdata, final_drain);
+                    self.current_token_emission_position = None;
+                    return needs_cdata_context;
                 } else {
                     self.process_token(Token::Comment(comment));
                 }
@@ -5116,80 +5122,43 @@ impl HtmlParser {
             token => self.process_token(token),
         }
         self.current_token_emission_position = None;
+        false
     }
 
-    fn start_foreign_cdata_text(&mut self, cdata: &str, final_drain: bool) {
+    fn reconcile_cdata_lexer_diagnostics(&self, diagnostics: &[Diagnostic]) -> Vec<Diagnostic> {
+        let mut cdata_diagnostic_permissions = self.cdata_diagnostic_permissions.iter();
+        diagnostics
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code != "cdata-in-html-content"
+                    || !cdata_diagnostic_permissions
+                        .next()
+                        .copied()
+                        .unwrap_or(false)
+            })
+            .cloned()
+            .collect()
+    }
+
+    fn start_foreign_cdata_text(&mut self, cdata: &str, final_drain: bool) -> bool {
         if final_drain {
             if !cdata.is_empty() {
                 self.append_text(cdata.to_string());
             }
-            return;
+            return false;
         }
 
         if let Some(cdata) = cdata.strip_suffix("]]") {
             if !cdata.is_empty() {
                 self.append_text(cdata.to_string());
             }
-            return;
+            return false;
         }
 
         let mut text = cdata.to_string();
         text.push('>');
-        self.consume_foreign_cdata_text(text);
-    }
-
-    fn consume_foreign_cdata_token(&mut self, token: Token) {
-        match token {
-            Token::Text(text) => self.consume_foreign_cdata_text(text),
-            Token::StartTag {
-                name,
-                attributes,
-                self_closing,
-            } => {
-                self.consume_foreign_cdata_text(start_tag_as_text(
-                    &name,
-                    &attributes,
-                    self_closing,
-                ));
-            }
-            Token::EndTag { name } => self.consume_foreign_cdata_text(format!("</{name}>")),
-            Token::Comment(comment) => {
-                self.consume_foreign_cdata_text(format!("<!--{comment}-->"));
-            }
-            Token::ProcessingInstruction { target, data } => {
-                self.consume_foreign_cdata_text(format!("<?{target} {data}?>"));
-            }
-            Token::Doctype { name, .. } => {
-                self.consume_foreign_cdata_text(format!("<!DOCTYPE {}>", name.unwrap_or_default()));
-            }
-            Token::Eof => self.flush_foreign_cdata_text(),
-        }
-    }
-
-    fn consume_foreign_cdata_text(&mut self, text: String) {
-        let mut cdata = self.foreign_cdata_text.take().unwrap_or_default();
-        cdata.push_str(&text);
-
-        if let Some(end) = cdata.find("]]>") {
-            let trailing = cdata[end + 3..].to_string();
-            cdata.truncate(end);
-            if !cdata.is_empty() {
-                self.append_text(cdata);
-            }
-            if !trailing.is_empty() {
-                self.process_token(Token::Text(trailing));
-            }
-        } else {
-            self.foreign_cdata_text = Some(cdata);
-        }
-    }
-
-    fn flush_foreign_cdata_text(&mut self) {
-        if let Some(cdata) = self.foreign_cdata_text.take() {
-            if !cdata.is_empty() {
-                self.append_text(cdata);
-            }
-        }
+        self.append_text(text);
+        true
     }
 
     fn append_start_tag(
@@ -5198,7 +5167,12 @@ impl HtmlParser {
         attributes: Vec<LexerAttribute>,
         self_closing: bool,
     ) {
-        if name == "image" {
+        let body_element_existed_before_start_tag = self.document_has_body_element();
+
+        let mut in_foreign_content = self.current_namespace().is_some()
+            && !self.current_node_is_svg_html_integration_point()
+            && !self.current_node_is_mathml_integration_point();
+        if !in_foreign_content && name == "image" {
             self.diagnostics.push(
                 ParserDiagnostic::new(
                     "unexpected-start-tag-treated-as",
@@ -5208,11 +5182,6 @@ impl HtmlParser {
             );
             name = "img".to_string();
         }
-        let body_element_existed_before_start_tag = self.document_has_body_element();
-
-        let mut in_foreign_content = self.current_namespace().is_some()
-            && !self.current_node_is_svg_html_integration_point()
-            && !self.current_node_is_mathml_integration_point();
         let mut forced_html_fragment_breakout = false;
         if in_foreign_content
             && self.current_element_is_marked_foreign_fragment_context()
@@ -5745,7 +5714,9 @@ impl HtmlParser {
                 attributes,
                 namespace,
             )) {
-                self.open_elements.push(path);
+                if !self_closing {
+                    self.open_elements.push(path);
+                }
             }
             return;
         }
@@ -6555,17 +6526,6 @@ impl HtmlParser {
     }
 
     fn append_comment(&mut self, comment: String) {
-        if self.current_namespace().is_some() {
-            if let Some(cdata) = comment
-                .strip_prefix("[CDATA[")
-                .and_then(|data| data.strip_suffix("]]"))
-            {
-                if !cdata.is_empty() {
-                    self.append_text_to_current(cdata.to_string());
-                }
-                return;
-            }
-        }
         self.append_comment_or_processing_instruction(Node::comment(comment));
     }
 
@@ -7553,7 +7513,7 @@ impl HtmlParser {
             );
             return;
         }
-        let in_foreign_content = self.current_namespace().is_some()
+        let mut in_foreign_content = self.current_namespace().is_some()
             && !self.current_node_is_svg_html_integration_point()
             && !self.current_node_is_mathml_integration_point();
         if self.current_namespace().is_none()
@@ -7621,6 +7581,17 @@ impl HtmlParser {
                 )
                 .at_emission(self.current_token_emission_position),
             );
+            if is_scoped_block_end_tag(name) && name != "button" {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-non-current-end-tag",
+                        format!(
+                            "end tag `</{name}>` was seen before its open element was current"
+                        ),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+            }
             self.pop_foreign_elements();
         }
         if self.current_namespace().is_some()
@@ -7985,6 +7956,13 @@ impl HtmlParser {
             && !(self.current_namespace().is_none()
                 && self.has_authored_open_html_element(name))
         {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-non-current-end-tag",
+                    format!("end tag `</{name}>` was seen before its open element was current"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if self.current_namespace().is_some()
@@ -8049,9 +8027,35 @@ impl HtmlParser {
                     )
                     .at_emission(self.current_token_emission_position),
                 );
+            } else {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag-in-foreign-content",
+                        format!("end tag `</{name}>` did not match the current foreign element"),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+            }
+            if self.close_open_foreign_element_before_html_boundary(name) {
+                return;
             }
             self.pop_foreign_elements();
-        } else if !in_foreign_content
+            in_foreign_content = false;
+        }
+        if in_foreign_content
+            && !self.current_element_is(name)
+            && self.close_open_foreign_element_before_html_boundary(name)
+        {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    format!("end tag `</{name}>` did not match the current foreign element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return;
+        }
+        if !in_foreign_content
             && self.current_namespace().is_some()
             && is_table_context_element(name)
         {
@@ -8069,6 +8073,24 @@ impl HtmlParser {
         {
             self.pop_foreign_elements();
         } else if in_foreign_content && !self.current_element_is(name) {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    format!("end tag `</{name}>` did not match the current foreign element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            if !self.has_open_foreign_fragment_context()
+                && uses_in_body_any_other_end_tag_rules(name)
+            {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag",
+                        format!("end tag `</{name}>` did not match an open element"),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+            }
             return;
         }
         if in_foreign_content && self.current_element_is(name) {
@@ -9808,6 +9830,14 @@ impl HtmlParser {
             }
         }
         false
+    }
+
+    fn has_open_foreign_fragment_context(&self) -> bool {
+        self.open_elements.iter().rev().any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                has_fragment_context_marker(element) && element.namespace.is_some()
+            })
+        })
     }
 
     fn handle_html_template_end_tag(&mut self) {
@@ -11698,9 +11728,24 @@ fn drain_parser_tokens(
             Token::StartTag { name, .. } if !is_void_element(name) => Some(name.clone()),
             _ => None,
         };
-        parser.process_lexer_token(positioned_token, final_drain);
+        let has_new_cdata_diagnostic = matches!(
+            &positioned_token.token,
+            Token::Comment(comment) if comment.starts_with("[CDATA[")
+        ) && lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "cdata-in-html-content")
+            .count()
+            > parser.cdata_diagnostic_permissions.len();
+        let entered_cdata_section = parser.process_lexer_token(
+            positioned_token,
+            final_drain,
+            has_new_cdata_diagnostic,
+        );
 
-        let next_context = if let Some(name) = start_tag_name {
+        let next_context = if entered_cdata_section {
+            Some(HtmlLexContext::cdata_section())
+        } else if let Some(name) = start_tag_name {
             (parser.current_namespace().is_none() && parser.current_element_is(&name))
                 .then(|| {
                     HtmlLexContext::for_element_text_with_scripting(&name, parser.options.scripting)
@@ -11737,22 +11782,6 @@ fn is_html_whitespace(character: char) -> bool {
 
 fn is_html_whitespace_text(text: &str) -> bool {
     text.chars().all(is_html_whitespace)
-}
-
-fn start_tag_as_text(name: &str, attributes: &[LexerAttribute], self_closing: bool) -> String {
-    let mut text = format!("<{name}");
-    for attribute in attributes {
-        text.push(' ');
-        text.push_str(&attribute.name);
-        text.push_str("=\"");
-        text.push_str(&attribute.value);
-        text.push('"');
-    }
-    if self_closing {
-        text.push('/');
-    }
-    text.push('>');
-    text
 }
 
 fn trim_formatting_reconstruction_noah_ark(
@@ -37273,6 +37302,121 @@ mod tests {
     }
 
     #[test]
+    fn non_current_foreign_end_tags_preserve_their_foreign_ancestors() {
+        let source = "<!doctype html><svg id=s><g id=g><path></g>X<linearGradient id=l><path></linearGradient>Y<circle /></svg>Z<math id=m><mrow id=r><mi></mrow>Q<mo /></math>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+
+        let svg = find_element_by_id(&output.document.children, "s").unwrap();
+        assert_eq!(svg.children.len(), 5);
+        assert_eq!(element(&svg.children[0]).name, "g");
+        assert_eq!(svg.children[1], Node::text("X"));
+        assert_eq!(element(&svg.children[2]).name, "linearGradient");
+        assert_eq!(svg.children[3], Node::text("Y"));
+        assert_eq!(element(&svg.children[4]).name, "circle");
+        assert_eq!(body(&output.document).children[1], Node::text("Z"));
+
+        let math = find_element_by_id(&output.document.children, "m").unwrap();
+        assert_eq!(math.children.len(), 3);
+        assert_eq!(element(&math.children[0]).name, "mrow");
+        assert_eq!(math.children[1], Node::text("Q"));
+        assert_eq!(element(&math.children[2]).name, "mo");
+
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
+                .count(),
+            3
+        );
+    }
+
+    #[test]
+    fn unmatched_foreign_end_tags_report_foreign_and_in_body_errors() {
+        for source in [
+            "<!doctype html><svg></path></svg>",
+            "<!doctype html><math></path></math>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .map(|diagnostic| diagnostic.code.as_str())
+                    .collect::<Vec<_>>(),
+                vec![
+                    "unexpected-end-tag-in-foreign-content",
+                    "unexpected-end-tag"
+                ],
+                "{source}"
+            );
+        }
+
+        let fragment_source = "</path>";
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            fragment_source,
+            "svg g",
+        )
+        .unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec!["unexpected-end-tag-in-foreign-content"]
+        );
+
+        let nested_fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<g></path>X",
+            "svg path",
+        )
+        .unwrap();
+        assert_eq!(
+            nested_fragment
+                .parser_diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec![
+                "unexpected-end-tag-in-foreign-content",
+                "eof-with-unclosed-elements"
+            ]
+        );
+    }
+
+    #[test]
+    fn foreign_end_tag_reprocessing_reports_blocked_html_targets() {
+        for source in [
+            "<!doctype html><div><svg></div>a",
+            "<!doctype html><div><svg><path></div>a",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .map(|diagnostic| diagnostic.code.as_str())
+                    .collect::<Vec<_>>(),
+                vec![
+                    "unexpected-end-tag-in-foreign-content",
+                    "unexpected-non-current-end-tag"
+                ],
+                "{source}"
+            );
+        }
+
+        let integration_source =
+            "<!doctype html><div><svg><path><foreignObject><p></foreignObject><p>";
+        let integration = parse_html_with_diagnostics(integration_source).unwrap();
+        assert!(integration.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-non-current-end-tag"
+                && diagnostic.position
+                    == Some(end_tag_position(integration_source, "foreignObject"))
+        }));
+    }
+
+    #[test]
     fn foreign_ancestor_end_tags_stop_at_html_integration_boundaries() {
         for source in [
             "<!doctype html><!--é-->\r\n<math><mtext><p>A</math>B",
@@ -46251,6 +46395,39 @@ mod tests {
     }
 
     #[test]
+    fn image_start_tags_remain_foreign_outside_html_integration_points() {
+        for (source, namespace) in [
+            ("<!doctype html><svg><image id=host />Y</svg>", "svg"),
+            ("<!doctype html><math><image id=host />Y</math>", "math"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let host = find_element_by_id(&output.document.children, "host").unwrap();
+            assert_eq!(host.name, "image", "{source}");
+            assert_eq!(host.namespace.as_deref(), Some(namespace), "{source}");
+            assert!(host.children.is_empty(), "{source}");
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-start-tag-treated-as"),
+                "{source}"
+            );
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<image id=host />Y", "svg g")
+                .unwrap();
+        let host = find_element_by_id(&fragment.nodes, "host").unwrap();
+        assert_eq!(host.name, "image");
+        assert_eq!(host.namespace.as_deref(), Some("svg"));
+        assert!(host.children.is_empty());
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-start-tag-treated-as"));
+    }
+
+    #[test]
     fn ignores_self_closing_flag_inside_implied_table_structure() {
         let output = parse_html_with_diagnostics(
             "<!doctype html><table><tr/><td/>A<td/>B</table><p>after</p>",
@@ -46285,6 +46462,26 @@ mod tests {
                 "non-void-html-element-self-closing",
             ]
         );
+    }
+
+    #[test]
+    fn self_closed_foreign_roots_fostered_from_a_table_do_not_capture_following_text() {
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><table><svg/>X<math/>Y",
+        )
+        .unwrap();
+
+        let body = body(&output.document);
+        assert_eq!(body.children.len(), 5);
+        let svg = element(&body.children[0]);
+        assert_eq!(svg.namespace.as_deref(), Some("svg"));
+        assert!(svg.children.is_empty());
+        assert_eq!(body.children[1], Node::text("X"));
+        let math = element(&body.children[2]);
+        assert_eq!(math.namespace.as_deref(), Some("math"));
+        assert!(math.children.is_empty());
+        assert_eq!(body.children[3], Node::text("Y"));
+        assert_eq!(element(&body.children[4]).name, "table");
     }
 
     #[test]
@@ -46637,6 +46834,178 @@ mod tests {
         let paragraph = element(&body(&document).children[1]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn parser_suppresses_html_cdata_diagnostics_only_when_foreign_content_allows_cdata() {
+        for source in [
+            "<!doctype html><svg><g id=host><![CDATA[A<B]]>",
+            "<!doctype html><svg><title id=host><![CDATA[A<B]]>",
+            "<!doctype html><math><mrow id=host><![CDATA[A<B]]>",
+            "<!doctype html><math><mtext id=host><![CDATA[A<B]]>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .lexer_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "cdata-in-html-content"),
+                "{source}"
+            );
+            let host = find_element_by_id(&output.document.children, "host").unwrap();
+            assert_eq!(host.children, vec![Node::text("A<B")], "{source}");
+        }
+
+        for context in [
+            "svg path",
+            "svg foreignobject",
+            "svg desc",
+            "svg title",
+            "math mi",
+            "math mo",
+            "math mn",
+            "math ms",
+            "math mtext",
+            "math annotation-xml",
+        ] {
+            let output = parse_html_fragment_for_context_with_diagnostics(
+                "x<![CDATA[y]]>",
+                context,
+            )
+            .unwrap();
+            assert!(
+                output
+                    .lexer_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "cdata-in-html-content"),
+                "{context}"
+            );
+            assert_eq!(output.nodes, vec![Node::text("xy")], "{context}");
+        }
+
+        let html = parse_html_with_diagnostics(
+            "<!doctype html><div id=host><![CDATA[A<B]]>",
+        )
+        .unwrap();
+        assert!(html
+            .lexer_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "cdata-in-html-content"));
+        let host = find_element_by_id(&html.document.children, "host").unwrap();
+        assert_eq!(host.children, vec![Node::comment("[CDATA[A<B]]")]);
+
+        let decoy = parse_html_with_diagnostics(
+            "<!doctype html><svg><g><!--[CDATA[decoy]]--></g></svg><div><![CDATA[real]]>",
+        )
+        .unwrap();
+        assert_eq!(
+            decoy
+                .lexer_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "cdata-in-html-content")
+                .count(),
+            1
+        );
+
+        for source in [
+            "<!doctype html><div><![CDATA[html]]></div><svg><g id=host><![CDATA[foreign]]></g></svg>",
+            "<!doctype html><svg><g id=host><![CDATA[foreign]]></g></svg><div><![CDATA[html]]></div>",
+            "<!doctype html><!--[CDATA[decoy]]--><svg><g id=host><![CDATA[foreign]]></g></svg><div><![CDATA[html]]>",
+            "<!doctype html><svg><g id=host><!--[CDATA[decoy]]--><![CDATA[foreign]]></g></svg><div><![CDATA[html]]>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .lexer_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "cdata-in-html-content")
+                    .count(),
+                1,
+                "{source}"
+            );
+            let host = find_element_by_id(&output.document.children, "host").unwrap();
+            if source.contains("<g id=host><!--") {
+                assert_eq!(
+                    host.children,
+                    vec![Node::comment("[CDATA[decoy]]"), Node::text("foreign")],
+                    "{source}"
+                );
+            } else {
+                assert_eq!(host.children, vec![Node::text("foreign")], "{source}");
+            }
+        }
+
+        let foreign_eof = parse_html_with_diagnostics(
+            "<!doctype html><svg><g id=host><![CDATA[foreign",
+        )
+        .unwrap();
+        assert!(foreign_eof
+            .lexer_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "cdata-in-html-content"));
+        let host = find_element_by_id(&foreign_eof.document.children, "host").unwrap();
+        assert_eq!(host.children, vec![Node::text("foreign")]);
+
+        let literal = parse_html_with_diagnostics(
+            "<!doctype html><svg><g id=host><![CDATA[one<B X='Y'>two<I A='B'>&amp;]]></g></svg>",
+        )
+        .unwrap();
+        let host = find_element_by_id(&literal.document.children, "host").unwrap();
+        assert_eq!(
+            host.children,
+            vec![Node::text("one<B X='Y'>two<I A='B'>&amp;")]
+        );
+
+        for context in [
+            "svg path",
+            "svg foreignobject",
+            "svg desc",
+            "svg title",
+            "math mi",
+            "math mo",
+            "math mn",
+            "math ms",
+            "math mtext",
+            "math annotation-xml",
+        ] {
+            let output = parse_html_fragment_for_context_with_diagnostics(
+                "<![CDATA[one<B X='Y'>two<I A='B'>&amp;]]>",
+                context,
+            )
+            .unwrap();
+            assert_eq!(
+                output.nodes,
+                vec![Node::text("one<B X='Y'>two<I A='B'>&amp;")],
+                "{context}"
+            );
+            assert!(
+                output
+                    .lexer_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "cdata-in-html-content"),
+                "{context}"
+            );
+        }
+
+        for payload in ["x--!>y", "x<!--y>z", "x?>y"] {
+            let source = format!(
+                "<!doctype html><svg><g id=host><![CDATA[{payload}]]></g></svg>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert!(output.lexer_diagnostics.is_empty(), "{payload}");
+            let host = find_element_by_id(&output.document.children, "host").unwrap();
+            assert_eq!(host.children, vec![Node::text(payload)], "{payload}");
+        }
+
+        let html_eof = parse_html_with_diagnostics("<!doctype html><div><![CDATA[html").unwrap();
+        assert_eq!(
+            html_eof
+                .lexer_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "cdata-in-html-content")
+                .count(),
+            1
+        );
     }
 
     #[test]
