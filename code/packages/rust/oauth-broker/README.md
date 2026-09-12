@@ -16,12 +16,14 @@ are rejected. JWT profiles additionally require a bounded, unique, non-`none`
 advertised algorithm set, while secret methods reject algorithm data. Exact
 selection is retained as non-secret provider data without claiming a concrete
 algorithm or acquiring credential or signer authority. The broker can compose
-public-profile decoding and registration through an injected data source. It
-durably records the requested provider and trace before the source read,
-rejects a profile that names another provider before registry mutation, and
-records the closed read/decode result before proceeding to separately audited
-registration. No file path, backend diagnostic, or profile byte enters broker
-audit data.
+both public- and confidential-profile decoding and registration through
+separate injected data-source contracts. It durably records the requested
+provider and trace before the source read, rejects a profile that names another
+provider before registry mutation, and records the closed read/decode result
+before proceeding to separately audited registration. Confidential source
+loading reads only provider policy and never acquires client-secret or
+signing-key access. No file path, backend diagnostic, or profile byte enters
+broker audit data.
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
