@@ -2237,6 +2237,16 @@ enum TableSemanticScope {
         row_index: String,
         column_index: String,
     },
+    /// The fixed cell that opens a row, before the `For` -- the corner in the
+    /// header and the row-header in each body row (#14843).
+    ///
+    /// It needs its own variant because `in_loop` is what advances the scope
+    /// to a cell, and this cell is not in a loop. Without it the two authored
+    /// roles that live here, `corner` and `row-header`, got no semantics at
+    /// all while `column-header` and `data` got theirs.
+    LeadingCell {
+        row_index: Option<String>,
+    },
 }
 
 struct ComposeSemanticTableShape<'a> {
@@ -2556,6 +2566,16 @@ fn table_semantics_modifier(node: &LayoutNode, table_ctx: Option<&TableContext>)
                 "semantics {{ collectionItemInfo = CollectionItemInfo(rowIndex = 0, rowSpan = 1, columnIndex = {column}, columnSpan = 1); heading() }}"
             ))
         }
+        // The fixed leading cell. In a header row it is the corner; in a
+        // body row it labels its row, so it gets `heading()` -- the
+        // nearest thing Compose has to React's `scope="row"`.
+        (TableSemanticScope::LeadingCell { row_index }, "Box") => Some(match row_index {
+            Some(row) => format!(
+                "semantics {{ collectionItemInfo = CollectionItemInfo(rowIndex = {row} + 1, rowSpan = 1, columnIndex = 0, columnSpan = 1); heading() }}"
+            ),
+            None => "semantics { collectionItemInfo = CollectionItemInfo(rowIndex = 0, rowSpan = 1, columnIndex = 0, columnSpan = 1) }"
+                .to_string(),
+        }),
         (
             TableSemanticScope::BodyCell {
                 row_index,
@@ -4710,7 +4730,7 @@ fn emit_container(
     // A `Row` inside a HostTable routes each child through
     // `emit_table_cell` so cell-position `For`s get width threading.
     if composable == "Row" && table_ctx.is_some() {
-        for cell in &node.children {
+        for (position, cell) in node.children.iter().enumerate() {
             out.push_str(&emit_table_cell(
                 cell,
                 depth + 1,
@@ -4720,6 +4740,7 @@ fn emit_container(
                 table_ctx,
                 child_text.as_ref(),
                 for_payload,
+                position == 0,
             )?);
         }
     } else {
@@ -4755,7 +4776,33 @@ fn emit_table_cell(
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
     for_payload: Option<ForPayloadScope<'_>>,
+    // Whether this is the row's FIRST cell, in a table whose rows open with a
+    // fixed one (#14843). Positional because the colgroup is: the leading cell
+    // has no name distinguishing it from any other.
+    is_leading: bool,
 ) -> Result<String, PipelineEmitError> {
+    let leading_ctx;
+    let table_ctx = match table_ctx {
+        Some(ctx)
+            if is_leading
+                && ctx
+                    .native_semantics
+                    .as_ref()
+                    .is_some_and(|s| s.leading_cell) =>
+        {
+            leading_ctx = TableContext {
+                semantic_scope: TableSemanticScope::LeadingCell {
+                    row_index: match &ctx.semantic_scope {
+                        TableSemanticScope::BodyRow { row_index } => Some(row_index.clone()),
+                        _ => None,
+                    },
+                },
+                ..ctx.clone()
+            };
+            Some(&leading_ctx)
+        }
+        other => other,
+    };
     if let Some(ctx) = table_ctx {
         if ctx.column_widths_slot.is_some()
             && cell.tag == "For"
@@ -11767,6 +11814,70 @@ mod tests {
             props: vec![],
             children,
         }
+    }
+
+    #[test]
+    fn the_leading_cell_of_each_row_gets_its_own_semantics() {
+        // `corner` and `row-header` are two of the four authored
+        // `table-cell-role` values, and they live on the fixed cell that
+        // opens a row -- outside the `For`. `in_loop` is what advances the
+        // scope to a cell, so that cell never entered one: `column-header`
+        // and `data` got `collectionItemInfo` and these two got nothing at
+        // all (#14843).
+        let m = component("F", vec![], vec![]);
+        let out = from_pipeline(
+            &m,
+            &layout("F", row_header_table()),
+            &empty_style("F"),
+        )
+        .expect("emit ok")
+        .output;
+        assert_eq!(
+            out.matches("columnIndex = 0, columnSpan = 1").count(),
+            2,
+            "the header corner and the body row-header each take column 0, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn a_body_row_header_is_a_heading_and_the_corner_is_not() {
+        // A body-row leading cell labels its row -- `heading()` is the
+        // nearest thing Compose has to React's `scope="row"`. The header
+        // row's corner labels nothing, so it gets position only.
+        let m = component("F", vec![], vec![]);
+        let out = from_pipeline(
+            &m,
+            &layout("F", row_header_table()),
+            &empty_style("F"),
+        )
+        .expect("emit ok")
+        .output;
+        assert!(
+            out.contains("columnIndex = 0, columnSpan = 1); heading()"),
+            "the row-header must be a heading, got:\n{out}"
+        );
+        assert!(
+            out.contains("rowIndex = 0, rowSpan = 1, columnIndex = 0, columnSpan = 1) }"),
+            "the corner must carry position without heading(), got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn a_plain_grid_has_no_leading_cell_semantics() {
+        // The offset and the leading scope are both conditional: a `Grid`
+        // opens its rows with the `For` itself, so nothing should claim
+        // column 0 beyond the loop's own first iteration.
+        let mut plain = row_header_table();
+        plain.children[0].children[0].children.remove(0);
+        plain.children[1].children[0].children[0].children.remove(0);
+        let m = component("F", vec![], vec![]);
+        let out = from_pipeline(&m, &layout("F", plain), &empty_style("F"))
+            .expect("emit ok")
+            .output;
+        assert!(
+            !out.contains("columnIndex = 0, columnSpan = 1"),
+            "got:\n{out}"
+        );
     }
 
     #[test]
