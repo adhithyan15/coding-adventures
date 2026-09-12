@@ -7681,6 +7681,11 @@ impl HtmlParser {
             && self.has_authored_open_html_element(name)
             && self.open_html_element_in_scope_index(name).is_none()
         {
+            if self.has_open_foreign_integration_point()
+                && self.close_open_foreign_element_before_html_boundary(name)
+            {
+                return;
+            }
             self.diagnostics.push(
                 ParserDiagnostic::new(
                     "unexpected-end-tag-in-foreign-content",
@@ -7898,9 +7903,27 @@ impl HtmlParser {
             );
             return;
         }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
+            && is_table_context_element(name)
+            && self.has_open_foreign_integration_point()
+            && self.close_open_foreign_element_before_html_boundary(name)
+        {
+            return;
+        }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
+            && is_void_element(name)
+            && name != "br"
+            && self.has_open_foreign_integration_point()
+            && self.close_open_foreign_element_before_html_boundary(name)
+        {
+            return;
+        }
         if self.has_open_svg_html_integration_point()
             && name != "template"
             && name != "p"
+            && name != "br"
             && !self.current_element_is(name)
             && !is_table_context_element(name)
             && !(self.current_namespace().is_some() && self.has_open_element(name))
@@ -7925,7 +7948,7 @@ impl HtmlParser {
                 return;
             }
 
-            if !self.has_open_html_element_before_foreign_boundary(name) {
+            if self.open_html_element_in_scope_index(name).is_none() {
                 self.diagnostics.push(
                     ParserDiagnostic::new(
                         "unexpected-end-tag",
@@ -8211,6 +8234,7 @@ impl HtmlParser {
                 self.append_start_tag("br".to_string(), Vec::new(), true);
             }
             "menuitem" => self.close_non_paragraph_children_above_menuitem(),
+            "select" => self.close_select_end_tag_at_foreign_integration_point(),
             "template" => self.handle_html_template_end_tag(),
             name if is_void_element(name) => {
                 self.diagnostics.push(
@@ -9159,12 +9183,12 @@ impl HtmlParser {
                         self.close_open_element_silently("nobr");
                         return false;
                     }
-                }
-                let formatting_above_nobr = self.formatting_above_open_element("nobr");
-                self.close_open_element_silently("nobr");
-                if !formatting_above_nobr.is_empty() {
-                    self.pending_formatting_reconstruction =
-                        trim_formatting_reconstruction_noah_ark(formatting_above_nobr);
+                    let formatting_above_nobr = self.formatting_above_open_element("nobr");
+                    self.close_open_element_silently("nobr");
+                    if !formatting_above_nobr.is_empty() {
+                        self.pending_formatting_reconstruction =
+                            trim_formatting_reconstruction_noah_ark(formatting_above_nobr);
+                    }
                 }
                 false
             }
@@ -9263,6 +9287,24 @@ impl HtmlParser {
     }
 
     fn close_non_paragraph_children_above_menuitem(&mut self) {
+        if self.current_namespace().is_some()
+            && !self.current_element_is("menuitem")
+            && self.has_open_foreign_integration_point()
+        {
+            if self.close_open_foreign_element_before_html_boundary("menuitem") {
+                return;
+            }
+            if self.open_html_element_in_scope_index("menuitem").is_none() {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-menuitem-end-tag",
+                        "end tag `</menuitem>` did not match the current open element",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+                return;
+            }
+        }
         let Some(index) = self.open_elements.iter().rposition(|path| {
             element_ref_at_path(&self.document, path).is_some_and(|element| {
                 element.namespace.is_none()
@@ -9297,6 +9339,28 @@ impl HtmlParser {
             return;
         }
         self.truncate_open_elements(index);
+    }
+
+    fn close_select_end_tag_at_foreign_integration_point(&mut self) {
+        if self.current_namespace().is_some()
+            && !self.current_element_is("select")
+            && self.has_open_foreign_integration_point()
+        {
+            if self.close_open_foreign_element_before_html_boundary("select") {
+                return;
+            }
+            if self.open_html_element_in_scope_index("select").is_none() {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag",
+                        "end tag `</select>` did not match an open element",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+                return;
+            }
+        }
+        self.close_element("select");
     }
 
     fn open_list_item_in_scope_index(&self) -> Option<usize> {
@@ -9421,6 +9485,13 @@ impl HtmlParser {
         else {
             return false;
         };
+        if self.open_elements.iter().skip(index + 1).any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.namespace.is_some() && is_ordinary_scope_boundary(element)
+            })
+        }) {
+            return false;
+        }
         if self.has_table_context_above(index) {
             return false;
         }
@@ -9456,10 +9527,23 @@ impl HtmlParser {
         let Some(index) = self
             .open_elements
             .iter()
-            .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
+            .rposition(|path| {
+                element_ref_at_path(&self.document, path).is_some_and(|element| {
+                    element.namespace.is_none()
+                        && element.name == name
+                        && !has_fragment_context_marker(element)
+                })
+            })
         else {
             return false;
         };
+        if self.open_elements.iter().skip(index + 1).any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.namespace.is_some() && is_ordinary_scope_boundary(element)
+            })
+        }) {
+            return false;
+        }
 
         self.adopt_formatting_end_tag_across_paragraph(index)
             || self.adopt_formatting_end_tag_across_nested_paragraph(index)
@@ -41922,6 +42006,91 @@ mod tests {
                 "<desc><form>a<svg><form></form>x",
                 "svg g[svg desc[form[\"a\",svg svg[svg form[],\"x\"]]]]",
             ),
+            (
+                "g",
+                "<desc><a id=h>A<svg><a id=f><desc><a id=n>N",
+                "svg g[svg desc[a[\"A\",svg svg[svg a[svg desc[a[\"N\"]]]]]]]",
+            ),
+            (
+                "g",
+                "<desc><a id=h>A<svg><a id=f><desc></a>X",
+                "svg g[svg desc[a[\"A\",svg svg[svg a[svg desc[]],\"X\"]]]]",
+            ),
+            (
+                "g",
+                "<desc><font id=h>A<svg><font id=f><desc></font>X",
+                "svg g[svg desc[font[\"A\",svg svg[svg font[svg desc[]],\"X\"]]]]",
+            ),
+            (
+                "g",
+                "<desc><font id=h>A<svg><g id=f><desc></font>X",
+                "svg g[svg desc[font[\"A\",svg svg[svg g[svg desc[\"X\"]]]]]]",
+            ),
+            (
+                "g",
+                "<desc><nobr id=h>A<svg><g id=f><desc><nobr id=n>N",
+                "svg g[svg desc[nobr[\"A\",svg svg[svg g[svg desc[nobr[\"N\"]]]]]]]",
+            ),
+            (
+                "g",
+                "<desc><select id=h>A<svg><g id=f><desc></select>X",
+                "svg g[svg desc[select[\"A\",svg svg[svg g[svg desc[\"X\"]]]]]]",
+            ),
+            (
+                "g",
+                "<desc><select id=h>A<svg><select id=f><desc></select>X",
+                "svg g[svg desc[select[\"A\",svg svg[svg select[svg desc[]],\"X\"]]]]",
+            ),
+            (
+                "g",
+                "<desc><menuitem id=h>A<svg><g id=f><desc></menuitem>X",
+                "svg g[svg desc[menuitem[\"A\",svg svg[svg g[svg desc[\"X\"]]]]]]",
+            ),
+            (
+                "g",
+                "<desc><menuitem id=h>A<svg><menuitem id=f><desc></menuitem>X",
+                "svg g[svg desc[menuitem[\"A\",svg svg[svg menuitem[svg desc[]],\"X\"]]]]",
+            ),
+            (
+                "g",
+                "<desc><caption id=h>A<svg><g id=f><desc></caption>X",
+                "svg g[svg desc[\"A\",svg svg[svg g[svg desc[\"X\"]]]]]",
+            ),
+            (
+                "g",
+                "<desc><caption id=h>A<svg><caption id=f><desc></caption>X",
+                "svg g[svg desc[\"A\",svg svg[svg caption[svg desc[]],\"X\"]]]",
+            ),
+            (
+                "g",
+                "<desc><details id=h>A<svg><g id=f><desc></details>X",
+                "svg g[svg desc[details[\"A\",svg svg[svg g[svg desc[\"X\"]]]]]]",
+            ),
+            (
+                "g",
+                "<desc><details id=h>A<svg><details id=f><desc></details>X",
+                "svg g[svg desc[details[\"A\",svg svg[svg details[svg desc[]],\"X\"]]]]",
+            ),
+            (
+                "g",
+                "<desc><span>A<svg><g><desc></br>X",
+                "svg g[svg desc[span[\"A\",svg svg[svg g[svg desc[br[],\"X\"]]]]]]",
+            ),
+            (
+                "g",
+                "<desc><span>A<svg><g><desc></area>X",
+                "svg g[svg desc[span[\"A\",svg svg[svg g[svg desc[\"X\"]]]]]]",
+            ),
+            (
+                "g",
+                "<desc><span>A<svg><area><desc></area>X",
+                "svg g[svg desc[span[\"A\",svg svg[svg area[svg desc[]],\"X\"]]]]",
+            ),
+            (
+                "g",
+                "<desc><span>A<svg><br><desc></br>X",
+                "svg g[svg desc[span[\"A\",svg svg[],br[],desc[br[],\"X\"]]]]",
+            ),
         ];
 
         let mut mismatches = Vec::new();
@@ -41945,6 +42114,166 @@ mod tests {
             }
         }
         assert!(mismatches.is_empty(), "{}", mismatches.join("\n"));
+    }
+
+    #[test]
+    fn mathml_integration_point_keeps_nested_anchor_inside_same_named_svg_ancestor() {
+        let context = Element {
+            namespace: Some("math".to_string()),
+            name: "g".to_string(),
+            attributes: Vec::new(),
+            children: Vec::new(),
+        };
+        let nodes = parse_html_fragment_for_element(
+            "<mtext><a id=h>A<svg><a id=f><desc><a id=n>N",
+            &context,
+        )
+        .unwrap();
+
+        let mtext = element(&nodes[0]);
+        assert_eq!(mtext.namespace.as_deref(), Some("math"));
+        let outer_anchor = element(&mtext.children[0]);
+        assert_eq!(outer_anchor.namespace, None);
+        assert_eq!(outer_anchor.name, "a");
+        let svg = element(&outer_anchor.children[1]);
+        assert_eq!(svg.namespace.as_deref(), Some("svg"));
+        let foreign_anchor = element(&svg.children[0]);
+        assert_eq!(foreign_anchor.namespace.as_deref(), Some("svg"));
+        assert_eq!(foreign_anchor.name, "a");
+        let desc = element(&foreign_anchor.children[0]);
+        assert_eq!(desc.namespace.as_deref(), Some("svg"));
+        let nested_anchor = element(&desc.children[0]);
+        assert_eq!(nested_anchor.namespace, None);
+        assert_eq!(nested_anchor.name, "a");
+        assert_eq!(nested_anchor.children, vec![Node::text("N")]);
+    }
+
+    #[test]
+    fn mathml_integration_point_keeps_nested_nobr_inside_svg_scope_boundary() {
+        let context = Element {
+            namespace: Some("math".to_string()),
+            name: "g".to_string(),
+            attributes: Vec::new(),
+            children: Vec::new(),
+        };
+        let nodes = parse_html_fragment_for_element(
+            "<mtext><nobr id=h>A<svg><g id=f><desc><nobr id=n>N",
+            &context,
+        )
+        .unwrap();
+
+        let mtext = element(&nodes[0]);
+        assert_eq!(mtext.namespace.as_deref(), Some("math"));
+        let outer_nobr = element(&mtext.children[0]);
+        assert_eq!(outer_nobr.namespace, None);
+        assert_eq!(outer_nobr.name, "nobr");
+        let svg = element(&outer_nobr.children[1]);
+        let group = element(&svg.children[0]);
+        assert_eq!(group.namespace.as_deref(), Some("svg"));
+        let desc = element(&group.children[0]);
+        assert_eq!(desc.namespace.as_deref(), Some("svg"));
+        let nested_nobr = element(&desc.children[0]);
+        assert_eq!(nested_nobr.namespace, None);
+        assert_eq!(nested_nobr.name, "nobr");
+        assert_eq!(nested_nobr.children, vec![Node::text("N")]);
+    }
+
+    #[test]
+    fn mathml_integration_point_end_tags_do_not_close_html_targets_across_svg_scope() {
+        let context = Element {
+            namespace: Some("math".to_string()),
+            name: "g".to_string(),
+            attributes: Vec::new(),
+            children: Vec::new(),
+        };
+
+        for name in ["select", "menuitem"] {
+            let source = format!("<mtext><{name}>A<svg><g><desc></{name}>X");
+            let nodes = parse_html_fragment_for_element(&source, &context).unwrap();
+
+            let mtext = element(&nodes[0]);
+            assert_eq!(mtext.namespace.as_deref(), Some("math"), "name {name}");
+            let html_target = element(&mtext.children[0]);
+            assert_eq!(html_target.namespace, None, "name {name}");
+            assert_eq!(html_target.name, name, "name {name}");
+            let svg = element(&html_target.children[1]);
+            let group = element(&svg.children[0]);
+            let desc = element(&group.children[0]);
+            assert_eq!(desc.namespace.as_deref(), Some("svg"), "name {name}");
+            assert_eq!(desc.children, vec![Node::text("X")], "name {name}");
+        }
+    }
+
+    #[test]
+    fn mathml_integration_point_end_tags_close_matching_foreign_targets_first() {
+        fn nested_svg(nodes: &[Node]) -> Option<&Element> {
+            nodes.iter().find_map(|node| match node {
+                Node::Element(element)
+                    if element.namespace.as_deref() == Some("svg") && element.name == "svg" =>
+                {
+                    Some(element)
+                }
+                Node::Element(element) => nested_svg(&element.children),
+                _ => None,
+            })
+        }
+
+        let context = Element {
+            namespace: Some("math".to_string()),
+            name: "g".to_string(),
+            attributes: Vec::new(),
+            children: Vec::new(),
+        };
+
+        for name in ["caption", "details"] {
+            let source = format!("<mtext><{name}>A<svg><{name}><desc></{name}>X");
+            let nodes = parse_html_fragment_for_element(&source, &context).unwrap();
+
+            let mtext = element(&nodes[0]);
+            let svg = nested_svg(&mtext.children)
+                .expect("the nested SVG should remain under the MathML integration point");
+            assert_eq!(svg.namespace.as_deref(), Some("svg"), "name {name}");
+            let foreign_target = element(&svg.children[0]);
+            assert_eq!(foreign_target.namespace.as_deref(), Some("svg"), "name {name}");
+            assert_eq!(foreign_target.name, name, "name {name}");
+            assert_eq!(element(&foreign_target.children[0]).name, "desc", "name {name}");
+            assert_eq!(svg.children[1], Node::text("X"), "name {name}");
+        }
+    }
+
+    #[test]
+    fn mathml_nested_svg_integration_routes_br_and_void_end_tags_like_chromium() {
+        let context = Element {
+            namespace: Some("math".to_string()),
+            name: "g".to_string(),
+            attributes: Vec::new(),
+            children: Vec::new(),
+        };
+
+        let br_nodes = parse_html_fragment_for_element(
+            "<mtext><span>A<svg><g><desc></br>X",
+            &context,
+        )
+        .unwrap();
+        let mtext = element(&br_nodes[0]);
+        let span = element(&mtext.children[0]);
+        let svg = element(&span.children[1]);
+        let group = element(&svg.children[0]);
+        let desc = element(&group.children[0]);
+        assert_eq!(desc.children, vec![Node::element("br", Vec::new()), Node::text("X")]);
+
+        let area_nodes = parse_html_fragment_for_element(
+            "<mtext><span>A<svg><area><desc></area>X",
+            &context,
+        )
+        .unwrap();
+        let mtext = element(&area_nodes[0]);
+        let span = element(&mtext.children[0]);
+        let svg = element(&span.children[1]);
+        let area = element(&svg.children[0]);
+        assert_eq!(area.namespace.as_deref(), Some("svg"));
+        assert_eq!(element(&area.children[0]).name, "desc");
+        assert_eq!(svg.children[1], Node::text("X"));
     }
 
     #[test]
@@ -49593,16 +49922,21 @@ mod tests {
             "a", "b", "big", "code", "em", "font", "i", "nobr", "s", "small", "strike", "strong",
             "tt", "u",
         ] {
-            let source = format!("<!doctype html><{name}><math><mi></{name}>");
+            let source = format!("<!doctype html><{name}><math><mi></{name}>X");
             let output = parse_html_with_diagnostics(&source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
                 vec![
                     generic_foreign_end_tag_mismatch(&source, name),
-                    unexpected_non_current_formatting_end_tag(&source, name, 0),
+                    unmatched_foreign_formatting_end_tag(&source, name, 0),
+                    eof_with_unclosed_elements(&source),
                 ],
                 "source {source:?}"
             );
+            let formatter = element(&body(&output.document).children[0]);
+            let math = element(&formatter.children[0]);
+            let mi = element(&math.children[0]);
+            assert_eq!(mi.children, vec![Node::text("X")], "source {source:?}");
         }
 
         let target = parse_html_with_diagnostics("<!doctype html><a><svg><tr><input></a>").unwrap();
@@ -49687,7 +50021,11 @@ mod tests {
         );
         assert_eq!(
             output.parser_diagnostics[1],
-            unexpected_non_current_formatting_end_tag(source, "b", 0)
+            unmatched_foreign_formatting_end_tag(source, "b", 0)
+        );
+        assert_eq!(
+            output.parser_diagnostics[2],
+            eof_with_unclosed_elements(source)
         );
         assert!(source.len() > source.chars().count());
 
