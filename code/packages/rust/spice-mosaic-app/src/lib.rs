@@ -16,8 +16,8 @@ use spice_netlist_parser::{inspect_netlist_json, parse_berkeley_app_deck, run_ne
 mod schematic;
 
 pub use schematic::{
-    SchematicComponent, SchematicComponentKind, SchematicDocument, SchematicError, SchematicPoint,
-    SchematicWire,
+    SchematicAnalysis, SchematicComponent, SchematicComponentKind, SchematicDocument,
+    SchematicError, SchematicPoint, SchematicWire,
 };
 
 const SNAPSHOT_SCHEMA: &str = "spice-mosaic-app/state";
@@ -390,9 +390,20 @@ impl SpiceMosaicApp {
             "schematic-palette": [
                 SchematicComponentKind::Resistor.palette_label(),
                 SchematicComponentKind::Capacitor.palette_label(),
+                SchematicComponentKind::Inductor.palette_label(),
                 SchematicComponentKind::DcVoltage.palette_label(),
+                SchematicComponentKind::DcCurrent.palette_label(),
+                SchematicComponentKind::AcVoltage.palette_label(),
                 SchematicComponentKind::Ground.palette_label(),
             ],
+            "schematic-analysis-label": "Schematic analysis",
+            "schematic-analysis-controls": [
+                SchematicAnalysis::OperatingPoint.palette_label(),
+                SchematicAnalysis::DcSweep.palette_label(),
+                SchematicAnalysis::AcSweep.palette_label(),
+                SchematicAnalysis::Transient.palette_label(),
+            ],
+            "selected-schematic-analysis-label": self.schematic.as_ref().map(|document| document.analysis.palette_label()).unwrap_or(SchematicAnalysis::default().palette_label()),
             "schematic-grid-label": "Grid routing",
             "schematic-grid-lines": Self::schematic_grid_lines(),
             "schematic-wire-segments": schematic_wire_segments,
@@ -568,6 +579,7 @@ impl MosaicApp for SpiceMosaicApp {
                     title: "Untitled schematic".to_owned(),
                     components: Vec::new(),
                     wires: Vec::new(),
+                    analysis: SchematicAnalysis::default(),
                 });
                 let reference = document
                     .place_palette_component(kind)
@@ -575,6 +587,26 @@ impl MosaicApp for SpiceMosaicApp {
                 self.selected_schematic_component = Some(reference.clone());
                 self.diagnostics = format!(
                     "Placed {reference} on the grid. Select a component and route it to a target."
+                );
+                self.mode = "Schematic";
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "selectSchematicAnalysis" => {
+                let analysis = event.payload["analysis"]
+                    .as_str()
+                    .ok_or_else(|| invalid("selectSchematicAnalysis requires an analysis"))?;
+                let analysis = SchematicAnalysis::from_palette_label(analysis)
+                    .map_err(|error| invalid(error.to_string()))?;
+                let document = self.schematic.get_or_insert_with(|| SchematicDocument {
+                    title: "Untitled schematic".to_owned(),
+                    components: Vec::new(),
+                    wires: Vec::new(),
+                    analysis: SchematicAnalysis::default(),
+                });
+                document.analysis = analysis;
+                self.diagnostics = format!(
+                    "Selected {} for the canonical schematic deck.",
+                    analysis.palette_label()
                 );
                 self.mode = "Schematic";
                 Ok(self.announced(self.diagnostics.clone()))
@@ -637,14 +669,12 @@ impl MosaicApp for SpiceMosaicApp {
                 let target = event.payload["reference"]
                     .as_str()
                     .ok_or_else(|| invalid("routeToSchematicComponent requires reference"))?;
-                let selected = self
-                    .selected_schematic_component
-                    .clone()
-                    .ok_or_else(|| invalid("routeToSchematicComponent requires a selected component"))?;
-                let document = self
-                    .schematic
-                    .as_mut()
-                    .ok_or_else(|| invalid("routeToSchematicComponent requires a loaded schematic"))?;
+                let selected = self.selected_schematic_component.clone().ok_or_else(|| {
+                    invalid("routeToSchematicComponent requires a selected component")
+                })?;
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("routeToSchematicComponent requires a loaded schematic")
+                })?;
                 document
                     .route_components(&selected, target)
                     .map_err(|error| invalid(error.to_string()))?;
@@ -873,6 +903,21 @@ mod tests {
             json!({"kind": "Capacitor"}),
         );
         assert_eq!(capacitor.props["schematic-rows"], json!(["R1", "C1"]));
+        let inductor = dispatch(
+            &mut app,
+            "onPlaceSchematicComponent",
+            json!({"kind": "Inductor"}),
+        );
+        assert_eq!(inductor.props["schematic-rows"], json!(["R1", "C1", "L1"]));
+        let analysis = dispatch(
+            &mut app,
+            "onSelectSchematicAnalysis",
+            json!({"analysis": "AC sweep"}),
+        );
+        assert_eq!(
+            analysis.props["selected-schematic-analysis-label"],
+            "AC sweep"
+        );
         dispatch(
             &mut app,
             "onSelectSchematicComponent",
@@ -887,8 +932,26 @@ mod tests {
             routed.props["diagnostics"],
             "Routed R1 to C1 on the schematic grid."
         );
-        assert_eq!(routed.props["schematic-wire-segments"].as_array().unwrap().len(), 1);
-        assert_eq!(routed.props["schematic-terminal-points"].as_array().unwrap().len(), 4);
-        assert_eq!(routed.props["schematic-grid-lines"].as_array().unwrap().len(), 18);
+        assert_eq!(
+            routed.props["schematic-wire-segments"]
+                .as_array()
+                .unwrap()
+                .len(),
+            1
+        );
+        assert_eq!(
+            routed.props["schematic-terminal-points"]
+                .as_array()
+                .unwrap()
+                .len(),
+            6
+        );
+        assert_eq!(
+            routed.props["schematic-grid-lines"]
+                .as_array()
+                .unwrap()
+                .len(),
+            18
+        );
     }
 }
