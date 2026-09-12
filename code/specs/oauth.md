@@ -214,6 +214,11 @@ The delivery order is:
    advertised algorithm set; secret methods reject algorithm data. Exact
    algorithms remain provider data without claiming an implementation, and the
    decoder acquires no secret, key, signer, or storage authority. The broker
+   can now bind a retained `client_secret_basic` or `client_secret_post`
+   selection directly to an exact provider-matched opaque secret key and the
+   existing custody adapter. Public and `private_key_jwt` profiles fail closed,
+   and no caller-selected or default secret method reaches credential access.
+   Private-key profile binding remains a separate follow-up. The broker
    rejects redirect reuse when either registration relies on distinct-redirect
    mix-up defense while allowing shared redirects only when both providers
    validate RFC 9207 response issuers.

@@ -7,5 +7,6 @@ description = "Provider-neutral audit-first OAuth credential, refresh, and devic
 [dependencies]
 coding_adventures_bounded_json = { path = "../bounded-json" }
 coding_adventures_oauth = { path = "../oauth" }
+coding_adventures_oauth_client_secret_custody = { path = "../oauth-client-secret-custody" }
 coding_adventures_oauth_credential_custody = { path = "../oauth-credential-custody" }
 coding_adventures_zeroize = { path = "../zeroize" }

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added exact retained-profile binding for `client_secret_basic` and
+  `client_secret_post` into the existing opaque client-secret adapter, with
+  provider mismatch and public/private-key profiles rejected before custody
+  access and no caller-selected authentication method.
 - Added audited confidential static provider-data source composition with
   exact requested-provider binding, zeroizing profile bytes, closed source
   errors, and separate registration audit. It reads provider policy only and

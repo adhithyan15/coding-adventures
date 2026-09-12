@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Route native activation and script-style `requestSubmit`, reset,
+  `checkValidity`, and `reportValidity` through cancelable lifecycle events and
+  mutable form-data dispatch before transactional navigation.
+
 - Expose shared form-associated custom-element attachment, value, validity,
   lifecycle, and accessibility APIs to every Venture host adapter.
 

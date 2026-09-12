@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add ordered, cancelable invalid/submit/reset dispatch, script-style
+  `requestSubmit`, mutable bounded `formdata` entries, and delayed navigation
+  commit through one host-neutral transaction.
+
 - Merge attached custom-element string, file, and entry-list values into
   document-ordered successful controls and reuse their validity diagnostics.
 

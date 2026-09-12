@@ -24,6 +24,11 @@ before proceeding to separately audited registration. Confidential source
 loading reads only provider policy and never acquires client-secret or
 signing-key access. No file path, backend diagnostic, or profile byte enters
 broker audit data.
+For retained `client_secret_basic` and `client_secret_post` profiles, the
+validated provider data can bind an exact provider-matched opaque secret key
+into the existing client-secret adapter without letting the caller choose or
+default the wire method. Public profiles, `private_key_jwt` profiles, and keys
+for another provider fail before any credential access.
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
@@ -60,7 +65,8 @@ dependency are sibling packages in this repository.
 - concrete encrypted-vault credential storage;
 - account identity proof and key selection, listing, detach/revocation, device
   authorization UI, timing/sleep authority, and full device-flow loops;
-- confidential-client secret/key access, OIDC validation, and DPoP.
+- confidential-client secret/key access, private-key profile binding, OIDC
+  validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
 

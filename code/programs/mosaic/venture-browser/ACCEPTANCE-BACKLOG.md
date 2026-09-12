@@ -253,11 +253,21 @@ cross-platform proving application. Items are ordered by risk and dependency.
   reassociation, bounded string/file/entry-list values and restoration state,
   typed lifecycle effects, shared custom validity, label and ARIA projection,
   accessibility value actions, and ordered native/custom serialization.
-- [ ] **P1 browser convergence — scripted form lifecycle dispatch.** Add
+- [x] **P1 browser convergence — scripted form lifecycle dispatch.** Add
   host-neutral `requestSubmit`, cancelable submit/reset events, interactive and
   scripted validation reporting, and mutable `formdata` event entries. Route
   native and custom controls through one transactional dispatch plan before
   navigation so no generated host owns event ordering or cancellation policy.
+  Completed with validated optional submitters, shared check/report/submit
+  validation modes, cancelable invalid/submit/reset events, bounded mutable
+  string/file form data, delayed request construction, retained lifecycle
+  effects, and deterministic core/Mosaic acceptance over existing host seams.
+- [ ] **P1 browser convergence — form state restoration and autofill.** Add
+  shared dirty-value/default-state tracking, autocomplete section and purpose
+  grouping, privacy-bounded autofill transactions, input/change event order,
+  history restoration, and custom-element restore callbacks. Keep persisted
+  state and autofill policy out of generated native/web hosts while preserving
+  one document-ordered form-control model.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

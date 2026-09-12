@@ -173,8 +173,12 @@ image coordinates, and Unicode `dirname` fields now converge through the same
 planner. Form-associated custom elements add attachable internals with bounded
 values/restoration state, ownership reassociation, validity anchors/messages,
 typed disabled/reset/restore callbacks, label/accessibility projection, and
-document-ordered serialization. The next P1 phase is scripted form lifecycle
-dispatch, including cancelable submit/reset and mutable form-data events.
+document-ordered serialization. Scripted form lifecycle dispatch now adds
+validated `requestSubmit`, shared check/report/submit validation modes,
+cancelable invalid/submit/reset events, bounded mutable form-data entries, and
+navigation only after synchronous handlers finish. The next P1 phase is form
+state restoration and autofill with shared dirty/default state and privacy
+boundaries.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
