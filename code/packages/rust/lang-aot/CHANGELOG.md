@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.325.0 — 2026-09-12 — ALGOL final-iteration body snapshots
+
+The seven-backend ALGOL matrix now proves formatter-free output from a simple
+scalar assignment that depends on the final in-range value of a statically
+bounded step-loop control.
+
 ## 0.324.0 — 2026-09-12 — ALGOL constant standard-result powers
 
 The seven-backend ALGOL matrix now proves a tracked real snapshot paired with

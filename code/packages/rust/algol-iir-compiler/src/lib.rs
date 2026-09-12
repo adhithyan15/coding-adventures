@@ -157,6 +157,13 @@ struct ExprValue {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+enum StaticScalarSnapshot {
+    Integer(i64),
+    Real(String),
+    Boolean(bool),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 struct VarBinding {
     slot: String,
     ty: ScalarType,
@@ -5721,6 +5728,11 @@ impl Compiler {
             } else {
                 (None, None)
             };
+            let static_step_body_assignment = if is_step_element && !entry_tracking_disabled {
+                self.for_step_body_assignment_at_last_iteration(target, var_ty, elem, body)
+            } else {
+                None
+            };
             let (static_while_exit_real, static_while_exit_integer) = if is_while_element
                 && !entry_tracking_disabled
                 && self.for_body_avoids_target(target, body)
@@ -5729,8 +5741,9 @@ impl Compiler {
             } else {
                 (None, None)
             };
-            let tracks_step_body =
-                static_step_exit_real.is_some() || static_step_exit_integer.is_some();
+            let tracks_step_body = static_step_exit_real.is_some()
+                || static_step_exit_integer.is_some()
+                || static_step_body_assignment.is_some();
             let tracks_while_body = is_while_element
                 && executes == Some(true)
                 && !entry_tracking_disabled
@@ -5774,6 +5787,19 @@ impl Compiler {
                     static_step_exit_real,
                     static_step_exit_integer,
                 )?;
+                if let Some((slot, snapshot)) = static_step_body_assignment {
+                    match snapshot {
+                        StaticScalarSnapshot::Integer(value) => {
+                            self.static_integer_slots.insert(slot, value);
+                        }
+                        StaticScalarSnapshot::Real(value) => {
+                            self.static_real_slots.insert(slot, value);
+                        }
+                        StaticScalarSnapshot::Boolean(value) => {
+                            self.static_boolean_slots.insert(slot, value);
+                        }
+                    }
+                }
             } else if tracks_while_body && !self.static_real_tracking_disabled {
                 self.update_for_target_snapshot(
                     target,
@@ -5969,6 +5995,130 @@ impl Compiler {
             }
             ScalarType::Boolean | ScalarType::String => false,
         }
+    }
+
+    fn for_step_body_assignment_at_last_iteration(
+        &mut self,
+        target: &GrammarASTNode,
+        target_ty: ScalarType,
+        elem: &GrammarASTNode,
+        body: &GrammarASTNode,
+    ) -> Option<(String, StaticScalarSnapshot)> {
+        if array_subscripts(target).is_some() {
+            return None;
+        }
+        let target_name = self.simple_variable_name(target).ok()?;
+        if self.for_body_writes_name(body, &target_name, &target_name, body) {
+            return None;
+        }
+        let values: Vec<&GrammarASTNode> = direct_nodes(elem)
+            .into_iter()
+            .filter(|node| node.rule_name == "arith_expr")
+            .collect();
+        if values.len() != 3 {
+            return None;
+        }
+
+        let (last_real, last_integer) = match target_ty {
+            ScalarType::Integer => {
+                let start = self.static_assigned_integer_value(values[0])?;
+                let step = self.static_assigned_integer_value(values[1])?;
+                let limit = self.static_assigned_integer_value(values[2])?;
+                if step == 0 || (step > 0 && start > limit) || (step < 0 && start < limit) {
+                    return None;
+                }
+                let (start, step, limit) =
+                    (i128::from(start), i128::from(step), i128::from(limit));
+                let iterations = if step > 0 {
+                    (limit - start) / step + 1
+                } else {
+                    (start - limit) / -step + 1
+                };
+                let last = start.checked_add((iterations - 1).checked_mul(step)?)?;
+                (None, Some(i64::try_from(last).ok()?))
+            }
+            ScalarType::Real => {
+                let start = self.static_assigned_real_value(values[0])?;
+                let step = self.static_assigned_real_value(values[1])?;
+                let limit = self.static_assigned_real_value(values[2])?;
+                if !start.is_finite()
+                    || !step.is_finite()
+                    || !limit.is_finite()
+                    || step == 0.0
+                    || (step > 0.0 && start > limit)
+                    || (step < 0.0 && start < limit)
+                {
+                    return None;
+                }
+                let mut control = start;
+                let mut last = None;
+                let mut exited = false;
+                for _ in 0..MAX_STATIC_REAL_FOR_ITERATIONS {
+                    last = Some(control);
+                    let next = control + step;
+                    if !next.is_finite() || next == control {
+                        return None;
+                    }
+                    if (step > 0.0 && next > limit) || (step < 0.0 && next < limit) {
+                        exited = true;
+                        break;
+                    }
+                    control = next;
+                }
+                if !exited {
+                    return None;
+                }
+                (Some(last?.to_string()), None)
+            }
+            ScalarType::Boolean | ScalarType::String => return None,
+        };
+
+        let statement = first_direct_node(body, "unlabeled_stmt")?;
+        let assignment = first_direct_node(statement, "assign_stmt")?;
+        let left_parts: Vec<&GrammarASTNode> = direct_nodes(assignment)
+            .into_iter()
+            .filter(|node| node.rule_name == "left_part")
+            .collect();
+        if left_parts.len() != 1 {
+            return None;
+        }
+        let variable = first_direct_node(left_parts[0], "variable")?;
+        if array_subscripts(variable).is_some() {
+            return None;
+        }
+        let name = self.simple_variable_name(variable).ok()?;
+        let binding = self.require_var(&name).ok()?;
+        if binding.is_global
+            || binding.array.is_some()
+            || self.active_by_name_binding(&name).is_some()
+        {
+            return None;
+        }
+        let expression = first_direct_node(assignment, "expression")?;
+
+        let saved_reals = self.static_real_slots.clone();
+        let saved_integers = self.static_integer_slots.clone();
+        let saved_booleans = self.static_boolean_slots.clone();
+        let updated = self
+            .update_for_target_snapshot(target, last_real, last_integer)
+            .is_ok();
+        let snapshot = updated.then(|| match binding.ty {
+            ScalarType::Integer => self
+                .static_assigned_integer_value(expression)
+                .map(StaticScalarSnapshot::Integer),
+            ScalarType::Real => self
+                .static_assigned_real_value(expression)
+                .filter(|value| value.is_finite())
+                .map(|value| StaticScalarSnapshot::Real(value.to_string())),
+            ScalarType::Boolean => self
+                .static_boolean_value(expression)
+                .map(StaticScalarSnapshot::Boolean),
+            ScalarType::String => None,
+        }).flatten();
+        self.static_real_slots = saved_reals;
+        self.static_integer_slots = saved_integers;
+        self.static_boolean_slots = saved_booleans;
+        Some((binding.slot, snapshot?))
     }
 
     fn for_body_avoids_target(
@@ -14028,13 +14178,30 @@ mod tests {
     }
 
     #[test]
-    fn al4_finite_step_loop_rejects_control_dependent_body_snapshots() {
-        let err = compile_source(
-            "begin integer i; real r; for i := 1 step 1 until 3 do r := i + 0.25; print(r) end",
-            "test",
-        )
-        .expect_err("a control-dependent body requires iteration-specific analysis");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+    fn al4_finite_step_loop_tracks_control_dependent_body_snapshot() {
+        for (source, expected) in [
+            (
+                "begin integer i; real r; for i := 1 step 1 until 3 do r := i + 0.25; print(r) end",
+                "3.25",
+            ),
+            (
+                "begin integer i; real r; for i := 3 step -1 until 1 do r := i + 0.25; print(r) end",
+                "1.25",
+            ),
+            (
+                "begin real x, r; for x := 1.0 step 0.5 until 2.0 do r := x + 0.25; print(r) end",
+                "2.25",
+            ),
+        ] {
+            let module = compile_source(source, "test").expect(
+                "the last statically bounded iteration determines the assigned real snapshot",
+            );
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
     }
 
     #[test]
