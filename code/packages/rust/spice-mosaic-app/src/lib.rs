@@ -13,6 +13,13 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use spice_netlist_parser::{inspect_netlist_json, parse_berkeley_app_deck, run_netlist_json};
 
+mod schematic;
+
+pub use schematic::{
+    SchematicComponent, SchematicComponentKind, SchematicDocument, SchematicError, SchematicPoint,
+    SchematicWire,
+};
+
 const SNAPSHOT_SCHEMA: &str = "spice-mosaic-app/state";
 const SNAPSHOT_VERSION: u32 = 1;
 const DEFAULT_DECK: &str = "* Berkeley SPICE Mosaic workbench\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\nC1 out 0 1u IC=0\n.options method=trap\n.op\n.dc V1 0 1 1\n.ac dec 1 1k 1k\n.tran 1m 3m\n.tf V(out) V1\n.save V(out)\n.end\n";
