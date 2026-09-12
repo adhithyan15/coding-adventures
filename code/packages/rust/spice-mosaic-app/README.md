@@ -12,6 +12,10 @@ This is not a second simulator or parser format; hosts pass the emitted text to
 the same parser and engine used by the deck editor. Interactive placement,
 selection, and synchronization are the next UI phase.
 
+Hosts now load, place, wire, select, and synchronize that document through the
+Mosaic app event contract. Synchronization replaces the text deck with the
+canonical emitted deck and refreshes its runnable Berkeley analysis plan.
+
 ```sh
 cargo test -p spice-mosaic-app
 cargo clippy -p spice-mosaic-app --all-targets -- -D warnings

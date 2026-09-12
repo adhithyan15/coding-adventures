@@ -4,6 +4,13 @@ style SpiceWorkbench {
   part workbench-title { width : 100% ; font-size : 20 ; font-weight : bold ; color : "#0f172a" ; }
   part workbench-mode { background : "#e0f2fe" ; color : "#075985" ; border-radius : 4 ; padding : 5 ; }
   part deck-editor { gap : 6 ; }
+  part schematic { gap : 6 ; }
+  part schematic-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
+  part schematic-title { color : "#0f172a" ; font-weight : bold ; }
+  part schematic-components { gap : 6 ; }
+  part schematic-component { background : "#ffffff" ; color : "#0f172a" ; border-width : 1 ; border-color : "#cbd5e1" ; border-radius : 3 ; padding : 6 ; }
+  part selected-schematic { color : "#0369a1" ; font-weight : bold ; }
+  part synchronize-schematic { background : "#fef3c7" ; color : "#92400e" ; border-width : 1 ; border-color : "#fcd34d" ; border-radius : 4 ; padding : 8 ; }
   part netlist-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
   part diagnostics-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
   part analysis-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
