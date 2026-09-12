@@ -8,3 +8,4 @@ description = "Host-neutral browser form-control state and interaction semantics
 coding-adventures-html-parser = { path = "../html-parser" }
 layout-controls = { path = "../layout-controls" }
 text-flow = { path = "../text-flow" }
+url-parser = { path = "../url-parser" }

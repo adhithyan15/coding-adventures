@@ -244,59 +244,22 @@ fn validate_controls(
                 );
             }
         }
-        if !control.value.is_empty() && control.kind == ControlKind::Email {
-            let valid = control.value.split(',').all(valid_email_address);
-            if !valid {
+        if let Some(value_state) = model.value_state(&binding.key) {
+            for value_diagnostic in value_state.diagnostics {
                 push_diagnostic(
                     &mut diagnostics,
-                    "type-mismatch",
+                    value_diagnostic.code,
                     control,
-                    "email value is malformed",
+                    value_diagnostic.message,
                 );
             }
         }
-        validate_length(control, binding, &mut diagnostics);
         validate_pattern(control, binding, &mut diagnostics);
-        validate_number(control, binding, &mut diagnostics);
         if diagnostics.len() >= MAX_DIAGNOSTICS {
             break;
         }
     }
     diagnostics
-}
-
-fn validate_length(
-    control: &ControlState,
-    binding: &ControlBinding,
-    diagnostics: &mut Vec<FormDiagnostic>,
-) {
-    let length = control.value.chars().count();
-    if binding
-        .minlength
-        .as_deref()
-        .and_then(|value| value.parse::<usize>().ok())
-        .is_some_and(|minimum| length < minimum)
-    {
-        push_diagnostic(
-            diagnostics,
-            "too-short",
-            control,
-            "value is shorter than minlength",
-        );
-    }
-    if binding
-        .maxlength
-        .as_deref()
-        .and_then(|value| value.parse::<usize>().ok())
-        .is_some_and(|maximum| length > maximum)
-    {
-        push_diagnostic(
-            diagnostics,
-            "too-long",
-            control,
-            "value is longer than maxlength",
-        );
-    }
 }
 
 fn validate_pattern(
@@ -328,51 +291,6 @@ fn validate_pattern(
     }
 }
 
-fn validate_number(
-    control: &ControlState,
-    binding: &ControlBinding,
-    diagnostics: &mut Vec<FormDiagnostic>,
-) {
-    if control.kind != ControlKind::Number || control.value.is_empty() {
-        return;
-    }
-    let Ok(value) = control.value.parse::<f64>() else {
-        push_diagnostic(
-            diagnostics,
-            "type-mismatch",
-            control,
-            "number value is malformed",
-        );
-        return;
-    };
-    if binding
-        .min
-        .as_deref()
-        .and_then(|minimum| minimum.parse::<f64>().ok())
-        .is_some_and(|minimum| value < minimum)
-    {
-        push_diagnostic(
-            diagnostics,
-            "range-underflow",
-            control,
-            "number is below min",
-        );
-    }
-    if binding
-        .max
-        .as_deref()
-        .and_then(|maximum| maximum.parse::<f64>().ok())
-        .is_some_and(|maximum| value > maximum)
-    {
-        push_diagnostic(
-            diagnostics,
-            "range-overflow",
-            control,
-            "number is above max",
-        );
-    }
-}
-
 fn push_diagnostic(
     diagnostics: &mut Vec<FormDiagnostic>,
     code: &'static str,
@@ -386,18 +304,6 @@ fn push_diagnostic(
             message: message.to_string(),
         });
     }
-}
-
-fn valid_email_address(value: &str) -> bool {
-    let value = value.trim();
-    let Some((local, domain)) = value.split_once('@') else {
-        return false;
-    };
-    !local.is_empty()
-        && !domain.is_empty()
-        && !domain.starts_with('.')
-        && !domain.ends_with('.')
-        && !domain.contains('@')
 }
 
 fn collect_successful_controls(
@@ -655,6 +561,40 @@ mod tests {
     }
 
     #[test]
+    fn shared_typed_value_diagnostics_block_and_then_allow_submission() {
+        let url = "http://example.test/form";
+        let (mut model, document) = model_and_document(
+            "<form><input id='site' name='site' type='url' value='http://['>\
+             <input id='count' name='count' type='number' min='0' max='10' step='2' value='3'>\
+             <button id='go'>Go</button></form>",
+            url,
+        );
+        let FormActivation::Invalid(diagnostics) =
+            plan_activation(&document, &model, "control:2:id:go", url).unwrap()
+        else {
+            panic!("expected invalid activation");
+        };
+        assert_eq!(
+            diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code)
+                .collect::<Vec<_>>(),
+            vec!["type-mismatch", "step-mismatch"]
+        );
+
+        model.focus("control:0:id:site");
+        model.accessibility_action(browser_form_controls::ControlAccessibilityAction::SetValue(
+            "https://example.test/path".into(),
+        ));
+        model.focus("control:1:id:count");
+        model.accessibility_action(browser_form_controls::ControlAccessibilityAction::Increment);
+        assert!(matches!(
+            plan_activation(&document, &model, "control:2:id:go", url).unwrap(),
+            FormActivation::Navigate(_)
+        ));
+    }
+
+    #[test]
     fn plans_urlencoded_post_and_reset_effects() {
         let url = "http://example.test/form";
         let (model, document) = model_and_document(
@@ -682,10 +622,7 @@ mod tests {
             request.content_type.as_deref(),
             Some("application/x-www-form-urlencoded")
         );
-        assert_eq!(
-            request.body,
-            b"bio=hello%0D%0Aworld&intent=save".to_vec()
-        );
+        assert_eq!(request.body, b"bio=hello%0D%0Aworld&intent=save".to_vec());
     }
 
     #[test]

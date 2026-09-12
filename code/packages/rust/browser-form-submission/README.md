@@ -10,4 +10,9 @@ The planner bounds entries, payload bytes, and diagnostics. Reset activation
 is returned as an explicit effect so the shared control model can restore its
 initial state before ordinary retained-page reflow.
 
-Spec: [`UI54-form-submission`](../../../specs/UI54-form-submission.md).
+Constraint planning consumes `browser-form-controls::ControlValueState`, so
+live editor feedback and submit-time email, URL, length, numeric range, and
+step diagnostics cannot drift into separate host-specific policies.
+
+Specs: [`UI54-form-submission`](../../../specs/UI54-form-submission.md) and
+[`UI63-typed-input-value-semantics`](../../../specs/UI63-typed-input-value-semantics.md).

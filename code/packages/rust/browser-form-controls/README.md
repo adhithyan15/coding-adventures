@@ -28,7 +28,17 @@ shared reducer; payloads negotiate plain and escaped HTML flavors, and password
 controls never return clipboard payloads. Platform accessibility adapters use
 the same movement, selection, replacement, and transaction actions.
 
+Typed inputs also share one value reducer. Unicode-scalar `maxlength` is
+enforced during replacement, email and absolute URL syntax produce reusable
+diagnostics, and finite number constraints drive min/max/step validation plus
+Arrow Up/Down stepping. `ControlValueState` exposes current value,
+`inputmode`, selection capability, numeric range metadata, and typed validity
+diagnostics; accessibility SetValue/Increment/Decrement actions enter the same
+transaction path. Number controls deliberately do not expose public selection
+or clipboard ranges.
+
 Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI55-form-editing`](../../../specs/UI55-form-editing.md), and
 [`UI56-editor-presentation`](../../../specs/UI56-editor-presentation.md), and
-[`UI62-advanced-editing-transactions`](../../../specs/UI62-advanced-editing-transactions.md).
+[`UI62-advanced-editing-transactions`](../../../specs/UI62-advanced-editing-transactions.md), and
+[`UI63-typed-input-value-semantics`](../../../specs/UI63-typed-input-value-semantics.md).

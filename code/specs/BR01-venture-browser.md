@@ -156,13 +156,16 @@ versioned JSON with native profile paths and crash-safe atomic replacement;
 one label/disabled/event contract. Adapter, restart, rollback, DOM, and direct
 native toolbar tests cover the complete seam.
 
-Completed through the advanced editing phase: `browser-form-controls` owns
+Completed through the typed input value phase: `browser-form-controls` owns
 selection, composition, editor presentation, generated-Unicode grapheme and
 shared word movement, click-count selection, bounded drag autoscroll, and
 per-control undo/redo. Typed plain/HTML clipboard and accessibility actions
 flow through `BrowserSession`; native adapters translate shortcuts and host
 events without taking ownership of value, selection, or history policy. The
-next P1 phase is typed input value semantics and reusable value diagnostics.
+same reducer now enforces live Unicode-scalar `maxlength`, validates email and
+absolute URL syntax, parses and steps bounded numbers, restricts numeric public
+selection, and publishes reusable value diagnostics and accessibility range
+metadata. The next P1 phase is advanced choice and range-control semantics.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do

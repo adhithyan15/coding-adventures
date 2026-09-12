@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add live Unicode-scalar `maxlength`, email/URL and numeric value
+  diagnostics, min/max/step keyboard stepping, number-selection restrictions,
+  reusable value-state metadata, and accessibility value actions.
+
 - Add generated-Unicode grapheme movement/deletion, shared word and click-count
   selection, bounded drag autoscroll, per-control undo/redo transactions,
   plain/HTML clipboard negotiation, and host-neutral accessibility actions.

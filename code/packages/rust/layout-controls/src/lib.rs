@@ -13,6 +13,7 @@ pub enum ControlKind {
     Password,
     Search,
     Email,
+    Url,
     Number,
     Button,
     TextArea,
@@ -28,6 +29,7 @@ impl ControlKind {
             Self::Password => "password",
             Self::Search => "search",
             Self::Email => "email",
+            Self::Url => "url",
             Self::Number => "number",
             Self::Button => "button",
             Self::TextArea => "textarea",
@@ -43,6 +45,7 @@ impl ControlKind {
             "password" => Self::Password,
             "search" => Self::Search,
             "email" => Self::Email,
+            "url" => Self::Url,
             "number" => Self::Number,
             "button" | "submit" | "reset" => Self::Button,
             "textarea" => Self::TextArea,
@@ -60,9 +63,18 @@ impl ControlKind {
                 | Self::Password
                 | Self::Search
                 | Self::Email
+                | Self::Url
                 | Self::Number
                 | Self::TextArea
         )
+    }
+
+    pub const fn supports_selection(self) -> bool {
+        self.accepts_text() && !matches!(self, Self::Number)
+    }
+
+    pub const fn supports_maxlength(self) -> bool {
+        self.accepts_text() && !matches!(self, Self::Number)
     }
 }
 
@@ -359,6 +371,15 @@ mod tests {
         assert!(text.width > 150.0 && text.height > 20.0);
         assert!(area.height > text.height);
         assert_eq!(check.width, check.height);
+    }
+
+    #[test]
+    fn typed_input_capabilities_are_explicit() {
+        assert_eq!(ControlKind::parse("url"), Some(ControlKind::Url));
+        assert!(ControlKind::Url.supports_selection());
+        assert!(ControlKind::Url.supports_maxlength());
+        assert!(!ControlKind::Number.supports_selection());
+        assert!(!ControlKind::Number.supports_maxlength());
     }
 
     #[test]
