@@ -418,6 +418,26 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                         func.name
                     ));
                 }
+                "str_len"
+                    if instr.dest.is_none()
+                        || !matches!(instr.srcs.as_slice(), [Operand::Var(_)])
+                        || !matches!(instr.type_hint.as_str(), "i32" | "i64") =>
+                {
+                    errors.push(format!(
+                        "InvalidString: function {:?}, str_len requires dest, one string variable, and an integer result",
+                        func.name
+                    ));
+                }
+                "str_index"
+                    if instr.dest.is_none()
+                        || !matches!(instr.srcs.as_slice(), [Operand::Var(_), Operand::Var(_)])
+                        || !matches!(instr.type_hint.as_str(), "i32" | "i64") =>
+                {
+                    errors.push(format!(
+                        "InvalidString: function {:?}, str_index requires dest, a string variable, an integer index variable, and an integer result",
+                        func.name
+                    ));
+                }
                 "str_eq"
                     if instr.dest.is_none()
                         || !matches!(instr.srcs.as_slice(), [Operand::Var(_), Operand::Var(_)])
@@ -663,6 +683,69 @@ mod tests {
         assert!(
             errs.iter().any(|e| e.contains("InvalidString") && e.contains("str_slice")),
             "expected an InvalidString error naming str_slice; got: {errs:?}"
+        );
+    }
+
+    #[test]
+    fn str_len_and_str_index_are_accepted() {
+        // VM-040's COBOL BEAM STRING SIZE/delimiter slice added str_len/
+        // str_index support (COBOL's STRING ... DELIMITED BY delim and
+        // UNSTRING both scan a sending field character-by-character via
+        // `str_len`/`str_index`/`str_slice`). Both must validate cleanly with
+        // their documented shapes.
+        let errs = validate_for_beam(&single_fn_module(vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("HE".into())], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("a".into())], "i64"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "str_index",
+                Some("c".into()),
+                vec![Operand::Var("a".into()), Operand::Var("z".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(errs.is_empty(), "unexpected errors: {errs:?}");
+    }
+
+    #[test]
+    fn str_len_wrong_arity_is_rejected() {
+        // str_len with an extra source operand must be a clear InvalidString
+        // error, matching str_slice_wrong_arity_is_rejected's discipline.
+        let errs = validate_for_beam(&single_fn_module(vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("HE".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("X".into())], "str"),
+            IIRInstr::new(
+                "str_len",
+                Some("n".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.iter().any(|e| e.contains("InvalidString") && e.contains("str_len")),
+            "expected an InvalidString error naming str_len; got: {errs:?}"
+        );
+    }
+
+    #[test]
+    fn str_index_wrong_arity_is_rejected() {
+        // str_index with only the string operand (missing the index) must be
+        // a clear InvalidString error, matching str_slice_wrong_arity_is_rejected.
+        let errs = validate_for_beam(&single_fn_module(vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("HE".into())], "str"),
+            IIRInstr::new(
+                "str_index",
+                Some("c".into()),
+                vec![Operand::Var("a".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+        ]));
+        assert!(
+            errs.iter().any(|e| e.contains("InvalidString") && e.contains("str_index")),
+            "expected an InvalidString error naming str_index; got: {errs:?}"
         );
     }
 }

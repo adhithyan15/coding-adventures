@@ -576,6 +576,22 @@ pub fn lower_iir_to_beam(
     let atom_sublist = atoms.intern("sublist");
     let import_sublist = imports.intern(lists_atom, atom_sublist, 3); // lists:sublist/3
 
+    // ── Single-character indexing: `lists:nth/2` ───────────────────────────
+    //
+    // `str_index`'s documented contract (`vm-core::dispatch::handle_str_index`)
+    // is: trap when `idx < 0 || idx >= length(source)`, else return the byte
+    // at `idx`. Unlike `sublist` above, `lists:nth(N, List)` is NOT lenient —
+    // its two clauses (`nth(1, [H|_]) -> H；` and `nth(N, [_|T]) when N > 1 ->
+    // nth(N - 1, T)`) have no case for `N =< 0`, and recursing past the list's
+    // end eventually calls `nth(K, [])` for some `K >= 1`, which also matches
+    // neither clause. Both out-of-range directions already raise
+    // `function_clause` on their own, so — unlike `str_slice`'s `sublist` gap
+    // (VM-D032) — no separate explicit bounds check is needed here; the +1
+    // conversion below (0-based IIR index → 1-based `nth`) is exactly what
+    // makes the host's own failure mode line up with the documented contract.
+    let atom_nth = atoms.intern("nth");
+    let import_nth = imports.intern(lists_atom, atom_nth, 2); // lists:nth/2
+
     // ── String slicing bounds check: `erlang:length/1` + `erlang:error/1` ──
     //
     // `lists:sublist/3` is NOT a faithful implementation of `str_slice`'s
@@ -891,6 +907,9 @@ pub fn lower_iir_to_beam(
                     // `str_slice` emits `lists:sublist/3` via call_ext (see
                     // `import_sublist` above) — the same reasoning applies.
                     | "str_slice"
+                    // `str_index` emits `lists:nth/2` via call_ext (see
+                    // `import_nth` above) — the same reasoning applies.
+                    | "str_index"
             ) && !(instr.op == "call_builtin" && matches!(instr.srcs.first(),
                 Some(Operand::Var(name)) if name == "putchar")) {
                 continue;
@@ -1485,6 +1504,113 @@ pub fn lower_iir_to_beam(
                     instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
                         BEAMOperand::u(3),
                         BEAMOperand::u(import_sublist as u64),
+                    ]));
+                    if rd != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(rd),
+                        ]));
+                    }
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
+                // ── str_len → erlang:length/1 ────────────────────────────────
+                //
+                // A v1 string is an Erlang character list, so its length is
+                // exactly `erlang:length/1` — a recognized guard BIF, so this
+                // reuses the same `gc_bif1` pattern as `neg`/`not` (and the
+                // same `import_length` `str_slice`'s bounds check already
+                // registered). No bounds concern: length has no failure mode.
+                "str_len" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_len must have a dest".into(),
+                        }),
+                    };
+                    let r = operand_reg!(get_src!(instr, 0));
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
+                        BEAMOperand::f(0),
+                        BEAMOperand::u(live),
+                        BEAMOperand::u(import_length as u64),
+                        BEAMOperand::x(r),
+                        BEAMOperand::x(rd),
+                    ]));
+                }
+
+                // ── str_index → lists:nth(idx+1, source) ─────────────────────
+                //
+                // `str_index`'s documented contract traps when `idx < 0` or
+                // `idx >= length(source)` (see `vm-core::dispatch::
+                // handle_str_index`). `lists:nth/2` is 1-indexed like
+                // `sublist`/`atomics` above, so `idx + 1` is computed first —
+                // but unlike `str_slice`'s `sublist` gap (VM-D032), `nth`'s own
+                // clause structure already traps on BOTH out-of-range
+                // directions (see `import_nth`'s doc comment), so no separate
+                // explicit guard is needed here.
+                "str_index" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_index must have a dest".into(),
+                        }),
+                    };
+                    let (src_reg, idx_reg) = match instr.srcs.as_slice() {
+                        [Operand::Var(s), Operand::Var(i)] => (var_reg!(s), var_reg!(i)),
+                        _ => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_index requires a string variable and an integer index variable".into(),
+                        }),
+                    };
+                    // Scratch registers are u8 and the bank tops out at 255;
+                    // guard the same way store_byte/array_set/str_slice do.
+                    let top = meta.next_reg.checked_add(2).filter(|t| *t < 255);
+                    let Some(_) = top else {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "str_index: needs 3 scratch registers but only {} remain below x255",
+                                255u16 - meta.next_reg as u16
+                            ),
+                        });
+                    };
+                    let t_one = meta.next_reg;
+                    let s_src = meta.next_reg + 1;
+                    let s_idx = meta.next_reg + 2;
+                    let cur_idx = instr_idx - 1;
+
+                    // Stage before the GC-capable `add`, same discipline as
+                    // load_byte/array_get above.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(src_reg), BEAMOperand::x(s_src),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(idx_reg), BEAMOperand::x(s_idx),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(1), BEAMOperand::x(t_one),
+                    ]));
+                    let live_staged = (s_idx as u64) + 1;
+
+                    // s_idx = idx + 1 (0-based IIR index -> 1-based lists:nth).
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                        BEAMOperand::f(0),
+                        BEAMOperand::u(live_staged),
+                        BEAMOperand::u(import_add as u64),
+                        BEAMOperand::x(s_idx), BEAMOperand::x(t_one), BEAMOperand::x(s_idx),
+                    ]));
+
+                    save_live_across_imported_call!(cur_idx);
+                    // lists:nth(N, List): the 1-based index comes FIRST.
+                    for (from, to) in [(s_idx, 0u8), (s_src, 1u8)] {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(from), BEAMOperand::x(to),
+                        ]));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2),
+                        BEAMOperand::u(import_nth as u64),
                     ]));
                     if rd != 0 {
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
