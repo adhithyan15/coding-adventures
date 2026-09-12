@@ -18,6 +18,6 @@ separate repository-owned RSA primitive. Injected HSM or operating-system
 authorities can implement the same non-exporting contract without widening the
 OAuth protocol core.
 
-JWT serialization, claims, replay-resistant `jti` generation, and request
-binding intentionally remain outside this package and will consume this
-authority in the next OAuth slice.
+The sibling `oauth-private-key-jwt` package now owns bounded RFC 7523 JSON/JWS
+construction and caller-entropy `jti` values through this authority. Request
+binding remains outside this package.
