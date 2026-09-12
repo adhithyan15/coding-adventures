@@ -2236,6 +2236,7 @@ pub struct BrowserContentNode {
     pub cols: Option<String>,
     pub control_name: Option<String>,
     pub list: Option<String>,
+    pub datalist_options: Vec<BrowserDatalistOption>,
     pub form_action: Option<String>,
     pub resolved_form_action: Option<String>,
     pub form_enctype: Option<String>,
@@ -2427,6 +2428,7 @@ pub struct BrowserRenderNode {
     pub cols: Option<String>,
     pub control_name: Option<String>,
     pub list: Option<String>,
+    pub datalist_options: Vec<BrowserDatalistOption>,
     pub form_action: Option<String>,
     pub resolved_form_action: Option<String>,
     pub form_enctype: Option<String>,
@@ -4236,6 +4238,7 @@ impl BrowserContentTree {
         let labels = collect_label_texts_by_control_id(nodes);
         let id_texts = collect_element_texts_by_id(nodes);
         collect_browser_content_nodes(nodes, &mut children, base_href, &labels, &id_texts);
+        attach_content_datalist_options(&mut children, nodes);
         Self { children }
     }
 }
@@ -4392,6 +4395,7 @@ impl BrowserRenderNode {
             cols: content_node.cols.clone(),
             control_name: content_node.control_name.clone(),
             list: content_node.list.clone(),
+            datalist_options: content_node.datalist_options.clone(),
             form_action: content_node.form_action.clone(),
             resolved_form_action: content_node.resolved_form_action.clone(),
             form_enctype: content_node.form_enctype.clone(),
@@ -17533,6 +17537,7 @@ fn collect_browser_content_nodes_with_mode(
                         cols: None,
                         control_name: None,
                         list: None,
+                        datalist_options: Vec::new(),
                         form_action: None,
                         resolved_form_action: None,
                         form_enctype: None,
@@ -17610,6 +17615,16 @@ fn collect_browser_content_nodes_with_mode(
             }
             Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_) => {}
         }
+    }
+}
+
+fn attach_content_datalist_options(content: &mut [BrowserContentNode], body_root: &[Node]) {
+    for node in content {
+        if let Some(list_id) = node.list.as_deref() {
+            node.datalist_options = datalist_option_items_by_id(body_root, list_id)
+                .unwrap_or_default();
+        }
+        attach_content_datalist_options(&mut node.children, body_root);
     }
 }
 
@@ -17812,6 +17827,7 @@ fn browser_content_node_for_element(
             None
         },
         list: browser_control_list(element),
+        datalist_options: Vec::new(),
         resolved_form_action: browser_control_form_action(element)
             .as_deref()
             .and_then(|action| resolve_browser_url(action, base_href)),
@@ -25498,6 +25514,24 @@ fn collect_datalist_option_items_into(nodes: &[Node], options: &mut Vec<BrowserD
     }
 }
 
+fn datalist_option_items_by_id(
+    nodes: &[Node],
+    list_id: &str,
+) -> Option<Vec<BrowserDatalistOption>> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == "datalist" && element.attribute("id") == Some(list_id) {
+            return Some(collect_datalist_option_items(&element.children));
+        }
+        if let Some(options) = datalist_option_items_by_id(&element.children, list_id) {
+            return Some(options);
+        }
+    }
+    None
+}
+
 fn selected_option_value(nodes: &[Node]) -> Option<String> {
     let mut first = None;
     selected_option_value_in(nodes, &mut first).or(first)
@@ -31182,6 +31216,35 @@ mod tests {
         let external = by_id(&render_tree.children, "confirmation").unwrap();
         assert_eq!(external.form_owner.as_deref(), Some("review"));
         assert_eq!(external.control_name.as_deref(), Some("confirmation"));
+    }
+
+    #[test]
+    fn browser_render_tree_resolves_datalist_options_onto_referencing_controls() {
+        fn by_id<'a>(nodes: &'a [BrowserRenderNode], id: &str) -> Option<&'a BrowserRenderNode> {
+            nodes.iter().find_map(|node| {
+                (node.id.as_deref() == Some(id))
+                    .then_some(node)
+                    .or_else(|| by_id(&node.children, id))
+            })
+        }
+
+        let document = parse_html(
+            "<input id='city' list='cities'><datalist id='cities'>\
+             <option value='SFO' label='San Francisco'>Bay Area</option>\
+             <option value='SEA' disabled>Seattle</option></datalist>",
+        )
+        .unwrap();
+        let render_tree = BrowserRenderTree::from_document(&document);
+        let input = by_id(&render_tree.children, "city").unwrap();
+
+        assert_eq!(input.datalist_options.len(), 2);
+        assert_eq!(input.datalist_options[0].value, "SFO");
+        assert_eq!(
+            input.datalist_options[0].label.as_deref(),
+            Some("San Francisco")
+        );
+        assert_eq!(input.datalist_options[0].text, "Bay Area");
+        assert!(input.datalist_options[1].disabled);
     }
 
     #[test]

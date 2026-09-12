@@ -14,8 +14,8 @@ use venture_browser_core::{
     BrowserFetchRequest, BrowserFetchResponse, BrowserHostController, BrowserHostEventOutcome,
     BrowserLoadError, BrowserNavigation, BrowserNavigationUpdate, BrowserPagePipeline,
     BrowserResourceFetcher, BrowserScrollCommand, BrowserScrollMetrics, BrowserSession,
-    BrowserSubresourceCompletion, BrowserSubresourceUpdate, ControlKey, HostFileSelection,
-    HttpBrowserFetcher, MemoryBookmarkRepository,
+    BrowserSubresourceCompletion, BrowserSubresourceUpdate, ControlKey,
+    ControlSuggestionPickerAction, HostFileSelection, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 #[cfg(any(target_os = "windows", test))]
@@ -338,6 +338,84 @@ impl WindowsBrowserHost {
             .session()
             .focused_file_picker_request()
             .map(|request| request.to_host_json())
+    }
+
+    pub fn suggestion_state_json(&self) -> Option<String> {
+        self.controller
+            .session()
+            .focused_control_suggestion_state()
+            .map(|state| state.to_host_json())
+    }
+
+    pub fn suggestion_query(&mut self, query: &str, limit: usize) -> bool {
+        let Some(key) = self
+            .controller
+            .session()
+            .controls()
+            .focused_key()
+            .map(str::to_owned)
+        else {
+            return false;
+        };
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        self.controller
+            .session_mut()
+            .open_control_suggestions(&key, query, limit, &pipeline)
+            .is_some()
+    }
+
+    pub fn suggestion_action(&mut self, name: &str, index: usize) -> bool {
+        let action = match name {
+            "previous" => ControlSuggestionPickerAction::MovePrevious,
+            "next" => ControlSuggestionPickerAction::MoveNext,
+            "commit-active" => ControlSuggestionPickerAction::CommitActive,
+            "commit-index" => ControlSuggestionPickerAction::CommitIndex(index),
+            "cancel" => ControlSuggestionPickerAction::Cancel,
+            _ => return false,
+        };
+        let Some(key) = self
+            .controller
+            .session()
+            .controls()
+            .focused_key()
+            .map(str::to_owned)
+        else {
+            return false;
+        };
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        let changed = self
+            .controller
+            .session_mut()
+            .control_suggestion_picker_action(&key, action, &pipeline)
+            .is_some();
+        if changed {
+            self.controller.synchronize_session_state();
+        }
+        changed
     }
 
     pub fn control_file_selected(
@@ -747,6 +825,45 @@ mod ffi {
             .and_then(|value| CString::new(value).ok())
             .map(CString::into_raw)
             .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_suggestion_state(
+        host: *mut WindowsBrowserHost,
+    ) -> *mut c_char {
+        host.as_ref()
+            .and_then(WindowsBrowserHost::suggestion_state_json)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_suggestion_query(
+        host: *mut WindowsBrowserHost,
+        query: *const c_char,
+        limit: usize,
+    ) -> u8 {
+        string_arg(query)
+            .and_then(|query| {
+                host.as_mut()
+                    .map(|host| host.suggestion_query(&query, limit) as u8)
+            })
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_suggestion_action(
+        host: *mut WindowsBrowserHost,
+        name: *const c_char,
+        index: usize,
+    ) -> u8 {
+        string_arg(name)
+            .and_then(|name| {
+                host.as_mut()
+                    .map(|host| host.suggestion_action(&name, index) as u8)
+            })
+            .unwrap_or(0)
     }
 
     #[no_mangle]

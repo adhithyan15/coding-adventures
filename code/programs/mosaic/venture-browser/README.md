@@ -299,6 +299,12 @@ only bounded purpose/value transactions and translate ordered mutation events;
 the shared session owns credential gating, typed normalization, history
 snapshots, dirty flags, and deferred custom-element restore callbacks.
 
+Datalist pickers use that boundary as well. HTML parsing resolves option
+metadata onto referencing controls, the shared reducer performs bounded
+filtering and typed normalization, and host adapters receive a compact JSON
+projection plus semantic move/commit/cancel actions. Toolkits never decide
+which suggestions are valid or whether Enter commits versus submits a form.
+
 ## Releases
 
 Venture follows Semantic Versioning on a coordinated pre-1.0 product line.

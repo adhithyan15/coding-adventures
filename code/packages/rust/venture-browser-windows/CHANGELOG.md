@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose shared bounded datalist state and semantic picker action ABI seams to
+  WinUI hosts.
+
 - Expose path-free file picker request and selected-byte ABI seams for the
   generated WinUI adapter.
 

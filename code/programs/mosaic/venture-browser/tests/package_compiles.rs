@@ -722,6 +722,49 @@ fn file_fixture_uses_the_shared_path_free_picker_contract() {
 }
 
 #[test]
+fn datalist_fixture_uses_bounded_shared_picker_policy_and_native_abis() {
+    use venture_browser_core::{
+        BrowserControlModel, ControlEffect, ControlKey, ControlSuggestionPickerAction,
+    };
+
+    let tree = coding_adventures_html_parser::parse_browser_render_tree(
+        "<input id='city' list='cities'><datalist id='cities'>\
+         <option value='SFO' label='San Francisco'><option value='SEA'>\
+         <option value='PDX' disabled></datalist>",
+    )
+    .expect("parse deterministic datalist fixture");
+    let mut controls = BrowserControlModel::from_render_tree(&tree);
+    let key = "control:0:id:city";
+    controls.focus(key).unwrap();
+    controls.open_suggestions(key, "san", 8).unwrap();
+    assert_eq!(
+        controls.suggestion_state(key).unwrap().options[0].value,
+        "SFO"
+    );
+    controls
+        .apply_suggestion_picker_action(key, ControlSuggestionPickerAction::Cancel)
+        .unwrap();
+    controls.key_down(ControlKey::ArrowDown).unwrap();
+    assert!(matches!(
+        controls.key_down(ControlKey::Enter),
+        Some(ControlEffect::SuggestionCommitted { value, .. }) if value == "SFO"
+    ));
+
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../packages/rust");
+    for (package, prefix) in [
+        ("venture-browser-macos", "venture_browser_macos"),
+        ("venture-browser-windows", "venture_browser_windows"),
+        ("venture-browser-cairo", "venture_browser_qt"),
+    ] {
+        let source = fs::read_to_string(root.join(package).join("src/lib.rs")).unwrap();
+        for suffix in ["suggestion_state", "suggestion_query", "suggestion_action"] {
+            let symbol = format!("{prefix}_{suffix}");
+            assert!(source.contains(&symbol), "{package} omits {symbol}");
+        }
+    }
+}
+
+#[test]
 fn image_submit_and_dirname_fixture_uses_shared_semantics() {
     use venture_browser_core::{
         BrowserControlModel, ControlAccessibilityAction, ControlEffect, ControlTextDirection,

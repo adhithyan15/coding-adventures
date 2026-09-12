@@ -5,6 +5,10 @@ documented in this file.
 
 ## Unreleased
 
+- Resolve authored datalist option values, labels, text, and disabled state
+  onto each referencing browser content/render control for host-neutral picker
+  policy.
+
 - Retain empty autonomous custom elements plus their form owner, control name,
   labels, and accessibility metadata for host-neutral ElementInternals wiring.
 

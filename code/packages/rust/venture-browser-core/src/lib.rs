@@ -18,14 +18,17 @@ pub use browser_form_controls::{
     ControlFilePickerRequest, ControlFileState, ControlKey, ControlMutationEvent,
     ControlMutationEventKind, ControlMutationSource, ControlNavigationUnit, ControlRect,
     ControlRestorationEntry, ControlSelection, ControlStateDiagnostic, ControlStatePrivacy,
-    ControlStateSnapshot, ControlTextDirection, ControlTextMetrics, ControlValueDiagnostic,
-    ControlValueState, CustomElementAccessibilityAction, CustomElementAccessibilityProjection,
+    ControlStateSnapshot, ControlSuggestionDiagnostic, ControlSuggestionOption,
+    ControlSuggestionPickerAction, ControlSuggestionState, ControlTextDirection,
+    ControlTextMetrics, ControlValueDiagnostic, ControlValueState,
+    CustomElementAccessibilityAction, CustomElementAccessibilityProjection,
     CustomElementAccessibilityState, CustomElementAccessibilityValue, CustomElementDiagnostic,
     CustomElementFormAssociation, CustomElementFormEntry, CustomElementFormEntryValue,
     CustomElementFormValue, CustomElementInternalsError, CustomElementLifecycleEvent,
     CustomElementRestorationEntry, CustomElementStateRestoreMode, CustomElementSubmissionGroup,
     CustomElementValidity, FileAcceptFilter, FormAssociatedCustomElementState, HostFileSelection,
-    TypedValue, TypedValueConstraints,
+    TypedValue, TypedValueConstraints, MAX_DATALIST_OPTIONS, MAX_SUGGESTION_QUERY_BYTES,
+    MAX_SUGGESTION_RESULTS,
 };
 pub use browser_form_submission::{
     check_form_validity, dispatch_activation_with_image_coordinates, dispatch_form_reset,
@@ -1404,6 +1407,52 @@ impl BrowserSession {
             .and_then(|key| self.controls.choice_state(key))
     }
 
+    pub fn control_suggestion_state(&self, key: &str) -> Option<&ControlSuggestionState> {
+        self.controls.suggestion_state(key)
+    }
+
+    pub fn focused_control_suggestion_state(&self) -> Option<&ControlSuggestionState> {
+        self.controls.focused_suggestion_state()
+    }
+
+    pub fn open_control_suggestions<M, S, FM, R>(
+        &mut self,
+        key: &str,
+        query: &str,
+        limit: usize,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.open_suggestions(key, query, limit)?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_suggestion_picker_action<M, S, FM, R>(
+        &mut self,
+        key: &str,
+        action: ControlSuggestionPickerAction,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.apply_suggestion_picker_action(key, action)?;
+        self.record_control_effect_events(&effect);
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
     pub fn control_default_state(&self, key: &str) -> Option<ControlDefaultState> {
         self.controls.default_state(key)
     }
@@ -1456,6 +1505,24 @@ impl BrowserSession {
 
     pub fn take_control_mutation_events(&mut self) -> Vec<ControlMutationEvent> {
         std::mem::take(&mut self.control_mutation_events)
+    }
+
+    fn record_control_effect_events(&mut self, effect: &ControlEffect) {
+        let ControlEffect::SuggestionCommitted { key, .. } = effect else {
+            return;
+        };
+        self.control_mutation_events.extend([
+            ControlMutationEvent {
+                key: key.clone(),
+                kind: ControlMutationEventKind::Input,
+                source: ControlMutationSource::SuggestionPicker,
+            },
+            ControlMutationEvent {
+                key: key.clone(),
+                kind: ControlMutationEventKind::Change,
+                source: ControlMutationSource::SuggestionPicker,
+            },
+        ]);
     }
 
     pub fn control_file_state(&self, key: &str) -> Option<ControlFileState> {
@@ -1943,6 +2010,7 @@ impl BrowserSession {
         R: FontResolver<Handle = S::Handle>,
     {
         let effect = self.controls.accessibility_action(action)?;
+        self.record_control_effect_events(&effect);
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -1965,6 +2033,9 @@ impl BrowserSession {
         R: FontResolver<Handle = S::Handle>,
     {
         let effect = self.controls.accessibility_action(action);
+        if let Some(effect) = &effect {
+            self.record_control_effect_events(effect);
+        }
         if let Some(ControlEffect::Activated(key)) = &effect {
             let outcome = self.dispatch_form_activation(key, |_| {})?;
             self.apply_form_dispatch(outcome, pipeline, fetcher)?;
@@ -2098,10 +2169,17 @@ impl BrowserSession {
                 control.kind.accepts_text() && control.kind.name() != "textarea"
             });
         let effect = self.controls.key_down_with_shift(key, shift);
+        if let Some(effect) = &effect {
+            self.record_control_effect_events(effect);
+        }
         let activation = match &effect {
             Some(ControlEffect::Activated(activated)) => {
                 Some(self.dispatch_form_activation(activated, |_| {})?)
             }
+            Some(
+                ControlEffect::SuggestionCommitted { .. }
+                | ControlEffect::SuggestionPickerChanged { .. },
+            ) => None,
             _ if key == ControlKey::Enter && focused_accepts_implicit => {
                 let focused = focused_key.as_deref().expect("focused key checked above");
                 Some(self.dispatch_implicit_form_activation(focused, |_| {})?)
@@ -2360,6 +2438,7 @@ impl BrowserSession {
         R: FontResolver<Handle = S::Handle>,
     {
         let effect = self.controls.key_down_with_shift(key, shift)?;
+        self.record_control_effect_events(&effect);
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -6450,5 +6529,80 @@ mod tests {
                     ..
                 } if state == "restore:5"
             )));
+    }
+
+    #[test]
+    fn session_commits_datalist_choices_without_triggering_implicit_submission() {
+        struct SuggestionFetcher {
+            requests: RefCell<Vec<String>>,
+        }
+
+        impl BrowserResourceFetcher for SuggestionFetcher {
+            fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String> {
+                self.requests.borrow_mut().push(url.to_string());
+                Ok(BrowserFetchResponse::new(
+                    url,
+                    200,
+                    Some("text/html".into()),
+                    b"<form action='/search'><input id='q' name='q' list='terms'>\
+                      <datalist id='terms'><option value='alpha'><option value='beta'></datalist>\
+                      <button>Search</button></form>"
+                        .to_vec(),
+                ))
+            }
+        }
+
+        let fetcher = SuggestionFetcher {
+            requests: RefCell::new(Vec::new()),
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(420.0, 160.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/form", 160.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        session.focus_control(false, &pipeline).unwrap();
+        session
+            .control_key_down(ControlKey::ArrowDown, &pipeline)
+            .unwrap();
+
+        assert_eq!(
+            session
+                .focused_control_suggestion_state()
+                .unwrap()
+                .active_index,
+            Some(0)
+        );
+        assert!(matches!(
+            session
+                .control_key_down_and_submit(ControlKey::Enter, &pipeline, &fetcher)
+                .unwrap(),
+            Some(ControlEffect::SuggestionCommitted { value, .. }) if value == "alpha"
+        ));
+        assert_eq!(fetcher.requests.borrow().len(), 1);
+        assert_eq!(
+            session
+                .take_control_mutation_events()
+                .into_iter()
+                .map(|event| (event.kind, event.source))
+                .collect::<Vec<_>>(),
+            vec![
+                (
+                    ControlMutationEventKind::Input,
+                    ControlMutationSource::SuggestionPicker,
+                ),
+                (
+                    ControlMutationEventKind::Change,
+                    ControlMutationSource::SuggestionPicker,
+                ),
+            ]
+        );
     }
 }

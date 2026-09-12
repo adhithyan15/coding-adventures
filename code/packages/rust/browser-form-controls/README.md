@@ -85,6 +85,15 @@ before `change` for each updated control. History restoration is event-silent,
 restores dirty flags, and queues custom-element restore callbacks until their
 internals attach.
 
+Datalist-backed controls resolve authored options before entering the reducer.
+Shared queries cap source options, query bytes, and returned results; skip
+disabled, duplicate, and type-invalid candidates; and match values, labels, or
+fallback text without exposing the full source list to hosts. Arrow keys and
+accessibility actions move one active option, Escape cancels, and commit marks
+the value dirty and enters edit history as one input/change transaction.
+Native pickers consume only the bounded `ControlSuggestionState` JSON
+projection and return semantic actions.
+
 Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI55-form-editing`](../../../specs/UI55-form-editing.md), and
 [`UI56-editor-presentation`](../../../specs/UI56-editor-presentation.md), and
@@ -97,3 +106,5 @@ Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI68-form-associated-custom-elements`](../../../specs/UI68-form-associated-custom-elements.md).
 State restoration and autofill are specified by
 [`UI70-form-state-autofill`](../../../specs/UI70-form-state-autofill.md).
+Datalist behavior is specified by
+[`UI71-datalist-picker-mediation`](../../../specs/UI71-datalist-picker-mediation.md).

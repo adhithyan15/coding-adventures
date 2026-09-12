@@ -179,8 +179,11 @@ cancelable invalid/submit/reset events, bounded mutable form-data entries, and
 navigation only after synchronous handlers finish. Form state restoration and
 autofill now add shared dirty/default projection, bounded privacy modes,
 autocomplete grouping, ordered mutation effects, Back/Forward snapshots, and
-deferred custom-element callbacks. The next P1 phase is host-neutral datalist
-suggestions and picker mediation.
+deferred custom-element callbacks. Datalist convergence now resolves authored
+option metadata into the retained tree, bounds and normalizes shared queries,
+tracks one keyboard/accessibility active option, and emits ordered mutation
+events when semantic native picker actions commit. The next P1 phase is live
+output, meter, and progress semantics.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose shared bounded datalist state and semantic picker action ABI seams to
+  Qt, Flutter, and Compose hosts.
+
 - Expose shared file picker request and selected-byte ABI seams for Qt,
   Flutter, and Compose adapters.
 
