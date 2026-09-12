@@ -2297,7 +2297,18 @@ fn emit_widget_tree_inner(
     if node.tag == "HostSurface" {
         return emit_host_surface(node, indent);
     }
-    if node.tag == "HostInput" {
+    // `Input` is the pre-UI29 spelling of `HostInput`, retained for
+    // capabilities such as multiline editing that the first HostInput
+    // contract did not carry. Every other emitter of the eight accepts both
+    // (#14861); Flutter accepted only `HostInput`, so a bare `Input` fell
+    // through to the unresolved-component fallback and became
+    // `SizedBox.shrink()` -- an empty widget where a text field belongs.
+    //
+    // That reached a shipped product: `mosaic-pkg-notes` authors
+    // `Input [ notes-body-input ]`, TaskApp embeds Notes, and TaskApp's
+    // Flutter build had no notes input at all while reporting ZERO
+    // degradations.
+    if node.tag == "HostInput" || node.tag == "Input" {
         return emit_host_input(
             node,
             indent,
@@ -9132,6 +9143,38 @@ mod tests {
             matches!(err, PipelineEmitError::UnknownPrimitive(_)),
             "expected UnknownPrimitive rejection for tag with `*/`, got {err:?}"
         );
+    }
+
+    #[test]
+    fn input_is_a_primitive_not_an_unresolved_component_reference() {
+        // #14861. `Input` is the pre-UI29 spelling of `HostInput`, and every
+        // other emitter of the eight accepts both. Flutter accepted only
+        // `HostInput`, so a bare `Input` fell through to the
+        // unresolved-component fallback and became `SizedBox.shrink()` -- an
+        // empty widget where a text field belongs, with NO degradation
+        // reported.
+        //
+        // It reached a shipped product: `mosaic-pkg-notes` authors
+        // `Input [ notes-body-input ]`, TaskApp embeds Notes, and TaskApp's
+        // Flutter build had no notes input while reporting zero degradations.
+        let m = component("Host", vec![slot("v", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "Host",
+            node_with(
+                "Input",
+                vec![LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::SlotRef("v".into()),
+                }],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Host")).expect("ok").output;
+        assert!(
+            !out.contains("not yet resolved"),
+            "Input must not take the unresolved-component path, got:\n{out}"
+        );
+        assert!(out.contains("TextField"), "got:\n{out}");
     }
 
     /// Positive case for the same fallback path: a clean PascalCase
