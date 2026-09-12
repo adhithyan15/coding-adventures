@@ -97,7 +97,7 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt::Write as _;
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
@@ -3547,8 +3547,15 @@ fn emit_view_tree(
         // scrollable region. SwiftUI's `ScrollView` is the direct analog;
         // it implicitly handles its own scroll-state and viewport, so we
         // do not need to thread offset/extent slots through here.
+        // UI61 -- the axis. A bare `ScrollView` is SwiftUI's vertical
+        // default, so the vertical case stays byte-identical to what
+        // every existing layout already emits.
         "HostScroll" => container(
-            "ScrollView",
+            match ScrollAxis::of(node) {
+                ScrollAxis::Vertical => "ScrollView",
+                ScrollAxis::Horizontal => "ScrollView(.horizontal)",
+                ScrollAxis::Both => "ScrollView([.horizontal, .vertical])",
+            },
             node,
             indent,
             part_styles,
@@ -8961,6 +8968,55 @@ mod tests {
         assert!(
             out.contains("_mosaicButton(option, action:"),
             "expected HostButton label to use For item binding, got:\n{out}"
+        );
+    }
+
+    /// UI61 — the axis reaches the SwiftUI view. The vertical case must
+    /// stay a BARE `ScrollView`: that is SwiftUI's own default and what
+    /// every existing layout already emits, so a byte-identical vertical
+    /// output is the promise that keeps shipped apps still.
+    #[test]
+    fn ui61_each_axis_selects_its_scroll_view_form() {
+        let render = |axis: Option<&str>| {
+            let mut root = container_node(
+                "HostScroll",
+                vec![leaf("Text", vec![prop_string("content", "row")])],
+            );
+            if let Some(a) = axis {
+                root.props = vec![LayoutProp {
+                    name: "axis".to_string(),
+                    value: LayoutPropValue::Keyword(a.to_string()),
+                }];
+            }
+            from_pipeline(
+                &component("S", vec![], vec![]),
+                &layout_with("S", root),
+                &empty_style("S"),
+            )
+            .unwrap()
+            .output
+        };
+
+        // Default and explicit `vertical` are the same text.
+        assert_eq!(
+            render(None),
+            render(Some("vertical")),
+            "an explicit `axis: vertical` must emit exactly the default"
+        );
+        let out = render(None);
+        assert!(out.contains("ScrollView {"), "got:\n{out}");
+        assert!(
+            !out.contains("ScrollView(.horizontal)") && !out.contains("[.horizontal"),
+            "the default must not name an axis, got:\n{out}"
+        );
+
+        let out = render(Some("horizontal"));
+        assert!(out.contains("ScrollView(.horizontal) {"), "got:\n{out}");
+
+        let out = render(Some("both"));
+        assert!(
+            out.contains("ScrollView([.horizontal, .vertical]) {"),
+            "got:\n{out}"
         );
     }
 
