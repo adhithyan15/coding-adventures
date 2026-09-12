@@ -4,8 +4,8 @@ use super::{
     audited, audited_with_outcome, json_nesting_within_limit, render_secret_form, valid_uri_text,
     validate_client_id, validate_scopes, Audited, AuthorizationServerMetadata,
     ConfigurationViolation, OAuthAuditAction, OAuthAuditOutcome, OAuthError, OAuthTraceId,
-    ProviderId, ProviderTokenError, TokenResponse, TokenResponseContext, TokenResponseFormat,
-    TokenResponseViolation, MAX_ENDPOINT_BYTES, MAX_JSON_NESTING,
+    ProviderConfig, ProviderId, ProviderTokenError, TokenResponse, TokenResponseContext,
+    TokenResponseFormat, TokenResponseViolation, MAX_ENDPOINT_BYTES, MAX_JSON_NESTING,
 };
 use crate::token::{decode_token_response_inner, zeroize_json};
 use coding_adventures_bounded_json::{JsonNumber, JsonValue};
@@ -265,6 +265,16 @@ impl DevicePollingSession {
     /// Return the relative session lifetime for a caller-owned clock.
     pub const fn expires_in_seconds(&self) -> u64 {
         self.expires_in_seconds
+    }
+
+    /// Return whether this session exactly matches one registered public client.
+    ///
+    /// The device code stays opaque while a broker can still reject a session
+    /// from another provider, client, or token endpoint before transport.
+    pub fn is_bound_to(&self, config: &ProviderConfig) -> bool {
+        self.provider == config.provider
+            && self.client_id == config.client_id
+            && self.token_endpoint == config.token_endpoint
     }
 }
 
@@ -901,6 +911,18 @@ mod tests {
             .response_context()
     }
 
+    fn provider_config(provider: &str, client_id: &str, token_endpoint: &str) -> ProviderConfig {
+        ProviderConfig::new(
+            ProviderId::new(provider).unwrap(),
+            "https://login.example/auth",
+            token_endpoint,
+            client_id,
+            "http://127.0.0.1:49152/callback",
+        )
+        .unwrap()
+        .with_distinct_redirect_uri()
+    }
+
     #[test]
     fn metadata_capabilities_bind_request_before_transport_release() {
         let audited =
@@ -923,6 +945,31 @@ mod tests {
         let context = request.response_context();
         assert_eq!(context.provider().as_str(), "fixture");
         assert_eq!(context.trace(), trace());
+    }
+
+    #[test]
+    fn opaque_polling_session_checks_every_provider_config_binding() {
+        let session = polling_session(5);
+        assert!(session.is_bound_to(&provider_config(
+            "fixture",
+            "public/client",
+            "https://login.example/token",
+        )));
+        assert!(!session.is_bound_to(&provider_config(
+            "other",
+            "public/client",
+            "https://login.example/token",
+        )));
+        assert!(!session.is_bound_to(&provider_config(
+            "fixture",
+            "other-client",
+            "https://login.example/token",
+        )));
+        assert!(!session.is_bound_to(&provider_config(
+            "fixture",
+            "public/client",
+            "https://other.example/token",
+        )));
     }
 
     #[test]

@@ -167,8 +167,12 @@ The delivery order is:
    transitions; and persistent five-second slow-down increases. The device code
    remains inside an opaque provider/client/token-endpoint/trace-bound session,
    each sent request becomes one response context, and each transient wire body
-   is zeroizing. The caller still owns elapsed-time expiry checks, waiting, and
-   orchestration; this crate adds no sleep, clock, storage, or network authority.
+   is zeroizing. The broker can now execute one externally scheduled poll
+   through an injected transport after exact registry binding, returning the
+   opaque session on transient transport failure and auditing the effect and
+   result before release. The caller still owns elapsed-time expiry checks,
+   waiting, initiation UI, and the full loop; these boundaries add no sleep,
+   clock, storage, or network authority.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.
