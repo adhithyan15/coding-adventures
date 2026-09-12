@@ -1655,7 +1655,7 @@ fn split_block_items(line: &str) -> Vec<&str> {
     let mut depth = 0usize;
     for (index, character) in line.char_indices() {
         match character {
-            '[' | '(' | '{' => depth += 1,
+            '[' | '(' | '{' | '>' => depth += 1,
             ']' | ')' | '}' => depth = depth.saturating_sub(1),
             character if character.is_whitespace() && depth == 0 => {
                 if start < index { items.push(&line[start..index]); }
@@ -1683,6 +1683,7 @@ fn parse_block_node(source: &str) -> (String, String, DiagramShape) {
         ("[", "]", DiagramShape::Rect),
         ("(", ")", DiagramShape::RoundedRect),
         ("{", "}", DiagramShape::Diamond),
+        (">", "]", DiagramShape::Asymmetric),
     ] {
         if let Some(index) = source.find(open) {
             if source.ends_with(close) {
@@ -9113,6 +9114,13 @@ mod tests_dg04 {
         assert_eq!(diagram.cells[0].shape, DiagramShape::Subroutine);
         assert_eq!(diagram.cells[1].shape, DiagramShape::Cylinder);
         assert_eq!(diagram.cells[2].shape, DiagramShape::DoubleCircle);
+    }
+
+    #[test]
+    fn block_parses_native_asymmetric_shape_with_spaced_label() {
+        let diagram = parse_block("block\nA>Flag shaped node]").unwrap();
+        assert_eq!(diagram.cells[0].label.text, "Flag shaped node");
+        assert_eq!(diagram.cells[0].shape, DiagramShape::Asymmetric);
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.109.0
+
+- Preserve the asymmetric Block node shape in semantic IR.
+
 ## 0.108.0
 
 - Preserve Block subroutine, cylinder, and double-circle shape semantics.

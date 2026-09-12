@@ -28,6 +28,7 @@ pub enum DiagramShape {
     Subroutine,
     Cylinder,
     DoubleCircle,
+    Asymmetric,
     Note,
 }
 

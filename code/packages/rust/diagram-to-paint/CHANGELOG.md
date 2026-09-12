@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.119.0
+
+- Lower asymmetric Block nodes to backend-neutral five-point paths and validate them through Metal-to-PNG.
+
 ## 0.118.0
 
 - Lower multi-outline Block shapes to grouped PaintInstructions and validate them through Metal-to-PNG.
