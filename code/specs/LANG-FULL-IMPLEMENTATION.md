@@ -975,12 +975,13 @@ backend immediately) come before the enabler-dependent items.
   non-finite and rounded-away progress fails closed. Finite static loops also
   retain path-independent integer, real, and boolean constants established by
   a body that does not reference the control. One simple local scalar body
-  assignment may instead reference the control: bounded analysis evaluates it
-  at the final in-range control value and retains its exact integer, finite
-  real, or boolean result. Larger real loops, compound bodies, integer
-  overflow, zero steps, arrays, globals, by-name targets, tracking barriers,
-  dynamic writes, and other control-dependent multi-iteration bodies remain
-  conservative.
+  assignment may instead reference the control or its own prior snapshot:
+  bounded analysis evaluates it once per iteration and retains its exact
+  integer, finite real, or boolean result. Integer and real recurrence
+  simulation is capped at 4,096 passes. Larger loops, compound bodies, integer
+  overflow, non-finite results, zero steps, arrays, globals, by-name targets,
+  tracking barriers, dynamic writes, and other control-dependent
+  multi-iteration bodies remain conservative.
   A `while` element also retains body initialization when a bounded static
   numeric comparison, evaluated after abstractly assigning its initial
   controlled value, proves the first condition true. Such an element also
