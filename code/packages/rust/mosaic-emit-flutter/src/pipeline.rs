@@ -2549,36 +2549,25 @@ fn emit_widget_tree_inner(
         _ => {}
     }
 
-    // --- Component reference fallback ---
-    // PascalCase tags that aren't kernel primitives are component
-    // references. The package-resolver wiring is a follow-up; for
-    // now we emit a labelled placeholder so the file type-checks
-    // and the author can spot the un-resolved reference.
+    // --- Unresolved component reference ---
     //
-    // Security: `node.tag` flows from author-controlled .msl source
-    // into a Dart `/* ... */` block comment here. A tag like
-    // `Foo*/dispatch(evil());/*` would terminate the comment early
-    // and inject arbitrary Dart into the generated build() body —
-    // same shape as the line-comment injection vector caught in
-    // the SwiftUI and Qt backends. Reject anything that isn't a
-    // clean PascalCase identifier rather than try to escape `*/`
-    // inside a block comment (which has no canonical Dart
-    // escape sequence).
-    if node
-        .tag
-        .chars()
-        .next()
-        .map(|c| c.is_ascii_uppercase())
-        .unwrap_or(false)
-    {
-        if !is_safe_dart_identifier(&node.tag) {
-            return Err(PipelineEmitError::UnknownPrimitive(node.tag.clone()));
-        }
-        return Ok(format!(
-            "{pad}/* TODO: component reference '{tag}' not yet resolved */ const SizedBox.shrink()\n",
-            tag = node.tag,
-        ));
-    }
+    // This used to emit `/* TODO: component reference 'X' not yet resolved */
+    // const SizedBox.shrink()` and return Ok, on the reasoning that the
+    // package-resolver wiring was a follow-up and a labelled placeholder let
+    // the file type-check meanwhile. That follow-up landed: UI34's resolver
+    // inlines every `pkg::P::C` node before emit and leaves backends a tree
+    // with no qualified tags.
+    //
+    // The placeholder outlived its reason and became a way to ship a hole.
+    // `from_pipeline` returning Ok meant every gate downstream passed while
+    // the component was simply absent, occupying zero pixels -- which is how
+    // `mosaic-pkg-grid` looked supported on Flutter while six backends
+    // refused it (#14867). Flutter was not the one that supported the
+    // package; it was the one that could not report the failure (#14892).
+    //
+    // Falling through to `UnknownPrimitive` puts this backend on the same
+    // footing as the other seven, all of which were measured rejecting the
+    // same input.
 
     Err(PipelineEmitError::UnknownPrimitive(node.tag.clone()))
 }
@@ -9343,21 +9332,48 @@ mod tests {
         assert!(out.contains("TextField"), "got:\n{out}");
     }
 
-    /// Positive case for the same fallback path: a clean PascalCase
-    /// component reference produces the labelled placeholder. (Real
-    /// resolution against a package manifest is a follow-up PR.)
+    /// A clean PascalCase component reference the resolver did not inline
+    /// is an ERROR, like it is on the other seven backends.
+    ///
+    /// This test used to assert the opposite: that such a tag produced a
+    /// labelled `SizedBox.shrink()` placeholder and returned Ok, because
+    /// package resolution was still a follow-up. That follow-up landed
+    /// (UI34's resolver inlines every `pkg::P::C` before emit), and the
+    /// placeholder became a way to ship a hole -- Ok meant every gate
+    /// downstream passed with the component simply absent (#14892).
+    ///
+    /// Retargeted rather than deleted: the rule it protects, that a
+    /// non-kernel PascalCase tag is handled deliberately rather than
+    /// falling through by accident, is unchanged.
     #[test]
-    fn clean_pascal_case_component_reference_emits_placeholder() {
+    fn clean_pascal_case_component_reference_is_an_error_not_a_placeholder() {
         let m = component("Host", vec![], vec![]);
         let l = layout("Host", node("UserCard"));
-        let r = from_pipeline(&m, &l, &empty_style("Host")).unwrap();
+        let err = from_pipeline(&m, &l, &empty_style("Host")).unwrap_err();
         assert!(
-            r.output
-                .contains("/* TODO: component reference 'UserCard' not yet resolved */"),
-            "expected labelled placeholder, got:\n{}",
-            r.output
+            matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t == "UserCard"),
+            "got: {err:?}"
         );
-        assert!(r.output.contains("const SizedBox.shrink()"));
+    }
+
+    /// The placeholder must not come back by another route: nothing in a
+    /// successful emit may claim a reference is "not yet resolved".
+    #[test]
+    fn no_emit_path_produces_an_unresolved_component_placeholder() {
+        let m = component("Host", vec![slot("v", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "Host",
+            node_with(
+                "Column",
+                vec![],
+                vec![text_node("hello"), node_with("Row", vec![], vec![])],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Host")).expect("ok").output;
+        assert!(
+            !out.contains("not yet resolved"),
+            "a placeholder leaked into a successful emit:\n{out}"
+        );
     }
 
     // =====================================================================
