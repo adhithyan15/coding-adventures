@@ -180,7 +180,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      to serialized-document validation and `schematicConnect`, and lock the
      failure modes with canonical and host-contract regressions before adding
      more capture controls.
-   - **Mosaic schematic property inspector** (current phase): discovery after
+   - **Mosaic schematic property inspector** (completed in PR #14929): discovery after
      PR #14922: palette placement and routing only expose fixed default values,
      so a host must inject raw document JSON to author an actual circuit. Add a
      selected-component inspector for all supported non-ground symbols, with a
@@ -188,6 +188,15 @@ model-card parameter, or a UI artifact is not a completion signal.
      input surface, and synchronization regressions. Keep analysis-card source
      selection and sweep-parameter editing for the following analysis
      configuration phase.
+   - **Mosaic schematic analysis configuration** (current phase): discovery after
+     PR #14929: choosing an analysis still emits fixed `.dc V1 0 5 1`, `.ac dec
+     10 10 10k`, or `.tran 1m 10m` cards, so useful sweep setup requires raw
+     document injection. Persist a canonical DC source selection across every
+     independent voltage/current symbol and the active DC/AC/transient card's
+     three one-token parameters. Expose those settings through typed host
+     events and Mosaic controls, and synchronize the exact resulting card into
+     the existing Berkeley parser flow. Keep multi-card plans, nested sweeps,
+     and vendor-analysis controls for later product phases.
 
 ### Operating rules
 

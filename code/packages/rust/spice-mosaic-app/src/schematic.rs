@@ -114,12 +114,45 @@ impl SchematicAnalysis {
         }
     }
 
-    fn directive(self) -> &'static str {
+    fn parameter_labels(self) -> [&'static str; 3] {
         match self {
-            Self::OperatingPoint => ".op",
-            Self::DcSweep => ".dc V1 0 5 1",
-            Self::AcSweep => ".ac dec 10 10 10k",
-            Self::Transient => ".tran 1m 10m",
+            Self::OperatingPoint => ["", "", ""],
+            Self::DcSweep => ["Start", "Stop", "Step"],
+            Self::AcSweep => ["Points per decade", "Start frequency", "Stop frequency"],
+            Self::Transient => ["Time step", "Stop time", ""],
+        }
+    }
+}
+
+/// Persisted Berkeley card values for the selected schematic analysis.
+///
+/// The defaults reproduce the initial palette controls while allowing hosts to
+/// edit real sweep cards without manufacturing a second netlist format.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct SchematicAnalysisSettings {
+    pub dc_source: String,
+    pub dc_start: String,
+    pub dc_stop: String,
+    pub dc_step: String,
+    pub ac_points_per_decade: String,
+    pub ac_start_frequency: String,
+    pub ac_stop_frequency: String,
+    pub transient_time_step: String,
+    pub transient_stop_time: String,
+}
+
+impl Default for SchematicAnalysisSettings {
+    fn default() -> Self {
+        Self {
+            dc_source: "V1".to_owned(),
+            dc_start: "0".to_owned(),
+            dc_stop: "5".to_owned(),
+            dc_step: "1".to_owned(),
+            ac_points_per_decade: "10".to_owned(),
+            ac_start_frequency: "10".to_owned(),
+            ac_stop_frequency: "10k".to_owned(),
+            transient_time_step: "1m".to_owned(),
+            transient_stop_time: "10m".to_owned(),
         }
     }
 }
@@ -148,6 +181,8 @@ pub struct SchematicDocument {
     pub wires: Vec<SchematicWire>,
     #[serde(default)]
     pub analysis: SchematicAnalysis,
+    #[serde(default)]
+    pub analysis_settings: SchematicAnalysisSettings,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -360,6 +395,138 @@ impl SchematicDocument {
         Ok(())
     }
 
+    /// Return selectable independent sources for a canonical DC sweep.
+    pub fn dc_sweep_source_references(&self) -> Vec<&str> {
+        self.components
+            .iter()
+            .filter(|component| {
+                matches!(
+                    component.kind,
+                    SchematicComponentKind::DcVoltage
+                        | SchematicComponentKind::DcCurrent
+                        | SchematicComponentKind::AcVoltage
+                )
+            })
+            .map(|component| component.reference.as_str())
+            .collect()
+    }
+
+    /// Select the independent source controlled by the active DC sweep.
+    pub fn set_dc_sweep_source(&mut self, reference: &str) -> Result<(), SchematicError> {
+        if self.analysis != SchematicAnalysis::DcSweep {
+            return Err(invalid(
+                "schematic analysis source applies only to DC sweep",
+            ));
+        }
+        if !self.dc_sweep_source_references().contains(&reference) {
+            return Err(invalid(format!(
+                "{reference} is not an independent voltage or current source"
+            )));
+        }
+        self.analysis_settings.dc_source = reference.to_owned();
+        Ok(())
+    }
+
+    /// Read the three visible editor fields for the active analysis card.
+    pub fn analysis_parameter_values(&self) -> [&str; 3] {
+        match self.analysis {
+            SchematicAnalysis::OperatingPoint => ["", "", ""],
+            SchematicAnalysis::DcSweep => [
+                &self.analysis_settings.dc_start,
+                &self.analysis_settings.dc_stop,
+                &self.analysis_settings.dc_step,
+            ],
+            SchematicAnalysis::AcSweep => [
+                &self.analysis_settings.ac_points_per_decade,
+                &self.analysis_settings.ac_start_frequency,
+                &self.analysis_settings.ac_stop_frequency,
+            ],
+            SchematicAnalysis::Transient => [
+                &self.analysis_settings.transient_time_step,
+                &self.analysis_settings.transient_stop_time,
+                "",
+            ],
+        }
+    }
+
+    /// Read the labels paired with the active analysis card's editor fields.
+    pub fn analysis_parameter_labels(&self) -> [&'static str; 3] {
+        self.analysis.parameter_labels()
+    }
+
+    /// Update one visible analysis-card parameter through the canonical document.
+    pub fn set_analysis_parameter(
+        &mut self,
+        index: usize,
+        value: &str,
+    ) -> Result<(), SchematicError> {
+        if self.analysis == SchematicAnalysis::OperatingPoint {
+            return Err(invalid("operating point does not accept sweep parameters"));
+        }
+        if index >= 3 || (self.analysis == SchematicAnalysis::Transient && index == 2) {
+            return Err(invalid("schematic analysis parameter is unavailable"));
+        }
+        if value.is_empty() || value.chars().any(char::is_whitespace) {
+            return Err(invalid(
+                "schematic analysis parameter must be one non-empty SPICE token",
+            ));
+        }
+        match (self.analysis, index) {
+            (SchematicAnalysis::DcSweep, 0) => self.analysis_settings.dc_start = value.to_owned(),
+            (SchematicAnalysis::DcSweep, 1) => self.analysis_settings.dc_stop = value.to_owned(),
+            (SchematicAnalysis::DcSweep, 2) => self.analysis_settings.dc_step = value.to_owned(),
+            (SchematicAnalysis::AcSweep, 0) => {
+                self.analysis_settings.ac_points_per_decade = value.to_owned()
+            }
+            (SchematicAnalysis::AcSweep, 1) => {
+                self.analysis_settings.ac_start_frequency = value.to_owned()
+            }
+            (SchematicAnalysis::AcSweep, 2) => {
+                self.analysis_settings.ac_stop_frequency = value.to_owned()
+            }
+            (SchematicAnalysis::Transient, 0) => {
+                self.analysis_settings.transient_time_step = value.to_owned()
+            }
+            (SchematicAnalysis::Transient, 1) => {
+                self.analysis_settings.transient_stop_time = value.to_owned()
+            }
+            _ => unreachable!("availability was checked before assigning a parameter"),
+        }
+        Ok(())
+    }
+
+    fn analysis_directive(&self) -> Result<String, SchematicError> {
+        let settings = &self.analysis_settings;
+        match self.analysis {
+            SchematicAnalysis::OperatingPoint => Ok(".op".to_owned()),
+            SchematicAnalysis::DcSweep => {
+                if !self
+                    .dc_sweep_source_references()
+                    .contains(&settings.dc_source.as_str())
+                {
+                    return Err(invalid(format!(
+                        "{} is not an independent voltage or current source",
+                        settings.dc_source
+                    )));
+                }
+                Ok(format!(
+                    ".dc {} {} {} {}",
+                    settings.dc_source, settings.dc_start, settings.dc_stop, settings.dc_step
+                ))
+            }
+            SchematicAnalysis::AcSweep => Ok(format!(
+                ".ac dec {} {} {}",
+                settings.ac_points_per_decade,
+                settings.ac_start_frequency,
+                settings.ac_stop_frequency
+            )),
+            SchematicAnalysis::Transient => Ok(format!(
+                ".tran {} {}",
+                settings.transient_time_step, settings.transient_stop_time
+            )),
+        }
+    }
+
     fn validate_wire_endpoints(&self, wire: &SchematicWire) -> Result<(), SchematicError> {
         if wire.start == wire.end {
             return Err(invalid("schematic wires must have distinct endpoints"));
@@ -434,6 +601,18 @@ impl SchematicDocument {
         if ground_count == 0 {
             return Err(invalid("schematic requires at least one ground symbol"));
         }
+        for (label, value) in self
+            .analysis_parameter_labels()
+            .into_iter()
+            .zip(self.analysis_parameter_values())
+        {
+            if !label.is_empty() && (value.is_empty() || value.chars().any(char::is_whitespace)) {
+                return Err(invalid(format!(
+                    "{label} must be one non-empty SPICE token"
+                )));
+            }
+        }
+        self.analysis_directive()?;
         for (index, wire) in self.wires.iter().enumerate() {
             self.validate_wire_endpoints(wire)?;
             if self.wires[..index].iter().any(|existing| {
@@ -538,7 +717,7 @@ impl SchematicDocument {
             };
             lines.push(line);
         }
-        lines.extend([self.analysis.directive().to_owned(), ".end".to_owned()]);
+        lines.extend([self.analysis_directive()?, ".end".to_owned()]);
         Ok(lines.join("\n") + "\n")
     }
 }
@@ -600,6 +779,7 @@ mod tests {
                 },
             ],
             analysis: SchematicAnalysis::OperatingPoint,
+            analysis_settings: SchematicAnalysisSettings::default(),
         }
     }
 
@@ -631,6 +811,7 @@ mod tests {
             components: Vec::new(),
             wires: Vec::new(),
             analysis: SchematicAnalysis::default(),
+            analysis_settings: SchematicAnalysisSettings::default(),
         };
         assert_eq!(
             document
@@ -715,6 +896,7 @@ mod tests {
                 end: point(0, 0),
             }],
             analysis: SchematicAnalysis::AcSweep,
+            analysis_settings: SchematicAnalysisSettings::default(),
         };
         let deck = document.to_berkeley_netlist().unwrap();
         assert_eq!(
@@ -736,6 +918,57 @@ mod tests {
                 .unwrap()
                 .contains(directive));
         }
+    }
+
+    #[test]
+    fn configurable_analysis_cards_lower_selected_sources_and_parameters() {
+        let mut document = rc_document();
+        document.analysis = SchematicAnalysis::DcSweep;
+        document.set_dc_sweep_source("V1").unwrap();
+        document.set_analysis_parameter(0, "-1").unwrap();
+        document.set_analysis_parameter(1, "4").unwrap();
+        document.set_analysis_parameter(2, "0.5").unwrap();
+        let deck = document.to_berkeley_netlist().unwrap();
+        assert!(deck.contains(".dc V1 -1 4 0.5"));
+        parse_netlist(&deck).unwrap();
+        assert_eq!(run_netlist(&deck).unwrap().len(), 1);
+
+        document.analysis = SchematicAnalysis::AcSweep;
+        document.set_analysis_parameter(0, "20").unwrap();
+        document.set_analysis_parameter(1, "1").unwrap();
+        document.set_analysis_parameter(2, "1k").unwrap();
+        assert!(document
+            .to_berkeley_netlist()
+            .unwrap()
+            .contains(".ac dec 20 1 1k"));
+
+        document.analysis = SchematicAnalysis::Transient;
+        document.set_analysis_parameter(0, "2m").unwrap();
+        document.set_analysis_parameter(1, "20m").unwrap();
+        assert!(document
+            .to_berkeley_netlist()
+            .unwrap()
+            .contains(".tran 2m 20m"));
+
+        assert_eq!(
+            document
+                .set_analysis_parameter(2, "1")
+                .unwrap_err()
+                .to_string(),
+            "schematic analysis parameter is unavailable"
+        );
+        assert_eq!(
+            document
+                .set_analysis_parameter(0, "1 m")
+                .unwrap_err()
+                .to_string(),
+            "schematic analysis parameter must be one non-empty SPICE token"
+        );
+        document.analysis = SchematicAnalysis::DcSweep;
+        assert_eq!(
+            document.set_dc_sweep_source("R1").unwrap_err().to_string(),
+            "R1 is not an independent voltage or current source"
+        );
     }
 
     #[test]
