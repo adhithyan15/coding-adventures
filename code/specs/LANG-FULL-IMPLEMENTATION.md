@@ -28,8 +28,8 @@ language**, and each frontend was a **deliberate subset**:
 
 The ALGOL power inventory also includes direct initialized tracked-real
 snapshot exponents and nested pure conditionals whose tracked snapshot and
-finite real-literal leaves prove the same value over plain real bases; these do
-not require a standard function in the base.
+finite variable-free real-arithmetic leaves prove the same value over plain
+real bases; these do not require a standard function in the base.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
@@ -1046,10 +1046,11 @@ backend immediately) come before the enabler-dependent items.
   snapshot directly, without requiring a standard-function result in the base.
   The snapshot must remain initialized and local, finite, nonnegative,
   integral, and within the existing exponent cap; otherwise it remains on
-  `f64_pow`. Nested pure conditionals over such snapshots and finite real
-  literals may also participate when at least one leaf is a tracked snapshot,
-  every leaf proves the same exact value, and each selector is call-free; all
-  selector execution remains in emitted IIR.
+  `f64_pow`. Nested pure conditionals over such snapshots and finite,
+  variable-free real arithmetic may also participate when at least one leaf is
+  a tracked snapshot, every leaf proves the same exact value, and each selector
+  is call-free; all selector execution remains in emitted IIR. Calls, nested
+  powers, non-finite arithmetic, and differing leaves fail closed.
   A real power also accepts finite arithmetic over initialized ordinary local
   real snapshots when the result is an exact nonnegative integer within the
   unroll cap; neither it nor a pure conditional whose branches prove the same

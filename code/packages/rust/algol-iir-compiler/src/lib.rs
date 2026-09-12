@@ -3177,6 +3177,21 @@ impl Compiler {
         {
             return Some((value, false));
         }
+        if !self.contains_conditional_expression(node)
+            && !self.contains_procedure_call(node)
+            && !self.contains_power_operator(node)
+            && self.static_real_expression_has_real_evidence(node)
+            && self
+                .static_predicate_dependencies(node)
+                .is_some_and(|dependencies| dependencies.is_empty())
+        {
+            if let Some(value) = self
+                .static_real_arithmetic_value(node)
+                .filter(|value| value.is_finite())
+            {
+                return Some((value, false));
+            }
+        }
         let (condition, then_node, else_node) = self.conditional_expression_parts(node)?;
         if self.contains_procedure_call(condition)
             || self.static_predicate_dependencies(condition).is_none()
@@ -11572,6 +11587,19 @@ mod tests {
     }
 
     #[test]
+    fn al4_conditional_real_snapshot_and_literal_arithmetic_power_unrolls() {
+        let module = compile_source(
+            "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else 1.0 + 1.0) + 6.0; gate := true; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("an equal tracked real snapshot and literal arithmetic may bound a real power");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
     fn al4_tracked_real_standard_function_exponents_fail_closed() {
         for source in [
             "begin real exponent, saved; exponent := 1.0; saved := 6.0 ^ (exponent + cos(0)) end",
@@ -11612,6 +11640,7 @@ mod tests {
             "begin real gate, left, right, saved; left := 2.0; right := 3.0; saved := 6.0 ^ (if gate = 0.0 then left else right) end",
             "begin boolean outer, inner; real first, second, third, saved; first := 2.0; second := 3.0; third := 2.0; saved := 6.0 ^ (if outer then if inner then first else second else third) end",
             "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else 3.0) end",
+            "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else 1.0 + 2.0) end",
             "begin real procedure choose(x); value x; real x; choose := x; real gate, exponent, saved; gate := 0.0; exponent := 0.0; saved := 6.0 ^ (if choose(gate) = 0.0 then cos(exponent) + 1 else cos(exponent) + 1) end",
         ] {
             let module = compile_source(source, "test")
