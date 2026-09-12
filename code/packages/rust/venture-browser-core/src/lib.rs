@@ -10,10 +10,12 @@ pub use browser_bookmarks::{
     BookmarkUrl, MemoryBookmarkRepository,
 };
 pub use browser_form_controls::{
-    BrowserControlModel, ControlAccessibilityAction, ControlChoiceOptionState, ControlChoiceState,
-    ControlClipboardPayload, ControlEditorPresentation, ControlEditorState, ControlEffect,
-    ControlKey, ControlNavigationUnit, ControlRect, ControlSelection, ControlTextMetrics,
-    ControlValueDiagnostic, ControlValueState,
+    format_typed_value, normalize_color, parse_typed_step, parse_typed_value, step_typed_value,
+    typed_constraints, BrowserControlModel, ControlAccessibilityAction, ControlChoiceOptionState,
+    ControlChoiceState, ControlClipboardPayload, ControlEditorPresentation, ControlEditorState,
+    ControlEffect, ControlKey, ControlNavigationUnit, ControlRect, ControlSelection,
+    ControlTextMetrics, ControlValueDiagnostic, ControlValueState, TypedValue,
+    TypedValueConstraints,
 };
 use browser_form_submission::{plan_activation, plan_implicit_submission};
 pub use browser_form_submission::{
@@ -5148,6 +5150,68 @@ mod tests {
         assert_eq!(
             session.focused_control_choice_state().unwrap().value,
             Some(6.0)
+        );
+    }
+
+    #[test]
+    fn session_routes_temporal_and_color_actions_through_shared_reflow() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<input id='day' type='date' min='2024-01-01' max='2024-01-09' step='2' value='2024-01-02'><input id='clock' type='time' value='09:30:05.120'><input id='ink' type='color' value='#A0b1C2'>".to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(420.0, 140.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/", 140.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let regions = session.viewport().unwrap().page().paint.controls.clone();
+
+        let date = regions
+            .iter()
+            .find(|region| region.key.contains("day"))
+            .unwrap();
+        session
+            .control_pointer_down(date.x + 1.0, date.y + 1.0, &pipeline)
+            .unwrap();
+        assert_eq!(
+            session.focused_control_value_state().unwrap().diagnostics[0].code,
+            "step-mismatch"
+        );
+        session
+            .control_key_down(ControlKey::ArrowUp, &pipeline)
+            .unwrap();
+        let date_state = session.focused_control_value_state().unwrap();
+        assert_eq!(date_state.value_text.as_deref(), Some("2024-01-03"));
+        assert!(date_state.is_valid());
+
+        let color = regions
+            .iter()
+            .find(|region| region.key.contains("ink"))
+            .unwrap();
+        session
+            .control_pointer_down(color.x + 1.0, color.y + 1.0, &pipeline)
+            .unwrap();
+        session
+            .control_accessibility_action(
+                ControlAccessibilityAction::SetValue("#00FF7f".into()),
+                &pipeline,
+            )
+            .unwrap();
+        assert_eq!(
+            session.focused_control_value_state().unwrap().value_text.as_deref(),
+            Some("#00ff7f")
         );
     }
 

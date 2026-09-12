@@ -131,7 +131,7 @@ pub const EFFECTS_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="ef
 pub const BACKGROUNDS_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="background-card" style="width:120px;height:60px;padding:8px;border-top:3px solid black;border-right:3px dashed red;border-bottom:3px dotted blue;border-left:3px double green;overflow:hidden;background-color:white;background-image:linear-gradient(90deg,red 0%,blue 100%),radial-gradient(white 0%,green 100%),url('http://venture.test/checker.gif');background-position:center,10px 20%,right bottom;background-size:cover,40px 30px,12px 12px;background-repeat:no-repeat,repeat-x,no-repeat;background-origin:padding-box,content-box,content-box;background-clip:border-box,padding-box,content-box;border-radius:18px 10px 6px 2px / 10px 8px 4px 2px"><span style="position:relative;left:-16px">Layered background</span></div></body></html>"#;
 
 /// Form controls crossing every shared formatting context and interaction state.
-pub const FORM_CONTROLS_FIXTURE_HTML: &str = r#"<!doctype html><html><body>
+pub const FORM_CONTROLS_FIXTURE_HTML: &str = r##"<!doctype html><html><body>
 <input id="normal-control" name="query" size="10" value="normal">
 <div style="display:flex"><input id="flex-control" size="10" placeholder="flex"></div>
 <div style="display:grid"><input id="grid-control" size="10" value="grid"></div>
@@ -142,7 +142,13 @@ pub const FORM_CONTROLS_FIXTURE_HTML: &str = r#"<!doctype html><html><body>
 <input id="check-control" type="checkbox" checked>
 <button id="disabled-control" disabled>Disabled</button>
 <input id="custom-control" value="custom" style="appearance:none;width:92px;min-width:80px;max-width:100px">
-</body></html>"#;
+<input id="date-control" type="date" value="2024-02-29">
+<input id="month-control" type="month" value="2024-07">
+<input id="week-control" type="week" value="2020-W53">
+<input id="time-control" type="time" value="09:30:05.120" step="0.01">
+<input id="datetime-control" type="datetime-local" value="2024-02-29T09:30">
+<input id="color-control" type="color" value="#A0b1C2">
+</body></html>"##;
 
 /// Deterministic validation, successful-control, reset, and POST fixture.
 pub const FORM_SUBMISSION_FIXTURE_HTML: &str = r#"<!doctype html><html><head><title>Venture form fixture</title></head><body>
@@ -1336,7 +1342,7 @@ mod tests {
     #[test]
     fn form_controls_keep_intrinsics_across_layout_contexts_and_cairo() {
         let page = load_form_controls_page("http://venture.test").expect("control fixture");
-        assert_eq!(page.paint.controls.len(), 10);
+        assert_eq!(page.paint.controls.len(), 16);
         let widths = [
             "normal-control",
             "flex-control",
@@ -1365,6 +1371,15 @@ mod tests {
             .iter()
             .find(|control| control.key == "control:8:id:disabled-control")
             .is_some_and(|control| control.disabled));
+        assert_eq!(
+            page.paint
+                .controls
+                .iter()
+                .skip(10)
+                .map(|control| control.kind.name())
+                .collect::<Vec<_>>(),
+            vec!["date", "month", "week", "time", "datetime-local", "color"]
+        );
         let pixels = paint_vm_cairo::render(&page.paint.scene).expect("control fixture cairo");
         assert_eq!((pixels.width, pixels.height), (VIEWPORT_WIDTH as u32, 480));
         assert!(pixels.data.iter().any(|channel| *channel != 0));

@@ -97,6 +97,11 @@ recreating the surrounding chrome in backend-specific UI code.
   slider values in the same reducer. Every host already forwards the semantic
   arrows, Home/End, activation, and accessibility actions consumed by this
   shared state; submission emits only live enabled selections.
+- Date, month, ISO week, time, datetime-local, and simple color inputs use
+  shared canonical parsers, bounds, step alignment, normalized accessibility
+  value text, and successful serialization. Existing host semantic arrows,
+  Home/End, and accessibility SetValue/Increment/Decrement enter that reducer;
+  no generated host owns locale parsing or picker state.
 - Native SwiftUI and WinUI surface-size changes use matching Rust resize ABIs.
   The shared session recomposes its retained render tree for the new logical
   viewport, preserves and clamps scroll state, updates hit regions, and

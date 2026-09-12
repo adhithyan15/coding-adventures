@@ -15,6 +15,12 @@ pub enum ControlKind {
     Email,
     Url,
     Number,
+    Date,
+    Month,
+    Week,
+    Time,
+    DateTimeLocal,
+    Color,
     Button,
     TextArea,
     Select,
@@ -32,6 +38,12 @@ impl ControlKind {
             Self::Email => "email",
             Self::Url => "url",
             Self::Number => "number",
+            Self::Date => "date",
+            Self::Month => "month",
+            Self::Week => "week",
+            Self::Time => "time",
+            Self::DateTimeLocal => "datetime-local",
+            Self::Color => "color",
             Self::Button => "button",
             Self::TextArea => "textarea",
             Self::Select => "select",
@@ -49,6 +61,12 @@ impl ControlKind {
             "email" => Self::Email,
             "url" => Self::Url,
             "number" => Self::Number,
+            "date" => Self::Date,
+            "month" => Self::Month,
+            "week" => Self::Week,
+            "time" => Self::Time,
+            "datetime-local" => Self::DateTimeLocal,
+            "color" => Self::Color,
             "button" | "submit" | "reset" => Self::Button,
             "textarea" => Self::TextArea,
             "select" => Self::Select,
@@ -78,6 +96,17 @@ impl ControlKind {
 
     pub const fn supports_maxlength(self) -> bool {
         self.accepts_text() && !matches!(self, Self::Number)
+    }
+
+    pub const fn is_temporal(self) -> bool {
+        matches!(
+            self,
+            Self::Date | Self::Month | Self::Week | Self::Time | Self::DateTimeLocal
+        )
+    }
+
+    pub const fn has_typed_value(self) -> bool {
+        self.is_temporal() || matches!(self, Self::Color)
     }
 }
 
@@ -455,6 +484,14 @@ mod tests {
         assert!(ControlKind::Url.supports_maxlength());
         assert!(!ControlKind::Number.supports_selection());
         assert!(!ControlKind::Number.supports_maxlength());
+        assert!(ControlKind::Date.is_temporal());
+        assert!(ControlKind::DateTimeLocal.has_typed_value());
+        assert!(ControlKind::Color.has_typed_value());
+        assert!(!ControlKind::Time.supports_selection());
+        assert_eq!(
+            ControlKind::parse("datetime-local"),
+            Some(ControlKind::DateTimeLocal)
+        );
     }
 
     #[test]

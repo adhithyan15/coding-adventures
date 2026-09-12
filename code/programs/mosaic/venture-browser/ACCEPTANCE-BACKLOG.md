@@ -219,10 +219,19 @@ cross-platform proving application. Items are ordered by risk and dependency.
   range stepping, reusable accessibility projections/actions, successful
   control serialization, and retained-session acceptance over the semantic
   key seams already shared by every generated host.
-- [ ] **P1 browser convergence — temporal and color value controls.** Add
+- [x] **P1 browser convergence — temporal and color value controls.** Add
   shared date, month, week, time, datetime-local, and color parsing,
   normalization, bounds, stepping, accessibility value text/actions, and
   successful-control serialization before any host adds native pickers.
+  Completed with canonical Gregorian and ISO-week scalar conversions,
+  subsecond local-time normalization, reusable bound/step diagnostics,
+  semantic keyboard and accessibility mutation, canonical color values,
+  retained-session acceptance, and deterministic successful serialization.
+- [ ] **P1 browser convergence — file values and multipart submission.** Add
+  an opaque host file-selection contract, accept/multiple filtering, reusable
+  file-list accessibility state, multipart/form-data planning with deterministic
+  boundaries, reset behavior, bounded payload diagnostics, and native/web
+  picker adapters without exposing host paths to layout or paint.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

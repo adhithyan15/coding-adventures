@@ -5,6 +5,13 @@ use layout_controls::{ControlAppearance, ControlKind, ControlState};
 use text_flow::graphemes;
 use url_parser::Url;
 
+mod typed_values;
+
+pub use typed_values::{
+    format_typed_value, normalize_color, parse_typed_step, parse_typed_value, step_typed_value,
+    typed_constraints, TypedValue, TypedValueConstraints,
+};
+
 const EDIT_HISTORY_LIMIT: usize = 100;
 
 pub const VERSION: &str = "0.1.0";
@@ -133,6 +140,7 @@ pub struct ControlValueState {
     pub minimum: Option<f64>,
     pub maximum: Option<f64>,
     pub step: Option<f64>,
+    pub value_text: Option<String>,
     pub diagnostics: Vec<ControlValueDiagnostic>,
 }
 
@@ -547,6 +555,15 @@ impl BrowserControlModel {
                 _ => None,
             };
         }
+        if kind.is_temporal() {
+            return match key {
+                ControlKey::ArrowUp | ControlKey::ArrowRight => self.step_focused_value(true),
+                ControlKey::ArrowDown | ControlKey::ArrowLeft => self.step_focused_value(false),
+                ControlKey::Home => self.set_focused_typed_boundary(false),
+                ControlKey::End => self.set_focused_typed_boundary(true),
+                _ => None,
+            };
+        }
         if kind == ControlKind::Radio {
             return match key {
                 ControlKey::ArrowUp | ControlKey::ArrowLeft => self.move_radio_group(false),
@@ -855,8 +872,8 @@ impl BrowserControlModel {
                 self.replace_focused_selection(&value)
             }
             ControlAccessibilityAction::SetValue(value) => self.set_focused_value(&value),
-            ControlAccessibilityAction::Increment => self.step_focused_numeric(true),
-            ControlAccessibilityAction::Decrement => self.step_focused_numeric(false),
+            ControlAccessibilityAction::Increment => self.step_focused_value(true),
+            ControlAccessibilityAction::Decrement => self.step_focused_value(false),
             ControlAccessibilityAction::Toggle => self.activate_focused(),
             ControlAccessibilityAction::SetIndeterminate(indeterminate) => {
                 let key = self.focused_key()?.to_string();
@@ -1161,7 +1178,9 @@ impl BrowserControlModel {
         let control = &self.controls[index];
         if control.disabled
             || control.readonly
-            || (!control.kind.accepts_text() && control.kind != ControlKind::Range)
+            || (!control.kind.accepts_text()
+                && control.kind != ControlKind::Range
+                && !control.kind.has_typed_value())
         {
             return None;
         }
@@ -1171,6 +1190,28 @@ impl BrowserControlModel {
                 requested,
                 control_numeric_constraints(&self.controls[index], &self.bindings[index]),
             ));
+            if self.controls[index].value == value {
+                return None;
+            }
+            self.controls[index].value = value.clone();
+            return Some(ControlEffect::ValueChanged {
+                key: self.controls[index].key.clone(),
+                value,
+            });
+        }
+        if control.kind.is_temporal() {
+            let value = parse_typed_value(control.kind, value)?.normalized;
+            if self.controls[index].value == value {
+                return None;
+            }
+            self.controls[index].value = value.clone();
+            return Some(ControlEffect::ValueChanged {
+                key: self.controls[index].key.clone(),
+                value,
+            });
+        }
+        if control.kind == ControlKind::Color {
+            let value = normalize_color(value)?;
             if self.controls[index].value == value {
                 return None;
             }
@@ -1229,6 +1270,48 @@ impl BrowserControlModel {
             next = next.min(maximum);
         }
         self.set_focused_value(&format_number(next))
+    }
+
+    fn step_focused_value(&mut self, forward: bool) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        let kind = self.controls[index].kind;
+        if matches!(kind, ControlKind::Number | ControlKind::Range) {
+            return self.step_focused_numeric(forward);
+        }
+        if self.controls[index].disabled || self.controls[index].readonly || !kind.is_temporal() {
+            return None;
+        }
+        let binding = &self.bindings[index];
+        let constraints = typed_constraints(
+            kind,
+            binding.min.as_deref(),
+            binding.max.as_deref(),
+            binding.step.as_deref(),
+        );
+        let value = step_typed_value(kind, &self.controls[index].value, constraints, forward)?;
+        self.set_focused_value(&value)
+    }
+
+    fn set_focused_typed_boundary(&mut self, maximum: bool) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        let kind = self.controls[index].kind;
+        if !kind.is_temporal() {
+            return None;
+        }
+        let binding = &self.bindings[index];
+        let constraints = typed_constraints(
+            kind,
+            binding.min.as_deref(),
+            binding.max.as_deref(),
+            binding.step.as_deref(),
+        );
+        let scalar = if maximum {
+            constraints.maximum?
+        } else {
+            constraints.minimum?
+        };
+        let value = format_typed_value(kind, scalar)?;
+        self.set_focused_value(&value)
     }
 
     fn set_focused_range_boundary(&mut self, maximum: bool) -> Option<ControlEffect> {
@@ -1617,6 +1700,12 @@ pub fn project_control(node: &BrowserRenderNode, key: impl Into<String>) -> Cont
             .filter(|value| value.is_finite())
             .unwrap_or((constraints.minimum.unwrap() + constraints.maximum.unwrap()) / 2.0);
         state.value = format_number(normalize_range_value(initial, constraints));
+    } else if kind.is_temporal() {
+        state.value = parse_typed_value(kind, &state.value)
+            .map(|value| value.normalized)
+            .unwrap_or_default();
+    } else if kind == ControlKind::Color {
+        state.value = normalize_color(&state.value).unwrap_or_else(|| "#000000".into());
     }
     state
 }
@@ -2122,14 +2211,16 @@ fn control_value_state(control: &ControlState, binding: &ControlBinding) -> Cont
         _ => {}
     }
 
-    let constraints = control_numeric_constraints(control, binding);
-    let numeric_value = if matches!(control.kind, ControlKind::Number | ControlKind::Range)
+    let numeric_constraints = control_numeric_constraints(control, binding);
+    let mut numeric_value = if matches!(control.kind, ControlKind::Number | ControlKind::Range)
         && !control.value.is_empty()
     {
         match parse_finite(&control.value) {
             Some(value) => {
                 if control.kind == ControlKind::Number
-                    && constraints.minimum.is_some_and(|minimum| value < minimum)
+                    && numeric_constraints
+                        .minimum
+                        .is_some_and(|minimum| value < minimum)
                 {
                     diagnostics.push(ControlValueDiagnostic {
                         code: "range-underflow",
@@ -2137,7 +2228,9 @@ fn control_value_state(control: &ControlState, binding: &ControlBinding) -> Cont
                     });
                 }
                 if control.kind == ControlKind::Number
-                    && constraints.maximum.is_some_and(|maximum| value > maximum)
+                    && numeric_constraints
+                        .maximum
+                        .is_some_and(|maximum| value > maximum)
                 {
                     diagnostics.push(ControlValueDiagnostic {
                         code: "range-overflow",
@@ -2145,8 +2238,12 @@ fn control_value_state(control: &ControlState, binding: &ControlBinding) -> Cont
                     });
                 }
                 if control.kind == ControlKind::Number
-                    && constraints.validates_step
-                    && step_mismatch(value, constraints.minimum.unwrap_or(0.0), constraints.step)
+                    && numeric_constraints.validates_step
+                    && step_mismatch(
+                        value,
+                        numeric_constraints.minimum.unwrap_or(0.0),
+                        numeric_constraints.step,
+                    )
                 {
                     diagnostics.push(ControlValueDiagnostic {
                         code: "step-mismatch",
@@ -2167,15 +2264,110 @@ fn control_value_state(control: &ControlState, binding: &ControlBinding) -> Cont
         None
     };
 
+    let mut minimum = numeric_constraints.minimum;
+    let mut maximum = numeric_constraints.maximum;
+    let mut step = numeric_constraints
+        .validates_step
+        .then_some(numeric_constraints.step);
+    let mut value_text = None;
+    if control.kind.is_temporal() {
+        let constraints = typed_constraints(
+            control.kind,
+            binding.min.as_deref(),
+            binding.max.as_deref(),
+            binding.step.as_deref(),
+        );
+        for (authored, code, message) in [
+            (
+                binding.min.as_deref(),
+                "invalid-minimum",
+                "minimum is not a valid temporal value",
+            ),
+            (
+                binding.max.as_deref(),
+                "invalid-maximum",
+                "maximum is not a valid temporal value",
+            ),
+        ] {
+            if authored.is_some_and(|value| parse_typed_value(control.kind, value).is_none()) {
+                diagnostics.push(ControlValueDiagnostic { code, message });
+            }
+        }
+        if binding.step.as_deref().is_some_and(|authored| {
+            authored.trim() != "any"
+                && parse_typed_step(control.kind, authored).is_none()
+        }) {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "invalid-step",
+                message: "step is not positive and finite",
+            });
+        }
+        let parsed = (!control.value.is_empty())
+            .then(|| parse_typed_value(control.kind, &control.value))
+            .flatten();
+        if !control.value.is_empty() && parsed.is_none() {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "bad-input",
+                message: "temporal value is malformed",
+            });
+        }
+        if let Some(parsed) = parsed {
+            if constraints
+                .minimum
+                .is_some_and(|minimum| parsed.scalar < minimum)
+            {
+                diagnostics.push(ControlValueDiagnostic {
+                    code: "range-underflow",
+                    message: "temporal value is below min",
+                });
+            }
+            if constraints
+                .maximum
+                .is_some_and(|maximum| parsed.scalar > maximum)
+            {
+                diagnostics.push(ControlValueDiagnostic {
+                    code: "range-overflow",
+                    message: "temporal value is above max",
+                });
+            }
+            let base = constraints.minimum.unwrap_or(0);
+            if constraints.validates_step && (parsed.scalar - base) % constraints.step != 0 {
+                diagnostics.push(ControlValueDiagnostic {
+                    code: "step-mismatch",
+                    message: "temporal value is not aligned to step",
+                });
+            }
+            numeric_value = Some(parsed.scalar as f64);
+            value_text = Some(parsed.normalized);
+        }
+        minimum = constraints.minimum.map(|value| value as f64);
+        maximum = constraints.maximum.map(|value| value as f64);
+        step = constraints
+            .validates_step
+            .then_some(constraints.step as f64);
+    } else if control.kind == ControlKind::Color {
+        value_text = normalize_color(&control.value);
+        if value_text.is_none() {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "bad-input",
+                message: "color value is not a simple hexadecimal color",
+            });
+        }
+        minimum = None;
+        maximum = None;
+        step = None;
+    }
+
     ControlValueState {
         key: control.key.clone(),
         value: control.value.clone(),
         input_mode: binding.inputmode.clone(),
         selection_supported: control.kind.supports_selection(),
         numeric_value,
-        minimum: constraints.minimum,
-        maximum: constraints.maximum,
-        step: constraints.validates_step.then_some(constraints.step),
+        minimum,
+        maximum,
+        step,
+        value_text,
         diagnostics,
     }
 }
@@ -3088,5 +3280,76 @@ mod tests {
         assert_eq!(range_state.minimum, Some(0.0));
         assert_eq!(range_state.maximum, Some(10.0));
         assert_eq!(range_state.step, Some(2.0));
+    }
+
+    #[test]
+    fn temporal_and_color_values_share_normalization_diagnostics_and_actions() {
+        let tree = parse_browser_render_tree(
+            "<input id='day' type='date' value='2024-01-02' min='2024-01-01' max='2024-01-09' step='2'>\
+             <input id='month' type='month' value='2024-7'>\
+             <input id='week' type='week' value='2020-W53'>\
+             <input id='clock' type='time' value='09:30:05.120' step='0.5'>\
+             <input id='local' type='datetime-local' value='2024-02-29T09:30'>\
+             <input id='ink' type='color' value='#A0b1C2'>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+
+        let day = "control:0:id:day";
+        let day_state = model.value_state(day).unwrap();
+        assert!(!day_state.selection_supported);
+        assert_eq!(day_state.value_text.as_deref(), Some("2024-01-02"));
+        assert_eq!(day_state.diagnostics[0].code, "step-mismatch");
+        model.focus(day);
+        model.key_down(ControlKey::ArrowUp);
+        assert_eq!(model.control(day).unwrap().value, "2024-01-03");
+        model.accessibility_action(ControlAccessibilityAction::Increment);
+        assert_eq!(model.control(day).unwrap().value, "2024-01-05");
+        model.key_down(ControlKey::End);
+        assert_eq!(model.control(day).unwrap().value, "2024-01-09");
+
+        assert_eq!(model.control("control:1:id:month").unwrap().value, "");
+        assert_eq!(
+            model.control("control:2:id:week").unwrap().value,
+            "2020-W53"
+        );
+        assert_eq!(
+            model.control("control:3:id:clock").unwrap().value,
+            "09:30:05.12"
+        );
+        assert_eq!(
+            model.control("control:4:id:local").unwrap().value,
+            "2024-02-29T09:30"
+        );
+
+        let color = "control:5:id:ink";
+        assert_eq!(model.control(color).unwrap().value, "#a0b1c2");
+        model.focus(color);
+        model.accessibility_action(ControlAccessibilityAction::SetValue("#00FF7f".into()));
+        let color_state = model.value_state(color).unwrap();
+        assert_eq!(color_state.value_text.as_deref(), Some("#00ff7f"));
+        assert!(color_state.is_valid());
+        assert_eq!(
+            model.accessibility_action(ControlAccessibilityAction::SetValue("blue".into())),
+            None
+        );
+    }
+
+    #[test]
+    fn temporal_metadata_diagnostics_are_reusable() {
+        let tree = parse_browser_render_tree(
+            "<input id='day' type='date' value='2024-06-01' min='bad' max='2024-05-01' step='zero'>",
+        )
+        .unwrap();
+        let model = BrowserControlModel::from_render_tree(&tree);
+        let state = model.value_state("control:0:id:day").unwrap();
+        assert_eq!(
+            state
+                .diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code)
+                .collect::<Vec<_>>(),
+            vec!["invalid-minimum", "invalid-step", "range-overflow"]
+        );
     }
 }

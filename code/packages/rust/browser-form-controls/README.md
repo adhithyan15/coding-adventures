@@ -47,9 +47,19 @@ driven by semantic arrows, Home/End, and accessibility value actions.
 per-option availability/selection, and slider value metadata without a host
 widget type.
 
+Picker-backed values remain host neutral too. Date, month, ISO week, time,
+datetime-local, and simple color inputs normalize through shared parsers before
+entering retained state. Temporal controls use canonical day/month/week or
+millisecond scalars for min/max/step diagnostics and semantic stepping;
+`ControlValueState::value_text` gives accessibility adapters the normalized
+human-readable value. Color values are strict lowercase `#rrggbb`. Hosts may
+present native pickers later, but SetValue, Increment/Decrement, arrows, and
+Home/End always return through this reducer.
+
 Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI55-form-editing`](../../../specs/UI55-form-editing.md), and
 [`UI56-editor-presentation`](../../../specs/UI56-editor-presentation.md), and
 [`UI62-advanced-editing-transactions`](../../../specs/UI62-advanced-editing-transactions.md), and
-[`UI63-typed-input-value-semantics`](../../../specs/UI63-typed-input-value-semantics.md), and
-[`UI64-choice-range-controls`](../../../specs/UI64-choice-range-controls.md).
+[`UI63-typed-input-value-semantics`](../../../specs/UI63-typed-input-value-semantics.md),
+[`UI64-choice-range-controls`](../../../specs/UI64-choice-range-controls.md), and
+[`UI65-temporal-color-controls`](../../../specs/UI65-temporal-color-controls.md).

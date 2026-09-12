@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Add canonical date/month/week/time/datetime-local and simple-color values,
+  shared temporal min/max/step diagnostics and semantic stepping,
+  accessibility value text/actions, retained-session acceptance, and
+  successful-control serialization across the existing host event seams.
+
 - Add shared advanced choice/range semantics: multi-select range and toggle,
   disabled option/optgroup filtering, checkbox indeterminate state, wrapping
   radio-group arrows, normalized slider stepping, reusable accessibility

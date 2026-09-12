@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extend the shared form-control page with canonical date, month, ISO week,
+  time, datetime-local, and color values for deterministic layout/paint gates.
+
 - Add deterministic form submission and result routes spanning required text,
   radio groups, select values, reset, submitter data, and POST navigation.
 
