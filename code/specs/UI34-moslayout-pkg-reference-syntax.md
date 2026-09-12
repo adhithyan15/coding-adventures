@@ -321,6 +321,63 @@ A diagnostic-only check (`debug_assert!`) in each emitter's entry
 point can confirm this invariant during development; release builds
 omit the check.
 
+### 6.1 What the backends actually do — measured (#14886)
+
+The `debug_assert!` above was never added to any emitter. That turned out
+not to matter, because the real behaviour is stronger than the assert would
+have been: an assert vanishes in release builds, whereas every backend
+already refuses a qualified tag with a clean, named error.
+
+Measured by handing each backend a layout containing
+`pkg::mosaic-pkg-grid::Cell` with **no resolver pass**, with a bare unknown
+`Cell` as the control so “rejects qualified tags” could be told apart from
+“rejects unknown tags”:
+
+| backend | qualified tag | bare unknown tag |
+| --- | --- | --- |
+| compose, html, react, swiftui, qt, webcomponent | `UnknownPrimitive("pkg::mosaic-pkg-grid::Cell")` | `UnknownPrimitive("Cell")` |
+| xaml | resolves it — see 6.2 | `UnknownComponent("Cell")` |
+| **flutter** | `UnknownPrimitive(..)` | **`Ok`** — see 6.3 |
+
+No backend silently drops the qualifier and resolves the tag structurally,
+which was the failure mode worth checking for: it would produce a component
+reference to the right *name* from the wrong *package*.
+
+### 6.2 XAML resolves a qualified tag, by design (#14884)
+
+§6 says no `tag` starts with `pkg::` after resolution. That holds for a
+full build, but XAML has a second, resolver-less entry point that §6 did not
+anticipate: `from_pipeline` called directly with a `ComponentRegistry`, which
+is how `mosaic-compile --package-manifest` compiles a single component and
+how `tests/pkg_grid_compiles_to_xaml.rs` exercises the registry.
+
+On that path a qualified tag does reach the emitter. `emit_component_reference`
+splits it with `LayoutNode::package_ref()` and uses the component half for
+both the registry key (the registry is keyed by bare export names) and the
+emitted element name — `<grid:pkg::mosaic-pkg-grid::Cell/>` is not
+well-formed XML. A tag that names a package explicitly must match the
+registration's package, so `pkg::other-pkg::Cell` does not resolve to
+`mosaic-pkg-grid`'s `Cell`.
+
+This is narrower than the “Path B” below: it is not a `--keep-pkg-refs`
+mode, just the registry path being made correct for input it can genuinely
+receive.
+
+### 6.3 Flutter does not fail closed
+
+Flutter is the one backend that returns `Ok` for an unresolved component
+reference, emitting a comment and a zero-size widget:
+
+```dart
+/* TODO: component reference 'Cell' not yet resolved */ const SizedBox.shrink()
+```
+
+Every gate downstream of `from_pipeline` then passes: the build is green and
+the component is absent. This is how `mosaic-pkg-grid` appeared to work on
+Flutter while six backends refused it — Flutter was not the one that
+supported the package, it was the one that could not report the failure.
+Tracked in #14892.
+
 Backends that *want* to render a `pkg::` reference as a real
 component-system call site (XAML `<grid:Grid>`, future React
 `import` + `<Grid />`) can opt into a Path B emit by reading the
