@@ -7,7 +7,15 @@ layout RowHeaderGrid {
     }
     HostTableHead [column-headings] {
       Row [header-row] {
-        Text [row-corner] (content: "", table-cell-role: corner)
+        // Wrapped for the same reason the header cell below is (#14830): the
+        // colgroup's leading `Col (width: 48)` is threaded into the cell's
+        // modifier chain, and only a CONTAINER body receives it. As a bare
+        // Text this measured `size=0 x 24` at origin (0, 0) -- present in the
+        // semantics tree, correctly named, occupying no space, every
+        // accessibility gate passing on it.
+        Box [row-corner] (table-cell-role: corner) {
+          Text [row-corner-text] (content: "")
+        }
         For (each: slot: column-headers, as: h, index: ch) {
           // The Box is load-bearing, not decoration (#14829). A HostTable's
           // per-column width is threaded into the For body's modifier chain,
@@ -28,7 +36,12 @@ layout RowHeaderGrid {
     HostTableBody {
       For (each: slot: viewport-rows, as: row, index: r) {
         Row [data-row] {
-          Text [row-heading] (content: (rowHeaders[r]), table-cell-role: row-header)
+          // Same wrap, same reason (#14829): the row-heading column is the
+          // one the leading static `Col` describes, and a bare Text sizes to
+          // its own glyph rather than to the authored column width.
+          Box [row-heading] (table-cell-role: row-header) {
+            Text [row-heading-text] (content: (rowHeaders[r]))
+          }
           For (each: row, as: v, index: c) {
             Box [data-cell] (table-cell-role: data) {
               Cell (
