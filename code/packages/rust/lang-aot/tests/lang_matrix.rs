@@ -1673,6 +1673,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — equal path-independent tracked real snapshots may bound a
+    // plain real power while preserving runtime selector execution.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real gate, left, right, saved; left := 2.0; right := 2.0; saved := 6.0 ^ (if gate = 0.0 then left else right) + 6.0; gate := 1.0; left := 9.0; right := 9.0; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — finite arithmetic over initialized tracked local reals may
     // bound a power around a path-independent built-in result.
     Prog {
@@ -9950,6 +9959,31 @@ fn algol_standard_free_tracked_real_snapshot_powers_run_on_every_available_stand
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but standard-free tracked-real snapshot power did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_standard_free_conditional_real_snapshots_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("then left else right) + 6.0; gate := 1.0")
+        })
+        .expect("standard-free conditional real snapshots must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional real snapshots did not run"
             );
             continue;
         };
