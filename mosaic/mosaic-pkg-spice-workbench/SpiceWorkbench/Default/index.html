@@ -32,6 +32,19 @@
             <span style="color: #b91c1c; font-family: monospace">{{diagnostic}}</span>
           <!-- /mosaic-for -->
         </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicLabel}}</span>
+          <span style="color: #0f172a; font-weight: bold">{{schematicTitle}}</span>
+          <div style="display: flex; flex-direction: row; gap: 6px">
+            <!-- mosaic-for each="schematicRows" as="component" index="component-index" -->
+              <!-- emit "onSelectSchematicComponent" dropped: HTML is static -->
+              <button data-on-click="onSelectSchematicComponent" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px">{{component}}</button>
+            <!-- /mosaic-for -->
+          </div>
+          <span style="color: #0369a1; font-weight: bold">{{selectedSchematicLabel}}</span>
+          <!-- emit "onSynchronizeSchematic" dropped: HTML is static -->
+          <button data-on-click="onSynchronizeSchematic" style="background: #fef3c7; color: #92400e; border-width: 1px; border-color: #fcd34d; border-radius: 4px; padding: 8px">{{synchronizeSchematicLabel}}</button>
+        </div>
         <div style="display: flex; flex-direction: row; gap: 14px">
           <div style="display: flex; flex-direction: column; width: 30%; gap: 6px">
             <span style="font-size: 12px; font-weight: bold; color: #475569">{{analysisLabel}}</span>

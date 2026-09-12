@@ -18,8 +18,13 @@ const fallbackProps = {
   "resultRows": [],
   "resultText": "Sample ResultText",
   "runLabel": "Sample RunLabel",
+  "schematicLabel": "Sample SchematicLabel",
+  "schematicRows": [],
+  "schematicTitle": "Sample SchematicTitle",
   "selectedAnalysisLabel": "Sample SelectedAnalysisLabel",
+  "selectedSchematicLabel": "Sample SelectedSchematicLabel",
   "selectedWaveformLabel": "Sample SelectedWaveformLabel",
+  "synchronizeSchematicLabel": "Sample SynchronizeSchematicLabel",
   "waveformAxisLabel": "Sample WaveformAxisLabel",
   "waveformLabel": "Sample WaveformLabel",
   "waveformRows": [],
@@ -41,12 +46,19 @@ const emitPayloads = {
       "type": "number"
     }
   ],
+  "onSelectSchematicComponent": [
+    {
+      "name": "reference",
+      "type": "text"
+    }
+  ],
   "onSelectWaveform": [
     {
       "name": "index",
       "type": "number"
     }
-  ]
+  ],
+  "onSynchronizeSchematic": []
 };
 const MOSAIC_HOST_READY_EVENT = "mosaic-host-ready";
 const MOSAIC_HOST_INTENT_EVENT = "mosaic-host-intent";
