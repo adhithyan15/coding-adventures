@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed an opaque exact-binding check between metadata-derived RFC 8628
+  device profiles and registered public-client provider configurations.
 - Added confidential `ProviderConfig` derivation for the stack's closed,
   implemented authentication-method set. The exact method must be advertised
   by RFC 8414 metadata, PKCE `S256` and mix-up defense remain mandatory, and

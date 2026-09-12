@@ -8,10 +8,12 @@
 #![deny(missing_docs)]
 
 use coding_adventures_oauth::{
-    decode_device_token_poll_response, decode_token_response, prepare_device_token_poll,
-    prepare_token_refresh, DevicePollResult, DevicePollingSession, DeviceTokenPollRequest,
-    OAuthAuditSink, OAuthError, OAuthTraceId, ProviderConfig, ProviderId, TokenRefreshRequest,
-    TokenResponse, TokenResponseFormat, MAX_TOKEN_RESPONSE_BYTES,
+    decode_device_authorization_response, decode_device_token_poll_response, decode_token_response,
+    prepare_device_authorization, prepare_device_token_poll, prepare_token_refresh,
+    DeviceAuthorization, DeviceAuthorizationProfile, DeviceAuthorizationRequest, DevicePollResult,
+    DevicePollingSession, DeviceTokenPollRequest, OAuthAuditSink, OAuthError, OAuthTraceId,
+    ProviderConfig, ProviderId, TokenRefreshRequest, TokenResponse, TokenResponseFormat,
+    MAX_TOKEN_RESPONSE_BYTES,
 };
 use coding_adventures_oauth_credential_custody::{
     CredentialAuditSink, CredentialCustody, CredentialKey, CredentialMetadata, CredentialRevision,
@@ -145,6 +147,53 @@ impl Debug for TokenEndpointResponse {
     }
 }
 
+/// Bounded device-authorization endpoint response owned in wipe-on-drop storage.
+pub struct DeviceAuthorizationEndpointResponse {
+    status: u16,
+    content_type: String,
+    body: Zeroizing<Vec<u8>>,
+}
+
+impl DeviceAuthorizationEndpointResponse {
+    /// Construct a syntactically valid HTTP response boundary.
+    pub fn new(
+        status: u16,
+        content_type: impl Into<String>,
+        body: Zeroizing<Vec<u8>>,
+    ) -> Result<Self, BrokerError> {
+        let content_type = content_type.into();
+        if !(100..=599).contains(&status)
+            || content_type.is_empty()
+            || content_type.len() > 256
+            || !content_type.is_ascii()
+            || body.is_empty()
+            || body.len() > MAX_TOKEN_RESPONSE_BYTES
+        {
+            return Err(BrokerError::InvalidTransportResponse);
+        }
+        Ok(Self {
+            status,
+            content_type,
+            body,
+        })
+    }
+
+    fn into_parts(self) -> (u16, String, Zeroizing<Vec<u8>>) {
+        (self.status, self.content_type, self.body)
+    }
+}
+
+impl Debug for DeviceAuthorizationEndpointResponse {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("DeviceAuthorizationEndpointResponse")
+            .field("status", &self.status)
+            .field("content_type", &"<redacted>")
+            .field("body", &"<redacted>")
+            .finish()
+    }
+}
+
 /// Authorized provider-neutral token transport.
 pub trait OAuthTokenTransport {
     /// Send one already validated refresh request and return bounded owned bytes.
@@ -161,6 +210,15 @@ pub trait OAuthDeviceTokenTransport {
         &mut self,
         request: &DeviceTokenPollRequest,
     ) -> Result<TokenEndpointResponse, TokenTransportError>;
+}
+
+/// Authorized provider-neutral transport for RFC 8628 initiation.
+pub trait OAuthDeviceAuthorizationTransport {
+    /// Send one already validated device-authorization request.
+    fn send_device_authorization(
+        &mut self,
+        request: &DeviceAuthorizationRequest,
+    ) -> Result<DeviceAuthorizationEndpointResponse, TokenTransportError>;
 }
 
 /// One broker-mediated device poll result.
@@ -217,6 +275,10 @@ pub enum BrokerAuditAction {
     DevicePoll,
     /// Send one device-token request through the injected transport.
     DeviceTokenTransport,
+    /// Initiate one RFC 8628 device authorization operation.
+    DeviceAuthorization,
+    /// Send one device-authorization request through the injected transport.
+    DeviceAuthorizationTransport,
 }
 
 /// Closed privacy-safe broker result.
@@ -306,7 +368,7 @@ pub enum BrokerError {
     InvalidProviderData,
     /// The injected provider-data source failed without releasing diagnostics.
     ProviderDataSource,
-    /// A transport returned an impossible HTTP status.
+    /// A transport returned an impossible bounded HTTP response.
     InvalidTransportResponse,
     /// The provider has not been registered.
     ProviderNotRegistered,
@@ -629,6 +691,55 @@ impl<S: CredentialStore> OAuthBroker<S> {
         )
     }
 
+    /// Initiate one RFC 8628 device flow through an injected transport.
+    ///
+    /// The metadata-derived profile must exactly match a registered provider,
+    /// client, and token endpoint before protocol preparation or transport.
+    /// The caller retains UI, clock, waiting, and full-loop authority.
+    pub fn begin_device_authorization<T, A>(
+        &self,
+        profile: &DeviceAuthorizationProfile,
+        requested_scopes: &[&str],
+        trace: OAuthTraceId,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<DeviceAuthorization, BrokerError>
+    where
+        T: OAuthDeviceAuthorizationTransport,
+        A: OAuthBrokerAuditSink,
+    {
+        let provider = profile.provider().clone();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::DeviceAuthorization,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            let registered = self.registered_provider(&provider)?;
+            if !profile.is_bound_to(registered.config()) {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let request = prepare_device_authorization(profile, requested_scopes, trace)
+                .publish_then_release(audit)
+                .map_err(map_oauth_error)?;
+            let context = request.response_context();
+            let response = send_device_authorization_audited(transport, &request, audit)?;
+            let (status, content_type, body) = response.into_parts();
+            decode_device_authorization_response(context, status, &content_type, body)
+                .publish_then_release(audit)
+                .map_err(map_oauth_error)
+        })();
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::DeviceAuthorization,
+            result,
+        )
+    }
+
     fn poll_device_once_inner<T, A>(
         &self,
         session: DevicePollingSession,
@@ -809,6 +920,30 @@ fn send_refresh_audited<T: OAuthTokenTransport, A: BrokerAuditSink>(
         provider,
         trace,
         BrokerAuditAction::TokenTransport,
+        result,
+    )
+}
+
+fn send_device_authorization_audited<T: OAuthDeviceAuthorizationTransport, A: BrokerAuditSink>(
+    transport: &mut T,
+    request: &DeviceAuthorizationRequest,
+    audit: &mut A,
+) -> Result<DeviceAuthorizationEndpointResponse, BrokerError> {
+    publish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::DeviceAuthorizationTransport,
+        BrokerAuditOutcome::Attempted,
+    )?;
+    let result = transport
+        .send_device_authorization(request)
+        .map_err(|_| BrokerError::Transport);
+    finish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::DeviceAuthorizationTransport,
         result,
     )
 }
@@ -1034,6 +1169,53 @@ mod tests {
         }
     }
 
+    struct MockDeviceAuthorizationTransport {
+        response: Option<Result<DeviceAuthorizationEndpointResponse, TokenTransportError>>,
+        calls: usize,
+    }
+
+    impl MockDeviceAuthorizationTransport {
+        fn json(body: &str) -> Self {
+            Self {
+                response: Some(Ok(DeviceAuthorizationEndpointResponse::new(
+                    200,
+                    "application/json",
+                    Zeroizing::new(body.as_bytes().to_vec()),
+                )
+                .unwrap())),
+                calls: 0,
+            }
+        }
+
+        fn failed() -> Self {
+            Self {
+                response: Some(Err(TokenTransportError)),
+                calls: 0,
+            }
+        }
+    }
+
+    impl OAuthDeviceAuthorizationTransport for MockDeviceAuthorizationTransport {
+        fn send_device_authorization(
+            &mut self,
+            request: &DeviceAuthorizationRequest,
+        ) -> Result<DeviceAuthorizationEndpointResponse, TokenTransportError> {
+            self.calls += 1;
+            assert_eq!(request.provider().as_str(), "fixture");
+            assert_eq!(request.client_id(), "fixture-public-client");
+            assert_eq!(
+                request.endpoint(),
+                "https://device.fixture.example/authorize"
+            );
+            assert_eq!(request.content_type(), "application/x-www-form-urlencoded");
+            assert_eq!(
+                request.form_body(),
+                "client_id=fixture-public-client&scope=files.read"
+            );
+            self.response.take().unwrap_or(Err(TokenTransportError))
+        }
+    }
+
     struct MockProviderDataSource {
         response: Option<Result<Zeroizing<Vec<u8>>, ProviderDataSourceError>>,
         calls: usize,
@@ -1127,11 +1309,11 @@ mod tests {
         )
     }
 
-    fn device_session(
+    fn device_profile(
         name: &str,
         operation_trace: OAuthTraceId,
         audit: &mut RecordingAudit,
-    ) -> DevicePollingSession {
+    ) -> DeviceAuthorizationProfile {
         let issuer = format!("https://login.{name}.example/tenant");
         let metadata_request = prepare_authorization_server_metadata(
             ProviderId::new(name).unwrap(),
@@ -1160,9 +1342,16 @@ mod tests {
         )
         .publish_then_release(audit)
         .unwrap();
-        let profile =
-            DeviceAuthorizationProfile::from_metadata(&metadata, format!("{name}-public-client"))
-                .unwrap();
+        DeviceAuthorizationProfile::from_metadata(&metadata, format!("{name}-public-client"))
+            .unwrap()
+    }
+
+    fn device_session(
+        name: &str,
+        operation_trace: OAuthTraceId,
+        audit: &mut RecordingAudit,
+    ) -> DevicePollingSession {
+        let profile = device_profile(name, operation_trace, audit);
         let request = prepare_device_authorization(&profile, &["files.read"], operation_trace)
             .publish_then_release(audit)
             .unwrap();
@@ -1583,6 +1772,206 @@ mod tests {
             .oauth
             .iter()
             .any(|event| { event.outcome() == OAuthAuditOutcome::Succeeded }));
+    }
+
+    #[test]
+    fn device_authorization_is_registry_bound_and_audited_around_transport() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let mut setup_audit = RecordingAudit::default();
+        broker
+            .register_provider(policy("fixture", 300), trace(32), &mut setup_audit)
+            .unwrap();
+        let profile = device_profile("fixture", trace(32), &mut setup_audit);
+        let mut audit = RecordingAudit::default();
+        let mut transport = MockDeviceAuthorizationTransport::json(
+            r#"{
+                "device_code":"device-secret",
+                "user_code":"ABCD-EFGH",
+                "verification_uri":"https://device.fixture.example/activate",
+                "expires_in":900,
+                "interval":5
+            }"#,
+        );
+
+        let authorization = broker
+            .begin_device_authorization(
+                &profile,
+                &["files.read"],
+                trace(32),
+                &mut transport,
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(transport.calls, 1);
+        assert_eq!(authorization.polling().provider().as_str(), "fixture");
+        assert_eq!(authorization.polling().trace(), trace(32));
+        assert_eq!(authorization.verification().user_code(), "ABCD-EFGH");
+        assert_eq!(
+            audit
+                .broker
+                .iter()
+                .map(|event| (event.action(), event.outcome()))
+                .collect::<Vec<_>>(),
+            vec![
+                (
+                    BrokerAuditAction::DeviceAuthorization,
+                    BrokerAuditOutcome::Attempted,
+                ),
+                (
+                    BrokerAuditAction::DeviceAuthorizationTransport,
+                    BrokerAuditOutcome::Attempted,
+                ),
+                (
+                    BrokerAuditAction::DeviceAuthorizationTransport,
+                    BrokerAuditOutcome::Succeeded,
+                ),
+                (
+                    BrokerAuditAction::DeviceAuthorization,
+                    BrokerAuditOutcome::Succeeded,
+                ),
+            ]
+        );
+        assert_eq!(audit.oauth.len(), 2);
+        assert!(audit
+            .oauth
+            .iter()
+            .all(|event| { event.provider().as_str() == "fixture" && event.trace() == trace(32) }));
+    }
+
+    #[test]
+    fn device_authorization_binding_and_transport_audits_fail_closed() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let mut setup_audit = RecordingAudit::default();
+        let mismatched = ProviderConfig::new(
+            ProviderId::new("fixture").unwrap(),
+            "https://auth.fixture.example/authorize",
+            "https://token.fixture.example/token",
+            "different-public-client",
+            "http://127.0.0.1:49152/callback",
+        )
+        .unwrap()
+        .with_distinct_redirect_uri();
+        broker
+            .register_provider(
+                BrokerProvider::new(mismatched, TokenResponseFormat::Json, 300).unwrap(),
+                trace(33),
+                &mut setup_audit,
+            )
+            .unwrap();
+        let profile = device_profile("fixture", trace(33), &mut setup_audit);
+        let mut audit = RecordingAudit::default();
+        let mut transport = MockDeviceAuthorizationTransport::failed();
+        assert!(matches!(
+            broker.begin_device_authorization(
+                &profile,
+                &["files.read"],
+                trace(33),
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(transport.calls, 0);
+        assert!(audit.oauth.is_empty());
+
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(policy("fixture", 300), trace(34), &mut setup_audit)
+            .unwrap();
+        let profile = device_profile("fixture", trace(34), &mut setup_audit);
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(2),
+            ..RecordingAudit::default()
+        };
+        assert!(matches!(
+            broker.begin_device_authorization(
+                &profile,
+                &["files.read"],
+                trace(34),
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Audit)
+        ));
+        assert_eq!(transport.calls, 0);
+    }
+
+    #[test]
+    fn device_authorization_transport_failure_and_result_audit_are_closed() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let mut setup_audit = RecordingAudit::default();
+        broker
+            .register_provider(policy("fixture", 300), trace(35), &mut setup_audit)
+            .unwrap();
+        let profile = device_profile("fixture", trace(35), &mut setup_audit);
+        let mut audit = RecordingAudit::default();
+        let mut transport = MockDeviceAuthorizationTransport::failed();
+        assert!(matches!(
+            broker.begin_device_authorization(
+                &profile,
+                &["files.read"],
+                trace(35),
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Transport)
+        ));
+        assert_eq!(transport.calls, 1);
+        assert!(audit.broker.iter().any(|event| {
+            event.action() == BrokerAuditAction::DeviceAuthorizationTransport
+                && event.outcome() == BrokerAuditOutcome::Failed(BrokerFailureClass::Transport)
+        }));
+
+        let profile = device_profile("fixture", trace(36), &mut setup_audit);
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(3),
+            ..RecordingAudit::default()
+        };
+        let mut transport = MockDeviceAuthorizationTransport::json(
+            r#"{"device_code":"secret","user_code":"CODE","verification_uri":"https://device.fixture.example/activate","expires_in":900}"#,
+        );
+        assert!(matches!(
+            broker.begin_device_authorization(
+                &profile,
+                &["files.read"],
+                trace(36),
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Audit)
+        ));
+        assert_eq!(transport.calls, 1);
+        assert_eq!(audit.oauth.len(), 1);
+    }
+
+    #[test]
+    fn device_authorization_response_boundary_is_bounded_and_redacted() {
+        assert!(DeviceAuthorizationEndpointResponse::new(
+            99,
+            "application/json",
+            Zeroizing::new(vec![1]),
+        )
+        .is_err());
+        assert!(DeviceAuthorizationEndpointResponse::new(
+            200,
+            "application/json",
+            Zeroizing::new(vec![0; MAX_TOKEN_RESPONSE_BYTES + 1]),
+        )
+        .is_err());
+        let response = DeviceAuthorizationEndpointResponse::new(
+            200,
+            "application/json",
+            Zeroizing::new(b"device-secret".to_vec()),
+        )
+        .unwrap();
+        let debug = format!("{response:?}");
+        assert!(!debug.contains("device-secret"));
+        assert!(!debug.contains("application/json"));
     }
 
     #[test]

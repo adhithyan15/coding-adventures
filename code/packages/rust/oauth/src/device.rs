@@ -76,6 +76,17 @@ impl DeviceAuthorizationProfile {
     pub fn provider(&self) -> &ProviderId {
         &self.provider
     }
+
+    /// Return whether this profile exactly matches one registered public client.
+    ///
+    /// The metadata-derived endpoints and client identity stay opaque while a
+    /// broker can reject cross-provider or cross-client initiation before
+    /// request preparation or transport.
+    pub fn is_bound_to(&self, config: &ProviderConfig) -> bool {
+        self.provider == config.provider
+            && self.client_id == config.client_id
+            && self.token_endpoint == config.token_endpoint
+    }
 }
 
 impl Debug for DeviceAuthorizationProfile {
@@ -948,28 +959,20 @@ mod tests {
     }
 
     #[test]
-    fn opaque_polling_session_checks_every_provider_config_binding() {
+    fn opaque_device_state_checks_every_provider_config_binding() {
+        let profile = profile();
         let session = polling_session(5);
-        assert!(session.is_bound_to(&provider_config(
-            "fixture",
-            "public/client",
-            "https://login.example/token",
-        )));
-        assert!(!session.is_bound_to(&provider_config(
-            "other",
-            "public/client",
-            "https://login.example/token",
-        )));
-        assert!(!session.is_bound_to(&provider_config(
-            "fixture",
-            "other-client",
-            "https://login.example/token",
-        )));
-        assert!(!session.is_bound_to(&provider_config(
-            "fixture",
-            "public/client",
-            "https://other.example/token",
-        )));
+        let matching = provider_config("fixture", "public/client", "https://login.example/token");
+        assert!(profile.is_bound_to(&matching));
+        assert!(session.is_bound_to(&matching));
+        for mismatched in [
+            provider_config("other", "public/client", "https://login.example/token"),
+            provider_config("fixture", "other-client", "https://login.example/token"),
+            provider_config("fixture", "public/client", "https://other.example/token"),
+        ] {
+            assert!(!profile.is_bound_to(&mismatched));
+            assert!(!session.is_bound_to(&mismatched));
+        }
     }
 
     #[test]

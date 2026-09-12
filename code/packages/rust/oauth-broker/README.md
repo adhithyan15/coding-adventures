@@ -20,10 +20,10 @@ redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
 For one provider/account key it can store an already audited initial token
 response, release a still-usable access token to exactly one closure, or refresh
-an expiring token through an injected transport. It also composes exactly one
-externally scheduled RFC 8628 device-token poll through a separate injected
-transport while preserving the opaque polling session after a transient
-transport failure. Refresh-token disclosure,
+an expiring token through an injected transport. It also initiates an RFC 8628
+device authorization request and composes exactly one externally scheduled
+device-token poll through separate injected transports while preserving the
+opaque polling session after a transient poll transport failure. Refresh-token disclosure,
 request preparation, transport attempt/result, response decoding, credential
 release, compare-and-swap rotation, metadata reads, and final access-token
 release are all durable-audit gates.
@@ -42,8 +42,8 @@ dependency are sibling packages in this repository.
 - concrete HTTPS, TLS, or socket authority;
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
-- account identity proof, listing, detach/revocation, device authorization
-  initiation UI, polling schedules, and full device-flow loops;
+- account identity proof, listing, detach/revocation, device authorization UI,
+  polling schedules, and full device-flow loops;
 - confidential-client secrets, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added exact registry-bound RFC 8628 device authorization initiation through
+  an injected transport, with provider/trace audit gates around orchestration,
+  transport effect and result, protocol preparation, and response release.
 - Added an injected static provider-data source boundary with durable
   provider/trace audit before each read, exact requested-provider binding before
   registry mutation, closed source errors, zeroizing profile bytes, and a
