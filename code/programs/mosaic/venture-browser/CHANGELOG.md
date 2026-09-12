@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Add shared advanced choice/range semantics: multi-select range and toggle,
+  disabled option/optgroup filtering, checkbox indeterminate state, wrapping
+  radio-group arrows, normalized slider stepping, reusable accessibility
+  state/actions, and live successful-control serialization.
+
 - Add shared typed input value semantics: live Unicode `maxlength`, email/URL
   and numeric validity, aligned min/max/step number changes, number-selection
   restrictions, reusable accessibility state, and deterministic submission

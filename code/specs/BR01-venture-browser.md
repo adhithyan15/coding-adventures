@@ -165,7 +165,10 @@ events without taking ownership of value, selection, or history policy. The
 same reducer now enforces live Unicode-scalar `maxlength`, validates email and
 absolute URL syntax, parses and steps bounded numbers, restricts numeric public
 selection, and publishes reusable value diagnostics and accessibility range
-metadata. The next P1 phase is advanced choice and range-control semantics.
+metadata. Advanced choice/range convergence adds ordered multi-selection,
+disabled-option filtering, checkbox mixed state, scoped radio arrow movement,
+normalized sliders, reusable accessibility actions, and live successful-control
+serialization. The next P1 phase is date/time/color control value semantics.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do

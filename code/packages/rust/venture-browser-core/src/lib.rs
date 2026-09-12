@@ -10,9 +10,9 @@ pub use browser_bookmarks::{
     BookmarkUrl, MemoryBookmarkRepository,
 };
 pub use browser_form_controls::{
-    BrowserControlModel, ControlAccessibilityAction, ControlClipboardPayload,
-    ControlEditorPresentation, ControlEditorState, ControlEffect, ControlKey,
-    ControlNavigationUnit, ControlRect, ControlSelection, ControlTextMetrics,
+    BrowserControlModel, ControlAccessibilityAction, ControlChoiceOptionState, ControlChoiceState,
+    ControlClipboardPayload, ControlEditorPresentation, ControlEditorState, ControlEffect,
+    ControlKey, ControlNavigationUnit, ControlRect, ControlSelection, ControlTextMetrics,
     ControlValueDiagnostic, ControlValueState,
 };
 use browser_form_submission::{plan_activation, plan_implicit_submission};
@@ -1366,6 +1366,16 @@ impl BrowserSession {
         self.controls
             .focused_key()
             .and_then(|key| self.controls.value_state(key))
+    }
+
+    pub fn control_choice_state(&self, key: &str) -> Option<ControlChoiceState> {
+        self.controls.choice_state(key)
+    }
+
+    pub fn focused_control_choice_state(&self) -> Option<ControlChoiceState> {
+        self.controls
+            .focused_key()
+            .and_then(|key| self.controls.choice_state(key))
     }
 
     pub fn form_diagnostics(&self) -> &[FormDiagnostic] {
@@ -5054,6 +5064,89 @@ mod tests {
                 .control_value_state("control:0:id:count")
                 .unwrap()
                 .numeric_value,
+            Some(6.0)
+        );
+    }
+
+    #[test]
+    fn session_routes_choice_and_range_actions_through_shared_reflow() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<select id='tags' multiple><option value='a' selected>A</option><option value='b' disabled>B</option><option value='c'>C</option></select><input id='mixed' type='checkbox'><input id='level' type='range' min='0' max='10' step='2' value='4'>".to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(320.0, 180.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/", 180.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let regions = session.viewport().unwrap().page().paint.controls.clone();
+
+        let select = regions
+            .iter()
+            .find(|region| region.key.contains("tags"))
+            .unwrap();
+        session
+            .control_pointer_down(select.x + 1.0, select.y + 1.0, &pipeline)
+            .unwrap();
+        session
+            .control_accessibility_action(
+                ControlAccessibilityAction::SelectOption {
+                    index: 2,
+                    extend: false,
+                    toggle: true,
+                },
+                &pipeline,
+            )
+            .unwrap();
+        let select_state = session.focused_control_choice_state().unwrap();
+        assert_eq!(select_state.role, "listbox");
+        assert!(select_state.options[1].disabled);
+        assert!(select_state.options[2].selected);
+
+        let checkbox = regions
+            .iter()
+            .find(|region| region.key.contains("mixed"))
+            .unwrap();
+        session
+            .control_pointer_down(checkbox.x + 1.0, checkbox.y + 1.0, &pipeline)
+            .unwrap();
+        session
+            .control_accessibility_action(
+                ControlAccessibilityAction::SetIndeterminate(true),
+                &pipeline,
+            )
+            .unwrap();
+        assert!(
+            session
+                .focused_control_choice_state()
+                .unwrap()
+                .indeterminate
+        );
+
+        let range = regions
+            .iter()
+            .find(|region| region.key.contains("level"))
+            .unwrap();
+        session
+            .control_pointer_down(range.x + 1.0, range.y + 1.0, &pipeline)
+            .unwrap();
+        session
+            .control_accessibility_action(ControlAccessibilityAction::Increment, &pipeline)
+            .unwrap();
+        assert_eq!(
+            session.focused_control_choice_state().unwrap().value,
             Some(6.0)
         );
     }

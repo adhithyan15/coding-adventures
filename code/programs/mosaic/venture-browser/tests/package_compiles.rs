@@ -558,6 +558,42 @@ fn typed_input_fixture_uses_the_shared_host_neutral_value_contract() {
 }
 
 #[test]
+fn choice_range_fixture_uses_the_shared_host_neutral_contract() {
+    use venture_browser_core::{BrowserControlModel, ControlAccessibilityAction, ControlKey};
+
+    let tree = coding_adventures_html_parser::parse_browser_render_tree(
+        "<select id='tags' multiple><option value='a' selected>A</option>\
+         <optgroup disabled><option value='b'>B</option></optgroup>\
+         <option value='c'>C</option></select>\
+         <input id='check' type='checkbox'>\
+         <input id='level' type='range' min='0' max='10' step='2' value='3'>",
+    )
+    .expect("parse deterministic choice/range fixture");
+    let mut controls = BrowserControlModel::from_render_tree(&tree);
+
+    controls.focus("control:0:id:tags");
+    controls.key_down_with_shift(ControlKey::ArrowDown, true);
+    assert_eq!(
+        controls.selected_values("control:0:id:tags").unwrap(),
+        vec!["a", "c"]
+    );
+    assert!(controls.choice_state("control:0:id:tags").unwrap().options[1].disabled);
+
+    controls.focus("control:1:id:check");
+    controls.accessibility_action(ControlAccessibilityAction::SetIndeterminate(true));
+    controls.accessibility_action(ControlAccessibilityAction::Toggle);
+    let checkbox = controls.choice_state("control:1:id:check").unwrap();
+    assert_eq!(checkbox.checked, Some(true));
+    assert!(!checkbox.indeterminate);
+
+    controls.focus("control:2:id:level");
+    controls.accessibility_action(ControlAccessibilityAction::Increment);
+    let range = controls.choice_state("control:2:id:level").unwrap();
+    assert_eq!(range.role, "slider");
+    assert_eq!(range.value, Some(6.0));
+}
+
+#[test]
 fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
     let build = read_package_file("BUILD");
     let build_windows = read_package_file("BUILD_windows");

@@ -233,6 +233,9 @@ fn validate_controls(
                             && !candidate.disabled
                     },
                 ),
+                ControlKind::Select => model
+                    .selected_values(&binding.key)
+                    .is_none_or(|values| values.is_empty()),
                 _ => control.value.is_empty(),
             };
             if missing {
@@ -395,11 +398,31 @@ fn append_control_entries(
         _ => {}
     }
     let values = match source.control_type.as_str() {
-        "select" if source.multiple => source.selected_options.clone(),
         "select" => dynamic
             .as_ref()
-            .map(|(_, control, _)| vec![control.value.clone()])
-            .unwrap_or_else(|| source.selected_options.clone()),
+            .map(|(_, control, _)| {
+                control
+                    .selected_indices
+                    .iter()
+                    .filter(|index| {
+                        !control
+                            .option_disabled
+                            .get(**index)
+                            .copied()
+                            .unwrap_or(false)
+                    })
+                    .filter_map(|index| control.options.get(*index))
+                    .cloned()
+                    .collect()
+            })
+            .unwrap_or_else(|| {
+                source
+                    .option_items
+                    .iter()
+                    .filter(|option| option.selected && !option.disabled)
+                    .map(|option| option.value.clone())
+                    .collect()
+            }),
         "checkbox" | "radio" => vec![source.value.clone().unwrap_or_else(|| "on".into())],
         "submit" => vec![source.value.clone().unwrap_or_default()],
         "file" => source.submission_values.clone(),
@@ -633,6 +656,43 @@ mod tests {
                 value: "caf\u{e9} & tea".into(),
             }]),
             "query=caf%C3%A9+%26+tea"
+        );
+    }
+
+    #[test]
+    fn multi_select_serialization_uses_live_enabled_selections() {
+        let url = "http://example.test/form";
+        let (mut model, document) = model_and_document(
+            "<form><select id='tags' name='tag' multiple required>\
+             <option value='a' selected>A</option>\
+             <optgroup disabled><option value='b' selected>B</option></optgroup>\
+             <option value='c'>C</option><option value='d' disabled>D</option>\
+             </select><button id='go'>Go</button></form>",
+            url,
+        );
+        model.select_option("control:0:id:tags", 2, false, true);
+        assert_eq!(
+            model.select_option("control:0:id:tags", 3, false, true),
+            None
+        );
+
+        let FormActivation::Navigate(request) =
+            plan_activation(&document, &model, "control:1:id:go", url).unwrap()
+        else {
+            panic!("expected navigation");
+        };
+        assert_eq!(
+            request.entries,
+            vec![
+                FormEntry {
+                    name: "tag".into(),
+                    value: "a".into(),
+                },
+                FormEntry {
+                    name: "tag".into(),
+                    value: "c".into(),
+                },
+            ]
         );
     }
 }
