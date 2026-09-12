@@ -928,10 +928,11 @@ fn parse_html_fragment_for_context_parts_with_diagnostics_and_options(
     });
 
     let lexer_diagnostics = parser.reconcile_cdata_lexer_diagnostics(lexer.diagnostics());
+    let html_fragment_tail_misc = std::mem::take(&mut parser.html_fragment_tail_misc);
     let document = parser.finish_document();
 
     Ok(FragmentOutput {
-        nodes: marked_fragment_context_nodes(document),
+        nodes: marked_fragment_context_nodes(document, html_fragment_tail_misc),
         lexer_diagnostics,
         parser_diagnostics: parser.diagnostics,
     })
@@ -4521,6 +4522,7 @@ pub struct HtmlParser {
     explicit_body_end_seen: bool,
     explicit_body_start_seen: bool,
     explicit_html_end_seen: bool,
+    html_fragment_tail_misc: Vec<Node>,
     document_tail_mode: DocumentTailMode,
     document_tail_reentered_in_body: bool,
     template_insertion_modes: Vec<TemplateInsertionMode>,
@@ -4555,6 +4557,7 @@ impl Default for HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
+            html_fragment_tail_misc: Vec::new(),
             document_tail_mode: DocumentTailMode::InBody,
             document_tail_reentered_in_body: false,
             template_insertion_modes: Vec::new(),
@@ -4620,6 +4623,7 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
+            html_fragment_tail_misc: Vec::new(),
             document_tail_mode: DocumentTailMode::InBody,
             document_tail_reentered_in_body: false,
             template_insertion_modes: Vec::new(),
@@ -4669,6 +4673,7 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: matches!(context_element, "body"),
             explicit_html_end_seen: false,
+            html_fragment_tail_misc: Vec::new(),
             document_tail_mode: DocumentTailMode::InBody,
             document_tail_reentered_in_body: false,
             template_insertion_modes: (context_element == "template")
@@ -5012,6 +5017,14 @@ impl HtmlParser {
             && !self.is_fragment
         {
             self.document_tail_mode = DocumentTailMode::AfterHtml;
+        } else if matches!(self.document_tail_mode, DocumentTailMode::AfterBody)
+            && self.is_fragment
+            && self.open_fragment_context_name() == Some("html")
+            && !self.document_has_body_element()
+            && matches!(token, Token::StartTag { name, .. } if name == "frameset")
+        {
+            self.document_tail_mode = DocumentTailMode::InBody;
+            self.document_tail_reentered_in_body = false;
         } else if !allowed {
             let mode = self.document_tail_mode;
             self.diagnostics.push(
@@ -6562,6 +6575,13 @@ impl HtmlParser {
     }
 
     fn append_comment_or_processing_instruction(&mut self, node: Node) {
+        if self.is_fragment
+            && self.open_fragment_context_name() == Some("html")
+            && matches!(self.document_tail_mode, DocumentTailMode::AfterBody)
+        {
+            self.html_fragment_tail_misc.push(node);
+            return;
+        }
         let active_fostered_anchor = self
             .pending_formatting_reconstruction
             .first()
@@ -6695,9 +6715,19 @@ impl HtmlParser {
         if self.open_elements.is_empty()
             || (self.current_element_is("html") && !self.explicit_body_end_seen)
         {
-            if let Some(body_children) = children_at_path_mut(&mut self.document.children, &[0, 1])
-                .filter(|children| !children.is_empty())
-            {
+            let body_children = self.document.children.iter_mut().find_map(|node| {
+                let Node::Element(html) = node else {
+                    return None;
+                };
+                html.children.iter_mut().find_map(|child| {
+                    let Node::Element(body) = child else {
+                        return None;
+                    };
+                    (body.name == "body" && !body.children.is_empty())
+                        .then_some(&mut body.children)
+                })
+            });
+            if let Some(body_children) = body_children {
                 body_children.push(node);
                 return;
             }
@@ -7674,16 +7704,12 @@ impl HtmlParser {
     }
 
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
-        let current_is_authored_html_head = self
+        let current_is_html_head = self
             .open_elements
             .last()
             .and_then(|path| element_ref_at_path(&self.document, path))
-            .is_some_and(|element| {
-                element.namespace.is_none()
-                    && !has_fragment_context_marker(element)
-                    && element.name == "head"
-            });
-        if starts_body_after_head(incoming_name) && current_is_authored_html_head {
+            .is_some_and(|element| element.namespace.is_none() && element.name == "head");
+        if starts_body_after_head(incoming_name) && current_is_html_head {
             self.pop_current_if(|name| name == "head");
         }
     }
@@ -7693,8 +7719,24 @@ impl HtmlParser {
             self.append_text_to_current("</script>".to_string());
             return;
         }
+        if name == "body"
+            && self.is_fragment
+            && self.open_fragment_context_name() == Some("html")
+            && !self.document_has_body_element()
+        {
+            self.document_tail_mode = DocumentTailMode::AfterBody;
+            self.document_tail_reentered_in_body = false;
+            self.explicit_body_end_seen = true;
+            return;
+        }
         let suspend_after_end_tag = name == "script"
             && self.current_script_requests_document_root_table_replacement();
+        let targets_marked_html_context =
+            name == "html" && self.open_marked_fragment_shell_element_matches(name);
+        if targets_marked_html_context {
+            self.document_tail_mode = DocumentTailMode::AfterBody;
+            self.document_tail_reentered_in_body = false;
+        }
         if (name != "html" && self.current_element_is_marked_fragment_context(name))
             || self.open_marked_fragment_shell_element_matches(name)
         {
@@ -7710,6 +7752,19 @@ impl HtmlParser {
         let mut in_foreign_content = self.current_namespace().is_some()
             && !self.current_node_is_svg_html_integration_point()
             && !self.current_node_is_mathml_integration_point();
+        if !in_foreign_content
+            && self.current_namespace().is_none()
+            && self.non_current_foreign_scope_boundary_matches(name)
+        {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-non-current-end-tag",
+                    format!("end tag `</{name}>` was blocked by its foreign scope boundary"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return;
+        }
         if self.current_namespace().is_none()
             && self.has_open_foreign_integration_point()
             && is_adoption_agency_element(name)
@@ -11257,16 +11312,24 @@ impl HtmlParser {
         if element_at_path(&self.document, &html_path) != Some("html") {
             return;
         }
-        let Some(html) = element_ref_at_path(&self.document, &html_path) else {
+        let Some(html) = element_at_path_mut(&mut self.document, &html_path) else {
             return;
         };
-        let Some(body_index) = html
+        let body_index = html
             .children
             .iter()
             .position(|node| matches!(node, Node::Element(element) if element.name == "body"))
-        else {
-            return;
-        };
+            .unwrap_or_else(|| {
+                if !html.children.iter().any(
+                    |node| matches!(node, Node::Element(element) if element.name == "head"),
+                ) {
+                    html.children
+                        .push(Node::element("head".to_string(), Vec::new()));
+                }
+                html.children
+                    .push(Node::element("body".to_string(), Vec::new()));
+                html.children.len() - 1
+            });
         let mut body_path = html_path;
         body_path.push(body_index);
         self.open_elements.push(body_path);
@@ -11485,6 +11548,24 @@ impl HtmlParser {
             .skip(element_index + 1)
             .any(|path| {
                 element_at_path(&self.document, path).is_some_and(is_special_scope_boundary_element)
+            })
+    }
+
+    fn non_current_foreign_scope_boundary_matches(&self, name: &str) -> bool {
+        self.open_elements
+            .iter()
+            .enumerate()
+            .rfind(|(_, path)| {
+                element_ref_at_path(&self.document, path).is_some_and(|element| {
+                    !has_fragment_context_marker(element)
+                        && element.namespace.is_some()
+                        && element.name.eq_ignore_ascii_case(name)
+                })
+            })
+            .is_some_and(|(index, path)| {
+                index + 1 < self.open_elements.len()
+                    && element_ref_at_path(&self.document, path)
+                        .is_some_and(is_ordinary_scope_boundary)
             })
     }
 
@@ -12644,18 +12725,14 @@ fn rfind_script_end_marker(haystack: &str) -> Option<(usize, usize)> {
                 }
             }
             Some(b'/') => {
-                let mut cursor = after_name + 1;
-                while bytes
-                    .get(cursor)
-                    .is_some_and(|byte| byte.is_ascii_whitespace())
+                if let Some(close) = find_tag_close_ignoring_quoted_text(haystack, after_name + 1) {
+                    return Some((relative_start, close + 1));
+                }
+                if haystack[after_name + 1..]
+                    .bytes()
+                    .all(|byte| byte.is_ascii_whitespace())
                 {
-                    cursor += 1;
-                }
-                if cursor == haystack.len() {
                     return Some((relative_start, haystack.len()));
-                }
-                if bytes.get(cursor) == Some(&b'>') {
-                    return Some((relative_start, cursor + 1));
                 }
             }
             _ => {}
@@ -13184,7 +13261,10 @@ fn fragment_initial_lex_context(
     Some(HtmlLexContext::new(state))
 }
 
-fn marked_fragment_context_nodes(mut document: Document) -> Vec<Node> {
+fn marked_fragment_context_nodes(
+    mut document: Document,
+    html_fragment_tail_misc: Vec<Node>,
+) -> Vec<Node> {
     let Some(marker_path) = find_fragment_context_marker_path(document.children.as_slice()) else {
         return body_fragment_nodes(document);
     };
@@ -13197,7 +13277,15 @@ fn marked_fragment_context_nodes(mut document: Document) -> Vec<Node> {
             return Vec::new();
         };
         strip_fragment_context_markers(&mut html.children);
-        move_leading_html_fragment_misc_after_body(&mut html.children);
+        if !html_fragment_tail_misc.is_empty() {
+            let insertion_index = html
+                .children
+                .iter()
+                .position(|node| matches!(node, Node::Element(element) if element.name == "body"))
+                .map_or(html.children.len(), |body_index| body_index + 1);
+            html.children
+                .splice(insertion_index..insertion_index, html_fragment_tail_misc);
+        }
         return std::mem::take(&mut html.children)
             .into_iter()
             .filter(|node| !matches!(node, Node::DocumentType(_)))
@@ -13205,11 +13293,27 @@ fn marked_fragment_context_nodes(mut document: Document) -> Vec<Node> {
     }
 
     if marker_name == "head" {
-        let Some(head) = element_at_path_mut(&mut document, &marker_path) else {
+        let Some(html) = element_at_path_mut(&mut document, &marker_path[..marker_path.len() - 1])
+        else {
             return Vec::new();
         };
-        strip_fragment_context_markers(&mut head.children);
-        return std::mem::take(&mut head.children)
+        let mut fragment = Vec::new();
+        for child in std::mem::take(&mut html.children) {
+            match child {
+                Node::Element(mut element)
+                    if (element.name == "head" && has_fragment_context_marker(&element))
+                        || element.name == "body" =>
+                {
+                    fragment.append(&mut element.children);
+                }
+                Node::Comment(_) | Node::ProcessingInstruction(_) | Node::Text(_) => {
+                    fragment.push(child);
+                }
+                _ => {}
+            }
+        }
+        strip_fragment_context_markers(&mut fragment);
+        return fragment
             .into_iter()
             .filter(|node| !matches!(node, Node::DocumentType(_)))
             .collect();
@@ -13320,32 +13424,6 @@ fn strip_fragment_context_markers(nodes: &mut [Node]) {
             .attributes
             .retain(|attribute| attribute.name != FRAGMENT_CONTEXT_MARKER);
         strip_fragment_context_markers(&mut element.children);
-    }
-}
-
-fn move_leading_html_fragment_misc_after_body(nodes: &mut Vec<Node>) {
-    let body_index = nodes
-        .iter()
-        .position(|node| matches!(node, Node::Element(element) if element.name == "body"));
-    let Some(body_index) = body_index else {
-        return;
-    };
-
-    let mut leading_misc = Vec::new();
-    while matches!(
-        nodes.first(),
-        Some(Node::Comment(_) | Node::ProcessingInstruction(_) | Node::Text(_))
-    ) {
-        leading_misc.push(nodes.remove(0));
-    }
-    if leading_misc.is_empty() {
-        return;
-    }
-
-    let body_index = body_index.saturating_sub(leading_misc.len());
-    let insert_at = body_index + 1;
-    for (offset, node) in leading_misc.into_iter().enumerate() {
-        nodes.insert(insert_at + offset, node);
     }
 }
 
@@ -13686,7 +13764,7 @@ fn starts_body_after_head(name: &str) -> bool {
 
 fn is_ignorable_before_body(node: &Node) -> bool {
     match node {
-        Node::Text(text) => text.data.chars().all(char::is_whitespace),
+        Node::Text(text) => text.data.chars().all(is_html_whitespace),
         Node::Comment(_) | Node::ProcessingInstruction(_) => true,
         _ => false,
     }
@@ -13695,7 +13773,7 @@ fn is_ignorable_before_body(node: &Node) -> bool {
 fn is_body_content_node(node: &Node) -> bool {
     match node {
         Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_) => false,
-        Node::Text(text) => !text.data.chars().all(char::is_whitespace),
+        Node::Text(text) => !text.data.chars().all(is_html_whitespace),
         Node::Element(_) => true,
     }
 }
@@ -37788,10 +37866,14 @@ mod tests {
         let direct_close = parse_html("<!doctype html><math><mtext>A</math>B").unwrap();
         assert_eq!(body(&direct_close).children.last(), Some(&Node::text("B")));
 
-        let integration_close =
+        let blocked_integration_close =
             parse_html("<!doctype html><math><mtext><span>A</mtext>B").unwrap();
-        let math = element(&body(&integration_close).children[0]);
-        assert_eq!(math.children.last(), Some(&Node::text("B")));
+        let span = find_first_element_in_nodes(
+            &body(&blocked_integration_close).children,
+            "span",
+        )
+        .unwrap();
+        assert_eq!(span.children, vec![Node::text("AB")]);
 
         let fragment_source = "<math><mtext><span>A</math>B";
         let fragment = parse_html_fragment_for_context_with_diagnostics(
@@ -45138,6 +45220,50 @@ mod tests {
     }
 
     #[test]
+    fn foreign_integration_boundaries_block_non_current_matching_end_tags() {
+        let boundaries = [
+            ("math", "mi", "mi"),
+            ("math", "mo", "mo"),
+            ("math", "mn", "mn"),
+            ("math", "ms", "ms"),
+            ("math", "mtext", "mtext"),
+            (
+                "math",
+                "annotation-xml encoding=\"text/html\"",
+                "annotation-xml",
+            ),
+            (
+                "math",
+                "annotation-xml encoding=\"application/xhtml+xml\"",
+                "annotation-xml",
+            ),
+            ("svg", "foreignObject", "foreignObject"),
+            ("svg", "desc", "desc"),
+            ("svg", "title", "title"),
+        ];
+
+        for (root, start, end) in boundaries {
+            for descendant_name in ["b", "span"] {
+                let source = format!(
+                    "<{root}><{start}><{descendant_name}>A</{end}>B</{root}>C"
+                );
+                let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+                let boundary = find_first_element_in_nodes(&fragment, end).unwrap();
+                let descendant = element(&boundary.children[0]);
+                assert_eq!(descendant.name, descendant_name, "source {source:?}");
+                assert_eq!(element_text_content(descendant), "ABC", "source {source:?}");
+            }
+
+            let control = format!("<{root}><{start}>A</{end}>B</{root}>C");
+            let fragment = parse_html_fragment_for_context(&control, "div").unwrap();
+            let foreign_root = element(&fragment[0]);
+            assert_eq!(element_text_content(element(&foreign_root.children[0])), "A");
+            assert_eq!(foreign_root.children[1], Node::text("B"));
+            assert_eq!(fragment[1], Node::text("C"));
+        }
+    }
+
+    #[test]
     fn option_group_starts_only_close_current_select_items() {
         let source = "<!doctype html><!--é-->\r\n<select><option id=outer><div>A<option id=nested>B</select>";
         let document = parse_html(source).unwrap();
@@ -47063,6 +47189,35 @@ mod tests {
     }
 
     #[test]
+    fn non_ascii_whitespace_keeps_late_head_content_in_the_body() {
+        let tags = [
+            ("title", "<title id=x>T</title>Z"),
+            ("style", "<style id=x>.a{color:red}</style>Z"),
+            ("meta", "<meta id=x name=a content=b>Z"),
+            ("base", "<base id=x href=/x>Z"),
+        ];
+
+        for marker in ['\u{00A0}', '\u{2003}', '\u{3000}'] {
+            for (name, tag) in tags {
+                let source = format!("{marker}{tag}");
+                let document = parse_html(&source).unwrap();
+                assert!(
+                    find_element_by_id(&head(&document).children, "x").is_none(),
+                    "source {source:?}"
+                );
+                let late_head = find_element_by_id(&body(&document).children, "x").unwrap();
+                assert_eq!(late_head.name, name, "source {source:?}");
+            }
+        }
+
+        for (name, tag) in tags {
+            let document = parse_html(&format!(" {tag}")).unwrap();
+            let head_content = find_element_by_id(&head(&document).children, "x").unwrap();
+            assert_eq!(head_content.name, name);
+        }
+    }
+
+    #[test]
     fn treats_non_ascii_whitespace_as_anchor_content_before_paragraphs() {
         for marker in ['\u{00A0}', '\u{2003}', '\u{3000}'] {
             let source = format!("<!doctype html><!--é-->\r\n<a>{marker}<p>x");
@@ -48063,6 +48218,28 @@ mod tests {
                 "end tag `</script>` did not match an open element"
             )]
         );
+    }
+
+    #[test]
+    fn vertical_tab_does_not_delimit_a_script_end_tag_name() {
+        let vertical_tab = parse_html("<script id=x>A</script\u{000B}>B").unwrap();
+        let script = element(&head(&vertical_tab).children[0]);
+        assert_eq!(script.children, vec![Node::text("A</script\u{000B}>B")]);
+        assert!(body(&vertical_tab).children.is_empty());
+
+        for source in [
+            "<script id=x>A</script\u{000C}>B",
+            "<script id=x>A</script\t>B",
+            "<script id=x>A</script/\u{000B}>B",
+            "<script id=x>A</script/\u{000C}>B",
+            "<script id=x>A</script/x>B",
+            "<script id=x>A</script/x=\">\">B",
+        ] {
+            let document = parse_html(source).unwrap();
+            let script = element(&head(&document).children[0]);
+            assert_eq!(script.children, vec![Node::text("A")], "source {source:?}");
+            assert_eq!(body(&document).children, vec![Node::text("B")]);
+        }
     }
 
     #[test]
@@ -62030,4 +62207,119 @@ mod tests {
             None
         );
     }
+
+    #[test]
+    fn head_fragments_retain_content_parsed_after_non_ascii_whitespace() {
+        for marker in ["\u{a0}", " "] {
+            let title = parse_html_fragment_for_context(
+                &format!("{marker}<title id=x>T</title>Z"),
+                "head",
+            )
+            .unwrap();
+            assert_eq!(title.len(), 3, "marker {marker:?}");
+            assert_eq!(title[0], Node::text(marker));
+            assert_eq!(element(&title[1]).name, "title");
+            assert_eq!(element(&title[1]).attribute("id"), Some("x"));
+            assert_eq!(element_text(element(&title[1])), "T");
+            assert_eq!(title[2], Node::text("Z"));
+
+            let meta = parse_html_fragment_for_context(
+                &format!("{marker}<meta id=x name=a content=b>Z"),
+                "head",
+            )
+            .unwrap();
+            assert_eq!(meta.len(), 3, "marker {marker:?}");
+            assert_eq!(meta[0], Node::text(marker));
+            assert_eq!(element(&meta[1]).name, "meta");
+            assert_eq!(element(&meta[1]).attribute("id"), Some("x"));
+            assert_eq!(meta[2], Node::text("Z"));
+
+        }
+    }
+
+    #[test]
+    fn shell_starts_exit_a_seeded_head_fragment_context() {
+        let body = parse_html_fragment_for_context("<body class=x><p>Y</p>", "head").unwrap();
+        assert_eq!(body.len(), 1);
+        assert_eq!(element(&body[0]).name, "p");
+        assert_eq!(element_text(element(&body[0])), "Y");
+
+        let shell = parse_html_fragment_for_context("<html><body>X", "head").unwrap();
+        assert_eq!(shell, vec![Node::text("X")]);
+
+        let frameset =
+            parse_html_fragment_for_context("<frameset><frame name=x>", "head").unwrap();
+        assert!(frameset.is_empty());
+    }
+
+    #[test]
+    fn html_fragments_preserve_comments_around_the_implied_shell() {
+        let nodes = parse_html_fragment_for_context(
+            "<!--a--><title>T</title><!--h--><p>X</p><!--b-->",
+            "html",
+        )
+        .unwrap();
+
+        assert_eq!(nodes.len(), 3);
+        assert_eq!(nodes[0], Node::comment("a"));
+
+        let head = element(&nodes[1]);
+        assert_eq!(head.name, "head");
+        assert_eq!(element(&head.children[0]).name, "title");
+        assert_eq!(head.children[1], Node::comment("h"));
+
+        let body = element(&nodes[2]);
+        assert_eq!(body.name, "body");
+        assert_eq!(element(&body.children[0]).name, "p");
+        assert_eq!(body.children[1], Node::comment("b"));
+
+        let after_doctype =
+            parse_html_fragment_for_context("<!doctype html><!--a-->X", "html").unwrap();
+        assert_eq!(after_doctype[0], Node::comment("a"));
+        assert_eq!(element(&after_doctype[1]).name, "head");
+        assert_eq!(element(&after_doctype[2]).name, "body");
+
+        let after_context_end =
+            parse_html_fragment_for_context("</html><!--b-->X", "html").unwrap();
+        assert_eq!(element(&after_context_end[0]).name, "head");
+        assert_eq!(element(&after_context_end[1]).name, "body");
+        assert_eq!(after_context_end[2], Node::comment("b"));
+
+        let straddling_context_end =
+            parse_html_fragment_for_context("<!--a--></html><!--b-->X", "html").unwrap();
+        assert_eq!(straddling_context_end[0], Node::comment("a"));
+        assert_eq!(element(&straddling_context_end[1]).name, "head");
+        assert_eq!(element(&straddling_context_end[2]).name, "body");
+        assert_eq!(straddling_context_end[3], Node::comment("b"));
+
+        let after_title =
+            parse_html_fragment_for_context("<title>T</title></html><!--b-->X", "html").unwrap();
+        assert_eq!(element(&after_title[0]).name, "head");
+        assert_eq!(element(&after_title[1]).name, "body");
+        assert_eq!(after_title[2], Node::comment("b"));
+
+        let after_body = parse_html_fragment_for_context("</body><!--b-->X", "html").unwrap();
+        assert_eq!(element(&after_body[0]).name, "head");
+        assert_eq!(element(&after_body[1]).name, "body");
+        assert_eq!(after_body[2], Node::comment("b"));
+
+        let reentered =
+            parse_html_fragment_for_context("</html><meta name=x><!--b-->X", "html").unwrap();
+        assert_eq!(element(&reentered[0]).name, "head");
+        let reentered_body = element(&reentered[1]);
+        assert_eq!(reentered_body.name, "body");
+        assert_eq!(element(&reentered_body.children[0]).name, "meta");
+        assert_eq!(reentered_body.children[1], Node::comment("b"));
+        assert_eq!(reentered_body.children[2], Node::text("X"));
+
+        let frameset = parse_html_fragment_for_context(
+            "</html><frameset><frame name=x><!--b-->",
+            "html",
+        )
+        .unwrap();
+        assert_eq!(element(&frameset[0]).name, "head");
+        assert_eq!(element(&frameset[1]).name, "frameset");
+        assert_eq!(element(&frameset[1]).children[1], Node::comment("b"));
+    }
+
 }
