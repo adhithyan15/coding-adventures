@@ -2738,15 +2738,17 @@ impl Compiler {
         })
     }
 
-    /// Admit exact tracked real snapshots only for powers whose base contains
-    /// a pure standard-function result. The snapshot must be integral and fit
-    /// the existing bounded-unroll cap.
+    /// Admit exact tracked real snapshots, including pure conditionals whose
+    /// branches prove the same snapshot value. The snapshot must be integral
+    /// and fit the existing bounded-unroll cap.
     fn static_nonnegative_tracked_real_snapshot_power_chain(
         &self,
         nodes: &[&GrammarASTNode],
     ) -> Option<u32> {
         self.static_nonnegative_power_chain_with(nodes, &|node| {
-            if !self.exact_tracked_real_snapshot_operand(node) {
+            if !self.exact_tracked_real_snapshot_operand(node)
+                && !self.path_independent_tracked_real_snapshot_operand(node)
+            {
                 return None;
             }
             let value = self.static_tracked_exponent_real_value(node)?;
@@ -3144,6 +3146,33 @@ impl Compiler {
         self.require_var(&name)
             .is_ok_and(|binding| !binding.is_global && binding.ty == ScalarType::Real)
             && self.static_tracked_numeric_value(node, false).is_some()
+    }
+
+    fn path_independent_tracked_real_snapshot_operand(&self, node: &GrammarASTNode) -> bool {
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.path_independent_tracked_real_snapshot_operand(child);
+        }
+        if direct_tokens(node).is_empty() {
+            let children = direct_nodes(node);
+            if children.len() == 1 {
+                return self.path_independent_tracked_real_snapshot_operand(children[0]);
+            }
+        }
+        let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) else {
+            return false;
+        };
+        if self.contains_procedure_call(condition)
+            || self.static_predicate_dependencies(condition).is_none()
+            || !self.exact_tracked_real_snapshot_operand(then_node)
+            || !self.exact_tracked_real_snapshot_operand(else_node)
+        {
+            return false;
+        }
+        let Some(then_value) = self.static_tracked_numeric_value(then_node, false) else {
+            return false;
+        };
+        self.static_tracked_numeric_value(else_node, false)
+            .is_some_and(|else_value| then_value.to_bits() == else_value.to_bits())
     }
 
     fn contains_pure_standard_function_call(&self, node: &GrammarASTNode) -> bool {
@@ -11482,6 +11511,19 @@ mod tests {
     }
 
     #[test]
+    fn al4_standard_free_conditional_tracked_real_snapshot_power_unrolls() {
+        let module = compile_source(
+            "begin real gate, left, right, saved; left := 2.0; right := 2.0; saved := 6.0 ^ (if gate = 0.0 then left else right) + 6.0; gate := 1.0; left := 9.0; right := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("equal conditional tracked real snapshots may bound a plain real power");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
     fn al4_tracked_real_standard_function_exponents_fail_closed() {
         for source in [
             "begin real exponent, saved; exponent := 1.0; saved := 6.0 ^ (exponent + cos(0)) end",
@@ -11519,7 +11561,7 @@ mod tests {
     fn al4_conditional_tracked_real_standard_function_exponents_fail_closed() {
         for source in [
             "begin real gate, exponent, saved; exponent := 0.0; saved := 6.0 ^ (if gate = 0.0 then cos(exponent) + 1 else cos(exponent) + 2) end",
-            "begin real gate, exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate = 0.0 then exponent else exponent) end",
+            "begin real gate, left, right, saved; left := 2.0; right := 3.0; saved := 6.0 ^ (if gate = 0.0 then left else right) end",
             "begin real procedure choose(x); value x; real x; choose := x; real gate, exponent, saved; gate := 0.0; exponent := 0.0; saved := 6.0 ^ (if choose(gate) = 0.0 then cos(exponent) + 1 else cos(exponent) + 1) end",
         ] {
             let module = compile_source(source, "test")
