@@ -1673,6 +1673,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — finite arithmetic over initialized tracked local reals may
+    // bound a plain real power without a standard-function result in its base.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real power, offset, saved; power := 0.5; offset := 1.5; saved := 6.0 ^ (power + offset) + 6.0; power := 9.0; offset := 9.0; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — path-independent conditional arithmetic over tracked local
     // reals may bound a power while its runtime selector remains emitted.
     Prog {
@@ -9923,6 +9932,32 @@ fn algol_tracked_real_arithmetic_powered_standard_results_run_on_every_available
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but tracked-real arithmetic power did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_standard_free_tracked_real_arithmetic_powers_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("saved := 6.0 ^ (power + offset) + 6.0")
+                && program.src.contains("offset := 1.5")
+        })
+        .expect("standard-free tracked-real arithmetic power must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but standard-free tracked-real arithmetic did not run"
             );
             continue;
         };
