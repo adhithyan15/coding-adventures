@@ -21,6 +21,8 @@ use coding_adventures_zeroize::Zeroizing;
 use std::collections::BTreeMap;
 use std::fmt::{self, Debug, Display, Formatter};
 
+mod provider_data;
+
 /// Largest accepted proactive-refresh window: one day.
 pub const MAX_REFRESH_LEAD_SECONDS: u64 = 24 * 60 * 60;
 
@@ -278,6 +280,8 @@ pub struct BrokerAuditError;
 pub enum BrokerError {
     /// Broker lifecycle policy was outside its accepted bound.
     InvalidPolicy,
+    /// Static public-provider data was malformed, unknown, or failed validation.
+    InvalidProviderData,
     /// A transport returned an impossible HTTP status.
     InvalidTransportResponse,
     /// The provider has not been registered.
@@ -301,9 +305,10 @@ pub enum BrokerError {
 impl BrokerError {
     fn failure_class(&self) -> Option<BrokerFailureClass> {
         match self {
-            Self::InvalidPolicy | Self::InvalidTransportResponse | Self::BindingMismatch => {
-                Some(BrokerFailureClass::InvalidInput)
-            }
+            Self::InvalidPolicy
+            | Self::InvalidProviderData
+            | Self::InvalidTransportResponse
+            | Self::BindingMismatch => Some(BrokerFailureClass::InvalidInput),
             Self::ProviderNotRegistered => Some(BrokerFailureClass::ProviderNotRegistered),
             Self::ProviderConflict => Some(BrokerFailureClass::ProviderConflict),
             Self::Clock => Some(BrokerFailureClass::Clock),
@@ -321,6 +326,7 @@ impl Debug for BrokerError {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         formatter.write_str(match self {
             Self::InvalidPolicy => "InvalidPolicy",
+            Self::InvalidProviderData => "InvalidProviderData",
             Self::InvalidTransportResponse => "InvalidTransportResponse",
             Self::ProviderNotRegistered => "ProviderNotRegistered",
             Self::ProviderConflict => "ProviderConflict",
@@ -382,8 +388,18 @@ impl<S: CredentialStore> OAuthBroker<S> {
             Some(existing) if existing == &provider => Ok(()),
             Some(_) => Err(BrokerError::ProviderConflict),
             None => {
-                self.providers.insert(provider_id.clone(), provider);
-                Ok(())
+                let config = provider.config();
+                let redirect_conflict = self.providers.values().any(|existing| {
+                    existing.config().redirect_uri() == config.redirect_uri()
+                        && (existing.config().uses_distinct_redirect_uri()
+                            || config.uses_distinct_redirect_uri())
+                });
+                if redirect_conflict {
+                    Err(BrokerError::ProviderConflict)
+                } else {
+                    self.providers.insert(provider_id.clone(), provider);
+                    Ok(())
+                }
             }
         };
         finish_broker(
@@ -925,10 +941,24 @@ mod tests {
             format!("https://auth.{name}.example/authorize"),
             format!("https://token.{name}.example/token"),
             format!("{name}-public-client"),
-            "http://127.0.0.1:49152/callback",
+            format!("http://127.0.0.1:49152/{name}/callback"),
         )
         .unwrap()
         .with_distinct_redirect_uri()
+    }
+
+    fn issuer_policy(name: &str, redirect_uri: &str) -> BrokerProvider {
+        let config = ProviderConfig::new(
+            ProviderId::new(name).unwrap(),
+            format!("https://auth.{name}.example/authorize"),
+            format!("https://token.{name}.example/token"),
+            format!("{name}-public-client"),
+            redirect_uri,
+        )
+        .unwrap()
+        .with_expected_issuer(format!("https://auth.{name}.example"))
+        .unwrap();
+        BrokerProvider::new(config, TokenResponseFormat::Json, 300).unwrap()
     }
 
     fn policy(name: &str, lead: u64) -> BrokerProvider {
@@ -1090,6 +1120,83 @@ mod tests {
             audit.broker.last().unwrap().outcome(),
             BrokerAuditOutcome::Failed(BrokerFailureClass::ProviderConflict)
         );
+    }
+
+    #[test]
+    fn registry_enforces_distinct_redirect_ownership_in_both_orders() {
+        let shared = "http://127.0.0.1:49152/shared/callback";
+
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let mut audit = RecordingAudit::default();
+        let distinct = ProviderConfig::new(
+            ProviderId::new("distinct-first").unwrap(),
+            "https://auth.distinct-first.example/authorize",
+            "https://token.distinct-first.example/token",
+            "distinct-first-client",
+            shared,
+        )
+        .unwrap()
+        .with_distinct_redirect_uri();
+        broker
+            .register_provider(
+                BrokerProvider::new(distinct, TokenResponseFormat::Json, 300).unwrap(),
+                trace(21),
+                &mut audit,
+            )
+            .unwrap();
+        assert_eq!(
+            broker.register_provider(
+                issuer_policy("issuer-second", shared),
+                trace(22),
+                &mut audit,
+            ),
+            Err(BrokerError::ProviderConflict)
+        );
+        assert_eq!(broker.provider_count(), 1);
+
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(issuer_policy("issuer-first", shared), trace(23), &mut audit)
+            .unwrap();
+        let distinct = ProviderConfig::new(
+            ProviderId::new("distinct-second").unwrap(),
+            "https://auth.distinct-second.example/authorize",
+            "https://token.distinct-second.example/token",
+            "distinct-second-client",
+            shared,
+        )
+        .unwrap()
+        .with_distinct_redirect_uri();
+        assert_eq!(
+            broker.register_provider(
+                BrokerProvider::new(distinct, TokenResponseFormat::Json, 300).unwrap(),
+                trace(24),
+                &mut audit,
+            ),
+            Err(BrokerError::ProviderConflict)
+        );
+        assert_eq!(broker.provider_count(), 1);
+        assert_eq!(
+            audit.broker.last().unwrap().outcome(),
+            BrokerAuditOutcome::Failed(BrokerFailureClass::ProviderConflict)
+        );
+    }
+
+    #[test]
+    fn registry_allows_shared_redirect_when_both_providers_validate_issuer() {
+        let shared = "http://127.0.0.1:49152/shared/callback";
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let mut audit = RecordingAudit::default();
+        broker
+            .register_provider(issuer_policy("issuer-one", shared), trace(25), &mut audit)
+            .unwrap();
+        broker
+            .register_provider(issuer_policy("issuer-two", shared), trace(26), &mut audit)
+            .unwrap();
+        assert_eq!(broker.provider_count(), 2);
     }
 
     #[test]
