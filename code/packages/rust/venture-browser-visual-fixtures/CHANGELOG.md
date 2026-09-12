@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a deterministic disclosure page covering closed, open, grouped,
+  linked-summary, and generated-summary details.
+
 - Add a deterministic form-group fixture covering explicit/implicit labels,
   disabled fieldsets, and the first-legend exception.
 

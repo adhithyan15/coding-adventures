@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Emit transformed, clipped, scroll-aware details-summary hit regions with
+  stable disclosure keys and open state.
+
 - Resolve explicit and implicit labels into semantic control hit regions while
   preserving direct nested-control precedence.
 

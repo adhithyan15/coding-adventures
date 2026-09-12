@@ -148,9 +148,7 @@ where
         &metrics,
         &resolver,
     );
-    Ok(session
-        .activate_control_and_submit(viewport_x, viewport_y, &pipeline, fetcher)?
-        .is_some())
+    session.activate_page_interaction(viewport_x, viewport_y, &pipeline, fetcher)
 }
 
 /// Activate the link at a viewport coordinate through the native page
@@ -396,9 +394,7 @@ where
                 NamedKey::Space => ControlKey::Space,
                 _ => return Ok(false),
             };
-            Ok(session
-                .control_key_down_with_shift_and_submit(key, modifiers.shift, &pipeline, fetcher)?
-                .is_some())
+            session.page_key_down_with_shift_and_submit(key, modifiers.shift, &pipeline, fetcher)
         }
         _ => Ok(false),
     }
@@ -706,8 +702,7 @@ impl MacBrowserHost {
         let changed = self
             .controller
             .session_mut()
-            .control_key_down_with_shift_and_submit(key, shift, &pipeline, &self.fetcher)?
-            .is_some();
+            .page_key_down_with_shift_and_submit(key, shift, &pipeline, &self.fetcher)?;
         if changed {
             self.controller.synchronize_session_state();
         }
