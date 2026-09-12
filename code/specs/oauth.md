@@ -83,9 +83,11 @@ The delivery order is:
    and secret-bearing requests are audit-gated before release.
 3. **Shipped authorization-server metadata:** audited RFC 8414 well-known
    request preparation, bounded JSON decoding, exact issuer validation, strict
-   endpoint policy, explicit Authorization Code + public-client `none` + PKCE
-   `S256` negotiation, immutable capability retention, and provider-config
-   derivation that never silently widens metadata-derived behavior. Unverified
+   endpoint policy, explicit Authorization Code + PKCE `S256` negotiation,
+   immutable public and confidential authentication-capability retention, and
+   public provider-config derivation that separately requires an explicitly
+   advertised `none` method and never silently widens metadata-derived
+   behavior. Unverified
    `signed_metadata` and unknown fields are ignored and scrubbed, not trusted.
    RFC 9207 response-issuer support is retained exactly; providers that omit it
    require the existing registry-owned distinct-redirect defense.
@@ -138,16 +140,20 @@ The delivery order is:
    that boundary: exact provider-advertised method and algorithm checks,
    `iss`/`sub`/`aud`/`exp`/`iat` claims, caller-entropy replay-resistant `jti`,
    zeroizing JWS material, and provider/client/audience/trace bindings retained
-   for the next request layer. The repository-owned Ed25519 implementation
-   must first replace
+   for request binding. Provider-driven binding into authorization-code
+   exchange, refresh, and revocation requests is now shipped: exact
+   provider/client/endpoint-audience checks happen before signing, the request
+   trace drives signer and later transport audit, secret-bearing form bodies
+   remain zeroizing, and exchange/refresh response contexts are preserved.
+   Revocation uses an explicitly configured revocation-endpoint audience rather
+   than inventing provider acceptance of the token endpoint as that audience.
+   The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate
-   repository-owned RSA primitive. Provider-driven request binding into token
-   exchange, refresh, and revocation remains next. The RFC 8414 decoder must
-   also be generalized so confidential-only providers that omit public-client
-   `none` can retain the same exact capability data while public
-   `ProviderConfig` derivation continues to require `none`. Public native
-   clients remain `none` + PKCE.
+   repository-owned RSA primitive. The RFC 8414 decoder now retains exact
+   confidential-only authentication capabilities even when public-client
+   `none` is omitted, while public `ProviderConfig` derivation continues to
+   require an explicit `none`. Public native clients remain `none` + PKCE.
 7. **Device Authorization Grant:** RFC 8628 preparation and a caller-driven
    polling state machine with no internal sleep or network authority.
 8. **HTTPS transport:** provider-neutral request/response types over the

@@ -2799,15 +2799,17 @@ impl Compiler {
 
     /// Admit finite arithmetic that mixes initialized local integer and real
     /// snapshots for powers whose base contains a pure standard-function
-    /// result. Integer snapshots must widen exactly to binary64. Conditionals,
-    /// calls, nested powers, and single-domain expressions stay on their
-    /// existing paths.
+    /// result. Integer snapshots must widen exactly to binary64. Optionally, a
+    /// pure conditional may participate when every runtime path proves the
+    /// same value. Calls, nested powers, and single-domain expressions stay on
+    /// their existing paths.
     fn static_nonnegative_mixed_tracked_numeric_arithmetic_power_chain(
         &self,
         nodes: &[&GrammarASTNode],
+        require_path_independent_conditional: bool,
     ) -> Option<u32> {
         self.static_nonnegative_power_chain_with(nodes, &|node| {
-            if self.contains_conditional_expression(node)
+            if self.contains_conditional_expression(node) != require_path_independent_conditional
                 || self.contains_procedure_call(node)
                 || self.contains_power_operator(node)
                 || !self.contains_binary_real_arithmetic(node)
@@ -3098,7 +3100,14 @@ impl Compiler {
                     self.static_nonnegative_tracked_real_arithmetic_power_chain(exponents, true)
                 })
                 .or_else(|| {
-                    self.static_nonnegative_mixed_tracked_numeric_arithmetic_power_chain(exponents)
+                    self.static_nonnegative_mixed_tracked_numeric_arithmetic_power_chain(
+                        exponents, false,
+                    )
+                })
+                .or_else(|| {
+                    self.static_nonnegative_mixed_tracked_numeric_arithmetic_power_chain(
+                        exponents, true,
+                    )
                 });
             return self.exact_tracked_standard_function_operand(base)
                 && self.contains_pure_standard_function_call(base)
@@ -7917,6 +7926,18 @@ impl Compiler {
                 .then(|| {
                     self.static_nonnegative_mixed_tracked_numeric_arithmetic_power_chain(
                         exponent_nodes,
+                        false,
+                    )
+                })
+                .flatten()
+            })
+            .or_else(|| {
+                (base.ty == ScalarType::Real
+                    && self.contains_pure_standard_function_call(base_node))
+                .then(|| {
+                    self.static_nonnegative_mixed_tracked_numeric_arithmetic_power_chain(
+                        exponent_nodes,
+                        true,
                     )
                 })
                 .flatten()
@@ -11794,12 +11815,45 @@ mod tests {
             "begin integer whole; real part, gate, exponent, saved; whole := 9007199254740993; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (whole + part)) end",
             "begin integer whole; real part, gate, exponent, saved; whole := 0; part := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (whole + part)) end",
             "begin integer whole; real part, saved; whole := 1; part := 0.0; saved := 6.0 ^ (whole + part) end",
-            "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then whole + part else part + whole)) end",
             "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ ((whole + part) ^ 1)) end",
             "begin real procedure choose(x); value x; real x; choose := x; integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (whole + choose(part))) end",
         ] {
             let module = compile_source(source, "test")
                 .expect("unsafe mixed tracked numeric powers must remain dynamic");
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"), "{source}");
+        }
+    }
+
+    #[test]
+    fn al4_path_independent_conditional_mixed_tracked_numeric_power_arithmetic_unrolls() {
+        let module = compile_source(
+            "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then whole + part else part + whole)) + 6.0; gate := 1.0; whole := 9; part := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("path-independent conditional mixed tracked numeric arithmetic may unroll");
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions
+                .iter()
+                .filter(|instr| instr.op == "jmp_if_false")
+                .count()
+                >= 2
+        );
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
+    fn al4_conditional_mixed_tracked_numeric_power_arithmetic_fails_closed() {
+        for source in [
+            "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then whole + part else part + whole + 1.0)) end",
+            "begin integer whole; real part, gate, exponent, saved; whole := 1; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then whole + part else part + whole)) end",
+            "begin integer whole; real part, gate, saved; whole := 1; part := 0.0; saved := 6.0 ^ (if gate = 0.0 then whole + part else part + whole) end",
+            "begin real procedure choose(x); value x; real x; choose := x; integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if choose(gate) = 0.0 then whole + part else part + whole)) end",
+        ] {
+            let module = compile_source(source, "test")
+                .expect("unsafe conditional mixed tracked numeric powers must remain dynamic");
             let main = module.get_function("main").expect("has main");
             assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"), "{source}");
         }

@@ -52,6 +52,20 @@ QByteArray keyCommand(QKeyEvent *event)
 
 QByteArray controlKey(QKeyEvent *event)
 {
+  const auto modifiers = event->modifiers();
+  const bool command = modifiers.testFlag(Qt::ControlModifier)
+    || modifiers.testFlag(Qt::MetaModifier);
+  if (command) {
+    if (event->key() == Qt::Key_A) return "select-all";
+    if (event->key() == Qt::Key_Z) {
+      return modifiers.testFlag(Qt::ShiftModifier) ? "redo" : "undo";
+    }
+    if (event->key() == Qt::Key_Y) return "redo";
+  }
+  if (modifiers.testFlag(Qt::AltModifier)) {
+    if (event->key() == Qt::Key_Left) return "word-left";
+    if (event->key() == Qt::Key_Right) return "word-right";
+  }
   switch (event->key()) {
   case Qt::Key_Backspace: return "backspace";
   case Qt::Key_Delete: return "delete";

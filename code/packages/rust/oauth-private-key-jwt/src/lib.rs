@@ -9,7 +9,10 @@
 
 use coding_adventures_base64::{encode_into as encode_base64_into, URL_SAFE_NO_PAD};
 use coding_adventures_bounded_json::{serialize, JsonNumber, JsonValue};
-use coding_adventures_oauth::{AuthorizationServerMetadata, OAuthTraceId, ProviderId};
+use coding_adventures_oauth::{
+    AuthorizationServerMetadata, OAuthTraceId, ProviderId, TokenExchangeRequest,
+    TokenRefreshRequest, TokenResponseContext, TokenRevocationRequest,
+};
 use coding_adventures_oauth_private_key_signer::{
     AuditedPrivateKeySigner, PrivateKeyAuditSink, PrivateKeyId, PrivateKeyJwtAlgorithm,
     PrivateKeySignerError, SigningAuthority,
@@ -123,10 +126,11 @@ impl PrivateKeyJwtProfile {
         &self,
         signer: &AuditedPrivateKeySigner<S>,
         issued_at: u64,
-        mut replay_entropy: [u8; 32],
+        replay_entropy: [u8; 32],
         trace: OAuthTraceId,
         audit: &mut A,
     ) -> Result<PrivateKeyJwtAssertion, PrivateKeyJwtError> {
+        let replay_entropy = Zeroizing::new(replay_entropy);
         let expires_at = issued_at
             .checked_add(self.lifetime_seconds)
             .filter(|value| *value <= i64::MAX as u64)
@@ -142,8 +146,7 @@ impl PrivateKeyJwtProfile {
         }
 
         let mut jti = Zeroizing::new(String::new());
-        encode_base64_into(&replay_entropy, &URL_SAFE_NO_PAD, &mut jti);
-        replay_entropy.zeroize();
+        encode_base64_into(replay_entropy.as_slice(), &URL_SAFE_NO_PAD, &mut jti);
         let claims = JsonValue::Object(vec![
             ("iss".to_owned(), JsonValue::String(self.client_id.clone())),
             ("sub".to_owned(), JsonValue::String(self.client_id.clone())),
@@ -185,6 +188,121 @@ impl PrivateKeyJwtProfile {
             value: assertion,
         })
     }
+
+    /// Sign and bind client authentication to an authorization-code exchange.
+    ///
+    /// Provider, client, token endpoint, and trace are inherited from the
+    /// already audit-released request. Any identity mismatch fails before the
+    /// signing effect.
+    pub fn authenticate_token_exchange<S: SigningAuthority, A: PrivateKeyAuditSink>(
+        &self,
+        signer: &AuditedPrivateKeySigner<S>,
+        request: TokenExchangeRequest,
+        issued_at: u64,
+        replay_entropy: [u8; 32],
+        audit: &mut A,
+    ) -> Result<PrivateKeyJwtAuthenticatedTokenExchange, PrivateKeyJwtError> {
+        let response_context = request.response_context();
+        let request = self.authenticate_request(
+            signer,
+            RequestBinding {
+                provider: request.provider(),
+                trace: request.trace(),
+                client_id: request.client_id(),
+                endpoint: request.endpoint(),
+                form_body: request.form_body(),
+            },
+            issued_at,
+            replay_entropy,
+            audit,
+        )?;
+        Ok(PrivateKeyJwtAuthenticatedTokenExchange {
+            request,
+            response_context,
+        })
+    }
+
+    /// Sign and bind client authentication to a refresh-token grant.
+    ///
+    /// Provider, client, token endpoint, and trace are inherited from the
+    /// already audit-released request. Any identity mismatch fails before the
+    /// signing effect.
+    pub fn authenticate_token_refresh<S: SigningAuthority, A: PrivateKeyAuditSink>(
+        &self,
+        signer: &AuditedPrivateKeySigner<S>,
+        request: TokenRefreshRequest,
+        issued_at: u64,
+        replay_entropy: [u8; 32],
+        audit: &mut A,
+    ) -> Result<PrivateKeyJwtAuthenticatedTokenRefresh, PrivateKeyJwtError> {
+        let response_context = request.response_context();
+        let request = self.authenticate_request(
+            signer,
+            RequestBinding {
+                provider: request.provider(),
+                trace: request.trace(),
+                client_id: request.client_id(),
+                endpoint: request.endpoint(),
+                form_body: request.form_body(),
+            },
+            issued_at,
+            replay_entropy,
+            audit,
+        )?;
+        Ok(PrivateKeyJwtAuthenticatedTokenRefresh {
+            request,
+            response_context,
+        })
+    }
+
+    /// Sign and bind client authentication to an RFC 7009 revocation request.
+    ///
+    /// The profile audience must exactly match the revocation endpoint. This
+    /// avoids inventing whether a provider accepts its token endpoint as the
+    /// audience for a different authenticated endpoint.
+    pub fn authenticate_token_revocation<S: SigningAuthority, A: PrivateKeyAuditSink>(
+        &self,
+        signer: &AuditedPrivateKeySigner<S>,
+        request: TokenRevocationRequest,
+        issued_at: u64,
+        replay_entropy: [u8; 32],
+        audit: &mut A,
+    ) -> Result<PrivateKeyJwtAuthenticatedTokenRevocation, PrivateKeyJwtError> {
+        let request = self.authenticate_request(
+            signer,
+            RequestBinding {
+                provider: request.provider(),
+                trace: request.trace(),
+                client_id: request.client_id(),
+                endpoint: request.endpoint(),
+                form_body: request.form_body(),
+            },
+            issued_at,
+            replay_entropy,
+            audit,
+        )?;
+        Ok(PrivateKeyJwtAuthenticatedTokenRevocation { request })
+    }
+
+    fn authenticate_request<S: SigningAuthority, A: PrivateKeyAuditSink>(
+        &self,
+        signer: &AuditedPrivateKeySigner<S>,
+        request: RequestBinding<'_>,
+        issued_at: u64,
+        replay_entropy: [u8; 32],
+        audit: &mut A,
+    ) -> Result<PrivateKeyJwtAuthenticatedRequest, PrivateKeyJwtError> {
+        let replay_entropy = Zeroizing::new(replay_entropy);
+        if request.provider != &self.provider
+            || request.client_id != self.client_id
+            || request.endpoint != self.audience
+        {
+            return Err(PrivateKeyJwtError::RequestBinding);
+        }
+        let assertion =
+            self.sign_assertion(signer, issued_at, *replay_entropy, request.trace, audit)?;
+        Ok(build_authenticated_request(request, assertion))
+    }
 }
 
 impl Debug for PrivateKeyJwtProfile {
@@ -198,6 +316,145 @@ impl Debug for PrivateKeyJwtProfile {
             .field("algorithm", &self.algorithm)
             .field("has_key_id", &self.key_id.is_some())
             .field("lifetime_seconds", &self.lifetime_seconds)
+            .finish()
+    }
+}
+
+struct RequestBinding<'a> {
+    provider: &'a ProviderId,
+    trace: OAuthTraceId,
+    client_id: &'a str,
+    endpoint: &'a str,
+    form_body: &'a str,
+}
+
+/// Zeroizing private-key-authenticated HTTP request material.
+pub struct PrivateKeyJwtAuthenticatedRequest {
+    provider: ProviderId,
+    trace: OAuthTraceId,
+    client_id: String,
+    endpoint: String,
+    form_body: Zeroizing<String>,
+}
+
+impl PrivateKeyJwtAuthenticatedRequest {
+    /// Return the provider identity used for routing and external-effect audit.
+    pub const fn provider(&self) -> &ProviderId {
+        &self.provider
+    }
+
+    /// Return the correlation identity used for signing and transport audit.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.trace
+    }
+
+    /// Return the exact client identity bound before signing.
+    pub fn client_id(&self) -> &str {
+        &self.client_id
+    }
+
+    /// Borrow the exact validated HTTPS endpoint.
+    pub fn endpoint(&self) -> &str {
+        &self.endpoint
+    }
+
+    /// Borrow the wipe-on-drop authenticated form body for transport.
+    pub fn form_body(&self) -> &str {
+        self.form_body.as_str()
+    }
+
+    /// Return the exact request media type.
+    pub const fn content_type(&self) -> &'static str {
+        "application/x-www-form-urlencoded"
+    }
+}
+
+impl Debug for PrivateKeyJwtAuthenticatedRequest {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("PrivateKeyJwtAuthenticatedRequest")
+            .field("provider", &self.provider)
+            .field("trace", &self.trace)
+            .field("client_id", &"<redacted>")
+            .field("endpoint", &"<redacted>")
+            .field("form_body", &"<redacted>")
+            .finish()
+    }
+}
+
+/// Private-key-authenticated authorization-code exchange and response binding.
+pub struct PrivateKeyJwtAuthenticatedTokenExchange {
+    request: PrivateKeyJwtAuthenticatedRequest,
+    response_context: TokenResponseContext,
+}
+
+impl PrivateKeyJwtAuthenticatedTokenExchange {
+    /// Borrow the authenticated wire request.
+    pub const fn request(&self) -> &PrivateKeyJwtAuthenticatedRequest {
+        &self.request
+    }
+
+    /// Borrow the exact provider/trace response binding.
+    pub const fn response_context(&self) -> &TokenResponseContext {
+        &self.response_context
+    }
+}
+
+impl Debug for PrivateKeyJwtAuthenticatedTokenExchange {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("PrivateKeyJwtAuthenticatedTokenExchange")
+            .field("request", &self.request)
+            .field("response_context", &self.response_context)
+            .finish()
+    }
+}
+
+/// Private-key-authenticated refresh grant and response binding.
+pub struct PrivateKeyJwtAuthenticatedTokenRefresh {
+    request: PrivateKeyJwtAuthenticatedRequest,
+    response_context: TokenResponseContext,
+}
+
+impl PrivateKeyJwtAuthenticatedTokenRefresh {
+    /// Borrow the authenticated wire request.
+    pub const fn request(&self) -> &PrivateKeyJwtAuthenticatedRequest {
+        &self.request
+    }
+
+    /// Borrow the exact provider/trace response binding.
+    pub const fn response_context(&self) -> &TokenResponseContext {
+        &self.response_context
+    }
+}
+
+impl Debug for PrivateKeyJwtAuthenticatedTokenRefresh {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("PrivateKeyJwtAuthenticatedTokenRefresh")
+            .field("request", &self.request)
+            .field("response_context", &self.response_context)
+            .finish()
+    }
+}
+
+/// Private-key-authenticated RFC 7009 revocation request.
+pub struct PrivateKeyJwtAuthenticatedTokenRevocation {
+    request: PrivateKeyJwtAuthenticatedRequest,
+}
+
+impl PrivateKeyJwtAuthenticatedTokenRevocation {
+    /// Borrow the authenticated wire request.
+    pub const fn request(&self) -> &PrivateKeyJwtAuthenticatedRequest {
+        &self.request
+    }
+}
+
+impl Debug for PrivateKeyJwtAuthenticatedTokenRevocation {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("PrivateKeyJwtAuthenticatedTokenRevocation")
+            .field("request", &self.request)
             .finish()
     }
 }
@@ -263,6 +520,8 @@ pub enum PrivateKeyJwtError {
     InvalidConfiguration,
     /// Issued-at or expiration time could not be represented safely.
     InvalidTime,
+    /// A prepared request did not match the assertion profile exactly.
+    RequestBinding,
     /// The audited non-exporting signer rejected or withheld the operation.
     Signing(PrivateKeySignerError),
 }
@@ -272,6 +531,7 @@ impl Debug for PrivateKeyJwtError {
         formatter.write_str(match self {
             Self::InvalidConfiguration => "InvalidConfiguration",
             Self::InvalidTime => "InvalidTime",
+            Self::RequestBinding => "RequestBinding",
             Self::Signing(_) => "Signing",
         })
     }
@@ -320,6 +580,39 @@ fn valid_key_id(value: Option<&str>) -> bool {
     })
 }
 
+fn build_authenticated_request(
+    request: RequestBinding<'_>,
+    assertion: PrivateKeyJwtAssertion,
+) -> PrivateKeyJwtAuthenticatedRequest {
+    let mut form_body = Zeroizing::new(request.form_body.to_owned());
+    form_body.push_str("&client_assertion_type=");
+    append_form_encoded(&mut form_body, assertion.assertion_type());
+    form_body.push_str("&client_assertion=");
+    append_form_encoded(&mut form_body, assertion.as_str());
+    PrivateKeyJwtAuthenticatedRequest {
+        provider: request.provider.clone(),
+        trace: request.trace,
+        client_id: request.client_id.to_owned(),
+        endpoint: request.endpoint.to_owned(),
+        form_body,
+    }
+}
+
+fn append_form_encoded(output: &mut String, value: &str) {
+    for byte in value.bytes() {
+        if byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'.' | b'_' | b'~') {
+            output.push(char::from(byte));
+        } else if byte == b' ' {
+            output.push('+');
+        } else {
+            const HEX: &[u8; 16] = b"0123456789ABCDEF";
+            output.push('%');
+            output.push(char::from(HEX[usize::from(byte >> 4)]));
+            output.push(char::from(HEX[usize::from(byte & 0x0f)]));
+        }
+    }
+}
+
 fn serialize_and_scrub(mut value: JsonValue) -> Result<Zeroizing<String>, PrivateKeyJwtError> {
     let result = serialize(&value)
         .map(Zeroizing::new)
@@ -350,6 +643,11 @@ fn scrub_json(value: &mut JsonValue) {
 mod tests {
     use super::*;
     use coding_adventures_base64::decode;
+    use coding_adventures_oauth::{
+        begin_authorization, complete_authorization, prepare_token_refresh,
+        prepare_token_revocation, Audited, EntropySource, OAuthAuditError, OAuthAuditEvent,
+        OAuthAuditSink, OAuthError, ProviderConfig, RevocationTokenHint,
+    };
     use coding_adventures_oauth_private_key_signer::{
         PrivateKeyAuditError, PrivateKeyAuditEvent, PrivateKeyAuditOutcome, PrivateKeyReference,
         PrivateKeySignature, SigningAuthorityError,
@@ -381,6 +679,24 @@ mod tests {
     struct Audit {
         events: Vec<PrivateKeyAuditEvent>,
         fail_at: Option<usize>,
+    }
+
+    #[derive(Default)]
+    struct OAuthAudit;
+
+    impl OAuthAuditSink for OAuthAudit {
+        fn publish(&mut self, _event: &OAuthAuditEvent) -> Result<(), OAuthAuditError> {
+            Ok(())
+        }
+    }
+
+    struct FixedEntropy([u8; 64]);
+
+    impl EntropySource for FixedEntropy {
+        fn fill(&mut self, destination: &mut [u8]) -> Result<(), OAuthError> {
+            destination.copy_from_slice(&self.0[..destination.len()]);
+            Ok(())
+        }
     }
 
     impl PrivateKeyAuditSink for Audit {
@@ -425,6 +741,73 @@ mod tests {
         OAuthTraceId::new([7; 16])
     }
 
+    fn secret(value: &str) -> Zeroizing<String> {
+        Zeroizing::new(value.to_owned())
+    }
+
+    fn config() -> ProviderConfig {
+        config_with(
+            "fixture",
+            "client id/plus+",
+            "https://token.example/oauth2/token",
+        )
+    }
+
+    fn config_with(provider_name: &str, client_id: &str, token_endpoint: &str) -> ProviderConfig {
+        ProviderConfig::new(
+            provider(provider_name),
+            "https://authorize.example/oauth2/auth",
+            token_endpoint,
+            client_id,
+            "http://127.0.0.1:53682/callback",
+        )
+        .unwrap()
+        .with_distinct_redirect_uri()
+        .with_revocation_endpoint("https://token.example/oauth2/revoke")
+        .unwrap()
+    }
+
+    fn request_profile(audience: &str) -> PrivateKeyJwtProfile {
+        let provider = provider("fixture");
+        PrivateKeyJwtProfile::new(
+            provider.clone(),
+            "client id/plus+",
+            audience,
+            &["none".to_owned(), "private_key_jwt".to_owned()],
+            &["EdDSA".to_owned()],
+            key(provider),
+            algorithm("EdDSA"),
+            Some("key-1".to_owned()),
+            120,
+        )
+        .unwrap()
+    }
+
+    fn release<T>(audited: Audited<T>) -> T {
+        audited.publish_then_release(&mut OAuthAudit).unwrap()
+    }
+
+    fn exchange_request(config: &ProviderConfig) -> TokenExchangeRequest {
+        let begin = release(begin_authorization(
+            config,
+            &["files.read"],
+            trace(),
+            &mut FixedEntropy([0x29; 64]),
+        ));
+        let state = begin
+            .url()
+            .as_str()
+            .split('&')
+            .find_map(|parameter| parameter.strip_prefix("state="))
+            .unwrap()
+            .to_owned();
+        let (_, transaction) = begin.into_parts();
+        release(complete_authorization(
+            transaction,
+            &format!("http://127.0.0.1:53682/callback?code=code-value&state={state}"),
+        ))
+    }
+
     #[test]
     fn builds_exact_bounded_claims_and_audited_signing_input() {
         let authority = RecordingAuthority::default();
@@ -464,6 +847,150 @@ mod tests {
         assert_eq!(assertion.audience(), "https://token.example/oauth2/token");
         assert_eq!(assertion.trace(), trace());
         assert_eq!(assertion.assertion_type(), CLIENT_ASSERTION_TYPE);
+    }
+
+    #[test]
+    fn binds_exchange_and_response_context_to_the_signed_request() {
+        let authority = RecordingAuthority::default();
+        let inspection = authority.clone();
+        let signer = AuditedPrivateKeySigner::from_audited_authority(authority);
+        let mut audit = Audit::default();
+        let authenticated = request_profile("https://token.example/oauth2/token")
+            .authenticate_token_exchange(
+                &signer,
+                exchange_request(&config()),
+                1_700_000_000,
+                [0x31; 32],
+                &mut audit,
+            )
+            .unwrap();
+
+        let request = authenticated.request();
+        assert_eq!(request.provider().as_str(), "fixture");
+        assert_eq!(request.trace(), trace());
+        assert_eq!(request.client_id(), "client id/plus+");
+        assert_eq!(request.endpoint(), "https://token.example/oauth2/token");
+        assert_eq!(request.content_type(), "application/x-www-form-urlencoded");
+        assert!(request
+            .form_body()
+            .contains("grant_type=authorization_code"));
+        assert!(request.form_body().contains("code=code-value"));
+        assert!(request
+            .form_body()
+            .contains("client_id=client%20id%2Fplus%2B"));
+        assert!(request.form_body().contains(concat!(
+            "&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3A",
+            "client-assertion-type%3Ajwt-bearer&client_assertion="
+        )));
+        let assertion = request
+            .form_body()
+            .split("&client_assertion=")
+            .nth(1)
+            .unwrap();
+        assert_eq!(assertion.split('.').count(), 3);
+        assert_eq!(
+            authenticated.response_context().provider().as_str(),
+            "fixture"
+        );
+        assert_eq!(authenticated.response_context().trace(), trace());
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(audit.events.len(), 2);
+        assert!(audit.events.iter().all(|event| event.trace() == trace()));
+    }
+
+    #[test]
+    fn binds_refresh_and_revocation_to_their_exact_audiences() {
+        let authority = RecordingAuthority::default();
+        let inspection = authority.clone();
+        let signer = AuditedPrivateKeySigner::from_audited_authority(authority);
+        let mut audit = Audit::default();
+        let config = config();
+
+        let refresh = release(prepare_token_refresh(
+            &config,
+            secret("refresh-token"),
+            &["files.read"],
+            trace(),
+        ));
+        let refresh = request_profile("https://token.example/oauth2/token")
+            .authenticate_token_refresh(&signer, refresh, 9, [0x41; 32], &mut audit)
+            .unwrap();
+        assert!(refresh
+            .request()
+            .form_body()
+            .contains("refresh_token=refresh-token"));
+        assert_eq!(refresh.response_context().provider().as_str(), "fixture");
+        assert_eq!(refresh.response_context().trace(), trace());
+
+        let revocation = release(prepare_token_revocation(
+            &config,
+            secret("access-token"),
+            RevocationTokenHint::AccessToken,
+            trace(),
+        ));
+        let revocation = request_profile("https://token.example/oauth2/revoke")
+            .authenticate_token_revocation(&signer, revocation, 10, [0x42; 32], &mut audit)
+            .unwrap();
+        assert_eq!(
+            revocation.request().endpoint(),
+            "https://token.example/oauth2/revoke"
+        );
+        assert!(revocation
+            .request()
+            .form_body()
+            .contains("token=access-token"));
+        assert!(revocation
+            .request()
+            .form_body()
+            .contains("client_assertion_type="));
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 2);
+        assert_eq!(audit.events.len(), 4);
+        assert!(audit.events.iter().all(|event| {
+            event.key().provider().as_str() == "fixture" && event.trace() == trace()
+        }));
+    }
+
+    #[test]
+    fn request_identity_mismatches_fail_before_signing_or_audit() {
+        let authority = RecordingAuthority::default();
+        let inspection = authority.clone();
+        let signer = AuditedPrivateKeySigner::from_audited_authority(authority);
+        let mut audit = Audit::default();
+        let profile = request_profile("https://token.example/oauth2/token");
+
+        let mismatches = [
+            config_with(
+                "other",
+                "client id/plus+",
+                "https://token.example/oauth2/token",
+            ),
+            config_with(
+                "fixture",
+                "other-client",
+                "https://token.example/oauth2/token",
+            ),
+            config_with(
+                "fixture",
+                "client id/plus+",
+                "https://other.example/oauth2/token",
+            ),
+        ];
+        for (index, config) in mismatches.iter().enumerate() {
+            let request = release(prepare_token_refresh(
+                config,
+                secret("refresh-token"),
+                &[],
+                trace(),
+            ));
+            assert_eq!(
+                profile
+                    .authenticate_token_refresh(&signer, request, 1, [index as u8; 32], &mut audit,)
+                    .unwrap_err(),
+                PrivateKeyJwtError::RequestBinding
+            );
+        }
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 0);
+        assert!(audit.events.is_empty());
     }
 
     #[test]
@@ -606,5 +1133,30 @@ mod tests {
         assert!(!assertion_debug.contains(assertion.as_str()));
         assert!(!assertion_debug.contains("client\"id"));
         assert!(!assertion_debug.contains("token.example"));
+    }
+
+    #[test]
+    fn authenticated_request_debug_redacts_endpoint_body_and_assertion() {
+        let signer = AuditedPrivateKeySigner::from_audited_authority(RecordingAuthority::default());
+        let mut audit = Audit::default();
+        let authenticated = request_profile("https://token.example/oauth2/token")
+            .authenticate_token_refresh(
+                &signer,
+                release(prepare_token_refresh(
+                    &config(),
+                    secret("refresh-secret"),
+                    &[],
+                    trace(),
+                )),
+                1,
+                [0x51; 32],
+                &mut audit,
+            )
+            .unwrap();
+        let debug = format!("{authenticated:?}");
+        assert!(!debug.contains("token.example"));
+        assert!(!debug.contains("refresh-secret"));
+        assert!(!debug.contains("client_assertion"));
+        assert!(!debug.contains("client id"));
     }
 }

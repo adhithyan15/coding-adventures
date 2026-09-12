@@ -2,6 +2,9 @@
 
 use coding_adventures_html_parser::{BrowserRenderNode, BrowserRenderTree};
 use layout_controls::{ControlAppearance, ControlKind, ControlState};
+use text_flow::graphemes;
+
+const EDIT_HISTORY_LIMIT: usize = 100;
 
 pub const VERSION: &str = "0.1.0";
 
@@ -57,6 +60,52 @@ pub struct ControlClipboardCut {
     pub effect: ControlEffect,
 }
 
+/// Clipboard flavors exchanged with a host. Plain text wins when both are
+/// present; HTML-only payloads are reduced by the shared, bounded sanitizer.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct ControlClipboardPayload {
+    pub plain_text: Option<String>,
+    pub html: Option<String>,
+}
+
+impl ControlClipboardPayload {
+    pub fn from_plain_text(text: impl Into<String>) -> Self {
+        let plain_text = text.into();
+        Self {
+            html: Some(text_to_html_fragment(&plain_text)),
+            plain_text: Some(plain_text),
+        }
+    }
+
+    pub fn preferred_text(&self) -> Option<String> {
+        self.plain_text
+            .clone()
+            .or_else(|| self.html.as_deref().map(html_fragment_to_text))
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ControlNavigationUnit {
+    Grapheme,
+    Word,
+    Line,
+    Document,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ControlAccessibilityAction {
+    Move {
+        forward: bool,
+        unit: ControlNavigationUnit,
+        extend: bool,
+    },
+    SetSelection(ControlSelection),
+    ReplaceSelection(String),
+    SelectAll,
+    Undo,
+    Redo,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ControlKey {
     Backspace,
@@ -69,6 +118,11 @@ pub enum ControlKey {
     End,
     Enter,
     Space,
+    WordLeft,
+    WordRight,
+    SelectAll,
+    Undo,
+    Redo,
 }
 
 impl ControlKey {
@@ -84,6 +138,11 @@ impl ControlKey {
             "end" => Self::End,
             "enter" => Self::Enter,
             "space" => Self::Space,
+            "word-left" => Self::WordLeft,
+            "word-right" => Self::WordRight,
+            "select-all" => Self::SelectAll,
+            "undo" => Self::Undo,
+            "redo" => Self::Redo,
             _ => return None,
         })
     }
@@ -100,6 +159,11 @@ impl ControlKey {
             Self::End => "end",
             Self::Enter => "enter",
             Self::Space => "space",
+            Self::WordLeft => "word-left",
+            Self::WordRight => "word-right",
+            Self::SelectAll => "select-all",
+            Self::Undo => "undo",
+            Self::Redo => "redo",
         }
     }
 }
@@ -126,7 +190,8 @@ pub enum ControlEffect {
     },
 }
 
-/// Character-indexed selection that never splits a UTF-8 scalar value.
+/// Character-indexed selection. Navigation and deletion snap to UAX #29
+/// grapheme boundaries while explicit accessibility ranges remain scalar-based.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct ControlSelection {
     pub anchor: usize,
@@ -170,7 +235,29 @@ pub struct BrowserControlModel {
     initial_controls: Vec<ControlState>,
     bindings: Vec<ControlBinding>,
     editors: Vec<ControlEditorState>,
+    histories: Vec<ControlEditHistory>,
     focused_key: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct ControlEditSnapshot {
+    value: String,
+    selection: ControlSelection,
+}
+
+impl ControlEditSnapshot {
+    fn from_parts(control: &ControlState, editor: &ControlEditorState) -> Self {
+        Self {
+            value: control.value.clone(),
+            selection: editor.selection,
+        }
+    }
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+struct ControlEditHistory {
+    undo: Vec<ControlEditSnapshot>,
+    redo: Vec<ControlEditSnapshot>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -227,11 +314,13 @@ impl BrowserControlModel {
                 accessible_description,
             })
             .collect();
+        let histories = vec![ControlEditHistory::default(); bindings.len()];
         Self {
             initial_controls: controls.clone(),
             controls,
             bindings,
             editors,
+            histories,
             focused_key,
         }
     }
@@ -266,12 +355,13 @@ impl BrowserControlModel {
         form_index: Option<usize>,
     ) -> Vec<ControlEffect> {
         let mut effects = Vec::new();
-        for (((control, initial), binding), editor) in self
+        for (index, (((control, initial), binding), editor)) in self
             .controls
             .iter_mut()
             .zip(&self.initial_controls)
             .zip(&self.bindings)
             .zip(&mut self.editors)
+            .enumerate()
         {
             let associated = match binding.form_owner.as_deref() {
                 Some(owner) => form_id == Some(owner),
@@ -294,6 +384,7 @@ impl BrowserControlModel {
             editor.caret_phase_ms = 0;
             editor.pointer_anchor = None;
             editor.invalid_message = None;
+            self.histories[index] = ControlEditHistory::default();
             if changed {
                 effects.push(ControlEffect::ValueChanged {
                     key: control.key.clone(),
@@ -367,6 +458,16 @@ impl BrowserControlModel {
 
     pub fn key_down_with_shift(&mut self, key: ControlKey, shift: bool) -> Option<ControlEffect> {
         let kind = self.focused()?.kind;
+        match key {
+            ControlKey::Undo => return self.undo(),
+            ControlKey::Redo => return self.redo(),
+            ControlKey::SelectAll if kind.accepts_text() => {
+                let key = self.focused_key()?.to_string();
+                let length = self.focused()?.value.chars().count();
+                return self.set_selection(&key, 0, length);
+            }
+            _ => {}
+        }
         match (key, kind) {
             (ControlKey::Space, kind) if kind.accepts_text() => return self.text_input(" "),
             (ControlKey::Enter, ControlKind::TextArea) => return self.text_input("\n"),
@@ -377,6 +478,12 @@ impl BrowserControlModel {
             match key {
                 ControlKey::ArrowLeft => return self.move_caret(-1, shift, false),
                 ControlKey::ArrowRight => return self.move_caret(1, shift, false),
+                ControlKey::WordLeft => {
+                    return self.move_by_unit(false, ControlNavigationUnit::Word, shift)
+                }
+                ControlKey::WordRight => {
+                    return self.move_by_unit(true, ControlNavigationUnit::Word, shift)
+                }
                 ControlKey::Home => return self.move_caret(0, shift, true),
                 ControlKey::End => return self.move_caret(0, shift, false),
                 ControlKey::Backspace => return self.delete_from_focused(true),
@@ -509,13 +616,19 @@ impl BrowserControlModel {
 
     /// Return the selected plain text without exposing password values.
     pub fn copy_selection(&self) -> Option<String> {
+        self.copy_selection_payload()?.plain_text
+    }
+
+    pub fn copy_selection_payload(&self) -> Option<ControlClipboardPayload> {
         let index = self.focused_index()?;
         let control = &self.controls[index];
         if control.kind == ControlKind::Password || !control.kind.accepts_text() {
             return None;
         }
         let (start, end) = self.editors[index].selection.ordered();
-        (start != end).then(|| char_range(&control.value, start, end))
+        (start != end).then(|| {
+            ControlClipboardPayload::from_plain_text(char_range(&control.value, start, end))
+        })
     }
 
     /// Delete and return the selected text. Password selections are never
@@ -530,6 +643,10 @@ impl BrowserControlModel {
         self.replace_focused_selection(text)
     }
 
+    pub fn paste_payload(&mut self, payload: &ControlClipboardPayload) -> Option<ControlEffect> {
+        self.replace_focused_selection(&payload.preferred_text()?)
+    }
+
     /// Place a caret from control-local coordinates and begin drag selection.
     pub fn pointer_place(
         &mut self,
@@ -537,6 +654,19 @@ impl BrowserControlModel {
         x: f64,
         y: f64,
         metrics: ControlTextMetrics,
+    ) -> Option<ControlEffect> {
+        self.pointer_select(key, x, y, metrics, 1)
+    }
+
+    /// Apply platform-independent click-count selection policy. A double click
+    /// selects a Unicode-aware word class and a triple click selects a line.
+    pub fn pointer_select(
+        &mut self,
+        key: &str,
+        x: f64,
+        y: f64,
+        metrics: ControlTextMetrics,
+        click_count: u8,
     ) -> Option<ControlEffect> {
         self.focus(key)?;
         let index = self.focused_index()?;
@@ -546,12 +676,26 @@ impl BrowserControlModel {
             y + self.editors[index].scroll_y,
             metrics,
         );
-        self.editors[index].selection = ControlSelection::collapsed(offset);
-        self.editors[index].pointer_anchor = Some(offset);
+        let selection = match click_count.min(3) {
+            2 => {
+                let (start, end) = word_boundary(&self.controls[index].value, offset);
+                ControlSelection {
+                    anchor: start,
+                    focus: end,
+                }
+            }
+            3 => ControlSelection {
+                anchor: line_boundary(&self.controls[index].value, offset, true),
+                focus: line_boundary(&self.controls[index].value, offset, false),
+            },
+            _ => ControlSelection::collapsed(offset),
+        };
+        self.editors[index].selection = selection;
+        self.editors[index].pointer_anchor = Some(selection.anchor);
         self.editors[index].caret_phase_ms = 0;
         Some(ControlEffect::SelectionChanged {
             key: key.to_string(),
-            selection: self.editors[index].selection,
+            selection,
         })
     }
 
@@ -578,6 +722,74 @@ impl BrowserControlModel {
             key: self.controls[index].key.clone(),
             selection,
         })
+    }
+
+    /// Continue a drag and deterministically scroll when the pointer leaves
+    /// the editable viewport. Hosts provide only local geometry.
+    pub fn pointer_drag_autoscroll(
+        &mut self,
+        x: f64,
+        y: f64,
+        viewport_width: f64,
+        viewport_height: f64,
+        metrics: ControlTextMetrics,
+    ) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        self.editors[index].pointer_anchor?;
+        let metrics = sanitize_metrics(metrics);
+        let (content_width, content_height) = text_extent(&self.controls[index].value, metrics);
+        let max_x = (content_width - viewport_width.max(metrics.caret_width)).max(0.0);
+        let max_y = if self.controls[index].kind == ControlKind::TextArea {
+            (content_height - viewport_height.max(metrics.line_height)).max(0.0)
+        } else {
+            0.0
+        };
+        self.editors[index].scroll_x = drag_autoscroll_offset(
+            self.editors[index].scroll_x,
+            x,
+            viewport_width,
+            metrics.advance * 3.0,
+            max_x,
+        );
+        self.editors[index].scroll_y = drag_autoscroll_offset(
+            self.editors[index].scroll_y,
+            y,
+            viewport_height,
+            metrics.line_height * 3.0,
+            max_y,
+        );
+        self.pointer_drag(x, y, metrics)
+    }
+
+    pub fn accessibility_action(
+        &mut self,
+        action: ControlAccessibilityAction,
+    ) -> Option<ControlEffect> {
+        match action {
+            ControlAccessibilityAction::Move {
+                forward,
+                unit,
+                extend,
+            } => self.move_by_unit(forward, unit, extend),
+            ControlAccessibilityAction::SetSelection(selection) => {
+                let key = self.focused_key()?.to_string();
+                self.set_selection(&key, selection.anchor, selection.focus)
+            }
+            ControlAccessibilityAction::ReplaceSelection(value) => {
+                self.replace_focused_selection(&value)
+            }
+            ControlAccessibilityAction::SelectAll => self.key_down(ControlKey::SelectAll),
+            ControlAccessibilityAction::Undo => self.undo(),
+            ControlAccessibilityAction::Redo => self.redo(),
+        }
+    }
+
+    pub fn undo(&mut self) -> Option<ControlEffect> {
+        self.restore_history(true)
+    }
+
+    pub fn redo(&mut self) -> Option<ControlEffect> {
+        self.restore_history(false)
     }
 
     pub fn pointer_release(&mut self) {
@@ -726,12 +938,19 @@ impl BrowserControlModel {
 
     fn replace_focused_selection(&mut self, text: &str) -> Option<ControlEffect> {
         let index = self.focused_index()?;
-        let control = &mut self.controls[index];
-        if control.disabled || control.readonly || !control.kind.accepts_text() {
+        if self.controls[index].disabled
+            || self.controls[index].readonly
+            || !self.controls[index].kind.accepts_text()
+        {
             return None;
         }
         let selection = self.editors[index].selection;
         let (start, end) = selection.ordered();
+        if start == end && text.is_empty() {
+            return None;
+        }
+        self.record_history(index);
+        let control = &mut self.controls[index];
         replace_char_range(&mut control.value, start, end, text);
         let caret = start + text.chars().count();
         self.editors[index].selection = ControlSelection::collapsed(caret);
@@ -751,19 +970,18 @@ impl BrowserControlModel {
         if control.disabled || control.readonly || !control.kind.accepts_text() {
             return None;
         }
-        let length = control.value.chars().count();
         let (mut start, mut end) = self.editors[index].selection.ordered();
         if start == end {
             if backward {
                 if start == 0 {
                     return None;
                 }
-                start -= 1;
+                start = previous_grapheme_offset(&control.value, start);
             } else {
-                if end >= length {
+                if end >= control.value.chars().count() {
                     return None;
                 }
-                end += 1;
+                end = next_grapheme_offset(&control.value, end);
             }
         }
         self.editors[index].selection = ControlSelection {
@@ -776,7 +994,6 @@ impl BrowserControlModel {
     fn move_caret(&mut self, delta: isize, extend: bool, home: bool) -> Option<ControlEffect> {
         let index = self.focused_index()?;
         let control = &self.controls[index];
-        let length = control.value.chars().count();
         let current = self.editors[index].selection;
         let focus = if delta < 0 && !extend && !current.is_collapsed() {
             current.ordered().0
@@ -787,7 +1004,11 @@ impl BrowserControlModel {
         } else if delta == 0 {
             line_boundary(&control.value, current.focus, false)
         } else {
-            current.focus.saturating_add_signed(delta).min(length)
+            if delta < 0 {
+                previous_grapheme_offset(&control.value, current.focus)
+            } else {
+                next_grapheme_offset(&control.value, current.focus)
+            }
         };
         let selection = if extend {
             ControlSelection {
@@ -802,6 +1023,108 @@ impl BrowserControlModel {
         Some(ControlEffect::SelectionChanged {
             key: control.key.clone(),
             selection,
+        })
+    }
+
+    fn move_by_unit(
+        &mut self,
+        forward: bool,
+        unit: ControlNavigationUnit,
+        extend: bool,
+    ) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        let control = &self.controls[index];
+        if !control.kind.accepts_text() {
+            return None;
+        }
+        let current = self.editors[index].selection;
+        let length = control.value.chars().count();
+        let focus = if !extend && !current.is_collapsed() {
+            if forward {
+                current.ordered().1
+            } else {
+                current.ordered().0
+            }
+        } else {
+            match unit {
+                ControlNavigationUnit::Grapheme => {
+                    if forward {
+                        next_grapheme_offset(&control.value, current.focus)
+                    } else {
+                        previous_grapheme_offset(&control.value, current.focus)
+                    }
+                }
+                ControlNavigationUnit::Word => {
+                    word_navigation_offset(&control.value, current.focus, forward)
+                }
+                ControlNavigationUnit::Line => {
+                    line_boundary(&control.value, current.focus, !forward)
+                }
+                ControlNavigationUnit::Document => {
+                    if forward {
+                        length
+                    } else {
+                        0
+                    }
+                }
+            }
+        };
+        let selection = if extend {
+            ControlSelection {
+                anchor: current.anchor,
+                focus,
+            }
+        } else {
+            ControlSelection::collapsed(focus)
+        };
+        self.editors[index].selection = selection;
+        self.editors[index].caret_phase_ms = 0;
+        Some(ControlEffect::SelectionChanged {
+            key: control.key.clone(),
+            selection,
+        })
+    }
+
+    fn record_history(&mut self, index: usize) {
+        let snapshot = ControlEditSnapshot::from_parts(&self.controls[index], &self.editors[index]);
+        let history = &mut self.histories[index];
+        if history.undo.last() != Some(&snapshot) {
+            history.undo.push(snapshot);
+            if history.undo.len() > EDIT_HISTORY_LIMIT {
+                history.undo.remove(0);
+            }
+        }
+        history.redo.clear();
+    }
+
+    fn restore_history(&mut self, undo: bool) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        if self.controls[index].disabled
+            || self.controls[index].readonly
+            || !self.controls[index].kind.accepts_text()
+        {
+            return None;
+        }
+        let current = ControlEditSnapshot::from_parts(&self.controls[index], &self.editors[index]);
+        let history = &mut self.histories[index];
+        let target = if undo {
+            let target = history.undo.pop()?;
+            history.redo.push(current);
+            target
+        } else {
+            let target = history.redo.pop()?;
+            history.undo.push(current);
+            target
+        };
+        self.controls[index].value = target.value;
+        self.editors[index].selection = target.selection;
+        self.editors[index].composition = None;
+        self.editors[index].composition_range = None;
+        self.editors[index].caret_phase_ms = 0;
+        self.editors[index].invalid_message = None;
+        Some(ControlEffect::ValueChanged {
+            key: self.controls[index].key.clone(),
+            value: self.controls[index].value.clone(),
         })
     }
 
@@ -1114,6 +1437,189 @@ fn char_range(value: &str, start: usize, end: usize) -> String {
         .skip(start)
         .take(end.saturating_sub(start))
         .collect()
+}
+
+fn grapheme_offsets(value: &str) -> Vec<usize> {
+    let mut offsets = graphemes(value)
+        .into_iter()
+        .map(|cluster| value[..cluster.bytes.start].chars().count())
+        .collect::<Vec<_>>();
+    offsets.push(value.chars().count());
+    offsets.sort_unstable();
+    offsets.dedup();
+    offsets
+}
+
+fn previous_grapheme_offset(value: &str, offset: usize) -> usize {
+    grapheme_offsets(value)
+        .into_iter()
+        .rev()
+        .find(|boundary| *boundary < offset)
+        .unwrap_or(0)
+}
+
+fn next_grapheme_offset(value: &str, offset: usize) -> usize {
+    grapheme_offsets(value)
+        .into_iter()
+        .find(|boundary| *boundary > offset)
+        .unwrap_or_else(|| value.chars().count())
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum WordClass {
+    Space,
+    Word,
+    Punctuation,
+}
+
+fn word_class(character: char) -> WordClass {
+    if character.is_whitespace() {
+        WordClass::Space
+    } else if character.is_alphanumeric() || character == '_' {
+        WordClass::Word
+    } else {
+        WordClass::Punctuation
+    }
+}
+
+fn word_boundary(value: &str, offset: usize) -> (usize, usize) {
+    let characters = value.chars().collect::<Vec<_>>();
+    if characters.is_empty() {
+        return (0, 0);
+    }
+    let pivot = offset.min(characters.len().saturating_sub(1));
+    let class = word_class(characters[pivot]);
+    let mut start = pivot;
+    let mut end = pivot + 1;
+    while start > 0 && word_class(characters[start - 1]) == class {
+        start -= 1;
+    }
+    while end < characters.len() && word_class(characters[end]) == class {
+        end += 1;
+    }
+    (start, end)
+}
+
+fn word_navigation_offset(value: &str, offset: usize, forward: bool) -> usize {
+    let characters = value.chars().collect::<Vec<_>>();
+    let mut cursor = offset.min(characters.len());
+    if forward {
+        if cursor < characters.len() {
+            let class = word_class(characters[cursor]);
+            while cursor < characters.len() && word_class(characters[cursor]) == class {
+                cursor += 1;
+            }
+        }
+        while cursor < characters.len() && word_class(characters[cursor]) == WordClass::Space {
+            cursor += 1;
+        }
+    } else {
+        while cursor > 0 && word_class(characters[cursor - 1]) == WordClass::Space {
+            cursor -= 1;
+        }
+        if cursor > 0 {
+            let class = word_class(characters[cursor - 1]);
+            while cursor > 0 && word_class(characters[cursor - 1]) == class {
+                cursor -= 1;
+            }
+        }
+    }
+    cursor
+}
+
+fn text_extent(value: &str, metrics: ControlTextMetrics) -> (f64, f64) {
+    let mut longest = 0;
+    let mut lines = 1;
+    let mut column = 0;
+    for character in value.chars() {
+        if character == '\n' {
+            longest = longest.max(column);
+            column = 0;
+            lines += 1;
+        } else {
+            column += 1;
+        }
+    }
+    longest = longest.max(column);
+    (
+        longest as f64 * metrics.advance,
+        lines as f64 * metrics.line_height,
+    )
+}
+
+fn axis_drag_delta(position: f64, extent: f64, maximum_step: f64) -> f64 {
+    if position < 0.0 {
+        -(-position).min(maximum_step)
+    } else if position > extent {
+        (position - extent).min(maximum_step)
+    } else {
+        0.0
+    }
+}
+
+fn drag_autoscroll_offset(
+    current: f64,
+    position: f64,
+    extent: f64,
+    maximum_step: f64,
+    maximum: f64,
+) -> f64 {
+    (current + axis_drag_delta(position, extent.max(0.0), maximum_step))
+        .clamp(0.0, maximum.max(0.0))
+}
+
+fn escape_html(value: &str) -> String {
+    value
+        .replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
+        .replace('\'', "&#39;")
+}
+
+fn text_to_html_fragment(value: &str) -> String {
+    format!("<span>{}</span>", escape_html(value).replace('\n', "<br>"))
+}
+
+fn html_fragment_to_text(value: &str) -> String {
+    let mut output = String::new();
+    let mut cursor = 0;
+    while cursor < value.len() {
+        let rest = &value[cursor..];
+        if rest.starts_with('<') {
+            let Some(end) = rest.find('>') else {
+                break;
+            };
+            let tag = rest[1..end]
+                .trim()
+                .trim_start_matches('/')
+                .split_ascii_whitespace()
+                .next()
+                .unwrap_or("")
+                .trim_end_matches('/')
+                .to_ascii_lowercase();
+            if matches!(tag.as_str(), "br" | "p" | "div" | "li")
+                && !output.ends_with('\n')
+                && !output.is_empty()
+            {
+                output.push('\n');
+            }
+            cursor += end + 1;
+            continue;
+        }
+        let next = rest.find('<').unwrap_or(rest.len());
+        output.push_str(
+            &rest[..next]
+                .replace("&nbsp;", " ")
+                .replace("&lt;", "<")
+                .replace("&gt;", ">")
+                .replace("&quot;", "\"")
+                .replace("&#39;", "'")
+                .replace("&amp;", "&"),
+        );
+        cursor += next;
+    }
+    output
 }
 
 fn line_column(value: &str, offset: usize) -> (usize, usize) {
@@ -1500,5 +2006,100 @@ mod tests {
             .unwrap()
             .caret
             .is_none());
+    }
+
+    #[test]
+    fn grapheme_and_word_navigation_never_split_user_perceived_characters() {
+        let tree = parse_browser_render_tree("<input id='q' value='A👩‍🚀 café two'>").unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let key = "control:0:id:q";
+        model.focus(key);
+        model.set_selection(key, 4, 4);
+        model.key_down(ControlKey::ArrowLeft);
+        assert_eq!(
+            model.editor(key).unwrap().selection,
+            ControlSelection::collapsed(1)
+        );
+        model.set_selection(key, 4, 4);
+        model.key_down(ControlKey::Backspace);
+        assert_eq!(model.control(key).unwrap().value, "A café two");
+
+        model.key_down(ControlKey::End);
+        model.key_down(ControlKey::WordLeft);
+        assert_eq!(
+            model.editor(key).unwrap().selection,
+            ControlSelection::collapsed(7)
+        );
+        model.key_down(ControlKey::WordLeft);
+        assert_eq!(
+            model.editor(key).unwrap().selection,
+            ControlSelection::collapsed(2)
+        );
+        model.key_down_with_shift(ControlKey::WordRight, true);
+        assert_eq!(model.editor(key).unwrap().selection.ordered(), (2, 7));
+    }
+
+    #[test]
+    fn undo_redo_and_clipboard_flavors_are_shared_bounded_transactions() {
+        let tree = parse_browser_render_tree("<input id='q' value='one &lt; two'>").unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let key = "control:0:id:q";
+        model.focus(key);
+        model.set_selection(key, 0, 3);
+        let payload = model.copy_selection_payload().unwrap();
+        assert_eq!(payload.plain_text.as_deref(), Some("one"));
+        assert_eq!(payload.html.as_deref(), Some("<span>one</span>"));
+
+        model.paste_text("three");
+        assert_eq!(model.control(key).unwrap().value, "three < two");
+        model.key_down(ControlKey::Undo);
+        assert_eq!(model.control(key).unwrap().value, "one < two");
+        assert_eq!(model.editor(key).unwrap().selection.ordered(), (0, 3));
+        model.key_down(ControlKey::Redo);
+        assert_eq!(model.control(key).unwrap().value, "three < two");
+
+        model.set_selection(key, 0, 5);
+        model.paste_payload(&ControlClipboardPayload {
+            plain_text: None,
+            html: Some("<b>four &amp; five</b><br>six".into()),
+        });
+        assert_eq!(model.control(key).unwrap().value, "four & five\nsix < two");
+
+        for _ in 0..(EDIT_HISTORY_LIMIT + 25) {
+            model.text_input("!");
+        }
+        assert_eq!(model.histories[0].undo.len(), EDIT_HISTORY_LIMIT);
+    }
+
+    #[test]
+    fn click_count_autoscroll_and_accessibility_actions_share_selection_policy() {
+        let tree = parse_browser_render_tree(
+            "<textarea id='notes'>one two three four five\nsecond line</textarea>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let key = "control:0:id:notes";
+        let metrics = ControlTextMetrics::default();
+
+        model.pointer_select(key, 5.0 * metrics.advance, 0.0, metrics, 2);
+        assert_eq!(model.editor(key).unwrap().selection.ordered(), (4, 7));
+        model.pointer_select(key, 5.0 * metrics.advance, 0.0, metrics, 3);
+        assert_eq!(model.editor(key).unwrap().selection.ordered(), (0, 23));
+
+        model.pointer_select(key, 0.0, 0.0, metrics, 1);
+        model.pointer_drag_autoscroll(160.0, 80.0, 32.0, 18.0, metrics);
+        assert!(model.editor(key).unwrap().scroll_x > 0.0);
+        assert!(model.editor(key).unwrap().scroll_y > 0.0);
+
+        model.accessibility_action(ControlAccessibilityAction::SelectAll);
+        model.accessibility_action(ControlAccessibilityAction::ReplaceSelection(
+            "accessible".into(),
+        ));
+        assert_eq!(model.control(key).unwrap().value, "accessible");
+        model.accessibility_action(ControlAccessibilityAction::Undo);
+        assert_eq!(
+            model.control(key).unwrap().value,
+            "one two three four five\nsecond line"
+        );
     }
 }

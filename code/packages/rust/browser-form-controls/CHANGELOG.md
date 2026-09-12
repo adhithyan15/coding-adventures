@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add generated-Unicode grapheme movement/deletion, shared word and click-count
+  selection, bounded drag autoscroll, per-control undo/redo transactions,
+  plain/HTML clipboard negotiation, and host-neutral accessibility actions.
+
 - Add backend-neutral editor presentation geometry, control viewport scrolling,
   pointer drag selection, deterministic caret blink, composition candidate
   rectangles, and password-safe clipboard operations.

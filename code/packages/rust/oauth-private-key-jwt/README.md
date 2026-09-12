@@ -15,8 +15,18 @@ encoding, and the final assertion are wipe-on-drop values.
 The only effect is delegated to `oauth-private-key-signer`, whose durable
 attempt/result events contain the provider, opaque key, exact algorithm, and
 caller trace. Pure assertion construction needs no additional audit event.
-The returned assertion retains provider, client, audience, and trace bindings
-for the request-binding layer to verify before HTTPS transport.
+The profile can now authenticate already audit-released authorization-code,
+refresh-token, and revocation requests. Provider, client, endpoint audience,
+and trace are bound before signing; a mismatch prevents both signer audit and
+the signing effect. The result carries a zeroizing form body with exact
+`client_assertion_type` and `client_assertion` fields, while exchange and
+refresh results preserve their response-decoder context. Revocation requires a
+profile whose audience exactly matches the revocation endpoint rather than
+assuming that a provider accepts its token endpoint as that audience.
+
+Transport remains injected and must independently audit its external effect
+with the retained provider and trace. The request-binding layer adds no network
+or storage authority and emits no duplicate event for its pure form assembly.
 
 This package implements no signing algorithm and grants no network authority.
 An injected HSM or operating-system signer can satisfy the existing boundary.

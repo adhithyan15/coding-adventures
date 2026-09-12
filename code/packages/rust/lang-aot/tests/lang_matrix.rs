@@ -1691,6 +1691,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — path-independent conditional mixed tracked arithmetic may
+    // bound a power while its runtime selector remains emitted.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then whole + part else part + whole)) + 6.0; gate := 1.0; whole := 9; part := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — equal branches of a pure runtime conditional may retain
     // bounded multiplication while the selector branch still lowers.
     Prog {
@@ -9946,6 +9955,31 @@ fn algol_mixed_tracked_numeric_arithmetic_powers_run_on_every_available_standard
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but mixed numeric arithmetic did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_mixed_tracked_numeric_powers_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if gate = 0.0 then whole + part else part + whole")
+        })
+        .expect("conditional mixed tracked numeric power must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional mixed arithmetic did not run"
             );
             continue;
         };

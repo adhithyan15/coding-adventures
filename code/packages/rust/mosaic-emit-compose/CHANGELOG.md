@@ -5,6 +5,33 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — the fixed leading cell of each table row gets its own semantics (#14843)
+
+`RowHeaderGrid` authors four `table-cell-role` values. Compose expressed two:
+`column-header` got `collectionItemInfo` plus `heading()`, `data` got
+`collectionItemInfo`. **`corner` and `row-header` got nothing at all** —
+they live on the fixed cell that opens a row, outside the `For`, and
+`in_loop` is what advances the scope to a cell.
+
+A new `TableSemanticScope::LeadingCell` covers it:
+
+| cell | emits |
+| --- | --- |
+| header row's corner | `collectionItemInfo(rowIndex = 0, columnIndex = 0)` |
+| each body row's row-header | `collectionItemInfo(rowIndex = r + 1, columnIndex = 0)` + `heading()` |
+
+`heading()` on the body one because it labels its row — the nearest thing
+Compose has to React's `scope="row"`, which is how React expresses the same
+authored role. The corner labels nothing, so it carries position only.
+
+Conditional, like the column offset it sits beside: a plain `Grid` opens its
+rows with the `For` itself and nothing claims column 0. Pinned by a test.
+
+This does **not** change VisiCalc's degradation count — `table-cell-role` is
+still reported on every non-React backend, because that gate has no
+per-backend predicate. Giving it one needs the enclosing table's context,
+which the property walker does not carry; the substance is now there for it.
+
 ### Added — a HostTable's authored focus and accessible name (#14843)
 
 `accessibility.table-focus-unimplemented` was gated on `backend != React`
