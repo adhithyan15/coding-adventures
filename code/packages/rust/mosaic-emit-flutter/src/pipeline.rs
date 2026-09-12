@@ -2626,7 +2626,17 @@ fn emit_container(
     // putting a flexible child in it throws
     // `RenderFlex children have non-zero flex but incoming width constraints
     // are unbounded` (#14857).
+    // A `max-width` cap is a bound this emitter is about to write into the
+    // output itself -- the `ConstrainedBox` goes on a few lines below,
+    // unconditionally -- so it is a SOURCE of boundedness, not an inherited
+    // flag, and it survives the direct-Row-child reset on the last line.
+    //
+    // That distinction is the whole fix (#14902). Threading `width_bounded`
+    // down from the cap instead was inert (#14901): a capped node is itself
+    // usually a direct Row child, so the reset discarded the flag the moment
+    // it arrived.
     let width_bounded = width.is_some()
+        || part_max_width(node, part_styles).is_some()
         || part_flex_grow(node, part_styles).is_some()
         || (!ctx.direct_row_child && ctx.width_bounded);
     let row_accepts_flex = widget == "Row" && width_bounded;
@@ -11241,6 +11251,62 @@ mod tests {
         assert!(
             !out.contains("Expanded("),
             "nested branch inputs must use the intermediate Column context:\n{out}"
+        );
+    }
+
+    /// A `max-width` cap is a bound the emitter itself is about to write
+    /// into the output, so it must survive the direct-Row-child reset.
+    ///
+    /// The reset is right for an *inherited* flag: a direct Row child
+    /// really is unbounded in the general case, which is what
+    /// `nested_if_inside_row_branch_column_resets_direct_row_context`
+    /// protects. An explicit cap is different in kind -- the
+    /// `ConstrainedBox` that bounds the subtree is emitted a few lines
+    /// later, unconditionally.
+    ///
+    /// Placing the capped node as a direct Row child is the whole point of
+    /// the fixture: under the root the subtree is already bounded and the
+    /// cap would be indistinguishable from doing nothing. That is exactly
+    /// how the first attempt at this (a threaded `width_bounded` flag,
+    /// dropped in #14901) passed every product-level check while changing
+    /// no output at all.
+    #[test]
+    fn a_max_width_cap_bounds_its_subtree_through_the_row_child_reset() {
+        let m = component("Capped", vec![slot("label", SlotType::Text, false)], vec![]);
+        let style = StyleDef {
+            component_name: "Capped".into(),
+            parts: vec![PartStyle {
+                name: "cap".into(),
+                base: vec![StyleProp {
+                    name: "max-width".into(),
+                    value: "760px".into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let mut capped = node_with(
+            "Box",
+            vec![],
+            vec![node_with(
+                "Row",
+                vec![],
+                vec![text_node("some long cell text"), text_node("and more")],
+            )],
+        );
+        capped.part_name = Some("cap".into());
+        let l = layout("Capped", node_with("Row", vec![], vec![capped]));
+        let out = from_pipeline(&m, &l, &style).expect("emit").output;
+
+        assert!(out.contains("maxWidth: 760"), "cap must be emitted:\n{out}");
+        // Count rather than match a rendered line: the emitter pads between
+        // `child:` and the child, so a literal match would be asserting the
+        // indentation instead of the behaviour.
+        assert_eq!(
+            out.matches("Flexible(child:").count(),
+            2,
+            "the Row under the cap is bounded, so both Text children can \
+             shrink:\n{out}"
         );
     }
 
