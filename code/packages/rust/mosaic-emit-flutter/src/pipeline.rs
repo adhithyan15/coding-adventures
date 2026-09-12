@@ -1953,6 +1953,10 @@ fn emit_widget_class(
         emits,
         TableCtx {
             radio_group_members: Some(&radio_groups),
+            // The component root is given the window's width (#14857).
+            // `bool::default()` is false, which would make every root
+            // unbounded and suppress flex everywhere.
+            width_bounded: true,
             ..TableCtx::default()
         },
     )?;
@@ -2055,6 +2059,14 @@ struct TableCtx<'a> {
     /// children. A `Row` that is itself a non-flex child of another `Row` is
     /// laid out with unbounded width and must keep its children non-flex.
     direct_row_accepts_flex: bool,
+    /// Whether this widget's own width is bounded (#14857).
+    ///
+    /// Distinct from `direct_row_accepts_flex`, which asks only about the
+    /// immediate parent. Unboundedness propagates: a non-flex `Row` child is
+    /// measured unbounded, and so is everything beneath it until something
+    /// re-bounds the width. A flexible child under an unbounded constraint is
+    /// a runtime assertion, not a layout quirk.
+    width_bounded: bool,
     /// Whole-component radio-group membership (`#13007`), computed once
     /// in `emit_widget_class` via [`collect_radio_group_members`] and
     /// threaded unchanged through every recursive call — `emit_host_radio`
@@ -2557,14 +2569,27 @@ fn emit_container(
     let width = props.get("width").and_then(|v| fixed_pixel_length(v));
     let height = props.get("height").and_then(|v| fixed_pixel_length(v));
     let elevation = elevation_tier(&props);
-    let row_accepts_flex = widget == "Row"
-        && (!ctx.direct_row_child
-            || width.is_some()
-            || part_flex_grow(node, part_styles).is_some());
+    // Is THIS container's own width bounded? A non-flex child of a `Row` is
+    // measured with an unbounded max width, and that unboundedness passes
+    // down through any intermediate container -- a `Column` inside such a
+    // `Row` is unbounded too, and so is a `Row` inside that `Column`.
+    //
+    // The previous form asked only `!ctx.direct_row_child`, i.e. "my parent
+    // is not a Row", and so treated one level of indirection as bounded.
+    // Trestle's `Row [subline]` sits at `Row [topbar] > Column [title-block] >
+    // Row [subline]` and was judged flex-accepting while measuring unbounded;
+    // putting a flexible child in it throws
+    // `RenderFlex children have non-zero flex but incoming width constraints
+    // are unbounded` (#14857).
+    let width_bounded = width.is_some()
+        || part_flex_grow(node, part_styles).is_some()
+        || (!ctx.direct_row_child && ctx.width_bounded);
+    let row_accepts_flex = widget == "Row" && width_bounded;
     let child_ctx = TableCtx {
         direct_row_child: widget == "Row",
         direct_row_accepts_flex: row_accepts_flex,
         direct_stack_child: widget == "Stack",
+        width_bounded,
         ..ctx
     };
 
@@ -2890,11 +2915,34 @@ fn emit_paired_children(
         // `Expanded` relies on the `Row`'s normal shrink-to-content
         // behaviour instead). `Expanded` is a compile error outside a
         // `Row`/`Column`, hence the `ctx.direct_row_child` gate.
+        // UI59 §11 (#14857): a Flutter `Row` measures a non-flexible child
+        // with an UNBOUNDED max width, so a `Text` never wraps -- it extends
+        // the row until the row overflows and throws
+        // `A RenderFlex overflowed by N pixels`. Compose starves a sibling to
+        // zero for the same authored layout; Flutter is the louder of the two.
+        //
+        // `Flexible` with the default loose fit is the mechanism: the child
+        // may take up to its share and measures to its content when smaller,
+        // so a short Text is unaffected and a long one wraps instead of
+        // overrunning. Only a `Text`, because a Text is the child that can
+        // REFLOW -- a container's intrinsic width is its content's.
+        //
+        // Gated on `direct_row_accepts_flex` for the same reason `Expanded`
+        // is: a `Row` that is itself a non-flex child of another `Row` is laid
+        // out unbounded, and `Flexible` inside it is a runtime error.
+        let flexible;
         let expanded;
         let sub: &str = match flex {
             Some(flex) => {
                 expanded = format!("Expanded(flex: {flex}, child: {sub})");
                 &expanded
+            }
+            None if ctx.direct_row_child
+                && ctx.direct_row_accepts_flex
+                && child.tag == "Text" =>
+            {
+                flexible = format!("Flexible(child: {sub})");
+                &flexible
             }
             None => sub,
         };
@@ -5525,6 +5573,8 @@ fn emit_host_table(
         sheet_font_size: sheet_font_size.as_deref(),
         direct_row_child: false,
         direct_row_accepts_flex: false,
+        // The root gets the window's width.
+        width_bounded: true,
         direct_stack_child: false,
         radio_group_members: parent_ctx.radio_group_members,
     };
