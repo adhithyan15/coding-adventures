@@ -49,6 +49,26 @@
             <!-- /mosaic-for -->
           </div>
           <span style="color: #6d28d9; font-weight: bold">{{selectedSchematicAnalysisLabel}}</span>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicAnalysisConfigurationLabel}}</span>
+            <span style="font-size: 12px; color: #475569">{{schematicAnalysisSourceLabel}}</span>
+            <div style="display: flex; flex-direction: row; gap: 6px">
+              <!-- mosaic-for each="schematicAnalysisSourceOptions" as="source" index="source-index" -->
+                <!-- emit "onSelectSchematicAnalysisSource" dropped: HTML is static -->
+                <button data-on-click="onSelectSchematicAnalysisSource" style="background: #eef2ff; color: #4338ca; border-width: 1px; border-color: #a5b4fc; border-radius: 3px; padding: 6px">{{source}}</button>
+              <!-- /mosaic-for -->
+            </div>
+            <span style="color: #5b21b6; font-family: monospace">{{selectedSchematicAnalysisSourceLabel}}</span>
+            <span style="font-size: 12px; color: #475569">{{schematicAnalysisParameterOneLabel}}</span>
+            <!-- emit "onSchematicAnalysisParameterOneChange" dropped: HTML is static -->
+            <input type="text" value="{{schematicAnalysisParameterOneValue}}" data-disabled="{{schematicAnalysisParameterOneDisabled}}" data-on-change="onSchematicAnalysisParameterOneChange" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px; font-family: monospace">
+            <span style="font-size: 12px; color: #475569">{{schematicAnalysisParameterTwoLabel}}</span>
+            <!-- emit "onSchematicAnalysisParameterTwoChange" dropped: HTML is static -->
+            <input type="text" value="{{schematicAnalysisParameterTwoValue}}" data-disabled="{{schematicAnalysisParameterTwoDisabled}}" data-on-change="onSchematicAnalysisParameterTwoChange" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px; font-family: monospace">
+            <span style="font-size: 12px; color: #475569">{{schematicAnalysisParameterThreeLabel}}</span>
+            <!-- emit "onSchematicAnalysisParameterThreeChange" dropped: HTML is static -->
+            <input type="text" value="{{schematicAnalysisParameterThreeValue}}" data-disabled="{{schematicAnalysisParameterThreeDisabled}}" data-on-change="onSchematicAnalysisParameterThreeChange" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px; font-family: monospace">
+          </div>
           <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicGridLabel}}</span>
           <div style="position: relative; width: 360px; min-height: 240px; background: #ffffff; border-width: 1px; border-color: #cbd5e1">
             <!-- mosaic-for each="schematicGridLines" as="line" index="line-index" -->

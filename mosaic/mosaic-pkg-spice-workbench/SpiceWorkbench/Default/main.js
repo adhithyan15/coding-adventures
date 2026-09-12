@@ -19,8 +19,20 @@ const fallbackProps = {
   "resultText": "Sample ResultText",
   "routeSchematicLabel": "Sample RouteSchematicLabel",
   "runLabel": "Sample RunLabel",
+  "schematicAnalysisConfigurationLabel": "Sample SchematicAnalysisConfigurationLabel",
   "schematicAnalysisControls": [],
   "schematicAnalysisLabel": "Sample SchematicAnalysisLabel",
+  "schematicAnalysisParameterOneDisabled": false,
+  "schematicAnalysisParameterOneLabel": "Sample SchematicAnalysisParameterOneLabel",
+  "schematicAnalysisParameterOneValue": "Sample SchematicAnalysisParameterOneValue",
+  "schematicAnalysisParameterThreeDisabled": false,
+  "schematicAnalysisParameterThreeLabel": "Sample SchematicAnalysisParameterThreeLabel",
+  "schematicAnalysisParameterThreeValue": "Sample SchematicAnalysisParameterThreeValue",
+  "schematicAnalysisParameterTwoDisabled": false,
+  "schematicAnalysisParameterTwoLabel": "Sample SchematicAnalysisParameterTwoLabel",
+  "schematicAnalysisParameterTwoValue": "Sample SchematicAnalysisParameterTwoValue",
+  "schematicAnalysisSourceLabel": "Sample SchematicAnalysisSourceLabel",
+  "schematicAnalysisSourceOptions": [],
   "schematicGridLabel": "Sample SchematicGridLabel",
   "schematicGridLines": [],
   "schematicLabel": "Sample SchematicLabel",
@@ -36,6 +48,7 @@ const fallbackProps = {
   "schematicWireSegments": [],
   "selectedAnalysisLabel": "Sample SelectedAnalysisLabel",
   "selectedSchematicAnalysisLabel": "Sample SelectedSchematicAnalysisLabel",
+  "selectedSchematicAnalysisSourceLabel": "Sample SelectedSchematicAnalysisSourceLabel",
   "selectedSchematicKindLabel": "Sample SelectedSchematicKindLabel",
   "selectedSchematicLabel": "Sample SelectedSchematicLabel",
   "selectedWaveformLabel": "Sample SelectedWaveformLabel",
@@ -67,6 +80,24 @@ const emitPayloads = {
     }
   ],
   "onRun": [],
+  "onSchematicAnalysisParameterOneChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
+  "onSchematicAnalysisParameterThreeChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
+  "onSchematicAnalysisParameterTwoChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
   "onSchematicValueChange": [
     {
       "name": "value",
@@ -82,6 +113,12 @@ const emitPayloads = {
   "onSelectSchematicAnalysis": [
     {
       "name": "analysis",
+      "type": "text"
+    }
+  ],
+  "onSelectSchematicAnalysisSource": [
+    {
+      "name": "reference",
       "type": "text"
     }
   ],
