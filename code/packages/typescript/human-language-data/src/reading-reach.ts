@@ -87,17 +87,66 @@ export interface ReadingReachReport {
  * author wrote, which would make a heavily-explained short passage outrank a
  * bare long one.
  */
-export function passageWordCount(markdown: string): number {
+/**
+ * Scripts that write no spaces, so whitespace cannot delimit a unit.
+ *
+ * Han, hiragana, katakana and the CJK extensions. A passage in any of these is
+ * counted by CHARACTER; everything else is counted by whitespace-separated word.
+ */
+const SPACELESS_SCRIPT = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/u;
+
+/**
+ * How much text a passage is, in the unit its own script makes available.
+ *
+ * The first version of this counted whitespace-separated runs everywhere, and
+ * for Japanese that is not a unit at all: もうすこし、ゆっくりいってください is
+ * fourteen signs and four words, and whitespace sees ONE token. The comma in it
+ * is U+3001, which is not whitespace either. So a six-line Japanese passage
+ * measured 6 and a reader could not tell that from six single words.
+ *
+ * A spaceless script is therefore counted by character, which is also the unit
+ * Chinese's own task shape asks for -- `prea1-reading-pinyin-signs-and-doorway-words`
+ * declares `unit: "items"`, and an item there is a character. Latin, Cyrillic,
+ * Devanagari and the Arabic-script tracks keep the word count they always had,
+ * because their shapes declare `unit: "words"` and they write the spaces to
+ * support it.
+ *
+ * Mixed passages count both: a Han character is one, and a run of Latin letters
+ * between spaces is one. That is the honest reading of a line like `コーヒー 100`.
+ */
+export function passageLength(markdown: string): number {
   const quoted = markdown
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.startsWith(">"))
     .map((line) => line.replace(/^>\s?/, ""));
-  return quoted
-    .join(" ")
-    .split(/\s+/)
-    .filter((word) => /[\p{L}\p{N}]/u.test(word)).length;
+  const text = quoted.join(" ");
+  if (!SPACELESS_SCRIPT.test(text)) {
+    return text.split(/\s+/).filter((word) => /[\p{L}\p{N}]/u.test(word)).length;
+  }
+  let count = 0;
+  let run = false;
+  for (const char of text) {
+    if (SPACELESS_SCRIPT.test(char)) {
+      count += 1;
+      run = false;
+      continue;
+    }
+    if (/[\p{L}\p{N}]/u.test(char)) {
+      if (!run) count += 1;
+      run = true;
+      continue;
+    }
+    run = false;
+  }
+  return count;
 }
+
+/**
+ * Kept as the old name so a caller that genuinely wants words can say so.
+ * Identical to `passageLength` for every space-writing script.
+ */
+export const passageWordCount = passageLength;
 
 /** Longest comprehension passage in each track, keyed by language. */
 export function longestPassageByTrack(lessons: readonly ParsedLesson[]): Record<string, number> {
@@ -105,7 +154,7 @@ export function longestPassageByTrack(lessons: readonly ParsedLesson[]): Record<
   for (const lesson of lessons) {
     for (const block of lesson.blocks ?? []) {
       if (block.type !== "comprehension") continue;
-      const words = passageWordCount(block.markdown ?? "");
+      const words = passageLength(block.markdown ?? "");
       if (words > (longest[lesson.language] ?? 0)) longest[lesson.language] = words;
     }
   }

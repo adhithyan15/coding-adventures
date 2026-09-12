@@ -17,7 +17,7 @@ import {
   loadTaskShapeInventory,
   loadEverything,
 } from "../src/loader.js";
-import { measureReadingReach, passageWordCount } from "../src/reading-reach.js";
+import { measureReadingReach, passageLength } from "../src/reading-reach.js";
 
 const root = defaultCurriculumRoot();
 const inventoryIds = listTaskShapeInventories();
@@ -90,13 +90,31 @@ describe("a passage is the quoted text, not the lesson around it", () => {
       "",
       "More prose afterwards, also not the passage.",
     ].join("\n");
-    expect(passageWordCount(markdown)).toBe(5);
+    expect(passageLength(markdown)).toBe(5);
   });
 
   // A numeral IS a word to a candidate and to the boards' own word counts; an
   // em-dash used as a bullet is not. Counting letters only would measure our
   // passages by a stricter rule than the exam length they are compared to.
   it("counts numerals but not letterless markers", () => {
-    expect(passageWordCount("> uno --- dos\n> 3 tres")).toBe(4);
+    expect(passageLength("> uno --- dos\n> 3 tres")).toBe(4);
+  });
+
+  // A spaceless script gets counted by character, because whitespace is not a
+  // unit there. This line is sixteen kana and four words; the old count saw ONE
+  // token, which is indistinguishable from a single-word passage. The 、 in the
+  // middle is U+3001 -- not whitespace, and correctly not counted as a sign.
+  it("counts a spaceless script by character", () => {
+    expect(passageLength("> もうすこし、ゆっくりいってください")).toBe(16);
+  });
+
+  // Chinese's own task shape asks for `items`, and an item is a character.
+  it("counts Han characters individually", () => {
+    expect(passageLength("> 你好\n> 谢谢")).toBe(4);
+  });
+
+  // Mixed: a Han character is one, a run of Latin between spaces is one.
+  it("counts a mixed passage in both units", () => {
+    expect(passageLength("> コーヒー 100")).toBe(5);
   });
 });
