@@ -9,7 +9,13 @@ Static public-client registrations may be decoded from the exact, versioned
 `BrokerProvider::from_public_provider_data` schema. Deployment-specific client
 IDs and redirect URIs stay outside that file and are supplied by the caller;
 unknown fields, duplicate fields, unsafe endpoints, implicit mix-up defenses,
-and unsupported response formats fail closed. Registration enforces exclusive
+and unsupported response formats fail closed. The broker can compose decoding
+and registration through an injected `PublicProviderDataSource`: it durably
+records the requested provider and trace before the source read, rejects a
+profile that names another provider before registry mutation, and records the
+closed read/decode result before proceeding to separately audited registration.
+No file path, backend diagnostic, or profile byte enters broker audit data.
+Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
 For one provider/account key it can store an already audited initial token
@@ -34,6 +40,7 @@ dependency are sibling packages in this repository.
 
 - browser and loopback-host orchestration;
 - concrete HTTPS, TLS, or socket authority;
+- concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
 - account identity proof, listing, detach/revocation, device authorization
   initiation UI, polling schedules, and full device-flow loops;

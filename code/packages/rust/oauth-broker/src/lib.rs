@@ -94,6 +94,24 @@ pub trait BrokerClock {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct BrokerClockError;
 
+/// Caller-injected authority for reading one static public-provider profile.
+///
+/// Implementations may read a file, vault object, embedded resource, or other
+/// host-owned source. The broker publishes its provider- and trace-bound audit
+/// intent before invoking this method, and the returned bytes remain
+/// wipe-on-drop while they are decoded.
+pub trait PublicProviderDataSource {
+    /// Read the profile selected by the exact requested provider identity.
+    fn load_public_provider_data(
+        &mut self,
+        provider: &ProviderId,
+    ) -> Result<Zeroizing<Vec<u8>>, ProviderDataSourceError>;
+}
+
+/// Closed provider-data source failure without path or backend diagnostics.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ProviderDataSourceError;
+
 /// Bounded token-endpoint response owned in wipe-on-drop storage.
 pub struct TokenEndpointResponse {
     status: u16,
@@ -185,6 +203,8 @@ pub struct TokenTransportError;
 /// Broker boundary recorded durably around configuration and external effects.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum BrokerAuditAction {
+    /// Read and decode one provider-bound static public-provider profile.
+    ProviderDataLoad,
     /// Register or idempotently confirm one provider definition.
     ProviderRegister,
     /// Store an initial credential response under an opaque account key.
@@ -215,6 +235,8 @@ pub enum BrokerAuditOutcome {
 pub enum BrokerFailureClass {
     /// Provider or broker policy input was invalid.
     InvalidInput,
+    /// The injected provider-data source failed.
+    ProviderData,
     /// No provider registration matched the requested key.
     ProviderNotRegistered,
     /// A provider identifier was redefined with different data.
@@ -282,6 +304,8 @@ pub enum BrokerError {
     InvalidPolicy,
     /// Static public-provider data was malformed, unknown, or failed validation.
     InvalidProviderData,
+    /// The injected provider-data source failed without releasing diagnostics.
+    ProviderDataSource,
     /// A transport returned an impossible HTTP status.
     InvalidTransportResponse,
     /// The provider has not been registered.
@@ -309,6 +333,7 @@ impl BrokerError {
             | Self::InvalidProviderData
             | Self::InvalidTransportResponse
             | Self::BindingMismatch => Some(BrokerFailureClass::InvalidInput),
+            Self::ProviderDataSource => Some(BrokerFailureClass::ProviderData),
             Self::ProviderNotRegistered => Some(BrokerFailureClass::ProviderNotRegistered),
             Self::ProviderConflict => Some(BrokerFailureClass::ProviderConflict),
             Self::Clock => Some(BrokerFailureClass::Clock),
@@ -327,6 +352,7 @@ impl Debug for BrokerError {
         formatter.write_str(match self {
             Self::InvalidPolicy => "InvalidPolicy",
             Self::InvalidProviderData => "InvalidProviderData",
+            Self::ProviderDataSource => "ProviderDataSource",
             Self::InvalidTransportResponse => "InvalidTransportResponse",
             Self::ProviderNotRegistered => "ProviderNotRegistered",
             Self::ProviderConflict => "ProviderConflict",
@@ -367,6 +393,56 @@ impl<S: CredentialStore> OAuthBroker<S> {
     /// Return the number of registered provider configurations.
     pub fn provider_count(&self) -> usize {
         self.providers.len()
+    }
+
+    /// Audit, load, exactly bind, decode, and register one public-provider profile.
+    ///
+    /// The requested provider identity selects the caller-owned source before
+    /// any read occurs. A profile naming another provider is rejected before
+    /// registry mutation. Deployment-specific client and redirect values stay
+    /// outside the static profile, and no concrete filesystem or vault
+    /// authority is acquired by the broker.
+    pub fn load_and_register_public_provider<D, A>(
+        &mut self,
+        requested_provider: &ProviderId,
+        client_id: impl Into<String>,
+        redirect_uri: impl Into<String>,
+        trace: OAuthTraceId,
+        source: &mut D,
+        audit: &mut A,
+    ) -> Result<(), BrokerError>
+    where
+        D: PublicProviderDataSource,
+        A: BrokerAuditSink,
+    {
+        publish_broker(
+            audit,
+            requested_provider,
+            trace,
+            BrokerAuditAction::ProviderDataLoad,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = source
+            .load_public_provider_data(requested_provider)
+            .map_err(|_| BrokerError::ProviderDataSource)
+            .and_then(|body| {
+                BrokerProvider::from_public_provider_data(body, client_id, redirect_uri)
+            })
+            .and_then(|provider| {
+                if provider.provider() == requested_provider {
+                    Ok(provider)
+                } else {
+                    Err(BrokerError::BindingMismatch)
+                }
+            });
+        let provider = finish_broker(
+            audit,
+            requested_provider,
+            trace,
+            BrokerAuditAction::ProviderDataLoad,
+            result,
+        )?;
+        self.register_provider(provider, trace, audit)
     }
 
     /// Audit and register one provider; an exact repeat is idempotent.
@@ -815,7 +891,9 @@ mod tests {
         AccountId, CredentialAuditAction, CredentialAuditError, CredentialAuditEvent,
         CredentialAuditOutcome, InMemoryCredentialStore,
     };
+    use std::cell::RefCell;
     use std::collections::VecDeque;
+    use std::rc::Rc;
 
     #[derive(Default)]
     struct RecordingAudit {
@@ -824,6 +902,7 @@ mod tests {
         custody: Vec<CredentialAuditEvent>,
         broker_calls: usize,
         fail_broker_on: Option<usize>,
+        order: Option<Rc<RefCell<Vec<&'static str>>>>,
     }
 
     impl BrokerAuditSink for RecordingAudit {
@@ -831,6 +910,30 @@ mod tests {
             self.broker_calls += 1;
             if self.fail_broker_on == Some(self.broker_calls) {
                 return Err(BrokerAuditError);
+            }
+            if let Some(order) = &self.order {
+                let label = match (event.action(), event.outcome()) {
+                    (BrokerAuditAction::ProviderDataLoad, BrokerAuditOutcome::Attempted) => {
+                        "load-attempted"
+                    }
+                    (BrokerAuditAction::ProviderDataLoad, BrokerAuditOutcome::Succeeded) => {
+                        "load-succeeded"
+                    }
+                    (BrokerAuditAction::ProviderDataLoad, BrokerAuditOutcome::Failed(_)) => {
+                        "load-failed"
+                    }
+                    (BrokerAuditAction::ProviderRegister, BrokerAuditOutcome::Attempted) => {
+                        "register-attempted"
+                    }
+                    (BrokerAuditAction::ProviderRegister, BrokerAuditOutcome::Succeeded) => {
+                        "register-succeeded"
+                    }
+                    (BrokerAuditAction::ProviderRegister, BrokerAuditOutcome::Failed(_)) => {
+                        "register-failed"
+                    }
+                    _ => "other-broker-audit",
+                };
+                order.borrow_mut().push(label);
             }
             self.broker.push(event.clone());
             Ok(())
@@ -931,6 +1034,47 @@ mod tests {
         }
     }
 
+    struct MockProviderDataSource {
+        response: Option<Result<Zeroizing<Vec<u8>>, ProviderDataSourceError>>,
+        calls: usize,
+        requested: Vec<ProviderId>,
+        order: Option<Rc<RefCell<Vec<&'static str>>>>,
+    }
+
+    impl MockProviderDataSource {
+        fn successful(body: Zeroizing<Vec<u8>>) -> Self {
+            Self {
+                response: Some(Ok(body)),
+                calls: 0,
+                requested: Vec::new(),
+                order: None,
+            }
+        }
+
+        fn failed() -> Self {
+            Self {
+                response: Some(Err(ProviderDataSourceError)),
+                calls: 0,
+                requested: Vec::new(),
+                order: None,
+            }
+        }
+    }
+
+    impl PublicProviderDataSource for MockProviderDataSource {
+        fn load_public_provider_data(
+            &mut self,
+            provider: &ProviderId,
+        ) -> Result<Zeroizing<Vec<u8>>, ProviderDataSourceError> {
+            self.calls += 1;
+            self.requested.push(provider.clone());
+            if let Some(order) = &self.order {
+                order.borrow_mut().push("source-read");
+            }
+            self.response.take().unwrap_or(Err(ProviderDataSourceError))
+        }
+    }
+
     fn trace(byte: u8) -> OAuthTraceId {
         OAuthTraceId::new([byte; 16])
     }
@@ -963,6 +1107,24 @@ mod tests {
 
     fn policy(name: &str, lead: u64) -> BrokerProvider {
         BrokerProvider::new(config(name), TokenResponseFormat::Json, lead).unwrap()
+    }
+
+    fn public_provider_data(name: &str) -> Zeroizing<Vec<u8>> {
+        Zeroizing::new(
+            format!(
+                r#"{{
+                    "schema_version":1,
+                    "provider":"{name}",
+                    "authorization_endpoint":"https://auth.{name}.example/authorize",
+                    "token_endpoint":"https://token.{name}.example/token",
+                    "mix_up_defense":{{"kind":"distinct_redirect_uri"}},
+                    "authorization_extra_parameters":{{}},
+                    "token_response_format":"json",
+                    "refresh_lead_seconds":300
+                }}"#
+            )
+            .into_bytes(),
+        )
     }
 
     fn device_session(
@@ -1120,6 +1282,149 @@ mod tests {
             audit.broker.last().unwrap().outcome(),
             BrokerAuditOutcome::Failed(BrokerFailureClass::ProviderConflict)
         );
+    }
+
+    #[test]
+    fn provider_data_load_is_bound_and_audited_before_source_and_registration() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let requested = ProviderId::new("fixture").unwrap();
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut source = MockProviderDataSource::successful(public_provider_data("fixture"));
+        source.order = Some(Rc::clone(&order));
+        let mut audit = RecordingAudit {
+            order: Some(Rc::clone(&order)),
+            ..RecordingAudit::default()
+        };
+
+        broker
+            .load_and_register_public_provider(
+                &requested,
+                "fixture-client",
+                "http://127.0.0.1:49152/fixture/callback",
+                trace(27),
+                &mut source,
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(source.calls, 1);
+        assert_eq!(
+            source.requested.as_slice(),
+            std::slice::from_ref(&requested)
+        );
+        assert_eq!(broker.provider_count(), 1);
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "load-attempted",
+                "source-read",
+                "load-succeeded",
+                "register-attempted",
+                "register-succeeded",
+            ]
+        );
+        assert!(audit
+            .broker
+            .iter()
+            .all(|event| { event.provider() == &requested && event.trace() == trace(27) }));
+    }
+
+    #[test]
+    fn provider_data_source_and_identity_failures_never_register() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let requested = ProviderId::new("fixture").unwrap();
+        let mut audit = RecordingAudit::default();
+        let mut failed_source = MockProviderDataSource::failed();
+        assert_eq!(
+            broker.load_and_register_public_provider(
+                &requested,
+                "fixture-client",
+                "http://127.0.0.1:49152/fixture/callback",
+                trace(28),
+                &mut failed_source,
+                &mut audit,
+            ),
+            Err(BrokerError::ProviderDataSource)
+        );
+        assert_eq!(failed_source.calls, 1);
+        assert_eq!(broker.provider_count(), 0);
+        assert_eq!(
+            audit.broker.last().unwrap().outcome(),
+            BrokerAuditOutcome::Failed(BrokerFailureClass::ProviderData)
+        );
+
+        let mut mismatched_source =
+            MockProviderDataSource::successful(public_provider_data("other"));
+        assert_eq!(
+            broker.load_and_register_public_provider(
+                &requested,
+                "fixture-client",
+                "http://127.0.0.1:49152/fixture/callback",
+                trace(29),
+                &mut mismatched_source,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        );
+        assert_eq!(mismatched_source.calls, 1);
+        assert_eq!(broker.provider_count(), 0);
+        assert_eq!(
+            audit.broker.last().unwrap().outcome(),
+            BrokerAuditOutcome::Failed(BrokerFailureClass::InvalidInput)
+        );
+        assert!(!audit.broker.iter().any(|event| {
+            event.trace() == trace(29) && event.action() == BrokerAuditAction::ProviderRegister
+        }));
+    }
+
+    #[test]
+    fn provider_data_audit_failures_prevent_read_or_registration() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let requested = ProviderId::new("fixture").unwrap();
+        let mut source = MockProviderDataSource::successful(public_provider_data("fixture"));
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(1),
+            ..RecordingAudit::default()
+        };
+        assert_eq!(
+            broker.load_and_register_public_provider(
+                &requested,
+                "fixture-client",
+                "http://127.0.0.1:49152/fixture/callback",
+                trace(30),
+                &mut source,
+                &mut audit,
+            ),
+            Err(BrokerError::Audit)
+        );
+        assert_eq!(source.calls, 0);
+        assert_eq!(broker.provider_count(), 0);
+
+        let mut source = MockProviderDataSource::successful(public_provider_data("fixture"));
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(2),
+            ..RecordingAudit::default()
+        };
+        assert_eq!(
+            broker.load_and_register_public_provider(
+                &requested,
+                "fixture-client",
+                "http://127.0.0.1:49152/fixture/callback",
+                trace(31),
+                &mut source,
+                &mut audit,
+            ),
+            Err(BrokerError::Audit)
+        );
+        assert_eq!(source.calls, 1);
+        assert_eq!(broker.provider_count(), 0);
+        assert!(!audit
+            .broker
+            .iter()
+            .any(|event| event.action() == BrokerAuditAction::ProviderRegister));
     }
 
     #[test]
