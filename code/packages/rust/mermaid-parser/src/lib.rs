@@ -31,6 +31,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_treemap, try_tokenize_mermaid_venn, try_tokenize_mermaid_ishikawa,
     try_tokenize_mermaid_wardley, try_tokenize_mermaid_cynefin, try_tokenize_mermaid_treeview,
     try_tokenize_mermaid_swimlane, try_tokenize_mermaid_railroad, try_tokenize_mermaid_info,
+    try_tokenize_mermaid_zenuml,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -76,6 +77,7 @@ const TREEVIEW_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/
 const SWIMLANE_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/swimlane.grammar");
 const RAILROAD_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/railroad.grammar");
 const INFO_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/info.grammar");
+const ZENUML_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/zenuml.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -682,6 +684,7 @@ impl MermaidDiagramType {
                 | Self::Swimlane
                 | Self::Railroad
                 | Self::Info
+                | Self::ZenUml
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -854,16 +857,64 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Swimlane => parse_swimlane(source).map(MermaidDiagram::Swimlane),
         MermaidDiagramType::Railroad => parse_railroad(source).map(MermaidDiagram::Railroad),
         MermaidDiagramType::Info => parse_info(source).map(MermaidDiagram::Info),
-        unsupported => Err(ParseError {
-            message: format!(
-                "Mermaid {} diagram family {:?} is recognized but not implemented",
-                MERMAID_COMPATIBILITY_BASELINE,
-                unsupported.canonical_id()
-            ),
-            line: 1,
-            col: 1,
-        }),
+        MermaidDiagramType::ZenUml => parse_zenuml(source).map(MermaidDiagram::Sequence),
     }
+}
+
+/// Parse the documented native ZenUML subset into the shared sequence IR.
+pub fn parse_zenuml(source: &str) -> Result<SequenceDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_zenuml(&prepared)
+        .map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(ZENUML_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse zenuml.grammar: {error}"));
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
+        .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
+
+    let mut diagram = SequenceDiagram {
+        title: None, accessibility_title: None, accessibility_description: None,
+        auto_number: false, auto_number_start: 1.0, auto_number_step: 1.0,
+        participants: Vec::new(), participant_groups: Vec::new(), events: Vec::new(),
+    };
+    let mut participant_indices = HashMap::new();
+    let mut header_seen = false;
+    for raw_line in prepared.lines() {
+        let line = raw_line.trim();
+        if line.is_empty() || line.starts_with("//") { continue; }
+        if !header_seen {
+            header_seen = line == "zenuml";
+            continue;
+        }
+        if let Some(title) = line.strip_prefix("title ") {
+            diagram.title = Some(title.trim().to_string());
+            continue;
+        }
+        if let Some(declaration) = line.strip_prefix('@') {
+            let (annotation, id) = declaration.split_once(char::is_whitespace)
+                .ok_or_else(|| ParseError { message: "invalid ZenUML participant annotator".into(), line: 1, col: 1 })?;
+            let kind = match annotation { "Actor" => SequenceParticipantKind::Actor, "Database" => SequenceParticipantKind::Database, _ => unreachable!() };
+            upsert_sequence_participant(&mut diagram, &mut participant_indices, id.trim().into(), id.trim().into(), SequenceTextWrap::Default, kind);
+            continue;
+        }
+        if let Some((message_head, label)) = line.split_once(':') {
+            if let Some((from, to)) = message_head.split_once("->") {
+                let from = from.trim(); let to = to.trim();
+                ensure_sequence_participant(&mut diagram, &mut participant_indices, from);
+                ensure_sequence_participant(&mut diagram, &mut participant_indices, to);
+                diagram.events.push(SequenceEvent::Message { from: from.into(), to: to.into(), label: label.trim().into(),
+                    wrap: SequenceTextWrap::Default, line_style: SequenceLineStyle::Solid,
+                    arrowhead: SequenceArrowhead::Open, bidirectional: false,
+                    central_connection: SequenceCentralConnection::None, activate: false, deactivate: false });
+                continue;
+            }
+        }
+        if let Some((id, label)) = line.split_once(" as ") {
+            upsert_sequence_participant(&mut diagram, &mut participant_indices, id.trim().into(), label.trim().into(), SequenceTextWrap::Default, SequenceParticipantKind::Participant);
+        } else {
+            ensure_sequence_participant(&mut diagram, &mut participant_indices, line);
+        }
+    }
+    Ok(diagram)
 }
 
 /// Parse Mermaid's complete 11.16.1 Info grammar and pin its injected version.

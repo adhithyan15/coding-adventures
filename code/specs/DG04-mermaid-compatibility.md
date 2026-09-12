@@ -506,6 +506,16 @@ the upstream fixed 400-by-100 layout and a backend-neutral glyph run reading
 `v11.16.1`. The pinned corpus covers both accepted forms and unsupported
 suffixes, and the native Metal-to-PNG path validates the complete family.
 
+### ZenUML Partial Compatibility
+
+The native ZenUML frontend accepts the documented title, participant ordering,
+aliases, Actor and Database annotators, and asynchronous `A->B: message` forms.
+It lowers into the shared Sequence IR, layout, and backend-neutral PaintScene
+pipeline, with a Metal-to-PNG fixture. Mermaid 11.16.1 delegates the broader
+language to external `@zenuml/core`; synchronous nesting, creation and reply
+messages, comments-as-notes, and control fragments remain unsupported and fail
+grammar validation rather than degrading silently.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

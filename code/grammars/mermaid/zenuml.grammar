@@ -1,0 +1,3 @@
+# @version 1
+document = { NEWLINE } HEADER { NEWLINE [ statement ] } EOF ;
+statement = TITLE_LINE | MESSAGE_LINE | ANNOTATED_PARTICIPANT_LINE | ALIAS_LINE | PARTICIPANT_LINE ;
