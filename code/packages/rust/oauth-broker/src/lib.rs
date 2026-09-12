@@ -15,6 +15,9 @@ use coding_adventures_oauth::{
     OAuthAuditSink, OAuthError, OAuthTraceId, ProviderConfig, ProviderId, TokenRefreshRequest,
     TokenResponse, TokenResponseFormat, MAX_TOKEN_RESPONSE_BYTES,
 };
+use coding_adventures_oauth_client_secret_custody::{
+    ClientSecretAuthentication, ClientSecretAuthenticationMethod, ClientSecretKey,
+};
 use coding_adventures_oauth_credential_custody::{
     CredentialAuditSink, CredentialCustody, CredentialKey, CredentialMetadata, CredentialRevision,
     CredentialStore, CustodyError,
@@ -116,6 +119,33 @@ impl BrokerProvider {
     /// imply that any algorithm has a concrete signing implementation.
     pub fn client_authentication_signing_algorithms(&self) -> &[String] {
         &self.client_authentication_signing_algorithms
+    }
+
+    /// Bind one opaque client-secret key to this provider's retained method.
+    ///
+    /// The key's provider must match exactly. Public profiles and
+    /// `private_key_jwt` profiles fail closed, so callers cannot choose or
+    /// default the client-secret wire method. This pure binding performs no
+    /// credential access and acquires no storage or transport authority.
+    pub fn bind_client_secret_authentication(
+        &self,
+        key: ClientSecretKey,
+    ) -> Result<ClientSecretAuthentication, BrokerError> {
+        if key.provider() != self.provider() {
+            return Err(BrokerError::BindingMismatch);
+        }
+        let method = match self.confidential_authentication_method {
+            Some(ConfidentialClientAuthenticationMethod::ClientSecretBasic) => {
+                ClientSecretAuthenticationMethod::ClientSecretBasic
+            }
+            Some(ConfidentialClientAuthenticationMethod::ClientSecretPost) => {
+                ClientSecretAuthenticationMethod::ClientSecretPost
+            }
+            None | Some(ConfidentialClientAuthenticationMethod::PrivateKeyJwt) => {
+                return Err(BrokerError::BindingMismatch);
+            }
+        };
+        Ok(ClientSecretAuthentication::new(key, method))
     }
 }
 
@@ -1522,6 +1552,7 @@ mod tests {
         prepare_authorization_server_metadata, prepare_device_authorization, prepare_token_refresh,
         DeviceAuthorizationProfile, OAuthAuditError, OAuthAuditEvent, OAuthAuditOutcome,
     };
+    use coding_adventures_oauth_client_secret_custody::ClientSecretReference;
     use coding_adventures_oauth_credential_custody::{
         AccountId, CredentialAuditAction, CredentialAuditError, CredentialAuditEvent,
         CredentialAuditOutcome, InMemoryCredentialStore,
@@ -2119,6 +2150,72 @@ mod tests {
             .broker
             .iter()
             .all(|event| { event.provider() == &requested && event.trace() == trace(32) }));
+    }
+
+    #[test]
+    fn confidential_provider_binds_only_its_exact_retained_client_secret_method() {
+        let provider = ProviderId::new("fixture-confidential").unwrap();
+        let key = || ClientSecretKey::new(provider.clone(), ClientSecretReference::new([0x51; 32]));
+
+        for (retained, expected) in [
+            (
+                ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+                ClientSecretAuthenticationMethod::ClientSecretBasic,
+            ),
+            (
+                ConfidentialClientAuthenticationMethod::ClientSecretPost,
+                ClientSecretAuthenticationMethod::ClientSecretPost,
+            ),
+        ] {
+            let policy = BrokerProvider::new_confidential(
+                config("fixture-confidential"),
+                TokenResponseFormat::Json,
+                300,
+                retained,
+                Vec::new(),
+            )
+            .unwrap();
+            let authentication = policy
+                .bind_client_secret_authentication(key())
+                .expect("retained client-secret method");
+            assert_eq!(authentication.key().provider(), &provider);
+            assert_eq!(authentication.method(), expected);
+        }
+
+        let wrong_provider_key = ClientSecretKey::new(
+            ProviderId::new("other-provider").unwrap(),
+            ClientSecretReference::new([0x52; 32]),
+        );
+        let basic = BrokerProvider::new_confidential(
+            config("fixture-confidential"),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            Vec::new(),
+        )
+        .unwrap();
+        assert_eq!(
+            basic.bind_client_secret_authentication(wrong_provider_key),
+            Err(BrokerError::BindingMismatch)
+        );
+
+        let public = policy("fixture-confidential", 300);
+        assert_eq!(
+            public.bind_client_secret_authentication(key()),
+            Err(BrokerError::BindingMismatch)
+        );
+        let private_key_jwt = BrokerProvider::new_confidential(
+            config("fixture-confidential"),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::PrivateKeyJwt,
+            vec!["EdDSA".to_owned()],
+        )
+        .unwrap();
+        assert_eq!(
+            private_key_jwt.bind_client_secret_authentication(key()),
+            Err(BrokerError::BindingMismatch)
+        );
     }
 
     #[test]
