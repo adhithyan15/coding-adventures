@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C29-characters",
+    "language": "chinese",
+    "chapter": 29,
+    "sequence": 2510,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:889f8028a51e9879"
+  },
+  "findings": []
+}

@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "CONNECTED-READING"
+  "segments": [
+    "ZH-PATH-028"
   ],
+  "omits": [],
   "relocates": {}
 }
