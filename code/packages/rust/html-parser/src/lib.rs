@@ -4713,7 +4713,16 @@ impl HtmlParser {
         if self.has_unmarked_table_after_last_fragment_marker() {
             return false;
         }
-        let Some(context) = self.open_fragment_context_name() else {
+        let Some(context_element) = self.open_elements.iter().rev().find_map(|path| {
+            let element = element_ref_at_path(&self.document, path)?;
+            has_fragment_context_marker(element).then_some(element)
+        }) else {
+            return false;
+        };
+        if context_element.namespace.is_some() {
+            return false;
+        }
+        let Some(context) = fragment_marker_value(context_element) else {
             return false;
         };
         match context {
@@ -4772,7 +4781,8 @@ impl HtmlParser {
             .rev()
             .find_map(|path| {
                 let element = element_ref_at_path(&self.document, path)?;
-                (element.name == name).then_some(has_fragment_context_marker(element))
+                (element.namespace.is_none() && element.name == name)
+                    .then_some(has_fragment_context_marker(element))
             })
             .unwrap_or(false)
     }
@@ -5239,9 +5249,10 @@ impl HtmlParser {
                 )
                 .at_emission(self.current_token_emission_position),
             );
-            if self.has_open_svg_html_integration_point() {
+            if self.has_open_foreign_integration_point() {
                 while self.current_namespace().is_some()
                     && !self.current_node_is_svg_html_integration_point()
+                    && !self.current_node_is_mathml_integration_point()
                 {
                     self.open_elements.pop();
                 }
@@ -7545,6 +7556,7 @@ impl HtmlParser {
             && !self.current_element_is(name)
             && !matches!(name, "br" | "p")
             && !is_table_context_element(name)
+            && name != "form"
             && self.open_html_element_in_scope_index(name).is_some()
         {
             self.diagnostics.push(
@@ -7576,13 +7588,12 @@ impl HtmlParser {
             }
 
             let has_open_template = self.has_open_html_template_element();
-            let pointer_was_set = self.form_element_pointer_set;
-            if !has_open_template {
-                self.form_element_pointer_set = false;
+            if !has_open_template && self.form_element_pointer_set {
+                self.close_pointer_owned_form_end_tag();
+                return;
             }
-            let (code, message) = if (has_open_template
-                && self.has_authored_open_html_element("form"))
-                || (!has_open_template && pointer_was_set)
+            let (code, message) = if has_open_template
+                && self.has_authored_open_html_element("form")
             {
                 (
                     "unexpected-form-end-tag-outside-scope",
@@ -7938,10 +7949,11 @@ impl HtmlParser {
         }
         if self.current_namespace().is_some()
             && !self.current_element_is(name)
-            && self.has_open_element(name)
+            && self.has_authored_open_element(name)
             && (is_table_context_element(name)
-                || self.current_namespace() == Some("svg")
-                || (self.current_namespace() == Some("math") && name == "p"))
+                || (in_foreign_content
+                    && (self.current_namespace() == Some("svg")
+                        || (self.current_namespace() == Some("math") && name == "p"))))
         {
             if is_table_context_element(name) {
                 self.diagnostics.push(
@@ -7961,19 +7973,28 @@ impl HtmlParser {
                 );
             }
             self.pop_foreign_elements();
-        } else if self.current_namespace().is_some()
+        } else if !in_foreign_content
+            && self.current_namespace().is_some()
+            && is_table_context_element(name)
+        {
+            return;
+        } else if in_foreign_content
             && !self.current_element_is(name)
             && matches!(name, "br" | "p")
             && self.current_element_is_marked_foreign_fragment_context()
         {
             self.append_node(Node::element(name.to_string(), Vec::new()));
             return;
-        } else if self.current_namespace().is_some()
+        } else if in_foreign_content
             && !self.current_element_is(name)
             && matches!(name, "br" | "p")
         {
             self.pop_foreign_elements();
-        } else if self.current_namespace().is_some() && !self.current_element_is(name) {
+        } else if in_foreign_content && !self.current_element_is(name) {
+            return;
+        }
+        if in_foreign_content && self.current_element_is(name) {
+            self.open_elements.pop();
             return;
         }
         if self.at_authored_template_column_group_boundary() && name != "template" {
@@ -8456,7 +8477,7 @@ impl HtmlParser {
     }
 
     fn close_element(&mut self, name: &str) {
-        let lower_bound = if name == "template" {
+        let template_lower_bound = if name == "template" {
             0
         } else {
             self.open_elements
@@ -8466,6 +8487,15 @@ impl HtmlParser {
                 })
                 .map_or(0, |index| index + 1)
         };
+        let fragment_lower_bound = self
+            .open_elements
+            .iter()
+            .rposition(|path| {
+                element_ref_at_path(&self.document, path)
+                    .is_some_and(has_fragment_context_marker)
+            })
+            .map_or(0, |index| index + 1);
+        let lower_bound = template_lower_bound.max(fragment_lower_bound);
         if let Some(relative_index) = self.open_elements[lower_bound..].iter().rposition(|path| {
             element_ref_at_path(&self.document, path).is_some_and(|element| {
                 element.name.eq_ignore_ascii_case(name)
@@ -8957,7 +8987,8 @@ impl HtmlParser {
             })
             .map_or(0, |index| index + 1);
         let Some(relative_index) = self.open_elements[lower_bound..].iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(&predicate)
+            element_ref_at_path(&self.document, path)
+                .is_some_and(|element| element.namespace.is_none() && predicate(&element.name))
         }) else {
             return false;
         };
@@ -9233,7 +9264,11 @@ impl HtmlParser {
 
     fn close_non_paragraph_children_above_menuitem(&mut self) {
         let Some(index) = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| name == "menuitem")
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.namespace.is_none()
+                    && element.name == "menuitem"
+                    && !has_fragment_context_marker(element)
+            })
         }) else {
             self.diagnostics.push(
                 ParserDiagnostic::new(
@@ -9498,7 +9533,9 @@ impl HtmlParser {
 
     fn close_open_element_if(&mut self, predicate: impl Fn(&str) -> bool) -> bool {
         let Some(index) = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(&predicate)
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.namespace.is_none() && predicate(&element.name)
+            })
         }) else {
             return false;
         };
@@ -9551,6 +9588,9 @@ impl HtmlParser {
             let Some(element) = element_ref_at_path(&self.document, path) else {
                 continue;
             };
+            if has_fragment_context_marker(element) {
+                return false;
+            }
             if element.namespace.is_none() {
                 return false;
             }
@@ -10559,6 +10599,14 @@ impl HtmlParser {
         self.open_elements
             .iter()
             .any(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
+    }
+
+    fn has_authored_open_element(&self, name: &str) -> bool {
+        self.open_elements.iter().any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                !has_fragment_context_marker(element) && element.name.eq_ignore_ascii_case(name)
+            })
+        })
     }
 
     fn open_html_select_is_in_table_context(&self) -> bool {
@@ -41605,6 +41653,330 @@ mod tests {
     }
 
     #[test]
+    fn foreign_fragment_context_names_do_not_drive_html_recovery() {
+        fn shape(node: &Node) -> String {
+            match node {
+                Node::Text(text) => format!("{:?}", text.data),
+                Node::Element(element) => {
+                    let namespace = match element.namespace.as_deref() {
+                        Some("svg") => "svg ",
+                        Some("math") => "math ",
+                        _ => "",
+                    };
+                    let children = element
+                        .children
+                        .iter()
+                        .map(shape)
+                        .collect::<Vec<_>>()
+                        .join(",");
+                    format!("{namespace}{}[{children}]", element.name)
+                }
+                _ => String::new(),
+            }
+        }
+
+        let cases = [
+            ("g", "<desc></p>x", "svg g[svg desc[p[],\"x\"]]"),
+            ("p", "<desc></p>x", "svg p[svg desc[p[],\"x\"]]"),
+            ("br", "<desc></br>x", "svg br[svg desc[br[],\"x\"]]"),
+            (
+                "p",
+                "<desc><p>a<div>b",
+                "svg p[svg desc[p[\"a\"],div[\"b\"]]]",
+            ),
+            ("body", "<desc></body>x", "svg body[svg desc[\"x\"]]"),
+            ("html", "<desc></html>x", "svg html[svg desc[\"x\"]]"),
+            ("form", "<desc></form>x", "svg form[svg desc[\"x\"]]"),
+            (
+                "button",
+                "<desc></button>x",
+                "svg button[svg desc[\"x\"]]",
+            ),
+            ("div", "<desc></div>x", "svg div[svg desc[\"x\"]]"),
+            ("li", "<desc></li>x", "svg li[svg desc[\"x\"]]"),
+            ("h1", "<desc></h1>x", "svg h1[svg desc[\"x\"]]"),
+            (
+                "table",
+                "<desc></table>x",
+                "svg table[svg desc[\"x\"]]",
+            ),
+            (
+                "select",
+                "<desc></select>x",
+                "svg select[svg desc[\"x\"]]",
+            ),
+            (
+                "object",
+                "<desc></object>x",
+                "svg object[svg desc[\"x\"]]",
+            ),
+            (
+                "applet",
+                "<desc></applet>x",
+                "svg applet[svg desc[\"x\"]]",
+            ),
+            (
+                "marquee",
+                "<desc></marquee>x",
+                "svg marquee[svg desc[\"x\"]]",
+            ),
+            (
+                "noframes",
+                "<desc><p>a<div>b",
+                "svg noframes[svg desc[p[\"a\"],div[\"b\"]]]",
+            ),
+            ("frameset", "<desc><frame>x", "svg frameset[svg desc[\"x\"]]"),
+            (
+                "frameset",
+                "<desc><div>x",
+                "svg frameset[svg desc[div[\"x\"]]]",
+            ),
+            (
+                "noframes",
+                "<desc><div>x",
+                "svg noframes[svg desc[div[\"x\"]]]",
+            ),
+            (
+                "body",
+                "<desc><frameset>x",
+                "svg body[svg desc[\"x\"]]",
+            ),
+            (
+                "html",
+                "<desc><head><title>x</title>",
+                "svg html[svg desc[title[\"x\"]]]",
+            ),
+            (
+                "select",
+                "<desc><option>x",
+                "svg select[svg desc[option[\"x\"]]]",
+            ),
+            (
+                "option",
+                "<desc><option>x",
+                "svg option[svg desc[option[\"x\"]]]",
+            ),
+            (
+                "table",
+                "<desc><tr><td>x",
+                "svg table[svg desc[\"x\"]]",
+            ),
+            (
+                "colgroup",
+                "<desc><col>x",
+                "svg colgroup[svg desc[\"x\"]]",
+            ),
+            (
+                "tbody",
+                "<desc><tr><td>x",
+                "svg tbody[svg desc[\"x\"]]",
+            ),
+            ("tr", "<desc><td>x", "svg tr[svg desc[\"x\"]]"),
+            ("p", "<desc><p>x", "svg p[svg desc[p[\"x\"]]]"),
+            (
+                "form",
+                "<desc><form>x",
+                "svg form[svg desc[form[\"x\"]]]",
+            ),
+            (
+                "button",
+                "<desc><button>x",
+                "svg button[svg desc[button[\"x\"]]]",
+            ),
+            (
+                "head",
+                "<desc><meta><p>x",
+                "svg head[svg desc[meta[],p[\"x\"]]]",
+            ),
+            ("a", "<desc></a>x", "svg a[svg desc[\"x\"]]"),
+            ("a", "<desc><a>x", "svg a[svg desc[a[\"x\"]]]"),
+            ("b", "<desc></b>x", "svg b[svg desc[\"x\"]]"),
+            ("b", "<desc><b>x", "svg b[svg desc[b[\"x\"]]]"),
+            ("i", "<desc></i>x", "svg i[svg desc[\"x\"]]"),
+            ("i", "<desc><i>x", "svg i[svg desc[i[\"x\"]]]"),
+            ("nobr", "<desc></nobr>x", "svg nobr[svg desc[\"x\"]]"),
+            (
+                "nobr",
+                "<desc><nobr>x",
+                "svg nobr[svg desc[nobr[\"x\"]]]",
+            ),
+            ("font", "<desc></font>x", "svg font[svg desc[\"x\"]]"),
+            (
+                "font",
+                "<desc><font>x",
+                "svg font[svg desc[font[\"x\"]]]",
+            ),
+            ("ruby", "<desc></ruby>x", "svg ruby[svg desc[\"x\"]]"),
+            (
+                "ruby",
+                "<desc><ruby>x",
+                "svg ruby[svg desc[ruby[\"x\"]]]",
+            ),
+            ("rt", "<desc></rt>x", "svg rt[svg desc[\"x\"]]"),
+            ("rt", "<desc><rt>x", "svg rt[svg desc[rt[\"x\"]]]"),
+            ("rp", "<desc></rp>x", "svg rp[svg desc[\"x\"]]"),
+            ("rp", "<desc><rp>x", "svg rp[svg desc[rp[\"x\"]]]"),
+            ("dd", "<desc></dd>x", "svg dd[svg desc[\"x\"]]"),
+            ("dd", "<desc><dd>x", "svg dd[svg desc[dd[\"x\"]]]"),
+            ("dt", "<desc></dt>x", "svg dt[svg desc[\"x\"]]"),
+            ("dt", "<desc><dt>x", "svg dt[svg desc[dt[\"x\"]]]"),
+            (
+                "menuitem",
+                "<desc></menuitem>x",
+                "svg menuitem[svg desc[\"x\"]]",
+            ),
+            (
+                "menuitem",
+                "<desc><menuitem>x",
+                "svg menuitem[svg desc[menuitem[\"x\"]]]",
+            ),
+            ("span", "<desc></span>x", "svg span[svg desc[\"x\"]]"),
+            (
+                "span",
+                "<desc><span>x",
+                "svg span[svg desc[span[\"x\"]]]",
+            ),
+            (
+                "canvas",
+                "<desc></canvas>x",
+                "svg canvas[svg desc[\"x\"]]",
+            ),
+            (
+                "canvas",
+                "<desc><canvas>x",
+                "svg canvas[svg desc[canvas[\"x\"]]]",
+            ),
+            ("map", "<desc></map>x", "svg map[svg desc[\"x\"]]"),
+            ("map", "<desc><map>x", "svg map[svg desc[map[\"x\"]]]"),
+            (
+                "picture",
+                "<desc></picture>x",
+                "svg picture[svg desc[\"x\"]]",
+            ),
+            (
+                "picture",
+                "<desc><picture>x",
+                "svg picture[svg desc[picture[\"x\"]]]",
+            ),
+            ("label", "<desc></label>x", "svg label[svg desc[\"x\"]]"),
+            (
+                "label",
+                "<desc><label>x",
+                "svg label[svg desc[label[\"x\"]]]",
+            ),
+            (
+                "summary",
+                "<desc></summary>x",
+                "svg summary[svg desc[\"x\"]]",
+            ),
+            (
+                "summary",
+                "<desc><summary>x",
+                "svg summary[svg desc[summary[\"x\"]]]",
+            ),
+            (
+                "details",
+                "<desc></details>x",
+                "svg details[svg desc[\"x\"]]",
+            ),
+            (
+                "details",
+                "<desc><details>x",
+                "svg details[svg desc[details[\"x\"]]]",
+            ),
+            (
+                "caption",
+                "<desc><caption>x",
+                "svg caption[svg desc[\"x\"]]",
+            ),
+            (
+                "colgroup",
+                "<desc><colgroup>x",
+                "svg colgroup[svg desc[\"x\"]]",
+            ),
+            (
+                "tbody",
+                "<desc><tbody>x",
+                "svg tbody[svg desc[\"x\"]]",
+            ),
+            (
+                "thead",
+                "<desc><thead>x",
+                "svg thead[svg desc[\"x\"]]",
+            ),
+            (
+                "tfoot",
+                "<desc><tfoot>x",
+                "svg tfoot[svg desc[\"x\"]]",
+            ),
+            ("tr", "<desc><tr>x", "svg tr[svg desc[\"x\"]]"),
+            ("td", "<desc><td>x", "svg td[svg desc[\"x\"]]"),
+            ("th", "<desc><th>x", "svg th[svg desc[\"x\"]]"),
+            (
+                "g",
+                "<desc><form>a<svg><g></form>x",
+                "svg g[svg desc[form[\"a\",svg svg[svg g[\"x\"]]]]]",
+            ),
+            (
+                "g",
+                "<desc><form>a<svg><form></form>x",
+                "svg g[svg desc[form[\"a\",svg svg[svg form[],\"x\"]]]]",
+            ),
+        ];
+
+        let mut mismatches = Vec::new();
+        for (name, source, expected) in cases {
+            let context = Element {
+                namespace: Some("svg".to_string()),
+                name: name.to_string(),
+                attributes: Vec::new(),
+                children: Vec::new(),
+            };
+            let nodes = parse_html_fragment_for_element(source, &context).unwrap();
+            let actual = format!(
+                "svg {name}[{}]",
+                nodes.iter().map(shape).collect::<Vec<_>>().join(",")
+            );
+
+            if actual != expected {
+                mismatches.push(format!(
+                    "context {name}, source {source}: expected {expected}, got {actual}"
+                ));
+            }
+        }
+        assert!(mismatches.is_empty(), "{}", mismatches.join("\n"));
+    }
+
+    #[test]
+    fn mathml_breakout_stops_at_integration_point_after_non_current_form_end_tag() {
+        let context = Element {
+            namespace: Some("math".to_string()),
+            name: "g".to_string(),
+            attributes: Vec::new(),
+            children: Vec::new(),
+        };
+        let nodes = parse_html_fragment_for_element(
+            "<mtext><form>a<svg><button></form><p>x",
+            &context,
+        )
+        .unwrap();
+
+        let mtext = element(&nodes[0]);
+        assert_eq!(mtext.namespace.as_deref(), Some("math"));
+        assert_eq!(mtext.children.len(), 2);
+        let form = element(&mtext.children[0]);
+        assert_eq!(form.name, "form");
+        assert_eq!(form.children.len(), 2);
+        assert_eq!(form.children[0], Node::text("a"));
+        let svg = element(&form.children[1]);
+        assert_eq!(svg.namespace.as_deref(), Some("svg"));
+        assert_eq!(element(&svg.children[0]).name, "button");
+        let paragraph = element(&mtext.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
     fn synthesizes_table_body_and_row_for_omitted_table_structure() {
         let document = parse_html("<table><td>A<td>B<tr><th>C</table>").unwrap();
 
@@ -59823,6 +60195,25 @@ mod tests {
         let fragment =
             parse_html_fragment_for_context_with_diagnostics("A\0B\u{FFFD}&#0;C", "div").unwrap();
         assert_eq!(fragment.nodes, vec![Node::text("AB\u{FFFD}\u{FFFD}C")]);
+
+        for (context, expected) in [
+            ("textarea", "\u{FFFD}filler\u{FFFD}text"),
+            ("title", "\u{FFFD}filler\u{FFFD}text"),
+            ("style", "\u{FFFD}filler\u{FFFD}text"),
+            ("xmp", "\u{FFFD}filler\u{FFFD}text"),
+            ("script", "\u{FFFD}filler\u{FFFD}text"),
+            ("plaintext", "\u{FFFD}filler\u{FFFD}text"),
+            ("div", "fillertext"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics("\0filler\0text", context)
+                    .unwrap();
+            assert_eq!(
+                output.nodes,
+                vec![Node::text(expected)],
+                "context {context}"
+            );
+        }
 
         let tail = parse_html_with_diagnostics("<!doctype html><body>A</body>\0B").unwrap();
         assert_eq!(element_text(body(&tail.document)), "AB");
