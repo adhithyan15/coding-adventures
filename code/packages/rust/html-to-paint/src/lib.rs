@@ -217,6 +217,32 @@ pub struct ControlRegion {
     pub clips: Vec<LinkClip>,
 }
 
+/// A host-neutral hit region for the first summary of a details disclosure.
+#[derive(Clone, Debug, PartialEq)]
+pub struct DisclosureRegion {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub key: String,
+    pub disclosure_index: usize,
+    pub open: bool,
+    pub fixed: bool,
+    pub clips: Vec<LinkClip>,
+}
+
+impl DisclosureRegion {
+    pub fn contains(&self, x: f64, y: f64) -> bool {
+        x.is_finite()
+            && y.is_finite()
+            && x >= self.x
+            && x < self.x + self.width
+            && y >= self.y
+            && y < self.y + self.height
+            && self.clips.iter().all(|clip| clip.contains(x, y))
+    }
+}
+
 impl ControlRegion {
     pub fn contains(&self, x: f64, y: f64) -> bool {
         x.is_finite()
@@ -235,6 +261,7 @@ pub struct HtmlPaintOutput {
     pub positioned: PositionedNode,
     pub links: Vec<LinkRegion>,
     pub controls: Vec<ControlRegion>,
+    pub disclosures: Vec<DisclosureRegion>,
     pub scene: PaintScene,
 }
 
@@ -471,12 +498,13 @@ where
     };
     let mut scene = layout_to_paint(&positioned, &options);
     annotate_html_image_metadata(&positioned, &mut scene);
-    let (links, controls) = extract_interactive_regions(&positioned);
+    let (links, controls, disclosures) = extract_interactive_regions(&positioned);
 
     HtmlPaintOutput {
         positioned,
         links,
         controls,
+        disclosures,
         scene,
     }
 }
@@ -496,12 +524,29 @@ pub fn extract_control_regions(root: &PositionedNode) -> Vec<ControlRegion> {
     extract_interactive_regions(root).1
 }
 
-fn extract_interactive_regions(root: &PositionedNode) -> (Vec<LinkRegion>, Vec<ControlRegion>) {
+/// Extract visible details-summary regions in document order.
+pub fn extract_disclosure_regions(root: &PositionedNode) -> Vec<DisclosureRegion> {
+    extract_interactive_regions(root).2
+}
+
+fn extract_interactive_regions(
+    root: &PositionedNode,
+) -> (Vec<LinkRegion>, Vec<ControlRegion>, Vec<DisclosureRegion>) {
     let mut links = Vec::new();
     let mut controls = Vec::new();
+    let mut disclosures = Vec::new();
     let mut control_targets = Vec::new();
     let mut labels = Vec::new();
-    let mut stack = vec![(root, 0.0, 0.0, None, Vec::new(), false, IDENTITY)];
+    let mut stack = vec![(
+        root,
+        0.0,
+        0.0,
+        None::<(f64, f64, f64, f64)>,
+        Vec::new(),
+        false,
+        IDENTITY,
+        None::<(usize, String, bool)>,
+    )];
 
     while let Some((
         node,
@@ -511,6 +556,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> (Vec<LinkRegion>, Vec<C
         inherited_clips,
         inherited_fixed,
         inherited_transform,
+        parent_disclosure,
     )) = stack.pop()
     {
         let absolute_x = parent_x + node.x;
@@ -522,6 +568,44 @@ fn extract_interactive_regions(root: &PositionedNode) -> (Vec<LinkRegion>, Vec<C
             .map(|local| multiply(inherited_transform, local))
             .unwrap_or(inherited_transform);
         let fixed = inherited_fixed || style.position == layout_positioned::Position::Fixed;
+        let current_disclosure =
+            (positioned_html_string(node, "disclosureKind") == Some("details")).then(|| {
+                let index = positioned_html_int(node, "disclosureIndex")
+                    .and_then(|value| usize::try_from(value).ok())
+                    .unwrap_or_default();
+                let key = positioned_html_string(node, "id")
+                    .filter(|id| !id.is_empty())
+                    .map(|id| format!("disclosure:id:{id}"))
+                    .unwrap_or_else(|| format!("disclosure:{index}"));
+                (
+                    index,
+                    key,
+                    positioned_html_bool(node, "open").unwrap_or(false),
+                )
+            });
+        if positioned_html_string(node, "disclosureKind") == Some("summary") {
+            if let Some((disclosure_index, key, open)) = parent_disclosure.as_ref() {
+                let region = clipped_box(
+                    transformed_box((absolute_x, absolute_y, node.width, node.height), transform),
+                    inherited_clip,
+                );
+                if let Some((x, y, width, height)) =
+                    region.filter(|(x, y, width, height)| valid_link_box(*x, *y, *width, *height))
+                {
+                    disclosures.push(DisclosureRegion {
+                        x,
+                        y,
+                        width,
+                        height,
+                        key: key.clone(),
+                        disclosure_index: *disclosure_index,
+                        open: *open,
+                        fixed,
+                        clips: inherited_clips.clone(),
+                    });
+                }
+            }
+        }
         if positioned_html_string(node, "role") == Some("link") {
             if let Some(url) = positioned_html_string(node, "href") {
                 let region = clipped_box(
@@ -634,6 +718,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> (Vec<LinkRegion>, Vec<C
                 child_clips.clone(),
                 fixed,
                 transform,
+                current_disclosure.clone(),
             ));
         }
     }
@@ -664,7 +749,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> (Vec<LinkRegion>, Vec<C
         .collect::<Vec<_>>();
     // Direct controls remain topmost when a wrapping label contains its target.
     label_controls.extend(controls);
-    (links, label_controls)
+    (links, label_controls, disclosures)
 }
 
 #[derive(Clone, Debug)]
@@ -840,6 +925,24 @@ pub fn hit_test_control(
     })
 }
 
+/// Hit-test a viewport-space point against details summaries, topmost first.
+pub fn hit_test_disclosure(
+    regions: &[DisclosureRegion],
+    viewport_x: f64,
+    viewport_y: f64,
+    scroll_y: f64,
+) -> Option<&DisclosureRegion> {
+    let scroll_y = finite_non_negative(scroll_y);
+    regions.iter().rev().find(|region| {
+        let y = if region.fixed {
+            viewport_y
+        } else {
+            viewport_y + scroll_y
+        };
+        region.contains(viewport_x, y)
+    })
+}
+
 fn clipped_box(
     rect: (f64, f64, f64, f64),
     clip: Option<(f64, f64, f64, f64)>,
@@ -879,6 +982,26 @@ fn positioned_html_string<'a>(node: &'a PositionedNode, key: &str) -> Option<&'a
         return None;
     };
     Some(value)
+}
+
+fn positioned_html_bool(node: &PositionedNode, key: &str) -> Option<bool> {
+    let ExtValue::Map(values) = node.ext.get("html")? else {
+        return None;
+    };
+    let ExtValue::Bool(value) = values.get(key)? else {
+        return None;
+    };
+    Some(*value)
+}
+
+fn positioned_html_int(node: &PositionedNode, key: &str) -> Option<i64> {
+    let ExtValue::Map(values) = node.ext.get("html")? else {
+        return None;
+    };
+    let ExtValue::Int(value) = values.get(key)? else {
+        return None;
+    };
+    Some(*value)
 }
 
 fn resolve_instruction_images<F>(
@@ -1353,6 +1476,36 @@ mod tests {
 
         assert_eq!(output.scene.width, 0.0);
         assert!(output.scene.height >= 0.0);
+    }
+
+    #[test]
+    fn extracts_visible_details_summary_regions() {
+        let render = parse_browser_render_tree(
+            "<details id='shipping'><summary>Shipping</summary><p>Hidden</p></details>\
+             <details open><summary>Billing</summary><p>Shown</p></details>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(320.0, 200.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        assert_eq!(output.disclosures.len(), 2);
+        assert_eq!(output.disclosures[0].key, "disclosure:id:shipping");
+        assert!(!output.disclosures[0].open);
+        assert!(output.disclosures[1].open);
+        assert!(hit_test_disclosure(
+            &output.disclosures,
+            output.disclosures[0].x + 1.0,
+            output.disclosures[0].y + 1.0,
+            0.0,
+        )
+        .is_some());
     }
 
     #[test]

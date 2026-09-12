@@ -41,6 +41,7 @@ pub const FORM_CONTROLS_FIXTURE_PATH: &str = "/form-controls.html";
 pub const FORM_GROUPS_FIXTURE_PATH: &str = "/form-groups.html";
 pub const FORM_SUBMISSION_FIXTURE_PATH: &str = "/form-submission.html";
 pub const FORM_SUBMISSION_RESULT_PATH: &str = "/form-result.html";
+pub const DISCLOSURE_FIXTURE_PATH: &str = "/disclosures.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -176,6 +177,13 @@ pub const FORM_SUBMISSION_FIXTURE_HTML: &str = r#"<!doctype html><html><head><ti
 </body></html>"#;
 
 pub const FORM_SUBMISSION_RESULT_HTML: &str = r#"<!doctype html><html><head><title>Venture form result</title></head><body><p id="form-result">Form accepted</p></body></html>"#;
+
+/// Closed, open, grouped, nested-interactive, and generated-summary details.
+pub const DISCLOSURE_FIXTURE_HTML: &str = r#"<!doctype html><html><body>
+<details id="shipping" name="checkout"><summary>Shipping <a href="/help.html">help</a></summary><p>Shipping address</p></details>
+<details id="billing" name="checkout" open><summary>Billing</summary><p>Billing address</p></details>
+<details id="generated"><p>Generated summary body</p></details>
+</body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -581,6 +589,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let form_groups_url = format!("{origin}{FORM_GROUPS_FIXTURE_PATH}");
     let form_submission_url = format!("{origin}{FORM_SUBMISSION_FIXTURE_PATH}");
     let form_result_url = format!("{origin}{FORM_SUBMISSION_RESULT_PATH}");
+    let disclosure_url = format!("{origin}{DISCLOSURE_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -695,6 +704,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             FORM_SUBMISSION_RESULT_HTML.as_bytes().to_vec(),
+        )),
+        url if url == disclosure_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            DISCLOSURE_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -927,6 +942,23 @@ pub fn load_form_groups_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{FORM_GROUPS_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_disclosure_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, 240.0, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{DISCLOSURE_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1589,6 +1621,18 @@ mod tests {
         let imported = fixture_response(origin, "http://venture.test/fixture-base.css").unwrap();
         assert_eq!(imported.body, IMPORTED_FIXTURE_CSS.as_bytes());
         assert!(fixture_response(origin, "http://venture.test/missing.gif").is_err());
+    }
+
+    #[test]
+    fn disclosure_fixture_keeps_closed_content_out_of_geometry() {
+        let page = load_disclosure_page("http://venture.test").expect("disclosure fixture page");
+        assert_eq!(page.paint.disclosures.len(), 3);
+        assert_eq!(page.paint.disclosures[0].key, "disclosure:id:shipping");
+        assert!(!page.paint.disclosures[0].open);
+        assert!(page.paint.disclosures[1].open);
+        assert!(find_positioned_id(&page.paint.positioned, "shipping").is_some());
+        assert!(find_positioned_id(&page.paint.positioned, "billing").is_some());
+        assert!(find_positioned_id(&page.paint.positioned, "generated").is_some());
     }
 
     #[test]

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Hide non-summary children of closed `details` nodes and synthesize the
+  interoperable `Details` summary fallback in shared layout.
+
 - Retain label association metadata in Layout IR for shared hit-region
   resolution.
 

@@ -76,9 +76,7 @@ where
         &metrics,
         &resolver,
     );
-    Ok(session
-        .activate_control_and_submit(x, y, &pipeline, fetcher)?
-        .is_some())
+    session.activate_page_interaction(x, y, &pipeline, fetcher)
 }
 
 fn route_control_key<F>(
@@ -105,9 +103,7 @@ where
         &metrics,
         &resolver,
     );
-    Ok(session
-        .control_key_down_with_shift_and_submit(key, shift, &pipeline, fetcher)?
-        .is_some())
+    session.page_key_down_with_shift_and_submit(key, shift, &pipeline, fetcher)
 }
 
 fn route_control_text(session: &mut BrowserSession, text: &str, width: f64, height: f64) -> bool {

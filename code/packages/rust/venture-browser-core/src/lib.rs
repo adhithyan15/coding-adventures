@@ -43,15 +43,14 @@ use browser_form_submission::{
     report_form_validity as report_planned_form_validity,
 };
 pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
-#[cfg(test)]
 use coding_adventures_html_parser::BrowserRenderNode;
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
 use html_to_layout::{html_media_query_applies, HtmlAuthorStylesheet, HtmlStyleContext, HtmlTheme};
 use html_to_paint::{
-    decode_image_resource, hit_test_control, hit_test_link,
+    decode_image_resource, hit_test_control, hit_test_disclosure, hit_test_link,
     html_render_tree_to_paint_with_style_context, resolve_scene_image_resources_incrementally,
-    scene_image_resource_uris, ControlRegion, FetchedImage, HtmlImageResolver, HtmlImageResource,
-    HtmlImageResourceError, HtmlPaintOutput, HtmlPaintViewport, LinkRegion,
+    scene_image_resource_uris, ControlRegion, DisclosureRegion, FetchedImage, HtmlImageResolver,
+    HtmlImageResource, HtmlImageResourceError, HtmlPaintOutput, HtmlPaintViewport, LinkRegion,
 };
 use http1_client::HttpClient;
 use layout_ir::TextMeasurer;
@@ -73,6 +72,22 @@ const CONTROL_TEXT_METRICS: ControlTextMetrics = ControlTextMetrics {
 };
 const EDITOR_OVERLAY_PREFIX: &str = "venture-editor:";
 const FORM_HISTORY_STATE_LIMIT: usize = 64;
+
+fn apply_details_open_states(
+    nodes: &mut [BrowserRenderNode],
+    states: &[(usize, bool)],
+    details_index: &mut usize,
+) {
+    for node in nodes {
+        if node.disclosure_kind.as_deref() == Some("details") {
+            if let Some((_, open)) = states.iter().find(|(index, _)| *index == *details_index) {
+                node.open = *open;
+            }
+            *details_index += 1;
+        }
+        apply_details_open_states(&mut node.children, states, details_index);
+    }
+}
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
 pub const VENTURE_CHROME_SLOT_NAMES: [&str; 9] = [
@@ -475,6 +490,22 @@ pub struct BrowserPage {
     pub stylesheet_resources: Vec<BrowserStylesheetResource>,
 }
 
+/// Host-neutral accessibility projection for one visible details summary.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct DisclosureAccessibilityState {
+    pub key: String,
+    pub name: String,
+    pub open: bool,
+    pub group_name: Option<String>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum DisclosureAccessibilityAction {
+    Toggle,
+    Open,
+    Close,
+}
+
 impl BrowserPage {
     pub fn pending_image_urls(&self) -> impl Iterator<Item = &str> {
         self.image_resources.iter().filter_map(|resource| {
@@ -809,6 +840,19 @@ impl BrowserViewport {
     pub fn hit_test_control(&self, viewport_x: f64, viewport_y: f64) -> Option<&ControlRegion> {
         hit_test_control(
             &self.page.paint.controls,
+            viewport_x,
+            viewport_y,
+            self.scroll.offset_y(),
+        )
+    }
+
+    pub fn hit_test_disclosure(
+        &self,
+        viewport_x: f64,
+        viewport_y: f64,
+    ) -> Option<&DisclosureRegion> {
+        hit_test_disclosure(
+            &self.page.paint.disclosures,
             viewport_x,
             viewport_y,
             self.scroll.offset_y(),
@@ -1239,6 +1283,7 @@ pub struct BrowserSession {
     bookmarks: BookmarkCatalog,
     viewport: Option<BrowserViewport>,
     controls: BrowserControlModel,
+    focused_disclosure: Option<String>,
     form_diagnostics: Vec<FormDiagnostic>,
     form_lifecycle_events: Vec<FormLifecycleEvent>,
     control_mutation_events: Vec<ControlMutationEvent>,
@@ -1255,6 +1300,7 @@ impl BrowserSession {
             bookmarks: BookmarkCatalog::new(),
             viewport: None,
             controls: BrowserControlModel::default(),
+            focused_disclosure: None,
             form_diagnostics: Vec::new(),
             form_lifecycle_events: Vec::new(),
             control_mutation_events: Vec::new(),
@@ -1848,6 +1894,168 @@ impl BrowserSession {
             .map(|control| control.key.as_str())
     }
 
+    pub fn disclosure_accessibility_states(&self) -> Vec<DisclosureAccessibilityState> {
+        let Some(viewport) = &self.viewport else {
+            return Vec::new();
+        };
+        let details = viewport
+            .page()
+            .document
+            .disclosures
+            .iter()
+            .filter(|disclosure| disclosure.element == "details")
+            .collect::<Vec<_>>();
+        viewport
+            .page()
+            .paint
+            .disclosures
+            .iter()
+            .filter_map(|region| {
+                let disclosure = details.get(region.disclosure_index)?;
+                Some(DisclosureAccessibilityState {
+                    key: region.key.clone(),
+                    name: disclosure
+                        .accessible_name
+                        .clone()
+                        .or_else(|| disclosure.summary_text.clone())
+                        .unwrap_or_else(|| "Details".into()),
+                    open: region.open,
+                    group_name: disclosure.name.clone().filter(|name| !name.is_empty()),
+                })
+            })
+            .collect()
+    }
+
+    /// Apply an accessibility disclosure action and reflow the retained page.
+    pub fn disclosure_accessibility_action<M, S, FM, R>(
+        &mut self,
+        key: &str,
+        action: DisclosureAccessibilityAction,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<DisclosureAccessibilityState>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let open = self
+            .disclosure_accessibility_states()
+            .into_iter()
+            .find(|state| state.key == key)?
+            .open;
+        let requested = match action {
+            DisclosureAccessibilityAction::Toggle => !open,
+            DisclosureAccessibilityAction::Open => true,
+            DisclosureAccessibilityAction::Close => false,
+        };
+        self.set_disclosure_open(key, requested, pipeline)
+    }
+
+    /// Toggle the details summary under a pointer coordinate.
+    pub fn activate_disclosure<M, S, FM, R>(
+        &mut self,
+        viewport_x: f64,
+        viewport_y: f64,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<DisclosureAccessibilityState>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let region = self
+            .viewport
+            .as_ref()?
+            .hit_test_disclosure(viewport_x, viewport_y)?
+            .clone();
+        self.focused_disclosure = Some(region.key.clone());
+        self.set_disclosure_open(&region.key, !region.open, pipeline)
+    }
+
+    fn set_disclosure_open<M, S, FM, R>(
+        &mut self,
+        key: &str,
+        open: bool,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<DisclosureAccessibilityState>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let mut current = self.viewport.as_ref()?.page().clone();
+        let target = current
+            .paint
+            .disclosures
+            .iter()
+            .find(|region| region.key == key)?
+            .disclosure_index;
+        let group_name = current
+            .document
+            .disclosures
+            .iter()
+            .filter(|disclosure| disclosure.element == "details")
+            .nth(target)
+            .and_then(|disclosure| disclosure.name.clone())
+            .filter(|name| !name.is_empty());
+        let mut states = vec![(target, open)];
+        if open {
+            if let Some(group_name) = group_name.as_deref() {
+                states.extend(
+                    current
+                        .document
+                        .disclosures
+                        .iter()
+                        .filter(|disclosure| disclosure.element == "details")
+                        .enumerate()
+                        .filter(|(index, disclosure)| {
+                            *index != target && disclosure.name.as_deref() == Some(group_name)
+                        })
+                        .map(|(index, _)| (index, false)),
+                );
+            }
+        }
+        let mut details_index = 0;
+        apply_details_open_states(
+            &mut current.render_tree.children,
+            &states,
+            &mut details_index,
+        );
+        let mut details_index = 0;
+        for disclosure in &mut current.document.disclosures {
+            if disclosure.element == "details" {
+                if let Some((_, requested)) =
+                    states.iter().find(|(index, _)| *index == details_index)
+                {
+                    disclosure.open = *requested;
+                }
+                details_index += 1;
+            }
+        }
+        let mut details_index = 0;
+        for descriptor in &mut current.document.disclosure_state_descriptors {
+            if descriptor.element == "details" {
+                if let Some((_, requested)) =
+                    states.iter().find(|(index, _)| *index == details_index)
+                {
+                    descriptor.open = *requested;
+                }
+                details_index += 1;
+            }
+        }
+        let updated = pipeline.reflow_retained_with_visited(&current, &self.visited_links);
+        self.viewport
+            .as_mut()?
+            .reflow_page(updated, self.viewport_height);
+        self.refresh_control_editor_presentation();
+        self.disclosure_accessibility_states()
+            .into_iter()
+            .find(|state| state.key == key)
+    }
+
     pub fn activate_control<M, S, FM, R>(
         &mut self,
         viewport_x: f64,
@@ -2189,6 +2397,49 @@ impl BrowserSession {
         Ok(Some(effect))
     }
 
+    /// Route a page click through controls, links, then details summaries.
+    ///
+    /// Links deliberately win over an enclosing summary so interactive
+    /// descendants retain their authored activation behavior.
+    pub fn activate_page_interaction<F, M, S, FM, R>(
+        &mut self,
+        viewport_x: f64,
+        viewport_y: f64,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        if self
+            .viewport
+            .as_ref()
+            .and_then(|viewport| viewport.hit_test_control(viewport_x, viewport_y))
+            .is_some()
+        {
+            self.focused_disclosure = None;
+            return Ok(self
+                .activate_control_and_submit(viewport_x, viewport_y, pipeline, fetcher)?
+                .is_some());
+        }
+        if self
+            .viewport
+            .as_ref()
+            .and_then(|viewport| viewport.hit_test_link(viewport_x, viewport_y))
+            .is_some()
+        {
+            self.focused_disclosure = None;
+            return Ok(false);
+        }
+        Ok(self
+            .activate_disclosure(viewport_x, viewport_y, pipeline)
+            .is_some())
+    }
+
     pub fn control_key_down_and_submit<F, M, S, FM, R>(
         &mut self,
         key: ControlKey,
@@ -2252,6 +2503,41 @@ impl BrowserSession {
             self.reflow_controls(pipeline);
         }
         Ok(effect)
+    }
+
+    /// Route host keyboard input to the focused control or details summary.
+    pub fn page_key_down_with_shift_and_submit<F, M, S, FM, R>(
+        &mut self,
+        key: ControlKey,
+        shift: bool,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        if matches!(key, ControlKey::Enter | ControlKey::Space) {
+            if let Some(disclosure) = self.focused_disclosure.clone() {
+                return Ok(self
+                    .disclosure_accessibility_action(
+                        &disclosure,
+                        DisclosureAccessibilityAction::Toggle,
+                        pipeline,
+                    )
+                    .is_some());
+            }
+        }
+        if self.controls.focused_key().is_some() {
+            self.focused_disclosure = None;
+            return Ok(self
+                .control_key_down_with_shift_and_submit(key, shift, pipeline, fetcher)?
+                .is_some());
+        }
+        Ok(false)
     }
 
     fn dispatch_form_activation<F>(
@@ -2440,6 +2726,7 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        self.focused_disclosure = None;
         if let Some((url, snapshot)) = departing_state {
             self.remember_form_history_state(url, snapshot);
         }
@@ -2465,6 +2752,7 @@ impl BrowserSession {
         R: FontResolver<Handle = S::Handle>,
     {
         let effect = self.controls.focus_next(reverse)?;
+        self.focused_disclosure = None;
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -2840,6 +3128,7 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        self.focused_disclosure = None;
         if let Some((url, snapshot)) = departing_state {
             self.remember_form_history_state(url, snapshot);
         }
@@ -6794,6 +7083,62 @@ mod tests {
         assert_eq!(
             session.live_value_state("live:2:id:load").unwrap().position,
             Some(0.4)
+        );
+    }
+
+    #[test]
+    fn session_routes_grouped_details_pointer_keyboard_and_accessibility_actions() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<details hidden><summary>Hidden</summary></details>\
+                  <details id='first' name='group' open><summary>First</summary><p>One</p></details>\
+                  <details id='second' name='group'><summary>Second</summary><p>Two</p></details>\
+                  <details id='fallback'><p>Three</p></details>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(420.0, 200.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/details", 200.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        let states = session.disclosure_accessibility_states();
+        assert_eq!(states.len(), 3);
+        assert!(states[0].open);
+        assert_eq!(states[2].name, "Details");
+        let second = session.viewport().unwrap().page().paint.disclosures[1].clone();
+        assert!(session
+            .activate_page_interaction(second.x + 1.0, second.y + 1.0, &pipeline, &fetcher,)
+            .unwrap());
+        let states = session.disclosure_accessibility_states();
+        assert!(!states[0].open);
+        assert!(states[1].open);
+
+        assert!(session
+            .page_key_down_with_shift_and_submit(ControlKey::Space, false, &pipeline, &fetcher,)
+            .unwrap());
+        assert!(!session.disclosure_accessibility_states()[1].open);
+        assert!(
+            session
+                .disclosure_accessibility_action(
+                    "disclosure:id:first",
+                    DisclosureAccessibilityAction::Open,
+                    &pipeline,
+                )
+                .unwrap()
+                .open
         );
     }
 }
