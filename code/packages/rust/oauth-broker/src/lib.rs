@@ -12,8 +12,8 @@ use coding_adventures_oauth::{
     prepare_device_authorization, prepare_device_token_poll, prepare_token_refresh,
     ConfidentialClientAuthenticationMethod, DeviceAuthorization, DeviceAuthorizationProfile,
     DeviceAuthorizationRequest, DevicePollResult, DevicePollingSession, DeviceTokenPollRequest,
-    OAuthAuditSink, OAuthError, OAuthTraceId, ProviderConfig, ProviderId, TokenRefreshRequest,
-    TokenResponse, TokenResponseFormat, MAX_TOKEN_RESPONSE_BYTES,
+    OAuthAuditSink, OAuthError, OAuthTraceId, ProviderConfig, ProviderId, TokenExchangeRequest,
+    TokenRefreshRequest, TokenResponse, TokenResponseFormat, MAX_TOKEN_RESPONSE_BYTES,
 };
 use coding_adventures_oauth_client_secret_custody::{
     ClientSecretAuditSink, ClientSecretAuthenticatedRequest, ClientSecretAuthentication,
@@ -381,6 +381,15 @@ pub trait OAuthClientSecretTokenTransport {
     ) -> Result<TokenEndpointResponse, TokenTransportError>;
 }
 
+/// Authorized provider-neutral transport for one client-secret-authenticated exchange.
+pub trait OAuthClientSecretTokenExchangeTransport {
+    /// Send one custody-built, zeroizing authenticated authorization-code exchange.
+    fn send_client_secret_exchange(
+        &mut self,
+        request: &ClientSecretAuthenticatedRequest,
+    ) -> Result<TokenEndpointResponse, TokenTransportError>;
+}
+
 /// Authorized provider-neutral transport for one RFC 8628 token poll.
 pub trait OAuthDeviceTokenTransport {
     /// Send one already validated device-code request and return bounded owned bytes.
@@ -612,6 +621,8 @@ pub enum BrokerAuditAction {
     Refresh,
     /// Authenticate and send one client-secret refresh request.
     ClientSecretRefresh,
+    /// Authenticate and send one client-secret authorization-code exchange.
+    ClientSecretExchange,
     /// Send one request through the injected token transport.
     TokenTransport,
     /// Classify one externally scheduled RFC 8628 device-token poll.
@@ -1119,6 +1130,53 @@ impl<S: CredentialStore> OAuthBroker<S> {
         )
     }
 
+    /// Authenticate, send, and decode one prepared client-secret token exchange.
+    ///
+    /// The request has already consumed and validated the authorization
+    /// transaction. The registered provider's exact client ID, token endpoint,
+    /// and retained `client_secret_basic` or `client_secret_post` method are
+    /// checked before client-secret custody access. Custody owns secret
+    /// disclosure and zeroizing wire construction; the broker audit-brackets
+    /// the injected transport and releases only an audit-gated bounded token
+    /// response.
+    pub fn send_client_secret_exchange<SS, T, A>(
+        &self,
+        authentication: &ClientSecretAuthentication,
+        request: TokenExchangeRequest,
+        client_secret_custody: &ClientSecretCustody<SS>,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<TokenResponse, BrokerError>
+    where
+        SS: ClientSecretStore,
+        T: OAuthClientSecretTokenExchangeTransport,
+        A: OAuthClientSecretBrokerAuditSink,
+    {
+        let provider = request.provider().clone();
+        let trace = request.trace();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::ClientSecretExchange,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = self.send_client_secret_exchange_inner(
+            authentication,
+            request,
+            client_secret_custody,
+            transport,
+            audit,
+        );
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::ClientSecretExchange,
+            result,
+        )
+    }
+
     /// Execute one externally scheduled RFC 8628 poll without sleeping or reading a clock.
     ///
     /// The opaque session must exactly match a registered provider, client, and
@@ -1509,6 +1567,39 @@ impl<S: CredentialStore> OAuthBroker<S> {
             .map_err(map_oauth_error)
     }
 
+    fn send_client_secret_exchange_inner<SS, T, A>(
+        &self,
+        authentication: &ClientSecretAuthentication,
+        request: TokenExchangeRequest,
+        client_secret_custody: &ClientSecretCustody<SS>,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<TokenResponse, BrokerError>
+    where
+        SS: ClientSecretStore,
+        T: OAuthClientSecretTokenExchangeTransport,
+        A: OAuthClientSecretBrokerAuditSink,
+    {
+        let provider = self.registered_provider(request.provider())?;
+        let expected = provider.bind_client_secret_authentication(authentication.key().clone())?;
+        if &expected != authentication
+            || request.client_id() != provider.config().client_id()
+            || request.endpoint() != provider.config().token_endpoint()
+        {
+            return Err(BrokerError::BindingMismatch);
+        }
+        let authenticated = client_secret_custody
+            .authenticate_token_exchange(provider.config(), authentication, request, audit)
+            .map_err(map_client_secret_custody_error)?;
+        let context = authenticated.response_context().clone();
+        let wire_response =
+            send_client_secret_exchange_audited(transport, authenticated.request(), audit)?;
+        let (status, body) = wire_response.into_parts();
+        decode_token_response(context, status, provider.response_format(), body)
+            .publish_then_release(audit)
+            .map_err(map_oauth_error)
+    }
+
     fn registered_provider(&self, provider: &ProviderId) -> Result<&BrokerProvider, BrokerError> {
         self.providers
             .get(provider)
@@ -1629,6 +1720,33 @@ fn send_client_secret_refresh_audited<T: OAuthClientSecretTokenTransport, A: Bro
     )
 }
 
+fn send_client_secret_exchange_audited<
+    T: OAuthClientSecretTokenExchangeTransport,
+    A: BrokerAuditSink,
+>(
+    transport: &mut T,
+    request: &ClientSecretAuthenticatedRequest,
+    audit: &mut A,
+) -> Result<TokenEndpointResponse, BrokerError> {
+    publish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::TokenTransport,
+        BrokerAuditOutcome::Attempted,
+    )?;
+    let result = transport
+        .send_client_secret_exchange(request)
+        .map_err(|_| BrokerError::Transport);
+    finish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::TokenTransport,
+        result,
+    )
+}
+
 fn send_device_authorization_audited<T: OAuthDeviceAuthorizationTransport, A: BrokerAuditSink>(
     transport: &mut T,
     request: &DeviceAuthorizationRequest,
@@ -1731,9 +1849,10 @@ fn map_client_secret_custody_error(error: ClientSecretCustodyError) -> BrokerErr
 mod tests {
     use super::*;
     use coding_adventures_oauth::{
-        decode_authorization_server_metadata, decode_device_authorization_response,
-        prepare_authorization_server_metadata, prepare_device_authorization, prepare_token_refresh,
-        DeviceAuthorizationProfile, OAuthAuditError, OAuthAuditEvent, OAuthAuditOutcome,
+        begin_authorization, complete_authorization, decode_authorization_server_metadata,
+        decode_device_authorization_response, prepare_authorization_server_metadata,
+        prepare_device_authorization, prepare_token_refresh, DeviceAuthorizationProfile,
+        EntropySource, OAuthAuditError, OAuthAuditEvent, OAuthAuditOutcome,
     };
     use coding_adventures_oauth_client_secret_custody::{
         ClientSecretAuditAction, ClientSecretAuditError, ClientSecretAuditEvent,
@@ -1794,6 +1913,15 @@ mod tests {
                     (BrokerAuditAction::ClientSecretRefresh, BrokerAuditOutcome::Failed(_)) => {
                         "refresh-failed"
                     }
+                    (BrokerAuditAction::ClientSecretExchange, BrokerAuditOutcome::Attempted) => {
+                        "exchange-attempted"
+                    }
+                    (BrokerAuditAction::ClientSecretExchange, BrokerAuditOutcome::Succeeded) => {
+                        "exchange-succeeded"
+                    }
+                    (BrokerAuditAction::ClientSecretExchange, BrokerAuditOutcome::Failed(_)) => {
+                        "exchange-failed"
+                    }
                     (BrokerAuditAction::TokenTransport, BrokerAuditOutcome::Attempted) => {
                         "transport-attempted"
                     }
@@ -1853,6 +1981,15 @@ mod tests {
     impl BrokerClock for FixedClock {
         fn now_unix_seconds(&mut self) -> Result<u64, BrokerClockError> {
             Ok(self.0)
+        }
+    }
+
+    struct FixedEntropy([u8; 64]);
+
+    impl EntropySource for FixedEntropy {
+        fn fill(&mut self, destination: &mut [u8]) -> Result<(), OAuthError> {
+            destination.copy_from_slice(&self.0[..destination.len()]);
+            Ok(())
         }
     }
 
@@ -1927,6 +2064,41 @@ mod tests {
                 self.expected_authorization_header
             );
             assert!(request.form_body().contains("refresh_token=refresh-secret"));
+            assert_eq!(
+                request.form_body().contains("client_secret=client+secret"),
+                !self.expected_authorization_header
+            );
+            self.response.take().ok_or(TokenTransportError)
+        }
+    }
+
+    struct MockClientSecretExchangeTransport {
+        response: Option<TokenEndpointResponse>,
+        expected_authorization_header: bool,
+        calls: usize,
+        order: Rc<RefCell<Vec<&'static str>>>,
+    }
+
+    impl OAuthClientSecretTokenExchangeTransport for MockClientSecretExchangeTransport {
+        fn send_client_secret_exchange(
+            &mut self,
+            request: &ClientSecretAuthenticatedRequest,
+        ) -> Result<TokenEndpointResponse, TokenTransportError> {
+            self.calls += 1;
+            self.order.borrow_mut().push("transport-effect");
+            assert_eq!(request.provider().as_str(), "fixture-confidential");
+            assert_eq!(
+                request.endpoint(),
+                "https://token.fixture-confidential.example/token"
+            );
+            assert_eq!(
+                request.authorization_header().is_some(),
+                self.expected_authorization_header
+            );
+            assert!(request
+                .form_body()
+                .contains("grant_type=authorization_code"));
+            assert!(request.form_body().contains("code=code-value"));
             assert_eq!(
                 request.form_body().contains("client_secret=client+secret"),
                 !self.expected_authorization_header
@@ -2088,6 +2260,35 @@ mod tests {
         )
         .unwrap()
         .with_distinct_redirect_uri()
+    }
+
+    fn prepared_exchange(
+        config: &ProviderConfig,
+        operation_trace: OAuthTraceId,
+        audit: &mut impl OAuthAuditSink,
+    ) -> TokenExchangeRequest {
+        let begin = begin_authorization(
+            config,
+            &["files.read"],
+            operation_trace,
+            &mut FixedEntropy([0x29; 64]),
+        )
+        .publish_then_release(audit)
+        .unwrap();
+        let state = begin
+            .url()
+            .as_str()
+            .split('&')
+            .find_map(|parameter| parameter.strip_prefix("state="))
+            .unwrap()
+            .to_owned();
+        let (_, transaction) = begin.into_parts();
+        complete_authorization(
+            transaction,
+            &format!("{}?code=code-value&state={state}", config.redirect_uri()),
+        )
+        .publish_then_release(audit)
+        .unwrap()
     }
 
     fn issuer_policy(name: &str, redirect_uri: &str) -> BrokerProvider {
@@ -2651,6 +2852,164 @@ mod tests {
                 ]
             );
         }
+    }
+
+    #[test]
+    fn client_secret_exchange_uses_exact_retained_method_and_audit_order() {
+        for (method, expects_basic_header) in [
+            (
+                ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+                true,
+            ),
+            (
+                ConfidentialClientAuthenticationMethod::ClientSecretPost,
+                false,
+            ),
+        ] {
+            let provider_config = config("fixture-confidential");
+            let secret_key = ClientSecretKey::new(
+                provider_config.provider().clone(),
+                ClientSecretReference::new([0x73; 32]),
+            );
+            let provider = BrokerProvider::new_confidential(
+                provider_config.clone(),
+                TokenResponseFormat::Json,
+                300,
+                method,
+                Vec::new(),
+            )
+            .unwrap();
+            let authentication = provider
+                .bind_client_secret_authentication(secret_key.clone())
+                .unwrap();
+            let mut broker =
+                OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+            let order = Rc::new(RefCell::new(Vec::new()));
+            let mut audit = RecordingAudit {
+                order: Some(order.clone()),
+                ..RecordingAudit::default()
+            };
+            broker
+                .register_provider(provider, trace(45), &mut audit)
+                .unwrap();
+            let client_secret_custody = ClientSecretCustody::new(InMemoryClientSecretStore::new());
+            client_secret_custody
+                .create(
+                    &secret_key,
+                    Zeroizing::new("client secret".to_owned()),
+                    trace(45),
+                    &mut audit,
+                )
+                .unwrap();
+            let request = prepared_exchange(&provider_config, trace(46), &mut audit);
+            order.borrow_mut().clear();
+            let mut transport = MockClientSecretExchangeTransport {
+                response: Some(
+                    TokenEndpointResponse::new(
+                        200,
+                        Zeroizing::new(
+                            br#"{"access_token":"initial","token_type":"Bearer"}"#.to_vec(),
+                        ),
+                    )
+                    .unwrap(),
+                ),
+                expected_authorization_header: expects_basic_header,
+                calls: 0,
+                order: order.clone(),
+            };
+
+            let response = broker
+                .send_client_secret_exchange(
+                    &authentication,
+                    request,
+                    &client_secret_custody,
+                    &mut transport,
+                    &mut audit,
+                )
+                .unwrap();
+
+            assert_eq!(response.provider(), provider_config.provider());
+            assert_eq!(response.trace(), trace(46));
+            assert_eq!(response.token_type(), "Bearer");
+            assert_eq!(transport.calls, 1);
+            assert_eq!(
+                order.borrow().as_slice(),
+                [
+                    "exchange-attempted",
+                    "secret-access-attempted",
+                    "secret-access-succeeded",
+                    "transport-attempted",
+                    "transport-effect",
+                    "transport-succeeded",
+                    "exchange-succeeded",
+                ]
+            );
+        }
+    }
+
+    #[test]
+    fn client_secret_exchange_binding_failure_precedes_secret_and_transport() {
+        let provider_config = config("fixture-confidential");
+        let secret_key = ClientSecretKey::new(
+            provider_config.provider().clone(),
+            ClientSecretReference::new([0x74; 32]),
+        );
+        let provider = BrokerProvider::new_confidential(
+            provider_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            Vec::new(),
+        )
+        .unwrap();
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(provider, trace(47), &mut audit)
+            .unwrap();
+        let client_secret_custody = ClientSecretCustody::new(InMemoryClientSecretStore::new());
+        client_secret_custody
+            .create(
+                &secret_key,
+                Zeroizing::new("client secret".to_owned()),
+                trace(47),
+                &mut audit,
+            )
+            .unwrap();
+        let authentication = ClientSecretAuthentication::new(
+            secret_key,
+            ClientSecretAuthenticationMethod::ClientSecretPost,
+        );
+        let request = prepared_exchange(&provider_config, trace(48), &mut audit);
+        order.borrow_mut().clear();
+        let secret_events_before = audit.client_secret.len();
+        let mut transport = MockClientSecretExchangeTransport {
+            response: None,
+            expected_authorization_header: true,
+            calls: 0,
+            order: order.clone(),
+        };
+
+        assert!(matches!(
+            broker.send_client_secret_exchange(
+                &authentication,
+                request,
+                &client_secret_custody,
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(audit.client_secret.len(), secret_events_before);
+        assert_eq!(transport.calls, 0);
+        assert_eq!(
+            order.borrow().as_slice(),
+            ["exchange-attempted", "exchange-failed"]
+        );
     }
 
     #[test]
