@@ -162,8 +162,12 @@ The delivery order is:
    retained Basic/Post method are checked before audited client-secret access;
    custody constructs the zeroizing request; and broker-audited injected
    transport plus bounded response decoding completes before release. Initial
-   credential persistence and stored OAuth credential rotation remain separate
-   composition steps, and these boundaries add no concrete network authority.
+   client-secret exchange can now compose directly into an exact opaque account
+   key: key/provider mismatch fails before secret, transport, clock, or storage
+   access; OAuth credential release and custody creation remain separately
+   audited; and only the opaque revision is returned. Stored OAuth credential
+   rotation remains a separate composition step, and these boundaries add no
+   concrete network authority.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate

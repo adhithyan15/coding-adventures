@@ -40,8 +40,10 @@ client ID, token endpoint, and retained Basic/Post method are checked before
 audited secret custody access; custody constructs zeroizing wire material; and
 broker-audited injected transport plus bounded response decoding completes
 before result release. These boundaries add no concrete network implementation;
-exchange does not persist its returned credentials, and refresh does not rotate
-stored OAuth credentials.
+exchange can either return its audit-gated response or compose it directly into
+an exact provider-bound opaque account key, crossing the OAuth credential
+release and custody-create audit gates without credential disclosure. Refresh
+does not rotate stored OAuth credentials.
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
