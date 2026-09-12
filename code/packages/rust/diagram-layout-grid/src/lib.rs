@@ -1,11 +1,11 @@
 //! Deterministic grid layout for Mermaid block diagrams.
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
-    resolve_style, resolve_style_with_base, DiagramDirection, DiagramStyle, EdgeKind, GridDiagram, LayoutedGraphDiagram,
+    resolve_style, resolve_style_with_base, DiagramDirection, DiagramStyle, GridDiagram, LayoutedGraphDiagram,
     LayoutedGraphEdge, LayoutedGraphNode, Point, ResolvedDiagramStyle,
 };
 
@@ -79,7 +79,7 @@ pub fn layout_grid_diagram(diagram: &GridDiagram) -> LayoutedGraphDiagram {
                 id: None,
                 from_node_id: connection.from.clone(),
                 to_node_id: connection.to.clone(),
-                kind: EdgeKind::Directed,
+                kind: connection.kind.clone(),
                 points: vec![start, end],
                 label: connection.label.clone(),
                 label_position: connection.label.as_ref().map(|_| Point {
@@ -165,7 +165,7 @@ fn grid_style(index: usize) -> DiagramStyle {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use diagram_ir::{DiagramLabel, DiagramShape, GridCell, GridConnection};
+    use diagram_ir::{DiagramLabel, DiagramShape, EdgeKind, GridCell, GridConnection};
 
     #[test]
     fn places_cells_in_authored_grid_slots() {
@@ -214,6 +214,7 @@ mod tests {
             connections: vec![GridConnection {
                 from: "a".into(),
                 to: "b".into(),
+                kind: EdgeKind::Directed,
                 label: None,
             }],
         };
@@ -259,6 +260,7 @@ mod tests {
             connections: vec![GridConnection {
                 from: "wide".into(),
                 to: "tail".into(),
+                kind: EdgeKind::Directed,
                 label: None,
             }],
         };

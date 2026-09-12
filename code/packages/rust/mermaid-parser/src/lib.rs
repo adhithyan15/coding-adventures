@@ -1465,7 +1465,8 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             direct_styles.push((split_block_names(ids), parse_block_style(token, declarations)?));
             continue;
         }
-        if let Some((from, rest)) = line.split_once("-->") {
+        if let Some((from, rest, kind)) = line.split_once("-->").map(|(from, rest)| (from, rest, EdgeKind::Directed))
+            .or_else(|| line.split_once("---").map(|(from, rest)| (from, rest, EdgeKind::Undirected))) {
             let (to, label) = if let Some(rest) = rest.trim().strip_prefix('|') {
                 let (label, to) = rest
                     .split_once('|')
@@ -1477,6 +1478,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             connections.push(GridConnection {
                 from: from.trim().to_string(),
                 to: to.to_string(),
+                kind,
                 label,
             });
             continue;
@@ -9001,7 +9003,7 @@ mod tests_dg04 {
     #[test]
     fn block_parses_grid_cells_spaces_shapes_and_connections() {
         let diagram = parse_block(
-            "block-beta\ncolumns 3\nA[Parser] space B(IR)\nC((Paint))\nA -->|lower| C",
+            "block-beta\ncolumns 3\nA[Parser] space B(IR)\nC((Paint))\nA -->|lower| C\nB --- C",
         )
         .unwrap();
         assert_eq!(diagram.columns, 3);
@@ -9010,6 +9012,8 @@ mod tests_dg04 {
         assert_eq!(diagram.cells[2].shape, DiagramShape::RoundedRect);
         assert_eq!(diagram.cells[3].shape, DiagramShape::Ellipse);
         assert_eq!(diagram.connections[0].label.as_ref().unwrap().text, "lower");
+        assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
+        assert_eq!(diagram.connections[1].kind, EdgeKind::Undirected);
     }
 
     #[test]

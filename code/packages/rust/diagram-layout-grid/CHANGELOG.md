@@ -1,5 +1,9 @@
 # Changelog - diagram-layout-grid
 
+## 0.4.0
+
+- Preserve Block connection kinds in shared graph layout geometry.
+
 ## 0.3.0
 
 - Resolve authored Block cell styles over deterministic grid defaults before Paint lowering.

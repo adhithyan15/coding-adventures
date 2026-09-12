@@ -167,6 +167,7 @@ pub struct GridCell {
 pub struct GridConnection {
     pub from: String,
     pub to: String,
+    pub kind: EdgeKind,
     pub label: Option<DiagramLabel>,
 }
 

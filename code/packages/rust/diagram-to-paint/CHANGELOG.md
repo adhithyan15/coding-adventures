@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.115.0
+
+- Validate directed and undirected Block edges through PaintScene and Metal-to-PNG rendering.
+
 ## 0.114.0
 
 - Validate Block class and direct styles through the backend-neutral Metal-to-PNG path.
