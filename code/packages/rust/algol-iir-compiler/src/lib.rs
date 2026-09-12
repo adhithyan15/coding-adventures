@@ -5729,7 +5729,7 @@ impl Compiler {
                 (None, None)
             };
             let static_step_body_assignment = if is_step_element && !entry_tracking_disabled {
-                self.for_step_body_assignment_at_last_iteration(target, var_ty, elem, body)
+                self.for_step_body_assignment_snapshot(target, var_ty, elem, body)
             } else {
                 None
             };
@@ -5937,7 +5937,7 @@ impl Compiler {
                     return (None, None);
                 }
                 let mut control = start;
-                for _ in 0..MAX_STATIC_REAL_FOR_ITERATIONS {
+                for _ in 0..MAX_STATIC_STEP_ITERATIONS {
                     let next = control + step;
                     if !next.is_finite() || next == control {
                         return (None, None);
@@ -5997,7 +5997,7 @@ impl Compiler {
         }
     }
 
-    fn for_step_body_assignment_at_last_iteration(
+    fn for_step_body_assignment_snapshot(
         &mut self,
         target: &GrammarASTNode,
         target_ty: ScalarType,
@@ -6019,7 +6019,7 @@ impl Compiler {
             return None;
         }
 
-        let (last_real, last_integer) = match target_ty {
+        let controls = match target_ty {
             ScalarType::Integer => {
                 let start = self.static_assigned_integer_value(values[0])?;
                 let step = self.static_assigned_integer_value(values[1])?;
@@ -6034,8 +6034,16 @@ impl Compiler {
                 } else {
                     (start - limit) / -step + 1
                 };
-                let last = start.checked_add((iterations - 1).checked_mul(step)?)?;
-                (None, Some(i64::try_from(last).ok()?))
+                let iterations = usize::try_from(iterations).ok()?;
+                if iterations > MAX_STATIC_STEP_ITERATIONS {
+                    return None;
+                }
+                let mut controls = Vec::with_capacity(iterations);
+                for index in 0..iterations {
+                    let value = start.checked_add(i128::try_from(index).ok()?.checked_mul(step)?)?;
+                    controls.push((None, Some(i64::try_from(value).ok()?)));
+                }
+                controls
             }
             ScalarType::Real => {
                 let start = self.static_assigned_real_value(values[0])?;
@@ -6051,10 +6059,10 @@ impl Compiler {
                     return None;
                 }
                 let mut control = start;
-                let mut last = None;
+                let mut controls = Vec::new();
                 let mut exited = false;
-                for _ in 0..MAX_STATIC_REAL_FOR_ITERATIONS {
-                    last = Some(control);
+                for _ in 0..MAX_STATIC_STEP_ITERATIONS {
+                    controls.push((Some(control.to_string()), None));
                     let next = control + step;
                     if !next.is_finite() || next == control {
                         return None;
@@ -6068,7 +6076,7 @@ impl Compiler {
                 if !exited {
                     return None;
                 }
-                (Some(last?.to_string()), None)
+                controls
             }
             ScalarType::Boolean | ScalarType::String => return None,
         };
@@ -6099,22 +6107,44 @@ impl Compiler {
         let saved_reals = self.static_real_slots.clone();
         let saved_integers = self.static_integer_slots.clone();
         let saved_booleans = self.static_boolean_slots.clone();
-        let updated = self
-            .update_for_target_snapshot(target, last_real, last_integer)
-            .is_ok();
-        let snapshot = updated.then(|| match binding.ty {
-            ScalarType::Integer => self
-                .static_assigned_integer_value(expression)
-                .map(StaticScalarSnapshot::Integer),
-            ScalarType::Real => self
-                .static_assigned_real_value(expression)
-                .filter(|value| value.is_finite())
-                .map(|value| StaticScalarSnapshot::Real(value.to_string())),
-            ScalarType::Boolean => self
-                .static_boolean_value(expression)
-                .map(StaticScalarSnapshot::Boolean),
-            ScalarType::String => None,
-        }).flatten();
+        let mut snapshot = None;
+        for (control_real, control_integer) in controls {
+            if self
+                .update_for_target_snapshot(target, control_real, control_integer)
+                .is_err()
+            {
+                snapshot = None;
+                break;
+            }
+            snapshot = match binding.ty {
+                ScalarType::Integer => self
+                    .static_assigned_integer_value(expression)
+                    .map(StaticScalarSnapshot::Integer),
+                ScalarType::Real => self
+                    .static_assigned_real_value(expression)
+                    .filter(|value| value.is_finite())
+                    .map(|value| StaticScalarSnapshot::Real(value.to_string())),
+                ScalarType::Boolean => self
+                    .static_boolean_value(expression)
+                    .map(StaticScalarSnapshot::Boolean),
+                ScalarType::String => None,
+            };
+            let Some(value) = snapshot.as_ref() else {
+                break;
+            };
+            match value {
+                StaticScalarSnapshot::Integer(value) => {
+                    self.static_integer_slots.insert(binding.slot.clone(), *value);
+                }
+                StaticScalarSnapshot::Real(value) => {
+                    self.static_real_slots
+                        .insert(binding.slot.clone(), value.clone());
+                }
+                StaticScalarSnapshot::Boolean(value) => {
+                    self.static_boolean_slots.insert(binding.slot.clone(), *value);
+                }
+            }
+        }
         self.static_real_slots = saved_reals;
         self.static_integer_slots = saved_integers;
         self.static_boolean_slots = saved_booleans;
@@ -9151,10 +9181,10 @@ fn single_token_recursive(node: &GrammarASTNode) -> Option<&Token> {
 /// for an integer base).  64 mirrors BASIC's BA-pow cap.
 const MAX_POW_UNROLL_EXPONENT: u32 = 64;
 
-/// Bound compile-time simulation of real `for` progress. Real addition is not
-/// algebraically invertible, so mirror the emitted additions while keeping
-/// adversarial source programs from consuming unbounded compiler time.
-const MAX_STATIC_REAL_FOR_ITERATIONS: usize = 4_096;
+/// Bound compile-time simulation of `step` progress and scalar recurrences.
+/// Real addition is not algebraically invertible, so mirror emitted operations
+/// while keeping adversarial source programs from consuming unbounded time.
+const MAX_STATIC_STEP_ITERATIONS: usize = 4_096;
 
 /// Bound abstract execution of self-contained `while` controls.
 const MAX_STATIC_WHILE_ITERATIONS: usize = 4_096;
@@ -14202,6 +14232,38 @@ mod tests {
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
             }));
         }
+    }
+
+    #[test]
+    fn al4_finite_step_loop_tracks_scalar_recurrence_snapshot() {
+        for (source, expected) in [
+            (
+                "begin integer i, n; n := 0; for i := 1 step 1 until 3 do n := n + i; print(n + 0.25) end",
+                "6.25",
+            ),
+            (
+                "begin integer i; real r; r := 0.25; for i := 1 step 1 until 3 do r := r + i; print(r) end",
+                "6.25",
+            ),
+        ] {
+            let module = compile_source(source, "test")
+                .expect("a bounded scalar recurrence has an exact final snapshot");
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_long_integer_step_recurrence_remains_conservative() {
+        let err = compile_source(
+            "begin integer i; real r; r := 0.0; for i := 1 step 1 until 5000 do r := r + 0.001; print(r) end",
+            "test",
+        )
+        .expect_err("integer-loop recurrence simulation is bounded");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
