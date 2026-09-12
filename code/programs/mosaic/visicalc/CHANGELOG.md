@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+### Fixed — the sheet now exposes native table semantics on Compose (#14843)
+
+VisiCalc's grid is the only `HostTable` in the product and Compose did not
+recognise it as a table: no `collectionInfo`, no `collectionItemInfo`. Every
+accessibility gate passed regardless, because each cell existed and was
+correctly named — a screen reader simply had no way to know it was a table.
+
+The cause was in the emitter, not here: its shape predicate required exactly
+one child per row, and `RowHeaderGrid` opens each row with a fixed corner or
+row-header cell before the `For`.
+
+Degradations **8 → 7**; the render script's pin moves with them. The remaining
+seven are `table-focus`, `table-wheel-shift` and `authored-table-cell`, all
+gated on `backend != React` with no per-backend predicate.
+
+
 ### Added — VisiCalc can be rendered on Compose (#14829)
 
 `conformance/compose/VisiCalcScreenshots.kt` and `scripts/render-compose.sh`
