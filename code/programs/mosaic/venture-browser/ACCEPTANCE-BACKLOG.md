@@ -5,6 +5,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 browser convergence — shared details disclosure semantics.** Hide
+  closed details content before layout, emit reusable summary hit regions, and
+  route pointer, Enter/Space, accessibility, generated-summary, and named-group
+  behavior through retained core state. Completed with link/control precedence,
+  deterministic fixtures, native forwarding, and generated-host package
+  acceptance without toolkit-owned visibility policy.
+
 - [x] **P0 browser convergence — form groups and label activation.** Project
   disabled-fieldset inheritance with the first-legend exception into the shared
   render/control model, and resolve explicit and implicit labels into reusable

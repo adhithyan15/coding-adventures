@@ -355,6 +355,7 @@ where
 struct ConversionState {
     counters: CounterContext,
     control_index: usize,
+    disclosure_index: usize,
 }
 
 fn convert_node<F>(
@@ -371,10 +372,16 @@ where
 {
     let style = style_for_node(node, context, inherited, ancestors, position, is_visited);
     let display = style.display.as_deref().unwrap_or(&node.display);
+    let disclosure_index = (node.disclosure_kind.as_deref() == Some("details")).then(|| {
+        let index = state.disclosure_index;
+        state.disclosure_index += 1;
+        index
+    });
     if display == "none"
         || node.hidden
         || (node.role == "control" && node.control_type.as_deref() == Some("hidden"))
     {
+        state.disclosure_index += count_details_nodes(&node.children);
         return None;
     }
 
@@ -433,14 +440,7 @@ where
         _ if node.role == "control" => {
             control_leaf(node, &style, control_key.as_deref().unwrap_or("control"))
         }
-        _ => container_or_fallback(
-            node,
-            context,
-            &style,
-            &next_ancestors,
-            state,
-            is_visited,
-        ),
+        _ => container_or_fallback(node, context, &style, &next_ancestors, state, is_visited),
     };
 
     if supports_generated {
@@ -501,7 +501,9 @@ where
             .ext
             .insert("backgrounds".into(), backgrounds.to_ext());
     }
-    layout.ext.insert("html".into(), html_ext(node));
+    layout
+        .ext
+        .insert("html".into(), html_ext(node, disclosure_index));
     layout
         .ext
         .insert("block".into(), block_ext(node, display, &style));
@@ -529,6 +531,16 @@ where
     Some(layout)
 }
 
+fn count_details_nodes(nodes: &[BrowserRenderNode]) -> usize {
+    nodes
+        .iter()
+        .map(|node| {
+            usize::from(node.disclosure_kind.as_deref() == Some("details"))
+                + count_details_nodes(&node.children)
+        })
+        .sum()
+}
+
 fn convert_children<F>(
     nodes: &[BrowserRenderNode],
     context: &HtmlStyleContext,
@@ -553,13 +565,7 @@ where
                 }
             });
             convert_node(
-                node,
-                context,
-                inherited,
-                ancestors,
-                position,
-                state,
-                is_visited,
+                node, context, inherited, ancestors, position, state, is_visited,
             )
         })
         .collect()
@@ -576,14 +582,41 @@ fn container_or_fallback<F>(
 where
     F: Fn(&str) -> bool + ?Sized,
 {
-    let children = convert_children(
-        &node.children,
+    let visible_children = if node.disclosure_kind.as_deref() == Some("details") && !node.open {
+        node.children
+            .iter()
+            .find(|child| child.disclosure_kind.as_deref() == Some("summary"))
+            .map(std::slice::from_ref)
+            .unwrap_or_default()
+    } else {
+        node.children.as_slice()
+    };
+    let mut children = convert_children(
+        visible_children,
         context,
         style,
         ancestors,
         state,
         is_visited,
     );
+
+    if node.disclosure_kind.as_deref() == Some("details")
+        && !node
+            .children
+            .iter()
+            .any(|child| child.disclosure_kind.as_deref() == Some("summary"))
+    {
+        let mut summary = text_leaf("Details", style);
+        summary.ext.insert(
+            "html".into(),
+            ExtValue::Map(HashMap::from([
+                ("role".into(), ExtValue::Str("disclosure_summary".into())),
+                ("tag".into(), ExtValue::Str("summary".into())),
+                ("disclosureKind".into(), ExtValue::Str("summary".into())),
+            ])),
+        );
+        children.insert(0, summary);
+    }
 
     if !children.is_empty() {
         return LayoutNode::container(children);
@@ -3958,11 +3991,21 @@ fn positive_attribute(value: Option<&str>) -> Option<usize> {
         .filter(|value| *value > 0)
 }
 
-fn html_ext(node: &BrowserRenderNode) -> ExtValue {
+fn html_ext(node: &BrowserRenderNode, disclosure_index: Option<usize>) -> ExtValue {
     let mut values = HashMap::new();
     values.insert("role".into(), ExtValue::Str(node.role.clone()));
     values.insert("display".into(), ExtValue::Str(node.display.clone()));
     insert_optional(&mut values, "tag", node.name.as_deref());
+    insert_optional(&mut values, "id", node.id.as_deref());
+    insert_optional(
+        &mut values,
+        "disclosureKind",
+        node.disclosure_kind.as_deref(),
+    );
+    values.insert("open".into(), ExtValue::Bool(node.open));
+    if let Some(index) = disclosure_index {
+        values.insert("disclosureIndex".into(), ExtValue::Int(index as i64));
+    }
     insert_optional(
         &mut values,
         "href",
@@ -4788,6 +4831,32 @@ mod tests {
         let layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
         let text = all_text(&layout);
         assert_eq!(text, vec!["shown", "visual"]);
+    }
+
+    #[test]
+    fn details_only_lays_out_its_summary_until_opened() {
+        let closed = parse_browser_render_tree(
+            "<details><summary>More</summary><p>Hidden body</p></details>",
+        )
+        .unwrap();
+        let open = parse_browser_render_tree(
+            "<details open><summary>More</summary><p>Visible body</p></details>",
+        )
+        .unwrap();
+        let fallback = parse_browser_render_tree("<details><p>Hidden body</p></details>").unwrap();
+
+        let closed_layout = html_render_tree_to_layout(&closed, &mosaic_html_theme());
+        let closed_text = all_text(&closed_layout);
+        assert!(closed_text.contains(&"More"));
+        assert!(!closed_text.contains(&"Hidden body"));
+        let open_layout = html_render_tree_to_layout(&open, &mosaic_html_theme());
+        let open_text = all_text(&open_layout);
+        assert!(open_text.contains(&"More"));
+        assert!(open_text.contains(&"Visible body"));
+        assert_eq!(
+            all_text(&html_render_tree_to_layout(&fallback, &mosaic_html_theme())),
+            vec!["Details"]
+        );
     }
 
     #[test]

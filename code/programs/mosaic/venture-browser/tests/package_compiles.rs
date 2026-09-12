@@ -1162,3 +1162,13 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         );
     }
 }
+
+#[test]
+fn shared_disclosure_fixture_is_available_to_every_generated_host() {
+    let page = venture_browser_visual_fixtures::load_disclosure_page("http://venture.test")
+        .expect("load disclosure fixture");
+    assert_eq!(page.paint.disclosures.len(), 3);
+    assert_eq!(page.paint.disclosures[0].key, "disclosure:id:shipping");
+    assert!(!page.paint.disclosures[0].open);
+    assert!(page.paint.disclosures[1].open);
+}
