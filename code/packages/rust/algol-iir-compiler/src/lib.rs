@@ -2866,7 +2866,7 @@ impl Compiler {
         nodes: &[&GrammarASTNode],
     ) -> Option<u32> {
         self.static_nonnegative_power_chain_with(nodes, &|node| {
-            let value = self.static_tracked_real_standard_expression_value(node)?;
+            let value = self.static_tracked_real_standard_expression_value(node, true)?;
             (value >= 0.0
                 && value <= MAX_POW_UNROLL_EXPONENT as f64
                 && value.fract() == 0.0)
@@ -2877,6 +2877,7 @@ impl Compiler {
     fn static_tracked_real_standard_expression_value(
         &self,
         node: &GrammarASTNode,
+        require_real_dependency: bool,
     ) -> Option<f64> {
         let dependencies = self.tracked_integer_expression_dependencies(node)?;
         if dependencies.is_empty()
@@ -2902,7 +2903,7 @@ impl Compiler {
                 _ => return None,
             }
         }
-        saw_real_dependency
+        (!require_real_dependency || saw_real_dependency)
             .then(|| self.static_tracked_exponent_real_value(node))
             .flatten()
             .filter(|value| value.is_finite())
@@ -3184,7 +3185,7 @@ impl Compiler {
         {
             return Some((value, false));
         }
-        if let Some(value) = self.static_tracked_real_standard_expression_value(node) {
+        if let Some(value) = self.static_tracked_real_standard_expression_value(node, false) {
             return Some((value, false));
         }
         if !self.contains_conditional_expression(node)
@@ -11623,6 +11624,19 @@ mod tests {
     }
 
     #[test]
+    fn al4_conditional_real_snapshot_and_integer_standard_result_power_unrolls() {
+        let module = compile_source(
+            "begin integer radicand; boolean gate; real exponent, saved; radicand := 4; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) + 6.0; gate := true; radicand := 9; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("an equal tracked real snapshot and integer-backed built-in may bound a power");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
     fn al4_tracked_real_standard_function_exponents_fail_closed() {
         for source in [
             "begin real exponent, saved; exponent := 1.0; saved := 6.0 ^ (exponent + cos(0)) end",
@@ -11666,6 +11680,9 @@ mod tests {
             "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else 1.0 + 2.0) end",
             "begin boolean gate; real exponent, radicand, saved; exponent := 2.0; radicand := 9.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) end",
             "begin boolean gate; real exponent, radicand, saved; exponent := 2.0; radicand := 2.25; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) end",
+            "begin integer radicand; boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) end",
+            "begin integer radicand; boolean gate; real exponent, saved; radicand := 9007199254740993; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) end",
+            "begin integer radicand; boolean gate; real exponent, saved; radicand := 9; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) end",
             "begin real procedure sqrt(x); value x; real x; sqrt := 2.0; boolean gate; real exponent, radicand, saved; exponent := 2.0; radicand := 4.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) end",
             "begin real procedure choose(x); value x; real x; choose := x; real gate, exponent, saved; gate := 0.0; exponent := 0.0; saved := 6.0 ^ (if choose(gate) = 0.0 then cos(exponent) + 1 else cos(exponent) + 1) end",
         ] {
