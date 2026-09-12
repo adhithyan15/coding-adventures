@@ -226,7 +226,7 @@
     {
       "id": "info",
       "headers": ["info"],
-      "status": "detected",
+      "status": "full",
       "ir": "info",
       "smoke_source": "info"
     },

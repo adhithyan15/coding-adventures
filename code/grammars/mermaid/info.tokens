@@ -1,0 +1,6 @@
+# @version 1
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+  COMMENT = /%%[^\r\n]*/
+HEADER = "info"
+SHOW_INFO = "showInfo"

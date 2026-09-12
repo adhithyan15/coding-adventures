@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_cynefin, parse_event_modeling, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart,
+    parse_cynefin, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -66,6 +66,22 @@ const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
 const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-corpus.json"));
+const INFO_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/info-11.16.1-corpus.json"));
+
+#[test]
+fn info_full_status_is_backed_by_the_complete_pinned_corpus() {
+    let corpus: Value = serde_json::from_str(INFO_CORPUS).expect("info corpus must be JSON");
+    assert_eq!(corpus["upstream_version"].as_str(), Some("11.16.1"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
+        let diagram = parse_info(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("valid info fixture {:?} failed: {error}", fixture["name"]));
+        assert_eq!(diagram.version, "11.16.1");
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        assert!(parse_info(fixture["source"].as_str().expect("fixture source")).is_err(),
+            "invalid info fixture {:?} should fail", fixture["name"]);
+    }
+}
 
 #[test]
 fn pinned_railroad_subset_corpus_parses_to_recursive_ir() {
@@ -893,4 +909,12 @@ fn railroad_dispatches_to_dedicated_recursive_ir_and_rejects_textual_dialects() 
     }
     assert!(parse_railroad("railroad-ebnf-beta\ndigit = '0' | '1';").is_err());
     assert!(parse_railroad("railroad-beta\nvalue = optional(terminal(\"x\"), terminal(\"y\"));").is_err());
+}
+
+#[test]
+fn info_dispatches_to_dedicated_version_ir() {
+    match parse_any_mermaid("info showInfo").expect("info should parse") {
+        mermaid_parser::MermaidDiagram::Info(diagram) => assert_eq!(diagram.version, "11.16.1"),
+        _ => panic!("info should lower to dedicated version IR"),
+    }
 }

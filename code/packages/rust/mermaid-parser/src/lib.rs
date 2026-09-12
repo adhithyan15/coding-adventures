@@ -16,6 +16,7 @@ use diagram_ir::{
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell,
     GridConnection, GridDiagram, PacketDiagram, PacketField, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode, RailroadDiagram, RailroadExpression, RailroadRule,
+    InfoDiagram,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -29,7 +30,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_eventmodeling, try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
     try_tokenize_mermaid_treemap, try_tokenize_mermaid_venn, try_tokenize_mermaid_ishikawa,
     try_tokenize_mermaid_wardley, try_tokenize_mermaid_cynefin, try_tokenize_mermaid_treeview,
-    try_tokenize_mermaid_swimlane, try_tokenize_mermaid_railroad,
+    try_tokenize_mermaid_swimlane, try_tokenize_mermaid_railroad, try_tokenize_mermaid_info,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -74,6 +75,7 @@ const CYNEFIN_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/m
 const TREEVIEW_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/treeview.grammar");
 const SWIMLANE_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/swimlane.grammar");
 const RAILROAD_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/railroad.grammar");
+const INFO_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/info.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -679,6 +681,7 @@ impl MermaidDiagramType {
                 | Self::TreeView
                 | Self::Swimlane
                 | Self::Railroad
+                | Self::Info
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -711,6 +714,7 @@ pub enum MermaidDiagram {
     TreeView(TreeViewDiagram),
     Swimlane(SwimlaneDiagram),
     Railroad(RailroadDiagram),
+    Info(InfoDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -849,6 +853,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::TreeView => parse_treeview(source).map(MermaidDiagram::TreeView),
         MermaidDiagramType::Swimlane => parse_swimlane(source).map(MermaidDiagram::Swimlane),
         MermaidDiagramType::Railroad => parse_railroad(source).map(MermaidDiagram::Railroad),
+        MermaidDiagramType::Info => parse_info(source).map(MermaidDiagram::Info),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -859,6 +864,17 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             col: 1,
         }),
     }
+}
+
+/// Parse Mermaid's complete 11.16.1 Info grammar and pin its injected version.
+pub fn parse_info(source: &str) -> Result<InfoDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_info(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(INFO_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse info.grammar: {error}"));
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
+        .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
+    Ok(InfoDiagram { version: MERMAID_COMPATIBILITY_BASELINE.into() })
 }
 
 /// Parse the core Mermaid Architecture service/group/edge subset.
