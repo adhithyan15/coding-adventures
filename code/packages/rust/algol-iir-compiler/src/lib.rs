@@ -7950,8 +7950,7 @@ impl Compiler {
                 .flatten()
             })
             .or_else(|| {
-                (base.ty == ScalarType::Real
-                    && self.contains_pure_standard_function_call(base_node))
+                (base.ty == ScalarType::Real)
                 .then(|| {
                     self.static_nonnegative_tracked_real_arithmetic_power_chain(
                         exponent_nodes,
@@ -11788,11 +11787,23 @@ mod tests {
     }
 
     #[test]
+    fn al4_standard_free_conditional_tracked_real_arithmetic_power_unrolls() {
+        let module = compile_source(
+            "begin real power, offset, gate, saved; power := 0.5; offset := 1.5; saved := 6.0 ^ (if gate = 0.0 then power + offset else offset + power) + 6.0; gate := 1.0; power := 9.0; offset := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("path-independent tracked-real arithmetic may bound a plain real power");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
     fn al4_conditional_tracked_real_arithmetic_power_operands_fail_closed() {
         for source in [
             "begin real power, offset, gate, exponent, saved; power := 0.5; offset := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then power + offset else power + offset + 1.0)) end",
             "begin real power, offset, gate, exponent, saved; power := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then power + offset else offset + power)) end",
-            "begin real power, offset, gate, saved; power := 0.5; offset := 0.5; saved := 6.0 ^ (if gate = 0.0 then power + offset else offset + power) end",
             "begin real procedure choose(x); value x; real x; choose := x; real power, offset, gate, exponent, saved; power := 0.5; offset := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if choose(gate) = 0.0 then power + offset else offset + power)) end",
         ] {
             let module = compile_source(source, "test")
