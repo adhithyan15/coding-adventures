@@ -36,7 +36,7 @@ pub enum MetadataViolation {
     ResponseType,
     /// Authorization Code was not supported by the advertised grant set.
     GrantType,
-    /// Public-client token endpoint authentication method `none` was not advertised.
+    /// Public-client derivation was requested but token authentication method `none` was absent.
     TokenAuthentication,
     /// JWT client authentication omitted valid signing-algorithm metadata.
     TokenAuthenticationSigningAlgorithm,
@@ -122,7 +122,7 @@ impl Debug for AuthorizationServerMetadataContext {
     }
 }
 
-/// Validated RFC 8414 metadata narrowed to this public installed-app profile.
+/// Validated RFC 8414 metadata narrowed to this installed-app profile.
 ///
 /// Unknown metadata fields are deliberately discarded. The retained capability
 /// sets are the exact values that justified accepting this record, so a cache
@@ -237,6 +237,11 @@ impl AuthorizationServerMetadata {
         client_id: impl Into<String>,
         redirect_uri: impl Into<String>,
     ) -> Result<ProviderConfig, OAuthError> {
+        require_member(
+            &self.token_endpoint_auth_methods_supported,
+            "none",
+            MetadataViolation::TokenAuthentication,
+        )?;
         let mut config = ProviderConfig::new(
             self.provider,
             self.authorization_endpoint,
@@ -315,12 +320,13 @@ pub fn prepare_authorization_server_metadata(
     )
 }
 
-/// Decode and validate metadata for the public installed-app profile.
+/// Decode and validate metadata for the installed-app profile.
 ///
 /// This function accepts ownership of a wipe-on-drop response body. The exact
-/// issuer, Authorization Code support, public-client method `none`, and PKCE
-/// `S256` are mandatory. The provider response is released only after the
-/// returned audit descriptor is durably published.
+/// issuer, Authorization Code support, an explicit token-authentication method
+/// set, and PKCE `S256` are mandatory. Public [`ProviderConfig`] derivation
+/// separately requires method `none`. The provider response is released only
+/// after the returned audit descriptor is durably published.
 pub fn decode_authorization_server_metadata(
     context: AuthorizationServerMetadataContext,
     status: u16,
@@ -413,11 +419,6 @@ fn parse_metadata_object(
 
     let token_endpoint_auth_methods_supported =
         required_string_array(fields, "token_endpoint_auth_methods_supported")?;
-    require_member(
-        &token_endpoint_auth_methods_supported,
-        "none",
-        MetadataViolation::TokenAuthentication,
-    )?;
     let token_endpoint_auth_signing_alg_values_supported =
         optional_string_array(fields, "token_endpoint_auth_signing_alg_values_supported")?
             .unwrap_or_default();
@@ -801,7 +802,7 @@ mod tests {
     }
 
     #[test]
-    fn required_public_profile_capabilities_fail_closed() {
+    fn required_installed_app_capabilities_fail_closed() {
         let issuer = "https://login.example";
         for (from, to, violation) in [
             (
@@ -813,11 +814,6 @@ mod tests {
                 r#"["authorization_code","refresh_token"]"#,
                 r#"["refresh_token"]"#,
                 MetadataViolation::GrantType,
-            ),
-            (
-                r#"["none","client_secret_basic","private_key_jwt"]"#,
-                r#"["client_secret_basic"]"#,
-                MetadataViolation::TokenAuthentication,
             ),
             (r#"["S256"]"#, r#"["plain"]"#, MetadataViolation::Pkce),
         ] {
@@ -835,7 +831,50 @@ mod tests {
     }
 
     #[test]
-    fn missing_public_auth_or_pkce_advertisement_does_not_assume_support() {
+    fn confidential_authentication_is_retained_but_public_derivation_requires_none() {
+        let issuer = "https://login.example";
+        let confidential_body = String::from_utf8(valid_body(issuer))
+            .unwrap()
+            .replace(
+                r#"["none","client_secret_basic","private_key_jwt"]"#,
+                r#"["client_secret_basic","private_key_jwt"]"#,
+            )
+            .into_bytes();
+
+        let metadata = decode(issuer, confidential_body.clone())
+            .publish_then_release(&mut Sink::default())
+            .unwrap();
+        assert_eq!(
+            metadata.token_endpoint_auth_methods_supported(),
+            &["client_secret_basic", "private_key_jwt"]
+        );
+        assert_eq!(
+            metadata.token_endpoint_auth_signing_alg_values_supported(),
+            &["EdDSA", "RS256"]
+        );
+        assert_eq!(
+            metadata
+                .into_provider_config("public-client", "http://127.0.0.1:43210/oauth/callback")
+                .unwrap_err(),
+            invalid(MetadataViolation::TokenAuthentication)
+        );
+
+        let metadata = decode(issuer, confidential_body)
+            .publish_then_release(&mut Sink::default())
+            .unwrap();
+        assert_eq!(
+            metadata
+                .into_provider_config_with_distinct_redirect_uri(
+                    "public-client",
+                    "http://127.0.0.1:43211/oauth/callback",
+                )
+                .unwrap_err(),
+            invalid(MetadataViolation::TokenAuthentication)
+        );
+    }
+
+    #[test]
+    fn missing_authentication_or_pkce_advertisement_does_not_assume_support() {
         let issuer = "https://login.example";
         for field in [
             r#""token_endpoint_auth_methods_supported":["none","client_secret_basic","private_key_jwt"],"#,

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Generalized RFC 8414 decoding to retain exact confidential-client token
+  authentication capabilities even when `none` is absent, while both public
+  `ProviderConfig` derivation paths still fail closed unless `none` was
+  explicitly advertised.
 - Retained RFC 8414 `token_endpoint_auth_signing_alg_values_supported` as
   immutable provider data, require it when JWT client authentication is
   advertised, and reject the unsecured `none` algorithm without inventing
