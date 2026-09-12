@@ -23,6 +23,10 @@ private final class VentureNativeLibrary {
   ) -> UInt8
   typealias ControlClipboard = @convention(c) (UnsafeMutableRawPointer?) -> UnsafeMutablePointer<CChar>?
   typealias CaretTick = @convention(c) (UnsafeMutableRawPointer?, UInt64) -> UInt8
+  typealias ControlFile = @convention(c) (
+    UnsafeMutableRawPointer?, UnsafePointer<CChar>?, UnsafePointer<CChar>?,
+    UnsafePointer<CChar>?, UnsafePointer<CChar>?, UnsafePointer<UInt8>?, Int, UInt8
+  ) -> UInt8
   typealias ScrollMetrics = @convention(c) (
     UnsafeMutableRawPointer?, UnsafeMutablePointer<Double>?, UnsafeMutablePointer<Double>?,
     UnsafeMutablePointer<Double>?, UnsafeMutablePointer<Double>?
@@ -48,6 +52,8 @@ private final class VentureNativeLibrary {
   let controlPaste: ControlText
   let caretTick: CaretTick
   let imeCandidateRect: ControlClipboard
+  let filePickerRequest: ControlClipboard
+  let controlFile: ControlFile
   let scrollMetrics: ScrollMetrics
   let scrollTo: ScrollTo
   let activateLink: ActivateLink
@@ -90,6 +96,10 @@ private final class VentureNativeLibrary {
       let imeCandidateRect = symbol(
         "venture_browser_macos_ime_candidate_rect", as: ControlClipboard.self
       ),
+      let filePickerRequest = symbol(
+        "venture_browser_macos_file_picker_request", as: ControlClipboard.self
+      ),
+      let controlFile = symbol("venture_browser_macos_control_file", as: ControlFile.self),
       let scrollMetrics = symbol(
         "venture_browser_macos_scroll_metrics", as: ScrollMetrics.self
       ),
@@ -118,6 +128,8 @@ private final class VentureNativeLibrary {
     self.controlPaste = controlPaste
     self.caretTick = caretTick
     self.imeCandidateRect = imeCandidateRect
+    self.filePickerRequest = filePickerRequest
+    self.controlFile = controlFile
     self.scrollMetrics = scrollMetrics
     self.scrollTo = scrollTo
     self.activateLink = activateLink
@@ -1475,6 +1487,42 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     }
     contentView?.renderPage()
     propsChangedHandler?()
+    presentFilePickerIfRequested()
+  }
+
+  private func presentFilePickerIfRequested() {
+    guard let native, let browser,
+          let request = native.decode(native.filePickerRequest(browser)),
+          let key = request["key"] as? String,
+          let multiple = request["multiple"] as? Bool else { return }
+    let panel = NSOpenPanel()
+    panel.canChooseFiles = true
+    panel.canChooseDirectories = false
+    panel.allowsMultipleSelection = multiple
+    panel.begin { [weak self] response in
+      guard response == .OK, let self, let native = self.native, let browser = self.browser else {
+        return
+      }
+      for (index, url) in panel.urls.enumerated() {
+        guard let handle = try? FileHandle(forReadingFrom: url),
+              let bytes = try? handle.read(upToCount: 16 * 1024 * 1024 + 1) else { continue }
+        try? handle.close()
+        let opaqueID = "macos:\(UUID().uuidString)"
+        let changed = key.withCString { controlKey in
+          opaqueID.withCString { opaque in
+            url.lastPathComponent.withCString { name in
+              bytes.withUnsafeBytes { buffer in
+                native.controlFile(
+                  browser, controlKey, opaque, name, nil,
+                  buffer.bindMemory(to: UInt8.self).baseAddress,
+                  bytes.count, index == 0 ? 0 : 1)
+              }
+            }
+          }
+        }
+        if changed != 0 { self.contentView?.renderPage() }
+      }
+    }
   }
 
   fileprivate func updateHover(at point: NSPoint?) -> Bool {

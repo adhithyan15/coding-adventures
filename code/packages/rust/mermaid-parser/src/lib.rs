@@ -15,7 +15,7 @@ use diagram_ir::{
     BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell,
     GridConnection, GridDiagram, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
-    RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
+    PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
@@ -1189,6 +1189,7 @@ pub fn parse_packet(source: &str) -> Result<PacketDiagram, ParseError> {
 
     let mut diagram = PacketDiagram {
         config: parse_packet_config(source),
+        theme: parse_packet_theme(source),
         ..PacketDiagram::default()
     };
     let mut next_bit = 0u32;
@@ -1256,6 +1257,50 @@ pub fn parse_packet(source: &str) -> Result<PacketDiagram, ParseError> {
             .ok_or_else(|| token_error(token, "packet bit range is too large"))?;
     }
     Ok(diagram)
+}
+
+fn parse_packet_theme(source: &str) -> PacketTheme {
+    let front_matter = mermaid_front_matter_section(source, &["themeVariables", "packet"]);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .and_then(|theme| mermaid_directive_object(theme, "packet"))
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key: &str| -> Option<String> {
+        quadrant_directive_value(theme_source, key).or_else(|| {
+            theme_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    let color = |key: &str, default: &str| {
+        value(key)
+            .filter(|value| !value.is_empty())
+            .unwrap_or_else(|| default.to_string())
+    };
+    let font_size = |key: &str, default| {
+        value(key)
+            .and_then(parse_mermaid_font_size)
+            .filter(|value| value.is_finite() && *value > 0.0)
+            .unwrap_or(default)
+    };
+    let defaults = PacketTheme::default();
+    let block_stroke_width = value("blockStrokeWidth")
+        .and_then(parse_mermaid_font_size)
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .unwrap_or(defaults.block_stroke_width);
+    PacketTheme {
+        byte_font_size: font_size("byteFontSize", defaults.byte_font_size),
+        start_byte_color: color("startByteColor", &defaults.start_byte_color),
+        end_byte_color: color("endByteColor", &defaults.end_byte_color),
+        label_color: color("labelColor", &defaults.label_color),
+        label_font_size: font_size("labelFontSize", defaults.label_font_size),
+        title_color: color("titleColor", &defaults.title_color),
+        title_font_size: font_size("titleFontSize", defaults.title_font_size),
+        block_stroke_color: color("blockStrokeColor", &defaults.block_stroke_color),
+        block_stroke_width,
+        block_fill_color: color("blockFillColor", &defaults.block_fill_color),
+    }
 }
 
 fn parse_packet_config(source: &str) -> PacketConfig {
@@ -1414,12 +1459,14 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         }
 
         for item in split_block_items(line) {
+            let (item, column_span) = parse_block_span(token, item)?;
             if item.eq_ignore_ascii_case("space") {
                 space_count += 1;
                 cells.push(GridCell {
                     id: format!("__space{space_count}"),
                     label: DiagramLabel::new(""),
                     shape: DiagramShape::Rect,
+                    column_span,
                     visible: false,
                     style: None,
                 });
@@ -1433,6 +1480,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 id,
                 label: DiagramLabel::new(normalize_mermaid_line_breaks(&label)),
                 shape,
+                column_span,
                 visible: true,
                 style: None,
             });
@@ -1460,6 +1508,21 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         cells,
         connections,
     })
+}
+
+fn parse_block_span<'a>(token: &Token, source: &'a str) -> Result<(&'a str, usize), ParseError> {
+    let Some((item, span)) = source.rsplit_once(':') else {
+        return Ok((source, 1));
+    };
+    if span.is_empty() || !span.chars().all(|character| character.is_ascii_digit()) {
+        return Ok((source, 1));
+    }
+    let span = span
+        .parse::<usize>()
+        .ok()
+        .filter(|span| *span > 0)
+        .ok_or_else(|| token_error(token, "block span must be a positive integer"))?;
+    Ok((item, span))
 }
 
 fn prepare_line_grammar_source(source: &str) -> Result<String, ParseError> {
@@ -8857,6 +8920,23 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn block_parses_node_and_space_column_spans() {
+        let diagram = parse_block(
+            "block\ncolumns 4\none[One] two[Two]:2\nspace:3 three[Three]",
+        )
+        .unwrap();
+        assert_eq!(diagram.cells[0].column_span, 1);
+        assert_eq!(diagram.cells[1].column_span, 2);
+        assert_eq!(diagram.cells[2].column_span, 3);
+        assert_eq!(diagram.cells[3].column_span, 1);
+        assert_eq!(
+            parse_block("block\ncolumns 2\nwide[Wide]:3").unwrap().cells[0].column_span,
+            3
+        );
+        assert!(parse_block("block\ncolumns 2\nzero[Zero]:0").is_err());
+    }
+
+    #[test]
     fn dispatch_block_to_grid_ir() {
         match parse_any_mermaid("block-beta\ncolumns 2\nA B").unwrap() {
             MermaidDiagram::Grid(diagram) => assert_eq!(diagram.cells.len(), 2),
@@ -8913,6 +8993,35 @@ mod tests_dg04 {
         .unwrap();
         assert_eq!(diagram.config.bits_per_row, 8);
         assert!(!diagram.config.show_bits);
+    }
+
+    #[test]
+    fn packet_parses_all_theme_variables_from_front_matter() {
+        let diagram = parse_packet(
+            "---\nthemeVariables:\n  packet:\n    byteFontSize: 11px\n    startByteColor: red\n    endByteColor: '#112233'\n    labelColor: blue\n    labelFontSize: 13px\n    titleColor: green\n    titleFontSize: 17px\n    blockStrokeColor: orange\n    blockStrokeWidth: 2.5\n    blockFillColor: '#abcdef'\n---\npacket\ntitle Themed\n0-7: \"byte\"",
+        )
+        .unwrap();
+        assert_eq!(diagram.theme.byte_font_size, 11.0);
+        assert_eq!(diagram.theme.start_byte_color, "red");
+        assert_eq!(diagram.theme.end_byte_color, "#112233");
+        assert_eq!(diagram.theme.label_color, "blue");
+        assert_eq!(diagram.theme.label_font_size, 13.0);
+        assert_eq!(diagram.theme.title_color, "green");
+        assert_eq!(diagram.theme.title_font_size, 17.0);
+        assert_eq!(diagram.theme.block_stroke_color, "orange");
+        assert_eq!(diagram.theme.block_stroke_width, 2.5);
+        assert_eq!(diagram.theme.block_fill_color, "#abcdef");
+    }
+
+    #[test]
+    fn packet_parses_theme_variables_from_init_directive() {
+        let diagram = parse_packet(
+            "%%{init: {'themeVariables': {'packet': {'labelColor': '#123456', 'labelFontSize': '15px', 'blockStrokeWidth': '3px'}}}}%%\npacket\n0-7: \"byte\"",
+        )
+        .unwrap();
+        assert_eq!(diagram.theme.label_color, "#123456");
+        assert_eq!(diagram.theme.label_font_size, 15.0);
+        assert_eq!(diagram.theme.block_stroke_width, 3.0);
     }
 
     #[test]

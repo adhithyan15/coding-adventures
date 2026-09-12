@@ -163,12 +163,15 @@ model-card parameter, or a UI artifact is not a completion signal.
      endpoint-wiring, selection, and synchronization events. Persist the
      document in app snapshots and let the workbench select its components and
      synchronize the canonical Berkeley deck through the existing parser flow.
-   - **Mosaic schematic grid placement and wire routing** (current phase): add
+   - **Mosaic schematic grid placement and wire routing** (completed in PR #14899): add
      deterministic palette placement, selected-component routing, and a grid
      projection with orthogonal wire segments and terminal markers. The
      canonical endpoint-only document remains the netlist source of truth.
-   - Next: expand the symbol palette and analysis controls on top of this
-     routed host contract.
+   - **Mosaic schematic palette and analysis controls** (current phase): extend
+     the canonical document and routed host contract with L, DC-current, and
+     AC-voltage symbols plus persisted operating-point, DC-sweep, AC-sweep,
+     and transient analysis selection. Each control must lower to the existing
+     Berkeley parser syntax without adding a parallel circuit model.
 
 ### Operating rules
 

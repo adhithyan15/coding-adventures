@@ -34,6 +34,28 @@ public static class MosaicHost
     private static int interactionAcceptanceStarted;
     public static JsonElement? LastAuxiliaryDocument { get; private set; }
     public static event Action<JsonElement>? AuxiliaryDocumentRequested;
+    public static JsonElement? LastFilePickerRequest { get; private set; }
+    public static event Action<JsonElement>? FilePickerRequested;
+
+    public static bool SubmitPickedFile(
+        string key,
+        string opaqueId,
+        string displayName,
+        string? mediaType,
+        byte[] bytes,
+        bool append = false)
+    {
+        EnsureBrowser();
+        var changed = browser != IntPtr.Zero
+            && Native.ControlFile(
+                browser, key, opaqueId, displayName, mediaType, bytes, (nuint)bytes.Length,
+                append ? (byte)1 : (byte)0) != 0;
+        if (changed)
+        {
+            contentSurface?.Refresh();
+        }
+        return changed;
+    }
     private const uint WmKeyDown = 0x0100;
     private const uint WmKeyUp = 0x0101;
     private const int EnterKeyDownLParam = 0x001C0001;
@@ -1254,6 +1276,13 @@ public static class MosaicHost
                 return false;
             }
             _ = ApplyProps(component);
+            var picker = Native.Decode(Native.FilePickerRequest(browser));
+            if (picker is not null)
+            {
+                var retained = picker.RootElement.Clone();
+                LastFilePickerRequest = retained;
+                FilePickerRequested?.Invoke(retained);
+            }
             return true;
         }
 
@@ -1366,6 +1395,22 @@ public static class MosaicHost
         [DllImport(Library, EntryPoint = "venture_browser_windows_ime_candidate_rect",
             CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr ImeCandidateRect(IntPtr browser);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_file_picker_request",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr FilePickerRequest(IntPtr browser);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_control_file",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern byte ControlFile(
+            IntPtr browser,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string key,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string opaqueId,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string displayName,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string? mediaType,
+            byte[] bytes,
+            nuint length,
+            byte append);
 
         [DllImport(Library, EntryPoint = "venture_browser_windows_activate_link",
             CallingConvention = CallingConvention.Cdecl)]

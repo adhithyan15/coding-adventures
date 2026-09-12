@@ -46,6 +46,32 @@ pub enum MetadataViolation {
     AuthorizationResponseIssuer,
 }
 
+/// Confidential-client authentication methods implemented by this OAuth stack.
+///
+/// The closed enum prevents a caller from treating an arbitrary advertised
+/// extension as executable support. Metadata matching remains exact and
+/// case-sensitive.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ConfidentialClientAuthenticationMethod {
+    /// RFC 6749 HTTP Basic client-secret authentication.
+    ClientSecretBasic,
+    /// RFC 6749 request-body client-secret authentication.
+    ClientSecretPost,
+    /// RFC 7523 JWT client assertion signed by a non-exporting private key.
+    PrivateKeyJwt,
+}
+
+impl ConfidentialClientAuthenticationMethod {
+    /// Return the exact RFC 8414 metadata token for this method.
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::ClientSecretBasic => "client_secret_basic",
+            Self::ClientSecretPost => "client_secret_post",
+            Self::PrivateKeyJwt => "private_key_jwt",
+        }
+    }
+}
+
 /// An audited, provider-bound RFC 8414 metadata request.
 pub struct AuthorizationServerMetadataRequest {
     provider: ProviderId,
@@ -219,7 +245,7 @@ impl AuthorizationServerMetadata {
             return Err(invalid(MetadataViolation::AuthorizationResponseIssuer));
         }
         let expected_issuer = self.issuer.clone();
-        self.into_base_provider_config(client_id, redirect_uri)?
+        self.into_base_provider_config(client_id, redirect_uri, "none")?
             .with_expected_issuer(expected_issuer)
     }
 
@@ -234,7 +260,45 @@ impl AuthorizationServerMetadata {
         redirect_uri: impl Into<String>,
     ) -> Result<ProviderConfig, OAuthError> {
         Ok(self
-            .into_base_provider_config(client_id, redirect_uri)?
+            .into_base_provider_config(client_id, redirect_uri, "none")?
+            .with_distinct_redirect_uri())
+    }
+
+    /// Derive a confidential Authorization Code configuration using RFC 9207.
+    ///
+    /// The selected method must be one of the stack's closed implemented set
+    /// and must have been advertised exactly by this metadata. Callers derive
+    /// the corresponding opaque-key or opaque-secret authentication profile
+    /// from the same metadata before consuming it here. PKCE `S256` remains
+    /// mandatory for confidential clients.
+    pub fn into_confidential_provider_config(
+        self,
+        client_id: impl Into<String>,
+        redirect_uri: impl Into<String>,
+        authentication_method: ConfidentialClientAuthenticationMethod,
+    ) -> Result<ProviderConfig, OAuthError> {
+        if !self.authorization_response_iss_parameter_supported {
+            return Err(invalid(MetadataViolation::AuthorizationResponseIssuer));
+        }
+        let expected_issuer = self.issuer.clone();
+        self.into_base_provider_config(client_id, redirect_uri, authentication_method.as_str())?
+            .with_expected_issuer(expected_issuer)
+    }
+
+    /// Derive a confidential configuration using a registry-owned redirect.
+    ///
+    /// This is the distinct-redirect counterpart to
+    /// [`Self::into_confidential_provider_config`]. The registry must enforce
+    /// exclusive redirect ownership, and the selected confidential method must
+    /// be advertised exactly by this metadata.
+    pub fn into_confidential_provider_config_with_distinct_redirect_uri(
+        self,
+        client_id: impl Into<String>,
+        redirect_uri: impl Into<String>,
+        authentication_method: ConfidentialClientAuthenticationMethod,
+    ) -> Result<ProviderConfig, OAuthError> {
+        Ok(self
+            .into_base_provider_config(client_id, redirect_uri, authentication_method.as_str())?
             .with_distinct_redirect_uri())
     }
 
@@ -242,10 +306,11 @@ impl AuthorizationServerMetadata {
         self,
         client_id: impl Into<String>,
         redirect_uri: impl Into<String>,
+        authentication_method: &str,
     ) -> Result<ProviderConfig, OAuthError> {
         require_member(
             &self.token_endpoint_auth_methods_supported,
-            "none",
+            authentication_method,
             MetadataViolation::TokenAuthentication,
         )?;
         let mut config = ProviderConfig::new(
@@ -887,6 +952,79 @@ mod tests {
                 .into_provider_config_with_distinct_redirect_uri(
                     "public-client",
                     "http://127.0.0.1:43211/oauth/callback",
+                )
+                .unwrap_err(),
+            invalid(MetadataViolation::TokenAuthentication)
+        );
+    }
+
+    #[test]
+    fn confidential_derivation_requires_an_exact_implemented_metadata_method() {
+        let issuer = "https://login.example";
+        let confidential_body = String::from_utf8(valid_body(issuer))
+            .unwrap()
+            .replace(
+                r#"["none","client_secret_basic","private_key_jwt"]"#,
+                r#"["client_secret_basic","private_key_jwt"]"#,
+            )
+            .into_bytes();
+
+        let metadata = decode(issuer, confidential_body.clone())
+            .publish_then_release(&mut Sink::default())
+            .unwrap();
+        let basic = metadata
+            .into_confidential_provider_config(
+                "confidential-client",
+                "http://127.0.0.1:43212/oauth/callback",
+                ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            )
+            .unwrap();
+        assert_eq!(basic.client_id(), "confidential-client");
+        assert_eq!(basic.provider(), &provider());
+        assert!(!basic.uses_distinct_redirect_uri());
+
+        let metadata = decode(issuer, confidential_body.clone())
+            .publish_then_release(&mut Sink::default())
+            .unwrap();
+        let private_key = metadata
+            .into_confidential_provider_config_with_distinct_redirect_uri(
+                "confidential-client",
+                "http://127.0.0.1:43213/oauth/callback",
+                ConfidentialClientAuthenticationMethod::PrivateKeyJwt,
+            )
+            .unwrap();
+        assert!(private_key.uses_distinct_redirect_uri());
+
+        let metadata = decode(issuer, confidential_body)
+            .publish_then_release(&mut Sink::default())
+            .unwrap();
+        assert_eq!(
+            metadata
+                .into_confidential_provider_config(
+                    "confidential-client",
+                    "http://127.0.0.1:43214/oauth/callback",
+                    ConfidentialClientAuthenticationMethod::ClientSecretPost,
+                )
+                .unwrap_err(),
+            invalid(MetadataViolation::TokenAuthentication)
+        );
+
+        let wrong_case = String::from_utf8(valid_body(issuer))
+            .unwrap()
+            .replace(
+                r#"["none","client_secret_basic","private_key_jwt"]"#,
+                r#"["Client_Secret_Basic"]"#,
+            )
+            .into_bytes();
+        let metadata = decode(issuer, wrong_case)
+            .publish_then_release(&mut Sink::default())
+            .unwrap();
+        assert_eq!(
+            metadata
+                .into_confidential_provider_config(
+                    "confidential-client",
+                    "http://127.0.0.1:43215/oauth/callback",
+                    ConfidentialClientAuthenticationMethod::ClientSecretBasic,
                 )
                 .unwrap_err(),
             invalid(MetadataViolation::TokenAuthentication)

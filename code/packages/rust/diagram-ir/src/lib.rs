@@ -158,6 +158,7 @@ pub struct GridCell {
     pub id: String,
     pub label: DiagramLabel,
     pub shape: DiagramShape,
+    pub column_span: usize,
     pub visible: bool,
     pub style: Option<DiagramStyle>,
 }
@@ -211,6 +212,38 @@ impl Default for PacketConfig {
     }
 }
 
+/// Mermaid packet theme variables after defaults and directives are resolved.
+#[derive(Clone, Debug, PartialEq)]
+pub struct PacketTheme {
+    pub byte_font_size: f64,
+    pub start_byte_color: String,
+    pub end_byte_color: String,
+    pub label_color: String,
+    pub label_font_size: f64,
+    pub title_color: String,
+    pub title_font_size: f64,
+    pub block_stroke_color: String,
+    pub block_stroke_width: f64,
+    pub block_fill_color: String,
+}
+
+impl Default for PacketTheme {
+    fn default() -> Self {
+        Self {
+            byte_font_size: 10.0,
+            start_byte_color: "black".into(),
+            end_byte_color: "black".into(),
+            label_color: "black".into(),
+            label_font_size: 12.0,
+            title_color: "black".into(),
+            title_font_size: 14.0,
+            block_stroke_color: "black".into(),
+            block_stroke_width: 1.0,
+            block_fill_color: "#efefef".into(),
+        }
+    }
+}
+
 /// Semantic IR for a packet bit-field diagram.
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct PacketDiagram {
@@ -219,6 +252,7 @@ pub struct PacketDiagram {
     pub accessibility_description: Option<String>,
     pub fields: Vec<PacketField>,
     pub config: PacketConfig,
+    pub theme: PacketTheme,
 }
 
 /// Resolved field rectangle emitted by packet layout.
@@ -243,6 +277,7 @@ pub struct LayoutedPacketBitLabel {
     pub width: f64,
     pub height: f64,
     pub align: TextAlign,
+    pub style: ResolvedDiagramStyle,
 }
 
 /// Backend-neutral packet geometry ready for Paint lowering.
@@ -253,6 +288,7 @@ pub struct LayoutedPacketDiagram {
     pub accessibility_description: Option<String>,
     pub fields: Vec<LayoutedPacketField>,
     pub bit_labels: Vec<LayoutedPacketBitLabel>,
+    pub title_style: ResolvedDiagramStyle,
     pub title_y: f64,
     pub width: f64,
     pub height: f64,

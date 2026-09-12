@@ -13,13 +13,15 @@ pub use browser_form_controls::{
     format_typed_value, normalize_color, parse_typed_step, parse_typed_value, step_typed_value,
     typed_constraints, BrowserControlModel, ControlAccessibilityAction, ControlChoiceOptionState,
     ControlChoiceState, ControlClipboardPayload, ControlEditorPresentation, ControlEditorState,
-    ControlEffect, ControlKey, ControlNavigationUnit, ControlRect, ControlSelection,
-    ControlTextMetrics, ControlValueDiagnostic, ControlValueState, TypedValue,
+    ControlEffect, ControlFileItemState, ControlFilePickerRequest, ControlFileState, ControlKey,
+    ControlNavigationUnit, ControlRect, ControlSelection, ControlTextMetrics,
+    ControlValueDiagnostic, ControlValueState, FileAcceptFilter, HostFileSelection, TypedValue,
     TypedValueConstraints,
 };
 use browser_form_submission::{plan_activation, plan_implicit_submission};
 pub use browser_form_submission::{
-    FormActivation, FormDiagnostic, FormEntry, FormMethod, FormNavigation, FormPlanningError,
+    FormActivation, FormDiagnostic, FormEntry, FormFileEntry, FormMethod, FormNavigation,
+    FormPlanningError,
 };
 pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
 #[cfg(test)]
@@ -1378,6 +1380,44 @@ impl BrowserSession {
         self.controls
             .focused_key()
             .and_then(|key| self.controls.choice_state(key))
+    }
+
+    pub fn control_file_state(&self, key: &str) -> Option<ControlFileState> {
+        self.controls.file_state(key)
+    }
+
+    pub fn focused_control_file_state(&self) -> Option<ControlFileState> {
+        self.controls
+            .focused_key()
+            .and_then(|key| self.controls.file_state(key))
+    }
+
+    pub fn focused_file_picker_request(&self) -> Option<ControlFilePickerRequest> {
+        self.controls
+            .focused_key()
+            .and_then(|key| self.controls.file_picker_request(key))
+    }
+
+    /// Deliver a path-free picker result into the shared reducer. Native and
+    /// web hosts retain responsibility only for opening their picker and
+    /// reading the selected bytes.
+    pub fn control_files_selected<M, S, FM, R>(
+        &mut self,
+        key: &str,
+        files: Vec<HostFileSelection>,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.apply_file_selection(key, files)?;
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        self.reflow_controls(pipeline)?;
+        Some(effect)
     }
 
     pub fn form_diagnostics(&self) -> &[FormDiagnostic] {
@@ -5210,7 +5250,11 @@ mod tests {
             )
             .unwrap();
         assert_eq!(
-            session.focused_control_value_state().unwrap().value_text.as_deref(),
+            session
+                .focused_control_value_state()
+                .unwrap()
+                .value_text
+                .as_deref(),
             Some("#00ff7f")
         );
     }

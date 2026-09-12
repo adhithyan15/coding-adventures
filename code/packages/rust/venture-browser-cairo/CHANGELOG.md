@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose shared file picker request and selected-byte ABI seams for Qt,
+  Flutter, and Compose adapters.
+
 - Route form submit/reset activation through the shared validation and
   transactional GET/POST navigation pipeline.
 

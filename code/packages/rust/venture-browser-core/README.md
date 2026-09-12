@@ -60,6 +60,10 @@ Date, month, ISO week, time, datetime-local, and color inputs extend that same
 contract with normalized accessibility value text and scalar stepping. Session
 reflow follows every accepted semantic key or accessibility value action;
 platform adapters remain translators rather than owners of picker state.
+File controls follow the same boundary: activation yields a path-free picker
+request, selected metadata and bounded bytes return through the shared model,
+retained reflow sees only sanitized names, and multipart navigation is planned
+before the common transport receives a request.
 
 `NavigationHistory` is re-exported from the reusable `browser-navigation`
 package and implements the BR01 in-memory navigation model: navigate, Back,

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.256.0 — 2026-09-12 — standard-free tracked real snapshot powers
+
+An exact integral initialized local real snapshot may now bound any real power
+without requiring a pure standard-function result in the base. Uninitialized,
+fractional, non-finite, and oversized exponents continue to fail closed.
+
+## 0.255.0 — 2026-09-12 — standard-free conditional real arithmetic powers
+
+Pure path-independent conditional arithmetic over initialized tracked local
+real snapshots may now bound any real power. Runtime selector execution is
+preserved, while differing, uninitialized, effectful, call-bearing,
+nested-power, fractional, and non-finite forms continue to fail closed.
+
 ## 0.254.0 — 2026-09-12 — standard-free tracked real arithmetic powers
 
 Finite arithmetic over initialized tracked local real snapshots may now bound

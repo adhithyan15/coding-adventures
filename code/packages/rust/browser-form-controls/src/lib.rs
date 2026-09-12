@@ -13,6 +13,9 @@ pub use typed_values::{
 };
 
 const EDIT_HISTORY_LIMIT: usize = 100;
+pub const MAX_SELECTED_FILES: usize = 256;
+pub const MAX_SELECTED_FILE_BYTES: usize = 16 * 1024 * 1024;
+pub const MAX_SELECTED_TOTAL_BYTES: usize = 16 * 1024 * 1024;
 
 pub const VERSION: &str = "0.1.0";
 
@@ -170,6 +173,95 @@ pub struct ControlChoiceState {
     pub diagnostics: Vec<ControlValueDiagnostic>,
 }
 
+/// One path-free file selected by a host picker. The opaque identifier is
+/// meaningful only to the host; shared form code owns the bounded bytes.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct HostFileSelection {
+    pub opaque_id: String,
+    pub name: String,
+    pub media_type: Option<String>,
+    pub bytes: Vec<u8>,
+}
+
+impl HostFileSelection {
+    pub fn new(
+        opaque_id: impl Into<String>,
+        name: impl Into<String>,
+        media_type: Option<String>,
+        bytes: Vec<u8>,
+    ) -> Self {
+        Self {
+            opaque_id: opaque_id.into(),
+            name: sanitize_file_name(&name.into()),
+            media_type: media_type.and_then(|value| normalize_media_type(&value)),
+            bytes,
+        }
+    }
+
+    pub const fn size(&self) -> usize {
+        self.bytes.len()
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum FileAcceptFilter {
+    Extension(String),
+    MediaType(String),
+    MediaRange(String),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlFilePickerRequest {
+    pub key: String,
+    pub accept: Vec<FileAcceptFilter>,
+    pub multiple: bool,
+}
+
+impl FileAcceptFilter {
+    pub fn as_token(&self) -> String {
+        match self {
+            Self::Extension(value) | Self::MediaType(value) => value.clone(),
+            Self::MediaRange(category) => format!("{category}/*"),
+        }
+    }
+}
+
+impl ControlFilePickerRequest {
+    pub fn accept_attribute(&self) -> String {
+        self.accept
+            .iter()
+            .map(FileAcceptFilter::as_token)
+            .collect::<Vec<_>>()
+            .join(",")
+    }
+
+    pub fn to_host_json(&self) -> String {
+        format!(
+            "{{\"key\":\"{}\",\"accept\":\"{}\",\"multiple\":{}}}",
+            json_string(&self.key),
+            json_string(&self.accept_attribute()),
+            self.multiple
+        )
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlFileItemState {
+    pub opaque_id: String,
+    pub name: String,
+    pub media_type: Option<String>,
+    pub size: usize,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct ControlFileState {
+    pub key: String,
+    pub files: Vec<ControlFileItemState>,
+    pub multiple: bool,
+    pub value_text: String,
+    pub diagnostics: Vec<ControlValueDiagnostic>,
+}
+
 impl ControlValueState {
     pub fn is_valid(&self) -> bool {
         self.diagnostics.is_empty()
@@ -250,6 +342,11 @@ pub enum ControlEffect {
         checked: bool,
     },
     Activated(String),
+    FilePickerRequested(ControlFilePickerRequest),
+    FilesChanged {
+        key: String,
+        files: Vec<ControlFileItemState>,
+    },
     SelectionChanged {
         key: String,
         selection: ControlSelection,
@@ -307,6 +404,8 @@ pub struct BrowserControlModel {
     editors: Vec<ControlEditorState>,
     histories: Vec<ControlEditHistory>,
     choice_anchors: Vec<Option<usize>>,
+    file_selections: Vec<Vec<HostFileSelection>>,
+    file_diagnostics: Vec<Vec<ControlValueDiagnostic>>,
     focused_key: Option<String>,
 }
 
@@ -350,6 +449,7 @@ pub struct ControlBinding {
     pub maxlength: Option<String>,
     pub step: Option<String>,
     pub inputmode: Option<String>,
+    pub accept: Option<String>,
 }
 
 impl BrowserControlModel {
@@ -389,6 +489,8 @@ impl BrowserControlModel {
             .collect();
         let histories = vec![ControlEditHistory::default(); bindings.len()];
         let choice_anchors = vec![None; bindings.len()];
+        let file_selections = vec![Vec::new(); bindings.len()];
+        let file_diagnostics = vec![Vec::new(); bindings.len()];
         Self {
             initial_controls: controls.clone(),
             controls,
@@ -396,6 +498,8 @@ impl BrowserControlModel {
             editors,
             histories,
             choice_anchors,
+            file_selections,
+            file_diagnostics,
             focused_key,
         }
     }
@@ -418,6 +522,131 @@ impl BrowserControlModel {
 
     pub fn control(&self, key: &str) -> Option<&ControlState> {
         self.controls.iter().find(|control| control.key == key)
+    }
+
+    pub fn selected_files(&self, key: &str) -> Option<&[HostFileSelection]> {
+        let index = self
+            .controls
+            .iter()
+            .position(|control| control.key == key)?;
+        (self.controls[index].kind == ControlKind::File)
+            .then_some(self.file_selections[index].as_slice())
+    }
+
+    pub fn file_picker_request(&self, key: &str) -> Option<ControlFilePickerRequest> {
+        let index = self
+            .controls
+            .iter()
+            .position(|control| control.key == key)?;
+        let control = &self.controls[index];
+        if control.kind != ControlKind::File || control.disabled {
+            return None;
+        }
+        Some(ControlFilePickerRequest {
+            key: key.to_string(),
+            accept: parse_accept_filters(self.bindings[index].accept.as_deref()),
+            multiple: control.multiple,
+        })
+    }
+
+    pub fn file_state(&self, key: &str) -> Option<ControlFileState> {
+        let index = self
+            .controls
+            .iter()
+            .position(|control| control.key == key)?;
+        let control = &self.controls[index];
+        if control.kind != ControlKind::File {
+            return None;
+        }
+        let files = self.file_selections[index]
+            .iter()
+            .map(file_item_state)
+            .collect::<Vec<_>>();
+        let value_text = match files.as_slice() {
+            [] => "No file selected".to_string(),
+            [file] => file.name.clone(),
+            files => format!("{} files selected", files.len()),
+        };
+        Some(ControlFileState {
+            key: key.to_string(),
+            files,
+            multiple: control.multiple,
+            value_text,
+            diagnostics: self.file_diagnostics[index].clone(),
+        })
+    }
+
+    /// Apply one host picker result after shared accept/multiple validation.
+    /// Rejected entries never enter retained state or multipart planning.
+    pub fn apply_file_selection(
+        &mut self,
+        key: &str,
+        selections: Vec<HostFileSelection>,
+    ) -> Option<ControlEffect> {
+        let index = self
+            .controls
+            .iter()
+            .position(|control| control.key == key)?;
+        if self.controls[index].kind != ControlKind::File || self.controls[index].disabled {
+            return None;
+        }
+        let filters = parse_accept_filters(self.bindings[index].accept.as_deref());
+        let mut diagnostics = Vec::new();
+        let mut accepted = Vec::new();
+        let mut accepted_bytes = 0_usize;
+        for selection in selections.into_iter().take(MAX_SELECTED_FILES + 1) {
+            if accepted.len() >= MAX_SELECTED_FILES {
+                push_file_diagnostic(
+                    &mut diagnostics,
+                    "too-many-files",
+                    "file selection exceeds the shared item limit",
+                );
+                break;
+            }
+            if selection.size() > MAX_SELECTED_FILE_BYTES {
+                push_file_diagnostic(
+                    &mut diagnostics,
+                    "file-too-large",
+                    "selected file exceeds the shared byte limit",
+                );
+                continue;
+            }
+            if accepted_bytes.saturating_add(selection.size()) > MAX_SELECTED_TOTAL_BYTES {
+                push_file_diagnostic(
+                    &mut diagnostics,
+                    "selection-too-large",
+                    "selected files exceed the shared aggregate byte limit",
+                );
+                continue;
+            }
+            if !filters.is_empty() && !file_matches_accept(&selection, &filters) {
+                push_file_diagnostic(
+                    &mut diagnostics,
+                    "accept-mismatch",
+                    "selected file does not match the accept filter",
+                );
+                continue;
+            }
+            accepted_bytes += selection.size();
+            accepted.push(selection);
+            if !self.controls[index].multiple {
+                break;
+            }
+        }
+        self.file_selections[index] = accepted;
+        self.file_diagnostics[index] = diagnostics;
+        self.controls[index].value = self.file_selections[index]
+            .iter()
+            .map(|file| file.name.as_str())
+            .collect::<Vec<_>>()
+            .join(", ");
+        Some(ControlEffect::FilesChanged {
+            key: key.to_string(),
+            files: self.file_selections[index]
+                .iter()
+                .map(file_item_state)
+                .collect(),
+        })
     }
 
     pub fn focused_key(&self) -> Option<&str> {
@@ -450,7 +679,8 @@ impl BrowserControlModel {
                 || control.checked != initial.checked
                 || control.indeterminate != initial.indeterminate
                 || control.selected_indices != initial.selected_indices
-                || control.selected_index != initial.selected_index;
+                || control.selected_index != initial.selected_index
+                || !self.file_selections[index].is_empty();
             *control = initial.clone();
             control.focused = focused;
             editor.selection = ControlSelection::collapsed(control.value.chars().count());
@@ -463,6 +693,8 @@ impl BrowserControlModel {
             editor.invalid_message = None;
             self.histories[index] = ControlEditHistory::default();
             self.choice_anchors[index] = None;
+            self.file_selections[index].clear();
+            self.file_diagnostics[index].clear();
             if changed {
                 effects.push(ControlEffect::ValueChanged {
                     key: control.key.clone(),
@@ -1587,6 +1819,9 @@ impl BrowserControlModel {
                 })
             }
             ControlKind::Button => Some(ControlEffect::Activated(self.controls[index].key.clone())),
+            ControlKind::File => self
+                .file_picker_request(&self.controls[index].key)
+                .map(ControlEffect::FilePickerRequested),
             ControlKind::Select => {
                 if self.controls[index].options.is_empty() {
                     return None;
@@ -1635,6 +1870,7 @@ pub fn project_control(node: &BrowserRenderNode, key: impl Into<String>) -> Cont
             .clone()
             .or_else(|| node.text.clone())
             .unwrap_or_default(),
+        ControlKind::File => String::new(),
         _ => node.value.clone().unwrap_or_default(),
     };
     state.placeholder = node.placeholder.clone();
@@ -1764,6 +2000,7 @@ fn collect_model_nodes(
                 maxlength: node.maxlength.clone(),
                 step: node.step.clone(),
                 inputmode: node.inputmode.clone(),
+                accept: node.accept.clone(),
             });
         }
         collect_model_nodes(
@@ -2294,8 +2531,7 @@ fn control_value_state(control: &ControlState, binding: &ControlBinding) -> Cont
             }
         }
         if binding.step.as_deref().is_some_and(|authored| {
-            authored.trim() != "any"
-                && parse_typed_step(control.kind, authored).is_none()
+            authored.trim() != "any" && parse_typed_step(control.kind, authored).is_none()
         }) {
             diagnostics.push(ControlValueDiagnostic {
                 code: "invalid-step",
@@ -2454,6 +2690,118 @@ fn choice_state(control: &ControlState, binding: &ControlBinding) -> Option<Cont
         step: is_range.then_some(constraints.step),
         diagnostics,
     })
+}
+
+fn file_item_state(file: &HostFileSelection) -> ControlFileItemState {
+    ControlFileItemState {
+        opaque_id: file.opaque_id.clone(),
+        name: file.name.clone(),
+        media_type: file.media_type.clone(),
+        size: file.size(),
+    }
+}
+
+fn sanitize_file_name(value: &str) -> String {
+    let leaf = value.rsplit(['/', '\\']).next().unwrap_or(value);
+    let clean = leaf
+        .chars()
+        .filter(|character| !character.is_control())
+        .collect::<String>();
+    if clean.is_empty() {
+        "unnamed".to_string()
+    } else {
+        clean
+    }
+}
+
+fn json_string(value: &str) -> String {
+    let mut escaped = String::new();
+    for character in value.chars() {
+        match character {
+            '"' => escaped.push_str("\\\""),
+            '\\' => escaped.push_str("\\\\"),
+            '\n' => escaped.push_str("\\n"),
+            '\r' => escaped.push_str("\\r"),
+            '\t' => escaped.push_str("\\t"),
+            character if character.is_control() => {
+                escaped.push_str(&format!("\\u{:04x}", u32::from(character)));
+            }
+            character => escaped.push(character),
+        }
+    }
+    escaped
+}
+
+fn normalize_media_type(value: &str) -> Option<String> {
+    let value = value
+        .split(';')
+        .next()
+        .unwrap_or_default()
+        .trim()
+        .to_ascii_lowercase();
+    let (category, subtype) = value.split_once('/')?;
+    if category.is_empty()
+        || subtype.is_empty()
+        || !category.bytes().chain(subtype.bytes()).all(|byte| {
+            byte.is_ascii_alphanumeric()
+                || matches!(
+                    byte,
+                    b'!' | b'#' | b'$' | b'&' | b'-' | b'^' | b'_' | b'.' | b'+'
+                )
+        })
+    {
+        return None;
+    }
+    Some(value)
+}
+
+pub fn parse_accept_filters(value: Option<&str>) -> Vec<FileAcceptFilter> {
+    value
+        .into_iter()
+        .flat_map(|value| value.split(','))
+        .filter_map(|item| {
+            let item = item.trim().to_ascii_lowercase();
+            if item.starts_with('.')
+                && item.len() > 1
+                && item
+                    .bytes()
+                    .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'.' | b'-' | b'_'))
+            {
+                return Some(FileAcceptFilter::Extension(item));
+            }
+            let (category, subtype) = item.split_once('/')?;
+            if subtype == "*"
+                && !category.is_empty()
+                && category.bytes().all(|byte| byte.is_ascii_alphanumeric())
+            {
+                return Some(FileAcceptFilter::MediaRange(category.to_string()));
+            }
+            normalize_media_type(&item).map(FileAcceptFilter::MediaType)
+        })
+        .collect()
+}
+
+fn file_matches_accept(file: &HostFileSelection, filters: &[FileAcceptFilter]) -> bool {
+    let name = file.name.to_ascii_lowercase();
+    filters.iter().any(|filter| match filter {
+        FileAcceptFilter::Extension(extension) => name.ends_with(extension),
+        FileAcceptFilter::MediaType(media_type) => file.media_type.as_ref() == Some(media_type),
+        FileAcceptFilter::MediaRange(category) => file
+            .media_type
+            .as_deref()
+            .and_then(|media_type| media_type.split_once('/'))
+            .is_some_and(|(actual, _)| actual == category),
+    })
+}
+
+fn push_file_diagnostic(
+    diagnostics: &mut Vec<ControlValueDiagnostic>,
+    code: &'static str,
+    message: &'static str,
+) {
+    if diagnostics.len() < 16 && !diagnostics.iter().any(|item| item.code == code) {
+        diagnostics.push(ControlValueDiagnostic { code, message });
+    }
 }
 
 fn grapheme_offsets(value: &str) -> Vec<usize> {
@@ -3350,6 +3698,94 @@ mod tests {
                 .map(|diagnostic| diagnostic.code)
                 .collect::<Vec<_>>(),
             vec!["invalid-minimum", "invalid-step", "range-overflow"]
+        );
+    }
+
+    #[test]
+    fn file_picker_contract_filters_without_retaining_host_paths() {
+        let tree = coding_adventures_html_parser::parse_browser_render_tree(
+            "<form id='upload'><input id='asset' name='asset' type='file' accept='image/*,.txt' multiple></form>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let key = "control:0:id:asset";
+        assert_eq!(model.control(key).unwrap().kind, ControlKind::File);
+        assert_eq!(
+            model.pointer_activate(key),
+            Some(ControlEffect::FilePickerRequested(
+                ControlFilePickerRequest {
+                    key: key.into(),
+                    accept: vec![
+                        FileAcceptFilter::MediaRange("image".into()),
+                        FileAcceptFilter::Extension(".txt".into()),
+                    ],
+                    multiple: true,
+                }
+            ))
+        );
+
+        model.apply_file_selection(
+            key,
+            vec![
+                HostFileSelection::new(
+                    "host:1",
+                    "/private/user/photo.PNG",
+                    Some("IMAGE/PNG; charset=binary".into()),
+                    vec![1, 2, 3],
+                ),
+                HostFileSelection::new(
+                    "host:2",
+                    "notes.txt",
+                    Some("text/plain".into()),
+                    b"notes".to_vec(),
+                ),
+                HostFileSelection::new(
+                    "host:3",
+                    "program.exe",
+                    Some("application/octet-stream".into()),
+                    vec![0],
+                ),
+            ],
+        );
+        let state = model.file_state(key).unwrap();
+        assert_eq!(
+            state
+                .files
+                .iter()
+                .map(|file| file.name.as_str())
+                .collect::<Vec<_>>(),
+            vec!["photo.PNG", "notes.txt"]
+        );
+        assert_eq!(state.value_text, "2 files selected");
+        assert_eq!(state.diagnostics[0].code, "accept-mismatch");
+        assert!(!model.control(key).unwrap().value.contains("private"));
+
+        model.apply_file_selection(
+            key,
+            vec![
+                HostFileSelection::new(
+                    "host:large-1",
+                    "one.txt",
+                    Some("text/plain".into()),
+                    vec![0; 9 * 1024 * 1024],
+                ),
+                HostFileSelection::new(
+                    "host:large-2",
+                    "two.txt",
+                    Some("text/plain".into()),
+                    vec![0; 9 * 1024 * 1024],
+                ),
+            ],
+        );
+        let bounded = model.file_state(key).unwrap();
+        assert_eq!(bounded.files.len(), 1);
+        assert_eq!(bounded.diagnostics[0].code, "selection-too-large");
+
+        model.reset_form(Some("upload"), Some(0));
+        assert!(model.file_state(key).unwrap().files.is_empty());
+        assert_eq!(
+            model.file_state(key).unwrap().value_text,
+            "No file selected"
         );
     }
 }

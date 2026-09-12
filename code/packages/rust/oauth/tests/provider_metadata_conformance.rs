@@ -1,8 +1,9 @@
 use coding_adventures_bounded_json::{parse, serialize, JsonNumber, JsonValue};
 use coding_adventures_oauth::{
     decode_authorization_server_metadata, prepare_authorization_server_metadata,
-    AuthorizationServerMetadata, DeviceAuthorizationProfile, MetadataViolation, OAuthAuditAction,
-    OAuthAuditError, OAuthAuditEvent, OAuthAuditSink, OAuthError, OAuthTraceId, ProviderId,
+    AuthorizationServerMetadata, ConfidentialClientAuthenticationMethod,
+    DeviceAuthorizationProfile, MetadataViolation, OAuthAuditAction, OAuthAuditError,
+    OAuthAuditEvent, OAuthAuditSink, OAuthError, OAuthTraceId, ProviderId,
 };
 use coding_adventures_zeroize::Zeroizing;
 
@@ -167,6 +168,46 @@ fn synthetic_provider_profiles_share_one_metadata_conformance_contract() {
             boolean(expected, "device_profile"),
             "case {name}"
         );
+
+        let confidential_profiles = strings(expected, "confidential_profiles");
+        let confidential_methods = [
+            (
+                "client_secret_basic",
+                ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            ),
+            (
+                "client_secret_post",
+                ConfidentialClientAuthenticationMethod::ClientSecretPost,
+            ),
+            (
+                "private_key_jwt",
+                ConfidentialClientAuthenticationMethod::PrivateKeyJwt,
+            ),
+        ];
+        for (method_name, method) in confidential_methods {
+            let metadata = decode_case(case, trace, &mut audit).unwrap();
+            let derived = match string(expected, "confidential_mix_up") {
+                "rfc9207" => metadata.into_confidential_provider_config(
+                    "fixture-confidential-client",
+                    "https://client.example/oauth/callback",
+                    method,
+                ),
+                "distinct_redirect" => metadata
+                    .into_confidential_provider_config_with_distinct_redirect_uri(
+                        "fixture-confidential-client",
+                        "https://client.example/oauth/callback",
+                        method,
+                    ),
+                mode => panic!("case {name} has unknown confidential mix-up mode {mode}"),
+            };
+            assert_eq!(
+                derived.is_ok(),
+                confidential_profiles
+                    .iter()
+                    .any(|candidate| candidate == method_name),
+                "case {name}, confidential method {method_name}"
+            );
+        }
 
         match string(expected, "public_profile") {
             "rfc9207" => {

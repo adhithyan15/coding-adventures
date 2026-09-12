@@ -6,8 +6,10 @@ inspection and simulation to `spice-netlist-parser`.
 
 The workbench has table and waveform views while retaining raw JSON as the
 canonical result artifact. Its initial schematic-capture API is a small,
-editor-owned Rust model: R, C, DC voltage, and ground symbols connect through
-exact grid endpoints, then lower deterministically to a Berkeley `.op` deck.
+editor-owned Rust model: R, C, L, DC voltage/current, AC voltage, and ground
+symbols connect through exact grid endpoints. The document persists an
+operating-point, DC sweep, AC sweep, or transient choice and lowers it
+deterministically to a Berkeley deck.
 This is not a second simulator or parser format; hosts pass the emitted text to
 the same parser and engine used by the deck editor. The workbench exposes a
 palette for deterministic grid placement, selected-component routing, and

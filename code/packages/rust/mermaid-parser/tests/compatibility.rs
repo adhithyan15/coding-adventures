@@ -234,15 +234,29 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
 }
 
 #[test]
-fn pinned_packet_subset_corpus_parses_to_packet_ir() {
+fn packet_full_status_is_backed_by_the_pinned_corpus() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let packet = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "packet")
+        .expect("packet family");
+    assert_eq!(packet["status"].as_str(), Some("full"));
+
     let corpus: Value = serde_json::from_str(PACKET_CORPUS).expect("packet corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
-        let diagram = parse_packet(source)
-            .unwrap_or_else(|error| panic!("packet fixture {id} failed: {error}"));
-        assert!(!diagram.fields.is_empty());
+        parse_packet(source).unwrap_or_else(|error| panic!("packet fixture {id} failed: {error}"));
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(parse_packet(source).is_err(), "invalid packet fixture {id} parsed");
     }
 }
 

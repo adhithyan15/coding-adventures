@@ -21,6 +21,7 @@ pub enum ControlKind {
     Time,
     DateTimeLocal,
     Color,
+    File,
     Button,
     TextArea,
     Select,
@@ -44,6 +45,7 @@ impl ControlKind {
             Self::Time => "time",
             Self::DateTimeLocal => "datetime-local",
             Self::Color => "color",
+            Self::File => "file",
             Self::Button => "button",
             Self::TextArea => "textarea",
             Self::Select => "select",
@@ -67,6 +69,7 @@ impl ControlKind {
             "time" => Self::Time,
             "datetime-local" => Self::DateTimeLocal,
             "color" => Self::Color,
+            "file" => Self::File,
             "button" | "submit" | "reset" => Self::Button,
             "textarea" => Self::TextArea,
             "select" => Self::Select,
@@ -480,6 +483,7 @@ mod tests {
     #[test]
     fn typed_input_capabilities_are_explicit() {
         assert_eq!(ControlKind::parse("url"), Some(ControlKind::Url));
+        assert_eq!(ControlKind::parse("file"), Some(ControlKind::File));
         assert!(ControlKind::Url.supports_selection());
         assert!(ControlKind::Url.supports_maxlength());
         assert!(!ControlKind::Number.supports_selection());
@@ -488,6 +492,7 @@ mod tests {
         assert!(ControlKind::DateTimeLocal.has_typed_value());
         assert!(ControlKind::Color.has_typed_value());
         assert!(!ControlKind::Time.supports_selection());
+        assert!(!ControlKind::File.accepts_text());
         assert_eq!(
             ControlKind::parse("datetime-local"),
             Some(ControlKind::DateTimeLocal)

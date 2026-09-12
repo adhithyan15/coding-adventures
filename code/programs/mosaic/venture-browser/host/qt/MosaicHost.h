@@ -51,6 +51,7 @@ public:
   bool scrollCommand(const QByteArray &command);
   bool controlKey(const QByteArray &key, bool shift);
   bool controlText(const QByteArray &text);
+  bool presentFilePicker();
   bool activateLink(double x, double y);
   bool updateHover(double x, double y);
   bool requestViewSource();
@@ -70,6 +71,9 @@ private:
   using ControlTextFn = unsigned char (*)(void *, const char *);
   using ControlClipboardFn = char *(*)(void *);
   using CaretTickFn = unsigned char (*)(void *, std::uint64_t);
+  using ControlFileFn = unsigned char (*)(void *, const char *, const char *, const char *,
+                                          const char *, const unsigned char *, size_t,
+                                          unsigned char);
   using ScrollMetricsFn = unsigned char (*)(void *, double *, double *, double *, double *);
   using PointFn = unsigned char (*)(void *, double, double);
   using ResizeFn = unsigned char (*)(void *, double, double);
@@ -105,6 +109,8 @@ private:
   ControlTextFn controlPaste_ = nullptr;
   CaretTickFn caretTick_ = nullptr;
   ControlClipboardFn imeCandidateRect_ = nullptr;
+  ControlClipboardFn filePickerRequest_ = nullptr;
+  ControlFileFn controlFile_ = nullptr;
   ScrollMetricsFn scrollMetrics_ = nullptr;
   PointFn activateLink_ = nullptr;
   PointFn updateHover_ = nullptr;

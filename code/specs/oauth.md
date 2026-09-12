@@ -9,8 +9,8 @@ literal-loopback callback host plus storage-agnostic audit-before-disclosure
 credential custody now compose through data-driven provider registration,
 expiry policy, injected transport, and compare-and-swap refresh orchestration;
 the custody contract has a bounded zeroizing encrypted-store adapter over any
-`vault-sealed-store` backend; concrete transport, device-flow orchestration,
-and provider data remain prioritized below.
+`vault-sealed-store` backend; concrete transport, full device-flow
+orchestration, and verified live provider snapshots remain prioritized below.
 
 ## Overview
 
@@ -133,7 +133,13 @@ The delivery order is:
    bodies are zeroizing, reject provider or client-identity mismatches before
    secret access, and retain the provider/trace audit binding. Validated RFC
    8414 metadata now selects these methods only after exact provider and
-   case-sensitive method matching, without inventing a default. A
+   case-sensitive method matching, without inventing a default. The same
+   metadata can now derive a PKCE-enforced confidential `ProviderConfig` only
+   for the closed implemented set (`client_secret_basic`, `client_secret_post`,
+   or `private_key_jwt`) and only when the selected method was advertised
+   exactly. RFC 9207 or registry-owned distinct-redirect mix-up defense remains
+   mandatory, while both public derivation paths still require explicit
+   `none`. A
    non-exporting signer boundary for `private_key_jwt` is shipped: opaque
    provider-bound key references, algorithm-as-data, bounded zeroizing
    signature ownership, and durable trace-correlated audit before signing and
@@ -180,9 +186,22 @@ The delivery order is:
    contract now drives synthetic public RFC 9207, distinct-redirect, device,
    confidential, user-defined, and fail-closed metadata profiles through the
    same decoder and audited derivation paths. The synthetic corpus explicitly
-   claims no live provider values. Verified Google, Microsoft, GitHub, Dropbox,
-   Slack, and Spotify snapshots remain to be added through this same suite;
-   provider quirks remain data and none creates a new OAuth implementation.
+   claims no live provider values. A bounded, exact-schema static public-client
+   profile decoder now creates broker registrations from caller-owned client
+   IDs and redirect URIs; endpoint, mix-up-defense, response-format,
+   refresh-lead, and authorization-parameter policy remain data. An injected
+   provider-data source now composes profile loading with registration: the
+   broker durably audits the exact requested provider and caller trace before
+   the source read, rejects a returned profile naming another provider before
+   registry mutation, keeps profile bytes zeroizing, and records a closed
+   source/decode result before separately audited registration. Concrete file,
+   vault, or embedded-resource lookup remains host-owned. The broker rejects
+   redirect reuse when
+   either registration relies on distinct-redirect mix-up defense while allowing
+   shared redirects only when both providers validate RFC 9207 response issuers.
+   Verified Google, Microsoft, GitHub, Dropbox, Slack, and Spotify snapshots
+   remain to be added through this same suite; provider quirks remain data and
+   none creates a new OAuth implementation.
 10. **Later hardening:** DPoP and full OpenID
    Connect discovery/JWKS/ID-token validation.
 

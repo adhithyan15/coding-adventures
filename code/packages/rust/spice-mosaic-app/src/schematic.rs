@@ -18,12 +18,15 @@ pub struct SchematicPoint {
     pub y: i32,
 }
 
-/// The first symbol palette supported by canonical schematic capture.
+/// The symbol palette supported by canonical schematic capture.
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub enum SchematicComponentKind {
     Resistor,
     Capacitor,
+    Inductor,
     DcVoltage,
+    DcCurrent,
+    AcVoltage,
     Ground,
 }
 
@@ -33,7 +36,10 @@ impl SchematicComponentKind {
         match label {
             "Resistor" => Ok(Self::Resistor),
             "Capacitor" => Ok(Self::Capacitor),
+            "Inductor" => Ok(Self::Inductor),
             "DC source" => Ok(Self::DcVoltage),
+            "DC current" => Ok(Self::DcCurrent),
+            "AC source" => Ok(Self::AcVoltage),
             "Ground" => Ok(Self::Ground),
             _ => Err(invalid("unknown schematic palette component")),
         }
@@ -44,7 +50,10 @@ impl SchematicComponentKind {
         match self {
             Self::Resistor => "Resistor",
             Self::Capacitor => "Capacitor",
+            Self::Inductor => "Inductor",
             Self::DcVoltage => "DC source",
+            Self::DcCurrent => "DC current",
+            Self::AcVoltage => "AC source",
             Self::Ground => "Ground",
         }
     }
@@ -53,7 +62,9 @@ impl SchematicComponentKind {
         match self {
             Self::Resistor => 'R',
             Self::Capacitor => 'C',
-            Self::DcVoltage => 'V',
+            Self::Inductor => 'L',
+            Self::DcVoltage | Self::AcVoltage => 'V',
+            Self::DcCurrent => 'I',
             Self::Ground => 'G',
         }
     }
@@ -61,7 +72,54 @@ impl SchematicComponentKind {
     fn terminal_count(self) -> usize {
         match self {
             Self::Ground => 1,
-            Self::Resistor | Self::Capacitor | Self::DcVoltage => 2,
+            Self::Resistor
+            | Self::Capacitor
+            | Self::Inductor
+            | Self::DcVoltage
+            | Self::DcCurrent
+            | Self::AcVoltage => 2,
+        }
+    }
+}
+
+/// A canonical analysis card selected by the schematic session.
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize, Default)]
+pub enum SchematicAnalysis {
+    #[default]
+    OperatingPoint,
+    DcSweep,
+    AcSweep,
+    Transient,
+}
+
+impl SchematicAnalysis {
+    /// Parse the stable analysis labels exposed by the Mosaic workbench.
+    pub fn from_palette_label(label: &str) -> Result<Self, SchematicError> {
+        match label {
+            "Operating point" => Ok(Self::OperatingPoint),
+            "DC sweep" => Ok(Self::DcSweep),
+            "AC sweep" => Ok(Self::AcSweep),
+            "Transient" => Ok(Self::Transient),
+            _ => Err(invalid("unknown schematic analysis")),
+        }
+    }
+
+    /// Human-readable names are part of the host analysis control contract.
+    pub fn palette_label(self) -> &'static str {
+        match self {
+            Self::OperatingPoint => "Operating point",
+            Self::DcSweep => "DC sweep",
+            Self::AcSweep => "AC sweep",
+            Self::Transient => "Transient",
+        }
+    }
+
+    fn directive(self) -> &'static str {
+        match self {
+            Self::OperatingPoint => ".op",
+            Self::DcSweep => ".dc V1 0 5 1",
+            Self::AcSweep => ".ac dec 10 10 10k",
+            Self::Transient => ".tran 1m 10m",
         }
     }
 }
@@ -82,12 +140,14 @@ pub struct SchematicWire {
     pub end: SchematicPoint,
 }
 
-/// A compact editor document that can be lowered into a canonical `.op` deck.
+/// A compact editor document that can be lowered into a canonical Berkeley deck.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct SchematicDocument {
     pub title: String,
     pub components: Vec<SchematicComponent>,
     pub wires: Vec<SchematicWire>,
+    #[serde(default)]
+    pub analysis: SchematicAnalysis,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -163,7 +223,9 @@ impl SchematicDocument {
             y: 40 + (position / 4) * 70,
         };
         let terminals = match kind {
-            SchematicComponentKind::Resistor | SchematicComponentKind::Capacitor => vec![
+            SchematicComponentKind::Resistor
+            | SchematicComponentKind::Capacitor
+            | SchematicComponentKind::Inductor => vec![
                 SchematicPoint {
                     x: center.x - 20,
                     y: center.y,
@@ -173,7 +235,9 @@ impl SchematicDocument {
                     y: center.y,
                 },
             ],
-            SchematicComponentKind::DcVoltage => vec![
+            SchematicComponentKind::DcVoltage
+            | SchematicComponentKind::DcCurrent
+            | SchematicComponentKind::AcVoltage => vec![
                 SchematicPoint {
                     x: center.x,
                     y: center.y - 20,
@@ -188,7 +252,10 @@ impl SchematicDocument {
         let value = match kind {
             SchematicComponentKind::Resistor => "1k",
             SchematicComponentKind::Capacitor => "1u",
+            SchematicComponentKind::Inductor => "1m",
             SchematicComponentKind::DcVoltage => "5",
+            SchematicComponentKind::DcCurrent => "1m",
+            SchematicComponentKind::AcVoltage => "1",
             SchematicComponentKind::Ground => "",
         }
         .to_owned();
@@ -308,7 +375,7 @@ impl SchematicDocument {
         Ok(())
     }
 
-    /// Emit a deterministic Berkeley `.op` deck independent of placement order.
+    /// Emit a deterministic Berkeley deck independent of placement order.
     pub fn to_berkeley_netlist(&self) -> Result<String, SchematicError> {
         self.validate()?;
 
@@ -378,7 +445,9 @@ impl SchematicDocument {
                 })
                 .collect::<Vec<_>>();
             let line = match component.kind {
-                SchematicComponentKind::Resistor | SchematicComponentKind::Capacitor => format!(
+                SchematicComponentKind::Resistor
+                | SchematicComponentKind::Capacitor
+                | SchematicComponentKind::Inductor => format!(
                     "{} {} {} {}",
                     component.reference, terminals[0], terminals[1], component.value
                 ),
@@ -386,11 +455,19 @@ impl SchematicDocument {
                     "{} {} {} DC {}",
                     component.reference, terminals[0], terminals[1], component.value
                 ),
+                SchematicComponentKind::DcCurrent => format!(
+                    "{} {} {} DC {}",
+                    component.reference, terminals[0], terminals[1], component.value
+                ),
+                SchematicComponentKind::AcVoltage => format!(
+                    "{} {} {} AC {}",
+                    component.reference, terminals[0], terminals[1], component.value
+                ),
                 SchematicComponentKind::Ground => unreachable!("ground symbols are skipped"),
             };
             lines.push(line);
         }
-        lines.extend([".op".to_owned(), ".end".to_owned()]);
+        lines.extend([self.analysis.directive().to_owned(), ".end".to_owned()]);
         Ok(lines.join("\n") + "\n")
     }
 }
@@ -451,6 +528,7 @@ mod tests {
                     end: point(50, 0),
                 },
             ],
+            analysis: SchematicAnalysis::OperatingPoint,
         }
     }
 
@@ -481,6 +559,7 @@ mod tests {
             title: "Palette routing".to_owned(),
             components: Vec::new(),
             wires: Vec::new(),
+            analysis: SchematicAnalysis::default(),
         };
         assert_eq!(
             document
@@ -494,13 +573,98 @@ mod tests {
                 .unwrap(),
             "C1"
         );
+        assert_eq!(
+            document
+                .place_palette_component(SchematicComponentKind::Inductor)
+                .unwrap(),
+            "L1"
+        );
+        assert_eq!(
+            document
+                .place_palette_component(SchematicComponentKind::DcCurrent)
+                .unwrap(),
+            "I1"
+        );
+        assert_eq!(
+            document
+                .place_palette_component(SchematicComponentKind::AcVoltage)
+                .unwrap(),
+            "V1"
+        );
         let wire = document.route_components("R1", "C1").unwrap();
         assert_eq!(wire.start, point(60, 40));
         assert_eq!(wire.end, point(100, 40));
         assert_eq!(
-            document.route_components("R1", "C1").unwrap_err().to_string(),
+            document
+                .route_components("R1", "C1")
+                .unwrap_err()
+                .to_string(),
             "selected component terminals are already routed"
         );
+    }
+
+    #[test]
+    fn expanded_palette_and_analysis_controls_lower_to_runnable_ac_deck() {
+        let document = SchematicDocument {
+            title: "RLC sweep".to_owned(),
+            components: vec![
+                SchematicComponent {
+                    reference: "V1".to_owned(),
+                    kind: SchematicComponentKind::AcVoltage,
+                    value: "1".to_owned(),
+                    terminals: vec![point(0, 20), point(0, 0)],
+                },
+                SchematicComponent {
+                    reference: "L1".to_owned(),
+                    kind: SchematicComponentKind::Inductor,
+                    value: "1m".to_owned(),
+                    terminals: vec![point(0, 20), point(20, 20)],
+                },
+                SchematicComponent {
+                    reference: "I1".to_owned(),
+                    kind: SchematicComponentKind::DcCurrent,
+                    value: "1m".to_owned(),
+                    terminals: vec![point(0, 20), point(0, 0)],
+                },
+                SchematicComponent {
+                    reference: "R1".to_owned(),
+                    kind: SchematicComponentKind::Resistor,
+                    value: "10".to_owned(),
+                    terminals: vec![point(20, 20), point(20, 0)],
+                },
+                SchematicComponent {
+                    reference: "G1".to_owned(),
+                    kind: SchematicComponentKind::Ground,
+                    value: String::new(),
+                    terminals: vec![point(0, 0)],
+                },
+            ],
+            wires: vec![SchematicWire {
+                start: point(20, 0),
+                end: point(0, 0),
+            }],
+            analysis: SchematicAnalysis::AcSweep,
+        };
+        let deck = document.to_berkeley_netlist().unwrap();
+        assert_eq!(
+            deck,
+            "* RLC sweep\nI1 n1 0 DC 1m\nL1 n1 n2 1m\nR1 n2 0 10\nV1 n1 0 AC 1\n.ac dec 10 10 10k\n.end\n"
+        );
+        parse_netlist(&deck).unwrap();
+        assert_eq!(run_netlist(&deck).unwrap().len(), 1);
+
+        for (analysis, directive) in [
+            (SchematicAnalysis::OperatingPoint, ".op"),
+            (SchematicAnalysis::DcSweep, ".dc V1 0 5 1"),
+            (SchematicAnalysis::Transient, ".tran 1m 10m"),
+        ] {
+            let mut controlled = document.clone();
+            controlled.analysis = analysis;
+            assert!(controlled
+                .to_berkeley_netlist()
+                .unwrap()
+                .contains(directive));
+        }
     }
 
     #[test]

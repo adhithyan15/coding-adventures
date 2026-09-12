@@ -1,5 +1,17 @@
 # Changelog — `lang-aot`
 
+## 0.317.0 — 2026-09-12 — ALGOL standard-free tracked real snapshot powers
+
+The seven-backend ALGOL matrix now proves that an exact integral initialized
+local real snapshot can bound a plain real power without a standard-function
+result in its base.
+
+## 0.316.0 — 2026-09-12 — ALGOL standard-free conditional real powers
+
+The seven-backend ALGOL matrix now proves that path-independent conditional
+arithmetic over tracked local real snapshots can bound a plain real power while
+preserving runtime selector execution.
+
 ## 0.315.0 — 2026-09-12 — ALGOL standard-free tracked real arithmetic powers
 
 The seven-backend ALGOL matrix now proves that finite arithmetic over tracked

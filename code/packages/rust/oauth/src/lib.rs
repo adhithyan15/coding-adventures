@@ -132,7 +132,10 @@ impl Debug for MixUpDefense {
     }
 }
 
-/// Static provider data for a public installed-app Authorization Code client.
+/// Static provider data for an Authorization Code client using mandatory PKCE.
+///
+/// Client authentication is intentionally composed by a separate public,
+/// client-secret, or private-key boundary before transport.
 #[derive(Clone, PartialEq, Eq)]
 pub struct ProviderConfig {
     provider: ProviderId,
@@ -146,7 +149,7 @@ pub struct ProviderConfig {
 }
 
 impl ProviderConfig {
-    /// Construct a strict public-client configuration.
+    /// Construct a strict provider configuration without selecting client authentication.
     pub fn new(
         provider: ProviderId,
         authorization_endpoint: impl Into<String>,
@@ -239,6 +242,16 @@ impl ProviderConfig {
     /// Return the registered client identifier for request authentication.
     pub fn client_id(&self) -> &str {
         &self.client_id
+    }
+
+    /// Return the exact redirect URI bound to this provider registration.
+    pub fn redirect_uri(&self) -> &str {
+        &self.redirect_uri
+    }
+
+    /// Return whether registry-wide redirect uniqueness is the mix-up defense.
+    pub const fn uses_distinct_redirect_uri(&self) -> bool {
+        matches!(self.mix_up_defense, Some(MixUpDefense::DistinctRedirectUri))
     }
 }
 

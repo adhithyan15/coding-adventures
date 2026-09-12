@@ -1,6 +1,6 @@
 [package]
 name = "diagram-layout-packet"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Deterministic backend-neutral layout for Mermaid packet diagrams"
 

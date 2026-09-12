@@ -230,10 +230,11 @@ mod apple {
     #[test]
     fn render_mermaid_block_to_png() {
         let grid = parse_block(
-            "block-beta\ntitle Native block grid\ncolumns 3\nA[Grammar] B(IR) C((Paint))\nspace D[Metal] E[PNG]\nA --> B\nB --> C\nC --> D\nD --> E",
+            "block-beta\ntitle Native block grid\ncolumns 3\nA[Grammar]:2 B(IR)\nspace:2 C((Paint))\nD[Metal] E[PNG]\nA --> B\nB --> C\nC --> D\nD --> E",
         )
         .expect("block parse failed");
         let layout = layout_grid_diagram(&grid);
+        assert!(layout.nodes[0].width > layout.nodes[1].width);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();
@@ -257,12 +258,16 @@ mod apple {
     #[test]
     fn render_mermaid_packet_to_png() {
         let packet = parse_packet(
-            "%%{init: {\"packet\": {\"rowHeight\": 40, \"bitWidth\": 20, \"bitsPerRow\": 16, \"paddingX\": 4, \"paddingY\": 6}}}%%\npacket-beta\ntitle Configured packet fields\n0-7: \"Version\"\n8-15: \"Flags\"\n16-31: \"Payload length\"",
+            "---\nconfig:\n  packet:\n    rowHeight: 40\n    bitWidth: 20\n    bitsPerRow: 16\n    paddingX: 4\n    paddingY: 6\nthemeVariables:\n  packet:\n    byteFontSize: 11px\n    startByteColor: '#aa0000'\n    endByteColor: '#0000aa'\n    labelColor: '#006600'\n    labelFontSize: 13px\n    titleColor: '#663300'\n    titleFontSize: 17px\n    blockStrokeColor: '#123456'\n    blockStrokeWidth: 2.5\n    blockFillColor: '#abcdef'\n---\npacket-beta\ntitle Configured packet fields\n0-7: \"Version\"\n8-15: \"Flags\"\n16-31: \"Payload length\"",
         )
         .expect("packet parse failed");
         let layout = layout_packet_diagram(&packet);
         assert_eq!((layout.width, layout.height), (322.0, 168.0));
         assert_eq!(layout.bit_labels.len(), 6);
+        assert_eq!(layout.fields[0].style.fill, "#abcdef");
+        assert_eq!(layout.fields[0].style.stroke, "#123456");
+        assert_eq!(layout.fields[0].style.stroke_width, 2.5);
+        assert_eq!(layout.title_style.font_size, 17.0);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();
@@ -279,7 +284,28 @@ mod apple {
             },
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#abcdef")
+                    && rect.stroke.as_deref() == Some("#123456")
+                    && rect.stroke_width == Some(2.5)
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run)
+                if run.font_size == 17.0 && run.fill.as_deref() == Some("rgb(102, 51, 0)")
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run)
+                if run.font_size == 13.0 && run.fill.as_deref() == Some("rgb(0, 102, 0)")
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run)
+                if run.font_size == 11.0 && run.fill.as_deref() == Some("rgb(170, 0, 0)")
+        )));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_packet_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);

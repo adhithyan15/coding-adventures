@@ -353,11 +353,12 @@ mindmap shapes remain explicitly outside the partial compatibility level.
 
 The initial Mermaid 11.16.1 block slice parses `block` and `block-beta` through
 dedicated portable grammars into typed grid IR. The subset preserves positive
-column counts, flat node ordering, explicit `space` slots, square, rounded,
+column counts, flat node ordering, explicit `space` slots, node and space
+column spans, square, rounded,
 circular, and diamond nodes, titles, accessibility metadata, and directed
 connections with optional labels. `diagram-layout-grid` resolves deterministic
 cell geometry before the shared backend-neutral PaintScene lowering path. A
-native Metal-to-PNG fixture gates this slice; nested blocks, spans, classes, and
+native Metal-to-PNG fixture gates this slice; nested blocks, classes, and
 style directives remain explicitly unsupported at the partial level.
 
 ### Packet Native Slice
@@ -371,8 +372,10 @@ configured row boundaries are split into deterministic row fragments by
 `showBits`, `paddingX`, and `paddingY` settings flow through typed semantic IR
 to resolved field and bit-label geometry, and dedicated PaintScene lowering
 emits backend-neutral rectangles and shaped text. A configured native
-Metal-to-PNG fixture gates this slice; packet theme and style controls remain
-explicitly unsupported at the partial level.
+Metal-to-PNG fixture gates this slice. All ten documented packet theme variables
+resolve through semantic IR and layout into backend-neutral field, bit-label,
+and title paint styles. The complete pinned syntax corpus and visual fixture gate
+Packet at the full compatibility level.
 
 ### Kanban Native Slice
 

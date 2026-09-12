@@ -102,6 +102,11 @@ recreating the surrounding chrome in backend-specific UI code.
   value text, and successful serialization. Existing host semantic arrows,
   Home/End, and accessibility SetValue/Increment/Decrement enter that reducer;
   no generated host owns locale parsing or picker state.
+- File inputs emit a path-free picker request containing normalized
+  accept/multiple policy. Hosts return opaque IDs, display names, media types,
+  and bounded bytes to the shared reducer; layout and paint receive only
+  sanitized display names, while submission builds deterministic bounded
+  multipart/form-data bodies and reset clears the retained file list.
 - Native SwiftUI and WinUI surface-size changes use matching Rust resize ABIs.
   The shared session recomposes its retained render tree for the new logical
   viewport, preserves and clamps scroll state, updates hit regions, and

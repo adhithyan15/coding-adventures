@@ -31,6 +31,8 @@ import com.sun.jna.Pointer
 import com.sun.jna.ptr.DoubleByReference
 import com.sun.jna.ptr.IntByReference
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.UUID
+import javax.swing.JFileChooser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -58,6 +60,17 @@ private interface VentureNative : Library {
     fun venture_browser_compose_control_paste(host: Pointer, text: String): Byte
     fun venture_browser_compose_caret_tick(host: Pointer, elapsedMilliseconds: Long): Byte
     fun venture_browser_compose_ime_candidate_rect(host: Pointer): Pointer?
+    fun venture_browser_compose_file_picker_request(host: Pointer): Pointer?
+    fun venture_browser_compose_control_file(
+        host: Pointer,
+        key: String,
+        opaqueId: String,
+        displayName: String,
+        mediaType: String?,
+        bytes: ByteArray,
+        length: Long,
+        append: Byte,
+    ): Byte
     fun venture_browser_compose_activate_link(host: Pointer, x: Double, y: Double): Byte
     fun venture_browser_compose_update_hover(host: Pointer, x: Double, y: Double): Byte
     fun venture_browser_compose_scroll_metrics(
@@ -182,7 +195,37 @@ class MosaicHost private constructor(
     }
 
     fun activateLink(x: Double, y: Double) {
-        if (native.venture_browser_compose_activate_link(handle, x, y).toInt() != 0) surfaceChanged()
+        if (native.venture_browser_compose_activate_link(handle, x, y).toInt() != 0) {
+            surfaceChanged()
+            presentFilePickerIfRequested()
+        }
+    }
+
+    private fun presentFilePickerIfRequested() {
+        val request = decodeOptional(native.venture_browser_compose_file_picker_request(handle))
+            ?: return
+        val key = request["key"] as? String ?: return
+        val chooser = JFileChooser().apply {
+            isMultiSelectionEnabled = request["multiple"] == true
+            fileSelectionMode = JFileChooser.FILES_ONLY
+        }
+        if (chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) return
+        val files = if (chooser.isMultiSelectionEnabled) chooser.selectedFiles.toList()
+            else listOfNotNull(chooser.selectedFile)
+        files.forEachIndexed { index, file ->
+            val bytes = file.inputStream().use { it.readNBytes(16 * 1024 * 1024 + 1) }
+            native.venture_browser_compose_control_file(
+                handle,
+                key,
+                "compose:${UUID.randomUUID()}",
+                file.name,
+                null,
+                bytes,
+                bytes.size.toLong(),
+                (if (index == 0) 0 else 1).toByte(),
+            )
+        }
+        surfaceChanged()
     }
 
     fun resize(width: Double, height: Double) {
@@ -212,6 +255,17 @@ class MosaicHost private constructor(
             val element = Json.parseToJsonElement(value.getString(0, "UTF-8"))
             element.toHostValue() as? Map<String, Any?>
                 ?: error("shared Venture host returned a non-object response")
+        } finally {
+            native.venture_browser_compose_string_free(value)
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun decodeOptional(value: Pointer?): Map<String, Any?>? {
+        value ?: return null
+        return try {
+            Json.parseToJsonElement(value.getString(0, "UTF-8")).toHostValue()
+                as? Map<String, Any?>
         } finally {
             native.venture_browser_compose_string_free(value)
         }

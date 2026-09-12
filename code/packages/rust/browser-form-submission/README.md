@@ -17,8 +17,13 @@ path validates temporal bounds/alignment and serializes normalized temporal and
 simple-color values, so submission never depends on a native picker format.
 Live select serialization likewise reads the shared selected-index state and
 omits disabled options, including options disabled through an optgroup.
+For multipart POST, ordered file parts consume path-free retained selections,
+use sanitized disposition parameters and normalized media types, and enforce a
+complete-body byte bound. Boundaries are deterministic and retried if they
+occur in any submitted value or file payload.
 
 Specs: [`UI54-form-submission`](../../../specs/UI54-form-submission.md) and
 [`UI63-typed-input-value-semantics`](../../../specs/UI63-typed-input-value-semantics.md),
 [`UI64-choice-range-controls`](../../../specs/UI64-choice-range-controls.md), and
-[`UI65-temporal-color-controls`](../../../specs/UI65-temporal-color-controls.md).
+[`UI65-temporal-color-controls`](../../../specs/UI65-temporal-color-controls.md), and
+[`UI66-file-values-multipart`](../../../specs/UI66-file-values-multipart.md).

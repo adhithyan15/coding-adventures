@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added confidential `ProviderConfig` derivation for the stack's closed,
+  implemented authentication-method set. The exact method must be advertised
+  by RFC 8414 metadata, PKCE `S256` and mix-up defense remain mandatory, and
+  public derivation still requires explicit `none`.
+- Exposed the validated provider redirect URI and whether it relies on
+  registry-wide distinct-redirect ownership so composition roots can enforce
+  the mix-up-defense invariant without duplicating protocol state.
 - Added audited RFC 8628 device-token response classification with one-use
   request/response session ownership, exact HTTP 400 polling-error handling,
   persistent five-second `slow_down` increases, normal token-response reuse,
