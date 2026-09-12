@@ -871,6 +871,7 @@ impl BrowserControlModel {
             },
             None,
             ControlTextDirection::Ltr,
+            false,
         );
         let focused_key = controls
             .iter()
@@ -2981,7 +2982,7 @@ impl BrowserControlModel {
 pub fn control_states(tree: &BrowserRenderTree) -> Vec<ControlState> {
     let mut states = Vec::new();
     let mut index = 0;
-    collect_nodes(&tree.children, &mut states, &mut index);
+    collect_nodes(&tree.children, &mut states, &mut index, false);
     states
 }
 
@@ -3084,16 +3085,44 @@ pub fn project_control(node: &BrowserRenderNode, key: impl Into<String>) -> Cont
     state
 }
 
-fn collect_nodes(nodes: &[BrowserRenderNode], states: &mut Vec<ControlState>, index: &mut usize) {
+fn collect_nodes(
+    nodes: &[BrowserRenderNode],
+    states: &mut Vec<ControlState>,
+    index: &mut usize,
+    inherited_disabled: bool,
+) {
     for node in nodes {
         if node.role == "control" && node.control_type.as_deref() != Some("hidden") && !node.hidden
         {
             let key = control_key(node, *index);
             *index += 1;
-            states.push(project_control(node, key));
+            let mut state = project_control(node, key);
+            state.disabled |= inherited_disabled;
+            states.push(state);
         }
-        collect_nodes(&node.children, states, index);
+        let first_legend = disabled_fieldset_first_legend(node);
+        for (child_index, child) in node.children.iter().enumerate() {
+            collect_nodes(
+                std::slice::from_ref(child),
+                states,
+                index,
+                inherited_disabled
+                    || (node.name.as_deref() == Some("fieldset")
+                        && node.disabled
+                        && Some(child_index) != first_legend),
+            );
+        }
     }
+}
+
+fn disabled_fieldset_first_legend(node: &BrowserRenderNode) -> Option<usize> {
+    (node.name.as_deref() == Some("fieldset") && node.disabled)
+        .then(|| {
+            node.children
+                .iter()
+                .position(|child| child.name.as_deref() == Some("legend"))
+        })
+        .flatten()
 }
 
 struct ModelCollection<'a> {
@@ -3111,6 +3140,7 @@ fn collect_model_nodes(
     collection: &mut ModelCollection<'_>,
     containing_form: Option<usize>,
     inherited_direction: ControlTextDirection,
+    inherited_disabled: bool,
 ) {
     for node in nodes {
         let node_order = *collection.document_order;
@@ -3141,7 +3171,9 @@ fn collect_model_nodes(
         {
             let key = control_key(node, *collection.control_index);
             *collection.control_index += 1;
-            collection.states.push(project_control(node, key.clone()));
+            let mut state = project_control(node, key.clone());
+            state.disabled |= inherited_disabled;
+            collection.states.push(state);
             collection.bindings.push(ControlBinding {
                 key,
                 id: node.id.clone(),
@@ -3182,7 +3214,19 @@ fn collect_model_nodes(
                 document_order: node_order,
             });
         }
-        collect_model_nodes(&node.children, collection, containing_form, node_direction);
+        let first_legend = disabled_fieldset_first_legend(node);
+        for (child_index, child) in node.children.iter().enumerate() {
+            collect_model_nodes(
+                std::slice::from_ref(child),
+                collection,
+                containing_form,
+                node_direction,
+                inherited_disabled
+                    || (node.name.as_deref() == Some("fieldset")
+                        && node.disabled
+                        && Some(child_index) != first_legend),
+            );
+        }
     }
 }
 
@@ -5128,6 +5172,40 @@ mod tests {
         let states = control_states(&tree);
         assert_eq!(states[0].value, "go!");
         assert!(states[2].checked && states[2].focused);
+    }
+
+    #[test]
+    fn disabled_fieldsets_exempt_only_their_first_legend_subtree() {
+        let mut tree = parse_browser_render_tree(
+            "<form><fieldset disabled>\
+             <legend><input id='legend-control'></legend>\
+             <input id='blocked'>\
+             <legend><input id='second-legend-control'></legend>\
+             <fieldset><legend>Nested</legend><input id='nested-blocked'></fieldset>\
+             </fieldset><input id='outside'></form>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+
+        let disabled = |id: &str| {
+            model
+                .controls()
+                .iter()
+                .find(|control| control.key.ends_with(&format!("id:{id}")))
+                .map(|control| control.disabled)
+        };
+        assert_eq!(disabled("legend-control"), Some(false));
+        assert_eq!(disabled("blocked"), Some(true));
+        assert_eq!(disabled("second-legend-control"), Some(true));
+        assert_eq!(disabled("nested-blocked"), Some(true));
+        assert_eq!(disabled("outside"), Some(false));
+        assert_eq!(model.focus("control:1:id:blocked"), None);
+
+        model.sync_render_tree(&mut tree);
+        let states = control_states(&tree);
+        assert!(states[1].disabled);
+        assert!(states[2].disabled);
+        assert!(states[3].disabled);
     }
 
     #[test]

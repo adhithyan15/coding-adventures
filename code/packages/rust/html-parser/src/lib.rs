@@ -17580,7 +17580,7 @@ fn collect_browser_content_nodes(
     id_texts: &[(String, String)],
 ) {
     collect_browser_content_nodes_with_mode(
-        nodes, output, base_href, labels, id_texts, None, false,
+        nodes, output, base_href, labels, id_texts, None, false, false,
     );
 }
 
@@ -17592,6 +17592,7 @@ fn collect_browser_content_nodes_with_mode(
     id_texts: &[(String, String)],
     current_label_text: Option<&str>,
     preserve_whitespace: bool,
+    disabled_fieldset_ancestor: bool,
 ) {
     for node in nodes {
         match node {
@@ -17801,6 +17802,7 @@ fn collect_browser_content_nodes_with_mode(
                     id_texts,
                     current_label_text,
                     preserve_whitespace,
+                    disabled_fieldset_ancestor,
                 ) {
                     output.push(content_node);
                 }
@@ -17827,6 +17829,7 @@ fn browser_content_node_for_element(
     id_texts: &[(String, String)],
     current_label_text: Option<&str>,
     preserve_whitespace: bool,
+    disabled_fieldset_ancestor: bool,
 ) -> Option<BrowserContentNode> {
     if is_browser_invisible_element(&element.name) {
         return None;
@@ -17839,15 +17842,34 @@ fn browser_content_node_for_element(
         .filter(|text| !text.is_empty());
     let child_label_text = element_label_text.as_deref().or(current_label_text);
     if should_collect_browser_content_children(&element.name) {
-        collect_browser_content_nodes_with_mode(
-            &element.children,
-            &mut children,
-            base_href,
-            labels,
-            id_texts,
-            child_label_text,
-            preserve_whitespace || browser_preserves_text_whitespace(&element.name),
-        );
+        let disabled_fieldset =
+            element.name == "fieldset" && element.attribute("disabled").is_some();
+        let first_legend = disabled_fieldset
+            .then(|| first_direct_child_named(element, "legend"))
+            .flatten();
+        for child in &element.children {
+            let child_disabled_fieldset_ancestor = match child {
+                Node::Element(child_element)
+                    if disabled_fieldset
+                        && first_legend.is_some_and(|legend| {
+                            std::ptr::eq(legend, child_element as *const Element)
+                        }) =>
+                {
+                    disabled_fieldset_ancestor
+                }
+                _ => disabled_fieldset_ancestor || disabled_fieldset,
+            };
+            collect_browser_content_nodes_with_mode(
+                std::slice::from_ref(child),
+                &mut children,
+                base_href,
+                labels,
+                id_texts,
+                child_label_text,
+                preserve_whitespace || browser_preserves_text_whitespace(&element.name),
+                child_disabled_fieldset_ancestor,
+            );
+        }
     }
 
     let text = browser_content_text(element, role);
@@ -18032,7 +18054,7 @@ fn browser_content_node_for_element(
         value: browser_content_value(element),
         autofocus: browser_autofocus(element),
         control_focused: browser_autofocus(element),
-        disabled: element.attribute("disabled").is_some(),
+        disabled: disabled_fieldset_ancestor || element.attribute("disabled").is_some(),
         required: browser_required(element),
         readonly: browser_readonly(element),
         checked: element.attribute("checked").is_some(),

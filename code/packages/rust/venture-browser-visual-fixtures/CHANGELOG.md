@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a deterministic form-group fixture covering explicit/implicit labels,
+  disabled fieldsets, and the first-legend exception.
+
 - Extend the shared form-control page with a file input and accept/multiple
   metadata for deterministic cross-host layout and paint coverage.
 

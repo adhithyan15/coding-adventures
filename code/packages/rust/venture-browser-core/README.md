@@ -79,6 +79,9 @@ non-interactive `checkValidity`, interactive `reportValidity`, and mutable
 `formdata` entries. It records the resulting lifecycle events and commits
 navigation only after every synchronous handler returns, so generated hosts do
 not own cancellation, event ordering, diagnostics, or serialization policy.
+Disabled-fieldset inheritance and explicit/implicit label activation also stay
+inside this boundary; host adapters forward page coordinates without deriving
+form ownership, effective disabledness, or activation behavior.
 Form values now survive Back/Forward through bounded session-owned snapshots.
 The session exposes dirty/default state, grouped autofill descriptors, explicit
 public-versus-credential transactions, and ordered mutation events. Passwords

@@ -5,6 +5,9 @@ documented in this file.
 
 ## Unreleased
 
+- Project effective disabled-fieldset state into browser render nodes, including
+  the first direct legend exception and nested-fieldset inheritance.
+
 - Retain `output for` dependency tokens in browser content/render nodes and
   project `output` as a distinct live-value role for shared recalculation.
 

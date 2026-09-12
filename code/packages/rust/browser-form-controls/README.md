@@ -66,6 +66,9 @@ Text/search/textarea `dirname` metadata stays in the control binding. The
 shared model resolves explicit and inherited direction, and recomputes
 `dir=auto` from the live value with the Unicode bidi analyzer. Accessibility
 activation also enters the same semantic path as pointer and keyboard input.
+Effective disabledness follows disabled fieldsets through nested controls while
+exempting only the first direct legend subtree, keeping focus, validation, and
+submission consumers aligned.
 
 Autonomous custom elements are retained as attachable ElementInternals-style
 candidates with stable document ordinals. Attached internals own bounded

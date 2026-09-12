@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Resolve explicit and implicit labels into semantic control hit regions while
+  preserving direct nested-control precedence.
+
 - Emit typed control hit regions with the same transforms, rounded overflow
   clips, fixed positioning, and topmost hit policy as links.
 
