@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added one composed client-secret authorization-code exchange-to-custody
+  boundary: an exact provider-bound opaque account key is required before any
+  secret, transport, clock, or credential-store access; the decoded response
+  crosses existing OAuth release and custody-create audits without credential
+  disclosure, and only the opaque revision leaves the broker.
 - Added one broker-composed client-secret authorization-code exchange boundary
   that checks the registered provider, client ID, token endpoint, and retained
   Basic/Post method before audited secret access, then audit-brackets injected
