@@ -3,7 +3,8 @@
 **Status:** Phase 2 provider-neutral broker boundary implemented —
 installed-app Authorization Code + PKCE, RFC 8628 device-flow initiation and
 caller-driven polling classification and sequencing,
-token/error codecs, refresh rotation, revocation request preparation, RFC 8414
+token/error codecs, refresh rotation, revocation request and response
+classification, RFC 8414
 metadata validation, and an audited
 literal-loopback callback host plus storage-agnostic audit-before-disclosure
 credential custody now compose through data-driven provider registration,
@@ -80,9 +81,12 @@ The delivery order is:
    `publish_then_release`, so audit failure fails closed.
 2. **Shipped OAuth token boundary:** bounded JSON and form token/error
    responses, refresh grant requests, explicit rotating refresh-token
-   semantics, and RFC 7009 revocation preparation. Token or raw provider
-   response bytes never enter errors or audit data, and both decoded material
-   and secret-bearing requests are audit-gated before release.
+   semantics, and RFC 7009 revocation preparation plus response classification.
+   Only exact HTTP 200 confirms revocation and its bounded body is ignored;
+   bounded HTTP 400/401 OAuth errors and retryable HTTP 503 are closed
+   classifications. Token or raw provider response bytes never enter errors or
+   audit data, and requests, success, and error results are audit-gated before
+   release. Retry timing, transport, and credential removal remain caller-owned.
 3. **Shipped authorization-server metadata:** audited RFC 8414 well-known
    request preparation, bounded JSON decoding, exact issuer validation, strict
    endpoint policy, explicit Authorization Code + PKCE `S256` negotiation,
@@ -157,6 +161,10 @@ The delivery order is:
    remain zeroizing, and exchange/refresh response contexts are preserved.
    Revocation uses an explicitly configured revocation-endpoint audience rather
    than inventing provider acceptance of the token endpoint as that audience.
+   Its request-bound response classifier now treats only exact HTTP 200 as
+   revoked, ignores the bounded success body, validates bounded JSON errors for
+   HTTP 400/401, and retains HTTP 503 as a closed retryable error before any
+   later broker transport or local credential-removal authority is added.
    Broker-level client-secret authorization-code exchange and refresh sends
    are also shipped: the registered provider, client ID, token endpoint, and
    retained Basic/Post method are checked before audited client-secret access;
@@ -883,7 +891,10 @@ pub enum OAuthError {
    exposed. The OAuth-only slice does not decode an ID token.
 6. **Refresh logic.** Token within lead time → no refresh. Token outside lead time → refresh fires. Rotated refresh token written atomically.
 7. **Device-flow polling.** Sequence of `authorization_pending`, `slow_down` (with interval increase), `authorized` works correctly.
-8. **Revocation.** Calls revocation endpoint with correct params; tolerates 404 (already revoked).
+8. **Revocation.** Calls the revocation endpoint with correct parameters;
+   accepts exact HTTP 200 for both revoked and unknown tokens, rejects 404 as a
+   protocol violation, and preserves HTTP 503 as retryable without deleting the
+   local credential.
 
 ### Integration Tests (gated)
 
