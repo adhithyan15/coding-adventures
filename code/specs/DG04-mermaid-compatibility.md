@@ -356,8 +356,9 @@ dedicated portable grammars into typed grid IR. The subset preserves automatic
 and positive fixed column counts, flat node ordering, explicit `space` slots, node and space
 column spans, named `classDef` declarations, `class` assignments, inline
 `:::class` assignments, direct `style` declarations, square, rounded,
-circular, diamond, hexagon, stadium, parallelogram, and trapezoid nodes, titles,
-accessibility metadata, and directed and undirected connections with native quoted or pipe-delimited optional
+circular, double-circle, diamond, hexagon, stadium, subroutine, cylinder,
+parallelogram, and trapezoid nodes, titles, accessibility metadata, and directed
+and undirected connections with native quoted or pipe-delimited optional
 labels. `diagram-layout-grid` resolves deterministic
 cell geometry before the shared backend-neutral PaintScene lowering path. A
 native Metal-to-PNG fixture gates this slice; nested blocks remain explicitly

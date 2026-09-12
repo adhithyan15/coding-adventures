@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.108.0
+
+- Preserve Block subroutine, cylinder, and double-circle shape semantics.
+
 ## 0.107.0
 
 - Preserve Block hexagon, stadium, parallelogram, and trapezoid shape semantics.

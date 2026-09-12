@@ -1670,6 +1670,9 @@ fn split_block_items(line: &str) -> Vec<&str> {
 
 fn parse_block_node(source: &str) -> (String, String, DiagramShape) {
     for (open, close, shape) in [
+        ("(((", ")))", DiagramShape::DoubleCircle),
+        ("[[", "]]", DiagramShape::Subroutine),
+        ("[(", ")]", DiagramShape::Cylinder),
         ("{{", "}}", DiagramShape::Hexagon),
         ("([", "])", DiagramShape::Stadium),
         ("[/", "/]", DiagramShape::ParallelogramRight),
@@ -9102,6 +9105,14 @@ mod tests_dg04 {
         assert_eq!(diagram.cells[4].shape, DiagramShape::Trapezoid);
         assert_eq!(diagram.cells[5].shape, DiagramShape::InvertedTrapezoid);
         assert_eq!(diagram.cells[6].shape, DiagramShape::Diamond);
+    }
+
+    #[test]
+    fn block_parses_native_multi_outline_shapes() {
+        let diagram = parse_block("block\nA[[Subroutine]] B[(Database)] C(((Stop)))").unwrap();
+        assert_eq!(diagram.cells[0].shape, DiagramShape::Subroutine);
+        assert_eq!(diagram.cells[1].shape, DiagramShape::Cylinder);
+        assert_eq!(diagram.cells[2].shape, DiagramShape::DoubleCircle);
     }
 
     #[test]

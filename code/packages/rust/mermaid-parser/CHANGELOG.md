@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.197.0
+
+- Parse Mermaid Block subroutine, cylinder, and double-circle delimiters.
+
 ## 0.196.0
 
 - Parse Mermaid Block hexagon, stadium, parallelogram, and trapezoid delimiters.

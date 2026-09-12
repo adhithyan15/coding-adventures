@@ -8,6 +8,7 @@
     { "id": "spaces-and-edges", "source": "block\ncolumns 2\nA[Source] space\nB[Output]\nA --> B\nA-- \"observes\" ---B" },
     { "id": "column-spans", "source": "block\ncolumns 4\nA[Wide]:2 B[Single] space\nspace:3 C[Next row]\nA --> B\nB --> C" },
     { "id": "polygonal-shapes", "source": "block\nA{{Hexagon}} B([Stadium]) C[/Right/] D[\\Left\\] E[/Trapezoid\\] F[\\Inverse/]" },
+    { "id": "multi-outline-shapes", "source": "block\nA[[Subroutine]] B[(Database)] C(((Double circle)))" },
     { "id": "classes-and-styles", "source": "block\ncolumns 2\nA[Grammar]:::pipeline B[Paint]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass B pipeline\nstyle B fill:#dcfce7,font-size:18px,font-weight:bold" }
   ]
 }
