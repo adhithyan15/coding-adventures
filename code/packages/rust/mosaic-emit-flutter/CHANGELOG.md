@@ -5,6 +5,45 @@ this file.
 
 ## [Unreleased]
 
+### Fixed — `max-width` reached nothing; Flutter was the last of eight (#14851)
+
+With #14833 landing Compose, Flutter was the only backend of the eight still
+discarding it. All seven others were measured on a minimal probe rather than
+assumed: html, react and webcomponent emit `max-width`, SwiftUI
+`.frame(maxWidth:)`, Qt `Layout.maximumWidth`, XAML `MaxWidth`, Compose
+`.widthIn(max = ..)`.
+
+Engram authors it on all seven of its screens and Trestle on its task list, so
+a Flutter build of either rendered those as full-width sprawl.
+
+```dart
+ConstrainedBox(
+  constraints: const BoxConstraints(maxWidth: 760),
+  child: SizedBox(
+    width: double.infinity,
+    child: …,
+  ),
+)
+```
+
+Flutter has no max-width *argument* — `ConstrainedBox` is a widget that wraps —
+so this reuses the `emit_widget_tree` / `emit_widget_tree_inner` split built
+for `Opacity` in #14708, which applies a wrapping widget once on the way out
+and so covers every return site by construction.
+
+The `width: double.infinity` is not decoration: a ceiling is not a width, and
+without a fill the child sizes to its content where CSS gives a block
+`max-width: 760px` its parent's width up to 760. Compose needed the same
+pairing. Unlike Compose the order cannot go wrong here, because the constraint
+and the fill sit on different widgets rather than in one modifier chain.
+
+`Opacity` wraps outside the cap, so a fade applies to the capped box rather
+than inside it — pinned by a test.
+
+Verified with `flutter analyze` on a generated project (**No issues found**),
+and 14 `maxWidth` constraints now emitted across Engram with the drop reporter
+correctly no longer naming the property.
+
 ### Fixed — authored `opacity` reached nothing (#14708)
 
 `opacity` was parsed and then dropped. The toolkit authors it on eight

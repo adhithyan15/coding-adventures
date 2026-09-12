@@ -2223,16 +2223,61 @@ fn emit_widget_tree(
     emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
-    let inner = emit_widget_tree_inner(node, indent, part_styles, component, emits, ctx)?;
-    let Some(expr) = part_opacity_expr(node, part_styles) else {
-        return Ok(inner);
-    };
+    let mut out = emit_widget_tree_inner(node, indent, part_styles, component, emits, ctx)?;
     let pad = " ".repeat(indent);
-    let body = inner.trim_end_matches('\n');
-    Ok(format!(
-        "{pad}Opacity(\n{pad}  opacity: {expr},\n{pad}  child: {},\n{pad})\n",
-        body.trim_start()
-    ))
+
+    // `max-width` (#14851). Flutter has no max-width argument -- the lowering
+    // is `ConstrainedBox`, a widget that WRAPS. Applied innermost of the two
+    // wrappers so an opacity fades the capped box rather than the other way
+    // round, which is the same reasoning as `.alpha` coming first in the
+    // Compose chain (#14708).
+    //
+    // The `width: double.infinity` is not decoration. A ceiling is not a
+    // width: without a fill the child sizes to its CONTENT, where CSS gives a
+    // block `max-width: 760px` the parent's width up to 760. Compose needed
+    // exactly the same pairing (#14833), and there the order of the two
+    // mattered -- here it cannot, because the constraint and the fill are on
+    // different widgets rather than in one chain.
+    if let Some(cap) = part_max_width(node, part_styles) {
+        let body = out.trim_end_matches('\n');
+        let mut wrapped = String::new();
+        wrapped.push_str(&format!("{pad}ConstrainedBox(\n"));
+        wrapped.push_str(&format!(
+            "{pad}  constraints: const BoxConstraints(maxWidth: {cap}),\n"
+        ));
+        wrapped.push_str(&format!("{pad}  child: SizedBox(\n"));
+        wrapped.push_str(&format!("{pad}    width: double.infinity,\n"));
+        wrapped.push_str(&format!("{pad}    child: {},\n", body.trim_start()));
+        wrapped.push_str(&format!("{pad}  ),\n{pad})\n"));
+        out = wrapped;
+    }
+
+    if let Some(expr) = part_opacity_expr(node, part_styles) {
+        let body = out.trim_end_matches('\n');
+        out = format!(
+            "{pad}Opacity(\n{pad}  opacity: {expr},\n{pad}  child: {},\n{pad})\n",
+            body.trim_start()
+        );
+    }
+    Ok(out)
+}
+
+/// The authored `max-width` for a part, in logical pixels (#14851).
+///
+/// Seven of the eight backends lower this; Flutter was the last that did not,
+/// measured on a minimal probe rather than assumed. Engram authors it on all
+/// seven of its screens and Trestle on its task list, so a Flutter build of
+/// either renders those as full-width sprawl.
+///
+/// Base only, no state layers: nothing authors a per-state `max-width`, and a
+/// cap that changes on hover would want an animation story this does not have.
+fn part_max_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<String> {
+    let part = node.part_name.as_deref()?;
+    let props = part_styles.get(part)?;
+    let raw = parse_style_props(props).get("max-width")?.clone();
+    let trimmed = raw.trim().trim_end_matches("px").trim();
+    trimmed.parse::<f64>().ok().filter(|v| v.is_finite() && *v > 0.0)?;
+    Some(trimmed.to_string())
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -12542,6 +12587,104 @@ mod tests {
         );
     }
 
+
+    // ====================================================================
+    // max-width -- #14851. Flutter was the LAST of the eight backends to
+    // drop it; the other seven were measured on a minimal probe, not
+    // assumed.
+    // ====================================================================
+
+    #[test]
+    fn max_width_wraps_the_part_in_a_constrained_box() {
+        let m = component("Screen", vec![], vec![]);
+        let l = layout("Screen", box_part("panel", vec![], vec![]));
+        let s = style_with_part(
+            "Screen",
+            "panel",
+            vec![StyleProp {
+                name: "max-width".into(),
+                value: "760px".into(),
+            }],
+        );
+        let r = from_pipeline(&m, &l, &s).expect("ok");
+        assert!(
+            r.output.contains("BoxConstraints(maxWidth: 760)"),
+            "got:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn a_capped_part_still_fills_up_to_the_cap() {
+        // A ceiling is not a width. Without the fill the child sizes to its
+        // CONTENT, where CSS gives a block `max-width: 760px` its parent's
+        // width up to 760. Compose needed the same pairing (#14833).
+        let m = component("Screen", vec![], vec![]);
+        let l = layout("Screen", box_part("panel", vec![], vec![]));
+        let s = style_with_part(
+            "Screen",
+            "panel",
+            vec![StyleProp {
+                name: "max-width".into(),
+                value: "760px".into(),
+            }],
+        );
+        let r = from_pipeline(&m, &l, &s).expect("ok");
+        assert!(
+            r.output.contains("width: double.infinity"),
+            "got:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn a_part_with_no_max_width_gains_no_constrained_box() {
+        // The wrapper sits around EVERY node; a missing guard would wrap the
+        // whole package in an unconstrained ConstrainedBox.
+        let m = component("Plain", vec![], vec![]);
+        let l = layout("Plain", box_part("panel", vec![], vec![]));
+        let s = style_with_part(
+            "Plain",
+            "panel",
+            vec![StyleProp {
+                name: "background".into(),
+                value: "#222222".into(),
+            }],
+        );
+        let r = from_pipeline(&m, &l, &s).expect("ok");
+        assert!(!r.output.contains("ConstrainedBox"), "got:\n{}", r.output);
+    }
+
+    #[test]
+    fn opacity_wraps_outside_the_width_cap() {
+        // Order of the two wrappers: the opacity fades the capped box, not
+        // the other way round. Same reasoning as `.alpha` coming first in
+        // the Compose chain (#14708) -- a fade applied inside the constraint
+        // would leave the constraint's own painting at full strength.
+        let m = component("Both", vec![], vec![]);
+        let l = layout("Both", box_part("panel", vec![], vec![]));
+        let s = style_with_part(
+            "Both",
+            "panel",
+            vec![
+                StyleProp {
+                    name: "max-width".into(),
+                    value: "760px".into(),
+                },
+                StyleProp {
+                    name: "opacity".into(),
+                    value: "0.5".into(),
+                },
+            ],
+        );
+        let r = from_pipeline(&m, &l, &s).expect("ok");
+        let opacity = r.output.find("Opacity(").expect("opacity emitted");
+        let cap = r
+            .output
+            .find("ConstrainedBox(")
+            .expect("constrained box emitted");
+        assert!(opacity < cap, "got:\n{}", r.output);
+    }
 
     // ====================================================================
     // opacity -- #14708.  Flutter has no opacity ARGUMENT; `Opacity` is a
