@@ -42,6 +42,7 @@ pub const FORM_GROUPS_FIXTURE_PATH: &str = "/form-groups.html";
 pub const FORM_SUBMISSION_FIXTURE_PATH: &str = "/form-submission.html";
 pub const FORM_SUBMISSION_RESULT_PATH: &str = "/form-result.html";
 pub const DISCLOSURE_FIXTURE_PATH: &str = "/disclosures.html";
+pub const TOP_LAYER_FIXTURE_PATH: &str = "/top-layer.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -183,6 +184,14 @@ pub const DISCLOSURE_FIXTURE_HTML: &str = r#"<!doctype html><html><body>
 <details id="shipping" name="checkout"><summary>Shipping <a href="/help.html">help</a></summary><p>Shipping address</p></details>
 <details id="billing" name="checkout" open><summary>Billing</summary><p>Billing address</p></details>
 <details id="generated"><p>Generated summary body</p></details>
+</body></html>"#;
+
+/// Open-dialog geometry plus an initially closed popover interaction target.
+pub const TOP_LAYER_FIXTURE_HTML: &str = r#"<!doctype html><html><body>
+<button id="dialog-invoker" commandfor="confirm" command="show-modal">Open dialog</button>
+<button id="popover-invoker" popovertarget="actions">Open actions</button>
+<div id="actions" popover="auto" open aria-label="Actions" style="transform:translate(12px, 8px)">Popover actions</div>
+<dialog id="confirm" open aria-modal="true" closedby="any" aria-label="Confirm choice"><input id="dialog-input" value="ready"><button commandfor="confirm" command="close">Close</button></dialog>
 </body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
@@ -590,6 +599,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let form_submission_url = format!("{origin}{FORM_SUBMISSION_FIXTURE_PATH}");
     let form_result_url = format!("{origin}{FORM_SUBMISSION_RESULT_PATH}");
     let disclosure_url = format!("{origin}{DISCLOSURE_FIXTURE_PATH}");
+    let top_layer_url = format!("{origin}{TOP_LAYER_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -710,6 +720,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             DISCLOSURE_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == top_layer_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            TOP_LAYER_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -959,6 +975,23 @@ pub fn load_disclosure_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{DISCLOSURE_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_top_layer_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, 240.0, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{TOP_LAYER_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1633,6 +1666,16 @@ mod tests {
         assert!(find_positioned_id(&page.paint.positioned, "shipping").is_some());
         assert!(find_positioned_id(&page.paint.positioned, "billing").is_some());
         assert!(find_positioned_id(&page.paint.positioned, "generated").is_some());
+    }
+
+    #[test]
+    fn top_layer_fixture_keeps_dialog_and_popover_above_document_content() {
+        let page = load_top_layer_page("http://venture.test").expect("top-layer fixture page");
+        assert_eq!(page.paint.top_layers.len(), 1);
+        assert_eq!(page.paint.top_layers[0].key, "top-layer:id:confirm");
+        assert!(page.paint.top_layers[0].modal);
+        assert!(page.paint.top_layers.iter().all(|surface| surface.fixed));
+        assert!(find_positioned_id(&page.paint.positioned, "confirm").is_some());
     }
 
     #[test]

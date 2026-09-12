@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Promote open dialogs and popovers into a shared root top layer, hide closed
+  surfaces, synthesize modal backdrops, and retain stable semantics in Layout IR.
+
 - Hide non-summary children of closed `details` nodes and synthesize the
   interoperable `Details` summary fallback in shared layout.
 

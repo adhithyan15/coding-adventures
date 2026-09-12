@@ -313,7 +313,7 @@ where
         .counters
         .enter(&style.counter_reset, &style.counter_set);
     state.counters.increment(&style.counter_increment);
-    let children = convert_children(
+    let mut children = convert_children(
         &render_tree.children,
         context,
         &style,
@@ -321,6 +321,7 @@ where
         &mut state,
         is_visited,
     );
+    children.append(&mut state.top_layers);
 
     let mut root = LayoutNode::container(children)
         .with_padding(
@@ -356,6 +357,8 @@ struct ConversionState {
     counters: CounterContext,
     control_index: usize,
     disclosure_index: usize,
+    top_layer_index: usize,
+    top_layers: Vec<LayoutNode>,
 }
 
 fn convert_node<F>(
@@ -377,11 +380,25 @@ where
         state.disclosure_index += 1;
         index
     });
+    let top_layer_kind = if node.disclosure_kind.as_deref() == Some("dialog") {
+        Some("dialog")
+    } else if node.popover.is_some() {
+        Some("popover")
+    } else {
+        None
+    };
+    let top_layer_index = top_layer_kind.map(|_| {
+        let index = state.top_layer_index;
+        state.top_layer_index += 1;
+        index
+    });
     if display == "none"
         || node.hidden
+        || (top_layer_kind.is_some() && !node.open)
         || (node.role == "control" && node.control_type.as_deref() == Some("hidden"))
     {
         state.disclosure_index += count_details_nodes(&node.children);
+        state.top_layer_index += count_top_layer_nodes(&node.children);
         return None;
     }
 
@@ -501,9 +518,10 @@ where
             .ext
             .insert("backgrounds".into(), backgrounds.to_ext());
     }
-    layout
-        .ext
-        .insert("html".into(), html_ext(node, disclosure_index));
+    layout.ext.insert(
+        "html".into(),
+        html_ext(node, disclosure_index, top_layer_index, top_layer_kind),
+    );
     layout
         .ext
         .insert("block".into(), block_ext(node, display, &style));
@@ -527,6 +545,26 @@ where
     layout
         .ext
         .insert("positioned".into(), positioned_ext(style.positioned));
+    if let (Some(index), Some(kind)) = (top_layer_index, top_layer_kind) {
+        let mut positioned = style.positioned;
+        positioned.position = Position::Fixed;
+        positioned.z_index = Some(1_000_000 + index as i64);
+        if positioned.insets.top.is_none() && positioned.insets.bottom.is_none() {
+            positioned.insets.top = Some(24.0 + index as f64 * 12.0);
+        }
+        if positioned.insets.left.is_none() && positioned.insets.right.is_none() {
+            positioned.insets.left = Some(24.0 + index as f64 * 12.0);
+        }
+        layout
+            .ext
+            .insert("positioned".into(), positioned_ext(positioned));
+        if kind == "dialog" && node.aria_modal.as_deref() == Some("true") {
+            state.top_layers.push(top_layer_backdrop(index));
+        }
+        state.top_layers.push(layout);
+        state.counters.exit(counter_scope);
+        return None;
+    }
     state.counters.exit(counter_scope);
     Some(layout)
 }
@@ -539,6 +577,56 @@ fn count_details_nodes(nodes: &[BrowserRenderNode]) -> usize {
                 + count_details_nodes(&node.children)
         })
         .sum()
+}
+
+fn count_top_layer_nodes(nodes: &[BrowserRenderNode]) -> usize {
+    nodes
+        .iter()
+        .map(|node| {
+            usize::from(
+                node.disclosure_kind.as_deref() == Some("dialog") || node.popover.is_some(),
+            ) + count_top_layer_nodes(&node.children)
+        })
+        .sum()
+}
+
+fn top_layer_backdrop(index: usize) -> LayoutNode {
+    let mut backdrop = LayoutNode::container(Vec::new())
+        .with_width(SizeValue::Fill)
+        .with_height(SizeValue::Fill)
+        .with_ext(
+            "positioned",
+            positioned_ext(PositionedStyle {
+                position: Position::Fixed,
+                insets: layout_positioned::Insets {
+                    top: Some(0.0),
+                    right: Some(0.0),
+                    bottom: Some(0.0),
+                    left: Some(0.0),
+                },
+                z_index: Some(999_999 + index as i64),
+                ..PositionedStyle::default()
+            }),
+        )
+        .with_ext("block", display_ext("block"));
+    backdrop.ext.insert(
+        "paint".into(),
+        background_ext(Color {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 72,
+        }),
+    );
+    backdrop.ext.insert(
+        "html".into(),
+        ExtValue::Map(HashMap::from([
+            ("role".into(), ExtValue::Str("presentation".into())),
+            ("topLayerBackdrop".into(), ExtValue::Bool(true)),
+            ("topLayerIndex".into(), ExtValue::Int(index as i64)),
+        ])),
+    );
+    backdrop
 }
 
 fn convert_children<F>(
@@ -972,6 +1060,14 @@ where
         Some("b" | "strong") => style.font = font_bold(style.font),
         Some("em" | "i") => style.font = font_italic(style.font),
         _ => {}
+    }
+    if node.disclosure_kind.as_deref() == Some("dialog") || node.popover.is_some() {
+        style.background = Some(rgb(255, 255, 255));
+        style.border_width = edges_all(1.0);
+        style.border_color = [Some(rgb(72, 72, 72)); 4];
+        style.border_style = std::array::from_fn(|_| "solid".into());
+        style.padding = Some(edges_all(theme.page_padding.max(12.0)));
+        style.width = Some(320.0);
     }
     if node.role == "link" {
         let href = node.resolved_href.as_deref().or(node.href.as_deref());
@@ -3991,7 +4087,12 @@ fn positive_attribute(value: Option<&str>) -> Option<usize> {
         .filter(|value| *value > 0)
 }
 
-fn html_ext(node: &BrowserRenderNode, disclosure_index: Option<usize>) -> ExtValue {
+fn html_ext(
+    node: &BrowserRenderNode,
+    disclosure_index: Option<usize>,
+    top_layer_index: Option<usize>,
+    top_layer_kind: Option<&str>,
+) -> ExtValue {
     let mut values = HashMap::new();
     values.insert("role".into(), ExtValue::Str(node.role.clone()));
     values.insert("display".into(), ExtValue::Str(node.display.clone()));
@@ -4005,6 +4106,16 @@ fn html_ext(node: &BrowserRenderNode, disclosure_index: Option<usize>) -> ExtVal
     values.insert("open".into(), ExtValue::Bool(node.open));
     if let Some(index) = disclosure_index {
         values.insert("disclosureIndex".into(), ExtValue::Int(index as i64));
+    }
+    if let (Some(index), Some(kind)) = (top_layer_index, top_layer_kind) {
+        values.insert("topLayerIndex".into(), ExtValue::Int(index as i64));
+        values.insert("topLayerKind".into(), ExtValue::Str(kind.into()));
+        values.insert("topLayer".into(), ExtValue::Bool(true));
+        values.insert(
+            "topLayerModal".into(),
+            ExtValue::Bool(kind == "dialog" && node.aria_modal.as_deref() == Some("true")),
+        );
+        insert_optional(&mut values, "popover", node.popover.as_deref());
     }
     insert_optional(
         &mut values,
@@ -4857,6 +4968,35 @@ mod tests {
             all_text(&html_render_tree_to_layout(&fallback, &mosaic_html_theme())),
             vec!["Details"]
         );
+    }
+
+    #[test]
+    fn closed_surfaces_are_hidden_and_open_surfaces_join_the_root_top_layer() {
+        let render = parse_browser_render_tree(
+            "<main><dialog id='closed'>Closed</dialog><div><dialog id='modal' open aria-modal='true'>Modal</dialog></div><div id='menu' popover>Menu</div></main>",
+        )
+        .unwrap();
+        let layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
+
+        assert!(find_by_id(&layout, "closed").is_none());
+        assert!(find_by_id(&layout, "menu").is_none());
+        let modal = find_by_id(&layout, "modal").expect("open dialog should be visible");
+        assert!(matches!(
+            modal.ext.get("html"),
+            Some(ExtValue::Map(values))
+                if values.get("topLayer") == Some(&ExtValue::Bool(true))
+                    && values.get("topLayerModal") == Some(&ExtValue::Bool(true))
+        ));
+        assert_eq!(
+            PositionedStyle::from_layout(modal).position,
+            Position::Fixed
+        );
+        assert!(layout.children.iter().any(|child| matches!(
+            child.ext.get("html"),
+            Some(ExtValue::Map(values))
+                if values.get("topLayerBackdrop") == Some(&ExtValue::Bool(true))
+        )));
+        assert_eq!(layout.children.last().and_then(|node| node.id.as_deref()), Some("modal"));
     }
 
     #[test]

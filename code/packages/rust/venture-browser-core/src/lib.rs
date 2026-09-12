@@ -48,9 +48,10 @@ use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTr
 use html_to_layout::{html_media_query_applies, HtmlAuthorStylesheet, HtmlStyleContext, HtmlTheme};
 use html_to_paint::{
     decode_image_resource, hit_test_control, hit_test_disclosure, hit_test_link,
-    html_render_tree_to_paint_with_style_context, resolve_scene_image_resources_incrementally,
-    scene_image_resource_uris, ControlRegion, DisclosureRegion, FetchedImage, HtmlImageResolver,
-    HtmlImageResource, HtmlImageResourceError, HtmlPaintOutput, HtmlPaintViewport, LinkRegion,
+    hit_test_top_layer, html_render_tree_to_paint_with_style_context,
+    resolve_scene_image_resources_incrementally, scene_image_resource_uris, ControlRegion,
+    DisclosureRegion, FetchedImage, HtmlImageResolver, HtmlImageResource, HtmlImageResourceError,
+    HtmlPaintOutput, HtmlPaintViewport, LinkRegion, TopLayerRegion,
 };
 use http1_client::HttpClient;
 use layout_ir::TextMeasurer;
@@ -87,6 +88,186 @@ fn apply_details_open_states(
         }
         apply_details_open_states(&mut node.children, states, details_index);
     }
+}
+
+#[derive(Clone, Debug)]
+struct TopLayerSnapshot {
+    key: String,
+    id: Option<String>,
+    name: String,
+    kind: String,
+    mode: String,
+    open: bool,
+    modal: bool,
+    light_dismiss: bool,
+    escape_dismiss: bool,
+}
+
+fn top_layer_snapshots(tree: &BrowserRenderTree) -> Vec<TopLayerSnapshot> {
+    fn collect(nodes: &[BrowserRenderNode], index: &mut usize, out: &mut Vec<TopLayerSnapshot>) {
+        for node in nodes {
+            let kind = if node.disclosure_kind.as_deref() == Some("dialog") {
+                Some("dialog")
+            } else if node.popover.is_some() {
+                Some("popover")
+            } else {
+                None
+            };
+            if let Some(kind) = kind {
+                let current = *index;
+                *index += 1;
+                let key = node
+                    .id
+                    .as_deref()
+                    .filter(|id| !id.is_empty())
+                    .map(|id| format!("top-layer:id:{id}"))
+                    .unwrap_or_else(|| format!("top-layer:{current}"));
+                let mode = if kind == "popover" {
+                    node.popover
+                        .clone()
+                        .filter(|mode| !mode.is_empty())
+                        .unwrap_or_else(|| "auto".into())
+                } else if node.aria_modal.as_deref() == Some("true") {
+                    "modal".into()
+                } else {
+                    "nonmodal".into()
+                };
+                let default_closedby = if mode == "modal" {
+                    "closerequest"
+                } else {
+                    "none"
+                };
+                out.push(TopLayerSnapshot {
+                    key,
+                    id: node.id.clone(),
+                    name: node
+                        .accessible_name
+                        .clone()
+                        .or_else(|| node.text.clone())
+                        .or_else(|| node.id.clone())
+                        .unwrap_or_else(|| {
+                            if kind == "dialog" {
+                                "Dialog"
+                            } else {
+                                "Popover"
+                            }
+                            .into()
+                        }),
+                    kind: kind.into(),
+                    mode: mode.clone(),
+                    open: node.open,
+                    modal: mode == "modal",
+                    light_dismiss: kind == "popover" && mode != "manual"
+                        || kind == "dialog" && default_closedby == "any",
+                    escape_dismiss: kind == "popover"
+                        || kind == "dialog" && default_closedby != "none",
+                });
+            }
+            collect(&node.children, index, out);
+        }
+    }
+    let mut result = Vec::new();
+    collect(&tree.children, &mut 0, &mut result);
+    result
+}
+
+fn set_top_layer_node_state(
+    nodes: &mut [BrowserRenderNode],
+    target_id: &str,
+    open: bool,
+    modal: bool,
+) -> bool {
+    for node in nodes {
+        let is_surface =
+            node.disclosure_kind.as_deref() == Some("dialog") || node.popover.is_some();
+        if is_surface && node.id.as_deref() == Some(target_id) {
+            node.open = open;
+            if node.disclosure_kind.as_deref() == Some("dialog") {
+                node.aria_modal = modal.then(|| "true".into());
+            }
+            return true;
+        }
+        if set_top_layer_node_state(&mut node.children, target_id, open, modal) {
+            return true;
+        }
+    }
+    false
+}
+
+fn control_top_layer_command(tree: &BrowserRenderTree, key: &str) -> Option<(String, String)> {
+    fn find(
+        nodes: &[BrowserRenderNode],
+        key: &str,
+        control_index: &mut usize,
+    ) -> Option<(String, String)> {
+        for node in nodes {
+            if node.role == "control"
+                && node.control_type.as_deref() != Some("hidden")
+                && !node.hidden
+            {
+                let candidate = browser_form_controls::control_key(node, *control_index);
+                *control_index += 1;
+                if candidate == key {
+                    let target = node
+                        .command_for
+                        .clone()
+                        .or_else(|| node.popover_target.clone())?;
+                    let action = node.command.clone().unwrap_or_else(|| {
+                        format!(
+                            "popover-{}",
+                            node.popover_target_action.as_deref().unwrap_or("toggle")
+                        )
+                    });
+                    return Some((action, target));
+                }
+            }
+            if let Some(command) = find(&node.children, key, control_index) {
+                return Some(command);
+            }
+        }
+        None
+    }
+    find(&tree.children, key, &mut 0)
+}
+
+fn top_layer_action_from_command(command: &str) -> Option<TopLayerAccessibilityAction> {
+    Some(match command {
+        "show" => TopLayerAccessibilityAction::Show,
+        "show-modal" => TopLayerAccessibilityAction::ShowModal,
+        "close" | "request-close" => TopLayerAccessibilityAction::Close,
+        "toggle-popover" | "popover-toggle" => TopLayerAccessibilityAction::TogglePopover,
+        "show-popover" | "popover-show" => TopLayerAccessibilityAction::ShowPopover,
+        "hide-popover" | "popover-hide" => TopLayerAccessibilityAction::HidePopover,
+        _ => return None,
+    })
+}
+
+fn controls_inside_top_layer(tree: &BrowserRenderTree, target_id: &str) -> Vec<String> {
+    fn collect(
+        nodes: &[BrowserRenderNode],
+        target_id: &str,
+        inside: bool,
+        control_index: &mut usize,
+        out: &mut Vec<String>,
+    ) {
+        for node in nodes {
+            let inside = inside || node.id.as_deref() == Some(target_id);
+            if node.role == "control"
+                && node.control_type.as_deref() != Some("hidden")
+                && !node.hidden
+            {
+                let key = browser_form_controls::control_key(node, *control_index);
+                *control_index += 1;
+                if inside && !node.disabled {
+                    out.push(key);
+                }
+            }
+            collect(&node.children, target_id, inside, control_index, out);
+        }
+    }
+    let mut result = Vec::new();
+    collect(&tree.children, target_id, false, &mut 0, &mut result);
+    result
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
@@ -499,6 +680,38 @@ pub struct DisclosureAccessibilityState {
     pub group_name: Option<String>,
 }
 
+/// Shared accessibility and host projection for an open dialog or popover.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TopLayerAccessibilityState {
+    pub key: String,
+    pub id: Option<String>,
+    pub name: String,
+    pub kind: String,
+    pub mode: String,
+    pub open: bool,
+    pub modal: bool,
+    pub light_dismiss: bool,
+    pub escape_dismiss: bool,
+    pub topmost: bool,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TopLayerAccessibilityAction {
+    Show,
+    ShowModal,
+    Close,
+    TogglePopover,
+    ShowPopover,
+    HidePopover,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TopLayerDiagnostic {
+    pub code: &'static str,
+    pub target: Option<String>,
+    pub message: &'static str,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DisclosureAccessibilityAction {
     Toggle,
@@ -853,6 +1066,15 @@ impl BrowserViewport {
     ) -> Option<&DisclosureRegion> {
         hit_test_disclosure(
             &self.page.paint.disclosures,
+            viewport_x,
+            viewport_y,
+            self.scroll.offset_y(),
+        )
+    }
+
+    pub fn hit_test_top_layer(&self, viewport_x: f64, viewport_y: f64) -> Option<&TopLayerRegion> {
+        hit_test_top_layer(
+            &self.page.paint.top_layers,
             viewport_x,
             viewport_y,
             self.scroll.offset_y(),
@@ -1284,6 +1506,9 @@ pub struct BrowserSession {
     viewport: Option<BrowserViewport>,
     controls: BrowserControlModel,
     focused_disclosure: Option<String>,
+    top_layer_stack: Vec<String>,
+    top_layer_invokers: Vec<(String, String)>,
+    top_layer_diagnostics: Vec<TopLayerDiagnostic>,
     form_diagnostics: Vec<FormDiagnostic>,
     form_lifecycle_events: Vec<FormLifecycleEvent>,
     control_mutation_events: Vec<ControlMutationEvent>,
@@ -1301,6 +1526,9 @@ impl BrowserSession {
             viewport: None,
             controls: BrowserControlModel::default(),
             focused_disclosure: None,
+            top_layer_stack: Vec::new(),
+            top_layer_invokers: Vec::new(),
+            top_layer_diagnostics: Vec::new(),
             form_diagnostics: Vec::new(),
             form_lifecycle_events: Vec::new(),
             control_mutation_events: Vec::new(),
@@ -1926,6 +2154,211 @@ impl BrowserSession {
             .collect()
     }
 
+    pub fn top_layer_accessibility_states(&self) -> Vec<TopLayerAccessibilityState> {
+        let Some(page) = self.viewport.as_ref().map(BrowserViewport::page) else {
+            return Vec::new();
+        };
+        let snapshots = top_layer_snapshots(&page.render_tree);
+        snapshots
+            .into_iter()
+            .map(|snapshot| {
+                let closedby = (snapshot.kind == "dialog")
+                    .then(|| {
+                        page.document.disclosures.iter().find(|disclosure| {
+                            disclosure.element == "dialog" && disclosure.id == snapshot.id
+                        })
+                    })
+                    .flatten()
+                    .and_then(|disclosure| disclosure.closedby.as_deref());
+                let light_dismiss = if snapshot.kind == "dialog" {
+                    closedby == Some("any")
+                } else {
+                    snapshot.light_dismiss
+                };
+                let escape_dismiss = if snapshot.kind == "dialog" {
+                    closedby
+                        .map(|policy| policy != "none")
+                        .unwrap_or(snapshot.modal)
+                } else {
+                    snapshot.escape_dismiss
+                };
+                let topmost = self.top_layer_stack.last() == Some(&snapshot.key);
+                TopLayerAccessibilityState {
+                    key: snapshot.key,
+                    id: snapshot.id,
+                    name: snapshot.name,
+                    kind: snapshot.kind,
+                    mode: snapshot.mode,
+                    open: snapshot.open,
+                    modal: snapshot.modal,
+                    light_dismiss,
+                    escape_dismiss,
+                    topmost,
+                }
+            })
+            .collect()
+    }
+
+    pub fn top_layer_diagnostics(&self) -> &[TopLayerDiagnostic] {
+        &self.top_layer_diagnostics
+    }
+
+    pub fn take_top_layer_diagnostics(&mut self) -> Vec<TopLayerDiagnostic> {
+        std::mem::take(&mut self.top_layer_diagnostics)
+    }
+
+    pub fn top_layer_accessibility_action<M, S, FM, R>(
+        &mut self,
+        key: &str,
+        action: TopLayerAccessibilityAction,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> bool
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let target = self
+            .top_layer_accessibility_states()
+            .into_iter()
+            .find(|state| state.key == key)
+            .and_then(|state| state.id);
+        let Some(target) = target else {
+            self.top_layer_diagnostics.push(TopLayerDiagnostic {
+                code: "top-layer-target-missing",
+                target: Some(key.into()),
+                message: "top-layer action requires an ID-addressable target",
+            });
+            return false;
+        };
+        self.apply_top_layer_action(&target, action, None, pipeline)
+    }
+
+    fn apply_top_layer_action<M, S, FM, R>(
+        &mut self,
+        target_id: &str,
+        action: TopLayerAccessibilityAction,
+        invoker: Option<&str>,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> bool
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let Some(mut current) = self
+            .viewport
+            .as_ref()
+            .map(|viewport| viewport.page().clone())
+        else {
+            return false;
+        };
+        let snapshots = top_layer_snapshots(&current.render_tree);
+        let Some(target) = snapshots
+            .iter()
+            .find(|surface| surface.id.as_deref() == Some(target_id))
+            .cloned()
+        else {
+            self.top_layer_diagnostics.push(TopLayerDiagnostic {
+                code: "top-layer-target-missing",
+                target: Some(target_id.into()),
+                message: "invoker target does not identify a dialog or popover",
+            });
+            return false;
+        };
+        let valid = matches!(
+            (&*target.kind, action),
+            ("dialog", TopLayerAccessibilityAction::Show)
+                | ("dialog", TopLayerAccessibilityAction::ShowModal)
+                | ("dialog", TopLayerAccessibilityAction::Close)
+                | ("popover", TopLayerAccessibilityAction::TogglePopover)
+                | ("popover", TopLayerAccessibilityAction::ShowPopover)
+                | ("popover", TopLayerAccessibilityAction::HidePopover)
+        );
+        if !valid {
+            self.top_layer_diagnostics.push(TopLayerDiagnostic {
+                code: "top-layer-command-mismatch",
+                target: Some(target_id.into()),
+                message: "invoker command is not valid for its target surface",
+            });
+            return false;
+        }
+        let open = match action {
+            TopLayerAccessibilityAction::Show | TopLayerAccessibilityAction::ShowModal => true,
+            TopLayerAccessibilityAction::Close | TopLayerAccessibilityAction::HidePopover => false,
+            TopLayerAccessibilityAction::TogglePopover => !target.open,
+            TopLayerAccessibilityAction::ShowPopover => true,
+        };
+        let modal = action == TopLayerAccessibilityAction::ShowModal;
+
+        if open && target.kind == "popover" && target.mode != "manual" {
+            for surface in &snapshots {
+                if surface.open
+                    && surface.kind == "popover"
+                    && surface.mode != "manual"
+                    && surface.id.as_deref() != Some(target_id)
+                {
+                    if let Some(id) = surface.id.as_deref() {
+                        set_top_layer_node_state(
+                            &mut current.render_tree.children,
+                            id,
+                            false,
+                            false,
+                        );
+                    }
+                    self.top_layer_stack.retain(|key| key != &surface.key);
+                }
+            }
+        }
+        if !set_top_layer_node_state(&mut current.render_tree.children, target_id, open, modal) {
+            return false;
+        }
+        for disclosure in &mut current.document.disclosures {
+            if disclosure.element == "dialog" && disclosure.id.as_deref() == Some(target_id) {
+                disclosure.open = open;
+                disclosure.aria_modal = modal.then(|| "true".into());
+            }
+        }
+        for descriptor in &mut current.document.disclosure_state_descriptors {
+            if descriptor.element == "dialog" && descriptor.id.as_deref() == Some(target_id) {
+                descriptor.open = open;
+                descriptor.modal = modal;
+                descriptor.aria_modal = modal.then(|| "true".into());
+            }
+        }
+
+        self.top_layer_stack.retain(|key| key != &target.key);
+        if open {
+            self.top_layer_stack.push(target.key.clone());
+            if let Some(invoker) = invoker {
+                self.top_layer_invokers
+                    .retain(|(surface, _)| surface != &target.key);
+                self.top_layer_invokers
+                    .push((target.key.clone(), invoker.into()));
+            }
+        }
+        let updated = pipeline.reflow_retained_with_visited(&current, &self.visited_links);
+        if let Some(viewport) = self.viewport.as_mut() {
+            viewport.reflow_page(updated, self.viewport_height);
+        }
+        if open {
+            if let Some(key) = controls_inside_top_layer(&current.render_tree, target_id).first() {
+                self.controls.focus(key);
+            }
+        } else if let Some(position) = self
+            .top_layer_invokers
+            .iter()
+            .rposition(|(surface, _)| surface == &target.key)
+        {
+            let (_, key) = self.top_layer_invokers.remove(position);
+            self.controls.focus(&key);
+        }
+        self.refresh_control_editor_presentation();
+        true
+    }
+
     /// Apply an accessibility disclosure action and reflow the retained page.
     pub fn disclosure_accessibility_action<M, S, FM, R>(
         &mut self,
@@ -2295,8 +2728,21 @@ impl BrowserSession {
             self.record_control_effect_events(effect);
         }
         if let Some(ControlEffect::Activated(key)) = &effect {
-            let outcome = self.dispatch_form_activation(key, |_| {})?;
-            self.apply_form_dispatch(outcome, pipeline, fetcher)?;
+            let command = self
+                .viewport
+                .as_ref()
+                .and_then(|viewport| control_top_layer_command(&viewport.page().render_tree, key));
+            let handled = command
+                .and_then(|(command, target)| {
+                    top_layer_action_from_command(&command).map(|action| {
+                        self.apply_top_layer_action(&target, action, Some(key), pipeline)
+                    })
+                })
+                .unwrap_or(false);
+            if !handled {
+                let outcome = self.dispatch_form_activation(key, |_| {})?;
+                self.apply_form_dispatch(outcome, pipeline, fetcher)?;
+            }
         } else if effect.is_some() {
             self.form_diagnostics.clear();
             self.controls.clear_validation();
@@ -2356,6 +2802,10 @@ impl BrowserSession {
             return Ok(None);
         };
         let key = region.key.clone();
+        let top_layer_command = self
+            .viewport
+            .as_ref()
+            .and_then(|viewport| control_top_layer_command(&viewport.page().render_tree, &key));
         let effect = if region.label_activation {
             self.controls.pointer_activate(&key)
         } else if region.kind.accepts_text() {
@@ -2372,6 +2822,13 @@ impl BrowserSession {
             return Ok(None);
         };
         if matches!(effect, ControlEffect::Activated(_)) {
+            if let Some((command, target)) = top_layer_command {
+                if let Some(action) = top_layer_action_from_command(&command) {
+                    if self.apply_top_layer_action(&target, action, Some(&key), pipeline) {
+                        return Ok(Some(effect));
+                    }
+                }
+            }
             let image_coordinates = self
                 .controls
                 .binding(&key)
@@ -2415,6 +2872,34 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        if let Some(topmost) = self
+            .top_layer_accessibility_states()
+            .into_iter()
+            .find(|state| state.open && state.topmost)
+        {
+            let inside = self
+                .viewport
+                .as_ref()
+                .and_then(|viewport| viewport.hit_test_top_layer(viewport_x, viewport_y))
+                .is_some_and(|region| region.key == topmost.key);
+            if !inside && topmost.light_dismiss {
+                if let Some(id) = topmost.id {
+                    return Ok(self.apply_top_layer_action(
+                        &id,
+                        if topmost.kind == "dialog" {
+                            TopLayerAccessibilityAction::Close
+                        } else {
+                            TopLayerAccessibilityAction::HidePopover
+                        },
+                        None,
+                        pipeline,
+                    ));
+                }
+            }
+            if !inside && topmost.modal {
+                return Ok(true);
+            }
+        }
         if self
             .viewport
             .as_ref()
@@ -2483,6 +2968,16 @@ impl BrowserSession {
         }
         let activation = match &effect {
             Some(ControlEffect::Activated(activated)) => {
+                let command = self.viewport.as_ref().and_then(|viewport| {
+                    control_top_layer_command(&viewport.page().render_tree, activated)
+                });
+                if let Some((command, target)) = command {
+                    if let Some(action) = top_layer_action_from_command(&command) {
+                        if self.apply_top_layer_action(&target, action, Some(activated), pipeline) {
+                            return Ok(effect);
+                        }
+                    }
+                }
                 Some(self.dispatch_form_activation(activated, |_| {})?)
             }
             Some(
@@ -2520,6 +3015,26 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        if key == ControlKey::Escape {
+            if let Some(topmost) = self
+                .top_layer_accessibility_states()
+                .into_iter()
+                .find(|state| state.open && state.topmost && state.escape_dismiss)
+            {
+                if let Some(id) = topmost.id {
+                    return Ok(self.apply_top_layer_action(
+                        &id,
+                        if topmost.kind == "dialog" {
+                            TopLayerAccessibilityAction::Close
+                        } else {
+                            TopLayerAccessibilityAction::HidePopover
+                        },
+                        None,
+                        pipeline,
+                    ));
+                }
+            }
+        }
         if matches!(key, ControlKey::Enter | ControlKey::Space) {
             if let Some(disclosure) = self.focused_disclosure.clone() {
                 return Ok(self
@@ -2721,12 +3236,20 @@ impl BrowserSession {
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
         let controls = BrowserControlModel::from_render_tree(&page.render_tree);
+        let top_layer_stack = top_layer_snapshots(&page.render_tree)
+            .into_iter()
+            .filter(|surface| surface.open)
+            .map(|surface| surface.key)
+            .collect();
         history.replace_current(page.final_url.clone());
         self.viewport = Some(BrowserViewport::new(page, self.viewport_height));
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
         self.focused_disclosure = None;
+        self.top_layer_stack = top_layer_stack;
+        self.top_layer_invokers.clear();
+        self.top_layer_diagnostics.clear();
         if let Some((url, snapshot)) = departing_state {
             self.remember_form_history_state(url, snapshot);
         }
@@ -2751,7 +3274,27 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.focus_next(reverse)?;
+        let mut keys = self
+            .viewport
+            .as_ref()?
+            .page()
+            .paint
+            .controls
+            .iter()
+            .map(|region| region.key.clone())
+            .collect::<Vec<_>>();
+        if let Some(modal) = self
+            .top_layer_accessibility_states()
+            .into_iter()
+            .find(|state| state.open && state.topmost && state.modal)
+        {
+            if let Some(id) = modal.id {
+                let inside =
+                    controls_inside_top_layer(&self.viewport.as_ref()?.page().render_tree, &id);
+                keys.retain(|key| inside.contains(key));
+            }
+        }
+        let effect = self.controls.focus_next_in(&keys, reverse)?;
         self.focused_disclosure = None;
         self.reflow_controls(pipeline)?;
         Some(effect)
@@ -3109,6 +3652,11 @@ impl BrowserSession {
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
         let mut controls = BrowserControlModel::from_render_tree(&page.render_tree);
+        let top_layer_stack = top_layer_snapshots(&page.render_tree)
+            .into_iter()
+            .filter(|surface| surface.open)
+            .map(|surface| surface.key)
+            .collect();
         if restores_form_state {
             if let Some((_, snapshot)) = self
                 .form_history_states
@@ -3129,6 +3677,9 @@ impl BrowserSession {
         self.visited_links = visited_links;
         self.controls = controls;
         self.focused_disclosure = None;
+        self.top_layer_stack = top_layer_stack;
+        self.top_layer_invokers.clear();
+        self.top_layer_diagnostics.clear();
         if let Some((url, snapshot)) = departing_state {
             self.remember_form_history_state(url, snapshot);
         }
@@ -7140,5 +7691,94 @@ mod tests {
                 .unwrap()
                 .open
         );
+    }
+
+    #[test]
+    fn session_owns_dialog_and_popover_top_layer_transactions() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<button id='open' commandfor='confirm' command='show-modal'>Open</button>\
+                  <button id='menu-button' popovertarget='menu'>Menu</button>\
+                  <dialog id='confirm' closedby='any' aria-label='Confirm choice'>\
+                    <input id='inside'><button commandfor='confirm' command='close'>Close</button>\
+                  </dialog><div id='menu' popover='auto' aria-label='Actions'>Actions</div>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(480.0, 240.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/layers", 240.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        assert!(session
+            .top_layer_accessibility_states()
+            .iter()
+            .all(|surface| !surface.open));
+        let open = session
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .controls
+            .iter()
+            .find(|control| control.key == "control:0:id:open")
+            .unwrap()
+            .clone();
+        assert!(session
+            .activate_page_interaction(open.x + 1.0, open.y + 1.0, &pipeline, &fetcher)
+            .unwrap());
+        let dialog = session
+            .top_layer_accessibility_states()
+            .into_iter()
+            .find(|surface| surface.kind == "dialog")
+            .unwrap();
+        assert!(dialog.open && dialog.modal && dialog.topmost);
+        assert_eq!(
+            session.controls().focused_key(),
+            Some("control:2:id:inside")
+        );
+
+        assert!(session
+            .activate_page_interaction(470.0, 230.0, &pipeline, &fetcher)
+            .unwrap());
+        assert!(
+            !session
+                .top_layer_accessibility_states()
+                .into_iter()
+                .find(|surface| surface.kind == "dialog")
+                .unwrap()
+                .open
+        );
+        assert_eq!(session.controls().focused_key(), Some("control:0:id:open"));
+
+        assert!(session.top_layer_accessibility_action(
+            "top-layer:id:menu",
+            TopLayerAccessibilityAction::ShowPopover,
+            &pipeline,
+        ));
+        assert!(session
+            .page_key_down_with_shift_and_submit(ControlKey::Escape, false, &pipeline, &fetcher,)
+            .unwrap());
+        assert!(
+            !session
+                .top_layer_accessibility_states()
+                .into_iter()
+                .find(|surface| surface.kind == "popover")
+                .unwrap()
+                .open
+        );
+        assert!(session.top_layer_diagnostics().is_empty());
     }
 }

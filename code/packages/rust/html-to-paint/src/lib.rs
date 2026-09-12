@@ -231,6 +231,33 @@ pub struct DisclosureRegion {
     pub clips: Vec<LinkClip>,
 }
 
+/// Geometry for one open dialog or popover surface in shared top-layer order.
+#[derive(Clone, Debug, PartialEq)]
+pub struct TopLayerRegion {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub key: String,
+    pub top_layer_index: usize,
+    pub kind: String,
+    pub modal: bool,
+    pub fixed: bool,
+    pub clips: Vec<LinkClip>,
+}
+
+impl TopLayerRegion {
+    pub fn contains(&self, x: f64, y: f64) -> bool {
+        x.is_finite()
+            && y.is_finite()
+            && x >= self.x
+            && x < self.x + self.width
+            && y >= self.y
+            && y < self.y + self.height
+            && self.clips.iter().all(|clip| clip.contains(x, y))
+    }
+}
+
 impl DisclosureRegion {
     pub fn contains(&self, x: f64, y: f64) -> bool {
         x.is_finite()
@@ -262,6 +289,7 @@ pub struct HtmlPaintOutput {
     pub links: Vec<LinkRegion>,
     pub controls: Vec<ControlRegion>,
     pub disclosures: Vec<DisclosureRegion>,
+    pub top_layers: Vec<TopLayerRegion>,
     pub scene: PaintScene,
 }
 
@@ -498,13 +526,14 @@ where
     };
     let mut scene = layout_to_paint(&positioned, &options);
     annotate_html_image_metadata(&positioned, &mut scene);
-    let (links, controls, disclosures) = extract_interactive_regions(&positioned);
+    let (links, controls, disclosures, top_layers) = extract_interactive_regions(&positioned);
 
     HtmlPaintOutput {
         positioned,
         links,
         controls,
         disclosures,
+        top_layers,
         scene,
     }
 }
@@ -529,12 +558,23 @@ pub fn extract_disclosure_regions(root: &PositionedNode) -> Vec<DisclosureRegion
     extract_interactive_regions(root).2
 }
 
+/// Extract open dialog and popover surfaces in shared paint order.
+pub fn extract_top_layer_regions(root: &PositionedNode) -> Vec<TopLayerRegion> {
+    extract_interactive_regions(root).3
+}
+
 fn extract_interactive_regions(
     root: &PositionedNode,
-) -> (Vec<LinkRegion>, Vec<ControlRegion>, Vec<DisclosureRegion>) {
+) -> (
+    Vec<LinkRegion>,
+    Vec<ControlRegion>,
+    Vec<DisclosureRegion>,
+    Vec<TopLayerRegion>,
+) {
     let mut links = Vec::new();
     let mut controls = Vec::new();
     let mut disclosures = Vec::new();
+    let mut top_layers = Vec::new();
     let mut control_targets = Vec::new();
     let mut labels = Vec::new();
     let mut stack = vec![(
@@ -568,6 +608,36 @@ fn extract_interactive_regions(
             .map(|local| multiply(inherited_transform, local))
             .unwrap_or(inherited_transform);
         let fixed = inherited_fixed || style.position == layout_positioned::Position::Fixed;
+        if let (Some(kind), Some(index)) = (
+            positioned_html_string(node, "topLayerKind"),
+            positioned_html_int(node, "topLayerIndex")
+                .and_then(|value| usize::try_from(value).ok()),
+        ) {
+            let region = clipped_box(
+                transformed_box((absolute_x, absolute_y, node.width, node.height), transform),
+                inherited_clip,
+            );
+            if let Some((x, y, width, height)) =
+                region.filter(|(x, y, width, height)| valid_link_box(*x, *y, *width, *height))
+            {
+                let key = positioned_html_string(node, "id")
+                    .filter(|id| !id.is_empty())
+                    .map(|id| format!("top-layer:id:{id}"))
+                    .unwrap_or_else(|| format!("top-layer:{index}"));
+                top_layers.push(TopLayerRegion {
+                    x,
+                    y,
+                    width,
+                    height,
+                    key,
+                    top_layer_index: index,
+                    kind: kind.to_string(),
+                    modal: positioned_html_bool(node, "topLayerModal").unwrap_or(false),
+                    fixed,
+                    clips: inherited_clips.clone(),
+                });
+            }
+        }
         let current_disclosure =
             (positioned_html_string(node, "disclosureKind") == Some("details")).then(|| {
                 let index = positioned_html_int(node, "disclosureIndex")
@@ -749,7 +819,7 @@ fn extract_interactive_regions(
         .collect::<Vec<_>>();
     // Direct controls remain topmost when a wrapping label contains its target.
     label_controls.extend(controls);
-    (links, label_controls, disclosures)
+    (links, label_controls, disclosures, top_layers)
 }
 
 #[derive(Clone, Debug)]
@@ -932,6 +1002,24 @@ pub fn hit_test_disclosure(
     viewport_y: f64,
     scroll_y: f64,
 ) -> Option<&DisclosureRegion> {
+    let scroll_y = finite_non_negative(scroll_y);
+    regions.iter().rev().find(|region| {
+        let y = if region.fixed {
+            viewport_y
+        } else {
+            viewport_y + scroll_y
+        };
+        region.contains(viewport_x, y)
+    })
+}
+
+/// Hit-test a viewport-space point against open top-layer surfaces.
+pub fn hit_test_top_layer(
+    regions: &[TopLayerRegion],
+    viewport_x: f64,
+    viewport_y: f64,
+    scroll_y: f64,
+) -> Option<&TopLayerRegion> {
     let scroll_y = finite_non_negative(scroll_y);
     regions.iter().rev().find(|region| {
         let y = if region.fixed {
@@ -2075,6 +2163,35 @@ mod tests {
             hit_test_control(&output.controls, first.x + 1.0, first.y + 1.0, 0.0)
                 .map(|region| region.key.as_str()),
             Some("control:0:id:query")
+        );
+    }
+
+    #[test]
+    fn top_layer_surfaces_emit_transformed_hit_regions() {
+        let render = parse_browser_render_tree(
+            "<dialog id='confirm' open aria-modal='true' style='transform:translate(8px, 6px)'>Confirm</dialog>\
+             <div id='menu' popover='manual'>Menu</div>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(320.0, 180.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        assert_eq!(output.top_layers.len(), 1);
+        let dialog = &output.top_layers[0];
+        assert_eq!(dialog.key, "top-layer:id:confirm");
+        assert_eq!(dialog.kind, "dialog");
+        assert!(dialog.modal && dialog.fixed);
+        assert_eq!(
+            hit_test_top_layer(&output.top_layers, dialog.x + 1.0, dialog.y + 1.0, 0.0)
+                .map(|region| region.key.as_str()),
+            Some("top-layer:id:confirm")
         );
     }
 
