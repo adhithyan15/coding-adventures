@@ -4160,6 +4160,14 @@ fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, Pipel
     }
 }
 
+/// Whether a Path geometry prop is bound rather than a literal number.
+fn path_prop_is_bound(node: &LayoutNode, prop_name: &str) -> bool {
+    matches!(
+        find_prop_value(node, prop_name),
+        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_))
+    )
+}
+
 /// Read a numeric coordinate for a `line` Path. Unlike circle and curve
 /// geometry, Line exposes each coordinate as a dependency property, so WinUI
 /// can bind it directly. This is deliberately separate from
@@ -4222,10 +4230,39 @@ fn emit_path(
 
     match kind {
         "circle" => {
-            let cx = required_path_number(node, "cx")?;
-            let cy = required_path_number(node, "cy")?;
+            // `r` stays literal: the diameter is a Width/Height and the
+            // offset below is a Thickness, neither of which a markup binding
+            // can compute.
             let r = required_path_number(node, "r")?;
             let d = 2.0 * r;
+
+            if path_prop_is_bound(node, "cx") || path_prop_is_bound(node, "cy") {
+                // A bound centre cannot go through `Margin`, because the
+                // position WinUI needs is `cx - r` and XAML cannot do
+                // arithmetic in an attribute -- let alone inside a Thickness,
+                // which is one composite string rather than four bindable
+                // doubles. That is why circles were excluded when lines gained
+                // bindings in #14682.
+                //
+                // Split the sum instead of computing it. `TranslateTransform`
+                // exposes X and Y as plain bindable doubles, so the bound
+                // centre goes there, and the `- r` half is a LITERAL negative
+                // margin. The two compose to `(cx - r, cy - r)` with no
+                // arithmetic performed on a bound value.
+                let cx = required_path_line_number(node, "cx", ctx)?;
+                let cy = required_path_line_number(node, "cy", ctx)?;
+                let offset = -r;
+                return Ok(format!(
+                    "{pad}<Ellipse Width=\"{d}\" Height=\"{d}\" Margin=\"{offset},{offset},0,0\" HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}>\n\
+                     {pad}  <Ellipse.RenderTransform>\n\
+                     {pad}    <TranslateTransform X=\"{cx}\" Y=\"{cy}\"/>\n\
+                     {pad}  </Ellipse.RenderTransform>\n\
+                     {pad}</Ellipse>\n"
+                ));
+            }
+
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
             let (left, top) = (cx - r, cy - r);
             Ok(format!(
                 "{pad}<Ellipse Width=\"{d}\" Height=\"{d}\" Margin=\"{left},{top},0,0\" HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}/>\n"
@@ -13119,9 +13156,14 @@ mod tests {
         );
     }
 
+    /// A bound centre now binds. The rule this test was originally written
+    /// to protect -- a bound coordinate must never be silently dropped --
+    /// is unchanged; it is enforced by emitting the binding rather than by
+    /// refusing. The companion below keeps the refusing half for the props
+    /// that still cannot bind.
     #[test]
-    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
-        let c = component("Foo", vec![], vec![]);
+    fn path_slot_bound_centre_binds_through_a_translate_transform() {
+        let c = component("Foo", vec![slot("moon-x", SlotType::Number, true)], vec![]);
         let l = layout_with_root(
             "Foo",
             LayoutNode {
@@ -13148,9 +13190,73 @@ mod tests {
                 children: Vec::new(),
             },
         );
-        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
-            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("cx") && t.contains("literal")),
+            r.xaml.contains("<TranslateTransform X=\"{x:Bind MoonX, Mode=OneWay}\" Y=\"17\"/>"),
+            "the bound centre must reach a bindable double:\n{}",
+            r.xaml
+        );
+        // The `- r` half is a literal offset, so the pair sums to
+        // (cx - 17, cy - 17) without arithmetic on the bound value.
+        assert!(
+            r.xaml.contains("Margin=\"-17,-17,0,0\""),
+            "the radius offset must stay a literal Thickness:\n{}",
+            r.xaml
+        );
+    }
+
+    /// A literal circle is byte-identical to before: no TranslateTransform,
+    /// and the margin still carries the computed corner.
+    #[test]
+    fn path_literal_circle_is_unchanged_by_the_bound_centre_path() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("moon-disc", "circle", &[("cx", 17.0), ("cy", 17.0), ("r", 5.0)]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("Margin=\"12,12,0,0\""), "got:\n{}", r.xaml);
+        assert!(
+            !r.xaml.contains("TranslateTransform"),
+            "a literal circle must not gain a transform:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn path_slot_bound_radius_is_a_clear_error_not_a_silent_drop() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Path".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "kind".to_string(),
+                        value: LayoutPropValue::Keyword("circle".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cx".to_string(),
+                        value: LayoutPropValue::Number(17.0),
+                    },
+                    LayoutProp {
+                        name: "cy".to_string(),
+                        value: LayoutPropValue::Number(17.0),
+                    },
+                    LayoutProp {
+                        name: "r".to_string(),
+                        value: LayoutPropValue::SlotRef("moon-r".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        // The radius drives Width/Height and the literal margin offset, so it
+        // genuinely cannot bind. Refusing loudly is still the right answer.
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains('r') && t.contains("literal")),
             "{err:?}"
         );
     }
