@@ -1,13 +1,14 @@
 # OAuth
 
 **Status:** Phase 2 provider-neutral broker boundary implemented —
-installed-app Authorization Code + PKCE, token/error codecs, refresh rotation,
-revocation request preparation, RFC 8414 metadata validation, and an audited
+installed-app Authorization Code + PKCE, RFC 8628 device-flow initiation,
+token/error codecs, refresh rotation, revocation request preparation, RFC 8414
+metadata validation, and an audited
 literal-loopback callback host plus storage-agnostic audit-before-disclosure
 credential custody now compose through data-driven provider registration,
 expiry policy, injected transport, and compare-and-swap refresh orchestration;
 the custody contract has a bounded zeroizing encrypted-store adapter over any
-`vault-sealed-store` backend; concrete transport, device flow, and provider
+`vault-sealed-store` backend; concrete transport, device polling, and provider
 data remain prioritized below.
 
 ## Overview
@@ -156,8 +157,15 @@ The delivery order is:
    confidential-only authentication capabilities even when public-client
    `none` is omitted, while public `ProviderConfig` derivation continues to
    require an explicit `none`. Public native clients remain `none` + PKCE.
-7. **Device Authorization Grant:** RFC 8628 preparation and a caller-driven
-   polling state machine with no internal sleep or network authority.
+7. **Device Authorization Grant:** metadata-bound RFC 8628 public-client
+   initiation is shipped: exact device endpoint, grant, and `none`
+   authentication capability checks; bounded zeroizing response ownership;
+   strict HTTPS verification URIs and bounded lifetime/interval values; and
+   audited device-code poll request preparation. The device code remains inside
+   an opaque provider/client/token-endpoint/trace-bound session and each
+   transient wire body is zeroizing. Poll response classification and the
+   caller-driven `authorization_pending` / `slow_down` state machine remain the
+   next slice; it will add no internal sleep, clock, or network authority.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.

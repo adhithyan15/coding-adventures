@@ -132,6 +132,7 @@ pub struct AuthorizationServerMetadata {
     issuer: String,
     authorization_endpoint: String,
     token_endpoint: String,
+    device_authorization_endpoint: Option<String>,
     revocation_endpoint: Option<String>,
     response_types_supported: Vec<String>,
     grant_types_supported: Vec<String>,
@@ -160,6 +161,11 @@ impl AuthorizationServerMetadata {
     /// Borrow the validated token endpoint.
     pub fn token_endpoint(&self) -> &str {
         &self.token_endpoint
+    }
+
+    /// Borrow the optional validated RFC 8628 device authorization endpoint.
+    pub fn device_authorization_endpoint(&self) -> Option<&str> {
+        self.device_authorization_endpoint.as_deref()
     }
 
     /// Borrow the optional validated RFC 7009 revocation endpoint.
@@ -264,6 +270,10 @@ impl Debug for AuthorizationServerMetadata {
             .field("issuer", &"<redacted>")
             .field("authorization_endpoint", &"<redacted>")
             .field("token_endpoint", &"<redacted>")
+            .field(
+                "has_device_authorization_endpoint",
+                &self.device_authorization_endpoint.is_some(),
+            )
             .field(
                 "has_revocation_endpoint",
                 &self.revocation_endpoint.is_some(),
@@ -452,11 +462,21 @@ fn parse_metadata_object(
         validate_https_endpoint(endpoint).map_err(|_| invalid(MetadataViolation::Endpoint))?;
     }
 
+    let device_authorization_endpoint = optional_string(
+        fields,
+        "device_authorization_endpoint",
+        super::MAX_ENDPOINT_BYTES,
+    )?;
+    if let Some(endpoint) = &device_authorization_endpoint {
+        validate_https_endpoint(endpoint).map_err(|_| invalid(MetadataViolation::Endpoint))?;
+    }
+
     Ok(AuthorizationServerMetadata {
         provider: context.provider.clone(),
         issuer,
         authorization_endpoint,
         token_endpoint,
+        device_authorization_endpoint,
         revocation_endpoint,
         response_types_supported,
         grant_types_supported,
@@ -1058,6 +1078,20 @@ mod tests {
                 invalid(MetadataViolation::Endpoint)
             );
         }
+
+        let unsafe_device_endpoint = String::from_utf8(valid_body(issuer))
+            .unwrap()
+            .replace(
+                r#""revocation_endpoint":"https://login.example/revoke","#,
+                r#""device_authorization_endpoint":"http://login.example/device","revocation_endpoint":"https://login.example/revoke","#,
+            )
+            .into_bytes();
+        assert_eq!(
+            decode(issuer, unsafe_device_endpoint)
+                .publish_then_release(&mut Sink::default())
+                .unwrap_err(),
+            invalid(MetadataViolation::Endpoint)
+        );
     }
 
     #[test]

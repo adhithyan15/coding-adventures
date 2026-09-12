@@ -8,7 +8,11 @@ The crate owns the security-sensitive, pure portion of installed-app OAuth:
   confidential authentication-capability retention, public-client `none`
   enforcement at configuration derivation, and explicit RFC 9207 or
   registry-owned distinct-redirect mix-up defense, including fail-closed JWT
-  client-authentication signing algorithms;
+  client-authentication signing algorithms and validated optional RFC 8628
+  device authorization endpoints;
+- metadata-bound RFC 8628 public-client initiation, bounded response decoding,
+  zeroizing device and user codes, and audited device-code poll preparation
+  with caller-owned timing;
 - 256-bit caller-injected state and PKCE entropy;
 - mandatory PKCE `S256` authorization requests;
 - deterministic RFC 3986 form encoding;
@@ -34,18 +38,18 @@ Authorization-server JSON is parsed by the sibling zero-dependency
 therefore entirely repository-owned; it does not reach `serde_json`, the
 third-party `regex` crate, or another registry library.
 
-The crate performs no network, browser, listener, clock, storage, or credential
-I/O. The sibling `coding_adventures_oauth_installed_app_host` package owns the
-separately audited literal-loopback and injected-browser boundary, while
+The crate performs no network, browser, listener, sleep, clock, storage, or
+credential I/O. The sibling `coding_adventures_oauth_installed_app_host`
+package owns the separately audited literal-loopback and injected-browser boundary, while
 `coding_adventures_oauth_credential_custody` owns audited secret lifecycle over
 an injected atomic store. Later broker and transport packages will inject the
 remaining authorities. Provider differences are data in `ProviderConfig`; the
 core contains no Google, Microsoft, GitHub, Dropbox, or other provider branch.
 
-This implements the pure authorization, token-lifecycle, and RFC 8414 metadata
-trust slices of `code/specs/oauth.md`. Broker orchestration, concrete encrypted
-credential storage, device authorization, DPoP, and production HTTPS transport
-remain separately testable backlog items.
+This implements the pure authorization, device-initiation, token-lifecycle, and
+RFC 8414 metadata trust slices of `code/specs/oauth.md`. Device polling response
+transitions, broker orchestration, DPoP, and production HTTPS transport remain
+separately testable backlog items.
 
 ## Verification
 

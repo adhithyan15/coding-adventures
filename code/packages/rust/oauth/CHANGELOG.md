@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added metadata-bound RFC 8628 public-client device authorization initiation:
+  exact device endpoint, grant, and `none` authentication capability checks;
+  audited zeroizing request and response ownership; strict bounded verification
+  URI, lifetime, and interval validation; and audited device-code poll request
+  preparation without acquiring sleep, clock, or network authority.
 - Generalized RFC 8414 decoding to retain exact confidential-client token
   authentication capabilities even when `none` is absent, while both public
   `ProviderConfig` derivation paths still fail closed unless `none` was
