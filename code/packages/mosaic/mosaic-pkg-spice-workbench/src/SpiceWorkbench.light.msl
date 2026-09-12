@@ -7,9 +7,19 @@ style SpiceWorkbench {
   part schematic { gap : 6 ; }
   part schematic-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
   part schematic-title { color : "#0f172a" ; font-weight : bold ; }
+  part schematic-palette { gap : 6 ; }
+  part schematic-palette-item { background : "#ecfeff" ; color : "#155e75" ; border-width : 1 ; border-color : "#67e8f9" ; border-radius : 3 ; padding : 6 ; }
+  part schematic-grid-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
+  part schematic-grid { width : 360 ; min-height : 240 ; background : "#ffffff" ; border-width : 1 ; border-color : "#cbd5e1" ; }
+  part schematic-grid-line { border-color : "#e2e8f0" ; border-width : 1 ; }
+  part schematic-wire-segment { border-color : "#0369a1" ; border-width : 2 ; }
+  part schematic-terminal { background : "#f59e0b" ; border-color : "#92400e" ; border-width : 1 ; }
   part schematic-components { gap : 6 ; }
   part schematic-component { background : "#ffffff" ; color : "#0f172a" ; border-width : 1 ; border-color : "#cbd5e1" ; border-radius : 3 ; padding : 6 ; }
   part selected-schematic { color : "#0369a1" ; font-weight : bold ; }
+  part route-schematic { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
+  part schematic-route-targets { gap : 6 ; }
+  part schematic-route-target { background : "#f0fdfa" ; color : "#115e59" ; border-width : 1 ; border-color : "#5eead4" ; border-radius : 3 ; padding : 6 ; }
   part synchronize-schematic { background : "#fef3c7" ; color : "#92400e" ; border-width : 1 ; border-color : "#fcd34d" ; border-radius : 4 ; padding : 8 ; }
   part netlist-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
   part diagnostics-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }

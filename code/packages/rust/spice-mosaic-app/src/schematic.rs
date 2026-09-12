@@ -28,6 +28,27 @@ pub enum SchematicComponentKind {
 }
 
 impl SchematicComponentKind {
+    /// Parse the stable palette labels exposed by the Mosaic workbench.
+    pub fn from_palette_label(label: &str) -> Result<Self, SchematicError> {
+        match label {
+            "Resistor" => Ok(Self::Resistor),
+            "Capacitor" => Ok(Self::Capacitor),
+            "DC source" => Ok(Self::DcVoltage),
+            "Ground" => Ok(Self::Ground),
+            _ => Err(invalid("unknown schematic palette component")),
+        }
+    }
+
+    /// Human-readable names are part of the host palette contract.
+    pub fn palette_label(self) -> &'static str {
+        match self {
+            Self::Resistor => "Resistor",
+            Self::Capacitor => "Capacitor",
+            Self::DcVoltage => "DC source",
+            Self::Ground => "Ground",
+        }
+    }
+
     fn reference_prefix(self) -> char {
         match self {
             Self::Resistor => 'R',
@@ -114,6 +135,123 @@ impl DisjointSet {
 }
 
 impl SchematicDocument {
+    /// Place one palette component on the next deterministic grid cell.
+    ///
+    /// Placement does not require a complete runnable circuit. The document is
+    /// still validated when it is synchronized into a canonical netlist.
+    pub fn place_palette_component(
+        &mut self,
+        kind: SchematicComponentKind,
+    ) -> Result<String, SchematicError> {
+        let prefix = kind.reference_prefix();
+        let next = self
+            .components
+            .iter()
+            .filter_map(|component| {
+                component
+                    .reference
+                    .strip_prefix(prefix)
+                    .and_then(|suffix| suffix.parse::<usize>().ok())
+            })
+            .max()
+            .unwrap_or(0)
+            + 1;
+        let reference = format!("{prefix}{next}");
+        let position = self.components.len() as i32;
+        let center = SchematicPoint {
+            x: 40 + (position % 4) * 80,
+            y: 40 + (position / 4) * 70,
+        };
+        let terminals = match kind {
+            SchematicComponentKind::Resistor | SchematicComponentKind::Capacitor => vec![
+                SchematicPoint {
+                    x: center.x - 20,
+                    y: center.y,
+                },
+                SchematicPoint {
+                    x: center.x + 20,
+                    y: center.y,
+                },
+            ],
+            SchematicComponentKind::DcVoltage => vec![
+                SchematicPoint {
+                    x: center.x,
+                    y: center.y - 20,
+                },
+                SchematicPoint {
+                    x: center.x,
+                    y: center.y + 20,
+                },
+            ],
+            SchematicComponentKind::Ground => vec![center],
+        };
+        let value = match kind {
+            SchematicComponentKind::Resistor => "1k",
+            SchematicComponentKind::Capacitor => "1u",
+            SchematicComponentKind::DcVoltage => "5",
+            SchematicComponentKind::Ground => "",
+        }
+        .to_owned();
+        self.components.push(SchematicComponent {
+            reference: reference.clone(),
+            kind,
+            value,
+            terminals,
+        });
+        Ok(reference)
+    }
+
+    /// Connect the nearest terminals of two selected components.
+    ///
+    /// The wire remains a semantic endpoint connection. Renderers derive an
+    /// orthogonal route from those endpoints, so the canonical deck remains
+    /// independent of presentation geometry.
+    pub fn route_components(
+        &mut self,
+        start_reference: &str,
+        end_reference: &str,
+    ) -> Result<SchematicWire, SchematicError> {
+        if start_reference == end_reference {
+            return Err(invalid("schematic route requires two different components"));
+        }
+        let start = self
+            .components
+            .iter()
+            .find(|component| component.reference == start_reference)
+            .ok_or_else(|| invalid("schematic route start reference is unknown"))?;
+        let end = self
+            .components
+            .iter()
+            .find(|component| component.reference == end_reference)
+            .ok_or_else(|| invalid("schematic route target reference is unknown"))?;
+        let wire = start
+            .terminals
+            .iter()
+            .flat_map(|left| {
+                end.terminals.iter().map(move |right| SchematicWire {
+                    start: *left,
+                    end: *right,
+                })
+            })
+            .filter(|wire| wire.start != wire.end)
+            .min_by_key(|wire| {
+                (
+                    (wire.start.x - wire.end.x).abs() + (wire.start.y - wire.end.y).abs(),
+                    wire.start,
+                    wire.end,
+                )
+            })
+            .ok_or_else(|| invalid("selected components already share a terminal"))?;
+        if self.wires.iter().any(|existing| {
+            (existing.start == wire.start && existing.end == wire.end)
+                || (existing.start == wire.end && existing.end == wire.start)
+        }) {
+            return Err(invalid("selected component terminals are already routed"));
+        }
+        self.wires.push(wire);
+        Ok(wire)
+    }
+
     /// Reject incomplete capture state before it can produce an ambiguous deck.
     pub fn validate(&self) -> Result<(), SchematicError> {
         if self.title.trim().is_empty() || self.title.contains(['\n', '\r']) {
@@ -335,6 +473,34 @@ mod tests {
         reordered.components.reverse();
         reordered.wires.reverse();
         assert_eq!(reordered.to_berkeley_netlist().unwrap(), expected);
+    }
+
+    #[test]
+    fn palette_placement_and_component_routing_are_deterministic() {
+        let mut document = SchematicDocument {
+            title: "Palette routing".to_owned(),
+            components: Vec::new(),
+            wires: Vec::new(),
+        };
+        assert_eq!(
+            document
+                .place_palette_component(SchematicComponentKind::Resistor)
+                .unwrap(),
+            "R1"
+        );
+        assert_eq!(
+            document
+                .place_palette_component(SchematicComponentKind::Capacitor)
+                .unwrap(),
+            "C1"
+        );
+        let wire = document.route_components("R1", "C1").unwrap();
+        assert_eq!(wire.start, point(60, 40));
+        assert_eq!(wire.end, point(100, 40));
+        assert_eq!(
+            document.route_components("R1", "C1").unwrap_err().to_string(),
+            "selected component terminals are already routed"
+        );
     }
 
     #[test]
