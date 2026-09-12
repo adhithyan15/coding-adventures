@@ -363,8 +363,9 @@ with authored labels, local column counts, and parent-grid spans, and directed
 and undirected connections with native quoted or pipe-delimited optional
 labels. `diagram-layout-grid` resolves deterministic
 cell geometry before the shared backend-neutral PaintScene lowering path. A
-native Metal-to-PNG fixture gates this slice; composite-specific styles remain
-explicitly unsupported at the partial level.
+native Metal-to-PNG fixture gates this slice. Named classes and direct styles
+resolve for both cells and composites; Block remains at the partial level while
+the pinned corpus is not yet complete.
 
 ### Packet Native Slice
 

@@ -180,7 +180,7 @@ fn layout_grid_entries(
                     positions.insert(group.id.clone(), (Point { x: entry_x + entry_width / 2.0, y: row_y + height / 2.0 }, entry_width, height));
                     groups.push(LayoutedGraphGroup { id: group.id.clone(), label: group.label.clone(), parent_id: group.parent_id.clone(),
                         x: entry_x, y: row_y, width: entry_width, height, divider_y: Vec::new(), direction: None,
-                        style: resolve_style(Some(&group_style())) });
+                        style: resolve_style_with_base(group.style.as_ref(), resolve_style(Some(&group_style()))) });
                     let child_entries = grid_entries(diagram, Some(&group.id));
                     let child_columns = match group.columns {
                         GridColumns::Auto => child_entries.iter().map(|entry| entry_span(*entry)).sum::<usize>().max(1),
@@ -441,13 +441,17 @@ mod tests {
                 column_span: 1, parent_id: Some("nested".into()), order: 0, visible: true, style: None }],
             groups: vec![
                 GridGroup { id: "pipeline".into(), label: DiagramLabel::new("pipeline"), parent_id: None,
-                    columns: GridColumns::Fixed(1), column_span: 2, order: 0 },
+                    columns: GridColumns::Fixed(1), column_span: 2, order: 0, style: Some(DiagramStyle {
+                        fill: Some("#fef3c7".into()), stroke_width: Some(4.0), ..DiagramStyle::default()
+                    }) },
                 GridGroup { id: "nested".into(), label: DiagramLabel::new(""), parent_id: Some("pipeline".into()),
-                    columns: GridColumns::Fixed(1), column_span: 1, order: 0 },
+                    columns: GridColumns::Fixed(1), column_span: 1, order: 0, style: None },
             ], connections: Vec::new(),
         };
         let layout = layout_grid_diagram(&diagram);
         assert_eq!(layout.groups.len(), 2);
+        assert_eq!(layout.groups[0].style.fill, "#fef3c7");
+        assert_eq!(layout.groups[0].style.stroke_width, 4.0);
         assert!(layout.groups[1].x > layout.groups[0].x);
         assert!(layout.groups[1].y > layout.groups[0].y);
         assert!(layout.nodes[0].x > layout.groups[1].x);
