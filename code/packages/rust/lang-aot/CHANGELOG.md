@@ -71,7 +71,7 @@ before fixing it, and updated `LANG-VM-FEATURE-COVERAGE.md`'s COBOL-60 row
 and grand-total prose (1563 → 1567 declared cells) to match. The full
 `non_algol_matrix_every_proven_cell_agrees` capstone confirmed the corrected
 total against a live run: 210 programs, 1357 cells exercised (was 1353), 210
-skipped, zero failures.
+skipped, zero failures, 478.98s.
 
 ## 0.325.0 — 2026-09-12 — ALGOL final-iteration body snapshots
 
