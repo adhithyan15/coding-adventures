@@ -29,6 +29,7 @@ pub enum TokenResponseFormat {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum TokenGrantKind {
     AuthorizationCode,
+    DeviceCode,
     RefreshToken,
 }
 
@@ -49,6 +50,14 @@ impl TokenResponseContext {
     /// Return the correlation identity inherited from the request.
     pub const fn trace(&self) -> OAuthTraceId {
         self.trace
+    }
+
+    pub(crate) fn device_code(provider: ProviderId, trace: OAuthTraceId) -> Self {
+        Self {
+            provider,
+            trace,
+            grant: TokenGrantKind::DeviceCode,
+        }
     }
 }
 
@@ -307,6 +316,14 @@ pub enum ProviderTokenError {
     TemporarilyUnavailable,
     /// `server_error`.
     ServerError,
+    /// RFC 8628 `authorization_pending`.
+    AuthorizationPending,
+    /// RFC 8628 `slow_down`.
+    SlowDown,
+    /// RFC 8628 `access_denied`.
+    AccessDenied,
+    /// RFC 8628 `expired_token`.
+    ExpiredToken,
     /// A valid bounded extension error code.
     Other,
 }
@@ -463,7 +480,7 @@ pub fn decode_token_response(
     )
 }
 
-fn decode_token_response_inner(
+pub(crate) fn decode_token_response_inner(
     context: &TokenResponseContext,
     status: u16,
     format: TokenResponseFormat,
@@ -703,6 +720,10 @@ fn classify_error(value: &str) -> Result<ProviderTokenError, OAuthError> {
         "invalid_scope" => ProviderTokenError::InvalidScope,
         "temporarily_unavailable" => ProviderTokenError::TemporarilyUnavailable,
         "server_error" => ProviderTokenError::ServerError,
+        "authorization_pending" => ProviderTokenError::AuthorizationPending,
+        "slow_down" => ProviderTokenError::SlowDown,
+        "access_denied" => ProviderTokenError::AccessDenied,
+        "expired_token" => ProviderTokenError::ExpiredToken,
         _ => ProviderTokenError::Other,
     })
 }

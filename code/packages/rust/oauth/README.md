@@ -11,8 +11,9 @@ The crate owns the security-sensitive, pure portion of installed-app OAuth:
   client-authentication signing algorithms and validated optional RFC 8628
   device authorization endpoints;
 - metadata-bound RFC 8628 public-client initiation, bounded response decoding,
-  zeroizing device and user codes, and audited device-code poll preparation
-  with caller-owned timing;
+  zeroizing device and user codes, audited one-use device-code poll contexts,
+  and exact `authorization_pending`, `slow_down`, authorization, denial, and
+  expiry classification with caller-owned timing;
 - 256-bit caller-injected state and PKCE entropy;
 - mandatory PKCE `S256` authorization requests;
 - deterministic RFC 3986 form encoding;
@@ -46,10 +47,10 @@ an injected atomic store. Later broker and transport packages will inject the
 remaining authorities. Provider differences are data in `ProviderConfig`; the
 core contains no Google, Microsoft, GitHub, Dropbox, or other provider branch.
 
-This implements the pure authorization, device-initiation, token-lifecycle, and
-RFC 8414 metadata trust slices of `code/specs/oauth.md`. Device polling response
-transitions, broker orchestration, DPoP, and production HTTPS transport remain
-separately testable backlog items.
+This implements the pure authorization, device-flow, token-lifecycle, and RFC
+8414 metadata trust slices of `code/specs/oauth.md`. Device-flow clock/sleep and
+broker orchestration, DPoP, and production HTTPS transport remain separately
+testable backlog items.
 
 ## Verification
 
