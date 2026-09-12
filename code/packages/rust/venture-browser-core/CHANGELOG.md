@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Route image-submit pointer coordinates, keyboard `(0, 0)` activation,
+  accessibility activation, and live `dirname` directionality through the
+  shared submission planner.
+
 - Route path-free host file selections through retained control reflow and
   multipart requests without exposing host paths to layout or paint.
 

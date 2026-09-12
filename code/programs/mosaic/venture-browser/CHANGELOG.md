@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Add document-ordered image-submit coordinates, live Unicode `dirname`
+  direction fields, and common pointer, keyboard, and accessibility activation
+  through the shared form planner.
+
 - Add path-free file picker requests/results, reusable file-list state,
   accept/multiple filtering, reset semantics, and deterministic bounded
   multipart/form-data requests through the shared control pipeline.

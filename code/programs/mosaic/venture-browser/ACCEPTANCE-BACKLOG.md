@@ -236,10 +236,20 @@ cross-platform proving application. Items are ordered by risk and dependency.
   bounded retained file bytes, reusable accessibility projection,
   deterministic collision-safe multipart boundaries, reset semantics,
   payload diagnostics, and a shared cross-host fixture.
-- [ ] **P1 browser convergence — image submit coordinates and dirname.** Add
+- [x] **P1 browser convergence — image submit coordinates and dirname.** Add
   successful-control expansion for image-button coordinates and `dirname`
   directionality fields, preserving document order and the shared submission
-  planner before broadening form-associated custom element support.
+  planner before broadening form-associated custom element support. Completed
+  with bounded control-local pointer coordinates, keyboard/accessibility
+  `(0, 0)` activation, Unicode-aware live `dir=auto`, inherited direction,
+  adjacent successful entries, and retained-session acceptance shared by all
+  host event seams.
+- [ ] **P1 browser convergence — form-associated custom elements.** Add a
+  host-neutral element-internals contract for form ownership, submitted values
+  and state, validity anchors/messages, disabled propagation, reset/restore
+  callbacks, labels, and accessibility projection. Preserve document-order
+  successful-control collection and keep custom-element lifecycle policy out
+  of generated host toolkits.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

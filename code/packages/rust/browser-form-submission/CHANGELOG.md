@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expand active image submitters into normalized pointer or keyboard
+  coordinates and append live `dirname` direction fields in document order.
+
 - Add ordered file entries and deterministic bounded multipart/form-data
   planning with sanitized filenames, media types, and collision-safe
   boundaries.

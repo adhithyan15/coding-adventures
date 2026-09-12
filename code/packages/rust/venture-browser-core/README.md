@@ -64,6 +64,10 @@ File controls follow the same boundary: activation yields a path-free picker
 request, selected metadata and bounded bytes return through the shared model,
 retained reflow sees only sanitized names, and multipart navigation is planned
 before the common transport receives a request.
+Image submitters pass control-local pointer coordinates into that planner;
+keyboard and accessibility activation use deterministic zero coordinates.
+The session also preserves live Unicode `dirname` direction fields beside
+their owning successful controls without exposing this policy to hosts.
 
 `NavigationHistory` is re-exported from the reusable `browser-navigation`
 package and implements the BR01 in-memory navigation model: navigate, Back,

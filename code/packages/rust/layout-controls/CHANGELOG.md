@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Classify image submit inputs as button controls so all hosts share ordinary
+  focus, paint, and activation behavior.
+
 - Distinguish file controls in backend-neutral Layout IR while keeping host
   file identities and payload bytes outside layout and paint state.
 

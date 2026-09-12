@@ -62,6 +62,11 @@ and bounded bytes. The reducer owns accept/multiple filtering and reset state;
 `ControlFileState` exposes a payload-free file list and accessible value text.
 Per-file and aggregate retained-byte limits are enforced before state changes.
 
+Text/search/textarea `dirname` metadata stays in the control binding. The
+shared model resolves explicit and inherited direction, and recomputes
+`dir=auto` from the live value with the Unicode bidi analyzer. Accessibility
+activation also enters the same semantic path as pointer and keyboard input.
+
 Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI55-form-editing`](../../../specs/UI55-form-editing.md), and
 [`UI56-editor-presentation`](../../../specs/UI56-editor-presentation.md), and
@@ -69,4 +74,5 @@ Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI63-typed-input-value-semantics`](../../../specs/UI63-typed-input-value-semantics.md),
 [`UI64-choice-range-controls`](../../../specs/UI64-choice-range-controls.md), and
 [`UI65-temporal-color-controls`](../../../specs/UI65-temporal-color-controls.md), and
-[`UI66-file-values-multipart`](../../../specs/UI66-file-values-multipart.md).
+[`UI66-file-values-multipart`](../../../specs/UI66-file-values-multipart.md), and
+[`UI67-image-submit-dirname`](../../../specs/UI67-image-submit-dirname.md).

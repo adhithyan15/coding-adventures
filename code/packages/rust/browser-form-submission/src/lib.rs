@@ -30,6 +30,24 @@ pub struct FormFileEntry {
     pub file: HostFileSelection,
 }
 
+/// Image-submit coordinates normalized from a shared control-local point.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct ImageSubmitCoordinates {
+    pub x: u32,
+    pub y: u32,
+}
+
+impl ImageSubmitCoordinates {
+    pub const KEYBOARD: Self = Self { x: 0, y: 0 };
+
+    pub fn from_local_point(x: f64, y: f64) -> Self {
+        Self {
+            x: normalize_coordinate(x),
+            y: normalize_coordinate(y),
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct FormNavigation {
     pub method: FormMethod,
@@ -99,6 +117,22 @@ pub fn plan_activation(
     activated_key: &str,
     document_url: &str,
 ) -> Result<FormActivation, FormPlanningError> {
+    plan_activation_with_image_coordinates(
+        document,
+        controls,
+        activated_key,
+        document_url,
+        ImageSubmitCoordinates::KEYBOARD,
+    )
+}
+
+pub fn plan_activation_with_image_coordinates(
+    document: &BrowserDocument,
+    controls: &BrowserControlModel,
+    activated_key: &str,
+    document_url: &str,
+    image_coordinates: ImageSubmitCoordinates,
+) -> Result<FormActivation, FormPlanningError> {
     let binding = controls
         .binding(activated_key)
         .ok_or_else(|| FormPlanningError::UnknownControl(activated_key.to_string()))?;
@@ -116,6 +150,7 @@ pub fn plan_activation(
             form,
             Some(binding),
             document_url,
+            image_coordinates,
         ),
         _ => Ok(FormActivation::None),
     }
@@ -146,6 +181,7 @@ pub fn plan_implicit_submission(
         form,
         submitter,
         document_url,
+        ImageSubmitCoordinates::KEYBOARD,
     )
 }
 
@@ -156,6 +192,7 @@ fn plan_submission(
     form: &BrowserForm,
     submitter: Option<&ControlBinding>,
     document_url: &str,
+    image_coordinates: ImageSubmitCoordinates,
 ) -> Result<FormActivation, FormPlanningError> {
     let skip_validation =
         form.novalidate || submitter.is_some_and(|binding| binding.form_novalidate);
@@ -189,7 +226,8 @@ fn plan_submission(
         return Err(FormPlanningError::UnsupportedEncoding(encoding));
     }
 
-    let data = collect_successful_controls(controls, form, form_index, submitter)?;
+    let data =
+        collect_successful_controls(controls, form, form_index, submitter, image_coordinates)?;
     let entries = data
         .iter()
         .map(|datum| match datum {
@@ -371,6 +409,7 @@ fn collect_successful_controls(
     form: &BrowserForm,
     form_index: usize,
     submitter: Option<&ControlBinding>,
+    image_coordinates: ImageSubmitCoordinates,
 ) -> Result<Vec<FormDatum>, FormPlanningError> {
     let mut data = Vec::new();
     let mut used = vec![false; model.controls().len()];
@@ -379,7 +418,14 @@ fn collect_successful_controls(
         if let Some((index, _, _)) = dynamic {
             used[index] = true;
         }
-        append_control_entries(&mut data, model, source, dynamic, submitter);
+        append_control_entries(
+            &mut data,
+            model,
+            source,
+            dynamic,
+            submitter,
+            image_coordinates,
+        );
         if data.len() > MAX_FORM_ENTRIES {
             return Err(FormPlanningError::TooManyEntries {
                 limit: MAX_FORM_ENTRIES,
@@ -431,13 +477,11 @@ fn append_control_entries(
     source: &BrowserFormControl,
     dynamic: Option<(usize, &ControlState, &ControlBinding)>,
     submitter: Option<&ControlBinding>,
+    image_coordinates: ImageSubmitCoordinates,
 ) {
     if source.disabled {
         return;
     }
-    let Some(name) = source.name.as_ref().filter(|name| !name.is_empty()) else {
-        return;
-    };
     let active_submitter = dynamic
         .as_ref()
         .and_then(|(_, _, binding)| submitter.map(|submitter| binding.key == submitter.key))
@@ -455,6 +499,27 @@ fn append_control_entries(
         }
         _ => {}
     }
+    if source.control_type == "image" {
+        let prefix = source
+            .name
+            .as_deref()
+            .filter(|name| !name.is_empty())
+            .map(|name| format!("{name}."))
+            .unwrap_or_default();
+        data.push(FormDatum::Text(FormEntry {
+            name: format!("{prefix}x"),
+            value: image_coordinates.x.to_string(),
+        }));
+        data.push(FormDatum::Text(FormEntry {
+            name: format!("{prefix}y"),
+            value: image_coordinates.y.to_string(),
+        }));
+        return;
+    }
+    let Some(name) = source.name.as_ref().filter(|name| !name.is_empty()) else {
+        append_dirname_entry(data, model, source, dynamic);
+        return;
+    };
     if source.control_type == "file" {
         if let Some((_, _, binding)) = dynamic {
             if let Some(files) = model.selected_files(&binding.key) {
@@ -517,6 +582,43 @@ fn append_control_entries(
             value,
         })
     }));
+    append_dirname_entry(data, model, source, dynamic);
+}
+
+fn append_dirname_entry(
+    data: &mut Vec<FormDatum>,
+    model: &BrowserControlModel,
+    source: &BrowserFormControl,
+    dynamic: Option<(usize, &ControlState, &ControlBinding)>,
+) {
+    if !matches!(source.control_type.as_str(), "text" | "search" | "textarea") {
+        return;
+    }
+    let dirname = dynamic
+        .as_ref()
+        .and_then(|(_, _, binding)| binding.dirname.as_deref())
+        .or(source.dirname.as_deref())
+        .filter(|dirname| !dirname.is_empty());
+    let Some(dirname) = dirname else {
+        return;
+    };
+    let direction = dynamic
+        .and_then(|(_, _, binding)| model.directionality(&binding.key))
+        .unwrap_or_default();
+    data.push(FormDatum::Text(FormEntry {
+        name: dirname.to_string(),
+        value: direction.as_str().to_string(),
+    }));
+}
+
+fn normalize_coordinate(value: f64) -> u32 {
+    if !value.is_finite() || value <= 0.0 {
+        0
+    } else if value >= u32::MAX as f64 {
+        u32::MAX
+    } else {
+        value.floor() as u32
+    }
 }
 
 fn associated_form<'a>(
@@ -975,6 +1077,121 @@ mod tests {
             Err(FormPlanningError::PayloadTooLarge {
                 limit: MAX_MULTIPART_BYTES,
             })
+        );
+    }
+
+    #[test]
+    fn image_submit_coordinates_expand_in_document_order() {
+        let url = "http://example.test/form";
+        let (model, document) = model_and_document(
+            "<form action='/map'><input name='before' value='a'>\
+             <input id='pin' type='image' name='pin' alt='Choose'>\
+             <input name='after' value='b'></form>",
+            url,
+        );
+        let FormActivation::Navigate(request) = plan_activation_with_image_coordinates(
+            &document,
+            &model,
+            "control:1:id:pin",
+            url,
+            ImageSubmitCoordinates::from_local_point(12.9, 7.2),
+        )
+        .unwrap() else {
+            panic!("expected image submission");
+        };
+        assert_eq!(
+            request.entries,
+            vec![
+                FormEntry {
+                    name: "before".into(),
+                    value: "a".into()
+                },
+                FormEntry {
+                    name: "pin.x".into(),
+                    value: "12".into()
+                },
+                FormEntry {
+                    name: "pin.y".into(),
+                    value: "7".into()
+                },
+                FormEntry {
+                    name: "after".into(),
+                    value: "b".into()
+                },
+            ]
+        );
+        assert_eq!(
+            request.url,
+            "http://example.test/map?before=a&pin.x=12&pin.y=7&after=b"
+        );
+    }
+
+    #[test]
+    fn keyboard_image_submit_and_dirname_are_deterministic() {
+        let url = "http://example.test/form";
+        let (mut model, document) = model_and_document(
+            "<form action='/search' dir='rtl'>\
+             <input id='query' name='q' dirname='q.dir' dir='auto' value='שלום'>\
+             <textarea id='notes' dirname='notes.dir' dir='ltr'>neutral 123</textarea>\
+             <input id='go' type='image' alt='Search'></form>",
+            url,
+        );
+        assert_eq!(
+            model.directionality("control:0:id:query").unwrap().as_str(),
+            "rtl"
+        );
+        model.focus("control:0:id:query");
+        model.accessibility_action(browser_form_controls::ControlAccessibilityAction::SetValue(
+            "123 -".into(),
+        ));
+        assert_eq!(
+            model.directionality("control:0:id:query").unwrap().as_str(),
+            "rtl"
+        );
+        model.accessibility_action(browser_form_controls::ControlAccessibilityAction::SetValue(
+            "Venture".into(),
+        ));
+        let FormActivation::Navigate(request) =
+            plan_activation(&document, &model, "control:2:id:go", url).unwrap()
+        else {
+            panic!("expected keyboard image submission");
+        };
+        assert_eq!(
+            request.entries,
+            vec![
+                FormEntry {
+                    name: "q".into(),
+                    value: "Venture".into()
+                },
+                FormEntry {
+                    name: "q.dir".into(),
+                    value: "ltr".into()
+                },
+                FormEntry {
+                    name: "notes.dir".into(),
+                    value: "ltr".into()
+                },
+                FormEntry {
+                    name: "x".into(),
+                    value: "0".into()
+                },
+                FormEntry {
+                    name: "y".into(),
+                    value: "0".into()
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn image_coordinate_normalization_is_bounded() {
+        assert_eq!(
+            ImageSubmitCoordinates::from_local_point(-2.0, f64::NAN),
+            ImageSubmitCoordinates::KEYBOARD
+        );
+        assert_eq!(
+            ImageSubmitCoordinates::from_local_point(f64::INFINITY, u32::MAX as f64 + 10.0),
+            ImageSubmitCoordinates { x: 0, y: u32::MAX }
         );
     }
 }

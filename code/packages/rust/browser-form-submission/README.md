@@ -21,9 +21,15 @@ For multipart POST, ordered file parts consume path-free retained selections,
 use sanitized disposition parameters and normalized media types, and enforce a
 complete-body byte bound. Boundaries are deterministic and retried if they
 occur in any submitted value or file payload.
+Image submitters expand at their document position into bounded integer `x`
+and `y` entries: pointer activation uses control-local coordinates while
+keyboard and accessibility activation use `(0, 0)`. Text/search/textarea
+`dirname` entries immediately follow their owning control and use the shared
+live Unicode directionality result.
 
 Specs: [`UI54-form-submission`](../../../specs/UI54-form-submission.md) and
 [`UI63-typed-input-value-semantics`](../../../specs/UI63-typed-input-value-semantics.md),
 [`UI64-choice-range-controls`](../../../specs/UI64-choice-range-controls.md), and
 [`UI65-temporal-color-controls`](../../../specs/UI65-temporal-color-controls.md), and
-[`UI66-file-values-multipart`](../../../specs/UI66-file-values-multipart.md).
+[`UI66-file-values-multipart`](../../../specs/UI66-file-values-multipart.md), and
+[`UI67-image-submit-dirname`](../../../specs/UI67-image-submit-dirname.md).

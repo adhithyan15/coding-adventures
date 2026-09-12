@@ -107,6 +107,10 @@ recreating the surrounding chrome in backend-specific UI code.
   and bounded bytes to the shared reducer; layout and paint receive only
   sanitized display names, while submission builds deterministic bounded
   multipart/form-data bodies and reset clears the retained file list.
+- Image submit buttons serialize bounded control-local pointer coordinates;
+  keyboard and accessibility activation serialize `(0, 0)`. Live
+  text/search/textarea `dirname` fields use shared inherited or Unicode
+  `dir=auto` directionality and remain adjacent in document order.
 - Native SwiftUI and WinUI surface-size changes use matching Rust resize ABIs.
   The shared session recomposes its retained render tree for the new logical
   viewport, preserves and clamps scroll state, updates hit regions, and
