@@ -181,8 +181,12 @@ The delivery order is:
    request preparation or transport, performs at most one poll per call,
    reschedules from the actual attempt time, and retains cumulative
    `slow_down`. The caller still supplies monotonic observations and owns
-   waiting and UI; these boundaries add no sleep, clock, storage, or concrete
-   network authority.
+   waiting and UI. A caller-selected exact opaque account key can now compose
+   an authorized poll directly into the existing audited credential-custody
+   boundary; only the opaque storage revision is released, while continuation
+   outcomes access neither the injected wall clock nor credential storage.
+   Account identity and key selection remain caller-owned. These boundaries
+   add no sleep or concrete network authority.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.
@@ -720,8 +724,10 @@ avoid refresh storms).
        - "error": "access_denied" → return Denied
        - tokens present → return Authorized
 8. Pending, SlowDown, and transient transport failure return an opaque sequence
-   with an absolute next-poll value. On Authorized, the caller stores tokens
-   identically to auth-code through the existing audited credential boundary.
+   with an absolute next-poll value. On Authorized, a caller-selected exact
+   opaque account key can route the response through the existing audited
+   credential boundary without releasing token bytes; only its storage
+   revision returns.
 ```
 
 ### Refresh Detail
