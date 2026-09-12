@@ -29,6 +29,11 @@ validated provider data can bind an exact provider-matched opaque secret key
 into the existing client-secret adapter without letting the caller choose or
 default the wire method. Public profiles, `private_key_jwt` profiles, and keys
 for another provider fail before any credential access.
+For retained `private_key_jwt` profiles, the broker similarly binds its exact
+client ID, token-endpoint audience, advertised algorithm set, and a
+provider-matched opaque private-key reference into the existing assertion
+profile. The selected algorithm must appear exactly in provider data; this
+pure construction invokes no signer and enables no concrete algorithm.
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
@@ -65,8 +70,7 @@ dependency are sibling packages in this repository.
 - concrete encrypted-vault credential storage;
 - account identity proof and key selection, listing, detach/revocation, device
   authorization UI, timing/sleep authority, and full device-flow loops;
-- confidential-client secret/key access, private-key profile binding, OIDC
-  validation, and DPoP.
+- confidential-client secret/key access or signing, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
 

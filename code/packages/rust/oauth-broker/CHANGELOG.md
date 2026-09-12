@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added exact retained `private_key_jwt` profile binding into the existing
+  opaque-key assertion adapter, including provider, client ID, token-endpoint
+  audience, and advertised algorithm checks without invoking a signer or
+  enabling any concrete algorithm.
 - Added exact retained-profile binding for `client_secret_basic` and
   `client_secret_post` into the existing opaque client-secret adapter, with
   provider mismatch and public/private-key profiles rejected before custody

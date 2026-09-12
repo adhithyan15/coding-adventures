@@ -218,10 +218,14 @@ The delivery order is:
    selection directly to an exact provider-matched opaque secret key and the
    existing custody adapter. Public and `private_key_jwt` profiles fail closed,
    and no caller-selected or default secret method reaches credential access.
-   Private-key profile binding remains a separate follow-up. The broker
-   rejects redirect reuse when either registration relies on distinct-redirect
-   mix-up defense while allowing shared redirects only when both providers
-   validate RFC 9207 response issuers.
+   A retained `private_key_jwt` selection can likewise bind the exact provider,
+   client ID, token-endpoint audience, advertised algorithm set, and an opaque
+   provider-matched key into the existing assertion profile. Public and
+   client-secret profiles plus unadvertised algorithms fail closed before any
+   signer access; constructing this profile enables no concrete algorithm. The
+   broker rejects redirect reuse when either registration relies on
+   distinct-redirect mix-up defense while allowing shared redirects only when
+   both providers validate RFC 9207 response issuers.
    Verified Google, Microsoft, GitHub, Dropbox, Slack, and Spotify snapshots
    remain to be added through this same suite; provider quirks remain data and
    none creates a new OAuth implementation.

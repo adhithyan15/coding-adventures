@@ -244,6 +244,11 @@ impl ProviderConfig {
         &self.client_id
     }
 
+    /// Return the validated token endpoint for authentication composition.
+    pub fn token_endpoint(&self) -> &str {
+        &self.token_endpoint
+    }
+
     /// Return the exact redirect URI bound to this provider registration.
     pub fn redirect_uri(&self) -> &str {
         &self.redirect_uri
