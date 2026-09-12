@@ -1,12 +1,12 @@
-"""Haskell Parser â€” parses Haskell source code into ASTs using the grammar-driven approach.
+"""Haskell Parser — parses Haskell source code into ASTs using the grammar-driven approach.
 
 This module is a thin wrapper around the generic ``GrammarParser``. It
 demonstrates the same core idea as the Haskell lexer: the *same* parser
-engine that handles Python or HaskellScript can handle Haskell â€” just swap the
+engine that handles Python or HaskellScript can handle Haskell — just swap the
 ``.grammar`` file.
 
 Haskell's grammar includes constructs that Python and HaskellScript do not have
-in the same form â€” like explicit type declarations (``int x = 1;``),
+in the same form — like explicit type declarations (``int x = 1;``),
 access modifiers (``public``, ``private``), and checked exceptions
 (``throws IOException``). The grammar-driven approach handles all of these
 through grammar rules rather than hard-coded parser logic.
@@ -22,16 +22,16 @@ Version Support
 This module supports key Haskell versions tracked by the repo. Pass the
 ``version`` argument to select a specific version's grammar:
 
-- ``"1.0"``  â€” Haskell 1.0 (January 1996)
-- ``"1.1"``  â€” Haskell 1.1 (February 1997)
-- ``"1.4"``  â€” Haskell 1.4 (February 2002)
-- ``"5"``    â€” Haskell 5 (September 2004)
-- ``"7"``    â€” Haskell 7 (July 2011)
-- ``"8"``    â€” Haskell 8 (March 2014)
-- ``"10"``   â€” Haskell 10 (March 2018)
-- ``"14"``   â€” Haskell 14 (March 2020)
-- ``"17"``   â€” Haskell 17 (September 2021)
-- ``"21"``   â€” Haskell 21 (September 2023)
+- ``"1.0"``  — Haskell 1.0 (January 1996)
+- ``"1.1"``  — Haskell 1.1 (February 1997)
+- ``"1.4"``  — Haskell 1.4 (February 2002)
+- ``"5"``    — Haskell 5 (September 2004)
+- ``"7"``    — Haskell 7 (July 2011)
+- ``"8"``    — Haskell 8 (March 2014)
+- ``"10"``   — Haskell 10 (March 2018)
+- ``"14"``   — Haskell 14 (March 2020)
+- ``"17"``   — Haskell 17 (September 2021)
+- ``"21"``   — Haskell 21 (September 2023)
 
 When no ``version`` is given, the default Haskell 21 grammar is used
 (the latest version).
@@ -42,24 +42,24 @@ Locating the Grammar Files
 Grammar files live in ``code/grammars/haskell/`` at the repository root::
 
     parser.py
-    â””â”€â”€ haskell_parser/      (parent)
-        â””â”€â”€ src/          (parent)
-            â””â”€â”€ haskell-parser/  (parent)
-                â””â”€â”€ python/       (parent)
-                    â””â”€â”€ packages/ (parent)
-                        â””â”€â”€ code/     (parent)
-                            â””â”€â”€ grammars/
-                                â””â”€â”€ haskell/
-                                    â”œâ”€â”€ haskell1.0.grammar
-                                    â”œâ”€â”€ haskell1.1.grammar
-                                    â”œâ”€â”€ haskell1.4.grammar
-                                    â”œâ”€â”€ haskell5.grammar
-                                    â”œâ”€â”€ haskell7.grammar
-                                    â”œâ”€â”€ haskell8.grammar
-                                    â”œâ”€â”€ haskell10.grammar
-                                    â”œâ”€â”€ haskell14.grammar
-                                    â”œâ”€â”€ haskell17.grammar
-                                    â””â”€â”€ haskell21.grammar   â† default
+    â””── haskell_parser/      (parent)
+        â””── src/          (parent)
+            â””── haskell-parser/  (parent)
+                â””── python/       (parent)
+                    â””── packages/ (parent)
+                        â””── code/     (parent)
+                            â””── grammars/
+                                â””── haskell/
+                                    â”œ── haskell1.0.grammar
+                                    â”œ── haskell1.1.grammar
+                                    â”œ── haskell1.4.grammar
+                                    â”œ── haskell5.grammar
+                                    â”œ── haskell7.grammar
+                                    â”œ── haskell8.grammar
+                                    â”œ── haskell10.grammar
+                                    â”œ── haskell14.grammar
+                                    â”œ── haskell17.grammar
+                                    â””── haskell21.grammar   â† default
 """
 
 from __future__ import annotations
@@ -82,7 +82,7 @@ def _resolve_grammar_path(version: str | None) -> Path:
     """Return the Path to the correct .grammar file for the requested version.
 
     ``version=None`` (or ``""``) loads the default ``haskell2010.grammar``
-    file â€” the latest Haskell grammar.  Named versions load the corresponding
+    file — the latest Haskell grammar.  Named versions load the corresponding
     versioned file from ``grammars/haskell/``.
 
     Args:
@@ -119,7 +119,7 @@ def create_haskell_parser(
 
     Args:
         source: The Haskell source code to parse.
-        version: Optional Haskell version string â€” ``"1.0"`` through
+        version: Optional Haskell version string — ``"1.0"`` through
             ``"21"``.  When omitted (or ``None`` / ``""``), the default
             Haskell 21 grammar is used.
 
@@ -153,7 +153,7 @@ def parse_haskell(source: str, version: str | None = None) -> ASTNode:
 
     Args:
         source: The Haskell source code to parse.
-        version: Optional Haskell version string â€” ``"1.0"`` through
+        version: Optional Haskell version string — ``"1.0"`` through
             ``"21"``.  When omitted (or ``None`` / ``""``), the default
             Haskell 21 grammar is used.
 
@@ -168,10 +168,10 @@ def parse_haskell(source: str, version: str | None = None) -> ASTNode:
         # Default (Haskell 21) grammar
         ast = parse_haskell('public class Hello { }')
 
-        # Haskell 8 â€” lambdas, streams
+        # Haskell 8 — lambdas, streams
         ast = parse_haskell('int x = 1;', '8')
 
-        # Haskell 10 â€” var keyword
+        # Haskell 10 — var keyword
         ast = parse_haskell('var x = 1;', '10')
     """
     parser = create_haskell_parser(source, version)

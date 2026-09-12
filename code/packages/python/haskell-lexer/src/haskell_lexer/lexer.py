@@ -1,14 +1,14 @@
-"""Haskell Lexer â€” tokenizes Haskell source code using the grammar-driven approach.
+"""Haskell Lexer — tokenizes Haskell source code using the grammar-driven approach.
 
 This module is a thin wrapper around the generic ``GrammarLexer``. It
 demonstrates a core idea of the grammar-driven architecture: the *same*
-lexer engine that tokenizes Python or HaskellScript can tokenize Haskell â€” or any
-other language â€” simply by swapping the ``.tokens`` file.
+lexer engine that tokenizes Python or HaskellScript can tokenize Haskell — or any
+other language — simply by swapping the ``.tokens`` file.
 
 How the Grammar-Driven Approach Works
 --------------------------------------
 
-Haskell has tokens that differ from Python and HaskellScript â€” like access
+Haskell has tokens that differ from Python and HaskellScript — like access
 modifiers (``public``, ``private``, ``protected``), type keywords
 (``int``, ``boolean``, ``void``), and object-oriented constructs
 (``class``, ``interface``, ``extends``, ``implements``). The grammar-driven
@@ -22,25 +22,25 @@ Version Support
 This module supports key Haskell versions tracked by the repo. Pass the
 ``version`` argument to select a specific version's grammar:
 
-- ``"1.0"``  â€” Haskell 1.0 (January 1996): the original release. The
+- ``"1.0"``  — Haskell 1.0 (January 1996): the original release. The
   foundation: classes, interfaces, exceptions, threads.
-- ``"1.1"``  â€” Haskell 1.1 (February 1997): inner classes, reflection, JDBC,
+- ``"1.1"``  — Haskell 1.1 (February 1997): inner classes, reflection, JDBC,
   HaskellBeans.
-- ``"1.4"``  â€” Haskell 1.4 (February 2002): ``assert`` keyword, regex, NIO,
+- ``"1.4"``  — Haskell 1.4 (February 2002): ``assert`` keyword, regex, NIO,
   logging, XML parsing.
-- ``"5"``    â€” Haskell 5 (September 2004): generics, ``enum``, annotations
+- ``"5"``    — Haskell 5 (September 2004): generics, ``enum``, annotations
   (``@Override``), autoboxing, varargs, enhanced ``for`` loop.
-- ``"7"``    â€” Haskell 7 (July 2011): try-with-resources, diamond operator
+- ``"7"``    — Haskell 7 (July 2011): try-with-resources, diamond operator
   (``<>``), multi-catch, strings in ``switch``.
-- ``"8"``    â€” Haskell 8 (March 2014): lambdas (``->``), streams, default
+- ``"8"``    — Haskell 8 (March 2014): lambdas (``->``), streams, default
   methods, ``Optional``, method references (``::``).
-- ``"10"``   â€” Haskell 10 (March 2018): local variable type inference
+- ``"10"``   — Haskell 10 (March 2018): local variable type inference
   (``var``).
-- ``"14"``   â€” Haskell 14 (March 2020): ``switch`` expressions (``yield``),
+- ``"14"``   — Haskell 14 (March 2020): ``switch`` expressions (``yield``),
   records (preview), helpful NullPointerExceptions.
-- ``"17"``   â€” Haskell 17 (September 2021): sealed classes (``sealed``,
+- ``"17"``   — Haskell 17 (September 2021): sealed classes (``sealed``,
   ``permits``), pattern matching for ``instanceof``.
-- ``"21"``   â€” Haskell 21 (September 2023): virtual threads, pattern matching
+- ``"21"``   — Haskell 21 (September 2023): virtual threads, pattern matching
   for ``switch``, record patterns, string templates (preview).
 
 When no ``version`` is given (or ``None`` / ``""``), the latest version
@@ -51,10 +51,10 @@ What This Module Provides
 
 Two convenience functions:
 
-- ``create_haskell_lexer(source, version)`` â€” creates a ``GrammarLexer``
+- ``create_haskell_lexer(source, version)`` — creates a ``GrammarLexer``
   configured for the requested Haskell version.
 
-- ``tokenize_haskell(source, version)`` â€” the all-in-one function. Pass in
+- ``tokenize_haskell(source, version)`` — the all-in-one function. Pass in
   Haskell source code, get back a list of tokens.
 
 Locating the Grammar Files
@@ -63,24 +63,24 @@ Locating the Grammar Files
 Grammar files live in ``code/grammars/haskell/`` at the repository root::
 
     lexer.py
-    â””â”€â”€ haskell_lexer/       (parent)
-        â””â”€â”€ src/          (parent)
-            â””â”€â”€ haskell-lexer/   (parent)
-                â””â”€â”€ python/       (parent)
-                    â””â”€â”€ packages/ (parent)
-                        â””â”€â”€ code/     (parent)
-                            â””â”€â”€ grammars/
-                                â””â”€â”€ haskell/
-                                    â”œâ”€â”€ haskell1.0.tokens
-                                    â”œâ”€â”€ haskell1.1.tokens
-                                    â”œâ”€â”€ haskell1.4.tokens
-                                    â”œâ”€â”€ haskell5.tokens
-                                    â”œâ”€â”€ haskell7.tokens
-                                    â”œâ”€â”€ haskell8.tokens
-                                    â”œâ”€â”€ haskell10.tokens
-                                    â”œâ”€â”€ haskell14.tokens
-                                    â”œâ”€â”€ haskell17.tokens
-                                    â””â”€â”€ haskell21.tokens   â† default
+    â””── haskell_lexer/       (parent)
+        â””── src/          (parent)
+            â””── haskell-lexer/   (parent)
+                â””── python/       (parent)
+                    â””── packages/ (parent)
+                        â””── code/     (parent)
+                            â””── grammars/
+                                â””── haskell/
+                                    â”œ── haskell1.0.tokens
+                                    â”œ── haskell1.1.tokens
+                                    â”œ── haskell1.4.tokens
+                                    â”œ── haskell5.tokens
+                                    â”œ── haskell7.tokens
+                                    â”œ── haskell8.tokens
+                                    â”œ── haskell10.tokens
+                                    â”œ── haskell14.tokens
+                                    â”œ── haskell17.tokens
+                                    â””── haskell21.tokens   â† default
 """
 
 from __future__ import annotations
@@ -109,7 +109,7 @@ def _resolve_tokens_path(version: str | None) -> Path:
     """Return the Path to the correct .tokens file for the requested version.
 
     ``version=None`` (or ``""``) loads the default ``haskell21.tokens``
-    file â€” the latest Haskell grammar.  Named versions load the corresponding
+    file — the latest Haskell grammar.  Named versions load the corresponding
     versioned file from ``grammars/haskell/``.
 
     Args:
@@ -146,7 +146,7 @@ def create_haskell_lexer(
 
     Args:
         source: The Haskell source code to tokenize.
-        version: Optional Haskell version string â€” ``"1.0"`` through
+        version: Optional Haskell version string — ``"1.0"`` through
             ``"21"``.  When omitted (or ``None`` / ``""``), the default
             Haskell 21 grammar is used.
 
@@ -178,7 +178,7 @@ def tokenize_haskell(
 
     Args:
         source: The Haskell source code to tokenize.
-        version: Optional Haskell version string â€” ``"1.0"`` through
+        version: Optional Haskell version string — ``"1.0"`` through
             ``"21"``.  When omitted (or ``None`` / ``""``), the default
             Haskell 21 grammar is used.
 
@@ -193,13 +193,13 @@ def tokenize_haskell(
         # Default (Haskell 21) grammar
         tokens = tokenize_haskell('public class Hello { }')
 
-        # Haskell 8 â€” lambdas, streams, default methods
+        # Haskell 8 — lambdas, streams, default methods
         tokens = tokenize_haskell('x -> x * 2', '8')
 
-        # Haskell 5 â€” generics, enums, annotations
+        # Haskell 5 — generics, enums, annotations
         tokens = tokenize_haskell('enum Color { RED, GREEN, BLUE }', '5')
 
-        # Haskell 21 â€” latest: virtual threads, pattern matching
+        # Haskell 21 — latest: virtual threads, pattern matching
         tokens = tokenize_haskell('sealed interface Shape permits Circle { }', '21')
     """
     lexer = create_haskell_lexer(source, version)

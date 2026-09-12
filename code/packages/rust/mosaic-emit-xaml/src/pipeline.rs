@@ -1,7 +1,7 @@
 //! # Three-file pipeline entry point for the WinUI 3 / XAML backend.
 //!
 //! Mirrors the public function shape of `mosaic-emit-react`'s and
-//! `mosaic-emit-swiftui`'s `pipeline` modules â€” same [`from_pipeline`]
+//! `mosaic-emit-swiftui`'s `pipeline` modules — same [`from_pipeline`]
 //! signature, same error variants, same section emitters. Read alongside
 //! those crates' source if you need a side-by-side comparison of how the
 //! same IR lowers to JSX vs. Swift vs. XAML.
@@ -12,7 +12,7 @@
 //! generates a partial class. The user-authored partial class lives in
 //! `{Component}.xaml.cs` and must match the markup's class name + base
 //! type. Squashing both into one file is not possible at the WinUI 3
-//! level â€” the XAML compiler refuses files that don't match its expected
+//! level — the XAML compiler refuses files that don't match its expected
 //! shape. Splitting the event-union out into a third file is a Mosaic
 //! convention (keeps `.xaml.cs` lean and lets hosts import event types in
 //! isolation).
@@ -24,12 +24,12 @@
 //!   notifications. The hand-rolled DP registration is a fixed pattern
 //!   per type; the emitter writes one block per slot.
 //! - **Emits become a single `Dispatch` event** carrying the discriminated
-//!   `{Component}Event` record. This matches UI24 Â§3.1's React shape
-//!   (`event GridEvent = ...`) exactly â€” host code subscribes via
+//!   `{Component}Event` record. This matches UI24 §3.1's React shape
+//!   (`event GridEvent = ...`) exactly — host code subscribes via
 //!   `grid.Dispatch += (s, e) => state.HandleEvent(e);`.
 //! - **`Box` without padding/background lowers to `<ContentPresenter>`**
 //!   instead of `<Border>`. A `<Border>` always paints (even with zero
-//!   thickness and transparent brush) â€” `<ContentPresenter>` is the
+//!   thickness and transparent brush) — `<ContentPresenter>` is the
 //!   zero-cost option. The emitter picks the right one by inspecting the
 //!   resolved mosstyle for the box's part name. PR-1 doesn't yet inline
 //!   per-element styles, so today every `Box` lowers to `<Border>`
@@ -54,7 +54,7 @@ use mosstyle_compiler::{StyleDef, StyleProp, StyleTransition};
 ///
 /// Mirrors `mosaic_emit_react::pipeline::PipelineEmitResult` and
 /// `mosaic_emit_swiftui::pipeline::PipelineEmitResult` so a generic CLI
-/// driver can treat all three backends uniformly â€” except that XAML
+/// driver can treat all three backends uniformly — except that XAML
 /// returns three separate source strings (one per output file) rather
 /// than one combined.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -87,7 +87,7 @@ pub struct XamlEmitResult {
     /// PR-5.
     pub project: Option<ProjectFiles>,
 
-    /// One entry per `For` block â€” the generated `RowVm` C# source.
+    /// One entry per `For` block — the generated `RowVm` C# source.
     ///
     /// PR-1 always returns an empty `Vec`; `For` lowering lands with
     /// PR-2.
@@ -115,7 +115,7 @@ pub struct EmittedFile {
 
 /// Project-shaped artifacts emitted when `EmitOptions::emit_project` is
 /// on. With these in addition to the per-component triple, the output
-/// directory is a buildable WinUI 3 project â€” `dotnet build` produces a
+/// directory is a buildable WinUI 3 project — `dotnet build` produces a
 /// runnable .exe (modulo the well-documented bare-SDK MSBuild error,
 /// see lessons.md).
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -124,18 +124,18 @@ pub struct ProjectFiles {
     /// family targeted by the generated project, even when a newer SDK is
     /// installed globally.
     pub global_json: String,
-    /// `<Component>.csproj` â€” MSBuild project file. Targets net9.0-windows,
+    /// `<Component>.csproj` — MSBuild project file. Targets net9.0-windows,
     /// references WindowsAppSDK + Microsoft.Windows.SDK.BuildTools,
     /// declares the project unpackaged + self-contained, includes a
     /// post-build target that flattens the native runtime DLLs (Fix B2).
     pub csproj: String,
-    /// `App.xaml` â€” application resource dictionary (Fluent / Mica
+    /// `App.xaml` — application resource dictionary (Fluent / Mica
     /// styles).
     pub app_xaml: String,
-    /// `App.xaml.cs` â€” application code-behind: instantiates
+    /// `App.xaml.cs` — application code-behind: instantiates
     /// MainWindow on OnLaunched.
     pub app_xaml_cs: String,
-    /// `MainWindow.xaml` â€” host window. Layout depends on the chosen
+    /// `MainWindow.xaml` — host window. Layout depends on the chosen
     /// `RootShape`:
     ///   - `UserControl` root: hosts the component directly in the
     ///     Grid (full-window placement).
@@ -143,29 +143,29 @@ pub struct ProjectFiles {
     ///     spawns the dialog on click, plus a status bar that echoes
     ///     dispatched events.
     pub main_window_xaml: String,
-    /// `MainWindow.xaml.cs` â€” host code-behind. Wires the component's
+    /// `MainWindow.xaml.cs` — host code-behind. Wires the component's
     /// Dispatch event to a stub handler the user fills in with their
     /// business logic.
     pub main_window_cs: String,
-    /// `app.manifest` â€” Win32 app manifest with DPI awareness +
+    /// `app.manifest` — Win32 app manifest with DPI awareness +
     /// supported-OS GUID.
     pub package_manifest: String,
-    /// `build.ps1` â€” driver script that runs `mosaic-compile` over
+    /// `build.ps1` — driver script that runs `mosaic-compile` over
     /// each `.mil/.mll/.msl` triple, then `dotnet build`, then
     /// optionally launches the .exe. Fix B3.
     pub build_script: String,
-    /// `README.md` for the emitted project â€” describes prerequisites,
+    /// `README.md` for the emitted project — describes prerequisites,
     /// bundled Windows App SDK deployment, the build command, and the
     /// known MSBuild error from bare-SDK environments.
     pub readme: String,
 }
 
 /// Registry of components that the emitter is allowed to reference as
-/// non-kernel tags (UI29 Â§4.4 component references).
+/// non-kernel tags (UI29 §4.4 component references).
 ///
 /// The CLI builds this by walking the active manifest's
 /// `[dependencies]`, parsing each one's `mosaic-package.toml`, and
-/// registering every exported component name â†’ its
+/// registering every exported component name → its
 /// (xmlns_prefix, xmlns_value, package_name) tuple.
 ///
 /// Tests build the registry inline with synthetic entries.
@@ -175,12 +175,12 @@ pub struct ProjectFiles {
 /// run_pipeline) and is wired up in the same PR series.
 #[derive(Debug, Clone, Default)]
 pub struct ComponentRegistry {
-    /// component_name â†’ resolution info. Keyed by the PascalCase tag
+    /// component_name → resolution info. Keyed by the PascalCase tag
     /// that appears in `.mll` source.
     entries: std::collections::HashMap<String, ComponentRef>,
 }
 
-/// One entry in the [`ComponentRegistry`] â€” the metadata needed to
+/// One entry in the [`ComponentRegistry`] — the metadata needed to
 /// emit a `<{prefix}:{Tag} ... />` XAML reference plus the
 /// `xmlns:prefix="using:Namespace"` declaration on the `<UserControl>`
 /// root.
@@ -189,7 +189,7 @@ pub struct ComponentRef {
     /// The xmlns prefix that appears in the `<{prefix}:{Tag}/>`
     /// reference and in the matching `xmlns:{prefix}` declaration on
     /// the `<UserControl>` root. Conventionally derived from the
-    /// package name (`mosaic-pkg-grid` â†’ `grid`).
+    /// package name (`mosaic-pkg-grid` → `grid`).
     pub xmlns_prefix: String,
     /// The value of the xmlns declaration, e.g. `using:Mosaic.Package.Grid`.
     /// Derived from the package's C# namespace.
@@ -200,7 +200,7 @@ pub struct ComponentRef {
 
 impl ComponentRegistry {
     /// Construct an empty registry. The emitter treats this the same
-    /// way it treats `None` â€” every non-kernel tag becomes
+    /// way it treats `None` — every non-kernel tag becomes
     /// [`PipelineEmitError::UnknownComponent`].
     pub fn new() -> Self {
         Self::default()
@@ -244,7 +244,7 @@ impl ComponentRegistry {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EmitOptions {
     /// Also emit `.csproj` + `App.xaml(.cs)` + `MainWindow.xaml(.cs)` +
-    /// `Package.appxmanifest`. Default `false`. PR-1 ignores this flag â€”
+    /// `Package.appxmanifest`. Default `false`. PR-1 ignores this flag —
     /// the project triple lands in PR-5.
     pub emit_project: bool,
 
@@ -260,18 +260,18 @@ pub struct EmitOptions {
     pub namespace: String,
 
     /// Windows App SDK version to pin in the emitted `.csproj` (only used
-    /// when `emit_project` is on). Default `"1.8.260710003"` â€” a known-
+    /// when `emit_project` is on). Default `"1.8.260710003"` — a known-
     /// good full version. A bare `"1.5"` or `"1.6"` doesn't pin enough
     /// for NuGet to resolve a build-able combination on every machine.
     pub windows_app_sdk: String,
 
     /// Lower `HostTable` to `controls:DataGrid` from the Community
     /// Toolkit rather than a hand-rolled `<Grid>`. PR-1 ignores this
-    /// flag â€” `HostTable` is unsupported until PR-4.
+    /// flag — `HostTable` is unsupported until PR-4.
     pub use_community_datagrid: bool,
 
     /// Treat the input as a UI29 userland package. PR-1 ignores this
-    /// flag â€” `--package-mode` lands in PR-5.
+    /// flag — `--package-mode` lands in PR-5.
     pub package_mode: bool,
 
     /// Story fixture values keyed by slot name. The generated `MainWindow`
@@ -311,7 +311,7 @@ impl Default for EmitOptions {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PipelineEmitError {
     /// The mosmodel component name and the moslayout component name
-    /// disagree. The mosstyle name is allowed to differ per UI23 Â§4 (a
+    /// disagree. The mosstyle name is allowed to differ per UI23 §4 (a
     /// style file can target a layout variant).
     ComponentNameMismatch { mosmodel: String, moslayout: String },
 
@@ -326,7 +326,7 @@ pub enum PipelineEmitError {
     /// caller can include it in user-visible diagnostics.
     UnsupportedPrimitive(String),
 
-    /// An expression form (`row[c]`, `slot: a && slot: b`, â€¦) is not yet
+    /// An expression form (`row[c]`, `slot: a && slot: b`, …) is not yet
     /// lowered by the WinUI 3 ExprLowerer. PR-1 doesn't yet attempt
     /// expression lowering; PR-2 introduces this error path.
     UnsupportedExpression(String),
@@ -343,7 +343,7 @@ pub enum PipelineEmitError {
     /// An emit name fails the same safe-identifier check.
     UnsafeEmitName(String),
 
-    /// A mosmodel slot type has no WinUI 3 mapping (per spec Â§8). Only
+    /// A mosmodel slot type has no WinUI 3 mapping (per spec §8). Only
     /// possible if mosmodel grows new slot types ahead of this backend.
     UnmappableSlotType(String),
 
@@ -414,7 +414,7 @@ impl std::error::Error for PipelineEmitError {}
 /// triple.
 ///
 /// The `_manifest` argument carries the resolved package dependencies
-/// (UI29 Â§4.4). PR-1 ignores it â€” every non-kernel tag is currently
+/// (UI29 §4.4). PR-1 ignores it — every non-kernel tag is currently
 /// reported as `UnsupportedPrimitive`. PR-5 lands the resolver and
 /// switches a manifest-known tag to a `<pkg:ComponentName/>` reference.
 ///
@@ -430,7 +430,7 @@ pub fn from_pipeline(
 ) -> Result<XamlEmitResult, PipelineEmitError> {
     // 1. The three IRs must agree on the component name. The style IR's
     //    `component_name` is allowed to differ when the style targets a
-    //    specific layout variant (UI23 Â§4).
+    //    specific layout variant (UI23 §4).
     if interface.component != layout.component_name {
         return Err(PipelineEmitError::ComponentNameMismatch {
             mosmodel: interface.component.clone(),
@@ -440,13 +440,13 @@ pub fn from_pipeline(
 
     let name = &interface.component;
 
-    // 2. Build a part-name â†’ CSS-fragment map from the mosstyle source.
+    // 2. Build a part-name → CSS-fragment map from the mosstyle source.
     //    Used by the style inliner inside each primitive emitter. PR-1's
     //    inliner only consumes base props; state blocks and the full
     //    UserControl.Resources cascade land in later PRs.
     let part_styles = build_part_style_map(style);
 
-    // 3. Construct the emission context â€” threaded through the XAML
+    // 3. Construct the emission context — threaded through the XAML
     //    walker so `For`/`If` can register helpers, RowVms, and the
     //    converter requirement (PR-2).
     let mut ctx = EmitContext::new(name, &interface.slots, &interface.emits);
@@ -474,7 +474,7 @@ pub fn from_pipeline(
     //    the `if_helpers` field remains empty because the emitter inlines
     //    helper methods into the code-behind's partial class (one file
     //    per component is cleaner than scattering helper-bodies across
-    //    siblings â€” the spec calls for separate files but PR-2 keeps
+    //    siblings — the spec calls for separate files but PR-2 keeps
     //    them inline; see CHANGELOG for the deviation rationale).
     let for_view_models = ctx
         .row_vms
@@ -537,7 +537,7 @@ pub fn from_pipeline(
 }
 
 // =====================================================================
-// EmitContext â€” state threaded through the XAML walker (PR-2)
+// EmitContext — state threaded through the XAML walker (PR-2)
 // =====================================================================
 //
 // `If`/`Else`/`For` lowering needs information that doesn't live on any
@@ -566,11 +566,11 @@ struct ForBinding {
     /// The `index:` binding name when present (e.g. `r`).
     index_name: Option<String>,
     /// The C# type of the element. Derived from the iterated slot's type:
-    /// `list<text>` â†’ `string`, `list<number>` â†’ `double`, etc.
+    /// `list<text>` → `string`, `list<number>` → `double`, etc.
     element_type: String,
     /// The generated RowVm class name: `{Component}_{AsName}Vm`.
     /// Stored on the binding even though the per-element binding code
-    /// resolves the same value off `RowVm` â€” used by nested-For helper
+    /// resolves the same value off `RowVm` — used by nested-For helper
     /// transliteration in a follow-up PR and by debug introspection.
     #[allow(dead_code)]
     vm_class: String,
@@ -589,7 +589,7 @@ struct HelperMethod {
     name: String,
     /// `(parameter_name, parameter_csharp_type)` pairs.
     parameters: Vec<(String, String)>,
-    /// C# return type â€” `bool` for predicates, `string` for indexed
+    /// C# return type — `bool` for predicates, `string` for indexed
     /// element accessors, `double` for numeric, etc.
     return_type: String,
     /// The C# expression body (no trailing semicolon).
@@ -597,23 +597,23 @@ struct HelperMethod {
 }
 
 /// A WinUI 3 event-handler method generated for a Host* primitive's
-/// bound emits. Same lifecycle as `HelperMethod` â€” registered during
+/// bound emits. Same lifecycle as `HelperMethod` — registered during
 /// the walk, emitted inline into the code-behind partial class.
 #[derive(Debug, Clone)]
 struct HostHandler {
     /// Fully-qualified method name (also the XAML attribute value).
     name: String,
     /// Full C# source for the method, including signature and body.
-    /// Multi-line and self-contained â€” emitted verbatim into the
+    /// Multi-line and self-contained — emitted verbatim into the
     /// `partial class`.
     source: String,
 }
 
-/// A generated `RowVm` C# record â€” the typed `DataContext` for a
+/// A generated `RowVm` C# record — the typed `DataContext` for a
 /// `<DataTemplate>` inside a `For` block.
 #[derive(Debug, Clone)]
 struct RowVm {
-    /// `{Component}_{AsName}Vm` â€” must match the `x:DataType` reference
+    /// `{Component}_{AsName}Vm` — must match the `x:DataType` reference
     /// in the matching `<DataTemplate>`.
     class_name: String,
     /// The PascalCase property name that holds the element value (e.g.
@@ -624,7 +624,7 @@ struct RowVm {
     /// `true` iff the matching `For` declared an `index:` binding.
     has_index: bool,
     /// GROUP C: `true` iff this VM is the per-column cell loop (a `For`
-    /// whose `each:` is an enclosing For binding â€” UI29 Â§3.4). Such VMs
+    /// whose `each:` is an enclosing For binding — UI29 §3.4). Such VMs
     /// carry an extra `double Width` field so the enclosing generated
     /// projection can thread the matching authored column width onto every
     /// cell, and the generated cell element binds `Width="{x:Bind Width}"`.
@@ -686,14 +686,14 @@ struct NativeTableEmission {
 
 /// Mutable state threaded through the recursive XAML emission.
 ///
-/// PR-1's emit_xaml didn't need any of this â€” all primitive emitters
+/// PR-1's emit_xaml didn't need any of this — all primitive emitters
 /// were stateless. PR-2's `For`/`If` lowering does, so we collect every
 /// stateful effect into one struct that the assembly step in
 /// `from_pipeline` consumes.
 struct EmitContext<'a> {
-    /// The component name â€” used to namespace generated types.
+    /// The component name — used to namespace generated types.
     component_name: &'a str,
-    /// Slot name (kebab-case) â†’ C# type. For looking up the element
+    /// Slot name (kebab-case) → C# type. For looking up the element
     /// type of a `For (each: slot: foo)` from `foo`'s declared type.
     slot_types: std::collections::HashMap<String, String>,
     /// Slot declaration order from `.mil`. UI49 uses this to give later
@@ -840,7 +840,7 @@ impl<'a> EmitContext<'a> {
     }
 
     /// PascalCased slot name (PR-1 default), unless the slot collides
-    /// with a property on the chosen base class â€” in which case the
+    /// with a property on the chosen base class — in which case the
     /// alias from `slot_aliases` wins. `{x:Bind}` paths route through
     /// this so a slot named `title` on a ContentDialog-rooted
     /// component resolves to `DialogTitle`, not the shadowed
@@ -869,7 +869,7 @@ impl<'a> EmitContext<'a> {
     }
 
     /// Register an event-handler method. Same dedup pattern as
-    /// helpers â€” two handlers with the same name share the same body.
+    /// helpers — two handlers with the same name share the same body.
     fn add_host_handler(&mut self, h: HostHandler) {
         if !self.host_handlers.iter().any(|x| x.name == h.name) {
             self.host_handlers.push(h);
@@ -927,7 +927,7 @@ impl<'a> EmitContext<'a> {
     }
 
     /// Add a helper method (or skip if a method by the same name already
-    /// exists â€” assumed to be identical because helper names are a
+    /// exists — assumed to be identical because helper names are a
     /// deterministic function of the expression they came from).
     fn add_helper(&mut self, helper: HelperMethod) {
         if !self.helpers.iter().any(|h| h.name == helper.name) {
@@ -955,7 +955,7 @@ impl<'a> EmitContext<'a> {
 }
 
 // =====================================================================
-// Part-style map (mosstyle â†’ flat property fragments)
+// Part-style map (mosstyle → flat property fragments)
 // =====================================================================
 
 #[derive(Debug, Clone)]
@@ -1892,8 +1892,8 @@ fn build_style_fragment_with_drops(
         // X5: translate the *value* into the form the WinUI 3 markup
         // compiler accepts. `translate_xaml_value` may return `None`
         // when the whole property must be dropped (e.g. a percentage
-        // `Width="100%"` â€” WinUI's `Width` is a `Double`, not a
-        // percentage). `{x:Bind â€¦}` / `{Binding â€¦}` markup extensions
+        // `Width="100%"` — WinUI's `Width` is a `Double`, not a
+        // percentage). `{x:Bind …}` / `{Binding …}` markup extensions
         // pass through untouched (never px-stripped or case-mangled).
         let value = match translate_xaml_value(&key, &p.value) {
             Some(v) => v,
@@ -2138,13 +2138,13 @@ fn has_unsupported_length_unit(value: &str) -> bool {
 /// | `font-weight: 600`    | `FontWeight`    | `SemiBold`    |
 /// | `background: red`     | `Background`    | `Red`         |
 ///
-/// `{x:Bind â€¦}` / `{Binding â€¦}` values pass through verbatim â€” a
+/// `{x:Bind …}` / `{Binding …}` values pass through verbatim — a
 /// binding expression is not a literal and must never be mangled.
 fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     let trimmed = raw.trim();
 
-    // Markup extensions (`{x:Bind â€¦}`, `{Binding â€¦}`, `{StaticResource â€¦}`)
-    // pass through untouched â€” they are not literal values.
+    // Markup extensions (`{x:Bind …}`, `{Binding …}`, `{StaticResource …}`)
+    // pass through untouched — they are not literal values.
     if trimmed.starts_with('{') {
         return Some(raw.to_string());
     }
@@ -2162,7 +2162,7 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     // Length setters: strip CSS `px` units (and reject percentages,
     // which WinUI's `Double`-typed length properties can't express).
     if is_length_setter(key) {
-        // `100%` (or any percentage) â€” WinUI lengths are absolute
+        // `100%` (or any percentage) — WinUI lengths are absolute
         // Doubles. Drop the whole property; the layout container
         // (StackPanel / Grid `*`) sizes the element instead.
         if trimmed.ends_with('%') {
@@ -2178,12 +2178,12 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
         return Some(strip_px_units(trimmed));
     }
 
-    // `text-align` â†’ WinUI `TextAlignment` enum (PascalCase value).
+    // `text-align` → WinUI `TextAlignment` enum (PascalCase value).
     if key == "TextAlignment" {
         return Some(pascalcase_text_alignment(trimmed));
     }
 
-    // `font-weight` â†’ WinUI `FontWeight` named-constant (PascalCase).
+    // `font-weight` → WinUI `FontWeight` named-constant (PascalCase).
     if key == "FontWeight" {
         return Some(pascalcase_font_weight(trimmed));
     }
@@ -2217,10 +2217,10 @@ fn is_length_setter(setter: &str) -> bool {
 /// Strip CSS `px` suffixes from a length value, preserving the
 /// comma-separated `Thickness` shape WinUI uses for multi-edge values.
 ///
-/// - `12px`          â†’ `12`
-/// - `0,0,0,1px`     â†’ `0,0,0,1`
-/// - `8px 4px`       â†’ `8 4`   (space-separated multi-value)
-/// - `12`            â†’ `12`    (already clean)
+/// - `12px`          → `12`
+/// - `0,0,0,1px`     → `0,0,0,1`
+/// - `8px 4px`       → `8 4`   (space-separated multi-value)
+/// - `12`            → `12`    (already clean)
 ///
 /// Only a trailing `px` on each component is removed; the numeric body
 /// is left exactly as written so the host's XAML `Double` / `Thickness`
@@ -2240,8 +2240,8 @@ fn strip_px_units(value: &str) -> String {
         .join(&sep.to_string())
 }
 
-/// `center` â†’ `Center`, `right` â†’ `Right`, `left` â†’ `Left`, `justify`
-/// â†’ `Justify`. Maps a CSS `text-align` value to the WinUI
+/// `center` → `Center`, `right` → `Right`, `left` → `Left`, `justify`
+/// → `Justify`. Maps a CSS `text-align` value to the WinUI
 /// `TextAlignment` enum member (PascalCase). Unknown values are
 /// PascalCased generically so a typo surfaces at the markup compiler
 /// rather than silently mangling.
@@ -2261,7 +2261,7 @@ fn pascalcase_text_alignment(value: &str) -> String {
 
 /// Map a CSS `font-weight` value (a keyword or a 100â€“900 numeric) to
 /// the WinUI `FontWeights` named constant. WinUI's `FontWeight` setter
-/// accepts the named constants (`Normal`, `Bold`, `SemiBold`, â€¦) but
+/// accepts the named constants (`Normal`, `Bold`, `SemiBold`, …) but
 /// NOT the bare CSS keyword `normal`/`bold` in lowercase, and not the
 /// numeric `600` form in a `<Setter>`.
 fn pascalcase_font_weight(value: &str) -> String {
@@ -2275,7 +2275,7 @@ fn pascalcase_font_weight(value: &str) -> String {
         "700" | "bold" => "Bold".to_string(),
         "800" | "extrabold" | "ultrabold" => "ExtraBold".to_string(),
         "900" | "black" | "heavy" => "Black".to_string(),
-        // Unknown â€” PascalCase generically so the markup compiler flags
+        // Unknown — PascalCase generically so the markup compiler flags
         // it rather than us silently emitting an invalid lowercase form.
         other => kebab_to_pascal_case(other),
     }
@@ -2283,7 +2283,7 @@ fn pascalcase_font_weight(value: &str) -> String {
 
 /// Which XAML setter properties take a `Brush` (the WinUI color type).
 /// Used by `build_style_fragment` to scope `normalize_xaml_color_value`
-/// to the values that actually flow to a brush â€” everything else
+/// to the values that actually flow to a brush — everything else
 /// (lengths, fonts, weights) passes through verbatim.
 fn is_color_setter(setter: &str) -> bool {
     matches!(setter, "Background" | "Foreground" | "BorderBrush")
@@ -2297,10 +2297,10 @@ fn is_color_setter(setter: &str) -> bool {
 /// expects either a hex literal (`#RRGGBB` / `#AARRGGBB`) or a *Pascal-
 /// cased* named color (`Transparent`, `Red`).  This function:
 ///
-/// - Pass-through for hex literals (`#â€¦`) â€” XAML accepts these as-is.
+/// - Pass-through for hex literals (`#…`) — XAML accepts these as-is.
 /// - Pass-through for already-PascalCased names (first letter upper)
-///   â€” assumed XAML-native.
-/// - PascalCase known CSS color names â€” `transparent`â†’`Transparent`,
+///   — assumed XAML-native.
+/// - PascalCase known CSS color names — `transparent`→`Transparent`,
 ///   etc.
 /// - For anything else, return unchanged.  Better to emit a stale
 ///   value the markup compiler can flag than to silently mangle a
@@ -2308,8 +2308,8 @@ fn is_color_setter(setter: &str) -> bool {
 ///
 /// The named-color table mirrors the CSS3 / SVG palette intersected
 /// with the WinUI 3 `Microsoft.UI.Colors` set.  Most of them are
-/// identical PascalCased forms (`red`â†’`Red`); a few â€” `darkgray`
-/// vs `DarkGray` â€” also normalise to PascalCase.
+/// identical PascalCased forms (`red`→`Red`); a few — `darkgray`
+/// vs `DarkGray` — also normalise to PascalCase.
 fn normalize_xaml_color_value(s: &str) -> Option<String> {
     let trimmed = s.trim();
     // Defence in depth. #12025 fixed the general case — the base-style-
@@ -2343,8 +2343,8 @@ fn normalize_xaml_color_value(s: &str) -> Option<String> {
     if trimmed.eq_ignore_ascii_case("currentcolor") {
         return None;
     }
-    // `{x:Bind â€¦}` / `{Binding â€¦}` markup extensions or any string with
-    // braces â€” keep verbatim.  These aren't color literals.
+    // `{x:Bind …}` / `{Binding …}` markup extensions or any string with
+    // braces — keep verbatim.  These aren't color literals.
     if trimmed.starts_with('{') {
         return Some(s.to_string());
     }
@@ -2354,8 +2354,8 @@ fn normalize_xaml_color_value(s: &str) -> Option<String> {
     if matches!(first, Some(c) if c.is_ascii_uppercase()) {
         return Some(s.to_string());
     }
-    // All-lowercase identifier â€” PascalCase it.  `transparent` â†’
-    // `Transparent`, `red` â†’ `Red`, etc.  We don't gate on a known
+    // All-lowercase identifier — PascalCase it.  `transparent` →
+    // `Transparent`, `red` → `Red`, etc.  We don't gate on a known
     // CSS-color whitelist: the markup compiler will reject anything
     // that isn't a real named color, and over-pascalCasing is the
     // failure mode we want (it just shifts which compiler complains).
@@ -2423,7 +2423,7 @@ fn css_rgb_function_to_xaml_hex(s: &str) -> Option<String> {
 }
 
 /// Map a mosstyle CSS property name to its XAML setter property name.
-/// The table is intentionally small in PR-1 â€” only what the nine simple
+/// The table is intentionally small in PR-1 — only what the nine simple
 /// primitives need. PR-3..PR-6 grow it.
 fn css_property_to_xaml_setter(name: &str) -> Option<String> {
     match name {
@@ -2455,8 +2455,8 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         // X5: `text-align` maps to WinUI's `TextAlignment` (a
         // `TextBlock` enum property), NOT `TextAlign`. The value side
         // is PascalCased by `translate_xaml_value`
-        // (`center`â†’`Center`). The old `kebab_to_pascal_case` fallback
-        // produced `TextAlign` â€” a property that doesn't exist â€” so the
+        // (`center`→`Center`). The old `kebab_to_pascal_case` fallback
+        // produced `TextAlign` — a property that doesn't exist — so the
         // setter was silently dropped by the markup compiler.
         "text-align" => Some("TextAlignment".to_string()),
         // X5/X6: CSS-only or flex-only properties with NO direct WinUI
@@ -2464,13 +2464,13 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         // omits them entirely rather than emitting an invalid attribute
         // / `<Setter>` the markup compiler rejects.
         //
-        //   border-collapse â€” WinUI has no table model; gridlines are
+        //   border-collapse — WinUI has no table model; gridlines are
         //                     drawn by per-cell BorderThickness.
-        //   border-style    â€” WinUI borders are always solid; there is
+        //   border-style    — WinUI borders are always solid; there is
         //                     no dashed/dotted `BorderStyle` property.
-        //   outline         â€” no WinUI equivalent (focus visuals use
+        //   outline         — no WinUI equivalent (focus visuals use
         //                     the FocusVisual* attached properties).
-        //   text-decoration â€” TextBlock uses the `TextDecorations`
+        //   text-decoration — TextBlock uses the `TextDecorations`
         //                     property with a different value shape;
         //                     not wired yet, so drop rather than emit
         //                     an invalid literal.
@@ -2547,13 +2547,13 @@ fn unsupported_property_reason(name: &str) -> &'static str {
 
 /// Returns `true` for the XAML setter properties that belong on a
 /// `<Border>` (and other container elements like `<Grid>`, `<StackPanel>`)
-/// â€” i.e. properties governing the box's own paint, not the text content
+/// — i.e. properties governing the box's own paint, not the text content
 /// inside it. Used by `emit_box` to partition style props between the
 /// `<Border>` itself and its inner `<TextBlock>` child.
 ///
 /// `<Border>` accepts: Background, BorderBrush, BorderThickness,
 /// CornerRadius, Padding, Margin, Width, Height. It does NOT accept
-/// Foreground, FontSize, FontWeight, FontFamily â€” those belong on the
+/// Foreground, FontSize, FontWeight, FontFamily — those belong on the
 /// inner content. Caught by the toolkit Alert + Badge demo (#4548).
 fn is_container_style_attr(setter: &str) -> bool {
     matches!(
@@ -2604,7 +2604,7 @@ fn is_text_style_attr(setter: &str) -> bool {
 // Identifier conversions
 // =====================================================================
 
-/// `column-headers` â†’ `ColumnHeaders` (XAML `DependencyProperty` names,
+/// `column-headers` → `ColumnHeaders` (XAML `DependencyProperty` names,
 /// C# property names). PascalCase.
 fn kebab_to_pascal_case(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
@@ -2622,10 +2622,10 @@ fn kebab_to_pascal_case(s: &str) -> String {
     out
 }
 
-/// `column-headers` â†’ `columnHeaders`. Used for `{x:Bind}` paths and
+/// `column-headers` → `columnHeaders`. Used for `{x:Bind}` paths and
 /// local C# helpers. camelCase with first letter lowered.
 ///
-/// Currently unused â€” PR-2's `For` lowering will reach for it when it
+/// Currently unused — PR-2's `For` lowering will reach for it when it
 /// generates `{x:Bind}` paths into `For`-bound row variables.
 #[allow(dead_code)]
 fn kebab_to_camel_case(s: &str) -> String {
@@ -2652,7 +2652,7 @@ fn is_safe_identifier(s: &str) -> bool {
 // File 1: XAML markup
 // =====================================================================
 
-/// Emit `{Component}.xaml` â€” the markup file. Wraps the lowered
+/// Emit `{Component}.xaml` — the markup file. Wraps the lowered
 /// moslayout tree in a `<UserControl>` root.
 ///
 /// `ctx` is mutated during the walk: `For` pushes/pops bindings, `If`
@@ -2668,9 +2668,9 @@ fn is_safe_identifier(s: &str) -> bool {
 ///     (emit_dependency_property uses ctx.slot_aliases)
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum RootShape {
-    /// Standard component â€” `<UserControl>` root, `: UserControl` C#.
+    /// Standard component — `<UserControl>` root, `: UserControl` C#.
     UserControl,
-    /// HostDialog-rooted â€” `<ContentDialog>` root, `: ContentDialog`
+    /// HostDialog-rooted — `<ContentDialog>` root, `: ContentDialog`
     /// C#. The moslayout root's HostDialog props become attributes on
     /// the ContentDialog itself; its children become the Content.
     ContentDialog,
@@ -2717,7 +2717,7 @@ impl RootShape {
 
 /// Choose the root shape for the component's emitted XAML.
 ///
-/// HostDialog as the moslayout root â†’ ContentDialog root + partial
+/// HostDialog as the moslayout root → ContentDialog root + partial
 /// class extends ContentDialog. This matches the WinUI 3 idiom that
 /// ContentDialog is a top-layer popup primitive: it can't be embedded
 /// inside a UserControl and then shown via ShowAsync(); the parented
@@ -2731,7 +2731,7 @@ fn pick_root_shape(root: &LayoutNode) -> RootShape {
     }
 }
 
-/// Populate `ctx.slot_aliases` with `slot_name â†’ AliasedDpName` entries
+/// Populate `ctx.slot_aliases` with `slot_name → AliasedDpName` entries
 /// for every slot whose PascalCased name collides with a property on
 /// the chosen base class. Fix A4.
 ///
@@ -2789,7 +2789,7 @@ fn emit_xaml(
     writeln!(out, "    xmlns:local=\"using:{ns}\">").unwrap();
     writeln!(out).unwrap();
 
-    // Walk the root node â€” at the moslayout level a component has
+    // Walk the root node — at the moslayout level a component has
     // exactly one root, but we still pass through the children iterator
     // because `If`/`Else` pairing happens there.
     //
@@ -2900,7 +2900,7 @@ fn indent_xaml_fragment(fragment: &str, extra_spaces: usize) -> String {
 /// `indent` spaces.
 ///
 /// PR-1 added the nine simple kernel primitives; PR-2 adds `For`. `If`
-/// and `Else` are NOT handled here â€” they're consumed by
+/// and `Else` are NOT handled here — they're consumed by
 /// [`emit_xaml_children`] which pairs an `If` with the following `Else`
 /// sibling. A bare `If` or `Else` reaching this function is an error
 /// (they should always come through `emit_xaml_children`).
@@ -2932,13 +2932,13 @@ fn emit_xaml_node(
 
         // `If` and `Else` are paired by the children iterator. Seeing a
         // bare one here means the author wrote `If` as the root of the
-        // component (no preceding sibling) â€” emit it as a top-level
+        // component (no preceding sibling) — emit it as a top-level
         // conditional. The look-ahead for `Else` happens in the
         // children iterator, so the standalone case here means no
         // `Else` was paired.
         "If" => emit_if(node, None, indent, part_styles, ctx, None),
         // A standalone `Else` (no preceding `If`) is a moslayout-level
-        // validation error per UI29 Â§3.2; we treat it as
+        // validation error per UI29 §3.2; we treat it as
         // UnsupportedPrimitive here for the second line of defence in
         // case validation was bypassed.
         "Else" => Err(PipelineEmitError::UnsupportedPrimitive(
@@ -2953,7 +2953,7 @@ fn emit_xaml_node(
         "HostButton" => emit_host_button(node, indent, part_styles, ctx),
         "HostSurface" => emit_host_surface(node, indent, part_styles, ctx),
 
-        // UI29-2 â€” `HostCheckbox` lowers to WinUI/WPF `<CheckBox>` and
+        // UI29-2 — `HostCheckbox` lowers to WinUI/WPF `<CheckBox>` and
         // `HostRadio` lowers to `<RadioButton>`. Both controls share
         // the `IsChecked` / `IsEnabled` / `Content` property surface
         // with `<Button>`, plus their own checked-state events.
@@ -2962,7 +2962,7 @@ fn emit_xaml_node(
         "HostSlider" => emit_host_slider(node, indent, part_styles, ctx),
         "HostProgressRing" => emit_host_progress_ring(node, indent, part_styles, ctx),
 
-        // UI29-4 â€” HostLink lowers to a `<HyperlinkButton NavigateUri=
+        // UI29-4 — HostLink lowers to a `<HyperlinkButton NavigateUri=
         // "..." Content="...">` (WinUI 3's first-class clickable
         // hyperlink). HostTooltip uses the `ToolTipService.ToolTip`
         // attached property on the wrapped child. HostNumberInput
@@ -2983,7 +2983,7 @@ fn emit_xaml_node(
         // PR-4: HostTable.
         "HostTable" => emit_host_table(node, indent, part_styles, ctx),
 
-        // U29-1-K-xaml: HostDialog kernel primitive (UI29-1 Â§3.6).
+        // U29-1-K-xaml: HostDialog kernel primitive (UI29-1 §3.6).
         "HostDialog" => emit_host_dialog(node, indent, part_styles, ctx),
 
         // The four section sub-tags are recognised only as children of
@@ -2995,7 +2995,7 @@ fn emit_xaml_node(
             PipelineEmitError::UnsupportedPrimitive(format!("{} outside HostTable", node.tag)),
         ),
 
-        // Anything else is a component reference (UI29 Â§4.4). PR-5
+        // Anything else is a component reference (UI29 §4.4). PR-5
         // resolves it through the optional `ComponentRegistry`. When the
         // registry is absent or the tag isn't registered, the error
         // path makes the failure clear: a missing manifest dependency
@@ -3006,7 +3006,7 @@ fn emit_xaml_node(
 }
 
 /// Walk a slice of children, emitting each in order. Pairs an `If` with
-/// a following `Else` sibling (UI29 Â§3.2) â€” that pairing is the only
+/// a following `Else` sibling (UI29 §3.2) — that pairing is the only
 /// reason this exists rather than every container directly calling
 /// `emit_xaml_node` per child.
 fn emit_xaml_children(
@@ -3235,7 +3235,7 @@ fn parse_style_fragment(frag: &str) -> Vec<(String, String)> {
 /// Partition a style fragment into:
 ///   - `container_attrs`: a leading-space-prefixed attribute string
 ///     containing only the setters valid on `<Border>` / `<Grid>` /
-///     `<StackPanel>` (paint, padding, sizing â€” see
+///     `<StackPanel>` (paint, padding, sizing — see
 ///     `is_container_style_attr`).
 ///   - `text_setters`: the remaining `(setter, value)` pairs that
 ///     belong on text content (Foreground, FontSize, FontWeight,
@@ -3356,14 +3356,14 @@ fn partition_flex_grid_style(
 }
 
 // ---------------------------------------------------------------------
-// Primitive emitters (the nine simple kernel primitives â€” PR-1)
+// Primitive emitters (the nine simple kernel primitives — PR-1)
 // ---------------------------------------------------------------------
 
-/// `Box [name] { children }` â†’ `<Border>...</Border>`.
+/// `Box [name] { children }` → `<Border>...</Border>`.
 ///
 /// PR-1 always emits `<Border>` even when no style applies. A later PR
 /// swaps to `<ContentPresenter>` when the resolved style has no
-/// background / border / padding â€” `<ContentPresenter>` is zero-cost
+/// background / border / padding — `<ContentPresenter>` is zero-cost
 /// while `<Border>` always allocates a brush.
 fn emit_box(
     node: &LayoutNode,
@@ -3658,11 +3658,11 @@ fn emit_flex_grid(
     Ok(out)
 }
 
-/// `Stack [name] { children }` â†’ `<Grid>...</Grid>`.
+/// `Stack [name] { children }` → `<Grid>...</Grid>`.
 ///
-/// XAML `<Grid>` is the z-axis container â€” children at the same row/col
+/// XAML `<Grid>` is the z-axis container — children at the same row/col
 /// stack visually with later children drawn on top. The Mosaic `Stack`
-/// primitive (UI29 Â§2.1) is exactly this shape.
+/// primitive (UI29 §2.1) is exactly this shape.
 fn emit_stack(
     node: &LayoutNode,
     indent: usize,
@@ -3778,9 +3778,9 @@ fn emit_text_style_resources(
     writeln!(out, "{pad}</{element}.Resources>").unwrap();
 }
 
-/// `Text [name] (content: slot: foo)` â†’ `<TextBlock Text="{x:Bind Foo}"/>`.
-/// `Text [name] (content: "literal")` â†’ `<TextBlock Text="literal"/>`.
-/// `Text [name] (content: row.value)` â†’ `<TextBlock Text="{x:Bind Row.Value}"/>`
+/// `Text [name] (content: slot: foo)` → `<TextBlock Text="{x:Bind Foo}"/>`.
+/// `Text [name] (content: "literal")` → `<TextBlock Text="literal"/>`.
+/// `Text [name] (content: row.value)` → `<TextBlock Text="{x:Bind Row.Value}"/>`
 /// when `row` is a `For`-bound name (PR-2).
 fn emit_text(
     node: &LayoutNode,
@@ -3932,7 +3932,7 @@ fn emit_text(
     }
 }
 
-/// `Image [name] (source: slot: foo)` â†’ `<Image Source="{x:Bind Foo}"/>`.
+/// `Image [name] (source: slot: foo)` → `<Image Source="{x:Bind Foo}"/>`.
 fn emit_image(
     node: &LayoutNode,
     indent: usize,
@@ -3978,7 +3978,7 @@ fn emit_image(
     Ok(format!("{pad}<Image{source_attr}{style}/>\n"))
 }
 
-/// `Spacer` â†’ `<Rectangle/>` with default Width/Height that flex the layout.
+/// `Spacer` → `<Rectangle/>` with default Width/Height that flex the layout.
 /// In a StackPanel a `<Rectangle Width="0" Height="0"/>` collapses; a more
 /// useful default is `Width="Auto"` so the parent layout can drive size.
 fn emit_spacer(
@@ -3993,7 +3993,7 @@ fn emit_spacer(
     ))
 }
 
-/// `Divider` â†’ a thin `<Border>` band. WinUI 3 has no `<Separator>` in the
+/// `Divider` → a thin `<Border>` band. WinUI 3 has no `<Separator>` in the
 /// base SDK; the conventional pattern is a `<Border BorderThickness="..."
 /// BorderBrush="..."/>` line.
 fn emit_divider(
@@ -4010,16 +4010,16 @@ fn emit_divider(
     ))
 }
 
-/// `Icon [name] (glyph: "...")` â†’ `<FontIcon Glyph="..."/>` against
+/// `Icon [name] (glyph: "...")` → `<FontIcon Glyph="..."/>` against
 /// Segoe Fluent Icons (the WinUI 3 default icon font).
 ///
 /// Exception: when the `glyph` value is a *semantic* name (today only
 /// `"spinner"`) the lowering switches to the WinUI-native widget that
-/// expresses that semantic â€” `<ProgressRing IsActive="True"/>` for
+/// expresses that semantic — `<ProgressRing IsActive="True"/>` for
 /// `"spinner"`.  This is X5 Path A from
 /// `code/programs/csharp/toolkit-multi-demo/ISSUES.md`: Segoe Fluent has no glyph
 /// literally named `"spinner"`, and even if it did, `FontIcon` only
-/// renders a static character â€” the toolkit's `Spinner` component
+/// renders a static character — the toolkit's `Spinner` component
 /// wants the animated spinning ring that `ProgressRing` provides.
 ///
 /// The semantic-name list is intentionally tiny (start with `spinner`,
@@ -4037,7 +4037,7 @@ fn emit_icon(
     let style = part_style_attr(node, part_styles);
 
     // X5: semantic-glyph lowering.  Only fires for literal string
-    // values â€” slot-bound glyphs (`{x:Bind GlyphProp}`) stay on the
+    // values — slot-bound glyphs (`{x:Bind GlyphProp}`) stay on the
     // FontIcon path because we can't statically tell what the runtime
     // value will be.
     if let Some(LayoutPropValue::String(s)) =
@@ -4077,7 +4077,7 @@ fn emit_icon(
 
 /// Map a semantic glyph name to a WinUI 3 element name + attribute
 /// fragment that expresses that semantic natively.  Returns `None`
-/// for any name not in the table â€” the caller then falls back to
+/// for any name not in the table — the caller then falls back to
 /// the standard `<FontIcon Glyph="..."/>` lowering.
 ///
 /// Currently recognized:
@@ -4310,7 +4310,7 @@ fn emit_path(
 // File 2: code-behind (.xaml.cs)
 // =====================================================================
 
-/// Emit `{Component}.xaml.cs` â€” the partial class with DPs, the
+/// Emit `{Component}.xaml.cs` — the partial class with DPs, the
 /// Dispatch event, constructor boilerplate, and any helper methods the
 /// expression lowerer registered during the XAML walk (PR-2).
 fn emit_code_behind(
@@ -4397,10 +4397,10 @@ fn emit_code_behind(
         writeln!(out).unwrap();
     }
 
-    // One DependencyProperty per declared slot (spec Â§8). Slots whose
+    // One DependencyProperty per declared slot (spec §8). Slots whose
     // PascalCased name collides with a property on the chosen base
     // class are renamed to `<BaseName>{Slot}` via `ctx.slot_aliases`
-    // (Fix A4 â€” e.g. `slot title : text` on a ContentDialog-rooted
+    // (Fix A4 — e.g. `slot title : text` on a ContentDialog-rooted
     // component becomes `DialogTitle`).
     for slot in slots {
         out.push_str(&emit_dependency_property(slot, name, ctx)?);
@@ -4422,7 +4422,7 @@ fn emit_code_behind(
     writeln!(out, "    public event EventHandler<{name}Event>? Dispatch;").unwrap();
     writeln!(out).unwrap();
 
-    // Helper to invoke Dispatch from generated handlers â€” used by future
+    // Helper to invoke Dispatch from generated handlers — used by future
     // PRs (PR-3 wires HostButton's Click etc.). Today it's just here as a
     // no-warn unused method to lock the API shape.
     if !emits.is_empty() {
@@ -5476,7 +5476,7 @@ fn row_projections_depending_on<'a>(ctx: &'a EmitContext<'_>, slot_path: &str) -
     properties
 }
 
-/// Translate a mosmodel slot type to its C# property type per spec Â§8.
+/// Translate a mosmodel slot type to its C# property type per spec §8.
 fn emit_row_projection_property(projection: &RowProjection) -> String {
     let property_name = &projection.property_name;
     let source_path = &projection.source_path;
@@ -5563,7 +5563,7 @@ fn list_inner_to_csharp(t: &ListInnerType) -> Result<String, PipelineEmitError> 
 // File 3: event union (.Event.cs)
 // =====================================================================
 
-/// Emit `{Component}.Event.cs` â€” the discriminated record union for the
+/// Emit `{Component}.Event.cs` — the discriminated record union for the
 /// UI24 dispatch contract.
 fn emit_events(
     name: &str,
@@ -5674,7 +5674,7 @@ fn emit_payload_to_csharp(t: &EmitPayloadType) -> String {
         EmitPayloadType::Bool => "bool".to_string(),
         EmitPayloadType::Color => "Windows.UI.Color".to_string(),
         // Component-typed emit payloads forward the C# type name verbatim
-        // (same shape as component-typed slots â€” the host declares a
+        // (same shape as component-typed slots — the host declares a
         // matching record type and the resolver in PR-5 wires it up).
         EmitPayloadType::Component(type_name) => type_name.clone(),
     }
@@ -5688,7 +5688,7 @@ fn strip_on_prefix(name: &str) -> String {
             .map(|c| c.is_ascii_uppercase())
             .unwrap_or(false)
         {
-            // `onNavigate` â†’ `navigate` (lower the first char so kebab
+            // `onNavigate` → `navigate` (lower the first char so kebab
             // conversion gives `Navigate`).
             let mut chars = rest.chars();
             let mut s = String::with_capacity(rest.len());
@@ -5735,7 +5735,7 @@ fn escape_xaml_attr(s: &str) -> String {
 // PR-2: For / If / Else lowering + ExprLowerer
 // =====================================================================
 
-/// `For (each: <expr>, as: <name>, index: <name>?) { <children> }` â†’
+/// `For (each: <expr>, as: <name>, index: <name>?) { <children> }` →
 /// `<ItemsRepeater>` with a generated `<DataTemplate>` whose
 /// `x:DataType` is the generated RowVm record.
 fn emit_for(
@@ -5753,9 +5753,9 @@ fn emit_for(
 
     // -- 2. Resolve the `each:` source to a {x:Bind} path and an
     //    element type --
-    // `is_cell_loop` is `true` only for the per-column cell loop â€”
-    // a `For` whose `each:` is an enclosing For binding (UI29 Â§3.4,
-    // the inner `For (each: row, â€¦)`). GROUP C threads the colgroup
+    // `is_cell_loop` is `true` only for the per-column cell loop —
+    // a `For` whose `each:` is an enclosing For binding (UI29 §3.4,
+    // the inner `For (each: row, …)`). GROUP C threads the colgroup
     // width onto that loop's value VM (a `double Width` field) so each
     // column renders at a fixed pixel width.
     let (items_path, element_type, is_cell_loop, slot_backed_items_source) =
@@ -5766,7 +5766,7 @@ fn emit_for(
                     return Err(PipelineEmitError::UnsafeSlotName(pascal));
                 }
                 // Look up the slot's declared C# type to derive the element
-                // type. Slots are typed as `IReadOnlyList<X>` â†’ element is X.
+                // type. Slots are typed as `IReadOnlyList<X>` → element is X.
                 let csharp_type = ctx
                     .slot_types
                     .get(slot.as_str())
@@ -5792,7 +5792,7 @@ fn emit_for(
                     }
                 }
             }
-            // UI29 Â§3.4 â€” `each: <NAME>` where NAME is an enclosing For's
+            // UI29 §3.4 — `each: <NAME>` where NAME is an enclosing For's
             // binding. The moslayout validator has already verified the
             // name is in scope. XAML's existing `ctx.for_scope` tracks the
             // matching `ForBinding`, so we can look up its `element_type`
@@ -5805,19 +5805,19 @@ fn emit_for(
                     return Err(PipelineEmitError::UnsafeSlotName(pascal));
                 }
                 // GROUP B FIX (element-type peel). `each: <NAME>` where NAME
-                // is an enclosing `For`'s `as:` binding (UI29 Â§3.4 â€” the
+                // is an enclosing `For`'s `as:` binding (UI29 §3.4 — the
                 // nested cell loop `For (each: row, as: v)`). The enclosing
                 // binding's `element_type` is the type of NAME *itself*
                 // (e.g. `row` is `IReadOnlyList<string>`). But THIS `For`
                 // iterates over NAME's elements, so each `as:` element is
-                // one level deeper â€” `v` is `string`, not the whole row
+                // one level deeper — `v` is `string`, not the whole row
                 // list. We must peel exactly one `List<>` level.
                 //
                 // The pre-fix code used `fb.element_type` verbatim, so the
                 // inner value VM (`Grid_VVm`) typed its value field as
                 // `IReadOnlyList<string>`. The cell then bound
-                // `<TextBlock Text="{x:Bind V}"/>` â€” a `string` Text bound
-                // to a list â€” which BLOCKS `dotnet build`. Peeling one
+                // `<TextBlock Text="{x:Bind V}"/>` — a `string` Text bound
+                // to a list — which BLOCKS `dotnet build`. Peeling one
                 // level types `V` as `string`, so the bind type-checks.
                 let outer_type = ctx
                     .for_scope
@@ -6038,9 +6038,9 @@ fn emit_for(
     let mut body = body_result?;
 
     // GROUP C: bind the fixed per-column width onto the rendered cell.
-    // The cell element is the first opening tag of this loop's body â€”
-    // either a kernel `<Border â€¦>` (when Cell.mll resolved inline) or
-    // a component reference `<grid:Cell â€¦>` (both are FrameworkElements
+    // The cell element is the first opening tag of this loop's body —
+    // either a kernel `<Border …>` (when Cell.mll resolved inline) or
+    // a component reference `<grid:Cell …>` (both are FrameworkElements
     // and so have a `Width` property). Inject `Width="{x:Bind Width}"`
     // into that opening tag so the column renders at the colgroup's
     // fixed pixel width regardless of cell content.
@@ -6180,14 +6180,14 @@ fn row_vm_capture_specs(
 /// the existing attributes. If no suitable element is found the body is
 /// returned unchanged.
 ///
-/// Example: `inject_attr_into_first_element("  <Border A=\"1\">\nâ€¦", "W=\"2\"")`
-/// â†’ `"  <Border A=\"1\" W=\"2\">\nâ€¦"`.
+/// Example: `inject_attr_into_first_element("  <Border A=\"1\">\n…", "W=\"2\"")`
+/// → `"  <Border A=\"1\" W=\"2\">\n…"`.
 fn inject_attr_into_first_element(body: &str, attr: &str) -> String {
     let bytes = body.as_bytes();
     let mut i = 0;
     while i < bytes.len() {
         if bytes[i] == b'<' {
-            // Skip comments (`<!-- â€¦ -->`) and closing tags (`</â€¦>`).
+            // Skip comments (`<!-- … -->`) and closing tags (`</…>`).
             let next = bytes.get(i + 1).copied();
             if next == Some(b'!') || next == Some(b'/') {
                 // Advance past this `<` and continue scanning.
@@ -6220,7 +6220,7 @@ fn inject_attr_into_first_element(body: &str, attr: &str) -> String {
     body.to_string()
 }
 
-/// `If (when: <expr>) { <then> } [Else { <else> }]` â†’ twin
+/// `If (when: <expr>) { <then> } [Else { <else> }]` → twin
 /// `<ContentControl>`s whose `Visibility` is bound to the expression
 /// and its negation.
 fn emit_if(
@@ -6365,12 +6365,12 @@ fn emit_converter_resource_block(
 ///
 /// Implements `IValueConverter` with optional `ConverterParameter`
 /// support: passing `"invert"` flips the boolean before converting
-/// to `Visibility`. That matches the `If`/`Else` lowering in Â§6.2.
+/// to `Visibility`. That matches the `If`/`Else` lowering in §6.2.
 fn emit_bool_to_vis_converter_source(namespace: &str) -> String {
     format!(
         "// Auto-generated by mosaic-emit-xaml. Do not edit.\n\
          //\n\
-         // Bool â†’ Visibility converter. Used by every `If` / `Else` lowering and by\n\
+         // Bool → Visibility converter. Used by every `If` / `Else` lowering and by\n\
          // HostDialog `open: slot:` bindings. ConverterParameter=\"invert\" flips the\n\
          // boolean before mapping (used by the Else branch of an If/Else pair).\n\
          using System;\n\
@@ -6498,7 +6498,7 @@ fn emit_row_vm_source(component: &str, vm: &RowVm, options: &EmitOptions) -> Str
         writeln!(
             out,
             "/// <remarks>\n\
-             /// GROUP C â€” fixed per-column widths. This VM carries a `Width`\n\
+             /// GROUP C — fixed per-column widths. This VM carries a `Width`\n\
              /// (double) the cell element binds via `Width=\"{{x:Bind Width, Mode=OneWay}}\"`.\n\
              /// The enclosing generated row projection zips each cell index\n\
              /// with the component's authored `column-widths` slot.\n\
@@ -6545,22 +6545,22 @@ fn emit_row_vm_source(component: &str, vm: &RowVm, options: &EmitOptions) -> Str
 // to see the component on screen.
 //
 // What the host MainWindow does depends on the component's RootShape:
-//   - `RootShape::UserControl` â†’ MainWindow's Grid hosts the component
+//   - `RootShape::UserControl` → MainWindow's Grid hosts the component
 //     directly as its content (full-window placement).
-//   - `RootShape::ContentDialog` â†’ MainWindow has a button that
+//   - `RootShape::ContentDialog` → MainWindow has a button that
 //     constructs the dialog (a ContentDialog under the hood), sets
 //     its XamlRoot from the button (Fix D1), and ShowAsync's it.
 //
 // The component's slot DPs become host-set values in the generated
 // MainWindow code; the user replaces these stubs with real values
 // when filling in business logic. Sensible defaults:
-//   - text slot â†’ "Sample <SlotName>"
-//   - number slot â†’ 0
-//   - bool slot â†’ false
-//   - color slot â†’ /* TODO */ Windows.UI.Colors.Gray
-//   - image slot â†’ null
-//   - node slot â†’ null
-//   - list<T> slot â†’ an empty array
+//   - text slot → "Sample <SlotName>"
+//   - number slot → 0
+//   - bool slot → false
+//   - color slot → /* TODO */ Windows.UI.Colors.Gray
+//   - image slot → null
+//   - node slot → null
+//   - list<T> slot → an empty array
 //
 // The component's emits are wired to a single `OnComponentDispatch`
 // handler that pattern-matches the event union and updates a status
@@ -6765,7 +6765,7 @@ fn emit_main_window_xaml(name: &str, options: &EmitOptions, shape: RootShape) ->
     match shape {
         RootShape::ContentDialog => {
             // For a HostDialog-rooted component, the MainWindow has a
-            // button and a status text. Click â†’ spawn the dialog.
+            // button and a status text. Click → spawn the dialog.
             format!(
                 "<!-- Auto-generated by mosaic-emit-xaml in emit-project mode. -->\n\
                  <Window\n    \
@@ -6853,7 +6853,7 @@ fn emit_main_window_cs(
                  \n    \
                      private async void OnOpenButtonClick(object sender, RoutedEventArgs e)\n    \
                      {{\n        \
-                         // Fix D1: use the button's XamlRoot â€” it's guaranteed in-tree at click time.\n        \
+                         // Fix D1: use the button's XamlRoot — it's guaranteed in-tree at click time.\n        \
                          var xamlRoot = (sender as FrameworkElement)?.XamlRoot;\n        \
                          if (xamlRoot is null) {{ this.StatusText.Text = \"No XamlRoot on click sender\"; return; }}\n        \
                          try\n        \
@@ -7304,7 +7304,7 @@ fn stub_value_for_slot(t: &SlotType, slot_name: &str) -> String {
             "new System.Collections.Generic.List<{}>()",
             list_inner_csharp(inner)
         ),
-        // Component slots (rare) â€” surface a stub null for now.
+        // Component slots (rare) — surface a stub null for now.
         _ => "null!".to_string(),
     }
 }
@@ -7325,13 +7325,13 @@ fn list_inner_csharp(t: &ListInnerType) -> String {
     }
 }
 
-/// Build the body of `OnComponentDispatch` â€” a `switch (ev) { ... }`
+/// Build the body of `OnComponentDispatch` — a `switch (ev) { ... }`
 /// over the emit cases. Each arm sets `this.StatusText.Text` to a
 /// stub label and has a `/* TODO: business logic */` comment.
 fn build_dispatch_match(name: &str, emits: &[EmitDecl]) -> String {
     if emits.is_empty() {
         return format!(
-            "// {name} declares no emits â€” Dispatch never fires.\n        \
+            "// {name} declares no emits — Dispatch never fires.\n        \
              this.StatusText.Text = $\"Dispatched (no emits declared): {{ev}}\";"
         );
     }
@@ -7459,7 +7459,7 @@ fn emit_project_readme(name: &str, shape: RootShape, require_runtime: bool) -> S
     let shape_blurb = match shape {
         RootShape::ContentDialog => {
             "This project hosts a Mosaic-authored **dialog component** ({name}).\n\
-             The MainWindow contains a button â€” click it to display the dialog\n\
+             The MainWindow contains a button — click it to display the dialog\n\
              (a `<ContentDialog>` underneath).\n"
         }
         RootShape::UserControl => {
@@ -7500,7 +7500,7 @@ fn emit_project_readme(name: &str, shape: RootShape, require_runtime: bool) -> S
         "**Yes** — your host"
     };
     format!(
-        "# {name} â€” WinUI 3 host project\n\
+        "# {name} — WinUI 3 host project\n\
          \n\
          Auto-generated by `mosaic-compile --backend xaml --emit-project`.\n\
          \n\
@@ -7508,7 +7508,7 @@ fn emit_project_readme(name: &str, shape: RootShape, require_runtime: bool) -> S
          {runtime_blurb}\
          ## Prerequisites\n\
          \n\
-         1. **.NET 9.0 SDK** â€” `dotnet --list-sdks` should list one matching `9.0.*`.\n\
+         1. **.NET 9.0 SDK** — `dotnet --list-sdks` should list one matching `9.0.*`.\n\
          2. No separate Windows App Runtime install is required; the pinned\n\
             Windows App SDK is bundled with the generated host.\n\
          3. Visual Studio Build Tools 2022 is useful when opening the project in\n\
@@ -7533,7 +7533,7 @@ fn emit_project_readme(name: &str, shape: RootShape, require_runtime: bool) -> S
          \n\
          {logic_blurb}\
          - The `{name}.xaml.cs` and `{name}.xaml` files are auto-generated\n\
-           from the Mosaic sources and **should NOT be edited by hand** â€” they\n\
+           from the Mosaic sources and **should NOT be edited by hand** — they\n\
            get overwritten on the next `mosaic-compile` run.\n\
          \n\
          ## Files\n\
@@ -7565,20 +7565,20 @@ fn inner_type_of_list(t: &str) -> String {
     "object".to_string()
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// ExprLowerer â€” UI29 Â§3.3 expression source â†’ {x:Bind} path or helper
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────
+// ExprLowerer — UI29 §3.3 expression source → {x:Bind} path or helper
+// ─────────────────────────────────────────────────────────────────────
 //
 // The moslayout-compiler stores `Expr` as the source-text substring
 // (tokens joined with spaces). It can be:
 //
-//   - bare name              `row`                                â†’ Bindable("Row")
-//   - bare slot ref          `slot: editable`                     â†’ Bindable("Editable")
-//   - boolean literal        `true` / `false`                     â†’ Bindable("True"/"False")
-//   - dotted access          `row.value` / `slot: theme.dark`     â†’ Bindable("Row.Value" / "Theme.Dark")
-//   - indexer                `row[c]` / `slot: rows[r][c]`        â†’ Helper("GetXxx(...)")
-//   - comparisons            `r == slot: edit-row`                â†’ Helper("IsXxx(...)")
-//   - logical &&/||/!        `a && b`                             â†’ Helper("Combined(...)")
+//   - bare name              `row`                                → Bindable("Row")
+//   - bare slot ref          `slot: editable`                     → Bindable("Editable")
+//   - boolean literal        `true` / `false`                     → Bindable("True"/"False")
+//   - dotted access          `row.value` / `slot: theme.dark`     → Bindable("Row.Value" / "Theme.Dark")
+//   - indexer                `row[c]` / `slot: rows[r][c]`        → Helper("GetXxx(...)")
+//   - comparisons            `r == slot: edit-row`                → Helper("IsXxx(...)")
+//   - logical &&/||/!        `a && b`                             → Helper("Combined(...)")
 //
 // The PR-2 lowerer supports the first four directly and the last three
 // via generated helpers. Anything else returns `Unsupported` with a
@@ -7590,7 +7590,7 @@ enum ExprLowering {
     /// Direct `{x:Bind X}` path (the inner part of the markup
     /// extension, without the `{x:Bind ...}` wrapper).
     Bindable(String),
-    /// A helper-method call expression in C# form â€” `{x:Bind GetCell(R, C)}`
+    /// A helper-method call expression in C# form — `{x:Bind GetCell(R, C)}`
     /// is the consumer; the helper itself has been registered with the
     /// EmitContext.
     Helper(String),
@@ -7647,8 +7647,8 @@ fn try_lower_for_template_predicate(src: &str, ctx: &mut EmitContext<'_>) -> Opt
 
 /// Lower a raw expression source string to its WinUI 3 binding form.
 ///
-/// This is a small recursive-descent parser over the UI29 Â§3.3 grammar
-/// (or-expr â†’ and-expr â†’ eq-expr â†’ rel-expr â†’ unary â†’ postfix â†’ primary).
+/// This is a small recursive-descent parser over the UI29 §3.3 grammar
+/// (or-expr → and-expr → eq-expr → rel-expr → unary → postfix → primary).
 /// We do NOT pull in a separate parser dependency; the grammar is tiny
 /// and the source has already been validated by moslayout-compiler. We
 /// re-tokenise here only to figure out which branch of the lowering
@@ -7862,7 +7862,7 @@ enum ExprTok {
 }
 
 /// Tokenise an expression source string. The grammar is small enough
-/// that we don't need a generated lexer â€” a hand-rolled one fits in a
+/// that we don't need a generated lexer — a hand-rolled one fits in a
 /// few dozen lines.
 fn tokenise_expr(src: &str) -> Result<Vec<ExprTok>, String> {
     let mut out = Vec::new();
@@ -7931,7 +7931,7 @@ fn tokenise_expr(src: &str) -> Result<Vec<ExprTok>, String> {
                 i += 1;
             }
             b'"' => {
-                // String literal â€” collect until the closing quote,
+                // String literal — collect until the closing quote,
                 // honouring `\"` and `\\` escapes.
                 let start = i + 1;
                 i += 1;
@@ -7997,7 +7997,7 @@ struct ExprParser<'a, 'b> {
     tokens: &'a [ExprTok],
     pos: usize,
     ctx: &'a mut EmitContext<'b>,
-    /// The original source string â€” used in error messages and helper
+    /// The original source string — used in error messages and helper
     /// name hashing.
     src: &'a str,
     /// The C# type of an indexer-only helper's result.
@@ -8042,7 +8042,7 @@ impl<'a, 'b> ExprParser<'a, 'b> {
         self.pos >= self.tokens.len()
     }
 
-    /// Parse the entire expression â€” only the recursive-descent entry
+    /// Parse the entire expression — only the recursive-descent entry
     /// point a caller invokes. Returns the lowered form for the whole
     /// expression.
     fn parse_or(&mut self) -> Result<ExprLowering, String> {
@@ -8050,7 +8050,7 @@ impl<'a, 'b> ExprParser<'a, 'b> {
         // the expression and decide on a lowering strategy in one pass.
         //
         // - If every token after the first primary is `.NAME`, we have
-        //   a pure member-access path â†’ Bindable.
+        //   a pure member-access path → Bindable.
         // - If there's an indexer / comparison / logical / unary-not,
         //   we register a helper method and return Helper(call).
         // - The fallback is Unsupported with a clear reason.
@@ -8112,22 +8112,22 @@ impl<'a, 'b> ExprParser<'a, 'b> {
                 self.pos += 1;
                 Ok("False".to_string())
             }
-            // UI28-1 / U29-D1 â€” accept a parenthesised primary so that
+            // UI28-1 / U29-D1 — accept a parenthesised primary so that
             // single-NAME grouping like `( h )` (used by mosaic-pkg-grid
             // v0.2.0's Grid.mll and the VisiCalc demo's inlined copy)
             // resolves cleanly through the XAML {x:Bind} path. The
             // moslayout parser turns `( h )` into Expr because the
-            // `(...)` grouping triggers the Expr branch (UI29 Â§3.3);
+            // `(...)` grouping triggers the Expr branch (UI29 §3.3);
             // the XAML emitter previously rejected the resulting
             // LParen primary as "unsupported primary token". A
-            // parenthesised primary is just its inner primary â€”
+            // parenthesised primary is just its inner primary —
             // recurse and consume the matching RParen.
             ExprTok::LParen => {
                 self.pos += 1;
                 let inner = self.parse_primary_bindable()?;
                 if !self.consume(&ExprTok::RParen) {
                     return Err(format!(
-                        "expression {:?} has unmatched LParen â€” expected RParen after {:?}",
+                        "expression {:?} has unmatched LParen — expected RParen after {:?}",
                         self.src, inner
                     ));
                 }
@@ -8204,15 +8204,15 @@ impl<'a, 'b> ExprParser<'a, 'b> {
                         params.push((pname, "int".to_string()));
                     }
                 }
-                // Otherwise: a name with no binding â€” leave it for
+                // Otherwise: a name with no binding — leave it for
                 // transliteration to surface as `this.<name>` if it's a
                 // slot, or as a literal if it's something else.
             }
         }
 
         // Determine the return type. PR-2 supports two shapes:
-        //   - logical / comparison â†’ bool
-        //   - indexer (X[idx])     â†’ string (default; downstream type
+        //   - logical / comparison → bool
+        //   - indexer (X[idx])     → string (default; downstream type
         //                            inference is out of scope for PR-2)
         let return_type = if self.contains_logical_or_comparison() || self.starts_with_not() {
             "bool".to_string()
@@ -8265,7 +8265,7 @@ fn transliterate_to_csharp(tokens: &[ExprTok], ctx: &EmitContext<'_>) -> String 
             }
             ExprTok::Name(n) => {
                 let pascal = kebab_to_pascal_case(n);
-                // If it's a for-bound name or index, leave it bare â€”
+                // If it's a for-bound name or index, leave it bare —
                 // the helper's parameter has this exact PascalCased name.
                 if ctx.lookup_for_binding(n).is_some() || ctx.lookup_for_index(n).is_some() {
                     out.push_str(&pascal);
@@ -8387,9 +8387,9 @@ fn find_prop_keyword<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a st
 //
 // These three primitives lower to native WinUI 3 controls:
 //
-// - HostInput  â†’ <TextBox>     (spec Â§4.1)
-// - HostButton â†’ <Button>      (spec Â§4.2)
-// - HostScroll â†’ <ScrollViewer> (spec Â§4.3)
+// - HostInput  → <TextBox>     (spec §4.1)
+// - HostButton → <Button>      (spec §4.2)
+// - HostScroll → <ScrollViewer> (spec §4.3)
 //
 // Wiring an emit (e.g. `onChange: emit: onFormulaChange`) requires a
 // code-behind handler method. We register them on EmitContext and emit
@@ -8407,7 +8407,7 @@ fn host_x_name(node: &LayoutNode, tag: &str, ctx: &mut EmitContext<'_>) -> Strin
             // X2 fix: when the pascal-cased part name collides with the
             // enclosing component class name (e.g. component `Button`
             // with part `button`), WinUI's XAML compiler generates a
-            // `private â€¦ {pascal} {pascal};` field that triggers C#
+            // `private … {pascal} {pascal};` field that triggers C#
             // error CS0542 ("member names cannot be the same as their
             // enclosing type"). Suffix `Element` to disambiguate; the
             // `_Click` handler stem is derived from `x_name` so the
@@ -8423,7 +8423,7 @@ fn host_x_name(node: &LayoutNode, tag: &str, ctx: &mut EmitContext<'_>) -> Strin
     format!("{tag}_{n}")
 }
 
-/// `HostInput` â†’ `<TextBox>` per spec Â§4.1.
+/// `HostInput` → `<TextBox>` per spec §4.1.
 fn emit_host_input(
     node: &LayoutNode,
     indent: usize,
@@ -8470,7 +8470,7 @@ fn emit_host_input(
         _ => {}
     }
 
-    // value: slot/string/expr â†’ Text binding
+    // value: slot/string/expr → Text binding
     match find_prop_value(node, "value") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
@@ -8602,7 +8602,7 @@ fn emit_host_input(
         attrs.push_str(&format!(" MaxLength=\"{i}\""));
     }
 
-    // multiline: true â†’ AcceptsReturn + TextWrapping
+    // multiline: true → AcceptsReturn + TextWrapping
     if find_prop_keyword(node, "multiline") == Some("true") {
         attrs.push_str(" AcceptsReturn=\"True\" TextWrapping=\"Wrap\"");
     }
@@ -8639,7 +8639,7 @@ fn emit_host_input(
         attrs.push_str(&format!(" TextChanged=\"{handler}\""));
     }
 
-    // onCommit / onCancel â†’ merged KeyDown handler keyed on Enter / Escape.
+    // onCommit / onCancel → merged KeyDown handler keyed on Enter / Escape.
     let commit = match find_prop_value(node, "onCommit") {
         Some(LayoutPropValue::EmitRef(e)) => Some(e.clone()),
         _ => None,
@@ -8677,7 +8677,7 @@ fn emit_host_input(
         attrs.push_str(&format!(" KeyDown=\"{handler}\""));
     }
 
-    // onFocus â†’ GotFocus
+    // onFocus → GotFocus
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onFocus") {
         let handler = format!("{x_name}_GotFocus");
         let emit_case = strip_on_prefix(emit_name);
@@ -8727,7 +8727,7 @@ fn host_input_event_args(
     }
 }
 
-/// `HostButton` â†’ `<Button>` per spec Â§4.2.
+/// `HostButton` → `<Button>` per spec §4.2.
 fn emit_host_button(
     node: &LayoutNode,
     indent: usize,
@@ -8861,7 +8861,7 @@ fn emit_host_button(
         | None => {}
     }
 
-    // onClick â†’ Click handler
+    // onClick → Click handler
     if let Some(LayoutPropValue::EmitRef(emit_name)) =
         find_prop_value(node, "onClick").or_else(|| find_prop_value(node, "onTap"))
     {
@@ -9290,7 +9290,7 @@ fn emit_host_drop_target(
     ))
 }
 
-/// `HostCheckbox` â†’ WinUI / WPF `<CheckBox>` per UI29-2.
+/// `HostCheckbox` → WinUI / WPF `<CheckBox>` per UI29-2.
 ///
 /// ## Property handling
 ///
@@ -9307,14 +9307,14 @@ fn emit_host_drop_target(
 /// ## Checked vs. Unchecked event split
 ///
 /// WinUI's `<CheckBox>` has separate `Checked(object, RoutedEventArgs)`
-/// and `Unchecked(object, RoutedEventArgs)` events â€” there is no
+/// and `Unchecked(object, RoutedEventArgs)` events — there is no
 /// "toggled with new value" combined event. We register **two**
 /// code-behind handlers per `onToggle` binding: `<X>_Checked` fires
 /// `Dispatch(.x(checked: true))` and `<X>_Unchecked` fires
 /// `Dispatch(.x(checked: false))`. This matches the kernel-canonical
 /// `onToggle(checked: bool)` signature exactly.
 ///
-/// (`Indeterminate` event is intentionally NOT wired â€” the tri-state
+/// (`Indeterminate` event is intentionally NOT wired — the tri-state
 /// case only fires `Indeterminate` when the user clicks through to the
 /// third state, which is a UX choice the host can drive via the
 /// `indeterminate:` slot. v1 ignores `Indeterminate` events.)
@@ -9519,7 +9519,7 @@ fn emit_host_checkbox(
     // Checked + Unchecked handlers from `onToggle:`. WinUI splits the
     // toggle into two events; we wire both to dispatch with the
     // matching `checked: bool` payload value (true for Checked, false
-    // for Unchecked) so the kernel-canonical UI29-2 Â§2.2 emit signature
+    // for Unchecked) so the kernel-canonical UI29-2 §2.2 emit signature
     // is satisfied.
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onToggle") {
         let emit_case = strip_on_prefix(emit_name);
@@ -9554,19 +9554,19 @@ fn emit_host_checkbox(
     ))
 }
 
-/// `HostRadio` â†’ WinUI / WPF `<RadioButton>` per UI29-2.
+/// `HostRadio` → WinUI / WPF `<RadioButton>` per UI29-2.
 ///
 /// ## Property handling
 ///
 /// | moslayout prop          | XAML                                                       |
 /// |---|---|
 /// | `checked: slot: c`      | `IsChecked="{x:Bind C, Mode=OneWay}"`                      |
-/// | `group: "..."`          | `GroupName="..."` â€” WinUI's native radio-mutex attribute   |
+/// | `group: "..."`          | `GroupName="..."` — WinUI's native radio-mutex attribute   |
 /// | `group: slot: g`        | `GroupName="{x:Bind G}"`                                   |
 /// | `value: ... / slot:`    | recorded in source as a `<!-- value: ... -->` annotation   |
-/// | `disabled: ...`         | `IsEnabled` â€” same shape as HostCheckbox                   |
-/// | `label: ...`            | `Content=...` â€” same shape as HostCheckbox                 |
-/// | `onSelect: emit: onX`   | `Checked="X_Checked"` (only â€” Unchecked is silent)         |
+/// | `disabled: ...`         | `IsEnabled` — same shape as HostCheckbox                   |
+/// | `label: ...`            | `Content=...` — same shape as HostCheckbox                 |
+/// | `onSelect: emit: onX`   | `Checked="X_Checked"` (only — Unchecked is silent)         |
 ///
 /// ## Group mutex
 ///
@@ -9578,15 +9578,15 @@ fn emit_host_checkbox(
 ///
 /// ## `onSelect` fires only on Checked
 ///
-/// Per UI29-2 Â§2.2, `onSelect = "this radio was chosen"`. We wire
-/// **only** the `Checked` event â€” `Unchecked` (sibling-caused
+/// Per UI29-2 §2.2, `onSelect = "this radio was chosen"`. We wire
+/// **only** the `Checked` event — `Unchecked` (sibling-caused
 /// deselect) is intentionally not handled.
 ///
 /// ## `value` is recorded as a comment for v1
 ///
 /// WinUI's `<RadioButton>` has no built-in `Value` property. The
 /// emitted code-behind handler dispatches `.x(value: "<lit>")` (string
-/// literal) or `.x(value: this.<Pascal>)` (slot ref) directly â€” see
+/// literal) or `.x(value: this.<Pascal>)` (slot ref) directly — see
 /// the handler emission below.
 fn emit_host_radio(
     node: &LayoutNode,
@@ -9630,7 +9630,7 @@ fn emit_host_radio(
         _ => {}
     }
 
-    // GroupName from `group:` â€” native WinUI radio-mutex.
+    // GroupName from `group:` — native WinUI radio-mutex.
     match find_prop_value(node, "group") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
@@ -10056,7 +10056,7 @@ fn escape_csharp_string(s: &str) -> String {
 }
 
 // =====================================================================
-// UI29-4 â€” HostLink / HostTooltip / HostNumberInput emitters
+// UI29-4 — HostLink / HostTooltip / HostNumberInput emitters
 // =====================================================================
 
 /// #12038: whether a `HostLink.href` value's scheme is on the allowlist
@@ -10124,7 +10124,7 @@ fn has_allowed_uri_scheme(href: &str) -> bool {
     !authority_onward.starts_with(['/', '?', '#']) && !authority_onward.is_empty()
 }
 
-/// `HostLink` â†’ WinUI 3 `<HyperlinkButton>` per UI29-4.
+/// `HostLink` → WinUI 3 `<HyperlinkButton>` per UI29-4.
 ///
 /// WinUI 3 ships HyperlinkButton specifically for "clickable hyperlink"
 /// (vs `<Hyperlink>` which is the inline-text variant used inside
@@ -10138,7 +10138,7 @@ fn has_allowed_uri_scheme(href: &str) -> bool {
 /// | `href: "..."`       | `NavigateUri="..."` (XAML-attr-escaped)                     |
 /// | `href: slot: u`     | `NavigateUri="{x:Bind U}"`                                   |
 /// | `label: ..." / slot`| `Content="..."` / `Content="{x:Bind Label}"`                 |
-/// | `target: new-tab`   | (no extra attr â€” WinUI HyperlinkButton always opens via OS) |
+/// | `target: new-tab`   | (no extra attr — WinUI HyperlinkButton always opens via OS) |
 /// | `external: false` + `onActivate` | swaps to `<Button>` with `Click` handler so the host can route in-app |
 /// | `onActivate: emit`  | Click handler when external:false; otherwise dropped (v1) |
 ///
@@ -10176,7 +10176,7 @@ fn emit_host_link(
         _ => None,
     };
 
-    // Content (label) â€” shared between Button and HyperlinkButton.
+    // Content (label) — shared between Button and HyperlinkButton.
     let mut content_attr = String::new();
     match find_prop_value(node, "label") {
         Some(LayoutPropValue::SlotRef(slot)) => {
@@ -10214,7 +10214,7 @@ fn emit_host_link(
             }
         },
         _ => {
-            // No label â€” fall back to href as the visible text, but only when
+            // No label — fall back to href as the visible text, but only when
             // there is nothing else to show. A link wrapping a subtree gets
             // its content from the children; using the raw URL there would
             // both hide the subtree and display a routing path as body text
@@ -10316,7 +10316,7 @@ fn emit_host_link(
     }
 }
 
-/// `HostTooltip` â†’ wrap the single child with WinUI's
+/// `HostTooltip` → wrap the single child with WinUI's
 /// `ToolTipService.ToolTip` attached property.
 ///
 /// ## Generated shape
@@ -10328,7 +10328,7 @@ fn emit_host_link(
 /// ```
 ///
 /// A `Border` wrapper (rather than e.g. a `Grid`) keeps the layout
-/// flat â€” Border with no padding/margin/background is functionally a
+/// flat — Border with no padding/margin/background is functionally a
 /// pass-through. The ToolTipService attached property surfaces the
 /// tooltip on hover with proper a11y wiring.
 fn emit_host_tooltip(
@@ -10379,7 +10379,7 @@ fn emit_host_tooltip(
     Ok(out)
 }
 
-/// `HostNumberInput` â†’ WinUI 3 `<NumberBox>` per UI29-4.
+/// `HostNumberInput` → WinUI 3 `<NumberBox>` per UI29-4.
 ///
 /// NumberBox is WinUI 3's native numeric input with built-in Â±
 /// stepper buttons, min/max validation, and locale-aware decimal
@@ -10446,7 +10446,7 @@ fn emit_host_number_input(
         | None => {}
     }
 
-    // min/max/step â†’ Minimum/Maximum/SmallChange numeric literals.
+    // min/max/step → Minimum/Maximum/SmallChange numeric literals.
     if let Some(LayoutPropValue::Number(n)) = find_prop_value(node, "min") {
         attrs.push_str(&format!(" Minimum=\"{n}\""));
     }
@@ -10519,7 +10519,7 @@ fn emit_host_number_input(
         | None => {}
     }
 
-    // onChange â†’ ValueChanged code-behind handler.
+    // onChange → ValueChanged code-behind handler.
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onChange") {
         let handler = format!("{x_name}_ValueChanged");
         let case_pascal = kebab_to_pascal_case(&strip_on_prefix(emit_name));
@@ -10541,7 +10541,7 @@ fn emit_host_number_input(
     ))
 }
 
-/// `HostScroll` â†’ `<ScrollViewer>` per spec Â§4.3.
+/// `HostScroll` → `<ScrollViewer>` per spec §4.3.
 fn emit_host_scroll(
     node: &LayoutNode,
     indent: usize,
@@ -10572,17 +10572,17 @@ fn emit_host_scroll(
 }
 
 // =====================================================================
-// U29-1-K-xaml: HostDialog (UI29-1 Â§3.6)
+// U29-1-K-xaml: HostDialog (UI29-1 §3.6)
 // =====================================================================
 //
 // `HostDialog` lowers to WinUI 3's `ContentDialog` (modal: true, the
 // default) or `Flyout` (modal: false). Both are platform-level
 // top-layer primitives that provide modal blocking / focus trap /
-// dismiss handling out of the box â€” exactly the properties UI29-1 Â§1
+// dismiss handling out of the box — exactly the properties UI29-1 §1
 // identified as impossible to compose from `<div>`/`<Border>`.
 //
 // Lifecycle (ShowAsync / Hide) requires C# code-behind on the host
-// side: ContentDialog is not driven by a simple `IsOpen` DP â€” the
+// side: ContentDialog is not driven by a simple `IsOpen` DP — the
 // caller must `await dialog.ShowAsync()` to present it. The emitter
 // therefore takes the documented "code-behind stub" path:
 //
@@ -10605,7 +10605,7 @@ fn emit_host_scroll(
 // `dismiss-on-backdrop` is documented as not-yet-bindable here:
 // ContentDialog's nearest analogue is `LightDismissOverlayMode`
 // (an enum, not a bool) and Flyout's is `LightDismissOverlayMode`
-// + `ShouldConstrainToRootBounds` â€” neither maps cleanly to the
+// + `ShouldConstrainToRootBounds` — neither maps cleanly to the
 // spec's boolean. A keyword-true (the default) becomes a no-op; a
 // keyword-false surfaces as an emitted XAML comment so the gap is
 // visible in diffs without breaking the compile.
@@ -10616,7 +10616,7 @@ fn emit_host_scroll(
 ///
 /// Fix A2: dropped the `mos:Dialog.IsOpen` attribute entirely. The
 /// open-state still surfaces as a comment (the host code-behind
-/// remains responsible for calling ShowAsync()/Hide() â€” same contract
+/// remains responsible for calling ShowAsync()/Hide() — same contract
 /// as before, minus the undeclared-namespace XAML).
 ///
 /// #13008 investigated whether this host-code-behind requirement could
@@ -10627,10 +10627,10 @@ fn emit_host_scroll(
 /// bindable `IsOpen`-style property the way `Popup`/`Flyout`/
 /// `TeachingTip` do, so there is no declarative show/hide surface here
 /// to bind to. Lowering to `Flyout` instead was considered and
-/// rejected â€” `Flyout` isn't a true modal dialog, so it would trade
+/// rejected — `Flyout` isn't a true modal dialog, so it would trade
 /// this gap for a wrong-primitive one rather than closing it.
 ///
-/// Fix A3: `Title="{Binding X}"` â†’ `Title="{x:Bind X, Mode=OneWay}"`
+/// Fix A3: `Title="{Binding X}"` → `Title="{x:Bind X, Mode=OneWay}"`
 /// to match the rest of the emitter. The `{Binding}` form silently
 /// failed because nothing sets DataContext.
 ///
@@ -10644,7 +10644,7 @@ fn build_host_dialog_attrs(
     let mut attrs = String::new();
     let mut comments: Vec<String> = Vec::new();
 
-    // title: slot/string/expr â€” Fix A3 + A4.
+    // title: slot/string/expr — Fix A3 + A4.
     match find_prop_value(node, "title") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let path = ctx.slot_xbind_path(slot);
@@ -10673,7 +10673,7 @@ fn build_host_dialog_attrs(
         | None => {}
     }
 
-    // open: slot/keyword â€” Fix A2: NO `mos:Dialog.IsOpen` emission.
+    // open: slot/keyword — Fix A2: NO `mos:Dialog.IsOpen` emission.
     // The lifecycle contract lives in a doc comment for the host.
     match find_prop_value(node, "open") {
         Some(LayoutPropValue::SlotRef(slot)) => {
@@ -10701,11 +10701,11 @@ fn build_host_dialog_attrs(
     // dismiss-on-backdrop: WinUI 3 has no clean boolean analogue.
     if let Some("false") = find_prop_keyword(node, "dismiss-on-backdrop") {
         comments.push(format!(
-            "<!-- HostDialog #{counter} dismiss-on-backdrop: false â€” XAML's ContentDialog has no boolean equivalent (only LightDismissOverlayMode enum). Host must override the dismiss behaviour in code-behind. -->"
+            "<!-- HostDialog #{counter} dismiss-on-backdrop: false — XAML's ContentDialog has no boolean equivalent (only LightDismissOverlayMode enum). Host must override the dismiss behaviour in code-behind. -->"
         ));
     }
 
-    // onClose â†’ Closed handler. Handler dispatches the declared emit
+    // onClose → Closed handler. Handler dispatches the declared emit
     // case with no payload.
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onClose") {
         let handler = format!("OnHostDialogClose_{counter}");
@@ -10728,7 +10728,7 @@ fn build_host_dialog_attrs(
     Ok((attrs, comments))
 }
 
-/// HostDialog as a NESTED layout primitive (the rare case â€” most
+/// HostDialog as a NESTED layout primitive (the rare case — most
 /// HostDialog uses are at the moslayout root). Emits a
 /// `<ContentDialog>` or `<Flyout>` element with its own attributes
 /// and children.
@@ -10764,15 +10764,15 @@ fn emit_host_dialog(
     Ok(out)
 }
 
-/// HostDialog as the moslayout ROOT â€” the common case after Fix A1.
+/// HostDialog as the moslayout ROOT — the common case after Fix A1.
 /// The component's XAML root IS the `<ContentDialog>`, so this
 /// emitter writes the dialog's *attributes* and *children* only,
 /// without wrapping in another `<ContentDialog>` (that wrapping is
 /// done by `emit_xaml` at the outer level).
 ///
-/// The attributes (Title, Closed handler, â€¦) need to land on the
+/// The attributes (Title, Closed handler, …) need to land on the
 /// outer ContentDialog tag. We emit them by SPLICING into the
-/// already-written `<ContentDialog>` open tag â€” that's the only way
+/// already-written `<ContentDialog>` open tag — that's the only way
 /// to keep one source of truth for the attribute list across the
 /// nested vs root paths.
 ///
@@ -10783,8 +10783,8 @@ fn emit_host_dialog(
 ///   3. the attribute string, packaged into a sentinel comment line
 ///      that `emit_xaml` looks for and splices into the open tag.
 ///
-/// The sentinel approach is fragile â€” a cleaner refactor is on the
-/// to-do list â€” but it keeps the diff small and gets the demo green.
+/// The sentinel approach is fragile — a cleaner refactor is on the
+/// to-do list — but it keeps the diff small and gets the demo green.
 fn emit_host_dialog_as_root(
     node: &LayoutNode,
     indent: usize,
@@ -10798,7 +10798,7 @@ fn emit_host_dialog_as_root(
     let style = part_style_attr(node, part_styles);
 
     // The root's attributes need to live on the outer ContentDialog
-    // tag written by `emit_xaml`. Stash them in `ctx.used_xmlns` â€”
+    // tag written by `emit_xaml`. Stash them in `ctx.used_xmlns` —
     // no, that's xmlns prefixes only. Use a side channel.
     ctx.root_extra_attrs = Some(format!("{attrs}{style}"));
 
@@ -10825,16 +10825,16 @@ fn emit_host_dialog_as_root(
 // Other HostTable shapes retain the structural Grid fallback.
 //
 // Four section sub-tags are recognised:
-//   - HostTableColGroup â€” UI29 Â§2.1 (deferred to a later PR â€” see Â§5.2
+//   - HostTableColGroup — UI29 §2.1 (deferred to a later PR — see §5.2
 //                         caveat about column-widths layout)
-//   - HostTableHead     â€” header row(s), Grid.Row="0"
-//   - HostTableBody     â€” data row(s), wrapped in ScrollViewer for
+//   - HostTableHead     — header row(s), Grid.Row="0"
+//   - HostTableBody     — data row(s), wrapped in ScrollViewer for
 //                         vertical overflow, Grid.Row="<head?1:0>"
-//   - HostTableFoot     â€” footer row(s), Grid.Row="<...>"
+//   - HostTableFoot     — footer row(s), Grid.Row="<...>"
 //
 // Each section appears at most once per HostTable; a duplicate is a
 // `DuplicateTableSection` error (the spec's debug_assert pattern lifted
-// to a fatal error here â€” XAML doesn't have a defensible fallback for
+// to a fatal error here — XAML doesn't have a defensible fallback for
 // an extra `<Grid.RowDefinitions>` row).
 
 /// Canonical dynamic UI31/Grid structure that the XAML backend can expose as
@@ -11088,7 +11088,7 @@ fn emit_native_host_table(
     Ok(out)
 }
 
-/// `HostTable [name] { section sub-tags... }` per spec Â§5.
+/// `HostTable [name] { section sub-tags... }` per spec §5.
 fn emit_host_table(
     node: &LayoutNode,
     indent: usize,
@@ -11103,7 +11103,7 @@ fn emit_host_table(
     let pad2 = " ".repeat(indent + 4);
     let style = part_style_attr(node, part_styles);
 
-    // UI31 Â§3.2 RTL contract. WinUI's `FrameworkElement.FlowDirection`
+    // UI31 §3.2 RTL contract. WinUI's `FrameworkElement.FlowDirection`
     // is the canonical RTL knob: setting it to `RightToLeft` on the
     // root `<Grid>` flips the column ordering of all descendant rows
     // automatically by the WinUI layout pass. Inherited by descendants.
@@ -11115,13 +11115,13 @@ fn emit_host_table(
     // |------------------------|------------------------------------------------------|
     // | `dir: rtl`             | ` FlowDirection="RightToLeft"`                       |
     // | `dir: ltr`             | ` FlowDirection="LeftToRight"`                       |
-    // | `dir: auto`            | (nothing â€” inherit from ancestor; WinUI has no auto) |
+    // | `dir: auto`            | (nothing — inherit from ancestor; WinUI has no auto) |
     // | `dir: slot: layout-dir`| ` FlowDirection="{x:Bind LayoutDir}"`                |
-    // | unknown keyword        | (nothing â€” drops silently per allow-list)            |
+    // | unknown keyword        | (nothing — drops silently per allow-list)            |
     //
     // The allow-list (`ltr` / `rtl` / `auto`) is the security gate.
     // Slot refs go through `kebab_to_pascal_case` + `is_safe_identifier`
-    // so the binding path stays a clean XAML identifier â€” an
+    // so the binding path stays a clean XAML identifier — an
     // attacker-controlled slot name can't break out of the
     // `{x:Bind ...}` attribute value.
     let flow_direction_attr: String = match find_prop_value(node, "dir") {
@@ -11141,7 +11141,7 @@ fn emit_host_table(
             "ltr" => " FlowDirection=\"LeftToRight\"".to_string(),
             // `auto` is the spec-mandated "let the host decide"
             // keyword. WinUI has no `Auto` enum value for
-            // FlowDirection â€” the right behaviour is to NOT emit the
+            // FlowDirection — the right behaviour is to NOT emit the
             // attribute so any ancestor's FlowDirection (typically
             // the root `Page`'s, set from CultureInfo) flows through.
             "auto" => String::new(),
@@ -11221,11 +11221,11 @@ fn emit_host_table(
         }
     }
 
-    // colgroup is recognised but not yet rendered â€” the column-widths
-    // story needs more design (Â§5.2 caveat). PR-4 silently ignores it.
+    // colgroup is recognised but not yet rendered — the column-widths
+    // story needs more design (§5.2 caveat). PR-4 silently ignores it.
     let _ = colgroup;
 
-    // -- 2. Empty HostTable â†’ empty `<Grid/>`. Preserves part style. --
+    // -- 2. Empty HostTable → empty `<Grid/>`. Preserves part style. --
     if head.is_none() && body.is_none() && foot.is_none() {
         return Ok(format!("{pad}<Grid{flow_direction_attr}{style}></Grid>\n"));
     }
@@ -11295,7 +11295,7 @@ fn emit_host_table(
 /// `Row` children become `<StackPanel Orientation="Horizontal">` of
 /// cell children; the section itself becomes a
 /// `<StackPanel Orientation="Vertical">` (wrapped in a `<ScrollViewer>`
-/// when `scrollable` is `true` â€” used for the body section).
+/// when `scrollable` is `true` — used for the body section).
 fn emit_host_table_section(
     section: &LayoutNode,
     grid_row: u32,
@@ -11346,7 +11346,7 @@ fn emit_host_table_section(
 }
 
 /// Emit the rows of one section. Only `Row` is permitted as a direct
-/// child of a section per UI29 Â§2.1; any other tag is an
+/// child of a section per UI29 §2.1; any other tag is an
 /// `UnsupportedPrimitive`. Each `Row` lowers as if it were a moslayout
 /// `Row` primitive (a `<StackPanel Orientation="Horizontal">`).
 fn emit_host_table_rows(
@@ -11379,7 +11379,7 @@ fn emit_host_table_rows(
             }
             other => {
                 return Err(PipelineEmitError::UnsupportedPrimitive(format!(
-                    "{other} as a direct child of a HostTable section â€” only Row, For, If permitted"
+                    "{other} as a direct child of a HostTable section — only Row, For, If permitted"
                 )));
             }
         }
@@ -11388,7 +11388,7 @@ fn emit_host_table_rows(
 }
 
 // =====================================================================
-// PR-5: Component reference resolution (UI29 Â§4.4)
+// PR-5: Component reference resolution (UI29 §4.4)
 // =====================================================================
 
 /// Emit a `<{prefix}:{Tag} ... />` reference for a non-kernel tag.
@@ -11396,10 +11396,10 @@ fn emit_host_table_rows(
 /// Resolution: look the tag up in `ctx.registry`. If absent (no registry
 /// or tag not registered), the error path picks one of two variants:
 ///
-/// - When a registry IS present (even if empty) â†’ `UnknownComponent`
+/// - When a registry IS present (even if empty) → `UnknownComponent`
 ///   means "the host gave us a registry, the tag isn't in it". This is
 ///   the spec's intended error for "missing manifest dependency".
-/// - When the registry is absent â†’ `UnsupportedPrimitive` for parity
+/// - When the registry is absent → `UnsupportedPrimitive` for parity
 ///   with the pre-PR-5 shape (preserves the diagnostic for `--backend
 ///   xaml` invocations that don't use packages at all).
 fn emit_component_reference(
@@ -11450,14 +11450,14 @@ fn emit_component_reference(
         }
     };
 
-    // Record the xmlns prefix â†’ value mapping for the `<UserControl>`
+    // Record the xmlns prefix → value mapping for the `<UserControl>`
     // root injection. BTreeMap-keyed for deterministic output ordering.
     ctx.used_xmlns
         .insert(entry.xmlns_prefix.clone(), entry.xmlns_value.clone());
 
     // Build per-prop attributes. PR-5 supports slot refs, string
     // literals, numbers, and keywords. EmitRef props (`onClick: emit:
-    // X`) are deferred â€” they need a host-side handler-stub
+    // X`) are deferred — they need a host-side handler-stub
     // generation that is out of scope for PR-5. A clear comment in the
     // emitted XAML flags any deferred emit-ref props rather than
     // silently dropping them.
@@ -11533,7 +11533,7 @@ mod tests {
     use mosmodel_compiler::{EmitParam, ListInnerType, MosmodelComponent, SlotDecl, SlotType};
     use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp, StyleTransition};
 
-    // â”€â”€ helpers â”€â”€
+    // ── helpers ──
 
     fn component(name: &str, slots: Vec<SlotDecl>, emits: Vec<EmitDecl>) -> MosmodelComponent {
         MosmodelComponent {
@@ -11597,14 +11597,14 @@ mod tests {
         from_pipeline(c, l, s, None, &opts()).expect("emit ok")
     }
 
-    // â”€â”€ version â”€â”€
+    // ── version ──
 
     #[test]
     fn version_is_0_1_0() {
         assert_eq!(crate::VERSION, "0.1.0");
     }
 
-    // â”€â”€ kebab â†’ casing â”€â”€
+    // ── kebab → casing ──
 
     #[test]
     fn pascal_case_handles_single_segment() {
@@ -11641,7 +11641,7 @@ mod tests {
         assert!(!is_safe_identifier(""));
     }
 
-    // â”€â”€ component name mismatch â”€â”€
+    // ── component name mismatch ──
 
     #[test]
     fn component_name_mismatch_errors() {
@@ -11655,7 +11655,7 @@ mod tests {
         ));
     }
 
-    // â”€â”€ XAML root shape â”€â”€
+    // ── XAML root shape ──
 
     #[test]
     fn xaml_root_has_usercontrol_with_class_and_namespaces() {
@@ -11692,7 +11692,7 @@ mod tests {
         );
     }
 
-    // â”€â”€ code-behind shape â”€â”€
+    // ── code-behind shape ──
 
     #[test]
     fn code_behind_has_partial_class_and_init_call() {
@@ -11775,7 +11775,7 @@ mod tests {
         );
     }
 
-    // â”€â”€ event union â”€â”€
+    // ── event union ──
 
     #[test]
     fn empty_emit_union_is_abstract_record_with_no_body() {
@@ -11862,7 +11862,7 @@ mod tests {
         assert!(!r.code_behind.contains("RaiseDispatch"));
     }
 
-    // â”€â”€ primitive lowering: Box / containers â”€â”€
+    // ── primitive lowering: Box / containers ──
 
     #[test]
     fn box_lowers_to_border() {
@@ -12039,7 +12039,7 @@ mod tests {
             },
         );
         let r = compile(&c, &l, &empty_style("Foo"));
-        // <Grid> in XAML is the z-axis container (matches UI29 Â§2.1 `Stack`).
+        // <Grid> in XAML is the z-axis container (matches UI29 §2.1 `Stack`).
         assert!(r.xaml.contains("<Grid>"), "got:\n{}", r.xaml);
         assert!(r.xaml.contains("</Grid>"));
     }
@@ -12300,7 +12300,7 @@ mod tests {
         );
     }
 
-    // â”€â”€ primitive lowering: Text / Image / Spacer / Divider / Icon â”€â”€
+    // ── primitive lowering: Text / Image / Spacer / Divider / Icon ──
 
     #[test]
     fn text_with_literal_content_emits_text_attribute() {
@@ -12863,7 +12863,7 @@ mod tests {
 
     /// X5 Path A: `Icon (glyph: "spinner")` lowers to
     /// `<ProgressRing IsActive="True"/>` instead of the would-be
-    /// `<FontIcon Glyph="spinner"/>` â€” Segoe Fluent has no glyph
+    /// `<FontIcon Glyph="spinner"/>` — Segoe Fluent has no glyph
     /// literally named `spinner`, and the toolkit's `Spinner`
     /// component wants the animated ring anyway.
     #[test]
@@ -12894,7 +12894,7 @@ mod tests {
         );
         assert!(
             !r.xaml.contains("Glyph=\"spinner\""),
-            "literal Glyph=\"spinner\" must NOT survive â€” it's the bug, got:\n{}",
+            "literal Glyph=\"spinner\" must NOT survive — it's the bug, got:\n{}",
             r.xaml
         );
     }
@@ -12924,7 +12924,7 @@ mod tests {
 
     /// X5 scope: slot-bound glyphs (`{x:Bind GlyphProp}`) stay on
     /// the FontIcon path even if the runtime value happens to be
-    /// `"spinner"` â€” the lowering decision is static, by the
+    /// `"spinner"` — the lowering decision is static, by the
     /// layout's literal string, so a slot-bound glyph never enters
     /// the semantic table.  Future cycles could push the check to
     /// runtime via a binding converter, but PR-1 keeps it static.
@@ -12952,7 +12952,7 @@ mod tests {
         );
     }
 
-    // â”€â”€ UI39: Path kernel drawing primitive â”€â”€
+    // ── UI39: Path kernel drawing primitive ──
 
     fn path_node(part: &str, kind: &str, coords: &[(&str, f64)]) -> LayoutNode {
         let mut props = vec![LayoutProp {
@@ -13395,7 +13395,7 @@ mod tests {
         assert!(!r.xaml.contains("local:"), "got:\n{}", r.xaml);
     }
 
-    // â”€â”€ unsupported primitives surface clearly â”€â”€
+    // ── unsupported primitives surface clearly ──
 
     /// PR-3 lowers HostInput. The PR-1 version of this test expected
     /// an `UnsupportedPrimitive` error; we now verify the actual
@@ -13617,9 +13617,9 @@ mod tests {
         assert!(r.xaml.contains("<Grid></Grid>"), "got:\n{}", r.xaml);
     }
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
     // PR-4: HostTable + section sub-tags tests
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
 
     fn host_table_node(part: Option<&str>, sections: Vec<LayoutNode>) -> LayoutNode {
         LayoutNode {
@@ -14041,21 +14041,21 @@ mod tests {
         );
     }
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // UI31 â€” HostTable a11y gate + RTL contract (XAML backend)
+    // ─────────────────────────────────────────────────────────────────
+    // UI31 — HostTable a11y gate + RTL contract (XAML backend)
     //
     // Mirrors the React (#4143), HTML (#4156), WebComponent (#4162),
     // Flutter (#4166), Qt (#4185), and SwiftUI (#4194) precedents:
     //
     // - **A11y gate**: the XAML lowering must continue to emit a
-    //   structural <Grid> with <Grid.RowDefinitions> per section â€”
+    //   structural <Grid> with <Grid.RowDefinitions> per section —
     //   WinUI/UIA tooling sees that as a coherent table region, NOT
     //   a flat StackPanel where row associations are lost.
     // - **RTL gate**: when `dir:` is authored, the <Grid> carries
     //   `FlowDirection="RightToLeft"` (or LeftToRight, or a slot
     //   binding). Allow-list is `ltr|rtl|auto`; unknown keywords
     //   drop silently.
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
 
     /// Helper: build a `HostTable` LayoutDef carrying a `dir:` prop
     /// and a minimal HostTableBody so the table is non-empty (lets us
@@ -14077,7 +14077,7 @@ mod tests {
         layout_with_root("Foo", table)
     }
 
-    /// UI31 Â§3.1 a11y gate â€” `HostTable` MUST continue to lower to
+    /// UI31 §3.1 a11y gate — `HostTable` MUST continue to lower to
     /// a structural `<Grid>` with `<Grid.RowDefinitions>`. A
     /// regression to a flat `<StackPanel>` would lose the
     /// row-association semantics WinUI's automation peer derives
@@ -14108,7 +14108,7 @@ mod tests {
         );
     }
 
-    /// UI31 Â§3.2 RTL contract â€” `dir: rtl` keyword emits
+    /// UI31 §3.2 RTL contract — `dir: rtl` keyword emits
     /// `FlowDirection="RightToLeft"` on the Grid. WinUI's
     /// `FrameworkElement.FlowDirection` cascades to all descendants,
     /// flipping column ordering inside the grid rows.
@@ -14140,7 +14140,7 @@ mod tests {
     }
 
     /// `dir: auto` keyword is the spec-mandated "let the host
-    /// decide". WinUI has no `Auto` enum for FlowDirection â€” the
+    /// decide". WinUI has no `Auto` enum for FlowDirection — the
     /// right behaviour is to NOT emit the attribute so any
     /// ancestor's FlowDirection (typically the `Page`'s, set from
     /// CultureInfo) flows through.
@@ -14219,7 +14219,7 @@ mod tests {
         );
     }
 
-    /// Regression guard â€” `HostTable` with no `dir:` prop emits no
+    /// Regression guard — `HostTable` with no `dir:` prop emits no
     /// `FlowDirection` attribute. A future refactor that always-
     /// emits would break authors who rely on the Page-level
     /// CultureInfo cascade.
@@ -14244,9 +14244,9 @@ mod tests {
         );
     }
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
     // PR-5: ComponentRegistry / component-reference resolution
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
 
     fn component_ref_node(tag: &str, props: Vec<LayoutProp>) -> LayoutNode {
         LayoutNode {
@@ -14290,7 +14290,7 @@ mod tests {
 
     #[test]
     fn component_reference_with_no_registry_falls_back_to_unsupported() {
-        // Pre-PR-5 behaviour: no registry â†’ non-kernel tags surface as
+        // Pre-PR-5 behaviour: no registry → non-kernel tags surface as
         // UnsupportedPrimitive (preserves the old diagnostic so demos
         // not using packages still get a clear error).
         let c = component("Foo", vec![], vec![]);
@@ -14303,7 +14303,7 @@ mod tests {
     #[test]
     fn component_reference_with_empty_registry_returns_unknown() {
         // With an explicit (but empty) registry, missing-component
-        // becomes UnknownComponent â€” the spec's intended error for
+        // becomes UnknownComponent — the spec's intended error for
         // "missing manifest dependency".
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root("Foo", component_ref_node("Whatever", Vec::new()));
@@ -14649,9 +14649,9 @@ mod tests {
         assert!(matches!(err, PipelineEmitError::UnsupportedPrimitive(_)));
     }
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
     // PR-3: HostInput / HostButton / HostScroll tests
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
 
     fn host_input_node(part: Option<&str>, props: Vec<LayoutProp>) -> LayoutNode {
         LayoutNode {
@@ -14696,7 +14696,7 @@ mod tests {
         }
     }
 
-    // â”€â”€ HostInput â”€â”€
+    // ── HostInput ──
 
     #[test]
     fn host_input_with_part_name_uses_pascal_case_as_xname() {
@@ -14984,7 +14984,7 @@ mod tests {
         );
     }
 
-    // â”€â”€ HostButton â”€â”€
+    // ── HostButton ──
 
     #[test]
     fn host_button_lowers_to_button_with_xname() {
@@ -15291,7 +15291,7 @@ mod tests {
         assert!(r.code_behind.contains("FooEvent.Submit()"));
     }
 
-    // â”€â”€ HostScroll â”€â”€
+    // ── HostScroll ──
 
     #[test]
     fn host_button_on_tap_alias_emits_dispatch_handler() {
@@ -15389,7 +15389,7 @@ mod tests {
         assert!(sv < txt && txt < svc, "got:\n{}", r.xaml);
     }
 
-    // â”€â”€ Multi-Host counter â”€â”€
+    // ── Multi-Host counter ──
 
     #[test]
     fn multiple_unnamed_host_inputs_get_distinct_counters() {
@@ -15434,9 +15434,9 @@ mod tests {
         );
     }
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
     // PR-2: For / If / Else / ExprLowerer tests
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
 
     fn for_node(
         each: LayoutPropValue,
@@ -15489,7 +15489,7 @@ mod tests {
         }
     }
 
-    // â”€â”€ For lowering â”€â”€
+    // ── For lowering ──
 
     #[test]
     fn for_with_slot_ref_lowers_to_items_repeater_with_data_template() {
@@ -15737,7 +15737,7 @@ mod tests {
         assert!(matches!(err, PipelineEmitError::UnsupportedPrimitive(_)));
     }
 
-    // â”€â”€ If / Else lowering â”€â”€
+    // ── If / Else lowering ──
 
     #[test]
     fn if_with_slot_ref_lowers_to_contentcontrol_with_visibility() {
@@ -15803,7 +15803,7 @@ mod tests {
         assert!(r
             .xaml
             .contains("<local:BoolToVisibilityConverter x:Key=\"BoolToVisibilityConverter\"/>"));
-        // Only one occurrence â€” converter is shared.
+        // Only one occurrence — converter is shared.
         let count = r.xaml.matches("BoolToVisibilityConverter x:Key").count();
         assert_eq!(count, 1, "expected exactly one converter resource entry");
         let helper = r
@@ -15875,7 +15875,7 @@ mod tests {
         );
     }
 
-    // â”€â”€ ExprLowerer â”€â”€
+    // ── ExprLowerer ──
 
     #[test]
     fn expr_lowerer_bare_slot_ref_is_bindable() {
@@ -15981,7 +15981,7 @@ mod tests {
         }
     }
 
-    // â”€â”€ End-to-end: For + If together â”€â”€
+    // ── End-to-end: For + If together ──
 
     #[test]
     fn for_body_can_contain_if_with_for_bound_name_via_expr() {
@@ -16035,7 +16035,7 @@ mod tests {
         assert_eq!(r.for_view_models.len(), 1);
     }
 
-    // â”€â”€ part-style application â”€â”€
+    // ── part-style application ──
 
     #[test]
     fn part_style_attaches_setters_to_container_opening_tag() {
@@ -16654,7 +16654,7 @@ mod tests {
             css_rgb_function_to_xaml_hex("rgb(20,17,13)").as_deref(),
             Some("#FF14110D")
         );
-        // 4-arg form with CSS's leading-dot fraction: .28 * 255 = 71.4 â†’ 0x47.
+        // 4-arg form with CSS's leading-dot fraction: .28 * 255 = 71.4 → 0x47.
         assert_eq!(
             css_rgb_function_to_xaml_hex("rgba(20,17,13,.28)").as_deref(),
             Some("#4714110D")
@@ -16720,9 +16720,9 @@ mod tests {
         assert_eq!(css_rgb_function_to_xaml_hex(&hostile), None);
     }
 
-    // â”€â”€ unused-flag placeholders â”€â”€
+    // ── unused-flag placeholders ──
 
-    /// `EmitOptions::emit_project = false` (default) â†’ `project` is
+    /// `EmitOptions::emit_project = false` (default) → `project` is
     /// `None`, no host shell emitted.
     #[test]
     fn project_field_is_none_when_emit_project_false() {
@@ -16732,7 +16732,7 @@ mod tests {
         assert!(r.project.is_none());
     }
 
-    /// Fix B1: `EmitOptions::emit_project = true` â†’ `project` is
+    /// Fix B1: `EmitOptions::emit_project = true` → `project` is
     /// populated with the full WinUI 3 host shell (csproj + App +
     /// MainWindow + manifest + build.ps1 + README).
     #[test]
@@ -16970,7 +16970,7 @@ mod tests {
     #[test]
     fn project_main_window_hosts_user_control_directly() {
         let c = component("Foo", vec![], vec![]);
-        let l = layout_with_root("Foo", box_root()); // Box â†’ UserControl root
+        let l = layout_with_root("Foo", box_root()); // Box → UserControl root
         let s = empty_style("Foo");
         let mut o = opts();
         o.emit_project = true;
@@ -17036,9 +17036,9 @@ mod tests {
         assert!(r.if_helpers.is_empty());
     }
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // U29-1-K-xaml: HostDialog tests (UI29-1 Â§3.6)
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
+    // U29-1-K-xaml: HostDialog tests (UI29-1 §3.6)
+    // ─────────────────────────────────────────────────────────────────
 
     fn host_dialog_node(
         part: Option<&str>,
@@ -17056,7 +17056,7 @@ mod tests {
     #[test]
     fn host_dialog_empty_emits_contentdialog() {
         // Test 1 + Test 8: A bare HostDialog with no props lowers to
-        // <ContentDialog> (the modal default) â€” and is recognised, i.e.
+        // <ContentDialog> (the modal default) — and is recognised, i.e.
         // does not return UnsupportedPrimitive.
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root("Foo", host_dialog_node(None, Vec::new(), Vec::new()));
@@ -17095,10 +17095,10 @@ mod tests {
     }
 
     /// `modal: false` switches the *nested* HostDialog emission to a
-    /// `<Flyout>` (popover form per spec Â§3.6). At the moslayout root,
+    /// `<Flyout>` (popover form per spec §3.6). At the moslayout root,
     /// `modal:` is honored but the XAML root remains `<ContentDialog>`
     /// because Flyout cannot be a XAML root (it's an anchored
-    /// popover). Updated for Fix A1: HostDialog-at-root â†’ ContentDialog
+    /// popover). Updated for Fix A1: HostDialog-at-root → ContentDialog
     /// root regardless of modal.
     #[test]
     fn nested_host_dialog_modal_false_uses_flyout() {
@@ -17128,7 +17128,7 @@ mod tests {
     }
 
     /// Fix A1: HostDialog at the layout root hoists to a
-    /// `<ContentDialog>` XAML root regardless of the `modal:` flag â€”
+    /// `<ContentDialog>` XAML root regardless of the `modal:` flag —
     /// Flyout cannot be a XAML root. The behavior `modal:` was meant
     /// to control surfaces at runtime (e.g. via
     /// IsLightDismissEnabled) and is documented as future work.
@@ -17243,7 +17243,7 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(r.xaml.contains("<ContentDialog"), "got:\n{}", r.xaml);
         // The Text child renders as a <TextBlock Text="Hello"/> inside
-        // the dialog body â€” substring check both for the literal text
+        // the dialog body — substring check both for the literal text
         // and the order (TextBlock appears before the closing tag).
         let close = r.xaml.find("</ContentDialog>").expect("closing tag");
         let body_substr = &r.xaml[..close];
@@ -17286,7 +17286,7 @@ mod tests {
             r.code_behind
         );
         // The handler body dispatches the CloseMe case (the `on`
-        // prefix gets stripped per strip_on_prefix â†’ PascalCase).
+        // prefix gets stripped per strip_on_prefix → PascalCase).
         assert!(
             r.code_behind.contains("new FooEvent.CloseMe()"),
             "got:\n{}",
@@ -17297,7 +17297,7 @@ mod tests {
     /// Fix A2: `open: slot: x` previously emitted a
     /// `mos:Dialog.IsOpen="{Binding X}"` attribute referencing an
     /// undeclared `mos:` namespace. That broke XAML parsing at
-    /// runtime. The fix drops the attribute entirely â€” the host code-
+    /// runtime. The fix drops the attribute entirely — the host code-
     /// behind is the only mechanism for show/hide, and the comment
     /// stub documents that contract clearly.
     #[test]
@@ -17345,8 +17345,8 @@ mod tests {
     #[test]
     fn host_dialog_is_recognised_not_unknown_primitive() {
         // Test 8 (explicit): HostDialog must NOT surface as
-        // UnsupportedPrimitive or any other error â€” that was the whole
-        // point of UI29-1 Â§3.6. Construct a moderately-decorated
+        // UnsupportedPrimitive or any other error — that was the whole
+        // point of UI29-1 §3.6. Construct a moderately-decorated
         // HostDialog and assert from_pipeline returns Ok.
         let c = component(
             "Foo",
@@ -17417,14 +17417,14 @@ mod tests {
         assert!(r.xaml.contains("<ContentDialog"), "got:\n{}", r.xaml);
     }
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // UI29-2 â€” HostCheckbox + HostRadio
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
+    // UI29-2 — HostCheckbox + HostRadio
+    // ─────────────────────────────────────────────────────────────────
 
     /// Helper: a one-component layout def rooted at a `HostCheckbox`.
     /// The HostCheckbox itself is wrapped in a `Box` root so the XAML
     /// root-shape selector treats it as a normal in-flow widget (the
-    /// HostDialog-special-cased "root is dialog â†’ ContentDialog" rule
+    /// HostDialog-special-cased "root is dialog → ContentDialog" rule
     /// doesn't fire).
     fn checkbox_in_box(props: Vec<LayoutProp>) -> LayoutDef {
         layout_with_root(
@@ -17461,7 +17461,7 @@ mod tests {
         )
     }
 
-    /// UI29-2 XAML test 1 â€” bare HostCheckbox emits a `<CheckBox>`
+    /// UI29-2 XAML test 1 — bare HostCheckbox emits a `<CheckBox>`
     /// self-closing element with only the auto-assigned x:Name.
     #[test]
     fn host_checkbox_empty_emits_checkbox_with_xname() {
@@ -17475,7 +17475,7 @@ mod tests {
         );
     }
 
-    /// UI29-2 XAML test 2 â€” `checked: slot: c` emits
+    /// UI29-2 XAML test 2 — `checked: slot: c` emits
     /// `IsChecked="{x:Bind C, Mode=OneWay}"` (PascalCased slot, OneWay
     /// binding mirroring HostInput/HostButton's slot-binding form).
     #[test]
@@ -17494,7 +17494,7 @@ mod tests {
         );
     }
 
-    /// UI29-2 XAML test 3 â€” `label: "Agree"` flows into the
+    /// UI29-2 XAML test 3 — `label: "Agree"` flows into the
     /// `Content="..."` attribute (XAML's analog of children for
     /// content controls).
     #[test]
@@ -17512,7 +17512,7 @@ mod tests {
         );
     }
 
-    /// UI29-2 XAML test 4 â€” `disabled: slot: d` reuses HostButton's
+    /// UI29-2 XAML test 4 — `disabled: slot: d` reuses HostButton's
     /// `Not(bool)` helper to flip polarity into the XAML-native
     /// `IsEnabled` property.
     #[test]
@@ -17531,10 +17531,10 @@ mod tests {
         );
     }
 
-    /// UI29-2 XAML test 5 â€” `onToggle: emit: onChange` wires BOTH the
+    /// UI29-2 XAML test 5 — `onToggle: emit: onChange` wires BOTH the
     /// `Checked` and `Unchecked` events to code-behind handlers that
     /// dispatch with the matching `checked: bool` payload (true for
-    /// Checked, false for Unchecked). Matches UI29-2 Â§2.2's kernel-
+    /// Checked, false for Unchecked). Matches UI29-2 §2.2's kernel-
     /// canonical onToggle(checked: bool) signature.
     #[test]
     fn host_checkbox_on_toggle_emits_checked_and_unchecked_handler_pair() {
@@ -17566,7 +17566,7 @@ mod tests {
         );
         // Both handlers should appear in the code-behind. The Checked
         // handler dispatches true, the Unchecked handler dispatches
-        // false â€” matching the kernel-canonical checked: bool payload.
+        // false — matching the kernel-canonical checked: bool payload.
         assert!(
             r.code_behind.contains("XEvent.Change(true)"),
             "expected `XEvent.Change(true)` in code-behind, got:\n{}",
@@ -17579,10 +17579,10 @@ mod tests {
         );
     }
 
-    /// UI29-2 XAML test 6 â€” `indeterminate: true` (or any slot ref)
+    /// UI29-2 XAML test 6 — `indeterminate: true` (or any slot ref)
     /// adds `IsThreeState="True"` so the visual tri-state mode is on.
     /// The actual `IsChecked = null` toggle is the host's job via the
-    /// bound slot â€” WinUI doesn't have a "show as indeterminate"
+    /// bound slot — WinUI doesn't have a "show as indeterminate"
     /// attribute, only the tri-state-enabled flag.
     #[test]
     fn host_checkbox_indeterminate_keyword_enables_three_state() {
@@ -17599,7 +17599,7 @@ mod tests {
         );
     }
 
-    /// UI29-2 XAML test 7 â€” bare HostRadio emits a `<RadioButton>`
+    /// UI29-2 XAML test 7 — bare HostRadio emits a `<RadioButton>`
     /// self-closing element with only x:Name.
     #[test]
     fn host_radio_empty_emits_radio_button_with_xname() {
@@ -17613,9 +17613,9 @@ mod tests {
         );
     }
 
-    /// UI29-2 XAML test 8 â€” `group: "flavor"` lowers to WinUI's native
+    /// UI29-2 XAML test 8 — `group: "flavor"` lowers to WinUI's native
     /// `GroupName="flavor"` attribute. WinUI auto-deselects siblings
-    /// sharing GroupName when one IsChecked goes true â€” true radio-
+    /// sharing GroupName when one IsChecked goes true — true radio-
     /// group behavior at the XAML level (matches UI29-2's design).
     #[test]
     fn host_radio_group_string_emits_group_name_attribute() {
@@ -17632,9 +17632,9 @@ mod tests {
         );
     }
 
-    /// UI29-2 XAML test 9 â€” `onSelect: emit: onPick` + `value:
-    /// "vanilla"` wires ONLY the Checked event (Unchecked is silent â€”
-    /// sibling-caused deselects don't fire onSelect, per UI29-2 Â§2.2).
+    /// UI29-2 XAML test 9 — `onSelect: emit: onPick` + `value:
+    /// "vanilla"` wires ONLY the Checked event (Unchecked is silent —
+    /// sibling-caused deselects don't fire onSelect, per UI29-2 §2.2).
     /// The code-behind dispatches XEvent.Pick("vanilla") via the
     /// generated C# string-literal payload.
     #[test]
@@ -17666,7 +17666,7 @@ mod tests {
             "expected Checked= attribute, got:\n{}",
             r.xaml
         );
-        // Onunchecked NOT wired â€” sibling deselects are silent.
+        // Onunchecked NOT wired — sibling deselects are silent.
         assert!(
             !r.xaml.contains("Unchecked=\""),
             "Unchecked must NOT be wired for HostRadio onSelect, got:\n{}",
@@ -17679,7 +17679,7 @@ mod tests {
         );
     }
 
-    /// UI29-2 XAML test 10 â€” `value: slot: v` flows the camelCased
+    /// UI29-2 XAML test 10 — `value: slot: v` flows the camelCased
     /// slot identifier into the dispatch as `this.<Pascal>` so the
     /// runtime value drives the payload.
     #[test]
@@ -17713,9 +17713,9 @@ mod tests {
         );
     }
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // UI29-4 â€” HostLink + HostTooltip + HostNumberInput
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────
+    // UI29-4 — HostLink + HostTooltip + HostNumberInput
+    // ─────────────────────────────────────────────────────────────────
 
     fn slider_in_box(part_name: Option<&str>, props: Vec<LayoutProp>) -> LayoutDef {
         layout_with_root(
@@ -17887,7 +17887,7 @@ mod tests {
         )
     }
 
-    /// UI29-4 XAML test 1 â€” bare `HostLink href + label` lowers to
+    /// UI29-4 XAML test 1 — bare `HostLink href + label` lowers to
     /// `<HyperlinkButton NavigateUri="..." Content="..."/>`.
     #[test]
     fn host_link_string_href_and_label_emits_hyperlink_button() {
@@ -18018,7 +18018,7 @@ mod tests {
         );
     }
 
-    /// UI29-4 XAML test 2 â€” `external: false` + `onActivate` swaps
+    /// UI29-4 XAML test 2 — `external: false` + `onActivate` swaps
     /// to a Button with a Click handler that dispatches the named
     /// emit with the href in the payload (in-app routing path).
     #[test]
@@ -18066,7 +18066,7 @@ mod tests {
         );
     }
 
-    /// UI29-4 XAML test 3 â€” a link inside an indexed `For` dispatches
+    /// UI29-4 XAML test 3 — a link inside an indexed `For` dispatches
     /// the row index and binds the row item as its label.
     #[test]
     fn host_link_inside_indexed_for_dispatches_index_payload() {
@@ -18133,7 +18133,7 @@ mod tests {
         );
     }
 
-    /// UI29-4 XAML test 4 â€” `HostTooltip` wraps its child in a
+    /// UI29-4 XAML test 4 — `HostTooltip` wraps its child in a
     /// `Border` with the `ToolTipService.ToolTip` attached property.
     #[test]
     fn host_tooltip_wraps_child_in_border_with_tooltip_service() {
@@ -18175,7 +18175,7 @@ mod tests {
         );
     }
 
-    /// UI29-4 XAML test 4 â€” bare `HostNumberInput` lowers to a
+    /// UI29-4 XAML test 4 — bare `HostNumberInput` lowers to a
     /// `<NumberBox x:Name="..."/>` self-closing element.
     #[test]
     fn host_number_input_empty_emits_numberbox() {
@@ -18189,7 +18189,7 @@ mod tests {
         );
     }
 
-    /// UI29-4 XAML test 5 â€” `min`/`max`/`step` numeric literals map
+    /// UI29-4 XAML test 5 — `min`/`max`/`step` numeric literals map
     /// to WinUI's `Minimum`/`Maximum`/`SmallChange` NumberBox
     /// properties.
     #[test]
@@ -18225,9 +18225,9 @@ mod tests {
         );
     }
 
-    /// UI29-4 XAML test 6 â€” `onChange: emit: onSet` registers a
+    /// UI29-4 XAML test 6 — `onChange: emit: onSet` registers a
     /// `ValueChanged` handler in the code-behind that dispatches
-    /// `XEvent.Set(args.NewValue)` â€” WinUI's standard NumberBox
+    /// `XEvent.Set(args.NewValue)` — WinUI's standard NumberBox
     /// event-arg shape.
     #[test]
     fn host_number_input_on_change_emits_value_changed_handler() {
@@ -18259,7 +18259,7 @@ mod tests {
         );
     }
 
-    // â”€â”€ #4548 toolkit-demo emitter-gap regressions â”€â”€
+    // ── #4548 toolkit-demo emitter-gap regressions ──
 
     /// Helper: build a Box with a part name carrying a style on
     /// every interesting CSS property.
@@ -18492,7 +18492,7 @@ mod tests {
     #[test]
     fn x_name_avoids_component_class_name_collision() {
         let c = component("Button", vec![], vec![emit("onClick", vec![])]);
-        // Part name "button" pascal-cases to "Button" â€” same as the
+        // Part name "button" pascal-cases to "Button" — same as the
         // component class. The emitter must rename to ButtonElement.
         let l = layout_with_root(
             "Button",
@@ -18621,7 +18621,7 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
-        // X5: numeric CSS font-weight `500` â†’ WinUI `Medium` constant
+        // X5: numeric CSS font-weight `500` → WinUI `Medium` constant
         // (the bare `500` is not a valid WinUI `<Setter>` value).
         assert!(
             r.xaml
@@ -19231,10 +19231,10 @@ mod tests {
         );
     }
 
-    // â”€â”€ X4: color-value normalization for WinUI 3 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── X4: color-value normalization for WinUI 3 ──────────────────
 
     /// X4: `background: "transparent"` in `.msl` must emit
-    /// `Background="Transparent"` (PascalCase) â€” WinUI 3's markup
+    /// `Background="Transparent"` (PascalCase) — WinUI 3's markup
     /// compiler rejects the lowercase form.  Caught by the toolkit
     /// Alert demo's close-button background.
     #[test]
@@ -19254,7 +19254,7 @@ mod tests {
         );
     }
 
-    /// X4 negative: hex literals (`#â€¦`) pass through verbatim.
+    /// X4 negative: hex literals (`#…`) pass through verbatim.
     /// PascalCasing a hex value would be wrong (`#abc` isn't a name).
     #[test]
     fn x4_color_value_hex_passes_through_unchanged() {
@@ -19275,7 +19275,7 @@ mod tests {
 
     /// X4/X5 scope: hex color setters and unit-free lengths pass
     /// through untouched, while `font-weight: normal` is now PascalCased
-    /// to the WinUI `FontWeights.Normal` constant (X5) â€” the lowercase
+    /// to the WinUI `FontWeights.Normal` constant (X5) — the lowercase
     /// CSS keyword is NOT a valid WinUI `<Setter>` value.
     #[test]
     fn x4_non_color_setters_pass_through_unchanged() {
@@ -19295,7 +19295,7 @@ mod tests {
         ];
         let frag = build_style_fragment(&props);
         assert!(frag.contains("FontSize=\"12\""), "got:\n{frag}");
-        // X5: `normal` â†’ WinUI `Normal` (the lowercase form is invalid).
+        // X5: `normal` → WinUI `Normal` (the lowercase form is invalid).
         assert!(frag.contains("FontWeight=\"Normal\""), "got:\n{frag}");
         assert!(!frag.contains("FontWeight=\"normal\""), "got:\n{frag}");
         assert!(frag.contains("Padding=\"6\""), "got:\n{frag}");
@@ -19487,7 +19487,7 @@ mod tests {
         assert_eq!(parsed[3], ("CornerRadius".to_string(), "4".to_string()));
     }
 
-    // â”€â”€ X5: WinUI value translation (Group A) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── X5: WinUI value translation (Group A) ──────────────────────
 
     /// X5: CSS `px` units are stripped from every length setter so the
     /// WinUI `Double` / `Thickness` parser accepts the value. A literal
@@ -19562,7 +19562,7 @@ mod tests {
         assert!(frag.contains("Background=\"#1e1e1e\""), "got:\n{frag}");
     }
 
-    /// X5: `width: 100%` is dropped â€” WinUI's `Width` is an absolute
+    /// X5: `width: 100%` is dropped — WinUI's `Width` is an absolute
     /// `Double`, not a percentage. The layout container sizes instead.
     #[test]
     fn x5_percentage_width_is_dropped() {
@@ -19578,8 +19578,8 @@ mod tests {
         assert!(!frag.contains("100%"), "got:\n{frag}");
     }
 
-    /// X5: `text-align` â†’ WinUI `TextAlignment` with a PascalCase value.
-    /// The old output emitted `TextAlign="center"` â€” wrong on both the
+    /// X5: `text-align` → WinUI `TextAlignment` with a PascalCase value.
+    /// The old output emitted `TextAlign="center"` — wrong on both the
     /// property name (no such property) and the value (lowercase).
     #[test]
     fn x5_text_align_maps_to_textalignment_pascalcase() {
@@ -19631,7 +19631,7 @@ mod tests {
         }
     }
 
-    /// X5: a `{x:Bind â€¦}` binding value must pass through unmangled â€”
+    /// X5: a `{x:Bind …}` binding value must pass through unmangled —
     /// it is never px-stripped or case-mangled.
     #[test]
     fn x5_binding_value_passes_through_unmangled() {
@@ -19657,13 +19657,13 @@ mod tests {
         assert_eq!(strip_px_units("12"), "12");
     }
 
-    // â”€â”€ Group B / Group C: the nested cell loop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Group B / Group C: the nested cell loop ────────────────────
 
     /// Build a Grid-shaped layout: an outer `For (each: slot:
     /// viewport-rows, as: row, index: r)` whose body is an inner
     /// `For (each: row, as: v, index: c)` rendering one styled cell
     /// containing `Text (content: v)`. Mirrors mosaic-pkg-grid's
-    /// resolved body shape (UI29 Â§3.4 nested For).
+    /// resolved body shape (UI29 §3.4 nested For).
     fn grid_nested_for_root() -> LayoutNode {
         let inner_for = LayoutNode {
             tag: "For".to_string(),
@@ -19841,7 +19841,7 @@ mod tests {
 
     /// GROUP A end-to-end on the Grid shape: the cell's `text-align:
     /// right` style lands as a valid `TextAlignment="Right"` Setter and
-    /// the px-laden `padding`/`height` are stripped â€” proving the
+    /// the px-laden `padding`/`height` are stripped — proving the
     /// translation runs through the full pipeline, not just the unit.
     #[test]
     fn group_a_cell_style_is_valid_winui() {

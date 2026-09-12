@@ -1,5 +1,5 @@
 /**
- * Haskell Lexer â€” tokenizes Haskell source code using the grammar-driven approach.
+ * Haskell Lexer — tokenizes Haskell source code using the grammar-driven approach.
  *
  * Usage:
  *

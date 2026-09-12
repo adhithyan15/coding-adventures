@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "coding-adventures-haskell-lexer"
 version = "0.1.0"
-description = "Tokenizes Haskell source code using the grammar-driven lexer â€” a thin wrapper that loads haskell.tokens"
+description = "Tokenizes Haskell source code using the grammar-driven lexer — a thin wrapper that loads haskell.tokens"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

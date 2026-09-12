@@ -124,6 +124,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Reject double-encoded UTF-8
+        shell: bash
+        run: python3 code/scripts/check_mojibake.py
+
       - name: Set up Go
         uses: actions/setup-go@v7
         with:

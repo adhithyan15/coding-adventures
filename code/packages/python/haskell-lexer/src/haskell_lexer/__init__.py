@@ -1,8 +1,8 @@
-"""Haskell Lexer â€” tokenizes Haskell source code using the grammar-driven approach.
+"""Haskell Lexer — tokenizes Haskell source code using the grammar-driven approach.
 
 This package demonstrates the power of the grammar-driven lexer: by simply
 providing a different ``.tokens`` file, the same lexer engine that tokenizes
-Python or HaskellScript can tokenize Haskell. No new lexer code needed â€” just a
+Python or HaskellScript can tokenize Haskell. No new lexer code needed — just a
 new grammar.
 
 How It Works
