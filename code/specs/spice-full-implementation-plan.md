@@ -151,6 +151,16 @@ model-card parameter, or a UI artifact is not a completion signal.
      the SPICE trace. Schematic capture remains after the text-deck workflow is
      proven, because it must emit the canonical netlist rather than introduce a
      parallel circuit model.
+   - **Canonical schematic capture** (current phase): add a Rust-owned,
+     editor-facing grid document for the initial R/C/DC-source/ground palette.
+     It validates references, terminals, values, and endpoint-only wires, then
+     emits a stable Berkeley `.op` deck with `0` ground and deterministic
+     `n1...` names independent of component or wire order. This is a Mosaic UI
+     contract, not a Berkeley parser change, so Python and TypeScript continue
+     to consume the emitted canonical text through the frozen v1 interfaces.
+   - Next: integrate symbol placement, selection, endpoint wiring, and
+     deck/schematic synchronization into the Mosaic package. Expand the symbol
+     palette and analysis controls only after that canonical bridge is proven.
 
 ### Operating rules
 
