@@ -1459,12 +1459,14 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         }
 
         for item in split_block_items(line) {
+            let (item, column_span) = parse_block_span(token, item)?;
             if item.eq_ignore_ascii_case("space") {
                 space_count += 1;
                 cells.push(GridCell {
                     id: format!("__space{space_count}"),
                     label: DiagramLabel::new(""),
                     shape: DiagramShape::Rect,
+                    column_span,
                     visible: false,
                     style: None,
                 });
@@ -1478,6 +1480,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 id,
                 label: DiagramLabel::new(normalize_mermaid_line_breaks(&label)),
                 shape,
+                column_span,
                 visible: true,
                 style: None,
             });
@@ -1505,6 +1508,21 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         cells,
         connections,
     })
+}
+
+fn parse_block_span<'a>(token: &Token, source: &'a str) -> Result<(&'a str, usize), ParseError> {
+    let Some((item, span)) = source.rsplit_once(':') else {
+        return Ok((source, 1));
+    };
+    if span.is_empty() || !span.chars().all(|character| character.is_ascii_digit()) {
+        return Ok((source, 1));
+    }
+    let span = span
+        .parse::<usize>()
+        .ok()
+        .filter(|span| *span > 0)
+        .ok_or_else(|| token_error(token, "block span must be a positive integer"))?;
+    Ok((item, span))
 }
 
 fn prepare_line_grammar_source(source: &str) -> Result<String, ParseError> {
@@ -8899,6 +8917,23 @@ mod tests_dg04 {
         assert_eq!(diagram.cells[2].shape, DiagramShape::RoundedRect);
         assert_eq!(diagram.cells[3].shape, DiagramShape::Ellipse);
         assert_eq!(diagram.connections[0].label.as_ref().unwrap().text, "lower");
+    }
+
+    #[test]
+    fn block_parses_node_and_space_column_spans() {
+        let diagram = parse_block(
+            "block\ncolumns 4\none[One] two[Two]:2\nspace:3 three[Three]",
+        )
+        .unwrap();
+        assert_eq!(diagram.cells[0].column_span, 1);
+        assert_eq!(diagram.cells[1].column_span, 2);
+        assert_eq!(diagram.cells[2].column_span, 3);
+        assert_eq!(diagram.cells[3].column_span, 1);
+        assert_eq!(
+            parse_block("block\ncolumns 2\nwide[Wide]:3").unwrap().cells[0].column_span,
+            3
+        );
+        assert!(parse_block("block\ncolumns 2\nzero[Zero]:0").is_err());
     }
 
     #[test]

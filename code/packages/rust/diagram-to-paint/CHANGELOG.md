@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.113.0
+
+- Validate spanned Mermaid Block geometry through PaintScene and Metal-to-PNG rendering.
+
 ## 0.112.0
 
 - Lower resolved Packet field, bit-label, and title theme styles into PaintScene instructions.

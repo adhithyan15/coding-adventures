@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.191.0
+
+- Parse and validate Mermaid 11.16.1 Block node and space column spans.
+
 ## 0.190.0
 
 - Parse all Mermaid 11.16.1 packet theme variables and promote Packet to full compatibility.
