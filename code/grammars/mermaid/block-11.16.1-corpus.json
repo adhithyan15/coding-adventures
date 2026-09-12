@@ -10,7 +10,7 @@
     { "id": "polygonal-shapes", "source": "block\nA{{Hexagon}} B([Stadium]) C[/Right/] D[\\Left\\] E[/Trapezoid\\] F[\\Inverse/]" },
     { "id": "multi-outline-shapes", "source": "block\nA[[Subroutine]] B[(Database)] C(((Double circle)))" },
     { "id": "multiline-accessibility", "source": "block\naccTitle: Processing pipeline\naccDescr {\nGrammar becomes semantic IR\nthen backend-neutral paint\n}\nA[Parser] B[Renderer]" },
-    { "id": "recursive-composite-blocks", "source": "block\ncolumns 3\nA[Input]\nblock:pipeline:2\ncolumns 2\nB[Parse] C[Layout]\nblock\nD[Paint]\nend\nend\nE[Output]" },
+    { "id": "recursive-composite-blocks", "source": "block\ncolumns 3\nA[Input]\nblock:pipeline[\"Processing Pipeline\"]:2\ncolumns 2\nB[Parse] C[Layout]\nblock\nD[Paint]\nend\nend\nE[Output]" },
     { "id": "asymmetric-shape", "source": "block\nA>Flag shaped node]" },
     { "id": "classes-and-styles", "source": "block\ncolumns 2\nA[Grammar]:::pipeline B[Paint]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass B pipeline\nstyle B fill:#dcfce7,font-size:18px,font-weight:bold" }
   ]

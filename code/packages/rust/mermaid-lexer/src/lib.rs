@@ -516,6 +516,19 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_labeled_block_group_start_as_one_grammar_token() {
+        let tokens = try_tokenize_mermaid_block(
+            "block\nblock:pipeline[\"Processing Pipeline\"]:2\nA\nend\n",
+        )
+        .unwrap();
+        let group = tokens
+            .iter()
+            .find(|token| token.type_name.as_deref() == Some("GROUP_START"))
+            .unwrap();
+        assert_eq!(group.value.trim(), "block:pipeline[\"Processing Pipeline\"]:2");
+    }
+
+    #[test]
     fn tokenizes_packet_fields_as_complete_lines() {
         let tokens = try_tokenize_mermaid_packet(
             "packet-beta\n0-7: \"Header\"\n8-31: \"Payload\"\n",
