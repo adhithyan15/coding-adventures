@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- Resolve all documented packet theme variables into backend-neutral field and text styles.
+
 ## 0.2.0
 
 - Resolve configured packet row geometry and optional start/end bit labels.

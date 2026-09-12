@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.190.0
+
+- Parse all Mermaid 11.16.1 packet theme variables and promote Packet to full compatibility.
+
 ## 0.189.0
 
 - Parse Mermaid 11.16.1 packet layout configuration into typed semantic IR.

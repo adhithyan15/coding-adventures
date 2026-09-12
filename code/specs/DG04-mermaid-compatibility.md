@@ -371,8 +371,10 @@ configured row boundaries are split into deterministic row fragments by
 `showBits`, `paddingX`, and `paddingY` settings flow through typed semantic IR
 to resolved field and bit-label geometry, and dedicated PaintScene lowering
 emits backend-neutral rectangles and shaped text. A configured native
-Metal-to-PNG fixture gates this slice; packet theme and style controls remain
-explicitly unsupported at the partial level.
+Metal-to-PNG fixture gates this slice. All ten documented packet theme variables
+resolve through semantic IR and layout into backend-neutral field, bit-label,
+and title paint styles. The complete pinned syntax corpus and visual fixture gate
+Packet at the full compatibility level.
 
 ### Kanban Native Slice
 

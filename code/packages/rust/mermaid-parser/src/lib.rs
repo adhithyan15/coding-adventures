@@ -15,7 +15,7 @@ use diagram_ir::{
     BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell,
     GridConnection, GridDiagram, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
-    RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
+    PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
@@ -1189,6 +1189,7 @@ pub fn parse_packet(source: &str) -> Result<PacketDiagram, ParseError> {
 
     let mut diagram = PacketDiagram {
         config: parse_packet_config(source),
+        theme: parse_packet_theme(source),
         ..PacketDiagram::default()
     };
     let mut next_bit = 0u32;
@@ -1256,6 +1257,50 @@ pub fn parse_packet(source: &str) -> Result<PacketDiagram, ParseError> {
             .ok_or_else(|| token_error(token, "packet bit range is too large"))?;
     }
     Ok(diagram)
+}
+
+fn parse_packet_theme(source: &str) -> PacketTheme {
+    let front_matter = mermaid_front_matter_section(source, &["themeVariables", "packet"]);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .and_then(|theme| mermaid_directive_object(theme, "packet"))
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key: &str| -> Option<String> {
+        quadrant_directive_value(theme_source, key).or_else(|| {
+            theme_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    let color = |key: &str, default: &str| {
+        value(key)
+            .filter(|value| !value.is_empty())
+            .unwrap_or_else(|| default.to_string())
+    };
+    let font_size = |key: &str, default| {
+        value(key)
+            .and_then(parse_mermaid_font_size)
+            .filter(|value| value.is_finite() && *value > 0.0)
+            .unwrap_or(default)
+    };
+    let defaults = PacketTheme::default();
+    let block_stroke_width = value("blockStrokeWidth")
+        .and_then(parse_mermaid_font_size)
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .unwrap_or(defaults.block_stroke_width);
+    PacketTheme {
+        byte_font_size: font_size("byteFontSize", defaults.byte_font_size),
+        start_byte_color: color("startByteColor", &defaults.start_byte_color),
+        end_byte_color: color("endByteColor", &defaults.end_byte_color),
+        label_color: color("labelColor", &defaults.label_color),
+        label_font_size: font_size("labelFontSize", defaults.label_font_size),
+        title_color: color("titleColor", &defaults.title_color),
+        title_font_size: font_size("titleFontSize", defaults.title_font_size),
+        block_stroke_color: color("blockStrokeColor", &defaults.block_stroke_color),
+        block_stroke_width,
+        block_fill_color: color("blockFillColor", &defaults.block_fill_color),
+    }
 }
 
 fn parse_packet_config(source: &str) -> PacketConfig {
@@ -8913,6 +8958,35 @@ mod tests_dg04 {
         .unwrap();
         assert_eq!(diagram.config.bits_per_row, 8);
         assert!(!diagram.config.show_bits);
+    }
+
+    #[test]
+    fn packet_parses_all_theme_variables_from_front_matter() {
+        let diagram = parse_packet(
+            "---\nthemeVariables:\n  packet:\n    byteFontSize: 11px\n    startByteColor: red\n    endByteColor: '#112233'\n    labelColor: blue\n    labelFontSize: 13px\n    titleColor: green\n    titleFontSize: 17px\n    blockStrokeColor: orange\n    blockStrokeWidth: 2.5\n    blockFillColor: '#abcdef'\n---\npacket\ntitle Themed\n0-7: \"byte\"",
+        )
+        .unwrap();
+        assert_eq!(diagram.theme.byte_font_size, 11.0);
+        assert_eq!(diagram.theme.start_byte_color, "red");
+        assert_eq!(diagram.theme.end_byte_color, "#112233");
+        assert_eq!(diagram.theme.label_color, "blue");
+        assert_eq!(diagram.theme.label_font_size, 13.0);
+        assert_eq!(diagram.theme.title_color, "green");
+        assert_eq!(diagram.theme.title_font_size, 17.0);
+        assert_eq!(diagram.theme.block_stroke_color, "orange");
+        assert_eq!(diagram.theme.block_stroke_width, 2.5);
+        assert_eq!(diagram.theme.block_fill_color, "#abcdef");
+    }
+
+    #[test]
+    fn packet_parses_theme_variables_from_init_directive() {
+        let diagram = parse_packet(
+            "%%{init: {'themeVariables': {'packet': {'labelColor': '#123456', 'labelFontSize': '15px', 'blockStrokeWidth': '3px'}}}}%%\npacket\n0-7: \"byte\"",
+        )
+        .unwrap();
+        assert_eq!(diagram.theme.label_color, "#123456");
+        assert_eq!(diagram.theme.label_font_size, 15.0);
+        assert_eq!(diagram.theme.block_stroke_width, 3.0);
     }
 
     #[test]
