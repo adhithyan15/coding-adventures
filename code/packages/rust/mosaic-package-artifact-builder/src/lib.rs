@@ -286,13 +286,12 @@ impl Backend {
     /// the only version of "remember to update the supported set" that works.
     fn installs_host_effects(self) -> bool {
         match self {
-            Backend::Qt | Backend::SwiftUI | Backend::Compose => true,
+            Backend::Qt | Backend::SwiftUI | Backend::Compose | Backend::Flutter => true,
             Backend::React
             | Backend::Electron
             | Backend::WebComponent
             | Backend::Html
-            | Backend::Xaml
-            | Backend::Flutter => false,
+            | Backend::Xaml => false,
         }
     }
 
@@ -2875,7 +2874,8 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 if let Some(parent) = nested.parent() {
                     create_dir_all(parent)?;
                 }
-                write_file(&nested, proj.main_dart.as_bytes())?;
+                let main_dart = flutter_main_with_host_effects(&proj.main_dart, host_effects)?;
+                write_file(&nested, main_dart.as_bytes())?;
                 written.push(nested);
                 let widget_test = backend_dir.join("test/widget_test.dart");
                 if let Some(parent) = widget_test.parent() {
@@ -3642,6 +3642,94 @@ fn compose_main_with_host_effects(
     )
     .expect("write Compose host-effect install");
     out.push_str(&generated[line_end..]);
+    Ok(out)
+}
+
+/// Install a package's effect handler in the generated Flutter entry point.
+///
+/// Flutter needs an `include` where Compose and SwiftUI refuse one, and that is
+/// a language difference rather than a style choice: Dart resolves nothing
+/// across files without an explicit `import`, so a handler merely copied into
+/// `lib/` is present, compiled and unreachable. Kotlin and Swift make every
+/// file in the module visible, which is why declaring an include there would be
+/// a field silently dropped. Qt is the same shape as this one for the same
+/// reason -- C++ has no cross-file visibility either.
+///
+/// The call goes immediately after the host is assigned in `initState`, through
+/// a local: `_mosaicHost` is a `late final MosaicHost?` field, and Dart does not
+/// promote fields to non-null, so the null check has to be on a local copy.
+fn flutter_main_with_host_effects(
+    generated: &str,
+    host_effects: &mosaic_package_manifest::HostEffectsSection,
+) -> Result<String, BuildError> {
+    let Some(handler) = host_effects
+        .handlers
+        .iter()
+        .find(|handler| handler.backend == "flutter")
+    else {
+        return Ok(generated.to_string());
+    };
+
+    let Some(include) = handler.include.as_deref() else {
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` declares a Flutter handler `{}` with no `include`, \
+             but Dart resolves nothing across files without an import -- the \
+             handler would be copied, compiled and never reachable. Set \
+             `include` to the file's path relative to `lib/`.",
+            handler.install
+        )));
+    };
+
+    // Anchored on the ASSIGNMENT, which both emitted shapes share.
+    // `require_runtime` loads through `MosaicHost.loadRequired()` at `runApp`
+    // and assigns the widget's field directly; the other loads inside
+    // `initState`. Both lines begin `_mosaicHost = widget.mosaicHost`, so
+    // anchoring on the whole call would silently miss one of them.
+    const ANCHOR: &str = "_mosaicHost = widget.mosaicHost";
+    let Some(at) = line_anchored_find(generated, ANCHOR) else {
+        // Loud, as on every other backend: Flutter compiles everything under
+        // `lib/`, so an uninstalled handler still compiles and ships, and the
+        // first symptom is an `Await` going unanswered at runtime.
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` declares a Flutter handler `{}`, but the generated \
+             entry point has no `{ANCHOR}` to install it after",
+            handler.install
+        )));
+    };
+
+    let line_start = generated[..at].rfind('\n').map_or(0, |index| index + 1);
+    let indent: String = generated[line_start..at].to_string();
+    let line_end = generated[at..]
+        .find('\n')
+        .map_or(generated.len(), |index| at + index + 1);
+
+    let mut out = String::with_capacity(generated.len() + 256);
+    out.push_str(&generated[..line_end]);
+    writeln!(
+        out,
+        "{indent}// Package-declared effect handler, from `[host_effects]`."
+    )
+    .expect("write Flutter host-effect comment");
+    writeln!(
+        out,
+        "{indent}final mosaicEffectHost = _mosaicHost;\n\
+         {indent}if (mosaicEffectHost != null) {{ {}(mosaicEffectHost); }}",
+        handler.install
+    )
+    .expect("write Flutter host-effect install");
+    out.push_str(&generated[line_end..]);
+
+    // The import goes at the top, after the last existing one so it cannot land
+    // between a directive and its own comment.
+    let import = format!("import '{include}';\n");
+    if out.contains(&import) {
+        return Ok(out);
+    }
+    let insert_at = out
+        .rfind("\nimport ")
+        .and_then(|start| out[start + 1..].find('\n').map(|end| start + 1 + end + 1))
+        .unwrap_or(0);
+    out.insert_str(insert_at, &import);
     Ok(out)
 }
 
@@ -12363,7 +12451,9 @@ version = "1"
         // Compose used to be in this list. It gained an emitter, the
         // classification flipped, and the tripwire above sent me back here --
         // which is exactly what an exhaustive match buys over a list.
-        for backend in [Backend::Flutter, Backend::Xaml, Backend::React] {
+        // Flutter used to be here; it gained an emitter and the tripwire sent
+        // me back. XAML is the last native backend that cannot install one.
+        for backend in [Backend::Xaml, Backend::React, Backend::Html] {
             let root = scratch();
             fs::create_dir_all(root.join("host/qt")).expect("create the source directory");
             fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
@@ -12431,20 +12521,20 @@ version = "1"
     /// `qt` alone while shipping Compose, Flutter and XAML host ASSETS -- so
     /// this is not a synthetic arrangement, it is the one that exists.
     #[test]
-    fn a_qt_only_handler_does_not_refuse_a_flutter_build() {
+    fn a_qt_only_handler_does_not_refuse_an_xaml_build() {
         let root = scratch();
         fs::create_dir_all(root.join("host/qt")).expect("create the source directory");
         fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
 
         let written = install_host_effects(
             &manifest_targeting("probe_effects.h"),
-            Backend::Flutter,
+            Backend::Xaml,
             &root,
             &root.join("out"),
             &HashMap::new(),
             &HashSet::new(),
         )
-        .expect("a qt-only handler must not refuse a flutter build");
+        .expect("a qt-only handler must not refuse an xaml build");
         assert!(
             written.is_empty(),
             "nothing should be installed for a backend the package does not target"
@@ -12494,7 +12584,7 @@ exports = ["Probe"]
 
 [host_effects]
 handlers = [
-  { backend = "flutter", install = "installProbeEffects" },
+  { backend = "xaml", install = "installProbeEffects" },
 ]
 
 [kernel]
@@ -12509,7 +12599,7 @@ version = "1"
 
         let error = install_host_effects(
             &manifest,
-            Backend::Flutter,
+            Backend::Xaml,
             &root,
             &root.join("out"),
             &HashMap::new(),
@@ -12552,7 +12642,7 @@ version = "1"
             .collect();
         assert_eq!(
             claiming,
-            vec!["swiftui", "qt", "compose"],
+            vec!["swiftui", "qt", "flutter", "compose"],
             "update this when a backend gains an install emission -- and when it \
              does, `install_host_effects` stops refusing it"
         );
@@ -12887,6 +12977,207 @@ handlers = [
             app.contains("installProbeEffects(mosaicEffectHost)"),
             "the bundled-runtime assignment must also be wired:\n{app}"
         );
+    }
+}
+
+#[cfg(test)]
+mod flutter_host_effect_tests {
+    use super::*;
+
+    fn section(toml: &str) -> mosaic_package_manifest::HostEffectsSection {
+        let manifest = format!(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+{toml}
+
+[kernel]
+version = "1"
+"#
+        );
+        mosaic_package_manifest::parse(&manifest)
+            .expect("probe manifest must parse")
+            .host_effects
+    }
+
+    fn handler() -> mosaic_package_manifest::HostEffectsSection {
+        section(
+            r#"
+[host_effects]
+files = [
+  { backend = "flutter", source = "host/flutter/effects.dart", target = "lib/probe_effects.dart" },
+]
+handlers = [
+  { backend = "flutter", include = "probe_effects.dart", install = "installProbeEffects" },
+]
+"#,
+        )
+    }
+
+    const MAIN_DART: &str = concat!(
+        "import 'package:flutter/material.dart';\n",
+        "import 'mosaic_host.dart';\n",
+        "\n",
+        "class _MosaicAppState extends State<MosaicApp> {\n",
+        "  late final MosaicHost? _mosaicHost;\n",
+        "  @override\n",
+        "  void initState() {\n",
+        "    super.initState();\n",
+        "    _mosaicHost = widget.mosaicHost ?? MosaicHost.load();\n",
+        "    _mosaicHost?.setPropsChangedHandler(() {});\n",
+        "  }\n",
+        "}\n",
+    );
+
+    #[test]
+    fn a_package_with_no_flutter_handler_is_untouched() {
+        let empty = section("");
+        assert_eq!(
+            flutter_main_with_host_effects(MAIN_DART, &empty).expect("wiring must succeed"),
+            MAIN_DART
+        );
+    }
+
+    #[test]
+    fn the_install_lands_after_the_host_assignment() {
+        let wired = flutter_main_with_host_effects(MAIN_DART, &handler()).expect("wiring");
+        let host = wired
+            .find("_mosaicHost = widget.mosaicHost")
+            .expect("host assignment");
+        let install = wired
+            .find("installProbeEffects(mosaicEffectHost)")
+            .expect("install");
+        assert!(host < install, "{wired}");
+        // Through a LOCAL, because Dart does not promote a nullable field to
+        // non-null; `if (_mosaicHost != null) install(_mosaicHost)` does not
+        // compile.
+        assert!(
+            wired.contains("final mosaicEffectHost = _mosaicHost;"),
+            "{wired}"
+        );
+    }
+
+    #[test]
+    fn the_handler_file_is_imported() {
+        // The difference from Compose and SwiftUI. Dart resolves nothing across
+        // files without an import, so a handler copied into `lib/` is present,
+        // compiled and unreachable -- the call would simply not resolve.
+        let wired = flutter_main_with_host_effects(MAIN_DART, &handler()).expect("wiring");
+        assert!(wired.contains("import 'probe_effects.dart';\n"), "{wired}");
+        // After the existing imports, not before them or inside the body.
+        let import = wired.find("import 'probe_effects.dart'").expect("import");
+        let existing = wired
+            .find("import 'mosaic_host.dart'")
+            .expect("existing import");
+        let class = wired.find("class _MosaicAppState").expect("class");
+        assert!(
+            existing < import && import < class,
+            "the import must sit with the other directives:\n{wired}"
+        );
+    }
+
+    #[test]
+    fn a_flutter_handler_without_an_include_is_refused() {
+        // Refused rather than emitted-and-broken: without the import the call
+        // does not resolve, and the author's mistake should be named at build
+        // time rather than by the Dart analyser in generated code they did not
+        // write.
+        let effects = section(
+            r#"
+[host_effects]
+files = [
+  { backend = "flutter", source = "host/flutter/effects.dart", target = "lib/probe_effects.dart" },
+]
+handlers = [
+  { backend = "flutter", install = "installProbeEffects" },
+]
+"#,
+        );
+        let error = flutter_main_with_host_effects(MAIN_DART, &effects)
+            .expect_err("a Flutter handler with no include must be refused");
+        let message = format!("{error:?}");
+        assert!(
+            message.contains("include") && message.contains("installProbeEffects"),
+            "{message}"
+        );
+    }
+
+    #[test]
+    fn a_declared_flutter_handler_with_no_anchor_fails_the_build() {
+        let error = flutter_main_with_host_effects("void main() {}\n", &handler())
+            .expect_err("a declared handler with nowhere to go must fail the build");
+        assert!(
+            format!("{error:?}").contains("installProbeEffects"),
+            "{error:?}"
+        );
+    }
+
+    /// Both emitted shapes carry the anchor.
+    ///
+    /// `require_runtime` loads through `MosaicHost.loadRequired()` at `runApp`
+    /// and assigns the widget's field directly; the other loads inside
+    /// `initState`. Anchoring on the whole call would match one and silently
+    /// miss the other, so this drives the real generator for both.
+    #[test]
+    fn the_anchor_matches_both_emitted_shapes() {
+        let component = mosmodel_compiler::MosmodelComponent {
+            component: "Probe".to_string(),
+            slots: Vec::new(),
+            emits: Vec::new(),
+        };
+        let layout = moslayout_compiler::LayoutDef {
+            component_name: "Probe".to_string(),
+            root: moslayout_compiler::LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let style = mosstyle_compiler::StyleDef {
+            component_name: "Probe".to_string(),
+            parts: Vec::new(),
+        };
+        for require_runtime in [false, true] {
+            let options = mosaic_emit_flutter::pipeline::EmitOptions {
+                emit_project: true,
+                require_runtime,
+                ..Default::default()
+            };
+            let emitted = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
+                &component, &layout, &style, &options,
+            )
+            .expect("the emitter must produce a project")
+            .project
+            .expect("emit_project: true must produce a shell");
+
+            assert_eq!(
+                emitted.main_dart.contains("MosaicHost.loadRequired()"),
+                require_runtime,
+                "require_runtime={require_runtime} must select the matching loader"
+            );
+            let wired = flutter_main_with_host_effects(&emitted.main_dart, &handler())
+                .unwrap_or_else(|e| panic!("require_runtime={require_runtime}: {e:?}"));
+            let host = wired
+                .find("_mosaicHost = widget.mosaicHost")
+                .expect("host assignment");
+            let install = wired
+                .find("installProbeEffects(mosaicEffectHost)")
+                .expect("install");
+            assert!(
+                host < install,
+                "require_runtime={require_runtime}:\n{wired}"
+            );
+        }
     }
 }
 
