@@ -6,8 +6,10 @@ The crate owns the security-sensitive, pure portion of installed-app OAuth:
 - strict provider/end-point configuration;
 - bounded RFC 8414 metadata discovery with exact issuer trust binding,
   confidential authentication-capability retention, public-client `none`
-  enforcement at configuration derivation, and explicit RFC 9207 or
-  registry-owned distinct-redirect mix-up defense, including fail-closed JWT
+  enforcement, and confidential configuration derivation limited to exact
+  advertised `client_secret_basic`, `client_secret_post`, or `private_key_jwt`;
+  both derivation paths require explicit RFC 9207 or registry-owned
+  distinct-redirect mix-up defense, including fail-closed JWT
   client-authentication signing algorithms and validated optional RFC 8628
   device authorization endpoints;
 - metadata-bound RFC 8628 public-client initiation, bounded response decoding,

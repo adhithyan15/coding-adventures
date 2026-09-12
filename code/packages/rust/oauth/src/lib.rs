@@ -132,7 +132,10 @@ impl Debug for MixUpDefense {
     }
 }
 
-/// Static provider data for a public installed-app Authorization Code client.
+/// Static provider data for an Authorization Code client using mandatory PKCE.
+///
+/// Client authentication is intentionally composed by a separate public,
+/// client-secret, or private-key boundary before transport.
 #[derive(Clone, PartialEq, Eq)]
 pub struct ProviderConfig {
     provider: ProviderId,
@@ -146,7 +149,7 @@ pub struct ProviderConfig {
 }
 
 impl ProviderConfig {
-    /// Construct a strict public-client configuration.
+    /// Construct a strict provider configuration without selecting client authentication.
     pub fn new(
         provider: ProviderId,
         authorization_endpoint: impl Into<String>,

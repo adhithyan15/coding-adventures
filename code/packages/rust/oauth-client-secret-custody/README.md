@@ -18,8 +18,10 @@ bodies are wipe-on-drop, and every request is matched to the exact provider and
 client identity before access while inheriting the trace used for the custody
 audit. Authentication can be derived from validated RFC 8414 metadata only
 when the opaque key's provider and exact method token both match; no default is
-invented. Private-key JWT uses a separate non-exporting signing authority so
-private key bytes never cross this boundary.
+invented. The selected method maps to the core's closed confidential-method
+type so callers can derive a matching PKCE-enforced `ProviderConfig` without
+re-parsing a string token. Private-key JWT uses a separate non-exporting
+signing authority so private key bytes never cross this boundary.
 
 ## Verification
 

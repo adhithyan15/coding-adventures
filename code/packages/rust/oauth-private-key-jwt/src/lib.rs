@@ -10,8 +10,8 @@
 use coding_adventures_base64::{encode_into as encode_base64_into, URL_SAFE_NO_PAD};
 use coding_adventures_bounded_json::{serialize, JsonNumber, JsonValue};
 use coding_adventures_oauth::{
-    AuthorizationServerMetadata, OAuthTraceId, ProviderId, TokenExchangeRequest,
-    TokenRefreshRequest, TokenResponseContext, TokenRevocationRequest,
+    AuthorizationServerMetadata, ConfidentialClientAuthenticationMethod, OAuthTraceId, ProviderId,
+    TokenExchangeRequest, TokenRefreshRequest, TokenResponseContext, TokenRevocationRequest,
 };
 use coding_adventures_oauth_private_key_signer::{
     AuditedPrivateKeySigner, PrivateKeyAuditSink, PrivateKeyId, PrivateKeyJwtAlgorithm,
@@ -60,9 +60,9 @@ impl PrivateKeyJwtProfile {
         if key.provider() != &provider
             || !valid_client_id(&client_id)
             || !valid_audience(&audience)
-            || !token_endpoint_auth_methods_supported
-                .iter()
-                .any(|method| method == "private_key_jwt")
+            || !token_endpoint_auth_methods_supported.iter().any(|method| {
+                method == ConfidentialClientAuthenticationMethod::PrivateKeyJwt.as_str()
+            })
             || !token_endpoint_auth_signing_alg_values_supported
                 .iter()
                 .any(|candidate| candidate == algorithm.as_str())

@@ -133,7 +133,13 @@ The delivery order is:
    bodies are zeroizing, reject provider or client-identity mismatches before
    secret access, and retain the provider/trace audit binding. Validated RFC
    8414 metadata now selects these methods only after exact provider and
-   case-sensitive method matching, without inventing a default. A
+   case-sensitive method matching, without inventing a default. The same
+   metadata can now derive a PKCE-enforced confidential `ProviderConfig` only
+   for the closed implemented set (`client_secret_basic`, `client_secret_post`,
+   or `private_key_jwt`) and only when the selected method was advertised
+   exactly. RFC 9207 or registry-owned distinct-redirect mix-up defense remains
+   mandatory, while both public derivation paths still require explicit
+   `none`. A
    non-exporting signer boundary for `private_key_jwt` is shipped: opaque
    provider-bound key references, algorithm-as-data, bounded zeroizing
    signature ownership, and durable trace-correlated audit before signing and
