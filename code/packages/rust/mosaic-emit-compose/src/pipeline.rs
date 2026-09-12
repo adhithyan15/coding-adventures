@@ -92,8 +92,13 @@ pub fn from_pipeline(
     // (drag-and-drop AND the calendar's wrapping row). Collect the classes
     // and emit a single annotation.
     let mut opt_ins: Vec<&str> = Vec::new();
+    let uses_wheel = layout_has_table_wheel_routing(&layout.root);
     if layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget")
+        // UI73's `onPointerEvent` sits behind the SAME opt-in, so it joins
+        // this condition rather than adding a second `@file:OptIn`, which
+        // is not repeatable and does not compile (#14964).
+        || uses_wheel
     {
         opt_ins.push("androidx.compose.ui.ExperimentalComposeUiApi::class");
     }
@@ -201,6 +206,14 @@ pub fn from_pipeline(
     if uses_flow {
         writeln!(out, "import androidx.compose.foundation.layout.FlowColumn").unwrap();
         writeln!(out, "import androidx.compose.foundation.layout.FlowRow").unwrap();
+    }
+    if uses_wheel {
+        writeln!(out, "import androidx.compose.runtime.mutableStateOf").unwrap();
+        writeln!(out, "import androidx.compose.runtime.remember").unwrap();
+        writeln!(out, "import androidx.compose.ui.input.pointer.PointerEventType").unwrap();
+        writeln!(out, "import androidx.compose.ui.input.pointer.onPointerEvent").unwrap();
+        writeln!(out, "import kotlin.math.abs").unwrap();
+        writeln!(out, "import kotlin.math.sign").unwrap();
     }
     // #14810 — unconditional, like the layout imports around it. Emitting
     // `RoundedCornerShape`/`clip` without their imports is Kotlin that does
@@ -1895,14 +1908,19 @@ fn emit_split_composable_function(
         )
         .unwrap();
     }
+    let root_wheel =
+        table_wheel_modifier(layout_root, table_context.as_ref(), component_name);
     let frame = emit_container_frame(
         layout_root,
         root_composable,
         root_depth,
         part_styles,
-        table_context.as_ref(),
-        root_text.as_ref(),
-        None,
+        &FrameCtx {
+            table: table_context.as_ref(),
+            text: root_text.as_ref(),
+            injected_width: None,
+            wheel_modifier: root_wheel.as_deref(),
+        },
     );
     out.push_str(&frame.opener);
     let ranges = child_section_ranges(&layout_root.children);
@@ -2024,14 +2042,19 @@ fn emit_section_fn(
         // (a HostTable's sheet text) still wins.
         let sub_table = sub_table.as_ref().or(table_context);
         let sub_text = sub_text.as_ref().or(child_text);
+        let section_wheel =
+            table_wheel_modifier(node, sub_table, component_name);
         let frame = emit_container_frame(
             node,
             composable,
             1,
             ctx.part_styles,
-            sub_table,
-            sub_text,
-            None,
+            &FrameCtx {
+                table: sub_table,
+                text: sub_text,
+                injected_width: None,
+                wheel_modifier: section_wheel.as_deref(),
+            },
         );
         let sub_ranges = child_section_ranges(&node.children);
         let mut inner = String::new();
@@ -2837,6 +2860,98 @@ fn table_focus_modifier(node: &LayoutNode, table_ctx: Option<&TableContext>) -> 
         Some(LayoutPropValue::Keyword(v)) if v == "true"
     )
     .then(|| "focusable()".to_string())
+}
+
+/// The state holder the wheel accumulator needs, emitted just before the
+/// table's composable (UI73).
+///
+/// A `Modifier` cannot hold state, and the fractional remainder has to
+/// survive between scroll events, so this is a line rather than another
+/// chain segment.
+fn table_wheel_state_prelude(
+    node: &LayoutNode,
+    table_ctx: Option<&TableContext>,
+) -> Option<String> {
+    table_wheel_shift_event(node, table_ctx)
+        .map(|_| "val mosaicWheelRows = remember { mutableStateOf(0f) }".to_string())
+}
+
+/// The `onViewportShift` event this table routes its wheel to, if it is
+/// wired for virtual scrolling at all (UI73).
+///
+/// All three of `onViewportShift`, `viewport-offset` and `total-rows` are
+/// required: the delta is meaningless without the offset to clamp against
+/// and the total to clamp to. A table missing any of them is not wired for
+/// virtual scrolling and gets no handler.
+fn table_wheel_shift_event(
+    node: &LayoutNode,
+    table_ctx: Option<&TableContext>,
+) -> Option<(String, String, String, String)> {
+    let ctx = table_ctx?;
+    if !matches!(ctx.semantic_scope, TableSemanticScope::Root) || node.tag != "HostTable" {
+        return None;
+    }
+    let event = find_emit_ref_prop(node, "onViewportShift")?;
+    let offset = find_slot_ref_prop(node, "viewport-offset")?;
+    let total = find_slot_ref_prop(node, "total-rows")?;
+    // The rendered row count, from the same collection the semantics row
+    // count is derived from -- so the clamp and the announced row count
+    // cannot disagree.
+    let rendered = for_collection_expr(compose_semantic_table_shape(node)?.body_rows)?;
+    Some((
+        event.to_string(),
+        to_camel_case_first_lower(offset),
+        to_camel_case_first_lower(total),
+        rendered,
+    ))
+}
+
+/// Route the table's scroll wheel to `onViewportShift` (UI73).
+///
+/// Mirrors `mosaic-emit-react/src/table_capacity.ts`: ignore the event when
+/// the horizontal delta dominates, clamp at both ends of the virtual window
+/// and reset the accumulator when clamped, and carry the fractional
+/// remainder between events, discarding it on a direction change.
+///
+/// ONE DELIBERATE DIFFERENCE. React divides `deltaY` by a measured row pitch
+/// because the DOM reports pixels. Compose's `scrollDelta.y` is already in
+/// LINE units -- a wheel notch is 1.0 -- so there is no pitch, no
+/// measurement pass, and no analogue of React's `deltaMode` branch. The
+/// accumulator still earns its place: a trackpad delivers fractional lines.
+///
+/// The `.toInt()` / `.toDouble()` crossings are not decoration: a mosstyle
+/// `number` slot lowers to a Kotlin `Double`, so the clamp arithmetic and the
+/// dispatched payload each need one. COMPILING the generated project is what
+/// surfaced that -- the shape type-checked against an `Int` fixture when the
+/// API was verified, and only the real project has the real slot types.
+fn table_wheel_modifier(
+    node: &LayoutNode,
+    table_ctx: Option<&TableContext>,
+    component_name: &str,
+) -> Option<String> {
+    let (event, offset, total, rendered) = table_wheel_shift_event(node, table_ctx)?;
+    let case = pascalize(&strip_on_prefix(&event));
+    Some(format!(
+        "onPointerEvent(PointerEventType.Scroll) {{ event ->          val mosaicDelta = event.changes.first().scrollDelta;          if (abs(mosaicDelta.x) < abs(mosaicDelta.y) && mosaicDelta.y != 0f) {{          val mosaicLimit = maxOf(0, {total}.toInt() - {rendered}.size);          if ((mosaicDelta.y < 0f && {offset}.toInt() <= 0) || (mosaicDelta.y > 0f && {offset}.toInt() >= mosaicLimit)) {{          mosaicWheelRows.value = 0f          }} else {{          val mosaicCarried = if (sign(mosaicWheelRows.value) == sign(mosaicDelta.y)) mosaicWheelRows.value else 0f;          val mosaicAccumulated = mosaicCarried + mosaicDelta.y;          val mosaicRows = mosaicAccumulated.toInt();          mosaicWheelRows.value = mosaicAccumulated - mosaicRows;          if (mosaicRows != 0) dispatch({component_name}Event.{case}(rows = mosaicRows.toDouble()))          }} }} }}"
+    ))
+}
+
+/// Whether any table in this layout routes its wheel, and so whether the
+/// file needs the pointer imports and the opt-in (UI73).
+fn layout_has_table_wheel_routing(node: &LayoutNode) -> bool {
+    (node.tag == "HostTable" && host_table_has_wheel_routing(node))
+        || node.children.iter().any(layout_has_table_wheel_routing)
+}
+
+/// Whether Compose routes this table's wheel to `onViewportShift` (UI73).
+///
+/// The capability analysis asks this so the degradation report cannot drift
+/// from what the emitter emits.
+pub fn host_table_has_wheel_routing(host_table: &LayoutNode) -> bool {
+    // The scope check inside wants a root TableContext; build the one the
+    // emitter would.
+    let ctx = extract_table_context(host_table);
+    table_wheel_shift_event(host_table, Some(&ctx)).is_some()
 }
 
 /// Whether Compose lowers a `HostTable`'s authored focus and accessible name
@@ -4633,15 +4748,33 @@ fn drag_event_dispatch(
     )))
 }
 
+/// The context a container frame is written against.
+///
+/// Grouped when UI73's wheel modifier became an eighth argument and tripped
+/// clippy's limit; the four are all "what surrounds this node" rather than
+/// what it is.
+struct FrameCtx<'a> {
+    table: Option<&'a TableContext>,
+    text: Option<&'a TextStyleCtx>,
+    injected_width: Option<&'a str>,
+    /// Precomputed by the caller: this writer has no `emits` or component
+    /// name, and the wheel handler needs both to build its dispatch (UI73).
+    wheel_modifier: Option<&'a str>,
+}
+
 fn emit_container_frame(
     node: &LayoutNode,
     composable: &str,
     depth: usize,
     part_styles: &PartStyleMap,
-    table_ctx: Option<&TableContext>,
-    text_ctx: Option<&TextStyleCtx>,
-    injected_width: Option<&str>,
+    frame_ctx: &FrameCtx<'_>,
 ) -> ContainerFrame {
+    let FrameCtx {
+        table: table_ctx,
+        text: text_ctx,
+        injected_width,
+        wheel_modifier,
+    } = *frame_ctx;
     let pad = "    ".repeat(depth);
     let composable = flow_wrapped_composable(node, part_styles, composable);
     let mut opener = String::new();
@@ -4712,6 +4845,7 @@ fn emit_container_frame(
         has_style_chain
         || semantic_modifier.is_some()
         || focus_modifier.is_some()
+        || wheel_modifier.is_some()
         || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
     let gap = style.as_ref().and_then(|s| s.gap.clone());
@@ -4755,6 +4889,9 @@ fn emit_container_frame(
         }
         if let Some(focus) = &focus_modifier {
             write!(opener, "\n{}.{focus}", " ".repeat(chain_indent)).unwrap();
+        }
+        if let Some(wheel) = wheel_modifier {
+            write!(opener, "\n{}.{wheel}", " ".repeat(chain_indent)).unwrap();
         }
         if let Some(semantics) = &radio_group_modifier {
             write!(opener, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
@@ -5014,6 +5151,13 @@ fn emit_container(
         .unwrap_or(false);
     let semantic_modifier = table_semantics_modifier(node, table_ctx);
     let focus_modifier = table_focus_modifier(node, table_ctx);
+    let wheel_modifier = table_wheel_modifier(node, table_ctx, component_name);
+    // The accumulator has to survive between scroll events, and a Modifier
+    // cannot hold state, so this is a line before the composable rather
+    // than another chain segment (UI73).
+    if let Some(prelude) = table_wheel_state_prelude(node, table_ctx) {
+        writeln!(out, "{pad}{prelude}").unwrap();
+    }
     // #13007: a container physically holding 2+ same-group HostRadio
     // siblings gets `.selectableGroup()` for native mutual-exclusion
     // a11y semantics — purely additive, doesn't touch each radio's own
@@ -5027,6 +5171,7 @@ fn emit_container(
         has_style_chain
         || semantic_modifier.is_some()
         || focus_modifier.is_some()
+        || wheel_modifier.is_some()
         || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
     let gap = style.as_ref().and_then(|s| s.gap.clone());
@@ -5077,6 +5222,9 @@ fn emit_container(
         }
         if let Some(focus) = &focus_modifier {
             write!(out, "\n{}.{focus}", " ".repeat(chain_indent)).unwrap();
+        }
+        if let Some(wheel) = &wheel_modifier {
+            write!(out, "\n{}.{wheel}", " ".repeat(chain_indent)).unwrap();
         }
         if let Some(semantics) = &radio_group_modifier {
             write!(out, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
@@ -10585,6 +10733,49 @@ mod tests {
     // generated project before being written down. `contentAlignment` on a
     // Row analysed fine to the eye and only kotlinc rejected it.
     // ===================================================================
+
+    /// UI73 — a table wired for virtual scrolling routes its wheel; one
+    /// that is not gets no handler at all.
+    ///
+    /// Asserted as a PAIR: the negative alone would pass on a predicate
+    /// that never fires, and the positive alone would pass on one that
+    /// always does.
+    #[test]
+    fn table_wheel_routing_is_emitted_only_when_the_table_is_wired_for_it() {
+        fn table(with_window: bool) -> LayoutNode {
+            let mut props = vec![LayoutProp {
+                name: "onViewportShift".into(),
+                value: LayoutPropValue::EmitRef("onViewportShift".into()),
+            }];
+            if with_window {
+                props.push(LayoutProp {
+                    name: "viewport-offset".into(),
+                    value: LayoutPropValue::SlotRef("viewport-offset".into()),
+                });
+                props.push(LayoutProp {
+                    name: "total-rows".into(),
+                    value: LayoutPropValue::SlotRef("total-rows".into()),
+                });
+            }
+            LayoutNode {
+                tag: "HostTable".into(),
+                part_name: None,
+                props,
+                children: vec![],
+            }
+        }
+        // Wired but with no recognisable body-row collection: still no
+        // handler, because the clamp has nothing to measure against.
+        assert!(
+            !host_table_has_wheel_routing(&table(true)),
+            "a table with no body rows has no rendered count to clamp to"
+        );
+        // Missing the window slots: no handler either.
+        assert!(
+            !host_table_has_wheel_routing(&table(false)),
+            "a shift event without offset and total cannot be clamped"
+        );
+    }
 
     /// A Box has no wrapping equivalent, so `flex-wrap` is still reported
     /// there -- while a Row that wraps is not. Both directions, because a

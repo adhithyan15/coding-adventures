@@ -35,18 +35,16 @@ cargo run --manifest-path "$repo/code/packages/rust/mosaic-compile/Cargo.toml" -
   pkg "$app" --backend compose --output "$work" --emit-project \
   --runtime-library "$runtime"
 
-# Unlike Engram's script this does NOT assert nativeComplete, because VisiCalc
-# is not native-complete on Compose. The four `table-cell-role` entries were
-# false positives -- Compose emits `collectionItemInfo` for every cell of a
-# table it recognises -- and are gone; what remains is one genuine gap, wheel
-# routing, which Compose does not implement at all (#14843). Pinning the COUNT
-# so the render keeps saying which build it is a picture of and a new
-# degradation cannot appear unremarked.
+# VisiCalc is native-complete on Compose as of UI73 (#14843): the four
+# `table-cell-role` entries were false positives (#14954) and the last real
+# gap, wheel routing, is implemented. Asserting nativeComplete rather than
+# pinning a count -- the pin existed only because there was something to pin.
 python3 -c "
 import json
 d=json.load(open('$work/compose/mosaic-degradations.json'))
 n=len(d['degradations'])
-assert n == 1, f'expected the 1 known table-semantics degradation (#14843: wheel routing), got {n}: ' + repr([x[\"code\"] for x in d['degradations']])
+assert n == 0, f'expected VisiCalc to be native-complete on Compose, got {n}: ' + repr([x[\"code\"] for x in d['degradations']])
+assert d.get('nativeComplete') is True, 'report does not claim nativeComplete'
 "
 
 mkdir -p "$work/compose/src/test/kotlin"
