@@ -5,6 +5,55 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — `flex-wrap: wrap` reached nothing; Compose's `Row` does not wrap (#14836)
+
+Engram authors it on `app-header`, `app-nav` and `host-status`;
+`mosaic-pkg-calendar` authors it too, which Trestle picks up through the
+Calendar tab. Compose discarded all of them, so a narrow window clipped or
+squeezed the nav instead of wrapping it.
+
+`Row` becomes `FlowRow` and `Column` becomes `FlowColumn` when the part
+authors it. They take the same arrangement and alignment arguments, so
+nothing downstream changes. Measured after: **3** `FlowRow` in Engram, **1**
+in Trestle (the calendar's).
+
+`FlowRow` is behind `ExperimentalLayoutApi`, so the file gains
+`@file:OptIn(..)` and two imports — emitted **only** when some part actually
+wraps, so a project that does not keeps a byte-identical header. A test
+asserts the opt-in is absent in that case.
+
+#### Where the first attempt failed
+
+This was tried once and backed out. `root_container_context`'s comment calls
+itself "the SECOND place a primitive picks its composable" and records that
+UI60 had to change both. **It undercounts.** The emitter has:
+
+| | site |
+| --- | --- |
+| chooses | `emit_node`'s `match node.tag` |
+| chooses | `root_container_context` |
+| **writes** | `emit_container` |
+| **writes** | `emit_container_frame` |
+| hardcodes `Row(` | `emit_host_checkbox` |
+| hardcodes `Row(` | `emit_host_radio` |
+
+The first attempt patched the two that *choose*. A plain root `Row` goes
+through `emit_container`, so it still emitted `Row(` while the file gained the
+FlowRow opt-in — a half-applied change of exactly the kind UI60 describes.
+
+The upgrade now sits in the two functions that **write** an opener, which are
+the last common point and cannot be bypassed by a caller. Both a root and a
+nested Row are tested, because a nested-only fixture would have passed the
+broken version.
+
+#### The drop report stays co-total
+
+`flex-wrap` is still recorded as a candidate drop in `compose_box_style`,
+which cannot see the tag, and filtered out by
+`dropped_style_properties_in_layout` for the Row and Column that now carry it.
+A `Box` has no wrapping equivalent, so it is still reported there — asserted in
+both directions, since a filter that never fires would pass the positive alone.
+
 ### Fixed — `justify-content` and `align-items` reached nothing, and the drop reporter could not tell where they applied (#14834)
 
 Engram authors `justify-content: space-between` and `align-items: center` on its
