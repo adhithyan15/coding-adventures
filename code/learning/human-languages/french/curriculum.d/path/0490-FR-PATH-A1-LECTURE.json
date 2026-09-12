@@ -1,0 +1,14 @@
+{
+  "id": "FR-PATH-A1-LECTURE",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "FR-C45-instructions",
+    "FR-C45-details",
+    "FR-C45-premiere-lecture"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-A1-LECTURE"
+  ],
+  "after": []
+}

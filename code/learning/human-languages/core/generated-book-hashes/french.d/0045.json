@@ -1,0 +1,11 @@
+{
+  "language": "french",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:10b75074d3345393",
+  "lessonIds": [
+    "FR-C45-instructions",
+    "FR-C45-details",
+    "FR-C45-premiere-lecture"
+  ],
+  "tex": "french/book/chapters/ch45-reading-instructions-form-and-paragraph.tex"
+}

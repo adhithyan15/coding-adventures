@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C45-details",
+    "language": "french",
+    "chapter": 45,
+    "sequence": 1760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b25f3336c5b0d718"
+  },
+  "findings": []
+}
