@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extend the shared form-control page with a file input and accept/multiple
+  metadata for deterministic cross-host layout and paint coverage.
+
 - Extend the shared form-control page with canonical date, month, ISO week,
   time, datetime-local, and color values for deterministic layout/paint gates.
 

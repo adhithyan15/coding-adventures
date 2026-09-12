@@ -1,6 +1,6 @@
 //! Host-neutral HTML form submission and constraint validation.
 
-use browser_form_controls::{BrowserControlModel, ControlBinding};
+use browser_form_controls::{BrowserControlModel, ControlBinding, HostFileSelection};
 use coding_adventures_html_parser::{BrowserDocument, BrowserForm, BrowserFormControl};
 use layout_controls::{ControlKind, ControlState};
 use regex::Regex;
@@ -9,6 +9,7 @@ use url_parser::Url;
 pub const VERSION: &str = "0.1.0";
 pub const MAX_FORM_ENTRIES: usize = 1_024;
 pub const MAX_ENCODED_BYTES: usize = 1024 * 1024;
+pub const MAX_MULTIPART_BYTES: usize = 16 * 1024 * 1024;
 pub const MAX_DIAGNOSTICS: usize = 32;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -24,12 +25,19 @@ pub struct FormEntry {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
+pub struct FormFileEntry {
+    pub name: String,
+    pub file: HostFileSelection,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct FormNavigation {
     pub method: FormMethod,
     pub url: String,
     pub content_type: Option<String>,
     pub body: Vec<u8>,
     pub entries: Vec<FormEntry>,
+    pub files: Vec<FormFileEntry>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -77,7 +85,7 @@ impl std::fmt::Display for FormPlanningError {
                 write!(formatter, "form exceeds the {limit}-entry limit")
             }
             Self::PayloadTooLarge { limit } => {
-                write!(formatter, "encoded form exceeds the {limit}-byte limit")
+                write!(formatter, "form payload exceeds the {limit}-byte limit")
             }
         }
     }
@@ -172,17 +180,33 @@ fn plan_submission(
         .or(form.enctype.as_deref())
         .unwrap_or("application/x-www-form-urlencoded")
         .to_ascii_lowercase();
-    if method == FormMethod::Post && encoding != "application/x-www-form-urlencoded" {
+    if method == FormMethod::Post
+        && !matches!(
+            encoding.as_str(),
+            "application/x-www-form-urlencoded" | "multipart/form-data"
+        )
+    {
         return Err(FormPlanningError::UnsupportedEncoding(encoding));
     }
 
-    let entries = collect_successful_controls(controls, form, form_index, submitter)?;
-    let encoded = encode_form_entries(&entries);
-    if encoded.len() > MAX_ENCODED_BYTES {
-        return Err(FormPlanningError::PayloadTooLarge {
-            limit: MAX_ENCODED_BYTES,
-        });
-    }
+    let data = collect_successful_controls(controls, form, form_index, submitter)?;
+    let entries = data
+        .iter()
+        .map(|datum| match datum {
+            FormDatum::Text(entry) => entry.clone(),
+            FormDatum::File(entry) => FormEntry {
+                name: entry.name.clone(),
+                value: entry.file.name.clone(),
+            },
+        })
+        .collect::<Vec<_>>();
+    let files = data
+        .iter()
+        .filter_map(|datum| match datum {
+            FormDatum::File(entry) => Some(entry.clone()),
+            FormDatum::Text(_) => None,
+        })
+        .collect::<Vec<_>>();
     let action = submitter
         .and_then(|binding| binding.resolved_form_action.as_deref())
         .or(form.resolved_action.as_deref())
@@ -190,13 +214,29 @@ fn plan_submission(
         .or(form.action.as_deref())
         .unwrap_or(document_url);
     let action = resolve_action(action, document_url)?;
-    let (url, content_type, body) = match method {
-        FormMethod::Get => (with_query(&action, &encoded)?, None, Vec::new()),
-        FormMethod::Post => (
-            action,
-            Some("application/x-www-form-urlencoded".to_string()),
-            encoded.into_bytes(),
-        ),
+    let (url, content_type, body) = match (method, encoding.as_str()) {
+        (FormMethod::Get, _) => {
+            let encoded = bounded_urlencoded(&entries)?;
+            (with_query(&action, &encoded)?, None, Vec::new())
+        }
+        (FormMethod::Post, "application/x-www-form-urlencoded") => {
+            let encoded = bounded_urlencoded(&entries)?;
+            (
+                action,
+                Some("application/x-www-form-urlencoded".to_string()),
+                encoded.into_bytes(),
+            )
+        }
+        (FormMethod::Post, "multipart/form-data") => {
+            let boundary = multipart_boundary(&data);
+            let body = encode_multipart(&data, &boundary)?;
+            (
+                action,
+                Some(format!("multipart/form-data; boundary={boundary}")),
+                body,
+            )
+        }
+        (FormMethod::Post, _) => unreachable!("encoding checked above"),
     };
     Ok(FormActivation::Navigate(FormNavigation {
         method,
@@ -204,7 +244,18 @@ fn plan_submission(
         content_type,
         body,
         entries,
+        files,
     }))
+}
+
+fn bounded_urlencoded(entries: &[FormEntry]) -> Result<String, FormPlanningError> {
+    let encoded = encode_form_entries(entries);
+    if encoded.len() > MAX_ENCODED_BYTES {
+        return Err(FormPlanningError::PayloadTooLarge {
+            limit: MAX_ENCODED_BYTES,
+        });
+    }
+    Ok(encoded)
 }
 
 fn validate_controls(
@@ -309,27 +360,33 @@ fn push_diagnostic(
     }
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum FormDatum {
+    Text(FormEntry),
+    File(FormFileEntry),
+}
+
 fn collect_successful_controls(
     model: &BrowserControlModel,
     form: &BrowserForm,
     form_index: usize,
     submitter: Option<&ControlBinding>,
-) -> Result<Vec<FormEntry>, FormPlanningError> {
-    let mut entries = Vec::new();
+) -> Result<Vec<FormDatum>, FormPlanningError> {
+    let mut data = Vec::new();
     let mut used = vec![false; model.controls().len()];
     for source in &form.controls {
         let dynamic = find_dynamic_control(model, form.id.as_deref(), form_index, source, &used);
         if let Some((index, _, _)) = dynamic {
             used[index] = true;
         }
-        append_control_entries(&mut entries, source, dynamic, submitter);
-        if entries.len() > MAX_FORM_ENTRIES {
+        append_control_entries(&mut data, model, source, dynamic, submitter);
+        if data.len() > MAX_FORM_ENTRIES {
             return Err(FormPlanningError::TooManyEntries {
                 limit: MAX_FORM_ENTRIES,
             });
         }
     }
-    Ok(entries)
+    Ok(data)
 }
 
 fn find_dynamic_control<'a>(
@@ -369,7 +426,8 @@ fn find_dynamic_control<'a>(
 }
 
 fn append_control_entries(
-    entries: &mut Vec<FormEntry>,
+    data: &mut Vec<FormDatum>,
+    model: &BrowserControlModel,
     source: &BrowserFormControl,
     dynamic: Option<(usize, &ControlState, &ControlBinding)>,
     submitter: Option<&ControlBinding>,
@@ -396,6 +454,19 @@ fn append_control_entries(
             return
         }
         _ => {}
+    }
+    if source.control_type == "file" {
+        if let Some((_, _, binding)) = dynamic {
+            if let Some(files) = model.selected_files(&binding.key) {
+                data.extend(files.iter().cloned().map(|file| {
+                    FormDatum::File(FormFileEntry {
+                        name: name.clone(),
+                        file,
+                    })
+                }));
+            }
+        }
+        return;
     }
     let values = match source.control_type.as_str() {
         "select" => dynamic
@@ -425,7 +496,6 @@ fn append_control_entries(
             }),
         "checkbox" | "radio" => vec![source.value.clone().unwrap_or_else(|| "on".into())],
         "submit" => vec![source.value.clone().unwrap_or_default()],
-        "file" => source.submission_values.clone(),
         _ => dynamic
             .as_ref()
             .map(|(_, control, _)| vec![normalize_line_breaks(&control.value)])
@@ -441,9 +511,11 @@ fn append_control_entries(
                 }
             }),
     };
-    entries.extend(values.into_iter().map(|value| FormEntry {
-        name: name.clone(),
-        value,
+    data.extend(values.into_iter().map(|value| {
+        FormDatum::Text(FormEntry {
+            name: name.clone(),
+            value,
+        })
     }));
 }
 
@@ -502,6 +574,106 @@ pub fn encode_form_entries(entries: &[FormEntry]) -> String {
         })
         .collect::<Vec<_>>()
         .join("&")
+}
+
+fn multipart_boundary(data: &[FormDatum]) -> String {
+    let mut hash = 0xcbf29ce484222325_u64;
+    for datum in data {
+        match datum {
+            FormDatum::Text(entry) => {
+                hash_bytes(&mut hash, entry.name.as_bytes());
+                hash_bytes(&mut hash, entry.value.as_bytes());
+            }
+            FormDatum::File(entry) => {
+                hash_bytes(&mut hash, entry.name.as_bytes());
+                hash_bytes(&mut hash, entry.file.opaque_id.as_bytes());
+                hash_bytes(&mut hash, entry.file.name.as_bytes());
+                hash_bytes(&mut hash, &entry.file.bytes);
+            }
+        }
+    }
+    for salt in 0_u64.. {
+        let candidate = format!("----venture-{hash:016x}-{salt:x}");
+        if !data.iter().any(|datum| match datum {
+            FormDatum::Text(entry) => entry
+                .value
+                .as_bytes()
+                .windows(candidate.len())
+                .any(|part| part == candidate.as_bytes()),
+            FormDatum::File(entry) => entry
+                .file
+                .bytes
+                .windows(candidate.len())
+                .any(|part| part == candidate.as_bytes()),
+        }) {
+            return candidate;
+        }
+    }
+    unreachable!("u64 boundary salt is exhaustive")
+}
+
+fn hash_bytes(hash: &mut u64, bytes: &[u8]) {
+    for byte in bytes {
+        *hash ^= u64::from(*byte);
+        *hash = hash.wrapping_mul(0x100000001b3);
+    }
+    *hash ^= 0xff;
+    *hash = hash.wrapping_mul(0x100000001b3);
+}
+
+fn encode_multipart(data: &[FormDatum], boundary: &str) -> Result<Vec<u8>, FormPlanningError> {
+    let mut body = Vec::new();
+    for datum in data {
+        append_multipart(&mut body, format!("--{boundary}\r\n").as_bytes())?;
+        match datum {
+            FormDatum::Text(entry) => {
+                let name = multipart_quoted(&entry.name);
+                append_multipart(
+                    &mut body,
+                    format!("Content-Disposition: form-data; name=\"{name}\"\r\n\r\n").as_bytes(),
+                )?;
+                append_multipart(&mut body, entry.value.as_bytes())?;
+            }
+            FormDatum::File(entry) => {
+                let name = multipart_quoted(&entry.name);
+                let filename = multipart_quoted(&entry.file.name);
+                let media_type = entry
+                    .file
+                    .media_type
+                    .as_deref()
+                    .unwrap_or("application/octet-stream");
+                append_multipart(
+                    &mut body,
+                    format!(
+                        "Content-Disposition: form-data; name=\"{name}\"; filename=\"{filename}\"\r\nContent-Type: {media_type}\r\n\r\n"
+                    )
+                    .as_bytes(),
+                )?;
+                append_multipart(&mut body, &entry.file.bytes)?;
+            }
+        }
+        append_multipart(&mut body, b"\r\n")?;
+    }
+    append_multipart(&mut body, format!("--{boundary}--\r\n").as_bytes())?;
+    Ok(body)
+}
+
+fn append_multipart(body: &mut Vec<u8>, bytes: &[u8]) -> Result<(), FormPlanningError> {
+    if body.len().saturating_add(bytes.len()) > MAX_MULTIPART_BYTES {
+        return Err(FormPlanningError::PayloadTooLarge {
+            limit: MAX_MULTIPART_BYTES,
+        });
+    }
+    body.extend_from_slice(bytes);
+    Ok(())
+}
+
+fn multipart_quoted(value: &str) -> String {
+    value
+        .replace('%', "%25")
+        .replace('\r', "%0D")
+        .replace('\n', "%0A")
+        .replace('"', "%22")
 }
 
 fn encode_component(value: &str) -> String {
@@ -724,6 +896,85 @@ mod tests {
         assert_eq!(
             request.url,
             "http://example.test/values?day=2024-01-03&clock=09%3A30%3A05.12&ink=%23a0b1c2"
+        );
+    }
+
+    #[test]
+    fn multipart_submission_is_deterministic_and_path_free() {
+        let url = "http://example.test/form";
+        let (mut model, document) = model_and_document(
+            "<form action='/upload' method='post' enctype='multipart/form-data'>\
+             <input name='title' value='Field notes'>\
+             <input id='assets' name='asset' type='file' accept='image/*,.txt' multiple required>\
+             <button id='go'>Upload</button></form>",
+            url,
+        );
+        model.apply_file_selection(
+            "control:1:id:assets",
+            vec![
+                browser_form_controls::HostFileSelection::new(
+                    "picker:photo",
+                    "/Users/example/secret/photo.png",
+                    Some("image/png".into()),
+                    vec![0x89, b'P', b'N', b'G'],
+                ),
+                browser_form_controls::HostFileSelection::new(
+                    "picker:notes",
+                    "notes.txt",
+                    Some("text/plain".into()),
+                    b"hello\r\nworld".to_vec(),
+                ),
+            ],
+        );
+
+        let first = plan_activation(&document, &model, "control:2:id:go", url).unwrap();
+        let second = plan_activation(&document, &model, "control:2:id:go", url).unwrap();
+        assert_eq!(first, second);
+        let FormActivation::Navigate(request) = first else {
+            panic!("expected multipart navigation");
+        };
+        assert_eq!(request.files.len(), 2);
+        assert_eq!(request.files[0].file.name, "photo.png");
+        assert_eq!(request.entries[1].value, "photo.png");
+        let content_type = request.content_type.unwrap();
+        let boundary = content_type
+            .strip_prefix("multipart/form-data; boundary=")
+            .unwrap();
+        assert!(request
+            .body
+            .starts_with(format!("--{boundary}\r\n").as_bytes()));
+        assert!(request
+            .body
+            .ends_with(format!("--{boundary}--\r\n").as_bytes()));
+        let body = String::from_utf8_lossy(&request.body);
+        assert!(body.contains("name=\"title\"\r\n\r\nField notes"));
+        assert!(body.contains("filename=\"photo.png\"\r\nContent-Type: image/png"));
+        assert!(!body.contains("/Users/example/secret"));
+    }
+
+    #[test]
+    fn multipart_payload_limit_is_enforced_before_navigation() {
+        let url = "http://example.test/form";
+        let (mut model, document) = model_and_document(
+            "<form method='post' enctype='multipart/form-data'>\
+             <input id='assets' name='asset' type='file' multiple>\
+             <button id='go'>Upload</button></form>",
+            url,
+        );
+        model.apply_file_selection(
+            "control:0:id:assets",
+            vec![browser_form_controls::HostFileSelection::new(
+                "one",
+                "one.bin",
+                None,
+                vec![0; MAX_MULTIPART_BYTES],
+            )],
+        );
+        assert_eq!(
+            plan_activation(&document, &model, "control:1:id:go", url),
+            Err(FormPlanningError::PayloadTooLarge {
+                limit: MAX_MULTIPART_BYTES,
+            })
         );
     }
 }

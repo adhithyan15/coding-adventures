@@ -227,11 +227,19 @@ cross-platform proving application. Items are ordered by risk and dependency.
   subsecond local-time normalization, reusable bound/step diagnostics,
   semantic keyboard and accessibility mutation, canonical color values,
   retained-session acceptance, and deterministic successful serialization.
-- [ ] **P1 browser convergence — file values and multipart submission.** Add
+- [x] **P1 browser convergence — file values and multipart submission.** Add
   an opaque host file-selection contract, accept/multiple filtering, reusable
   file-list accessibility state, multipart/form-data planning with deterministic
   boundaries, reset behavior, bounded payload diagnostics, and native/web
-  picker adapters without exposing host paths to layout or paint.
+  picker adapters without exposing host paths to layout or paint. Completed
+  with path-free picker requests/results, normalized accept filtering,
+  bounded retained file bytes, reusable accessibility projection,
+  deterministic collision-safe multipart boundaries, reset semantics,
+  payload diagnostics, and a shared cross-host fixture.
+- [ ] **P1 browser convergence — image submit coordinates and dirname.** Add
+  successful-control expansion for image-button coordinates and `dirname`
+  directionality fields, preserving document order and the shared submission
+  planner before broadening form-associated custom element support.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

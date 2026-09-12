@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Distinguish file controls in backend-neutral Layout IR while keeping host
+  file identities and payload bytes outside layout and paint state.
+
 - Distinguish date, month, week, time, datetime-local, and color controls in
   backend-neutral Layout IR and publish their typed-value capabilities.
 

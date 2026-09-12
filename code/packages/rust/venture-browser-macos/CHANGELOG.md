@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose path-free file picker request and selected-byte ABI seams for the
+  generated SwiftUI adapter.
+
 - Route AppKit and generated SwiftUI surface clicks through shared form-control
   activation before link navigation.
 

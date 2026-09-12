@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add a path-free host file picker request/result contract, shared
+  accept/multiple filtering, bounded retained bytes, reset behavior, and
+  reusable file-list accessibility state.
+
 - Add shared date/month/week/time/datetime-local parsing and scalar stepping,
   strict simple-color normalization, temporal bounds and step diagnostics,
   accessibility value text, and semantic value actions.

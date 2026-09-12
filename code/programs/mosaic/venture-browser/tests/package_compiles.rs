@@ -328,6 +328,12 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     );
     let swift_host = read_package_file("host/swiftui/MosaicHost.swift");
     let xaml_host = read_package_file("host/xaml/MosaicHost.cs");
+    for symbol in ["file_picker_request", "control_file", "presentFilePickerIfRequested"] {
+        assert!(swift_host.contains(symbol), "SwiftUI file adapter omits {symbol}");
+    }
+    for symbol in ["FilePickerRequest", "ControlFile", "FilePickerRequested"] {
+        assert!(xaml_host.contains(symbol), "XAML file adapter omits {symbol}");
+    }
     for command in venture_browser_core::VENTURE_SCROLL_COMMAND_NAMES {
         assert!(
             swift_host.contains(command),
@@ -350,6 +356,9 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_flutter_control_paste",
         "venture_browser_flutter_caret_tick",
         "venture_browser_flutter_ime_candidate_rect",
+        "venture_browser_flutter_file_picker_request",
+        "venture_browser_flutter_control_file",
+        "submitPickedFile",
         "venture_browser_flutter_render_rgba",
         "VentureContentSurface",
         "PointerScrollEvent",
@@ -410,6 +419,9 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "controlPaste_",
         "caretTick_",
         "imeCandidateRect_",
+        "filePickerRequest_",
+        "controlFile_",
+        "MosaicHost::presentFilePicker",
         "MosaicHost::scrollOffset",
         "MosaicHost::runInteractionAcceptance",
         "MosaicHost::scheduleAcceptance",
@@ -436,6 +448,9 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_compose_control_paste",
         "venture_browser_compose_caret_tick",
         "venture_browser_compose_ime_candidate_rect",
+        "venture_browser_compose_file_picker_request",
+        "venture_browser_compose_control_file",
+        "presentFilePickerIfRequested",
         "venture_browser_compose_render_rgba",
         "VentureContentSurface",
         "PointerEventType.Scroll",
@@ -502,7 +517,7 @@ fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
     capture.assert_valid();
     let controls = venture_browser_visual_fixtures::load_form_controls_page("http://venture.test")
         .expect("load Venture's deterministic form-control fixture");
-    assert_eq!(controls.paint.controls.len(), 16);
+    assert_eq!(controls.paint.controls.len(), 17);
     assert!(controls
         .paint
         .controls
@@ -650,6 +665,50 @@ fn temporal_color_fixture_uses_the_shared_host_neutral_contract() {
             .as_deref(),
         Some("#00ff7f")
     );
+}
+
+#[test]
+fn file_fixture_uses_the_shared_path_free_picker_contract() {
+    use venture_browser_core::{
+        BrowserControlModel, ControlEffect, FileAcceptFilter, HostFileSelection,
+    };
+
+    let tree = coding_adventures_html_parser::parse_browser_render_tree(
+        "<form><input id='asset' name='asset' type='file' accept='image/*,.txt' multiple required></form>",
+    )
+    .expect("parse deterministic file fixture");
+    let mut controls = BrowserControlModel::from_render_tree(&tree);
+    let key = "control:0:id:asset";
+    let request = controls.file_picker_request(key).unwrap();
+    assert_eq!(
+        request.accept,
+        vec![
+            FileAcceptFilter::MediaRange("image".into()),
+            FileAcceptFilter::Extension(".txt".into()),
+        ]
+    );
+    assert!(request.multiple);
+
+    assert!(matches!(
+        controls.apply_file_selection(
+            key,
+            vec![HostFileSelection::new(
+                "fixture:1",
+                "/host/private/receipt.txt",
+                Some("text/plain".into()),
+                b"venture".to_vec(),
+            )],
+        ),
+        Some(ControlEffect::FilesChanged { .. })
+    ));
+    let state = controls.file_state(key).unwrap();
+    assert_eq!(state.files[0].name, "receipt.txt");
+    assert_eq!(state.files[0].size, 7);
+    assert!(!controls
+        .control(key)
+        .unwrap()
+        .value
+        .contains("/host/private"));
 }
 
 #[test]
