@@ -12,6 +12,8 @@ use std::fmt::{self, Debug, Formatter};
 
 /// Largest token-endpoint response body accepted by the protocol decoder.
 pub const MAX_TOKEN_RESPONSE_BYTES: usize = 128 * 1024;
+/// Largest RFC 7009 error response accepted before closed classification.
+pub const MAX_TOKEN_REVOCATION_RESPONSE_BYTES: usize = 16 * 1024;
 const MAX_TOKEN_RESPONSE_FIELDS: usize = 64;
 const MAX_TOKEN_BYTES: usize = 64 * 1024;
 const MAX_TOKEN_TYPE_BYTES: usize = 64;
@@ -229,6 +231,14 @@ impl TokenRevocationRequest {
     pub const fn content_type(&self) -> &'static str {
         "application/x-www-form-urlencoded"
     }
+
+    /// Bind a later RFC 7009 response classifier to this request and trace.
+    pub fn response_context(&self) -> TokenRevocationResponseContext {
+        TokenRevocationResponseContext {
+            provider: self.provider.clone(),
+            trace: self.trace,
+        }
+    }
 }
 
 impl Debug for TokenRevocationRequest {
@@ -241,6 +251,44 @@ impl Debug for TokenRevocationRequest {
             .field("endpoint", &"<redacted>")
             .field("form_body", &"<redacted>")
             .finish()
+    }
+}
+
+/// Non-secret context binding one RFC 7009 response to its request.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TokenRevocationResponseContext {
+    provider: ProviderId,
+    trace: OAuthTraceId,
+}
+
+impl TokenRevocationResponseContext {
+    /// Return the provider expected to own the response.
+    pub fn provider(&self) -> &ProviderId {
+        &self.provider
+    }
+
+    /// Return the correlation identity inherited from the request.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.trace
+    }
+}
+
+/// Audit-gated confirmation that RFC 7009 returned exact HTTP 200.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TokenRevocationResponse {
+    provider: ProviderId,
+    trace: OAuthTraceId,
+}
+
+impl TokenRevocationResponse {
+    /// Return the provider whose token is now treated as revoked.
+    pub fn provider(&self) -> &ProviderId {
+        &self.provider
+    }
+
+    /// Return the caller-owned request trace.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.trace
     }
 }
 
@@ -278,6 +326,128 @@ pub fn prepare_token_revocation(
         OAuthAuditAction::TokenRevocationPrepare,
         result,
     )
+}
+
+/// Closed structural reason an RFC 7009 response was rejected.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TokenRevocationResponseViolation {
+    /// The HTTP status was outside the RFC 7009 success and error contract.
+    Status,
+    /// An error body was empty, oversized, non-UTF-8, or invalid JSON.
+    Encoding,
+    /// The error object, duplicate fields, or error-code type was invalid.
+    Shape,
+}
+
+/// Closed RFC 7009 endpoint error classification without attacker text.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ProviderTokenRevocationError {
+    /// `invalid_request`.
+    InvalidRequest,
+    /// `invalid_client`.
+    InvalidClient,
+    /// RFC 7009 `unsupported_token_type`.
+    UnsupportedTokenType,
+    /// HTTP 503: the token may still exist and the caller may retry later.
+    TemporarilyUnavailable,
+    /// Another valid bounded OAuth extension error code.
+    Other,
+}
+
+/// Classify a bounded RFC 7009 response and audit before releasing the result.
+///
+/// Only exact HTTP 200 confirms revocation; its body is deliberately ignored.
+/// HTTP 503 is a closed retryable error, while HTTP 400/401 require a bounded
+/// RFC 6749 JSON error object. Retry scheduling and credential removal remain
+/// caller-owned.
+pub fn decode_token_revocation_response(
+    context: TokenRevocationResponseContext,
+    status: u16,
+    body: Zeroizing<Vec<u8>>,
+) -> Audited<TokenRevocationResponse> {
+    let result = decode_token_revocation_response_inner(&context, status, &body);
+    audited(
+        context.provider,
+        context.trace,
+        OAuthAuditAction::TokenRevocationResponseClassify,
+        result,
+    )
+}
+
+fn decode_token_revocation_response_inner(
+    context: &TokenRevocationResponseContext,
+    status: u16,
+    body: &[u8],
+) -> Result<TokenRevocationResponse, OAuthError> {
+    if body.len() > MAX_TOKEN_REVOCATION_RESPONSE_BYTES {
+        return Err(invalid_revocation(
+            TokenRevocationResponseViolation::Encoding,
+        ));
+    }
+    match status {
+        200 => Ok(TokenRevocationResponse {
+            provider: context.provider.clone(),
+            trace: context.trace,
+        }),
+        503 => Err(OAuthError::TokenRevocationEndpoint(
+            ProviderTokenRevocationError::TemporarilyUnavailable,
+        )),
+        400 | 401 => Err(decode_token_revocation_error(body)),
+        _ => Err(invalid_revocation(TokenRevocationResponseViolation::Status)),
+    }
+}
+
+fn decode_token_revocation_error(body: &[u8]) -> OAuthError {
+    let result = (|| {
+        if body.is_empty() {
+            return Err(invalid_revocation(
+                TokenRevocationResponseViolation::Encoding,
+            ));
+        }
+        let text = std::str::from_utf8(body)
+            .map_err(|_| invalid_revocation(TokenRevocationResponseViolation::Encoding))?;
+        let fields = parse_json_fields(text).map_err(map_revocation_parse_error)?;
+        let error = fields
+            .string("error")
+            .map_err(|_| invalid_revocation(TokenRevocationResponseViolation::Shape))?
+            .ok_or_else(|| invalid_revocation(TokenRevocationResponseViolation::Shape))?;
+        classify_revocation_error(error)
+    })();
+    match result {
+        Ok(error) => OAuthError::TokenRevocationEndpoint(error),
+        Err(error) => error,
+    }
+}
+
+fn map_revocation_parse_error(error: OAuthError) -> OAuthError {
+    let violation = match error {
+        OAuthError::InvalidTokenResponse(TokenResponseViolation::Encoding) => {
+            TokenRevocationResponseViolation::Encoding
+        }
+        _ => TokenRevocationResponseViolation::Shape,
+    };
+    invalid_revocation(violation)
+}
+
+fn classify_revocation_error(value: &str) -> Result<ProviderTokenRevocationError, OAuthError> {
+    let valid = !value.is_empty()
+        && value.len() <= 128
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-' | b'.'));
+    if !valid {
+        return Err(invalid_revocation(TokenRevocationResponseViolation::Shape));
+    }
+    Ok(match value {
+        "invalid_request" => ProviderTokenRevocationError::InvalidRequest,
+        "invalid_client" => ProviderTokenRevocationError::InvalidClient,
+        "unsupported_token_type" => ProviderTokenRevocationError::UnsupportedTokenType,
+        _ => ProviderTokenRevocationError::Other,
+    })
+}
+
+fn invalid_revocation(reason: TokenRevocationResponseViolation) -> OAuthError {
+    OAuthError::InvalidTokenRevocationResponse(reason)
 }
 
 /// Closed structural reason a token endpoint response was rejected.
@@ -755,7 +925,9 @@ pub(crate) fn zeroize_json(value: &mut JsonValue) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{OAuthAuditError, OAuthAuditEvent, OAuthAuditSink};
+    use crate::{
+        OAuthAuditError, OAuthAuditEvent, OAuthAuditOutcome, OAuthAuditSink, OAuthFailureClass,
+    };
 
     #[derive(Default)]
     struct Sink {
@@ -928,6 +1100,161 @@ mod tests {
         assert_eq!(request.endpoint(), "https://fixture.example/revoke");
         assert!(request.form_body().contains("token_type_hint=access_token"));
         assert!(!format!("{request:?}").contains("access-secret"));
+        assert_eq!(request.response_context().provider(), config().provider());
+        assert_eq!(request.response_context().trace(), trace());
+    }
+
+    fn revocation_context() -> TokenRevocationResponseContext {
+        prepare_token_revocation(
+            &config(),
+            Zeroizing::new("access-secret".to_owned()),
+            RevocationTokenHint::AccessToken,
+            trace(),
+        )
+        .publish_then_release(&mut Sink::default())
+        .unwrap()
+        .response_context()
+    }
+
+    #[test]
+    fn revocation_http_200_ignores_bounded_body_and_is_audit_gated() {
+        let audited = decode_token_revocation_response(
+            revocation_context(),
+            200,
+            Zeroizing::new(vec![0xff, 0x00]),
+        );
+        assert_eq!(
+            audited.audit().action(),
+            OAuthAuditAction::TokenRevocationResponseClassify
+        );
+        assert_eq!(audited.audit().outcome(), OAuthAuditOutcome::Succeeded);
+        let response = audited.publish_then_release(&mut Sink::default()).unwrap();
+        assert_eq!(response.provider(), config().provider());
+        assert_eq!(response.trace(), trace());
+    }
+
+    #[test]
+    fn revocation_errors_are_closed_and_http_503_remains_retryable() {
+        for (status, body, expected) in [
+            (
+                400,
+                br#"{"error":"unsupported_token_type"}"#.as_slice(),
+                ProviderTokenRevocationError::UnsupportedTokenType,
+            ),
+            (
+                401,
+                br#"{"error":"invalid_client"}"#.as_slice(),
+                ProviderTokenRevocationError::InvalidClient,
+            ),
+            (
+                400,
+                br#"{"error":"provider_extension"}"#.as_slice(),
+                ProviderTokenRevocationError::Other,
+            ),
+        ] {
+            let audited = decode_token_revocation_response(
+                revocation_context(),
+                status,
+                Zeroizing::new(body.to_vec()),
+            );
+            assert_eq!(
+                audited.audit().outcome(),
+                OAuthAuditOutcome::Failed(OAuthFailureClass::Provider)
+            );
+            assert_eq!(
+                audited
+                    .publish_then_release(&mut Sink::default())
+                    .unwrap_err(),
+                OAuthError::TokenRevocationEndpoint(expected)
+            );
+        }
+
+        assert_eq!(
+            decode_token_revocation_response(
+                revocation_context(),
+                503,
+                Zeroizing::new(Vec::new()),
+            )
+            .publish_then_release(&mut Sink::default())
+            .unwrap_err(),
+            OAuthError::TokenRevocationEndpoint(
+                ProviderTokenRevocationError::TemporarilyUnavailable
+            )
+        );
+    }
+
+    #[test]
+    fn revocation_response_status_shape_and_bounds_fail_closed() {
+        let cases = [
+            (201, Vec::new(), TokenRevocationResponseViolation::Status),
+            (400, Vec::new(), TokenRevocationResponseViolation::Encoding),
+            (
+                400,
+                b"not-json".to_vec(),
+                TokenRevocationResponseViolation::Encoding,
+            ),
+            (
+                400,
+                br#"{"error_description":"missing error"}"#.to_vec(),
+                TokenRevocationResponseViolation::Shape,
+            ),
+            (
+                400,
+                br#"{"error":"invalid_request","error":"invalid_client"}"#.to_vec(),
+                TokenRevocationResponseViolation::Shape,
+            ),
+        ];
+        for (status, body, violation) in cases {
+            assert_eq!(
+                decode_token_revocation_response(
+                    revocation_context(),
+                    status,
+                    Zeroizing::new(body),
+                )
+                .publish_then_release(&mut Sink::default())
+                .unwrap_err(),
+                OAuthError::InvalidTokenRevocationResponse(violation)
+            );
+        }
+
+        assert_eq!(
+            decode_token_revocation_response(
+                revocation_context(),
+                200,
+                Zeroizing::new(vec![0; MAX_TOKEN_REVOCATION_RESPONSE_BYTES + 1]),
+            )
+            .publish_then_release(&mut Sink::default())
+            .unwrap_err(),
+            OAuthError::InvalidTokenRevocationResponse(TokenRevocationResponseViolation::Encoding)
+        );
+    }
+
+    #[test]
+    fn revocation_response_audit_failure_withholds_success_and_error() {
+        let mut sink = Sink {
+            events: Vec::new(),
+            fail: true,
+        };
+        assert_eq!(
+            decode_token_revocation_response(
+                revocation_context(),
+                200,
+                Zeroizing::new(Vec::new()),
+            )
+            .publish_then_release(&mut sink)
+            .unwrap_err(),
+            OAuthError::Audit
+        );
+        assert_eq!(
+            decode_token_revocation_response(
+                revocation_context(),
+                400,
+                Zeroizing::new(br#"{"error":"invalid_request"}"#.to_vec()),
+            )
+            .publish_then_release(&mut sink)
+            .unwrap_err(),
+            OAuthError::Audit
+        );
     }
 
     #[test]

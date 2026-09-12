@@ -487,6 +487,8 @@ pub enum OAuthAuditAction {
     TokenCredentialRelease,
     /// An RFC 7009 revocation request was prepared for transport.
     TokenRevocationPrepare,
+    /// An RFC 7009 revocation response was bounded and classified.
+    TokenRevocationResponseClassify,
 }
 
 /// Privacy-safe outcome stored without callback, code, token, URL, or scope.
@@ -828,6 +830,10 @@ pub enum OAuthError {
     InvalidTokenResponse(TokenResponseViolation),
     /// The token endpoint returned a bounded, classified OAuth error code.
     TokenEndpoint(ProviderTokenError),
+    /// The RFC 7009 response was malformed or violated its HTTP contract.
+    InvalidTokenRevocationResponse(TokenRevocationResponseViolation),
+    /// The RFC 7009 endpoint returned a bounded, classified error.
+    TokenRevocationEndpoint(ProviderTokenRevocationError),
     /// Durable audit publication failed; the wrapped result was not released.
     Audit,
 }
@@ -843,7 +849,9 @@ impl OAuthError {
             | Self::InvalidMetadata(_)
             | Self::InvalidDeviceAuthorizationResponse(_)
             | Self::InvalidTokenResponse(_)
-            | Self::TokenEndpoint(_) => OAuthFailureClass::Provider,
+            | Self::TokenEndpoint(_)
+            | Self::InvalidTokenRevocationResponse(_)
+            | Self::TokenRevocationEndpoint(_) => OAuthFailureClass::Provider,
             Self::Audit => OAuthFailureClass::Audit,
         }
     }
@@ -878,6 +886,14 @@ impl Debug for OAuthError {
             Self::TokenEndpoint(code) => {
                 formatter.debug_tuple("TokenEndpoint").field(code).finish()
             }
+            Self::InvalidTokenRevocationResponse(reason) => formatter
+                .debug_tuple("InvalidTokenRevocationResponse")
+                .field(reason)
+                .finish(),
+            Self::TokenRevocationEndpoint(code) => formatter
+                .debug_tuple("TokenRevocationEndpoint")
+                .field(code)
+                .finish(),
             Self::Audit => formatter.write_str("Audit"),
         }
     }
@@ -897,6 +913,8 @@ impl Display for OAuthError {
             }
             Self::InvalidTokenResponse(_) => "oauth: invalid token response",
             Self::TokenEndpoint(_) => "oauth: token endpoint rejected request",
+            Self::InvalidTokenRevocationResponse(_) => "oauth: invalid token revocation response",
+            Self::TokenRevocationEndpoint(_) => "oauth: token revocation endpoint rejected request",
             Self::Audit => "oauth: audit publication failed",
         })
     }

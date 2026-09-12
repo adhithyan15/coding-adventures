@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added bounded, request-bound RFC 7009 response classification: only exact
+  HTTP 200 confirms revocation and its bounded body is ignored; HTTP 400/401
+  errors are parsed into closed codes; HTTP 503 remains explicitly retryable;
+  and provider/trace audit is durable before success or error release.
 - Exposed the already-validated token endpoint as read-only provider policy so
   higher-level authentication adapters can retain its exact audience binding.
 - Exposed an opaque exact-binding check between metadata-derived RFC 8628
