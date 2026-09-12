@@ -1,5 +1,39 @@
 # Changelog
 
+## Unreleased
+
+### Added — VisiCalc can be rendered on Compose (#14829)
+
+`conformance/compose/VisiCalcScreenshots.kt` and `scripts/render-compose.sh`
+render the sheet to a PNG in one command. The third product to get a render
+harness, after Trestle (#14799) and Engram (#14828), and the one where looking
+pays off most directly: a grid is the hardest thing here to judge from a
+semantics tree, because "every cell exists and is named" is true of a grid
+whose headers sit nowhere near their columns — which is exactly what #14829
+was.
+
+Measured on the first reproducible render, against the semantics tree:
+
+- **#14829's primary defect is fixed.** Column headers now lay out at an 80px
+  pitch, matching the data columns' 80px pitch (right edges 113, 193, 273,
+  353, 433). The issue's original measurement had five headers spanning 45px
+  against the same five data columns spanning 338px — a different scale
+  entirely. #14830's `Box` wrap and UI60 (#14828) between them fixed it.
+- **The corner cell is still `0 x 24` at origin `(0, 0)`** — the remaining
+  half of #14829. The colgroup's leading `Col (width: 48)` is not inside the
+  `For`, and only the `For` is scanned for widths, so the row-header column
+  has no threading path.
+- **Columns Q-Z collapse to zero width** (#14842). Ten columns present in the
+  semantics tree, correctly named, occupying no space; every accessibility
+  gate passes on them.
+- **VisiCalc is not native-complete on Compose** (#14843) — 8 degradations,
+  all accessibility and table semantics. The script pins that count rather
+  than asserting `nativeComplete`, so a ninth cannot appear unremarked.
+
+Not a pixel-diff gate; a strict baseline needs a pinned font stack and
+renderer, which is a separate decision (#14798).
+
+
 ## 2026-09-08
 
 - Add a themed empty-workbook introduction above the existing editable grid.

@@ -111,3 +111,29 @@ Browser acceptance covered the dark desktop readout for E1's SUM result and a
 375px light-theme worksheet with a long cell value: the readout stayed 327px wide
 with an ellipsis, the worksheet scroll width stayed 375px, and the complete value
 remained in the live region. The document stayed within the 720px viewport.
+
+## Looking at it
+
+Every gate above asserts the **semantics tree** or the DOM. A grid passes all
+of them while its headers sit nowhere near their columns — "every cell exists
+and is named" is true either way. That is what #14829 was, and it was found by
+rendering rather than by any gate.
+
+To render the sheet on Compose Desktop and look at it:
+
+```bash
+scripts/render-compose.sh /tmp/visicalc-shots
+```
+
+That builds the Rust runtime, generates the Compose project, runs
+`conformance/compose/VisiCalcScreenshots.kt`, and writes a PNG.
+
+It does **not** assert `nativeComplete` — VisiCalc is the one desktop product
+that is not native-complete on Compose, with 8 accessibility/table-semantics
+degradations (#14843). The script pins that count instead, so a ninth cannot
+appear unremarked.
+
+Deliberately not a pixel-diff gate: a strict baseline needs a pinned font stack
+and renderer, which is a separate decision (#14798). Measure a defect against
+the semantics tree before filing it — the render tells you where to look, not
+what is wrong.
