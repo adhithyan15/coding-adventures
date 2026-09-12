@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "CONNECTED-READING"
+  "segments": [
+    "GE-PATH-A1-LESUNG"
   ],
+  "omits": [],
   "relocates": {}
 }

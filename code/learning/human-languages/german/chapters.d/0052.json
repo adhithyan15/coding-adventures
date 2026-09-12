@@ -1,0 +1,16 @@
+{
+  "chapter": 52,
+  "title": "Reading — Nouns, Sentences, and a First Paragraph",
+  "label": "ch:ge-erste-lesung",
+  "canDo": "I can read German nouns off a page, follow a sentence whose verb waits at the end, and hold a whole paragraph without translating it word by word.",
+  "payoff": {
+    "lesson": "GE-C52-erste-lesung",
+    "kind": "four-skill-function-map",
+    "summary": "Forty-eight words of German with no new word in them, including the one line where weil sends the verb to the far end and the reader has to hold the sentence open.",
+    "assesses": [
+      "GE-SKILL-CONNECTED-READING",
+      "GE-SKILL-READ-SENTENCES",
+      "GE-SKILL-READ-WORDS"
+    ]
+  }
+}

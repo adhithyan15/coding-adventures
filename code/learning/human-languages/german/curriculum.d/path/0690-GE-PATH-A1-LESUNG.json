@@ -1,0 +1,14 @@
+{
+  "id": "GE-PATH-A1-LESUNG",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "GE-C52-words",
+    "GE-C52-saetze",
+    "GE-C52-erste-lesung"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-A1-LESUNG"
+  ],
+  "after": []
+}
