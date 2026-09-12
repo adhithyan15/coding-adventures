@@ -5,6 +5,34 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — a HostTable's authored focus and accessible name (#14843)
+
+`accessibility.table-focus-unimplemented` was gated on `backend != React`
+with **no per-backend question at all** — unlike
+`accessibility.table-semantics-missing` next door, which asks one. So it said
+nothing about what any other backend could express, and Compose already emits
+both mechanisms elsewhere in the same file.
+
+- `a11y-label` joins the table's existing collection-semantics block as
+  `contentDescription`. One block, not two: two `semantics { }` modifiers on
+  the same node do not merge — the later replaces the earlier — and the
+  collection info is the half that would be lost.
+- `focusable: true` emits `Modifier.focusable()`. `false` emits nothing, since
+  it is the default and the call would change nothing.
+- `host_table_has_focus_semantics` is the per-backend predicate the reporter
+  now asks, so the report cannot drift from what is emitted.
+
+**The `focusable` import was inside the drag-and-drop block.** A table
+authoring `focusable: true` therefore emitted the modifier with no import, and
+the generated Kotlin did not compile. The emitter tests were perfectly happy;
+only `gradle compileKotlin` caught it — the same shape as the XAML `Not()`
+helper (#14793) and `fillMaxSize` (#14798). It is unconditional now, with a
+test that asserts the import on a component with no drag-and-drop in it.
+
+VisiCalc's degradations go **7 → 5**, and its render-harness pin moves with
+them. Engram and Trestle stay at 0. Falsified: with the predicate disabled the
+count returns to 7.
+
 ### Fixed — a row-header table got no collection semantics at all (#14843)
 
 `compose_semantic_table_shape` required **exactly one** child per header and

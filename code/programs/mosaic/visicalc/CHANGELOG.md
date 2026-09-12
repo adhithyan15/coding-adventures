@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Fixed — the sheet exposes its focus and accessible name on Compose (#14843)
+
+`focusable: true` and `a11y-label: "Data table"` are authored on the grid and
+reached nothing outside React. Compose now emits `Modifier.focusable()` and a
+`contentDescription` inside the table's collection-semantics block.
+
+Degradations **7 → 5**; the render script's pin moves with them. The remaining
+five are `table-wheel-shift` (1) and `authored-table-cell` (4).
+
+
 ### Fixed — the sheet now exposes native table semantics on Compose (#14843)
 
 VisiCalc's grid is the only `HostTable` in the product and Compose did not
