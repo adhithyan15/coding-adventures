@@ -1,5 +1,9 @@
 # Changelog - diagram-layout-grid
 
+## 0.6.0
+
+- Resolve automatic Block columns from authored occupied slots.
+
 ## 0.5.0
 
 - Position Block edge labels outside horizontal and vertical node bounds.

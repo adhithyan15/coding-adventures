@@ -1,11 +1,11 @@
 //! Deterministic grid layout for Mermaid block diagrams.
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
-    resolve_style, resolve_style_with_base, DiagramDirection, DiagramStyle, GridDiagram, LayoutedGraphDiagram,
+    resolve_style, resolve_style_with_base, DiagramDirection, DiagramStyle, GridColumns, GridDiagram, LayoutedGraphDiagram,
     LayoutedGraphEdge, LayoutedGraphNode, Point, ResolvedDiagramStyle,
 };
 
@@ -18,7 +18,10 @@ const TITLE_INSET: f64 = 38.0;
 
 /// Lay out a flat Mermaid block grid into shared graph geometry.
 pub fn layout_grid_diagram(diagram: &GridDiagram) -> LayoutedGraphDiagram {
-    let columns = diagram.columns.max(1);
+    let columns = match diagram.columns {
+        GridColumns::Auto => diagram.cells.iter().map(|cell| cell.column_span).sum::<usize>().max(1),
+        GridColumns::Fixed(columns) => columns.max(1),
+    };
     let title_inset = if diagram.title.is_some() {
         TITLE_INSET
     } else {
@@ -177,12 +180,12 @@ fn grid_style(index: usize) -> DiagramStyle {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use diagram_ir::{DiagramLabel, DiagramShape, EdgeKind, GridCell, GridConnection};
+    use diagram_ir::{DiagramLabel, DiagramShape, EdgeKind, GridCell, GridColumns, GridConnection};
 
     #[test]
     fn places_cells_in_authored_grid_slots() {
         let diagram = GridDiagram {
-            columns: 2,
+            columns: GridColumns::Fixed(2),
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -206,9 +209,25 @@ mod tests {
     }
 
     #[test]
+    fn auto_columns_place_all_authored_slots_in_one_row() {
+        let diagram = GridDiagram {
+            columns: GridColumns::Auto,
+            title: None, accessibility_title: None, accessibility_description: None,
+            cells: ["a", "b", "c"].into_iter().map(|id| GridCell {
+                id: id.into(), label: DiagramLabel::new(id), shape: DiagramShape::Rect,
+                column_span: 1, visible: true, style: None,
+            }).collect(),
+            connections: Vec::new(),
+        };
+        let layout = layout_grid_diagram(&diagram);
+        assert_eq!(layout.nodes[0].y, layout.nodes[2].y);
+        assert_eq!(layout.width, PADDING * 2.0 + 3.0 * CELL_WIDTH + 2.0 * COLUMN_GAP);
+    }
+
+    #[test]
     fn routes_connections_to_cell_boundaries() {
         let diagram = GridDiagram {
-            columns: 2,
+            columns: GridColumns::Fixed(2),
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -239,7 +258,7 @@ mod tests {
     #[test]
     fn spans_cells_and_advances_by_occupied_columns() {
         let diagram = GridDiagram {
-            columns: 3,
+            columns: GridColumns::Fixed(3),
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -290,7 +309,7 @@ mod tests {
     #[test]
     fn resolves_authored_cell_style_over_grid_defaults() {
         let diagram = GridDiagram {
-            columns: 1, title: None, accessibility_title: None, accessibility_description: None,
+            columns: GridColumns::Fixed(1), title: None, accessibility_title: None, accessibility_description: None,
             cells: vec![GridCell {
                 id: "styled".into(), label: DiagramLabel::new("Styled"), shape: DiagramShape::Rect,
                 column_span: 1, visible: true,

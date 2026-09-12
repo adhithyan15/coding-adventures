@@ -352,8 +352,8 @@ mindmap shapes remain explicitly outside the partial compatibility level.
 ### Block Native Slice
 
 The initial Mermaid 11.16.1 block slice parses `block` and `block-beta` through
-dedicated portable grammars into typed grid IR. The subset preserves positive
-column counts, flat node ordering, explicit `space` slots, node and space
+dedicated portable grammars into typed grid IR. The subset preserves automatic
+and positive fixed column counts, flat node ordering, explicit `space` slots, node and space
 column spans, named `classDef` declarations, `class` assignments, inline
 `:::class` assignments, direct `style` declarations, square, rounded,
 circular, and diamond nodes, titles, accessibility metadata, and directed

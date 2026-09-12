@@ -171,9 +171,16 @@ pub struct GridConnection {
     pub label: Option<DiagramLabel>,
 }
 
+#[derive(Clone, Debug, PartialEq, Default)]
+pub enum GridColumns {
+    #[default]
+    Auto,
+    Fixed(usize),
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct GridDiagram {
-    pub columns: usize,
+    pub columns: GridColumns,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,

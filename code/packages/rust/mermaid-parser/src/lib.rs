@@ -13,7 +13,7 @@ use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
     BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
-    DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell,
+    DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
@@ -1406,7 +1406,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         col: error.token.column,
     })?;
 
-    let mut columns = 1usize;
+    let mut columns = GridColumns::Auto;
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
@@ -1424,12 +1424,15 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
     {
         let line = token.value.trim();
         if let Some(value) = line.strip_prefix("columns ") {
-            columns = value
-                .trim()
+            columns = if value.trim().eq_ignore_ascii_case("auto") {
+                GridColumns::Auto
+            } else {
+                GridColumns::Fixed(value.trim()
                 .parse::<usize>()
                 .ok()
                 .filter(|value| *value > 0)
-                .ok_or_else(|| token_error(token, "block columns must be a positive integer"))?;
+                .ok_or_else(|| token_error(token, "block columns must be auto or a positive integer"))?)
+            };
             continue;
         }
         if let Some(value) = line.strip_prefix("title ") {
@@ -9019,7 +9022,7 @@ mod tests_dg04 {
             "block-beta\ncolumns 3\nA[Parser] space B(IR)\nC((Paint))\nA -->|lower| C\nB-- \"observe\" ---C",
         )
         .unwrap();
-        assert_eq!(diagram.columns, 3);
+        assert_eq!(diagram.columns, GridColumns::Fixed(3));
         assert_eq!(diagram.cells.len(), 4);
         assert!(!diagram.cells[1].visible);
         assert_eq!(diagram.cells[2].shape, DiagramShape::RoundedRect);
@@ -9072,6 +9075,12 @@ mod tests_dg04 {
             MermaidDiagram::Grid(diagram) => assert_eq!(diagram.cells.len(), 2),
             _ => panic!("expected block grid"),
         }
+    }
+
+    #[test]
+    fn block_preserves_explicit_and_implicit_auto_columns() {
+        assert_eq!(parse_block("block\nA B C").unwrap().columns, GridColumns::Auto);
+        assert_eq!(parse_block("block\ncolumns auto\nA B").unwrap().columns, GridColumns::Auto);
     }
 
     #[test]

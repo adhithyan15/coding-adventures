@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.195.0
+
+- Parse implicit and explicit Mermaid Block automatic column modes into typed IR.
+
 ## 0.194.0
 
 - Parse native quoted Mermaid Block connection labels into semantic labels.
