@@ -73,6 +73,12 @@ internals, set bounded submission/restoration values and validity, drain typed
 association/disabled/reset/restore callbacks, and consume reusable label and
 accessibility projections. Native and web adapters receive one shared API;
 they do not serialize values or infer lifecycle policy.
+Native activation and scripted form APIs also converge before transport.
+`BrowserSession` exposes `requestSubmit`, cancelable submit/reset dispatch,
+non-interactive `checkValidity`, interactive `reportValidity`, and mutable
+`formdata` entries. It records the resulting lifecycle events and commits
+navigation only after every synchronous handler returns, so generated hosts do
+not own cancellation, event ordering, diagnostics, or serialization policy.
 
 `NavigationHistory` is re-exported from the reusable `browser-navigation`
 package and implements the BR01 in-memory navigation model: navigate, Back,
