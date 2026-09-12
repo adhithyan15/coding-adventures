@@ -1,0 +1,577 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 52,
+  "title": "Reading — Nouns, Sentences, and a First Paragraph",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:8566a0081d3db1d1",
+  "lessons": [
+    {
+      "id": "GE-C52-words",
+      "sequence": 1480,
+      "title": "(reading) — six nouns, and a capital letter doing real work",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "six nouns read cold — and the one thing German writing tells you that speech does not",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:190a7e23debfc3ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every word below you have met. Not one is new."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is that nobody says them first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Brot Kaffee Wasser Buch Bruder Schwester."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down the list once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again, and notice they all begin with a capital. Every one of them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the capital is information",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "German capitalises every noun. Spoken, that rule is invisible and costs nothing. Written, it is the single most useful thing on a German page for a beginner."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "It means you can find the nouns in a sentence before you understand the sentence. In a language that puts its verb at the end and its cases on the articles, knowing which words are the things is most of the way to a reading."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the trade: a writer capitalises a hundred nouns so a reader can skip a hundred decisions."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six words down the list, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six words down the list, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GE-C52-words-drink",
+              "prompt": "Which of the six would you drink?",
+              "assesses": [
+                "GE-SKILL-READ-WORDS"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "coffee",
+                "kaffee"
+              ],
+              "feedback": {
+                "correct": "Kaffee.",
+                "incorrect": "Kaffee -- coffee."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do all six have in common on the page? (A capital letter — and it tells you they are nouns.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C52-saetze",
+      "sequence": 1490,
+      "title": "(reading) — six sentences, and a wait at the end",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "six short sentences — and the bracket, seen rather than built",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d46f223887a327f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson gave you nouns. These are whole sentences."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have said every one of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ich kann Deutsch. Ich möchte lernen. Ich muss arbeiten. Wer ist das? Das ist mein Bruder. Danke!"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again — and this time notice where the second verb sits in the first three."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the bracket, from the outside",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have been building the bracket from the inside: choose the modal, park the verb at the end. Reading it, the bracket arrives the other way round — möchte comes early and then you wait."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That wait is what German reading is. A reader holds the front of the sentence open until the last word closes it, and the modal at the front is the signal to start holding."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six lines, and three of them ask you to wait."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six lines, once, in order, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six lines, once, in order, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GE-C52-saetze-must",
+              "prompt": "Which line says something is necessary?",
+              "assesses": [
+                "GE-SKILL-READ-SENTENCES"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "ich muss arbeiten",
+                "ich muss arbeiten.",
+                "muss"
+              ],
+              "feedback": {
+                "correct": "Ich muss arbeiten.",
+                "incorrect": "Ich muss arbeiten -- I have to work."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a modal at the front tell a reader? (To wait — the sentence is not finished until the last word.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C52-erste-lesung",
+      "sequence": 1500,
+      "title": "(reading) — the first paragraph",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "the first paragraph — forty-eight words of German in a row, and not one of them new",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99a9ed4e3f199647",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six nouns, then six sentences. Now a whole paragraph."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Forty-eight words, and not one of them is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Guten Tag! Ich heiße Anna. Das ist mein Bruder. Er ist sehr gut. Wir trinken Kaffee und essen Brot. Ich lese ein Buch. Das Buch ist schön und alt. Ich kann Deutsch. Ich möchte viel lernen, weil Deutsch schön ist. Morgen muss ich arbeiten. Danke und auf Wiedersehen."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read it again, and find the one line where the verb is last."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the word that moves a verb",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich möchte viel lernen, weil Deutsch schön ist. That ist at the end is not a mistake and not a style. Weil put it there."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Und does not do that. Nor does aber. Four of the shortest words in German, and one of them rearranges the sentence after it while the others leave it alone."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Reading is where that stops being a rule you apply and becomes something you see coming. The comma and the weil together are the warning: hold on, the verb is at the far end."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first whole paragraph the book has asked you to hold at once, and it works because everything in it was paid for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the paragraph aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the paragraph aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GE-C52-erste-lesung-weil",
+              "prompt": "Which word sends the verb to the end?",
+              "assesses": [
+                "GE-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "weil",
+                "because"
+              ],
+              "feedback": {
+                "correct": "weil.",
+                "incorrect": "weil -- and it is the only one here that does."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words in that paragraph were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which joiner moves the verb, and which two leave it alone? (Weil moves it; und and aber do not.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
