@@ -965,6 +965,16 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 opacity: None,
             })
         }
+        DiagramShape::Asymmetric => {
+            let point = node.width.min(node.height * 2.0) * 0.16;
+            polygon_node_instruction(node, &[
+                (node.x, node.y),
+                (node.x + point, node.y + node.height / 2.0),
+                (node.x, node.y + node.height),
+                (node.x + node.width, node.y + node.height),
+                (node.x + node.width, node.y),
+            ])
+        }
         DiagramShape::Note => {
             let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
             PaintInstruction::Path(PaintPath {
@@ -5362,6 +5372,16 @@ mod tests {
                 PaintInstruction::Group(group) if group.children.len() == expected_children
             ));
         }
+    }
+
+    #[test]
+    fn block_asymmetric_shape_lowers_to_five_point_path() {
+        let mut layout = simple_layout();
+        layout.nodes[0].shape = DiagramShape::Asymmetric;
+        assert!(matches!(
+            node_shape_instruction(&layout.nodes[0]),
+            PaintInstruction::Path(path) if path.commands.len() == 6
+        ));
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.198.0
+
+- Parse Mermaid Block asymmetric node delimiters and spaced labels.
+
 ## 0.197.0
 
 - Parse Mermaid Block subroutine, cylinder, and double-circle delimiters.
