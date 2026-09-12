@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed the selected client-secret method's shared confidential metadata
+  method so composition roots can derive an exactly matching provider config.
 - Added exact, case-sensitive RFC 8414 method selection for provider-bound
   client-secret authentication, rejecting unadvertised methods and
   cross-provider opaque keys before any credential access.

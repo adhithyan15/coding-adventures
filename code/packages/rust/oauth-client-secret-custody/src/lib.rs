@@ -8,8 +8,9 @@
 
 use coding_adventures_base64::{encode_into as encode_base64_into, STANDARD};
 use coding_adventures_oauth::{
-    AuthorizationServerMetadata, OAuthTraceId, ProviderConfig, ProviderId, TokenExchangeRequest,
-    TokenRefreshRequest, TokenResponseContext, TokenRevocationRequest,
+    AuthorizationServerMetadata, ConfidentialClientAuthenticationMethod, OAuthTraceId,
+    ProviderConfig, ProviderId, TokenExchangeRequest, TokenRefreshRequest, TokenResponseContext,
+    TokenRevocationRequest,
 };
 use coding_adventures_zeroize::Zeroizing;
 use std::collections::BTreeMap;
@@ -89,9 +90,14 @@ pub enum ClientSecretAuthenticationMethod {
 impl ClientSecretAuthenticationMethod {
     /// Return the exact RFC 8414 metadata token for this method.
     pub const fn as_str(self) -> &'static str {
+        self.metadata_method().as_str()
+    }
+
+    /// Return the shared confidential method used for metadata-bound config derivation.
+    pub const fn metadata_method(self) -> ConfidentialClientAuthenticationMethod {
         match self {
-            Self::ClientSecretBasic => "client_secret_basic",
-            Self::ClientSecretPost => "client_secret_post",
+            Self::ClientSecretBasic => ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            Self::ClientSecretPost => ConfidentialClientAuthenticationMethod::ClientSecretPost,
         }
     }
 }
@@ -1095,6 +1101,10 @@ mod tests {
             ClientSecretAuthenticationMethod::ClientSecretBasic
         );
         assert_eq!(basic.method().as_str(), "client_secret_basic");
+        assert_eq!(
+            basic.method().metadata_method(),
+            ConfidentialClientAuthenticationMethod::ClientSecretBasic
+        );
 
         assert_eq!(
             ClientSecretAuthentication::from_metadata(
