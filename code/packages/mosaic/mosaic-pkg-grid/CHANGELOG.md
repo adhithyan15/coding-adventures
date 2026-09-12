@@ -1,5 +1,32 @@
 # Changelog
 
+## Unreleased
+
+### Fixed — the corner and row-header cells had no width (#14829)
+
+`row-corner` and `row-heading` were bare `Text` leaves. Both parts already
+author `width: 48px` in VisiCalc's `.msl`, and the colgroup already declares
+`Col (width: 48)` — but a `Text` gets no style chain at all, so neither reached
+it. The corner cell measured `size=0 x 24` at origin `(0, 0)`: present in the
+semantics tree, correctly named, occupying no space, every accessibility gate
+passing on it.
+
+Wrapped in a `Box`, the same fix #14830 applied to the header cell and for the
+same reason: a width lands on a **container**, never on a text leaf.
+
+Measured on the rendered app:
+
+| | before | after |
+| --- | --- | --- |
+| corner cell | `w=0` | `x=24..72`, `w=48` |
+| header column A | `x=60..140` | `x=72..152` |
+| data column A | — | `x=72..152` |
+
+Header and data columns now occupy **identical spans** at every column:
+`72..152`, `152..232`, `232..312`, `392..472`.
+
+Nothing was added to the `.msl`; the authored widths were always there.
+
 All notable changes to `mosaic-pkg-grid` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.
