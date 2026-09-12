@@ -272,11 +272,20 @@ cross-platform proving application. Items are ordered by risk and dependency.
   snapshots, section/address/contact/purpose descriptors, privacy-gated typed
   autofill, ordered input/change effects, Back/Forward restoration, and queued
   custom-element callbacks that fire after internals attach.
-- [ ] **P1 browser convergence — datalist suggestions and picker mediation.**
+- [x] **P1 browser convergence — datalist suggestions and picker mediation.**
   Add shared datalist filtering, typed suggestion normalization, keyboard and
   accessibility active-option state, bounded host suggestion queries, picker
   commit/cancel transactions, deterministic fixtures, and consistent behavior
   across available native/web hosts without giving toolkits value policy.
+  Completed with parser-resolved option metadata, bounded value/label/text
+  matching, shared typed validation and deduplication, keyboard and semantic
+  accessibility movement, transactional input/change commits, host JSON
+  projections, native ABI seams, and implicit-submit suppression.
+- [ ] **P1 browser convergence — live output, meter, and progress semantics.**
+  Add shared output dependency recalculation, meter optimum/range state,
+  determinate and indeterminate progress behavior, form reset integration,
+  reusable accessibility projections, deterministic fixtures, and consistent
+  native/web rendering without moving value policy into generated hosts.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

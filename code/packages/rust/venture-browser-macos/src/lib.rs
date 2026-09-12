@@ -25,7 +25,8 @@ use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, Windo
 use venture_browser_core::{
     BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
     BrowserFetchRequest, BrowserHostController, BrowserHostEffect, BrowserHostEventOutcome,
-    BrowserScrollMetrics, HostFileSelection, HttpBrowserFetcher, MemoryBookmarkRepository,
+    BrowserScrollMetrics, ControlSuggestionPickerAction, HostFileSelection, HttpBrowserFetcher,
+    MemoryBookmarkRepository,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -391,6 +392,7 @@ where
                 NamedKey::Home => ControlKey::Home,
                 NamedKey::End => ControlKey::End,
                 NamedKey::Enter => ControlKey::Enter,
+                NamedKey::Escape => ControlKey::Escape,
                 NamedKey::Space => ControlKey::Space,
                 _ => return Ok(false),
             };
@@ -787,6 +789,84 @@ impl MacBrowserHost {
             .map(|request| request.to_host_json())
     }
 
+    pub fn suggestion_state_json(&self) -> Option<String> {
+        self.controller
+            .session()
+            .focused_control_suggestion_state()
+            .map(|state| state.to_host_json())
+    }
+
+    pub fn suggestion_query(&mut self, query: &str, limit: usize) -> bool {
+        let Some(key) = self
+            .controller
+            .session()
+            .controls()
+            .focused_key()
+            .map(str::to_owned)
+        else {
+            return false;
+        };
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        self.controller
+            .session_mut()
+            .open_control_suggestions(&key, query, limit, &pipeline)
+            .is_some()
+    }
+
+    pub fn suggestion_action(&mut self, name: &str, index: usize) -> bool {
+        let action = match name {
+            "previous" => ControlSuggestionPickerAction::MovePrevious,
+            "next" => ControlSuggestionPickerAction::MoveNext,
+            "commit-active" => ControlSuggestionPickerAction::CommitActive,
+            "commit-index" => ControlSuggestionPickerAction::CommitIndex(index),
+            "cancel" => ControlSuggestionPickerAction::Cancel,
+            _ => return false,
+        };
+        let Some(key) = self
+            .controller
+            .session()
+            .controls()
+            .focused_key()
+            .map(str::to_owned)
+        else {
+            return false;
+        };
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        let changed = self
+            .controller
+            .session_mut()
+            .control_suggestion_picker_action(&key, action, &pipeline)
+            .is_some();
+        if changed {
+            self.controller.synchronize_session_state();
+        }
+        changed
+    }
+
     pub fn control_file_selected(
         &mut self,
         key: &str,
@@ -1176,6 +1256,45 @@ mod mosaic_ffi {
             .and_then(|value| CString::new(value).ok())
             .map(CString::into_raw)
             .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_suggestion_state(
+        host: *mut MacBrowserHost,
+    ) -> *mut c_char {
+        host.as_ref()
+            .and_then(MacBrowserHost::suggestion_state_json)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_suggestion_query(
+        host: *mut MacBrowserHost,
+        query: *const c_char,
+        limit: usize,
+    ) -> u8 {
+        string_arg(query)
+            .and_then(|query| {
+                host.as_mut()
+                    .map(|host| host.suggestion_query(&query, limit) as u8)
+            })
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_suggestion_action(
+        host: *mut MacBrowserHost,
+        name: *const c_char,
+        index: usize,
+    ) -> u8 {
+        string_arg(name)
+            .and_then(|name| {
+                host.as_mut()
+                    .map(|host| host.suggestion_action(&name, index) as u8)
+            })
+            .unwrap_or(0)
     }
 
     #[no_mangle]

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose shared bounded datalist state and semantic picker action ABI seams to
+  AppKit and generated SwiftUI hosts.
+
 - Expose path-free file picker request and selected-byte ABI seams for the
   generated SwiftUI adapter.
 

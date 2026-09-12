@@ -1,6 +1,6 @@
 //! Host-neutral browser form-control interaction semantics.
 
-use coding_adventures_html_parser::{BrowserRenderNode, BrowserRenderTree};
+use coding_adventures_html_parser::{BrowserDatalistOption, BrowserRenderNode, BrowserRenderTree};
 use layout_controls::{ControlAppearance, ControlKind, ControlState};
 use text_flow::{first_strong_direction, graphemes, Direction};
 use url_parser::Url;
@@ -28,6 +28,9 @@ const FORM_STATE_CONTROL_LIMIT: usize = 512;
 const FORM_STATE_BYTE_LIMIT: usize = 1024 * 1024;
 pub const MAX_AUTOFILL_FIELDS: usize = 128;
 pub const MAX_AUTOFILL_VALUE_BYTES: usize = 16 * 1024;
+pub const MAX_DATALIST_OPTIONS: usize = 512;
+pub const MAX_SUGGESTION_RESULTS: usize = 64;
+pub const MAX_SUGGESTION_QUERY_BYTES: usize = 4096;
 pub const MAX_SELECTED_FILES: usize = 256;
 pub const MAX_SELECTED_FILE_BYTES: usize = 16 * 1024 * 1024;
 pub const MAX_SELECTED_TOTAL_BYTES: usize = 16 * 1024 * 1024;
@@ -139,6 +142,12 @@ pub enum ControlAccessibilityAction {
         toggle: bool,
     },
     SelectAll,
+    ShowSuggestions(String),
+    MoveSuggestion {
+        forward: bool,
+    },
+    CommitSuggestion,
+    DismissSuggestions,
     Undo,
     Redo,
 }
@@ -152,6 +161,7 @@ pub enum ControlMutationEventKind {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ControlMutationSource {
     Autofill,
+    SuggestionPicker,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -236,6 +246,87 @@ pub struct ControlStateSnapshot {
     pub controls: Vec<ControlRestorationEntry>,
     pub custom_elements: Vec<CustomElementRestorationEntry>,
     pub diagnostics: Vec<ControlStateDiagnostic>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlSuggestionOption {
+    pub value: String,
+    pub label: Option<String>,
+    pub text: String,
+    pub source_index: usize,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlSuggestionDiagnostic {
+    pub code: &'static str,
+    pub message: &'static str,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct ControlSuggestionState {
+    pub key: String,
+    pub open: bool,
+    pub query: String,
+    pub options: Vec<ControlSuggestionOption>,
+    pub active_index: Option<usize>,
+    pub diagnostics: Vec<ControlSuggestionDiagnostic>,
+}
+
+impl ControlSuggestionState {
+    pub fn to_host_json(&self) -> String {
+        let options = self
+            .options
+            .iter()
+            .map(|option| {
+                format!(
+                    "{{\"value\":\"{}\",\"label\":{},\"text\":\"{}\",\"sourceIndex\":{}}}",
+                    json_string(&option.value),
+                    option
+                        .label
+                        .as_deref()
+                        .map(|label| format!("\"{}\"", json_string(label)))
+                        .unwrap_or_else(|| "null".to_string()),
+                    json_string(&option.text),
+                    option.source_index,
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",");
+        let active_index = self
+            .active_index
+            .map(|index| index.to_string())
+            .unwrap_or_else(|| "null".to_string());
+        let diagnostics = self
+            .diagnostics
+            .iter()
+            .map(|diagnostic| {
+                format!(
+                    "{{\"code\":\"{}\",\"message\":\"{}\"}}",
+                    json_string(diagnostic.code),
+                    json_string(diagnostic.message),
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",");
+        format!(
+            "{{\"key\":\"{}\",\"open\":{},\"query\":\"{}\",\"activeIndex\":{},\"options\":[{}],\"diagnostics\":[{}]}}",
+            json_string(&self.key),
+            self.open,
+            json_string(&self.query),
+            active_index,
+            options,
+            diagnostics,
+        )
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ControlSuggestionPickerAction {
+    MovePrevious,
+    MoveNext,
+    CommitActive,
+    CommitIndex(usize),
+    Cancel,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -406,6 +497,7 @@ pub enum ControlKey {
     Home,
     End,
     Enter,
+    Escape,
     Space,
     WordLeft,
     WordRight,
@@ -426,6 +518,7 @@ impl ControlKey {
             "home" => Self::Home,
             "end" => Self::End,
             "enter" => Self::Enter,
+            "escape" => Self::Escape,
             "space" => Self::Space,
             "word-left" => Self::WordLeft,
             "word-right" => Self::WordRight,
@@ -447,6 +540,7 @@ impl ControlKey {
             Self::Home => "home",
             Self::End => "end",
             Self::Enter => "enter",
+            Self::Escape => "escape",
             Self::Space => "space",
             Self::WordLeft => "word-left",
             Self::WordRight => "word-right",
@@ -473,6 +567,15 @@ pub enum ControlEffect {
     FilesChanged {
         key: String,
         files: Vec<ControlFileItemState>,
+    },
+    SuggestionPickerChanged {
+        key: String,
+        open: bool,
+        active_index: Option<usize>,
+    },
+    SuggestionCommitted {
+        key: String,
+        value: String,
     },
     SelectionChanged {
         key: String,
@@ -533,6 +636,7 @@ pub struct BrowserControlModel {
     choice_anchors: Vec<Option<usize>>,
     file_selections: Vec<Vec<HostFileSelection>>,
     file_diagnostics: Vec<Vec<ControlValueDiagnostic>>,
+    suggestions: Vec<ControlSuggestionState>,
     dirty_values: Vec<bool>,
     dirty_checkedness: Vec<bool>,
     document_controls: Vec<DocumentControlBinding>,
@@ -581,6 +685,7 @@ pub struct ControlBinding {
     pub step: Option<String>,
     pub inputmode: Option<String>,
     pub accept: Option<String>,
+    pub datalist_options: Vec<BrowserDatalistOption>,
     pub autocomplete: Option<String>,
     pub autocomplete_tokens: Vec<String>,
     pub form_autocomplete_enabled: bool,
@@ -655,6 +760,13 @@ impl BrowserControlModel {
         let choice_anchors = vec![None; bindings.len()];
         let file_selections = vec![Vec::new(); bindings.len()];
         let file_diagnostics = vec![Vec::new(); bindings.len()];
+        let suggestions = bindings
+            .iter()
+            .map(|binding| ControlSuggestionState {
+                key: binding.key.clone(),
+                ..ControlSuggestionState::default()
+            })
+            .collect();
         let dirty_values = vec![false; bindings.len()];
         let dirty_checkedness = vec![false; bindings.len()];
         Self {
@@ -666,6 +778,7 @@ impl BrowserControlModel {
             choice_anchors,
             file_selections,
             file_diagnostics,
+            suggestions,
             dirty_values,
             dirty_checkedness,
             document_controls,
@@ -966,6 +1079,10 @@ impl BrowserControlModel {
             );
             self.histories[index] = ControlEditHistory::default();
             self.choice_anchors[index] = None;
+            self.suggestions[index] = ControlSuggestionState {
+                key: self.controls[index].key.clone(),
+                ..ControlSuggestionState::default()
+            };
             if changed {
                 effects.push(effect_for_restored_control(&self.controls[index]));
             }
@@ -1035,6 +1152,10 @@ impl BrowserControlModel {
                 self.controls[index].value.chars().count(),
             );
             self.histories[index] = ControlEditHistory::default();
+            self.suggestions[index] = ControlSuggestionState {
+                key: self.controls[index].key.clone(),
+                ..ControlSuggestionState::default()
+            };
             outcome
                 .effects
                 .push(effect_for_restored_control(&self.controls[index]));
@@ -1052,6 +1173,120 @@ impl BrowserControlModel {
         self.custom_elements
             .restore_all(CustomElementStateRestoreMode::Autocomplete);
         outcome
+    }
+
+    pub fn suggestion_state(&self, key: &str) -> Option<&ControlSuggestionState> {
+        let index = self
+            .bindings
+            .iter()
+            .position(|binding| binding.key == key)?;
+        (!self.bindings[index].datalist_options.is_empty()).then_some(&self.suggestions[index])
+    }
+
+    pub fn focused_suggestion_state(&self) -> Option<&ControlSuggestionState> {
+        self.focused_key()
+            .and_then(|key| self.suggestion_state(key))
+    }
+
+    /// Build a bounded picker projection from one datalist query. Hosts never
+    /// receive the unfiltered source list and do not normalize typed values.
+    pub fn open_suggestions(
+        &mut self,
+        key: &str,
+        query: &str,
+        limit: usize,
+    ) -> Option<ControlEffect> {
+        let index = self
+            .bindings
+            .iter()
+            .position(|binding| binding.key == key)?;
+        if !suggestions_enabled(&self.controls[index], &self.bindings[index]) {
+            return None;
+        }
+        self.suggestions[index] =
+            build_suggestion_state(&self.controls[index], &self.bindings[index], query, limit);
+        Some(suggestion_picker_effect(&self.suggestions[index]))
+    }
+
+    pub fn apply_suggestion_picker_action(
+        &mut self,
+        key: &str,
+        action: ControlSuggestionPickerAction,
+    ) -> Option<ControlEffect> {
+        let index = self
+            .bindings
+            .iter()
+            .position(|binding| binding.key == key)?;
+        match action {
+            ControlSuggestionPickerAction::MovePrevious => self.move_suggestion_at(index, false),
+            ControlSuggestionPickerAction::MoveNext => self.move_suggestion_at(index, true),
+            ControlSuggestionPickerAction::CommitActive => {
+                let option_index = self.suggestions[index].active_index?;
+                self.commit_suggestion_at(index, option_index)
+            }
+            ControlSuggestionPickerAction::CommitIndex(option_index) => {
+                self.commit_suggestion_at(index, option_index)
+            }
+            ControlSuggestionPickerAction::Cancel => self.dismiss_suggestions_at(index),
+        }
+    }
+
+    fn move_suggestion_at(&mut self, index: usize, forward: bool) -> Option<ControlEffect> {
+        if !self.suggestions[index].open {
+            let key = self.bindings[index].key.clone();
+            let query = self.controls[index].value.clone();
+            self.open_suggestions(&key, &query, MAX_SUGGESTION_RESULTS)?;
+            if !forward && !self.suggestions[index].options.is_empty() {
+                self.suggestions[index].active_index =
+                    Some(self.suggestions[index].options.len() - 1);
+            }
+            return Some(suggestion_picker_effect(&self.suggestions[index]));
+        }
+        let option_count = self.suggestions[index].options.len();
+        if option_count == 0 {
+            return Some(suggestion_picker_effect(&self.suggestions[index]));
+        }
+        self.suggestions[index].active_index = Some(match self.suggestions[index].active_index {
+            Some(active) if forward => (active + 1) % option_count,
+            Some(0) if !forward => option_count - 1,
+            Some(active) => active - 1,
+            None if forward => 0,
+            None => option_count - 1,
+        });
+        Some(suggestion_picker_effect(&self.suggestions[index]))
+    }
+
+    fn commit_suggestion_at(&mut self, index: usize, option_index: usize) -> Option<ControlEffect> {
+        if !self.suggestions[index].open {
+            return None;
+        }
+        let option = self.suggestions[index].options.get(option_index)?.clone();
+        let changed = self.controls[index].value != option.value;
+        if changed {
+            self.record_history(index);
+            self.controls[index].value = option.value.clone();
+            self.dirty_values[index] = true;
+            reset_editor_after_value_change(&mut self.editors[index], option.value.chars().count());
+        }
+        self.suggestions[index].open = false;
+        self.suggestions[index].active_index = None;
+        if changed {
+            Some(ControlEffect::SuggestionCommitted {
+                key: self.controls[index].key.clone(),
+                value: option.value,
+            })
+        } else {
+            Some(suggestion_picker_effect(&self.suggestions[index]))
+        }
+    }
+
+    fn dismiss_suggestions_at(&mut self, index: usize) -> Option<ControlEffect> {
+        if !self.suggestions[index].open {
+            return None;
+        }
+        self.suggestions[index].open = false;
+        self.suggestions[index].active_index = None;
+        Some(suggestion_picker_effect(&self.suggestions[index]))
     }
 
     pub fn selected_files(&self, key: &str) -> Option<&[HostFileSelection]> {
@@ -1226,6 +1461,10 @@ impl BrowserControlModel {
             self.choice_anchors[index] = None;
             self.file_selections[index].clear();
             self.file_diagnostics[index].clear();
+            self.suggestions[index] = ControlSuggestionState {
+                key: control.key.clone(),
+                ..ControlSuggestionState::default()
+            };
             self.dirty_values[index] = false;
             self.dirty_checkedness[index] = false;
             if changed {
@@ -1253,6 +1492,12 @@ impl BrowserControlModel {
             .position(|control| control.key == key && !control.disabled)?;
         for control in &mut self.controls {
             control.focused = false;
+        }
+        for (index, suggestion) in self.suggestions.iter_mut().enumerate() {
+            if index != target {
+                suggestion.open = false;
+                suggestion.active_index = None;
+            }
         }
         self.controls[target].focused = true;
         self.editors[target].caret_phase_ms = 0;
@@ -1303,6 +1548,11 @@ impl BrowserControlModel {
     }
 
     pub fn key_down_with_shift(&mut self, key: ControlKey, shift: bool) -> Option<ControlEffect> {
+        let focused_index = self.focused_key.as_deref().and_then(|focused| {
+            self.bindings
+                .iter()
+                .position(|binding| binding.key == focused)
+        })?;
         let kind = self.focused()?.kind;
         match key {
             ControlKey::Undo => return self.undo(),
@@ -1313,6 +1563,25 @@ impl BrowserControlModel {
                 return self.set_selection(&key, 0, length);
             }
             _ => {}
+        }
+        if self.suggestions[focused_index].open {
+            match key {
+                ControlKey::Escape => return self.dismiss_suggestions_at(focused_index),
+                ControlKey::Enter => {
+                    let option_index = self.suggestions[focused_index].active_index?;
+                    return self.commit_suggestion_at(focused_index, option_index);
+                }
+                ControlKey::ArrowUp => return self.move_suggestion_at(focused_index, false),
+                ControlKey::ArrowDown => return self.move_suggestion_at(focused_index, true),
+                _ => {}
+            }
+        } else if suggestions_enabled(&self.controls[focused_index], &self.bindings[focused_index])
+        {
+            match key {
+                ControlKey::ArrowUp => return self.move_suggestion_at(focused_index, false),
+                ControlKey::ArrowDown => return self.move_suggestion_at(focused_index, true),
+                _ => {}
+            }
         }
         if kind == ControlKind::Range {
             return match key {
@@ -1659,6 +1928,32 @@ impl BrowserControlModel {
             ControlAccessibilityAction::SelectAll => self.key_down(ControlKey::SelectAll),
             ControlAccessibilityAction::Undo => self.undo(),
             ControlAccessibilityAction::Redo => self.redo(),
+            ControlAccessibilityAction::ShowSuggestions(query) => {
+                let key = self.focused_key()?.to_string();
+                self.open_suggestions(&key, &query, MAX_SUGGESTION_RESULTS)
+            }
+            ControlAccessibilityAction::MoveSuggestion { forward } => {
+                let key = self.focused_key()?.to_string();
+                self.apply_suggestion_picker_action(
+                    &key,
+                    if forward {
+                        ControlSuggestionPickerAction::MoveNext
+                    } else {
+                        ControlSuggestionPickerAction::MovePrevious
+                    },
+                )
+            }
+            ControlAccessibilityAction::CommitSuggestion => {
+                let key = self.focused_key()?.to_string();
+                self.apply_suggestion_picker_action(
+                    &key,
+                    ControlSuggestionPickerAction::CommitActive,
+                )
+            }
+            ControlAccessibilityAction::DismissSuggestions => {
+                let key = self.focused_key()?.to_string();
+                self.apply_suggestion_picker_action(&key, ControlSuggestionPickerAction::Cancel)
+            }
         }
     }
 
@@ -2578,6 +2873,7 @@ fn collect_model_nodes(
                 step: node.step.clone(),
                 inputmode: node.inputmode.clone(),
                 accept: node.accept.clone(),
+                datalist_options: node.datalist_options.clone(),
                 autocomplete: node.autocomplete.clone(),
                 autocomplete_tokens: autocomplete_tokens(node.autocomplete.as_deref()),
                 form_autocomplete_enabled: effective_form_autocomplete(
@@ -2861,6 +3157,153 @@ fn apply_autofill_value(control: &mut ControlState, binding: &ControlBinding, va
     }
     control.value = normalized;
     true
+}
+
+fn suggestions_enabled(control: &ControlState, binding: &ControlBinding) -> bool {
+    !binding.datalist_options.is_empty()
+        && !control.disabled
+        && !control.readonly
+        && !matches!(
+            control.kind,
+            ControlKind::Button
+                | ControlKind::File
+                | ControlKind::Checkbox
+                | ControlKind::Radio
+                | ControlKind::Select
+                | ControlKind::TextArea
+                | ControlKind::Password
+        )
+}
+
+fn build_suggestion_state(
+    control: &ControlState,
+    binding: &ControlBinding,
+    query: &str,
+    requested_limit: usize,
+) -> ControlSuggestionState {
+    let (query, query_truncated) = bounded_utf8(query, MAX_SUGGESTION_QUERY_BYTES);
+    let folded_query = query.to_lowercase();
+    let limit = requested_limit.min(MAX_SUGGESTION_RESULTS);
+    let mut options = Vec::new();
+    let mut diagnostics = Vec::new();
+    if query_truncated {
+        diagnostics.push(ControlSuggestionDiagnostic {
+            code: "query-truncated",
+            message: "suggestion query exceeds the shared byte limit",
+        });
+    }
+    if binding.datalist_options.len() > MAX_DATALIST_OPTIONS {
+        diagnostics.push(ControlSuggestionDiagnostic {
+            code: "source-option-limit",
+            message: "datalist exceeds the shared source option limit",
+        });
+    }
+    let mut result_limited = false;
+    for (source_index, option) in binding
+        .datalist_options
+        .iter()
+        .take(MAX_DATALIST_OPTIONS)
+        .enumerate()
+    {
+        if option.disabled {
+            continue;
+        }
+        let Some(value) = normalize_suggestion_value(control, binding, &option.value) else {
+            continue;
+        };
+        let matches_query = folded_query.is_empty()
+            || value.to_lowercase().contains(&folded_query)
+            || option
+                .label
+                .as_deref()
+                .is_some_and(|label| label.to_lowercase().contains(&folded_query))
+            || option.text.to_lowercase().contains(&folded_query);
+        if !matches_query
+            || options
+                .iter()
+                .any(|candidate: &ControlSuggestionOption| candidate.value == value)
+        {
+            continue;
+        }
+        if options.len() >= limit {
+            result_limited = true;
+            break;
+        }
+        options.push(ControlSuggestionOption {
+            value,
+            label: option.label.clone(),
+            text: option.text.clone(),
+            source_index,
+        });
+    }
+    if result_limited {
+        diagnostics.push(ControlSuggestionDiagnostic {
+            code: "result-limit",
+            message: "suggestion results exceed the requested bounded limit",
+        });
+    }
+    let open = !options.is_empty();
+    ControlSuggestionState {
+        key: control.key.clone(),
+        open,
+        query,
+        active_index: open.then_some(0),
+        options,
+        diagnostics,
+    }
+}
+
+fn normalize_suggestion_value(
+    control: &ControlState,
+    binding: &ControlBinding,
+    value: &str,
+) -> Option<String> {
+    let normalized = match control.kind {
+        ControlKind::Range => {
+            let value = parse_finite(value)?;
+            format_number(normalize_range_value(
+                value,
+                control_numeric_constraints(control, binding),
+            ))
+        }
+        kind if kind.is_temporal() => parse_typed_value(kind, value)?.normalized,
+        ControlKind::Color => normalize_color(value)?,
+        ControlKind::Number => format_number(parse_finite(value)?),
+        _ => binding
+            .maxlength
+            .as_deref()
+            .and_then(|maximum| maximum.parse::<usize>().ok())
+            .filter(|_| control.kind.supports_maxlength())
+            .map_or_else(
+                || value.to_string(),
+                |maximum| value.chars().take(maximum).collect(),
+            ),
+    };
+    let mut candidate = control.clone();
+    candidate.value = normalized.clone();
+    control_value_state(&candidate, binding)
+        .diagnostics
+        .is_empty()
+        .then_some(normalized)
+}
+
+fn bounded_utf8(value: &str, max_bytes: usize) -> (String, bool) {
+    if value.len() <= max_bytes {
+        return (value.to_string(), false);
+    }
+    let mut end = max_bytes;
+    while !value.is_char_boundary(end) {
+        end -= 1;
+    }
+    (value[..end].to_string(), true)
+}
+
+fn suggestion_picker_effect(state: &ControlSuggestionState) -> ControlEffect {
+    ControlEffect::SuggestionPickerChanged {
+        key: state.key.clone(),
+        open: state.open,
+        active_index: state.active_index,
+    }
 }
 
 fn restoration_changed(control: &ControlState, entry: &ControlRestorationEntry) -> bool {
@@ -4901,5 +5344,73 @@ mod tests {
             snapshot.diagnostics[0].key.as_deref(),
             Some(custom_key.as_str())
         );
+    }
+
+    #[test]
+    fn datalist_queries_and_picker_transactions_share_typed_value_policy() {
+        let tree = parse_browser_render_tree(
+            "<input id='city' list='cities'><datalist id='cities'>\
+             <option value='SFO' label='San Francisco'>Bay Area</option>\
+             <option value='SEA'>Seattle</option><option value='SFO'>Duplicate</option>\
+             <option value='PDX' disabled>Portland</option></datalist>\
+             <input id='count' type='number' min='0' max='10' step='2' list='counts'>\
+             <datalist id='counts'><option value='4'><option value='3'><option value='many'></datalist>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let city = "control:0:id:city";
+        let count = "control:1:id:count";
+
+        model.open_suggestions(city, "bay", 8).unwrap();
+        let state = model.suggestion_state(city).unwrap();
+        assert_eq!(state.options.len(), 1);
+        assert_eq!(state.options[0].value, "SFO");
+        assert!(state.to_host_json().contains("\"sourceIndex\":0"));
+
+        model.open_suggestions(city, "", 1).unwrap();
+        assert_eq!(model.suggestion_state(city).unwrap().options.len(), 1);
+        assert_eq!(
+            model.suggestion_state(city).unwrap().diagnostics[0].code,
+            "result-limit"
+        );
+
+        model.open_suggestions(count, "", 8).unwrap();
+        assert_eq!(
+            model
+                .suggestion_state(count)
+                .unwrap()
+                .options
+                .iter()
+                .map(|option| option.value.as_str())
+                .collect::<Vec<_>>(),
+            vec!["4"]
+        );
+
+        model.focus(city).unwrap();
+        model
+            .apply_suggestion_picker_action(city, ControlSuggestionPickerAction::Cancel)
+            .unwrap();
+        model.key_down(ControlKey::ArrowDown).unwrap();
+        assert_eq!(
+            model.focused_suggestion_state().unwrap().active_index,
+            Some(0)
+        );
+        model
+            .accessibility_action(ControlAccessibilityAction::MoveSuggestion { forward: true })
+            .unwrap();
+        assert_eq!(
+            model.focused_suggestion_state().unwrap().active_index,
+            Some(1)
+        );
+        assert_eq!(
+            model.key_down(ControlKey::Enter),
+            Some(ControlEffect::SuggestionCommitted {
+                key: city.into(),
+                value: "SEA".into(),
+            })
+        );
+        assert_eq!(model.control(city).unwrap().value, "SEA");
+        assert!(model.default_state(city).unwrap().dirty_value);
+        assert!(!model.focused_suggestion_state().unwrap().open);
     }
 }

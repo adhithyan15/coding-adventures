@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add bounded datalist filtering, typed-option normalization, keyboard and
+  accessibility active-option movement, host JSON projection, and atomic
+  picker commit/cancel transactions.
+
 - Add live dirty/default state, bounded public or credential-bearing history
   snapshots, grouped autocomplete descriptors, privacy-gated autofill
   transactions, ordered input/change effects, and deferred custom-element

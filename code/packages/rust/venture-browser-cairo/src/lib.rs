@@ -17,7 +17,7 @@ use venture_browser_core::{
     BrowserHostEventOutcome, BrowserLoadError, BrowserNavigation, BrowserNavigationUpdate,
     BrowserPagePipeline, BrowserResourceFetcher, BrowserScrollCommand, BrowserScrollMetrics,
     BrowserSession, BrowserSubresourceCompletion, BrowserSubresourceUpdate, ControlKey,
-    HostFileSelection, HttpBrowserFetcher, MemoryBookmarkRepository,
+    ControlSuggestionPickerAction, HostFileSelection, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -341,6 +341,84 @@ impl CairoBrowserHost {
             .session()
             .focused_file_picker_request()
             .map(|request| request.to_host_json())
+    }
+
+    pub fn suggestion_state_json(&self) -> Option<String> {
+        self.controller
+            .session()
+            .focused_control_suggestion_state()
+            .map(|state| state.to_host_json())
+    }
+
+    pub fn suggestion_query(&mut self, query: &str, limit: usize) -> bool {
+        let Some(key) = self
+            .controller
+            .session()
+            .controls()
+            .focused_key()
+            .map(str::to_owned)
+        else {
+            return false;
+        };
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        self.controller
+            .session_mut()
+            .open_control_suggestions(&key, query, limit, &pipeline)
+            .is_some()
+    }
+
+    pub fn suggestion_action(&mut self, name: &str, index: usize) -> bool {
+        let action = match name {
+            "previous" => ControlSuggestionPickerAction::MovePrevious,
+            "next" => ControlSuggestionPickerAction::MoveNext,
+            "commit-active" => ControlSuggestionPickerAction::CommitActive,
+            "commit-index" => ControlSuggestionPickerAction::CommitIndex(index),
+            "cancel" => ControlSuggestionPickerAction::Cancel,
+            _ => return false,
+        };
+        let Some(key) = self
+            .controller
+            .session()
+            .controls()
+            .focused_key()
+            .map(str::to_owned)
+        else {
+            return false;
+        };
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        let changed = self
+            .controller
+            .session_mut()
+            .control_suggestion_picker_action(&key, action, &pipeline)
+            .is_some();
+        if changed {
+            self.controller.synchronize_session_state();
+        }
+        changed
     }
 
     pub fn control_file_selected(
@@ -757,6 +835,45 @@ mod ffi {
     }
 
     #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_qt_suggestion_state(
+        host: *mut CairoBrowserHost,
+    ) -> *mut c_char {
+        host.as_ref()
+            .and_then(CairoBrowserHost::suggestion_state_json)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_qt_suggestion_query(
+        host: *mut CairoBrowserHost,
+        query: *const c_char,
+        limit: usize,
+    ) -> u8 {
+        string_arg(query)
+            .and_then(|query| {
+                host.as_mut()
+                    .map(|host| host.suggestion_query(&query, limit) as u8)
+            })
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_qt_suggestion_action(
+        host: *mut CairoBrowserHost,
+        name: *const c_char,
+        index: usize,
+    ) -> u8 {
+        string_arg(name)
+            .and_then(|name| {
+                host.as_mut()
+                    .map(|host| host.suggestion_action(&name, index) as u8)
+            })
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
     pub unsafe extern "C" fn venture_browser_qt_control_file(
         host: *mut CairoBrowserHost,
         key: *const c_char,
@@ -1007,6 +1124,31 @@ mod ffi {
     }
 
     #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_suggestion_state(
+        host: *mut CairoBrowserHost,
+    ) -> *mut c_char {
+        unsafe { venture_browser_qt_suggestion_state(host) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_suggestion_query(
+        host: *mut CairoBrowserHost,
+        query: *const c_char,
+        limit: usize,
+    ) -> u8 {
+        unsafe { venture_browser_qt_suggestion_query(host, query, limit) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_suggestion_action(
+        host: *mut CairoBrowserHost,
+        name: *const c_char,
+        index: usize,
+    ) -> u8 {
+        unsafe { venture_browser_qt_suggestion_action(host, name, index) }
+    }
+
+    #[no_mangle]
     pub unsafe extern "C" fn venture_browser_flutter_control_file(
         host: *mut CairoBrowserHost,
         key: *const c_char,
@@ -1187,6 +1329,31 @@ mod ffi {
         host: *mut CairoBrowserHost,
     ) -> *mut c_char {
         unsafe { venture_browser_qt_file_picker_request(host) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_suggestion_state(
+        host: *mut CairoBrowserHost,
+    ) -> *mut c_char {
+        unsafe { venture_browser_qt_suggestion_state(host) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_suggestion_query(
+        host: *mut CairoBrowserHost,
+        query: *const c_char,
+        limit: usize,
+    ) -> u8 {
+        unsafe { venture_browser_qt_suggestion_query(host, query, limit) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_suggestion_action(
+        host: *mut CairoBrowserHost,
+        name: *const c_char,
+        index: usize,
+    ) -> u8 {
+        unsafe { venture_browser_qt_suggestion_action(host, name, index) }
     }
 
     #[no_mangle]
