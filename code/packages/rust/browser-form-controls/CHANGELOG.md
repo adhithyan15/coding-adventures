@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add attachable form-associated custom-element internals with bounded
+  submission/restoration values, ownership reassociation, validity anchors,
+  lifecycle callbacks, labels, and accessibility value actions.
+
 - Retain inherited and `dir=auto` control directionality for live `dirname`
   serialization, and expose semantic accessibility activation.
 

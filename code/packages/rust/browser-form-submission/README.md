@@ -26,10 +26,15 @@ and `y` entries: pointer activation uses control-local coordinates while
 keyboard and accessibility activation use `(0, 0)`. Text/search/textarea
 `dirname` entries immediately follow their owning control and use the shared
 live Unicode directionality result.
+Attached form-associated custom elements contribute bounded string, file, or
+entry-list values at their retained document ordinal. Their shared validity
+messages block navigation through the same diagnostic path as native controls;
+disabled or detached internals are never successful.
 
 Specs: [`UI54-form-submission`](../../../specs/UI54-form-submission.md) and
 [`UI63-typed-input-value-semantics`](../../../specs/UI63-typed-input-value-semantics.md),
 [`UI64-choice-range-controls`](../../../specs/UI64-choice-range-controls.md), and
 [`UI65-temporal-color-controls`](../../../specs/UI65-temporal-color-controls.md), and
 [`UI66-file-values-multipart`](../../../specs/UI66-file-values-multipart.md), and
-[`UI67-image-submit-dirname`](../../../specs/UI67-image-submit-dirname.md).
+[`UI67-image-submit-dirname`](../../../specs/UI67-image-submit-dirname.md), and
+[`UI68-form-associated-custom-elements`](../../../specs/UI68-form-associated-custom-elements.md).

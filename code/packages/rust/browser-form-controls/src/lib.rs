@@ -5,8 +5,18 @@ use layout_controls::{ControlAppearance, ControlKind, ControlState};
 use text_flow::{first_strong_direction, graphemes, Direction};
 use url_parser::Url;
 
+mod custom_elements;
 mod typed_values;
 
+use custom_elements::CustomElementInternalsRegistry;
+pub use custom_elements::{
+    CustomElementAccessibilityAction, CustomElementAccessibilityProjection,
+    CustomElementAccessibilityState, CustomElementAccessibilityValue, CustomElementDiagnostic,
+    CustomElementFormAssociation, CustomElementFormEntry, CustomElementFormEntryValue,
+    CustomElementFormValue, CustomElementInternalsError, CustomElementLifecycleEvent,
+    CustomElementStateRestoreMode, CustomElementSubmissionGroup, CustomElementValidity,
+    FormAssociatedCustomElementState, MAX_CUSTOM_ELEMENT_ENTRIES, MAX_CUSTOM_ELEMENT_TEXT_BYTES,
+};
 pub use typed_values::{
     format_typed_value, normalize_color, parse_typed_step, parse_typed_value, step_typed_value,
     typed_constraints, TypedValue, TypedValueConstraints,
@@ -423,6 +433,8 @@ pub struct BrowserControlModel {
     choice_anchors: Vec<Option<usize>>,
     file_selections: Vec<Vec<HostFileSelection>>,
     file_diagnostics: Vec<Vec<ControlValueDiagnostic>>,
+    document_controls: Vec<DocumentControlBinding>,
+    custom_elements: CustomElementInternalsRegistry,
     focused_key: Option<String>,
 }
 
@@ -470,20 +482,37 @@ pub struct ControlBinding {
     pub dirname: Option<String>,
     pub direction: ControlTextDirection,
     pub direction_auto: bool,
+    pub document_order: usize,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct DocumentControlBinding {
+    id: Option<String>,
+    name: Option<String>,
+    control_type: String,
+    form_owner: Option<String>,
+    form_index: Option<usize>,
+    document_order: usize,
 }
 
 impl BrowserControlModel {
     pub fn from_render_tree(tree: &BrowserRenderTree) -> Self {
         let mut controls = Vec::new();
         let mut bindings = Vec::new();
+        let mut document_controls = Vec::new();
         let mut control_index = 0;
         let mut form_index = 0;
+        let mut document_order = 0;
         collect_model_nodes(
             &tree.children,
-            &mut controls,
-            &mut bindings,
-            &mut control_index,
-            &mut form_index,
+            &mut ModelCollection {
+                states: &mut controls,
+                bindings: &mut bindings,
+                document_controls: &mut document_controls,
+                control_index: &mut control_index,
+                next_form_index: &mut form_index,
+                document_order: &mut document_order,
+            },
             None,
             ControlTextDirection::Ltr,
         );
@@ -521,6 +550,8 @@ impl BrowserControlModel {
             choice_anchors,
             file_selections,
             file_diagnostics,
+            document_controls,
+            custom_elements: CustomElementInternalsRegistry::from_render_tree(tree),
             focused_key,
         }
     }
@@ -535,6 +566,144 @@ impl BrowserControlModel {
 
     pub fn binding(&self, key: &str) -> Option<&ControlBinding> {
         self.bindings.iter().find(|binding| binding.key == key)
+    }
+
+    pub fn form_associated_custom_elements(&self) -> &[FormAssociatedCustomElementState] {
+        self.custom_elements.elements()
+    }
+
+    pub fn form_associated_custom_element(
+        &self,
+        key: &str,
+    ) -> Option<&FormAssociatedCustomElementState> {
+        self.custom_elements.element(key)
+    }
+
+    pub fn attach_form_associated_custom_element(
+        &mut self,
+        key: &str,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.custom_elements.attach(key)
+    }
+
+    pub fn reassociate_form_associated_custom_element(
+        &mut self,
+        key: &str,
+        association: CustomElementFormAssociation,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.custom_elements.reassociate(key, association)
+    }
+
+    pub fn set_custom_element_form_value(
+        &mut self,
+        key: &str,
+        value: Option<CustomElementFormValue>,
+        restoration_state: Option<CustomElementFormValue>,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.custom_elements
+            .set_form_value(key, value, restoration_state)
+    }
+
+    pub fn set_custom_element_validity(
+        &mut self,
+        key: &str,
+        validity: CustomElementValidity,
+        message: Option<String>,
+        anchor: Option<String>,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.custom_elements
+            .set_validity(key, validity, message, anchor)
+    }
+
+    pub fn set_custom_element_disabled(
+        &mut self,
+        key: &str,
+        disabled: bool,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.custom_elements.set_disabled(key, disabled)
+    }
+
+    pub fn set_custom_element_accessibility_value(
+        &mut self,
+        key: &str,
+        value: CustomElementAccessibilityValue,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.custom_elements.set_accessibility_value(key, value)
+    }
+
+    pub fn set_custom_element_accessibility_projection(
+        &mut self,
+        key: &str,
+        projection: CustomElementAccessibilityProjection,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.custom_elements
+            .set_accessibility_projection(key, projection)
+    }
+
+    pub fn custom_element_accessibility_action(
+        &mut self,
+        key: &str,
+        action: CustomElementAccessibilityAction,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.custom_elements.accessibility_action(key, action)
+    }
+
+    pub fn custom_element_accessibility_state(
+        &self,
+        key: &str,
+    ) -> Option<CustomElementAccessibilityState> {
+        self.custom_elements.accessibility_state(key)
+    }
+
+    pub fn custom_element_diagnostics(
+        &self,
+        form_id: Option<&str>,
+        form_index: usize,
+    ) -> Vec<CustomElementDiagnostic> {
+        self.custom_elements.diagnostics(form_id, form_index)
+    }
+
+    pub fn custom_element_submission_groups(
+        &self,
+        form_id: Option<&str>,
+        form_index: usize,
+    ) -> Vec<CustomElementSubmissionGroup> {
+        self.custom_elements.submission_groups(form_id, form_index)
+    }
+
+    pub fn restore_custom_element_state(
+        &mut self,
+        key: &str,
+        mode: CustomElementStateRestoreMode,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.custom_elements.restore_state(key, mode)
+    }
+
+    pub fn take_custom_element_lifecycle_events(&mut self) -> Vec<CustomElementLifecycleEvent> {
+        self.custom_elements.take_lifecycle_events()
+    }
+
+    pub fn form_control_document_order(
+        &self,
+        form_id: Option<&str>,
+        form_index: usize,
+        id: Option<&str>,
+        name: Option<&str>,
+        control_type: &str,
+        used_orders: &[usize],
+    ) -> Option<usize> {
+        self.document_controls
+            .iter()
+            .filter(|binding| !used_orders.contains(&binding.document_order))
+            .filter(|binding| match binding.form_owner.as_deref() {
+                Some(owner) => form_id == Some(owner),
+                None => binding.form_index == Some(form_index),
+            })
+            .find(|binding| {
+                id.is_some_and(|id| binding.id.as_deref() == Some(id))
+                    || (binding.name.as_deref() == name && binding.control_type == control_type)
+            })
+            .map(|binding| binding.document_order)
     }
 
     /// Resolve the live directionality used by HTML's `dirname` form entry.
@@ -736,6 +905,9 @@ impl BrowserControlModel {
                     value: control.value.clone(),
                 });
             }
+        }
+        if let Some(form_index) = form_index {
+            self.custom_elements.reset_form(form_id, form_index);
         }
         effects
     }
@@ -1994,30 +2166,52 @@ fn collect_nodes(nodes: &[BrowserRenderNode], states: &mut Vec<ControlState>, in
     }
 }
 
+struct ModelCollection<'a> {
+    states: &'a mut Vec<ControlState>,
+    bindings: &'a mut Vec<ControlBinding>,
+    document_controls: &'a mut Vec<DocumentControlBinding>,
+    control_index: &'a mut usize,
+    next_form_index: &'a mut usize,
+    document_order: &'a mut usize,
+}
+
 fn collect_model_nodes(
     nodes: &[BrowserRenderNode],
-    states: &mut Vec<ControlState>,
-    bindings: &mut Vec<ControlBinding>,
-    control_index: &mut usize,
-    next_form_index: &mut usize,
+    collection: &mut ModelCollection<'_>,
     containing_form: Option<usize>,
     inherited_direction: ControlTextDirection,
 ) {
     for node in nodes {
+        let node_order = *collection.document_order;
+        *collection.document_order += 1;
         let (node_direction, direction_auto) = node_direction(node, inherited_direction);
         let containing_form = if node.name.as_deref() == Some("form") {
-            let index = *next_form_index;
-            *next_form_index += 1;
+            let index = *collection.next_form_index;
+            *collection.next_form_index += 1;
             Some(index)
         } else {
             containing_form
         };
+        if node.role == "control" {
+            let control_type = node
+                .control_type
+                .clone()
+                .unwrap_or_else(|| node.name.clone().unwrap_or_else(|| "text".into()));
+            collection.document_controls.push(DocumentControlBinding {
+                id: node.id.clone(),
+                name: node.control_name.clone(),
+                control_type: control_type.clone(),
+                form_owner: node.form_owner.clone(),
+                form_index: containing_form,
+                document_order: node_order,
+            });
+        }
         if node.role == "control" && node.control_type.as_deref() != Some("hidden") && !node.hidden
         {
-            let key = control_key(node, *control_index);
-            *control_index += 1;
-            states.push(project_control(node, key.clone()));
-            bindings.push(ControlBinding {
+            let key = control_key(node, *collection.control_index);
+            *collection.control_index += 1;
+            collection.states.push(project_control(node, key.clone()));
+            collection.bindings.push(ControlBinding {
                 key,
                 id: node.id.clone(),
                 control_type: node
@@ -2046,17 +2240,10 @@ fn collect_model_nodes(
                     node_direction
                 },
                 direction_auto,
+                document_order: node_order,
             });
         }
-        collect_model_nodes(
-            &node.children,
-            states,
-            bindings,
-            control_index,
-            next_form_index,
-            containing_form,
-            node_direction,
-        );
+        collect_model_nodes(&node.children, collection, containing_form, node_direction);
     }
 }
 

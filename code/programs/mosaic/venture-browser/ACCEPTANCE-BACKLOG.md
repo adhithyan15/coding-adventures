@@ -244,12 +244,20 @@ cross-platform proving application. Items are ordered by risk and dependency.
   `(0, 0)` activation, Unicode-aware live `dir=auto`, inherited direction,
   adjacent successful entries, and retained-session acceptance shared by all
   host event seams.
-- [ ] **P1 browser convergence — form-associated custom elements.** Add a
+- [x] **P1 browser convergence — form-associated custom elements.** Add a
   host-neutral element-internals contract for form ownership, submitted values
   and state, validity anchors/messages, disabled propagation, reset/restore
   callbacks, labels, and accessibility projection. Preserve document-order
   successful-control collection and keep custom-element lifecycle policy out
-  of generated host toolkits.
+  of generated host toolkits. Completed with explicit attachment and
+  reassociation, bounded string/file/entry-list values and restoration state,
+  typed lifecycle effects, shared custom validity, label and ARIA projection,
+  accessibility value actions, and ordered native/custom serialization.
+- [ ] **P1 browser convergence — scripted form lifecycle dispatch.** Add
+  host-neutral `requestSubmit`, cancelable submit/reset events, interactive and
+  scripted validation reporting, and mutable `formdata` event entries. Route
+  native and custom controls through one transactional dispatch plan before
+  navigation so no generated host owns event ordering or cancellation policy.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

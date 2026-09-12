@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Merge attached custom-element string, file, and entry-list values into
+  document-ordered successful controls and reuse their validity diagnostics.
+
 - Expand active image submitters into normalized pointer or keyboard
   coordinates and append live `dirname` direction fields in document order.
 

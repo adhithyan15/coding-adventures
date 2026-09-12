@@ -67,6 +67,14 @@ shared model resolves explicit and inherited direction, and recomputes
 `dir=auto` from the live value with the Unicode bidi analyzer. Accessibility
 activation also enters the same semantic path as pointer and keyboard input.
 
+Autonomous custom elements are retained as attachable ElementInternals-style
+candidates with stable document ordinals. Attached internals own bounded
+string/file/entry-list values and restoration state, explicit or containing
+form association, validity messages and anchors, disabled/reset/restore
+lifecycle effects, label-derived accessibility metadata, and shared numeric
+value actions. This state remains separate from native `ControlState` because
+custom elements decide their own rendering while sharing form policy.
+
 Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI55-form-editing`](../../../specs/UI55-form-editing.md), and
 [`UI56-editor-presentation`](../../../specs/UI56-editor-presentation.md), and
@@ -75,4 +83,5 @@ Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI64-choice-range-controls`](../../../specs/UI64-choice-range-controls.md), and
 [`UI65-temporal-color-controls`](../../../specs/UI65-temporal-color-controls.md), and
 [`UI66-file-values-multipart`](../../../specs/UI66-file-values-multipart.md), and
-[`UI67-image-submit-dirname`](../../../specs/UI67-image-submit-dirname.md).
+[`UI67-image-submit-dirname`](../../../specs/UI67-image-submit-dirname.md), and
+[`UI68-form-associated-custom-elements`](../../../specs/UI68-form-associated-custom-elements.md).

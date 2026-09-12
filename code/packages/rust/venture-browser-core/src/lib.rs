@@ -15,8 +15,13 @@ pub use browser_form_controls::{
     ControlChoiceState, ControlClipboardPayload, ControlEditorPresentation, ControlEditorState,
     ControlEffect, ControlFileItemState, ControlFilePickerRequest, ControlFileState, ControlKey,
     ControlNavigationUnit, ControlRect, ControlSelection, ControlTextDirection, ControlTextMetrics,
-    ControlValueDiagnostic, ControlValueState, FileAcceptFilter, HostFileSelection, TypedValue,
-    TypedValueConstraints,
+    ControlValueDiagnostic, ControlValueState, CustomElementAccessibilityAction,
+    CustomElementAccessibilityProjection, CustomElementAccessibilityState,
+    CustomElementAccessibilityValue, CustomElementDiagnostic, CustomElementFormAssociation,
+    CustomElementFormEntry, CustomElementFormEntryValue, CustomElementFormValue,
+    CustomElementInternalsError, CustomElementLifecycleEvent, CustomElementStateRestoreMode,
+    CustomElementSubmissionGroup, CustomElementValidity, FileAcceptFilter,
+    FormAssociatedCustomElementState, HostFileSelection, TypedValue, TypedValueConstraints,
 };
 use browser_form_submission::{plan_activation_with_image_coordinates, plan_implicit_submission};
 pub use browser_form_submission::{
@@ -1396,6 +1401,101 @@ impl BrowserSession {
         self.controls
             .focused_key()
             .and_then(|key| self.controls.file_picker_request(key))
+    }
+
+    pub fn form_associated_custom_elements(&self) -> &[FormAssociatedCustomElementState] {
+        self.controls.form_associated_custom_elements()
+    }
+
+    pub fn attach_form_associated_custom_element(
+        &mut self,
+        key: &str,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.controls.attach_form_associated_custom_element(key)
+    }
+
+    pub fn reassociate_form_associated_custom_element(
+        &mut self,
+        key: &str,
+        association: CustomElementFormAssociation,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.controls
+            .reassociate_form_associated_custom_element(key, association)
+    }
+
+    pub fn set_custom_element_form_value(
+        &mut self,
+        key: &str,
+        value: Option<CustomElementFormValue>,
+        restoration_state: Option<CustomElementFormValue>,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.controls
+            .set_custom_element_form_value(key, value, restoration_state)
+    }
+
+    pub fn set_custom_element_validity(
+        &mut self,
+        key: &str,
+        validity: CustomElementValidity,
+        message: Option<String>,
+        anchor: Option<String>,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.controls
+            .set_custom_element_validity(key, validity, message, anchor)
+    }
+
+    pub fn set_custom_element_disabled(
+        &mut self,
+        key: &str,
+        disabled: bool,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.controls.set_custom_element_disabled(key, disabled)
+    }
+
+    pub fn set_custom_element_accessibility_value(
+        &mut self,
+        key: &str,
+        value: CustomElementAccessibilityValue,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.controls
+            .set_custom_element_accessibility_value(key, value)
+    }
+
+    pub fn set_custom_element_accessibility_projection(
+        &mut self,
+        key: &str,
+        projection: CustomElementAccessibilityProjection,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.controls
+            .set_custom_element_accessibility_projection(key, projection)
+    }
+
+    pub fn custom_element_accessibility_action(
+        &mut self,
+        key: &str,
+        action: CustomElementAccessibilityAction,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.controls
+            .custom_element_accessibility_action(key, action)
+    }
+
+    pub fn custom_element_accessibility_state(
+        &self,
+        key: &str,
+    ) -> Option<CustomElementAccessibilityState> {
+        self.controls.custom_element_accessibility_state(key)
+    }
+
+    pub fn restore_custom_element_state(
+        &mut self,
+        key: &str,
+        mode: CustomElementStateRestoreMode,
+    ) -> Result<(), CustomElementInternalsError> {
+        self.controls.restore_custom_element_state(key, mode)
+    }
+
+    pub fn take_custom_element_lifecycle_events(&mut self) -> Vec<CustomElementLifecycleEvent> {
+        self.controls.take_custom_element_lifecycle_events()
     }
 
     /// Deliver a path-free picker result into the shared reducer. Native and
@@ -5689,5 +5789,103 @@ mod tests {
         fn font_ref(&self, _: &Self::Handle) -> String {
             "fake:mosaic".into()
         }
+    }
+
+    #[test]
+    fn session_exposes_custom_element_internals_to_every_host_adapter() {
+        struct CustomFormFetcher {
+            requests: RefCell<Vec<BrowserFetchRequest>>,
+        }
+
+        impl BrowserResourceFetcher for CustomFormFetcher {
+            fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String> {
+                self.fetch_request(&BrowserFetchRequest::get(url))
+            }
+
+            fn fetch_request(
+                &self,
+                request: &BrowserFetchRequest,
+            ) -> Result<BrowserFetchResponse, String> {
+                self.requests.borrow_mut().push(request.clone());
+                let body = if request.url.starts_with("http://example.test/save") {
+                    b"<title>Saved</title>".to_vec()
+                } else {
+                    b"<label for='rating'>Rating</label><form id='review' action='/save'>\
+                      <input name='before' value='a'>\
+                      <x-rating id='rating' name='score' role='slider'></x-rating>\
+                      <input name='after' value='z'>\
+                      <button id='submit'>Save</button></form>"
+                        .to_vec()
+                };
+                Ok(BrowserFetchResponse::new(
+                    request.url.clone(),
+                    200,
+                    Some("text/html".into()),
+                    body,
+                ))
+            }
+        }
+
+        let fetcher = CustomFormFetcher {
+            requests: RefCell::new(Vec::new()),
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(420.0, 180.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/form", 180.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        let key = session.form_associated_custom_elements()[0].key.clone();
+        session.attach_form_associated_custom_element(&key).unwrap();
+        session
+            .set_custom_element_form_value(
+                &key,
+                Some(CustomElementFormValue::Text("4".into())),
+                Some(CustomElementFormValue::Text("rating:4".into())),
+            )
+            .unwrap();
+        session
+            .set_custom_element_accessibility_value(
+                &key,
+                CustomElementAccessibilityValue {
+                    value_text: Some("4 of 5".into()),
+                    minimum: Some(1.0),
+                    maximum: Some(5.0),
+                    step: Some(1.0),
+                },
+            )
+            .unwrap();
+        session
+            .custom_element_accessibility_action(&key, CustomElementAccessibilityAction::Increment)
+            .unwrap();
+        let accessibility = session.custom_element_accessibility_state(&key).unwrap();
+        assert_eq!(accessibility.name.as_deref(), Some("Rating"));
+        assert_eq!(accessibility.value.as_deref(), Some("5"));
+
+        let submit = session
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .controls
+            .iter()
+            .find(|control| control.key == "control:2:id:submit")
+            .unwrap()
+            .clone();
+        session
+            .activate_control_and_submit(submit.x + 1.0, submit.y + 1.0, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(
+            fetcher.requests.borrow()[1].url,
+            "http://example.test/save?before=a&score=5&after=z"
+        );
     }
 }

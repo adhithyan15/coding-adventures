@@ -274,6 +274,13 @@ shell reports success.
 This package is a browser-wiring milestone, not a claim of complete Venture or
 HTML conformance.
 
+Form-associated custom elements are also host-neutral. The shared session owns
+attachment, reassociation, value/restoration state, validity, lifecycle
+callbacks, accessibility projection, and document-ordered submission. The
+generated SwiftUI, WinUI, Qt, Flutter, Compose, React, Electron, HTML, and Web
+Component hosts all consume that contract rather than introducing a toolkit
+specific ElementInternals model.
+
 ## Releases
 
 Venture follows Semantic Versioning on a coordinated pre-1.0 product line.

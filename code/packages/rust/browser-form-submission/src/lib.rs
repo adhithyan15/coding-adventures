@@ -1,6 +1,8 @@
 //! Host-neutral HTML form submission and constraint validation.
 
-use browser_form_controls::{BrowserControlModel, ControlBinding, HostFileSelection};
+use browser_form_controls::{
+    BrowserControlModel, ControlBinding, CustomElementFormEntryValue, HostFileSelection,
+};
 use coding_adventures_html_parser::{BrowserDocument, BrowserForm, BrowserFormControl};
 use layout_controls::{ControlKind, ControlState};
 use regex::Regex;
@@ -351,6 +353,16 @@ fn validate_controls(
             break;
         }
     }
+    for diagnostic in model.custom_element_diagnostics(form_id, form_index) {
+        if diagnostics.len() >= MAX_DIAGNOSTICS {
+            break;
+        }
+        diagnostics.push(FormDiagnostic {
+            code: diagnostic.code,
+            key: Some(diagnostic.key),
+            message: diagnostic.message,
+        });
+    }
     diagnostics
 }
 
@@ -404,6 +416,13 @@ enum FormDatum {
     File(FormFileEntry),
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct OrderedFormData {
+    document_order: usize,
+    sequence: usize,
+    data: Vec<FormDatum>,
+}
+
 fn collect_successful_controls(
     model: &BrowserControlModel,
     form: &BrowserForm,
@@ -411,13 +430,30 @@ fn collect_successful_controls(
     submitter: Option<&ControlBinding>,
     image_coordinates: ImageSubmitCoordinates,
 ) -> Result<Vec<FormDatum>, FormPlanningError> {
-    let mut data = Vec::new();
+    let mut groups = Vec::new();
     let mut used = vec![false; model.controls().len()];
-    for source in &form.controls {
+    let mut used_orders = Vec::new();
+    for (sequence, source) in form.controls.iter().enumerate() {
         let dynamic = find_dynamic_control(model, form.id.as_deref(), form_index, source, &used);
         if let Some((index, _, _)) = dynamic {
             used[index] = true;
         }
+        let document_order = dynamic
+            .as_ref()
+            .map(|(_, _, binding)| binding.document_order)
+            .or_else(|| {
+                model.form_control_document_order(
+                    form.id.as_deref(),
+                    form_index,
+                    source.id.as_deref(),
+                    source.name.as_deref(),
+                    &source.control_type,
+                    &used_orders,
+                )
+            })
+            .unwrap_or(usize::MAX.saturating_sub(form.controls.len() - sequence));
+        used_orders.push(document_order);
+        let mut data = Vec::new();
         append_control_entries(
             &mut data,
             model,
@@ -426,11 +462,48 @@ fn collect_successful_controls(
             submitter,
             image_coordinates,
         );
-        if data.len() > MAX_FORM_ENTRIES {
-            return Err(FormPlanningError::TooManyEntries {
-                limit: MAX_FORM_ENTRIES,
+        if !data.is_empty() {
+            groups.push(OrderedFormData {
+                document_order,
+                sequence,
+                data,
             });
         }
+    }
+    let native_count = groups.len();
+    groups.extend(
+        model
+            .custom_element_submission_groups(form.id.as_deref(), form_index)
+            .into_iter()
+            .enumerate()
+            .map(|(sequence, group)| OrderedFormData {
+                document_order: group.document_order,
+                sequence: native_count + sequence,
+                data: group
+                    .entries
+                    .into_iter()
+                    .map(|entry| match entry.value {
+                        CustomElementFormEntryValue::Text(value) => FormDatum::Text(FormEntry {
+                            name: entry.name,
+                            value,
+                        }),
+                        CustomElementFormEntryValue::File(file) => FormDatum::File(FormFileEntry {
+                            name: entry.name,
+                            file,
+                        }),
+                    })
+                    .collect(),
+            }),
+    );
+    groups.sort_by_key(|group| (group.document_order, group.sequence));
+    let data = groups
+        .into_iter()
+        .flat_map(|group| group.data)
+        .collect::<Vec<_>>();
+    if data.len() > MAX_FORM_ENTRIES {
+        return Err(FormPlanningError::TooManyEntries {
+            limit: MAX_FORM_ENTRIES,
+        });
     }
     Ok(data)
 }
@@ -812,6 +885,80 @@ mod tests {
             ),
             BrowserDocument::from_document(&parsed),
         )
+    }
+
+    #[test]
+    fn custom_element_values_join_native_controls_in_document_order() {
+        let url = "http://example.test/form";
+        let (mut model, document) = model_and_document(
+            "<form id='checkout' action='/save'>\
+             <input name='before' value='a'>\
+             <x-tags id='tags' name='tag'></x-tags>\
+             <input name='after' value='z'>\
+             <button id='go'>Save</button></form>",
+            url,
+        );
+        let key = model.form_associated_custom_elements()[0].key.clone();
+        model.attach_form_associated_custom_element(&key).unwrap();
+        model
+            .set_custom_element_form_value(
+                &key,
+                Some(browser_form_controls::CustomElementFormValue::Entries(
+                    vec![
+                        browser_form_controls::CustomElementFormEntry {
+                            name: "tag".into(),
+                            value: CustomElementFormEntryValue::Text("rust".into()),
+                        },
+                        browser_form_controls::CustomElementFormEntry {
+                            name: "tag".into(),
+                            value: CustomElementFormEntryValue::Text("browser".into()),
+                        },
+                    ],
+                )),
+                Some(browser_form_controls::CustomElementFormValue::Text(
+                    "rust,browser".into(),
+                )),
+            )
+            .unwrap();
+
+        let activation = plan_activation(&document, &model, "control:2:id:go", url).unwrap();
+        let FormActivation::Navigate(navigation) = activation else {
+            panic!("expected navigation");
+        };
+        assert_eq!(
+            navigation.url,
+            "http://example.test/save?before=a&tag=rust&tag=browser&after=z"
+        );
+    }
+
+    #[test]
+    fn custom_element_validity_blocks_submission_with_shared_diagnostic() {
+        let url = "http://example.test/form";
+        let (mut model, document) = model_and_document(
+            "<form><x-rating id='rating' name='rating'></x-rating><button id='go'>Go</button></form>",
+            url,
+        );
+        let key = model.form_associated_custom_elements()[0].key.clone();
+        model.attach_form_associated_custom_element(&key).unwrap();
+        model
+            .set_custom_element_validity(
+                &key,
+                browser_form_controls::CustomElementValidity {
+                    value_missing: true,
+                    ..browser_form_controls::CustomElementValidity::default()
+                },
+                Some("Choose a rating".into()),
+                Some("rating".into()),
+            )
+            .unwrap();
+        let FormActivation::Invalid(diagnostics) =
+            plan_activation(&document, &model, "control:0:id:go", url).unwrap()
+        else {
+            panic!("expected invalid activation");
+        };
+        assert_eq!(diagnostics[0].code, "custom-element-invalid");
+        assert_eq!(diagnostics[0].key.as_deref(), Some(key.as_str()));
+        assert_eq!(diagnostics[0].message, "Choose a rating");
     }
 
     #[test]

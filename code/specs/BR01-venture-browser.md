@@ -168,7 +168,13 @@ selection, and publishes reusable value diagnostics and accessibility range
 metadata. Advanced choice/range convergence adds ordered multi-selection,
 disabled-option filtering, checkbox mixed state, scoped radio arrow movement,
 normalized sliders, reusable accessibility actions, and live successful-control
-serialization. The next P1 phase is date/time/color control value semantics.
+serialization. Temporal/color values, path-free files and multipart bodies,
+image coordinates, and Unicode `dirname` fields now converge through the same
+planner. Form-associated custom elements add attachable internals with bounded
+values/restoration state, ownership reassociation, validity anchors/messages,
+typed disabled/reset/restore callbacks, label/accessibility projection, and
+document-ordered serialization. The next P1 phase is scripted form lifecycle
+dispatch, including cancelable submit/reset and mutable form-data events.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
