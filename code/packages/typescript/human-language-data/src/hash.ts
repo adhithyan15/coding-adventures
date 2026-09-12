@@ -118,7 +118,7 @@ export function combineChapterHash(
         payoff: capability.canDo ? capability.payoff?.summary ?? "" : "",
       }
     : null;
-  // A caller with no chapter capability â€” narration is the intentional one â€” hashes
+  // A caller with no chapter capability — narration is the intentional one — hashes
   // exactly as before, so book-only metadata cannot churn an audio artifact.
   return printed === null ? lessonPart : fnv1a64(JSON.stringify({ lessonPart, printed }));
 }
