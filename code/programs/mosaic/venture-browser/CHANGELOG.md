@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Add generated-Unicode grapheme and shared word navigation, bounded undo/redo
+  transactions, plain/HTML clipboard negotiation, click-count selection, drag
+  autoscroll, and typed accessibility editing actions. SwiftUI, WinUI, Qt,
+  Flutter, and Compose route platform editing shortcuts through the same
+  semantic key seam.
 - Fixed: `flutter analyze lib` was failing the Flutter host build over an
   `unnecessary_import` on `dart:typed_data` in `mosaic_host.dart` -- its only
   use, `Uint8List`, is already re-exported transitively by

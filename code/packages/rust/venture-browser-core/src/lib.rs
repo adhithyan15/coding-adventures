@@ -10,8 +10,9 @@ pub use browser_bookmarks::{
     BookmarkUrl, MemoryBookmarkRepository,
 };
 pub use browser_form_controls::{
-    BrowserControlModel, ControlEditorPresentation, ControlEditorState, ControlEffect, ControlKey,
-    ControlRect, ControlSelection, ControlTextMetrics,
+    BrowserControlModel, ControlAccessibilityAction, ControlClipboardPayload,
+    ControlEditorPresentation, ControlEditorState, ControlEffect, ControlKey,
+    ControlNavigationUnit, ControlRect, ControlSelection, ControlTextMetrics,
 };
 use browser_form_submission::{plan_activation, plan_implicit_submission};
 pub use browser_form_submission::{
@@ -1426,6 +1427,37 @@ impl BrowserSession {
         Some(effect)
     }
 
+    pub fn control_pointer_down_with_click_count<M, S, FM, R>(
+        &mut self,
+        viewport_x: f64,
+        viewport_y: f64,
+        click_count: u8,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let (region, x, y) = self
+            .viewport
+            .as_ref()?
+            .control_local_point(viewport_x, viewport_y)?;
+        if !region.kind.accepts_text() {
+            return self.activate_control(viewport_x, viewport_y, pipeline);
+        }
+        let effect = self.controls.pointer_select(
+            &region.key,
+            x - CONTROL_TEXT_METRICS.inset_x,
+            y - CONTROL_TEXT_METRICS.inset_y,
+            CONTROL_TEXT_METRICS,
+            click_count,
+        )?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
     /// Continue selection from the most recent pointer press. Coordinates
     /// outside the control clamp to the nearest scalar position.
     pub fn control_pointer_drag<M, S, FM, R>(
@@ -1454,9 +1486,11 @@ impl BrowserSession {
         } else {
             viewport_y + viewport.scroll_state().offset_y()
         };
-        let effect = self.controls.pointer_drag(
+        let effect = self.controls.pointer_drag_autoscroll(
             viewport_x - region.x - CONTROL_TEXT_METRICS.inset_x,
             content_y - region.y - CONTROL_TEXT_METRICS.inset_y,
+            (region.width - CONTROL_TEXT_METRICS.inset_x * 2.0).max(0.0),
+            (region.height - CONTROL_TEXT_METRICS.inset_y * 2.0).max(0.0),
             CONTROL_TEXT_METRICS,
         )?;
         self.reflow_controls(pipeline)?;
@@ -1471,6 +1505,10 @@ impl BrowserSession {
     /// by the shared model before they can cross the host boundary.
     pub fn control_copy(&self) -> Option<String> {
         self.controls.copy_selection()
+    }
+
+    pub fn control_copy_payload(&self) -> Option<ControlClipboardPayload> {
+        self.controls.copy_selection_payload()
     }
 
     pub fn control_cut<M, S, FM, R>(
@@ -1502,6 +1540,42 @@ impl BrowserSession {
         R: FontResolver<Handle = S::Handle>,
     {
         let effect = self.controls.paste_text(text)?;
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_paste_payload<M, S, FM, R>(
+        &mut self,
+        payload: &ControlClipboardPayload,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.paste_payload(payload)?;
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn control_accessibility_action<M, S, FM, R>(
+        &mut self,
+        action: ControlAccessibilityAction,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.accessibility_action(action)?;
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -4839,6 +4913,87 @@ mod tests {
             "caret and composition underline"
         );
         assert!(session.control_advance_caret_blink(500));
+    }
+
+    #[test]
+    fn session_routes_advanced_editing_through_one_host_neutral_contract() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<textarea id='notes' cols='6' rows='1'>one two three four</textarea>".to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(320.0, 120.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/", 120.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let region = session.viewport().unwrap().page().paint.controls[0].clone();
+
+        session
+            .control_pointer_down_with_click_count(
+                region.x + CONTROL_TEXT_METRICS.inset_x + 5.0 * CONTROL_TEXT_METRICS.advance,
+                region.y + CONTROL_TEXT_METRICS.inset_y + 1.0,
+                2,
+                &pipeline,
+            )
+            .unwrap();
+        let payload = session.control_copy_payload().unwrap();
+        assert_eq!(payload.plain_text.as_deref(), Some("two"));
+        assert_eq!(payload.html.as_deref(), Some("<span>two</span>"));
+
+        session
+            .control_paste_payload(
+                &ControlClipboardPayload {
+                    plain_text: None,
+                    html: Some("<strong>second</strong>".into()),
+                },
+                &pipeline,
+            )
+            .unwrap();
+        assert_eq!(
+            session
+                .controls()
+                .control("control:0:id:notes")
+                .unwrap()
+                .value,
+            "one second three four"
+        );
+        session
+            .control_accessibility_action(ControlAccessibilityAction::Undo, &pipeline)
+            .unwrap();
+        assert_eq!(
+            session
+                .controls()
+                .control("control:0:id:notes")
+                .unwrap()
+                .value,
+            "one two three four"
+        );
+        session
+            .control_key_down_with_shift_and_submit(
+                ControlKey::WordRight,
+                true,
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert!(!session
+            .controls()
+            .editor("control:0:id:notes")
+            .unwrap()
+            .selection
+            .is_collapsed());
     }
 
     #[test]

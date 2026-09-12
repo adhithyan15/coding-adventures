@@ -46,7 +46,10 @@ overlay groups for selection, caret, composition, and invalid feedback after
 every retained reflow; routes pointer placement and drag selection; exposes
 explicit copy/cut/paste methods; advances caret blink from deterministic host
 ticks; and returns an IME candidate rectangle without handing editing state to
-a native toolkit. Password selection never crosses the clipboard boundary.
+a native toolkit. It also routes grapheme/word movement, click-count selection,
+drag autoscroll, bounded undo/redo, plain/HTML clipboard negotiation, and typed
+accessibility actions through the same retained reflow. Password selection
+never crosses the clipboard boundary.
 
 `NavigationHistory` is re-exported from the reusable `browser-navigation`
 package and implements the BR01 in-memory navigation model: navigate, Back,

@@ -532,7 +532,19 @@ class _VentureContentSurfaceState extends State<VentureContentSurface> {
 
   KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
-    final key = switch (event.logicalKey) {
+    final keyboard = HardwareKeyboard.instance;
+    final command = keyboard.isControlPressed || keyboard.isMetaPressed;
+    final key = command
+        ? switch (event.logicalKey) {
+            LogicalKeyboardKey.keyA => 'select-all',
+            LogicalKeyboardKey.keyZ when keyboard.isShiftPressed => 'redo',
+            LogicalKeyboardKey.keyZ => 'undo',
+            LogicalKeyboardKey.keyY => 'redo',
+            LogicalKeyboardKey.arrowLeft => 'word-left',
+            LogicalKeyboardKey.arrowRight => 'word-right',
+            _ => null,
+          }
+        : switch (event.logicalKey) {
       LogicalKeyboardKey.backspace => 'backspace',
       LogicalKeyboardKey.delete => 'delete',
       LogicalKeyboardKey.arrowLeft => 'arrow-left',
@@ -543,12 +555,12 @@ class _VentureContentSurfaceState extends State<VentureContentSurface> {
       LogicalKeyboardKey.end => 'end',
       LogicalKeyboardKey.enter => 'enter',
       LogicalKeyboardKey.space => 'space',
-      _ => null,
-    };
+            _ => null,
+          };
     if (key != null &&
         widget.host.controlKey(
           key,
-          shift: HardwareKeyboard.instance.isShiftPressed,
+          shift: keyboard.isShiftPressed,
         )) {
       return KeyEventResult.handled;
     }

@@ -1627,22 +1627,36 @@ private final class VentureContentView: NSView {
 
   override func keyDown(with event: NSEvent) {
     let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-    if modifiers.contains(.command)
-      && modifiers.intersection([.control, .option, .shift]).isEmpty
-    {
+    if modifiers.contains(.command) && modifiers.intersection([.control, .option]).isEmpty {
       switch event.keyCode {
+      case 0 where !modifiers.contains(.shift):
+        if host?.controlKey("select-all", shift: false) == true { return }
+      case 6:
+        if host?.controlKey(modifiers.contains(.shift) ? "redo" : "undo", shift: false) == true {
+          return
+        }
       case 32:
-        host?.requestViewSource()
-        return
+        if !modifiers.contains(.shift) {
+          host?.requestViewSource()
+          return
+        }
       case 123:
-        host?.navigateHistory(eventName: "onBack")
-        return
+        if !modifiers.contains(.shift) {
+          host?.navigateHistory(eventName: "onBack")
+          return
+        }
       case 124:
-        host?.navigateHistory(eventName: "onForward")
-        return
+        if !modifiers.contains(.shift) {
+          host?.navigateHistory(eventName: "onForward")
+          return
+        }
       default:
         break
       }
+    }
+    if modifiers.contains(.option) && modifiers.intersection([.command, .control]).isEmpty {
+      let wordKey = event.keyCode == 123 ? "word-left" : event.keyCode == 124 ? "word-right" : nil
+      if let wordKey, host?.controlKey(wordKey, shift: modifiers.contains(.shift)) == true { return }
     }
     guard modifiers.intersection([.command, .control, .option]).isEmpty else {
       super.keyDown(with: event)

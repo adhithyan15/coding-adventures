@@ -1151,6 +1151,26 @@ public static class MosaicHost
                 changed = true;
                 return true;
             }
+            if (controlKeyDown)
+            {
+                var editCommand = key switch
+                {
+                    VirtualKey.A => "select-all",
+                    VirtualKey.Z when shift => "redo",
+                    VirtualKey.Z => "undo",
+                    VirtualKey.Y => "redo",
+                    VirtualKey.Left => "word-left",
+                    VirtualKey.Right => "word-right",
+                    _ => null,
+                };
+                if (editCommand is not null
+                    && Native.ControlKey(browser, editCommand, shift ? (byte)1 : (byte)0) != 0)
+                {
+                    changed = true;
+                    Refresh();
+                    return true;
+                }
+            }
             if (menuKeyDown)
             {
                 var historyEvent = key switch
