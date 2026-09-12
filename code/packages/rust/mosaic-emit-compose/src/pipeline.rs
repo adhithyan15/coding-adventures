@@ -210,6 +210,9 @@ pub fn from_pipeline(
     // `Not()` helper went wrong in #14793 and why #14798 pins its import too.
     writeln!(out, "import androidx.compose.foundation.layout.fillMaxHeight").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.heightIn").unwrap();
+    // #14833 -- same unconditional block, same reason: a modifier without
+    // its import is Kotlin that does not compile.
+    writeln!(out, "import androidx.compose.foundation.layout.widthIn").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.padding").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.width").unwrap();
     if uses_path {
@@ -1243,6 +1246,10 @@ fn chain_sets_own_width(chain: &str) -> bool {
         || chain.contains(".fillMaxSize(")
         || chain.contains(".weight(")
         || chain.contains(".requiredWidth(")
+        // `.widthIn(` counts, but it emits its OWN `.fillMaxWidth()` right
+        // after itself -- see the `max-width` arm. The prepended default
+        // cannot be used here because it would land in the wrong ORDER, and
+        // the order is not symmetric (#14833).
         || chain.contains(".widthIn(")
 }
 
@@ -3044,6 +3051,7 @@ fn compose_box_style(
 
     let layer_count = state_layers.len();
     let mut width = PropBucket::new(layer_count);
+    let mut max_width = PropBucket::new(layer_count);
     let mut height = PropBucket::new(layer_count);
     let mut min_height = PropBucket::new(layer_count);
     // `100vh`/`100%` is not a number, so it cannot live in a PropBucket
@@ -3085,6 +3093,27 @@ fn compose_box_style(
             "width" => {
                 if let Some(v) = px_or_none(&p.value) {
                     set(&mut width, v);
+                }
+            }
+            // #14833. A ceiling, so `widthIn(max = ..)` rather than
+            // `width(..)`: it caps a container that would otherwise fill,
+            // without pinning one that is narrower.
+            //
+            // Six of the eight backends already lower this -- html, react,
+            // webcomponent, SwiftUI, Qt and XAML, all measured on a minimal
+            // two-node probe rather than assumed. Compose and Flutter were the
+            // two that did not, and Engram authors it on all seven of its
+            // screens (760px-1100px), so its study screen is a reading column
+            // that ran the full width of the window.
+            //
+            // Deliberately NO alignment alongside it. The web backends emit
+            // `max-width` with no `margin: auto`, so the capped box sits at its
+            // parent's start; `widthIn` does the same. Centring is a separate
+            // authored decision and adding it here would make Compose disagree
+            // with the six backends that already work.
+            "max-width" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut max_width, v);
                 }
             }
             "height" => {
@@ -3269,6 +3298,30 @@ fn compose_box_style(
     } else if !width.empty() {
         let expr = numeric_layer_value(&width, state_layers, "0");
         modifier.push_str(&format!("\n{cpad}.width({expr}.dp)"));
+    }
+
+    // .widthIn — the ceiling, and then a fill UP TO it.
+    //
+    // The order is load-bearing and NOT symmetric. Measured, because the
+    // reverse looked equally correct and is not: `.fillMaxWidth()` first sets
+    // minWidth = maxWidth = the incoming max, and `.widthIn(max = 980.dp)`
+    // then cannot lower the max below that min -- Compose coerces, the floor
+    // wins, and Engram's screens still rendered at the full 1208px with the
+    // modifier present in the emitted Kotlin.
+    //
+    // This way round, `widthIn` clamps the incoming max to 980 and
+    // `fillMaxWidth` fills to the clamped value.
+    //
+    // The fill is emitted HERE rather than left to the container default,
+    // because that default is prepended and would land on the wrong side. A
+    // `max-width` is a ceiling, not a width, so without a fill the container
+    // wraps its content -- which is also wrong: in CSS a block with
+    // `max-width: 980px` fills its parent up to 980.
+    if !max_width.empty() {
+        let expr = numeric_layer_value(&max_width, state_layers, "0");
+        modifier.push_str(&format!(
+            "\n{cpad}.widthIn(max = {expr}.dp)\n{cpad}.fillMaxWidth()"
+        ));
     }
 
     // .height — an exact size, then the `min-height` floor beneath it.
@@ -11393,6 +11446,78 @@ mod tests {
             out.contains("Box(modifier = Modifier.fillMaxWidth())"),
             "got:\n{out}"
         );
+    }
+
+    // ===================================================================
+    // max-width -- #14833.
+    // ===================================================================
+
+    fn max_width_chain(props: Vec<StyleProp>) -> String {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("b".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part("b", props, vec![]));
+        from_pipeline(&m, &l, &sheet).expect("emit ok").output
+    }
+
+    #[test]
+    fn max_width_caps_then_fills_and_the_order_is_not_symmetric() {
+        // The order here is the whole fix, and the reverse looked equally
+        // correct: `.fillMaxWidth()` first pins minWidth = maxWidth = the
+        // incoming max, after which `.widthIn(max = ..)` cannot lower the max
+        // below that min -- Compose coerces and the floor wins. Engram's
+        // screens rendered at the full 1208px with the modifier present in
+        // the emitted Kotlin, which is why this asserts the SEQUENCE and not
+        // just that both appear.
+        let out = max_width_chain(vec![sprop("max-width", "980px")]);
+        let cap = out.find(".widthIn(max = 980.dp)").expect("cap emitted");
+        let fill = out.find(".fillMaxWidth()").expect("fill emitted");
+        assert!(
+            cap < fill,
+            "widthIn must precede fillMaxWidth, or the cap does nothing:\n{out}"
+        );
+    }
+
+    #[test]
+    fn a_capped_container_still_fills_up_to_the_cap() {
+        // Without the fill the container wraps its CONTENT, which is also
+        // wrong: in CSS a block with `max-width: 980px` fills its parent up
+        // to 980. A ceiling is not a width.
+        let out = max_width_chain(vec![sprop("max-width", "980px")]);
+        assert!(out.contains(".fillMaxWidth()"), "got:\n{out}");
+    }
+
+    #[test]
+    fn max_width_carries_its_import() {
+        let out = max_width_chain(vec![sprop("max-width", "980px")]);
+        assert!(
+            out.contains("import androidx.compose.foundation.layout.widthIn"),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn a_consumed_max_width_is_not_also_reported_as_dropped() {
+        // Reporter and lowering must ask the same question (#14810).
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part("b", vec![sprop("max-width", "980px")], vec![]));
+        let drops = dropped_style_properties(&sheet);
+        let names: Vec<&str> = drops.iter().map(|d| d.name.as_str()).collect();
+        assert!(!names.contains(&"max-width"), "got: {names:?}");
+    }
+
+    #[test]
+    fn no_alignment_is_invented_alongside_the_cap() {
+        // The six backends that already lower `max-width` -- html, react,
+        // webcomponent, SwiftUI, Qt and XAML -- emit no centring with it, so
+        // the capped box sits at its parent's start. Measured on a minimal
+        // probe rather than assumed. Adding an alignment here would make
+        // Compose disagree with all six.
+        let out = max_width_chain(vec![sprop("max-width", "980px")]);
+        assert!(!out.contains("horizontalAlignment"), "got:\n{out}");
+        assert!(!out.contains("contentAlignment"), "got:\n{out}");
     }
 
     // ===================================================================
