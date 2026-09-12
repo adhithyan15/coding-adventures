@@ -5,16 +5,23 @@ protocol core and storage-agnostic credential custody.
 
 The broker registers any number of validated `ProviderConfig` values as data.
 It contains no Google, Microsoft, GitHub, Dropbox, or other provider branch.
-Static public-client registrations may be decoded from the exact, versioned
-`BrokerProvider::from_public_provider_data` schema. Deployment-specific client
-IDs and redirect URIs stay outside that file and are supplied by the caller;
-unknown fields, duplicate fields, unsafe endpoints, implicit mix-up defenses,
-and unsupported response formats fail closed. The broker can compose decoding
-and registration through an injected `PublicProviderDataSource`: it durably
-records the requested provider and trace before the source read, rejects a
-profile that names another provider before registry mutation, and records the
-closed read/decode result before proceeding to separately audited registration.
-No file path, backend diagnostic, or profile byte enters broker audit data.
+Static public- and confidential-client registrations may be decoded from exact,
+versioned `BrokerProvider` schemas. Deployment-specific client IDs and redirect
+URIs stay outside those files and are supplied by the caller; unknown fields,
+duplicate fields, unsafe endpoints, implicit mix-up defenses, and unsupported
+response formats fail closed. Confidential profiles must select exactly one
+closed implemented method (`client_secret_basic`, `client_secret_post`, or
+`private_key_jwt`); public `none`, missing, case-variant, and extension methods
+are rejected. JWT profiles additionally require a bounded, unique, non-`none`
+advertised algorithm set, while secret methods reject algorithm data. Exact
+selection is retained as non-secret provider data without claiming a concrete
+algorithm or acquiring credential or signer authority. The broker can compose
+public-profile decoding and registration through an injected data source. It
+durably records the requested provider and trace before the source read,
+rejects a profile that names another provider before registry mutation, and
+records the closed read/decode result before proceeding to separately audited
+registration. No file path, backend diagnostic, or profile byte enters broker
+audit data.
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
@@ -51,7 +58,7 @@ dependency are sibling packages in this repository.
 - concrete encrypted-vault credential storage;
 - account identity proof and key selection, listing, detach/revocation, device
   authorization UI, timing/sleep authority, and full device-flow loops;
-- confidential-client secrets, OIDC validation, and DPoP.
+- confidential-client secret/key access, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
 
