@@ -13,6 +13,8 @@ The analyzer never resolves fonts or measures glyphs. Font fallback remains a
 `TextShaper` responsibility, while hosts consume the same analyzed layout.
 `TextFlow::selection_spans` accepts a caller-owned cluster measurer and projects
 logical ranges into grapheme-safe visual spans split at bidi run boundaries.
+`first_strong_direction` exposes the same generated bidi properties to
+`dir=auto` consumers without duplicating Unicode tables or heuristics.
 
 Version 0.2 keeps that API while replacing handwritten classifiers with
 generated Unicode data:

@@ -38,6 +38,18 @@ pub enum Direction {
     Rtl,
 }
 
+/// Return the first strong Unicode bidi direction, ignoring neutral and
+/// numeric characters. This is the reusable basis for `dir=auto` consumers.
+pub fn first_strong_direction(text: &str) -> Option<Direction> {
+    let bidi_classes = CodePointMapData::<BidiClass>::new();
+    text.chars()
+        .find_map(|character| match bidi_classes.get(character) {
+            BidiClass::LeftToRight => Some(Direction::Ltr),
+            BidiClass::RightToLeft | BidiClass::ArabicLetter => Some(Direction::Rtl),
+            _ => None,
+        })
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum BreakKind {
     Allowed,
@@ -325,6 +337,19 @@ mod tests {
         assert_eq!(flow.logical_runs[0].direction, Direction::Rtl);
         assert_eq!(flow.logical_runs[1].direction, Direction::Ltr);
         assert_eq!(flow.visual_run_order, vec![1, 0]);
+    }
+
+    #[test]
+    fn first_strong_direction_ignores_neutral_and_numeric_prefixes() {
+        assert_eq!(
+            first_strong_direction(" 123 - שלום Venture"),
+            Some(Direction::Rtl)
+        );
+        assert_eq!(
+            first_strong_direction(" 123 - Venture שלום"),
+            Some(Direction::Ltr)
+        );
+        assert_eq!(first_strong_direction(" 123 -"), None);
     }
 
     #[test]

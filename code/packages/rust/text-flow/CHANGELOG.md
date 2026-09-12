@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Expose first-strong directionality from the generated Unicode bidi map for
+  reusable `dir=auto` policies.
+
 ## 0.2.0
 
 - Replaced handwritten grapheme, bidi, and line-break classifiers with

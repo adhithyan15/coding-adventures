@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Retain inherited and `dir=auto` control directionality for live `dirname`
+  serialization, and expose semantic accessibility activation.
+
 - Add a path-free host file picker request/result contract, shared
   accept/multiple filtering, bounded retained bytes, reset behavior, and
   reusable file-list accessibility state.

@@ -14,14 +14,14 @@ pub use browser_form_controls::{
     typed_constraints, BrowserControlModel, ControlAccessibilityAction, ControlChoiceOptionState,
     ControlChoiceState, ControlClipboardPayload, ControlEditorPresentation, ControlEditorState,
     ControlEffect, ControlFileItemState, ControlFilePickerRequest, ControlFileState, ControlKey,
-    ControlNavigationUnit, ControlRect, ControlSelection, ControlTextMetrics,
+    ControlNavigationUnit, ControlRect, ControlSelection, ControlTextDirection, ControlTextMetrics,
     ControlValueDiagnostic, ControlValueState, FileAcceptFilter, HostFileSelection, TypedValue,
     TypedValueConstraints,
 };
-use browser_form_submission::{plan_activation, plan_implicit_submission};
+use browser_form_submission::{plan_activation_with_image_coordinates, plan_implicit_submission};
 pub use browser_form_submission::{
     FormActivation, FormDiagnostic, FormEntry, FormFileEntry, FormMethod, FormNavigation,
-    FormPlanningError,
+    FormPlanningError, ImageSubmitCoordinates,
 };
 pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
 #[cfg(test)]
@@ -1647,6 +1647,33 @@ impl BrowserSession {
         Some(effect)
     }
 
+    /// Apply an accessibility action and execute submit/reset activation through
+    /// the same planner used by pointer and keyboard input.
+    pub fn control_accessibility_action_and_submit<F, M, S, FM, R>(
+        &mut self,
+        action: ControlAccessibilityAction,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<Option<ControlEffect>, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.accessibility_action(action);
+        if let Some(ControlEffect::Activated(key)) = &effect {
+            let activation = self.plan_form_activation(key)?;
+            self.apply_form_activation(activation, pipeline, fetcher)?;
+        } else if effect.is_some() {
+            self.form_diagnostics.clear();
+            self.controls.clear_validation();
+            self.reflow_controls(pipeline);
+        }
+        Ok(effect)
+    }
+
     /// Advance caret animation from a host-provided monotonic duration.
     pub fn control_advance_caret_blink(&mut self, elapsed_ms: u64) -> bool {
         let changed = self.controls.advance_caret_blink(elapsed_ms);
@@ -1712,7 +1739,15 @@ impl BrowserSession {
             return Ok(None);
         };
         if matches!(effect, ControlEffect::Activated(_)) {
-            let activation = self.plan_form_activation(&key)?;
+            let image_coordinates = self
+                .controls
+                .binding(&key)
+                .is_some_and(|binding| binding.control_type == "image")
+                .then(|| ImageSubmitCoordinates::from_local_point(x, y));
+            let activation = self.plan_form_activation_with_image_coordinates(
+                &key,
+                image_coordinates.unwrap_or(ImageSubmitCoordinates::KEYBOARD),
+            )?;
             self.apply_form_activation(activation, pipeline, fetcher)?;
         } else {
             self.form_diagnostics.clear();
@@ -1781,6 +1816,14 @@ impl BrowserSession {
     }
 
     fn plan_form_activation(&self, key: &str) -> Result<FormActivation, BrowserLoadError> {
+        self.plan_form_activation_with_image_coordinates(key, ImageSubmitCoordinates::KEYBOARD)
+    }
+
+    fn plan_form_activation_with_image_coordinates(
+        &self,
+        key: &str,
+        image_coordinates: ImageSubmitCoordinates,
+    ) -> Result<FormActivation, BrowserLoadError> {
         let page = self
             .viewport
             .as_ref()
@@ -1788,8 +1831,14 @@ impl BrowserSession {
             .ok_or_else(|| BrowserLoadError::Form {
                 message: "form activation requires a loaded page".into(),
             })?;
-        plan_activation(&page.document, &self.controls, key, &page.final_url)
-            .map_err(form_load_error)
+        plan_activation_with_image_coordinates(
+            &page.document,
+            &self.controls,
+            key,
+            &page.final_url,
+            image_coordinates,
+        )
+        .map_err(form_load_error)
     }
 
     fn plan_implicit_form_activation(
@@ -5403,6 +5452,114 @@ mod tests {
             session.viewport().unwrap().page().document.title.as_deref(),
             Some("Submitted")
         );
+    }
+
+    #[test]
+    fn session_routes_pointer_keyboard_and_accessible_image_submission() {
+        struct ImageFormFetcher {
+            requests: RefCell<Vec<BrowserFetchRequest>>,
+        }
+
+        impl BrowserResourceFetcher for ImageFormFetcher {
+            fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String> {
+                self.fetch_request(&BrowserFetchRequest::get(url))
+            }
+
+            fn fetch_request(
+                &self,
+                request: &BrowserFetchRequest,
+            ) -> Result<BrowserFetchResponse, String> {
+                self.requests.borrow_mut().push(request.clone());
+                let body = if request.url == "http://example.test/form" {
+                    b"<form action='/map' dir='rtl'><input id='q' name='q' dirname='q.dir' dir='auto' value='\xD7\xA9\xD7\x9C\xD7\x95\xD7\x9D'><input id='pin' type='image' name='pin' alt='Choose location'></form>".to_vec()
+                } else {
+                    b"<title>Submitted</title>".to_vec()
+                };
+                Ok(BrowserFetchResponse::new(
+                    request.url.clone(),
+                    200,
+                    Some("text/html".into()),
+                    body,
+                ))
+            }
+        }
+
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(420.0, 140.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        let pointer_fetcher = ImageFormFetcher {
+            requests: RefCell::new(Vec::new()),
+        };
+        let mut pointer_session = BrowserSession::new("http://example.test/form", 140.0);
+        pointer_session
+            .execute(BrowserNavigation::Home, &pipeline, &pointer_fetcher)
+            .unwrap();
+        let image = pointer_session
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .controls
+            .iter()
+            .find(|region| region.key.contains("pin"))
+            .unwrap();
+        let effect = pointer_session
+            .activate_control_and_submit(image.x + 1.9, image.y + 1.2, &pipeline, &pointer_fetcher)
+            .unwrap();
+        assert!(
+            matches!(effect, Some(ControlEffect::Activated(_))),
+            "{effect:?}"
+        );
+        assert_eq!(
+            pointer_fetcher.requests.borrow()[1].url,
+            "http://example.test/map?q=%D7%A9%D7%9C%D7%95%D7%9D&q.dir=rtl&pin.x=1&pin.y=1"
+        );
+
+        let keyboard_fetcher = ImageFormFetcher {
+            requests: RefCell::new(Vec::new()),
+        };
+        let mut keyboard_session = BrowserSession::new("http://example.test/form", 140.0);
+        keyboard_session
+            .execute(BrowserNavigation::Home, &pipeline, &keyboard_fetcher)
+            .unwrap();
+        keyboard_session.focus_control(false, &pipeline);
+        keyboard_session.focus_control(false, &pipeline);
+        keyboard_session
+            .control_key_down_and_submit(ControlKey::Enter, &pipeline, &keyboard_fetcher)
+            .unwrap();
+        assert!(keyboard_fetcher.requests.borrow()[1]
+            .url
+            .ends_with("&pin.x=0&pin.y=0"));
+
+        let accessible_fetcher = ImageFormFetcher {
+            requests: RefCell::new(Vec::new()),
+        };
+        let mut accessible_session = BrowserSession::new("http://example.test/form", 140.0);
+        accessible_session
+            .execute(BrowserNavigation::Home, &pipeline, &accessible_fetcher)
+            .unwrap();
+        accessible_session.focus_control(false, &pipeline);
+        accessible_session.focus_control(false, &pipeline);
+        assert!(matches!(
+            accessible_session
+                .control_accessibility_action_and_submit(
+                    ControlAccessibilityAction::Activate,
+                    &pipeline,
+                    &accessible_fetcher,
+                )
+                .unwrap(),
+            Some(ControlEffect::Activated(_))
+        ));
+        assert!(accessible_fetcher.requests.borrow()[1]
+            .url
+            .ends_with("&pin.x=0&pin.y=0"));
     }
 
     fn scene_fill_count(viewport: &BrowserViewport, fill: &str) -> usize {

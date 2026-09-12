@@ -2,7 +2,7 @@
 
 use coding_adventures_html_parser::{BrowserRenderNode, BrowserRenderTree};
 use layout_controls::{ControlAppearance, ControlKind, ControlState};
-use text_flow::graphemes;
+use text_flow::{first_strong_direction, graphemes, Direction};
 use url_parser::Url;
 
 mod typed_values;
@@ -105,6 +105,7 @@ pub enum ControlNavigationUnit {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ControlAccessibilityAction {
+    Activate,
     Move {
         forward: bool,
         unit: ControlNavigationUnit,
@@ -125,6 +126,22 @@ pub enum ControlAccessibilityAction {
     SelectAll,
     Undo,
     Redo,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum ControlTextDirection {
+    #[default]
+    Ltr,
+    Rtl,
+}
+
+impl ControlTextDirection {
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::Ltr => "ltr",
+            Self::Rtl => "rtl",
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -450,6 +467,9 @@ pub struct ControlBinding {
     pub step: Option<String>,
     pub inputmode: Option<String>,
     pub accept: Option<String>,
+    pub dirname: Option<String>,
+    pub direction: ControlTextDirection,
+    pub direction_auto: bool,
 }
 
 impl BrowserControlModel {
@@ -465,6 +485,7 @@ impl BrowserControlModel {
             &mut control_index,
             &mut form_index,
             None,
+            ControlTextDirection::Ltr,
         );
         let focused_key = controls
             .iter()
@@ -514,6 +535,20 @@ impl BrowserControlModel {
 
     pub fn binding(&self, key: &str) -> Option<&ControlBinding> {
         self.bindings.iter().find(|binding| binding.key == key)
+    }
+
+    /// Resolve the live directionality used by HTML's `dirname` form entry.
+    pub fn directionality(&self, key: &str) -> Option<ControlTextDirection> {
+        let index = self
+            .bindings
+            .iter()
+            .position(|binding| binding.key == key)?;
+        let binding = &self.bindings[index];
+        if binding.direction_auto {
+            Some(control_text_direction(&self.controls[index].value).unwrap_or(binding.direction))
+        } else {
+            Some(binding.direction)
+        }
     }
 
     pub fn editor(&self, key: &str) -> Option<&ControlEditorState> {
@@ -1091,6 +1126,7 @@ impl BrowserControlModel {
         action: ControlAccessibilityAction,
     ) -> Option<ControlEffect> {
         match action {
+            ControlAccessibilityAction::Activate => self.activate_focused(),
             ControlAccessibilityAction::Move {
                 forward,
                 unit,
@@ -1965,8 +2001,10 @@ fn collect_model_nodes(
     control_index: &mut usize,
     next_form_index: &mut usize,
     containing_form: Option<usize>,
+    inherited_direction: ControlTextDirection,
 ) {
     for node in nodes {
+        let (node_direction, direction_auto) = node_direction(node, inherited_direction);
         let containing_form = if node.name.as_deref() == Some("form") {
             let index = *next_form_index;
             *next_form_index += 1;
@@ -2001,6 +2039,13 @@ fn collect_model_nodes(
                 step: node.step.clone(),
                 inputmode: node.inputmode.clone(),
                 accept: node.accept.clone(),
+                dirname: node.dirname.clone(),
+                direction: if direction_auto {
+                    inherited_direction
+                } else {
+                    node_direction
+                },
+                direction_auto,
             });
         }
         collect_model_nodes(
@@ -2010,8 +2055,48 @@ fn collect_model_nodes(
             control_index,
             next_form_index,
             containing_form,
+            node_direction,
         );
     }
+}
+
+fn node_direction(
+    node: &BrowserRenderNode,
+    inherited: ControlTextDirection,
+) -> (ControlTextDirection, bool) {
+    match node.dir.as_deref() {
+        Some(direction) if direction.eq_ignore_ascii_case("ltr") => {
+            (ControlTextDirection::Ltr, false)
+        }
+        Some(direction) if direction.eq_ignore_ascii_case("rtl") => {
+            (ControlTextDirection::Rtl, false)
+        }
+        Some(direction) if direction.eq_ignore_ascii_case("auto") => (
+            control_text_direction(&render_node_text(node)).unwrap_or(inherited),
+            true,
+        ),
+        _ => (inherited, false),
+    }
+}
+
+fn render_node_text(node: &BrowserRenderNode) -> String {
+    let mut text = node
+        .value
+        .as_deref()
+        .or(node.text.as_deref())
+        .unwrap_or_default()
+        .to_string();
+    for child in &node.children {
+        text.push_str(&render_node_text(child));
+    }
+    text
+}
+
+fn control_text_direction(value: &str) -> Option<ControlTextDirection> {
+    first_strong_direction(value).map(|direction| match direction {
+        Direction::Rtl => ControlTextDirection::Rtl,
+        Direction::Ltr => ControlTextDirection::Ltr,
+    })
 }
 
 fn sync_nodes(

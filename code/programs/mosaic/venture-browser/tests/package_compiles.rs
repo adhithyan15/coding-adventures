@@ -328,11 +328,21 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     );
     let swift_host = read_package_file("host/swiftui/MosaicHost.swift");
     let xaml_host = read_package_file("host/xaml/MosaicHost.cs");
-    for symbol in ["file_picker_request", "control_file", "presentFilePickerIfRequested"] {
-        assert!(swift_host.contains(symbol), "SwiftUI file adapter omits {symbol}");
+    for symbol in [
+        "file_picker_request",
+        "control_file",
+        "presentFilePickerIfRequested",
+    ] {
+        assert!(
+            swift_host.contains(symbol),
+            "SwiftUI file adapter omits {symbol}"
+        );
     }
     for symbol in ["FilePickerRequest", "ControlFile", "FilePickerRequested"] {
-        assert!(xaml_host.contains(symbol), "XAML file adapter omits {symbol}");
+        assert!(
+            xaml_host.contains(symbol),
+            "XAML file adapter omits {symbol}"
+        );
     }
     for command in venture_browser_core::VENTURE_SCROLL_COMMAND_NAMES {
         assert!(
@@ -709,6 +719,40 @@ fn file_fixture_uses_the_shared_path_free_picker_contract() {
         .unwrap()
         .value
         .contains("/host/private"));
+}
+
+#[test]
+fn image_submit_and_dirname_fixture_uses_shared_semantics() {
+    use venture_browser_core::{
+        BrowserControlModel, ControlAccessibilityAction, ControlEffect, ControlTextDirection,
+        ImageSubmitCoordinates,
+    };
+
+    let tree = coding_adventures_html_parser::parse_browser_render_tree(
+        "<form dir='rtl'><input id='q' name='q' dirname='q.dir' dir='auto' value='שלום'>\
+         <input id='pin' type='image' name='pin' alt='Choose location'></form>",
+    )
+    .expect("parse deterministic image/dirname fixture");
+    let mut controls = BrowserControlModel::from_render_tree(&tree);
+    assert_eq!(
+        controls.directionality("control:0:id:q"),
+        Some(ControlTextDirection::Rtl)
+    );
+    controls.focus("control:0:id:q");
+    controls.accessibility_action(ControlAccessibilityAction::SetValue("Venture".into()));
+    assert_eq!(
+        controls.directionality("control:0:id:q"),
+        Some(ControlTextDirection::Ltr)
+    );
+    controls.focus("control:1:id:pin");
+    assert!(matches!(
+        controls.accessibility_action(ControlAccessibilityAction::Activate),
+        Some(ControlEffect::Activated(_))
+    ));
+    assert_eq!(
+        ImageSubmitCoordinates::from_local_point(18.8, 4.2),
+        ImageSubmitCoordinates { x: 18, y: 4 }
+    );
 }
 
 #[test]

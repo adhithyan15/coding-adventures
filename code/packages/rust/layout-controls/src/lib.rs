@@ -70,7 +70,7 @@ impl ControlKind {
             "datetime-local" => Self::DateTimeLocal,
             "color" => Self::Color,
             "file" => Self::File,
-            "button" | "submit" | "reset" => Self::Button,
+            "button" | "submit" | "reset" | "image" => Self::Button,
             "textarea" => Self::TextArea,
             "select" => Self::Select,
             "range" => Self::Range,
@@ -484,6 +484,7 @@ mod tests {
     fn typed_input_capabilities_are_explicit() {
         assert_eq!(ControlKind::parse("url"), Some(ControlKind::Url));
         assert_eq!(ControlKind::parse("file"), Some(ControlKind::File));
+        assert_eq!(ControlKind::parse("image"), Some(ControlKind::Button));
         assert!(ControlKind::Url.supports_selection());
         assert!(ControlKind::Url.supports_maxlength());
         assert!(!ControlKind::Number.supports_selection());
