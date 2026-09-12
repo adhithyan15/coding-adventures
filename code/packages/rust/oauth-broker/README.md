@@ -22,11 +22,15 @@ For one provider/account key it can store an already audited initial token
 response, release a still-usable access token to exactly one closure, or refresh
 an expiring token through an injected transport. It also initiates an RFC 8628
 device authorization request and composes exactly one externally scheduled
-device-token poll through separate injected transports while preserving the
-opaque polling session after a transient poll transport failure. Refresh-token disclosure,
-request preparation, transport attempt/result, response decoding, credential
-release, compare-and-swap rotation, metadata reads, and final access-token
-release are all durable-audit gates.
+device-token poll through separate injected transports. An opaque caller-timed
+sequence additionally enforces the provider interval and relative expiry on an
+arbitrary monotonic timeline, performs at most one poll per step, applies each
+`slow_down` increase, and schedules from the actual attempt time so delayed
+callers cannot trigger catch-up polling. It preserves the opaque polling state
+after a transient transport failure. Refresh-token disclosure, request
+preparation, transport attempt/result, response decoding, credential release,
+compare-and-swap rotation, metadata reads, and final result release are all
+durable-audit gates.
 
 The transport trait is deliberately an authority seam, not an HTTP library.
 Concrete HTTPS and capability authorization remain separate packages. The
@@ -43,7 +47,7 @@ dependency are sibling packages in this repository.
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
 - account identity proof, listing, detach/revocation, device authorization UI,
-  polling schedules, and full device-flow loops;
+  timing/sleep authority, and full device-flow loops;
 - confidential-client secrets, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.

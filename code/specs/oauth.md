@@ -2,15 +2,15 @@
 
 **Status:** Phase 2 provider-neutral broker boundary implemented —
 installed-app Authorization Code + PKCE, RFC 8628 device-flow initiation and
-caller-driven polling classification,
+caller-driven polling classification and sequencing,
 token/error codecs, refresh rotation, revocation request preparation, RFC 8414
 metadata validation, and an audited
 literal-loopback callback host plus storage-agnostic audit-before-disclosure
 credential custody now compose through data-driven provider registration,
 expiry policy, injected transport, and compare-and-swap refresh orchestration;
 the custody contract has a bounded zeroizing encrypted-store adapter over any
-`vault-sealed-store` backend; concrete transport, full device-flow
-orchestration, and verified live provider snapshots remain prioritized below.
+`vault-sealed-store` backend; concrete transport, complete account lifecycle,
+and verified live provider snapshots remain prioritized below.
 
 ## Overview
 
@@ -176,9 +176,13 @@ The delivery order is:
    is zeroizing. The broker can initiate device authorization and execute one
    externally scheduled poll through separate injected transports after exact
    registry binding, returning the opaque session on transient poll transport
-   failure and auditing each effect and result before release. The caller still
-   owns elapsed-time expiry checks, waiting, UI, and the full loop; these
-   boundaries add no sleep, clock, storage, or network authority.
+   failure and auditing each effect and result before release. An opaque
+   caller-timed sequence now rejects early and locally expired steps before
+   request preparation or transport, performs at most one poll per call,
+   reschedules from the actual attempt time, and retains cumulative
+   `slow_down`. The caller still supplies monotonic observations and owns
+   waiting and UI; these boundaries add no sleep, clock, storage, or concrete
+   network authority.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.
@@ -702,9 +706,11 @@ avoid refresh storms).
 3. Broker returns AuthorizeBegin::Device with these.
 4. Orchestrator displays user_code + verification_uri to user
    (e.g., "Go to https://google.com/device and enter ABCD-EFGH").
-5. The orchestrator waits at least the session's current interval, checks
-   expiry with its own clock, and asks the broker to prepare one audited poll.
-6. The caller-owned transport POSTs the zeroizing form to `token_endpoint`:
+5. The orchestrator creates an opaque sequence using a value from its monotonic
+   timeline, waits until the returned next-poll value, and supplies its next
+   observed value to the broker. Early and locally expired steps perform no
+   request; each due step performs at most one.
+6. The injected transport POSTs the zeroizing form to `token_endpoint`:
        grant_type=urn:ietf:params:oauth:grant-type:device_code,
        device_code=<code>, client_id=<id>.
 7. The audited response classifier returns one exact transition:
@@ -713,8 +719,9 @@ avoid refresh storms).
        - "error": "expired_token" → return ExpiredToken
        - "error": "access_denied" → return Denied
        - tokens present → return Authorized
-8. Only Pending and SlowDown return the opaque continuation session. On
-   Authorized, the broker stores tokens identically to auth-code.
+8. Pending, SlowDown, and transient transport failure return an opaque sequence
+   with an absolute next-poll value. On Authorized, the caller stores tokens
+   identically to auth-code through the existing audited credential boundary.
 ```
 
 ### Refresh Detail
