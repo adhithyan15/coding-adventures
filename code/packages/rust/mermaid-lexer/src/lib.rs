@@ -43,6 +43,7 @@ const WARDLEY_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/me
 const CYNEFIN_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/cynefin.tokens");
 const TREEVIEW_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/treeview.tokens");
 const SWIMLANE_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/swimlane.tokens");
+const RAILROAD_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/railroad.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
 const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
@@ -154,6 +155,10 @@ pub fn create_mermaid_treeview_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_swimlane_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, SWIMLANE_TOKEN_GRAMMAR_SOURCE, "swimlane.tokens")
+}
+
+pub fn create_mermaid_railroad_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, RAILROAD_TOKEN_GRAMMAR_SOURCE, "railroad.tokens")
 }
 
 pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
@@ -436,6 +441,11 @@ pub fn try_tokenize_mermaid_treeview(source: &str) -> Result<Vec<Token>, String>
 
 pub fn try_tokenize_mermaid_swimlane(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_swimlane_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
+pub fn try_tokenize_mermaid_railroad(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_railroad_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
 }
 

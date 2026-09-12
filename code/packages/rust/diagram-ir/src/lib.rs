@@ -1178,6 +1178,27 @@ pub struct LayoutedSwimlaneDiagram {
     pub lanes: Vec<LayoutedSwimlaneLane>, pub nodes: Vec<LayoutedSwimlaneNode>, pub edges: Vec<LayoutedSwimlaneEdge>,
 }
 
+// GRAMMAR VISUALIZATION FAMILY
+#[derive(Clone, Debug, PartialEq)]
+pub enum RailroadExpression {
+    Terminal(String), NonTerminal(String), Sequence(Vec<RailroadExpression>), Choice(Vec<RailroadExpression>),
+    Optional(Box<RailroadExpression>), Repetition { element: Box<RailroadExpression>, min: usize }, Special(String),
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct RailroadRule { pub name: String, pub definition: RailroadExpression }
+#[derive(Clone, Debug, PartialEq)]
+pub struct RailroadDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub rules: Vec<RailroadRule> }
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum RailroadElementKind { Terminal, NonTerminal, Special }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedRailroadElement { pub kind: RailroadElementKind, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedRailroadPath { pub points: Vec<Point>, pub loopback: bool }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedRailroadRule { pub name: String, pub y: f64, pub height: f64, pub elements: Vec<LayoutedRailroadElement>, pub paths: Vec<LayoutedRailroadPath> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedRailroadDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub rules: Vec<LayoutedRailroadRule> }
+
 // STRUCTURAL FAMILY
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralKind {

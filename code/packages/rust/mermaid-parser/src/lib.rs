@@ -15,7 +15,7 @@ use diagram_ir::{
     BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell,
     GridConnection, GridDiagram, PacketDiagram, PacketField, SwimlaneDiagram, SwimlaneEdge,
-    SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
+    SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode, RailroadDiagram, RailroadExpression, RailroadRule,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -29,7 +29,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_eventmodeling, try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
     try_tokenize_mermaid_treemap, try_tokenize_mermaid_venn, try_tokenize_mermaid_ishikawa,
     try_tokenize_mermaid_wardley, try_tokenize_mermaid_cynefin, try_tokenize_mermaid_treeview,
-    try_tokenize_mermaid_swimlane,
+    try_tokenize_mermaid_swimlane, try_tokenize_mermaid_railroad,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -73,6 +73,7 @@ const WARDLEY_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/m
 const CYNEFIN_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/cynefin.grammar");
 const TREEVIEW_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/treeview.grammar");
 const SWIMLANE_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/swimlane.grammar");
+const RAILROAD_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/railroad.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -677,6 +678,7 @@ impl MermaidDiagramType {
                 | Self::Cynefin
                 | Self::TreeView
                 | Self::Swimlane
+                | Self::Railroad
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -708,6 +710,7 @@ pub enum MermaidDiagram {
     Cynefin(CynefinDiagram),
     TreeView(TreeViewDiagram),
     Swimlane(SwimlaneDiagram),
+    Railroad(RailroadDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -845,6 +848,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Cynefin => parse_cynefin(source).map(MermaidDiagram::Cynefin),
         MermaidDiagramType::TreeView => parse_treeview(source).map(MermaidDiagram::TreeView),
         MermaidDiagramType::Swimlane => parse_swimlane(source).map(MermaidDiagram::Swimlane),
+        MermaidDiagramType::Railroad => parse_railroad(source).map(MermaidDiagram::Railroad),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -3568,6 +3572,69 @@ fn swimlane_error(line: usize, message: impl Into<String>) -> ParseError {
         col: 1,
     }
 }
+/// Parse Mermaid's explicit Railroad IR constructor notation.
+pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
+    let family = detect_mermaid_type(source)?; let prepared = prepare_line_grammar_source(source)?;
+    if !prepared.trim_start().starts_with("railroad-beta") {
+        return Err(ParseError { message: format!("Mermaid {} Railroad {:?} notation is recognized but not implemented", MERMAID_COMPATIBILITY_BASELINE, family.canonical_id()), line: 1, col: 1 });
+    }
+    let tokens = try_tokenize_mermaid_railroad(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(RAILROAD_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse railroad.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar).with_max_depth(MAX_RULE_DEPTH).parse()
+        .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
+    let mut cursor = RailroadCursor { tokens: &tokens, index: 1 };
+    let mut diagram = RailroadDiagram { title: None, accessibility_title: None, accessibility_description: None, rules: Vec::new() };
+    while !cursor.at("EOF") {
+        match cursor.name() {
+            "TITLE" => diagram.title = Some(cursor.take_value()["title".len()..].trim().trim_matches('"').to_string()),
+            "ACC_TITLE" => diagram.accessibility_title = Some(cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string()),
+            "ACC_DESCR" => diagram.accessibility_description = Some(cursor.take_value().split_once(':').map_or("", |(_, value)| value).trim().to_string()),
+            "IDENT" => {
+                let name = cursor.take_value(); cursor.expect("EQUAL")?;
+                let definition = parse_railroad_expression(&mut cursor)?; cursor.expect("SEMICOLON")?;
+                if diagram.rules.iter().any(|rule| rule.name == name) { return Err(cursor.error(format!("duplicate Railroad rule {name:?}"))); }
+                diagram.rules.push(RailroadRule { name, definition });
+            }
+            other => return Err(cursor.error(format!("unexpected Railroad token {other}"))),
+        }
+    }
+    if diagram.rules.is_empty() { return Err(ParseError { message: "Railroad diagrams require at least one rule".into(), line: 1, col: 1 }); }
+    Ok(diagram)
+}
+
+struct RailroadCursor<'a> { tokens: &'a [Token], index: usize }
+impl RailroadCursor<'_> {
+    fn token(&self) -> &Token { &self.tokens[self.index.min(self.tokens.len() - 1)] }
+    fn name(&self) -> &str { token_name(self.token()) }
+    fn at(&self, name: &str) -> bool { self.name() == name }
+    fn take_value(&mut self) -> String { let value = self.token().value.clone(); self.index += 1; value }
+    fn expect(&mut self, name: &str) -> Result<(), ParseError> { if self.at(name) { self.index += 1; Ok(()) } else { Err(self.error(format!("expected {name}, found {}", self.name()))) } }
+    fn error(&self, message: impl Into<String>) -> ParseError { ParseError { message: message.into(), line: self.token().line, col: self.token().column } }
+}
+
+fn parse_railroad_expression(cursor: &mut RailroadCursor<'_>) -> Result<RailroadExpression, ParseError> {
+    if !cursor.at("IDENT") { return Err(cursor.error("expected Railroad constructor")); }
+    let constructor = cursor.take_value(); cursor.expect("LPAREN")?;
+    if matches!(constructor.as_str(), "terminal" | "nonterminal" | "special") {
+        if !cursor.at("STRING") { return Err(cursor.error(format!("{constructor} requires one string argument"))); }
+        let value = unquote_mermaid_string(&cursor.take_value()); cursor.expect("RPAREN")?;
+        return Ok(match constructor.as_str() { "terminal" => RailroadExpression::Terminal(value),
+            "nonterminal" => RailroadExpression::NonTerminal(value), "special" => RailroadExpression::Special(value), _ => unreachable!() });
+    }
+    let mut arguments = Vec::new();
+    if !cursor.at("RPAREN") { loop { arguments.push(parse_railroad_expression(cursor)?); if cursor.at("COMMA") { cursor.index += 1; } else { break; } } }
+    cursor.expect("RPAREN")?;
+    match constructor.as_str() {
+        "sequence" if !arguments.is_empty() => Ok(RailroadExpression::Sequence(arguments)),
+        "choice" if arguments.len() >= 2 => Ok(RailroadExpression::Choice(arguments)),
+        "optional" if arguments.len() == 1 => Ok(RailroadExpression::Optional(Box::new(arguments.remove(0)))),
+        "zeroOrMore" if arguments.len() == 1 => Ok(RailroadExpression::Repetition { element: Box::new(arguments.remove(0)), min: 0 }),
+        "oneOrMore" if arguments.len() == 1 => Ok(RailroadExpression::Repetition { element: Box::new(arguments.remove(0)), min: 1 }),
+        _ => Err(cursor.error(format!("invalid or unsupported Railroad constructor {constructor:?}"))),
+    }
+}
+
 fn parse_radar_labeled_id(raw: &str, token: &Token) -> Result<(String, String), ParseError> {
     let raw = raw.trim();
     let (id, label) = if let Some(open) = raw.find('[') {

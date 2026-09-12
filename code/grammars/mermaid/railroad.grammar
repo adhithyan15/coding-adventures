@@ -1,0 +1,5 @@
+# @version 1
+document = HEADER { TITLE | ACC_TITLE | ACC_DESCR } { rule } EOF ;
+rule = IDENT EQUAL expression SEMICOLON ;
+expression = IDENT LPAREN [ argument { COMMA argument } ] RPAREN ;
+argument = STRING | expression ;

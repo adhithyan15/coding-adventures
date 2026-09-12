@@ -33,7 +33,7 @@ use std::collections::HashMap;
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
-    LayoutedCynefinDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram,
+    LayoutedCynefinDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
     LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardDiagram, LayoutedPacketDiagram,
@@ -41,6 +41,7 @@ use diagram_ir::{
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
     GanttTaskTags, SequenceProperty, SwimlaneEdgeKind, TextAlign as GeoTextAlign, TreeViewNodeKind,
+    RailroadElementKind,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -447,6 +448,45 @@ where
         metadata: (!metadata.is_empty()).then_some(metadata),
     }
 }
+/// Lower Railroad rules into backend-neutral paths, markers, boxes, and glyphs.
+pub fn diagram_to_paint_railroad<S, M, R>(diagram: &LayoutedRailroadDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
+where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
+    let mut instructions = Vec::new(); let mut text_children = Vec::new();
+    if let Some(title) = &diagram.title { text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
+        options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 })); }
+    for rule in &diagram.rules {
+        let center = rule.y + rule.height / 2.0;
+        text_children.push(text_node_no_wrap(&rule.name, 10.0, center - 14.0, 92.0, 28.0,
+            options.label_font.clone(), Color { r: 30, g: 64, b: 175, a: 255 }));
+        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: 110.0, cy: center,
+            rx: 5.0, ry: 5.0, fill: Some("#111827".into()), stroke: None, stroke_width: None, stroke_dash: None, stroke_dash_offset: None }));
+        let end_x = rule.paths.iter().flat_map(|path| path.points.iter().map(|point| point.x)).fold(140.0, f64::max);
+        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: end_x + 6.0, cy: center,
+            rx: 5.0, ry: 5.0, fill: Some("#111827".into()), stroke: None, stroke_width: None, stroke_dash: None, stroke_dash_offset: None }));
+        for path in &rule.paths { let mut paint = line_path(&path.points, "#334155", 1.8);
+            if path.loopback { paint.stroke_dash = Some(vec![4.0, 3.0]); } instructions.push(PaintInstruction::Path(paint)); }
+        for element in &rule.elements {
+            let (fill, stroke, radius) = match element.kind { RailroadElementKind::Terminal => ("#fef3c7", "#92400e", 14.0),
+                RailroadElementKind::NonTerminal => ("#ffffff", "#334155", 2.0), RailroadElementKind::Special => ("#f3e8ff", "#7e22ce", 7.0) };
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: element.x, y: element.y,
+                width: element.width, height: element.height, fill: Some(fill.into()), stroke: Some(stroke.into()),
+                stroke_width: Some(1.7), corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None }));
+            text_children.push(text_node_no_wrap(&element.label, element.x + 10.0, element.y + 7.0,
+                element.width - 20.0, 24.0, options.label_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+        }
+    }
+    let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+        id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions { width: diagram.width,
+        height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
+        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver });
+    instructions.extend(text_scene.instructions); let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
+    if let Some(description) = &diagram.accessibility_description { metadata.insert("accessibility.description".into(), description.clone()); }
+    PaintScene { width: diagram.width, height: diagram.height,
+        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
+        instructions, id: None, metadata: (!metadata.is_empty()).then_some(metadata) }
+}
+
 /// Lower Venn circle geometry into backend-neutral ellipses and glyph runs.
 pub fn diagram_to_paint_venn<S, M, R>(diagram: &LayoutedVennDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
