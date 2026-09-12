@@ -9,9 +9,13 @@ options, and form association. Form engines can query those bindings and reset
 one form without coupling submission policy to layout or a platform host.
 
 Text controls retain character-indexed anchor/focus selection, composition
-text, and validation feedback. Range replacement and deletion are UTF-8 safe,
-textarea Home/End navigation respects line boundaries, and password values are
-only exposed to layout through their masked `display_value`. Invalid forms can
+text, and validation feedback. Grapheme-safe deletion and movement reuse the
+generated Unicode 17 `text-flow` segmenter; word movement, double-click word
+selection, and triple-click line selection share one reducer. Per-control,
+100-snapshot undo/redo history restores values and selections together, while
+drag autoscroll remains a bounded function of explicit viewport metrics.
+Password values are only exposed to layout through their masked
+`display_value`. Invalid forms can
 focus the first failing control and synchronize `aria-invalid` plus an
 accessible description without putting validation policy in native adapters.
 
@@ -20,8 +24,11 @@ rectangles for carets, selections, composition underlines, validation, and IME
 candidate placement. Pointer placement and drag selection use explicit text
 metrics, control viewports scroll to reveal the caret, and blink timing advances
 only from host-supplied elapsed time. Clipboard copy/cut/paste remains in the
-shared reducer; password controls never return clipboard payloads.
+shared reducer; payloads negotiate plain and escaped HTML flavors, and password
+controls never return clipboard payloads. Platform accessibility adapters use
+the same movement, selection, replacement, and transaction actions.
 
 Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI55-form-editing`](../../../specs/UI55-form-editing.md), and
-[`UI56-editor-presentation`](../../../specs/UI56-editor-presentation.md).
+[`UI56-editor-presentation`](../../../specs/UI56-editor-presentation.md), and
+[`UI62-advanced-editing-transactions`](../../../specs/UI62-advanced-editing-transactions.md).

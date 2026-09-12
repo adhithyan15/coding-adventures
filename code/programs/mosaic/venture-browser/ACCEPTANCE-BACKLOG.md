@@ -191,11 +191,20 @@ cross-platform proving application. Items are ordered by risk and dependency.
   blink timing. Route host clipboard and IME candidate-rectangle capabilities
   through explicit interfaces, preserving password secrecy and avoiding
   toolkit-owned editing state.
-- [ ] **P1 browser convergence — advanced editing transactions.** Add
+- [x] **P1 browser convergence — advanced editing transactions.** Add
   grapheme- and word-aware navigation, undo/redo transactions, clipboard HTML
   flavor negotiation, drag autoscroll, double/triple-click selection, and
   platform accessibility actions while keeping edit history and selection
-  policy shared across every host.
+  policy shared across every host. Completed with generated Unicode 17
+  grapheme boundaries, a shared word/click policy, bounded per-control history,
+  typed clipboard and accessibility contracts, native semantic-key routing,
+  retained reflow acceptance, and deterministic drag/click fixtures.
+- [ ] **P1 browser convergence — typed input value semantics.** Extend the
+  retained control reducer with live `maxlength`, email/URL syntax, numeric
+  min/max/step parsing and stepping, type-appropriate selection restrictions,
+  and reusable value-state diagnostics. Keep validity, keyboard increment, and
+  accessibility value actions shared while native/web hosts only translate
+  platform input events.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

@@ -81,6 +81,12 @@ recreating the surrounding chrome in backend-specific UI code.
   Alt-Left/Right on Windows reuse the Mosaic `onBack`/`onForward` reducer
   events and reproject chrome props after navigation. The direct generated-app
   gates require both native history shortcuts to traverse a real linked page.
+- Editable page controls keep Unicode grapheme/word movement, selection,
+  click-count policy, bounded undo/redo, drag autoscroll, clipboard flavor
+  negotiation, and accessibility actions in `browser-form-controls`.
+  SwiftUI, WinUI, Qt, Flutter, and Compose translate native editing shortcuts
+  to shared semantic names rather than maintaining toolkit-specific edit
+  histories.
 - Native SwiftUI and WinUI surface-size changes use matching Rust resize ABIs.
   The shared session recomposes its retained render tree for the new logical
   viewport, preserves and clamps scroll state, updates hit regions, and

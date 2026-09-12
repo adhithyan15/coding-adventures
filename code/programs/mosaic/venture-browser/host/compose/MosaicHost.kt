@@ -1,4 +1,5 @@
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -8,6 +9,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isAltPressed
+import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.isMetaPressed
+import androidx.compose.ui.input.key.isShiftPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.platform.testTag
@@ -261,6 +273,7 @@ class MosaicHost private constructor(
     @Composable
     private fun VentureContentSurface(host: MosaicHost) {
         val revision = host.surfaceRevision.intValue
+        val focusRequester = remember { FocusRequester() }
         val frame = remember(revision) {
             val skiaImage = host.renderFrame().toSkiaImage()
             RenderedFrame(skiaImage, skiaImage.toComposeImageBitmap())
@@ -275,6 +288,32 @@ class MosaicHost private constructor(
             modifier = Modifier
                 .size(VIEWPORT_WIDTH.dp, VIEWPORT_HEIGHT.dp)
                 .testTag("venture-content-surface")
+                .focusRequester(focusRequester)
+                .focusable()
+                .onPreviewKeyEvent { event ->
+                    if (event.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+                    val command = event.isCtrlPressed || event.isMetaPressed
+                    val key = when {
+                        command && event.key == Key.A -> "select-all"
+                        command && event.key == Key.Z && event.isShiftPressed -> "redo"
+                        command && event.key == Key.Z -> "undo"
+                        command && event.key == Key.Y -> "redo"
+                        event.isAltPressed && event.key == Key.DirectionLeft -> "word-left"
+                        event.isAltPressed && event.key == Key.DirectionRight -> "word-right"
+                        event.key == Key.Backspace -> "backspace"
+                        event.key == Key.Delete -> "delete"
+                        event.key == Key.DirectionLeft -> "arrow-left"
+                        event.key == Key.DirectionRight -> "arrow-right"
+                        event.key == Key.DirectionUp -> "arrow-up"
+                        event.key == Key.DirectionDown -> "arrow-down"
+                        event.key == Key.MoveHome -> "home"
+                        event.key == Key.MoveEnd -> "end"
+                        event.key == Key.Enter -> "enter"
+                        event.key == Key.Spacebar -> "space"
+                        else -> null
+                    }
+                    key != null && host.controlKey(key, event.isShiftPressed)
+                }
                 .onPointerEvent(PointerEventType.Scroll) { event ->
                     event.changes.firstOrNull()?.scrollDelta?.y?.let { host.scrollBy(it.toDouble()) }
                 }
@@ -282,6 +321,7 @@ class MosaicHost private constructor(
                     event.changes.firstOrNull()?.position?.let { host.updateHover(it.x.toDouble(), it.y.toDouble()) }
                 }
                 .onPointerEvent(PointerEventType.Press) { event ->
+                    focusRequester.requestFocus()
                     event.changes.firstOrNull()?.position?.let { host.activateLink(it.x.toDouble(), it.y.toDouble()) }
                 },
         )
