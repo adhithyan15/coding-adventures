@@ -4717,7 +4717,7 @@ impl HtmlParser {
     }
 
     fn fragment_context_ignores_table_start_tag(&self, name: &str) -> bool {
-        if self.has_unmarked_table_after_last_fragment_marker() {
+        if self.has_unmarked_table_or_template_after_last_fragment_marker() {
             return false;
         }
         let Some(context_element) = self.open_elements.iter().rev().find_map(|path| {
@@ -4732,6 +4732,18 @@ impl HtmlParser {
         let Some(context) = fragment_marker_value(context_element) else {
             return false;
         };
+        if name == "table"
+            && matches!(
+                context,
+                "table" | "colgroup" | "tbody"
+                    | "thead"
+                    | "tfoot"
+                    | "tr"
+            )
+            && self.current_element_is_marked_fragment_context(context)
+        {
+            return true;
+        }
         match context {
             "table" => name == "table",
             "caption" => matches!(
@@ -4747,7 +4759,7 @@ impl HtmlParser {
                     | "th"
                     | "tr"
             ),
-            "colgroup" => name != "col",
+            "colgroup" => !matches!(name, "col" | "template"),
             "tbody" | "thead" | "tfoot" => {
                 matches!(
                     name,
@@ -4760,7 +4772,15 @@ impl HtmlParser {
             ),
             "td" | "th" => matches!(
                 name,
-                "caption" | "col" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr" | "td" | "th"
+                "caption"
+                    | "col"
+                    | "colgroup"
+                    | "tbody"
+                    | "thead"
+                    | "tfoot"
+                    | "tr"
+                    | "td"
+                    | "th"
             ),
             _ => false,
         }
@@ -4794,7 +4814,7 @@ impl HtmlParser {
             .unwrap_or(false)
     }
 
-    fn has_unmarked_table_after_last_fragment_marker(&self) -> bool {
+    fn has_unmarked_table_or_template_after_last_fragment_marker(&self) -> bool {
         let Some(marker_index) = self.open_elements.iter().rposition(|path| {
             element_ref_at_path(&self.document, path).is_some_and(has_fragment_context_marker)
         }) else {
@@ -4802,7 +4822,8 @@ impl HtmlParser {
         };
         self.open_elements[marker_index + 1..].iter().any(|path| {
             element_ref_at_path(&self.document, path).is_some_and(|element| {
-                element.name == "table" && !has_fragment_context_marker(element)
+                matches!(element.name.as_str(), "table" | "template")
+                    && !has_fragment_context_marker(element)
             })
         })
     }
@@ -6541,6 +6562,44 @@ impl HtmlParser {
     }
 
     fn append_comment_or_processing_instruction(&mut self, node: Node) {
+        let active_fostered_anchor = self
+            .pending_formatting_reconstruction
+            .first()
+            .is_some_and(|(name, _)| name == "a");
+        let current_has_authored_table_structure = self
+            .open_elements
+            .last()
+            .and_then(|path| element_ref_at_path(&self.document, path))
+            .is_some_and(|element| {
+                element.children.iter().any(|child| {
+                    matches!(
+                        child,
+                        Node::Element(child)
+                            if matches!(
+                                child.name.as_str(),
+                                "caption"
+                                    | "colgroup"
+                                    | "tbody"
+                                    | "thead"
+                                    | "tfoot"
+                                    | "tr"
+                                    | "td"
+                                    | "th"
+                            )
+                    )
+                })
+            });
+        if self.current_element_is_table_structure()
+            && active_fostered_anchor
+            && !current_has_authored_table_structure
+        {
+            if let Some(path) = self.previous_pending_formatting_path_before_open_table() {
+                if let Some(element) = element_at_path_mut(&mut self.document, &path) {
+                    element.children.push(node);
+                    return;
+                }
+            }
+        }
         if self.explicit_head_end_seen
             && self.current_element_is("head")
             && self.has_document_element()
@@ -7101,9 +7160,33 @@ impl HtmlParser {
             .iter()
             .rfind(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
             .cloned()?;
-        let (&table_index, parent_path) = table_path.split_last()?;
-        let mut path = parent_path.to_vec();
-        path.push(table_index.checked_sub(1)?);
+        let mut path = if element_ref_at_path(&self.document, &table_path)
+            .is_some_and(has_fragment_context_marker)
+        {
+            let (pending_name, pending_attributes) =
+                self.pending_formatting_reconstruction.first()?;
+            let marker_path = self.open_elements.iter().rev().find(|path| {
+                element_ref_at_path(&self.document, path)
+                    .is_some_and(has_fragment_context_marker)
+            })?;
+            let marker = element_ref_at_path(&self.document, marker_path)?;
+            let child_index = marker.children.iter().rposition(|node| {
+                matches!(
+                    node,
+                    Node::Element(element)
+                        if element.name == *pending_name
+                    && element.attributes == *pending_attributes
+                )
+            })?;
+            let mut path = marker_path.clone();
+            path.push(child_index);
+            path
+        } else {
+            let (&table_index, parent_path) = table_path.split_last()?;
+            let mut path = parent_path.to_vec();
+            path.push(table_index.checked_sub(1)?);
+            path
+        };
 
         for (index, (name, attributes)) in self.pending_formatting_reconstruction.iter().enumerate()
         {
@@ -7172,6 +7255,45 @@ impl HtmlParser {
         else {
             return;
         };
+        if element_ref_at_path(&self.document, &table_path)
+            .is_some_and(has_fragment_context_marker)
+            && self
+                .open_elements
+                .last()
+                .and_then(|path| element_ref_at_path(&self.document, path))
+                .is_some_and(has_fragment_context_marker)
+        {
+            let Some(marker_path) = self.open_elements.iter().rev().find_map(|path| {
+                element_ref_at_path(&self.document, path)
+                    .is_some_and(has_fragment_context_marker)
+                    .then_some(path.clone())
+            }) else {
+                return;
+            };
+            let Some(children) =
+                children_at_path_mut(&mut self.document.children, &marker_path)
+            else {
+                return;
+            };
+            let Some(remove_index) = children.iter().rposition(|node| {
+                matches!(
+                    node,
+                    Node::Element(element)
+                        if element.name == pending_name
+                            && element.attributes == pending_attributes
+                            && element.children.is_empty()
+                )
+            }) else {
+                return;
+            };
+            children.remove(remove_index);
+            decrement_open_element_paths_after_remove(
+                &mut self.open_elements,
+                &marker_path,
+                remove_index,
+            );
+            return;
+        }
         let Some((&table_index, parent_path)) = table_path.split_last() else {
             return;
         };
@@ -7242,6 +7364,37 @@ impl HtmlParser {
         }
 
         let table_path = last_table.map(|(_, path)| path)?;
+        if element_ref_at_path(&self.document, &table_path)
+            .is_some_and(has_fragment_context_marker)
+        {
+            let insertion_parent_path = self
+                .open_elements
+                .iter()
+                .rev()
+                .find(|path| {
+                    element_ref_at_path(&self.document, path)
+                        .is_some_and(has_fragment_context_marker)
+                })
+                .cloned()
+                .unwrap_or_else(|| table_path.clone());
+            let children =
+                children_at_path_mut(&mut self.document.children, &insertion_parent_path)?;
+            if let Node::Text(text) = node {
+                if let Some(Node::Text(existing)) = children.last_mut() {
+                    existing.data.push_str(&text.data);
+                    return Some(insertion_parent_path);
+                }
+                children.push(Node::Text(text));
+                let mut inserted_path = insertion_parent_path;
+                inserted_path.push(children.len() - 1);
+                return Some(inserted_path);
+            } else {
+                children.push(node);
+                let mut inserted_path = insertion_parent_path;
+                inserted_path.push(children.len() - 1);
+                return Some(inserted_path);
+            }
+        }
         let (&table_index, parent_path) = table_path.split_last()?;
         let children = children_at_path_mut(&mut self.document.children, parent_path)?;
 
@@ -7427,6 +7580,18 @@ impl HtmlParser {
         let Some(table_path) = self.open_elements.get(table_stack_index).cloned() else {
             return;
         };
+        let table_is_fragment_context = element_ref_at_path(&self.document, &table_path)
+            .is_some_and(|element| {
+                element.namespace.is_none()
+                    && fragment_marker_value(element).is_some_and(|context| {
+                        matches!(context, "table" | "tbody" | "thead" | "tfoot" | "tr")
+                    })
+            });
+        if table_is_fragment_context
+            && self.has_unmarked_table_or_template_after_last_fragment_marker()
+        {
+            return;
+        }
 
         let mut pending_formatting = Vec::new();
         while self.open_elements.len() > table_stack_index + 1 {
@@ -7435,7 +7600,7 @@ impl HtmlParser {
             };
             let is_fostered_formatting = element_at_path(&self.document, path)
                 .is_some_and(is_formatting_element)
-                && !path.starts_with(&table_path);
+                && (table_is_fragment_context || !path.starts_with(&table_path));
             if !is_fostered_formatting {
                 break;
             }
@@ -7463,13 +7628,34 @@ impl HtmlParser {
         let Some(table_path) = self.open_elements.get(table_stack_index).cloned() else {
             return;
         };
+        let table_is_fragment_context = element_ref_at_path(&self.document, &table_path)
+            .is_some_and(|element| {
+                element.namespace.is_none()
+                    && fragment_marker_value(element).is_some_and(|context| {
+                        matches!(context, "table" | "tbody" | "thead" | "tfoot" | "tr")
+                    })
+            });
+        if table_is_fragment_context
+            && self.has_unmarked_table_or_template_after_last_fragment_marker()
+        {
+            return;
+        }
 
         let mut pending_formatting = Vec::new();
         while self.open_elements.len() > table_stack_index + 1 {
             let Some(path) = self.open_elements.last() else {
                 break;
             };
-            if path.starts_with(&table_path) {
+            if (!table_is_fragment_context && path.starts_with(&table_path))
+                || (table_is_fragment_context
+                    && element_at_path(&self.document, path)
+                        .is_some_and(|name| {
+                            matches!(
+                                name,
+                                "table" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr"
+                            )
+                        }))
+            {
                 break;
             }
             if let Some(element) = element_ref_at_path(&self.document, path) {
@@ -13802,6 +13988,8 @@ fn adjusted_foreign_attribute_name(name: &str, namespace: Option<&str>) -> Strin
             "xlink:type" => Some("xlink type"),
             "xml:lang" => Some("xml lang"),
             "xml:space" => Some("xml space"),
+            "xmlns" => Some("xmlns xmlns"),
+            "xmlns:xlink" => Some("xmlns xlink"),
             _ => None,
         };
         if let Some(adjusted_attribute) = adjusted_attribute {
@@ -42859,9 +43047,20 @@ mod tests {
             let output =
                 parse_html_fragment_for_context_with_diagnostics(fragment_source, context).unwrap();
             assert!(
-                output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic == &table_start_tag_in_table_recovery(fragment_source)
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-table-start-tag-in-table"
                 }),
+                "source {fragment_source:?} in {context:?}"
+            );
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-table-start-tag-in-fragment"
+                    })
+                    .count(),
+                2,
                 "source {fragment_source:?} in {context:?}"
             );
         }
@@ -55478,6 +55677,8 @@ mod tests {
 
         let fragment =
             parse_html_fragment_for_context_with_diagnostics("<col>Hello", "template").unwrap();
+        assert_eq!(element(&fragment.nodes[0]).name, "col");
+        assert!(matches!(&fragment.nodes[1], Node::Text(text) if text.data == "Hello"));
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-character-in-template-column-group"
         }));
@@ -59714,6 +59915,153 @@ mod tests {
                 .position,
             None
         );
+    }
+
+    #[test]
+    fn adjusts_xmlns_attributes_on_foreign_elements() {
+        for (name, namespace) in [("svg", "svg"), ("math", "math")] {
+            let source = format!(
+                "<!doctype html><{name} id=foreign xmlns=default xmlns:xlink=prefixed>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            let element = find_element_by_id(&output.document.children, "foreign").unwrap();
+
+            assert_eq!(element.namespace.as_deref(), Some(namespace));
+            assert_eq!(element.attribute("xmlns xmlns"), Some("default"));
+            assert_eq!(element.attribute("xmlns xlink"), Some("prefixed"));
+            assert_eq!(element.attributes.len(), 3);
+        }
+    }
+
+    #[test]
+    fn preserves_fostered_order_in_table_family_fragments() {
+        let table = parse_html_fragment_for_context("<!--x-->A<script>B</script>C", "table")
+            .unwrap();
+        assert!(matches!(&table[0], Node::Comment(comment) if comment.data == "x"));
+        assert!(matches!(&table[1], Node::Text(text) if text.data == "A"));
+        assert_eq!(element(&table[2]).name, "script");
+        assert_eq!(element_text_content(element(&table[2])), "B");
+        assert!(matches!(&table[3], Node::Text(text) if text.data == "C"));
+
+        for context in ["tbody", "tr"] {
+            let fragment = parse_html_fragment_for_context("<!--x-->A<form>B", context).unwrap();
+            assert!(matches!(&fragment[0], Node::Comment(comment) if comment.data == "x"));
+            assert!(matches!(&fragment[1], Node::Text(text) if text.data == "A"));
+            assert!(
+                matches!(&fragment[2], Node::Element(element) if element.name == "form"),
+                "context {context:?}: {fragment:?}"
+            );
+            assert!(matches!(&fragment[3], Node::Text(text) if text.data == "B"));
+        }
+
+        let columns = parse_html_fragment_for_context("<col>A", "table").unwrap();
+        assert_eq!(element(&columns[0]).name, "colgroup");
+        assert_eq!(element(&element(&columns[0]).children[0]).name, "col");
+        assert!(matches!(&columns[1], Node::Text(text) if text.data == "A"));
+    }
+
+    #[test]
+    fn table_family_fragment_contexts_ignore_nested_table_starts() {
+        for context in ["tbody", "thead", "tfoot", "tr"] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics("<table>A", context).unwrap();
+            assert_eq!(output.nodes, vec![Node::text("A")], "context {context:?}");
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic.code == "unexpected-table-start-tag-in-fragment"
+            }));
+        }
+    }
+
+    #[test]
+    fn caption_fragments_allow_direct_table_starts() {
+        let fragment =
+            parse_html_fragment_for_context("<table>A<table>B", "caption").unwrap();
+        assert_eq!(fragment.len(), 4);
+        assert!(matches!(&fragment[0], Node::Text(text) if text.data == "A"));
+        assert_eq!(element(&fragment[1]).name, "table");
+        assert!(matches!(&fragment[2], Node::Text(text) if text.data == "B"));
+        assert_eq!(element(&fragment[3]).name, "table");
+    }
+
+    #[test]
+    fn table_family_fragments_reuse_fostered_anchor_after_ignored_structure() {
+        for context in ["tbody", "thead", "tfoot", "tr"] {
+            let fragment = parse_html_fragment_for_context("<a><caption>C", context).unwrap();
+            assert_eq!(fragment.len(), 1, "context {context:?}");
+            assert_eq!(element(&fragment[0]).name, "a");
+            assert_eq!(element_text_content(element(&fragment[0])), "C");
+        }
+    }
+
+    #[test]
+    fn comments_follow_fostered_text_inside_active_anchors() {
+        let document = parse_html("<!doctype html><table><a>A<!--x--><tr>").unwrap();
+        let anchor = element(&body(&document).children[0]);
+        assert_eq!(anchor.name, "a");
+        assert_eq!(anchor.children[0], Node::text("A"));
+        assert!(matches!(&anchor.children[1], Node::Comment(comment) if comment.data == "x"));
+
+        for (context, source) in [
+            ("table", "<a>A<!--x--><tr>"),
+            ("tbody", "<a>A<!--x--><tr>"),
+            ("tr", "<a>A<!--x--><td>"),
+        ] {
+            let fragment = parse_html_fragment_for_context(source, context).unwrap();
+            let anchor = element(&fragment[0]);
+            assert_eq!(anchor.name, "a", "context {context:?}: {fragment:?}");
+            assert_eq!(anchor.children[0], Node::text("A"));
+            assert!(
+                matches!(&anchor.children[1], Node::Comment(comment) if comment.data == "x"),
+                "context {context:?}: {fragment:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn seeded_table_transitions_close_fostered_formatting() {
+        for (context, row_name) in [("table", "tbody"), ("tbody", "tr"), ("tr", "td")] {
+            let fragment =
+                parse_html_fragment_for_context("<b><i>A<!--x--><tr><td>B", context).unwrap();
+            assert_eq!(fragment.len(), 2, "context {context:?}: {fragment:?}");
+            let bold = element(&fragment[0]);
+            assert_eq!(bold.name, "b", "context {context:?}");
+            let italic = element(&bold.children[0]);
+            assert_eq!(italic.name, "i", "context {context:?}");
+            assert_eq!(italic.children[0], Node::text("A"));
+            assert!(matches!(&italic.children[1], Node::Comment(comment) if comment.data == "x"));
+            assert_eq!(element(&fragment[1]).name, row_name, "context {context:?}");
+        }
+    }
+
+    #[test]
+    fn seeded_table_transitions_pop_fostered_non_formatting_content() {
+        for (context, row_name) in [("table", "tbody"), ("tbody", "tr"), ("tr", "td")] {
+            for fostered_name in ["div", "p"] {
+                let source = format!("<{fostered_name}>A<tr><td>B");
+                let fragment = parse_html_fragment_for_context(&source, context).unwrap();
+                assert_eq!(fragment.len(), 2, "context {context:?}: {fragment:?}");
+                let fostered = element(&fragment[0]);
+                assert_eq!(fostered.name, fostered_name, "context {context:?}");
+                assert_eq!(fostered.children, vec![Node::text("A")]);
+                assert_eq!(element(&fragment[1]).name, row_name, "context {context:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn template_start_resets_seeded_table_fragment_insertion_mode() {
+        for context in ["colgroup", "tr"] {
+            let fragment =
+                parse_html_fragment_for_context("<template><tr><td>A", context).unwrap();
+            assert_eq!(fragment.len(), 1, "context {context:?}: {fragment:?}");
+            let template = element(&fragment[0]);
+            assert_eq!(template.name, "template", "context {context:?}");
+            let row = element(&template.children[0]);
+            assert_eq!(row.name, "tr", "context {context:?}: {fragment:?}");
+            let cell = element(&row.children[0]);
+            assert_eq!(cell.name, "td", "context {context:?}: {fragment:?}");
+            assert_eq!(element_text_content(cell), "A", "context {context:?}");
+        }
     }
 
     #[test]
