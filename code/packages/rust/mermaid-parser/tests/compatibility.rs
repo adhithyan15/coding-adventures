@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_cynefin, parse_event_modeling, parse_ishikawa, parse_radar, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart,
+    parse_cynefin, parse_event_modeling, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -65,6 +65,19 @@ const ISHIKAWA_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "
 const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-corpus.json"));
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
+const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-corpus.json"));
+
+#[test]
+fn pinned_railroad_subset_corpus_parses_to_recursive_ir() {
+    let corpus: Value = serde_json::from_str(RAILROAD_CORPUS).expect("railroad corpus must be JSON");
+    assert_eq!(corpus["upstream_version"].as_str(), Some("11.16.1"));
+    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("railroad fixture {name} failed: {error}"));
+        assert!(!diagram.rules.is_empty());
+    }
+}
 
 #[test]
 fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
@@ -864,4 +877,20 @@ fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
         let source = fixture["source"].as_str().expect("fixture source must be a string");
         assert!(parse_swimlane(source).is_ok(), "fixture {:?} should parse", fixture["name"]);
     }
+}
+
+#[test]
+fn railroad_dispatches_to_dedicated_recursive_ir_and_rejects_textual_dialects() {
+    let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
+    let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");
+    match diagram {
+        mermaid_parser::MermaidDiagram::Railroad(diagram) => {
+            assert_eq!(diagram.rules.len(), 2);
+            assert_eq!(diagram.rules[1].name, "number");
+            assert!(matches!(diagram.rules[1].definition, diagram_ir::RailroadExpression::Repetition { min: 1, .. }));
+        }
+        _ => panic!("railroad should lower to dedicated recursive IR"),
+    }
+    assert!(parse_railroad("railroad-ebnf-beta\ndigit = '0' | '1';").is_err());
+    assert!(parse_railroad("railroad-beta\nvalue = optional(terminal(\"x\"), terminal(\"y\"));").is_err());
 }

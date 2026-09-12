@@ -482,6 +482,22 @@ Configuration-driven default and filename/extension icon maps, external icon
 pack artwork, custom row geometry, exact typography, and interactive behavior
 remain unsupported at the partial level.
 
+### Railroad Native Slice
+
+The initial Mermaid 11.16.1 Railroad slice recognizes `railroad-beta` and
+parses the upstream explicit constructor notation into dedicated recursive
+grammar IR. Terminals, nonterminals, sequences, choices, optional elements,
+zero-or-more and one-or-more repetitions, special elements, rule names, titles,
+and accessibility metadata survive deterministic branch-and-loop layout and
+backend-neutral path, ellipse, rectangle, and glyph PaintInstructions with
+native Metal-to-PNG validation.
+
+This is intentionally partial. The textual `railroad-ebnf-beta`,
+`railroad-abnf-beta`, and `railroad-peg-beta` dialects, separator-bearing
+repetition constructors, upstream curve geometry, theme/config overrides, and
+exact typography remain unsupported and fail explicitly rather than being
+counted as compatible.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

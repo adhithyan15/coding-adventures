@@ -1,0 +1,9 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "fixtures": [
+    {"name":"sequence","source":"railroad-beta\ntitle Expression\nexpression = sequence(nonterminal(\"term\"), terminal(\"+\"), nonterminal(\"term\"));"},
+    {"name":"choice-and-repeat","source":"railroad-beta\naccTitle: Digit syntax\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));"},
+    {"name":"optional-and-special","source":"railroad-beta\nvalue = sequence(optional(terminal(\"-\")), special(\"integer\"));"}
+  ]
+}
