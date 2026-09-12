@@ -54,6 +54,10 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .slots
         .iter()
+        .any(|slot| slot.name == "schematic-analysis-card-rows"));
+    assert!(component
+        .slots
+        .iter()
         .any(|slot| slot.name == "schematic-analysis-source-options"));
     assert!(component
         .slots
@@ -83,6 +87,18 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .emits
         .iter()
+        .any(|emit| emit.name == "onAddSchematicAnalysis"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onSelectSchematicAnalysisCard"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onRemoveSchematicAnalysisCard"));
+    assert!(component
+        .emits
+        .iter()
         .any(|emit| emit.name == "onSelectSchematicAnalysisSource"));
     assert!(component
         .emits
@@ -107,8 +123,13 @@ fn multiline_workbench_compiles_in_both_themes() {
     assert!(source("SpiceWorkbench.mll").contains("Path [ schematic-wire-segment ]"));
     assert!(source("SpiceWorkbench.mll").contains("Path [ schematic-terminal ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-control ]"));
-    assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-source-option ]"));
-    assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-analysis-parameter-one-input ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-card ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ remove-schematic-analysis-card ]"));
+    assert!(
+        source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-source-option ]")
+    );
+    assert!(source("SpiceWorkbench.mll")
+        .contains("HostInput [ schematic-analysis-parameter-one-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-value-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("segment[0]"));
     assert!(source("SpiceWorkbench.mll").contains("slot: diagnostic-rows"));
@@ -146,7 +167,9 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("data-on-change=\"onNetlistChange\""));
                 assert!(output.contains("data-on-click=\"onRun\""));
                 assert!(output.contains("data-on-click=\"onPlaceSchematicComponent\""));
-                assert!(output.contains("data-on-click=\"onSelectSchematicAnalysis\""));
+                assert!(output.contains("data-on-click=\"onAddSchematicAnalysis\""));
+                assert!(output.contains("data-on-click=\"onSelectSchematicAnalysisCard\""));
+                assert!(output.contains("data-on-click=\"onRemoveSchematicAnalysisCard\""));
                 assert!(output.contains("data-on-click=\"onSelectSchematicAnalysisSource\""));
                 assert!(output.contains("data-on-change=\"onSchematicAnalysisParameterOneChange\""));
                 assert!(output.contains("data-on-change=\"onSchematicValueChange\""));
