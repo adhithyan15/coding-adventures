@@ -17,10 +17,16 @@ const fallbackProps = {
   "resultLabel": "Sample ResultLabel",
   "resultRows": [],
   "resultText": "Sample ResultText",
+  "routeSchematicLabel": "Sample RouteSchematicLabel",
   "runLabel": "Sample RunLabel",
+  "schematicGridLabel": "Sample SchematicGridLabel",
+  "schematicGridLines": [],
   "schematicLabel": "Sample SchematicLabel",
+  "schematicPalette": [],
   "schematicRows": [],
+  "schematicTerminalPoints": [],
   "schematicTitle": "Sample SchematicTitle",
+  "schematicWireSegments": [],
   "selectedAnalysisLabel": "Sample SelectedAnalysisLabel",
   "selectedSchematicLabel": "Sample SelectedSchematicLabel",
   "selectedWaveformLabel": "Sample SelectedWaveformLabel",
@@ -36,6 +42,18 @@ const emitPayloads = {
   "onNetlistChange": [
     {
       "name": "value",
+      "type": "text"
+    }
+  ],
+  "onPlaceSchematicComponent": [
+    {
+      "name": "kind",
+      "type": "text"
+    }
+  ],
+  "onRouteToSchematicComponent": [
+    {
+      "name": "reference",
       "type": "text"
     }
   ],

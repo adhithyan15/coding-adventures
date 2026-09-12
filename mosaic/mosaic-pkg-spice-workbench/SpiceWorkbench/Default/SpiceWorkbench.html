@@ -25,12 +25,37 @@
       <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicLabel}}</span>
       <span style="color: #0f172a; font-weight: bold">{{schematicTitle}}</span>
       <div style="display: flex; flex-direction: row; gap: 6px">
+        <!-- mosaic-for each="schematicPalette" as="kind" index="kind-index" -->
+          <!-- emit "onPlaceSchematicComponent" dropped: HTML is static -->
+          <button data-on-click="onPlaceSchematicComponent" style="background: #ecfeff; color: #155e75; border-width: 1px; border-color: #67e8f9; border-radius: 3px; padding: 6px">{{kind}}</button>
+        <!-- /mosaic-for -->
+      </div>
+      <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicGridLabel}}</span>
+      <div style="position: relative; width: 360px; min-height: 240px; background: #ffffff; border-width: 1px; border-color: #cbd5e1">
+        <!-- mosaic-for each="schematicGridLines" as="line" index="line-index" -->
+          <svg aria-hidden="true" focusable="false" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none"><line x1="{{line.0}}" y1="{{line.1}}" x2="{{line.2}}" y2="{{line.3}}" fill="none" stroke="#e2e8f0" stroke-width="1px"></line></svg>
+        <!-- /mosaic-for -->
+        <!-- mosaic-for each="schematicWireSegments" as="segment" index="segment-index" -->
+          <svg aria-hidden="true" focusable="false" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none"><line x1="{{segment.0}}" y1="{{segment.1}}" x2="{{segment.2}}" y2="{{segment.3}}" fill="none" stroke="#0369a1" stroke-width="2px"></line></svg>
+        <!-- /mosaic-for -->
+        <!-- mosaic-for each="schematicTerminalPoints" as="point" index="point-index" -->
+          <svg aria-hidden="true" focusable="false" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none"><circle cx="{{point.0}}" cy="{{point.1}}" r="5" fill="#f59e0b" stroke="#92400e" stroke-width="1px"></circle></svg>
+        <!-- /mosaic-for -->
+      </div>
+      <div style="display: flex; flex-direction: row; gap: 6px">
         <!-- mosaic-for each="schematicRows" as="component" index="component-index" -->
           <!-- emit "onSelectSchematicComponent" dropped: HTML is static -->
           <button data-on-click="onSelectSchematicComponent" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px">{{component}}</button>
         <!-- /mosaic-for -->
       </div>
       <span style="color: #0369a1; font-weight: bold">{{selectedSchematicLabel}}</span>
+      <span style="font-size: 12px; font-weight: bold; color: #475569">{{routeSchematicLabel}}</span>
+      <div style="display: flex; flex-direction: row; gap: 6px">
+        <!-- mosaic-for each="schematicRows" as="component" index="component-index" -->
+          <!-- emit "onRouteToSchematicComponent" dropped: HTML is static -->
+          <button data-on-click="onRouteToSchematicComponent" style="background: #f0fdfa; color: #115e59; border-width: 1px; border-color: #5eead4; border-radius: 3px; padding: 6px">{{component}}</button>
+        <!-- /mosaic-for -->
+      </div>
       <!-- emit "onSynchronizeSchematic" dropped: HTML is static -->
       <button data-on-click="onSynchronizeSchematic" style="background: #fef3c7; color: #92400e; border-width: 1px; border-color: #fcd34d; border-radius: 4px; padding: 8px">{{synchronizeSchematicLabel}}</button>
     </div>
