@@ -9,6 +9,11 @@ component SpiceWorkbench {
   slot diagnostics-label : text ;
   slot diagnostics : text ;
   slot diagnostic-rows : list<text> ;
+  slot schematic-label : text ;
+  slot schematic-title : text ;
+  slot schematic-rows : list<text> ;
+  slot selected-schematic-label : text ;
+  slot synchronize-schematic-label : text ;
   slot analysis-label : text ;
   slot analysis-rows : list<list<text>> ;
   slot selected-analysis-label : text ;
@@ -26,6 +31,8 @@ component SpiceWorkbench {
   emit onNetlistChange ( value : text ) ;
   emit onInspect ;
   emit onRun ;
+  emit onSelectSchematicComponent ( reference : text ) ;
+  emit onSynchronizeSchematic ;
   emit onSelectAnalysis ( index : number ) ;
   emit onSelectWaveform ( index : number ) ;
 }

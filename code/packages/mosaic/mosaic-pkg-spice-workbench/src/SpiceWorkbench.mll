@@ -22,6 +22,23 @@ layout SpiceWorkbench {
         Text [ diagnostic-row ] ( content : ( diagnostic ) )
       }
     }
+    Column [ schematic ] {
+      Text [ schematic-label ] ( content : slot: schematic-label )
+      Text [ schematic-title ] ( content : slot: schematic-title )
+      Row [ schematic-components ] {
+        For ( each: slot: schematic-rows , as: component , index: component-index ) {
+          HostButton [ schematic-component ] (
+            label : ( component ) ,
+            onClick : emit: onSelectSchematicComponent
+          )
+        }
+      }
+      Text [ selected-schematic ] ( content : slot: selected-schematic-label )
+      HostButton [ synchronize-schematic ] (
+        label : slot: synchronize-schematic-label ,
+        onClick : emit: onSynchronizeSchematic
+      )
+    }
     Row [ workbench-body ] {
       Column [ analyses ] {
         Text [ analysis-label ] ( content : slot: analysis-label )

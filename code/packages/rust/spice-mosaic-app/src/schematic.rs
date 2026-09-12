@@ -4,6 +4,7 @@
 //! is an editor-owned representation that always lowers to a Berkeley deck;
 //! parsing and simulation remain the shared `spice-netlist-parser` contract.
 
+use serde::{Deserialize, Serialize};
 use std::{
     collections::{BTreeMap, BTreeSet},
     error::Error,
@@ -11,14 +12,14 @@ use std::{
 };
 
 /// An integer grid location used by component terminals and wire endpoints.
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize)]
 pub struct SchematicPoint {
     pub x: i32,
     pub y: i32,
 }
 
 /// The first symbol palette supported by canonical schematic capture.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub enum SchematicComponentKind {
     Resistor,
     Capacitor,
@@ -45,7 +46,7 @@ impl SchematicComponentKind {
 }
 
 /// A placed symbol whose terminals are connected by exact grid endpoints.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct SchematicComponent {
     pub reference: String,
     pub kind: SchematicComponentKind,
@@ -54,14 +55,14 @@ pub struct SchematicComponent {
 }
 
 /// A direct connection between two terminal grid endpoints.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct SchematicWire {
     pub start: SchematicPoint,
     pub end: SchematicPoint,
 }
 
 /// A compact editor document that can be lowered into a canonical `.op` deck.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct SchematicDocument {
     pub title: String,
     pub components: Vec<SchematicComponent>,

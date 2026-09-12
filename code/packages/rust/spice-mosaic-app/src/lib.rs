@@ -21,7 +21,7 @@ pub use schematic::{
 };
 
 const SNAPSHOT_SCHEMA: &str = "spice-mosaic-app/state";
-const SNAPSHOT_VERSION: u32 = 1;
+const SNAPSHOT_VERSION: u32 = 2;
 const DEFAULT_DECK: &str = "* Berkeley SPICE Mosaic workbench\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\nC1 out 0 1u IC=0\n.options method=trap\n.op\n.dc V1 0 1 1\n.ac dec 1 1k 1k\n.tran 1m 3m\n.tf V(out) V1\n.save V(out)\n.end\n";
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -49,6 +49,10 @@ struct WaveformPlot {
 struct SavedState {
     deck: String,
     selected_analysis_row: usize,
+    #[serde(default)]
+    schematic: Option<SchematicDocument>,
+    #[serde(default)]
+    selected_schematic_component: Option<String>,
 }
 
 /// A deliberately small host state. No parser or engine state crosses the
@@ -62,6 +66,8 @@ pub struct SpiceMosaicApp {
     result_text: String,
     diagnostic_rows: Vec<String>,
     diagnostics: String,
+    schematic: Option<SchematicDocument>,
+    selected_schematic_component: Option<String>,
     mode: &'static str,
     dark: bool,
 }
@@ -77,6 +83,8 @@ impl Default for SpiceMosaicApp {
             result_text: String::new(),
             diagnostic_rows: Vec::new(),
             diagnostics: "Edit a deck, then inspect its runnable analyses or run it.".to_owned(),
+            schematic: None,
+            selected_schematic_component: None,
             mode: "Draft",
             dark: false,
         }
@@ -273,6 +281,19 @@ fn waveform_plot(
 }
 
 impl SpiceMosaicApp {
+    fn schematic_rows(&self) -> Vec<String> {
+        self.schematic
+            .as_ref()
+            .map(|document| {
+                document
+                    .components
+                    .iter()
+                    .map(|component| component.reference.clone())
+                    .collect()
+            })
+            .unwrap_or_default()
+    }
+
     fn update(&self) -> AppUpdate {
         let selected_label = self
             .analyses
@@ -305,6 +326,11 @@ impl SpiceMosaicApp {
             "waveform-segments": self.waveform_plot.segments,
             "raw-result-label": "Raw result JSON",
             "result-text": self.result_text,
+            "schematic-label": "Schematic",
+            "schematic-title": self.schematic.as_ref().map(|document| document.title.as_str()).unwrap_or("No schematic loaded"),
+            "schematic-rows": self.schematic_rows(),
+            "selected-schematic-label": self.selected_schematic_component.as_deref().unwrap_or("No component selected"),
+            "synchronize-schematic-label": "Sync netlist",
             "dark-theme": self.dark,
         }))
     }
@@ -354,6 +380,31 @@ impl SpiceMosaicApp {
         self.analyses = analyses;
         self.mode = "Results";
         Ok(self.announced(self.diagnostics.clone()))
+    }
+
+    fn load_schematic(
+        &mut self,
+        document: SchematicDocument,
+    ) -> Result<AppUpdate, SpiceMosaicError> {
+        document
+            .validate()
+            .map_err(|error| invalid(error.to_string()))?;
+        self.selected_schematic_component = None;
+        self.schematic = Some(document);
+        self.diagnostics = "Schematic loaded. Sync its canonical netlist when ready.".to_owned();
+        self.mode = "Schematic";
+        Ok(self.announced(self.diagnostics.clone()))
+    }
+
+    fn synchronize_schematic(&mut self) -> Result<AppUpdate, SpiceMosaicError> {
+        let deck = self
+            .schematic
+            .as_ref()
+            .ok_or_else(|| invalid("synchronizeSchematic requires a loaded schematic"))?
+            .to_berkeley_netlist()
+            .map_err(|error| invalid(error.to_string()))?;
+        self.deck = deck;
+        self.inspect()
     }
 }
 
@@ -431,6 +482,68 @@ impl MosaicApp for SpiceMosaicApp {
                     self.waveform_plot.selected_label
                 )))
             }
+            "schematicLoad" => {
+                let document =
+                    serde_json::from_value(event.payload["document"].clone()).map_err(|error| {
+                        invalid(format!("schematicLoad requires a document: {error}"))
+                    })?;
+                self.load_schematic(document)
+            }
+            "schematicPlace" => {
+                let component: SchematicComponent =
+                    serde_json::from_value(event.payload["component"].clone()).map_err(
+                        |error| invalid(format!("schematicPlace requires a component: {error}")),
+                    )?;
+                let document = self
+                    .schematic
+                    .as_mut()
+                    .ok_or_else(|| invalid("schematicPlace requires a loaded schematic"))?;
+                if document
+                    .components
+                    .iter()
+                    .any(|existing| existing.reference == component.reference)
+                {
+                    return Err(invalid("schematicPlace component reference already exists"));
+                }
+                document.components.push(component);
+                self.diagnostics =
+                    "Component placed. Connect endpoints, then sync the netlist.".to_owned();
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "schematicConnect" => {
+                let wire: SchematicWire = serde_json::from_value(event.payload["wire"].clone())
+                    .map_err(|error| {
+                        invalid(format!("schematicConnect requires a wire: {error}"))
+                    })?;
+                let document = self
+                    .schematic
+                    .as_mut()
+                    .ok_or_else(|| invalid("schematicConnect requires a loaded schematic"))?;
+                if wire.start == wire.end {
+                    return Err(invalid("schematicConnect requires distinct endpoints"));
+                }
+                document.wires.push(wire);
+                self.diagnostics = "Endpoints connected. Sync the netlist when ready.".to_owned();
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "selectSchematicComponent" => {
+                let reference = event.payload["reference"]
+                    .as_str()
+                    .ok_or_else(|| invalid("selectSchematicComponent requires reference"))?;
+                let document = self.schematic.as_ref().ok_or_else(|| {
+                    invalid("selectSchematicComponent requires a loaded schematic")
+                })?;
+                if !document
+                    .components
+                    .iter()
+                    .any(|component| component.reference == reference)
+                {
+                    return Err(invalid("selectSchematicComponent reference is unknown"));
+                }
+                self.selected_schematic_component = Some(reference.to_owned());
+                Ok(self.announced(format!("Selected {reference}.")))
+            }
+            "synchronizeSchematic" => self.synchronize_schematic(),
             _ => Err(invalid(format!(
                 "unknown SPICE workbench event: {}",
                 event.name
@@ -442,6 +555,8 @@ impl MosaicApp for SpiceMosaicApp {
         let bytes = serde_json::to_vec(&SavedState {
             deck: self.deck.clone(),
             selected_analysis_row: self.selected_analysis_row,
+            schematic: self.schematic.clone(),
+            selected_schematic_component: self.selected_schematic_component.clone(),
         })
         .map_err(|error| invalid(error.to_string()))?;
         Ok(Some(Snapshot {
@@ -452,7 +567,8 @@ impl MosaicApp for SpiceMosaicApp {
     }
 
     fn restore(&mut self, snapshot: Snapshot) -> Result<AppUpdate, Self::Error> {
-        if snapshot.schema != SNAPSHOT_SCHEMA || snapshot.version != SNAPSHOT_VERSION {
+        if snapshot.schema != SNAPSHOT_SCHEMA || !(1..=SNAPSHOT_VERSION).contains(&snapshot.version)
+        {
             return Err(invalid("unsupported SPICE workbench snapshot"));
         }
         let saved: SavedState =
@@ -468,6 +584,19 @@ impl MosaicApp for SpiceMosaicApp {
         self.waveform_plot = WaveformPlot::default();
         self.result_text.clear();
         self.diagnostic_rows = diagnostic_rows(&self.deck);
+        self.schematic = saved.schematic;
+        self.selected_schematic_component = saved.selected_schematic_component;
+        if let (Some(document), Some(reference)) =
+            (&self.schematic, &self.selected_schematic_component)
+        {
+            if !document
+                .components
+                .iter()
+                .any(|component| &component.reference == reference)
+            {
+                return Err(invalid("snapshot schematic selection is unknown"));
+            }
+        }
         self.diagnostics = "Workbench restored. Inspect or run the saved deck.".to_owned();
         self.mode = "Draft";
         Ok(self.announced(self.diagnostics.clone()))
@@ -585,5 +714,36 @@ mod tests {
             .unwrap();
         assert_eq!(update.revision, 2);
         assert_eq!(update.props["selected-analysis-label"], ".op (analysis 1)");
+    }
+
+    #[test]
+    fn schematic_host_events_select_and_sync_a_canonical_deck() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let document = json!({
+            "title": "Host RC",
+            "components": [
+                {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":0,"y":20},{"x":40,"y":20}]},
+                {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+            ],
+            "wires": []
+        });
+        let loaded = dispatch(&mut app, "schematicLoad", json!({"document": document}));
+        assert_eq!(loaded.props["mode-label"], "Schematic");
+        assert_eq!(loaded.props["schematic-rows"], json!(["V1", "R1", "G1"]));
+        let selected = dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"R1"}),
+        );
+        assert_eq!(selected.props["selected-schematic-label"], "R1");
+        let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
+        assert_eq!(synchronized.props["mode-label"], "Inspection");
+        assert_eq!(
+            synchronized.props["netlist-text"],
+            "* Host RC\nR1 n1 n2 1k\nV1 n1 0 DC 5\n.op\n.end\n"
+        );
     }
 }
