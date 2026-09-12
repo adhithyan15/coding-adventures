@@ -2,7 +2,7 @@
 name = "coding_adventures_oauth_broker"
 version = "0.1.0"
 edition = "2021"
-description = "Provider-neutral audit-first OAuth credential, refresh, and device-poll orchestration"
+description = "Provider-neutral audit-first OAuth credential, refresh, revocation, and device orchestration"
 
 [dependencies]
 coding_adventures_bounded_json = { path = "../bounded-json" }

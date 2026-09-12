@@ -249,6 +249,11 @@ impl ProviderConfig {
         &self.token_endpoint
     }
 
+    /// Return the optional validated RFC 7009 revocation endpoint.
+    pub fn revocation_endpoint(&self) -> Option<&str> {
+        self.revocation_endpoint.as_deref()
+    }
+
     /// Return the exact redirect URI bound to this provider registration.
     pub fn redirect_uri(&self) -> &str {
         &self.redirect_uri

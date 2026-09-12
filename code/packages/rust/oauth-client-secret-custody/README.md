@@ -16,7 +16,9 @@ credentials are encoded before standard Base64 and are not duplicated in the
 body; Post credentials remain only in the form body. Returned headers and
 bodies are wipe-on-drop, and every request is matched to the exact provider and
 client identity before access while inheriting the trace used for the custody
-audit. Authentication can be derived from validated RFC 8414 metadata only
+audit. Exchange, refresh, and revocation authentication also retain their exact
+provider/trace response context for later audit-gated classification.
+Authentication can be derived from validated RFC 8414 metadata only
 when the opaque key's provider and exact method token both match; no default is
 invented. The selected method maps to the core's closed confidential-method
 type so callers can derive a matching PKCE-enforced `ProviderConfig` without

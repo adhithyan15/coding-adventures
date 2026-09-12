@@ -10,7 +10,7 @@ use coding_adventures_base64::{encode_into as encode_base64_into, STANDARD};
 use coding_adventures_oauth::{
     AuthorizationServerMetadata, ConfidentialClientAuthenticationMethod, OAuthTraceId,
     ProviderConfig, ProviderId, TokenExchangeRequest, TokenRefreshRequest, TokenResponseContext,
-    TokenRevocationRequest,
+    TokenRevocationRequest, TokenRevocationResponseContext,
 };
 use coding_adventures_zeroize::Zeroizing;
 use std::collections::BTreeMap;
@@ -261,15 +261,21 @@ impl Debug for ClientSecretAuthenticatedTokenRefresh {
     }
 }
 
-/// Authenticated RFC 7009 revocation request.
+/// Authenticated RFC 7009 revocation request plus its response binding.
 pub struct ClientSecretAuthenticatedTokenRevocation {
     request: ClientSecretAuthenticatedRequest,
+    response_context: TokenRevocationResponseContext,
 }
 
 impl ClientSecretAuthenticatedTokenRevocation {
     /// Borrow the authenticated wire request.
     pub const fn request(&self) -> &ClientSecretAuthenticatedRequest {
         &self.request
+    }
+
+    /// Borrow the exact provider/trace response binding.
+    pub const fn response_context(&self) -> &TokenRevocationResponseContext {
+        &self.response_context
     }
 }
 
@@ -278,6 +284,7 @@ impl Debug for ClientSecretAuthenticatedTokenRevocation {
         formatter
             .debug_struct("ClientSecretAuthenticatedTokenRevocation")
             .field("request", &self.request)
+            .field("response_context", &self.response_context)
             .finish()
     }
 }
@@ -678,6 +685,7 @@ impl<S: ClientSecretStore> ClientSecretCustody<S> {
         request: TokenRevocationRequest,
         audit: &mut A,
     ) -> Result<ClientSecretAuthenticatedTokenRevocation, ClientSecretCustodyError> {
+        let response_context = request.response_context();
         let authenticated = self.authenticate_request(
             config,
             authentication,
@@ -690,6 +698,7 @@ impl<S: ClientSecretStore> ClientSecretCustody<S> {
         )?;
         Ok(ClientSecretAuthenticatedTokenRevocation {
             request: authenticated,
+            response_context,
         })
     }
 
@@ -1372,6 +1381,8 @@ mod tests {
             .request()
             .form_body()
             .ends_with("client_secret=s+e%3Ac%2Fr%2Bet"));
+        assert_eq!(revocation.response_context().provider(), config.provider());
+        assert_eq!(revocation.response_context().trace(), trace());
         assert_eq!(audit.events.len(), 4);
         assert!(audit.events.iter().all(|event| event.trace() == trace()));
     }

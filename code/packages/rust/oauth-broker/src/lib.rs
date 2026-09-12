@@ -1,4 +1,4 @@
-//! Provider-neutral, audit-first OAuth credential, refresh, and device-poll orchestration.
+//! Provider-neutral, audit-first OAuth credential, refresh, revocation, and device orchestration.
 //!
 //! This crate composes the pure OAuth protocol core with storage-agnostic
 //! credential custody. It owns policy and sequencing, but no clock, network,
@@ -9,11 +9,13 @@
 
 use coding_adventures_oauth::{
     decode_device_authorization_response, decode_device_token_poll_response, decode_token_response,
-    prepare_device_authorization, prepare_device_token_poll, prepare_token_refresh,
-    ConfidentialClientAuthenticationMethod, DeviceAuthorization, DeviceAuthorizationProfile,
-    DeviceAuthorizationRequest, DevicePollResult, DevicePollingSession, DeviceTokenPollRequest,
-    OAuthAuditSink, OAuthError, OAuthTraceId, ProviderConfig, ProviderId, TokenExchangeRequest,
-    TokenRefreshRequest, TokenResponse, TokenResponseFormat, MAX_TOKEN_RESPONSE_BYTES,
+    decode_token_revocation_response, prepare_device_authorization, prepare_device_token_poll,
+    prepare_token_refresh, ConfidentialClientAuthenticationMethod, DeviceAuthorization,
+    DeviceAuthorizationProfile, DeviceAuthorizationRequest, DevicePollResult, DevicePollingSession,
+    DeviceTokenPollRequest, OAuthAuditSink, OAuthError, OAuthTraceId, ProviderConfig, ProviderId,
+    TokenExchangeRequest, TokenRefreshRequest, TokenResponse, TokenResponseFormat,
+    TokenRevocationRequest, TokenRevocationResponse, MAX_TOKEN_RESPONSE_BYTES,
+    MAX_TOKEN_REVOCATION_RESPONSE_BYTES,
 };
 use coding_adventures_oauth_client_secret_custody::{
     ClientSecretAuditSink, ClientSecretAuthenticatedRequest, ClientSecretAuthentication,
@@ -316,6 +318,38 @@ impl Debug for TokenEndpointResponse {
     }
 }
 
+/// Bounded RFC 7009 endpoint response owned in wipe-on-drop storage.
+pub struct TokenRevocationEndpointResponse {
+    status: u16,
+    body: Zeroizing<Vec<u8>>,
+}
+
+impl TokenRevocationEndpointResponse {
+    /// Construct a syntactically valid bounded HTTP response boundary.
+    ///
+    /// An empty body is valid because RFC 7009 success bodies are ignored.
+    pub fn new(status: u16, body: Zeroizing<Vec<u8>>) -> Result<Self, BrokerError> {
+        if !(100..=599).contains(&status) || body.len() > MAX_TOKEN_REVOCATION_RESPONSE_BYTES {
+            return Err(BrokerError::InvalidTransportResponse);
+        }
+        Ok(Self { status, body })
+    }
+
+    fn into_parts(self) -> (u16, Zeroizing<Vec<u8>>) {
+        (self.status, self.body)
+    }
+}
+
+impl Debug for TokenRevocationEndpointResponse {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("TokenRevocationEndpointResponse")
+            .field("status", &self.status)
+            .field("body", &"<redacted>")
+            .finish()
+    }
+}
+
 /// Bounded device-authorization endpoint response owned in wipe-on-drop storage.
 pub struct DeviceAuthorizationEndpointResponse {
     status: u16,
@@ -388,6 +422,15 @@ pub trait OAuthClientSecretTokenExchangeTransport {
         &mut self,
         request: &ClientSecretAuthenticatedRequest,
     ) -> Result<TokenEndpointResponse, TokenTransportError>;
+}
+
+/// Authorized provider-neutral transport for one client-secret-authenticated revocation.
+pub trait OAuthClientSecretTokenRevocationTransport {
+    /// Send one custody-built, zeroizing authenticated RFC 7009 request.
+    fn send_client_secret_revocation(
+        &mut self,
+        request: &ClientSecretAuthenticatedRequest,
+    ) -> Result<TokenRevocationEndpointResponse, TokenTransportError>;
 }
 
 /// Authorized provider-neutral transport for one RFC 8628 token poll.
@@ -623,10 +666,14 @@ pub enum BrokerAuditAction {
     ClientSecretRefresh,
     /// Authenticate and send one client-secret authorization-code exchange.
     ClientSecretExchange,
+    /// Authenticate, send, and classify one client-secret RFC 7009 revocation.
+    ClientSecretRevocation,
     /// Exchange and persist one client-secret-authenticated credential response.
     ClientSecretExchangeCredentialCreate,
     /// Send one request through the injected token transport.
     TokenTransport,
+    /// Send one RFC 7009 request through the injected revocation transport.
+    TokenRevocationTransport,
     /// Classify one externally scheduled RFC 8628 device-token poll.
     DevicePoll,
     /// Send one device-token request through the injected transport.
@@ -1203,6 +1250,52 @@ impl<S: CredentialStore> OAuthBroker<S> {
         )
     }
 
+    /// Authenticate, send, and classify one client-secret RFC 7009 revocation.
+    ///
+    /// The registered provider's exact client ID, revocation endpoint, and
+    /// retained `client_secret_basic` or `client_secret_post` method are
+    /// checked before client-secret custody access. Custody owns secret
+    /// disclosure and zeroizing wire construction; the broker audit-brackets
+    /// the injected transport, and the OAuth core audit-gates response
+    /// classification. This operation does not delete any local credential.
+    pub fn send_client_secret_revocation<SS, T, A>(
+        &self,
+        authentication: &ClientSecretAuthentication,
+        request: TokenRevocationRequest,
+        client_secret_custody: &ClientSecretCustody<SS>,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<TokenRevocationResponse, BrokerError>
+    where
+        SS: ClientSecretStore,
+        T: OAuthClientSecretTokenRevocationTransport,
+        A: OAuthClientSecretBrokerAuditSink,
+    {
+        let provider = request.provider().clone();
+        let trace = request.trace();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::ClientSecretRevocation,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = self.send_client_secret_revocation_inner(
+            authentication,
+            request,
+            client_secret_custody,
+            transport,
+            audit,
+        );
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::ClientSecretRevocation,
+            result,
+        )
+    }
+
     /// Exchange and persist one client-secret-authenticated credential response.
     ///
     /// The opaque account key must name the request provider before any
@@ -1680,6 +1773,39 @@ impl<S: CredentialStore> OAuthBroker<S> {
             .map_err(map_oauth_error)
     }
 
+    fn send_client_secret_revocation_inner<SS, T, A>(
+        &self,
+        authentication: &ClientSecretAuthentication,
+        request: TokenRevocationRequest,
+        client_secret_custody: &ClientSecretCustody<SS>,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<TokenRevocationResponse, BrokerError>
+    where
+        SS: ClientSecretStore,
+        T: OAuthClientSecretTokenRevocationTransport,
+        A: OAuthClientSecretBrokerAuditSink,
+    {
+        let provider = self.registered_provider(request.provider())?;
+        let expected = provider.bind_client_secret_authentication(authentication.key().clone())?;
+        if &expected != authentication
+            || request.client_id() != provider.config().client_id()
+            || Some(request.endpoint()) != provider.config().revocation_endpoint()
+        {
+            return Err(BrokerError::BindingMismatch);
+        }
+        let authenticated = client_secret_custody
+            .authenticate_token_revocation(provider.config(), authentication, request, audit)
+            .map_err(map_client_secret_custody_error)?;
+        let context = authenticated.response_context().clone();
+        let wire_response =
+            send_client_secret_revocation_audited(transport, authenticated.request(), audit)?;
+        let (status, body) = wire_response.into_parts();
+        decode_token_revocation_response(context, status, body)
+            .publish_then_release(audit)
+            .map_err(map_oauth_error)
+    }
+
     fn registered_provider(&self, provider: &ProviderId) -> Result<&BrokerProvider, BrokerError> {
         self.providers
             .get(provider)
@@ -1827,6 +1953,33 @@ fn send_client_secret_exchange_audited<
     )
 }
 
+fn send_client_secret_revocation_audited<
+    T: OAuthClientSecretTokenRevocationTransport,
+    A: BrokerAuditSink,
+>(
+    transport: &mut T,
+    request: &ClientSecretAuthenticatedRequest,
+    audit: &mut A,
+) -> Result<TokenRevocationEndpointResponse, BrokerError> {
+    publish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::TokenRevocationTransport,
+        BrokerAuditOutcome::Attempted,
+    )?;
+    let result = transport
+        .send_client_secret_revocation(request)
+        .map_err(|_| BrokerError::Transport);
+    finish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::TokenRevocationTransport,
+        result,
+    )
+}
+
 fn send_device_authorization_audited<T: OAuthDeviceAuthorizationTransport, A: BrokerAuditSink>(
     transport: &mut T,
     request: &DeviceAuthorizationRequest,
@@ -1931,8 +2084,9 @@ mod tests {
     use coding_adventures_oauth::{
         begin_authorization, complete_authorization, decode_authorization_server_metadata,
         decode_device_authorization_response, prepare_authorization_server_metadata,
-        prepare_device_authorization, prepare_token_refresh, DeviceAuthorizationProfile,
-        EntropySource, OAuthAuditAction, OAuthAuditError, OAuthAuditEvent, OAuthAuditOutcome,
+        prepare_device_authorization, prepare_token_refresh, prepare_token_revocation,
+        DeviceAuthorizationProfile, EntropySource, OAuthAuditAction, OAuthAuditError,
+        OAuthAuditEvent, OAuthAuditOutcome, ProviderTokenRevocationError, RevocationTokenHint,
     };
     use coding_adventures_oauth_client_secret_custody::{
         ClientSecretAuditAction, ClientSecretAuditError, ClientSecretAuditEvent,
@@ -2002,6 +2156,15 @@ mod tests {
                     (BrokerAuditAction::ClientSecretExchange, BrokerAuditOutcome::Failed(_)) => {
                         "exchange-failed"
                     }
+                    (BrokerAuditAction::ClientSecretRevocation, BrokerAuditOutcome::Attempted) => {
+                        "revocation-attempted"
+                    }
+                    (BrokerAuditAction::ClientSecretRevocation, BrokerAuditOutcome::Succeeded) => {
+                        "revocation-succeeded"
+                    }
+                    (BrokerAuditAction::ClientSecretRevocation, BrokerAuditOutcome::Failed(_)) => {
+                        "revocation-failed"
+                    }
                     (
                         BrokerAuditAction::ClientSecretExchangeCredentialCreate,
                         BrokerAuditOutcome::Attempted,
@@ -2032,6 +2195,18 @@ mod tests {
                     (BrokerAuditAction::TokenTransport, BrokerAuditOutcome::Failed(_)) => {
                         "transport-failed"
                     }
+                    (
+                        BrokerAuditAction::TokenRevocationTransport,
+                        BrokerAuditOutcome::Attempted,
+                    ) => "revocation-transport-attempted",
+                    (
+                        BrokerAuditAction::TokenRevocationTransport,
+                        BrokerAuditOutcome::Succeeded,
+                    ) => "revocation-transport-succeeded",
+                    (
+                        BrokerAuditAction::TokenRevocationTransport,
+                        BrokerAuditOutcome::Failed(_),
+                    ) => "revocation-transport-failed",
                     _ => "other-broker-audit",
                 };
                 order.borrow_mut().push(label);
@@ -2220,6 +2395,38 @@ mod tests {
                 !self.expected_authorization_header
             );
             self.response.take().ok_or(TokenTransportError)
+        }
+    }
+
+    struct MockClientSecretRevocationTransport {
+        response: Option<Result<TokenRevocationEndpointResponse, TokenTransportError>>,
+        expected_authorization_header: bool,
+        calls: usize,
+        order: Rc<RefCell<Vec<&'static str>>>,
+    }
+
+    impl OAuthClientSecretTokenRevocationTransport for MockClientSecretRevocationTransport {
+        fn send_client_secret_revocation(
+            &mut self,
+            request: &ClientSecretAuthenticatedRequest,
+        ) -> Result<TokenRevocationEndpointResponse, TokenTransportError> {
+            self.calls += 1;
+            self.order.borrow_mut().push("revocation-transport-effect");
+            assert_eq!(request.provider().as_str(), "fixture-confidential");
+            assert_eq!(
+                request.endpoint(),
+                "https://token.fixture-confidential.example/revoke"
+            );
+            assert_eq!(
+                request.authorization_header().is_some(),
+                self.expected_authorization_header
+            );
+            assert!(request.form_body().contains("token=access-secret"));
+            assert_eq!(
+                request.form_body().contains("client_secret=client+secret"),
+                !self.expected_authorization_header
+            );
+            self.response.take().unwrap_or(Err(TokenTransportError))
         }
     }
 
@@ -2968,6 +3175,232 @@ mod tests {
                 ]
             );
         }
+    }
+
+    #[test]
+    fn client_secret_revocation_uses_exact_retained_method_and_audit_order() {
+        for (method, expects_basic_header) in [
+            (
+                ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+                true,
+            ),
+            (
+                ConfidentialClientAuthenticationMethod::ClientSecretPost,
+                false,
+            ),
+        ] {
+            let provider_config = config("fixture-confidential")
+                .with_revocation_endpoint("https://token.fixture-confidential.example/revoke")
+                .unwrap();
+            let secret_key = ClientSecretKey::new(
+                provider_config.provider().clone(),
+                ClientSecretReference::new([0x77; 32]),
+            );
+            let provider = BrokerProvider::new_confidential(
+                provider_config.clone(),
+                TokenResponseFormat::Json,
+                300,
+                method,
+                Vec::new(),
+            )
+            .unwrap();
+            let authentication = provider
+                .bind_client_secret_authentication(secret_key.clone())
+                .unwrap();
+            let mut broker =
+                OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+            let order = Rc::new(RefCell::new(Vec::new()));
+            let mut audit = RecordingAudit {
+                order: Some(order.clone()),
+                ..RecordingAudit::default()
+            };
+            broker
+                .register_provider(provider, trace(53), &mut audit)
+                .unwrap();
+            let client_secret_custody = ClientSecretCustody::new(InMemoryClientSecretStore::new());
+            client_secret_custody
+                .create(
+                    &secret_key,
+                    Zeroizing::new("client secret".to_owned()),
+                    trace(53),
+                    &mut audit,
+                )
+                .unwrap();
+            let request = prepare_token_revocation(
+                &provider_config,
+                Zeroizing::new("access-secret".to_owned()),
+                RevocationTokenHint::AccessToken,
+                trace(54),
+            )
+            .publish_then_release(&mut audit)
+            .unwrap();
+            let oauth_events_before = audit.oauth.len();
+            order.borrow_mut().clear();
+            let mut transport = MockClientSecretRevocationTransport {
+                response: Some(Ok(TokenRevocationEndpointResponse::new(
+                    200,
+                    Zeroizing::new(Vec::new()),
+                )
+                .unwrap())),
+                expected_authorization_header: expects_basic_header,
+                calls: 0,
+                order: order.clone(),
+            };
+
+            let response = broker
+                .send_client_secret_revocation(
+                    &authentication,
+                    request,
+                    &client_secret_custody,
+                    &mut transport,
+                    &mut audit,
+                )
+                .unwrap();
+
+            assert_eq!(response.provider(), provider_config.provider());
+            assert_eq!(response.trace(), trace(54));
+            assert_eq!(transport.calls, 1);
+            assert_eq!(
+                audit.oauth[oauth_events_before..]
+                    .iter()
+                    .map(OAuthAuditEvent::action)
+                    .collect::<Vec<_>>(),
+                vec![OAuthAuditAction::TokenRevocationResponseClassify]
+            );
+            assert_eq!(
+                order.borrow().as_slice(),
+                [
+                    "revocation-attempted",
+                    "secret-access-attempted",
+                    "secret-access-succeeded",
+                    "revocation-transport-attempted",
+                    "revocation-transport-effect",
+                    "revocation-transport-succeeded",
+                    "revocation-succeeded",
+                ]
+            );
+        }
+    }
+
+    #[test]
+    fn client_secret_revocation_binding_and_retryable_failure_stay_closed() {
+        let provider_config = config("fixture-confidential")
+            .with_revocation_endpoint("https://token.fixture-confidential.example/revoke")
+            .unwrap();
+        let secret_key = ClientSecretKey::new(
+            provider_config.provider().clone(),
+            ClientSecretReference::new([0x78; 32]),
+        );
+        let provider = BrokerProvider::new_confidential(
+            provider_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            Vec::new(),
+        )
+        .unwrap();
+        let authentication = provider
+            .bind_client_secret_authentication(secret_key.clone())
+            .unwrap();
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(provider, trace(55), &mut audit)
+            .unwrap();
+        let client_secret_custody = ClientSecretCustody::new(InMemoryClientSecretStore::new());
+        client_secret_custody
+            .create(
+                &secret_key,
+                Zeroizing::new("client secret".to_owned()),
+                trace(55),
+                &mut audit,
+            )
+            .unwrap();
+
+        let other_endpoint_config = config("fixture-confidential")
+            .with_revocation_endpoint("https://other.fixture-confidential.example/revoke")
+            .unwrap();
+        let mismatched = prepare_token_revocation(
+            &other_endpoint_config,
+            Zeroizing::new("access-secret".to_owned()),
+            RevocationTokenHint::AccessToken,
+            trace(56),
+        )
+        .publish_then_release(&mut audit)
+        .unwrap();
+        let secret_events_before = audit.client_secret.len();
+        order.borrow_mut().clear();
+        let mut transport = MockClientSecretRevocationTransport {
+            response: None,
+            expected_authorization_header: true,
+            calls: 0,
+            order: order.clone(),
+        };
+        assert!(matches!(
+            broker.send_client_secret_revocation(
+                &authentication,
+                mismatched,
+                &client_secret_custody,
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(audit.client_secret.len(), secret_events_before);
+        assert_eq!(transport.calls, 0);
+        assert_eq!(
+            order.borrow().as_slice(),
+            ["revocation-attempted", "revocation-failed"]
+        );
+
+        let retryable = prepare_token_revocation(
+            &provider_config,
+            Zeroizing::new("access-secret".to_owned()),
+            RevocationTokenHint::AccessToken,
+            trace(57),
+        )
+        .publish_then_release(&mut audit)
+        .unwrap();
+        order.borrow_mut().clear();
+        let mut transport = MockClientSecretRevocationTransport {
+            response: Some(Ok(TokenRevocationEndpointResponse::new(
+                503,
+                Zeroizing::new(Vec::new()),
+            )
+            .unwrap())),
+            expected_authorization_header: true,
+            calls: 0,
+            order: order.clone(),
+        };
+        assert!(matches!(
+            broker.send_client_secret_revocation(
+                &authentication,
+                retryable,
+                &client_secret_custody,
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Protocol(OAuthError::TokenRevocationEndpoint(
+                ProviderTokenRevocationError::TemporarilyUnavailable
+            )))
+        ));
+        assert_eq!(transport.calls, 1);
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "revocation-attempted",
+                "secret-access-attempted",
+                "secret-access-succeeded",
+                "revocation-transport-attempted",
+                "revocation-transport-effect",
+                "revocation-transport-succeeded",
+                "revocation-failed",
+            ]
+        );
     }
 
     #[test]
@@ -4554,6 +4987,17 @@ mod tests {
             ),
             Err(BrokerError::InvalidTransportResponse)
         ));
+        assert!(matches!(
+            TokenRevocationEndpointResponse::new(99, Zeroizing::new(Vec::new())),
+            Err(BrokerError::InvalidTransportResponse)
+        ));
+        assert!(matches!(
+            TokenRevocationEndpointResponse::new(
+                200,
+                Zeroizing::new(vec![b'x'; MAX_TOKEN_REVOCATION_RESPONSE_BYTES + 1]),
+            ),
+            Err(BrokerError::InvalidTransportResponse)
+        ));
         let (broker, mut audit, key) = broker_with_credential(u64::MAX);
         let mut transport = MockTransport::new("refresh-one", &[]);
         assert_eq!(
@@ -4568,11 +5012,17 @@ mod tests {
             Err(BrokerError::Clock)
         );
         let debug = format!(
-            "{broker:?} {:?} {:?}",
+            "{broker:?} {:?} {:?} {:?}",
             BrokerError::Transport,
-            TokenEndpointResponse::new(200, Zeroizing::new(b"top-secret".to_vec())).unwrap()
+            TokenEndpointResponse::new(200, Zeroizing::new(b"top-secret".to_vec())).unwrap(),
+            TokenRevocationEndpointResponse::new(
+                200,
+                Zeroizing::new(b"revocation-secret".to_vec()),
+            )
+            .unwrap()
         );
         assert!(!debug.contains("top-secret"));
+        assert!(!debug.contains("revocation-secret"));
         assert!(debug.contains("<redacted>"));
     }
 }

@@ -165,17 +165,19 @@ The delivery order is:
    revoked, ignores the bounded success body, validates bounded JSON errors for
    HTTP 400/401, and retains HTTP 503 as a closed retryable error before any
    later broker transport or local credential-removal authority is added.
-   Broker-level client-secret authorization-code exchange and refresh sends
-   are also shipped: the registered provider, client ID, token endpoint, and
-   retained Basic/Post method are checked before audited client-secret access;
-   custody constructs the zeroizing request; and broker-audited injected
-   transport plus bounded response decoding completes before release. Initial
+   Broker-level client-secret authorization-code exchange, refresh, and RFC
+   7009 revocation sends are also shipped: the registered provider, client ID,
+   exact operation endpoint, and retained Basic/Post method are checked before
+   audited client-secret access; custody constructs the zeroizing request; and
+   broker-audited injected transport plus bounded response decoding completes
+   before release. Revocation releases success only for exact HTTP 200, keeps
+   HTTP 503 retryable, and performs no local credential deletion. Initial
    client-secret exchange can now compose directly into an exact opaque account
    key: key/provider mismatch fails before secret, transport, clock, or storage
    access; OAuth credential release and custody creation remain separately
    audited; and only the opaque revision is returned. Stored OAuth credential
-   rotation remains a separate composition step, and these boundaries add no
-   concrete network authority.
+   rotation and post-revocation local credential deletion remain separate
+   composition steps, and these boundaries add no concrete network authority.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate

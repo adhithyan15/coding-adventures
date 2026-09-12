@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Retained the exact provider/trace response context across authenticated RFC
+  7009 request construction so a later broker transport cannot classify an
+  unbound response.
 - Exposed the selected client-secret method's shared confidential metadata
   method so composition roots can derive an exactly matching provider config.
 - Added exact, case-sensitive RFC 8414 method selection for provider-bound
