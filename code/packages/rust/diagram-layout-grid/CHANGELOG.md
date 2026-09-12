@@ -1,5 +1,9 @@
 # Changelog - diagram-layout-grid
 
+## 0.8.0
+
+- Resolve authored Block composite styles over backend-neutral group defaults.
+
 ## 0.7.0
 
 - Recursively size and position Block composite groups and their child grids.

@@ -1466,6 +1466,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 columns: GridColumns::Auto,
                 column_span,
                 order,
+                style: None,
             });
             group_stack.push(id);
             continue;
@@ -1598,11 +1599,11 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             let class_style = class_styles.get(&class_name).ok_or_else(|| ParseError {
                 message: format!("unknown block style class {class_name:?}"), line: 1, col: 1,
             })?;
-            apply_block_style(&mut cells, &targets, class_style)?;
+            apply_block_style(&mut cells, &mut groups, &targets, class_style)?;
         }
     }
     for (targets, style) in direct_styles {
-        apply_block_style(&mut cells, &targets, &style)?;
+        apply_block_style(&mut cells, &mut groups, &targets, &style)?;
     }
 
     for connection in &connections {
@@ -1687,12 +1688,24 @@ fn split_block_names(source: &str) -> Vec<String> {
         .map(str::trim).filter(|name| !name.is_empty()).map(str::to_string).collect()
 }
 
-fn apply_block_style(cells: &mut [GridCell], targets: &[String], style: &DiagramStyle) -> Result<(), ParseError> {
+fn apply_block_style(
+    cells: &mut [GridCell],
+    groups: &mut [GridGroup],
+    targets: &[String],
+    style: &DiagramStyle,
+) -> Result<(), ParseError> {
     for target in targets {
-        let cell = cells.iter_mut().find(|cell| cell.visible && cell.id == *target).ok_or_else(|| ParseError {
-            message: format!("block style references an unknown node {target:?}"), line: 1, col: 1,
-        })?;
-        merge_state_style(cell.style.get_or_insert_default(), style);
+        if let Some(cell) = cells.iter_mut().find(|cell| cell.visible && cell.id == *target) {
+            merge_state_style(cell.style.get_or_insert_default(), style);
+        } else if let Some(group) = groups.iter_mut().find(|group| group.id == *target) {
+            merge_state_style(group.style.get_or_insert_default(), style);
+        } else {
+            return Err(ParseError {
+                message: format!("block style references an unknown target {target:?}"),
+                line: 1,
+                col: 1,
+            });
+        }
     }
     Ok(())
 }
@@ -9285,6 +9298,20 @@ mod tests_dg04 {
         assert_eq!(diagram.groups[0].id, "pipeline");
         assert_eq!(diagram.groups[0].label.text, "Processing Pipeline");
         assert_eq!(diagram.groups[0].column_span, 2);
+    }
+
+    #[test]
+    fn block_resolves_composite_class_and_direct_styles() {
+        let diagram = parse_block(
+            "block\nblock:pipeline[\"Processing Pipeline\"]\nA[Parse]\nend\nclassDef framed fill:#fef3c7,stroke:#b45309,color:#78350f\nclass pipeline framed\nstyle pipeline stroke-width:4px,font-weight:bold",
+        )
+        .unwrap();
+        let style = diagram.groups[0].style.as_ref().unwrap();
+        assert_eq!(style.fill.as_deref(), Some("#fef3c7"));
+        assert_eq!(style.stroke.as_deref(), Some("#b45309"));
+        assert_eq!(style.text_color.as_deref(), Some("#78350f"));
+        assert_eq!(style.stroke_width, Some(4.0));
+        assert_eq!(style.font_weight, Some(700));
     }
 
     #[test]

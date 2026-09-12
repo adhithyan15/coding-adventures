@@ -183,6 +183,7 @@ pub struct GridGroup {
     pub columns: GridColumns,
     pub column_span: usize,
     pub order: usize,
+    pub style: Option<DiagramStyle>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
