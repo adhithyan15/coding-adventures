@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.112.0
+
+- Lower resolved Packet field, bit-label, and title theme styles into PaintScene instructions.
+
 ## 0.111.0
 
 - Lower configured packet labels and bit-number geometry through backend-neutral PaintScene instructions.

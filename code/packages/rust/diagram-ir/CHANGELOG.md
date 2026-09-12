@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.103.0
+
+- Add typed Mermaid packet theme variables and resolved title and bit-label styles.
+
 ## 0.102.0
 
 - Add typed Mermaid packet configuration and resolved bit-label geometry.

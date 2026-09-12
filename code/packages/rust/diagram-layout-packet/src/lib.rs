@@ -3,7 +3,7 @@
 pub const VERSION: &str = "0.1.0";
 
 use diagram_ir::{
-    DiagramStyle, LayoutedPacketBitLabel, LayoutedPacketDiagram, LayoutedPacketField, PacketDiagram,
+    LayoutedPacketBitLabel, LayoutedPacketDiagram, LayoutedPacketField, PacketDiagram,
     ResolvedDiagramStyle, TextAlign,
 };
 
@@ -15,7 +15,7 @@ pub fn layout_packet_diagram(diagram: &PacketDiagram) -> LayoutedPacketDiagram {
     let total_row_height = config.row_height + padding_y;
     let mut fields = Vec::new();
     let mut bit_labels = Vec::new();
-    for (index, field) in diagram.fields.iter().enumerate() {
+    for field in &diagram.fields {
         let mut start_bit = field.start_bit;
         while start_bit <= field.end_bit {
             let row = start_bit / bits_per_row;
@@ -38,7 +38,7 @@ pub fn layout_packet_diagram(diagram: &PacketDiagram) -> LayoutedPacketDiagram {
                 y,
                 width,
                 height: config.row_height,
-                style: packet_style(index),
+                style: field_style(diagram),
             });
             if config.show_bits {
                 let single_bit = start_bit == end_bit;
@@ -48,7 +48,12 @@ pub fn layout_packet_diagram(diagram: &PacketDiagram) -> LayoutedPacketDiagram {
                     y: y - 12.0,
                     width,
                     height: 10.0,
-                    align: if single_bit { TextAlign::Center } else { TextAlign::Left },
+                    align: if single_bit {
+                        TextAlign::Center
+                    } else {
+                        TextAlign::Left
+                    },
+                    style: bit_label_style(diagram, true),
                 });
                 if !single_bit {
                     bit_labels.push(LayoutedPacketBitLabel {
@@ -58,6 +63,7 @@ pub fn layout_packet_diagram(diagram: &PacketDiagram) -> LayoutedPacketDiagram {
                         width,
                         height: 10.0,
                         align: TextAlign::Right,
+                        style: bit_label_style(diagram, false),
                     });
                 }
             }
@@ -79,21 +85,42 @@ pub fn layout_packet_diagram(diagram: &PacketDiagram) -> LayoutedPacketDiagram {
         accessibility_description: diagram.accessibility_description.clone(),
         fields,
         bit_labels,
+        title_style: title_style(diagram),
         title_y: height - total_row_height / 2.0,
         width: f64::from(bits_per_row) * config.bit_width + 2.0,
         height,
     }
 }
 
-fn packet_style(index: usize) -> ResolvedDiagramStyle {
-    let fills = ["#dbeafe", "#dcfce7", "#fef3c7", "#fee2e2", "#e0e7ff"];
+fn field_style(diagram: &PacketDiagram) -> ResolvedDiagramStyle {
     ResolvedDiagramStyle {
-        fill: fills[index % fills.len()].into(),
-        stroke: "#334155".into(),
-        stroke_width: 1.5,
-        text_color: "#0f172a".into(),
+        fill: diagram.theme.block_fill_color.clone(),
+        stroke: diagram.theme.block_stroke_color.clone(),
+        stroke_width: diagram.theme.block_stroke_width,
+        text_color: diagram.theme.label_color.clone(),
+        font_size: diagram.theme.label_font_size,
         corner_radius: 0.0,
-        ..diagram_ir::resolve_style(Some(&DiagramStyle::default()))
+        ..diagram_ir::resolve_style(None)
+    }
+}
+
+fn bit_label_style(diagram: &PacketDiagram, start: bool) -> ResolvedDiagramStyle {
+    ResolvedDiagramStyle {
+        text_color: if start {
+            diagram.theme.start_byte_color.clone()
+        } else {
+            diagram.theme.end_byte_color.clone()
+        },
+        font_size: diagram.theme.byte_font_size,
+        ..diagram_ir::resolve_style(None)
+    }
+}
+
+fn title_style(diagram: &PacketDiagram) -> ResolvedDiagramStyle {
+    ResolvedDiagramStyle {
+        text_color: diagram.theme.title_color.clone(),
+        font_size: diagram.theme.title_font_size,
+        ..diagram_ir::resolve_style(None)
     }
 }
 
@@ -169,5 +196,40 @@ mod tests {
         assert_eq!(layout.width, 322.0);
         assert_eq!(layout.height, 98.0);
         assert!(layout.bit_labels.is_empty());
+    }
+
+    #[test]
+    fn resolves_packet_theme_into_backend_neutral_styles() {
+        let layout = layout_packet_diagram(&PacketDiagram {
+            title: Some("Themed".into()),
+            fields: vec![PacketField {
+                start_bit: 0,
+                end_bit: 7,
+                label: DiagramLabel::new("byte"),
+            }],
+            theme: diagram_ir::PacketTheme {
+                byte_font_size: 11.0,
+                start_byte_color: "red".into(),
+                end_byte_color: "blue".into(),
+                label_color: "green".into(),
+                label_font_size: 13.0,
+                title_color: "orange".into(),
+                title_font_size: 17.0,
+                block_stroke_color: "#123456".into(),
+                block_stroke_width: 2.5,
+                block_fill_color: "#abcdef".into(),
+            },
+            ..PacketDiagram::default()
+        });
+        assert_eq!(layout.fields[0].style.fill, "#abcdef");
+        assert_eq!(layout.fields[0].style.stroke, "#123456");
+        assert_eq!(layout.fields[0].style.stroke_width, 2.5);
+        assert_eq!(layout.fields[0].style.text_color, "green");
+        assert_eq!(layout.fields[0].style.font_size, 13.0);
+        assert_eq!(layout.bit_labels[0].style.text_color, "red");
+        assert_eq!(layout.bit_labels[0].style.font_size, 11.0);
+        assert_eq!(layout.bit_labels[1].style.text_color, "blue");
+        assert_eq!(layout.title_style.text_color, "orange");
+        assert_eq!(layout.title_style.font_size, 17.0);
     }
 }
