@@ -25,12 +25,18 @@ const fallbackProps = {
   "schematicGridLines": [],
   "schematicLabel": "Sample SchematicLabel",
   "schematicPalette": [],
+  "schematicPropertiesLabel": "Sample SchematicPropertiesLabel",
   "schematicRows": [],
   "schematicTerminalPoints": [],
   "schematicTitle": "Sample SchematicTitle",
+  "schematicValue": "Sample SchematicValue",
+  "schematicValueDisabled": false,
+  "schematicValueLabel": "Sample SchematicValueLabel",
+  "schematicValuePlaceholder": "Sample SchematicValuePlaceholder",
   "schematicWireSegments": [],
   "selectedAnalysisLabel": "Sample SelectedAnalysisLabel",
   "selectedSchematicAnalysisLabel": "Sample SelectedSchematicAnalysisLabel",
+  "selectedSchematicKindLabel": "Sample SelectedSchematicKindLabel",
   "selectedSchematicLabel": "Sample SelectedSchematicLabel",
   "selectedWaveformLabel": "Sample SelectedWaveformLabel",
   "synchronizeSchematicLabel": "Sample SynchronizeSchematicLabel",
@@ -61,6 +67,12 @@ const emitPayloads = {
     }
   ],
   "onRun": [],
+  "onSchematicValueChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
   "onSelectAnalysis": [
     {
       "name": "index",
