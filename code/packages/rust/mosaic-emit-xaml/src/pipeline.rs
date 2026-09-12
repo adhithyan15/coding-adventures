@@ -11376,9 +11376,41 @@ fn emit_component_reference(
         None => return Err(PipelineEmitError::UnsupportedPrimitive(tag.to_string())),
     };
 
+    // UI34 — a qualified `pkg::P::C` tag names the same component as a
+    // bare `C`, so resolve it by its component half.
+    //
+    // In a full build the package resolver inlines every qualified node
+    // before emit, so this branch is unreachable there. It is reached
+    // whenever the emitter is driven without that pass — a direct
+    // `from_pipeline` call over a package's own `.mll` (which is how
+    // `tests/pkg_grid_compiles_to_xaml.rs` exercises PR-5), or a compile
+    // whose package search path found no manifest for `P`.
+    //
+    // Two things must use the component half rather than the raw tag:
+    // the registry key (`build_self_package_registry` registers the bare
+    // export names from `[components].exports`) and the emitted element
+    // name — `<grid:pkg::mosaic-pkg-grid::Cell/>` is not well-formed XML.
+    //
+    // When the tag names a package explicitly, that package must be the
+    // one the entry came from. Resolving `pkg::other-pkg::Cell` against a
+    // registration from `mosaic-pkg-grid` would emit a reference to the
+    // wrong component under a name that looks right.
+    let (qualified_pkg, tag) = match node.package_ref() {
+        Some((pkg, comp)) => (Some(pkg), comp),
+        None => (None, tag),
+    };
+
     let entry = match registry.lookup(tag) {
-        Some(e) => e.clone(),
-        None => return Err(PipelineEmitError::UnknownComponent(tag.to_string())),
+        Some(e) if qualified_pkg.is_none_or(|p| p == e.package_name) => e.clone(),
+        // Registered, but under a different package than the tag named.
+        // Report the tag as written so the diagnostic names the thing the
+        // author typed.
+        Some(_) | None => {
+            return Err(PipelineEmitError::UnknownComponent(match qualified_pkg {
+                Some(p) => format!("pkg::{p}::{tag}"),
+                None => tag.to_string(),
+            }))
+        }
     };
 
     // Record the xmlns prefix â†’ value mapping for the `<UserControl>`
@@ -14188,6 +14220,73 @@ mod tests {
         );
         let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
         assert!(r.xaml.contains("<grid:Grid/>"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn qualified_component_reference_lowers_to_bare_prefixed_tag() {
+        // UI34 — `pkg::P::C` names the same component as a bare `C`.
+        // The registry is keyed by the bare export name (that is what
+        // `build_self_package_registry` inserts), and the emitted element
+        // must be `<grid:Cell/>`: carrying the qualifier through would
+        // produce `<grid:pkg::mosaic-pkg-grid::Cell/>`, which is not
+        // well-formed XML.
+        let c = component("Demo", vec![], vec![]);
+        let l = layout_with_root(
+            "Demo",
+            component_ref_node("pkg::mosaic-pkg-grid::Cell", Vec::new()),
+        );
+        let mut reg = ComponentRegistry::new();
+        reg.register(
+            "Cell",
+            "grid",
+            "using:Mosaic.Package.Grid",
+            "mosaic-pkg-grid",
+        );
+        let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
+        assert!(r.xaml.contains("<grid:Cell/>"), "got:\n{}", r.xaml);
+        assert!(
+            !r.xaml.contains("pkg::"),
+            "qualifier leaked into the emitted element, got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn qualified_component_reference_naming_another_package_is_unknown() {
+        // The component half matching is not enough: `Cell` is registered
+        // by `mosaic-pkg-grid`, so a tag that explicitly asks for some
+        // other package's `Cell` must not silently resolve to this one.
+        let c = component("Demo", vec![], vec![]);
+        let mut reg = ComponentRegistry::new();
+        reg.register(
+            "Cell",
+            "grid",
+            "using:Mosaic.Package.Grid",
+            "mosaic-pkg-grid",
+        );
+
+        // Assert the discrimination, not just the rejection. Rejecting
+        // every qualified tag would satisfy the negative half on its own
+        // — which is exactly what the emitter did before UI34 resolution
+        // existed — so the owning package must be shown to resolve here.
+        let owned = layout_with_root(
+            "Demo",
+            component_ref_node("pkg::mosaic-pkg-grid::Cell", Vec::new()),
+        );
+        let r = compile_with_registry(&c, &owned, &empty_style("Demo"), &reg);
+        assert!(r.xaml.contains("<grid:Cell/>"), "got:\n{}", r.xaml);
+
+        let l = layout_with_root(
+            "Demo",
+            component_ref_node("pkg::mosaic-pkg-other::Cell", Vec::new()),
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Demo"), Some(&reg), &opts()).unwrap_err();
+        // Reported as written, so the diagnostic names what the author typed.
+        assert!(
+            matches!(err, PipelineEmitError::UnknownComponent(ref t)
+                     if t == "pkg::mosaic-pkg-other::Cell"),
+            "got: {err:?}"
+        );
     }
 
     #[test]
