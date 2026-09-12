@@ -36,7 +36,7 @@ cargo run --manifest-path "$repo/code/packages/rust/mosaic-compile/Cargo.toml" -
   --runtime-library "$runtime"
 
 # Unlike Engram's script this does NOT assert nativeComplete, because VisiCalc
-# is not native-complete on Compose: 7 degradations, all of them accessibility
+# is not native-complete on Compose: 5 degradations, all of them accessibility
 # and table semantics (#14843). Pinning the COUNT instead, so the render keeps
 # saying which build it is a picture of and a new degradation cannot appear
 # unremarked.
@@ -44,7 +44,7 @@ python3 -c "
 import json
 d=json.load(open('$work/compose/mosaic-degradations.json'))
 n=len(d['degradations'])
-assert n == 7, f'expected the 7 known table-semantics degradations (#14843), got {n}: ' + repr([x[\"code\"] for x in d['degradations']])
+assert n == 5, f'expected the 5 known table-semantics degradations (#14843), got {n}: ' + repr([x[\"code\"] for x in d['degradations']])
 "
 
 mkdir -p "$work/compose/src/test/kotlin"

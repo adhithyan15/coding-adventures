@@ -158,8 +158,13 @@ pub fn from_pipeline(
             "import androidx.compose.foundation.draganddrop.dragAndDropTarget"
         )
         .unwrap();
-        writeln!(out, "import androidx.compose.foundation.focusable").unwrap();
     }
+    // Unconditional since #14843. It was inside the drag-and-drop block, so a
+    // `HostTable` authoring `focusable: true` emitted `.focusable()` with no
+    // import and the generated Kotlin did not compile -- the same shape as the
+    // XAML `Not()` helper in #14793 and `fillMaxSize` in #14798. The emitter
+    // tests were perfectly happy; only kotlinc caught it.
+    writeln!(out, "import androidx.compose.foundation.focusable").unwrap();
     writeln!(out, "import androidx.compose.foundation.BasicTooltipBox").unwrap();
     writeln!(
         out,
@@ -2484,14 +2489,67 @@ fn column_offset(semantics: &NativeTableSemantics, column_index: &str) -> String
     }
 }
 
+/// `Modifier.focusable()` for a `HostTable` that authors `focusable: true`
+/// (#14843).
+///
+/// A separate modifier rather than part of the semantics block: `focusable`
+/// is a focus-system participation flag, not an accessibility property, and
+/// Compose spells the two differently. The emitter already uses this exact
+/// call for `HostDraggable`.
+///
+/// Only `true` counts. `focusable: false` is the default and emitting
+/// `focusable(enabled = false)` would add a modifier that changes nothing.
+fn table_focus_modifier(node: &LayoutNode, table_ctx: Option<&TableContext>) -> Option<String> {
+    let ctx = table_ctx?;
+    if !matches!(ctx.semantic_scope, TableSemanticScope::Root) || node.tag != "HostTable" {
+        return None;
+    }
+    matches!(
+        find_prop_value(node, "focusable"),
+        Some(LayoutPropValue::Keyword(v)) if v == "true"
+    )
+    .then(|| "focusable()".to_string())
+}
+
+/// Whether Compose lowers a `HostTable`'s authored focus and accessible name
+/// (#14843).
+///
+/// Package capability analysis calls this so the strict-profile report cannot
+/// drift from what is actually emitted -- the same arrangement
+/// `host_table_has_native_semantics` uses. Before this, the degradation was
+/// gated on `backend != React` with no per-backend question at all, so it
+/// said nothing about what Compose could express.
+pub fn host_table_has_focus_semantics(host_table: &LayoutNode) -> bool {
+    // The label rides in the collection-semantics block, so it is only
+    // emitted when that block is. `focusable` stands alone and always is.
+    compose_semantic_table_shape(host_table).is_some()
+}
+
 fn table_semantics_modifier(node: &LayoutNode, table_ctx: Option<&TableContext>) -> Option<String> {
     let ctx = table_ctx?;
     let semantics = ctx.native_semantics.as_ref()?;
     match (&ctx.semantic_scope, node.tag.as_str()) {
-        (TableSemanticScope::Root, "HostTable") => Some(format!(
-            "semantics {{ collectionInfo = CollectionInfo(rowCount = {}, columnCount = {}) }}",
-            semantics.row_count, semantics.column_count
-        )),
+        (TableSemanticScope::Root, "HostTable") => {
+            // An authored `a11y-label` joins the same semantics block rather
+            // than getting its own modifier: two `semantics { }` blocks on one
+            // node do not merge, the later silently replaces the earlier, and
+            // the collection info is the half that would be lost (#14843).
+            let label = match find_prop_value(node, "a11y-label") {
+                Some(LayoutPropValue::String(text)) => {
+                    Some(format!("; contentDescription = \"{}\"", escape_kotlin_string(text)))
+                }
+                Some(LayoutPropValue::SlotRef(slot)) => Some(format!(
+                    "; contentDescription = {}",
+                    to_camel_case_first_lower(slot)
+                )),
+                _ => None,
+            }
+            .unwrap_or_default();
+            Some(format!(
+                "semantics {{ collectionInfo = CollectionInfo(rowCount = {}, columnCount = {}){label} }}",
+                semantics.row_count, semantics.column_count
+            ))
+        }
         (TableSemanticScope::HeaderCell { column_index }, "Box") => {
             let column = column_offset(semantics, column_index);
             Some(format!(
@@ -4260,13 +4318,17 @@ fn emit_container_frame(
         .map(|s| !s.modifier.is_empty())
         .unwrap_or(false);
     let semantic_modifier = table_semantics_modifier(node, table_ctx);
+    let focus_modifier = table_focus_modifier(node, table_ctx);
     let radio_group_modifier: Option<String> = if container_needs_radio_group_semantics(node) {
         Some("selectableGroup()".to_string())
     } else {
         None
     };
     let has_chain =
-        has_style_chain || semantic_modifier.is_some() || radio_group_modifier.is_some();
+        has_style_chain
+        || semantic_modifier.is_some()
+        || focus_modifier.is_some()
+        || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
     let gap = style.as_ref().and_then(|s| s.gap.clone());
     let child_text: Option<TextStyleCtx> = match &style {
@@ -4304,6 +4366,9 @@ fn emit_container_frame(
         }
         if let Some(semantics) = &semantic_modifier {
             write!(opener, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
+        }
+        if let Some(focus) = &focus_modifier {
+            write!(opener, "\n{}.{focus}", " ".repeat(chain_indent)).unwrap();
         }
         if let Some(semantics) = &radio_group_modifier {
             write!(opener, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
@@ -4549,6 +4614,7 @@ fn emit_container(
         .map(|s| !s.modifier.is_empty())
         .unwrap_or(false);
     let semantic_modifier = table_semantics_modifier(node, table_ctx);
+    let focus_modifier = table_focus_modifier(node, table_ctx);
     // #13007: a container physically holding 2+ same-group HostRadio
     // siblings gets `.selectableGroup()` for native mutual-exclusion
     // a11y semantics — purely additive, doesn't touch each radio's own
@@ -4559,7 +4625,10 @@ fn emit_container(
         None
     };
     let has_chain =
-        has_style_chain || semantic_modifier.is_some() || radio_group_modifier.is_some();
+        has_style_chain
+        || semantic_modifier.is_some()
+        || focus_modifier.is_some()
+        || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
     let gap = style.as_ref().and_then(|s| s.gap.clone());
 
@@ -4604,6 +4673,9 @@ fn emit_container(
         }
         if let Some(semantics) = &semantic_modifier {
             write!(out, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
+        }
+        if let Some(focus) = &focus_modifier {
+            write!(out, "\n{}.{focus}", " ".repeat(chain_indent)).unwrap();
         }
         if let Some(semantics) = &radio_group_modifier {
             write!(out, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
@@ -11500,6 +11572,121 @@ mod tests {
             out.contains("Box(modifier = Modifier.fillMaxWidth())"),
             "got:\n{out}"
         );
+    }
+
+    // ===================================================================
+    // A HostTable's focus and accessible name -- #14843.
+    // ===================================================================
+
+    fn table_with(props: Vec<LayoutProp>) -> LayoutNode {
+        let mut t = row_header_table();
+        t.props = props;
+        t
+    }
+
+    #[test]
+    fn an_authored_a11y_label_joins_the_collection_semantics_block() {
+        // One block, not two. Two `semantics { }` modifiers on the same node
+        // do NOT merge -- the later replaces the earlier -- and the collection
+        // info is the half that would be lost.
+        let m = component("F", vec![], vec![]);
+        let l = layout(
+            "F",
+            table_with(vec![LayoutProp {
+                name: "a11y-label".into(),
+                value: LayoutPropValue::String("Data table".into()),
+            }]),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("F"))
+            .expect("emit ok")
+            .output;
+        assert!(
+            out.contains("collectionInfo = CollectionInfo(")
+                && out.contains("contentDescription = \"Data table\""),
+            "got:\n{out}"
+        );
+        // ONE block on the table root. The per-cell `collectionItemInfo`
+        // blocks are separate nodes and legitimately their own.
+        assert_eq!(
+            out.matches("collectionInfo = CollectionInfo(").count(),
+            1,
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn focusable_true_emits_the_modifier_and_false_emits_nothing() {
+        let m = component("F", vec![], vec![]);
+        let on = from_pipeline(
+            &m,
+            &layout(
+                "F",
+                table_with(vec![LayoutProp {
+                    name: "focusable".into(),
+                    value: LayoutPropValue::Keyword("true".into()),
+                }]),
+            ),
+            &empty_style("F"),
+        )
+        .expect("ok")
+        .output;
+        assert!(on.contains(".focusable()"), "got:\n{on}");
+
+        // `focusable: false` is the default; emitting a modifier for it would
+        // add a call that changes nothing.
+        let off = from_pipeline(
+            &m,
+            &layout(
+                "F",
+                table_with(vec![LayoutProp {
+                    name: "focusable".into(),
+                    value: LayoutPropValue::Keyword("false".into()),
+                }]),
+            ),
+            &empty_style("F"),
+        )
+        .expect("ok")
+        .output;
+        assert!(!off.contains(".focusable()"), "got:\n{off}");
+    }
+
+    #[test]
+    fn focusable_carries_its_import_even_with_no_drag_and_drop() {
+        // The import used to sit inside the drag-and-drop block, so a table
+        // authoring `focusable: true` emitted the modifier with no import and
+        // the generated Kotlin did not compile. The emitter tests were happy;
+        // only kotlinc caught it -- the same shape as the XAML `Not()` helper
+        // (#14793) and `fillMaxSize` (#14798).
+        let m = component("F", vec![], vec![]);
+        let out = from_pipeline(
+            &m,
+            &layout(
+                "F",
+                table_with(vec![LayoutProp {
+                    name: "focusable".into(),
+                    value: LayoutPropValue::Keyword("true".into()),
+                }]),
+            ),
+            &empty_style("F"),
+        )
+        .expect("ok")
+        .output;
+        assert!(
+            out.contains("import androidx.compose.foundation.focusable"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("dragAndDropTarget"), "no drag-and-drop here");
+    }
+
+    #[test]
+    fn focus_semantics_track_the_recognised_table_shape() {
+        // The reporter asks this exact question, so it cannot drift from what
+        // is emitted (#14810's lesson, applied to a capability rather than a
+        // style property).
+        assert!(host_table_has_focus_semantics(&row_header_table()));
+        let mut ragged = row_header_table();
+        ragged.children[1].children[0].children[0].children.remove(0);
+        assert!(!host_table_has_focus_semantics(&ragged));
     }
 
     // ===================================================================

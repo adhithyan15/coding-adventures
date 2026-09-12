@@ -1495,7 +1495,15 @@ fn ignored_native_property(
             "typography.font-size-binding-unimplemented",
             "layout font-size bindings are currently implemented only by React/Electron; static mosstyle typography is unaffected",
         )),
-        ("HostTable", "focusable" | "a11y-label") if backend != Backend::React => Some((
+        // #14843. Was `backend != React` with no per-backend question at all,
+        // so it said nothing about what any other backend could express --
+        // unlike `accessibility.table-semantics-missing` next door, which asks
+        // one. Compose emits `.focusable()` and a `contentDescription` in the
+        // table's own semantics block, so it now answers for itself.
+        ("HostTable", "focusable" | "a11y-label")
+            if backend != Backend::React
+                && !(backend == Backend::Compose
+                    && mosaic_emit_compose::pipeline::host_table_has_focus_semantics(node)) => Some((
             "accessibility.table-focus-unimplemented",
             "authored table focus and accessible naming are currently implemented only by React",
         )),
