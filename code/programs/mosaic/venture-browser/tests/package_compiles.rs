@@ -882,6 +882,56 @@ fn scripted_form_lifecycle_fixture_is_host_neutral() {
 }
 
 #[test]
+fn form_state_and_autofill_fixture_is_host_neutral() {
+    use venture_browser_core::{
+        BrowserControlModel, ControlAutofillTransaction, ControlAutofillValue,
+        ControlMutationEventKind, ControlStatePrivacy,
+    };
+
+    let tree = coding_adventures_html_parser::parse_browser_render_tree(
+        "<form autocomplete='on'>\
+         <input id='name' name='given-name' value='Ada' autocomplete='section-user given-name'>\
+         <input id='password' type='password' autocomplete='current-password'></form>",
+    )
+    .unwrap();
+    let mut controls = BrowserControlModel::from_render_tree(&tree);
+    let snapshot = controls.capture_state(ControlStatePrivacy::Public);
+    let outcome = controls.apply_autofill(&ControlAutofillTransaction {
+        privacy: ControlStatePrivacy::Public,
+        values: vec![
+            ControlAutofillValue {
+                section: Some("section-user".into()),
+                purpose: "given-name".into(),
+                value: "Grace".into(),
+            },
+            ControlAutofillValue {
+                section: None,
+                purpose: "current-password".into(),
+                value: "host-secret".into(),
+            },
+        ],
+    });
+    assert_eq!(
+        controls.control("control:0:id:name").unwrap().value,
+        "Grace"
+    );
+    assert_eq!(controls.control("control:1:id:password").unwrap().value, "");
+    assert_eq!(
+        outcome
+            .events
+            .iter()
+            .map(|event| event.kind)
+            .collect::<Vec<_>>(),
+        vec![
+            ControlMutationEventKind::Input,
+            ControlMutationEventKind::Change
+        ]
+    );
+    controls.restore_state(&snapshot);
+    assert_eq!(controls.control("control:0:id:name").unwrap().value, "Ada");
+}
+
+#[test]
 fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
     let build = read_package_file("BUILD");
     let build_windows = read_package_file("BUILD_windows");

@@ -14,8 +14,9 @@ pub use custom_elements::{
     CustomElementAccessibilityState, CustomElementAccessibilityValue, CustomElementDiagnostic,
     CustomElementFormAssociation, CustomElementFormEntry, CustomElementFormEntryValue,
     CustomElementFormValue, CustomElementInternalsError, CustomElementLifecycleEvent,
-    CustomElementStateRestoreMode, CustomElementSubmissionGroup, CustomElementValidity,
-    FormAssociatedCustomElementState, MAX_CUSTOM_ELEMENT_ENTRIES, MAX_CUSTOM_ELEMENT_TEXT_BYTES,
+    CustomElementRestorationEntry, CustomElementStateRestoreMode, CustomElementSubmissionGroup,
+    CustomElementValidity, FormAssociatedCustomElementState, MAX_CUSTOM_ELEMENT_ENTRIES,
+    MAX_CUSTOM_ELEMENT_TEXT_BYTES,
 };
 pub use typed_values::{
     format_typed_value, normalize_color, parse_typed_step, parse_typed_value, step_typed_value,
@@ -23,6 +24,10 @@ pub use typed_values::{
 };
 
 const EDIT_HISTORY_LIMIT: usize = 100;
+const FORM_STATE_CONTROL_LIMIT: usize = 512;
+const FORM_STATE_BYTE_LIMIT: usize = 1024 * 1024;
+pub const MAX_AUTOFILL_FIELDS: usize = 128;
+pub const MAX_AUTOFILL_VALUE_BYTES: usize = 16 * 1024;
 pub const MAX_SELECTED_FILES: usize = 256;
 pub const MAX_SELECTED_FILE_BYTES: usize = 16 * 1024 * 1024;
 pub const MAX_SELECTED_TOTAL_BYTES: usize = 16 * 1024 * 1024;
@@ -136,6 +141,101 @@ pub enum ControlAccessibilityAction {
     SelectAll,
     Undo,
     Redo,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ControlMutationEventKind {
+    Input,
+    Change,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ControlMutationSource {
+    Autofill,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlMutationEvent {
+    pub key: String,
+    pub kind: ControlMutationEventKind,
+    pub source: ControlMutationSource,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum ControlStatePrivacy {
+    #[default]
+    Public,
+    Credentials,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlAutofillDescriptor {
+    pub key: String,
+    pub section: Option<String>,
+    pub address_type: Option<String>,
+    pub contact_type: Option<String>,
+    pub purpose: String,
+    pub enabled: bool,
+    pub sensitive: bool,
+    pub document_order: usize,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlAutofillValue {
+    pub section: Option<String>,
+    pub purpose: String,
+    pub value: String,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct ControlAutofillTransaction {
+    pub values: Vec<ControlAutofillValue>,
+    pub privacy: ControlStatePrivacy,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlStateDiagnostic {
+    pub code: &'static str,
+    pub key: Option<String>,
+    pub message: &'static str,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct ControlAutofillOutcome {
+    pub effects: Vec<ControlEffect>,
+    pub events: Vec<ControlMutationEvent>,
+    pub diagnostics: Vec<ControlStateDiagnostic>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlDefaultState {
+    pub key: String,
+    pub default_value: String,
+    pub value: String,
+    pub default_checked: bool,
+    pub checked: bool,
+    pub dirty_value: bool,
+    pub dirty_checkedness: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlRestorationEntry {
+    pub key: String,
+    pub control_type: String,
+    pub value: String,
+    pub checked: bool,
+    pub indeterminate: bool,
+    pub selected_indices: Vec<usize>,
+    pub selected_index: usize,
+    pub dirty_value: bool,
+    pub dirty_checkedness: bool,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct ControlStateSnapshot {
+    pub controls: Vec<ControlRestorationEntry>,
+    pub custom_elements: Vec<CustomElementRestorationEntry>,
+    pub diagnostics: Vec<ControlStateDiagnostic>,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -433,6 +533,8 @@ pub struct BrowserControlModel {
     choice_anchors: Vec<Option<usize>>,
     file_selections: Vec<Vec<HostFileSelection>>,
     file_diagnostics: Vec<Vec<ControlValueDiagnostic>>,
+    dirty_values: Vec<bool>,
+    dirty_checkedness: Vec<bool>,
     document_controls: Vec<DocumentControlBinding>,
     custom_elements: CustomElementInternalsRegistry,
     focused_key: Option<String>,
@@ -479,6 +581,9 @@ pub struct ControlBinding {
     pub step: Option<String>,
     pub inputmode: Option<String>,
     pub accept: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub form_autocomplete_enabled: bool,
     pub dirname: Option<String>,
     pub direction: ControlTextDirection,
     pub direction_auto: bool,
@@ -495,8 +600,16 @@ struct DocumentControlBinding {
     document_order: usize,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct FormAutocompleteBinding {
+    id: Option<String>,
+    form_index: usize,
+    enabled: bool,
+}
+
 impl BrowserControlModel {
     pub fn from_render_tree(tree: &BrowserRenderTree) -> Self {
+        let form_autocomplete = collect_form_autocomplete_bindings(&tree.children);
         let mut controls = Vec::new();
         let mut bindings = Vec::new();
         let mut document_controls = Vec::new();
@@ -512,6 +625,7 @@ impl BrowserControlModel {
                 control_index: &mut control_index,
                 next_form_index: &mut form_index,
                 document_order: &mut document_order,
+                form_autocomplete: &form_autocomplete,
             },
             None,
             ControlTextDirection::Ltr,
@@ -541,6 +655,8 @@ impl BrowserControlModel {
         let choice_anchors = vec![None; bindings.len()];
         let file_selections = vec![Vec::new(); bindings.len()];
         let file_diagnostics = vec![Vec::new(); bindings.len()];
+        let dirty_values = vec![false; bindings.len()];
+        let dirty_checkedness = vec![false; bindings.len()];
         Self {
             initial_controls: controls.clone(),
             controls,
@@ -550,6 +666,8 @@ impl BrowserControlModel {
             choice_anchors,
             file_selections,
             file_diagnostics,
+            dirty_values,
+            dirty_checkedness,
             document_controls,
             custom_elements: CustomElementInternalsRegistry::from_render_tree(tree),
             focused_key,
@@ -728,6 +846,214 @@ impl BrowserControlModel {
         self.controls.iter().find(|control| control.key == key)
     }
 
+    pub fn default_state(&self, key: &str) -> Option<ControlDefaultState> {
+        let index = self
+            .controls
+            .iter()
+            .position(|control| control.key == key)?;
+        Some(ControlDefaultState {
+            key: key.to_string(),
+            default_value: self.initial_controls[index].value.clone(),
+            value: self.controls[index].value.clone(),
+            default_checked: self.initial_controls[index].checked,
+            checked: self.controls[index].checked,
+            dirty_value: self.dirty_values[index],
+            dirty_checkedness: self.dirty_checkedness[index],
+        })
+    }
+
+    pub fn autofill_descriptors(&self) -> Vec<ControlAutofillDescriptor> {
+        self.controls
+            .iter()
+            .zip(&self.bindings)
+            .filter_map(|(control, binding)| autofill_descriptor(control, binding))
+            .collect()
+    }
+
+    pub fn capture_state(&self, privacy: ControlStatePrivacy) -> ControlStateSnapshot {
+        let mut snapshot = ControlStateSnapshot::default();
+        let mut bytes = 0_usize;
+        for (index, (control, binding)) in self.controls.iter().zip(&self.bindings).enumerate() {
+            if snapshot.controls.len() >= FORM_STATE_CONTROL_LIMIT {
+                snapshot.diagnostics.push(ControlStateDiagnostic {
+                    code: "state-control-limit",
+                    key: None,
+                    message: "form state exceeds the shared control limit",
+                });
+                break;
+            }
+            if matches!(control.kind, ControlKind::Button | ControlKind::File)
+                || (control.kind == ControlKind::Password && privacy == ControlStatePrivacy::Public)
+            {
+                continue;
+            }
+            let entry_bytes = control.key.len() + binding.control_type.len() + control.value.len();
+            if bytes.saturating_add(entry_bytes) > FORM_STATE_BYTE_LIMIT {
+                snapshot.diagnostics.push(ControlStateDiagnostic {
+                    code: "state-byte-limit",
+                    key: Some(control.key.clone()),
+                    message: "form state exceeds the shared byte limit",
+                });
+                break;
+            }
+            bytes += entry_bytes;
+            snapshot.controls.push(ControlRestorationEntry {
+                key: control.key.clone(),
+                control_type: binding.control_type.clone(),
+                value: control.value.clone(),
+                checked: control.checked,
+                indeterminate: control.indeterminate,
+                selected_indices: control.selected_indices.clone(),
+                selected_index: control.selected_index,
+                dirty_value: self.dirty_values[index],
+                dirty_checkedness: self.dirty_checkedness[index],
+            });
+        }
+        for entry in self.custom_elements.restoration_entries() {
+            if snapshot.controls.len() + snapshot.custom_elements.len() >= FORM_STATE_CONTROL_LIMIT
+            {
+                snapshot.diagnostics.push(ControlStateDiagnostic {
+                    code: "state-control-limit",
+                    key: None,
+                    message: "form state exceeds the shared control limit",
+                });
+                break;
+            }
+            let Some(state_bytes) = custom_restoration_state_bytes(&entry.state) else {
+                snapshot.diagnostics.push(ControlStateDiagnostic {
+                    code: "state-file-omitted",
+                    key: Some(entry.key),
+                    message: "file-backed custom-element state is not persisted",
+                });
+                continue;
+            };
+            let entry_bytes = entry.key.len().saturating_add(state_bytes);
+            if bytes.saturating_add(entry_bytes) > FORM_STATE_BYTE_LIMIT {
+                snapshot.diagnostics.push(ControlStateDiagnostic {
+                    code: "state-byte-limit",
+                    key: Some(entry.key),
+                    message: "form state exceeds the shared byte limit",
+                });
+                break;
+            }
+            bytes += entry_bytes;
+            snapshot.custom_elements.push(entry);
+        }
+        snapshot
+    }
+
+    pub fn restore_state(&mut self, snapshot: &ControlStateSnapshot) -> Vec<ControlEffect> {
+        let mut effects = Vec::new();
+        for entry in snapshot.controls.iter().take(FORM_STATE_CONTROL_LIMIT) {
+            let Some(index) = self.bindings.iter().position(|binding| {
+                binding.key == entry.key && binding.control_type == entry.control_type
+            }) else {
+                continue;
+            };
+            if matches!(
+                self.controls[index].kind,
+                ControlKind::Button | ControlKind::File
+            ) {
+                continue;
+            }
+            let changed = restoration_changed(&self.controls[index], entry);
+            restore_control(&mut self.controls[index], entry);
+            self.dirty_values[index] = entry.dirty_value;
+            self.dirty_checkedness[index] = entry.dirty_checkedness;
+            reset_editor_after_value_change(
+                &mut self.editors[index],
+                self.controls[index].value.chars().count(),
+            );
+            self.histories[index] = ControlEditHistory::default();
+            self.choice_anchors[index] = None;
+            if changed {
+                effects.push(effect_for_restored_control(&self.controls[index]));
+            }
+        }
+        self.custom_elements.restore_entries(
+            &snapshot.custom_elements,
+            CustomElementStateRestoreMode::Restore,
+        );
+        effects
+    }
+
+    pub fn apply_autofill(
+        &mut self,
+        transaction: &ControlAutofillTransaction,
+    ) -> ControlAutofillOutcome {
+        let mut outcome = ControlAutofillOutcome::default();
+        if transaction.values.len() > MAX_AUTOFILL_FIELDS {
+            outcome.diagnostics.push(ControlStateDiagnostic {
+                code: "autofill-field-limit",
+                key: None,
+                message: "autofill transaction exceeds the shared field limit",
+            });
+        }
+        let descriptors = self.autofill_descriptors();
+        for descriptor in descriptors {
+            if !descriptor.enabled
+                || (descriptor.sensitive && transaction.privacy == ControlStatePrivacy::Public)
+            {
+                continue;
+            }
+            let value = transaction
+                .values
+                .iter()
+                .take(MAX_AUTOFILL_FIELDS)
+                .find(|value| {
+                    value.purpose.eq_ignore_ascii_case(&descriptor.purpose)
+                        && (value.section.is_none() || value.section == descriptor.section)
+                });
+            let Some(value) = value else {
+                continue;
+            };
+            if value.value.len() > MAX_AUTOFILL_VALUE_BYTES {
+                outcome.diagnostics.push(ControlStateDiagnostic {
+                    code: "autofill-value-limit",
+                    key: Some(descriptor.key.clone()),
+                    message: "autofill value exceeds the shared byte limit",
+                });
+                continue;
+            }
+            let Some(index) = self
+                .controls
+                .iter()
+                .position(|control| control.key == descriptor.key)
+            else {
+                continue;
+            };
+            if !apply_autofill_value(
+                &mut self.controls[index],
+                &self.bindings[index],
+                &value.value,
+            ) {
+                continue;
+            }
+            self.dirty_values[index] = true;
+            reset_editor_after_value_change(
+                &mut self.editors[index],
+                self.controls[index].value.chars().count(),
+            );
+            self.histories[index] = ControlEditHistory::default();
+            outcome
+                .effects
+                .push(effect_for_restored_control(&self.controls[index]));
+            for kind in [
+                ControlMutationEventKind::Input,
+                ControlMutationEventKind::Change,
+            ] {
+                outcome.events.push(ControlMutationEvent {
+                    key: descriptor.key.clone(),
+                    kind,
+                    source: ControlMutationSource::Autofill,
+                });
+            }
+        }
+        self.custom_elements
+            .restore_all(CustomElementStateRestoreMode::Autocomplete);
+        outcome
+    }
+
     pub fn selected_files(&self, key: &str) -> Option<&[HostFileSelection]> {
         let index = self
             .controls
@@ -844,6 +1170,7 @@ impl BrowserControlModel {
             .map(|file| file.name.as_str())
             .collect::<Vec<_>>()
             .join(", ");
+        self.dirty_values[index] = true;
         Some(ControlEffect::FilesChanged {
             key: key.to_string(),
             files: self.file_selections[index]
@@ -899,6 +1226,8 @@ impl BrowserControlModel {
             self.choice_anchors[index] = None;
             self.file_selections[index].clear();
             self.file_diagnostics[index].clear();
+            self.dirty_values[index] = false;
+            self.dirty_checkedness[index] = false;
             if changed {
                 effects.push(ControlEffect::ValueChanged {
                     key: control.key.clone(),
@@ -1366,14 +1695,16 @@ impl BrowserControlModel {
     }
 
     pub fn set_indeterminate(&mut self, key: &str, indeterminate: bool) -> Option<ControlEffect> {
-        let control = self
+        let index = self
             .controls
-            .iter_mut()
-            .find(|control| control.key == key && control.kind == ControlKind::Checkbox)?;
+            .iter()
+            .position(|control| control.key == key && control.kind == ControlKind::Checkbox)?;
+        let control = &mut self.controls[index];
         if control.disabled || control.indeterminate == indeterminate {
             return None;
         }
         control.indeterminate = indeterminate;
+        self.dirty_checkedness[index] = true;
         Some(ControlEffect::CheckedChanged {
             key: key.to_string(),
             checked: control.checked,
@@ -1430,6 +1761,7 @@ impl BrowserControlModel {
             self.choice_anchors[index] = Some(option_index);
         }
         sync_selected_value(control);
+        self.dirty_values[index] = true;
         Some(ControlEffect::ValueChanged {
             key: key.to_string(),
             value: control.value.clone(),
@@ -1601,6 +1933,7 @@ impl BrowserControlModel {
         self.record_history(index);
         let control = &mut self.controls[index];
         replace_char_range(&mut control.value, start, end, &text);
+        self.dirty_values[index] = true;
         let caret = start + text.chars().count();
         self.editors[index].selection = ControlSelection::collapsed(caret);
         self.editors[index].composition = None;
@@ -1634,6 +1967,7 @@ impl BrowserControlModel {
                 return None;
             }
             self.controls[index].value = value.clone();
+            self.dirty_values[index] = true;
             return Some(ControlEffect::ValueChanged {
                 key: self.controls[index].key.clone(),
                 value,
@@ -1645,6 +1979,7 @@ impl BrowserControlModel {
                 return None;
             }
             self.controls[index].value = value.clone();
+            self.dirty_values[index] = true;
             return Some(ControlEffect::ValueChanged {
                 key: self.controls[index].key.clone(),
                 value,
@@ -1656,6 +1991,7 @@ impl BrowserControlModel {
                 return None;
             }
             self.controls[index].value = value.clone();
+            self.dirty_values[index] = true;
             return Some(ControlEffect::ValueChanged {
                 key: self.controls[index].key.clone(),
                 value,
@@ -1820,8 +2156,10 @@ impl BrowserControlModel {
         for candidate in &group {
             self.controls[*candidate].checked = false;
             self.controls[*candidate].focused = false;
+            self.dirty_checkedness[*candidate] = true;
         }
         self.controls[target].checked = true;
+        self.dirty_checkedness[target] = true;
         self.controls[target].focused = true;
         self.focused_key = Some(self.controls[target].key.clone());
         Some(ControlEffect::CheckedChanged {
@@ -1983,6 +2321,7 @@ impl BrowserControlModel {
             target
         };
         self.controls[index].value = target.value;
+        self.dirty_values[index] = true;
         self.editors[index].selection = target.selection;
         self.editors[index].composition = None;
         self.editors[index].composition_range = None;
@@ -2002,6 +2341,7 @@ impl BrowserControlModel {
             ControlKind::Checkbox => {
                 self.controls[index].indeterminate = false;
                 self.controls[index].checked = !self.controls[index].checked;
+                self.dirty_checkedness[index] = true;
                 Some(ControlEffect::CheckedChanged {
                     key: self.controls[index].key.clone(),
                     checked: self.controls[index].checked,
@@ -2011,16 +2351,20 @@ impl BrowserControlModel {
                 let name = self.controls[index].name.clone();
                 let owner = self.bindings[index].form_owner.clone();
                 let form_index = self.bindings[index].form_index;
-                for (control, binding) in self.controls.iter_mut().zip(&self.bindings) {
+                for (candidate, (control, binding)) in
+                    self.controls.iter_mut().zip(&self.bindings).enumerate()
+                {
                     let same_form = match owner.as_deref() {
                         Some(owner) => binding.form_owner.as_deref() == Some(owner),
                         None => binding.form_owner.is_none() && binding.form_index == form_index,
                     };
                     if same_form && control.kind == ControlKind::Radio && control.name == name {
                         control.checked = false;
+                        self.dirty_checkedness[candidate] = true;
                     }
                 }
                 self.controls[index].checked = true;
+                self.dirty_checkedness[index] = true;
                 Some(ControlEffect::CheckedChanged {
                     key: self.controls[index].key.clone(),
                     checked: true,
@@ -2173,6 +2517,7 @@ struct ModelCollection<'a> {
     control_index: &'a mut usize,
     next_form_index: &'a mut usize,
     document_order: &'a mut usize,
+    form_autocomplete: &'a [FormAutocompleteBinding],
 }
 
 fn collect_model_nodes(
@@ -2233,6 +2578,13 @@ fn collect_model_nodes(
                 step: node.step.clone(),
                 inputmode: node.inputmode.clone(),
                 accept: node.accept.clone(),
+                autocomplete: node.autocomplete.clone(),
+                autocomplete_tokens: autocomplete_tokens(node.autocomplete.as_deref()),
+                form_autocomplete_enabled: effective_form_autocomplete(
+                    collection.form_autocomplete,
+                    node.form_owner.as_deref(),
+                    containing_form,
+                ),
                 dirname: node.dirname.clone(),
                 direction: if direction_auto {
                     inherited_direction
@@ -2244,6 +2596,341 @@ fn collect_model_nodes(
             });
         }
         collect_model_nodes(&node.children, collection, containing_form, node_direction);
+    }
+}
+
+fn collect_form_autocomplete_bindings(nodes: &[BrowserRenderNode]) -> Vec<FormAutocompleteBinding> {
+    fn collect(
+        nodes: &[BrowserRenderNode],
+        bindings: &mut Vec<FormAutocompleteBinding>,
+        next_form_index: &mut usize,
+    ) {
+        for node in nodes {
+            if node.name.as_deref() == Some("form") {
+                let form_index = *next_form_index;
+                *next_form_index += 1;
+                bindings.push(FormAutocompleteBinding {
+                    id: node.id.clone(),
+                    form_index,
+                    enabled: !autocomplete_is_off(node.autocomplete.as_deref()),
+                });
+            }
+            collect(&node.children, bindings, next_form_index);
+        }
+    }
+
+    let mut bindings = Vec::new();
+    let mut next_form_index = 0;
+    collect(nodes, &mut bindings, &mut next_form_index);
+    bindings
+}
+
+fn effective_form_autocomplete(
+    forms: &[FormAutocompleteBinding],
+    form_owner: Option<&str>,
+    form_index: Option<usize>,
+) -> bool {
+    forms
+        .iter()
+        .find(|form| match form_owner {
+            Some(owner) => form.id.as_deref() == Some(owner),
+            None => Some(form.form_index) == form_index,
+        })
+        .is_none_or(|form| form.enabled)
+}
+
+fn autocomplete_tokens(value: Option<&str>) -> Vec<String> {
+    value
+        .unwrap_or_default()
+        .split_ascii_whitespace()
+        .map(str::to_ascii_lowercase)
+        .collect()
+}
+
+fn autocomplete_is_off(value: Option<&str>) -> bool {
+    let tokens = autocomplete_tokens(value);
+    tokens.len() == 1 && tokens[0] == "off"
+}
+
+fn autofill_descriptor(
+    control: &ControlState,
+    binding: &ControlBinding,
+) -> Option<ControlAutofillDescriptor> {
+    if matches!(
+        control.kind,
+        ControlKind::Button | ControlKind::File | ControlKind::Checkbox | ControlKind::Radio
+    ) {
+        return None;
+    }
+    let tokens = &binding.autocomplete_tokens;
+    let section = tokens
+        .iter()
+        .find(|token| token.starts_with("section-"))
+        .cloned();
+    let address_type = tokens
+        .iter()
+        .find(|token| matches!(token.as_str(), "shipping" | "billing"))
+        .cloned();
+    let contact_type = tokens
+        .iter()
+        .find(|token| matches!(token.as_str(), "home" | "work" | "mobile" | "fax" | "pager"))
+        .cloned();
+    let purpose = tokens
+        .iter()
+        .rev()
+        .find(|token| is_autofill_purpose(token))
+        .cloned()
+        .unwrap_or_else(|| infer_autofill_purpose(control, binding));
+    if purpose.is_empty() {
+        return None;
+    }
+    let sensitive = control.kind == ControlKind::Password
+        || matches!(
+            purpose.as_str(),
+            "current-password" | "new-password" | "one-time-code" | "cc-number" | "cc-csc"
+        );
+    Some(ControlAutofillDescriptor {
+        key: control.key.clone(),
+        section,
+        address_type,
+        contact_type,
+        purpose,
+        enabled: binding.form_autocomplete_enabled
+            && !autocomplete_is_off(binding.autocomplete.as_deref())
+            && !control.disabled
+            && !control.readonly,
+        sensitive,
+        document_order: binding.document_order,
+    })
+}
+
+fn is_autofill_purpose(token: &str) -> bool {
+    matches!(
+        token,
+        "name"
+            | "honorific-prefix"
+            | "given-name"
+            | "additional-name"
+            | "family-name"
+            | "honorific-suffix"
+            | "nickname"
+            | "username"
+            | "new-password"
+            | "current-password"
+            | "one-time-code"
+            | "organization-title"
+            | "organization"
+            | "street-address"
+            | "address-line1"
+            | "address-line2"
+            | "address-line3"
+            | "address-level4"
+            | "address-level3"
+            | "address-level2"
+            | "address-level1"
+            | "country"
+            | "country-name"
+            | "postal-code"
+            | "cc-name"
+            | "cc-given-name"
+            | "cc-additional-name"
+            | "cc-family-name"
+            | "cc-number"
+            | "cc-exp"
+            | "cc-exp-month"
+            | "cc-exp-year"
+            | "cc-csc"
+            | "cc-type"
+            | "transaction-currency"
+            | "transaction-amount"
+            | "language"
+            | "bday"
+            | "bday-day"
+            | "bday-month"
+            | "bday-year"
+            | "sex"
+            | "url"
+            | "photo"
+            | "tel"
+            | "tel-country-code"
+            | "tel-national"
+            | "tel-area-code"
+            | "tel-local"
+            | "tel-local-prefix"
+            | "tel-local-suffix"
+            | "tel-extension"
+            | "email"
+            | "impp"
+            | "search"
+    )
+}
+
+fn infer_autofill_purpose(control: &ControlState, binding: &ControlBinding) -> String {
+    let name = control
+        .name
+        .as_deref()
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    for purpose in [
+        "given-name",
+        "family-name",
+        "street-address",
+        "postal-code",
+        "organization",
+        "username",
+        "email",
+        "tel",
+        "search",
+        "url",
+        "name",
+    ] {
+        if name == purpose || name.contains(purpose) {
+            return purpose.to_string();
+        }
+    }
+    match binding.control_type.as_str() {
+        "email" | "tel" | "url" | "search" => binding.control_type.clone(),
+        "password" => "current-password".to_string(),
+        _ => String::new(),
+    }
+}
+
+fn apply_autofill_value(control: &mut ControlState, binding: &ControlBinding, value: &str) -> bool {
+    let normalized = match control.kind {
+        ControlKind::Button | ControlKind::File | ControlKind::Checkbox | ControlKind::Radio => {
+            return false
+        }
+        ControlKind::Select => {
+            let Some(index) = control
+                .options
+                .iter()
+                .enumerate()
+                .find_map(|(index, option)| {
+                    (option == value && !option_is_disabled(control, index)).then_some(index)
+                })
+            else {
+                return false;
+            };
+            if control.selected_indices == [index] && control.selected_index == index {
+                return false;
+            }
+            control.selected_index = index;
+            control.selected_indices = vec![index];
+            sync_selected_value(control);
+            return true;
+        }
+        ControlKind::Range => {
+            let Some(value) = parse_finite(value) else {
+                return false;
+            };
+            format_number(normalize_range_value(
+                value,
+                control_numeric_constraints(control, binding),
+            ))
+        }
+        kind if kind.is_temporal() => {
+            let Some(value) = parse_typed_value(kind, value) else {
+                return false;
+            };
+            value.normalized
+        }
+        ControlKind::Color => {
+            let Some(value) = normalize_color(value) else {
+                return false;
+            };
+            value
+        }
+        ControlKind::Number => {
+            let Some(value) = parse_finite(value) else {
+                return false;
+            };
+            format_number(value)
+        }
+        _ => binding
+            .maxlength
+            .as_deref()
+            .and_then(|maximum| maximum.parse::<usize>().ok())
+            .filter(|_| control.kind.supports_maxlength())
+            .map_or_else(
+                || value.to_string(),
+                |maximum| value.chars().take(maximum).collect(),
+            ),
+    };
+    if control.value == normalized {
+        return false;
+    }
+    control.value = normalized;
+    true
+}
+
+fn restoration_changed(control: &ControlState, entry: &ControlRestorationEntry) -> bool {
+    control.value != entry.value
+        || control.checked != entry.checked
+        || control.indeterminate != entry.indeterminate
+        || control.selected_indices != entry.selected_indices
+        || control.selected_index != entry.selected_index
+}
+
+fn custom_restoration_state_bytes(state: &CustomElementFormValue) -> Option<usize> {
+    match state {
+        CustomElementFormValue::Text(value) => Some(value.len()),
+        CustomElementFormValue::File(_) => None,
+        CustomElementFormValue::Entries(entries) => {
+            entries.iter().try_fold(0_usize, |bytes, entry| {
+                let value_bytes = match &entry.value {
+                    CustomElementFormEntryValue::Text(value) => value.len(),
+                    CustomElementFormEntryValue::File(_) => return None,
+                };
+                Some(
+                    bytes
+                        .saturating_add(entry.name.len())
+                        .saturating_add(value_bytes),
+                )
+            })
+        }
+    }
+}
+
+fn restore_control(control: &mut ControlState, entry: &ControlRestorationEntry) {
+    control.value = entry.value.clone();
+    control.checked = entry.checked;
+    control.indeterminate = entry.indeterminate;
+    if control.kind == ControlKind::Select {
+        control.selected_indices = entry
+            .selected_indices
+            .iter()
+            .copied()
+            .filter(|index| *index < control.options.len() && !option_is_disabled(control, *index))
+            .collect();
+        control.selected_index = entry
+            .selected_index
+            .min(control.options.len().saturating_sub(1));
+        sync_selected_value(control);
+    }
+}
+
+fn reset_editor_after_value_change(editor: &mut ControlEditorState, length: usize) {
+    editor.selection = ControlSelection::collapsed(length);
+    editor.composition = None;
+    editor.composition_range = None;
+    editor.scroll_x = 0.0;
+    editor.scroll_y = 0.0;
+    editor.caret_phase_ms = 0;
+    editor.pointer_anchor = None;
+    editor.invalid_message = None;
+}
+
+fn effect_for_restored_control(control: &ControlState) -> ControlEffect {
+    if matches!(control.kind, ControlKind::Checkbox | ControlKind::Radio) {
+        ControlEffect::CheckedChanged {
+            key: control.key.clone(),
+            checked: control.checked,
+        }
+    } else {
+        ControlEffect::ValueChanged {
+            key: control.key.clone(),
+            value: control.value.clone(),
+        }
     }
 }
 
@@ -4058,6 +4745,161 @@ mod tests {
         assert_eq!(
             model.file_state(key).unwrap().value_text,
             "No file selected"
+        );
+    }
+
+    #[test]
+    fn dirty_default_state_survives_edits_and_clears_on_reset() {
+        let tree = parse_browser_render_tree(
+            "<form id='profile'><input id='name' name='name' value='Ada'>\
+             <input id='news' name='news' type='checkbox' checked></form>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let name = "control:0:id:name";
+        let news = "control:1:id:news";
+        assert!(!model.default_state(name).unwrap().dirty_value);
+
+        model.focus(name);
+        model.set_selection(name, 0, 3);
+        model.text_input("Grace");
+        model.pointer_activate(news);
+        assert!(model.default_state(name).unwrap().dirty_value);
+        assert!(model.default_state(news).unwrap().dirty_checkedness);
+        assert_eq!(model.default_state(name).unwrap().default_value, "Ada");
+
+        model.reset_form(Some("profile"), Some(0));
+        let name_state = model.default_state(name).unwrap();
+        assert_eq!(name_state.value, "Ada");
+        assert!(!name_state.dirty_value);
+        assert!(model.default_state(news).unwrap().checked);
+        assert!(!model.default_state(news).unwrap().dirty_checkedness);
+    }
+
+    #[test]
+    fn autofill_groups_fields_and_emits_input_before_change() {
+        let tree = parse_browser_render_tree(
+            "<form autocomplete='on'>\
+             <input id='given' name='given-name' autocomplete='section-contact shipping given-name'>\
+             <input id='password' type='password' autocomplete='current-password'>\
+             <select id='country' name='country' autocomplete='section-contact country-name'>\
+             <option>GB</option><option>US</option></select></form>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let descriptors = model.autofill_descriptors();
+        assert_eq!(descriptors[0].section.as_deref(), Some("section-contact"));
+        assert_eq!(descriptors[0].address_type.as_deref(), Some("shipping"));
+        assert_eq!(descriptors[0].purpose, "given-name");
+        assert!(descriptors[1].sensitive);
+
+        let outcome = model.apply_autofill(&ControlAutofillTransaction {
+            privacy: ControlStatePrivacy::Public,
+            values: vec![
+                ControlAutofillValue {
+                    section: Some("section-contact".into()),
+                    purpose: "given-name".into(),
+                    value: "Grace".into(),
+                },
+                ControlAutofillValue {
+                    section: None,
+                    purpose: "current-password".into(),
+                    value: "secret".into(),
+                },
+                ControlAutofillValue {
+                    section: Some("section-contact".into()),
+                    purpose: "country-name".into(),
+                    value: "US".into(),
+                },
+            ],
+        });
+        assert_eq!(model.control("control:0:id:given").unwrap().value, "Grace");
+        assert_eq!(model.control("control:1:id:password").unwrap().value, "");
+        assert_eq!(model.control("control:2:id:country").unwrap().value, "US");
+        assert_eq!(outcome.effects.len(), 2);
+        assert_eq!(
+            outcome
+                .events
+                .iter()
+                .map(|event| event.kind)
+                .collect::<Vec<_>>(),
+            vec![
+                ControlMutationEventKind::Input,
+                ControlMutationEventKind::Change,
+                ControlMutationEventKind::Input,
+                ControlMutationEventKind::Change,
+            ]
+        );
+    }
+
+    #[test]
+    fn history_snapshot_restores_native_state_and_custom_callbacks() {
+        let source = "<form><input id='query' name='search' value='before'>\
+                      <x-rating id='rating' name='rating'></x-rating></form>";
+        let tree = parse_browser_render_tree(source).unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let custom_key = model.form_associated_custom_elements()[0].key.clone();
+        model
+            .attach_form_associated_custom_element(&custom_key)
+            .unwrap();
+        model
+            .set_custom_element_form_value(
+                &custom_key,
+                Some(CustomElementFormValue::Text("4".into())),
+                Some(CustomElementFormValue::Text("restore:4".into())),
+            )
+            .unwrap();
+        model.take_custom_element_lifecycle_events();
+        model.focus("control:0:id:query");
+        model.set_selection("control:0:id:query", 0, 6);
+        model.text_input("saved");
+        let snapshot = model.capture_state(ControlStatePrivacy::Public);
+
+        model.set_selection("control:0:id:query", 0, 5);
+        model.text_input("later");
+        model.restore_state(&snapshot);
+        assert_eq!(model.control("control:0:id:query").unwrap().value, "saved");
+        assert!(matches!(
+            model.take_custom_element_lifecycle_events().as_slice(),
+            [CustomElementLifecycleEvent::FormStateRestore {
+                mode: CustomElementStateRestoreMode::Restore,
+                state: CustomElementFormValue::Text(state),
+                ..
+            }] if state == "restore:4"
+        ));
+    }
+
+    #[test]
+    fn history_snapshot_never_persists_custom_file_payloads() {
+        let tree = parse_browser_render_tree(
+            "<form><x-upload id='upload' name='upload'></x-upload></form>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let custom_key = model.form_associated_custom_elements()[0].key.clone();
+        model
+            .attach_form_associated_custom_element(&custom_key)
+            .unwrap();
+        model
+            .set_custom_element_form_value(
+                &custom_key,
+                None,
+                Some(CustomElementFormValue::File(HostFileSelection::new(
+                    "opaque-file",
+                    "secret.txt",
+                    Some("text/plain".into()),
+                    b"not history state".to_vec(),
+                ))),
+            )
+            .unwrap();
+
+        let snapshot = model.capture_state(ControlStatePrivacy::Credentials);
+
+        assert!(snapshot.custom_elements.is_empty());
+        assert_eq!(snapshot.diagnostics[0].code, "state-file-omitted");
+        assert_eq!(
+            snapshot.diagnostics[0].key.as_deref(),
+            Some(custom_key.as_str())
         );
     }
 }

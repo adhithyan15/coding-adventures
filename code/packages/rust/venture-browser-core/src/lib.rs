@@ -11,17 +11,21 @@ pub use browser_bookmarks::{
 };
 pub use browser_form_controls::{
     format_typed_value, normalize_color, parse_typed_step, parse_typed_value, step_typed_value,
-    typed_constraints, BrowserControlModel, ControlAccessibilityAction, ControlChoiceOptionState,
-    ControlChoiceState, ControlClipboardPayload, ControlEditorPresentation, ControlEditorState,
-    ControlEffect, ControlFileItemState, ControlFilePickerRequest, ControlFileState, ControlKey,
-    ControlNavigationUnit, ControlRect, ControlSelection, ControlTextDirection, ControlTextMetrics,
-    ControlValueDiagnostic, ControlValueState, CustomElementAccessibilityAction,
-    CustomElementAccessibilityProjection, CustomElementAccessibilityState,
-    CustomElementAccessibilityValue, CustomElementDiagnostic, CustomElementFormAssociation,
-    CustomElementFormEntry, CustomElementFormEntryValue, CustomElementFormValue,
-    CustomElementInternalsError, CustomElementLifecycleEvent, CustomElementStateRestoreMode,
-    CustomElementSubmissionGroup, CustomElementValidity, FileAcceptFilter,
-    FormAssociatedCustomElementState, HostFileSelection, TypedValue, TypedValueConstraints,
+    typed_constraints, BrowserControlModel, ControlAccessibilityAction, ControlAutofillDescriptor,
+    ControlAutofillOutcome, ControlAutofillTransaction, ControlAutofillValue,
+    ControlChoiceOptionState, ControlChoiceState, ControlClipboardPayload, ControlDefaultState,
+    ControlEditorPresentation, ControlEditorState, ControlEffect, ControlFileItemState,
+    ControlFilePickerRequest, ControlFileState, ControlKey, ControlMutationEvent,
+    ControlMutationEventKind, ControlMutationSource, ControlNavigationUnit, ControlRect,
+    ControlRestorationEntry, ControlSelection, ControlStateDiagnostic, ControlStatePrivacy,
+    ControlStateSnapshot, ControlTextDirection, ControlTextMetrics, ControlValueDiagnostic,
+    ControlValueState, CustomElementAccessibilityAction, CustomElementAccessibilityProjection,
+    CustomElementAccessibilityState, CustomElementAccessibilityValue, CustomElementDiagnostic,
+    CustomElementFormAssociation, CustomElementFormEntry, CustomElementFormEntryValue,
+    CustomElementFormValue, CustomElementInternalsError, CustomElementLifecycleEvent,
+    CustomElementRestorationEntry, CustomElementStateRestoreMode, CustomElementSubmissionGroup,
+    CustomElementValidity, FileAcceptFilter, FormAssociatedCustomElementState, HostFileSelection,
+    TypedValue, TypedValueConstraints,
 };
 pub use browser_form_submission::{
     check_form_validity, dispatch_activation_with_image_coordinates, dispatch_form_reset,
@@ -64,6 +68,7 @@ const CONTROL_TEXT_METRICS: ControlTextMetrics = ControlTextMetrics {
     caret_width: 1.5,
 };
 const EDITOR_OVERLAY_PREFIX: &str = "venture-editor:";
+const FORM_HISTORY_STATE_LIMIT: usize = 64;
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
 pub const VENTURE_CHROME_SLOT_NAMES: [&str; 9] = [
@@ -1232,6 +1237,8 @@ pub struct BrowserSession {
     controls: BrowserControlModel,
     form_diagnostics: Vec<FormDiagnostic>,
     form_lifecycle_events: Vec<FormLifecycleEvent>,
+    control_mutation_events: Vec<ControlMutationEvent>,
+    form_history_states: Vec<(String, ControlStateSnapshot)>,
     viewport_height: f64,
     navigation_id: u64,
 }
@@ -1246,6 +1253,8 @@ impl BrowserSession {
             controls: BrowserControlModel::default(),
             form_diagnostics: Vec::new(),
             form_lifecycle_events: Vec::new(),
+            control_mutation_events: Vec::new(),
+            form_history_states: Vec::new(),
             viewport_height: finite_non_negative(viewport_height),
             navigation_id: 0,
         }
@@ -1393,6 +1402,60 @@ impl BrowserSession {
         self.controls
             .focused_key()
             .and_then(|key| self.controls.choice_state(key))
+    }
+
+    pub fn control_default_state(&self, key: &str) -> Option<ControlDefaultState> {
+        self.controls.default_state(key)
+    }
+
+    pub fn control_autofill_descriptors(&self) -> Vec<ControlAutofillDescriptor> {
+        self.controls.autofill_descriptors()
+    }
+
+    pub fn capture_form_state(&self, privacy: ControlStatePrivacy) -> ControlStateSnapshot {
+        self.controls.capture_state(privacy)
+    }
+
+    pub fn restore_form_state<M, S, FM, R>(
+        &mut self,
+        snapshot: &ControlStateSnapshot,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Vec<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effects = self.controls.restore_state(snapshot);
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        self.reflow_controls(pipeline);
+        effects
+    }
+
+    pub fn apply_control_autofill<M, S, FM, R>(
+        &mut self,
+        transaction: &ControlAutofillTransaction,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> ControlAutofillOutcome
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let outcome = self.controls.apply_autofill(transaction);
+        self.control_mutation_events
+            .extend(outcome.events.iter().cloned());
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        self.reflow_controls(pipeline);
+        outcome
+    }
+
+    pub fn take_control_mutation_events(&mut self) -> Vec<ControlMutationEvent> {
+        std::mem::take(&mut self.control_mutation_events)
     }
 
     pub fn control_file_state(&self, key: &str) -> Option<ControlFileState> {
@@ -2219,6 +2282,7 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        let departing_state = self.current_form_history_state();
         let request = BrowserFetchRequest {
             method: match navigation.method {
                 FormMethod::Get => BrowserFetchMethod::Get,
@@ -2240,6 +2304,9 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        if let Some((url, snapshot)) = departing_state {
+            self.remember_form_history_state(url, snapshot);
+        }
         self.form_diagnostics.clear();
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
         self.refresh_control_editor_presentation();
@@ -2503,6 +2570,27 @@ impl BrowserSession {
         Some(())
     }
 
+    fn current_form_history_state(&self) -> Option<(String, ControlStateSnapshot)> {
+        Some((
+            self.history.current_url()?.to_string(),
+            self.controls.capture_state(ControlStatePrivacy::Public),
+        ))
+    }
+
+    fn remember_form_history_state(&mut self, url: String, snapshot: ControlStateSnapshot) {
+        if let Some(position) = self
+            .form_history_states
+            .iter()
+            .position(|(candidate, _)| candidate == &url)
+        {
+            self.form_history_states.remove(position);
+        }
+        self.form_history_states.push((url, snapshot));
+        if self.form_history_states.len() > FORM_HISTORY_STATE_LIMIT {
+            self.form_history_states.remove(0);
+        }
+    }
+
     /// Recompose the retained document for a new layout viewport without
     /// refetching or reparsing the page. Inline image resources continue to use
     /// the browser-owned fetch seam, and failures remain recoverable paint
@@ -2568,6 +2656,13 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        let restores_form_state = matches!(
+            &navigation,
+            BrowserNavigation::Back | BrowserNavigation::Forward
+        );
+        let departing_state = (!matches!(&navigation, BrowserNavigation::Reload))
+            .then(|| self.current_form_history_state())
+            .flatten();
         let mut history = self.history.clone();
         let requested_url = match navigation {
             BrowserNavigation::Navigate(url) => Some(history.navigate(url).to_string()),
@@ -2588,7 +2683,17 @@ impl BrowserSession {
         let cancelled = self.pending_subresource_requests();
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
-        let controls = BrowserControlModel::from_render_tree(&page.render_tree);
+        let mut controls = BrowserControlModel::from_render_tree(&page.render_tree);
+        if restores_form_state {
+            if let Some((_, snapshot)) = self
+                .form_history_states
+                .iter()
+                .rev()
+                .find(|(url, _)| url == &page.final_url || url == &requested_url)
+            {
+                controls.restore_state(snapshot);
+            }
+        }
         history.replace_current(page.final_url.clone());
         if let Some(viewport) = self.viewport.as_mut() {
             viewport.replace_page(page);
@@ -2598,6 +2703,9 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        if let Some((url, snapshot)) = departing_state {
+            self.remember_form_history_state(url, snapshot);
+        }
         self.form_diagnostics.clear();
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
         self.refresh_control_editor_presentation();
@@ -6207,5 +6315,140 @@ mod tests {
         let events = session.take_form_lifecycle_events();
         assert!(matches!(events[0], FormLifecycleEvent::Submit { .. }));
         assert!(matches!(events[1], FormLifecycleEvent::FormData { .. }));
+    }
+
+    #[test]
+    fn session_autofill_and_history_restoration_share_one_state_policy() {
+        let profile = "http://example.test/profile";
+        let next = "http://example.test/next";
+        let fetcher = |url: &str| {
+            let body = if url == profile {
+                b"<form autocomplete='on'>\
+                  <input id='given' name='given-name' value='Ada' autocomplete='section-user given-name'>\
+                  <input id='password' type='password' autocomplete='current-password'>\
+                  <x-rating id='rating' name='rating'></x-rating></form>"
+                    .to_vec()
+            } else {
+                b"<title>Next</title><p>Leave and return</p>".to_vec()
+            };
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                body,
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(420.0, 160.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(profile, 160.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        let custom_key = session.form_associated_custom_elements()[0].key.clone();
+        session
+            .attach_form_associated_custom_element(&custom_key)
+            .unwrap();
+        session
+            .set_custom_element_form_value(
+                &custom_key,
+                Some(CustomElementFormValue::Text("5".into())),
+                Some(CustomElementFormValue::Text("restore:5".into())),
+            )
+            .unwrap();
+        session.take_custom_element_lifecycle_events();
+        let outcome = session.apply_control_autofill(
+            &ControlAutofillTransaction {
+                privacy: ControlStatePrivacy::Public,
+                values: vec![
+                    ControlAutofillValue {
+                        section: Some("section-user".into()),
+                        purpose: "given-name".into(),
+                        value: "Grace".into(),
+                    },
+                    ControlAutofillValue {
+                        section: None,
+                        purpose: "current-password".into(),
+                        value: "not-shared".into(),
+                    },
+                ],
+            },
+            &pipeline,
+        );
+        assert_eq!(outcome.effects.len(), 1);
+        assert_eq!(
+            session
+                .controls()
+                .control("control:0:id:given")
+                .unwrap()
+                .value,
+            "Grace"
+        );
+        assert_eq!(
+            session
+                .controls()
+                .control("control:1:id:password")
+                .unwrap()
+                .value,
+            ""
+        );
+        assert!(
+            session
+                .control_default_state("control:0:id:given")
+                .unwrap()
+                .dirty_value
+        );
+        assert_eq!(
+            session
+                .take_control_mutation_events()
+                .iter()
+                .map(|event| event.kind)
+                .collect::<Vec<_>>(),
+            vec![
+                ControlMutationEventKind::Input,
+                ControlMutationEventKind::Change
+            ]
+        );
+
+        session
+            .execute(
+                BrowserNavigation::Navigate(next.into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        session
+            .execute(BrowserNavigation::Back, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(
+            session
+                .controls()
+                .control("control:0:id:given")
+                .unwrap()
+                .value,
+            "Grace"
+        );
+        let restored_custom_key = session.form_associated_custom_elements()[0].key.clone();
+        session
+            .attach_form_associated_custom_element(&restored_custom_key)
+            .unwrap();
+        assert!(session
+            .take_custom_element_lifecycle_events()
+            .iter()
+            .any(|event| matches!(
+                event,
+                CustomElementLifecycleEvent::FormStateRestore {
+                    mode: CustomElementStateRestoreMode::Restore,
+                    state: CustomElementFormValue::Text(state),
+                    ..
+                } if state == "restore:5"
+            )));
     }
 }

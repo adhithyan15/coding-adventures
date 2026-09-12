@@ -262,12 +262,21 @@ cross-platform proving application. Items are ordered by risk and dependency.
   validation modes, cancelable invalid/submit/reset events, bounded mutable
   string/file form data, delayed request construction, retained lifecycle
   effects, and deterministic core/Mosaic acceptance over existing host seams.
-- [ ] **P1 browser convergence — form state restoration and autofill.** Add
+- [x] **P1 browser convergence — form state restoration and autofill.** Add
   shared dirty-value/default-state tracking, autocomplete section and purpose
   grouping, privacy-bounded autofill transactions, input/change event order,
   history restoration, and custom-element restore callbacks. Keep persisted
   state and autofill policy out of generated native/web hosts while preserving
   one document-ordered form-control model.
+  Completed with live dirty/default projection, bounded public and credential
+  snapshots, section/address/contact/purpose descriptors, privacy-gated typed
+  autofill, ordered input/change effects, Back/Forward restoration, and queued
+  custom-element callbacks that fire after internals attach.
+- [ ] **P1 browser convergence — datalist suggestions and picker mediation.**
+  Add shared datalist filtering, typed suggestion normalization, keyboard and
+  accessibility active-option state, bounded host suggestion queries, picker
+  commit/cancel transactions, deterministic fixtures, and consistent behavior
+  across available native/web hosts without giving toolkits value policy.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

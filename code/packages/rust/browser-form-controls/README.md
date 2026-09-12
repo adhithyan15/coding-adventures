@@ -75,6 +75,16 @@ lifecycle effects, label-derived accessibility metadata, and shared numeric
 value actions. This state remains separate from native `ControlState` because
 custom elements decide their own rendering while sharing form policy.
 
+Form state and autofill remain in this reducer as well. Each native control
+exposes its immutable default and live dirty flags; bounded snapshots omit
+passwords unless credential access is explicit and never retain file bytes.
+Autocomplete section, address, contact, and purpose tokens produce ordered
+descriptors. A bounded autofill transaction normalizes values through the same
+typed/choice paths, blocks credential fields by default, and emits `input`
+before `change` for each updated control. History restoration is event-silent,
+restores dirty flags, and queues custom-element restore callbacks until their
+internals attach.
+
 Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI55-form-editing`](../../../specs/UI55-form-editing.md), and
 [`UI56-editor-presentation`](../../../specs/UI56-editor-presentation.md), and
@@ -85,3 +95,5 @@ Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI66-file-values-multipart`](../../../specs/UI66-file-values-multipart.md), and
 [`UI67-image-submit-dirname`](../../../specs/UI67-image-submit-dirname.md), and
 [`UI68-form-associated-custom-elements`](../../../specs/UI68-form-associated-custom-elements.md).
+State restoration and autofill are specified by
+[`UI70-form-state-autofill`](../../../specs/UI70-form-state-autofill.md).
