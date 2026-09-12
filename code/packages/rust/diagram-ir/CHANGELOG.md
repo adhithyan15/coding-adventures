@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.111.0
+
+- Preserve optional Block composite styles in grid semantic IR.
+
 ## 0.110.0
 
 - Represent recursive Block composite groups, local columns, spans, parentage, and authored order.

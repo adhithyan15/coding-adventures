@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.202.0
+
+- Resolve named classes and direct styles for Block composites.
+
 ## 0.201.0
 
 - Preserve authored labels on named Block composites in grid semantic IR.
