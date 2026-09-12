@@ -499,6 +499,23 @@ fn push_main_moc(out: &mut String, native_table_count: usize) {
     }
 }
 
+fn push_offscreen_font_fallback(out: &mut String, indent: &str) {
+    out.push_str(indent);
+    out.push_str("if (QGuiApplication::platformName() == QStringLiteral(\"offscreen\")\n");
+    out.push_str(indent);
+    out.push_str("    && app.font().family() == QStringLiteral(\"Sans Serif\")) {\n");
+    out.push_str(indent);
+    out.push_str("  QFont fallbackFont = app.font();\n");
+    out.push_str(indent);
+    out.push_str("  fallbackFont.setFamilies({});\n");
+    out.push_str(indent);
+    out.push_str("  fallbackFont.setStyleHint(QFont::SansSerif);\n");
+    out.push_str(indent);
+    out.push_str("  app.setFont(fallbackFont);\n");
+    out.push_str(indent);
+    out.push_str("}\n");
+}
+
 fn build_main_cpp(
     name: &str,
     module_name: &str,
@@ -515,6 +532,8 @@ fn build_main_cpp(
         out.push_str("#include <QApplication>\n");
         push_native_table_model_includes(&mut out, native_table_count);
         out.push_str("#include <QDebug>\n");
+        out.push_str("#include <QFont>\n");
+        out.push_str("#include <QGuiApplication>\n");
         out.push_str("#include <QQuickItem>\n");
         out.push_str("#include <QQuickStyle>\n");
         out.push_str("#include <QQuickView>\n");
@@ -529,6 +548,8 @@ fn build_main_cpp(
         out.push_str("  if (qEnvironmentVariableIsEmpty(\"QT_QUICK_CONTROLS_STYLE\")) {\n");
         out.push_str("    QQuickStyle::setStyle(QStringLiteral(\"Basic\"));\n  }\n");
         out.push_str("  QApplication app(argc, argv);\n\n");
+        push_offscreen_font_fallback(&mut out, "  ");
+        out.push('\n');
         out.push_str("  try {\n");
         out.push_str("    MosaicHost::registerTypes();\n");
         out.push_str("    MosaicHost mosaicHost;\n");
@@ -585,6 +606,8 @@ fn build_main_cpp(
     }
     out.push_str("#include <QApplication>\n");
     push_native_table_model_includes(&mut out, native_table_count);
+    out.push_str("#include <QFont>\n");
+    out.push_str("#include <QGuiApplication>\n");
     out.push_str("#include <QMetaObject>\n");
     out.push_str("#include <QObject>\n");
     out.push_str("#include <QQuickItem>\n");
@@ -606,6 +629,7 @@ fn build_main_cpp(
     out.push_str("    QQuickStyle::setStyle(QStringLiteral(\"Basic\"));\n");
     out.push_str("  }\n");
     out.push_str("  QApplication app(argc, argv);\n");
+    push_offscreen_font_fallback(&mut out, "  ");
     out.push_str("#if MOSAIC_HAS_HOST\n");
     out.push_str("  MosaicHost::registerTypes();\n");
     out.push_str("#endif\n");
@@ -12578,9 +12602,37 @@ mod tests {
             .main_cpp
             .find("QApplication app(argc, argv);")
             .expect("main.cpp must construct QApplication");
+        let offscreen_font_setup = proj
+            .main_cpp
+            .find("fallbackFont.setStyleHint(QFont::SansSerif);")
+            .expect("main.cpp must resolve Qt's offscreen generic font by style hint");
+        let view_setup = proj
+            .main_cpp
+            .find("QQuickView view;")
+            .expect("main.cpp must construct the generated view");
         assert!(
             style_setup < app_setup,
             "Controls style must be selected before QApplication/QML initialization"
+        );
+        assert!(
+            app_setup < offscreen_font_setup && offscreen_font_setup < view_setup,
+            "offscreen font fallback must run after QApplication and before QML initialization"
+        );
+        for fragment in [
+            "QGuiApplication::platformName() == QStringLiteral(\"offscreen\")",
+            "app.font().family() == QStringLiteral(\"Sans Serif\")",
+            "fallbackFont.setFamilies({});",
+            "fallbackFont.setStyleHint(QFont::SansSerif);",
+            "app.setFont(fallbackFont);",
+        ] {
+            assert!(
+                proj.main_cpp.contains(fragment),
+                "generated shell omits policy-preserving offscreen font fallback {fragment}"
+            );
+        }
+        assert!(
+            !proj.main_cpp.contains("Helvetica") && !proj.main_cpp.contains(".AppleSystemUIFont"),
+            "generated shell must not bake in a platform font family"
         );
         assert!(
             proj.main_cpp
@@ -12749,6 +12801,16 @@ mod tests {
         assert!(project.main_cpp.contains("#include \"MosaicHost.h\""));
         assert!(!project.main_cpp.contains("__has_include"));
         assert!(project.main_cpp.contains("mosaicHost.requireRuntime();"));
+        let app_setup = project
+            .main_cpp
+            .find("QApplication app(argc, argv);")
+            .unwrap();
+        let offscreen_font_setup = project
+            .main_cpp
+            .find("fallbackFont.setStyleHint(QFont::SansSerif);")
+            .expect("runtime-required shell must resolve Qt's offscreen generic font");
+        let runtime_setup = project.main_cpp.find("MosaicHost::registerTypes();").unwrap();
+        assert!(app_setup < offscreen_font_setup && offscreen_font_setup < runtime_setup);
         assert!(project
             .main_cpp
             .contains("{QStringLiteral(\"app-title\"), QStringLiteral(\"appTitle\")}"));

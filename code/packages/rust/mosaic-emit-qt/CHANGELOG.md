@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - offscreen system-font resolution
+
+Generated shells now replace Qt's unresolved offscreen `Sans Serif` placeholder
+with a family-free `QFont::SansSerif` style hint before QML initializes. This
+avoids CoreText's one-time family-alias scan on macOS while preserving any real
+platform font and any explicit host font selection.
+
 ### Added — `HostInput.disabled` (#14786)
 
 `HostInput` had `read-only` but no way to say *unavailable*. Qt spells

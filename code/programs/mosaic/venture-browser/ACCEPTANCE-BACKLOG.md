@@ -319,9 +319,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
   the customization-capable Basic Quick Controls style unless the host explicitly
   sets `QT_QUICK_CONTROLS_STYLE`, so Mosaic MSL backgrounds render without the
   macOS-native style's warnings or silently dropped paint.
-- [ ] **P3 — Qt Basic-style font fallback diagnostic.** Remove the one-time
+- [x] **P3 — Qt Basic-style font fallback diagnostic.** Remove the one-time
   macOS `Sans Serif` alias-population warning without baking a platform-specific
   font family into generated QML or overriding an explicit host font policy.
+  Completed by resolving only Qt's offscreen placeholder to a family-free
+  `QFont::SansSerif` style hint before QML initialization; real platform and
+  explicitly selected host fonts remain untouched, and direct launch
+  acceptance rejects a regression of the CoreText alias-scan diagnostic.
 - [x] **P0 regression — POSIX entry-point shell compatibility.** Keep `BUILD`
   compatible with the repository build tool's `/bin/sh` executor while it
   delegates the backend matrix to the Bash-specific implementation script.

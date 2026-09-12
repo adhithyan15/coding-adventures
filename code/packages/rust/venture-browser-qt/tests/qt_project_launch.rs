@@ -262,6 +262,11 @@ fn package_owned_qt_project_launches_and_drives_live_interactions() {
     assert!(report.contains("Venture Qt link acceptance"));
     assert!(report.contains(&urls.link));
     assert!(report.contains("\"rendered\":true"));
+    let app_output = fs::read_to_string(&app_log).unwrap_or_default();
+    assert!(
+        !app_output.contains("Populating font family aliases took"),
+        "generated Qt shell must resolve its offscreen generic font without alias scanning:\n{app_output}"
+    );
 
     fs::remove_dir_all(&output).expect("remove clean Qt acceptance output");
 }
