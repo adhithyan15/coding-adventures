@@ -167,11 +167,19 @@ model-card parameter, or a UI artifact is not a completion signal.
      deterministic palette placement, selected-component routing, and a grid
      projection with orthogonal wire segments and terminal markers. The
      canonical endpoint-only document remains the netlist source of truth.
-   - **Mosaic schematic palette and analysis controls** (current phase): extend
+   - **Mosaic schematic palette and analysis controls** (completed in PR #14908): extend
      the canonical document and routed host contract with L, DC-current, and
      AC-voltage symbols plus persisted operating-point, DC-sweep, AC-sweep,
      and transient analysis selection. Each control must lower to the existing
      Berkeley parser syntax without adding a parallel circuit model.
+   - **Mosaic schematic connectivity integrity** (current phase): discovery after
+     PR #14908: raw host wires and loaded documents can currently introduce
+     dangling or duplicate endpoint pairs, which would manufacture phantom
+     canonical net nodes during deck lowering. Make the document own one
+     terminal-membership and undirected-uniqueness admission boundary, apply it
+     to serialized-document validation and `schematicConnect`, and lock the
+     failure modes with canonical and host-contract regressions before adding
+     more capture controls.
 
 ### Operating rules
 
