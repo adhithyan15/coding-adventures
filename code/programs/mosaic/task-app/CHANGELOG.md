@@ -1,5 +1,48 @@
 # Changelog
 
+## Unreleased
+
+### Fixed — the view switcher moved out of the topbar (#14847, #14815)
+
+The topbar carried, in one row: the title, the summary, the status chip, a
+progress readout, a theme toggle, a complexity toggle, and a **474px**
+five-button view switcher. At 1280 it did not fit, and Compose resolved that by
+driving the last-measured child to nothing: the `On track` chip measured
+`0 x 168` — present in the semantics tree, correctly named, and passing every
+existence assertion in the suite.
+
+Measured by sweeping the viewport rather than inferred:
+
+| viewport | `summary` | chip | |
+| --- | --- | --- | --- |
+| 1280 | `185 x 48` | `0 x 168` | before |
+| 1520 | `302 x 24` | `56 x 24` | before — the narrowest that fit |
+| 1000 | `302 x 24` | `56 x 24` | **after** |
+| 1280 | `302 x 24` | `56 x 24` | **after** |
+
+The switcher is nearly twice the 240px shortfall, so moving it to its own row
+resolves the over-subscription outright rather than choosing which sibling
+absorbs it — which is all a shrink rule can do (UI59 §8). It is also the
+ordinary header shape: title and meta on one line, view tabs on a second.
+
+The topbar now needs **1000px**, leaving 280px of headroom at the 1280
+acceptance viewport. It still starves below ~1000px, which is under the
+declared viewport and is stated rather than claimed fixed.
+
+`TaskAppUiTest.assertTopbarIsNotStarved` fails if any topbar element measures
+zero width, at all three lifecycle stages. Asserting a **width** and not
+presence is the point: the chip was present, named and "displayed" at
+`0 x 168` for as long as the defect existed.
+
+### Corrected — the figure in #14847 and UI59 §8
+
+Both first said the topbar needed 1867px and was 587px short. Both were wrong.
+The endpoint of a right-aligned row tracks the **viewport**, not its content —
+the switcher ends 33px from the right edge at every width — so reading that
+endpoint as a content demand inflated the number 2.4x. The real figures are
+1520px and 240px, measured by sweep.
+
+
 All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]

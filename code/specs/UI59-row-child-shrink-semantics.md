@@ -128,22 +128,26 @@ what a `fill = false` child leaves unused, so each `Text` is capped at an equal
 share whatever its content. The third moves the starvation onto the summary
 instead of the chip. Every mechanism chooses *who* starves.
 
-### Why — the topbar is over-subscribed by ~587px
+### Why — the topbar is over-subscribed by ~240px
 
-The same app measured at two viewports, all children of the topbar row:
+**Corrected.** This section first said 1867px and 587px. Both were wrong, from
+a specific mistake worth recording: I read the rightmost element's endpoint at
+1900 as the topbar's content demand. The segment control is right-aligned — it
+ends 33px from the right edge at *every* viewport (1247 at 1280, 1867 at 1900)
+— so that endpoint tracks the window, not the content.
 
-| | 1280 x 900 | 1900 x 900 |
+Measured properly, by sweeping the viewport and watching for starvation:
+
+| viewport | `summary` | `On track` chip |
 | --- | --- | --- |
-| `Tasks — auto-scheduled` | `185 x 48` | `196 x 24` |
-| summary | `185 x 48` | `302 x 24` |
-| chip container | `0 x 168` | `67 x 24` |
-| rightmost element ends at | `1247` | **`1867`** |
+| 1280 | `185 x 48` (2 lines) | **`0 x 168`** |
+| 1360 | `265 x 48` (2 lines) | **`0 x 168`** |
+| 1440 | `302 x 24` (one line) | `6 x 144` — still starved |
+| **1520** | `302 x 24` | `56 x 24` — nothing starved |
+| 1900 | `302 x 24` | `56 x 24` |
 
-At its natural size the topbar needs **1867px**. At 1280 it is **587px**
-short. §6 asks for `summary` on one line *and* a non-zero chip — that is the
-1900 layout, and it does not exist at 1280 while the row also carries a title,
-a progress readout, a theme toggle, a Board button and a 474px five-button
-segment control.
+The topbar needs **1520px**, so at 1280 it is **240px** short. The defect was
+real and the direction right; the magnitude was inflated 2.4x.
 
 ### What this changes
 
@@ -155,7 +159,7 @@ segment control.
    can satisfy it at 1280. It should become: *no child measures zero, and the
    row's content is legible at 1280* — which the `fill = false` variant nearly
    meets, at six lines of summary.
-3. **The 587px is its own defect** ([#14847](https://github.com/adhithyan15/coding-adventures/issues/14847)).
+3. **The 240px is its own defect** ([#14847](https://github.com/adhithyan15/coding-adventures/issues/14847)).
    The topbar has to wrap, scroll or shed content at narrow widths. Until it
    does, UI59 is choosing which child absorbs a deficit that should not exist
    — worth doing, because "everything visible and cramped" beats "one thing
@@ -173,3 +177,33 @@ from a screenshot: the chip renders as *nothing at all* once
 Rust runtime. The `fill = false` variant in particular measured "correct" on
 the chip and would have shipped as a fix had the summary not also been
 measured.
+
+## 10. Resolved by removing the contention, not by a shrink rule
+
+#14847 moved TaskApp's view switcher — **474px**, nearly twice the 240px
+shortfall — out of the topbar onto its own row. Measured after:
+
+| viewport | `summary` | `On track` chip |
+| --- | --- | --- |
+| 1000 | `302 x 24` | `56 x 24` |
+| 1280 | `302 x 24` | `56 x 24` |
+
+The topbar's requirement drops from **1520px to 1000px**, leaving 280px of
+headroom at the 1280 acceptance viewport. §6's original acceptance — a non-zero
+chip *and* the summary on one line — is therefore **met**, by removing the
+contention rather than by arbitrating it.
+
+It still starves at 900px, which is below the declared acceptance viewport and
+is noted rather than claimed fixed.
+
+This does not retire UI59. §4's rule is still a real divergence from the CSS
+default every `.mll` is authored against, and the next over-subscribed row will
+hit it again — TaskApp simply no longer has one. What it does retire is the
+urgency: there is now no product rendering a zero-width child, so the rule can
+be designed against a row that fits, which §8 argued was the precondition for
+choosing it well.
+
+The assertion that keeps it honest lives in `TaskAppUiTest.assertTopbarIsNotStarved`:
+a topbar element measuring zero width fails, at the stage where it happened.
+Presence assertions cannot see this — the chip was present, named and
+"displayed" at `0 x 168` for as long as the defect existed.
