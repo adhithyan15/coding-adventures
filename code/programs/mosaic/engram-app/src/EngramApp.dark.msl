@@ -2,6 +2,12 @@
 
 style EngramApp {
   part app-shell {
+    // Fill the window rather than wrapping the content (#14837). Without it
+    // the composition root measured 1280x776 in a 1280x900 window and rows
+    // 776..899 came back at alpha 0 -- genuinely unpainted, so whatever
+    // composites behind the surface showed through. Trestle has authored the
+    // same line since it was built; Engram simply never did.
+    min-height  : "100vh" ;
     background  : "#101827" ;
     color       : "#f8fafc" ;
     font-family : "system-ui, sans-serif" ;

@@ -4,6 +4,27 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — `min-height` reached nothing (#14837)
+
+The same gap Compose had, found because Engram is gated on **both**. Authoring
+`min-height` on Engram's app shell made its `native_complete_gate` fail naming
+SwiftUI — which is the gate working: fixing one backend and leaving the other
+is how a property lands half-way (#14786).
+
+| authored | SwiftUI |
+| --- | --- |
+| `min-height: 100vh` / `100%` | `.frame(maxHeight: .infinity)` |
+| `min-height: N` / `Npx` | `.frame(minHeight: N)` |
+| `min-height: 0` | nothing — a zero floor constrains nothing |
+
+Its own chained `.frame`, beside the `max-width` ceiling and for the same
+reason: chaining is how SwiftUI composes these, so a floor constrains an
+authored height rather than replacing it. SwiftUI has no viewport unit either;
+`maxHeight: .infinity` is its idiom for "take all the vertical space offered".
+
+Verified with `swift build` on the generated Engram project, not by reading the
+emitted Swift.
+
 ### Fixed — `gap` was dropped (#14804)
 
 `gap` reached the lattice IR and died at this emitter. SwiftUI emitted only
