@@ -366,10 +366,12 @@ The initial Mermaid 11.16.1 packet slice parses `packet` and `packet-beta`
 through dedicated portable grammars into typed packet IR. It preserves
 contiguous absolute inclusive bit ranges, relative `+bits` fields, quoted
 labels, titles, accessibility metadata, and empty packets. Fields spanning
-32-bit row boundaries are split into deterministic row fragments by
-`diagram-layout-packet`, and dedicated PaintScene lowering emits
-backend-neutral field rectangles and shaped text. A native Metal-to-PNG
-fixture gates this slice; packet configuration and style controls remain
+configured row boundaries are split into deterministic row fragments by
+`diagram-layout-packet`. Mermaid's `rowHeight`, `bitWidth`, `bitsPerRow`,
+`showBits`, `paddingX`, and `paddingY` settings flow through typed semantic IR
+to resolved field and bit-label geometry, and dedicated PaintScene lowering
+emits backend-neutral rectangles and shaped text. A configured native
+Metal-to-PNG fixture gates this slice; packet theme and style controls remain
 explicitly unsupported at the partial level.
 
 ### Kanban Native Slice

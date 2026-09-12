@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.111.0
+
+- Lower configured packet labels and bit-number geometry through backend-neutral PaintScene instructions.
+
 ## 0.109.0
 
 - Validate Architecture structural groups, services, and edges through native PaintScene lowering.

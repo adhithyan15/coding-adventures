@@ -6,6 +6,7 @@
     { "id": "single-row", "source": "packet-beta\n0-7: \"Version\"\n8-31: \"Payload length\"" },
     { "id": "multi-row", "source": "packet\ntitle Native packet\n0-15: \"Source port\"\n16-31: \"Destination port\"\n32-63: \"Sequence number\"" },
     { "id": "relative-fields", "source": "packet\n+8: \"byte\"\n+16: \"word\"" },
-    { "id": "row-spanning-field", "source": "packet\n0-10: \"header\"\n11-90: \"payload\"" }
+    { "id": "row-spanning-field", "source": "packet\n0-10: \"header\"\n11-90: \"payload\"" },
+    { "id": "configured-layout", "source": "---\nconfig:\n  packet:\n    rowHeight: 40\n    bitWidth: 20\n    bitsPerRow: 16\n    showBits: false\n    paddingX: 4\n    paddingY: 6\n---\npacket\n0-31: \"configured word\"" }
   ]
 }

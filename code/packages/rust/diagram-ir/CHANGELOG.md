@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.102.0
+
+- Add typed Mermaid packet configuration and resolved bit-label geometry.
+
 ## 0.99.0
 
 - Add Architecture as a structural diagram family discriminator.

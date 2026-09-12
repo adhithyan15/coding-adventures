@@ -3,43 +3,64 @@
 pub const VERSION: &str = "0.1.0";
 
 use diagram_ir::{
-    DiagramStyle, LayoutedPacketDiagram, LayoutedPacketField, PacketDiagram, ResolvedDiagramStyle,
+    DiagramStyle, LayoutedPacketBitLabel, LayoutedPacketDiagram, LayoutedPacketField, PacketDiagram,
+    ResolvedDiagramStyle, TextAlign,
 };
-
-const BITS_PER_ROW: u32 = 32;
-const BIT_WIDTH: f64 = 24.0;
-const ROW_HEIGHT: f64 = 68.0;
-const PADDING: f64 = 24.0;
-const TITLE_INSET: f64 = 38.0;
 
 /// Resolve absolute packet bit ranges into rectangular field geometry.
 pub fn layout_packet_diagram(diagram: &PacketDiagram) -> LayoutedPacketDiagram {
-    let title_inset = if diagram.title.is_some() {
-        TITLE_INSET
-    } else {
-        0.0
-    };
+    let config = &diagram.config;
+    let bits_per_row = config.bits_per_row.max(1);
+    let padding_y = config.padding_y + if config.show_bits { 10.0 } else { 0.0 };
+    let total_row_height = config.row_height + padding_y;
     let mut fields = Vec::new();
+    let mut bit_labels = Vec::new();
     for (index, field) in diagram.fields.iter().enumerate() {
         let mut start_bit = field.start_bit;
         while start_bit <= field.end_bit {
-            let row = start_bit / BITS_PER_ROW;
+            let row = start_bit / bits_per_row;
             let row_end = row.checked_add(1)
-                .and_then(|next_row| next_row.checked_mul(BITS_PER_ROW))
+                .and_then(|next_row| next_row.checked_mul(bits_per_row))
                 .and_then(|next_row_start| next_row_start.checked_sub(1))
                 .unwrap_or(u32::MAX);
             let end_bit = field.end_bit.min(row_end);
-            let column = start_bit % BITS_PER_ROW;
+            let column = start_bit % bits_per_row;
+            let x = f64::from(column) * config.bit_width + 1.0;
+            let y = f64::from(row) * total_row_height + padding_y;
+            let width = (f64::from(end_bit - start_bit + 1) * config.bit_width
+                - config.padding_x)
+                .max(0.0);
             fields.push(LayoutedPacketField {
                 start_bit,
                 end_bit,
                 label: field.label.clone(),
-                x: PADDING + f64::from(column) * BIT_WIDTH,
-                y: PADDING + title_inset + f64::from(row) * ROW_HEIGHT,
-                width: f64::from(end_bit - start_bit + 1) * BIT_WIDTH,
-                height: ROW_HEIGHT,
+                x,
+                y,
+                width,
+                height: config.row_height,
                 style: packet_style(index),
             });
+            if config.show_bits {
+                let single_bit = start_bit == end_bit;
+                bit_labels.push(LayoutedPacketBitLabel {
+                    text: start_bit.to_string(),
+                    x,
+                    y: y - 12.0,
+                    width,
+                    height: 10.0,
+                    align: if single_bit { TextAlign::Center } else { TextAlign::Left },
+                });
+                if !single_bit {
+                    bit_labels.push(LayoutedPacketBitLabel {
+                        text: end_bit.to_string(),
+                        x,
+                        y: y - 12.0,
+                        width,
+                        height: 10.0,
+                        align: TextAlign::Right,
+                    });
+                }
+            }
             let Some(next) = end_bit.checked_add(1) else { break };
             start_bit = next;
         }
@@ -47,16 +68,20 @@ pub fn layout_packet_diagram(diagram: &PacketDiagram) -> LayoutedPacketDiagram {
     let rows = diagram
         .fields
         .last()
-        .map(|field| field.end_bit / BITS_PER_ROW + 1)
-        .unwrap_or(1);
+        .map(|field| u64::from(field.end_bit / bits_per_row) + 1)
+        .unwrap_or(0u64);
+    let height = total_row_height * (rows + 1) as f64
+        - if diagram.title.is_some() { 0.0 } else { config.row_height };
 
     LayoutedPacketDiagram {
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         fields,
-        width: PADDING * 2.0 + f64::from(BITS_PER_ROW) * BIT_WIDTH,
-        height: PADDING * 2.0 + title_inset + f64::from(rows) * ROW_HEIGHT,
+        bit_labels,
+        title_y: height - total_row_height / 2.0,
+        width: f64::from(bits_per_row) * config.bit_width + 2.0,
+        height,
     }
 }
 
@@ -100,10 +125,11 @@ mod tests {
             ],
             ..PacketDiagram::default()
         });
-        assert_eq!(layout.fields[0].width, 192.0);
-        assert_eq!(layout.fields[1].x, 216.0);
+        assert_eq!(layout.fields[0].width, 251.0);
+        assert_eq!(layout.fields[1].x, 257.0);
         assert!(layout.fields[2].y > layout.fields[1].y);
-        assert_eq!(layout.width, 816.0);
+        assert_eq!(layout.width, 1026.0);
+        assert_eq!(layout.bit_labels.len(), 6);
     }
 
     #[test]
@@ -116,5 +142,32 @@ mod tests {
         assert_eq!((layout.fields[0].start_bit, layout.fields[0].end_bit), (0, 31));
         assert_eq!((layout.fields[1].start_bit, layout.fields[1].end_bit), (32, 63));
         assert!(layout.fields[1].y > layout.fields[0].y);
+    }
+
+    #[test]
+    fn applies_packet_layout_configuration() {
+        let layout = layout_packet_diagram(&PacketDiagram {
+            fields: vec![PacketField {
+                start_bit: 0,
+                end_bit: 31,
+                label: DiagramLabel::new("wide"),
+            }],
+            config: diagram_ir::PacketConfig {
+                row_height: 40.0,
+                bit_width: 20.0,
+                bits_per_row: 16,
+                show_bits: false,
+                padding_x: 4.0,
+                padding_y: 6.0,
+            },
+            ..PacketDiagram::default()
+        });
+        assert_eq!(layout.fields.len(), 2);
+        assert_eq!(layout.fields[0].width, 316.0);
+        assert_eq!(layout.fields[0].height, 40.0);
+        assert_eq!(layout.fields[1].y, 52.0);
+        assert_eq!(layout.width, 322.0);
+        assert_eq!(layout.height, 98.0);
+        assert!(layout.bit_labels.is_empty());
     }
 }

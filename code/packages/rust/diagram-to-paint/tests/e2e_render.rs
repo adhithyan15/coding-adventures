@@ -257,10 +257,12 @@ mod apple {
     #[test]
     fn render_mermaid_packet_to_png() {
         let packet = parse_packet(
-            "packet-beta\ntitle Native packet fields\n0-7: \"Version\"\n8-15: \"Flags\"\n16-31: \"Payload length\"\n32-63: \"Sequence number\"",
+            "%%{init: {\"packet\": {\"rowHeight\": 40, \"bitWidth\": 20, \"bitsPerRow\": 16, \"paddingX\": 4, \"paddingY\": 6}}}%%\npacket-beta\ntitle Configured packet fields\n0-7: \"Version\"\n8-15: \"Flags\"\n16-31: \"Payload length\"",
         )
         .expect("packet parse failed");
         let layout = layout_packet_diagram(&packet);
+        assert_eq!((layout.width, layout.height), (322.0, 168.0));
+        assert_eq!(layout.bit_labels.len(), 6);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();
@@ -281,6 +283,7 @@ mod apple {
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_packet_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+        assert_eq!((pixels.width, pixels.height), (322, 168));
     }
 
     #[test]

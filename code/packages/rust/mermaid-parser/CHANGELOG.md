@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.189.0
+
+- Parse Mermaid 11.16.1 packet layout configuration into typed semantic IR.
+
 ## 0.186.0
 
 - Parse a grammar-backed Mermaid 11.16.1 Architecture slice into structural IR.

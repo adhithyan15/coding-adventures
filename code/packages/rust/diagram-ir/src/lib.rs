@@ -187,6 +187,30 @@ pub struct PacketField {
     pub label: DiagramLabel,
 }
 
+/// Mermaid packet layout configuration after defaults and directives are resolved.
+#[derive(Clone, Debug, PartialEq)]
+pub struct PacketConfig {
+    pub row_height: f64,
+    pub bit_width: f64,
+    pub bits_per_row: u32,
+    pub show_bits: bool,
+    pub padding_x: f64,
+    pub padding_y: f64,
+}
+
+impl Default for PacketConfig {
+    fn default() -> Self {
+        Self {
+            row_height: 32.0,
+            bit_width: 32.0,
+            bits_per_row: 32,
+            show_bits: true,
+            padding_x: 5.0,
+            padding_y: 5.0,
+        }
+    }
+}
+
 /// Semantic IR for a packet bit-field diagram.
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct PacketDiagram {
@@ -194,6 +218,7 @@ pub struct PacketDiagram {
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub fields: Vec<PacketField>,
+    pub config: PacketConfig,
 }
 
 /// Resolved field rectangle emitted by packet layout.
@@ -209,6 +234,17 @@ pub struct LayoutedPacketField {
     pub style: ResolvedDiagramStyle,
 }
 
+/// Resolved bit-number text emitted above a packet field.
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedPacketBitLabel {
+    pub text: String,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub align: TextAlign,
+}
+
 /// Backend-neutral packet geometry ready for Paint lowering.
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedPacketDiagram {
@@ -216,6 +252,8 @@ pub struct LayoutedPacketDiagram {
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub fields: Vec<LayoutedPacketField>,
+    pub bit_labels: Vec<LayoutedPacketBitLabel>,
+    pub title_y: f64,
     pub width: f64,
     pub height: f64,
 }

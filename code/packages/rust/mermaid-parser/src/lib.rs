@@ -14,9 +14,9 @@ use std::collections::{HashMap, HashSet};
 use diagram_ir::{
     BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell,
-    GridConnection, GridDiagram, PacketDiagram, PacketField, SwimlaneDiagram, SwimlaneEdge,
-    SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode, RailroadDiagram, RailroadExpression, RailroadRule,
-    InfoDiagram,
+    GridConnection, GridDiagram, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
+    RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
+    SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -1187,7 +1187,10 @@ pub fn parse_packet(source: &str) -> Result<PacketDiagram, ParseError> {
             col: error.token.column,
         })?;
 
-    let mut diagram = PacketDiagram::default();
+    let mut diagram = PacketDiagram {
+        config: parse_packet_config(source),
+        ..PacketDiagram::default()
+    };
     let mut next_bit = 0u32;
     for token in tokens
         .iter()
@@ -1253,6 +1256,85 @@ pub fn parse_packet(source: &str) -> Result<PacketDiagram, ParseError> {
             .ok_or_else(|| token_error(token, "packet bit range is too large"))?;
     }
     Ok(diagram)
+}
+
+fn parse_packet_config(source: &str) -> PacketConfig {
+    let front_matter = mermaid_front_matter_section(source, &["config", "packet"]);
+    let packet_source = mermaid_directive_object(source, "packet")
+        .or(front_matter.as_deref())
+        .unwrap_or(source);
+    let value = |key| {
+        quadrant_directive_value(packet_source, key).or_else(|| {
+            packet_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    let positive_number = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value >= 1.0)
+    };
+    let non_negative_number = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value >= 0.0)
+    };
+    let boolean = |key| {
+        value(key).and_then(|value| {
+            match value.to_ascii_lowercase().as_str() {
+                "true" => Some(true),
+                "false" => Some(false),
+                _ => None,
+            }
+        })
+    };
+    let defaults = PacketConfig::default();
+    let bits_per_row = positive_number("bitsPerRow")
+        .filter(|value| value.fract() == 0.0 && *value <= u32::MAX as f64)
+        .map(|value| value as u32)
+        .unwrap_or(defaults.bits_per_row);
+    PacketConfig {
+        row_height: positive_number("rowHeight").unwrap_or(defaults.row_height),
+        bit_width: positive_number("bitWidth").unwrap_or(defaults.bit_width),
+        bits_per_row,
+        show_bits: boolean("showBits").unwrap_or(defaults.show_bits),
+        padding_x: non_negative_number("paddingX").unwrap_or(defaults.padding_x),
+        padding_y: non_negative_number("paddingY").unwrap_or(defaults.padding_y),
+    }
+}
+
+fn mermaid_front_matter_section(source: &str, path: &[&str]) -> Option<String> {
+    let mut lines = source.lines().skip_while(|line| line.trim().is_empty());
+    if lines.next()?.trim() != "---" {
+        return None;
+    }
+    let mut matched = Vec::<usize>::new();
+    let mut output = String::new();
+    for line in lines {
+        let trimmed = line.trim();
+        if trimmed == "---" {
+            break;
+        }
+        if trimmed.is_empty() || trimmed.starts_with('#') {
+            continue;
+        }
+        let indent = line.len() - line.trim_start().len();
+        while matched.last().is_some_and(|parent_indent| indent <= *parent_indent) {
+            matched.pop();
+        }
+        if matched.len() < path.len() {
+            let Some((key, value)) = trimmed.split_once(':') else { continue };
+            if key.trim() == path[matched.len()] && value.trim().is_empty() {
+                matched.push(indent);
+            }
+            continue;
+        }
+        output.push_str(trimmed);
+        output.push('\n');
+    }
+    (!output.is_empty()).then_some(output)
 }
 
 fn parse_packet_bit(token: &Token, raw: &str) -> Result<u32, ParseError> {
@@ -8807,6 +8889,30 @@ mod tests_dg04 {
         assert_eq!((diagram.fields[1].start_bit, diagram.fields[1].end_bit), (8, 47));
         assert!(parse_packet("packet\n+0: \"invalid\"").is_err());
         assert!(parse_packet("packet").unwrap().fields.is_empty());
+    }
+
+    #[test]
+    fn packet_parses_layout_configuration_from_init_directive() {
+        let diagram = parse_packet(
+            "%%{init: {'packet': {'rowHeight': 40, 'bitWidth': 18, 'bitsPerRow': 16, 'showBits': false, 'paddingX': 2, 'paddingY': 7}}}%%\npacket\n0-15: \"word\"",
+        )
+        .unwrap();
+        assert_eq!(diagram.config.row_height, 40.0);
+        assert_eq!(diagram.config.bit_width, 18.0);
+        assert_eq!(diagram.config.bits_per_row, 16);
+        assert!(!diagram.config.show_bits);
+        assert_eq!(diagram.config.padding_x, 2.0);
+        assert_eq!(diagram.config.padding_y, 7.0);
+    }
+
+    #[test]
+    fn packet_parses_layout_configuration_from_front_matter() {
+        let diagram = parse_packet(
+            "---\nconfig:\n  packet:\n    bitsPerRow: 8\n    showBits: false\n---\npacket\n0-7: \"byte\"",
+        )
+        .unwrap();
+        assert_eq!(diagram.config.bits_per_row, 8);
+        assert!(!diagram.config.show_bits);
     }
 
     #[test]
