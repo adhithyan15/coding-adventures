@@ -81,6 +81,17 @@ layout SpiceWorkbench {
         }
       }
       Text [ selected-schematic ] ( content : slot: selected-schematic-label )
+      Column [ schematic-properties ] {
+        Text [ schematic-properties-label ] ( content : slot: schematic-properties-label )
+        Text [ selected-schematic-kind ] ( content : slot: selected-schematic-kind-label )
+        Text [ schematic-value-label ] ( content : slot: schematic-value-label )
+        HostInput [ schematic-value-input ] (
+          value : slot: schematic-value ,
+          placeholder : slot: schematic-value-placeholder ,
+          disabled : slot: schematic-value-disabled ,
+          onChange : emit: onSchematicValueChange
+        )
+      }
       Text [ route-schematic ] ( content : slot: route-schematic-label )
       Row [ schematic-route-targets ] {
         For ( each: slot: schematic-rows , as: component , index: component-index ) {

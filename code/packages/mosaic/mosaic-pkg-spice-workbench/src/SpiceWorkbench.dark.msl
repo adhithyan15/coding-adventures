@@ -21,6 +21,11 @@ style SpiceWorkbench {
   part schematic-components { gap : 6 ; }
   part schematic-component { background : "#202a36" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 6 ; }
   part selected-schematic { color : "#8cc8ff" ; font-weight : bold ; }
+  part schematic-properties { gap : 4 ; }
+  part schematic-properties-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
+  part selected-schematic-kind { color : "#d2e7ff" ; }
+  part schematic-value-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-value-input { background : "#0d1117" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 6 ; font-family : "monospace" ; }
   part route-schematic { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
   part schematic-route-targets { gap : 6 ; }
   part schematic-route-target { background : "#123b3a" ; color : "#99f6e4" ; border-width : 1 ; border-color : "#2c827c" ; border-radius : 3 ; padding : 6 ; }
