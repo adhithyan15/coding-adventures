@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add live output dependency snapshots and reset transactions, normalized
+  meter quality regions, determinate/indeterminate progress state, reusable
+  diagnostics, accessibility value text, and bounded host JSON.
+
 - Add bounded datalist filtering, typed-option normalization, keyboard and
   accessibility active-option movement, host JSON projection, and atomic
   picker commit/cancel transactions.

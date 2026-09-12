@@ -595,6 +595,7 @@ impl ExpectedRenderNode {
             control_name: self.control_name,
             list: self.list,
             datalist_options: Vec::new(),
+            output_for: Vec::new(),
             form_action: self.form_action,
             resolved_form_action: self.resolved_form_action,
             form_enctype: self.form_enctype,

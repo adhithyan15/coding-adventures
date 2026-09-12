@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose shared live output and normalized meter/progress accessibility state
+  to Qt, Flutter, and Compose hosts.
+
 - Expose shared bounded datalist state and semantic picker action ABI seams to
   Qt, Flutter, and Compose hosts.
 

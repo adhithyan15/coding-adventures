@@ -108,3 +108,11 @@ State restoration and autofill are specified by
 [`UI70-form-state-autofill`](../../../specs/UI70-form-state-autofill.md).
 Datalist behavior is specified by
 [`UI71-datalist-picker-mediation`](../../../specs/UI71-datalist-picker-mediation.md).
+
+Live `output`, `meter`, and `progress` elements use a parallel retained-value
+model. Output dependencies always resolve current control values and
+script-owned calculations enter one reflow transaction; form reset restores
+authored output text. Meter regions and determinate or indeterminate progress
+are normalized once and exposed as reusable accessibility state plus bounded
+host JSON. See
+[`UI72-live-output-measurements`](../../../specs/UI72-live-output-measurements.md).

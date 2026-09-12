@@ -765,6 +765,57 @@ fn datalist_fixture_uses_bounded_shared_picker_policy_and_native_abis() {
 }
 
 #[test]
+fn live_value_fixture_uses_shared_semantics_and_native_projection_abis() {
+    use venture_browser_core::{BrowserControlModel, LiveValueKind, MeterValueRegion};
+
+    let tree = coding_adventures_html_parser::parse_browser_render_tree(
+        "<input id='count' value='3'><output id='total' for='count'>pending</output>\
+         <meter id='score' min='0' max='10' low='3' high='7' optimum='9' value='2'>2</meter>\
+         <progress id='load' max='4'>Loading</progress>",
+    )
+    .expect("parse deterministic live-value fixture");
+    let controls = BrowserControlModel::from_render_tree(&tree);
+    assert_eq!(controls.live_value_states().len(), 3);
+    assert_eq!(
+        controls.live_value_state("live:0:id:total").unwrap().kind,
+        LiveValueKind::Output
+    );
+    assert_eq!(
+        controls
+            .live_value_state("live:1:id:score")
+            .unwrap()
+            .meter_region,
+        Some(MeterValueRegion::EvenLessGood)
+    );
+    assert!(
+        controls
+            .live_value_state("live:2:id:load")
+            .unwrap()
+            .indeterminate
+    );
+
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../packages/rust");
+    for (package, prefixes) in [
+        ("venture-browser-macos", vec!["venture_browser_macos"]),
+        ("venture-browser-windows", vec!["venture_browser_windows"]),
+        (
+            "venture-browser-cairo",
+            vec![
+                "venture_browser_qt",
+                "venture_browser_flutter",
+                "venture_browser_compose",
+            ],
+        ),
+    ] {
+        let source = fs::read_to_string(root.join(package).join("src/lib.rs")).unwrap();
+        for prefix in prefixes {
+            let symbol = format!("{prefix}_live_value_states");
+            assert!(source.contains(&symbol), "{package} omits {symbol}");
+        }
+    }
+}
+
+#[test]
 fn image_submit_and_dirname_fixture_uses_shared_semantics() {
     use venture_browser_core::{
         BrowserControlModel, ControlAccessibilityAction, ControlEffect, ControlTextDirection,

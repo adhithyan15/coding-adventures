@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Reflow shared output calculations and meter/progress value updates through
+  retained live-value state instead of host-specific widget policy.
+
 - Expose bounded datalist suggestion state and semantic picker actions, emit
   ordered input/change events on commit, and suppress implicit submission when
   Enter selects an active option.

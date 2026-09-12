@@ -281,11 +281,15 @@ cross-platform proving application. Items are ordered by risk and dependency.
   matching, shared typed validation and deduplication, keyboard and semantic
   accessibility movement, transactional input/change commits, host JSON
   projections, native ABI seams, and implicit-submit suppression.
-- [ ] **P1 browser convergence — live output, meter, and progress semantics.**
+- [x] **P1 browser convergence — live output, meter, and progress semantics.**
   Add shared output dependency recalculation, meter optimum/range state,
   determinate and indeterminate progress behavior, form reset integration,
   reusable accessibility projections, deterministic fixtures, and consistent
   native/web rendering without moving value policy into generated hosts.
+  Completed with live dependency snapshots and script-owned recalculation,
+  form-reset baselines, normalized meter regions, determinate/indeterminate
+  progress, bounded diagnostics and host JSON, shared reflow, and native ABI
+  projections for every host seam.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

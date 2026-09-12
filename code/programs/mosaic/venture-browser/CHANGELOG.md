@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Add deterministic live output, meter, and progress acceptance, including
+  shared reset/reflow semantics and every native host projection ABI.
+
 - Add deterministic datalist acceptance for bounded value/label filtering,
   typed normalization, keyboard commits, and shared native picker ABI seams.
 
