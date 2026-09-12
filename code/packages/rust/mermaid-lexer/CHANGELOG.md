@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.82.0
+
+- Tokenize named composite Block starts and recursive group ends through the pinned grammar.
+
 ## 0.79.0
 
 - Tokenize Mermaid 11.16.1 Architecture statements through a dedicated grammar.

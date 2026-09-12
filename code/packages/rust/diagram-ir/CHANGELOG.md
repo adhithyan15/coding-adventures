@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.110.0
+
+- Represent recursive Block composite groups, local columns, spans, parentage, and authored order.
+
 ## 0.109.0
 
 - Preserve the asymmetric Block node shape in semantic IR.

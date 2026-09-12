@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.121.0
+
+- Validate recursive Block composite backgrounds through shared PaintInstructions and Metal-to-PNG.
+
 ## 0.120.0
 
 - Validate multiline Block accessibility metadata through PaintScene and Metal-to-PNG.

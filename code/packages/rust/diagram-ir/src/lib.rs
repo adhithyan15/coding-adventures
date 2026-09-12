@@ -169,8 +169,20 @@ pub struct GridCell {
     pub label: DiagramLabel,
     pub shape: DiagramShape,
     pub column_span: usize,
+    pub parent_id: Option<String>,
+    pub order: usize,
     pub visible: bool,
     pub style: Option<DiagramStyle>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct GridGroup {
+    pub id: String,
+    pub label: DiagramLabel,
+    pub parent_id: Option<String>,
+    pub columns: GridColumns,
+    pub column_span: usize,
+    pub order: usize,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -195,6 +207,7 @@ pub struct GridDiagram {
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub cells: Vec<GridCell>,
+    pub groups: Vec<GridGroup>,
     pub connections: Vec<GridConnection>,
 }
 
