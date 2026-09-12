@@ -134,12 +134,20 @@ The delivery order is:
    before result release. RFC 8414 signing algorithms are retained exactly as
    provider data, required when JWT client authentication is advertised, and
    reject `none` without inventing defaults. No concrete software algorithm is
-   implied. The repository-owned Ed25519 implementation must first replace
+   implied. Bounded RFC 7523 assertion construction is now shipped through
+   that boundary: exact provider-advertised method and algorithm checks,
+   `iss`/`sub`/`aud`/`exp`/`iat` claims, caller-entropy replay-resistant `jti`,
+   zeroizing JWS material, and provider/client/audience/trace bindings retained
+   for the next request layer. The repository-owned Ed25519 implementation
+   must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate
-   repository-owned RSA primitive. JWT claims, replay-resistant identifiers,
-   and provider-driven request binding remain next. Public native clients
-   remain `none` + PKCE.
+   repository-owned RSA primitive. Provider-driven request binding into token
+   exchange, refresh, and revocation remains next. The RFC 8414 decoder must
+   also be generalized so confidential-only providers that omit public-client
+   `none` can retain the same exact capability data while public
+   `ProviderConfig` derivation continues to require `none`. Public native
+   clients remain `none` + PKCE.
 7. **Device Authorization Grant:** RFC 8628 preparation and a caller-driven
    polling state machine with no internal sleep or network authority.
 8. **HTTPS transport:** provider-neutral request/response types over the

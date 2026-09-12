@@ -1,0 +1,13 @@
+[package]
+name = "coding_adventures_oauth_private_key_jwt"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded provider-driven OAuth private_key_jwt assertions"
+
+[dependencies]
+coding_adventures_base64 = { path = "../base64" }
+coding_adventures_bounded_json = { path = "../bounded-json" }
+coding_adventures_oauth = { path = "../oauth" }
+coding_adventures_oauth_private_key_signer = { path = "../oauth-private-key-signer" }
+coding_adventures_zeroize = { path = "../zeroize" }
+url-parser = { path = "../url-parser" }
