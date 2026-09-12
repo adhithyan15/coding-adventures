@@ -199,12 +199,30 @@ cross-platform proving application. Items are ordered by risk and dependency.
   grapheme boundaries, a shared word/click policy, bounded per-control history,
   typed clipboard and accessibility contracts, native semantic-key routing,
   retained reflow acceptance, and deterministic drag/click fixtures.
-- [ ] **P1 browser convergence — typed input value semantics.** Extend the
+- [x] **P1 browser convergence — typed input value semantics.** Extend the
   retained control reducer with live `maxlength`, email/URL syntax, numeric
   min/max/step parsing and stepping, type-appropriate selection restrictions,
   and reusable value-state diagnostics. Keep validity, keyboard increment, and
   accessibility value actions shared while native/web hosts only translate
-  platform input events.
+  platform input events. Completed with Unicode-scalar live replacement
+  limits, reusable email/URL/numeric diagnostics, aligned and clamped number
+  stepping, public number-selection restrictions, shared submission planning,
+  accessibility value actions, and retained-session acceptance.
+- [x] **P1 browser convergence — advanced choice and range controls.** Extend
+  the same reducer with multi-select selection, disabled option semantics,
+  checkbox indeterminate state, radio-group arrow navigation, and range input
+  min/max/step behavior. Publish reusable choice/range accessibility state and
+  actions, preserve successful-control serialization, and keep every native
+  and web host on semantic input translation rather than toolkit-owned state.
+  Completed with ordered multi-selection, disabled option/optgroup filtering,
+  checkbox mixed state, form-scoped wrapping radio navigation, normalized
+  range stepping, reusable accessibility projections/actions, successful
+  control serialization, and retained-session acceptance over the semantic
+  key seams already shared by every generated host.
+- [ ] **P1 browser convergence — temporal and color value controls.** Add
+  shared date, month, week, time, datetime-local, and color parsing,
+  normalization, bounds, stepping, accessibility value text/actions, and
+  successful-control serialization before any host adds native pickers.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

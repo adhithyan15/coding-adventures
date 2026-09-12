@@ -15,9 +15,11 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{self, Debug, Display, Formatter};
 use url_parser::Url;
 
+mod device;
 mod metadata;
 mod token;
 
+pub use device::*;
 pub use metadata::*;
 pub use token::*;
 
@@ -447,6 +449,12 @@ pub enum OAuthAuditAction {
     MetadataRequestPrepare,
     /// Authorization-server metadata was decoded and trust-validated.
     MetadataResponseValidate,
+    /// An RFC 8628 device authorization request was prepared.
+    DeviceAuthorizationPrepare,
+    /// An RFC 8628 device authorization response was decoded and validated.
+    DeviceAuthorizationResponseDecode,
+    /// An RFC 8628 device-code token request was prepared for caller-driven polling.
+    DeviceTokenPollPrepare,
     /// An authorization URL and transaction were prepared.
     AuthorizationBegin,
     /// An authorization callback was validated and an exchange was prepared.
@@ -750,6 +758,8 @@ pub enum ConfigurationViolation {
     PkceVerifier,
     /// A token, token response, or revocation input failed strict bounds.
     TokenInput,
+    /// RFC 8628 endpoint, grant, or public-client authentication capability was absent.
+    DeviceAuthorization,
 }
 
 /// Closed callback validation violation.
@@ -782,6 +792,8 @@ pub enum OAuthError {
     ProviderError,
     /// Authorization-server metadata was malformed or failed trust policy.
     InvalidMetadata(MetadataViolation),
+    /// The device authorization response was malformed or failed strict policy.
+    InvalidDeviceAuthorizationResponse(DeviceAuthorizationResponseViolation),
     /// The token endpoint response was malformed or internally inconsistent.
     InvalidTokenResponse(TokenResponseViolation),
     /// The token endpoint returned a bounded, classified OAuth error code.
@@ -799,6 +811,7 @@ impl OAuthError {
             Self::ProviderDenied
             | Self::ProviderError
             | Self::InvalidMetadata(_)
+            | Self::InvalidDeviceAuthorizationResponse(_)
             | Self::InvalidTokenResponse(_)
             | Self::TokenEndpoint(_) => OAuthFailureClass::Provider,
             Self::Audit => OAuthFailureClass::Audit,
@@ -824,6 +837,10 @@ impl Debug for OAuthError {
                 .debug_tuple("InvalidMetadata")
                 .field(reason)
                 .finish(),
+            Self::InvalidDeviceAuthorizationResponse(reason) => formatter
+                .debug_tuple("InvalidDeviceAuthorizationResponse")
+                .field(reason)
+                .finish(),
             Self::InvalidTokenResponse(reason) => formatter
                 .debug_tuple("InvalidTokenResponse")
                 .field(reason)
@@ -845,6 +862,9 @@ impl Display for OAuthError {
             Self::ProviderDenied => "oauth: authorization denied",
             Self::ProviderError => "oauth: provider rejected authorization",
             Self::InvalidMetadata(_) => "oauth: invalid authorization-server metadata",
+            Self::InvalidDeviceAuthorizationResponse(_) => {
+                "oauth: invalid device authorization response"
+            }
             Self::InvalidTokenResponse(_) => "oauth: invalid token response",
             Self::TokenEndpoint(_) => "oauth: token endpoint rejected request",
             Self::Audit => "oauth: audit publication failed",

@@ -8,8 +8,8 @@
 
 use coding_adventures_base64::{encode_into as encode_base64_into, STANDARD};
 use coding_adventures_oauth::{
-    OAuthTraceId, ProviderConfig, ProviderId, TokenExchangeRequest, TokenRefreshRequest,
-    TokenResponseContext, TokenRevocationRequest,
+    AuthorizationServerMetadata, OAuthTraceId, ProviderConfig, ProviderId, TokenExchangeRequest,
+    TokenRefreshRequest, TokenResponseContext, TokenRevocationRequest,
 };
 use coding_adventures_zeroize::Zeroizing;
 use std::collections::BTreeMap;
@@ -86,6 +86,16 @@ pub enum ClientSecretAuthenticationMethod {
     ClientSecretPost,
 }
 
+impl ClientSecretAuthenticationMethod {
+    /// Return the exact RFC 8414 metadata token for this method.
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::ClientSecretBasic => "client_secret_basic",
+            Self::ClientSecretPost => "client_secret_post",
+        }
+    }
+}
+
 /// Provider-bound client authentication without raw secret material.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ClientSecretAuthentication {
@@ -97,6 +107,26 @@ impl ClientSecretAuthentication {
     /// Bind a provider/opaque-reference key to one wire authentication method.
     pub const fn new(key: ClientSecretKey, method: ClientSecretAuthenticationMethod) -> Self {
         Self { key, method }
+    }
+
+    /// Bind an opaque secret only to an authentication method advertised by metadata.
+    ///
+    /// Provider identity and method tokens are matched exactly and case-sensitively.
+    /// No default authentication method is invented.
+    pub fn from_metadata(
+        metadata: &AuthorizationServerMetadata,
+        key: ClientSecretKey,
+        method: ClientSecretAuthenticationMethod,
+    ) -> Result<Self, ClientSecretCustodyError> {
+        if key.provider() != metadata.provider()
+            || !metadata
+                .token_endpoint_auth_methods_supported()
+                .iter()
+                .any(|candidate| candidate == method.as_str())
+        {
+            return Err(ClientSecretCustodyError::InvalidInput);
+        }
+        Ok(Self::new(key, method))
     }
 
     /// Return the provider and opaque reference used for custody access.
@@ -945,9 +975,10 @@ fn map_store_error(error: ClientSecretStoreError) -> ClientSecretCustodyError {
 mod tests {
     use super::*;
     use coding_adventures_oauth::{
-        begin_authorization, complete_authorization, prepare_token_refresh,
-        prepare_token_revocation, Audited, EntropySource, OAuthAuditError, OAuthAuditEvent,
-        OAuthAuditSink, OAuthError, RevocationTokenHint,
+        begin_authorization, complete_authorization, decode_authorization_server_metadata,
+        prepare_authorization_server_metadata, prepare_token_refresh, prepare_token_revocation,
+        Audited, EntropySource, OAuthAuditError, OAuthAuditEvent, OAuthAuditSink, OAuthError,
+        RevocationTokenHint,
     };
 
     #[derive(Default)]
@@ -1020,6 +1051,81 @@ mod tests {
         audited
             .publish_then_release(&mut OAuthAudit)
             .expect("oauth audit and preparation")
+    }
+
+    fn metadata(methods: &str) -> AuthorizationServerMetadata {
+        let issuer = "https://issuer.example";
+        let request = release(prepare_authorization_server_metadata(
+            ProviderId::new("provider-a").expect("valid provider"),
+            issuer,
+            trace(),
+        ));
+        let body = format!(
+            r#"{{
+                "issuer":"{issuer}",
+                "authorization_endpoint":"https://issuer.example/authorize",
+                "token_endpoint":"https://issuer.example/token",
+                "response_types_supported":["code"],
+                "grant_types_supported":["authorization_code"],
+                "token_endpoint_auth_methods_supported":{methods},
+                "code_challenge_methods_supported":["S256"],
+                "authorization_response_iss_parameter_supported":true
+            }}"#
+        )
+        .into_bytes();
+        release(decode_authorization_server_metadata(
+            request.response_context(),
+            200,
+            "application/json",
+            Zeroizing::new(body),
+        ))
+    }
+
+    #[test]
+    fn metadata_selects_only_exact_provider_advertised_secret_authentication() {
+        let server_metadata = metadata(r#"["client_secret_basic"]"#);
+        let basic = ClientSecretAuthentication::from_metadata(
+            &server_metadata,
+            key(),
+            ClientSecretAuthenticationMethod::ClientSecretBasic,
+        )
+        .expect("advertised method");
+        assert_eq!(
+            basic.method(),
+            ClientSecretAuthenticationMethod::ClientSecretBasic
+        );
+        assert_eq!(basic.method().as_str(), "client_secret_basic");
+
+        assert_eq!(
+            ClientSecretAuthentication::from_metadata(
+                &server_metadata,
+                key(),
+                ClientSecretAuthenticationMethod::ClientSecretPost,
+            ),
+            Err(ClientSecretCustodyError::InvalidInput)
+        );
+        let wrong_provider = ClientSecretKey::new(
+            ProviderId::new("provider-b").expect("valid provider"),
+            ClientSecretReference::new([0x51; 32]),
+        );
+        assert_eq!(
+            ClientSecretAuthentication::from_metadata(
+                &server_metadata,
+                wrong_provider,
+                ClientSecretAuthenticationMethod::ClientSecretBasic,
+            ),
+            Err(ClientSecretCustodyError::InvalidInput)
+        );
+
+        let wrong_case = metadata(r#"["CLIENT_SECRET_BASIC"]"#);
+        assert_eq!(
+            ClientSecretAuthentication::from_metadata(
+                &wrong_case,
+                key(),
+                ClientSecretAuthenticationMethod::ClientSecretBasic,
+            ),
+            Err(ClientSecretCustodyError::InvalidInput)
+        );
     }
 
     #[test]

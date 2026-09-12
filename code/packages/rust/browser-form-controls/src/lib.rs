@@ -3,6 +3,7 @@
 use coding_adventures_html_parser::{BrowserRenderNode, BrowserRenderTree};
 use layout_controls::{ControlAppearance, ControlKind, ControlState};
 use text_flow::graphemes;
+use url_parser::Url;
 
 const EDIT_HISTORY_LIMIT: usize = 100;
 
@@ -101,9 +102,70 @@ pub enum ControlAccessibilityAction {
     },
     SetSelection(ControlSelection),
     ReplaceSelection(String),
+    SetValue(String),
+    Increment,
+    Decrement,
+    Toggle,
+    SetIndeterminate(bool),
+    SelectOption {
+        index: usize,
+        extend: bool,
+        toggle: bool,
+    },
     SelectAll,
     Undo,
     Redo,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct ControlValueDiagnostic {
+    pub code: &'static str,
+    pub message: &'static str,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct ControlValueState {
+    pub key: String,
+    pub value: String,
+    pub input_mode: Option<String>,
+    pub selection_supported: bool,
+    pub numeric_value: Option<f64>,
+    pub minimum: Option<f64>,
+    pub maximum: Option<f64>,
+    pub step: Option<f64>,
+    pub diagnostics: Vec<ControlValueDiagnostic>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlChoiceOptionState {
+    pub index: usize,
+    pub value: String,
+    pub disabled: bool,
+    pub selected: bool,
+}
+
+/// Reusable accessibility and interaction state for non-text controls.
+#[derive(Clone, Debug, PartialEq)]
+pub struct ControlChoiceState {
+    pub key: String,
+    pub role: &'static str,
+    pub disabled: bool,
+    pub checked: Option<bool>,
+    pub indeterminate: bool,
+    pub multiple: bool,
+    pub active_index: Option<usize>,
+    pub options: Vec<ControlChoiceOptionState>,
+    pub value: Option<f64>,
+    pub minimum: Option<f64>,
+    pub maximum: Option<f64>,
+    pub step: Option<f64>,
+    pub diagnostics: Vec<ControlValueDiagnostic>,
+}
+
+impl ControlValueState {
+    pub fn is_valid(&self) -> bool {
+        self.diagnostics.is_empty()
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -236,6 +298,7 @@ pub struct BrowserControlModel {
     bindings: Vec<ControlBinding>,
     editors: Vec<ControlEditorState>,
     histories: Vec<ControlEditHistory>,
+    choice_anchors: Vec<Option<usize>>,
     focused_key: Option<String>,
 }
 
@@ -277,6 +340,8 @@ pub struct ControlBinding {
     pub max: Option<String>,
     pub minlength: Option<String>,
     pub maxlength: Option<String>,
+    pub step: Option<String>,
+    pub inputmode: Option<String>,
 }
 
 impl BrowserControlModel {
@@ -315,12 +380,14 @@ impl BrowserControlModel {
             })
             .collect();
         let histories = vec![ControlEditHistory::default(); bindings.len()];
+        let choice_anchors = vec![None; bindings.len()];
         Self {
             initial_controls: controls.clone(),
             controls,
             bindings,
             editors,
             histories,
+            choice_anchors,
             focused_key,
         }
     }
@@ -373,6 +440,8 @@ impl BrowserControlModel {
             let focused = control.focused;
             let changed = control.value != initial.value
                 || control.checked != initial.checked
+                || control.indeterminate != initial.indeterminate
+                || control.selected_indices != initial.selected_indices
                 || control.selected_index != initial.selected_index;
             *control = initial.clone();
             control.focused = focused;
@@ -385,6 +454,7 @@ impl BrowserControlModel {
             editor.pointer_anchor = None;
             editor.invalid_message = None;
             self.histories[index] = ControlEditHistory::default();
+            self.choice_anchors[index] = None;
             if changed {
                 effects.push(ControlEffect::ValueChanged {
                     key: control.key.clone(),
@@ -461,12 +531,28 @@ impl BrowserControlModel {
         match key {
             ControlKey::Undo => return self.undo(),
             ControlKey::Redo => return self.redo(),
-            ControlKey::SelectAll if kind.accepts_text() => {
+            ControlKey::SelectAll if kind.supports_selection() => {
                 let key = self.focused_key()?.to_string();
                 let length = self.focused()?.value.chars().count();
                 return self.set_selection(&key, 0, length);
             }
             _ => {}
+        }
+        if kind == ControlKind::Range {
+            return match key {
+                ControlKey::ArrowUp | ControlKey::ArrowRight => self.step_focused_numeric(true),
+                ControlKey::ArrowDown | ControlKey::ArrowLeft => self.step_focused_numeric(false),
+                ControlKey::Home => self.set_focused_range_boundary(false),
+                ControlKey::End => self.set_focused_range_boundary(true),
+                _ => None,
+            };
+        }
+        if kind == ControlKind::Radio {
+            return match key {
+                ControlKey::ArrowUp | ControlKey::ArrowLeft => self.move_radio_group(false),
+                ControlKey::ArrowDown | ControlKey::ArrowRight => self.move_radio_group(true),
+                _ => None,
+            };
         }
         match (key, kind) {
             (ControlKey::Space, kind) if kind.accepts_text() => return self.text_input(" "),
@@ -476,6 +562,12 @@ impl BrowserControlModel {
         }
         if kind.accepts_text() {
             match key {
+                ControlKey::ArrowUp if kind == ControlKind::Number => {
+                    return self.step_focused_numeric(true)
+                }
+                ControlKey::ArrowDown if kind == ControlKind::Number => {
+                    return self.step_focused_numeric(false)
+                }
                 ControlKey::ArrowLeft => return self.move_caret(-1, shift, false),
                 ControlKey::ArrowRight => return self.move_caret(1, shift, false),
                 ControlKey::WordLeft => {
@@ -491,36 +583,20 @@ impl BrowserControlModel {
                 _ => {}
             }
         }
-        let control = self.focused_mut()?;
-        if control.disabled {
-            return None;
-        }
-        match key {
-            ControlKey::ArrowUp if control.kind == ControlKind::Select => {
-                control.selected_index = control.selected_index.saturating_sub(1);
-                sync_selected_value(control);
-            }
-            ControlKey::ArrowDown if control.kind == ControlKind::Select => {
-                if !control.options.is_empty() {
-                    control.selected_index =
-                        (control.selected_index + 1).min(control.options.len() - 1);
-                    sync_selected_value(control);
+        if kind == ControlKind::Select {
+            return match key {
+                ControlKey::ArrowUp | ControlKey::ArrowLeft => {
+                    self.move_select(false, false, shift)
                 }
-            }
-            ControlKey::Home if control.kind == ControlKind::Select => {
-                control.selected_index = 0;
-                sync_selected_value(control);
-            }
-            ControlKey::End if control.kind == ControlKind::Select => {
-                control.selected_index = control.options.len().saturating_sub(1);
-                sync_selected_value(control);
-            }
-            _ => return None,
+                ControlKey::ArrowDown | ControlKey::ArrowRight => {
+                    self.move_select(true, false, shift)
+                }
+                ControlKey::Home => self.move_select(true, true, shift),
+                ControlKey::End => self.move_select(false, true, shift),
+                _ => None,
+            };
         }
-        Some(ControlEffect::ValueChanged {
-            key: control.key.clone(),
-            value: control.value.clone(),
-        })
+        None
     }
 
     pub fn sync_render_tree(&self, tree: &mut BrowserRenderTree) {
@@ -543,7 +619,7 @@ impl BrowserControlModel {
             .controls
             .iter()
             .position(|control| control.key == key)?;
-        if !self.controls[index].kind.accepts_text() {
+        if !self.controls[index].kind.supports_selection() {
             return None;
         }
         let length = self.controls[index].value.chars().count();
@@ -622,7 +698,7 @@ impl BrowserControlModel {
     pub fn copy_selection_payload(&self) -> Option<ControlClipboardPayload> {
         let index = self.focused_index()?;
         let control = &self.controls[index];
-        if control.kind == ControlKind::Password || !control.kind.accepts_text() {
+        if control.kind == ControlKind::Password || !control.kind.supports_selection() {
             return None;
         }
         let (start, end) = self.editors[index].selection.ordered();
@@ -778,6 +854,22 @@ impl BrowserControlModel {
             ControlAccessibilityAction::ReplaceSelection(value) => {
                 self.replace_focused_selection(&value)
             }
+            ControlAccessibilityAction::SetValue(value) => self.set_focused_value(&value),
+            ControlAccessibilityAction::Increment => self.step_focused_numeric(true),
+            ControlAccessibilityAction::Decrement => self.step_focused_numeric(false),
+            ControlAccessibilityAction::Toggle => self.activate_focused(),
+            ControlAccessibilityAction::SetIndeterminate(indeterminate) => {
+                let key = self.focused_key()?.to_string();
+                self.set_indeterminate(&key, indeterminate)
+            }
+            ControlAccessibilityAction::SelectOption {
+                index,
+                extend,
+                toggle,
+            } => {
+                let key = self.focused_key()?.to_string();
+                self.select_option(&key, index, extend, toggle)
+            }
             ControlAccessibilityAction::SelectAll => self.key_down(ControlKey::SelectAll),
             ControlAccessibilityAction::Undo => self.undo(),
             ControlAccessibilityAction::Redo => self.redo(),
@@ -790,6 +882,101 @@ impl BrowserControlModel {
 
     pub fn redo(&mut self) -> Option<ControlEffect> {
         self.restore_history(false)
+    }
+
+    pub fn value_state(&self, key: &str) -> Option<ControlValueState> {
+        let index = self
+            .controls
+            .iter()
+            .position(|control| control.key == key)?;
+        Some(control_value_state(
+            &self.controls[index],
+            &self.bindings[index],
+        ))
+    }
+
+    pub fn choice_state(&self, key: &str) -> Option<ControlChoiceState> {
+        let index = self
+            .controls
+            .iter()
+            .position(|control| control.key == key)?;
+        choice_state(&self.controls[index], &self.bindings[index])
+    }
+
+    pub fn selected_values(&self, key: &str) -> Option<Vec<String>> {
+        let control = self.control(key)?;
+        (control.kind == ControlKind::Select).then(|| selected_values(control))
+    }
+
+    pub fn set_indeterminate(&mut self, key: &str, indeterminate: bool) -> Option<ControlEffect> {
+        let control = self
+            .controls
+            .iter_mut()
+            .find(|control| control.key == key && control.kind == ControlKind::Checkbox)?;
+        if control.disabled || control.indeterminate == indeterminate {
+            return None;
+        }
+        control.indeterminate = indeterminate;
+        Some(ControlEffect::CheckedChanged {
+            key: key.to_string(),
+            checked: control.checked,
+        })
+    }
+
+    pub fn select_option(
+        &mut self,
+        key: &str,
+        option_index: usize,
+        extend: bool,
+        toggle: bool,
+    ) -> Option<ControlEffect> {
+        let index = self
+            .controls
+            .iter()
+            .position(|control| control.key == key)?;
+        let control = &self.controls[index];
+        if control.disabled
+            || control.kind != ControlKind::Select
+            || option_index >= control.options.len()
+            || option_is_disabled(control, option_index)
+        {
+            return None;
+        }
+        let multiple = control.multiple;
+        let anchor = self.choice_anchors[index].unwrap_or(option_index);
+        let control = &mut self.controls[index];
+        control.selected_index = option_index;
+        if multiple {
+            if extend {
+                let (start, end) = (anchor.min(option_index), anchor.max(option_index));
+                control.selected_indices = (start..=end)
+                    .filter(|candidate| !option_is_disabled(control, *candidate))
+                    .collect();
+            } else if toggle {
+                if let Some(position) = control
+                    .selected_indices
+                    .iter()
+                    .position(|selected| *selected == option_index)
+                {
+                    control.selected_indices.remove(position);
+                } else {
+                    control.selected_indices.push(option_index);
+                    control.selected_indices.sort_unstable();
+                }
+                self.choice_anchors[index] = Some(option_index);
+            } else {
+                control.selected_indices = vec![option_index];
+                self.choice_anchors[index] = Some(option_index);
+            }
+        } else {
+            control.selected_indices = vec![option_index];
+            self.choice_anchors[index] = Some(option_index);
+        }
+        sync_selected_value(control);
+        Some(ControlEffect::ValueChanged {
+            key: key.to_string(),
+            value: control.value.clone(),
+        })
     }
 
     pub fn pointer_release(&mut self) {
@@ -926,11 +1113,6 @@ impl BrowserControlModel {
         })
     }
 
-    fn focused_mut(&mut self) -> Option<&mut ControlState> {
-        let key = self.focused_key.as_deref()?;
-        self.controls.iter_mut().find(|control| control.key == key)
-    }
-
     fn focused_index(&self) -> Option<usize> {
         let key = self.focused_key.as_deref()?;
         self.controls.iter().position(|control| control.key == key)
@@ -949,9 +1131,19 @@ impl BrowserControlModel {
         if start == end && text.is_empty() {
             return None;
         }
+        let text = constrained_replacement(
+            &self.controls[index],
+            &self.bindings[index],
+            start,
+            end,
+            text,
+        );
+        if text.is_empty() && start == end {
+            return None;
+        }
         self.record_history(index);
         let control = &mut self.controls[index];
-        replace_char_range(&mut control.value, start, end, text);
+        replace_char_range(&mut control.value, start, end, &text);
         let caret = start + text.chars().count();
         self.editors[index].selection = ControlSelection::collapsed(caret);
         self.editors[index].composition = None;
@@ -961,6 +1153,157 @@ impl BrowserControlModel {
         Some(ControlEffect::ValueChanged {
             key: control.key.clone(),
             value: control.value.clone(),
+        })
+    }
+
+    fn set_focused_value(&mut self, value: &str) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        let control = &self.controls[index];
+        if control.disabled
+            || control.readonly
+            || (!control.kind.accepts_text() && control.kind != ControlKind::Range)
+        {
+            return None;
+        }
+        if control.kind == ControlKind::Range {
+            let requested = parse_finite(value)?;
+            let value = format_number(normalize_range_value(
+                requested,
+                control_numeric_constraints(&self.controls[index], &self.bindings[index]),
+            ));
+            if self.controls[index].value == value {
+                return None;
+            }
+            self.controls[index].value = value.clone();
+            return Some(ControlEffect::ValueChanged {
+                key: self.controls[index].key.clone(),
+                value,
+            });
+        }
+        if control.value == value {
+            return None;
+        }
+        let length = control.value.chars().count();
+        self.editors[index].selection = ControlSelection {
+            anchor: 0,
+            focus: length,
+        };
+        self.replace_focused_selection(value)
+    }
+
+    fn step_focused_numeric(&mut self, forward: bool) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        let control = &self.controls[index];
+        if control.disabled
+            || control.readonly
+            || !matches!(control.kind, ControlKind::Number | ControlKind::Range)
+        {
+            return None;
+        }
+        let constraints = control_numeric_constraints(control, &self.bindings[index]);
+        let base = constraints.minimum.unwrap_or(0.0);
+        let mut next = match parse_finite(&control.value) {
+            Some(current) if step_mismatch(current, base, constraints.step) => {
+                let quotient = (current - base) / constraints.step;
+                base + if forward {
+                    quotient.ceil()
+                } else {
+                    quotient.floor()
+                } * constraints.step
+            }
+            Some(current) => {
+                current
+                    + if forward {
+                        constraints.step
+                    } else {
+                        -constraints.step
+                    }
+            }
+            None if forward => constraints.minimum.unwrap_or(constraints.step),
+            None => constraints.maximum.unwrap_or(-constraints.step),
+        };
+        if let Some(minimum) = constraints.minimum {
+            next = next.max(minimum);
+        }
+        if let Some(maximum) = constraints.maximum {
+            next = next.min(maximum);
+        }
+        self.set_focused_value(&format_number(next))
+    }
+
+    fn set_focused_range_boundary(&mut self, maximum: bool) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        if self.controls[index].kind != ControlKind::Range {
+            return None;
+        }
+        let constraints = control_numeric_constraints(&self.controls[index], &self.bindings[index]);
+        let value = if maximum {
+            constraints.maximum.unwrap_or(100.0)
+        } else {
+            constraints.minimum.unwrap_or(0.0)
+        };
+        self.set_focused_value(&format_number(value))
+    }
+
+    fn move_select(
+        &mut self,
+        forward: bool,
+        boundary: bool,
+        extend: bool,
+    ) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        let control = &self.controls[index];
+        let option = if boundary {
+            enabled_boundary_option(control, forward)
+        } else {
+            next_enabled_option(control, control.selected_index, forward)
+        }?;
+        let key = control.key.clone();
+        let multiple = control.multiple;
+        if extend && multiple && self.choice_anchors[index].is_none() {
+            self.choice_anchors[index] = Some(control.selected_index);
+        }
+        self.select_option(&key, option, extend && multiple, false)
+    }
+
+    fn move_radio_group(&mut self, forward: bool) -> Option<ControlEffect> {
+        let index = self.focused_index()?;
+        let name = self.controls[index].name.clone();
+        let owner = self.bindings[index].form_owner.clone();
+        let form_index = self.bindings[index].form_index;
+        let group = self
+            .controls
+            .iter()
+            .zip(&self.bindings)
+            .enumerate()
+            .filter_map(|(candidate, (control, binding))| {
+                let same_form = match owner.as_deref() {
+                    Some(owner) => binding.form_owner.as_deref() == Some(owner),
+                    None => binding.form_owner.is_none() && binding.form_index == form_index,
+                };
+                (same_form
+                    && control.kind == ControlKind::Radio
+                    && control.name == name
+                    && !control.disabled)
+                    .then_some(candidate)
+            })
+            .collect::<Vec<_>>();
+        let position = group.iter().position(|candidate| *candidate == index)?;
+        let target = if forward {
+            group[(position + 1) % group.len()]
+        } else {
+            group[(position + group.len() - 1) % group.len()]
+        };
+        for candidate in &group {
+            self.controls[*candidate].checked = false;
+            self.controls[*candidate].focused = false;
+        }
+        self.controls[target].checked = true;
+        self.controls[target].focused = true;
+        self.focused_key = Some(self.controls[target].key.clone());
+        Some(ControlEffect::CheckedChanged {
+            key: self.controls[target].key.clone(),
+            checked: true,
         })
     }
 
@@ -1134,6 +1477,7 @@ impl BrowserControlModel {
         })?;
         match self.controls[index].kind {
             ControlKind::Checkbox => {
+                self.controls[index].indeterminate = false;
                 self.controls[index].checked = !self.controls[index].checked;
                 Some(ControlEffect::CheckedChanged {
                     key: self.controls[index].key.clone(),
@@ -1164,13 +1508,14 @@ impl BrowserControlModel {
                 if self.controls[index].options.is_empty() {
                     return None;
                 }
-                self.controls[index].selected_index =
-                    (self.controls[index].selected_index + 1) % self.controls[index].options.len();
-                sync_selected_value(&mut self.controls[index]);
-                Some(ControlEffect::ValueChanged {
-                    key: self.controls[index].key.clone(),
-                    value: self.controls[index].value.clone(),
-                })
+                let active = self.controls[index].selected_index;
+                let option = if self.controls[index].multiple {
+                    Some(active)
+                } else {
+                    next_enabled_option(&self.controls[index], active, true)
+                }?;
+                let key = self.controls[index].key.clone();
+                self.select_option(&key, option, false, self.controls[index].multiple)
             }
             _ => None,
         }
@@ -1210,12 +1555,38 @@ pub fn project_control(node: &BrowserRenderNode, key: impl Into<String>) -> Cont
         _ => node.value.clone().unwrap_or_default(),
     };
     state.placeholder = node.placeholder.clone();
-    state.options = node.options.clone();
-    state.selected_index = node
-        .value
-        .as_ref()
-        .and_then(|value| state.options.iter().position(|option| option == value))
-        .unwrap_or(0);
+    let choice_options = collect_choice_options(&node.children);
+    state.options = if choice_options.is_empty() {
+        node.options.clone()
+    } else {
+        choice_options
+            .iter()
+            .map(|option| option.value.clone())
+            .collect()
+    };
+    state.option_disabled = choice_options
+        .iter()
+        .map(|option| option.disabled)
+        .collect();
+    state.multiple = node.multiple;
+    state.selected_indices = choice_options
+        .iter()
+        .enumerate()
+        .filter_map(|(index, option)| option.selected.then_some(index))
+        .collect();
+    state.selected_index = state
+        .selected_indices
+        .first()
+        .copied()
+        .or_else(|| {
+            node.value
+                .as_ref()
+                .and_then(|value| state.options.iter().position(|option| option == value))
+        })
+        .unwrap_or_else(|| enabled_boundary_option(&state, true).unwrap_or(0));
+    if kind == ControlKind::Select && state.selected_indices.is_empty() && !state.multiple {
+        state.selected_indices.push(state.selected_index);
+    }
     state.columns = node
         .cols
         .as_deref()
@@ -1230,10 +1601,23 @@ pub fn project_control(node: &BrowserRenderNode, key: impl Into<String>) -> Cont
     state.disabled = node.disabled || node.aria_disabled.as_deref() == Some("true");
     state.readonly = node.readonly;
     state.required = node.required || node.aria_required.as_deref() == Some("true");
-    state.multiple = node.multiple;
     state.checked = node.checked;
     state.focused = node.control_focused;
     state.appearance = ControlAppearance::Auto;
+    if kind == ControlKind::Range {
+        let constraints = range_constraints(
+            node.min.as_deref(),
+            node.max.as_deref(),
+            node.step.as_deref(),
+        );
+        let initial = state
+            .value
+            .parse::<f64>()
+            .ok()
+            .filter(|value| value.is_finite())
+            .unwrap_or((constraints.minimum.unwrap() + constraints.maximum.unwrap()) / 2.0);
+        state.value = format_number(normalize_range_value(initial, constraints));
+    }
     state
 }
 
@@ -1289,6 +1673,8 @@ fn collect_model_nodes(
                 max: node.max.clone(),
                 minlength: node.minlength.clone(),
                 maxlength: node.maxlength.clone(),
+                step: node.step.clone(),
+                inputmode: node.inputmode.clone(),
             });
         }
         collect_model_nodes(
@@ -1315,6 +1701,14 @@ fn sync_nodes(
                 node.value = Some(control.value.clone());
                 node.checked = control.checked;
                 node.control_focused = control.focused;
+                if control.kind == ControlKind::Select {
+                    let mut option_index = 0;
+                    sync_choice_option_nodes(
+                        &mut node.children,
+                        &control.selected_indices,
+                        &mut option_index,
+                    );
+                }
                 if let Some(editor) = editors.get(*index) {
                     node.aria_invalid = editor.invalid_message.as_ref().map(|_| "true".into());
                     node.accessible_description = match (
@@ -1395,14 +1789,103 @@ fn control_kind(node: &BrowserRenderNode) -> ControlKind {
     }
 }
 
+#[derive(Clone, Debug)]
+struct ChoiceOption {
+    value: String,
+    disabled: bool,
+    selected: bool,
+}
+
+fn collect_choice_options(nodes: &[BrowserRenderNode]) -> Vec<ChoiceOption> {
+    fn collect(nodes: &[BrowserRenderNode], inherited_disabled: bool, out: &mut Vec<ChoiceOption>) {
+        for node in nodes {
+            let disabled = inherited_disabled || node.disabled;
+            if node.name.as_deref() == Some("option") {
+                out.push(ChoiceOption {
+                    value: node
+                        .value
+                        .clone()
+                        .or_else(|| node.text.clone())
+                        .unwrap_or_default(),
+                    disabled,
+                    selected: node.selected,
+                });
+            } else {
+                collect(&node.children, disabled, out);
+            }
+        }
+    }
+
+    let mut options = Vec::new();
+    collect(nodes, false, &mut options);
+    options
+}
+
+fn sync_choice_option_nodes(
+    nodes: &mut [BrowserRenderNode],
+    selected_indices: &[usize],
+    option_index: &mut usize,
+) {
+    for node in nodes {
+        if node.name.as_deref() == Some("option") {
+            node.selected = selected_indices.contains(option_index);
+            *option_index += 1;
+        } else {
+            sync_choice_option_nodes(&mut node.children, selected_indices, option_index);
+        }
+    }
+}
+
 fn positive_count(value: &str) -> Option<usize> {
     value.parse().ok().filter(|value| *value > 0)
 }
 
 fn sync_selected_value(control: &mut ControlState) {
-    if let Some(value) = control.options.get(control.selected_index) {
-        control.value = value.clone();
+    control.value = selected_values(control)
+        .into_iter()
+        .next()
+        .unwrap_or_default();
+}
+
+fn option_is_disabled(control: &ControlState, index: usize) -> bool {
+    control.option_disabled.get(index).copied().unwrap_or(false)
+}
+
+fn selected_values(control: &ControlState) -> Vec<String> {
+    control
+        .selected_indices
+        .iter()
+        .filter(|index| !option_is_disabled(control, **index))
+        .filter_map(|index| control.options.get(*index))
+        .cloned()
+        .collect()
+}
+
+fn enabled_boundary_option(control: &ControlState, first: bool) -> Option<usize> {
+    let indices: Box<dyn Iterator<Item = usize>> = if first {
+        Box::new(0..control.options.len())
+    } else {
+        Box::new((0..control.options.len()).rev())
+    };
+    indices
+        .into_iter()
+        .find(|index| !option_is_disabled(control, *index))
+}
+
+fn next_enabled_option(control: &ControlState, current: usize, forward: bool) -> Option<usize> {
+    let length = control.options.len();
+    if length == 0 {
+        return None;
     }
+    (1..=length)
+        .map(|distance| {
+            if forward {
+                (current + distance) % length
+            } else {
+                (current + length - distance % length) % length
+            }
+        })
+        .find(|index| !option_is_disabled(control, *index))
 }
 
 fn sanitize_metrics(metrics: ControlTextMetrics) -> ControlTextMetrics {
@@ -1437,6 +1920,348 @@ fn char_range(value: &str, start: usize, end: usize) -> String {
         .skip(start)
         .take(end.saturating_sub(start))
         .collect()
+}
+
+fn constrained_replacement(
+    control: &ControlState,
+    binding: &ControlBinding,
+    start: usize,
+    end: usize,
+    replacement: &str,
+) -> String {
+    let Some(maximum) = binding
+        .maxlength
+        .as_deref()
+        .and_then(|value| value.parse::<usize>().ok())
+        .filter(|_| control.kind.supports_maxlength())
+    else {
+        return replacement.to_string();
+    };
+    let retained = control
+        .value
+        .chars()
+        .count()
+        .saturating_sub(end.saturating_sub(start));
+    replacement
+        .chars()
+        .take(maximum.saturating_sub(retained))
+        .collect()
+}
+
+#[derive(Clone, Copy, Debug)]
+struct NumericConstraints {
+    minimum: Option<f64>,
+    maximum: Option<f64>,
+    step: f64,
+    validates_step: bool,
+}
+
+fn numeric_constraints(binding: &ControlBinding) -> NumericConstraints {
+    let minimum = binding.min.as_deref().and_then(parse_finite);
+    let maximum = binding.max.as_deref().and_then(parse_finite);
+    let authored_step = binding.step.as_deref().map(str::trim);
+    let validates_step = authored_step != Some("any");
+    let step = authored_step
+        .and_then(parse_finite)
+        .filter(|step| *step > 0.0)
+        .unwrap_or(1.0);
+    NumericConstraints {
+        minimum,
+        maximum,
+        step,
+        validates_step,
+    }
+}
+
+fn range_constraints(
+    minimum: Option<&str>,
+    maximum: Option<&str>,
+    step: Option<&str>,
+) -> NumericConstraints {
+    let minimum = minimum.and_then(parse_finite).unwrap_or(0.0);
+    let maximum = maximum.and_then(parse_finite).unwrap_or(100.0).max(minimum);
+    let validates_step = step.map(str::trim) != Some("any");
+    let step = step
+        .and_then(parse_finite)
+        .filter(|step| *step > 0.0)
+        .unwrap_or(1.0);
+    NumericConstraints {
+        minimum: Some(minimum),
+        maximum: Some(maximum),
+        step,
+        validates_step,
+    }
+}
+
+fn control_numeric_constraints(
+    control: &ControlState,
+    binding: &ControlBinding,
+) -> NumericConstraints {
+    if control.kind == ControlKind::Range {
+        range_constraints(
+            binding.min.as_deref(),
+            binding.max.as_deref(),
+            binding.step.as_deref(),
+        )
+    } else {
+        numeric_constraints(binding)
+    }
+}
+
+fn normalize_range_value(value: f64, constraints: NumericConstraints) -> f64 {
+    let minimum = constraints.minimum.unwrap_or(0.0);
+    let maximum = constraints.maximum.unwrap_or(100.0);
+    let clamped = value.clamp(minimum, maximum);
+    if constraints.validates_step {
+        (minimum + ((clamped - minimum) / constraints.step).round() * constraints.step)
+            .clamp(minimum, maximum)
+    } else {
+        clamped
+    }
+}
+
+fn parse_finite(value: &str) -> Option<f64> {
+    value
+        .trim()
+        .parse::<f64>()
+        .ok()
+        .filter(|value| value.is_finite())
+}
+
+fn format_number(value: f64) -> String {
+    let value = if value == -0.0 { 0.0 } else { value };
+    value.to_string()
+}
+
+fn step_mismatch(value: f64, base: f64, step: f64) -> bool {
+    let quotient = (value - base) / step;
+    (quotient - quotient.round()).abs() > f64::EPSILON * quotient.abs().max(1.0) * 8.0
+}
+
+fn valid_email_address(value: &str) -> bool {
+    let value = value.trim();
+    let Some((local, domain)) = value.split_once('@') else {
+        return false;
+    };
+    !local.is_empty()
+        && !domain.is_empty()
+        && !domain.starts_with('.')
+        && !domain.ends_with('.')
+        && !domain.contains('@')
+        && !value.chars().any(char::is_whitespace)
+}
+
+fn valid_url_value(value: &str) -> bool {
+    let value = value.trim();
+    if value.is_empty() || value.chars().any(char::is_whitespace) {
+        return false;
+    }
+    Url::parse(value).is_ok_and(|url| {
+        url.host.as_deref().is_none_or(|host| {
+            let bracketed = host.starts_with('[') || host.ends_with(']');
+            if bracketed {
+                host.strip_prefix('[')
+                    .and_then(|host| host.strip_suffix(']'))
+                    .is_some_and(|host| host.parse::<std::net::Ipv6Addr>().is_ok())
+            } else {
+                !host.is_empty() && !host.contains(['[', ']'])
+            }
+        })
+    })
+}
+
+fn control_value_state(control: &ControlState, binding: &ControlBinding) -> ControlValueState {
+    let mut diagnostics = Vec::new();
+    let length = control.value.chars().count();
+    if !control.value.is_empty() {
+        if binding
+            .minlength
+            .as_deref()
+            .and_then(|value| value.parse::<usize>().ok())
+            .is_some_and(|minimum| length < minimum)
+        {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "too-short",
+                message: "value is shorter than minlength",
+            });
+        }
+        if binding
+            .maxlength
+            .as_deref()
+            .and_then(|value| value.parse::<usize>().ok())
+            .filter(|_| control.kind.supports_maxlength())
+            .is_some_and(|maximum| length > maximum)
+        {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "too-long",
+                message: "value is longer than maxlength",
+            });
+        }
+    }
+
+    match control.kind {
+        ControlKind::Email if !control.value.is_empty() => {
+            let valid = if control.multiple {
+                control.value.split(',').all(valid_email_address)
+            } else {
+                valid_email_address(&control.value)
+            };
+            if !valid {
+                diagnostics.push(ControlValueDiagnostic {
+                    code: "type-mismatch",
+                    message: "email value is malformed",
+                });
+            }
+        }
+        ControlKind::Url if !control.value.is_empty() && !valid_url_value(&control.value) => {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "type-mismatch",
+                message: "URL value is malformed",
+            });
+        }
+        _ => {}
+    }
+
+    let constraints = control_numeric_constraints(control, binding);
+    let numeric_value = if matches!(control.kind, ControlKind::Number | ControlKind::Range)
+        && !control.value.is_empty()
+    {
+        match parse_finite(&control.value) {
+            Some(value) => {
+                if control.kind == ControlKind::Number
+                    && constraints.minimum.is_some_and(|minimum| value < minimum)
+                {
+                    diagnostics.push(ControlValueDiagnostic {
+                        code: "range-underflow",
+                        message: "number is below min",
+                    });
+                }
+                if control.kind == ControlKind::Number
+                    && constraints.maximum.is_some_and(|maximum| value > maximum)
+                {
+                    diagnostics.push(ControlValueDiagnostic {
+                        code: "range-overflow",
+                        message: "number is above max",
+                    });
+                }
+                if control.kind == ControlKind::Number
+                    && constraints.validates_step
+                    && step_mismatch(value, constraints.minimum.unwrap_or(0.0), constraints.step)
+                {
+                    diagnostics.push(ControlValueDiagnostic {
+                        code: "step-mismatch",
+                        message: "number is not aligned to step",
+                    });
+                }
+                Some(value)
+            }
+            None => {
+                diagnostics.push(ControlValueDiagnostic {
+                    code: "bad-input",
+                    message: "number value is malformed",
+                });
+                None
+            }
+        }
+    } else {
+        None
+    };
+
+    ControlValueState {
+        key: control.key.clone(),
+        value: control.value.clone(),
+        input_mode: binding.inputmode.clone(),
+        selection_supported: control.kind.supports_selection(),
+        numeric_value,
+        minimum: constraints.minimum,
+        maximum: constraints.maximum,
+        step: constraints.validates_step.then_some(constraints.step),
+        diagnostics,
+    }
+}
+
+fn choice_state(control: &ControlState, binding: &ControlBinding) -> Option<ControlChoiceState> {
+    let role = match control.kind {
+        ControlKind::Checkbox => "checkbox",
+        ControlKind::Radio => "radio",
+        ControlKind::Select if control.multiple => "listbox",
+        ControlKind::Select => "combobox",
+        ControlKind::Range => "slider",
+        _ => return None,
+    };
+    let mut diagnostics = Vec::new();
+    if control.kind == ControlKind::Select {
+        if control.options.is_empty() {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "no-options",
+                message: "select control has no options",
+            });
+        }
+        if control
+            .selected_indices
+            .iter()
+            .any(|index| *index >= control.options.len())
+        {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "selection-out-of-range",
+                message: "selected option index is out of range",
+            });
+        }
+    }
+    if control.kind == ControlKind::Range {
+        for (value, code, message) in [
+            (
+                binding.min.as_deref(),
+                "invalid-minimum",
+                "range min is not finite",
+            ),
+            (
+                binding.max.as_deref(),
+                "invalid-maximum",
+                "range max is not finite",
+            ),
+        ] {
+            if value.is_some_and(|value| parse_finite(value).is_none()) {
+                diagnostics.push(ControlValueDiagnostic { code, message });
+            }
+        }
+        if binding.step.as_deref().is_some_and(|step| {
+            step.trim() != "any" && parse_finite(step).is_none_or(|step| step <= 0.0)
+        }) {
+            diagnostics.push(ControlValueDiagnostic {
+                code: "invalid-step",
+                message: "range step is not positive and finite",
+            });
+        }
+    }
+    let constraints = control_numeric_constraints(control, binding);
+    let is_range = control.kind == ControlKind::Range;
+    Some(ControlChoiceState {
+        key: control.key.clone(),
+        role,
+        disabled: control.disabled,
+        checked: matches!(control.kind, ControlKind::Checkbox | ControlKind::Radio)
+            .then_some(control.checked),
+        indeterminate: control.indeterminate,
+        multiple: control.multiple,
+        active_index: (control.kind == ControlKind::Select).then_some(control.selected_index),
+        options: control
+            .options
+            .iter()
+            .enumerate()
+            .map(|(index, value)| ControlChoiceOptionState {
+                index,
+                value: value.clone(),
+                disabled: option_is_disabled(control, index),
+                selected: control.selected_indices.contains(&index),
+            })
+            .collect(),
+        value: is_range.then(|| parse_finite(&control.value)).flatten(),
+        minimum: is_range.then_some(constraints.minimum).flatten(),
+        maximum: is_range.then_some(constraints.maximum).flatten(),
+        step: is_range.then_some(constraints.step),
+        diagnostics,
+    })
 }
 
 fn grapheme_offsets(value: &str) -> Vec<usize> {
@@ -2101,5 +2926,167 @@ mod tests {
             model.control(key).unwrap().value,
             "one two three four five\nsecond line"
         );
+    }
+
+    #[test]
+    fn maxlength_is_live_unicode_aware_and_number_selection_is_restricted() {
+        let tree = parse_browser_render_tree(
+            "<input id='text' maxlength='4' value='é'>\
+             <input id='number' type='number' maxlength='1' inputmode='decimal' value='3'>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let text = "control:0:id:text";
+        let number = "control:1:id:number";
+
+        model.focus(text);
+        model.text_input("abcde");
+        assert_eq!(model.control(text).unwrap().value, "éabc");
+        model.set_selection(text, 1, 4);
+        model.text_input("xyzw");
+        assert_eq!(model.control(text).unwrap().value, "éxyz");
+
+        assert_eq!(model.set_selection(number, 0, 1), None);
+        let state = model.value_state(number).unwrap();
+        assert!(!state.selection_supported);
+        assert_eq!(state.input_mode.as_deref(), Some("decimal"));
+        assert_eq!(state.value, "3");
+    }
+
+    #[test]
+    fn typed_value_states_report_email_url_and_number_diagnostics() {
+        let tree = parse_browser_render_tree(
+            "<input id='mail' type='email' value='not mail'>\
+             <input id='site' type='url' value='http://['>\
+             <input id='count' type='number' value='3' min='0' max='10' step='2'>\
+             <input id='any' type='number' value='3.5' step='any'>",
+        )
+        .unwrap();
+        let model = BrowserControlModel::from_render_tree(&tree);
+
+        for key in ["control:0:id:mail", "control:1:id:site"] {
+            assert_eq!(
+                model.value_state(key).unwrap().diagnostics[0].code,
+                "type-mismatch"
+            );
+        }
+        let number = model.value_state("control:2:id:count").unwrap();
+        assert_eq!(number.numeric_value, Some(3.0));
+        assert_eq!(number.minimum, Some(0.0));
+        assert_eq!(number.maximum, Some(10.0));
+        assert_eq!(number.step, Some(2.0));
+        assert_eq!(number.diagnostics[0].code, "step-mismatch");
+        assert!(model.value_state("control:3:id:any").unwrap().is_valid());
+    }
+
+    #[test]
+    fn number_keyboard_and_accessibility_steps_align_clamp_and_undo() {
+        let tree = parse_browser_render_tree(
+            "<input id='count' type='number' value='3' min='0' max='6' step='2'>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let key = "control:0:id:count";
+        model.focus(key);
+
+        model.key_down(ControlKey::ArrowUp);
+        assert_eq!(model.control(key).unwrap().value, "4");
+        model.accessibility_action(ControlAccessibilityAction::Increment);
+        assert_eq!(model.control(key).unwrap().value, "6");
+        assert_eq!(
+            model.accessibility_action(ControlAccessibilityAction::Increment),
+            None
+        );
+        model.accessibility_action(ControlAccessibilityAction::Decrement);
+        assert_eq!(model.control(key).unwrap().value, "4");
+        model.accessibility_action(ControlAccessibilityAction::SetValue("invalid".into()));
+        assert_eq!(
+            model.value_state(key).unwrap().diagnostics[0].code,
+            "bad-input"
+        );
+        model.accessibility_action(ControlAccessibilityAction::Increment);
+        assert_eq!(model.control(key).unwrap().value, "0");
+        model.accessibility_action(ControlAccessibilityAction::Undo);
+        assert_eq!(model.control(key).unwrap().value, "invalid");
+    }
+
+    #[test]
+    fn multi_select_skips_disabled_options_and_exposes_accessible_choice_state() {
+        let tree = parse_browser_render_tree(
+            "<select id='tags' name='tag' multiple>\
+             <option value='a' selected>A</option>\
+             <optgroup label='locked' disabled><option value='b' selected>B</option></optgroup>\
+             <option value='c'>C</option><option value='d' disabled>D</option>\
+             </select>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let key = "control:0:id:tags";
+
+        let state = model.choice_state(key).unwrap();
+        assert_eq!(state.role, "listbox");
+        assert_eq!(state.options.len(), 4);
+        assert!(state.options[1].disabled);
+        assert!(state.options[3].disabled);
+        assert_eq!(model.selected_values(key).unwrap(), vec!["a"]);
+
+        model.focus(key);
+        model.key_down_with_shift(ControlKey::ArrowDown, true);
+        assert_eq!(model.control(key).unwrap().selected_indices, vec![0, 2]);
+        assert_eq!(model.selected_values(key).unwrap(), vec!["a", "c"]);
+        assert_eq!(
+            model.select_option(key, 3, false, true),
+            None,
+            "disabled options never enter the selection reducer"
+        );
+        model.accessibility_action(ControlAccessibilityAction::SelectOption {
+            index: 2,
+            extend: false,
+            toggle: true,
+        });
+        assert_eq!(model.selected_values(key).unwrap(), vec!["a"]);
+    }
+
+    #[test]
+    fn checkbox_radio_and_range_actions_share_one_non_text_reducer() {
+        let tree = parse_browser_render_tree(
+            "<input id='check' type='checkbox'>\
+             <input id='one' type='radio' name='mode' checked>\
+             <input id='two' type='radio' name='mode' disabled>\
+             <input id='three' type='radio' name='mode'>\
+             <input id='level' type='range' min='0' max='10' step='2' value='3'>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+
+        let checkbox = "control:0:id:check";
+        model.focus(checkbox);
+        model.accessibility_action(ControlAccessibilityAction::SetIndeterminate(true));
+        assert!(model.choice_state(checkbox).unwrap().indeterminate);
+        model.accessibility_action(ControlAccessibilityAction::Toggle);
+        let check_state = model.choice_state(checkbox).unwrap();
+        assert_eq!(check_state.checked, Some(true));
+        assert!(!check_state.indeterminate);
+
+        model.focus("control:1:id:one");
+        model.key_down(ControlKey::ArrowRight);
+        assert_eq!(model.focused_key(), Some("control:3:id:three"));
+        assert!(model.control("control:3:id:three").unwrap().checked);
+        assert!(!model.control("control:1:id:one").unwrap().checked);
+
+        let range = "control:4:id:level";
+        model.focus(range);
+        assert_eq!(model.control(range).unwrap().value, "4");
+        model.key_down(ControlKey::ArrowRight);
+        assert_eq!(model.control(range).unwrap().value, "6");
+        model.accessibility_action(ControlAccessibilityAction::SetValue("9".into()));
+        assert_eq!(model.control(range).unwrap().value, "10");
+        model.key_down(ControlKey::Home);
+        let range_state = model.choice_state(range).unwrap();
+        assert_eq!(range_state.role, "slider");
+        assert_eq!(range_state.value, Some(0.0));
+        assert_eq!(range_state.minimum, Some(0.0));
+        assert_eq!(range_state.maximum, Some(10.0));
+        assert_eq!(range_state.step, Some(2.0));
     }
 }

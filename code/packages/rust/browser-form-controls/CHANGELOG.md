@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Add multi-select range/toggle selection, disabled-option filtering,
+  checkbox mixed state, scoped radio arrow navigation, normalized range input
+  stepping, and reusable choice/range accessibility state and actions.
+
+- Add live Unicode-scalar `maxlength`, email/URL and numeric value
+  diagnostics, min/max/step keyboard stepping, number-selection restrictions,
+  reusable value-state metadata, and accessibility value actions.
+
 - Add generated-Unicode grapheme movement/deletion, shared word and click-count
   selection, bounded drag autoscroll, per-control undo/redo transactions,
   plain/HTML clipboard negotiation, and host-neutral accessibility actions.

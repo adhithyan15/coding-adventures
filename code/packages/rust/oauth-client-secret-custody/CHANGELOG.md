@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added exact, case-sensitive RFC 8414 method selection for provider-bound
+  client-secret authentication, rejecting unadvertised methods and
+  cross-provider opaque keys before any credential access.
 - Added provider-driven `client_secret_basic` and `client_secret_post`
   authentication for authorization-code exchange, refresh, and revocation
   requests. Secret access stays inside the audited custody closure, wire

@@ -33,7 +33,7 @@ use std::collections::HashMap;
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
-    LayoutedCynefinDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
+    LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
     LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardDiagram, LayoutedPacketDiagram,
@@ -75,6 +75,20 @@ where
     pub shaper: &'a S,
     pub metrics: &'a M,
     pub resolver: &'a R,
+}
+
+/// Lower Mermaid Info's fixed version label into backend-neutral glyphs.
+pub fn diagram_to_paint_info<S, M, R>(diagram: &LayoutedInfoDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
+where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
+    let mut font = options.title_font.clone(); font.size = diagram.font_size;
+    let positioned = PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height, id: None, content: None,
+        children: vec![text_node_no_wrap(&diagram.label, diagram.x, diagram.y, 200.0, 44.0, font,
+            Color { r: 0, g: 0, b: 0, a: 255 })], ext: HashMap::new() };
+    let mut scene = layout_to_paint(&positioned, &LayoutToPaintOptions { width: diagram.width, height: diagram.height,
+        background: options.background, device_pixel_ratio: options.device_pixel_ratio,
+        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver });
+    scene.background = format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b);
+    scene
 }
 
 /// Lower a layouted treemap into backend-neutral paint instructions.

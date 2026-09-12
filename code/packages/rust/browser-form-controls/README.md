@@ -28,7 +28,28 @@ shared reducer; payloads negotiate plain and escaped HTML flavors, and password
 controls never return clipboard payloads. Platform accessibility adapters use
 the same movement, selection, replacement, and transaction actions.
 
+Typed inputs also share one value reducer. Unicode-scalar `maxlength` is
+enforced during replacement, email and absolute URL syntax produce reusable
+diagnostics, and finite number constraints drive min/max/step validation plus
+Arrow Up/Down stepping. `ControlValueState` exposes current value,
+`inputmode`, selection capability, numeric range metadata, and typed validity
+diagnostics; accessibility SetValue/Increment/Decrement actions enter the same
+transaction path. Number controls deliberately do not expose public selection
+or clipboard ranges.
+
+Choice and range controls use the same reducer. Multi-select retains ordered
+selected indices, skips disabled options and optgroups during keyboard or
+accessibility selection, and exposes listbox option state. Checkbox activation
+clears an indeterminate state, radio arrows wrap within the enabled members of
+their form-owned group, and range values are finite, clamped, step-aligned, and
+driven by semantic arrows, Home/End, and accessibility value actions.
+`ControlChoiceState` publishes role, checked/mixed state, active option,
+per-option availability/selection, and slider value metadata without a host
+widget type.
+
 Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
 [`UI55-form-editing`](../../../specs/UI55-form-editing.md), and
 [`UI56-editor-presentation`](../../../specs/UI56-editor-presentation.md), and
-[`UI62-advanced-editing-transactions`](../../../specs/UI62-advanced-editing-transactions.md).
+[`UI62-advanced-editing-transactions`](../../../specs/UI62-advanced-editing-transactions.md), and
+[`UI63-typed-input-value-semantics`](../../../specs/UI63-typed-input-value-semantics.md), and
+[`UI64-choice-range-controls`](../../../specs/UI64-choice-range-controls.md).

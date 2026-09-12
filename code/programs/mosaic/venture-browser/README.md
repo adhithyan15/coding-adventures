@@ -87,6 +87,16 @@ recreating the surrounding chrome in backend-specific UI code.
   SwiftUI, WinUI, Qt, Flutter, and Compose translate native editing shortcuts
   to shared semantic names rather than maintaining toolkit-specific edit
   histories.
+- Typed page inputs enforce Unicode-scalar `maxlength`, validate email and URL
+  syntax, and parse and step finite number values through the same retained
+  reducer. Hosts consume reusable current/min/max/step, `inputmode`, validity,
+  and selection-capability state; Arrow Up/Down and accessibility value actions
+  never move numeric policy into generated toolkit adapters.
+- Choice and range controls retain ordered multi-selection, disabled-option
+  filtering, checkbox mixed state, form-scoped radio navigation, and normalized
+  slider values in the same reducer. Every host already forwards the semantic
+  arrows, Home/End, activation, and accessibility actions consumed by this
+  shared state; submission emits only live enabled selections.
 - Native SwiftUI and WinUI surface-size changes use matching Rust resize ABIs.
   The shared session recomposes its retained render tree for the new logical
   viewport, preserves and clamps scroll state, updates hit regions, and

@@ -1,0 +1,11 @@
+# @version 1
+# Mermaid 11.16.1 ZenUML documented native subset.
+skip:
+  COMMENT = /[ \t]*\/\/[^\r\n]*/
+NEWLINE = /\r?\n/
+HEADER = /[ \t]*zenuml[ \t]*/
+TITLE_LINE = /[ \t]*title[ \t]+[^\r\n]+/
+MESSAGE_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_.]*[ \t]*->[ \t]*[A-Za-z_][A-Za-z0-9_.]*[ \t]*:[^\r\n]*/
+ANNOTATED_PARTICIPANT_LINE = /[ \t]*@(?:Actor|Database)[ \t]+[A-Za-z_][A-Za-z0-9_.]*[ \t]*/
+ALIAS_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_.]*[ \t]+as[ \t]+[^\r\n]+/
+PARTICIPANT_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_.]*[ \t]*/

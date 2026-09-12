@@ -233,6 +233,9 @@ fn validate_controls(
                             && !candidate.disabled
                     },
                 ),
+                ControlKind::Select => model
+                    .selected_values(&binding.key)
+                    .is_none_or(|values| values.is_empty()),
                 _ => control.value.is_empty(),
             };
             if missing {
@@ -244,59 +247,22 @@ fn validate_controls(
                 );
             }
         }
-        if !control.value.is_empty() && control.kind == ControlKind::Email {
-            let valid = control.value.split(',').all(valid_email_address);
-            if !valid {
+        if let Some(value_state) = model.value_state(&binding.key) {
+            for value_diagnostic in value_state.diagnostics {
                 push_diagnostic(
                     &mut diagnostics,
-                    "type-mismatch",
+                    value_diagnostic.code,
                     control,
-                    "email value is malformed",
+                    value_diagnostic.message,
                 );
             }
         }
-        validate_length(control, binding, &mut diagnostics);
         validate_pattern(control, binding, &mut diagnostics);
-        validate_number(control, binding, &mut diagnostics);
         if diagnostics.len() >= MAX_DIAGNOSTICS {
             break;
         }
     }
     diagnostics
-}
-
-fn validate_length(
-    control: &ControlState,
-    binding: &ControlBinding,
-    diagnostics: &mut Vec<FormDiagnostic>,
-) {
-    let length = control.value.chars().count();
-    if binding
-        .minlength
-        .as_deref()
-        .and_then(|value| value.parse::<usize>().ok())
-        .is_some_and(|minimum| length < minimum)
-    {
-        push_diagnostic(
-            diagnostics,
-            "too-short",
-            control,
-            "value is shorter than minlength",
-        );
-    }
-    if binding
-        .maxlength
-        .as_deref()
-        .and_then(|value| value.parse::<usize>().ok())
-        .is_some_and(|maximum| length > maximum)
-    {
-        push_diagnostic(
-            diagnostics,
-            "too-long",
-            control,
-            "value is longer than maxlength",
-        );
-    }
 }
 
 fn validate_pattern(
@@ -328,51 +294,6 @@ fn validate_pattern(
     }
 }
 
-fn validate_number(
-    control: &ControlState,
-    binding: &ControlBinding,
-    diagnostics: &mut Vec<FormDiagnostic>,
-) {
-    if control.kind != ControlKind::Number || control.value.is_empty() {
-        return;
-    }
-    let Ok(value) = control.value.parse::<f64>() else {
-        push_diagnostic(
-            diagnostics,
-            "type-mismatch",
-            control,
-            "number value is malformed",
-        );
-        return;
-    };
-    if binding
-        .min
-        .as_deref()
-        .and_then(|minimum| minimum.parse::<f64>().ok())
-        .is_some_and(|minimum| value < minimum)
-    {
-        push_diagnostic(
-            diagnostics,
-            "range-underflow",
-            control,
-            "number is below min",
-        );
-    }
-    if binding
-        .max
-        .as_deref()
-        .and_then(|maximum| maximum.parse::<f64>().ok())
-        .is_some_and(|maximum| value > maximum)
-    {
-        push_diagnostic(
-            diagnostics,
-            "range-overflow",
-            control,
-            "number is above max",
-        );
-    }
-}
-
 fn push_diagnostic(
     diagnostics: &mut Vec<FormDiagnostic>,
     code: &'static str,
@@ -386,18 +307,6 @@ fn push_diagnostic(
             message: message.to_string(),
         });
     }
-}
-
-fn valid_email_address(value: &str) -> bool {
-    let value = value.trim();
-    let Some((local, domain)) = value.split_once('@') else {
-        return false;
-    };
-    !local.is_empty()
-        && !domain.is_empty()
-        && !domain.starts_with('.')
-        && !domain.ends_with('.')
-        && !domain.contains('@')
 }
 
 fn collect_successful_controls(
@@ -489,11 +398,31 @@ fn append_control_entries(
         _ => {}
     }
     let values = match source.control_type.as_str() {
-        "select" if source.multiple => source.selected_options.clone(),
         "select" => dynamic
             .as_ref()
-            .map(|(_, control, _)| vec![control.value.clone()])
-            .unwrap_or_else(|| source.selected_options.clone()),
+            .map(|(_, control, _)| {
+                control
+                    .selected_indices
+                    .iter()
+                    .filter(|index| {
+                        !control
+                            .option_disabled
+                            .get(**index)
+                            .copied()
+                            .unwrap_or(false)
+                    })
+                    .filter_map(|index| control.options.get(*index))
+                    .cloned()
+                    .collect()
+            })
+            .unwrap_or_else(|| {
+                source
+                    .option_items
+                    .iter()
+                    .filter(|option| option.selected && !option.disabled)
+                    .map(|option| option.value.clone())
+                    .collect()
+            }),
         "checkbox" | "radio" => vec![source.value.clone().unwrap_or_else(|| "on".into())],
         "submit" => vec![source.value.clone().unwrap_or_default()],
         "file" => source.submission_values.clone(),
@@ -655,6 +584,40 @@ mod tests {
     }
 
     #[test]
+    fn shared_typed_value_diagnostics_block_and_then_allow_submission() {
+        let url = "http://example.test/form";
+        let (mut model, document) = model_and_document(
+            "<form><input id='site' name='site' type='url' value='http://['>\
+             <input id='count' name='count' type='number' min='0' max='10' step='2' value='3'>\
+             <button id='go'>Go</button></form>",
+            url,
+        );
+        let FormActivation::Invalid(diagnostics) =
+            plan_activation(&document, &model, "control:2:id:go", url).unwrap()
+        else {
+            panic!("expected invalid activation");
+        };
+        assert_eq!(
+            diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code)
+                .collect::<Vec<_>>(),
+            vec!["type-mismatch", "step-mismatch"]
+        );
+
+        model.focus("control:0:id:site");
+        model.accessibility_action(browser_form_controls::ControlAccessibilityAction::SetValue(
+            "https://example.test/path".into(),
+        ));
+        model.focus("control:1:id:count");
+        model.accessibility_action(browser_form_controls::ControlAccessibilityAction::Increment);
+        assert!(matches!(
+            plan_activation(&document, &model, "control:2:id:go", url).unwrap(),
+            FormActivation::Navigate(_)
+        ));
+    }
+
+    #[test]
     fn plans_urlencoded_post_and_reset_effects() {
         let url = "http://example.test/form";
         let (model, document) = model_and_document(
@@ -682,10 +645,7 @@ mod tests {
             request.content_type.as_deref(),
             Some("application/x-www-form-urlencoded")
         );
-        assert_eq!(
-            request.body,
-            b"bio=hello%0D%0Aworld&intent=save".to_vec()
-        );
+        assert_eq!(request.body, b"bio=hello%0D%0Aworld&intent=save".to_vec());
     }
 
     #[test]
@@ -696,6 +656,43 @@ mod tests {
                 value: "caf\u{e9} & tea".into(),
             }]),
             "query=caf%C3%A9+%26+tea"
+        );
+    }
+
+    #[test]
+    fn multi_select_serialization_uses_live_enabled_selections() {
+        let url = "http://example.test/form";
+        let (mut model, document) = model_and_document(
+            "<form><select id='tags' name='tag' multiple required>\
+             <option value='a' selected>A</option>\
+             <optgroup disabled><option value='b' selected>B</option></optgroup>\
+             <option value='c'>C</option><option value='d' disabled>D</option>\
+             </select><button id='go'>Go</button></form>",
+            url,
+        );
+        model.select_option("control:0:id:tags", 2, false, true);
+        assert_eq!(
+            model.select_option("control:0:id:tags", 3, false, true),
+            None
+        );
+
+        let FormActivation::Navigate(request) =
+            plan_activation(&document, &model, "control:1:id:go", url).unwrap()
+        else {
+            panic!("expected navigation");
+        };
+        assert_eq!(
+            request.entries,
+            vec![
+                FormEntry {
+                    name: "tag".into(),
+                    value: "a".into(),
+                },
+                FormEntry {
+                    name: "tag".into(),
+                    value: "c".into(),
+                },
+            ]
         );
     }
 }

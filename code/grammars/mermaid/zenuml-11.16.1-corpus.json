@@ -1,0 +1,42 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "documented native subset of the external @zenuml/core language",
+  "fixtures": [
+    {
+      "name": "async messages with title",
+      "compatible": true,
+      "source": "zenuml\n  title Demo\n  Alice->John: Hello John\n  John->Alice: Great!"
+    },
+    {
+      "name": "participant ordering and aliases",
+      "compatible": true,
+      "source": "zenuml\nBob\nA as Alice\nA->Bob: Hi Bob"
+    },
+    {
+      "name": "actor and database annotators",
+      "compatible": true,
+      "source": "zenuml\n@Actor Alice\n@Database Store\nAlice->Store: Query"
+    },
+    {
+      "name": "front matter before header",
+      "compatible": true,
+      "source": "---\ntitle: Host metadata\n---\nzenuml\nAlice->Bob: Hello"
+    },
+    {
+      "name": "nested synchronous message",
+      "compatible": false,
+      "source": "zenuml\nA.SyncMessage() {\n  B.nestedSyncMessage()\n}"
+    },
+    {
+      "name": "control fragment",
+      "compatible": false,
+      "source": "zenuml\nwhile(true) {\n  Alice->Bob: Hello\n}"
+    },
+    {
+      "name": "creation message",
+      "compatible": false,
+      "source": "zenuml\nnew A1"
+    }
+  ]
+}

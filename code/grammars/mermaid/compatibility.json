@@ -226,14 +226,14 @@
     {
       "id": "info",
       "headers": ["info"],
-      "status": "detected",
+      "status": "full",
       "ir": "info",
       "smoke_source": "info"
     },
     {
       "id": "zenuml",
       "headers": ["zenuml"],
-      "status": "detected",
+      "status": "partial",
       "ir": "sequence",
       "external": true,
       "smoke_source": "zenuml\nAlice->Bob: Hello"
