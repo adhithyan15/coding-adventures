@@ -104,10 +104,11 @@ This changes every emitted `Row`, so it is deliberately not a patch.
 
 ## 7. Explicitly out of scope
 
-Other backends. Qt, SwiftUI, Flutter and XAML each have their own answer to
-this and have not been measured — only Compose has been shown to have the
-defect. Fixing it generically across the emitters without that measurement
-would be guessing.
+Qt, SwiftUI and XAML each have their own answer to this and have not been
+measured. Fixing them generically without that measurement would be guessing.
+
+**Flutter is no longer out of scope — see §11.** This section originally said
+"only Compose has been shown to have the defect". That is now falsified.
 
 ## 8. Measured before implementing — the acceptance in §6 cannot be met
 
@@ -207,3 +208,63 @@ The assertion that keeps it honest lives in `TaskAppUiTest.assertTopbarIsNotStar
 a topbar element measuring zero width fails, at the stage where it happened.
 Presence assertions cannot see this — the chip was present, named and
 "displayed" at `0 x 168` for as long as the defect existed.
+
+## 11. Flutter has the same defect, and it does not starve — it throws
+
+Measured while implementing `max-width` on Flutter (#14851, #14857). Capping
+Trestle's `list-wrap` at its authored 760px makes the generated app assert
+during layout:
+
+```
+A RenderFlex overflowed by 316 pixels on the right.
+  Row TaskApp.dart:1657 — the task row
+```
+
+The row's children, measured individually rather than inferred from that
+number:
+
+| child | width |
+| --- | --- |
+| toggle button `○` | `64` |
+| task name button | `318` |
+| `due 2026-01-09` (a bare `Text`) | `200` |
+| Edit | `68` |
+| Delete | `97` |
+
+Nothing here can shrink. A Flutter `Row` measures a non-flexible child with an
+**unbounded** max width, so a `Text` never wraps — it extends the row. That is
+UI59's rule exactly, on a second backend:
+
+| | Compose | Flutter |
+| --- | --- | --- |
+| a Row that cannot fit its children | starves the last-measured child to `0` | **throws during layout** |
+| mechanism the child needs | `Modifier.weight` | `Flexible` |
+| how it is noticed | never — every gate passes on a `0`-wide node | immediately, loudly |
+
+Flutter is the more honest of the two. Compose's silence is what let the
+`On track` chip sit at `0 x 168` through every acceptance run.
+
+### Two things measured here that are NOT the defect
+
+Recorded because each looked like the cause:
+
+1. **`SizedBox(width: double.infinity)` inside a `ConstrainedBox`.** The
+   obvious way to say "fill up to the cap", and genuinely unsafe on Flutter —
+   a non-flexible Row child is measured unbounded, so `double.infinity`
+   resolves to infinity. But removing it left the overflow at *exactly* 316px.
+   An unchanged number after a targeted removal means the diagnosis was wrong.
+
+2. **`flutter test`'s default font.** `due 2026-01-09` measures `200` for 14
+   characters — 14px per glyph, which is the test font's one-em-per-glyph
+   metric at the inherited size of 14. A real font would be roughly half that.
+   So the *magnitude* of the overflow is inflated by the test environment. The
+   defect is not: no font makes an unshrinkable row fit an arbitrary cap.
+
+### And one thing that is a separate defect
+
+Every Flutter button carries Material's minimum size regardless of authored
+padding — the toggle `○` is **64 x 48** for a single glyph, against an
+authored `padding: 3`. `ButtonStyle(padding: ..)` sets padding and does *not*
+set `minimumSize` or `tapTargetSize`, which the emitter never overrides. Worth
+its own issue rather than folding in here, because shrinking a tap target
+below 48dp is an accessibility decision, not a layout one.
