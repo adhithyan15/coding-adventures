@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add live dirty/default state, bounded public or credential-bearing history
+  snapshots, grouped autocomplete descriptors, privacy-gated autofill
+  transactions, ordered input/change effects, and deferred custom-element
+  restoration callbacks.
+
 - Add attachable form-associated custom-element internals with bounded
   submission/restoration values, ownership reassociation, validity anchors,
   lifecycle callbacks, labels, and accessibility value actions.

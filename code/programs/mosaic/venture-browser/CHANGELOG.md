@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Add cross-host acceptance for shared dirty/default form state, grouped and
+  privacy-gated autofill, deterministic input/change ordering, Back/Forward
+  restoration, and deferred custom-element restore callbacks.
+
 - Add deterministic acceptance for shared scripted form lifecycle dispatch,
   including `requestSubmit`, cancelable defaults, validation modes, mutable
   form data, and navigation-after-handler ordering across every host seam.

@@ -115,6 +115,10 @@ recreating the surrounding chrome in backend-specific UI code.
   submit, and reset dispatch plus mutable `formdata` entries. Navigation waits
   for synchronous handlers and bounded reserialization, so every generated
   host observes the same lifecycle order and cancellation policy.
+- Form controls expose shared dirty/default state and autocomplete group
+  descriptors. Bounded autofill blocks credentials unless explicitly allowed,
+  emits `input` before `change`, and Back/Forward restores public values plus
+  custom-element state without placing file payloads in session history.
 - Native SwiftUI and WinUI surface-size changes use matching Rust resize ABIs.
   The shared session recomposes its retained render tree for the new logical
   viewport, preserves and clamps scroll state, updates hit regions, and
@@ -289,6 +293,11 @@ The same host-neutral boundary now covers script-style form lifecycle calls.
 `requestSubmit` verifies form ownership and submitter eligibility,
 `checkValidity` and `reportValidity` share cancelable invalid events, and
 mutable `formdata` handlers complete before a transactional navigation commit.
+
+Form restoration and autofill use the same boundary. Generated hosts submit
+only bounded purpose/value transactions and translate ordered mutation events;
+the shared session owns credential gating, typed normalization, history
+snapshots, dirty flags, and deferred custom-element restore callbacks.
 
 ## Releases
 

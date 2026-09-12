@@ -66,6 +66,12 @@ pub enum CustomElementStateRestoreMode {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CustomElementRestorationEntry {
+    pub key: String,
+    pub state: CustomElementFormValue,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum CustomElementLifecycleEvent {
     FormAssociated {
         key: String,
@@ -224,6 +230,7 @@ impl std::error::Error for CustomElementInternalsError {}
 pub(crate) struct CustomElementInternalsRegistry {
     elements: Vec<FormAssociatedCustomElementState>,
     lifecycle_events: Vec<CustomElementLifecycleEvent>,
+    pending_restores: Vec<(String, CustomElementStateRestoreMode)>,
 }
 
 impl CustomElementInternalsRegistry {
@@ -244,6 +251,7 @@ impl CustomElementInternalsRegistry {
         Self {
             elements,
             lifecycle_events: Vec::new(),
+            pending_restores: Vec::new(),
         }
     }
 
@@ -272,7 +280,24 @@ impl CustomElementInternalsRegistry {
             });
         if disabled {
             self.lifecycle_events
-                .push(CustomElementLifecycleEvent::FormDisabled { key, disabled });
+                .push(CustomElementLifecycleEvent::FormDisabled {
+                    key: key.clone(),
+                    disabled,
+                });
+        }
+        if let Some(position) = self
+            .pending_restores
+            .iter()
+            .position(|(pending_key, _)| pending_key == &key)
+        {
+            let (_, mode) = self.pending_restores.remove(position);
+            if let Some(state) = self
+                .element(&key)
+                .and_then(|element| element.restoration_state.clone())
+            {
+                self.lifecycle_events
+                    .push(CustomElementLifecycleEvent::FormStateRestore { key, state, mode });
+            }
         }
         Ok(())
     }
@@ -510,6 +535,60 @@ impl CustomElementInternalsRegistry {
                 mode,
             });
         Ok(())
+    }
+
+    pub(crate) fn restoration_entries(&self) -> Vec<CustomElementRestorationEntry> {
+        self.elements
+            .iter()
+            .filter(|element| element.attached)
+            .filter_map(|element| {
+                element
+                    .restoration_state
+                    .clone()
+                    .map(|state| CustomElementRestorationEntry {
+                        key: element.key.clone(),
+                        state,
+                    })
+            })
+            .collect()
+    }
+
+    pub(crate) fn restore_entries(
+        &mut self,
+        entries: &[CustomElementRestorationEntry],
+        mode: CustomElementStateRestoreMode,
+    ) {
+        for entry in entries {
+            let Some(element) = self
+                .elements
+                .iter_mut()
+                .find(|element| element.key == entry.key)
+            else {
+                continue;
+            };
+            element.restoration_state = Some(entry.state.clone());
+            if element.attached {
+                self.lifecycle_events
+                    .push(CustomElementLifecycleEvent::FormStateRestore {
+                        key: entry.key.clone(),
+                        state: entry.state.clone(),
+                        mode,
+                    });
+            } else if let Some(pending) = self
+                .pending_restores
+                .iter_mut()
+                .find(|(key, _)| key == &entry.key)
+            {
+                pending.1 = mode;
+            } else {
+                self.pending_restores.push((entry.key.clone(), mode));
+            }
+        }
+    }
+
+    pub(crate) fn restore_all(&mut self, mode: CustomElementStateRestoreMode) {
+        let entries = self.restoration_entries();
+        self.restore_entries(&entries, mode);
     }
 
     pub(crate) fn take_lifecycle_events(&mut self) -> Vec<CustomElementLifecycleEvent> {
