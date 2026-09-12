@@ -18,6 +18,7 @@ pub enum ControlKind {
     Button,
     TextArea,
     Select,
+    Range,
     Checkbox,
     Radio,
 }
@@ -34,6 +35,7 @@ impl ControlKind {
             Self::Button => "button",
             Self::TextArea => "textarea",
             Self::Select => "select",
+            Self::Range => "range",
             Self::Checkbox => "checkbox",
             Self::Radio => "radio",
         }
@@ -50,6 +52,7 @@ impl ControlKind {
             "button" | "submit" | "reset" => Self::Button,
             "textarea" => Self::TextArea,
             "select" => Self::Select,
+            "range" => Self::Range,
             "checkbox" => Self::Checkbox,
             "radio" => Self::Radio,
             _ => return None,
@@ -99,6 +102,8 @@ pub struct ControlState {
     pub value: String,
     pub placeholder: Option<String>,
     pub options: Vec<String>,
+    pub option_disabled: Vec<bool>,
+    pub selected_indices: Vec<usize>,
     pub selected_index: usize,
     pub columns: usize,
     pub rows: usize,
@@ -107,6 +112,7 @@ pub struct ControlState {
     pub required: bool,
     pub multiple: bool,
     pub checked: bool,
+    pub indeterminate: bool,
     pub focused: bool,
     pub appearance: ControlAppearance,
 }
@@ -120,6 +126,8 @@ impl ControlState {
             value: String::new(),
             placeholder: None,
             options: Vec::new(),
+            option_disabled: Vec::new(),
+            selected_indices: Vec::new(),
             selected_index: 0,
             columns: 20,
             rows: if kind == ControlKind::TextArea { 2 } else { 1 },
@@ -128,6 +136,7 @@ impl ControlState {
             required: false,
             multiple: false,
             checked: false,
+            indeterminate: false,
             focused: false,
             appearance: ControlAppearance::Auto,
         }
@@ -136,8 +145,22 @@ impl ControlState {
     pub fn display_value(&self) -> String {
         match self.kind {
             ControlKind::Password => "*".repeat(self.value.chars().count()),
-            ControlKind::Checkbox => if self.checked { "[x]" } else { "[ ]" }.to_string(),
+            ControlKind::Checkbox => if self.indeterminate {
+                "[-]"
+            } else if self.checked {
+                "[x]"
+            } else {
+                "[ ]"
+            }
+            .to_string(),
             ControlKind::Radio => if self.checked { "(o)" } else { "( )" }.to_string(),
+            ControlKind::Select if self.multiple => self
+                .selected_indices
+                .iter()
+                .filter_map(|index| self.options.get(*index))
+                .cloned()
+                .collect::<Vec<_>>()
+                .join(", "),
             ControlKind::Select => self
                 .options
                 .get(self.selected_index)
@@ -178,6 +201,10 @@ impl ControlState {
                     height: line + 12.0,
                 }
             }
+            ControlKind::Range => ControlSize {
+                width: (self.columns.clamp(8, 200) as f64 * advance + 18.0).max(129.0),
+                height: line + 12.0,
+            },
             _ => ControlSize {
                 width: self.columns.clamp(1, 200) as f64 * advance + 18.0,
                 height: line + 12.0,
@@ -209,6 +236,25 @@ impl ControlState {
                 ExtValue::List(self.options.iter().cloned().map(ExtValue::Str).collect()),
             ),
             (
+                "optionDisabled".into(),
+                ExtValue::List(
+                    self.option_disabled
+                        .iter()
+                        .copied()
+                        .map(ExtValue::Bool)
+                        .collect(),
+                ),
+            ),
+            (
+                "selectedIndices".into(),
+                ExtValue::List(
+                    self.selected_indices
+                        .iter()
+                        .map(|index| ExtValue::Int(*index as i64))
+                        .collect(),
+                ),
+            ),
+            (
                 "selectedIndex".into(),
                 ExtValue::Int(self.selected_index as i64),
             ),
@@ -219,6 +265,7 @@ impl ControlState {
             ("required".into(), ExtValue::Bool(self.required)),
             ("multiple".into(), ExtValue::Bool(self.multiple)),
             ("checked".into(), ExtValue::Bool(self.checked)),
+            ("indeterminate".into(), ExtValue::Bool(self.indeterminate)),
             ("focused".into(), ExtValue::Bool(self.focused)),
             (
                 "appearance".into(),
@@ -309,6 +356,33 @@ pub fn decode_control(value: &ExtValue) -> Result<ControlState, ControlDiagnosti
             _ => None,
         })
         .unwrap_or_default();
+    state.option_disabled = values
+        .get("optionDisabled")
+        .and_then(|value| match value {
+            ExtValue::List(values) => Some(
+                values
+                    .iter()
+                    .map(|value| matches!(value, ExtValue::Bool(true)))
+                    .collect(),
+            ),
+            _ => None,
+        })
+        .unwrap_or_default();
+    state.selected_indices = values
+        .get("selectedIndices")
+        .and_then(|value| match value {
+            ExtValue::List(values) => Some(
+                values
+                    .iter()
+                    .filter_map(|value| match value {
+                        ExtValue::Int(index) if *index >= 0 => Some(*index as usize),
+                        _ => None,
+                    })
+                    .collect(),
+            ),
+            _ => None,
+        })
+        .unwrap_or_default();
     state.selected_index = integer(values, "selectedIndex").unwrap_or(0).max(0) as usize;
     state.columns = integer(values, "columns").unwrap_or(20).clamp(1, 200) as usize;
     state.rows = integer(values, "rows").unwrap_or(1).clamp(1, 100) as usize;
@@ -317,6 +391,7 @@ pub fn decode_control(value: &ExtValue) -> Result<ControlState, ControlDiagnosti
     state.required = boolean(values, "required");
     state.multiple = boolean(values, "multiple");
     state.checked = boolean(values, "checked");
+    state.indeterminate = boolean(values, "indeterminate");
     state.focused = boolean(values, "focused");
     state.appearance = if string(values, "appearance") == Some("none") {
         ControlAppearance::None
@@ -386,6 +461,8 @@ mod tests {
     fn metadata_round_trips_without_host_types() {
         let mut expected = ControlState::new("choice", ControlKind::Select);
         expected.options = vec!["One".into(), "Two".into()];
+        expected.option_disabled = vec![false, true];
+        expected.selected_indices = vec![0];
         expected.selected_index = 1;
         expected.focused = true;
         assert_eq!(decode_control(&expected.to_ext()), Ok(expected));
@@ -400,6 +477,11 @@ mod tests {
         assert_eq!(check.display_value(), "[ ]");
         check.checked = true;
         assert_eq!(check.display_value(), "[x]");
+        check.indeterminate = true;
+        assert_eq!(check.display_value(), "[-]");
+        let mut range = ControlState::new("volume", ControlKind::Range);
+        range.value = "50".into();
+        assert!(range.intrinsic_size(16.0).width >= 129.0);
     }
 
     #[test]
