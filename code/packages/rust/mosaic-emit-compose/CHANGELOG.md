@@ -5,6 +5,48 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — Compose routes the table wheel; VisiCalc is native-complete (UI73, #14843)
+
+VisiCalc's **last** Compose degradation. `--profile native-complete` now builds
+it, so all three desktop products are native-complete on Compose.
+
+`HostTable` carrying `onViewportShift` with `viewport-offset` and `total-rows`
+gains an `onPointerEvent(PointerEventType.Scroll)` handler that mirrors
+`mosaic-emit-react/src/table_capacity.ts`: ignore the event when the horizontal
+delta dominates, clamp at both ends of the virtual window and reset the
+accumulator when clamped, and carry the fractional remainder between events,
+discarding it on a direction change.
+
+**One deliberate difference.** React divides `deltaY` by a measured row pitch
+because the DOM reports pixels. Compose's `scrollDelta.y` is already in line
+units, so there is no pitch, no measurement pass, and no analogue of React's
+`deltaMode` branch. The accumulator still earns its place: a trackpad delivers
+fractional lines.
+
+The `ExperimentalComposeUiApi` opt-in joins the file's existing condition rather
+than adding a second `@file:OptIn`, which is not repeatable (#14964).
+
+#### Two things only compiling could have found
+
+- **A mosstyle `number` slot lowers to a Kotlin `Double`.** The clamp arithmetic
+  and the dispatched payload each needed an explicit `.toInt()` / `.toDouble()`.
+  The API had been verified against an `Int` fixture, which type-checked fine;
+  only the real project has the real slot types.
+- **The chain is appended in two writers**, one writing to `opener` and one to
+  `out`. Patching the pattern that matched only the first emitted the handler
+  nowhere. This is the third time the Compose emitter's duplicated container
+  paths have cost a round (#14964 enumerated six).
+
+Both were caught by generating VisiCalc and running `gradle compileKotlin`, not
+by reading the output.
+
+#### Report and pin
+
+`host_table_has_wheel_routing` asks exactly what the emitter asks, and the
+capability analysis calls it, so the report cannot claim a drop the emitter does
+not make. VisiCalc's render script now asserts `nativeComplete` instead of
+pinning a count — the pin existed only because there was something to pin.
+
 ### Fixed — `justify-content` and `align-items` reached nothing, and the drop reporter could not tell where they applied (#14834)
 
 Engram authors `justify-content: space-between` and `align-items: center` on its

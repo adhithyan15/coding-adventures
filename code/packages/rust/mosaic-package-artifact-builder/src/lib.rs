@@ -1532,10 +1532,21 @@ fn ignored_native_property(
             "accessibility.table-focus-unimplemented",
             "authored table focus and accessible naming are currently implemented only by React",
         )),
-        ("HostTable", "onViewportShift") if backend != Backend::React => Some((
-            "interaction.table-wheel-shift-unimplemented",
-            "measured table wheel routing is currently implemented only by React",
-        )),
+        // UI73 -- Compose now routes the wheel to `onViewportShift` when the
+        // table carries the offset and total it needs to clamp against, so it
+        // answers for itself rather than being covered by a blanket
+        // `backend != React`. The predicate asks exactly what the emitter
+        // asks, so the report cannot claim a drop the emitter does not make.
+        ("HostTable", "onViewportShift")
+            if backend != Backend::React
+                && !(backend == Backend::Compose
+                    && mosaic_emit_compose::pipeline::host_table_has_wheel_routing(node)) =>
+        {
+            Some((
+                "interaction.table-wheel-shift-unimplemented",
+                "measured table wheel routing is currently implemented only by React",
+            ))
+        }
         // #14843. Was a blanket `backend != React`, which claimed no other
         // backend could express a cell role. Compose emits
         // `collectionItemInfo` for every header, leading and body cell of a
