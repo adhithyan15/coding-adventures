@@ -3264,18 +3264,17 @@ fn emit_if_dart(
     // available here, so we check both and prefer whichever is set.
     let flex = branch_flex_grow(&if_node.children, part_styles)
         .or_else(|| else_node.and_then(|en| branch_flex_grow(&en.children, part_styles)));
-    let introduces_branch_column = if_node.children.len() > 1
+    let shrinkable = branch_can_shrink(&if_node.children)
         || else_node
-            .map(|node| node.children.len() > 1)
+            .map(|node| branch_can_shrink(&node.children))
             .unwrap_or(false);
     let body = if ctx.direct_row_child {
         match flex {
             Some(f) => format!("Expanded(flex: {f}, child: {ternary})"),
-            // A multi-widget branch is represented by a Column. Keep that
-            // Column horizontally bounded when the conditional is a direct
-            // Row child, while allowing it to choose less than the available
-            // width when its contents do not need all of it.
-            None if introduces_branch_column && ctx.direct_row_accepts_flex => {
+            // The conditional occupies one Row slot whichever branch is
+            // taken, so the wrap is decided from the branches: if either
+            // can give back width, the slot can.
+            None if shrinkable && ctx.direct_row_accepts_flex => {
                 format!("Flexible(child: {ternary})")
             }
             None => ternary,
@@ -3284,6 +3283,36 @@ fn emit_if_dart(
         ternary
     };
     Ok(format!("{pad}({body})\n"))
+}
+
+/// Whether a conditional branch can give width back to its Row.
+///
+/// Two shapes can, and they are the two the emitter already produces:
+///
+/// - **A multi-widget branch**, which `render_branch` represents as a
+///   `Column`. Keeping that Column bounded is what the original rule was
+///   for: without it the Column takes the Row's full width.
+/// - **A single `Text`**, which shrinks by wrapping or ellipsising. This
+///   is the shape the original rule missed, and it is the common one:
+///   `If ( when: .. ) { Text .. }` is a single-child branch, so
+///   `children.len() > 1` was false and the `Text` never got its
+///   `Flexible`. TaskApp's task row is five such conditionals, which is
+///   why it overflowed by a figure that did not move across three
+///   attempts at the surrounding layout.
+///
+/// An absent `else` renders as `const SizedBox.shrink()` and is left out
+/// of the decision by the caller: it is already zero-width, so it neither
+/// needs nor is harmed by a `Flexible`.
+///
+/// Anything else (an `Icon`, a sized `Box`) reports `false`. Being wrong
+/// in that direction costs nothing but the wrap; being wrong the other way
+/// hands a fixed-size widget a loose constraint it did not ask for.
+fn branch_can_shrink(children: &[LayoutNode]) -> bool {
+    match children {
+        [] => false,
+        [only] => only.tag == "Text",
+        _ => true,
+    }
 }
 
 /// A conditional branch's `flex-grow`, read from its single styled child
@@ -11167,6 +11196,84 @@ mod tests {
         assert!(
             !out.contains("Expanded("),
             "nested branch inputs must use the intermediate Column context:\n{out}"
+        );
+    }
+
+    /// A conditional whose branch is a single `Text` is the shape the
+    /// original rule missed: `children.len() > 1` is false, so the
+    /// `Flexible` never landed and the `Text` measured at its natural
+    /// width. TaskApp's task row is five of these side by side, which is
+    /// what made it overflow.
+    #[test]
+    fn single_text_if_as_direct_row_child_emits_flexible() {
+        let m = component(
+            "Row1",
+            vec![slot("shown", SlotType::Bool, true)],
+            vec![],
+        );
+        let style = StyleDef {
+            component_name: "Row1".into(),
+            parts: vec![],
+        };
+        let l = layout(
+            "Row1",
+            node_with(
+                "Row",
+                vec![],
+                vec![if_node(
+                    LayoutPropValue::SlotRef("shown".into()),
+                    vec![text_node("A very long piece of cell text")],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &style).expect("emit").output;
+        assert!(
+            out.contains("Flexible(child: (_mosaicTruthy(shown)) ?"),
+            "a single-Text conditional must be able to give width back:\n{out}"
+        );
+        // The absent else is already zero-width, so it neither needs nor is
+        // harmed by the wrap -- but it must still be the wrapped ternary's
+        // else, not a second flex child competing for the same space.
+        assert_eq!(out.matches("Flexible(").count(), 1, "got:\n{out}");
+    }
+
+    /// The other direction: a branch that cannot shrink is left alone.
+    /// Being wrong here would hand a fixed-size widget a loose constraint
+    /// it never asked for.
+    #[test]
+    fn single_icon_if_as_direct_row_child_does_not_emit_flexible() {
+        let m = component(
+            "Row2",
+            vec![slot("shown", SlotType::Bool, true)],
+            vec![],
+        );
+        let style = StyleDef {
+            component_name: "Row2".into(),
+            parts: vec![],
+        };
+        let l = layout(
+            "Row2",
+            node_with(
+                "Row",
+                vec![],
+                vec![if_node(
+                    LayoutPropValue::SlotRef("shown".into()),
+                    vec![LayoutNode {
+                        tag: "Icon".into(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "glyph".into(),
+                            value: LayoutPropValue::String("check".into()),
+                        }],
+                        children: vec![],
+                    }],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &style).expect("emit").output;
+        assert!(
+            !out.contains("Flexible("),
+            "a fixed-size branch must not be wrapped:\n{out}"
         );
     }
 
