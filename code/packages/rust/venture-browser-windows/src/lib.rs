@@ -347,6 +347,10 @@ impl WindowsBrowserHost {
             .map(|state| state.to_host_json())
     }
 
+    pub fn live_value_states_json(&self) -> String {
+        self.controller.session().live_value_states_host_json()
+    }
+
     pub fn suggestion_query(&mut self, query: &str, limit: usize) -> bool {
         let Some(key) = self
             .controller
@@ -833,6 +837,17 @@ mod ffi {
     ) -> *mut c_char {
         host.as_ref()
             .and_then(WindowsBrowserHost::suggestion_state_json)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_live_value_states(
+        host: *mut WindowsBrowserHost,
+    ) -> *mut c_char {
+        host.as_ref()
+            .map(WindowsBrowserHost::live_value_states_json)
             .and_then(|value| CString::new(value).ok())
             .map(CString::into_raw)
             .unwrap_or(std::ptr::null_mut())

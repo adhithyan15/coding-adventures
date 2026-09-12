@@ -2237,6 +2237,7 @@ pub struct BrowserContentNode {
     pub control_name: Option<String>,
     pub list: Option<String>,
     pub datalist_options: Vec<BrowserDatalistOption>,
+    pub output_for: Vec<String>,
     pub form_action: Option<String>,
     pub resolved_form_action: Option<String>,
     pub form_enctype: Option<String>,
@@ -2429,6 +2430,7 @@ pub struct BrowserRenderNode {
     pub control_name: Option<String>,
     pub list: Option<String>,
     pub datalist_options: Vec<BrowserDatalistOption>,
+    pub output_for: Vec<String>,
     pub form_action: Option<String>,
     pub resolved_form_action: Option<String>,
     pub form_enctype: Option<String>,
@@ -4396,6 +4398,7 @@ impl BrowserRenderNode {
             control_name: content_node.control_name.clone(),
             list: content_node.list.clone(),
             datalist_options: content_node.datalist_options.clone(),
+            output_for: content_node.output_for.clone(),
             form_action: content_node.form_action.clone(),
             resolved_form_action: content_node.resolved_form_action.clone(),
             form_enctype: content_node.form_enctype.clone(),
@@ -17538,6 +17541,7 @@ fn collect_browser_content_nodes_with_mode(
                         control_name: None,
                         list: None,
                         datalist_options: Vec::new(),
+                        output_for: Vec::new(),
                         form_action: None,
                         resolved_form_action: None,
                         form_enctype: None,
@@ -17828,6 +17832,7 @@ fn browser_content_node_for_element(
         },
         list: browser_control_list(element),
         datalist_options: Vec::new(),
+        output_for: browser_output_for(element),
         resolved_form_action: browser_control_form_action(element)
             .as_deref()
             .and_then(|action| resolve_browser_url(action, base_href)),
@@ -17957,6 +17962,7 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "label" => Some("label"),
         "legend" => Some("legend"),
         "meter" => Some("meter"),
+        "output" => Some("output"),
         "progress" => Some("progress"),
         "input" | "button" | "select" | "textarea" => Some("control"),
         "optgroup" => Some("option_group"),
@@ -22093,6 +22099,7 @@ fn should_collect_browser_content_children(name: &str) -> bool {
             | "input"
             | "link"
             | "meter"
+            | "output"
             | "meta"
             | "param"
             | "progress"
@@ -22107,7 +22114,8 @@ fn browser_content_text(element: &Element, role: &str) -> Option<String> {
     let text = match role {
         "control" if element.name == "input" => browser_input_display_value(element),
         "option" => browser_option_display_text(element),
-        "control" | "heading" | "label" | "legend" | "link" | "table_caption" => {
+        "control" | "output" | "meter" | "progress" | "heading" | "label" | "legend"
+        | "link" | "table_caption" => {
             visible_text_for_nodes(&element.children)
         }
         _ => String::new(),
@@ -31245,6 +31253,31 @@ mod tests {
         );
         assert_eq!(input.datalist_options[0].text, "Bay Area");
         assert!(input.datalist_options[1].disabled);
+    }
+
+    #[test]
+    fn browser_render_tree_retains_output_dependencies_and_measurement_bounds() {
+        fn by_id<'a>(nodes: &'a [BrowserRenderNode], id: &str) -> Option<&'a BrowserRenderNode> {
+            nodes.iter().find_map(|node| {
+                (node.id.as_deref() == Some(id))
+                    .then_some(node)
+                    .or_else(|| by_id(&node.children, id))
+            })
+        }
+
+        let document = parse_html(
+            "<input id='a'><input id='b'><output id='sum' for='a b'>0</output>\
+             <meter id='score' min='1' max='5' low='2' high='4' optimum='5' value='3'></meter>\
+             <progress id='load' max='10'></progress>",
+        )
+        .unwrap();
+        let render_tree = BrowserRenderTree::from_document(&document);
+        assert_eq!(by_id(&render_tree.children, "sum").unwrap().output_for, vec!["a", "b"]);
+        let meter = by_id(&render_tree.children, "score").unwrap();
+        assert_eq!(meter.low.as_deref(), Some("2"));
+        assert_eq!(meter.high.as_deref(), Some("4"));
+        assert_eq!(meter.optimum.as_deref(), Some("5"));
+        assert_eq!(by_id(&render_tree.children, "load").unwrap().value, None);
     }
 
     #[test]

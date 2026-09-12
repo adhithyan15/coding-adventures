@@ -828,10 +828,10 @@
       "expected": {
         "children": [
           { "display": "inline", "role": "label", "name": "label", "text": "Disk", "href": null, "src": null, "alt": null, "label_for": "disk", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Disk", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
-          { "display": "inline-replaced", "role": "meter", "name": "meter", "id": "disk", "text": null, "href": null, "src": null, "alt": null, "labels": ["Disk"], "accessible_name": "Disk", "value": "0.72", "min": "0", "max": "1", "low": "0.25", "high": "0.9", "optimum": "0.7", "control_type": null, "children": [] },
+          { "display": "inline-replaced", "role": "meter", "name": "meter", "id": "disk", "text": "72%", "href": null, "src": null, "alt": null, "labels": ["Disk"], "accessible_name": "Disk", "value": "0.72", "min": "0", "max": "1", "low": "0.25", "high": "0.9", "optimum": "0.7", "control_type": null, "children": [] },
           { "display": "inline", "role": "label", "name": "label", "text": "Upload", "href": null, "src": null, "alt": null, "label_for": "upload", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Upload", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
-          { "display": "inline-replaced", "role": "progress", "name": "progress", "id": "upload", "text": null, "href": null, "src": null, "alt": null, "labels": ["Upload"], "accessible_name": "Upload", "value": "30", "max": "100", "control_type": null, "children": [] },
-          { "display": "inline-replaced", "role": "progress", "name": "progress", "id": "indeterminate", "text": null, "href": null, "src": null, "alt": null, "max": "1", "control_type": null, "children": [] }
+          { "display": "inline-replaced", "role": "progress", "name": "progress", "id": "upload", "text": "30%", "href": null, "src": null, "alt": null, "labels": ["Upload"], "accessible_name": "Upload", "value": "30", "max": "100", "control_type": null, "children": [] },
+          { "display": "inline-replaced", "role": "progress", "name": "progress", "id": "indeterminate", "text": "Loading", "href": null, "src": null, "alt": null, "max": "1", "control_type": null, "children": [] }
         ]
       }
     },

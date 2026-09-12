@@ -365,6 +365,137 @@ pub struct ControlValueState {
     pub diagnostics: Vec<ControlValueDiagnostic>,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum LiveValueKind {
+    Output,
+    Meter,
+    Progress,
+}
+
+impl LiveValueKind {
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::Output => "output",
+            Self::Meter => "meter",
+            Self::Progress => "progress",
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum MeterValueRegion {
+    Optimum,
+    Suboptimal,
+    EvenLessGood,
+}
+
+impl MeterValueRegion {
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::Optimum => "optimum",
+            Self::Suboptimal => "suboptimal",
+            Self::EvenLessGood => "even-less-good",
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OutputDependencyValue {
+    pub id: String,
+    pub key: Option<String>,
+    pub value: String,
+}
+
+/// Host-neutral state for HTML output, meter, and progress elements.
+#[derive(Clone, Debug, PartialEq)]
+pub struct LiveValueState {
+    pub key: String,
+    pub id: Option<String>,
+    pub kind: LiveValueKind,
+    pub form_owner: Option<String>,
+    pub form_index: Option<usize>,
+    pub text: String,
+    pub value: Option<f64>,
+    pub minimum: Option<f64>,
+    pub maximum: Option<f64>,
+    pub low: Option<f64>,
+    pub high: Option<f64>,
+    pub optimum: Option<f64>,
+    pub position: Option<f64>,
+    pub indeterminate: bool,
+    pub meter_region: Option<MeterValueRegion>,
+    pub dependencies: Vec<OutputDependencyValue>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub value_text: String,
+    pub diagnostics: Vec<ControlValueDiagnostic>,
+}
+
+impl LiveValueState {
+    pub fn to_host_json(&self) -> String {
+        let number = |value: Option<f64>| {
+            value.map_or_else(|| "null".to_string(), |value| value.to_string())
+        };
+        let string = |value: Option<&str>| {
+            value.map_or_else(
+                || "null".to_string(),
+                |value| format!("\"{}\"", json_string(value)),
+            )
+        };
+        let dependencies = self
+            .dependencies
+            .iter()
+            .map(|dependency| {
+                format!(
+                    "{{\"id\":\"{}\",\"key\":{},\"value\":\"{}\"}}",
+                    json_string(&dependency.id),
+                    dependency.key.as_ref().map_or_else(
+                        || "null".to_string(),
+                        |key| format!("\"{}\"", json_string(key))
+                    ),
+                    json_string(&dependency.value)
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",");
+        let diagnostics = self
+            .diagnostics
+            .iter()
+            .map(|diagnostic| {
+                format!(
+                    "{{\"code\":\"{}\",\"message\":\"{}\"}}",
+                    json_string(diagnostic.code),
+                    json_string(diagnostic.message)
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",");
+        format!(
+            "{{\"key\":\"{}\",\"kind\":\"{}\",\"text\":\"{}\",\"value\":{},\"minimum\":{},\"maximum\":{},\"low\":{},\"high\":{},\"optimum\":{},\"position\":{},\"indeterminate\":{},\"meterRegion\":{},\"accessibleName\":{},\"accessibleDescription\":{},\"valueText\":\"{}\",\"dependencies\":[{}],\"diagnostics\":[{}]}}",
+            json_string(&self.key),
+            self.kind.as_str(),
+            json_string(&self.text),
+            number(self.value),
+            number(self.minimum),
+            number(self.maximum),
+            number(self.low),
+            number(self.high),
+            number(self.optimum),
+            number(self.position),
+            self.indeterminate,
+            self.meter_region.map_or_else(
+                || "null".to_string(),
+                |region| format!("\"{}\"", region.as_str())
+            ),
+            string(self.accessible_name.as_deref()),
+            string(self.accessible_description.as_deref()),
+            json_string(&self.value_text),
+            dependencies,
+            diagnostics
+        )
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ControlChoiceOptionState {
     pub index: usize,
@@ -577,6 +708,10 @@ pub enum ControlEffect {
         key: String,
         value: String,
     },
+    LiveValueChanged {
+        key: String,
+        value: String,
+    },
     SelectionChanged {
         key: String,
         selection: ControlSelection,
@@ -637,6 +772,8 @@ pub struct BrowserControlModel {
     file_selections: Vec<Vec<HostFileSelection>>,
     file_diagnostics: Vec<Vec<ControlValueDiagnostic>>,
     suggestions: Vec<ControlSuggestionState>,
+    live_values: Vec<LiveValueState>,
+    initial_live_values: Vec<LiveValueState>,
     dirty_values: Vec<bool>,
     dirty_checkedness: Vec<bool>,
     document_controls: Vec<DocumentControlBinding>,
@@ -769,6 +906,16 @@ impl BrowserControlModel {
             .collect();
         let dirty_values = vec![false; bindings.len()];
         let dirty_checkedness = vec![false; bindings.len()];
+        let mut live_values = Vec::new();
+        let mut live_index = 0;
+        let mut live_form_index = 0;
+        collect_live_value_nodes(
+            &tree.children,
+            &mut live_values,
+            &mut live_index,
+            None,
+            &mut live_form_index,
+        );
         Self {
             initial_controls: controls.clone(),
             controls,
@@ -779,6 +926,8 @@ impl BrowserControlModel {
             file_selections,
             file_diagnostics,
             suggestions,
+            initial_live_values: live_values.clone(),
+            live_values,
             dirty_values,
             dirty_checkedness,
             document_controls,
@@ -789,6 +938,130 @@ impl BrowserControlModel {
 
     pub fn controls(&self) -> &[ControlState] {
         &self.controls
+    }
+
+    pub fn live_value_states(&self) -> Vec<LiveValueState> {
+        self.live_values
+            .iter()
+            .cloned()
+            .map(|mut state| {
+                if state.kind == LiveValueKind::Output {
+                    state.dependencies = self.output_dependencies(&state.key);
+                    if state
+                        .dependencies
+                        .iter()
+                        .any(|dependency| dependency.key.is_none())
+                    {
+                        state.diagnostics.push(ControlValueDiagnostic {
+                            code: "unresolved-output-dependency",
+                            message: "output dependency does not resolve to a form control",
+                        });
+                    }
+                }
+                state
+            })
+            .collect()
+    }
+
+    pub fn live_value_state(&self, key: &str) -> Option<LiveValueState> {
+        let mut state = self
+            .live_values
+            .iter()
+            .find(|state| state.key == key)?
+            .clone();
+        if state.kind == LiveValueKind::Output {
+            state.dependencies = self.output_dependencies(key);
+            if state
+                .dependencies
+                .iter()
+                .any(|dependency| dependency.key.is_none())
+            {
+                state.diagnostics.push(ControlValueDiagnostic {
+                    code: "unresolved-output-dependency",
+                    message: "output dependency does not resolve to a form control",
+                });
+            }
+        }
+        Some(state)
+    }
+
+    pub fn live_value_states_host_json(&self) -> String {
+        format!(
+            "[{}]",
+            self.live_value_states()
+                .iter()
+                .map(LiveValueState::to_host_json)
+                .collect::<Vec<_>>()
+                .join(",")
+        )
+    }
+
+    pub fn output_dependencies(&self, key: &str) -> Vec<OutputDependencyValue> {
+        let Some(output) = self.live_values.iter().find(|state| state.key == key) else {
+            return Vec::new();
+        };
+        output
+            .dependencies
+            .iter()
+            .map(|dependency| {
+                let control = self
+                    .bindings
+                    .iter()
+                    .position(|binding| binding.id.as_deref() == Some(&dependency.id))
+                    .and_then(|index| self.controls.get(index).map(|control| (index, control)));
+                OutputDependencyValue {
+                    id: dependency.id.clone(),
+                    key: control.map(|(_, control)| control.key.clone()),
+                    value: control
+                        .map(|(_, control)| control.value.clone())
+                        .unwrap_or_default(),
+                }
+            })
+            .collect()
+    }
+
+    /// Apply script-owned output calculation through shared dependency state.
+    pub fn recalculate_output<F>(&mut self, key: &str, calculate: F) -> Option<ControlEffect>
+    where
+        F: FnOnce(&[OutputDependencyValue]) -> String,
+    {
+        if !self
+            .live_values
+            .iter()
+            .any(|state| state.key == key && state.kind == LiveValueKind::Output)
+        {
+            return None;
+        }
+        let dependencies = self.output_dependencies(key);
+        let value = calculate(&dependencies);
+        self.set_live_value(key, Some(&value))
+    }
+
+    /// Set an output, meter, or progress value through shared normalization.
+    /// `None` makes progress indeterminate and restores output fallback text.
+    pub fn set_live_value(&mut self, key: &str, value: Option<&str>) -> Option<ControlEffect> {
+        let index = self.live_values.iter().position(|state| state.key == key)?;
+        let initial = self.initial_live_values.get(index)?.clone();
+        let current = &self.live_values[index];
+        let updated = match current.kind {
+            LiveValueKind::Output => {
+                let mut state = current.clone();
+                state.text = value.unwrap_or(&initial.text).to_string();
+                state.value_text = state.text.clone();
+                state
+            }
+            LiveValueKind::Meter => normalized_meter_state(current, value),
+            LiveValueKind::Progress => normalized_progress_state(current, value),
+        };
+        if *current == updated {
+            return None;
+        }
+        let effect = ControlEffect::LiveValueChanged {
+            key: key.to_string(),
+            value: updated.value_text.clone(),
+        };
+        self.live_values[index] = updated;
+        Some(effect)
     }
 
     pub fn bindings(&self) -> &[ControlBinding] {
@@ -1474,6 +1747,22 @@ impl BrowserControlModel {
                 });
             }
         }
+        for (state, initial) in self.live_values.iter_mut().zip(&self.initial_live_values) {
+            if state.kind != LiveValueKind::Output {
+                continue;
+            }
+            let associated = match state.form_owner.as_deref() {
+                Some(owner) => form_id == Some(owner),
+                None => state.form_index == form_index,
+            };
+            if associated && state.text != initial.text {
+                *state = initial.clone();
+                effects.push(ControlEffect::LiveValueChanged {
+                    key: state.key.clone(),
+                    value: state.value_text.clone(),
+                });
+            }
+        }
         if let Some(form_index) = form_index {
             self.custom_elements.reset_form(form_id, form_index);
         }
@@ -1661,6 +1950,8 @@ impl BrowserControlModel {
             &self.editors,
             &mut index,
         );
+        let mut live_index = 0;
+        sync_live_value_nodes(&mut tree.children, &self.live_values, &mut live_index);
     }
 
     pub fn set_selection(
@@ -2895,6 +3186,260 @@ fn collect_model_nodes(
     }
 }
 
+fn collect_live_value_nodes(
+    nodes: &[BrowserRenderNode],
+    states: &mut Vec<LiveValueState>,
+    index: &mut usize,
+    containing_form: Option<usize>,
+    next_form_index: &mut usize,
+) {
+    for node in nodes {
+        let containing_form = if node.name.as_deref() == Some("form") {
+            let form_index = *next_form_index;
+            *next_form_index += 1;
+            Some(form_index)
+        } else {
+            containing_form
+        };
+        let kind = match node.name.as_deref() {
+            Some("output") => Some(LiveValueKind::Output),
+            Some("meter") => Some(LiveValueKind::Meter),
+            Some("progress") => Some(LiveValueKind::Progress),
+            _ => None,
+        };
+        if let Some(kind) = kind {
+            let key = node
+                .id
+                .as_ref()
+                .map(|id| format!("live:{}:id:{id}", *index))
+                .unwrap_or_else(|| format!("live:{}", *index));
+            *index += 1;
+            let base = LiveValueState {
+                key,
+                id: node.id.clone(),
+                kind,
+                form_owner: node.form_owner.clone(),
+                form_index: containing_form,
+                text: if kind == LiveValueKind::Output {
+                    node.text.clone().unwrap_or_default()
+                } else {
+                    node.value
+                        .clone()
+                        .or_else(|| node.text.clone())
+                        .unwrap_or_default()
+                },
+                value: None,
+                minimum: parse_live_finite(node.min.as_deref()),
+                maximum: parse_live_finite(node.max.as_deref()),
+                low: parse_live_finite(node.low.as_deref()),
+                high: parse_live_finite(node.high.as_deref()),
+                optimum: parse_live_finite(node.optimum.as_deref()),
+                position: None,
+                indeterminate: false,
+                meter_region: None,
+                dependencies: node
+                    .output_for
+                    .iter()
+                    .map(|id| OutputDependencyValue {
+                        id: id.clone(),
+                        key: None,
+                        value: String::new(),
+                    })
+                    .collect(),
+                accessible_name: node.accessible_name.clone(),
+                accessible_description: node.accessible_description.clone(),
+                value_text: String::new(),
+                diagnostics: Vec::new(),
+            };
+            let mut state = match kind {
+                LiveValueKind::Output => LiveValueState {
+                    value_text: base.text.clone(),
+                    ..base
+                },
+                LiveValueKind::Meter => normalized_meter_state(&base, node.value.as_deref()),
+                LiveValueKind::Progress => normalized_progress_state(&base, node.value.as_deref()),
+            };
+            append_live_constraint_diagnostics(&mut state, node);
+            states.push(state);
+        }
+        collect_live_value_nodes(
+            &node.children,
+            states,
+            index,
+            containing_form,
+            next_form_index,
+        );
+    }
+}
+
+fn append_live_constraint_diagnostics(state: &mut LiveValueState, node: &BrowserRenderNode) {
+    for (value, code, message) in [
+        (
+            node.min.as_deref(),
+            "invalid-minimum",
+            "minimum must be a finite number",
+        ),
+        (
+            node.max.as_deref(),
+            "invalid-maximum",
+            "maximum must be a finite number",
+        ),
+        (
+            node.low.as_deref(),
+            "invalid-low",
+            "low boundary must be a finite number",
+        ),
+        (
+            node.high.as_deref(),
+            "invalid-high",
+            "high boundary must be a finite number",
+        ),
+        (
+            node.optimum.as_deref(),
+            "invalid-optimum",
+            "optimum must be a finite number",
+        ),
+    ] {
+        if value.is_some() && parse_live_finite(value).is_none() {
+            state
+                .diagnostics
+                .push(ControlValueDiagnostic { code, message });
+        }
+    }
+    if state.kind == LiveValueKind::Progress
+        && node.max.is_some()
+        && parse_live_finite(node.max.as_deref()).is_some_and(|maximum| maximum <= 0.0)
+    {
+        state.diagnostics.push(ControlValueDiagnostic {
+            code: "non-positive-progress-maximum",
+            message: "progress maximum must be greater than zero",
+        });
+    }
+    if state.kind == LiveValueKind::Meter {
+        if parse_live_finite(node.min.as_deref())
+            .zip(parse_live_finite(node.max.as_deref()))
+            .is_some_and(|(minimum, maximum)| maximum < minimum)
+        {
+            state.diagnostics.push(ControlValueDiagnostic {
+                code: "invalid-meter-range",
+                message: "meter maximum cannot be less than its minimum",
+            });
+        }
+        if parse_live_finite(node.low.as_deref())
+            .zip(parse_live_finite(node.high.as_deref()))
+            .is_some_and(|(low, high)| high < low)
+        {
+            state.diagnostics.push(ControlValueDiagnostic {
+                code: "invalid-meter-threshold-order",
+                message: "meter high boundary cannot be less than its low boundary",
+            });
+        }
+    }
+}
+
+fn parse_live_finite(value: Option<&str>) -> Option<f64> {
+    value?
+        .trim()
+        .parse::<f64>()
+        .ok()
+        .filter(|value| value.is_finite())
+}
+
+fn normalized_meter_state(base: &LiveValueState, value: Option<&str>) -> LiveValueState {
+    let mut state = base.clone();
+    state
+        .diagnostics
+        .retain(|diagnostic| diagnostic.code != "invalid-meter-value");
+    let minimum = state.minimum.unwrap_or(0.0);
+    let maximum = state.maximum.unwrap_or(1.0).max(minimum);
+    let low = state.low.unwrap_or(minimum).clamp(minimum, maximum);
+    let high = state.high.unwrap_or(maximum).clamp(low, maximum);
+    let optimum = state
+        .optimum
+        .unwrap_or((minimum + maximum) / 2.0)
+        .clamp(minimum, maximum);
+    let parsed = parse_live_finite(value);
+    if value.is_some() && parsed.is_none() {
+        state.diagnostics.push(ControlValueDiagnostic {
+            code: "invalid-meter-value",
+            message: "meter value must be a finite number",
+        });
+    }
+    let current = parsed.unwrap_or(0.0).clamp(minimum, maximum);
+    state.minimum = Some(minimum);
+    state.maximum = Some(maximum);
+    state.low = Some(low);
+    state.high = Some(high);
+    state.optimum = Some(optimum);
+    state.value = Some(current);
+    state.position = (maximum > minimum).then_some((current - minimum) / (maximum - minimum));
+    state.indeterminate = false;
+    state.meter_region = Some(meter_value_region(current, low, high, optimum));
+    state.value_text = format!("{} of {}", format_number(current), format_number(maximum));
+    state
+}
+
+fn meter_value_region(value: f64, low: f64, high: f64, optimum: f64) -> MeterValueRegion {
+    if optimum < low {
+        if value <= low {
+            MeterValueRegion::Optimum
+        } else if value <= high {
+            MeterValueRegion::Suboptimal
+        } else {
+            MeterValueRegion::EvenLessGood
+        }
+    } else if optimum > high {
+        if value >= high {
+            MeterValueRegion::Optimum
+        } else if value >= low {
+            MeterValueRegion::Suboptimal
+        } else {
+            MeterValueRegion::EvenLessGood
+        }
+    } else if (low..=high).contains(&value) {
+        MeterValueRegion::Optimum
+    } else {
+        MeterValueRegion::Suboptimal
+    }
+}
+
+fn normalized_progress_state(base: &LiveValueState, value: Option<&str>) -> LiveValueState {
+    let mut state = base.clone();
+    state
+        .diagnostics
+        .retain(|diagnostic| diagnostic.code != "invalid-progress-value");
+    let maximum = state.maximum.filter(|value| *value > 0.0).unwrap_or(1.0);
+    state.minimum = Some(0.0);
+    state.maximum = Some(maximum);
+    state.low = None;
+    state.high = None;
+    state.optimum = None;
+    state.meter_region = None;
+    match value {
+        None => {
+            state.value = None;
+            state.position = None;
+            state.indeterminate = true;
+            state.value_text = "indeterminate".to_string();
+        }
+        Some(value) => {
+            let parsed = parse_live_finite(Some(value));
+            if parsed.is_none() {
+                state.diagnostics.push(ControlValueDiagnostic {
+                    code: "invalid-progress-value",
+                    message: "progress value must be a finite number",
+                });
+            }
+            let current = parsed.unwrap_or(0.0).clamp(0.0, maximum);
+            state.value = Some(current);
+            state.position = Some(current / maximum);
+            state.indeterminate = false;
+            state.value_text = format!("{} of {}", format_number(current), format_number(maximum));
+        }
+    }
+    state
+}
+
 fn collect_form_autocomplete_bindings(nodes: &[BrowserRenderNode]) -> Vec<FormAutocompleteBinding> {
     fn collect(
         nodes: &[BrowserRenderNode],
@@ -3454,6 +3999,30 @@ fn sync_nodes(
             *index += 1;
         }
         sync_nodes(&mut node.children, controls, editors, index);
+    }
+}
+
+fn sync_live_value_nodes(
+    nodes: &mut [BrowserRenderNode],
+    states: &[LiveValueState],
+    index: &mut usize,
+) {
+    for node in nodes {
+        if matches!(node.name.as_deref(), Some("output" | "meter" | "progress")) {
+            if let Some(state) = states.get(*index) {
+                node.value = state
+                    .value
+                    .map(format_number)
+                    .or_else(|| (state.kind == LiveValueKind::Output).then(|| state.text.clone()));
+                node.text = Some(if state.kind == LiveValueKind::Output {
+                    state.text.clone()
+                } else {
+                    state.value_text.clone()
+                });
+            }
+            *index += 1;
+        }
+        sync_live_value_nodes(&mut node.children, states, index);
     }
 }
 
@@ -5412,5 +5981,84 @@ mod tests {
         assert_eq!(model.control(city).unwrap().value, "SEA");
         assert!(model.default_state(city).unwrap().dirty_value);
         assert!(!model.focused_suggestion_state().unwrap().open);
+    }
+
+    #[test]
+    fn output_dependencies_recalculate_and_reset_transactionally() {
+        let mut tree = parse_browser_render_tree(
+            "<form id='calc'><input id='a' value='2'><input id='b' value='3'>\
+             <output id='sum' for='a b' value='ignored'>waiting</output></form>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let output = "live:0:id:sum";
+        assert_eq!(model.live_value_state(output).unwrap().text, "waiting");
+        assert_eq!(
+            model
+                .output_dependencies(output)
+                .iter()
+                .map(|dependency| (dependency.id.as_str(), dependency.value.as_str()))
+                .collect::<Vec<_>>(),
+            vec![("a", "2"), ("b", "3")]
+        );
+
+        model.focus("control:0:id:a").unwrap();
+        model
+            .accessibility_action(ControlAccessibilityAction::SetValue("7".into()))
+            .unwrap();
+        assert_eq!(
+            model.recalculate_output(output, |values| {
+                values
+                    .iter()
+                    .filter_map(|value| value.value.parse::<i32>().ok())
+                    .sum::<i32>()
+                    .to_string()
+            }),
+            Some(ControlEffect::LiveValueChanged {
+                key: output.into(),
+                value: "10".into(),
+            })
+        );
+        model.sync_render_tree(&mut tree);
+        assert_eq!(model.live_value_state(output).unwrap().text, "10");
+
+        model.reset_form(Some("calc"), Some(0));
+        assert_eq!(model.live_value_state(output).unwrap().text, "waiting");
+    }
+
+    #[test]
+    fn meter_and_progress_publish_normalized_accessibility_state() {
+        let tree = parse_browser_render_tree(
+            "<meter id='health' min='0' max='10' low='3' high='7' optimum='9' value='2'>Low</meter>\
+             <progress id='download' max='20'>Loading</progress>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        assert_eq!(
+            model.recalculate_output("live:0:id:health", |_| {
+                panic!("meter must not invoke an output calculator")
+            }),
+            None
+        );
+        let meter = model.live_value_state("live:0:id:health").unwrap();
+        assert_eq!(meter.value, Some(2.0));
+        assert_eq!(meter.position, Some(0.2));
+        assert_eq!(meter.meter_region, Some(MeterValueRegion::EvenLessGood));
+        assert_eq!(meter.value_text, "2 of 10");
+
+        let progress = model.live_value_state("live:1:id:download").unwrap();
+        assert!(progress.indeterminate);
+        assert_eq!(progress.position, None);
+        assert_eq!(progress.value_text, "indeterminate");
+
+        model
+            .set_live_value("live:1:id:download", Some("25"))
+            .unwrap();
+        let progress = model.live_value_state("live:1:id:download").unwrap();
+        assert_eq!(progress.value, Some(20.0));
+        assert_eq!(progress.position, Some(1.0));
+        assert!(model
+            .live_value_states_host_json()
+            .contains("\"kind\":\"progress\""));
     }
 }

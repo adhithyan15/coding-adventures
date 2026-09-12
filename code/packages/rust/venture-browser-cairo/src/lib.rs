@@ -350,6 +350,10 @@ impl CairoBrowserHost {
             .map(|state| state.to_host_json())
     }
 
+    pub fn live_value_states_json(&self) -> String {
+        self.controller.session().live_value_states_host_json()
+    }
+
     pub fn suggestion_query(&mut self, query: &str, limit: usize) -> bool {
         let Some(key) = self
             .controller
@@ -846,6 +850,17 @@ mod ffi {
     }
 
     #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_qt_live_value_states(
+        host: *mut CairoBrowserHost,
+    ) -> *mut c_char {
+        host.as_ref()
+            .map(CairoBrowserHost::live_value_states_json)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
     pub unsafe extern "C" fn venture_browser_qt_suggestion_query(
         host: *mut CairoBrowserHost,
         query: *const c_char,
@@ -1131,6 +1146,13 @@ mod ffi {
     }
 
     #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_live_value_states(
+        host: *mut CairoBrowserHost,
+    ) -> *mut c_char {
+        unsafe { venture_browser_qt_live_value_states(host) }
+    }
+
+    #[no_mangle]
     pub unsafe extern "C" fn venture_browser_flutter_suggestion_query(
         host: *mut CairoBrowserHost,
         query: *const c_char,
@@ -1336,6 +1358,13 @@ mod ffi {
         host: *mut CairoBrowserHost,
     ) -> *mut c_char {
         unsafe { venture_browser_qt_suggestion_state(host) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_live_value_states(
+        host: *mut CairoBrowserHost,
+    ) -> *mut c_char {
+        unsafe { venture_browser_qt_live_value_states(host) }
     }
 
     #[no_mangle]

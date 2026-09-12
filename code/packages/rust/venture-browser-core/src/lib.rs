@@ -27,7 +27,8 @@ pub use browser_form_controls::{
     CustomElementFormValue, CustomElementInternalsError, CustomElementLifecycleEvent,
     CustomElementRestorationEntry, CustomElementStateRestoreMode, CustomElementSubmissionGroup,
     CustomElementValidity, FileAcceptFilter, FormAssociatedCustomElementState, HostFileSelection,
-    TypedValue, TypedValueConstraints, MAX_DATALIST_OPTIONS, MAX_SUGGESTION_QUERY_BYTES,
+    LiveValueKind, LiveValueState, MeterValueRegion, OutputDependencyValue, TypedValue,
+    TypedValueConstraints, MAX_DATALIST_OPTIONS, MAX_SUGGESTION_QUERY_BYTES,
     MAX_SUGGESTION_RESULTS,
 };
 pub use browser_form_submission::{
@@ -1383,6 +1384,53 @@ impl BrowserSession {
 
     pub fn controls(&self) -> &BrowserControlModel {
         &self.controls
+    }
+
+    pub fn live_value_states(&self) -> Vec<LiveValueState> {
+        self.controls.live_value_states()
+    }
+
+    pub fn live_value_state(&self, key: &str) -> Option<LiveValueState> {
+        self.controls.live_value_state(key)
+    }
+
+    pub fn live_value_states_host_json(&self) -> String {
+        self.controls.live_value_states_host_json()
+    }
+
+    pub fn set_live_value<M, S, FM, R>(
+        &mut self,
+        key: &str,
+        value: Option<&str>,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let effect = self.controls.set_live_value(key, value)?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
+    }
+
+    pub fn recalculate_output<M, S, FM, R, F>(
+        &mut self,
+        key: &str,
+        calculate: F,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<ControlEffect>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+        F: FnOnce(&[OutputDependencyValue]) -> String,
+    {
+        let effect = self.controls.recalculate_output(key, calculate)?;
+        self.reflow_controls(pipeline)?;
+        Some(effect)
     }
 
     /// Return reusable validation and accessibility value metadata for one
@@ -6603,6 +6651,65 @@ mod tests {
                     ControlMutationSource::SuggestionPicker,
                 ),
             ]
+        );
+    }
+
+    #[test]
+    fn session_reflows_scripted_output_and_normalized_measurements() {
+        struct LiveValueFetcher;
+
+        impl BrowserResourceFetcher for LiveValueFetcher {
+            fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String> {
+                Ok(BrowserFetchResponse::new(
+                    url,
+                    200,
+                    Some("text/html".into()),
+                    b"<form><input id='quantity' value='4'><output id='total' for='quantity'>0</output></form>\
+                      <meter id='quality' min='0' max='10' low='3' high='7' optimum='9' value='8'>8</meter>\
+                      <progress id='load' max='5'>Loading</progress>"
+                        .to_vec(),
+                ))
+            }
+        }
+
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(420.0, 160.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/live", 160.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &LiveValueFetcher)
+            .unwrap();
+
+        session
+            .recalculate_output(
+                "live:0:id:total",
+                |dependencies| format!("${}", dependencies[0].value),
+                &pipeline,
+            )
+            .unwrap();
+        session
+            .set_live_value("live:2:id:load", Some("2"), &pipeline)
+            .unwrap();
+        assert_eq!(
+            session.live_value_state("live:0:id:total").unwrap().text,
+            "$4"
+        );
+        assert_eq!(
+            session
+                .live_value_state("live:1:id:quality")
+                .unwrap()
+                .meter_region,
+            Some(MeterValueRegion::Optimum)
+        );
+        assert_eq!(
+            session.live_value_state("live:2:id:load").unwrap().position,
+            Some(0.4)
         );
     }
 }
