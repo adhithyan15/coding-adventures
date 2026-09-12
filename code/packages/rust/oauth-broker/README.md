@@ -7,7 +7,10 @@ The broker registers any number of validated `ProviderConfig` values as data.
 It contains no Google, Microsoft, GitHub, Dropbox, or other provider branch.
 For one provider/account key it can store an already audited initial token
 response, release a still-usable access token to exactly one closure, or refresh
-an expiring token through an injected transport. Refresh-token disclosure,
+an expiring token through an injected transport. It also composes exactly one
+externally scheduled RFC 8628 device-token poll through a separate injected
+transport while preserving the opaque polling session after a transient
+transport failure. Refresh-token disclosure,
 request preparation, transport attempt/result, response decoding, credential
 release, compare-and-swap rotation, metadata reads, and final access-token
 release are all durable-audit gates.
@@ -25,7 +28,8 @@ this repository.
 - browser and loopback-host orchestration;
 - concrete HTTPS, TLS, or socket authority;
 - concrete encrypted-vault credential storage;
-- account identity proof, listing, detach/revocation, and device flow;
+- account identity proof, listing, detach/revocation, device authorization
+  initiation UI, polling schedules, and full device-flow loops;
 - confidential-client secrets, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
