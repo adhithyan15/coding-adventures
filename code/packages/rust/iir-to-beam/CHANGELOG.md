@@ -1,5 +1,49 @@
 # Changelog — iir-to-beam
 
+## 0.9.3 - 2026-09-12 - add `str_len`/`str_index` (VM-040 COBOL BEAM STRING SIZE/delimiter)
+
+Added two new string ops needed by the next COBOL BEAM promotion batch:
+COBOL's `STRING ... DELIMITED BY delim` and `UNSTRING` both scan a sending
+field character-by-character (`cobol-iir-compiler::emit_prefix_before_delim`
+and `emit_unstring`'s comment: "the whole scan below reads it purely as a
+string register (`str_len`/`str_index`/`str_slice`)"). The four rows this
+slice promotes are three `DELIMITED BY SIZE` rows (already representable with
+`str_concat`/`str_slice`/`const`, already proven) and one `DELIMITED BY ","`
+row, which is the first COBOL BEAM row to actually need the per-character
+scan — so `str_len`/`str_index` had no BEAM lowering before this release
+(compiling that row previously failed cleanly with `UnsupportedOp: … "str_len"`,
+caught by the crate's own exhaustive lowering fallback, never silently).
+
+`str_len` lowers to `erlang:length/1` — a recognized guard BIF, reusing the
+same `gc_bif1` pattern `neg`/`not` and `str_slice`'s own bounds check already
+use, and the same `import_length` `str_slice` already registered. No bounds
+concern: length has no failure mode.
+
+`str_index` lowers to `lists:nth(idx+1, source)` via `call_ext` (new
+`lists:nth/2` import). Unlike `str_slice`'s `lists:sublist/3` gap (VM-D032,
+0.9.2 below), `lists:nth`'s own two clauses have no case for `N =< 0`, and
+recursing past the list's end always lands on `nth(K, [])` for some `K >= 1`,
+which also matches neither clause — both out-of-range directions already
+raise `function_clause` on their own. So converting the 0-based IIR index to
+`nth`'s 1-based index is *itself* what makes the host's native failure mode
+line up exactly with `str_index`'s documented contract
+(`vm-core::dispatch::handle_str_index`: trap when `idx < 0 || idx >= len`) —
+no separate explicit guard was needed here, in contrast to `str_slice`.
+Checked as part of this same slice: the `atomics`-backed `array_get`/
+`array_set`/`load_byte`/`store_byte` lowering (already shipped) has the same
+property — `atomics:get/put` themselves enforce a strict `1..size` range,
+stricter than `sublist`'s leniency, not weaker — so no other BEAM string/array
+op was found relying on incidental host leniency the way `str_slice` did.
+
+Four new real-`erl` regressions: `test_75_real_erl_str_len` and
+`test_76_real_erl_str_index` (basic correctness), plus
+`test_77_real_erl_str_index_traps_at_length` /
+`test_78_real_erl_str_index_last_valid_index_is_in_bounds` (the same
+trap/boundary-control pair shape `test_73`/`test_74` established for
+`str_slice`). Three new `validate_for_beam` unit tests pin the operand-shape
+checks (`str_len_and_str_index_are_accepted`, `str_len_wrong_arity_is_rejected`,
+`str_index_wrong_arity_is_rejected`).
+
 ## 0.9.2 - 2026-09-11 - `str_slice` fails closed on out-of-range bounds (VM-040 COBOL BEAM refmod MOVE/trap)
 
 Fixed a real defect found while probing the next COBOL BEAM reference-
