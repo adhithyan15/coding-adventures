@@ -641,10 +641,9 @@ impl MosaicApp for SpiceMosaicApp {
                     .schematic
                     .as_mut()
                     .ok_or_else(|| invalid("schematicConnect requires a loaded schematic"))?;
-                if wire.start == wire.end {
-                    return Err(invalid("schematicConnect requires distinct endpoints"));
-                }
-                document.wires.push(wire);
+                document
+                    .connect_wire(wire)
+                    .map_err(|error| invalid(error.to_string()))?;
                 self.diagnostics = "Endpoints connected. Sync the netlist when ready.".to_owned();
                 Ok(self.announced(self.diagnostics.clone()))
             }
@@ -883,6 +882,49 @@ mod tests {
             synchronized.props["netlist-text"],
             "* Host RC\nR1 n1 n2 1k\nV1 n1 0 DC 5\n.op\n.end\n"
         );
+    }
+
+    #[test]
+    fn schematic_connect_rejects_dangling_and_duplicate_host_wires() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let document = json!({
+            "title": "Host wire validation",
+            "components": [
+                {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":0,"y":20},{"x":40,"y":20}]},
+                {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+            ],
+            "wires": []
+        });
+        dispatch(&mut app, "schematicLoad", json!({"document": document}));
+
+        let dangling = app
+            .dispatch(Event::new(
+                1,
+                "schematicConnect",
+                json!({"wire":{"start":{"x":0,"y":20},"end":{"x":99,"y":99}}}),
+            ))
+            .unwrap_err();
+        assert_eq!(
+            dangling.to_string(),
+            "schematic wire endpoints must be component terminals"
+        );
+
+        dispatch(
+            &mut app,
+            "schematicConnect",
+            json!({"wire":{"start":{"x":0,"y":20},"end":{"x":40,"y":20}}}),
+        );
+        let duplicate = app
+            .dispatch(Event::new(
+                1,
+                "schematicConnect",
+                json!({"wire":{"start":{"x":40,"y":20},"end":{"x":0,"y":20}}}),
+            ))
+            .unwrap_err();
+        assert_eq!(duplicate.to_string(), "schematic wire is already connected");
     }
 
     #[test]

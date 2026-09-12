@@ -315,8 +315,46 @@ impl SchematicDocument {
         }) {
             return Err(invalid("selected component terminals are already routed"));
         }
-        self.wires.push(wire);
+        self.connect_wire(wire)?;
         Ok(wire)
+    }
+
+    /// Add one endpoint-only wire between terminals that belong to this document.
+    ///
+    /// This is the common admission boundary for raw host wiring and routed
+    /// component connections. Keeping it here prevents serialized editor state
+    /// from introducing phantom net points during Berkeley deck lowering.
+    pub fn connect_wire(&mut self, wire: SchematicWire) -> Result<(), SchematicError> {
+        self.validate_wire_endpoints(&wire)?;
+        if self.has_wire(&wire) {
+            return Err(invalid("schematic wire is already connected"));
+        }
+        self.wires.push(wire);
+        Ok(())
+    }
+
+    fn validate_wire_endpoints(&self, wire: &SchematicWire) -> Result<(), SchematicError> {
+        if wire.start == wire.end {
+            return Err(invalid("schematic wires must have distinct endpoints"));
+        }
+        let terminal_points = self
+            .components
+            .iter()
+            .flat_map(|component| component.terminals.iter().copied())
+            .collect::<BTreeSet<_>>();
+        if !terminal_points.contains(&wire.start) || !terminal_points.contains(&wire.end) {
+            return Err(invalid(
+                "schematic wire endpoints must be component terminals",
+            ));
+        }
+        Ok(())
+    }
+
+    fn has_wire(&self, wire: &SchematicWire) -> bool {
+        self.wires.iter().any(|existing| {
+            (existing.start == wire.start && existing.end == wire.end)
+                || (existing.start == wire.end && existing.end == wire.start)
+        })
     }
 
     /// Reject incomplete capture state before it can produce an ambiguous deck.
@@ -369,8 +407,14 @@ impl SchematicDocument {
         if ground_count == 0 {
             return Err(invalid("schematic requires at least one ground symbol"));
         }
-        if self.wires.iter().any(|wire| wire.start == wire.end) {
-            return Err(invalid("schematic wires must have distinct endpoints"));
+        for (index, wire) in self.wires.iter().enumerate() {
+            self.validate_wire_endpoints(wire)?;
+            if self.wires[..index].iter().any(|existing| {
+                (existing.start == wire.start && existing.end == wire.end)
+                    || (existing.start == wire.end && existing.end == wire.start)
+            }) {
+                return Err(invalid("schematic wire is already connected"));
+            }
         }
         Ok(())
     }
@@ -725,6 +769,34 @@ mod tests {
         assert_eq!(
             document.validate().unwrap_err().to_string(),
             "schematic wires must have distinct endpoints"
+        );
+
+        let mut document = rc_document();
+        document.wires[0].end = point(99, 99);
+        assert_eq!(
+            document.validate().unwrap_err().to_string(),
+            "schematic wire endpoints must be component terminals"
+        );
+
+        let mut document = rc_document();
+        let duplicate = SchematicWire {
+            start: document.wires[0].end,
+            end: document.wires[0].start,
+        };
+        document.wires.push(duplicate);
+        assert_eq!(
+            document.validate().unwrap_err().to_string(),
+            "schematic wire is already connected"
+        );
+
+        let mut document = rc_document();
+        let duplicate = SchematicWire {
+            start: document.wires[0].end,
+            end: document.wires[0].start,
+        };
+        assert_eq!(
+            document.connect_wire(duplicate).unwrap_err().to_string(),
+            "schematic wire is already connected"
         );
     }
 }
