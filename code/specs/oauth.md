@@ -129,7 +129,9 @@ The delivery order is:
    credentials are form-encoded before standard Base64 and omitted from the
    body; Post credentials remain only in the form body. Returned headers and
    bodies are zeroizing, reject provider or client-identity mismatches before
-   secret access, and retain the provider/trace audit binding. A
+   secret access, and retain the provider/trace audit binding. Validated RFC
+   8414 metadata now selects these methods only after exact provider and
+   case-sensitive method matching, without inventing a default. A
    non-exporting signer boundary for `private_key_jwt` is shipped: opaque
    provider-bound key references, algorithm-as-data, bounded zeroizing
    signature ownership, and durable trace-correlated audit before signing and
