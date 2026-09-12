@@ -1,0 +1,15 @@
+{
+  "id": "GE-EXT-A1-LESUNG",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read German nouns cold, follow a sentence whose verb waits at the end, and read a short paragraph without translating word by word.",
+  "prerequisites": [
+    "GE-EXT-A1-KLAMMER"
+  ],
+  "lessons": [
+    "GE-C52-words",
+    "GE-C52-saetze",
+    "GE-C52-erste-lesung"
+  ]
+}

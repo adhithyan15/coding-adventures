@@ -1,0 +1,11 @@
+{
+  "language": "german",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:dbb3297c006e1b38",
+  "lessonIds": [
+    "GE-C52-words",
+    "GE-C52-saetze",
+    "GE-C52-erste-lesung"
+  ],
+  "tex": "german/book/chapters/ch52-reading-nouns-sentences-and-a-paragraph.tex"
+}
