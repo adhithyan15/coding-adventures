@@ -3189,6 +3189,20 @@ impl Compiler {
             return Some((value, false));
         }
         if !self.contains_conditional_expression(node)
+            && !self.contains_power_operator(node)
+            && self.contains_pure_standard_function_call(node)
+            && self
+                .static_predicate_dependencies(node)
+                .is_some_and(|dependencies| dependencies.is_empty())
+        {
+            if let Some(value) = self
+                .static_real_arithmetic_value(node)
+                .filter(|value| value.is_finite())
+            {
+                return Some((value, false));
+            }
+        }
+        if !self.contains_conditional_expression(node)
             && !self.contains_procedure_call(node)
             && !self.contains_power_operator(node)
             && self.static_real_expression_has_real_evidence(node)
@@ -11637,6 +11651,19 @@ mod tests {
     }
 
     #[test]
+    fn al4_conditional_real_snapshot_and_constant_standard_result_power_unrolls() {
+        let module = compile_source(
+            "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(4.0)) + 6.0; gate := true; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("an equal tracked real snapshot and constant built-in may bound a power");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
     fn al4_tracked_real_standard_function_exponents_fail_closed() {
         for source in [
             "begin real exponent, saved; exponent := 1.0; saved := 6.0 ^ (exponent + cos(0)) end",
@@ -11683,6 +11710,10 @@ mod tests {
             "begin integer radicand; boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) end",
             "begin integer radicand; boolean gate; real exponent, saved; radicand := 9007199254740993; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) end",
             "begin integer radicand; boolean gate; real exponent, saved; radicand := 9; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) end",
+            "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(9.0)) end",
+            "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(2.25)) end",
+            "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(4.0) ^ 1) end",
+            "begin real procedure sqrt(x); value x; real x; sqrt := 2.0; boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(4.0)) end",
             "begin real procedure sqrt(x); value x; real x; sqrt := 2.0; boolean gate; real exponent, radicand, saved; exponent := 2.0; radicand := 4.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) end",
             "begin real procedure choose(x); value x; real x; choose := x; real gate, exponent, saved; gate := 0.0; exponent := 0.0; saved := 6.0 ^ (if choose(gate) = 0.0 then cos(exponent) + 1 else cos(exponent) + 1) end",
         ] {

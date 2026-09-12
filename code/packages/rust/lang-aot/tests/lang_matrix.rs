@@ -1727,6 +1727,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an exact variable-free built-in result may match a tracked
+    // real snapshot in a path-independent conditional exponent.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(4.0)) + 6.0; gate := true; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — finite arithmetic over initialized tracked local reals may
     // bound a power around a path-independent built-in result.
     Prog {
@@ -10146,6 +10155,31 @@ fn algol_conditional_real_snapshot_integer_standard_results_run_on_every_availab
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but integer-backed standard result did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_real_snapshot_constant_standard_results_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("else sqrt(4.0)")
+                && !program.src.contains("procedure sqrt")
+        })
+        .expect("conditional snapshot/constant-standard-result power must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but constant standard result did not run"
             );
             continue;
         };
