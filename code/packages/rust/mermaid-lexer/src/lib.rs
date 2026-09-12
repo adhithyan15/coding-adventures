@@ -503,6 +503,19 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_recursive_block_group_boundaries() {
+        let tokens = try_tokenize_mermaid_block(
+            "block\n  block:pipeline:2\n    block\n      endpoint\n    end\n  end\n",
+        )
+        .unwrap();
+        let types = tokens.iter().filter_map(|token| token.type_name.as_deref()).collect::<Vec<_>>();
+        assert_eq!(types.iter().filter(|token| **token == "GROUP_START").count(), 1);
+        assert_eq!(types.iter().filter(|token| **token == "HEADER").count(), 2);
+        assert_eq!(types.iter().filter(|token| **token == "GROUP_END").count(), 2);
+        assert!(tokens.iter().any(|token| token.value.trim() == "endpoint"));
+    }
+
+    #[test]
     fn tokenizes_packet_fields_as_complete_lines() {
         let tokens = try_tokenize_mermaid_packet(
             "packet-beta\n0-7: \"Header\"\n8-31: \"Payload\"\n",
