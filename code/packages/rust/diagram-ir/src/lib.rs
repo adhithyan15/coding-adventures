@@ -25,6 +25,9 @@ pub enum DiagramShape {
     ParallelogramLeft,
     Trapezoid,
     InvertedTrapezoid,
+    Subroutine,
+    Cylinder,
+    DoubleCircle,
     Note,
 }
 

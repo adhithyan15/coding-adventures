@@ -903,6 +903,68 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 stroke_dash: None, stroke_dash_offset: None,
             })
         }
+        DiagramShape::Subroutine => {
+            let inset = 12.0_f64.min(node.width / 5.0);
+            PaintInstruction::Group(PaintGroup {
+                base: PaintBase::default(),
+                children: vec![
+                    node_rect_instruction(node),
+                    node_open_path_instruction(node, vec![
+                        PathCommand::MoveTo { x: node.x + inset, y: node.y },
+                        PathCommand::LineTo { x: node.x + inset, y: node.y + node.height },
+                    ]),
+                    node_open_path_instruction(node, vec![
+                        PathCommand::MoveTo { x: node.x + node.width - inset, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width - inset, y: node.y + node.height },
+                    ]),
+                ],
+                transform: None,
+                opacity: None,
+            })
+        }
+        DiagramShape::Cylinder => {
+            let cap = 10.0_f64.min(node.height / 4.0);
+            PaintInstruction::Group(PaintGroup {
+                base: PaintBase::default(),
+                children: vec![
+                    PaintInstruction::Path(PaintPath {
+                        base: PaintBase::default(),
+                        commands: vec![
+                            PathCommand::MoveTo { x: node.x, y: node.y + cap },
+                            PathCommand::LineTo { x: node.x, y: node.y + node.height - cap },
+                            PathCommand::ArcTo { rx: node.width / 2.0, ry: cap, x_rotation: 0.0, large_arc: false, sweep: false, x: node.x + node.width, y: node.y + node.height - cap },
+                            PathCommand::LineTo { x: node.x + node.width, y: node.y + cap },
+                            PathCommand::Close,
+                        ],
+                        fill: Some(node.style.fill.clone()), fill_rule: None,
+                        stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+                        stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+                        stroke_dash: None, stroke_dash_offset: None,
+                    }),
+                    PaintInstruction::Ellipse(PaintEllipse {
+                        base: PaintBase::default(),
+                        cx: node.x + node.width / 2.0, cy: node.y + cap,
+                        rx: node.width / 2.0, ry: cap,
+                        fill: Some(node.style.fill.clone()), stroke: Some(node.style.stroke.clone()),
+                        stroke_width: Some(node.style.stroke_width), stroke_dash: None, stroke_dash_offset: None,
+                    }),
+                ],
+                transform: None,
+                opacity: None,
+            })
+        }
+        DiagramShape::DoubleCircle => {
+            let inset = 5.0_f64.min(node.width / 8.0).min(node.height / 8.0);
+            PaintInstruction::Group(PaintGroup {
+                base: PaintBase::default(),
+                children: vec![
+                    node_ellipse_instruction(node, 0.0, Some(node.style.fill.clone())),
+                    node_ellipse_instruction(node, inset, None),
+                ],
+                transform: None,
+                opacity: None,
+            })
+        }
         DiagramShape::Note => {
             let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
             PaintInstruction::Path(PaintPath {
@@ -986,6 +1048,34 @@ fn polygon_node_instruction(node: &LayoutedGraphNode, points: &[(f64, f64)]) -> 
         stroke_join: Some(StrokeJoin::Round),
         stroke_dash: None,
         stroke_dash_offset: None,
+    })
+}
+
+fn node_rect_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
+    PaintInstruction::Rect(PaintRect {
+        base: PaintBase::default(), x: node.x, y: node.y, width: node.width, height: node.height,
+        fill: Some(node.style.fill.clone()), stroke: Some(node.style.stroke.clone()),
+        stroke_width: Some(node.style.stroke_width), corner_radius: Some(0.0),
+        stroke_dash: None, stroke_dash_offset: None,
+    })
+}
+
+fn node_open_path_instruction(node: &LayoutedGraphNode, commands: Vec<PathCommand>) -> PaintInstruction {
+    PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(), commands, fill: None, fill_rule: None,
+        stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+        stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+        stroke_dash: None, stroke_dash_offset: None,
+    })
+}
+
+fn node_ellipse_instruction(node: &LayoutedGraphNode, inset: f64, fill: Option<String>) -> PaintInstruction {
+    PaintInstruction::Ellipse(PaintEllipse {
+        base: PaintBase::default(),
+        cx: node.x + node.width / 2.0, cy: node.y + node.height / 2.0,
+        rx: node.width / 2.0 - inset, ry: node.height / 2.0 - inset,
+        fill, stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+        stroke_dash: None, stroke_dash_offset: None,
     })
 }
 
@@ -5256,6 +5346,22 @@ mod tests {
                 if path.commands.len() == 8
                     && path.commands.iter().filter(|command| matches!(command, PathCommand::ArcTo { .. })).count() == 4)
         }));
+    }
+
+    #[test]
+    fn block_multi_outline_shapes_lower_to_backend_neutral_groups() {
+        let mut layout = simple_layout();
+        for (shape, expected_children) in [
+            (DiagramShape::Subroutine, 3),
+            (DiagramShape::Cylinder, 2),
+            (DiagramShape::DoubleCircle, 2),
+        ] {
+            layout.nodes[0].shape = shape;
+            assert!(matches!(
+                node_shape_instruction(&layout.nodes[0]),
+                PaintInstruction::Group(group) if group.children.len() == expected_children
+            ));
+        }
     }
 
     #[test]

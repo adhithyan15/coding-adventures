@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.118.0
+
+- Lower multi-outline Block shapes to grouped PaintInstructions and validate them through Metal-to-PNG.
+
 ## 0.117.0
 
 - Lower Block polygonal and stadium shapes to backend-neutral PaintInstructions and validate them through Metal-to-PNG.
