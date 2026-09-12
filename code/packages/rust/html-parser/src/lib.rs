@@ -5210,9 +5210,10 @@ impl HtmlParser {
         }
         let body_element_existed_before_start_tag = self.document_has_body_element();
 
-        let in_foreign_content = self.current_namespace().is_some()
+        let mut in_foreign_content = self.current_namespace().is_some()
             && !self.current_node_is_svg_html_integration_point()
             && !self.current_node_is_mathml_integration_point();
+        let mut forced_html_fragment_breakout = false;
         if in_foreign_content
             && self.current_element_is_marked_foreign_fragment_context()
             && matches!(name.as_str(), "body" | "frameset" | "head" | "html")
@@ -5237,6 +5238,20 @@ impl HtmlParser {
                 self.open_elements.push(path);
             }
             return;
+        }
+        if in_foreign_content
+            && self.current_element_is_marked_foreign_fragment_context()
+            && exits_foreign_content_on_start_tag(&name, &attributes)
+        {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-html-start-tag-in-foreign-content",
+                    format!("HTML start tag `<{name}>` forced recovery from foreign content"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            in_foreign_content = false;
+            forced_html_fragment_breakout = true;
         }
         if in_foreign_content
             && !self.current_node_is_svg_html_integration_point()
@@ -5812,7 +5827,7 @@ impl HtmlParser {
                 )
                 .at_emission(self.current_token_emission_position),
             );
-            self.close_open_element_if(|name| name == "li");
+            self.close_open_list_item_if_in_scope();
             if let Some(path) = self.insert_node_before_open_table(Node::element(name, attributes))
             {
                 self.open_elements.push(path);
@@ -6074,7 +6089,11 @@ impl HtmlParser {
             self.unwrap_current_empty_font_newline_before_bold(&name);
         }
 
-        let namespace = self.namespace_for_start_tag(&name);
+        let namespace = if forced_html_fragment_breakout {
+            None
+        } else {
+            self.namespace_for_start_tag(&name)
+        };
         let name = adjusted_foreign_start_tag_name(name, namespace);
         let attributes = adjusted_foreign_attributes(attributes, namespace);
         let html_void_element = namespace.is_none() && is_void_element(&name);
@@ -7501,7 +7520,16 @@ impl HtmlParser {
     }
 
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
-        if starts_body_after_head(incoming_name) && self.current_element_is("head") {
+        let current_is_authored_html_head = self
+            .open_elements
+            .last()
+            .and_then(|path| element_ref_at_path(&self.document, path))
+            .is_some_and(|element| {
+                element.namespace.is_none()
+                    && !has_fragment_context_marker(element)
+                    && element.name == "head"
+            });
+        if starts_body_after_head(incoming_name) && current_is_authored_html_head {
             self.pop_current_if(|name| name == "head");
         }
     }
@@ -9053,50 +9081,47 @@ impl HtmlParser {
                 self.close_open_element_if(|name| name == "p");
             }
         } else if incoming_name == "li" {
-            if !self.current_parent_has_element_ancestor("button") {
-                self.close_open_anchor_for_reconstruction_boundary();
-                if self.open_html_element_in_button_scope_index("p").is_some() {
-                    self.close_open_element_if(|name| name == "p");
-                }
-                if !self.current_element_is("li") && self.open_list_item_in_scope_index().is_some()
-                {
-                    self.diagnostics.push(
-                        ParserDiagnostic::new(
-                            "unexpected-li-start-tag",
-                            "start tag `<li>` implied the end of a non-current list item",
-                        )
-                        .at_emission(self.current_token_emission_position),
-                    );
-                }
-                self.close_open_list_item_if_in_scope();
+            self.close_open_anchor_for_reconstruction_boundary();
+            if self.open_html_element_in_button_scope_index("p").is_some() {
+                self.close_open_element_if(|name| name == "p");
             }
+            if !self.current_element_is("li")
+                && self.open_list_item_in_button_scope_index().is_some()
+            {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-li-start-tag",
+                        "start tag `<li>` implied the end of a non-current list item",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+            }
+            self.close_open_list_item_if_in_button_scope();
         } else if incoming_name == "dt" || incoming_name == "dd" {
-            if !self.current_parent_has_element_ancestor("button") {
-                if self.open_html_element_in_button_scope_index("p").is_some() {
-                    self.close_open_element_if(|name| name == "p");
-                }
-                let has_description_item_in_scope = self
-                    .open_html_element_in_scope_index("dt")
-                    .or_else(|| self.open_html_element_in_scope_index("dd"))
-                    .is_some();
-                if !self.current_element_is("dt")
-                    && !self.current_element_is("dd")
-                    && !self.current_element_is("optgroup")
-                    && has_description_item_in_scope
-                {
-                    self.diagnostics.push(
-                        ParserDiagnostic::new(
-                            "unexpected-description-list-item-start-tag",
-                            format!(
-                                "start tag `<{incoming_name}>` implied the end of a non-current description-list item"
-                            ),
-                        )
-                        .at_emission(self.current_token_emission_position),
-                    );
-                }
-                if has_description_item_in_scope {
-                    self.close_open_element_if(|name| name == "dt" || name == "dd");
-                }
+            if self.open_html_element_in_button_scope_index("p").is_some() {
+                self.close_open_element_if(|name| name == "p");
+            }
+            let has_description_item_in_scope = self
+                .open_html_element_in_button_scope_index("dt")
+                .or_else(|| self.open_html_element_in_button_scope_index("dd"))
+                .is_some();
+            if !self.current_element_is("dt")
+                && !self.current_element_is("dd")
+                && !self.current_element_is("optgroup")
+                && has_description_item_in_scope
+            {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-description-list-item-start-tag",
+                        format!(
+                            "start tag `<{incoming_name}>` implied the end of a non-current description-list item"
+                        ),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+            }
+            if has_description_item_in_scope {
+                self.close_open_element_if(|name| name == "dt" || name == "dd");
             }
         } else if incoming_name == "option" && self.current_element_is("option") {
             if !self.current_empty_select_is_nested_in_option() {
@@ -9128,12 +9153,19 @@ impl HtmlParser {
         } else if matches!(incoming_name, "rb" | "rtc" | "rp" | "rt") {
             self.apply_ruby_implied_end_tags(incoming_name);
         } else if is_heading_element(incoming_name) {
-            if !self.current_parent_has_element_ancestor("button")
-                && self.open_html_element_in_button_scope_index("p").is_some()
-            {
+            if self.open_html_element_in_button_scope_index("p").is_some() {
                 self.close_open_element_if(|name| name == "p");
             }
-            if self.current_element_name().is_some_and(is_heading_element) {
+            let current_is_authored_html_heading = self
+                .open_elements
+                .last()
+                .and_then(|path| element_ref_at_path(&self.document, path))
+                .is_some_and(|element| {
+                    element.namespace.is_none()
+                        && !has_fragment_context_marker(element)
+                        && is_heading_element(&element.name)
+                });
+            if current_is_authored_html_heading {
                 self.diagnostics.push(
                     ParserDiagnostic::new(
                         "nested-heading-start-tag",
@@ -9147,9 +9179,6 @@ impl HtmlParser {
             }
         } else if is_paragraph_boundary_element(incoming_name) {
             if incoming_name == "table" && self.quirks_mode {
-                return;
-            }
-            if self.current_parent_has_element_ancestor("button") {
                 return;
             }
             if incoming_name == "center" {
@@ -9450,6 +9479,36 @@ impl HtmlParser {
         None
     }
 
+    fn open_list_item_in_button_scope_index(&self) -> Option<usize> {
+        for (index, path) in self.open_elements.iter().enumerate().rev() {
+            let Some(element) = element_ref_at_path(&self.document, path) else {
+                continue;
+            };
+            if element.namespace.is_none()
+                && element.name == "li"
+                && !has_fragment_context_marker(element)
+            {
+                return Some(index);
+            }
+            if is_ordinary_scope_boundary(element)
+                || (element.namespace.is_none()
+                    && matches!(element.name.as_str(), "button" | "ol" | "ul"))
+            {
+                return None;
+            }
+        }
+        None
+    }
+
+    fn close_open_list_item_if_in_button_scope(&mut self) -> bool {
+        let Some(index) = self.open_list_item_in_button_scope_index() else {
+            return false;
+        };
+        self.capture_formatting_above(index);
+        self.truncate_open_elements(index);
+        true
+    }
+
     fn close_open_list_item_if_in_scope(&mut self) -> bool {
         let Some(index) = self.open_list_item_in_scope_index() else {
             return false;
@@ -9494,9 +9553,7 @@ impl HtmlParser {
     }
 
     fn close_open_anchor_for_reconstruction_boundary(&mut self) -> bool {
-        let Some(index) = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| name == "a")
-        }) else {
+        let Some(index) = self.open_html_element_in_scope_index("a") else {
             return false;
         };
         if self.has_table_context_above(index) || self.has_special_element_above(index) {
@@ -10761,11 +10818,7 @@ impl HtmlParser {
     }
 
     fn open_html_select_is_in_table_context(&self) -> bool {
-        let Some(select_index) = self.open_elements.iter().rposition(|path| {
-            element_ref_at_path(&self.document, path).is_some_and(|element| {
-                element.namespace.is_none() && element.name == "select"
-            })
-        }) else {
+        let Some(select_index) = self.open_html_element_in_scope_index("select") else {
             return false;
         };
         self.open_elements[..select_index].iter().any(|path| {
@@ -11085,16 +11138,6 @@ impl HtmlParser {
             current_parent_path.starts_with(path)
                 && element_ref_at_path(&self.document, path).is_some_and(|element| {
                     element.namespace.is_none() && matches!(element.name.as_str(), "td" | "th")
-                })
-        })
-    }
-
-    fn current_parent_has_element_ancestor(&self, ancestor_name: &str) -> bool {
-        let current_parent_path = self.current_parent_path();
-        self.open_elements.iter().any(|path| {
-            current_parent_path.starts_with(path)
-                && element_ref_at_path(&self.document, path).is_some_and(|element| {
-                    element.namespace.is_none() && element.name == ancestor_name
                 })
         })
     }
@@ -41720,6 +41763,21 @@ mod tests {
     }
 
     #[test]
+    fn foreign_head_fragment_context_survives_a_direct_html_breakout() {
+        let source = "<div id=box>X</div><circle id=tail>Y";
+        for (context, namespace) in [("svg head", "svg"), ("math head", "math")] {
+            let nodes = parse_html_fragment_for_context(source, context).unwrap();
+            assert_eq!(nodes.len(), 2, "context {context}");
+            let division = element(&nodes[0]);
+            assert_eq!(division.name, "div", "context {context}");
+            assert_eq!(division.namespace, None, "context {context}");
+            let tail = element(&nodes[1]);
+            assert_eq!(tail.name, "circle", "context {context}");
+            assert_eq!(tail.namespace.as_deref(), Some(namespace), "context {context}");
+        }
+    }
+
+    #[test]
     fn foreign_button_fragment_context_does_not_suppress_paragraph_closure() {
         let context = Element {
             namespace: Some("svg".to_string()),
@@ -41742,6 +41800,36 @@ mod tests {
         assert_eq!(division.namespace, None);
         assert_eq!(division.name, "div");
         assert_eq!(division.children, vec![Node::text("b")]);
+    }
+
+    #[test]
+    fn foreign_heading_fragment_context_is_not_popped_by_an_html_heading_start() {
+        let source = "<h2 id=heading>X</h2><circle id=tail>Y";
+        for (context, namespace) in [("svg h1", "svg"), ("math h1", "math")] {
+            let nodes = parse_html_fragment_for_context(source, context).unwrap();
+            assert_eq!(nodes.len(), 2, "context {context}");
+            let heading = element(&nodes[0]);
+            assert_eq!(heading.name, "h2", "context {context}");
+            assert_eq!(heading.namespace, None, "context {context}");
+            let tail = element(&nodes[1]);
+            assert_eq!(tail.name, "circle", "context {context}");
+            assert_eq!(tail.namespace.as_deref(), Some(namespace), "context {context}");
+        }
+    }
+
+    #[test]
+    fn foreign_fragment_breakout_starts_preserve_the_seeded_parent() {
+        let source = "<div id=box>X</div><circle id=tail>Y";
+        for (context, namespace) in [("svg g", "svg"), ("math mrow", "math")] {
+            let nodes = parse_html_fragment_for_context(source, context).unwrap();
+            assert_eq!(nodes.len(), 2, "context {context}");
+            let division = element(&nodes[0]);
+            assert_eq!(division.name, "div", "context {context}");
+            assert_eq!(division.namespace, None, "context {context}");
+            let tail = element(&nodes[1]);
+            assert_eq!(tail.name, "circle", "context {context}");
+            assert_eq!(tail.namespace.as_deref(), Some(namespace), "context {context}");
+        }
     }
 
     #[test]
@@ -50129,6 +50217,34 @@ mod tests {
     }
 
     #[test]
+    fn table_starts_do_not_close_selects_across_foreign_integration_scope() {
+        for boundary in [
+            "<svg><g><foreignObject>",
+            "<math><mrow><mtext>",
+        ] {
+            let source = format!(
+                "<table><tr><td><select id=outer>A{boundary}<table id=inner>B<span>C"
+            );
+            let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+            let outer = find_element_by_id(&fragment, "outer").unwrap();
+            assert!(
+                find_element_by_id(&outer.children, "inner").is_some(),
+                "source {source:?}"
+            );
+            assert_eq!(element_text_content(outer), "ABC", "source {source:?}");
+        }
+
+        let same_scope = parse_html_fragment_for_context(
+            "<table><tr><td><select id=outer>A<table id=inner>B",
+            "div",
+        )
+        .unwrap();
+        let outer = find_element_by_id(&same_scope, "outer").unwrap();
+        assert!(find_element_by_id(&outer.children, "inner").is_none());
+        assert!(find_element_by_id(&same_scope, "inner").is_some());
+    }
+
+    #[test]
     fn hr_start_recovery_does_not_cross_foreign_integration_scope() {
         for boundary in [
             "<svg><g><foreignObject>",
@@ -50177,6 +50293,32 @@ mod tests {
     }
 
     #[test]
+    fn buttons_do_not_suppress_in_scope_implied_start_recovery() {
+        for boundary in [
+            "",
+            "<svg><g><foreignObject>",
+            "<math><mrow><mtext>",
+        ] {
+            for content in [
+                "<p id=inner>A<div id=target>B",
+                "<ul><li id=inner>A<li id=target>B",
+                "<dl><dt id=inner>A<dd id=target>B",
+                "<p id=inner>A<h1 id=target>B",
+            ] {
+                let source = format!("<button id=outer>{boundary}{content}");
+                let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+                let inner = find_element_by_id(&fragment, "inner").unwrap();
+                assert_eq!(element_text_content(inner), "A", "source {source:?}");
+                assert!(
+                    find_element_by_id(&inner.children, "target").is_none(),
+                    "source {source:?}"
+                );
+                assert!(find_element_by_id(&fragment, "target").is_some());
+            }
+        }
+    }
+
+    #[test]
     fn table_end_tags_preserve_formatting_across_foreign_integration_content() {
         for boundary in [
             "<svg><g><foreignObject>",
@@ -50194,6 +50336,59 @@ mod tests {
             parse_html_fragment_for_context("<table><b>A</table>B", "div").unwrap();
         assert_eq!(element(&same_scope[2]).name, "b");
         assert_eq!(element_text_content(element(&same_scope[2])), "B");
+    }
+
+    #[test]
+    fn fostered_li_starts_do_not_cross_foreign_integration_scope() {
+        for boundary in [
+            "<svg><g><foreignObject>",
+            "<math><mrow><mtext>",
+        ] {
+            let source =
+                format!("<ul><li id=outer>A{boundary}<table><li id=inner>B<span>C");
+            let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+            let outer = find_element_by_id(&fragment, "outer").unwrap();
+            assert!(
+                find_element_by_id(&outer.children, "inner").is_some(),
+                "source {source:?}"
+            );
+        }
+
+        let same_scope = parse_html_fragment_for_context(
+            "<ul><li id=outer>A<table><li id=inner>B",
+            "div",
+        )
+        .unwrap();
+        let outer = find_element_by_id(&same_scope, "outer").unwrap();
+        assert!(find_element_by_id(&outer.children, "inner").is_some());
+        assert!(find_element_by_id(&same_scope, "inner").is_some());
+    }
+
+    #[test]
+    fn anchor_reconstruction_boundaries_do_not_close_foreign_anchors() {
+        for boundary in [
+            "<svg><a id=foreign><foreignObject>",
+            "<math><a id=foreign><mtext>",
+        ] {
+            for incoming in ["<ul><li", "<center"] {
+                let source = format!("{boundary}{incoming} id=target>X<span>Y");
+                let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+                let foreign = find_element_by_id(&fragment, "foreign").unwrap();
+                let target = find_element_by_id(&foreign.children, "target").unwrap();
+                assert_eq!(element_text_content(target), "XY", "source {source:?}");
+                assert_eq!(element(&target.children[1]).name, "span", "source {source:?}");
+            }
+        }
+
+        for source in [
+            "<a id=outer><ul><li id=target>X",
+            "<a id=outer><center id=target>X",
+        ] {
+            let fragment = parse_html_fragment_for_context(source, "div").unwrap();
+            let outer = find_element_by_id(&fragment, "outer").unwrap();
+            assert!(find_element_by_id(&outer.children, "target").is_none());
+            assert!(find_element_by_id(&fragment, "target").is_some());
+        }
     }
 
     #[test]
