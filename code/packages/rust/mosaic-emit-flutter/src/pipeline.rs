@@ -1953,6 +1953,10 @@ fn emit_widget_class(
         emits,
         TableCtx {
             radio_group_members: Some(&radio_groups),
+            // The component root is given the window's width (#14857).
+            // `bool::default()` is false, which would make every root
+            // unbounded and suppress flex everywhere.
+            width_bounded: true,
             ..TableCtx::default()
         },
     )?;
@@ -2055,6 +2059,14 @@ struct TableCtx<'a> {
     /// children. A `Row` that is itself a non-flex child of another `Row` is
     /// laid out with unbounded width and must keep its children non-flex.
     direct_row_accepts_flex: bool,
+    /// Whether this widget's own width is bounded (#14857).
+    ///
+    /// Distinct from `direct_row_accepts_flex`, which asks only about the
+    /// immediate parent. Unboundedness propagates: a non-flex `Row` child is
+    /// measured unbounded, and so is everything beneath it until something
+    /// re-bounds the width. A flexible child under an unbounded constraint is
+    /// a runtime assertion, not a layout quirk.
+    width_bounded: bool,
     /// Whole-component radio-group membership (`#13007`), computed once
     /// in `emit_widget_class` via [`collect_radio_group_members`] and
     /// threaded unchanged through every recursive call — `emit_host_radio`
@@ -2557,14 +2569,27 @@ fn emit_container(
     let width = props.get("width").and_then(|v| fixed_pixel_length(v));
     let height = props.get("height").and_then(|v| fixed_pixel_length(v));
     let elevation = elevation_tier(&props);
-    let row_accepts_flex = widget == "Row"
-        && (!ctx.direct_row_child
-            || width.is_some()
-            || part_flex_grow(node, part_styles).is_some());
+    // Is THIS container's own width bounded? A non-flex child of a `Row` is
+    // measured with an unbounded max width, and that unboundedness passes
+    // down through any intermediate container -- a `Column` inside such a
+    // `Row` is unbounded too, and so is a `Row` inside that `Column`.
+    //
+    // The previous form asked only `!ctx.direct_row_child`, i.e. "my parent
+    // is not a Row", and so treated one level of indirection as bounded.
+    // Trestle's `Row [subline]` sits at `Row [topbar] > Column [title-block] >
+    // Row [subline]` and was judged flex-accepting while measuring unbounded;
+    // putting a flexible child in it throws
+    // `RenderFlex children have non-zero flex but incoming width constraints
+    // are unbounded` (#14857).
+    let width_bounded = width.is_some()
+        || part_flex_grow(node, part_styles).is_some()
+        || (!ctx.direct_row_child && ctx.width_bounded);
+    let row_accepts_flex = widget == "Row" && width_bounded;
     let child_ctx = TableCtx {
         direct_row_child: widget == "Row",
         direct_row_accepts_flex: row_accepts_flex,
         direct_stack_child: widget == "Stack",
+        width_bounded,
         ..ctx
     };
 
@@ -2890,11 +2915,34 @@ fn emit_paired_children(
         // `Expanded` relies on the `Row`'s normal shrink-to-content
         // behaviour instead). `Expanded` is a compile error outside a
         // `Row`/`Column`, hence the `ctx.direct_row_child` gate.
+        // UI59 §11 (#14857): a Flutter `Row` measures a non-flexible child
+        // with an UNBOUNDED max width, so a `Text` never wraps -- it extends
+        // the row until the row overflows and throws
+        // `A RenderFlex overflowed by N pixels`. Compose starves a sibling to
+        // zero for the same authored layout; Flutter is the louder of the two.
+        //
+        // `Flexible` with the default loose fit is the mechanism: the child
+        // may take up to its share and measures to its content when smaller,
+        // so a short Text is unaffected and a long one wraps instead of
+        // overrunning. Only a `Text`, because a Text is the child that can
+        // REFLOW -- a container's intrinsic width is its content's.
+        //
+        // Gated on `direct_row_accepts_flex` for the same reason `Expanded`
+        // is: a `Row` that is itself a non-flex child of another `Row` is laid
+        // out unbounded, and `Flexible` inside it is a runtime error.
+        let flexible;
         let expanded;
         let sub: &str = match flex {
             Some(flex) => {
                 expanded = format!("Expanded(flex: {flex}, child: {sub})");
                 &expanded
+            }
+            None if ctx.direct_row_child
+                && ctx.direct_row_accepts_flex
+                && child.tag == "Text" =>
+            {
+                flexible = format!("Flexible(child: {sub})");
+                &flexible
             }
             None => sub,
         };
@@ -3216,18 +3264,17 @@ fn emit_if_dart(
     // available here, so we check both and prefer whichever is set.
     let flex = branch_flex_grow(&if_node.children, part_styles)
         .or_else(|| else_node.and_then(|en| branch_flex_grow(&en.children, part_styles)));
-    let introduces_branch_column = if_node.children.len() > 1
+    let shrinkable = branch_can_shrink(&if_node.children)
         || else_node
-            .map(|node| node.children.len() > 1)
+            .map(|node| branch_can_shrink(&node.children))
             .unwrap_or(false);
     let body = if ctx.direct_row_child {
         match flex {
             Some(f) => format!("Expanded(flex: {f}, child: {ternary})"),
-            // A multi-widget branch is represented by a Column. Keep that
-            // Column horizontally bounded when the conditional is a direct
-            // Row child, while allowing it to choose less than the available
-            // width when its contents do not need all of it.
-            None if introduces_branch_column && ctx.direct_row_accepts_flex => {
+            // The conditional occupies one Row slot whichever branch is
+            // taken, so the wrap is decided from the branches: if either
+            // can give back width, the slot can.
+            None if shrinkable && ctx.direct_row_accepts_flex => {
                 format!("Flexible(child: {ternary})")
             }
             None => ternary,
@@ -3236,6 +3283,36 @@ fn emit_if_dart(
         ternary
     };
     Ok(format!("{pad}({body})\n"))
+}
+
+/// Whether a conditional branch can give width back to its Row.
+///
+/// Two shapes can, and they are the two the emitter already produces:
+///
+/// - **A multi-widget branch**, which `render_branch` represents as a
+///   `Column`. Keeping that Column bounded is what the original rule was
+///   for: without it the Column takes the Row's full width.
+/// - **A single `Text`**, which shrinks by wrapping or ellipsising. This
+///   is the shape the original rule missed, and it is the common one:
+///   `If ( when: .. ) { Text .. }` is a single-child branch, so
+///   `children.len() > 1` was false and the `Text` never got its
+///   `Flexible`. TaskApp's task row is five such conditionals, which is
+///   why it overflowed by a figure that did not move across three
+///   attempts at the surrounding layout.
+///
+/// An absent `else` renders as `const SizedBox.shrink()` and is left out
+/// of the decision by the caller: it is already zero-width, so it neither
+/// needs nor is harmed by a `Flexible`.
+///
+/// Anything else (an `Icon`, a sized `Box`) reports `false`. Being wrong
+/// in that direction costs nothing but the wrap; being wrong the other way
+/// hands a fixed-size widget a loose constraint it did not ask for.
+fn branch_can_shrink(children: &[LayoutNode]) -> bool {
+    match children {
+        [] => false,
+        [only] => only.tag == "Text",
+        _ => true,
+    }
 }
 
 /// A conditional branch's `flex-grow`, read from its single styled child
@@ -5525,6 +5602,8 @@ fn emit_host_table(
         sheet_font_size: sheet_font_size.as_deref(),
         direct_row_child: false,
         direct_row_accepts_flex: false,
+        // The root gets the window's width.
+        width_bounded: true,
         direct_stack_child: false,
         radio_group_members: parent_ctx.radio_group_members,
     };
@@ -11117,6 +11196,84 @@ mod tests {
         assert!(
             !out.contains("Expanded("),
             "nested branch inputs must use the intermediate Column context:\n{out}"
+        );
+    }
+
+    /// A conditional whose branch is a single `Text` is the shape the
+    /// original rule missed: `children.len() > 1` is false, so the
+    /// `Flexible` never landed and the `Text` measured at its natural
+    /// width. TaskApp's task row is five of these side by side, which is
+    /// what made it overflow.
+    #[test]
+    fn single_text_if_as_direct_row_child_emits_flexible() {
+        let m = component(
+            "Row1",
+            vec![slot("shown", SlotType::Bool, true)],
+            vec![],
+        );
+        let style = StyleDef {
+            component_name: "Row1".into(),
+            parts: vec![],
+        };
+        let l = layout(
+            "Row1",
+            node_with(
+                "Row",
+                vec![],
+                vec![if_node(
+                    LayoutPropValue::SlotRef("shown".into()),
+                    vec![text_node("A very long piece of cell text")],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &style).expect("emit").output;
+        assert!(
+            out.contains("Flexible(child: (_mosaicTruthy(shown)) ?"),
+            "a single-Text conditional must be able to give width back:\n{out}"
+        );
+        // The absent else is already zero-width, so it neither needs nor is
+        // harmed by the wrap -- but it must still be the wrapped ternary's
+        // else, not a second flex child competing for the same space.
+        assert_eq!(out.matches("Flexible(").count(), 1, "got:\n{out}");
+    }
+
+    /// The other direction: a branch that cannot shrink is left alone.
+    /// Being wrong here would hand a fixed-size widget a loose constraint
+    /// it never asked for.
+    #[test]
+    fn single_icon_if_as_direct_row_child_does_not_emit_flexible() {
+        let m = component(
+            "Row2",
+            vec![slot("shown", SlotType::Bool, true)],
+            vec![],
+        );
+        let style = StyleDef {
+            component_name: "Row2".into(),
+            parts: vec![],
+        };
+        let l = layout(
+            "Row2",
+            node_with(
+                "Row",
+                vec![],
+                vec![if_node(
+                    LayoutPropValue::SlotRef("shown".into()),
+                    vec![LayoutNode {
+                        tag: "Icon".into(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "glyph".into(),
+                            value: LayoutPropValue::String("check".into()),
+                        }],
+                        children: vec![],
+                    }],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &style).expect("emit").output;
+        assert!(
+            !out.contains("Flexible("),
+            "a fixed-size branch must not be wrapped:\n{out}"
         );
     }
 
