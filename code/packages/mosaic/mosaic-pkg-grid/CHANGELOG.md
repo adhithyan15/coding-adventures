@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+### Fixed — `Cell` was invoked unqualified, and seven backends could not emit the package (#14861)
+
+`Grid.mll:140` and `RowHeaderGrid.mll:47` invoked `Cell ( … )` bare rather than
+as `pkg::mosaic-pkg-grid::Cell ( … )`. Package-level emit does not resolve a
+bare sibling, so the tag fell through to each emitter's unknown-primitive path:
+
+| before | after |
+| --- | --- |
+| compose, html, react, swiftui, qt, xaml, webcomponent — hard error | all eight emit |
+| flutter — "succeeded" by emitting a `DataTable` whose every cell was `SizedBox.shrink()` | real cells |
+
+This is the only package in the repo that invoked a sibling bare, and no
+package qualifies one — so there was no convention either way, and the
+resolver accepted the qualified form all along.
+
+### Fixed — TaskApp's Sheet cells were losing their styles
+
+Consequence of the same bug, and the reason it mattered beyond package emit.
+TaskApp embeds `Grid`, and its Sheet cells were emitted **without**:
+
+- `.background(…)` — the selected (`#264F78`) and editing (`#1F4F3F`)
+  highlights, and the base cell colour
+- `.padding(4.dp)`
+- the cell text colour, both in the editor and the display cell
+
+So the Sheet had no visible selection or editing state at all. The reference
+resolved structurally — a `Text` rendered — while `Cell.dark.msl`'s part
+styles were dropped.
+
+VisiCalc's emitted output is unchanged; it reaches `Cell` through
+`RowHeaderGrid`, whose `Box [data-cell]` carries the styling.
+
+
 ### Fixed — the corner and row-header cells had no width (#14829)
 
 `row-corner` and `row-heading` were bare `Text` leaves. Both parts already
