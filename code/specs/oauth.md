@@ -1,15 +1,16 @@
 # OAuth
 
 **Status:** Phase 2 provider-neutral broker boundary implemented —
-installed-app Authorization Code + PKCE, RFC 8628 device-flow initiation,
+installed-app Authorization Code + PKCE, RFC 8628 device-flow initiation and
+caller-driven polling classification,
 token/error codecs, refresh rotation, revocation request preparation, RFC 8414
 metadata validation, and an audited
 literal-loopback callback host plus storage-agnostic audit-before-disclosure
 credential custody now compose through data-driven provider registration,
 expiry policy, injected transport, and compare-and-swap refresh orchestration;
 the custody contract has a bounded zeroizing encrypted-store adapter over any
-`vault-sealed-store` backend; concrete transport, device polling, and provider
-data remain prioritized below.
+`vault-sealed-store` backend; concrete transport, device-flow orchestration,
+and provider data remain prioritized below.
 
 ## Overview
 
@@ -158,14 +159,16 @@ The delivery order is:
    `none` is omitted, while public `ProviderConfig` derivation continues to
    require an explicit `none`. Public native clients remain `none` + PKCE.
 7. **Device Authorization Grant:** metadata-bound RFC 8628 public-client
-   initiation is shipped: exact device endpoint, grant, and `none`
-   authentication capability checks; bounded zeroizing response ownership;
-   strict HTTPS verification URIs and bounded lifetime/interval values; and
-   audited device-code poll request preparation. The device code remains inside
-   an opaque provider/client/token-endpoint/trace-bound session and each
-   transient wire body is zeroizing. Poll response classification and the
-   caller-driven `authorization_pending` / `slow_down` state machine remain the
-   next slice; it will add no internal sleep, clock, or network authority.
+   initiation and polling classification are shipped: exact device endpoint,
+   grant, and `none` authentication capability checks; bounded zeroizing
+   response ownership; strict HTTPS verification URIs and bounded
+   lifetime/interval values; audited device-code poll preparation; exact
+   `authorization_pending`, `slow_down`, denial, expiry, and token-success
+   transitions; and persistent five-second slow-down increases. The device code
+   remains inside an opaque provider/client/token-endpoint/trace-bound session,
+   each sent request becomes one response context, and each transient wire body
+   is zeroizing. The caller still owns elapsed-time expiry checks, waiting, and
+   orchestration; this crate adds no sleep, clock, storage, or network authority.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.
@@ -672,21 +675,19 @@ avoid refresh storms).
 3. Broker returns AuthorizeBegin::Device with these.
 4. Orchestrator displays user_code + verification_uri to user
    (e.g., "Go to https://google.com/device and enter ABCD-EFGH").
-5. Orchestrator calls broker.complete_device(...) with a progress
-   callback.
-6. Broker enters poll loop:
-   loop:
-     sleep(interval)
-     POST token_endpoint with
+5. The orchestrator waits at least the session's current interval, checks
+   expiry with its own clock, and asks the broker to prepare one audited poll.
+6. The caller-owned transport POSTs the zeroizing form to `token_endpoint`:
        grant_type=urn:ietf:params:oauth:grant-type:device_code,
        device_code=<code>, client_id=<id>.
-     Parse response:
-       - "error": "authorization_pending" → continue
-       - "error": "slow_down" → increase interval
+7. The audited response classifier returns one exact transition:
+       - "error": "authorization_pending" → retain current interval
+       - "error": "slow_down" → increase every later interval by 5 seconds
        - "error": "expired_token" → return ExpiredToken
        - "error": "access_denied" → return Denied
        - tokens present → return Authorized
-7. On Authorized, broker stores tokens identically to auth-code.
+8. Only Pending and SlowDown return the opaque continuation session. On
+   Authorized, the broker stores tokens identically to auth-code.
 ```
 
 ### Refresh Detail

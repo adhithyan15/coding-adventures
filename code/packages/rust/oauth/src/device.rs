@@ -1,11 +1,13 @@
-//! RFC 8628 device authorization initiation primitives.
+//! RFC 8628 device authorization and caller-driven polling primitives.
 
 use super::{
-    audited, json_nesting_within_limit, render_secret_form, valid_uri_text, validate_client_id,
-    validate_scopes, Audited, AuthorizationServerMetadata, ConfigurationViolation,
-    OAuthAuditAction, OAuthError, OAuthTraceId, ProviderId, MAX_ENDPOINT_BYTES, MAX_JSON_NESTING,
+    audited, audited_with_outcome, json_nesting_within_limit, render_secret_form, valid_uri_text,
+    validate_client_id, validate_scopes, Audited, AuthorizationServerMetadata,
+    ConfigurationViolation, OAuthAuditAction, OAuthAuditOutcome, OAuthError, OAuthTraceId,
+    ProviderId, ProviderTokenError, TokenResponse, TokenResponseContext, TokenResponseFormat,
+    TokenResponseViolation, MAX_ENDPOINT_BYTES, MAX_JSON_NESTING,
 };
-use crate::token::zeroize_json;
+use crate::token::{decode_token_response_inner, zeroize_json};
 use coding_adventures_bounded_json::{JsonNumber, JsonValue};
 use coding_adventures_zeroize::Zeroizing;
 use std::collections::BTreeSet;
@@ -14,6 +16,7 @@ use url_parser::Url;
 
 const DEVICE_GRANT_TYPE: &str = "urn:ietf:params:oauth:grant-type:device_code";
 const DEFAULT_POLL_INTERVAL_SECONDS: u64 = 5;
+const SLOW_DOWN_INCREMENT_SECONDS: u64 = 5;
 const MAX_DEVICE_RESPONSE_BYTES: usize = 128 * 1024;
 const MAX_DEVICE_RESPONSE_FIELDS: usize = 32;
 const MAX_DEVICE_CODE_BYTES: usize = 4 * 1024;
@@ -282,32 +285,29 @@ impl Debug for DevicePollingSession {
 
 /// One RFC 8628 token request prepared for an externally scheduled poll.
 pub struct DeviceTokenPollRequest {
-    provider: ProviderId,
-    trace: OAuthTraceId,
-    client_id: String,
-    endpoint: String,
+    session: DevicePollingSession,
     form_body: Zeroizing<String>,
 }
 
 impl DeviceTokenPollRequest {
     /// Return the provider identifier for transport authorization and audit.
     pub fn provider(&self) -> &ProviderId {
-        &self.provider
+        &self.session.provider
     }
 
     /// Return the trace shared with device authorization initiation.
     pub const fn trace(&self) -> OAuthTraceId {
-        self.trace
+        self.session.trace
     }
 
     /// Return the exact client identity bound to this poll.
     pub fn client_id(&self) -> &str {
-        &self.client_id
+        &self.session.client_id
     }
 
     /// Borrow the metadata-validated token endpoint.
     pub fn endpoint(&self) -> &str {
-        &self.endpoint
+        &self.session.token_endpoint
     }
 
     /// Borrow the secret-bearing form body only after durable audit release.
@@ -319,18 +319,101 @@ impl DeviceTokenPollRequest {
     pub const fn content_type(&self) -> &'static str {
         "application/x-www-form-urlencoded"
     }
+
+    /// Consume the sent request into the only context accepted by the response classifier.
+    pub fn response_context(self) -> DeviceTokenPollResponseContext {
+        DeviceTokenPollResponseContext {
+            session: self.session,
+        }
+    }
+
+    /// Recover the opaque session when transport fails before a response exists.
+    ///
+    /// The caller still owns retry scheduling and must prepare and audit a new
+    /// request before another transport attempt.
+    pub fn into_session(self) -> DevicePollingSession {
+        self.session
+    }
 }
 
 impl Debug for DeviceTokenPollRequest {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("DeviceTokenPollRequest")
-            .field("provider", &self.provider)
-            .field("trace", &self.trace)
+            .field("provider", &self.session.provider)
+            .field("trace", &self.session.trace)
             .field("client_id", &"<redacted>")
             .field("endpoint", &"<redacted>")
             .field("form_body", &"<redacted>")
             .finish()
+    }
+}
+
+/// One-use response binding created from the exact poll request sent on the wire.
+pub struct DeviceTokenPollResponseContext {
+    session: DevicePollingSession,
+}
+
+impl DeviceTokenPollResponseContext {
+    /// Return the provider expected to own the response.
+    pub fn provider(&self) -> &ProviderId {
+        &self.session.provider
+    }
+
+    /// Return the trace shared by initiation, poll preparation, and classification.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.session.trace
+    }
+}
+
+impl Debug for DeviceTokenPollResponseContext {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("DeviceTokenPollResponseContext")
+            .field("provider", &self.session.provider)
+            .field("trace", &self.session.trace)
+            .field("client_id", &"<redacted>")
+            .field("token_endpoint", &"<redacted>")
+            .field("device_code", &"<redacted>")
+            .finish()
+    }
+}
+
+/// Audited RFC 8628 transition produced from one token-endpoint response.
+pub enum DevicePollResult {
+    /// Authorization remains incomplete; retry no sooner than the retained interval.
+    Pending(DevicePollingSession),
+    /// The provider requested an additional five-second delay for all later polls.
+    SlowDown(DevicePollingSession),
+    /// Authorization completed and yielded a normal audited token response.
+    Authorized(TokenResponse),
+    /// The resource owner denied the request.
+    Denied,
+    /// The device code expired at the authorization server.
+    ExpiredToken,
+}
+
+impl DevicePollResult {
+    /// Return the minimum caller-owned delay before the next poll, when applicable.
+    pub const fn retry_after_seconds(&self) -> Option<u64> {
+        match self {
+            Self::Pending(session) | Self::SlowDown(session) => Some(session.interval_seconds()),
+            Self::Authorized(_) | Self::Denied | Self::ExpiredToken => None,
+        }
+    }
+}
+
+impl Debug for DevicePollResult {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Pending(session) => formatter.debug_tuple("Pending").field(session).finish(),
+            Self::SlowDown(session) => formatter.debug_tuple("SlowDown").field(session).finish(),
+            Self::Authorized(response) => {
+                formatter.debug_tuple("Authorized").field(response).finish()
+            }
+            Self::Denied => formatter.write_str("Denied"),
+            Self::ExpiredToken => formatter.write_str("ExpiredToken"),
+        }
     }
 }
 
@@ -435,26 +518,82 @@ pub fn decode_device_authorization_response(
 ///
 /// The caller owns scheduling and must wait at least
 /// [`DevicePollingSession::interval_seconds`] before each call. The opaque
-/// session retains the original device code; only the returned zeroizing form
-/// body contains the transient wire copy.
-pub fn prepare_device_token_poll(
-    session: &DevicePollingSession,
-) -> Audited<DeviceTokenPollRequest> {
+/// session moves into the request so a sent request can become exactly one
+/// response context. Only the zeroizing form body contains the transient wire
+/// copy of the device code.
+pub fn prepare_device_token_poll(session: DevicePollingSession) -> Audited<DeviceTokenPollRequest> {
+    let provider = session.provider.clone();
+    let trace = session.trace;
     let result = Ok(DeviceTokenPollRequest {
-        provider: session.provider.clone(),
-        trace: session.trace,
-        client_id: session.client_id.clone(),
-        endpoint: session.token_endpoint.clone(),
         form_body: render_secret_form([
             ("grant_type", DEVICE_GRANT_TYPE),
             ("device_code", session.device_code.as_str()),
             ("client_id", session.client_id.as_str()),
         ]),
+        session,
     });
     audited(
-        session.provider.clone(),
-        session.trace,
+        provider,
+        trace,
         OAuthAuditAction::DeviceTokenPollPrepare,
+        result,
+    )
+}
+
+/// Decode and classify one RFC 8628 token response without sleeping or reading a clock.
+///
+/// `Pending` retains the current minimum interval. `SlowDown` increases it by
+/// exactly five seconds for every later request. Only those continuation
+/// variants return the opaque device code to the caller.
+pub fn decode_device_token_poll_response(
+    context: DeviceTokenPollResponseContext,
+    status: u16,
+    format: TokenResponseFormat,
+    body: Zeroizing<Vec<u8>>,
+) -> Audited<DevicePollResult> {
+    let provider = context.session.provider.clone();
+    let trace = context.session.trace;
+    let token_context = TokenResponseContext::device_code(provider.clone(), trace);
+    let result = (|| match decode_token_response_inner(&token_context, status, format, &body) {
+        Ok(response) => Ok(DevicePollResult::Authorized(response)),
+        Err(OAuthError::TokenEndpoint(error)) if status == 400 => match error {
+            ProviderTokenError::AuthorizationPending => {
+                Ok(DevicePollResult::Pending(context.session))
+            }
+            ProviderTokenError::SlowDown => {
+                let mut session = context.session;
+                session.interval_seconds = session
+                    .interval_seconds
+                    .checked_add(SLOW_DOWN_INCREMENT_SECONDS)
+                    .ok_or(OAuthError::InvalidConfiguration(
+                        ConfigurationViolation::DeviceAuthorization,
+                    ))?;
+                Ok(DevicePollResult::SlowDown(session))
+            }
+            ProviderTokenError::AccessDenied => Ok(DevicePollResult::Denied),
+            ProviderTokenError::ExpiredToken => Ok(DevicePollResult::ExpiredToken),
+            other => Err(OAuthError::TokenEndpoint(other)),
+        },
+        Err(OAuthError::TokenEndpoint(
+            ProviderTokenError::AuthorizationPending
+            | ProviderTokenError::SlowDown
+            | ProviderTokenError::AccessDenied
+            | ProviderTokenError::ExpiredToken,
+        )) => Err(OAuthError::InvalidTokenResponse(
+            TokenResponseViolation::Status,
+        )),
+        Err(error) => Err(error),
+    })();
+    let outcome = match result.as_ref() {
+        Ok(DevicePollResult::Denied) => OAuthAuditOutcome::Denied,
+        Ok(_) => OAuthAuditOutcome::Succeeded,
+        Err(error) => OAuthAuditOutcome::Failed(error.failure_class()),
+    };
+    audited_with_outcome(
+        provider,
+        trace,
+        OAuthAuditAction::DeviceTokenPollResponseClassify,
+        outcome,
         result,
     )
 }
@@ -743,6 +882,25 @@ mod tests {
         .unwrap()
     }
 
+    fn polling_session(interval_seconds: u64) -> DevicePollingSession {
+        DevicePollingSession {
+            provider: ProviderId::new("fixture").unwrap(),
+            trace: trace(),
+            client_id: "public/client".to_owned(),
+            token_endpoint: "https://login.example/token".to_owned(),
+            device_code: Zeroizing::new("device-secret".to_owned()),
+            expires_in_seconds: 900,
+            interval_seconds,
+        }
+    }
+
+    fn poll_context(session: DevicePollingSession) -> DeviceTokenPollResponseContext {
+        prepare_device_token_poll(session)
+            .publish_then_release(&mut Sink::default())
+            .unwrap()
+            .response_context()
+    }
+
     #[test]
     fn metadata_capabilities_bind_request_before_transport_release() {
         let audited =
@@ -804,7 +962,8 @@ mod tests {
         assert!(!debug.contains("device-secret"));
         assert!(!debug.contains("ABCD-EFGH"));
 
-        let poll = prepare_device_token_poll(authorization.polling());
+        let (_, session) = authorization.into_parts();
+        let poll = prepare_device_token_poll(session);
         assert_eq!(
             poll.audit().action(),
             OAuthAuditAction::DeviceTokenPollPrepare
@@ -819,6 +978,166 @@ mod tests {
             "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Adevice_code&device_code=device-secret&client_id=public%2Fclient"
         );
         assert!(!format!("{poll:?}").contains("device-secret"));
+    }
+
+    #[test]
+    fn poll_sequence_is_classified_with_caller_owned_scheduling() {
+        let pending = decode_device_token_poll_response(
+            poll_context(polling_session(7)),
+            400,
+            TokenResponseFormat::Json,
+            Zeroizing::new(br#"{"error":"authorization_pending"}"#.to_vec()),
+        );
+        assert_eq!(
+            pending.audit().action(),
+            OAuthAuditAction::DeviceTokenPollResponseClassify
+        );
+        assert_eq!(pending.audit().provider().as_str(), "fixture");
+        assert_eq!(pending.audit().trace(), trace());
+        assert_eq!(pending.audit().outcome(), OAuthAuditOutcome::Succeeded);
+        let pending = pending.publish_then_release(&mut Sink::default()).unwrap();
+        assert_eq!(pending.retry_after_seconds(), Some(7));
+        let DevicePollResult::Pending(session) = pending else {
+            panic!("expected pending continuation");
+        };
+
+        let slow_down = decode_device_token_poll_response(
+            poll_context(session),
+            400,
+            TokenResponseFormat::Json,
+            Zeroizing::new(br#"{"error":"slow_down"}"#.to_vec()),
+        )
+        .publish_then_release(&mut Sink::default())
+        .unwrap();
+        assert_eq!(slow_down.retry_after_seconds(), Some(12));
+        let DevicePollResult::SlowDown(session) = slow_down else {
+            panic!("expected slow-down continuation");
+        };
+
+        let pending = decode_device_token_poll_response(
+            poll_context(session),
+            400,
+            TokenResponseFormat::Json,
+            Zeroizing::new(br#"{"error":"authorization_pending"}"#.to_vec()),
+        )
+        .publish_then_release(&mut Sink::default())
+        .unwrap();
+        assert_eq!(pending.retry_after_seconds(), Some(12));
+        let DevicePollResult::Pending(session) = pending else {
+            panic!("expected pending continuation");
+        };
+
+        let slow_down = decode_device_token_poll_response(
+            poll_context(session),
+            400,
+            TokenResponseFormat::Json,
+            Zeroizing::new(br#"{"error":"slow_down"}"#.to_vec()),
+        )
+        .publish_then_release(&mut Sink::default())
+        .unwrap();
+        assert_eq!(slow_down.retry_after_seconds(), Some(17));
+        let DevicePollResult::SlowDown(session) = slow_down else {
+            panic!("expected cumulative slow-down continuation");
+        };
+
+        let authorized = decode_device_token_poll_response(
+            poll_context(session),
+            200,
+            TokenResponseFormat::Json,
+            Zeroizing::new(
+                br#"{"access_token":"access-secret","token_type":"Bearer","expires_in":3600,"refresh_token":"refresh-secret"}"#
+                    .to_vec(),
+            ),
+        )
+        .publish_then_release(&mut Sink::default())
+        .unwrap();
+        assert_eq!(authorized.retry_after_seconds(), None);
+        let DevicePollResult::Authorized(response) = authorized else {
+            panic!("expected authorized response");
+        };
+        assert_eq!(response.provider().as_str(), "fixture");
+        assert_eq!(response.trace(), trace());
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut Sink::default())
+            .unwrap();
+        assert_eq!(credentials.access_token(), "access-secret");
+    }
+
+    #[test]
+    fn terminal_device_errors_are_closed_and_audited() {
+        let denied = decode_device_token_poll_response(
+            poll_context(polling_session(5)),
+            400,
+            TokenResponseFormat::Json,
+            Zeroizing::new(
+                br#"{"error":"access_denied","error_description":"attacker text"}"#.to_vec(),
+            ),
+        );
+        assert_eq!(denied.audit().outcome(), OAuthAuditOutcome::Denied);
+        assert!(matches!(
+            denied.publish_then_release(&mut Sink::default()).unwrap(),
+            DevicePollResult::Denied
+        ));
+
+        let expired = decode_device_token_poll_response(
+            poll_context(polling_session(5)),
+            400,
+            TokenResponseFormat::FormEncoded,
+            Zeroizing::new(b"error=expired_token&error_description=attacker+text".to_vec()),
+        );
+        assert_eq!(expired.audit().outcome(), OAuthAuditOutcome::Succeeded);
+        assert!(matches!(
+            expired.publish_then_release(&mut Sink::default()).unwrap(),
+            DevicePollResult::ExpiredToken
+        ));
+    }
+
+    #[test]
+    fn poll_classifier_rejects_wrong_status_and_preserves_other_errors() {
+        assert_eq!(
+            decode_device_token_poll_response(
+                poll_context(polling_session(5)),
+                401,
+                TokenResponseFormat::Json,
+                Zeroizing::new(br#"{"error":"authorization_pending"}"#.to_vec()),
+            )
+            .publish_then_release(&mut Sink::default())
+            .unwrap_err(),
+            OAuthError::InvalidTokenResponse(TokenResponseViolation::Status)
+        );
+        assert_eq!(
+            decode_device_token_poll_response(
+                poll_context(polling_session(5)),
+                400,
+                TokenResponseFormat::Json,
+                Zeroizing::new(br#"{"error":"invalid_client"}"#.to_vec()),
+            )
+            .publish_then_release(&mut Sink::default())
+            .unwrap_err(),
+            OAuthError::TokenEndpoint(ProviderTokenError::InvalidClient)
+        );
+    }
+
+    #[test]
+    fn poll_request_context_and_results_redact_all_sensitive_values() {
+        let request = prepare_device_token_poll(polling_session(5))
+            .publish_then_release(&mut Sink::default())
+            .unwrap();
+        assert!(!format!("{request:?}").contains("device-secret"));
+        let context = request.response_context();
+        assert_eq!(context.provider().as_str(), "fixture");
+        assert_eq!(context.trace(), trace());
+        assert!(!format!("{context:?}").contains("device-secret"));
+        let result = decode_device_token_poll_response(
+            context,
+            400,
+            TokenResponseFormat::Json,
+            Zeroizing::new(br#"{"error":"authorization_pending"}"#.to_vec()),
+        )
+        .publish_then_release(&mut Sink::default())
+        .unwrap();
+        assert!(!format!("{result:?}").contains("device-secret"));
     }
 
     #[test]
@@ -980,10 +1299,22 @@ mod tests {
         )
         .publish_then_release(&mut Sink::default())
         .unwrap();
+        let (_, session) = authorization.into_parts();
         assert_eq!(
-            prepare_device_token_poll(authorization.polling())
+            prepare_device_token_poll(session)
                 .publish_then_release(&mut failing)
                 .unwrap_err(),
+            OAuthError::Audit
+        );
+
+        let response = decode_device_token_poll_response(
+            poll_context(polling_session(5)),
+            400,
+            TokenResponseFormat::Json,
+            Zeroizing::new(br#"{"error":"authorization_pending"}"#.to_vec()),
+        );
+        assert_eq!(
+            response.publish_then_release(&mut failing).unwrap_err(),
             OAuthError::Audit
         );
     }

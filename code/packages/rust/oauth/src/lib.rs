@@ -455,6 +455,8 @@ pub enum OAuthAuditAction {
     DeviceAuthorizationResponseDecode,
     /// An RFC 8628 device-code token request was prepared for caller-driven polling.
     DeviceTokenPollPrepare,
+    /// An RFC 8628 device-code token response was decoded and classified.
+    DeviceTokenPollResponseClassify,
     /// An authorization URL and transaction were prepared.
     AuthorizationBegin,
     /// An authorization callback was validated and an exchange was prepared.
@@ -724,6 +726,16 @@ fn audited<T>(
         Err(OAuthError::ProviderDenied) => OAuthAuditOutcome::Denied,
         Err(error) => OAuthAuditOutcome::Failed(error.failure_class()),
     };
+    audited_with_outcome(provider, trace, action, outcome, result)
+}
+
+fn audited_with_outcome<T>(
+    provider: ProviderId,
+    trace: OAuthTraceId,
+    action: OAuthAuditAction,
+    outcome: OAuthAuditOutcome,
+    result: Result<T, OAuthError>,
+) -> Audited<T> {
     Audited {
         audit: OAuthAuditEvent {
             provider,

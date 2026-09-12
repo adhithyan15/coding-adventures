@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added audited RFC 8628 device-token response classification with one-use
+  request/response session ownership, exact HTTP 400 polling-error handling,
+  persistent five-second `slow_down` increases, normal token-response reuse,
+  and caller-owned retry timing without sleep, clock, storage, or network
+  authority.
 - Added metadata-bound RFC 8628 public-client device authorization initiation:
   exact device endpoint, grant, and `none` authentication capability checks;
   audited zeroizing request and response ownership; strict bounded verification
