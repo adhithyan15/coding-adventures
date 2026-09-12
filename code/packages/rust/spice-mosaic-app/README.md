@@ -17,15 +17,17 @@ selected-component value inspector. Non-ground values are validated as one
 SPICE token before synchronization; orthogonal wire/terminal geometry retains
 endpoint-only netlist semantics.
 
-The selected analysis card is also canonical schematic state. DC sweeps choose
+The ordered analysis plan is also canonical schematic state. DC sweeps choose
 from independent voltage/current symbols, and DC, AC, and transient cards each
-expose their runnable Berkeley parameters before synchronization. Those values
+expose their runnable Berkeley parameters before synchronization. Cards lower
+in source order, and old single-card snapshots load as a one-card plan. Those values
 remain one-token inputs and lower directly to `.dc`, `.ac dec`, or `.tran` in
 the same deck consumed by the parser and engine.
 
 Hosts load, place, wire, select, edit component values, route, and synchronize that document through
 the Mosaic app event contract. They can also select a DC sweep source and edit
-the active analysis card. Synchronization replaces the text deck with the
+the selected analysis card. Hosts can add, select, and remove cards while one
+card remains required. Synchronization replaces the text deck with the
 canonical emitted deck and refreshes its runnable Berkeley analysis plan.
 
 ```sh
