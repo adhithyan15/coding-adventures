@@ -1,0 +1,15 @@
+{
+  "id": "ZH-EXT-063-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Chinese character cold, find a word boundary that nothing marks, and follow a short passage without translating character by character.",
+  "prerequisites": [
+    "ZH-EXT-062-XIHUAN"
+  ],
+  "lessons": [
+    "ZH-C29-characters",
+    "ZH-C29-words",
+    "ZH-C29-diyi-ke"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "language": "chinese",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:19f152c44ea70610",
+  "lessonIds": [
+    "ZH-C29-characters",
+    "ZH-C29-words",
+    "ZH-C29-diyi-ke"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "chinese/narration/ch29.txt",
+  "json": "chinese/narration/ch29.json",
+  "textHash": "fnv1a64:fec80951c28767ff",
+  "jsonHash": "fnv1a64:50823654e159511b",
+  "findings": []
+}

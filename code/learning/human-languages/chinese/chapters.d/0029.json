@@ -1,0 +1,16 @@
+{
+  "chapter": 29,
+  "title": "Reading — Characters, Words, and a First Passage",
+  "label": "ch:zh-diyi-ke",
+  "canDo": "I can read a Chinese character cold, find where a word ends when nothing marks it, and hold a whole passage without translating it character by character.",
+  "payoff": {
+    "lesson": "ZH-C29-diyi-ke",
+    "kind": "four-skill-function-map",
+    "summary": "Thirty-four characters in a row with no new character in them, including the first line in the book whose meaning depends on the lines before it.",
+    "assesses": [
+      "ZH-SKILL-CONNECTED-READING",
+      "ZH-SKILL-READ-WORDS",
+      "ZH-SKILL-READ-CHARACTERS"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "language": "chinese",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:f385099fc2cdd778",
+  "lessonIds": [
+    "ZH-C29-characters",
+    "ZH-C29-words",
+    "ZH-C29-diyi-ke"
+  ],
+  "tex": "chinese/book/chapters/ch29-reading-characters-words-and-a-passage.tex"
+}
