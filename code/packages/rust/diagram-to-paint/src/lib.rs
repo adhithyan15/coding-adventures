@@ -1059,23 +1059,6 @@ fn text_node_no_wrap(
     node
 }
 
-fn text_node_no_wrap_aligned(
-    value: &str,
-    x: f64,
-    y: f64,
-    width: f64,
-    height: f64,
-    font: FontSpec,
-    color: Color,
-    text_align: TextAlign,
-) -> PositionedNode {
-    let mut node = text_node_no_wrap(value, x, y, width, height, font, color);
-    if let Some(Content::Text(text)) = &mut node.content {
-        text.text_align = text_align;
-    }
-    node
-}
-
 // ============================================================================
 // Public API
 // ============================================================================
@@ -1375,7 +1358,7 @@ where
             GeoTextAlign::Center => TextAlign::Center,
             GeoTextAlign::Right => TextAlign::End,
         };
-        text_children.push(text_node_no_wrap_aligned(
+        let mut text_node = text_node_no_wrap(
             &label.text,
             label.x,
             label.y,
@@ -1383,8 +1366,11 @@ where
             label.height,
             bit_font.clone(),
             Color { r: 15, g: 23, b: 42, a: 255 },
-            align,
-        ));
+        );
+        if let Some(Content::Text(text)) = &mut text_node.content {
+            text.text_align = align;
+        }
+        text_children.push(text_node);
     }
 
     let text_root = PositionedNode {
