@@ -13,6 +13,18 @@ style SpiceWorkbench {
   part schematic-analysis-controls { gap : 6 ; }
   part schematic-analysis-control { background : "#362d4e" ; color : "#ddd6fe" ; border-width : 1 ; border-color : "#7c5cbf" ; border-radius : 3 ; padding : 6 ; }
   part selected-schematic-analysis { color : "#c4b5fd" ; font-weight : bold ; }
+  part schematic-analysis-configuration { gap : 4 ; }
+  part schematic-analysis-configuration-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
+  part schematic-analysis-source-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-analysis-source-options { gap : 6 ; }
+  part schematic-analysis-source-option { background : "#312e81" ; color : "#ddd6fe" ; border-width : 1 ; border-color : "#818cf8" ; border-radius : 3 ; padding : 6 ; }
+  part selected-schematic-analysis-source { color : "#c4b5fd" ; font-family : "monospace" ; }
+  part schematic-analysis-parameter-one-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-analysis-parameter-two-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-analysis-parameter-three-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-analysis-parameter-one-input { background : "#0d1117" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 6 ; font-family : "monospace" ; }
+  part schematic-analysis-parameter-two-input { background : "#0d1117" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 6 ; font-family : "monospace" ; }
+  part schematic-analysis-parameter-three-input { background : "#0d1117" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 6 ; font-family : "monospace" ; }
   part schematic-grid-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
   part schematic-grid { width : 360 ; min-height : 240 ; background : "#0d1117" ; border-width : 1 ; border-color : "#33465c" ; }
   part schematic-grid-line { border-color : "#263545" ; border-width : 1 ; }

@@ -18,12 +18,12 @@ use spice_netlist_parser::{inspect_netlist_json, parse_berkeley_app_deck, run_ne
 mod schematic;
 
 pub use schematic::{
-    SchematicAnalysis, SchematicComponent, SchematicComponentKind, SchematicDocument,
-    SchematicError, SchematicPoint, SchematicWire,
+    SchematicAnalysis, SchematicAnalysisSettings, SchematicComponent, SchematicComponentKind,
+    SchematicDocument, SchematicError, SchematicPoint, SchematicWire,
 };
 
 const SNAPSHOT_SCHEMA: &str = "spice-mosaic-app/state";
-const SNAPSHOT_VERSION: u32 = 2;
+const SNAPSHOT_VERSION: u32 = 3;
 const DEFAULT_DECK: &str = "* Berkeley SPICE Mosaic workbench\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\nC1 out 0 1u IC=0\n.options method=trap\n.op\n.dc V1 0 1 1\n.ac dec 1 1k 1k\n.tran 1m 3m\n.tf V(out) V1\n.save V(out)\n.end\n";
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -367,6 +367,50 @@ impl SpiceMosaicApp {
         let selected_schematic_component = self.selected_schematic_component();
         let schematic_value_disabled = selected_schematic_component
             .is_none_or(|component| component.kind == SchematicComponentKind::Ground);
+        let (
+            schematic_analysis_source_options,
+            selected_schematic_analysis_source_label,
+            schematic_analysis_parameter_labels,
+            schematic_analysis_parameter_values,
+            schematic_analysis_parameter_disabled,
+        ) = self
+            .schematic
+            .as_ref()
+            .map(|document| {
+                let labels = document.analysis_parameter_labels().map(str::to_owned);
+                let values = document.analysis_parameter_values().map(str::to_owned);
+                let source_options = if document.analysis == SchematicAnalysis::DcSweep {
+                    document
+                        .dc_sweep_source_references()
+                        .into_iter()
+                        .map(str::to_owned)
+                        .collect()
+                } else {
+                    Vec::new()
+                };
+                let selected_source = if document.analysis == SchematicAnalysis::DcSweep
+                    && source_options
+                        .iter()
+                        .any(|source| source == &document.analysis_settings.dc_source)
+                {
+                    document.analysis_settings.dc_source.clone()
+                } else if document.analysis == SchematicAnalysis::DcSweep {
+                    "Select a DC source".to_owned()
+                } else {
+                    "No DC source required".to_owned()
+                };
+                let disabled = labels.each_ref().map(|label| label.is_empty());
+                (source_options, selected_source, labels, values, disabled)
+            })
+            .unwrap_or_else(|| {
+                (
+                    Vec::new(),
+                    "Select a schematic analysis".to_owned(),
+                    [String::new(), String::new(), String::new()],
+                    [String::new(), String::new(), String::new()],
+                    [true, true, true],
+                )
+            });
         let selected_label = self
             .analyses
             .get(self.selected_analysis_row)
@@ -418,6 +462,19 @@ impl SpiceMosaicApp {
                 SchematicAnalysis::Transient.palette_label(),
             ],
             "selected-schematic-analysis-label": self.schematic.as_ref().map(|document| document.analysis.palette_label()).unwrap_or(SchematicAnalysis::default().palette_label()),
+            "schematic-analysis-configuration-label": "Analysis configuration",
+            "schematic-analysis-source-label": "DC sweep source",
+            "schematic-analysis-source-options": schematic_analysis_source_options,
+            "selected-schematic-analysis-source-label": selected_schematic_analysis_source_label,
+            "schematic-analysis-parameter-one-label": schematic_analysis_parameter_labels[0],
+            "schematic-analysis-parameter-one-value": schematic_analysis_parameter_values[0],
+            "schematic-analysis-parameter-one-disabled": schematic_analysis_parameter_disabled[0],
+            "schematic-analysis-parameter-two-label": schematic_analysis_parameter_labels[1],
+            "schematic-analysis-parameter-two-value": schematic_analysis_parameter_values[1],
+            "schematic-analysis-parameter-two-disabled": schematic_analysis_parameter_disabled[1],
+            "schematic-analysis-parameter-three-label": schematic_analysis_parameter_labels[2],
+            "schematic-analysis-parameter-three-value": schematic_analysis_parameter_values[2],
+            "schematic-analysis-parameter-three-disabled": schematic_analysis_parameter_disabled[2],
             "schematic-grid-label": "Grid routing",
             "schematic-grid-lines": Self::schematic_grid_lines(),
             "schematic-wire-segments": schematic_wire_segments,
@@ -600,6 +657,7 @@ impl MosaicApp for SpiceMosaicApp {
                     components: Vec::new(),
                     wires: Vec::new(),
                     analysis: SchematicAnalysis::default(),
+                    analysis_settings: SchematicAnalysisSettings::default(),
                 });
                 let reference = document
                     .place_palette_component(kind)
@@ -622,6 +680,7 @@ impl MosaicApp for SpiceMosaicApp {
                     components: Vec::new(),
                     wires: Vec::new(),
                     analysis: SchematicAnalysis::default(),
+                    analysis_settings: SchematicAnalysisSettings::default(),
                 });
                 document.analysis = analysis;
                 self.diagnostics = format!(
@@ -629,6 +688,43 @@ impl MosaicApp for SpiceMosaicApp {
                     analysis.palette_label()
                 );
                 self.mode = "Schematic";
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "selectSchematicAnalysisSource" => {
+                let reference = event.payload["reference"].as_str().ok_or_else(|| {
+                    invalid("selectSchematicAnalysisSource requires a source reference")
+                })?;
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("selectSchematicAnalysisSource requires a loaded schematic")
+                })?;
+                document
+                    .set_dc_sweep_source(reference)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.diagnostics = format!(
+                    "Selected {reference} as the canonical DC sweep source. Sync the netlist when ready."
+                );
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "schematicAnalysisParameterOneChange"
+            | "schematicAnalysisParameterTwoChange"
+            | "schematicAnalysisParameterThreeChange" => {
+                let value = event.payload["value"].as_str().ok_or_else(|| {
+                    invalid("schematic analysis parameter change requires text value")
+                })?;
+                let index = match event_name(&event.name).as_str() {
+                    "schematicAnalysisParameterOneChange" => 0,
+                    "schematicAnalysisParameterTwoChange" => 1,
+                    "schematicAnalysisParameterThreeChange" => 2,
+                    _ => unreachable!("the match arm lists every analysis parameter event"),
+                };
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("schematic analysis parameter change requires a loaded schematic")
+                })?;
+                document
+                    .set_analysis_parameter(index, value)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.diagnostics =
+                    "Updated the canonical analysis card. Sync the netlist when ready.".to_owned();
                 Ok(self.announced(self.diagnostics.clone()))
             }
             "schematicPlace" => {
@@ -921,6 +1017,84 @@ mod tests {
             synchronized.props["netlist-text"],
             "* Host RC\nR1 n1 n2 1k\nV1 n1 0 DC 5\n.op\n.end\n"
         );
+    }
+
+    #[test]
+    fn schematic_analysis_configuration_edits_the_canonical_sweep_card_before_sync() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let document = json!({
+            "title": "Configurable DC sweep",
+            "components": [
+                {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"I1","kind":"DcCurrent","value":"1m","terminals":[{"x":40,"y":20},{"x":40,"y":0}]},
+                {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":0,"y":20},{"x":40,"y":20}]},
+                {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+            ],
+            "wires": [{"start":{"x":40,"y":0},"end":{"x":0,"y":0}}]
+        });
+        dispatch(&mut app, "schematicLoad", json!({"document": document}));
+        let selected = dispatch(
+            &mut app,
+            "onSelectSchematicAnalysis",
+            json!({"analysis":"DC sweep"}),
+        );
+        assert_eq!(
+            selected.props["schematic-analysis-source-options"],
+            json!(["V1", "I1"])
+        );
+        assert_eq!(
+            selected.props["schematic-analysis-parameter-one-label"],
+            "Start"
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicAnalysisSource",
+            json!({"reference":"I1"}),
+        );
+        dispatch(
+            &mut app,
+            "onSchematicAnalysisParameterOneChange",
+            json!({"value":"-2"}),
+        );
+        dispatch(
+            &mut app,
+            "onSchematicAnalysisParameterTwoChange",
+            json!({"value":"3"}),
+        );
+        let configured = dispatch(
+            &mut app,
+            "onSchematicAnalysisParameterThreeChange",
+            json!({"value":"0.5"}),
+        );
+        assert_eq!(
+            configured.props["selected-schematic-analysis-source-label"],
+            "I1"
+        );
+        assert_eq!(
+            configured.props["schematic-analysis-parameter-three-value"],
+            "0.5"
+        );
+        let snapshot = app.snapshot().unwrap().unwrap();
+        assert_eq!(snapshot.version, 3);
+        let mut restored = SpiceMosaicApp::default();
+        let mut context = StartContext::new("en-US", Platform::Web);
+        context.restored_snapshot = Some(snapshot);
+        let restored_update = restored.start(context).unwrap();
+        assert_eq!(
+            restored_update.props["selected-schematic-analysis-source-label"],
+            "I1"
+        );
+        assert_eq!(
+            restored_update.props["schematic-analysis-parameter-one-value"],
+            "-2"
+        );
+        let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
+        assert!(synchronized.props["netlist-text"]
+            .as_str()
+            .unwrap()
+            .contains(".dc I1 -2 3 0.5"));
     }
 
     #[test]

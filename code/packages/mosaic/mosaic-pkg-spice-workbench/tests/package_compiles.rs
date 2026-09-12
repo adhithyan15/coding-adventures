@@ -54,6 +54,14 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .slots
         .iter()
+        .any(|slot| slot.name == "schematic-analysis-source-options"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "schematic-analysis-parameter-three-disabled"));
+    assert!(component
+        .slots
+        .iter()
         .any(|slot| slot.name == "schematic-value-disabled"));
     assert!(component.emits.iter().any(|emit| emit.name == "onRun"));
     assert!(component
@@ -75,6 +83,14 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .emits
         .iter()
+        .any(|emit| emit.name == "onSelectSchematicAnalysisSource"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onSchematicAnalysisParameterThreeChange"));
+    assert!(component
+        .emits
+        .iter()
         .any(|emit| emit.name == "onSchematicValueChange"));
 }
 
@@ -91,6 +107,8 @@ fn multiline_workbench_compiles_in_both_themes() {
     assert!(source("SpiceWorkbench.mll").contains("Path [ schematic-wire-segment ]"));
     assert!(source("SpiceWorkbench.mll").contains("Path [ schematic-terminal ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-control ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-source-option ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-analysis-parameter-one-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-value-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("segment[0]"));
     assert!(source("SpiceWorkbench.mll").contains("slot: diagnostic-rows"));
@@ -129,6 +147,8 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("data-on-click=\"onRun\""));
                 assert!(output.contains("data-on-click=\"onPlaceSchematicComponent\""));
                 assert!(output.contains("data-on-click=\"onSelectSchematicAnalysis\""));
+                assert!(output.contains("data-on-click=\"onSelectSchematicAnalysisSource\""));
+                assert!(output.contains("data-on-change=\"onSchematicAnalysisParameterOneChange\""));
                 assert!(output.contains("data-on-change=\"onSchematicValueChange\""));
             }
             Backend::React => {
@@ -138,6 +158,8 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("type: \"run\""));
                 assert!(output.contains("type: \"placeSchematicComponent\""));
                 assert!(output.contains("type: \"selectSchematicAnalysis\""));
+                assert!(output.contains("type: \"selectSchematicAnalysisSource\""));
+                assert!(output.contains("type: \"schematicAnalysisParameterOneChange\""));
                 assert!(output.contains("type: \"schematicValueChange\""));
             }
             _ => unreachable!("the test only builds HTML and React artifacts"),

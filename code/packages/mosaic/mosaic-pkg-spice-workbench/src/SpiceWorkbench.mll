@@ -43,6 +43,37 @@ layout SpiceWorkbench {
         }
       }
       Text [ selected-schematic-analysis ] ( content : slot: selected-schematic-analysis-label )
+      Column [ schematic-analysis-configuration ] {
+        Text [ schematic-analysis-configuration-label ] ( content : slot: schematic-analysis-configuration-label )
+        Text [ schematic-analysis-source-label ] ( content : slot: schematic-analysis-source-label )
+        Row [ schematic-analysis-source-options ] {
+          For ( each: slot: schematic-analysis-source-options , as: source , index: source-index ) {
+            HostButton [ schematic-analysis-source-option ] (
+              label : ( source ) ,
+              onClick : emit: onSelectSchematicAnalysisSource
+            )
+          }
+        }
+        Text [ selected-schematic-analysis-source ] ( content : slot: selected-schematic-analysis-source-label )
+        Text [ schematic-analysis-parameter-one-label ] ( content : slot: schematic-analysis-parameter-one-label )
+        HostInput [ schematic-analysis-parameter-one-input ] (
+          value : slot: schematic-analysis-parameter-one-value ,
+          disabled : slot: schematic-analysis-parameter-one-disabled ,
+          onChange : emit: onSchematicAnalysisParameterOneChange
+        )
+        Text [ schematic-analysis-parameter-two-label ] ( content : slot: schematic-analysis-parameter-two-label )
+        HostInput [ schematic-analysis-parameter-two-input ] (
+          value : slot: schematic-analysis-parameter-two-value ,
+          disabled : slot: schematic-analysis-parameter-two-disabled ,
+          onChange : emit: onSchematicAnalysisParameterTwoChange
+        )
+        Text [ schematic-analysis-parameter-three-label ] ( content : slot: schematic-analysis-parameter-three-label )
+        HostInput [ schematic-analysis-parameter-three-input ] (
+          value : slot: schematic-analysis-parameter-three-value ,
+          disabled : slot: schematic-analysis-parameter-three-disabled ,
+          onChange : emit: onSchematicAnalysisParameterThreeChange
+        )
+      }
       Text [ schematic-grid-label ] ( content : slot: schematic-grid-label )
       Stack [ schematic-grid ] {
         For ( each: slot: schematic-grid-lines , as: line , index: line-index ) {
