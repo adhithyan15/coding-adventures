@@ -270,8 +270,9 @@ impl Backend {
     /// handler to the generated app.
     ///
     /// Copying a handler's source into the project is backend-agnostic;
-    /// installing it is not. Only Qt and SwiftUI emit the call that reaches it
-    /// -- `qt_main_with_host_effects` and `swift_app_with_host_effects`.
+    /// installing it is not. Qt, SwiftUI and Compose emit the call that reaches
+    /// it -- `qt_main_with_host_effects`, `swift_app_with_host_effects` and
+    /// `compose_main_with_host_effects`. Flutter and XAML do not yet.
     ///
     /// Without this, a package declaring a handler for any other backend got
     /// the file copied, compiled and shipped with nothing ever calling it, and
@@ -285,14 +286,13 @@ impl Backend {
     /// the only version of "remember to update the supported set" that works.
     fn installs_host_effects(self) -> bool {
         match self {
-            Backend::Qt | Backend::SwiftUI => true,
+            Backend::Qt | Backend::SwiftUI | Backend::Compose => true,
             Backend::React
             | Backend::Electron
             | Backend::WebComponent
             | Backend::Html
             | Backend::Xaml
-            | Backend::Flutter
-            | Backend::Compose => false,
+            | Backend::Flutter => false,
         }
     }
 
@@ -2929,11 +2929,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             }
 
             let main_nested = backend_dir.join("src/main/kotlin/Main.kt");
-            write_file(
-                &main_nested,
-                build_compose_main_kt(component, &mosmodel_out.component.slots, require_runtime)
-                    .as_bytes(),
+            let main_kt = compose_main_with_host_effects(
+                &build_compose_main_kt(component, &mosmodel_out.component.slots, require_runtime),
+                host_effects,
             )?;
+            write_file(&main_nested, main_kt.as_bytes())?;
             written.push(main_nested);
 
             // A package shell is also the package's native compile boundary.
@@ -3534,6 +3534,102 @@ fn swift_app_with_host_effects(
         handler.install
     )
     .expect("write SwiftUI host-effect install");
+    out.push_str(&generated[line_end..]);
+    Ok(out)
+}
+
+/// Install a package's effect handler in the generated Compose entry point.
+///
+/// Compose needs no build-list half, like SwiftUI and unlike Qt. The emitted
+/// `build.gradle.kts` declares no `sourceSets`, so the Kotlin JVM plugin's
+/// convention applies and everything under `src/main/kotlin/` is compiled --
+/// which is where a `[host_effects]` target for this backend lands.
+///
+/// The call goes immediately after the host is loaded and before the `Window`
+/// that mounts the app, through a downcast: `MosaicComposeHost` is an interface
+/// that deliberately knows nothing about effects, and `effectHandler` lives on
+/// the concrete `MosaicRuntimeHost`. `as?` also covers the non-`native-complete`
+/// shape, where the host falls back to `MosaicComposeHostBridge` and there is
+/// nothing to install onto.
+fn compose_main_with_host_effects(
+    generated: &str,
+    host_effects: &mosaic_package_manifest::HostEffectsSection,
+) -> Result<String, BuildError> {
+    let Some(handler) = host_effects
+        .handlers
+        .iter()
+        .find(|handler| handler.backend == "compose")
+    else {
+        return Ok(generated.to_string());
+    };
+
+    // Kotlin has no `#include`, so a declared one would be silently dropped --
+    // which is the shape of failure this whole section exists to refuse.
+    if let Some(include) = handler.include.as_deref() {
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` declares `include = \"{include}\"` on the Compose \
+             handler `{}`, but Kotlin has no include directive and the field \
+             would be ignored. Remove it: everything under `src/main/kotlin/` \
+             is already compiled.",
+            handler.install
+        )));
+    }
+
+    // Line-anchored, as on the other backends -- defence in depth here rather
+    // than the load-bearing guard SwiftUI needs.
+    //
+    // The reason is POSITIONAL, and an earlier version of this comment gave a
+    // different one that does not hold. It said author text cannot begin a line
+    // because `escape_kotlin_string` turns a newline into `\n`. That is true of
+    // slot defaults, `OneOf` members and the window title -- but `component_name`
+    // and slot field names are interpolated RAW by
+    // `build_compose_root_invocation`, so the escaping is not what makes this
+    // safe. (Those two are constrained by grammar instead: `pascal_case_re` and
+    // the mosmodel NAME token admit no newline.)
+    //
+    // What actually carries the weight is that nothing author-controlled is
+    // emitted BEFORE the anchor. `build_compose_root_invocation`'s output lands
+    // in `MosaicApp`, which is emitted after `fun main()`; everything ahead of
+    // the anchor line is fixed scaffolding -- banner and imports. Since
+    // `find_anchored` scans forward and takes the first hit, the real anchor
+    // wins even if author text could start a line. That property is checkable,
+    // and a test pins it.
+    //
+    // SwiftUI is the opposite case: its author text sits ~270 lines AHEAD of
+    // the assignment being anchored on, so there the anchoring is the only
+    // thing between a slot default and the splice point.
+    const ANCHOR: &str = "val mosaicHost = remember {";
+    let Some(at) = line_anchored_find(generated, ANCHOR) else {
+        // Loud, for the same reason as SwiftUI. Gradle compiles everything
+        // under `src/main/kotlin/`, so an uninstalled handler still compiles,
+        // links and ships: there is no diagnostic until an `Await` effect goes
+        // unanswered at runtime and takes the session's persistence with it.
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` declares a Compose handler `{}`, but the generated \
+             entry point has no `{ANCHOR}` to install it after",
+            handler.install
+        )));
+    };
+
+    let line_start = generated[..at].rfind('\n').map_or(0, |index| index + 1);
+    let indent: String = generated[line_start..at].to_string();
+    let line_end = generated[at..]
+        .find('\n')
+        .map_or(generated.len(), |index| at + index + 1);
+
+    let mut out = String::with_capacity(generated.len() + 192);
+    out.push_str(&generated[..line_end]);
+    writeln!(
+        out,
+        "{indent}// Package-declared effect handler, from `[host_effects]`."
+    )
+    .expect("write Compose host-effect comment");
+    writeln!(
+        out,
+        "{indent}(mosaicHost as? MosaicRuntimeHost)?.let {{ {}(it) }}",
+        handler.install
+    )
+    .expect("write Compose host-effect install");
     out.push_str(&generated[line_end..]);
     Ok(out)
 }
@@ -7308,14 +7404,8 @@ layout AccessibleText {
             "fixture is not a table Compose recognises; the test would prove nothing"
         );
         assert!(
-            ignored_native_property(
-                Backend::Compose,
-                &cell,
-                &prop,
-                &HashSet::new(),
-                Some(&grid)
-            )
-            .is_none(),
+            ignored_native_property(Backend::Compose, &cell, &prop, &HashSet::new(), Some(&grid))
+                .is_none(),
             "Compose emits collectionItemInfo for this table's cells"
         );
 
@@ -7328,7 +7418,12 @@ layout AccessibleText {
 
         // The predicate is Compose-specific: the others are unchanged even
         // with the same recognised table.
-        for backend in [Backend::Flutter, Backend::Qt, Backend::SwiftUI, Backend::Xaml] {
+        for backend in [
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
             assert!(
                 ignored_native_property(backend, &cell, &prop, &HashSet::new(), Some(&grid))
                     .is_some(),
@@ -12254,7 +12349,10 @@ version = "1"
     /// was copied, compiled, linked and shipped with nothing calling it.
     #[test]
     fn a_handler_for_a_backend_that_cannot_install_one_is_refused() {
-        for backend in [Backend::Compose, Backend::Flutter, Backend::Xaml] {
+        // Compose used to be in this list. It gained an emitter, the
+        // classification flipped, and the tripwire above sent me back here --
+        // which is exactly what an exhaustive match buys over a list.
+        for backend in [Backend::Flutter, Backend::Xaml, Backend::React] {
             let root = scratch();
             fs::create_dir_all(root.join("host/qt")).expect("create the source directory");
             fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
@@ -12322,20 +12420,20 @@ version = "1"
     /// `qt` alone while shipping Compose, Flutter and XAML host ASSETS -- so
     /// this is not a synthetic arrangement, it is the one that exists.
     #[test]
-    fn a_qt_only_handler_does_not_refuse_a_compose_build() {
+    fn a_qt_only_handler_does_not_refuse_a_flutter_build() {
         let root = scratch();
         fs::create_dir_all(root.join("host/qt")).expect("create the source directory");
         fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
 
         let written = install_host_effects(
             &manifest_targeting("probe_effects.h"),
-            Backend::Compose,
+            Backend::Flutter,
             &root,
             &root.join("out"),
             &HashMap::new(),
             &HashSet::new(),
         )
-        .expect("a qt-only handler must not refuse a compose build");
+        .expect("a qt-only handler must not refuse a flutter build");
         assert!(
             written.is_empty(),
             "nothing should be installed for a backend the package does not target"
@@ -12385,7 +12483,7 @@ exports = ["Probe"]
 
 [host_effects]
 handlers = [
-  { backend = "compose", install = "installProbeEffects" },
+  { backend = "flutter", install = "installProbeEffects" },
 ]
 
 [kernel]
@@ -12400,7 +12498,7 @@ version = "1"
 
         let error = install_host_effects(
             &manifest,
-            Backend::Compose,
+            Backend::Flutter,
             &root,
             &root.join("out"),
             &HashMap::new(),
@@ -12443,7 +12541,7 @@ version = "1"
             .collect();
         assert_eq!(
             claiming,
-            vec!["swiftui", "qt"],
+            vec!["swiftui", "qt", "compose"],
             "update this when a backend gains an install emission -- and when it \
              does, `install_host_effects` stops refusing it"
         );
@@ -12778,6 +12876,231 @@ handlers = [
             app.contains("installProbeEffects(mosaicEffectHost)"),
             "the bundled-runtime assignment must also be wired:\n{app}"
         );
+    }
+}
+
+#[cfg(test)]
+mod compose_host_effect_tests {
+    use super::*;
+
+    fn compose_handler(toml: &str) -> mosaic_package_manifest::HostEffectsSection {
+        let manifest = format!(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+{toml}
+
+[kernel]
+version = "1"
+"#
+        );
+        mosaic_package_manifest::parse(&manifest)
+            .expect("probe manifest must parse")
+            .host_effects
+    }
+
+    fn handler() -> mosaic_package_manifest::HostEffectsSection {
+        compose_handler(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "compose", install = "installProbeEffects" },
+]
+"#,
+        )
+    }
+
+    const MAIN_KT: &str = concat!(
+        "fun main() = application {\n",
+        "    val mosaicHost = remember { MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load() }\n",
+        "    Window(onCloseRequest = ::exitApplication, title = \"Probe\") {\n",
+        "        MosaicApp(mosaicHost)\n",
+        "    }\n",
+        "}\n",
+    );
+
+    #[test]
+    fn a_package_with_no_compose_handler_is_untouched() {
+        let empty = compose_handler("");
+        assert_eq!(
+            compose_main_with_host_effects(MAIN_KT, &empty).expect("wiring must succeed"),
+            MAIN_KT
+        );
+    }
+
+    #[test]
+    fn the_install_lands_after_the_host_and_before_the_window() {
+        let wired = compose_main_with_host_effects(MAIN_KT, &handler()).expect("wiring");
+        let host = wired.find("val mosaicHost = remember").expect("host");
+        let install = wired.find("installProbeEffects(it)").expect("install");
+        let window = wired.find("Window(onCloseRequest").expect("window");
+        assert!(
+            host < install && install < window,
+            "the install must sit between the host and the window:\n{wired}"
+        );
+        // Through the downcast: `MosaicComposeHost` is an interface that knows
+        // nothing about effects, and the non-native-complete shape can be a
+        // fallback bridge with nothing to install onto.
+        assert!(
+            wired.contains("(mosaicHost as? MosaicRuntimeHost)?.let"),
+            "{wired}"
+        );
+    }
+
+    #[test]
+    fn the_indent_is_taken_from_the_anchor_line() {
+        let wired = compose_main_with_host_effects(MAIN_KT, &handler()).expect("wiring");
+        assert!(
+            wired.contains("\n    (mosaicHost as? MosaicRuntimeHost)?.let"),
+            "the install must inherit the anchor's four-space indent:\n{wired}"
+        );
+    }
+
+    #[test]
+    fn a_declared_compose_handler_with_no_anchor_fails_the_build() {
+        // Failing open is the shape this whole section exists to refuse:
+        // Gradle compiles everything under `src/main/kotlin/`, so an
+        // uninstalled handler still compiles, links and ships, and the first
+        // symptom is an `Await` going unanswered at runtime.
+        let error = compose_main_with_host_effects("fun main() {}\n", &handler())
+            .expect_err("a declared handler with nowhere to go must fail the build");
+        assert!(
+            format!("{error:?}").contains("installProbeEffects"),
+            "{error:?}"
+        );
+    }
+
+    #[test]
+    fn an_include_on_a_compose_handler_is_refused() {
+        // Kotlin has no include directive, so the field would be silently
+        // dropped -- which is the failure mode, not a tidy-up.
+        let effects = compose_handler(
+            r#"
+[host_effects]
+files = [
+  { backend = "compose", source = "host/compose/Effects.kt", target = "src/main/kotlin/Effects.kt" },
+]
+handlers = [
+  { backend = "compose", include = "Effects.kt", install = "installProbeEffects" },
+]
+"#,
+        );
+        let error = compose_main_with_host_effects(MAIN_KT, &effects)
+            .expect_err("an include on a Kotlin handler must be refused");
+        let message = format!("{error:?}");
+        assert!(
+            message.contains("include") && message.contains("installProbeEffects"),
+            "{message}"
+        );
+    }
+
+    #[test]
+    fn an_author_string_cannot_capture_the_compose_anchor() {
+        // Weaker than the SwiftUI case by construction, and worth saying so:
+        // `escape_kotlin_string` turns a newline into `\n`, so author text
+        // reaching the generated file through it cannot begin a line at all.
+        // The line anchor is defence in depth here rather than the only thing
+        // standing between a slot default and the splice point.
+        let app = concat!(
+            "fun main() = application {\n",
+            "    val note = \"val mosaicHost = remember { evil() }\"\n",
+            "    val mosaicHost = remember { MosaicRuntimeHost.load() }\n",
+            "    Window(onCloseRequest = ::exitApplication) { MosaicApp(mosaicHost) }\n",
+            "}\n",
+        );
+        let wired = compose_main_with_host_effects(app, &handler()).expect("wiring");
+        let decoy = wired.find("\"val mosaicHost").expect("decoy");
+        let install = wired.find("installProbeEffects(it)").expect("install");
+        assert!(
+            decoy < install,
+            "the install must follow the real host, not the string:\n{wired}"
+        );
+        let real = wired
+            .find("val mosaicHost = remember { MosaicRuntimeHost.load() }")
+            .expect("real");
+        assert!(real < install, "{wired}");
+    }
+
+    /// Nothing author-controlled is emitted before the anchor.
+    ///
+    /// This is the property the anchoring actually rests on, so it is asserted
+    /// rather than described. An earlier comment credited
+    /// `escape_kotlin_string` instead, which is wrong: `component_name` and
+    /// slot field names are interpolated raw by
+    /// `build_compose_root_invocation`.
+    ///
+    /// The real guarantee is positional -- author text lands in `MosaicApp`,
+    /// emitted after `fun main()`, so everything ahead of the anchor is fixed
+    /// scaffolding. A future emitter that moved author text above the anchor
+    /// would make the line-anchoring load-bearing without anyone noticing,
+    /// which is exactly what this catches.
+    #[test]
+    fn no_author_controlled_text_precedes_the_anchor() {
+        // Names chosen to be findable, and legal: `pascal_case_re` for the
+        // component, the mosmodel NAME token for the slot.
+        let slots = vec![SlotDecl {
+            name: "authorSlotName".to_string(),
+            r#type: SlotType::Text,
+            required: false,
+            default: Some(SlotDefault::Text("AUTHORDEFAULTVALUE".to_string())),
+        }];
+        let generated = build_compose_main_kt("AuthorComponentName", &slots, false);
+
+        let anchor = generated
+            .find("val mosaicHost = remember {")
+            .expect("the anchor must be present");
+        let prefix = &generated[..anchor];
+
+        for needle in [
+            "AuthorComponentName",
+            "authorSlotName",
+            "AUTHORDEFAULTVALUE",
+        ] {
+            assert!(
+                !prefix.contains(needle),
+                "author-controlled text {needle:?} appears BEFORE the anchor, which \
+                 makes the line-anchoring load-bearing rather than defence in \
+                 depth -- re-read the reasoning above `ANCHOR` before changing it"
+            );
+        }
+        // And the fixture really did carry those strings into the file, or the
+        // assertions above pass for the wrong reason.
+        for needle in ["AuthorComponentName", "authorSlotName"] {
+            assert!(generated.contains(needle), "fixture inert: {needle}");
+        }
+    }
+
+    /// The anchor must match what the Compose emitter ACTUALLY emits.
+    ///
+    /// `val mosaicHost = remember {` is an incidental detail of
+    /// `build_compose_main_kt`, free to be reworded by someone who never reads
+    /// this code. A fixture-only suite would survive that while every real
+    /// build broke, so this drives the real generator -- in both the
+    /// `require_runtime` shapes, since they select different host loaders.
+    #[test]
+    fn the_anchor_matches_a_genuinely_emitted_compose_main() {
+        for require_runtime in [false, true] {
+            let generated = build_compose_main_kt("Probe", &[], require_runtime);
+            assert_eq!(
+                generated.contains("requireNotNull(MosaicRuntimeHost.load())"),
+                require_runtime,
+                "require_runtime={require_runtime} must select the matching loader"
+            );
+            let wired = compose_main_with_host_effects(&generated, &handler())
+                .unwrap_or_else(|e| panic!("require_runtime={require_runtime}: {e:?}"));
+            let host = wired.find("val mosaicHost = remember").expect("host");
+            let install = wired.find("installProbeEffects(it)").expect("install");
+            assert!(host < install, "{wired}");
+        }
     }
 }
 
