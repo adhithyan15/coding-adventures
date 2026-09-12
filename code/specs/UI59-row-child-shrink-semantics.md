@@ -108,3 +108,68 @@ Other backends. Qt, SwiftUI, Flutter and XAML each have their own answer to
 this and have not been measured — only Compose has been shown to have the
 defect. Fixing it generically across the emitters without that measurement
 would be guessing.
+
+## 8. Measured before implementing — the acceptance in §6 cannot be met
+
+Three mechanisms were built and measured against the real generated Trestle
+app. All three fixed the chip. None produced the layout §6 asks for, and the
+reason is not the mechanism.
+
+### The three attempts
+
+| | `summary` | `On track` chip |
+| --- | --- | --- |
+| today | `185 x 48` (2 lines) | **`0 x 168`** |
+| `weight(1f, fill = false)` on every Row-child `Text` | `92 x 144` (**6 lines**) | `56 x 24` |
+| `weight(1f)` on the first Row-child `Text` only | **`0 x 744`** | `156 x 24` |
+
+The second looked like the answer and is not: Compose does not redistribute
+what a `fill = false` child leaves unused, so each `Text` is capped at an equal
+share whatever its content. The third moves the starvation onto the summary
+instead of the chip. Every mechanism chooses *who* starves.
+
+### Why — the topbar is over-subscribed by ~587px
+
+The same app measured at two viewports, all children of the topbar row:
+
+| | 1280 x 900 | 1900 x 900 |
+| --- | --- | --- |
+| `Tasks — auto-scheduled` | `185 x 48` | `196 x 24` |
+| summary | `185 x 48` | `302 x 24` |
+| chip container | `0 x 168` | `67 x 24` |
+| rightmost element ends at | `1247` | **`1867`** |
+
+At its natural size the topbar needs **1867px**. At 1280 it is **587px**
+short. §6 asks for `summary` on one line *and* a non-zero chip — that is the
+1900 layout, and it does not exist at 1280 while the row also carries a title,
+a progress readout, a theme toggle, a Board button and a 474px five-button
+segment control.
+
+### What this changes
+
+1. **The rule in §4 stands.** A zero-width child is never right, and Compose
+   starving the last-measured sibling is a real divergence from the CSS
+   default the `.mll` was authored against.
+2. **The acceptance in §6 does not.** "Its text renders on one line" is a
+   claim about available space, not about shrink semantics, and no shrink rule
+   can satisfy it at 1280. It should become: *no child measures zero, and the
+   row's content is legible at 1280* — which the `fill = false` variant nearly
+   meets, at six lines of summary.
+3. **The 587px is its own defect** ([#14847](https://github.com/adhithyan15/coding-adventures/issues/14847)).
+   The topbar has to wrap, scroll or shed content at narrow widths. Until it
+   does, UI59 is choosing which child absorbs a deficit that should not exist
+   — worth doing, because "everything visible and cramped" beats "one thing
+   invisible", but it is mitigation.
+
+Implementation is therefore sequenced **after** #14847, so the shrink rule is
+chosen against a row that fits rather than one that cannot.
+
+### Method note
+
+None of this was visible from the emitted source, and none of it was visible
+from a screenshot: the chip renders as *nothing at all* once
+`Modifier.clip(..)` is in play. Each row above is `SemanticsNode.size` and
+`positionInRoot` from a Compose test rendering the real app against the real
+Rust runtime. The `fill = false` variant in particular measured "correct" on
+the chip and would have shipped as a fix had the summary not also been
+measured.
