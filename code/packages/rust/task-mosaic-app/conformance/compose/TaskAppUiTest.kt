@@ -92,6 +92,50 @@ private fun ComposeUiTest.assertFitsViewport(stage: String) {
     )
 }
 
+/**
+ * Asserts nothing in the topbar has been squeezed to nothing (#14847, #14815).
+ *
+ * The vertical companion to [assertFitsViewport], and it exists for the same
+ * reason: a HORIZONTAL overflow has no scroll range to read, so the only
+ * evidence is a child that measured zero.
+ *
+ * The `On track` chip measured `0 x 168` at 1280 for as long as the topbar
+ * carried the view switcher, and every existence and semantics assertion in
+ * this file passed the whole time -- a node squeezed to zero width is still
+ * present, still named, and still "displayed". That is exactly why this
+ * asserts a WIDTH rather than presence.
+ *
+ * A width, not the sum of the row's children: the sum is not observable from
+ * the semantics tree, and the endpoint of a right-aligned row tracks the
+ * VIEWPORT rather than its content -- reading that endpoint as a content
+ * demand is how #14847 first got its number wrong by 2.4x.
+ */
+@OptIn(ExperimentalTestApi::class)
+private fun ComposeUiTest.assertTopbarIsNotStarved(stage: String) {
+    var starved: String? = null
+    fun walk(node: SemanticsNode) {
+        val text = node.config
+            .firstOrNull { it.key.name == "Text" }
+            ?.value
+            ?.let { (it as? List<*>)?.joinToString("") { part -> part.toString() } }
+        // Only the topbar band. A zero-width node further down the page is a
+        // different question and should fail in its own test, saying so.
+        if (text != null && text.isNotEmpty() && node.positionInRoot.y < 120f && node.size.width == 0) {
+            starved = text
+        }
+        node.children.forEach(::walk)
+    }
+    walk(onRoot().fetchSemanticsNode())
+    assertEquals(
+        null,
+        starved,
+        "a topbar element measured ZERO width at stage '$stage' in the " +
+            "${ACCEPTANCE_VIEWPORT.width.toInt()}px acceptance viewport. It is " +
+            "present and named, so every other assertion here still passes -- " +
+            "the row is over-subscribed and something has to leave it.",
+    )
+}
+
 class TaskAppUiTest {
     @OptIn(ExperimentalTestApi::class)
     @Test
@@ -111,6 +155,7 @@ class TaskAppUiTest {
             compose.onNodeWithText(UI_PERSISTED_TASK_NAME).assertIsDisplayed()
             compose.onNodeWithText("due $UI_DUE").assertIsDisplayed()
             assertFitsViewport("restored on launch")
+            assertTopbarIsNotStarved("restored on launch")
             compose.onNodeWithText(UI_SUMMARY).assertIsDisplayed()
             compose.onNodeWithTag("del-btn").performClick()
             compose.waitForIdle()
@@ -138,6 +183,7 @@ class TaskAppUiTest {
         compose.waitForIdle()
 
         assertFitsViewport("after first add")
+            assertTopbarIsNotStarved("after first add")
         compose.onNodeWithText(UI_TASK_NAME).assertIsDisplayed()
         compose.onNodeWithText("due $UI_DUE").assertIsDisplayed()
         // Scheduling is always projected in the Rust-owned summary. Do not
@@ -163,6 +209,7 @@ class TaskAppUiTest {
         // The Rust-owned completion value must be visible, not merely present
         // in the semantics tree beyond the measured desktop viewport.
         assertFitsViewport("after completion")
+            assertTopbarIsNotStarved("after completion")
         compose.onNodeWithText("100%").assertIsDisplayed()
         compose.onNodeWithTag("toggle").performClick()
         compose.waitForIdle()

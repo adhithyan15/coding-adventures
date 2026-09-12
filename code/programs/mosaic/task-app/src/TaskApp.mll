@@ -115,83 +115,95 @@ layout TaskApp {
           label : slot: complexity-label ,
           onClick : emit: onToggleProjectComplexity
         )
-
-        // Segmented view switch. Two explicit emits rather than one toggle, so
-        // clicking the view you are already on is a no-op instead of a swap.
-        Row [ seg ] {
-          // Part names are unique layout-wide, even across mutually-exclusive
-          // branches, so each of the six buttons gets its own name in each of
-          // the six branches (one "on" + five "off" variants per button).
-          If ( when: slot: timeline-mode ) {
-            HostButton [ seg-list-off ] ( label : "List" , onClick : emit: onShowList )
-            HostButton [ seg-board-off ] ( label : "Board" , onClick : emit: onShowBoard )
-            HostButton [ seg-sheet-off ] ( label : "Sheet" , onClick : emit: onShowSheet )
-            HostButton [ seg-cal-off ] ( label : "Calendar" , onClick : emit: onShowCalendar )
-            HostButton [ seg-notes-off ] ( label : "Notes" , onClick : emit: onShowNotes )
-            // Board-tier projects never show Timeline — see `allow-timeline`'s
-            // doc comment. Because `timeline-mode` can only be truthy for a
-            // Full-tier project (main.tsx forces the view away from Timeline
-            // whenever the active project is Board — see main.tsx's dispatch
-            // for onSelectProject/onToggleProjectComplexity), this branch is
-            // reachable only when `allow-timeline` is already non-empty; the
-            // `If` here is defense-in-depth, not the thing doing the hiding.
+      }
+      // Segmented view switch. Two explicit emits rather than one toggle, so
+      // clicking the view you are already on is a no-op instead of a swap.
+      //
+      // #14847 -- and its own row, not part of the topbar.
+      //
+      // Measured: with it inside `topbar` that row needed 1520px and was
+      // given 1280, so at 1280 the `On track` chip was driven to 0 x 168 --
+      // present in the semantics tree, correctly named, occupying no space.
+      // The switcher is 474px on its own, nearly twice the 240px shortfall,
+      // so moving it resolves the over-subscription outright rather than
+      // choosing which sibling absorbs it (which is all a shrink rule can
+      // do -- see UI59 §8).
+      //
+      // It is also the ordinary header shape: title and meta on one line,
+      // view tabs on a second.
+      Row [ seg ] {
+        // Part names are unique layout-wide, even across mutually-exclusive
+        // branches, so each of the six buttons gets its own name in each of
+        // the six branches (one "on" + five "off" variants per button).
+        If ( when: slot: timeline-mode ) {
+          HostButton [ seg-list-off ] ( label : "List" , onClick : emit: onShowList )
+          HostButton [ seg-board-off ] ( label : "Board" , onClick : emit: onShowBoard )
+          HostButton [ seg-sheet-off ] ( label : "Sheet" , onClick : emit: onShowSheet )
+          HostButton [ seg-cal-off ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+          HostButton [ seg-notes-off ] ( label : "Notes" , onClick : emit: onShowNotes )
+          // Board-tier projects never show Timeline — see `allow-timeline`'s
+          // doc comment. Because `timeline-mode` can only be truthy for a
+          // Full-tier project (main.tsx forces the view away from Timeline
+          // whenever the active project is Board — see main.tsx's dispatch
+          // for onSelectProject/onToggleProjectComplexity), this branch is
+          // reachable only when `allow-timeline` is already non-empty; the
+          // `If` here is defense-in-depth, not the thing doing the hiding.
+          If ( when: slot: allow-timeline ) {
+            HostButton [ seg-tl-on ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+          }
+        }
+        Else {
+          If ( when: slot: board-mode ) {
+            HostButton [ seg-list-off2 ] ( label : "List" , onClick : emit: onShowList )
+            HostButton [ seg-board-on ] ( label : "Board" , onClick : emit: onShowBoard )
+            HostButton [ seg-sheet-off2 ] ( label : "Sheet" , onClick : emit: onShowSheet )
+            HostButton [ seg-cal-off2 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+            HostButton [ seg-notes-off2 ] ( label : "Notes" , onClick : emit: onShowNotes )
             If ( when: slot: allow-timeline ) {
-              HostButton [ seg-tl-on ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+              HostButton [ seg-tl-off2 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
             }
           }
           Else {
-            If ( when: slot: board-mode ) {
-              HostButton [ seg-list-off2 ] ( label : "List" , onClick : emit: onShowList )
-              HostButton [ seg-board-on ] ( label : "Board" , onClick : emit: onShowBoard )
-              HostButton [ seg-sheet-off2 ] ( label : "Sheet" , onClick : emit: onShowSheet )
-              HostButton [ seg-cal-off2 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
-              HostButton [ seg-notes-off2 ] ( label : "Notes" , onClick : emit: onShowNotes )
+            If ( when: slot: sheet-mode ) {
+              HostButton [ seg-list-off3 ] ( label : "List" , onClick : emit: onShowList )
+              HostButton [ seg-board-off3 ] ( label : "Board" , onClick : emit: onShowBoard )
+              HostButton [ seg-sheet-on ] ( label : "Sheet" , onClick : emit: onShowSheet )
+              HostButton [ seg-cal-off3 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+              HostButton [ seg-notes-off3 ] ( label : "Notes" , onClick : emit: onShowNotes )
               If ( when: slot: allow-timeline ) {
-                HostButton [ seg-tl-off2 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                HostButton [ seg-tl-off3 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
               }
             }
             Else {
-              If ( when: slot: sheet-mode ) {
-                HostButton [ seg-list-off3 ] ( label : "List" , onClick : emit: onShowList )
-                HostButton [ seg-board-off3 ] ( label : "Board" , onClick : emit: onShowBoard )
-                HostButton [ seg-sheet-on ] ( label : "Sheet" , onClick : emit: onShowSheet )
-                HostButton [ seg-cal-off3 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
-                HostButton [ seg-notes-off3 ] ( label : "Notes" , onClick : emit: onShowNotes )
+              If ( when: slot: calendar-mode ) {
+                HostButton [ seg-list-off4 ] ( label : "List" , onClick : emit: onShowList )
+                HostButton [ seg-board-off5 ] ( label : "Board" , onClick : emit: onShowBoard )
+                HostButton [ seg-sheet-off4 ] ( label : "Sheet" , onClick : emit: onShowSheet )
+                HostButton [ seg-cal-on ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+                HostButton [ seg-notes-off4 ] ( label : "Notes" , onClick : emit: onShowNotes )
                 If ( when: slot: allow-timeline ) {
-                  HostButton [ seg-tl-off3 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                  HostButton [ seg-tl-off4 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
                 }
               }
               Else {
-                If ( when: slot: calendar-mode ) {
-                  HostButton [ seg-list-off4 ] ( label : "List" , onClick : emit: onShowList )
-                  HostButton [ seg-board-off5 ] ( label : "Board" , onClick : emit: onShowBoard )
-                  HostButton [ seg-sheet-off4 ] ( label : "Sheet" , onClick : emit: onShowSheet )
-                  HostButton [ seg-cal-on ] ( label : "Calendar" , onClick : emit: onShowCalendar )
-                  HostButton [ seg-notes-off4 ] ( label : "Notes" , onClick : emit: onShowNotes )
+                If ( when: slot: notes-mode ) {
+                  HostButton [ seg-list-off5 ] ( label : "List" , onClick : emit: onShowList )
+                  HostButton [ seg-board-off6 ] ( label : "Board" , onClick : emit: onShowBoard )
+                  HostButton [ seg-sheet-off5 ] ( label : "Sheet" , onClick : emit: onShowSheet )
+                  HostButton [ seg-cal-off5 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+                  HostButton [ seg-notes-on ] ( label : "Notes" , onClick : emit: onShowNotes )
                   If ( when: slot: allow-timeline ) {
-                    HostButton [ seg-tl-off4 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                    HostButton [ seg-tl-off5 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
                   }
                 }
                 Else {
-                  If ( when: slot: notes-mode ) {
-                    HostButton [ seg-list-off5 ] ( label : "List" , onClick : emit: onShowList )
-                    HostButton [ seg-board-off6 ] ( label : "Board" , onClick : emit: onShowBoard )
-                    HostButton [ seg-sheet-off5 ] ( label : "Sheet" , onClick : emit: onShowSheet )
-                    HostButton [ seg-cal-off5 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
-                    HostButton [ seg-notes-on ] ( label : "Notes" , onClick : emit: onShowNotes )
-                    If ( when: slot: allow-timeline ) {
-                      HostButton [ seg-tl-off5 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
-                    }
-                  }
-                  Else {
-                    HostButton [ seg-list-on ] ( label : "List" , onClick : emit: onShowList )
-                    HostButton [ seg-board-off4 ] ( label : "Board" , onClick : emit: onShowBoard )
-                    HostButton [ seg-sheet-off3 ] ( label : "Sheet" , onClick : emit: onShowSheet )
-                    HostButton [ seg-cal-off4 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
-                    HostButton [ seg-notes-off5 ] ( label : "Notes" , onClick : emit: onShowNotes )
-                    If ( when: slot: allow-timeline ) {
-                      HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
-                    }
+                  HostButton [ seg-list-on ] ( label : "List" , onClick : emit: onShowList )
+                  HostButton [ seg-board-off4 ] ( label : "Board" , onClick : emit: onShowBoard )
+                  HostButton [ seg-sheet-off3 ] ( label : "Sheet" , onClick : emit: onShowSheet )
+                  HostButton [ seg-cal-off4 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+                  HostButton [ seg-notes-off5 ] ( label : "Notes" , onClick : emit: onShowNotes )
+                  If ( when: slot: allow-timeline ) {
+                    HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
                   }
                 }
               }
