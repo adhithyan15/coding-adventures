@@ -4494,10 +4494,28 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
     }
 
     if style_parts.is_empty() {
-        String::new()
-    } else {
-        format!(", style: ButtonStyle({})", style_parts.join(", "))
+        return String::new();
     }
+
+    // Material's own minimum, which nothing in the `.msl` asked for.
+    //
+    // `ElevatedButton` defaults to `minimumSize: Size(64, 36)`, so an
+    // authored `padding: 3` around a one-glyph label still measured
+    // 64x48 -- the toggle in Trestle's task row is exactly that shape
+    // (#14858). Measured across the whole app before changing anything:
+    // EVERY button came back exactly 48.0 high, and the two narrowest
+    // were exactly 64.0 wide, which is the default floor rather than
+    // anything the design chose.
+    //
+    // `Size.zero` hands the size back to the authored padding. This is
+    // deliberately NOT paired with `tapTargetSize: shrinkWrap`: that
+    // would also shrink the TOUCH target below the 48dp accessibility
+    // minimum. Leaving `tapTargetSize` at its default keeps the padded
+    // hit area while letting the painted box follow the design, which is
+    // the whole point of the two being separate properties.
+    style_parts.push("minimumSize: WidgetStatePropertyAll(Size.zero)".to_string());
+
+    format!(", style: ButtonStyle({})", style_parts.join(", "))
 }
 
 /// `HostCheckbox` → `Checkbox`. `indeterminate:` (`#13006`) lowers to
@@ -7500,6 +7518,20 @@ mod tests {
         assert!(
             out.contains("style: ButtonStyle("),
             "missing ButtonStyle:\n{out}"
+        );
+        // Material's own 64x36 floor is not something the .msl asked for:
+        // without this, an authored `padding: 3` around one glyph still
+        // measured 64x48 (#14858).
+        assert!(
+            out.contains("minimumSize: WidgetStatePropertyAll(Size.zero)"),
+            "a styled button must not keep Material's default minimum:\n{out}"
+        );
+        // Deliberately absent: shrinkWrap would also shrink the TOUCH
+        // target below the 48dp accessibility minimum. Only the painted
+        // box should follow the authored padding.
+        assert!(
+            !out.contains("MaterialTapTargetSize.shrinkWrap"),
+            "the 48dp tap target must survive:\n{out}"
         );
         assert!(
             out.contains("backgroundColor: WidgetStatePropertyAll(const Color(0xFFF87171))"),
