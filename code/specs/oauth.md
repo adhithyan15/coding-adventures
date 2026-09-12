@@ -178,10 +178,13 @@ The delivery order is:
    client-secret exchange can now compose directly into an exact opaque account
    key: key/provider mismatch fails before secret, transport, clock, or storage
    access; OAuth credential release and custody creation remain separately
-   audited; and only the opaque revision is returned. Stored OAuth credential
-   rotation, account identity proof/key selection, and access-token-only detach
-   remain separate composition steps, and these boundaries add no concrete
-   network authority.
+   audited; and only the opaque revision is returned. Confidential refresh now
+   composes the exact stored refresh token through retained Basic/Post policy,
+   audited secret access and transport, bounded response decoding, caller-owned
+   time, OAuth credential release, and revision-bound atomic retain/rotation.
+   Binding and all later failures preserve the prior record. Account identity
+   proof/key selection and access-token-only detach remain separate composition
+   steps, and these boundaries add no concrete network authority.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate
