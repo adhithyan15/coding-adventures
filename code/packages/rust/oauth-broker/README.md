@@ -34,6 +34,13 @@ client ID, token-endpoint audience, advertised algorithm set, and a
 provider-matched opaque private-key reference into the existing assertion
 profile. The selected algorithm must appear exactly in provider data; this
 pure construction invokes no signer and enables no concrete algorithm.
+For client-secret profiles, one prepared refresh request can now cross the
+complete broker boundary: the registered provider, client ID, token endpoint,
+and retained Basic/Post method are checked before audited secret custody access;
+custody constructs zeroizing wire material; and broker-audited injected
+transport plus bounded response decoding completes before result release. This
+boundary adds no concrete network implementation and does not rotate stored
+OAuth credentials.
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
@@ -70,7 +77,8 @@ dependency are sibling packages in this repository.
 - concrete encrypted-vault credential storage;
 - account identity proof and key selection, listing, detach/revocation, device
   authorization UI, timing/sleep authority, and full device-flow loops;
-- confidential-client secret/key access or signing, OIDC validation, and DPoP.
+- full confidential credential-refresh rotation, private-key signing
+  orchestration, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
 

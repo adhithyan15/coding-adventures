@@ -157,6 +157,13 @@ The delivery order is:
    remain zeroizing, and exchange/refresh response contexts are preserved.
    Revocation uses an explicitly configured revocation-endpoint audience rather
    than inventing provider acceptance of the token endpoint as that audience.
+   One broker-level client-secret refresh send is also shipped: the registered
+   provider, client ID, token endpoint, and retained Basic/Post method are
+   checked before audited client-secret access; custody constructs the
+   zeroizing request; and broker-audited injected transport plus bounded
+   response decoding completes before release. Stored OAuth credential
+   rotation remains a separate composition step, and this adds no concrete
+   network authority.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate

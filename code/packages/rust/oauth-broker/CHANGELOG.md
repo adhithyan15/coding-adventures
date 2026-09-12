@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added one broker-composed client-secret refresh boundary that checks the
+  registered provider, client ID, token endpoint, and retained Basic/Post
+  method before audited secret access, then audit-brackets injected transport
+  and bounded response decoding without adding concrete network authority.
 - Added exact retained `private_key_jwt` profile binding into the existing
   opaque-key assertion adapter, including provider, client ID, token-endpoint
   audience, and advertised algorithm checks without invoking a signer or
