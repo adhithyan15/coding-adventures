@@ -14,8 +14,8 @@ use venture_browser_core::{
     BrowserFetchRequest, BrowserFetchResponse, BrowserHostController, BrowserHostEventOutcome,
     BrowserLoadError, BrowserNavigation, BrowserNavigationUpdate, BrowserPagePipeline,
     BrowserResourceFetcher, BrowserScrollCommand, BrowserScrollMetrics, BrowserSession,
-    BrowserSubresourceCompletion, BrowserSubresourceUpdate, ControlKey, HttpBrowserFetcher,
-    MemoryBookmarkRepository,
+    BrowserSubresourceCompletion, BrowserSubresourceUpdate, ControlKey, HostFileSelection,
+    HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 #[cfg(any(target_os = "windows", test))]
@@ -331,6 +331,63 @@ impl WindowsBrowserHost {
             "{{\"x\":{},\"y\":{},\"width\":{},\"height\":{}}}",
             rect.x, rect.y, rect.width, rect.height
         ))
+    }
+
+    pub fn file_picker_request_json(&self) -> Option<String> {
+        self.controller
+            .session()
+            .focused_file_picker_request()
+            .map(|request| request.to_host_json())
+    }
+
+    pub fn control_file_selected(
+        &mut self,
+        key: &str,
+        file: HostFileSelection,
+        append: bool,
+    ) -> bool {
+        if self
+            .controller
+            .session()
+            .controls()
+            .file_state(key)
+            .is_none()
+        {
+            return false;
+        }
+        let mut files = if append {
+            self.controller
+                .session()
+                .controls()
+                .selected_files(&key)
+                .unwrap_or_default()
+                .to_vec()
+        } else {
+            Vec::new()
+        };
+        files.push(file);
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        let changed = self
+            .controller
+            .session_mut()
+            .control_files_selected(key, files, &pipeline)
+            .is_some();
+        if changed {
+            self.controller.synchronize_session_state();
+        }
+        changed
     }
 
     pub fn update_hover(&mut self, x: f64, y: f64) -> bool {
@@ -679,6 +736,56 @@ mod ffi {
             .and_then(|value| CString::new(value).ok())
             .map(CString::into_raw)
             .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_file_picker_request(
+        host: *mut WindowsBrowserHost,
+    ) -> *mut c_char {
+        host.as_ref()
+            .and_then(WindowsBrowserHost::file_picker_request_json)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_control_file(
+        host: *mut WindowsBrowserHost,
+        key: *const c_char,
+        opaque_id: *const c_char,
+        name: *const c_char,
+        media_type: *const c_char,
+        bytes: *const u8,
+        length: usize,
+        append: u8,
+    ) -> u8 {
+        if bytes.is_null() && length != 0 {
+            return 0;
+        }
+        let Some(key) = string_arg(key) else {
+            return 0;
+        };
+        let Some(opaque_id) = string_arg(opaque_id) else {
+            return 0;
+        };
+        let Some(name) = string_arg(name) else {
+            return 0;
+        };
+        let payload = if length == 0 {
+            Vec::new()
+        } else {
+            unsafe { std::slice::from_raw_parts(bytes, length) }.to_vec()
+        };
+        host.as_mut()
+            .map(|host| {
+                host.control_file_selected(
+                    &key,
+                    HostFileSelection::new(opaque_id, name, string_arg(media_type), payload),
+                    append != 0,
+                ) as u8
+            })
+            .unwrap_or(0)
     }
 
     #[no_mangle]

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add ordered file entries and deterministic bounded multipart/form-data
+  planning with sanitized filenames, media types, and collision-safe
+  boundaries.
+
 - Validate shared temporal min/max/step state and serialize canonical date,
   month, week, time, datetime-local, and color values as successful controls.
 

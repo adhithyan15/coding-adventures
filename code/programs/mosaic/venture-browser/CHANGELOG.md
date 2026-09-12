@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Add path-free file picker requests/results, reusable file-list state,
+  accept/multiple filtering, reset semantics, and deterministic bounded
+  multipart/form-data requests through the shared control pipeline.
+
 - Add canonical date/month/week/time/datetime-local and simple-color values,
   shared temporal min/max/step diagnostics and semantic stepping,
   accessibility value text/actions, retained-session acceptance, and

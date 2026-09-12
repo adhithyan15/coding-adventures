@@ -30,6 +30,10 @@ typedef _ControlClipboardNative = Pointer<Char> Function(Pointer<Void>);
 typedef _ControlClipboardDart = Pointer<Char> Function(Pointer<Void>);
 typedef _CaretTickNative = Uint8 Function(Pointer<Void>, Uint64);
 typedef _CaretTickDart = int Function(Pointer<Void>, int);
+typedef _ControlFileNative = Uint8 Function(
+  Pointer<Void>, Pointer<Char>, Pointer<Char>, Pointer<Char>, Pointer<Char>, Pointer<Uint8>, IntPtr, Uint8);
+typedef _ControlFileDart = int Function(
+  Pointer<Void>, Pointer<Char>, Pointer<Char>, Pointer<Char>, Pointer<Char>, Pointer<Uint8>, int, int);
 typedef _MetricsNative =
     Uint8 Function(
       Pointer<Void>,
@@ -144,6 +148,12 @@ class _VentureBindings {
       imeCandidateRect = library.lookupFunction<_ControlClipboardNative, _ControlClipboardDart>(
         'venture_browser_flutter_ime_candidate_rect',
       ),
+      filePickerRequest = library.lookupFunction<_ControlClipboardNative, _ControlClipboardDart>(
+        'venture_browser_flutter_file_picker_request',
+      ),
+      controlFile = library.lookupFunction<_ControlFileNative, _ControlFileDart>(
+        'venture_browser_flutter_control_file',
+      ),
       activateLink = library.lookupFunction<_PointNative, _PointDart>(
         'venture_browser_flutter_activate_link',
       ),
@@ -175,6 +185,8 @@ class _VentureBindings {
   final _ControlTextDart controlPaste;
   final _CaretTickDart caretTick;
   final _ControlClipboardDart imeCandidateRect;
+  final _ControlClipboardDart filePickerRequest;
+  final _ControlFileDart controlFile;
   final _PointDart activateLink;
   final _PointDart updateHover;
   final _MetricsDart metrics;
@@ -262,11 +274,14 @@ class MosaicHost {
   final _VentureBindings _bindings;
   final Pointer<Void> _host;
   final ValueNotifier<int> _surfaceRevision = ValueNotifier<int>(0);
+  final StreamController<Map<String, Object?>> _filePickerRequests =
+      StreamController<Map<String, Object?>>.broadcast();
   Completer<void> _surfaceReady = Completer<void>();
   late final Widget _contentSurface;
   void Function()? _propsChangedHandler;
   bool _disposed = false;
   Map<String, Object?>? lastAuxiliaryDocument;
+  Stream<Map<String, Object?>> get filePickerRequests => _filePickerRequests.stream;
 
   FutureOr<Map<String, Object?>?> props() {
     return _decorate(_decodeResponse(_bindings.props(_host)));
@@ -363,7 +378,47 @@ class MosaicHost {
   }
 
   void activateLink(double x, double y) {
-    if (_bindings.activateLink(_host, x, y) != 0) _surfaceChanged();
+    if (_bindings.activateLink(_host, x, y) == 0) return;
+    _surfaceChanged();
+    final request = _bindings.filePickerRequest(_host);
+    if (request != nullptr) _filePickerRequests.add(_decodeResponse(request));
+  }
+
+  bool submitPickedFile({
+    required String key,
+    required String opaqueId,
+    required String displayName,
+    required Uint8List bytes,
+    String? mediaType,
+    bool append = false,
+  }) {
+    final controlKey = _NativeString(key);
+    final opaque = _NativeString(opaqueId);
+    final name = _NativeString(displayName);
+    final media = _NativeString(mediaType ?? '');
+    final payload = _memory.allocate<Uint8>(bytes.isEmpty ? 1 : bytes.length);
+    try {
+      if (bytes.isNotEmpty) payload.asTypedList(bytes.length).setAll(0, bytes);
+      final changed = _bindings.controlFile(
+            _host,
+            controlKey.pointer,
+            opaque.pointer,
+            name.pointer,
+            mediaType == null ? nullptr.cast<Char>() : media.pointer,
+            payload,
+            bytes.length,
+            append ? 1 : 0,
+          ) !=
+          0;
+      if (changed) _surfaceChanged();
+      return changed;
+    } finally {
+      _memory.free(payload.cast<Void>());
+      media.dispose();
+      name.dispose();
+      opaque.dispose();
+      controlKey.dispose();
+    }
   }
 
   void resize(double width, double height) {
@@ -460,6 +515,7 @@ class MosaicHost {
     if (_disposed) return;
     _disposed = true;
     _propsChangedHandler = null;
+    _filePickerRequests.close();
     _bindings.free(_host);
     _surfaceRevision.dispose();
   }

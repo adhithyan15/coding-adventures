@@ -12,7 +12,7 @@ through one geometry-and-paint oracle shared by every host.
 
 The form-control convergence page includes normal, flex, grid, table, float,
 disabled, checked, select, appearance, and canonical
-date/month/week/time/datetime-local/color cases. It preserves stable retained
+date/month/week/time/datetime-local/color and file accept/multiple cases. It preserves stable retained
 control regions for shared interaction and host paint gates.
 
 `load_backgrounds_page` ratchets multiple gradient layers, painting boxes,

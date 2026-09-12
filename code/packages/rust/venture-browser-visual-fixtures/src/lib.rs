@@ -148,6 +148,7 @@ pub const FORM_CONTROLS_FIXTURE_HTML: &str = r##"<!doctype html><html><body>
 <input id="time-control" type="time" value="09:30:05.120" step="0.01">
 <input id="datetime-control" type="datetime-local" value="2024-02-29T09:30">
 <input id="color-control" type="color" value="#A0b1C2">
+<input id="file-control" type="file" accept="image/*,.txt" multiple>
 </body></html>"##;
 
 /// Deterministic validation, successful-control, reset, and POST fixture.
@@ -1342,7 +1343,7 @@ mod tests {
     #[test]
     fn form_controls_keep_intrinsics_across_layout_contexts_and_cairo() {
         let page = load_form_controls_page("http://venture.test").expect("control fixture");
-        assert_eq!(page.paint.controls.len(), 16);
+        assert_eq!(page.paint.controls.len(), 17);
         let widths = [
             "normal-control",
             "flex-control",
@@ -1378,10 +1379,18 @@ mod tests {
                 .skip(10)
                 .map(|control| control.kind.name())
                 .collect::<Vec<_>>(),
-            vec!["date", "month", "week", "time", "datetime-local", "color"]
+            vec![
+                "date",
+                "month",
+                "week",
+                "time",
+                "datetime-local",
+                "color",
+                "file"
+            ]
         );
         let pixels = paint_vm_cairo::render(&page.paint.scene).expect("control fixture cairo");
-        assert_eq!((pixels.width, pixels.height), (VIEWPORT_WIDTH as u32, 480));
+        assert_eq!((pixels.width, pixels.height), (VIEWPORT_WIDTH as u32, 504));
         assert!(pixels.data.iter().any(|channel| *channel != 0));
     }
 

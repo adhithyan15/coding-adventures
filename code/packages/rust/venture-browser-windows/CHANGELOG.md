@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose path-free file picker request and selected-byte ABI seams for the
+  generated WinUI adapter.
+
 - Route WinUI surface clicks through shared form-control activation before
   link navigation.
 

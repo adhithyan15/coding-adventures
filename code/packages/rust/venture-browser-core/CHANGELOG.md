@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Route path-free host file selections through retained control reflow and
+  multipart requests without exposing host paths to layout or paint.
+
 - Route canonical temporal/color value state, keyboard stepping, bounds,
   accessibility value actions, and retained reflow through the shared session.
 

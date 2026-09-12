@@ -3,17 +3,21 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
+#include <QFileDialog>
+#include <QFileInfo>
 #include <QHoverEvent>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QMimeDatabase>
 #include <QPainter>
 #include <QQuickItem>
 #include <QQuickWindow>
 #include <QQmlComponent>
 #include <QQmlEngine>
 #include <QTimer>
+#include <QUuid>
 #include <QUrl>
 #include <QWheelEvent>
 #include <QtQml/qqml.h>
@@ -162,6 +166,7 @@ void VentureContentSurface::mouseReleaseEvent(QMouseEvent *event)
       && host_->activateLink(event->position().x(), event->position().y())) {
     host_->publishProps();
     update();
+    host_->presentFilePicker();
   }
   QQuickPaintedItem::mouseReleaseEvent(event);
 }
@@ -323,6 +328,49 @@ bool MosaicHost::controlText(const QByteArray &text)
   return browser_ && controlText_ && controlText_(browser_, text.constData()) != 0;
 }
 
+bool MosaicHost::presentFilePicker()
+{
+  if (!browser_ || !filePickerRequest_ || !controlFile_) {
+    return false;
+  }
+  const QVariantMap request = response(filePickerRequest_(browser_));
+  if (request.isEmpty()) {
+    return false;
+  }
+  const QByteArray key = request.value("key").toString().toUtf8();
+  if (key.isEmpty()) {
+    return false;
+  }
+  const QStringList paths = request.value("multiple").toBool()
+    ? QFileDialog::getOpenFileNames(nullptr, tr("Choose files"))
+    : QStringList{QFileDialog::getOpenFileName(nullptr, tr("Choose file"))};
+  bool changed = false;
+  QMimeDatabase mimeDatabase;
+  int accepted = 0;
+  for (const QString &path : paths) {
+    if (path.isEmpty()) {
+      continue;
+    }
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+      continue;
+    }
+    const QByteArray bytes = file.read(16 * 1024 * 1024 + 1);
+    const QByteArray opaque = QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+    const QByteArray name = QFileInfo(path).fileName().toUtf8();
+    const QByteArray mediaType = mimeDatabase.mimeTypeForFile(path).name().toUtf8();
+    changed = controlFile_(
+      browser_, key.constData(), opaque.constData(), name.constData(), mediaType.constData(),
+      reinterpret_cast<const unsigned char *>(bytes.constData()),
+      static_cast<size_t>(bytes.size()), accepted == 0 ? 0 : 1) != 0 || changed;
+    ++accepted;
+  }
+  if (changed) {
+    publishProps();
+  }
+  return changed;
+}
+
 bool MosaicHost::activateLink(double x, double y)
 {
   return browser_ && activateLink_ && activateLink_(browser_, x, y) != 0;
@@ -367,6 +415,8 @@ bool MosaicHost::loadBridge()
   RESOLVE(controlPaste_, "control_paste");
   RESOLVE(caretTick_, "caret_tick");
   RESOLVE(imeCandidateRect_, "ime_candidate_rect");
+  RESOLVE(filePickerRequest_, "file_picker_request");
+  RESOLVE(controlFile_, "control_file");
   RESOLVE(scrollMetrics_, "scroll_metrics");
   RESOLVE(activateLink_, "activate_link");
   RESOLVE(updateHover_, "update_hover");
@@ -377,7 +427,8 @@ bool MosaicHost::loadBridge()
 
   if (!new_ || !free_ || !applyProps_ || !handleEvent_ || !scroll_
       || !scrollCommand_ || !controlKey_ || !controlText_ || !controlCopy_
-      || !controlCut_ || !controlPaste_ || !caretTick_ || !imeCandidateRect_ || !scrollMetrics_
+      || !controlCut_ || !controlPaste_ || !caretTick_ || !imeCandidateRect_
+      || !filePickerRequest_ || !controlFile_ || !scrollMetrics_
       || !activateLink_ || !updateHover_
       || !resize_ || !render_ || !stringFree_) {
     library_.unload();
