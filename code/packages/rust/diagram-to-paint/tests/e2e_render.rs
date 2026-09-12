@@ -230,7 +230,7 @@ mod apple {
     #[test]
     fn render_mermaid_block_to_png() {
         let grid = parse_block(
-            "block-beta\ntitle Native block grid\ncolumns 3\nA[Grammar]:2 B(IR)\nspace:2 C((Paint))\nD[Metal] E[PNG]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass A,C pipeline\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA --> B\nB --> C\nC --- D\nD --> E",
+            "block-beta\ntitle Native block grid\ncolumns 3\nA[Grammar]:2 B(IR)\nspace:2 C((Paint))\nD[Metal] E[PNG]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass A,C pipeline\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E",
         )
         .expect("block parse failed");
         let layout = layout_grid_diagram(&grid);

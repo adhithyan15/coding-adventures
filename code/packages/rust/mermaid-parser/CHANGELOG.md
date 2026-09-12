@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.194.0
+
+- Parse native quoted Mermaid Block connection labels into semantic labels.
+
 ## 0.193.0
 
 - Parse Mermaid Block directed and undirected connections into typed edge kinds.

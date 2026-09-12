@@ -1,6 +1,6 @@
 //! Deterministic grid layout for Mermaid block diagrams.
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 use std::collections::HashMap;
 
@@ -82,9 +82,8 @@ pub fn layout_grid_diagram(diagram: &GridDiagram) -> LayoutedGraphDiagram {
                 kind: connection.kind.clone(),
                 points: vec![start, end],
                 label: connection.label.clone(),
-                label_position: connection.label.as_ref().map(|_| Point {
-                    x: (from.x + to.x) / 2.0,
-                    y: (from.y + to.y) / 2.0 - 10.0,
+                label_position: connection.label.as_ref().map(|_| {
+                    edge_label_position(from, *from_width, to, *to_width)
                 }),
                 style: edge_style.clone(),
             })
@@ -108,6 +107,19 @@ pub fn layout_grid_diagram(diagram: &GridDiagram) -> LayoutedGraphDiagram {
             + (rows - 1) as f64 * ROW_GAP,
         nodes,
         edges,
+    }
+}
+
+fn edge_label_position(from: &Point, from_width: f64, to: &Point, to_width: f64) -> Point {
+    let center_x = (from.x + to.x) / 2.0;
+    let center_y = (from.y + to.y) / 2.0;
+    if (to.x - from.x).abs() >= (to.y - from.y).abs() {
+        Point { x: center_x, y: from.y.min(to.y) - CELL_HEIGHT / 2.0 - 4.0 }
+    } else {
+        let half_width = from_width.max(to_width) / 2.0;
+        let left = center_x - half_width;
+        let x = if left >= PADDING + 55.0 { left - 55.0 } else { center_x + half_width + 55.0 };
+        Point { x, y: center_y }
     }
 }
 
@@ -290,4 +302,13 @@ mod tests {
         assert_eq!(style.stroke, "#0284c7");
         assert_eq!(style.stroke_width, 5.0);
     }
+
+    #[test]
+    fn positions_edge_labels_outside_node_bounds() {
+        let horizontal = edge_label_position(&Point { x: 100.0, y: 100.0 }, 80.0, &Point { x: 240.0, y: 100.0 }, 80.0);
+        assert_eq!(horizontal, Point { x: 170.0, y: 67.0 });
+        let vertical = edge_label_position(&Point { x: 150.0, y: 100.0 }, 80.0, &Point { x: 150.0, y: 200.0 }, 80.0);
+        assert_eq!(vertical, Point { x: 55.0, y: 150.0 });
+    }
+
 }
