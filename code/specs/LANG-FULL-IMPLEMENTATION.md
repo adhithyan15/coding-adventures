@@ -28,9 +28,10 @@ language**, and each frontend was a **deliberate subset**:
 
 The ALGOL power inventory also includes direct initialized tracked-real
 snapshot exponents and nested pure conditionals whose tracked snapshot and
-finite variable-free real-arithmetic or exact tracked built-in-result leaves
-prove the same value over plain real bases; these do not require a standard
-function in the base.
+finite variable-free real-arithmetic or exact tracked built-in-result leaves,
+including results over losslessly widened tracked integers, prove the same
+value over plain real bases; these do not require a standard function in the
+base.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
@@ -1049,11 +1050,12 @@ backend immediately) come before the enabler-dependent items.
   integral, and within the existing exponent cap; otherwise it remains on
   `f64_pow`. Nested pure conditionals over such snapshots and finite,
   variable-free real arithmetic and exact integral built-in results over
-  initialized tracked real locals may also participate when at least one leaf
-  is a tracked snapshot, every leaf proves the same exact value, and each
-  selector is call-free; all selector execution remains in emitted IIR. User
-  calls and built-in overrides, nested powers, fractional or non-finite
-  results, and differing leaves fail closed.
+  initialized tracked real locals or losslessly widened tracked integer locals
+  may also participate when at least one leaf is a tracked real snapshot, every
+  leaf proves the same exact value, and each selector is call-free; all
+  selector execution remains in emitted IIR. User calls and built-in
+  overrides, nested powers, fractional or non-finite results, inexact integer
+  widening, and differing leaves fail closed.
   A real power also accepts finite arithmetic over initialized ordinary local
   real snapshots when the result is an exact nonnegative integer within the
   unroll cap; neither it nor a pure conditional whose branches prove the same

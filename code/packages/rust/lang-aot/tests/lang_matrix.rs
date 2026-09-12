@@ -1718,6 +1718,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an exact built-in result over a losslessly widened tracked
+    // integer may match a tracked real snapshot in a conditional exponent.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer radicand; boolean gate; real exponent, saved; radicand := 4; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) + 6.0; gate := true; radicand := 9; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — finite arithmetic over initialized tracked local reals may
     // bound a power around a path-independent built-in result.
     Prog {
@@ -10112,6 +10121,31 @@ fn algol_conditional_real_snapshot_standard_results_run_on_every_available_stand
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but snapshot/standard-result power did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_real_snapshot_integer_standard_results_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer radicand; boolean gate")
+                && program.src.contains("else sqrt(radicand)")
+        })
+        .expect("conditional snapshot/integer-standard-result power must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but integer-backed standard result did not run"
             );
             continue;
         };
