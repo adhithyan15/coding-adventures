@@ -2800,9 +2800,8 @@ impl Compiler {
     /// Admit finite arithmetic that mixes initialized local integer and real
     /// snapshots for real powers. Integer snapshots must widen exactly to
     /// binary64. Optionally, a pure conditional may participate when every
-    /// runtime path proves the same value; that conditional path remains
-    /// limited to bases containing a pure standard-function result. Calls,
-    /// nested powers, and single-domain expressions stay on existing paths.
+    /// runtime path proves the same value. Calls, nested powers, and
+    /// single-domain expressions stay on existing paths.
     fn static_nonnegative_mixed_tracked_numeric_arithmetic_power_chain(
         &self,
         nodes: &[&GrammarASTNode],
@@ -7931,8 +7930,7 @@ impl Compiler {
                 .flatten()
             })
             .or_else(|| {
-                (base.ty == ScalarType::Real
-                    && self.contains_pure_standard_function_call(base_node))
+                (base.ty == ScalarType::Real)
                 .then(|| {
                     self.static_nonnegative_mixed_tracked_numeric_arithmetic_power_chain(
                         exponent_nodes,
@@ -11836,6 +11834,19 @@ mod tests {
     }
 
     #[test]
+    fn al4_standard_free_conditional_mixed_tracked_numeric_power_arithmetic_unrolls() {
+        let module = compile_source(
+            "begin integer whole; real part, gate, saved; whole := 1; part := 1.0; saved := 6.0 ^ (if gate = 0.0 then whole + part else part + whole) + 6.0; gate := 1.0; whole := 9; part := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("path-independent conditional mixed arithmetic may bound a plain real power");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
     fn al4_path_independent_conditional_mixed_tracked_numeric_power_arithmetic_unrolls() {
         let module = compile_source(
             "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then whole + part else part + whole)) + 6.0; gate := 1.0; whole := 9; part := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
@@ -11859,7 +11870,6 @@ mod tests {
         for source in [
             "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then whole + part else part + whole + 1.0)) end",
             "begin integer whole; real part, gate, exponent, saved; whole := 1; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then whole + part else part + whole)) end",
-            "begin integer whole; real part, gate, saved; whole := 1; part := 0.0; saved := 6.0 ^ (if gate = 0.0 then whole + part else part + whole) end",
             "begin real procedure choose(x); value x; real x; choose := x; integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if choose(gate) = 0.0 then whole + part else part + whole)) end",
         ] {
             let module = compile_source(source, "test")
