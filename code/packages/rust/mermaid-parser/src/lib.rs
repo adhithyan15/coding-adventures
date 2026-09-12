@@ -1168,7 +1168,7 @@ fn parse_board_node(source: &str) -> (Option<String>, String) {
     (None, normalize_mermaid_line_breaks(source.trim()))
 }
 
-/// Parse absolute inclusive bit ranges from the Mermaid packet family.
+/// Parse absolute and relative bit ranges from the Mermaid packet family.
 pub fn parse_packet(source: &str) -> Result<PacketDiagram, ParseError> {
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_packet(&prepared).map_err(|message| ParseError {
@@ -1216,7 +1216,13 @@ pub fn parse_packet(source: &str) -> Result<PacketDiagram, ParseError> {
         let (range, label) = line
             .split_once(':')
             .ok_or_else(|| token_error(token, "packet field requires a bit range and label"))?;
-        let (start_bit, end_bit) = if let Some((start, end)) = range.split_once('-') {
+        let (start_bit, end_bit) = if let Some(bits) = range.trim().strip_prefix('+') {
+            let bits = parse_packet_bit(token, bits)?;
+            if bits == 0 { return Err(token_error(token, "packet field bit count must be positive")); }
+            let end = next_bit.checked_add(bits - 1)
+                .ok_or_else(|| token_error(token, "packet bit range is too large"))?;
+            (next_bit, end)
+        } else if let Some((start, end)) = range.split_once('-') {
             let start = parse_packet_bit(token, start)?;
             let end = parse_packet_bit(token, end)?;
             (start, end)
@@ -1233,12 +1239,6 @@ pub fn parse_packet(source: &str) -> Result<PacketDiagram, ParseError> {
                 format!("packet fields must be contiguous; expected bit {next_bit}"),
             ));
         }
-        if end_bit / 32 != start_bit / 32 {
-            return Err(token_error(
-                token,
-                "packet fields spanning 32-bit rows are outside the supported subset",
-            ));
-        }
         let label = label.trim();
         if label.len() < 2 || !label.starts_with('"') || !label.ends_with('"') {
             return Err(token_error(token, "packet field label must be quoted"));
@@ -1251,13 +1251,6 @@ pub fn parse_packet(source: &str) -> Result<PacketDiagram, ParseError> {
         next_bit = end_bit
             .checked_add(1)
             .ok_or_else(|| token_error(token, "packet bit range is too large"))?;
-    }
-    if diagram.fields.is_empty() {
-        return Err(ParseError {
-            message: "packet diagram requires at least one field".into(),
-            line: 1,
-            col: 1,
-        });
     }
     Ok(diagram)
 }
@@ -8805,6 +8798,15 @@ mod tests_dg04 {
     fn packet_rejects_gaps_and_unquoted_labels() {
         assert!(parse_packet("packet-beta\n0-7: \"Header\"\n9-15: \"Gap\"").is_err());
         assert!(parse_packet("packet-beta\n0-7: Header").is_err());
+    }
+
+    #[test]
+    fn packet_parses_relative_and_row_spanning_fields() {
+        let diagram = parse_packet("packet\n+8: \"byte\"\n+40: \"wide\"").unwrap();
+        assert_eq!((diagram.fields[0].start_bit, diagram.fields[0].end_bit), (0, 7));
+        assert_eq!((diagram.fields[1].start_bit, diagram.fields[1].end_bit), (8, 47));
+        assert!(parse_packet("packet\n+0: \"invalid\"").is_err());
+        assert!(parse_packet("packet").unwrap().fields.is_empty());
     }
 
     #[test]

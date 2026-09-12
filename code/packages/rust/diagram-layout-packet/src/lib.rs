@@ -19,26 +19,31 @@ pub fn layout_packet_diagram(diagram: &PacketDiagram) -> LayoutedPacketDiagram {
     } else {
         0.0
     };
-    let fields = diagram
-        .fields
-        .iter()
-        .enumerate()
-        .map(|(index, field)| {
-            let row = field.start_bit / BITS_PER_ROW;
-            let column = field.start_bit % BITS_PER_ROW;
-            let bit_count = field.end_bit - field.start_bit + 1;
-            LayoutedPacketField {
-                start_bit: field.start_bit,
-                end_bit: field.end_bit,
+    let mut fields = Vec::new();
+    for (index, field) in diagram.fields.iter().enumerate() {
+        let mut start_bit = field.start_bit;
+        while start_bit <= field.end_bit {
+            let row = start_bit / BITS_PER_ROW;
+            let row_end = row.checked_add(1)
+                .and_then(|next_row| next_row.checked_mul(BITS_PER_ROW))
+                .and_then(|next_row_start| next_row_start.checked_sub(1))
+                .unwrap_or(u32::MAX);
+            let end_bit = field.end_bit.min(row_end);
+            let column = start_bit % BITS_PER_ROW;
+            fields.push(LayoutedPacketField {
+                start_bit,
+                end_bit,
                 label: field.label.clone(),
                 x: PADDING + f64::from(column) * BIT_WIDTH,
                 y: PADDING + title_inset + f64::from(row) * ROW_HEIGHT,
-                width: f64::from(bit_count) * BIT_WIDTH,
+                width: f64::from(end_bit - start_bit + 1) * BIT_WIDTH,
                 height: ROW_HEIGHT,
                 style: packet_style(index),
-            }
-        })
-        .collect();
+            });
+            let Some(next) = end_bit.checked_add(1) else { break };
+            start_bit = next;
+        }
+    }
     let rows = diagram
         .fields
         .last()
@@ -99,5 +104,17 @@ mod tests {
         assert_eq!(layout.fields[1].x, 216.0);
         assert!(layout.fields[2].y > layout.fields[1].y);
         assert_eq!(layout.width, 816.0);
+    }
+
+    #[test]
+    fn splits_fields_that_cross_row_boundaries() {
+        let layout = layout_packet_diagram(&PacketDiagram {
+            fields: vec![PacketField { start_bit: 0, end_bit: 63, label: DiagramLabel::new("wide") }],
+            ..PacketDiagram::default()
+        });
+        assert_eq!(layout.fields.len(), 2);
+        assert_eq!((layout.fields[0].start_bit, layout.fields[0].end_bit), (0, 31));
+        assert_eq!((layout.fields[1].start_bit, layout.fields[1].end_bit), (32, 63));
+        assert!(layout.fields[1].y > layout.fields[0].y);
     }
 }

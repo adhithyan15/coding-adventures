@@ -364,12 +364,13 @@ style directives remain explicitly unsupported at the partial level.
 
 The initial Mermaid 11.16.1 packet slice parses `packet` and `packet-beta`
 through dedicated portable grammars into typed packet IR. It preserves
-contiguous absolute inclusive bit ranges, quoted labels, titles, and
-accessibility metadata. `diagram-layout-packet` resolves deterministic 32-bit
-row geometry, and dedicated PaintScene lowering emits backend-neutral field
-rectangles and shaped text. A native Metal-to-PNG fixture gates this slice;
-relative ranges, fields spanning row boundaries, packet configuration, and
-style controls remain explicitly unsupported at the partial level.
+contiguous absolute inclusive bit ranges, relative `+bits` fields, quoted
+labels, titles, accessibility metadata, and empty packets. Fields spanning
+32-bit row boundaries are split into deterministic row fragments by
+`diagram-layout-packet`, and dedicated PaintScene lowering emits
+backend-neutral field rectangles and shaped text. A native Metal-to-PNG
+fixture gates this slice; packet configuration and style controls remain
+explicitly unsupported at the partial level.
 
 ### Kanban Native Slice
 
