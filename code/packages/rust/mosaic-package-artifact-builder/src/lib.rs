@@ -270,8 +270,9 @@ impl Backend {
     /// handler to the generated app.
     ///
     /// Copying a handler's source into the project is backend-agnostic;
-    /// installing it is not. Only Qt and SwiftUI emit the call that reaches it
-    /// -- `qt_main_with_host_effects` and `swift_app_with_host_effects`.
+    /// installing it is not. Qt, SwiftUI and Compose emit the call that reaches
+    /// it -- `qt_main_with_host_effects`, `swift_app_with_host_effects` and
+    /// `compose_main_with_host_effects`. Flutter and XAML do not yet.
     ///
     /// Without this, a package declaring a handler for any other backend got
     /// the file copied, compiled and shipped with nothing ever calling it, and
@@ -3574,15 +3575,29 @@ fn compose_main_with_host_effects(
         )));
     }
 
-    // Line-anchored, as on the other backends.
+    // Line-anchored, as on the other backends -- defence in depth here rather
+    // than the load-bearing guard SwiftUI needs.
     //
-    // Here it is defence in depth rather than the load-bearing guard SwiftUI
-    // needs: `escape_kotlin_string` turns a newline into `\n`, so author text
-    // reaching the generated file through it cannot start a line at all. That
-    // is a stronger position than SwiftUI's, where the escaping passes raw
-    // newlines through and the anchoring is the only thing standing between a
-    // slot default and the splice point. The guard does not depend on every
-    // path through this emitter being escaped, which is why it is still here.
+    // The reason is POSITIONAL, and an earlier version of this comment gave a
+    // different one that does not hold. It said author text cannot begin a line
+    // because `escape_kotlin_string` turns a newline into `\n`. That is true of
+    // slot defaults, `OneOf` members and the window title -- but `component_name`
+    // and slot field names are interpolated RAW by
+    // `build_compose_root_invocation`, so the escaping is not what makes this
+    // safe. (Those two are constrained by grammar instead: `pascal_case_re` and
+    // the mosmodel NAME token admit no newline.)
+    //
+    // What actually carries the weight is that nothing author-controlled is
+    // emitted BEFORE the anchor. `build_compose_root_invocation`'s output lands
+    // in `MosaicApp`, which is emitted after `fun main()`; everything ahead of
+    // the anchor line is fixed scaffolding -- banner and imports. Since
+    // `find_anchored` scans forward and takes the first hit, the real anchor
+    // wins even if author text could start a line. That property is checkable,
+    // and a test pins it.
+    //
+    // SwiftUI is the opposite case: its author text sits ~270 lines AHEAD of
+    // the assignment being anchored on, so there the anchoring is the only
+    // thing between a slot default and the splice point.
     const ANCHOR: &str = "val mosaicHost = remember {";
     let Some(at) = line_anchored_find(generated, ANCHOR) else {
         // Loud, for the same reason as SwiftUI. Gradle compiles everything
@@ -13013,6 +13028,55 @@ handlers = [
             .find("val mosaicHost = remember { MosaicRuntimeHost.load() }")
             .expect("real");
         assert!(real < install, "{wired}");
+    }
+
+    /// Nothing author-controlled is emitted before the anchor.
+    ///
+    /// This is the property the anchoring actually rests on, so it is asserted
+    /// rather than described. An earlier comment credited
+    /// `escape_kotlin_string` instead, which is wrong: `component_name` and
+    /// slot field names are interpolated raw by
+    /// `build_compose_root_invocation`.
+    ///
+    /// The real guarantee is positional -- author text lands in `MosaicApp`,
+    /// emitted after `fun main()`, so everything ahead of the anchor is fixed
+    /// scaffolding. A future emitter that moved author text above the anchor
+    /// would make the line-anchoring load-bearing without anyone noticing,
+    /// which is exactly what this catches.
+    #[test]
+    fn no_author_controlled_text_precedes_the_anchor() {
+        // Names chosen to be findable, and legal: `pascal_case_re` for the
+        // component, the mosmodel NAME token for the slot.
+        let slots = vec![SlotDecl {
+            name: "authorSlotName".to_string(),
+            r#type: SlotType::Text,
+            required: false,
+            default: Some(SlotDefault::Text("AUTHORDEFAULTVALUE".to_string())),
+        }];
+        let generated = build_compose_main_kt("AuthorComponentName", &slots, false);
+
+        let anchor = generated
+            .find("val mosaicHost = remember {")
+            .expect("the anchor must be present");
+        let prefix = &generated[..anchor];
+
+        for needle in [
+            "AuthorComponentName",
+            "authorSlotName",
+            "AUTHORDEFAULTVALUE",
+        ] {
+            assert!(
+                !prefix.contains(needle),
+                "author-controlled text {needle:?} appears BEFORE the anchor, which \
+                 makes the line-anchoring load-bearing rather than defence in \
+                 depth -- re-read the reasoning above `ANCHOR` before changing it"
+            );
+        }
+        // And the fixture really did carry those strings into the file, or the
+        // assertions above pass for the wrong reason.
+        for needle in ["AuthorComponentName", "authorSlotName"] {
+            assert!(generated.contains(needle), "fixture inert: {needle}");
+        }
     }
 
     /// The anchor must match what the Compose emitter ACTUALLY emits.

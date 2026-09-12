@@ -21,16 +21,31 @@ install onto.
 #### The anchor is guarded, and honestly described
 
 Line-anchored on `val mosaicHost = remember {`, as on the other backends — but
-here that is **defence in depth rather than the load-bearing guard**, and the
-difference is worth stating because SwiftUI's comment got it wrong in the other
-direction.
+here that is **defence in depth rather than the load-bearing guard**.
 
-`escape_kotlin_string` turns a newline into `\n`, so author text reaching the
-generated file through it cannot begin a line at all. SwiftUI's
-`escape_swift_string` passes raw newlines through, which is exactly why the
-anchoring there is the only thing between a slot default and the splice point.
-The guard stays because it does not depend on every path through this emitter
-being escaped.
+The reason is positional, and the first version of this entry gave a different
+one that does not hold. It credited `escape_kotlin_string` turning newlines into
+`\n`, which is true of slot defaults, `OneOf` members and the window title — but
+`component_name` and slot field names are interpolated **raw** by
+`build_compose_root_invocation`, so the escaping is not what makes this safe.
+(Those two are constrained by grammar instead: `pascal_case_re` and the mosmodel
+`NAME` token admit no newline.) Security review caught it.
+
+What carries the weight is that **nothing author-controlled is emitted before
+the anchor**. `build_compose_root_invocation`'s output lands in `MosaicApp`,
+emitted after `fun main()`; everything ahead of the anchor line is fixed
+scaffolding. Since the search scans forward and takes the first hit, the real
+anchor wins even if author text could begin a line.
+
+That property is checkable, so it is now a test rather than a comment —
+`no_author_controlled_text_precedes_the_anchor` emits with a findable component
+name, slot name and default, and asserts none appears before the anchor. A
+future emitter that moved author text above it would otherwise make the
+line-anchoring load-bearing with nobody noticing; the mutation fails the test.
+
+SwiftUI is the opposite case, which is why the comments differ: its author text
+sits ~270 lines *ahead* of the assignment being anchored on, so there the
+anchoring really is the only thing between a slot default and the splice point.
 
 #### An `include` on a Compose handler is refused
 
