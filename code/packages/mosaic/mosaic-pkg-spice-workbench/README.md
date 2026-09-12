@@ -7,5 +7,7 @@ waveform traces with axes on HTML and React hosts, and a raw result pane. The ma
 `spice-mosaic-app` Rust adapter owns state and invokes the parser/engine.
 
 The trace surface consumes parser-derived waveform artifacts rather than a
-second result schema. Data-bound Path geometry remains a native XAML follow-up;
-schematic capture and vendor-dialect controls are later phases.
+second result schema. The schematic host controls expose the canonical passive
+and source palette plus analysis selection; their Rust document remains the
+only lowering source. Data-bound Path geometry remains a native XAML follow-up;
+vendor-dialect controls are later phases.

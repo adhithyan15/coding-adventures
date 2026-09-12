@@ -13,6 +13,9 @@ component SpiceWorkbench {
   slot schematic-title : text ;
   slot schematic-rows : list<text> ;
   slot schematic-palette : list<text> ;
+  slot schematic-analysis-label : text ;
+  slot schematic-analysis-controls : list<text> ;
+  slot selected-schematic-analysis-label : text ;
   slot schematic-grid-label : text ;
   slot schematic-grid-lines : list<list<number>> ;
   slot schematic-wire-segments : list<list<number>> ;
@@ -38,6 +41,7 @@ component SpiceWorkbench {
   emit onInspect ;
   emit onRun ;
   emit onPlaceSchematicComponent ( kind : text ) ;
+  emit onSelectSchematicAnalysis ( analysis : text ) ;
   emit onSelectSchematicComponent ( reference : text ) ;
   emit onRouteToSchematicComponent ( reference : text ) ;
   emit onSynchronizeSchematic ;

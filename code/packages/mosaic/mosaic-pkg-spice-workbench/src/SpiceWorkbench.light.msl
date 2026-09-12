@@ -9,6 +9,10 @@ style SpiceWorkbench {
   part schematic-title { color : "#0f172a" ; font-weight : bold ; }
   part schematic-palette { gap : 6 ; }
   part schematic-palette-item { background : "#ecfeff" ; color : "#155e75" ; border-width : 1 ; border-color : "#67e8f9" ; border-radius : 3 ; padding : 6 ; }
+  part schematic-analysis-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
+  part schematic-analysis-controls { gap : 6 ; }
+  part schematic-analysis-control { background : "#f5f3ff" ; color : "#5b21b6" ; border-width : 1 ; border-color : "#c4b5fd" ; border-radius : 3 ; padding : 6 ; }
+  part selected-schematic-analysis { color : "#6d28d9" ; font-weight : bold ; }
   part schematic-grid-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
   part schematic-grid { width : 360 ; min-height : 240 ; background : "#ffffff" ; border-width : 1 ; border-color : "#cbd5e1" ; }
   part schematic-grid-line { border-color : "#e2e8f0" ; border-width : 1 ; }

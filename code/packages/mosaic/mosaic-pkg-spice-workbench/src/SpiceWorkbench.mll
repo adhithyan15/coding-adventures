@@ -33,6 +33,16 @@ layout SpiceWorkbench {
           )
         }
       }
+      Text [ schematic-analysis-label ] ( content : slot: schematic-analysis-label )
+      Row [ schematic-analysis-controls ] {
+        For ( each: slot: schematic-analysis-controls , as: analysis , index: analysis-index ) {
+          HostButton [ schematic-analysis-control ] (
+            label : ( analysis ) ,
+            onClick : emit: onSelectSchematicAnalysis
+          )
+        }
+      }
+      Text [ selected-schematic-analysis ] ( content : slot: selected-schematic-analysis-label )
       Text [ schematic-grid-label ] ( content : slot: schematic-grid-label )
       Stack [ schematic-grid ] {
         For ( each: slot: schematic-grid-lines , as: line , index: line-index ) {
