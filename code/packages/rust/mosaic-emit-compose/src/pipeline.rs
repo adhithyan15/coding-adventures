@@ -1,6 +1,6 @@
 //! Jetpack Compose backend pipeline emitter.
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeSet, HashMap, HashSet};
 use std::fmt::Write;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
@@ -1320,7 +1320,100 @@ fn compose_font_weight(value: &str) -> Option<String> {
 /// `contentAlignment` is Box-only and the Kotlin did not compile. Nothing
 /// caught it because no shipped package authors `text-align` on a Row; it was
 /// latent rather than absent.
-fn container_alignment_arguments(
+/// The Row/Column/Box arguments an authored part contributes (#14834).
+///
+/// Two authored properties can want the same argument slot, and Compose
+/// cannot express either pair, so each collision is resolved explicitly
+/// rather than by whichever branch runs last:
+///
+/// **`gap` vs `justify-content`** -- both want the arrangement slot.
+/// `Arrangement.spacedBy(n.dp, alignment)` takes an *Alignment*, while
+/// `SpaceBetween`/`SpaceAround`/`SpaceEvenly` are *Arrangements*: they do
+/// not compose. When `justify-content` resolves to a plain start/center/end
+/// the gap still folds in through `spacedBy`, so nothing is lost. Only the
+/// DISTRIBUTING values displace the gap, and they do so because an
+/// arrangement that already decides the spacing makes a fixed gap
+/// contradictory rather than additive.
+///
+/// **`align` (from `text-align`) vs `align-items` on a Column** -- both
+/// want `horizontalAlignment`. `align-items` wins: it is the explicit
+/// cross-axis property, where `align` is a text property being borrowed
+/// for layout.
+fn container_arrangement_arguments(
+    composable: &str,
+    align: Option<&str>,
+    gap: Option<&str>,
+    justify_content: Option<&str>,
+    align_items: Option<&str>,
+) -> Vec<String> {
+    let mut out = Vec::new();
+
+    // Main axis. `justify-content` owns the arrangement slot when it
+    // resolves; otherwise the legacy `align`/`gap` handling is unchanged.
+    let justify = justify_content.and_then(justify_arrangement);
+    let axis = match composable {
+        "Row" => Some("horizontalArrangement"),
+        "Column" => Some("verticalArrangement"),
+        _ => None,
+    };
+    match (justify, axis) {
+        (Some((arrangement, distributes)), Some(axis)) => {
+            if distributes || gap.is_none() {
+                out.push(format!("{axis} = {arrangement}"));
+            } else {
+                // Non-distributing: the gap survives, carrying the alignment.
+                let alignment = match (composable, arrangement) {
+                    ("Row", "Arrangement.Start") => "Alignment.Start",
+                    ("Row", "Arrangement.Center") => "Alignment.CenterHorizontally",
+                    ("Row", _) => "Alignment.End",
+                    (_, "Arrangement.Start") => "Alignment.Top",
+                    (_, "Arrangement.Center") => "Alignment.CenterVertically",
+                    (_, _) => "Alignment.Bottom",
+                };
+                let gap = gap.unwrap_or("0");
+                out.push(format!(
+                    "{axis} = Arrangement.spacedBy({gap}.dp, {alignment})"
+                ));
+            }
+        }
+        _ => {
+            // No usable `justify-content`. Legacy handling, except that on a
+            // Column `align-items` claims `horizontalAlignment` below, so the
+            // borrowed `text-align` must not also emit it -- collision (b).
+            let legacy_align = if composable == "Column"
+                && align_items
+                    .and_then(|v| cross_axis_alignment(v, composable))
+                    .is_some()
+            {
+                None
+            } else {
+                align
+            };
+            out.extend(container_alignment_arguments_legacy(
+                composable,
+                legacy_align,
+                gap,
+            ));
+        }
+    }
+
+    // Cross axis -- a DIFFERENT slot from the arrangement, so it composes
+    // with the main axis rather than competing with it. This is the half the
+    // first version of this function got wrong: routing `align-items`
+    // through the legacy `align` path put it on the MAIN axis on a Row.
+    if let Some(cross) = align_items.and_then(|v| cross_axis_alignment(v, composable)) {
+        let slot = match composable {
+            "Row" => "verticalAlignment",
+            "Column" => "horizontalAlignment",
+            _ => return out,
+        };
+        out.push(format!("{slot} = {cross}"));
+    }
+
+    out
+}
+
+fn container_alignment_arguments_legacy(
     composable: &str,
     align: Option<&str>,
     gap: Option<&str>,
@@ -1383,6 +1476,119 @@ fn container_alignment_arguments(
     out
 }
 
+/// Whether the container arguments carry `name` on EVERY composable the
+/// part is used on.
+///
+/// "Every" matters: a part shared between a Row and a `Text` is genuinely
+/// dropped on the `Text`, and saying otherwise would hide a real loss. The
+/// reporter keeps such a part in the report.
+fn container_argument_covers(name: &str, on: &BTreeSet<&'static str>) -> bool {
+    let carried_by = |composable: &str| match name {
+        // Main-axis distribution: an arrangement slot, which only the
+        // linear containers have.
+        "justify-content" => matches!(composable, "Row" | "Column"),
+        // Cross-axis alignment: `verticalAlignment` on a Row,
+        // `horizontalAlignment` on a Column, `contentAlignment` on a Box.
+        "align-items" | "align" => matches!(composable, "Row" | "Column" | "Box"),
+        _ => false,
+    };
+    !on.is_empty() && on.iter().all(|c| carried_by(c))
+}
+
+/// Map an authored `justify-content` value to a Compose arrangement.
+///
+/// The distributing values are the reason `gap` and `justify-content`
+/// cannot both be honoured: `Arrangement.spacedBy(n.dp, alignment)` takes
+/// an *Alignment*, while `SpaceBetween` and friends are *Arrangements*.
+/// See `container_alignment_arguments` for which one wins.
+fn justify_arrangement(value: &str) -> Option<(&'static str, bool)> {
+    // (arrangement, distributes) -- `distributes` marks the values that
+    // already decide the spacing, and so displace an authored `gap`.
+    match value {
+        "flex-start" | "start" => Some(("Arrangement.Start", false)),
+        "center" => Some(("Arrangement.Center", false)),
+        "flex-end" | "end" => Some(("Arrangement.End", false)),
+        "space-between" => Some(("Arrangement.SpaceBetween", true)),
+        "space-around" => Some(("Arrangement.SpaceAround", true)),
+        "space-evenly" => Some(("Arrangement.SpaceEvenly", true)),
+        _ => None,
+    }
+}
+
+/// Map an authored `align-items` / `align` value to a cross-axis alignment.
+fn cross_axis_alignment(value: &str, composable: &str) -> Option<&'static str> {
+    let centered = matches!(value, "center" | "center-vertical" | "center-horizontal");
+    match composable {
+        "Row" => Some(if centered {
+            "Alignment.CenterVertically"
+        } else if matches!(value, "flex-start" | "start") {
+            "Alignment.Top"
+        } else if matches!(value, "flex-end" | "end") {
+            "Alignment.Bottom"
+        } else {
+            return None;
+        }),
+        "Column" => Some(if centered {
+            "Alignment.CenterHorizontally"
+        } else if matches!(value, "flex-start" | "start") {
+            "Alignment.Start"
+        } else if matches!(value, "flex-end" | "end") {
+            "Alignment.End"
+        } else {
+            return None;
+        }),
+        _ => None,
+    }
+}
+
+/// The container composable a layout tag lowers to, for the tags whose
+/// arrangement/alignment arguments depend on it.
+///
+/// `Box` lowers to `Column` and `Stack` to `Box` (UI60) -- the pair that
+/// reads backwards until you know that Compose's `Box` is the z-stack.
+/// Returns `None` for anything that is not one of these containers, which
+/// is the honest answer for a `Text` or a `HostButton`: they have no
+/// arrangement slot at all.
+fn container_composable_for_tag(tag: &str) -> Option<&'static str> {
+    match tag {
+        "Column" => Some("Column"),
+        "Row" => Some("Row"),
+        "Box" => Some("Column"),
+        "Stack" => Some("Box"),
+        _ => None,
+    }
+}
+
+/// Every container composable each part is used on, keyed by part name.
+///
+/// The drop reporter needs this because whether a property is really
+/// dropped depends on the composable: `justify-content` reaches
+/// `horizontalArrangement` on a Row and `verticalArrangement` on a Column,
+/// but a `Text` has no such slot. Reporting per part name alone can only
+/// answer that question by guessing (#14834, #14843).
+///
+/// A part may be used on more than one node -- and on nodes of different
+/// tags -- so this collects a SET rather than a single answer. A property
+/// that lowers on one of them and not another is genuinely half-dropped,
+/// and the caller has to decide; collapsing to one composable here would
+/// hide that.
+fn part_container_composables(root: &LayoutNode) -> HashMap<String, BTreeSet<&'static str>> {
+    fn walk(node: &LayoutNode, out: &mut HashMap<String, BTreeSet<&'static str>>) {
+        if let (Some(part), Some(composable)) = (
+            node.part_name.as_deref(),
+            container_composable_for_tag(&node.tag),
+        ) {
+            out.entry(part.to_string()).or_default().insert(composable);
+        }
+        for child in &node.children {
+            walk(child, out);
+        }
+    }
+    let mut out = HashMap::new();
+    walk(root, &mut out);
+    out
+}
+
 /// One authored style property that Compose lowering discards.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DroppedStyleProperty {
@@ -1406,10 +1612,39 @@ pub struct DroppedStyleProperty {
 /// `border-radius` and 48 `font-weight` — every rounded corner square, every
 /// weight flattened — while the strict `native-complete` profile passed.
 pub fn dropped_style_properties(style: &StyleDef) -> Vec<DroppedStyleProperty> {
+    dropped_style_properties_in_layout(style, None)
+}
+
+/// [`dropped_style_properties`], told which composable each part sits on.
+///
+/// Whether a property is dropped is not a function of its name alone.
+/// `justify-content` reaches `horizontalArrangement` on a Row and
+/// `verticalArrangement` on a Column, and has nowhere to go on a `Text` --
+/// so a reporter that sees only `&StyleDef` has to answer per name and is
+/// wrong on one of those cases whichever way it answers (#14834, #14843).
+///
+/// Passing `None` keeps the old name-only behaviour for callers that
+/// genuinely have no layout (a stylesheet linted on its own).
+pub fn dropped_style_properties_in_layout(
+    style: &StyleDef,
+    layout_root: Option<&LayoutNode>,
+) -> Vec<DroppedStyleProperty> {
+    let composables = layout_root.map(part_container_composables);
     let mut out = Vec::new();
     for part in &style.parts {
         let built = compose_box_style(&part.base, &[], None, 0, None);
         for (name, value) in built.dropped {
+            // A property the container arguments now carry is not dropped on
+            // the containers that carry it. Without the layout we cannot tell,
+            // and fall back to reporting it -- over-reporting a drop is the
+            // safer error, but only the layout makes the answer right.
+            if let Some(map) = &composables {
+                if let Some(on) = map.get(&part.name) {
+                    if container_argument_covers(&name, on) {
+                        continue;
+                    }
+                }
+            }
             out.push(DroppedStyleProperty {
                 reason: compose_drop_reason(&name).to_string(),
                 part: part.name.clone(),
@@ -3111,6 +3346,10 @@ struct ComposeStyle {
     dropped: Vec<(String, String)>,
     /// Authored `gap`, in dp, for a Column/Row `Arrangement.spacedBy` (#14804).
     gap: Option<String>,
+    /// Authored `justify-content`, for the main-axis arrangement (#14834).
+    justify_content: Option<String>,
+    /// Authored `align-items` / `align`, for the cross-axis alignment (#14834).
+    align_items: Option<String>,
     /// Compose `FontWeight.*` expression for an authored `font-weight` (#14810).
     font_weight: Option<String>,
 }
@@ -3226,6 +3465,8 @@ fn compose_box_style(
     let mut font_weight: Option<String> = None;
     let mut dropped: Vec<(String, String)> = Vec::new();
     let mut gap: Option<String> = None;
+    let mut justify_content: Option<String> = None;
+    let mut align_items: Option<String> = None;
 
     let mut absorb = |p: &StyleProp, layer_idx: Option<usize>| {
         let set = |bucket: &mut PropBucket, v: String| match layer_idx {
@@ -3371,6 +3612,19 @@ fn compose_box_style(
                 if let Some(v) = px_or_none(&p.value) {
                     gap = Some(v);
                 }
+            }
+            // #14834 — captured here but STILL recorded as dropped below,
+            // because whether they reach an argument depends on the
+            // composable the part is used on, which this function cannot
+            // see. `dropped_style_properties_in_layout` filters them out
+            // for the containers that do carry them.
+            "justify-content" if layer_idx.is_none() => {
+                justify_content = Some(p.value.trim().to_string());
+                dropped.push((p.name.clone(), p.value.clone()));
+            }
+            "align-items" | "align" if layer_idx.is_none() => {
+                align_items = Some(p.value.trim().to_string());
+                dropped.push((p.name.clone(), p.value.clone()));
             }
             // `flex-grow` is consumed by `compose_row_weight`, not here, so
             // falling to `_` reported every usable one as a drop -- 6 against
@@ -3589,6 +3843,8 @@ fn compose_box_style(
         content_alignment: text_align.map(str::to_string),
         dropped,
         gap,
+        justify_content,
+        align_items,
         text_color,
         font_family_mono: !font_family_mono.empty(),
         font_size: font_size_out,
@@ -4337,6 +4593,8 @@ fn emit_container_frame(
                 style = Some(ComposeStyle {
                     modifier: prefix,
                     background: None,
+                    justify_content: None,
+                    align_items: None,
                     content_alignment: None,
                     text_color: None,
                     font_family_mono: false,
@@ -4367,6 +4625,8 @@ fn emit_container_frame(
         || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
     let gap = style.as_ref().and_then(|s| s.gap.clone());
+    let justify_content = style.as_ref().and_then(|s| s.justify_content.clone());
+    let align_items = style.as_ref().and_then(|s| s.align_items.clone());
     let child_text: Option<TextStyleCtx> = match &style {
         Some(s) => {
             let inherited = text_ctx.cloned().unwrap_or_default();
@@ -4411,7 +4671,13 @@ fn emit_container_frame(
         }
         writeln!(opener, ",").unwrap();
         for argument in
-            container_alignment_arguments(composable, content_alignment.as_deref(), gap.as_deref())
+            container_arrangement_arguments(
+                composable,
+                content_alignment.as_deref(),
+                gap.as_deref(),
+                justify_content.as_deref(),
+                align_items.as_deref(),
+            )
         {
             writeln!(opener, "{modifier_pad}{argument},").unwrap();
         }
@@ -4605,6 +4871,8 @@ fn emit_container(
             style = Some(ComposeStyle {
                 modifier: prefix,
                 background: None,
+                justify_content: None,
+                align_items: None,
                 content_alignment: None,
                 text_color: None,
                 font_family_mono: false,
@@ -4635,6 +4903,8 @@ fn emit_container(
                 style = Some(ComposeStyle {
                     modifier: prefix,
                     background: None,
+                    justify_content: None,
+                    align_items: None,
                     content_alignment: None,
                     text_color: None,
                     font_family_mono: false,
@@ -4669,6 +4939,8 @@ fn emit_container(
         || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
     let gap = style.as_ref().and_then(|s| s.gap.clone());
+    let justify_content = style.as_ref().and_then(|s| s.justify_content.clone());
+    let align_items = style.as_ref().and_then(|s| s.align_items.clone());
 
     // The text style children inherit: a styled Box may override the
     // inherited (sheet) color / font for its own cell text.
@@ -4720,7 +4992,13 @@ fn emit_container(
         }
         writeln!(out, ",").unwrap();
         for argument in
-            container_alignment_arguments(composable, content_alignment.as_deref(), gap.as_deref())
+            container_arrangement_arguments(
+                composable,
+                content_alignment.as_deref(),
+                gap.as_deref(),
+                justify_content.as_deref(),
+                align_items.as_deref(),
+            )
         {
             writeln!(out, "{modifier_pad}{argument},").unwrap();
         }
@@ -10217,18 +10495,79 @@ mod tests {
     // Row analysed fine to the eye and only kotlinc rejected it.
     // ===================================================================
 
+    /// #14834 — `justify-content` reaches the arrangement slot.
+    #[test]
+    fn justify_content_lowers_to_the_main_axis_arrangement() {
+        assert_eq!(
+            container_arrangement_arguments("Row", None, None, Some("space-between"), None),
+            vec!["horizontalArrangement = Arrangement.SpaceBetween"]
+        );
+        // On a Column the same property drives the VERTICAL arrangement.
+        assert_eq!(
+            container_arrangement_arguments("Column", None, None, Some("space-between"), None),
+            vec!["verticalArrangement = Arrangement.SpaceBetween"]
+        );
+    }
+
+    /// #14834 — `align-items` reaches the cross-axis alignment, which is a
+    /// different slot per composable.
+    #[test]
+    fn align_items_lowers_to_the_cross_axis_alignment() {
+        // On a Row the cross axis is VERTICAL -- the mistake the first
+        // implementation made was sending this to the main axis.
+        assert_eq!(
+            container_arrangement_arguments("Row", None, None, None, Some("center")),
+            vec!["verticalAlignment = Alignment.CenterVertically"]
+        );
+        // On a Column it is horizontal.
+        assert_eq!(
+            container_arrangement_arguments("Column", None, None, None, Some("center")),
+            vec!["horizontalAlignment = Alignment.CenterHorizontally"]
+        );
+    }
+
+    /// Collision (a): a DISTRIBUTING `justify-content` displaces `gap`,
+    /// because `Arrangement.spacedBy` takes an Alignment and SpaceBetween is
+    /// an Arrangement -- they cannot compose.
+    #[test]
+    fn distributing_justify_content_displaces_gap() {
+        assert_eq!(
+            container_arrangement_arguments("Row", None, Some("12"), Some("space-between"), None),
+            vec!["horizontalArrangement = Arrangement.SpaceBetween"]
+        );
+    }
+
+    /// ...but a NON-distributing one keeps the gap, folded in through
+    /// `spacedBy`, so nothing is lost in the common case.
+    #[test]
+    fn non_distributing_justify_content_keeps_the_gap() {
+        assert_eq!(
+            container_arrangement_arguments("Row", None, Some("12"), Some("center"), None),
+            vec!["horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)"]
+        );
+    }
+
+    /// Collision (b): on a Column both `align` (from `text-align`) and
+    /// `align-items` want `horizontalAlignment`. The explicit cross-axis
+    /// property wins over the borrowed text one.
+    #[test]
+    fn align_items_beats_text_align_on_a_column() {
+        let args = container_arrangement_arguments("Column", Some("end"), None, None, Some("center"));
+        assert_eq!(args, vec!["horizontalAlignment = Alignment.CenterHorizontally"]);
+    }
+
     #[test]
     fn box_keeps_content_alignment() {
         assert_eq!(
-            container_alignment_arguments("Box", Some("center"), None),
+            container_arrangement_arguments("Box", Some("center"), None, None, None),
             vec!["contentAlignment = Alignment.Center"]
         );
         assert_eq!(
-            container_alignment_arguments("Box", Some("start"), None),
+            container_arrangement_arguments("Box", Some("start"), None, None, None),
             vec!["contentAlignment = Alignment.CenterStart"]
         );
         assert_eq!(
-            container_alignment_arguments("Box", Some("end"), None),
+            container_arrangement_arguments("Box", Some("end"), None, None, None),
             vec!["contentAlignment = Alignment.CenterEnd"]
         );
     }
@@ -10237,14 +10576,14 @@ mod tests {
     fn a_box_drops_gap_rather_than_arranging_it() {
         // A Box stacks its children, so a gap is meaningless there rather
         // than unsupported -- and `Arrangement` is not a Box argument at all.
-        assert!(container_alignment_arguments("Box", None, Some("12")).is_empty());
+        assert!(container_arrangement_arguments("Box", None, Some("12"), None, None).is_empty());
     }
 
     #[test]
     fn row_text_align_is_an_arrangement_not_content_alignment() {
         // The #14839 regression in one line: `contentAlignment` is Box-only,
         // and `Row(contentAlignment = ..)` does not compile.
-        let args = container_alignment_arguments("Row", Some("center"), None);
+        let args = container_arrangement_arguments("Row", Some("center"), None, None, None);
         assert_eq!(args, vec!["horizontalArrangement = Arrangement.Center"]);
         assert!(
             !args.iter().any(|a| a.contains("contentAlignment")),
@@ -10257,7 +10596,7 @@ mod tests {
         // Both want `horizontalArrangement`. Emitting it twice is a duplicate
         // named argument and also does not compile, so the two-argument
         // `spacedBy` form is the resolution rather than a precedence rule.
-        let args = container_alignment_arguments("Row", Some("center"), Some("12"));
+        let args = container_arrangement_arguments("Row", Some("center"), Some("12"), None, None);
         assert_eq!(
             args,
             vec!["horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)"]
@@ -10269,7 +10608,7 @@ mod tests {
     fn column_alignment_and_gap_are_different_axes() {
         // Unlike a Row these do not collide, so both are emitted.
         assert_eq!(
-            container_alignment_arguments("Column", Some("center"), Some("8")),
+            container_arrangement_arguments("Column", Some("center"), Some("8"), None, None),
             vec![
                 "horizontalAlignment = Alignment.CenterHorizontally",
                 "verticalArrangement = Arrangement.spacedBy(8.dp)",
@@ -10281,7 +10620,7 @@ mod tests {
     fn no_alignment_and_no_gap_emits_nothing() {
         for composable in ["Box", "Row", "Column"] {
             assert!(
-                container_alignment_arguments(composable, None, None).is_empty(),
+                container_arrangement_arguments(composable, None, None, None, None).is_empty(),
                 "{composable} invented an argument"
             );
         }
