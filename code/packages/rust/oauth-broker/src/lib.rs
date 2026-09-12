@@ -22,6 +22,8 @@ use coding_adventures_oauth_credential_custody::{
     CredentialAuditSink, CredentialCustody, CredentialKey, CredentialMetadata, CredentialRevision,
     CredentialStore, CustodyError,
 };
+use coding_adventures_oauth_private_key_jwt::PrivateKeyJwtProfile;
+use coding_adventures_oauth_private_key_signer::{PrivateKeyId, PrivateKeyJwtAlgorithm};
 use coding_adventures_zeroize::Zeroizing;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{self, Debug, Display, Formatter};
@@ -146,6 +148,46 @@ impl BrokerProvider {
             }
         };
         Ok(ClientSecretAuthentication::new(key, method))
+    }
+
+    /// Bind one opaque private key to this provider's retained JWT profile.
+    ///
+    /// The key provider and selected algorithm must match this profile
+    /// exactly. Public and client-secret profiles fail closed. Constructing
+    /// this data-only assertion profile neither invokes a signer nor implies
+    /// that the selected algorithm has a concrete implementation.
+    pub fn bind_private_key_jwt_profile(
+        &self,
+        key: PrivateKeyId,
+        algorithm: PrivateKeyJwtAlgorithm,
+        key_id: Option<String>,
+        lifetime_seconds: u64,
+    ) -> Result<PrivateKeyJwtProfile, BrokerError> {
+        if key.provider() != self.provider()
+            || self.confidential_authentication_method
+                != Some(ConfidentialClientAuthenticationMethod::PrivateKeyJwt)
+            || !self
+                .client_authentication_signing_algorithms
+                .iter()
+                .any(|candidate| candidate == algorithm.as_str())
+        {
+            return Err(BrokerError::BindingMismatch);
+        }
+        let methods = [ConfidentialClientAuthenticationMethod::PrivateKeyJwt
+            .as_str()
+            .to_owned()];
+        PrivateKeyJwtProfile::new(
+            self.provider().clone(),
+            self.config.client_id().to_owned(),
+            self.config.token_endpoint(),
+            &methods,
+            &self.client_authentication_signing_algorithms,
+            key,
+            algorithm,
+            key_id,
+            lifetime_seconds,
+        )
+        .map_err(|_| BrokerError::InvalidPolicy)
     }
 }
 
@@ -1557,6 +1599,7 @@ mod tests {
         AccountId, CredentialAuditAction, CredentialAuditError, CredentialAuditEvent,
         CredentialAuditOutcome, InMemoryCredentialStore,
     };
+    use coding_adventures_oauth_private_key_signer::PrivateKeyReference;
     use std::cell::RefCell;
     use std::collections::VecDeque;
     use std::rc::Rc;
@@ -2216,6 +2259,81 @@ mod tests {
             private_key_jwt.bind_client_secret_authentication(key()),
             Err(BrokerError::BindingMismatch)
         );
+    }
+
+    #[test]
+    fn confidential_provider_binds_only_its_exact_retained_private_key_profile() {
+        let provider = ProviderId::new("fixture-confidential").unwrap();
+        let key = || PrivateKeyId::new(provider.clone(), PrivateKeyReference::new([0x61; 32]));
+        let algorithm = |name| PrivateKeyJwtAlgorithm::new(name).unwrap();
+        let private_key_jwt = BrokerProvider::new_confidential(
+            config("fixture-confidential"),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::PrivateKeyJwt,
+            vec!["EdDSA".to_owned(), "RS256".to_owned()],
+        )
+        .unwrap();
+
+        let profile = private_key_jwt
+            .bind_private_key_jwt_profile(
+                key(),
+                algorithm("EdDSA"),
+                Some("active-key".to_owned()),
+                60,
+            )
+            .expect("retained private-key JWT profile");
+        assert_eq!(profile.provider(), &provider);
+        assert_eq!(profile.algorithm().as_str(), "EdDSA");
+
+        let wrong_provider_key = PrivateKeyId::new(
+            ProviderId::new("other-provider").unwrap(),
+            PrivateKeyReference::new([0x62; 32]),
+        );
+        assert!(matches!(
+            private_key_jwt.bind_private_key_jwt_profile(
+                wrong_provider_key,
+                algorithm("EdDSA"),
+                None,
+                60,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert!(matches!(
+            private_key_jwt.bind_private_key_jwt_profile(key(), algorithm("ES256"), None, 60),
+            Err(BrokerError::BindingMismatch)
+        ));
+
+        let public = policy("fixture-confidential", 300);
+        assert!(matches!(
+            public.bind_private_key_jwt_profile(key(), algorithm("EdDSA"), None, 60),
+            Err(BrokerError::BindingMismatch)
+        ));
+        let client_secret = BrokerProvider::new_confidential(
+            config("fixture-confidential"),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            Vec::new(),
+        )
+        .unwrap();
+        assert!(matches!(
+            client_secret.bind_private_key_jwt_profile(key(), algorithm("EdDSA"), None, 60),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert!(matches!(
+            private_key_jwt.bind_private_key_jwt_profile(
+                key(),
+                algorithm("RS256"),
+                Some(String::new()),
+                60,
+            ),
+            Err(BrokerError::InvalidPolicy)
+        ));
+        assert!(matches!(
+            private_key_jwt.bind_private_key_jwt_profile(key(), algorithm("RS256"), None, 0),
+            Err(BrokerError::InvalidPolicy)
+        ));
     }
 
     #[test]

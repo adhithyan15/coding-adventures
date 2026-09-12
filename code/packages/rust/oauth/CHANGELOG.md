@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed the already-validated token endpoint as read-only provider policy so
+  higher-level authentication adapters can retain its exact audience binding.
 - Exposed an opaque exact-binding check between metadata-derived RFC 8628
   device profiles and registered public-client provider configurations.
 - Added confidential `ProviderConfig` derivation for the stack's closed,
