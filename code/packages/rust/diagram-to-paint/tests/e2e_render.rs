@@ -230,10 +230,11 @@ mod apple {
     #[test]
     fn render_mermaid_block_to_png() {
         let grid = parse_block(
-            "block-beta\ntitle Native block grid\ncolumns 3\nA[Grammar] B(IR) C((Paint))\nspace D[Metal] E[PNG]\nA --> B\nB --> C\nC --> D\nD --> E",
+            "block-beta\ntitle Native block grid\ncolumns 3\nA[Grammar]:2 B(IR)\nspace:2 C((Paint))\nD[Metal] E[PNG]\nA --> B\nB --> C\nC --> D\nD --> E",
         )
         .expect("block parse failed");
         let layout = layout_grid_diagram(&grid);
+        assert!(layout.nodes[0].width > layout.nodes[1].width);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();

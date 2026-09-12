@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.104.0
+
+- Represent Mermaid Block node and space column spans in typed grid IR.
+
 ## 0.103.0
 
 - Add typed Mermaid packet theme variables and resolved title and bit-label styles.

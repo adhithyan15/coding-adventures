@@ -158,6 +158,7 @@ pub struct GridCell {
     pub id: String,
     pub label: DiagramLabel,
     pub shape: DiagramShape,
+    pub column_span: usize,
     pub visible: bool,
     pub style: Option<DiagramStyle>,
 }
