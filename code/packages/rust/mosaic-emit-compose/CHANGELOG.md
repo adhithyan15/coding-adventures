@@ -5,6 +5,39 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — `min-height` reached nothing (#14837)
+
+Parsed and discarded. Three products author `min-height: 100vh` on their app
+shell to mean *fill the window*, and on Compose it did nothing at all.
+
+Engram's composition root measured `1280 x 776` in a `1280 x 900` window.
+Reading the rendered PNG's alpha channel: the last painted row at x=640 is
+**775**, and rows 776..899 are `(0, 0, 0, 0)` — genuinely **unpainted**, not
+painted in some other colour, so whatever composites behind the surface shows
+through. That is why the same defect read as white in one capture and black in
+another.
+
+| authored | Compose |
+| --- | --- |
+| `min-height: 100vh` / `100%` | `.fillMaxHeight()` |
+| `min-height: N` / `Npx` | `.heightIn(min = N.dp)` |
+| `min-height: 0` | nothing — a zero floor constrains nothing |
+
+A floor, so `heightIn(min = ..)` rather than `height(..)`: it composes with an
+authored `height` instead of replacing it.
+
+Compose has no viewport unit, so `fillMaxHeight()` fills the **parent**. On an
+app shell the parent is the window and the two agree; nested, they would not.
+Named rather than hidden — the alternative is what shipped, which was nothing.
+
+Both new modifiers join the unconditional import block. Emitting a modifier
+without its import is Kotlin that does not compile — the shape of the XAML
+`Not()` helper in #14793, and why #14798 pins its import too.
+
+TaskApp's `styleDegradations` go 168 → 164, and exactly four modifiers are
+emitted (one `fillMaxHeight`, three `heightIn`): the reporter and the lowering
+now ask the same question (#14810).
+
 ### Fixed — `Box` overlaid its children instead of laying them out (UI60, #14828)
 
 `Box` and `Stack` both lowered to Compose's `Box`, which layers its children at

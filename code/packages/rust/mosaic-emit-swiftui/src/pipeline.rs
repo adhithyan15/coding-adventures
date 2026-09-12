@@ -1889,6 +1889,10 @@ fn swiftui_modifier_chain_with_drops(
     let mut border_color = PropBucket::new(layer_count);
     let mut border_radius = PropBucket::new(layer_count);
     let mut max_width = PropBucket::new(layer_count);
+    let mut min_height = PropBucket::new(layer_count);
+    // `100vh`/`100%` is not a number, so it cannot share a PropBucket with
+    // the point values (#14837).
+    let mut min_height_fills = false;
     let mut opacity = PropBucket::new(layer_count);
 
     // `text-align` is a static layout concern — we deliberately do NOT
@@ -1956,6 +1960,26 @@ fn swiftui_modifier_chain_with_drops(
             "max-width" => {
                 if let Some(v) = px_or_none(&p.value) {
                     set(&mut max_width, v);
+                }
+            }
+            // #14837. A floor, so `minHeight` rather than `height` -- it
+            // composes with an authored height instead of replacing it.
+            //
+            // `100vh`/`100%` is the case that matters: three products author
+            // it on their app shell to mean "fill the window". SwiftUI has no
+            // viewport unit either, and its idiom for "take all the vertical
+            // space offered" is `maxHeight: .infinity`.
+            "min-height" if layer_idx.is_none() => {
+                match p.value.trim().trim_matches('"') {
+                    "100vh" | "100%" => min_height_fills = true,
+                    other => {
+                        if let Some(v) = px_or_none(other) {
+                            // A zero floor constrains nothing.
+                            if v.trim() != "0" {
+                                set(&mut min_height, v);
+                            }
+                        }
+                    }
                 }
             }
             "border-radius" => {
@@ -2227,6 +2251,23 @@ fn swiftui_modifier_chain_with_drops(
             &mut out,
             &pad,
             "max-width",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
+    }
+    // The `min-height` floor, on its own frame beside the `max-width`
+    // ceiling and for the same reason: chaining is how SwiftUI composes
+    // these (#14837).
+    if min_height_fills {
+        out.push_str(&format!("\n{pad}.frame(maxHeight: .infinity)"));
+    } else if !min_height.empty() {
+        let expr = layer_value(&min_height, state_layers, "0");
+        out.push_str(&format!("\n{pad}.frame(minHeight: {expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "min-height",
             &expr,
             base_transitions,
             state_layers,
@@ -14626,6 +14667,44 @@ mod tests {
         let out = chain_for(vec![("border-width", "1")]);
         assert!(out.contains(".border("), "got:\n{out}");
         assert!(!out.contains("RoundedRectangle"), "got:\n{out}");
+    }
+
+    #[test]
+    fn min_height_100vh_takes_all_the_vertical_space_offered() {
+        // #14837. Three products author this on their app shell to mean
+        // "fill the window"; SwiftUI has no viewport unit, and its idiom for
+        // that is `maxHeight: .infinity`.
+        let out = chain_for(vec![("min-height", "100vh")]);
+        assert!(out.contains(".frame(maxHeight: .infinity)"), "got:\n{out}");
+        assert!(!out.contains(".frame(minHeight:"), "got:\n{out}");
+    }
+
+    #[test]
+    fn a_numeric_min_height_is_a_floor_not_a_size() {
+        // `minHeight` rather than `height`: a floor composes with an authored
+        // height instead of replacing it, which is why they are separate
+        // chained frames.
+        let out = chain_for(vec![("height", "40"), ("min-height", "60")]);
+        assert!(out.contains(".frame(minHeight: 60)"), "got:\n{out}");
+        assert!(out.contains(".frame(height: 40"), "got:\n{out}");
+    }
+
+    #[test]
+    fn a_zero_min_height_constrains_nothing_and_emits_nothing() {
+        let out = chain_for(vec![("min-height", "0")]);
+        assert!(!out.contains("minHeight"), "got:\n{out}");
+        assert!(!out.contains("maxHeight"), "got:\n{out}");
+    }
+
+    #[test]
+    fn a_consumed_min_height_is_not_also_reported_as_dropped() {
+        // The reporter and the lowering must ask the same question -- a drop
+        // report that cries wolf stops being read (#14810).
+        let drops = drops_for(vec![("min-height", "100vh")]);
+        assert!(
+            !drops.iter().any(|d| d.name == "min-height"),
+            "got: {drops:?}"
+        );
     }
 
     #[test]

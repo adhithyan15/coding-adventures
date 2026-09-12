@@ -204,6 +204,12 @@ pub fn from_pipeline(
     )
     .unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.height").unwrap();
+    // `min-height` (#14837) lowers to one of these two. Unconditional, like
+    // every other layout import in this block -- emitting a modifier without
+    // its import is Kotlin that does not compile, which is how the XAML
+    // `Not()` helper went wrong in #14793 and why #14798 pins its import too.
+    writeln!(out, "import androidx.compose.foundation.layout.fillMaxHeight").unwrap();
+    writeln!(out, "import androidx.compose.foundation.layout.heightIn").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.padding").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.width").unwrap();
     if uses_path {
@@ -3039,6 +3045,10 @@ fn compose_box_style(
     let layer_count = state_layers.len();
     let mut width = PropBucket::new(layer_count);
     let mut height = PropBucket::new(layer_count);
+    let mut min_height = PropBucket::new(layer_count);
+    // `100vh`/`100%` is not a number, so it cannot live in a PropBucket
+    // alongside the dp values (#14837).
+    let mut min_height_fills = false;
     // One bucket per edge rather than one for `padding`. CSS directional
     // padding OVERRIDES the shorthand for that edge, and Compose's
     // `padding(start=, top=, end=, bottom=)` overload expresses exactly that,
@@ -3082,6 +3092,33 @@ fn compose_box_style(
                     set(&mut height, v);
                 }
             }
+            // #14837. A floor, not a size -- so it is `heightIn(min = ..)`
+            // rather than `height(..)`, and it composes with an authored
+            // `height` instead of replacing it.
+            //
+            // `100vh`/`100%` is the case that matters: three products author
+            // it on their app shell to mean "fill the window", and all three
+            // were dropped. Engram's composition root measured 1280x776 in a
+            // 1280x900 window, with rows 776..899 at alpha 0 -- genuinely
+            // unpainted rather than painted in some other colour.
+            //
+            // Compose has no viewport unit, so `fillMaxHeight()` fills the
+            // PARENT. On an app shell the parent is the window and the two
+            // agree; nested, they would not. Approximation named rather than
+            // hidden -- and the alternative is what shipped, which was
+            // nothing at all.
+            "min-height" if layer_idx.is_none() => match p.value.trim().trim_matches('"') {
+                "100vh" | "100%" => min_height_fills = true,
+                other => {
+                    if let Some(v) = px_or_none(other) {
+                        // A zero floor constrains nothing; emitting it would
+                        // be noise in every chain that carries one.
+                        if v.trim() != "0" {
+                            set(&mut min_height, v);
+                        }
+                    }
+                }
+            },
             // The shorthand seeds every edge. Authored order is preserved, so
             // `padding-top: 12; padding: 8` gives 8 everywhere and
             // `padding: 8; padding-top: 12` gives 12 on top -- both matching
@@ -3234,10 +3271,16 @@ fn compose_box_style(
         modifier.push_str(&format!("\n{cpad}.width({expr}.dp)"));
     }
 
-    // .height
+    // .height — an exact size, then the `min-height` floor beneath it.
     if !height.empty() {
         let expr = numeric_layer_value(&height, state_layers, "0");
         modifier.push_str(&format!("\n{cpad}.height({expr}.dp)"));
+    }
+    if min_height_fills {
+        modifier.push_str(&format!("\n{cpad}.fillMaxHeight()"));
+    } else if !min_height.empty() {
+        let expr = numeric_layer_value(&min_height, state_layers, "0");
+        modifier.push_str(&format!("\n{cpad}.heightIn(min = {expr}.dp)"));
     }
 
     // .alpha — FIRST of the drawing modifiers, so it covers the background,
@@ -11350,6 +11393,100 @@ mod tests {
             out.contains("Box(modifier = Modifier.fillMaxWidth())"),
             "got:\n{out}"
         );
+    }
+
+    // ===================================================================
+    // min-height -- #14837.
+    // ===================================================================
+
+    fn min_height_chain(value: &str) -> String {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("b".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part("b", vec![sprop("min-height", value)], vec![]));
+        from_pipeline(&m, &l, &sheet).expect("emit ok").output
+    }
+
+    #[test]
+    fn min_height_100vh_fills_the_parent() {
+        // Three products author this on their app shell to mean "fill the
+        // window", and all three were dropped. Engram's composition root
+        // measured 1280x776 in a 1280x900 window, with rows 776..899 at
+        // alpha 0 -- unpainted, not painted in another colour.
+        let out = min_height_chain("100vh");
+        assert!(out.contains(".fillMaxHeight()"), "got:\n{out}");
+        assert!(!out.contains(".heightIn("), "got:\n{out}");
+    }
+
+    #[test]
+    fn a_numeric_min_height_is_a_floor_not_a_size() {
+        // `heightIn(min = ..)` rather than `height(..)`: a floor composes with
+        // an authored height instead of replacing it.
+        let out = min_height_chain("60");
+        assert!(out.contains(".heightIn(min = 60.dp)"), "got:\n{out}");
+        assert!(!out.contains(".height(60.dp)"), "got:\n{out}");
+    }
+
+    #[test]
+    fn a_zero_min_height_constrains_nothing_and_emits_nothing() {
+        let out = min_height_chain("0");
+        assert!(!out.contains(".heightIn("), "got:\n{out}");
+        assert!(!out.contains(".fillMaxHeight()"), "got:\n{out}");
+    }
+
+    #[test]
+    fn min_height_composes_with_an_authored_height() {
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("b".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part(
+            "b",
+            vec![sprop("height", "40"), sprop("min-height", "60")],
+            vec![],
+        ));
+        let out = from_pipeline(&m, &l, &sheet).expect("emit ok").output;
+        assert!(out.contains(".height(40.dp)"), "got:\n{out}");
+        assert!(out.contains(".heightIn(min = 60.dp)"), "got:\n{out}");
+    }
+
+    #[test]
+    fn min_height_modifiers_carry_their_imports() {
+        // Emitting a modifier without its import is Kotlin that does not
+        // compile -- the same shape as the XAML `Not()` helper in #14793, and
+        // why #14798 pins `fillMaxSize`'s import too. Asserted on a component
+        // that authors NEITHER, because the import block is unconditional.
+        let out = min_height_chain("60");
+        assert!(
+            out.contains("import androidx.compose.foundation.layout.fillMaxHeight"),
+            "got:\n{out}"
+        );
+        assert!(
+            out.contains("import androidx.compose.foundation.layout.heightIn"),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn a_consumed_min_height_is_not_also_reported_as_dropped() {
+        // The reporter and the lowering must ask the SAME question (#14810).
+        // Before this, `min-height` appeared 4 times in TaskApp's drop report
+        // while reaching nothing; reporting it as dropped once it IS lowered
+        // would be the opposite error, and a report that cries wolf stops
+        // being read.
+        let m = component("F", vec![], vec![]);
+        let mut n = node("Box", vec![], vec![node("Text", vec![], vec![])]);
+        n.part_name = Some("b".to_string());
+        let l = layout("F", n);
+        let mut sheet = empty_style("F");
+        sheet.parts.push(part("b", vec![sprop("min-height", "100vh")], vec![]));
+        let _ = from_pipeline(&m, &l, &sheet).expect("emit ok");
+        let drops = dropped_style_properties(&sheet);
+        let names: Vec<&str> = drops.iter().map(|d| d.name.as_str()).collect();
+        assert!(!names.contains(&"min-height"), "got: {names:?}");
     }
 
     /// A `Stack` layers its children on top of one another and has no
