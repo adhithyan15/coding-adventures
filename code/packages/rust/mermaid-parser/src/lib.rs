@@ -1670,10 +1670,16 @@ fn split_block_items(line: &str) -> Vec<&str> {
 
 fn parse_block_node(source: &str) -> (String, String, DiagramShape) {
     for (open, close, shape) in [
+        ("{{", "}}", DiagramShape::Hexagon),
+        ("([", "])", DiagramShape::Stadium),
+        ("[/", "/]", DiagramShape::ParallelogramRight),
+        ("[\\", "\\]", DiagramShape::ParallelogramLeft),
+        ("[/", "\\]", DiagramShape::Trapezoid),
+        ("[\\", "/]", DiagramShape::InvertedTrapezoid),
         ("((", "))", DiagramShape::Ellipse),
         ("[", "]", DiagramShape::Rect),
         ("(", ")", DiagramShape::RoundedRect),
-        ("{{", "}}", DiagramShape::Diamond),
+        ("{", "}", DiagramShape::Diamond),
     ] {
         if let Some(index) = source.find(open) {
             if source.ends_with(close) {
@@ -9081,6 +9087,21 @@ mod tests_dg04 {
     fn block_preserves_explicit_and_implicit_auto_columns() {
         assert_eq!(parse_block("block\nA B C").unwrap().columns, GridColumns::Auto);
         assert_eq!(parse_block("block\ncolumns auto\nA B").unwrap().columns, GridColumns::Auto);
+    }
+
+    #[test]
+    fn block_parses_native_polygonal_and_stadium_shapes() {
+        let diagram = parse_block(
+            "block\nA{{Hex}} B([Stadium]) C[/Right/] D[\\Left\\] E[/Trap\\] F[\\Inverse/] G{Diamond}",
+        )
+        .unwrap();
+        assert_eq!(diagram.cells[0].shape, DiagramShape::Hexagon);
+        assert_eq!(diagram.cells[1].shape, DiagramShape::Stadium);
+        assert_eq!(diagram.cells[2].shape, DiagramShape::ParallelogramRight);
+        assert_eq!(diagram.cells[3].shape, DiagramShape::ParallelogramLeft);
+        assert_eq!(diagram.cells[4].shape, DiagramShape::Trapezoid);
+        assert_eq!(diagram.cells[5].shape, DiagramShape::InvertedTrapezoid);
+        assert_eq!(diagram.cells[6].shape, DiagramShape::Diamond);
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.196.0
+
+- Parse Mermaid Block hexagon, stadium, parallelogram, and trapezoid delimiters.
+
 ## 0.195.0
 
 - Parse implicit and explicit Mermaid Block automatic column modes into typed IR.
