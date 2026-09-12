@@ -1580,7 +1580,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             }
             cells.push(GridCell {
                 id: id.clone(),
-                label: DiagramLabel::new(normalize_mermaid_line_breaks(&label)),
+                label: DiagramLabel::new(normalize_mermaid_line_breaks(&unquote_block_label(&label))),
                 shape,
                 column_span,
                 parent_id,
@@ -9174,6 +9174,18 @@ mod tests_dg04 {
         assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
         assert_eq!(diagram.connections[1].kind, EdgeKind::Undirected);
         assert_eq!(diagram.connections[1].label.as_ref().unwrap().text, "observe");
+    }
+
+    #[test]
+    fn block_strips_delimiting_quotes_from_node_labels() {
+        let diagram = parse_block(
+            "block\ncolumns 2\nparser[\"Grammar front end\"] renderer(\"Paint output\")",
+        )
+        .unwrap();
+        assert_eq!(diagram.cells[0].label.text, "Grammar front end");
+        assert_eq!(diagram.cells[1].label.text, "Paint output");
+        assert_eq!(diagram.cells[0].shape, DiagramShape::Rect);
+        assert_eq!(diagram.cells[1].shape, DiagramShape::RoundedRect);
     }
 
     #[test]
