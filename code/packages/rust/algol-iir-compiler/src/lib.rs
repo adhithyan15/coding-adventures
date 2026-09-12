@@ -7912,8 +7912,7 @@ impl Compiler {
                     .flatten()
             })
             .or_else(|| {
-                (base.ty == ScalarType::Real
-                    && self.contains_pure_standard_function_call(base_node))
+                (base.ty == ScalarType::Real)
                 .then(|| {
                     self.static_nonnegative_tracked_real_snapshot_power_chain(exponent_nodes)
                 })
@@ -11471,9 +11470,20 @@ mod tests {
     }
 
     #[test]
+    fn al4_standard_free_tracked_real_snapshot_power_unrolls() {
+        let module = compile_source(
+            "begin real exponent, saved; exponent := 2.0; saved := 6.0 ^ exponent + 6.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("an exact integral tracked real may bound a plain real power");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
     fn al4_tracked_real_standard_function_exponents_fail_closed() {
         for source in [
-            "begin real exponent, saved; exponent := 2.0; saved := 6.0 ^ exponent end",
             "begin real exponent, saved; exponent := 1.0; saved := 6.0 ^ (exponent + cos(0)) end",
             "begin real exponent, saved; exponent := 1.0; saved := 6.0 ^ (cos(exponent) + 1) end",
             "begin real exponent, saved; exponent := 0.0; saved := 6.0 ^ (cos(exponent) + 64) end",
