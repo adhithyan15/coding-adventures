@@ -22,7 +22,11 @@
         </colgroup>
         <thead>
           <tr>
-            <th></th>
+            <th>
+              <div>
+                <span></span>
+              </div>
+            </th>
             <!-- mosaic-for each="columnHeaders" as="h" index="ch" -->
               <th>
                 <div>
@@ -35,7 +39,11 @@
         <tbody>
           <!-- mosaic-for each="viewportRows" as="row" index="r" -->
             <tr>
-              <td></td>
+              <td>
+                <div>
+                  <span>{{rowHeaders [ r ]}}</span>
+                </div>
+              </td>
               <!-- mosaic-for each="row" as="v" index="c" -->
                 <td>
                   <div>
