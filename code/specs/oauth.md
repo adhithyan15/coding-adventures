@@ -184,14 +184,17 @@ The delivery order is:
    time, OAuth credential release, and revision-bound atomic retain/rotation.
    Binding and all later failures preserve the prior record. Account identity
    proof/key selection and access-token-only detach remain separate composition
-   steps. Prepared `private_key_jwt` authorization-code exchange and refresh
-   requests can now cross the broker through the existing abstract signer:
-   exact retained provider, client, token endpoint, method, and case-sensitive
-   algorithm checks precede signing; signer and injected transport
-   effects/results are separately audited with the same provider and trace; and
-   bounded response decoding completes before release. Issued-at time and
-   256-bit replay entropy remain caller-owned, and this enables neither a
-   concrete signing algorithm, credential persistence, nor network authority.
+   steps. Prepared `private_key_jwt` authorization-code exchange, refresh, and
+   RFC 7009 revocation requests can now cross the broker through the existing
+   abstract signer: exact retained provider, client, operation endpoint,
+   method, and case-sensitive algorithm checks precede signing; signer and
+   injected transport effects/results are separately audited with the same
+   provider and trace; and bounded response decoding or classification
+   completes before release. Revocation derives a separate profile from the
+   explicitly configured revocation endpoint and never invents token-endpoint
+   audience acceptance. Issued-at time and 256-bit replay entropy remain
+   caller-owned, and this enables neither a concrete signing algorithm,
+   credential persistence or deletion, nor network authority.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate
