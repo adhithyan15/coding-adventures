@@ -244,6 +244,7 @@ pub fn from_pipeline(
     )
     .unwrap();
     writeln!(out, "import androidx.compose.material.Button").unwrap();
+    writeln!(out, "import androidx.compose.material.ButtonDefaults").unwrap();
     writeln!(out, "import androidx.compose.material.Checkbox").unwrap();
     if uses_icon || uses_progress_ring {
         writeln!(
@@ -3087,6 +3088,16 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
 ///     text style on a `Box`).
 struct ComposeStyle {
     modifier: String,
+    /// The authored background, as `(colour expression, exact modifier
+    /// segment emitted for it)`.
+    ///
+    /// A Material `Button` paints its own container over anything
+    /// `Modifier.background` puts down, so a button has to receive this
+    /// through `ButtonDefaults.buttonColors` instead. Recording the exact
+    /// segment lets the button emitter MOVE it rather than re-derive it,
+    /// so the state-layer `if/else` chain is shared verbatim between the
+    /// two channels and cannot drift.
+    background: Option<(String, String)>,
     content_alignment: Option<String>,
     text_color: Option<String>,
     font_family_mono: bool,
@@ -3506,9 +3517,12 @@ fn compose_box_style(
     // .background — fills the sized box.  State that overrides
     // background where there is no base value gets `Color.Transparent`
     // in the "no value" branch (the Compose default for an unstyled box).
+    let mut background_record = None;
     if !background.empty() {
         let expr = layer_value(&background, state_layers, "Color.Transparent");
-        modifier.push_str(&format!("\n{cpad}.background({expr}{shape_arg})"));
+        let segment = format!("\n{cpad}.background({expr}{shape_arg})");
+        modifier.push_str(&segment);
+        background_record = Some((expr, segment));
     }
 
     // .border — needs at least the width.  Default color `Color.Gray`
@@ -3571,6 +3585,7 @@ fn compose_box_style(
 
     ComposeStyle {
         modifier,
+        background: background_record,
         content_alignment: text_align.map(str::to_string),
         dropped,
         gap,
@@ -4321,6 +4336,7 @@ fn emit_container_frame(
             None => {
                 style = Some(ComposeStyle {
                     modifier: prefix,
+                    background: None,
                     content_alignment: None,
                     text_color: None,
                     font_family_mono: false,
@@ -4588,6 +4604,7 @@ fn emit_container(
         } else {
             style = Some(ComposeStyle {
                 modifier: prefix,
+                background: None,
                 content_alignment: None,
                 text_color: None,
                 font_family_mono: false,
@@ -4617,6 +4634,7 @@ fn emit_container(
             } else {
                 style = Some(ComposeStyle {
                     modifier: prefix,
+                    background: None,
                     content_alignment: None,
                     text_color: None,
                     font_family_mono: false,
@@ -5525,6 +5543,36 @@ fn emit_host_button(
         _ => "\"\"".to_string(),
     };
     let enabled_expr = disabled_prop_enabled_expr(node)?;
+
+    // An authored background has to reach a Button through `buttonColors`,
+    // not through the modifier. Material's Button draws its own container
+    // on top of whatever `Modifier.background` put down, so the authored
+    // colour was reaching the generated source and never the screen -- every
+    // button rendered Material's default primary instead (#14912).
+    //
+    // The colour expression is MOVED rather than re-derived: `compose_box_style`
+    // already folded any `state hover`/`state active` layers into one
+    // `if/else` chain, and reusing it verbatim keeps the two channels from
+    // drifting. The modifier segment it came from is removed, so the emitted
+    // source says what actually happens.
+    //
+    // `backgroundColor` is Material 2's parameter name; this emitter targets
+    // `androidx.compose.material`, not material3's `containerColor`.
+    let mut style = style;
+    let button_colors = match style.as_mut().and_then(|s| {
+        s.background
+            .take()
+            .map(|(expr, segment)| (expr, segment, &mut s.modifier))
+    }) {
+        Some((expr, segment, modifier)) => {
+            *modifier = modifier.replace(&segment, "");
+            Some(format!(
+                "ButtonDefaults.buttonColors(backgroundColor = {expr})"
+            ))
+        }
+        None => None,
+    };
+
     let mut modifier_expr = host_control_modifier_expr(node, style.as_ref());
     if let Some(accessible_label) = text_prop_expr(node, "a11y-label")? {
         let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
@@ -5534,11 +5582,14 @@ fn emit_host_button(
     }
 
     let mut out = String::new();
-    if enabled_expr.is_some() || modifier_expr.is_some() {
+    if enabled_expr.is_some() || modifier_expr.is_some() || button_colors.is_some() {
         writeln!(out, "{pad}Button(").unwrap();
         writeln!(out, "{inner}onClick = {{ {on_click} }},").unwrap();
         if let Some(enabled) = enabled_expr {
             writeln!(out, "{inner}enabled = {enabled},").unwrap();
+        }
+        if let Some(colors) = button_colors {
+            writeln!(out, "{inner}colors = {colors},").unwrap();
         }
         if let Some(modifier) = modifier_expr {
             writeln!(out, "{inner}modifier = {modifier},").unwrap();
@@ -8222,9 +8273,18 @@ mod tests {
             )],
         );
         let out = from_pipeline(&m, &l, &s).unwrap().output;
+        // A Button receives its background through `buttonColors`, not the
+        // modifier -- Material paints its own container over the modifier,
+        // so the authored colour would reach the source and not the screen
+        // (#14912).
         assert!(
-            out.contains(".background(Color(0xFFF87171))"),
+            out.contains("ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF87171))"),
             "got:\n{out}"
+        );
+        assert!(
+            !out.contains(".background(Color(0xFFF87171))"),
+            "the inert modifier background must be removed, not left beside \
+             the working one:\n{out}"
         );
         assert!(
             out.contains(".border(1.dp, Color(0xFF991B1B))"),
@@ -8339,8 +8399,11 @@ mod tests {
             out.contains("size: String"),
             "style-only size missing:\n{out}"
         );
+        // The state-layer chain is MOVED into `buttonColors` verbatim, not
+        // re-derived, so this asserts the same expression it always did --
+        // only the channel carrying it changed (#14912).
         assert!(out.contains(
-            ".background(if (_mosaicTruthy(( selected ))) Color(0xFFFFFFFF) else if (size == \"compact\") Color(0xFFFFAA00) else if (variant == \"danger\") Color(0xFFDC3545) else Color(0xFF111111))"
+            "ButtonDefaults.buttonColors(backgroundColor = if (_mosaicTruthy(( selected ))) Color(0xFFFFFFFF) else if (size == \"compact\") Color(0xFFFFAA00) else if (variant == \"danger\") Color(0xFFDC3545) else Color(0xFF111111))"
         ), "model slot order or conditional style is wrong:\n{out}");
         assert!(
             out.contains(".padding((if (size == \"compact\") 6 else 8).dp)"),
