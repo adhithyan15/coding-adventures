@@ -196,6 +196,11 @@ initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.
 Those static values may come from straight-line tracked numeric locals; their
 metadata is consumed before loop lowering disables snapshot propagation.
+For a statically bounded multi-iteration `step` loop, one simple local scalar
+assignment may depend on the control: the compiler evaluates it once at the
+final in-range control value and retains the exact integer, finite real, or
+boolean result. Compound bodies, writes to the control, dynamic bounds, and
+real loops beyond the analysis cap remain conservative.
 For a `while` element, a bounded static numeric comparison may likewise prove
 the initial body execution after abstractly assigning the controlled value;
 such known comparisons compose through ALGOL's boolean operators, while bare
