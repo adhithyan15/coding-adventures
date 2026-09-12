@@ -359,12 +359,12 @@ column spans, named `classDef` declarations, `class` assignments, inline
 circular, double-circle, diamond, hexagon, stadium, subroutine, cylinder,
 parallelogram, trapezoid, and asymmetric nodes, titles, single-line and braced
 multiline accessibility metadata, recursive anonymous and named composite blocks
-with local column counts and parent-grid spans, and directed
+with authored labels, local column counts, and parent-grid spans, and directed
 and undirected connections with native quoted or pipe-delimited optional
 labels. `diagram-layout-grid` resolves deterministic
 cell geometry before the shared backend-neutral PaintScene lowering path. A
-native Metal-to-PNG fixture gates this slice; composite labels and composite-specific
-styles remain explicitly unsupported at the partial level.
+native Metal-to-PNG fixture gates this slice; composite-specific styles remain
+explicitly unsupported at the partial level.
 
 ### Packet Native Slice
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.83.0
+
+- Tokenize labeled named Block composite declarations through the pinned grammar.
+
 ## 0.82.0
 
 - Tokenize named composite Block starts and recursive group ends through the pinned grammar.

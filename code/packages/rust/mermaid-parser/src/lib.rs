@@ -1434,13 +1434,24 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             let order = take_grid_order(&mut next_order, &parent_id);
             let (id, column_span, label) = if token_type == Some("GROUP_START") {
                 let value = token.value.trim().strip_prefix("block:").unwrap_or_default();
-                let (id, column_span) = match value.rsplit_once(':') {
-                    Some((id, span)) if span.chars().all(|character| character.is_ascii_digit()) => {
-                        (id, span.parse::<usize>().unwrap_or(1))
-                    }
-                    _ => (value, 1),
+                let (node, column_span) = parse_block_span(token, value)?;
+                let (id, label, _) = parse_block_node(node);
+                let mut id_characters = id.chars();
+                let valid_id = id_characters
+                    .next()
+                    .is_some_and(|character| character.is_ascii_alphabetic() || character == '_')
+                    && id_characters.all(|character| {
+                        character.is_ascii_alphanumeric() || character == '_' || character == '-'
+                    });
+                if !valid_id {
+                    return Err(token_error(token, "invalid named block group declaration"));
+                }
+                let label = if label == id {
+                    id.clone()
+                } else {
+                    normalize_mermaid_line_breaks(&unquote_block_label(&label))
                 };
-                (id.to_string(), column_span, id.to_string())
+                (id, column_span, label)
             } else {
                 group_count += 1;
                 (format!("__group{group_count}"), 1, String::new())
@@ -1734,6 +1745,15 @@ fn parse_block_span<'a>(token: &Token, source: &'a str) -> Result<(&'a str, usiz
         .filter(|span| *span > 0)
         .ok_or_else(|| token_error(token, "block span must be a positive integer"))?;
     Ok((item, span))
+}
+
+fn unquote_block_label(source: &str) -> String {
+    let source = source.trim();
+    if source.len() >= 2 && source.starts_with('"') && source.ends_with('"') {
+        source[1..source.len() - 1].to_string()
+    } else {
+        source.to_string()
+    }
 }
 
 fn prepare_line_grammar_source(source: &str) -> Result<String, ParseError> {
@@ -9253,6 +9273,18 @@ mod tests_dg04 {
         assert_eq!(parse_block("block\nendpoint").unwrap().cells[0].id, "endpoint");
         assert!(parse_block("block\nblock:open\nA").is_err());
         assert!(parse_block("block\nblock:group:0\nA\nend").is_err());
+    }
+
+    #[test]
+    fn block_preserves_named_composite_labels_and_spans() {
+        let diagram = parse_block(
+            "block\ncolumns 3\nblock:pipeline[\"Processing Pipeline\"]:2\nA[Parse] B[Paint]\nend\nC[PNG]",
+        )
+        .unwrap();
+        assert_eq!(diagram.groups.len(), 1);
+        assert_eq!(diagram.groups[0].id, "pipeline");
+        assert_eq!(diagram.groups[0].label.text, "Processing Pipeline");
+        assert_eq!(diagram.groups[0].column_span, 2);
     }
 
     #[test]
