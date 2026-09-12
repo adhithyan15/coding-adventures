@@ -19,6 +19,12 @@ pub enum DiagramShape {
     RoundedRect,
     Ellipse,
     Diamond,
+    Hexagon,
+    Stadium,
+    ParallelogramRight,
+    ParallelogramLeft,
+    Trapezoid,
+    InvertedTrapezoid,
     Note,
 }
 

@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.107.0
+
+- Preserve Block hexagon, stadium, parallelogram, and trapezoid shape semantics.
+
 ## 0.106.0
 
 - Represent automatic and fixed Block column modes without magic values.

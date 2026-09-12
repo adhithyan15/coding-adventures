@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.117.0
+
+- Lower Block polygonal and stadium shapes to backend-neutral PaintInstructions and validate them through Metal-to-PNG.
+
 ## 0.116.0
 
 - Validate native quoted Block edge labels through PaintScene and Metal-to-PNG rendering.

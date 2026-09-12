@@ -836,6 +836,73 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 stroke_dash_offset: None,
             })
         }
+        DiagramShape::Hexagon => {
+            let inset = node.width.min(node.height * 2.0) * 0.18;
+            polygon_node_instruction(node, &[
+                (node.x + inset, node.y),
+                (node.x + node.width - inset, node.y),
+                (node.x + node.width, node.y + node.height / 2.0),
+                (node.x + node.width - inset, node.y + node.height),
+                (node.x + inset, node.y + node.height),
+                (node.x, node.y + node.height / 2.0),
+            ])
+        }
+        DiagramShape::ParallelogramRight => {
+            let inset = node.width.min(node.height * 2.0) * 0.16;
+            polygon_node_instruction(node, &[
+                (node.x + inset, node.y),
+                (node.x + node.width, node.y),
+                (node.x + node.width - inset, node.y + node.height),
+                (node.x, node.y + node.height),
+            ])
+        }
+        DiagramShape::ParallelogramLeft => {
+            let inset = node.width.min(node.height * 2.0) * 0.16;
+            polygon_node_instruction(node, &[
+                (node.x, node.y),
+                (node.x + node.width - inset, node.y),
+                (node.x + node.width, node.y + node.height),
+                (node.x + inset, node.y + node.height),
+            ])
+        }
+        DiagramShape::Trapezoid => {
+            let inset = node.width.min(node.height * 2.0) * 0.16;
+            polygon_node_instruction(node, &[
+                (node.x + inset, node.y),
+                (node.x + node.width - inset, node.y),
+                (node.x + node.width, node.y + node.height),
+                (node.x, node.y + node.height),
+            ])
+        }
+        DiagramShape::InvertedTrapezoid => {
+            let inset = node.width.min(node.height * 2.0) * 0.16;
+            polygon_node_instruction(node, &[
+                (node.x, node.y),
+                (node.x + node.width, node.y),
+                (node.x + node.width - inset, node.y + node.height),
+                (node.x + inset, node.y + node.height),
+            ])
+        }
+        DiagramShape::Stadium => {
+            let radius = (node.height / 2.0).min(node.width / 2.0);
+            PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo { x: node.x + radius, y: node.y },
+                    PathCommand::LineTo { x: node.x + node.width - radius, y: node.y },
+                    PathCommand::ArcTo { rx: radius, ry: radius, x_rotation: 0.0, large_arc: false, sweep: true, x: node.x + node.width, y: node.y + radius },
+                    PathCommand::ArcTo { rx: radius, ry: radius, x_rotation: 0.0, large_arc: false, sweep: true, x: node.x + node.width - radius, y: node.y + node.height },
+                    PathCommand::LineTo { x: node.x + radius, y: node.y + node.height },
+                    PathCommand::ArcTo { rx: radius, ry: radius, x_rotation: 0.0, large_arc: false, sweep: true, x: node.x, y: node.y + radius },
+                    PathCommand::ArcTo { rx: radius, ry: radius, x_rotation: 0.0, large_arc: false, sweep: true, x: node.x + radius, y: node.y },
+                    PathCommand::Close,
+                ],
+                fill: Some(node.style.fill.clone()), fill_rule: None,
+                stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+                stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: None, stroke_dash_offset: None,
+            })
+        }
         DiagramShape::Note => {
             let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
             PaintInstruction::Path(PaintPath {
@@ -900,6 +967,26 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
             stroke_dash_offset: None,
         }),
     }
+}
+
+fn polygon_node_instruction(node: &LayoutedGraphNode, points: &[(f64, f64)]) -> PaintInstruction {
+    let mut commands = Vec::with_capacity(points.len() + 1);
+    let (x, y) = points[0];
+    commands.push(PathCommand::MoveTo { x, y });
+    commands.extend(points[1..].iter().map(|&(x, y)| PathCommand::LineTo { x, y }));
+    commands.push(PathCommand::Close);
+    PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands,
+        fill: Some(node.style.fill.clone()),
+        fill_rule: None,
+        stroke: Some(node.style.stroke.clone()),
+        stroke_width: Some(node.style.stroke_width),
+        stroke_cap: None,
+        stroke_join: Some(StrokeJoin::Round),
+        stroke_dash: None,
+        stroke_dash_offset: None,
+    })
 }
 
 // ============================================================================
@@ -5137,6 +5224,38 @@ mod tests {
             !diamond_paths.is_empty(),
             "expected a diamond PaintPath with 5 commands"
         );
+    }
+
+    #[test]
+    fn block_polygonal_and_stadium_shapes_lower_to_backend_neutral_paint() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+
+        for (shape, command_count) in [
+            (DiagramShape::Hexagon, 7),
+            (DiagramShape::ParallelogramRight, 5),
+            (DiagramShape::ParallelogramLeft, 5),
+            (DiagramShape::Trapezoid, 5),
+            (DiagramShape::InvertedTrapezoid, 5),
+        ] {
+            let mut layout = simple_layout();
+            layout.nodes[0].shape = shape;
+            let scene = diagram_to_paint(&layout, &opts);
+            assert!(scene.instructions.iter().any(|instruction| {
+                matches!(instruction, PaintInstruction::Path(path) if path.commands.len() == command_count)
+            }));
+        }
+
+        let mut layout = simple_layout();
+        layout.nodes[0].shape = DiagramShape::Stadium;
+        let scene = diagram_to_paint(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path)
+                if path.commands.len() == 8
+                    && path.commands.iter().filter(|command| matches!(command, PathCommand::ArcTo { .. })).count() == 4)
+        }));
     }
 
     #[test]
