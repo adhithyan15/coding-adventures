@@ -1,11 +1,11 @@
 //! Deterministic grid layout for Mermaid block diagrams.
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.3.0";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
-    resolve_style, DiagramDirection, DiagramStyle, EdgeKind, GridDiagram, LayoutedGraphDiagram,
+    resolve_style, resolve_style_with_base, DiagramDirection, DiagramStyle, EdgeKind, GridDiagram, LayoutedGraphDiagram,
     LayoutedGraphEdge, LayoutedGraphNode, Point, ResolvedDiagramStyle,
 };
 
@@ -58,7 +58,7 @@ pub fn layout_grid_diagram(diagram: &GridDiagram) -> LayoutedGraphDiagram {
             y,
             width,
             height: CELL_HEIGHT,
-            style: resolve_style(Some(&grid_style(index))),
+            style: resolve_style_with_base(cell.style.as_ref(), resolve_style(Some(&grid_style(index)))),
         });
     }
 
@@ -271,5 +271,21 @@ mod tests {
             layout.edges[0].points[0].x,
             layout.nodes[0].x + layout.nodes[0].width
         );
+    }
+
+    #[test]
+    fn resolves_authored_cell_style_over_grid_defaults() {
+        let diagram = GridDiagram {
+            columns: 1, title: None, accessibility_title: None, accessibility_description: None,
+            cells: vec![GridCell {
+                id: "styled".into(), label: DiagramLabel::new("Styled"), shape: DiagramShape::Rect,
+                column_span: 1, visible: true,
+                style: Some(DiagramStyle { fill: Some("#123456".into()), stroke_width: Some(5.0), ..DiagramStyle::default() }),
+            }], connections: Vec::new(),
+        };
+        let style = &layout_grid_diagram(&diagram).nodes[0].style;
+        assert_eq!(style.fill, "#123456");
+        assert_eq!(style.stroke, "#0284c7");
+        assert_eq!(style.stroke_width, 5.0);
     }
 }

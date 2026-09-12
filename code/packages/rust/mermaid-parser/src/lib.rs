@@ -1414,6 +1414,9 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
     let mut connections = Vec::new();
     let mut ids = HashSet::new();
     let mut space_count = 0usize;
+    let mut class_styles = HashMap::new();
+    let mut class_assignments: Vec<(Vec<String>, Vec<String>)> = Vec::new();
+    let mut direct_styles: Vec<(Vec<String>, DiagramStyle)> = Vec::new();
 
     for token in tokens
         .iter()
@@ -1439,6 +1442,27 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         }
         if let Some((_, value)) = line.strip_prefix("accDescr").and_then(|line| line.split_once(':')) {
             accessibility_description = Some(value.trim().to_string());
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("classDef ") {
+            let (names, declarations) = value.split_once(char::is_whitespace)
+                .ok_or_else(|| token_error(token, "block classDef requires a name and style"))?;
+            let style = parse_block_style(token, declarations)?;
+            for name in names.split(',').map(str::trim).filter(|name| !name.is_empty()) {
+                class_styles.insert(name.to_string(), style.clone());
+            }
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("class ") {
+            let (ids, classes) = value.split_once(char::is_whitespace)
+                .ok_or_else(|| token_error(token, "block class requires targets and class names"))?;
+            class_assignments.push((split_block_names(ids), split_block_names(classes)));
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("style ") {
+            let (ids, declarations) = value.split_once(char::is_whitespace)
+                .ok_or_else(|| token_error(token, "block style requires targets and properties"))?;
+            direct_styles.push((split_block_names(ids), parse_block_style(token, declarations)?));
             continue;
         }
         if let Some((from, rest)) = line.split_once("-->") {
@@ -1472,19 +1496,38 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 });
                 continue;
             }
+            let (item, inline_classes) = match item.split_once(":::") {
+                Some((item, classes)) => (item, split_block_names(classes)),
+                None => (item, Vec::new()),
+            };
             let (id, label, shape) = parse_block_node(item);
             if id.is_empty() || !ids.insert(id.clone()) {
                 return Err(token_error(token, format!("duplicate or empty block id {id:?}")));
             }
             cells.push(GridCell {
-                id,
+                id: id.clone(),
                 label: DiagramLabel::new(normalize_mermaid_line_breaks(&label)),
                 shape,
                 column_span,
                 visible: true,
                 style: None,
             });
+            if !inline_classes.is_empty() {
+                class_assignments.push((vec![id], inline_classes));
+            }
         }
+    }
+
+    for (targets, classes) in class_assignments {
+        for class_name in classes {
+            let class_style = class_styles.get(&class_name).ok_or_else(|| ParseError {
+                message: format!("unknown block style class {class_name:?}"), line: 1, col: 1,
+            })?;
+            apply_block_style(&mut cells, &targets, class_style)?;
+        }
+    }
+    for (targets, style) in direct_styles {
+        apply_block_style(&mut cells, &targets, &style)?;
     }
 
     for connection in &connections {
@@ -1508,6 +1551,56 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         cells,
         connections,
     })
+}
+
+fn split_block_names(source: &str) -> Vec<String> {
+    source.split(|character: char| character == ',' || character.is_whitespace())
+        .map(str::trim).filter(|name| !name.is_empty()).map(str::to_string).collect()
+}
+
+fn apply_block_style(cells: &mut [GridCell], targets: &[String], style: &DiagramStyle) -> Result<(), ParseError> {
+    for target in targets {
+        let cell = cells.iter_mut().find(|cell| cell.visible && cell.id == *target).ok_or_else(|| ParseError {
+            message: format!("block style references an unknown node {target:?}"), line: 1, col: 1,
+        })?;
+        merge_state_style(cell.style.get_or_insert_default(), style);
+    }
+    Ok(())
+}
+
+fn parse_block_style(token: &Token, source: &str) -> Result<DiagramStyle, ParseError> {
+    let mut style = DiagramStyle::default();
+    for declaration in source.split(',').map(str::trim).filter(|value| !value.is_empty()) {
+        let (property, value) = declaration.split_once(':')
+            .ok_or_else(|| token_error(token, format!("invalid block style {declaration:?}")))?;
+        let value = value.trim().trim_matches(['\'', '"']);
+        match property.trim().to_ascii_lowercase().as_str() {
+            "fill" => style.fill = Some(value.into()),
+            "stroke" => style.stroke = Some(value.into()),
+            "color" => style.text_color = Some(value.into()),
+            "stroke-width" => style.stroke_width = Some(parse_block_style_number(token, value)?),
+            "font-size" => style.font_size = Some(parse_block_style_number(token, value)?),
+            "font-weight" => style.font_weight = Some(match value.to_ascii_lowercase().as_str() {
+                "normal" => 400,
+                "bold" => 700,
+                _ => value.parse().map_err(|_| token_error(token, "invalid block font weight"))?,
+            }),
+            "font-style" => style.font_italic = Some(match value.to_ascii_lowercase().as_str() {
+                "normal" => false,
+                "italic" => true,
+                _ => return Err(token_error(token, "block font style must be normal or italic")),
+            }),
+            "font-family" => style.font_family = Some(value.into()),
+            property => return Err(token_error(token, format!("unsupported block style property {property:?}"))),
+        }
+    }
+    Ok(style)
+}
+
+fn parse_block_style_number(token: &Token, source: &str) -> Result<f64, ParseError> {
+    source.strip_suffix("px").unwrap_or(source).trim().parse::<f64>().ok()
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .ok_or_else(|| token_error(token, format!("invalid block style number {source:?}")))
 }
 
 fn parse_block_span<'a>(token: &Token, source: &'a str) -> Result<(&'a str, usize), ParseError> {
@@ -8934,6 +9027,25 @@ mod tests_dg04 {
             3
         );
         assert!(parse_block("block\ncolumns 2\nzero[Zero]:0").is_err());
+    }
+
+    #[test]
+    fn block_resolves_classes_inline_classes_and_direct_styles() {
+        let diagram = parse_block(
+            "block\ncolumns 2\nA[Grammar]:::pipeline B[Paint]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass B pipeline\nstyle B fill:#dcfce7,font-size:18px,font-weight:bold,font-style:italic,font-family:Avenir",
+        ).unwrap();
+        let grammar = diagram.cells[0].style.as_ref().unwrap();
+        assert_eq!(grammar.fill.as_deref(), Some("#dbeafe"));
+        assert_eq!(grammar.stroke_width, Some(3.0));
+        let paint = diagram.cells[1].style.as_ref().unwrap();
+        assert_eq!(paint.fill.as_deref(), Some("#dcfce7"));
+        assert_eq!(paint.stroke.as_deref(), Some("#1d4ed8"));
+        assert_eq!(paint.font_size, Some(18.0));
+        assert_eq!(paint.font_weight, Some(700));
+        assert_eq!(paint.font_italic, Some(true));
+        assert_eq!(paint.font_family.as_deref(), Some("Avenir"));
+        assert!(parse_block("block\nA:::missing\n").is_err());
+        assert!(parse_block("block\nA\nstyle missing fill:red\n").is_err());
     }
 
     #[test]
