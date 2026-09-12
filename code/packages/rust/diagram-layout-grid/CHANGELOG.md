@@ -1,5 +1,9 @@
 # Changelog - diagram-layout-grid
 
+## 0.3.0
+
+- Resolve authored Block cell styles over deterministic grid defaults before Paint lowering.
+
 ## 0.2.0
 
 - Lay out spanned Block nodes and spaces by occupied columns and route edges to widened bounds.

@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.114.0
+
+- Validate Block class and direct styles through the backend-neutral Metal-to-PNG path.
+
 ## 0.113.0
 
 - Validate spanned Mermaid Block geometry through PaintScene and Metal-to-PNG rendering.

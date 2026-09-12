@@ -354,12 +354,13 @@ mindmap shapes remain explicitly outside the partial compatibility level.
 The initial Mermaid 11.16.1 block slice parses `block` and `block-beta` through
 dedicated portable grammars into typed grid IR. The subset preserves positive
 column counts, flat node ordering, explicit `space` slots, node and space
-column spans, square, rounded,
+column spans, named `classDef` declarations, `class` assignments, inline
+`:::class` assignments, direct `style` declarations, square, rounded,
 circular, and diamond nodes, titles, accessibility metadata, and directed
 connections with optional labels. `diagram-layout-grid` resolves deterministic
 cell geometry before the shared backend-neutral PaintScene lowering path. A
-native Metal-to-PNG fixture gates this slice; nested blocks, classes, and
-style directives remain explicitly unsupported at the partial level.
+native Metal-to-PNG fixture gates this slice; nested blocks remain explicitly
+unsupported at the partial level.
 
 ### Packet Native Slice
 

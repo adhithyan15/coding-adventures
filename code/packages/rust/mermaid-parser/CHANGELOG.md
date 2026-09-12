@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.192.0
+
+- Resolve Mermaid 11.16.1 Block classes, inline class shorthand, and direct styles into typed cell styles.
+
 ## 0.191.0
 
 - Parse and validate Mermaid 11.16.1 Block node and space column spans.
