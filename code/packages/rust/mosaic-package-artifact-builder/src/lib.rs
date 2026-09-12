@@ -1246,13 +1246,16 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                 _ => HashSet::new(),
             };
             collect_native_degradations(
-                opts.backend,
-                component,
-                variant.as_deref(),
+                &NativeScan {
+                    backend: opts.backend,
+                    component,
+                    variant: variant.as_deref(),
+                    native_radio_groups: &native_radio_groups,
+                },
                 &composed.layout.def.root,
                 "root",
+                None,
                 &mut degradations,
-                &native_radio_groups,
             );
             // issue #12022: style-property drops, XAML only for now (see
             // `DegradationReport::style_degradations` doc comment for why
@@ -1322,16 +1325,40 @@ fn write_degradation_report(path: &Path, report: &DegradationReport) -> Result<(
     write_file(path, json.as_bytes())
 }
 
-fn collect_native_degradations(
+/// The parts of a degradation scan that do not change as it descends.
+///
+/// Split out when the enclosing-table parameter (#14843) pushed the
+/// recursive function past clippy's argument limit: four of its arguments
+/// were invariant across the whole walk and only three actually varied.
+struct NativeScan<'a> {
     backend: Backend,
-    component: &str,
-    variant: Option<&str>,
+    component: &'a str,
+    variant: Option<&'a str>,
+    native_radio_groups: &'a HashSet<String>,
+}
+
+fn collect_native_degradations(
+    scan: &NativeScan<'_>,
     node: &LayoutNode,
     path: &str,
+    // The nearest enclosing `HostTable`, if any. A cell property cannot be
+    // judged from the cell alone: whether a backend gives a cell native
+    // semantics is a fact about the TABLE's shape (#14843).
+    enclosing_table: Option<&LayoutNode>,
     degradations: &mut Vec<Degradation>,
-    native_radio_groups: &HashSet<String>,
 ) {
+    let NativeScan {
+        backend,
+        component,
+        variant,
+        native_radio_groups,
+    } = *scan;
     let backend_name = backend.dir_name();
+    let enclosing_table = if node.tag == "HostTable" {
+        Some(node)
+    } else {
+        enclosing_table
+    };
     let reason = match node.tag.as_str() {
         moslayout_compiler::CHILD_SLOT_MOUNT_TAG if backend.is_native() => Some((
             "composition.child-slot-parameter-unimplemented",
@@ -1456,7 +1483,7 @@ fn collect_native_degradations(
 
     for (index, prop) in node.props.iter().enumerate() {
         if let Some((code, reason)) =
-            ignored_native_property(backend, node, prop, native_radio_groups)
+            ignored_native_property(backend, node, prop, native_radio_groups, enclosing_table)
         {
             degradations.push(Degradation {
                 code: code.to_string(),
@@ -1472,15 +1499,7 @@ fn collect_native_degradations(
 
     for (index, child) in node.children.iter().enumerate() {
         let child_path = format!("{path}.children[{index}]");
-        collect_native_degradations(
-            backend,
-            component,
-            variant,
-            child,
-            &child_path,
-            degradations,
-            native_radio_groups,
-        );
+        collect_native_degradations(scan, child, &child_path, enclosing_table, degradations);
     }
 }
 
@@ -1489,6 +1508,7 @@ fn ignored_native_property(
     node: &LayoutNode,
     property: &LayoutProp,
     native_radio_groups: &HashSet<String>,
+    enclosing_table: Option<&LayoutNode>,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
         (_, "font-size") if !matches!(backend, Backend::React | Backend::Electron) => Some((
@@ -1511,10 +1531,28 @@ fn ignored_native_property(
             "interaction.table-wheel-shift-unimplemented",
             "measured table wheel routing is currently implemented only by React",
         )),
-        (_, "table-cell-role") if backend != Backend::React => Some((
-            "accessibility.authored-table-cell-unimplemented",
-            "authored table-cell roles and wrapper geometry are currently implemented only by React",
-        )),
+        // #14843. Was a blanket `backend != React`, which claimed no other
+        // backend could express a cell role. Compose emits
+        // `collectionItemInfo` for every header, leading and body cell of a
+        // table it recognises, so it can answer for itself -- the same shape
+        // the `HostTable focusable` arm above already uses.
+        //
+        // The question is about the TABLE, not the cell: cell semantics come
+        // from `compose_semantic_table_shape`, which is computed on the
+        // enclosing `HostTable`. A cell with no enclosing table (or in a
+        // table Compose does not recognise) is still a real degradation.
+        (_, "table-cell-role")
+            if backend != Backend::React
+                && !(backend == Backend::Compose
+                    && enclosing_table.is_some_and(
+                        mosaic_emit_compose::pipeline::host_table_has_native_semantics,
+                    )) =>
+        {
+            Some((
+                "accessibility.authored-table-cell-unimplemented",
+                "authored table-cell roles and wrapper geometry are currently implemented only by React",
+            ))
+        }
         ("Text", "a11y-label")
             if backend.is_native()
                 && !matches!(
@@ -7223,7 +7261,7 @@ layout AccessibleText {
                 Backend::SwiftUI,
                 Backend::Xaml,
             ] {
-                let result = ignored_native_property(backend, &node, &prop, &HashSet::new());
+                let result = ignored_native_property(backend, &node, &prop, &HashSet::new(), None);
                 assert_eq!(
                     result.map(|value| value.0),
                     if backend == Backend::React {
@@ -7234,6 +7272,95 @@ layout AccessibleText {
                 );
             }
         }
+    }
+
+    /// #14843 — Compose answers for itself once the ENCLOSING table is
+    /// known, because cell semantics come from the table's shape rather
+    /// than from the cell.
+    ///
+    /// The pair matters: asserting only the positive would pass on a
+    /// predicate that never reports anything, and asserting only the
+    /// negative would pass on the old blanket `backend != React`.
+    #[test]
+    fn compose_table_cell_role_depends_on_the_enclosing_table() {
+        let cell = LayoutNode {
+            tag: "Text".into(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
+        let prop = LayoutProp {
+            name: "table-cell-role".into(),
+            value: LayoutPropValue::Keyword("row-header".into()),
+        };
+
+        // A table Compose recognises: the cell role IS implemented, so
+        // reporting it would be a false positive. Built through the real
+        // package so the shape is the one the emitter actually accepts.
+        let grid = grid_package_table();
+        assert!(
+            mosaic_emit_compose::pipeline::host_table_has_native_semantics(&grid),
+            "fixture is not a table Compose recognises; the test would prove nothing"
+        );
+        assert!(
+            ignored_native_property(
+                Backend::Compose,
+                &cell,
+                &prop,
+                &HashSet::new(),
+                Some(&grid)
+            )
+            .is_none(),
+            "Compose emits collectionItemInfo for this table's cells"
+        );
+
+        // No enclosing table at all: still a real degradation.
+        assert!(
+            ignored_native_property(Backend::Compose, &cell, &prop, &HashSet::new(), None)
+                .is_some(),
+            "a cell outside any table has no collection semantics to inherit"
+        );
+
+        // The predicate is Compose-specific: the others are unchanged even
+        // with the same recognised table.
+        for backend in [Backend::Flutter, Backend::Qt, Backend::SwiftUI, Backend::Xaml] {
+            assert!(
+                ignored_native_property(backend, &cell, &prop, &HashSet::new(), Some(&grid))
+                    .is_some(),
+                "{backend:?} does not implement cell roles and must still report"
+            );
+        }
+    }
+
+    /// The `mosaic-pkg-grid` table, resolved the way a real build resolves
+    /// it. Compiling the `.mll` alone yields no `HostTable` at all, because
+    /// VisiCalc reaches its table through a `pkg::` reference.
+    fn grid_package_table() -> LayoutNode {
+        fn find(node: &LayoutNode) -> Option<LayoutNode> {
+            if node.tag == "HostTable" {
+                return Some(node.clone());
+            }
+            node.children.iter().find_map(find)
+        }
+        let src = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .and_then(|p| p.parent())
+            .map(|p| p.join("mosaic/mosaic-pkg-grid/src"))
+            .expect("package source root");
+        let mil = fs::read_to_string(src.join("Grid.mil")).expect("grid mil");
+        let mll = fs::read_to_string(src.join("Grid.mll")).expect("grid mll");
+        let model = mosmodel_compiler::compile(&mil).expect("grid model");
+        let mut layout =
+            moslayout_compiler::compile(&mll, Some(&model.descriptor_json)).expect("grid layout");
+        let packages = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .and_then(|p| p.parent())
+            .map(|p| p.join("mosaic"))
+            .expect("package search root");
+        mosaic_package_resolver::LayoutPackageResolver::new(vec![packages])
+            .resolve(&mut layout.def)
+            .expect("resolve grid packages");
+        find(&layout.def.root).expect("grid package contains a HostTable")
     }
 
     #[test]
@@ -7256,7 +7383,7 @@ layout AccessibleText {
             Backend::SwiftUI,
             Backend::Xaml,
         ] {
-            let result = ignored_native_property(backend, &node, &prop, &HashSet::new());
+            let result = ignored_native_property(backend, &node, &prop, &HashSet::new(), None);
             assert_eq!(result.is_some(), backend != Backend::React);
         }
     }
