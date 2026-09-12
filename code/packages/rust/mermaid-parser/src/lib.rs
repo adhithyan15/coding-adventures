@@ -1467,16 +1467,17 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         }
         if let Some((from, rest, kind)) = line.split_once("-->").map(|(from, rest)| (from, rest, EdgeKind::Directed))
             .or_else(|| line.split_once("---").map(|(from, rest)| (from, rest, EdgeKind::Undirected))) {
+            let (from, quoted_label) = parse_block_quoted_connection_label(token, from)?;
             let (to, label) = if let Some(rest) = rest.trim().strip_prefix('|') {
                 let (label, to) = rest
                     .split_once('|')
                     .ok_or_else(|| token_error(token, "unterminated block connection label"))?;
                 (to.trim(), Some(DiagramLabel::new(label.trim())))
             } else {
-                (rest.trim(), None)
+                (rest.trim(), quoted_label.map(DiagramLabel::new))
             };
             connections.push(GridConnection {
-                from: from.trim().to_string(),
+                from,
                 to: to.to_string(),
                 kind,
                 label,
@@ -1553,6 +1554,18 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         cells,
         connections,
     })
+}
+
+fn parse_block_quoted_connection_label(token: &Token, source: &str) -> Result<(String, Option<String>), ParseError> {
+    let source = source.trim();
+    let Some((from, label)) = source.split_once("--") else {
+        return Ok((source.to_string(), None));
+    };
+    let label = label.trim();
+    if label.len() < 2 || !label.starts_with('"') || !label.ends_with('"') {
+        return Err(token_error(token, "invalid quoted block connection label"));
+    }
+    Ok((from.trim().to_string(), Some(normalize_mermaid_line_breaks(&label[1..label.len() - 1]))))
 }
 
 fn split_block_names(source: &str) -> Vec<String> {
@@ -9003,7 +9016,7 @@ mod tests_dg04 {
     #[test]
     fn block_parses_grid_cells_spaces_shapes_and_connections() {
         let diagram = parse_block(
-            "block-beta\ncolumns 3\nA[Parser] space B(IR)\nC((Paint))\nA -->|lower| C\nB --- C",
+            "block-beta\ncolumns 3\nA[Parser] space B(IR)\nC((Paint))\nA -->|lower| C\nB-- \"observe\" ---C",
         )
         .unwrap();
         assert_eq!(diagram.columns, 3);
@@ -9014,6 +9027,7 @@ mod tests_dg04 {
         assert_eq!(diagram.connections[0].label.as_ref().unwrap().text, "lower");
         assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
         assert_eq!(diagram.connections[1].kind, EdgeKind::Undirected);
+        assert_eq!(diagram.connections[1].label.as_ref().unwrap().text, "observe");
     }
 
     #[test]

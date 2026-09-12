@@ -1,5 +1,9 @@
 # Changelog - diagram-layout-grid
 
+## 0.5.0
+
+- Position Block edge labels outside horizontal and vertical node bounds.
+
 ## 0.4.0
 
 - Preserve Block connection kinds in shared graph layout geometry.

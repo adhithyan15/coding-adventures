@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.116.0
+
+- Validate native quoted Block edge labels through PaintScene and Metal-to-PNG rendering.
+
 ## 0.115.0
 
 - Validate directed and undirected Block edges through PaintScene and Metal-to-PNG rendering.
