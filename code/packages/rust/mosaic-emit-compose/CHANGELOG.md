@@ -5,6 +5,45 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — `max-width` reached nothing (#14833)
+
+Six of the eight backends already lower it — html, react, webcomponent,
+SwiftUI, Qt and XAML — all measured on a minimal two-node probe rather than
+assumed. Compose and Flutter (#14851) were the two that did not, and Engram
+authors it on **all seven** of its screens (760px–1100px), so its study screen
+is a reading column that ran the full width of the window.
+
+```
+Modifier
+    .widthIn(max = 980.dp)
+    .fillMaxWidth()
+```
+
+**The order is load-bearing and not symmetric**, which cost a wrong version
+first. `.fillMaxWidth()` pins `minWidth = maxWidth` to the incoming max, after
+which `.widthIn(max = ..)` cannot lower the max below that min — Compose
+coerces and the floor wins. Engram's screens rendered at the full 1208px with
+the modifier plainly present in the emitted Kotlin. This way round, `widthIn`
+clamps the incoming max and `fillMaxWidth` fills to the clamped value.
+
+The fill is emitted alongside the cap rather than left to the container
+default, because that default is *prepended* and would land on the wrong side.
+And it must be emitted: without it the container wraps its content, which is
+also wrong — a ceiling is not a width.
+
+No alignment is added. The six backends that already lower `max-width` emit no
+centring with it, so the capped box sits at its parent's start.
+
+Measured on the rendered app, by painted extent:
+
+| | before | after |
+| --- | --- | --- |
+| Engram screen content | `1255` | **`1003`** |
+| Engram `app-header` (no cap authored) | `1255` | `1255` |
+
+Trestle's `list-wrap` (`max-width: 760`) now caps too — its task column ends at
+~1026 instead of ~1250.
+
 ### Fixed — `min-height` reached nothing (#14837)
 
 Parsed and discarded. Three products author `min-height: 100vh` on their app
