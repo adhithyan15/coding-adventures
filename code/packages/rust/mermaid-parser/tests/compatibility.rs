@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_cynefin, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart,
+    parse_cynefin, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -67,6 +67,17 @@ const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
 const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-corpus.json"));
 const INFO_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/info-11.16.1-corpus.json"));
+const ZENUML_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"));
+
+#[test]
+fn pinned_zenuml_subset_corpus_lowers_to_sequence_ir() {
+    let corpus: Value = serde_json::from_str(ZENUML_CORPUS).expect("zenuml corpus must be JSON");
+    assert_eq!(corpus["upstream_version"].as_str(), Some("11.16.1"));
+    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+        let result = parse_zenuml(fixture["source"].as_str().expect("fixture source"));
+        assert_eq!(result.is_ok(), fixture["compatible"].as_bool().unwrap(), "fixture {:?}", fixture["name"]);
+    }
+}
 
 #[test]
 fn info_full_status_is_backed_by_the_complete_pinned_corpus() {
@@ -916,5 +927,16 @@ fn info_dispatches_to_dedicated_version_ir() {
     match parse_any_mermaid("info showInfo").expect("info should parse") {
         mermaid_parser::MermaidDiagram::Info(diagram) => assert_eq!(diagram.version, "11.16.1"),
         _ => panic!("info should lower to dedicated version IR"),
+    }
+}
+
+#[test]
+fn zenuml_dispatches_to_shared_sequence_ir() {
+    match parse_any_mermaid("zenuml\nA as Alice\nA->Bob: Hello").expect("zenuml should parse") {
+        mermaid_parser::MermaidDiagram::Sequence(diagram) => {
+            assert_eq!(diagram.participants[0].label.text, "Alice");
+            assert_eq!(diagram.events.len(), 1);
+        }
+        _ => panic!("zenuml should lower to shared sequence IR"),
     }
 }
