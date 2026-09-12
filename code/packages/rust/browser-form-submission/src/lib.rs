@@ -1588,6 +1588,33 @@ mod tests {
     }
 
     #[test]
+    fn disabled_fieldset_controls_are_not_validated_or_serialized_except_in_first_legend() {
+        let url = "http://example.test/form";
+        let (model, document) = model_and_document(
+            "<form action='/save'><fieldset disabled>\
+             <legend><input id='legend' name='legend' value='yes'></legend>\
+             <input id='blocked' name='blocked' required>\
+             <legend><input id='second' name='second' value='no'></legend>\
+             </fieldset><input id='outside' name='outside' value='ok'>\
+             <button id='go'>Go</button></form>",
+            url,
+        );
+
+        assert!(!model.control("control:0:id:legend").unwrap().disabled);
+        assert!(model.control("control:1:id:blocked").unwrap().disabled);
+        assert!(model.control("control:2:id:second").unwrap().disabled);
+        let FormActivation::Navigate(request) =
+            plan_activation(&document, &model, "control:4:id:go", url).unwrap()
+        else {
+            panic!("expected navigation");
+        };
+        assert_eq!(
+            request.url,
+            "http://example.test/save?legend=yes&outside=ok"
+        );
+    }
+
+    #[test]
     fn validation_is_bounded_and_blocks_navigation() {
         let url = "http://example.test/form";
         let (model, document) = model_and_document(

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Retain label association metadata in Layout IR for shared hit-region
+  resolution.
+
 - Project form controls into the reusable `layout-controls` contract with
   deterministic intrinsic sizes, CSS appearance, constraints, and state.
 

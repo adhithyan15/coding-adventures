@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Derive effective disabledness through nested fieldsets while exempting only
+  each disabled fieldset's first direct legend subtree.
+
 - Add live output dependency snapshots and reset transactions, normalized
   meter quality regions, determinate/indeterminate progress state, reusable
   diagnostics, accessibility value text, and bounded host JSON.

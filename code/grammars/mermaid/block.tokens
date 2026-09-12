@@ -7,5 +7,7 @@ skip:
   COMMENT = /[ \t]*%%[^\r\n]*/
 
 NEWLINE       = /\r?\n/
-HEADER        = /block(?:-beta)?[ \t]*/
+GROUP_START   = /[ \t]*block:[A-Za-z_][^\r\n]*(?:\r?\n|$)/
+HEADER        = /[ \t]*block(?:-beta)?[ \t]*(?:\r?\n|$)/
+GROUP_END     = /[ \t]*end[ \t]*(?:\r?\n|$)/
 STATEMENT_LINE = /[ \t]*[^ \t\r\n][^\r\n]*/

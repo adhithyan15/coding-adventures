@@ -5,6 +5,12 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 browser convergence — form groups and label activation.** Project
+  disabled-fieldset inheritance with the first-legend exception into the shared
+  render/control model, and resolve explicit and implicit labels into reusable
+  hit regions. Completed with semantic pointer activation, submission and
+  validation exclusion, deterministic fixtures, and host-neutral acceptance.
+
 - [x] **P0 browser convergence — reusable visited-link state and decoration.**
   Canonicalize document URL identity in `browser-navigation`, commit only
   successful final response URLs in `BrowserSession`, and project blue/purple

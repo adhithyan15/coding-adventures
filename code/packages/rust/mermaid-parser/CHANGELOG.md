@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.201.0
+
+- Preserve authored labels on named Block composites in grid semantic IR.
+
+## 0.200.0
+
+- Parse anonymous and named recursive Block composites into hierarchical grid semantic IR.
+
 ## 0.199.0
 
 - Parse braced multiline Block accessibility descriptions into semantic metadata.

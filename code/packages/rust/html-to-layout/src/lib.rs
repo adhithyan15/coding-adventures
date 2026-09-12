@@ -3969,6 +3969,7 @@ fn html_ext(node: &BrowserRenderNode) -> ExtValue {
         node.resolved_href.as_deref().or(node.href.as_deref()),
     );
     insert_optional(&mut values, "target", node.target.as_deref());
+    insert_optional(&mut values, "labelFor", node.label_for.as_deref());
     insert_optional(&mut values, "lang", node.lang.as_deref());
     insert_optional(&mut values, "dir", node.dir.as_deref());
     insert_optional(&mut values, "alt", node.alt.as_deref());

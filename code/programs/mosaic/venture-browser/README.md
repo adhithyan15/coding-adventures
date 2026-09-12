@@ -119,6 +119,9 @@ recreating the surrounding chrome in backend-specific UI code.
   descriptors. Bounded autofill blocks credentials unless explicitly allowed,
   emits `input` before `change`, and Back/Forward restores public values plus
   custom-element state without placing file payloads in session history.
+- Disabled fieldsets, including the first-legend exception, are resolved in
+  shared render/control state. Explicit and implicit labels use shared hit
+  regions and semantic activation, so generated hosts only forward pointers.
 - Native SwiftUI and WinUI surface-size changes use matching Rust resize ABIs.
   The shared session recomposes its retained render tree for the new logical
   viewport, preserves and clamps scroll state, updates hit regions, and

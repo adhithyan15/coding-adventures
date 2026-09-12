@@ -210,6 +210,9 @@ pub struct ControlRegion {
     pub key: String,
     pub kind: ControlKind,
     pub disabled: bool,
+    /// Label regions focus or activate their associated control rather than
+    /// placing a text caret relative to the label box.
+    pub label_activation: bool,
     pub fixed: bool,
     pub clips: Vec<LinkClip>,
 }
@@ -496,6 +499,8 @@ pub fn extract_control_regions(root: &PositionedNode) -> Vec<ControlRegion> {
 fn extract_interactive_regions(root: &PositionedNode) -> (Vec<LinkRegion>, Vec<ControlRegion>) {
     let mut links = Vec::new();
     let mut controls = Vec::new();
+    let mut control_targets = Vec::new();
+    let mut labels = Vec::new();
     let mut stack = vec![(root, 0.0, 0.0, None, Vec::new(), false, IDENTITY)];
 
     while let Some((
@@ -546,7 +551,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> (Vec<LinkRegion>, Vec<C
             if let Some((x, y, width, height)) = region.filter(|(x, y, width, height)| {
                 valid_link_box(*x, *y, *width, *height) && !control.key.is_empty()
             }) {
-                controls.push(ControlRegion {
+                let region = ControlRegion {
                     x,
                     y,
                     width,
@@ -554,9 +559,41 @@ fn extract_interactive_regions(root: &PositionedNode) -> (Vec<LinkRegion>, Vec<C
                     key: control.key,
                     kind: control.kind,
                     disabled: control.disabled,
+                    label_activation: false,
                     fixed,
                     clips: inherited_clips.clone(),
-                });
+                };
+                if let Some(id) = node.id.as_deref() {
+                    if !control_targets
+                        .iter()
+                        .any(|(candidate, _): &(String, ControlRegion)| candidate == id)
+                    {
+                        control_targets.push((id.to_string(), region.clone()));
+                    }
+                }
+                controls.push(region);
+            }
+        }
+        if positioned_html_string(node, "role") == Some("label") {
+            let target = positioned_html_string(node, "labelFor")
+                .map(|id| LabelTarget::Explicit(id.to_string()))
+                .or_else(|| first_descendant_control_region(node).map(LabelTarget::Implicit));
+            let region = clipped_box(
+                transformed_box((absolute_x, absolute_y, node.width, node.height), transform),
+                inherited_clip,
+            );
+            if let (Some(target), Some((x, y, width, height))) = (target, region) {
+                if valid_link_box(x, y, width, height) {
+                    labels.push(LabelRegion {
+                        x,
+                        y,
+                        width,
+                        height,
+                        target,
+                        fixed,
+                        clips: inherited_clips.clone(),
+                    });
+                }
             }
         }
 
@@ -601,7 +638,73 @@ fn extract_interactive_regions(root: &PositionedNode) -> (Vec<LinkRegion>, Vec<C
         }
     }
 
-    (links, controls)
+    let mut label_controls = labels
+        .into_iter()
+        .filter_map(|label| {
+            let target = match label.target {
+                LabelTarget::Explicit(id) => control_targets
+                    .iter()
+                    .find(|(candidate, _)| candidate == &id)
+                    .map(|(_, region)| region.clone()),
+                LabelTarget::Implicit(region) => Some(region),
+            }?;
+            Some(ControlRegion {
+                x: label.x,
+                y: label.y,
+                width: label.width,
+                height: label.height,
+                key: target.key,
+                kind: target.kind,
+                disabled: target.disabled,
+                label_activation: true,
+                fixed: label.fixed,
+                clips: label.clips,
+            })
+        })
+        .collect::<Vec<_>>();
+    // Direct controls remain topmost when a wrapping label contains its target.
+    label_controls.extend(controls);
+    (links, label_controls)
+}
+
+#[derive(Clone, Debug)]
+enum LabelTarget {
+    Explicit(String),
+    Implicit(ControlRegion),
+}
+
+#[derive(Clone, Debug)]
+struct LabelRegion {
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    target: LabelTarget,
+    fixed: bool,
+    clips: Vec<LinkClip>,
+}
+
+fn first_descendant_control_region(node: &PositionedNode) -> Option<ControlRegion> {
+    for child in &node.children {
+        if let Some(control) = positioned_control_state(child) {
+            return Some(ControlRegion {
+                x: 0.0,
+                y: 0.0,
+                width: 0.0,
+                height: 0.0,
+                key: control.key,
+                kind: control.kind,
+                disabled: control.disabled,
+                label_activation: false,
+                fixed: false,
+                clips: Vec::new(),
+            });
+        }
+        if let Some(control) = first_descendant_control_region(child) {
+            return Some(control);
+        }
+    }
+    None
 }
 
 fn invert_transform(transform: Transform2D) -> Option<Transform2D> {
@@ -1819,6 +1922,58 @@ mod tests {
             hit_test_control(&output.controls, first.x + 1.0, first.y + 1.0, 0.0)
                 .map(|region| region.key.as_str()),
             Some("control:0:id:query")
+        );
+    }
+
+    #[test]
+    fn explicit_and_implicit_labels_share_control_hit_regions() {
+        let render = parse_browser_render_tree(
+            "<label for='query'>Search</label><input id='query' value='hello'>\
+             <label>Accept<input id='accept' type='checkbox'></label>\
+             <label for='missing'>Missing</label>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(420.0, 160.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        let labels = output
+            .controls
+            .iter()
+            .filter(|region| region.label_activation)
+            .collect::<Vec<_>>();
+        assert_eq!(labels.len(), 2);
+        assert_eq!(labels[0].key, "control:0:id:query");
+        assert_eq!(labels[1].key, "control:1:id:accept");
+        for label in labels {
+            assert!(label.width > 0.0 && label.height > 0.0);
+            assert_eq!(
+                hit_test_control(&output.controls, label.x + 1.0, label.y + 1.0, 0.0,)
+                    .map(|region| (region.key.as_str(), region.label_activation)),
+                Some((label.key.as_str(), true))
+            );
+        }
+        let direct_checkbox = output
+            .controls
+            .iter()
+            .find(|region| region.key == "control:1:id:accept" && !region.label_activation)
+            .unwrap();
+        assert_eq!(
+            hit_test_control(
+                &output.controls,
+                direct_checkbox.x + direct_checkbox.width / 2.0,
+                direct_checkbox.y + direct_checkbox.height / 2.0,
+                0.0,
+            )
+            .map(|region| region.label_activation),
+            Some(false),
+            "a nested control remains topmost inside its wrapping label"
         );
     }
 

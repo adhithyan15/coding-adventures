@@ -974,9 +974,12 @@ backend immediately) come before the enabler-dependent items.
   first post-limit value by simulating at most 4,096 emitted binary64 additions;
   non-finite and rounded-away progress fails closed. Finite static loops also
   retain path-independent integer, real, and boolean constants established by
-  a body that does not reference the control. Larger real loops, integer
+  a body that does not reference the control. One simple local scalar body
+  assignment may instead reference the control: bounded analysis evaluates it
+  at the final in-range control value and retains its exact integer, finite
+  real, or boolean result. Larger real loops, compound bodies, integer
   overflow, zero steps, arrays, globals, by-name targets, tracking barriers,
-  dynamic writes, and control-dependent multi-iteration bodies remain
+  dynamic writes, and other control-dependent multi-iteration bodies remain
   conservative.
   A `while` element also retains body initialization when a bounded static
   numeric comparison, evaluated after abstractly assigning its initial

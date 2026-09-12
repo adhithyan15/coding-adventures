@@ -14,7 +14,7 @@ use std::collections::{HashMap, HashSet};
 use diagram_ir::{
     BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
-    GridConnection, GridDiagram, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
+    GridConnection, GridDiagram, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
 };
@@ -1411,20 +1411,78 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
     let mut accessibility_title = None;
     let mut accessibility_description = None;
     let mut cells = Vec::new();
+    let mut groups = Vec::new();
     let mut connections = Vec::new();
     let mut ids = HashSet::new();
     let mut space_count = 0usize;
+    let mut group_count = 0usize;
+    let mut seen_header = false;
+    let mut group_stack: Vec<String> = Vec::new();
+    let mut next_order: HashMap<Option<String>, usize> = HashMap::new();
     let mut class_styles = HashMap::new();
     let mut class_assignments: Vec<(Vec<String>, Vec<String>)> = Vec::new();
     let mut direct_styles: Vec<(Vec<String>, DiagramStyle)> = Vec::new();
 
-    for token in tokens
-        .iter()
-        .filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE"))
-    {
+    for token in &tokens {
+        let token_type = token.type_name.as_deref();
+        if token_type == Some("HEADER") || token_type == Some("GROUP_START") {
+            if token_type == Some("HEADER") && !seen_header {
+                seen_header = true;
+                continue;
+            }
+            let parent_id = group_stack.last().cloned();
+            let order = take_grid_order(&mut next_order, &parent_id);
+            let (id, column_span, label) = if token_type == Some("GROUP_START") {
+                let value = token.value.trim().strip_prefix("block:").unwrap_or_default();
+                let (node, column_span) = parse_block_span(token, value)?;
+                let (id, label, _) = parse_block_node(node);
+                let mut id_characters = id.chars();
+                let valid_id = id_characters
+                    .next()
+                    .is_some_and(|character| character.is_ascii_alphabetic() || character == '_')
+                    && id_characters.all(|character| {
+                        character.is_ascii_alphanumeric() || character == '_' || character == '-'
+                    });
+                if !valid_id {
+                    return Err(token_error(token, "invalid named block group declaration"));
+                }
+                let label = if label == id {
+                    id.clone()
+                } else {
+                    normalize_mermaid_line_breaks(&unquote_block_label(&label))
+                };
+                (id, column_span, label)
+            } else {
+                group_count += 1;
+                (format!("__group{group_count}"), 1, String::new())
+            };
+            if id.is_empty() || !ids.insert(id.clone()) {
+                return Err(token_error(token, format!("duplicate or empty block group id {id:?}")));
+            }
+            groups.push(GridGroup {
+                id: id.clone(),
+                label: DiagramLabel::new(label),
+                parent_id,
+                columns: GridColumns::Auto,
+                column_span,
+                order,
+            });
+            group_stack.push(id);
+            continue;
+        }
+        if token_type == Some("GROUP_END") {
+            group_stack.pop().ok_or_else(|| token_error(token, "unexpected block group end"))?;
+            continue;
+        }
+        if token_type != Some("STATEMENT_LINE") {
+            continue;
+        }
         let line = token.value.trim();
+        if line.starts_with("block:") {
+            return Err(token_error(token, "invalid named block group declaration"));
+        }
         if let Some(value) = line.strip_prefix("columns ") {
-            columns = if value.trim().eq_ignore_ascii_case("auto") {
+            let parsed_columns = if value.trim().eq_ignore_ascii_case("auto") {
                 GridColumns::Auto
             } else {
                 GridColumns::Fixed(value.trim()
@@ -1433,6 +1491,11 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 .filter(|value| *value > 0)
                 .ok_or_else(|| token_error(token, "block columns must be auto or a positive integer"))?)
             };
+            if let Some(group_id) = group_stack.last() {
+                groups.iter_mut().find(|group| &group.id == group_id).expect("open group exists").columns = parsed_columns;
+            } else {
+                columns = parsed_columns;
+            }
             continue;
         }
         if let Some(value) = line.strip_prefix("title ") {
@@ -1490,6 +1553,8 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
 
         for item in split_block_items(line) {
             let (item, column_span) = parse_block_span(token, item)?;
+            let parent_id = group_stack.last().cloned();
+            let order = take_grid_order(&mut next_order, &parent_id);
             if item.eq_ignore_ascii_case("space") {
                 space_count += 1;
                 cells.push(GridCell {
@@ -1497,6 +1562,8 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                     label: DiagramLabel::new(""),
                     shape: DiagramShape::Rect,
                     column_span,
+                    parent_id,
+                    order,
                     visible: false,
                     style: None,
                 });
@@ -1515,6 +1582,8 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 label: DiagramLabel::new(normalize_mermaid_line_breaks(&label)),
                 shape,
                 column_span,
+                parent_id,
+                order,
                 visible: true,
                 style: None,
             });
@@ -1555,8 +1624,16 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         accessibility_title,
         accessibility_description,
         cells,
+        groups,
         connections,
     })
+}
+
+fn take_grid_order(next_order: &mut HashMap<Option<String>, usize>, parent_id: &Option<String>) -> usize {
+    let order = next_order.entry(parent_id.clone()).or_default();
+    let current = *order;
+    *order += 1;
+    current
 }
 
 fn prepare_block_source(source: &str) -> Result<String, ParseError> {
@@ -1668,6 +1745,15 @@ fn parse_block_span<'a>(token: &Token, source: &'a str) -> Result<(&'a str, usiz
         .filter(|span| *span > 0)
         .ok_or_else(|| token_error(token, "block span must be a positive integer"))?;
     Ok((item, span))
+}
+
+fn unquote_block_label(source: &str) -> String {
+    let source = source.trim();
+    if source.len() >= 2 && source.starts_with('"') && source.ends_with('"') {
+        source[1..source.len() - 1].to_string()
+    } else {
+        source.to_string()
+    }
 }
 
 fn prepare_line_grammar_source(source: &str) -> Result<String, ParseError> {
@@ -9169,6 +9255,36 @@ mod tests_dg04 {
             Some("Grammar to semantic IR\nthen PaintScene output")
         );
         assert!(parse_block("block\naccDescr {\nmissing close\nA").is_err());
+    }
+
+    #[test]
+    fn block_preserves_recursive_composite_group_structure() {
+        let diagram = parse_block(
+            "block\ncolumns 3\nA\n  block:pipeline:2\n    columns 2\n    B C\n    block\n      D\n    end\n  end\nE",
+        )
+        .unwrap();
+        assert_eq!(diagram.groups.len(), 2);
+        assert_eq!(diagram.groups[0].id, "pipeline");
+        assert_eq!(diagram.groups[0].column_span, 2);
+        assert_eq!(diagram.groups[0].columns, GridColumns::Fixed(2));
+        assert_eq!(diagram.groups[1].parent_id.as_deref(), Some("pipeline"));
+        assert_eq!(diagram.cells.iter().find(|cell| cell.id == "D").unwrap().parent_id.as_deref(), Some("__group1"));
+        assert_eq!(diagram.cells.iter().find(|cell| cell.id == "E").unwrap().order, 2);
+        assert_eq!(parse_block("block\nendpoint").unwrap().cells[0].id, "endpoint");
+        assert!(parse_block("block\nblock:open\nA").is_err());
+        assert!(parse_block("block\nblock:group:0\nA\nend").is_err());
+    }
+
+    #[test]
+    fn block_preserves_named_composite_labels_and_spans() {
+        let diagram = parse_block(
+            "block\ncolumns 3\nblock:pipeline[\"Processing Pipeline\"]:2\nA[Parse] B[Paint]\nend\nC[PNG]",
+        )
+        .unwrap();
+        assert_eq!(diagram.groups.len(), 1);
+        assert_eq!(diagram.groups[0].id, "pipeline");
+        assert_eq!(diagram.groups[0].label.text, "Processing Pipeline");
+        assert_eq!(diagram.groups[0].column_span, 2);
     }
 
     #[test]

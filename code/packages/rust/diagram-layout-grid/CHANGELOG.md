@@ -1,5 +1,9 @@
 # Changelog - diagram-layout-grid
 
+## 0.7.0
+
+- Recursively size and position Block composite groups and their child grids.
+
 ## 0.6.0
 
 - Resolve automatic Block columns from authored occupied slots.
