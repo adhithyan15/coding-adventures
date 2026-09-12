@@ -294,7 +294,65 @@ impl SpiceMosaicApp {
             .unwrap_or_default()
     }
 
+    fn schematic_grid_lines() -> Vec<[f64; 4]> {
+        (0..=8)
+            .flat_map(|index| {
+                let x = 20.0 + f64::from(index) * 40.0;
+                let y = 20.0 + f64::from(index) * 25.0;
+                [[x, 20.0, x, 220.0], [20.0, y, 340.0, y]]
+            })
+            .collect()
+    }
+
+    fn schematic_geometry(&self) -> (Vec<[f64; 4]>, Vec<[f64; 2]>) {
+        let Some(document) = &self.schematic else {
+            return (Vec::new(), Vec::new());
+        };
+        let points = document
+            .components
+            .iter()
+            .flat_map(|component| component.terminals.iter().copied())
+            .chain(
+                document
+                    .wires
+                    .iter()
+                    .flat_map(|wire| [wire.start, wire.end]),
+            )
+            .collect::<BTreeSet<_>>();
+        let Some(minimum) = points.first().copied() else {
+            return (Vec::new(), Vec::new());
+        };
+        let maximum = points.last().copied().unwrap_or(minimum);
+        let project = |point: SchematicPoint| {
+            let x_span = (maximum.x - minimum.x).max(1) as f64;
+            let y_span = (maximum.y - minimum.y).max(1) as f64;
+            [
+                20.0 + f64::from(point.x - minimum.x) / x_span * 320.0,
+                20.0 + f64::from(point.y - minimum.y) / y_span * 200.0,
+            ]
+        };
+        let segments = document
+            .wires
+            .iter()
+            .flat_map(|wire| {
+                let start = project(wire.start);
+                let end = project(wire.end);
+                if wire.start.x == wire.end.x || wire.start.y == wire.end.y {
+                    vec![[start[0], start[1], end[0], end[1]]]
+                } else {
+                    vec![
+                        [start[0], start[1], end[0], start[1]],
+                        [end[0], start[1], end[0], end[1]],
+                    ]
+                }
+            })
+            .collect();
+        let terminals = points.into_iter().map(project).collect();
+        (segments, terminals)
+    }
+
     fn update(&self) -> AppUpdate {
+        let (schematic_wire_segments, schematic_terminal_points) = self.schematic_geometry();
         let selected_label = self
             .analyses
             .get(self.selected_analysis_row)
@@ -329,7 +387,18 @@ impl SpiceMosaicApp {
             "schematic-label": "Schematic",
             "schematic-title": self.schematic.as_ref().map(|document| document.title.as_str()).unwrap_or("No schematic loaded"),
             "schematic-rows": self.schematic_rows(),
+            "schematic-palette": [
+                SchematicComponentKind::Resistor.palette_label(),
+                SchematicComponentKind::Capacitor.palette_label(),
+                SchematicComponentKind::DcVoltage.palette_label(),
+                SchematicComponentKind::Ground.palette_label(),
+            ],
+            "schematic-grid-label": "Grid routing",
+            "schematic-grid-lines": Self::schematic_grid_lines(),
+            "schematic-wire-segments": schematic_wire_segments,
+            "schematic-terminal-points": schematic_terminal_points,
             "selected-schematic-label": self.selected_schematic_component.as_deref().unwrap_or("No component selected"),
+            "route-schematic-label": "Route selected component to",
             "synchronize-schematic-label": "Sync netlist",
             "dark-theme": self.dark,
         }))
@@ -489,6 +558,27 @@ impl MosaicApp for SpiceMosaicApp {
                     })?;
                 self.load_schematic(document)
             }
+            "placeSchematicComponent" => {
+                let kind = event.payload["kind"]
+                    .as_str()
+                    .ok_or_else(|| invalid("placeSchematicComponent requires a palette kind"))?;
+                let kind = SchematicComponentKind::from_palette_label(kind)
+                    .map_err(|error| invalid(error.to_string()))?;
+                let document = self.schematic.get_or_insert_with(|| SchematicDocument {
+                    title: "Untitled schematic".to_owned(),
+                    components: Vec::new(),
+                    wires: Vec::new(),
+                });
+                let reference = document
+                    .place_palette_component(kind)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.selected_schematic_component = Some(reference.clone());
+                self.diagnostics = format!(
+                    "Placed {reference} on the grid. Select a component and route it to a target."
+                );
+                self.mode = "Schematic";
+                Ok(self.announced(self.diagnostics.clone()))
+            }
             "schematicPlace" => {
                 let component: SchematicComponent =
                     serde_json::from_value(event.payload["component"].clone()).map_err(
@@ -542,6 +632,24 @@ impl MosaicApp for SpiceMosaicApp {
                 }
                 self.selected_schematic_component = Some(reference.to_owned());
                 Ok(self.announced(format!("Selected {reference}.")))
+            }
+            "routeToSchematicComponent" => {
+                let target = event.payload["reference"]
+                    .as_str()
+                    .ok_or_else(|| invalid("routeToSchematicComponent requires reference"))?;
+                let selected = self
+                    .selected_schematic_component
+                    .clone()
+                    .ok_or_else(|| invalid("routeToSchematicComponent requires a selected component"))?;
+                let document = self
+                    .schematic
+                    .as_mut()
+                    .ok_or_else(|| invalid("routeToSchematicComponent requires a loaded schematic"))?;
+                document
+                    .route_components(&selected, target)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.diagnostics = format!("Routed {selected} to {target} on the schematic grid.");
+                Ok(self.announced(self.diagnostics.clone()))
             }
             "synchronizeSchematic" => self.synchronize_schematic(),
             _ => Err(invalid(format!(
@@ -745,5 +853,42 @@ mod tests {
             synchronized.props["netlist-text"],
             "* Host RC\nR1 n1 n2 1k\nV1 n1 0 DC 5\n.op\n.end\n"
         );
+    }
+
+    #[test]
+    fn palette_gestures_place_components_and_project_orthogonal_routes() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let resistor = dispatch(
+            &mut app,
+            "onPlaceSchematicComponent",
+            json!({"kind": "Resistor"}),
+        );
+        assert_eq!(resistor.props["schematic-rows"], json!(["R1"]));
+        assert_eq!(resistor.props["selected-schematic-label"], "R1");
+        let capacitor = dispatch(
+            &mut app,
+            "onPlaceSchematicComponent",
+            json!({"kind": "Capacitor"}),
+        );
+        assert_eq!(capacitor.props["schematic-rows"], json!(["R1", "C1"]));
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference": "R1"}),
+        );
+        let routed = dispatch(
+            &mut app,
+            "onRouteToSchematicComponent",
+            json!({"reference": "C1"}),
+        );
+        assert_eq!(
+            routed.props["diagnostics"],
+            "Routed R1 to C1 on the schematic grid."
+        );
+        assert_eq!(routed.props["schematic-wire-segments"].as_array().unwrap().len(), 1);
+        assert_eq!(routed.props["schematic-terminal-points"].as_array().unwrap().len(), 4);
+        assert_eq!(routed.props["schematic-grid-lines"].as_array().unwrap().len(), 18);
     }
 }

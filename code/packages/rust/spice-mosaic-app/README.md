@@ -9,11 +9,13 @@ canonical result artifact. Its initial schematic-capture API is a small,
 editor-owned Rust model: R, C, DC voltage, and ground symbols connect through
 exact grid endpoints, then lower deterministically to a Berkeley `.op` deck.
 This is not a second simulator or parser format; hosts pass the emitted text to
-the same parser and engine used by the deck editor. Interactive placement,
-selection, and synchronization are the next UI phase.
+the same parser and engine used by the deck editor. The workbench exposes a
+palette for deterministic grid placement, selected-component routing, and
+orthogonal wire/terminal geometry while retaining endpoint-only netlist
+semantics.
 
-Hosts now load, place, wire, select, and synchronize that document through the
-Mosaic app event contract. Synchronization replaces the text deck with the
+Hosts load, place, wire, select, route, and synchronize that document through
+the Mosaic app event contract. Synchronization replaces the text deck with the
 canonical emitted deck and refreshes its runnable Berkeley analysis plan.
 
 ```sh

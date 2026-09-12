@@ -25,6 +25,43 @@ layout SpiceWorkbench {
     Column [ schematic ] {
       Text [ schematic-label ] ( content : slot: schematic-label )
       Text [ schematic-title ] ( content : slot: schematic-title )
+      Row [ schematic-palette ] {
+        For ( each: slot: schematic-palette , as: kind , index: kind-index ) {
+          HostButton [ schematic-palette-item ] (
+            label : ( kind ) ,
+            onClick : emit: onPlaceSchematicComponent
+          )
+        }
+      }
+      Text [ schematic-grid-label ] ( content : slot: schematic-grid-label )
+      Stack [ schematic-grid ] {
+        For ( each: slot: schematic-grid-lines , as: line , index: line-index ) {
+          Path [ schematic-grid-line ] (
+            kind: line ,
+            x1: ( line[0] ) ,
+            y1: ( line[1] ) ,
+            x2: ( line[2] ) ,
+            y2: ( line[3] )
+          )
+        }
+        For ( each: slot: schematic-wire-segments , as: segment , index: segment-index ) {
+          Path [ schematic-wire-segment ] (
+            kind: line ,
+            x1: ( segment[0] ) ,
+            y1: ( segment[1] ) ,
+            x2: ( segment[2] ) ,
+            y2: ( segment[3] )
+          )
+        }
+        For ( each: slot: schematic-terminal-points , as: point , index: point-index ) {
+          Path [ schematic-terminal ] (
+            kind: circle ,
+            cx: ( point[0] ) ,
+            cy: ( point[1] ) ,
+            r: 5
+          )
+        }
+      }
       Row [ schematic-components ] {
         For ( each: slot: schematic-rows , as: component , index: component-index ) {
           HostButton [ schematic-component ] (
@@ -34,6 +71,15 @@ layout SpiceWorkbench {
         }
       }
       Text [ selected-schematic ] ( content : slot: selected-schematic-label )
+      Text [ route-schematic ] ( content : slot: route-schematic-label )
+      Row [ schematic-route-targets ] {
+        For ( each: slot: schematic-rows , as: component , index: component-index ) {
+          HostButton [ schematic-route-target ] (
+            label : ( component ) ,
+            onClick : emit: onRouteToSchematicComponent
+          )
+        }
+      }
       HostButton [ synchronize-schematic ] (
         label : slot: synchronize-schematic-label ,
         onClick : emit: onSynchronizeSchematic

@@ -4,6 +4,23 @@ style SpiceWorkbench {
   part workbench-title { width : 100% ; font-size : 20 ; font-weight : bold ; color : "#f0f6fc" ; }
   part workbench-mode { background : "#223047" ; color : "#8cc8ff" ; border-radius : 4 ; padding : 5 ; }
   part deck-editor { gap : 6 ; }
+  part schematic { gap : 6 ; }
+  part schematic-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
+  part schematic-title { color : "#f0f6fc" ; font-weight : bold ; }
+  part schematic-palette { gap : 6 ; }
+  part schematic-palette-item { background : "#163743" ; color : "#a5f3fc" ; border-width : 1 ; border-color : "#2c7180" ; border-radius : 3 ; padding : 6 ; }
+  part schematic-grid-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
+  part schematic-grid { width : 360 ; min-height : 240 ; background : "#0d1117" ; border-width : 1 ; border-color : "#33465c" ; }
+  part schematic-grid-line { border-color : "#263545" ; border-width : 1 ; }
+  part schematic-wire-segment { border-color : "#5eead4" ; border-width : 2 ; }
+  part schematic-terminal { background : "#fbbf24" ; border-color : "#fef3c7" ; border-width : 1 ; }
+  part schematic-components { gap : 6 ; }
+  part schematic-component { background : "#202a36" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 6 ; }
+  part selected-schematic { color : "#8cc8ff" ; font-weight : bold ; }
+  part route-schematic { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
+  part schematic-route-targets { gap : 6 ; }
+  part schematic-route-target { background : "#123b3a" ; color : "#99f6e4" ; border-width : 1 ; border-color : "#2c827c" ; border-radius : 3 ; padding : 6 ; }
+  part synchronize-schematic { background : "#4a3520" ; color : "#fde68a" ; border-width : 1 ; border-color : "#a66b24" ; border-radius : 4 ; padding : 8 ; }
   part netlist-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
   part diagnostics-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
   part analysis-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }

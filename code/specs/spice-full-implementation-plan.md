@@ -158,13 +158,17 @@ model-card parameter, or a UI artifact is not a completion signal.
      `n1...` names independent of component or wire order. This is a Mosaic UI
      contract, not a Berkeley parser change, so Python and TypeScript continue
      to consume the emitted canonical text through the frozen v1 interfaces.
-   - **Mosaic schematic-session synchronization** (current phase): expose the
+   - **Mosaic schematic-session synchronization** (completed in PR #14888): expose the
      capture document to hosts through typed load, component-placement,
      endpoint-wiring, selection, and synchronization events. Persist the
      document in app snapshots and let the workbench select its components and
      synchronize the canonical Berkeley deck through the existing parser flow.
-   - Next: add direct grid placement gestures and visual wire routing on top of
-     this host contract, then expand the symbol palette and analysis controls.
+   - **Mosaic schematic grid placement and wire routing** (current phase): add
+     deterministic palette placement, selected-component routing, and a grid
+     projection with orthogonal wire segments and terminal markers. The
+     canonical endpoint-only document remains the netlist source of truth.
+   - Next: expand the symbol palette and analysis controls on top of this
+     routed host contract.
 
 ### Operating rules
 

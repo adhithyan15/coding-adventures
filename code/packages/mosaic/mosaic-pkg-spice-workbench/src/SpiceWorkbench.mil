@@ -12,7 +12,13 @@ component SpiceWorkbench {
   slot schematic-label : text ;
   slot schematic-title : text ;
   slot schematic-rows : list<text> ;
+  slot schematic-palette : list<text> ;
+  slot schematic-grid-label : text ;
+  slot schematic-grid-lines : list<list<number>> ;
+  slot schematic-wire-segments : list<list<number>> ;
+  slot schematic-terminal-points : list<list<number>> ;
   slot selected-schematic-label : text ;
+  slot route-schematic-label : text ;
   slot synchronize-schematic-label : text ;
   slot analysis-label : text ;
   slot analysis-rows : list<list<text>> ;
@@ -31,7 +37,9 @@ component SpiceWorkbench {
   emit onNetlistChange ( value : text ) ;
   emit onInspect ;
   emit onRun ;
+  emit onPlaceSchematicComponent ( kind : text ) ;
   emit onSelectSchematicComponent ( reference : text ) ;
+  emit onRouteToSchematicComponent ( reference : text ) ;
   emit onSynchronizeSchematic ;
   emit onSelectAnalysis ( index : number ) ;
   emit onSelectWaveform ( index : number ) ;
