@@ -3163,15 +3163,17 @@ impl Compiler {
         };
         if self.contains_procedure_call(condition)
             || self.static_predicate_dependencies(condition).is_none()
-            || !self.exact_tracked_real_snapshot_operand(then_node)
-            || !self.exact_tracked_real_snapshot_operand(else_node)
+            || !(self.exact_tracked_real_snapshot_operand(then_node)
+                || self.path_independent_tracked_real_snapshot_operand(then_node))
+            || !(self.exact_tracked_real_snapshot_operand(else_node)
+                || self.path_independent_tracked_real_snapshot_operand(else_node))
         {
             return false;
         }
-        let Some(then_value) = self.static_tracked_numeric_value(then_node, false) else {
+        let Some(then_value) = self.static_tracked_exponent_real_value(then_node) else {
             return false;
         };
-        self.static_tracked_numeric_value(else_node, false)
+        self.static_tracked_exponent_real_value(else_node)
             .is_some_and(|else_value| then_value.to_bits() == else_value.to_bits())
     }
 
@@ -11524,6 +11526,25 @@ mod tests {
     }
 
     #[test]
+    fn al4_nested_conditional_tracked_real_snapshot_power_unrolls() {
+        let module = compile_source(
+            "begin boolean outer, inner; real first, second, third, saved; first := 2.0; second := 2.0; third := 2.0; saved := 6.0 ^ (if outer then if inner then first else second else third) + 6.0; outer := true; inner := true; first := 9.0; second := 9.0; third := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("nested equal conditional tracked real snapshots may bound a plain real power");
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions
+                .iter()
+                .filter(|instr| instr.op == "jmp_if_false")
+                .count()
+                >= 2
+        );
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
     fn al4_tracked_real_standard_function_exponents_fail_closed() {
         for source in [
             "begin real exponent, saved; exponent := 1.0; saved := 6.0 ^ (exponent + cos(0)) end",
@@ -11562,6 +11583,7 @@ mod tests {
         for source in [
             "begin real gate, exponent, saved; exponent := 0.0; saved := 6.0 ^ (if gate = 0.0 then cos(exponent) + 1 else cos(exponent) + 2) end",
             "begin real gate, left, right, saved; left := 2.0; right := 3.0; saved := 6.0 ^ (if gate = 0.0 then left else right) end",
+            "begin boolean outer, inner; real first, second, third, saved; first := 2.0; second := 3.0; third := 2.0; saved := 6.0 ^ (if outer then if inner then first else second else third) end",
             "begin real procedure choose(x); value x; real x; choose := x; real gate, exponent, saved; gate := 0.0; exponent := 0.0; saved := 6.0 ^ (if choose(gate) = 0.0 then cos(exponent) + 1 else cos(exponent) + 1) end",
         ] {
             let module = compile_source(source, "test")
