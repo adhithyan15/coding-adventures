@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.106.0
+
+- Represent automatic and fixed Block column modes without magic values.
+
 ## 0.105.0
 
 - Preserve directed and undirected connection kinds in Block grid semantic IR.
