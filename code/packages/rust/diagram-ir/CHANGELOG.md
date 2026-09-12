@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.105.0
+
+- Preserve directed and undirected connection kinds in Block grid semantic IR.
+
 ## 0.104.0
 
 - Represent Mermaid Block node and space column spans in typed grid IR.

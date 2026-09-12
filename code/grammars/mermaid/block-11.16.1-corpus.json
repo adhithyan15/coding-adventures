@@ -5,7 +5,7 @@
   "supported_subset": "Flat grids with columns, spanned spaces and nodes, labeled core shapes, and directed connections",
   "fixtures": [
     { "id": "basic-grid", "source": "block-beta\ncolumns 3\nA[Parser] B(IR) C((Paint))" },
-    { "id": "spaces-and-edges", "source": "block\ncolumns 2\nA[Source] space\nB[Output]\nA --> B" },
+    { "id": "spaces-and-edges", "source": "block\ncolumns 2\nA[Source] space\nB[Output]\nA --> B\nA --- B" },
     { "id": "column-spans", "source": "block\ncolumns 4\nA[Wide]:2 B[Single] space\nspace:3 C[Next row]\nA --> B\nB --> C" },
     { "id": "classes-and-styles", "source": "block\ncolumns 2\nA[Grammar]:::pipeline B[Paint]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass B pipeline\nstyle B fill:#dcfce7,font-size:18px,font-weight:bold" }
   ]

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.193.0
+
+- Parse Mermaid Block directed and undirected connections into typed edge kinds.
+
 ## 0.192.0
 
 - Resolve Mermaid 11.16.1 Block classes, inline class shorthand, and direct styles into typed cell styles.
