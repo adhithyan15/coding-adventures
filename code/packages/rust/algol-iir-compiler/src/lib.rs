@@ -2797,6 +2797,63 @@ impl Compiler {
         })
     }
 
+    /// Admit finite arithmetic that mixes initialized local integer and real
+    /// snapshots for powers whose base contains a pure standard-function
+    /// result. Integer snapshots must widen exactly to binary64. Conditionals,
+    /// calls, nested powers, and single-domain expressions stay on their
+    /// existing paths.
+    fn static_nonnegative_mixed_tracked_numeric_arithmetic_power_chain(
+        &self,
+        nodes: &[&GrammarASTNode],
+    ) -> Option<u32> {
+        self.static_nonnegative_power_chain_with(nodes, &|node| {
+            if self.contains_conditional_expression(node)
+                || self.contains_procedure_call(node)
+                || self.contains_power_operator(node)
+                || !self.contains_binary_real_arithmetic(node)
+            {
+                return None;
+            }
+            let dependencies = self.tracked_integer_expression_dependencies(node)?;
+            if dependencies.is_empty() {
+                return None;
+            }
+            let mut saw_integer = false;
+            let mut saw_real = false;
+            for name in dependencies {
+                let binding = self.require_var(&name).ok()?;
+                if binding.is_global
+                    || binding.array.is_some()
+                    || self.active_by_name_binding(&name).is_some()
+                {
+                    return None;
+                }
+                match binding.ty {
+                    ScalarType::Integer => {
+                        let value = *self.static_integer_slots.get(&binding.slot)?;
+                        if value.unsigned_abs() > 9_007_199_254_740_992_u64 {
+                            return None;
+                        }
+                        saw_integer = true;
+                    }
+                    ScalarType::Real => {
+                        self.static_real_slots.get(&binding.slot)?;
+                        saw_real = true;
+                    }
+                    _ => return None,
+                }
+            }
+            if !saw_integer || !saw_real {
+                return None;
+            }
+            let value = self.static_tracked_exponent_real_value(node)?;
+            (value >= 0.0
+                && value <= MAX_POW_UNROLL_EXPONENT as f64
+                && value.fract() == 0.0)
+                .then_some(value as u32)
+        })
+    }
+
     /// Admit exact integral standard-function results over tracked real locals
     /// without admitting arbitrary tracked real exponent arithmetic. Every real
     /// dependency must occur beneath a pure built-in call, where the existing
@@ -3039,6 +3096,9 @@ impl Compiler {
                 })
                 .or_else(|| {
                     self.static_nonnegative_tracked_real_arithmetic_power_chain(exponents, true)
+                })
+                .or_else(|| {
+                    self.static_nonnegative_mixed_tracked_numeric_arithmetic_power_chain(exponents)
                 });
             return self.exact_tracked_standard_function_operand(base)
                 && self.contains_pure_standard_function_call(base)
@@ -7855,6 +7915,16 @@ impl Compiler {
                 (base.ty == ScalarType::Real
                     && self.contains_pure_standard_function_call(base_node))
                 .then(|| {
+                    self.static_nonnegative_mixed_tracked_numeric_arithmetic_power_chain(
+                        exponent_nodes,
+                    )
+                })
+                .flatten()
+            })
+            .or_else(|| {
+                (base.ty == ScalarType::Real
+                    && self.contains_pure_standard_function_call(base_node))
+                .then(|| {
                     self.static_nonnegative_tracked_real_arithmetic_power_chain(
                         exponent_nodes,
                         false,
@@ -11699,6 +11769,37 @@ mod tests {
         ] {
             let module = compile_source(source, "test")
                 .expect("unsafe conditional arithmetic powers must remain dynamic");
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"), "{source}");
+        }
+    }
+
+    #[test]
+    fn al4_path_independent_standard_results_accept_mixed_tracked_numeric_power_arithmetic() {
+        let module = compile_source(
+            "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (whole + part)) + 6.0; gate := 1.0; whole := 9; part := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("exact mixed tracked numeric arithmetic may bound a power around a built-in result");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
+    fn al4_mixed_tracked_numeric_power_arithmetic_fails_closed() {
+        for source in [
+            "begin integer whole; real part, gate, exponent, saved; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (whole + part)) end",
+            "begin integer whole; real part, gate, exponent, saved; whole := 9007199254740993; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (whole + part)) end",
+            "begin integer whole; real part, gate, exponent, saved; whole := 0; part := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (whole + part)) end",
+            "begin integer whole; real part, saved; whole := 1; part := 0.0; saved := 6.0 ^ (whole + part) end",
+            "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then whole + part else part + whole)) end",
+            "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ ((whole + part) ^ 1)) end",
+            "begin real procedure choose(x); value x; real x; choose := x; integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (whole + choose(part))) end",
+        ] {
+            let module = compile_source(source, "test")
+                .expect("unsafe mixed tracked numeric powers must remain dynamic");
             let main = module.get_function("main").expect("has main");
             assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"), "{source}");
         }
