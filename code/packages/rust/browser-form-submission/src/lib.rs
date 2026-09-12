@@ -695,4 +695,35 @@ mod tests {
             ]
         );
     }
+
+    #[test]
+    fn temporal_and_color_controls_validate_and_serialize_canonical_values() {
+        let url = "http://example.test/form";
+        let (mut model, document) = model_and_document(
+            "<form action='/values'>\
+             <input id='day' name='day' type='date' value='2024-01-02' min='2024-01-01' step='2'>\
+             <input id='clock' name='clock' type='time' value='09:30:05.120' step='0.01'>\
+             <input id='ink' name='ink' type='color' value='#A0b1C2'>\
+             <button id='go'>Go</button></form>",
+            url,
+        );
+        let FormActivation::Invalid(diagnostics) =
+            plan_activation(&document, &model, "control:3:id:go", url).unwrap()
+        else {
+            panic!("expected step mismatch");
+        };
+        assert_eq!(diagnostics[0].code, "step-mismatch");
+
+        model.focus("control:0:id:day");
+        model.accessibility_action(browser_form_controls::ControlAccessibilityAction::Increment);
+        let FormActivation::Navigate(request) =
+            plan_activation(&document, &model, "control:3:id:go", url).unwrap()
+        else {
+            panic!("expected navigation");
+        };
+        assert_eq!(
+            request.url,
+            "http://example.test/values?day=2024-01-03&clock=09%3A30%3A05.12&ink=%23a0b1c2"
+        );
+    }
 }

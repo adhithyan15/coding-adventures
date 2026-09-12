@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add shared date/month/week/time/datetime-local parsing and scalar stepping,
+  strict simple-color normalization, temporal bounds and step diagnostics,
+  accessibility value text, and semantic value actions.
+
 - Add multi-select range/toggle selection, disabled-option filtering,
   checkbox mixed state, scoped radio arrow navigation, normalized range input
   stepping, and reusable choice/range accessibility state and actions.

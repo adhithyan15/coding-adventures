@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Validate shared temporal min/max/step state and serialize canonical date,
+  month, week, time, datetime-local, and color values as successful controls.
+
 - Serialize live single- and multi-select values in document order while
   excluding disabled options and disabled optgroup descendants.
 

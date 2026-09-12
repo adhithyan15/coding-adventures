@@ -56,6 +56,10 @@ Typed inputs retain that single-owner design. The session exposes
 Arrow Up/Down and SetValue/Increment/Decrement through shared numeric
 min/max/step policy, and reflows after each accepted mutation. Native and web
 hosts do not parse values, enforce `maxlength`, or duplicate selection rules.
+Date, month, ISO week, time, datetime-local, and color inputs extend that same
+contract with normalized accessibility value text and scalar stepping. Session
+reflow follows every accepted semantic key or accessibility value action;
+platform adapters remain translators rather than owners of picker state.
 
 `NavigationHistory` is re-exported from the reusable `browser-navigation`
 package and implements the BR01 in-memory navigation model: navigate, Back,

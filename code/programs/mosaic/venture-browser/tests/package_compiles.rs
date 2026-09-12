@@ -502,7 +502,7 @@ fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
     capture.assert_valid();
     let controls = venture_browser_visual_fixtures::load_form_controls_page("http://venture.test")
         .expect("load Venture's deterministic form-control fixture");
-    assert_eq!(controls.paint.controls.len(), 10);
+    assert_eq!(controls.paint.controls.len(), 16);
     assert!(controls
         .paint
         .controls
@@ -591,6 +591,65 @@ fn choice_range_fixture_uses_the_shared_host_neutral_contract() {
     let range = controls.choice_state("control:2:id:level").unwrap();
     assert_eq!(range.role, "slider");
     assert_eq!(range.value, Some(6.0));
+}
+
+#[test]
+fn temporal_color_fixture_uses_the_shared_host_neutral_contract() {
+    use venture_browser_core::{BrowserControlModel, ControlAccessibilityAction, ControlKey};
+
+    let tree = coding_adventures_html_parser::parse_browser_render_tree(
+        "<input id='day' type='date' min='2024-01-01' max='2024-01-09' step='2' value='2024-01-02'>\
+         <input id='month' type='month' value='2024-07'>\
+         <input id='week' type='week' value='2020-W53'>\
+         <input id='clock' type='time' value='09:30:05.120' step='0.5'>\
+         <input id='local' type='datetime-local' value='2024-02-29T09:30'>\
+         <input id='ink' type='color' value='#A0b1C2'>",
+    )
+    .expect("parse deterministic temporal/color fixture");
+    let mut controls = BrowserControlModel::from_render_tree(&tree);
+
+    controls.focus("control:0:id:day");
+    assert_eq!(
+        controls
+            .value_state("control:0:id:day")
+            .unwrap()
+            .diagnostics[0]
+            .code,
+        "step-mismatch"
+    );
+    controls.key_down(ControlKey::ArrowUp);
+    controls.accessibility_action(ControlAccessibilityAction::Increment);
+    assert_eq!(
+        controls.control("control:0:id:day").unwrap().value,
+        "2024-01-05"
+    );
+    assert_eq!(
+        controls
+            .value_state("control:3:id:clock")
+            .unwrap()
+            .value_text
+            .as_deref(),
+        Some("09:30:05.12")
+    );
+    assert_eq!(
+        controls
+            .value_state("control:4:id:local")
+            .unwrap()
+            .value_text
+            .as_deref(),
+        Some("2024-02-29T09:30")
+    );
+
+    controls.focus("control:5:id:ink");
+    controls.accessibility_action(ControlAccessibilityAction::SetValue("#00FF7f".into()));
+    assert_eq!(
+        controls
+            .value_state("control:5:id:ink")
+            .unwrap()
+            .value_text
+            .as_deref(),
+        Some("#00ff7f")
+    );
 }
 
 #[test]

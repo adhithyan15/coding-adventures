@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Route canonical temporal/color value state, keyboard stepping, bounds,
+  accessibility value actions, and retained reflow through the shared session.
+
 - Expose reusable choice/range state and route multi-select, checkbox mixed,
   radio arrow, and slider value actions through retained session reflow.
 
