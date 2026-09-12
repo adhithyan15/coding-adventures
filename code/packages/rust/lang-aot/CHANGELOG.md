@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.319.0 — 2026-09-12 — ALGOL nested conditional real snapshots
+
+The seven-backend ALGOL matrix now proves nested path-independent tracked-real
+snapshot exponents while preserving every runtime selector.
+
 ## 0.318.0 — 2026-09-12 — ALGOL conditional tracked real snapshots
 
 The seven-backend ALGOL matrix now proves that equal path-independent tracked
