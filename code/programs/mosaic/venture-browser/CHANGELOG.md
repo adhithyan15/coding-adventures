@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Add deterministic acceptance for the shared form-associated custom-element
+  internals contract consumed by every generated host.
+
 - Add document-ordered image-submit coordinates, live Unicode `dirname`
   direction fields, and common pointer, keyboard, and accessibility activation
   through the shared form planner.

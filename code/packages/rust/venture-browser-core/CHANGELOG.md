@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose shared form-associated custom-element attachment, value, validity,
+  lifecycle, and accessibility APIs to every Venture host adapter.
+
 - Route image-submit pointer coordinates, keyboard `(0, 0)` activation,
   accessibility activation, and live `dirname` directionality through the
   shared submission planner.

@@ -17615,7 +17615,11 @@ fn browser_content_node_for_element(
     }
 
     let text = browser_content_text(element, role);
-    if role == "inline" && text.is_none() && children.is_empty() {
+    if role == "inline"
+        && text.is_none()
+        && children.is_empty()
+        && !browser_custom_element(element)
+    {
         return None;
     }
 
@@ -17773,7 +17777,7 @@ fn browser_content_node_for_element(
         size: browser_control_size(element),
         rows: browser_control_rows(element),
         cols: browser_control_cols(element),
-        control_name: if role == "control" {
+        control_name: if role == "control" || browser_custom_element(element) {
             element.attribute("name").map(ToOwned::to_owned)
         } else {
             None
@@ -23971,7 +23975,7 @@ fn is_browser_labelable_element(name: &str) -> bool {
     matches!(
         name,
         "button" | "input" | "meter" | "output" | "progress" | "select" | "textarea"
-    )
+    ) || is_custom_element_name(name)
 }
 
 fn browser_control_labels(
@@ -24729,7 +24733,8 @@ fn browser_form_owner(element: &Element) -> Option<String> {
     if matches!(
         element.name.as_str(),
         "button" | "fieldset" | "input" | "object" | "output" | "select" | "textarea"
-    ) {
+    ) || browser_custom_element(element)
+    {
         element.attribute("form").map(ToOwned::to_owned)
     } else {
         None
@@ -31119,6 +31124,35 @@ mod tests {
         );
         assert_eq!(rendered.children[3].role, "slot");
         assert_eq!(rendered.children[3].display, "inline");
+    }
+
+    #[test]
+    fn browser_render_tree_retains_form_associated_custom_element_metadata() {
+        fn by_id<'a>(nodes: &'a [BrowserRenderNode], id: &str) -> Option<&'a BrowserRenderNode> {
+            nodes.iter().find_map(|node| {
+                (node.id.as_deref() == Some(id))
+                    .then_some(node)
+                    .or_else(|| by_id(&node.children, id))
+            })
+        }
+
+        let document = parse_html(
+            "<label for='rating'>Rating</label><form id='review'>\
+             <x-rating id='rating' name='score' role='slider'></x-rating></form>\
+             <x-confirmation id='confirmation' name='confirmation' form='review'></x-confirmation>",
+        )
+        .unwrap();
+        let render_tree = BrowserRenderTree::from_document(&document);
+        let rating = by_id(&render_tree.children, "rating").unwrap();
+        assert!(rating.custom_element);
+        assert_eq!(rating.control_name.as_deref(), Some("score"));
+        assert_eq!(rating.labels, vec!["Rating"]);
+        assert_eq!(rating.accessible_name.as_deref(), Some("Rating"));
+        assert_eq!(rating.authored_role.as_deref(), Some("slider"));
+
+        let external = by_id(&render_tree.children, "confirmation").unwrap();
+        assert_eq!(external.form_owner.as_deref(), Some("review"));
+        assert_eq!(external.control_name.as_deref(), Some("confirmation"));
     }
 
     #[test]

@@ -5,6 +5,9 @@ documented in this file.
 
 ## Unreleased
 
+- Retain empty autonomous custom elements plus their form owner, control name,
+  labels, and accessibility metadata for host-neutral ElementInternals wiring.
+
 ### Added
 - Textarea value and form-control descriptors preserve authored line breaks so
   retained multiline editing does not collapse content into spaces.

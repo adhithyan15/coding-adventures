@@ -68,6 +68,11 @@ Image submitters pass control-local pointer coordinates into that planner;
 keyboard and accessibility activation use deterministic zero coordinates.
 The session also preserves live Unicode `dirname` direction fields beside
 their owning successful controls without exposing this policy to hosts.
+Form-associated custom elements use the same boundary: hosts attach retained
+internals, set bounded submission/restoration values and validity, drain typed
+association/disabled/reset/restore callbacks, and consume reusable label and
+accessibility projections. Native and web adapters receive one shared API;
+they do not serialize values or infer lifecycle policy.
 
 `NavigationHistory` is re-exported from the reusable `browser-navigation`
 package and implements the BR01 in-memory navigation model: navigate, Back,

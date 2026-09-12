@@ -756,6 +756,84 @@ fn image_submit_and_dirname_fixture_uses_shared_semantics() {
 }
 
 #[test]
+fn form_associated_custom_element_fixture_uses_shared_internals() {
+    use venture_browser_core::{
+        BrowserControlModel, CustomElementAccessibilityAction,
+        CustomElementAccessibilityProjection, CustomElementAccessibilityValue,
+        CustomElementFormValue, CustomElementLifecycleEvent, CustomElementValidity,
+    };
+
+    let tree = coding_adventures_html_parser::parse_browser_render_tree(
+        "<label for='rating'>Rating</label><form id='review'>\
+         <input name='before' value='a'>\
+         <x-rating id='rating' name='score' role='slider'></x-rating>\
+         <input name='after' value='z'></form>",
+    )
+    .expect("parse deterministic form-associated custom-element fixture");
+    let mut controls = BrowserControlModel::from_render_tree(&tree);
+    let key = controls.form_associated_custom_elements()[0].key.clone();
+    controls
+        .attach_form_associated_custom_element(&key)
+        .unwrap();
+    controls
+        .set_custom_element_form_value(
+            &key,
+            Some(CustomElementFormValue::Text("3".into())),
+            Some(CustomElementFormValue::Text("rating:3".into())),
+        )
+        .unwrap();
+    controls
+        .set_custom_element_accessibility_projection(
+            &key,
+            CustomElementAccessibilityProjection {
+                role: Some("spinbutton".into()),
+                name: Some("Review rating".into()),
+                description: None,
+            },
+        )
+        .unwrap();
+    controls
+        .set_custom_element_accessibility_value(
+            &key,
+            CustomElementAccessibilityValue {
+                value_text: Some("3 of 5".into()),
+                minimum: Some(1.0),
+                maximum: Some(5.0),
+                step: Some(1.0),
+            },
+        )
+        .unwrap();
+    controls
+        .custom_element_accessibility_action(&key, CustomElementAccessibilityAction::Increment)
+        .unwrap();
+    let state = controls.custom_element_accessibility_state(&key).unwrap();
+    assert_eq!(state.role.as_deref(), Some("spinbutton"));
+    assert_eq!(state.value.as_deref(), Some("4"));
+    assert_eq!(state.labels, vec!["Rating"]);
+
+    controls
+        .set_custom_element_validity(
+            &key,
+            CustomElementValidity {
+                custom_error: true,
+                ..CustomElementValidity::default()
+            },
+            Some("Choose five stars".into()),
+            Some("rating".into()),
+        )
+        .unwrap();
+    assert_eq!(
+        controls.custom_element_diagnostics(Some("review"), 0).len(),
+        1
+    );
+    controls.reset_form(Some("review"), Some(0));
+    assert!(controls
+        .take_custom_element_lifecycle_events()
+        .iter()
+        .any(|event| matches!(event, CustomElementLifecycleEvent::FormReset { .. })));
+}
+
+#[test]
 fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
     let build = read_package_file("BUILD");
     let build_windows = read_package_file("BUILD_windows");
