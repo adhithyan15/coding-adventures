@@ -22,6 +22,7 @@ members = [
     "aarch64-gatelevel",
     "aarch64-simulator",
     "apple-m1-simulator",
+    "apple-m1-gatelevel",
     "x86_64-encoder",
     "x86_64-backend",
     "twig-aot",
