@@ -5506,7 +5506,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.has_open_html_template_element()
-            && !self.has_open_html_element("table")
+            && !self.has_open_html_element_after_last_authored_template("table")
             && self.current_template_insertion_mode() == Some(TemplateInsertionMode::Body)
             && matches!(
                 name.as_str(),
@@ -5527,7 +5527,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.has_open_html_template_element()
-            && !self.has_open_html_element("table")
+            && !self.has_open_html_element_after_last_authored_template("table")
             && self.current_template_insertion_mode() == Some(TemplateInsertionMode::Body)
             && name == "tr"
             && self.current_element_is("template")
@@ -5548,7 +5548,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.has_open_html_template_element()
-            && !self.has_open_html_element("table")
+            && !self.has_open_html_element_after_last_authored_template("table")
             && name == "tr"
             && self.current_has_child_element("thead")
             && !self.current_element_is("tbody")
@@ -5558,7 +5558,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.has_open_html_template_element()
-            && !self.has_open_html_element("table")
+            && !self.has_open_html_element_after_last_authored_template("table")
             && name == "tr"
             && !self.current_element_is("template")
             && !self.current_element_is("tbody")
@@ -5577,7 +5577,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.first_authored_open_template_index().is_some()
-            && !self.has_open_html_element("table")
+            && !self.has_open_html_element_after_last_authored_template("table")
             && (is_table_section(&name) || matches!(name.as_str(), "caption" | "colgroup"))
             && !(name == "tfoot" && self.current_has_child_element("thead"))
             && (self.current_last_child_element_is("td")
@@ -5599,7 +5599,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.has_open_html_template_element()
-            && !self.has_open_html_element("table")
+            && !self.has_open_html_element_after_last_authored_template("table")
             && matches!(name.as_str(), "td" | "th")
             && !self.current_element_is("tr")
             && self.current_has_child_element("tr")
@@ -6115,7 +6115,7 @@ impl HtmlParser {
             && self.current_element_is_table_structure()
             && self.has_open_html_element("table")
             && !starts_table_context(&name)
-            && !is_head_element(&name)
+            && !is_table_head_passthrough_element(&name)
         {
             self.insert_node_before_open_table(node)
         } else {
@@ -6810,6 +6810,7 @@ impl HtmlParser {
             && !self.has_open_element("p")
             && (self.current_element_is("b")
                 || self.current_element_is("i")
+                || self.current_element_is("span")
                 || self.current_element_is("u")
                 || (self.current_element_is("a") && self.current_has_non_whitespace_child())
                 || (self.current_empty_element_is("a") && self.current_has_formatting_ancestor()))
@@ -10088,7 +10089,7 @@ impl HtmlParser {
 
         let next_mode = match name {
             "base" | "basefont" | "bgsound" | "link" | "meta" | "noframes" | "script" | "style"
-            | "template" | "title" => return,
+            | "template" => return,
             "caption" | "colgroup" | "tbody" | "tfoot" | "thead" => TemplateInsertionMode::Table,
             "col" => TemplateInsertionMode::ColumnGroup,
             "tr" => TemplateInsertionMode::TableBody,
@@ -11089,6 +11090,23 @@ impl HtmlParser {
                 element.name == "template"
                     && element.namespace.is_none()
                     && !has_fragment_context_marker(element)
+            })
+        })
+    }
+
+    fn has_open_html_element_after_last_authored_template(&self, name: &str) -> bool {
+        let Some(template_index) = self.open_elements.iter().rposition(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.name == "template"
+                    && element.namespace.is_none()
+                    && !has_fragment_context_marker(element)
+            })
+        }) else {
+            return self.has_open_html_element(name);
+        };
+        self.open_elements[template_index + 1..].iter().any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.namespace.is_none() && element.name == name
             })
         })
     }
@@ -13656,6 +13674,10 @@ fn is_head_element(name: &str) -> bool {
             | "template"
             | "title"
     )
+}
+
+fn is_table_head_passthrough_element(name: &str) -> bool {
+    matches!(name, "script" | "style" | "template")
 }
 
 fn starts_body_after_head(name: &str) -> bool {
@@ -38328,6 +38350,21 @@ mod tests {
     }
 
     #[test]
+    fn inserts_fresh_paragraph_inside_current_span() {
+        for source in [
+            "<!doctype html><div><span id=outer>X<p id=inner>Y",
+            "<!doctype html><template><div><span id=outer>X<p id=inner>Y</template>",
+            "<!doctype html><table><template><div><span id=outer>X<p id=inner>Y</template>",
+        ] {
+            let document = parse_html(source).unwrap();
+            let outer = find_element_by_id(&document.children, "outer").unwrap();
+            assert_eq!(outer.children[0], Node::text("X"), "source {source:?}");
+            let inner = find_element_by_id(&outer.children, "inner").unwrap();
+            assert_eq!(inner.children, vec![Node::text("Y")], "source {source:?}");
+        }
+    }
+
+    #[test]
     fn adopts_nested_formatting_paragraph_when_outer_formatting_ends() {
         let document = parse_html("<div> abc <b> def <i> ghi <p> jkl </b>").unwrap();
 
@@ -57161,6 +57198,50 @@ mod tests {
     }
 
     #[test]
+    fn title_start_switches_template_recovery_to_body_mode() {
+        let document = parse_html(
+            "<!doctype html><table><template><title>T</title><tbody><tr><td>C</template>",
+        )
+        .unwrap();
+        let template = find_first_element_in_nodes(&document.children, "template").unwrap();
+        assert_eq!(template.children.len(), 2);
+        assert_eq!(element(&template.children[0]).name, "title");
+        assert_eq!(template.children[1], Node::text("C"));
+    }
+
+    #[test]
+    fn outer_tables_do_not_supply_template_body_table_scope() {
+        let document = parse_html(
+            "<!doctype html><table><template><div>X</div><tr><td>C</template>",
+        )
+        .unwrap();
+        let template = find_first_element_in_nodes(&document.children, "template").unwrap();
+        assert_eq!(template.children.len(), 2);
+        assert_eq!(element(&template.children[0]).name, "div");
+        assert_eq!(template.children[1], Node::text("C"));
+
+        let direct = parse_html("<!doctype html><table><template><tr><td>C</template>").unwrap();
+        let template = find_first_element_in_nodes(&direct.children, "template").unwrap();
+        assert_eq!(element(&template.children[0]).name, "tr");
+
+        for markup in [
+            "<div><span>X<tr><td>Y",
+            "<div><span>X<tbody><tr><td>Y",
+            "<div><span>X<thead><tr><td>Y",
+            "<div><span>X<tfoot><tr><td>Y",
+        ] {
+            let source = format!("<!doctype html><table><template>{markup}</template>Z");
+            let document = parse_html(&source).unwrap();
+            let template = find_first_element_in_nodes(&document.children, "template").unwrap();
+            assert!(
+                find_first_element_in_nodes(&template.children, "tr").is_none(),
+                "markup {markup:?}"
+            );
+            assert_eq!(element_text_content(template), "XY", "markup {markup:?}");
+        }
+    }
+
+    #[test]
     fn keeps_template_rows_inside_an_outer_caption_scope() {
         let source =
             "<!doctype html><!--é-->\r\n<table><caption><template><tr><td>雪</template>尾";
@@ -59518,6 +59599,35 @@ mod tests {
         assert!(head.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-head-content-start-tag-in-table"
         }));
+    }
+
+    #[test]
+    fn fosters_late_head_elements_that_are_not_table_passthrough_tokens() {
+        for (name, markup, expected_text) in [
+            ("base", "<base id=marker href=/x>", "ABCDE"),
+            ("basefont", "<basefont id=marker>", "ABCDE"),
+            ("bgsound", "<bgsound id=marker>", "ABCDE"),
+            ("link", "<link id=marker rel=x>", "ABCDE"),
+            (
+                "noframes",
+                "<noframes id=marker>X<b>Y</noframes>",
+                "ABX<b>YCDE",
+            ),
+            ("noscript", "<noscript id=marker>X</noscript>", "ABXCDE"),
+        ] {
+            let source = format!(
+                "<!doctype html><main>A<table>B{markup}C<tr><td>D</table>E</main>"
+            );
+            let document = parse_html(&source).unwrap();
+            let main = find_first_element_in_nodes(&document.children, "main").unwrap();
+            assert_eq!(main.children.len(), 5, "element {name:?}");
+            assert_eq!(main.children[0], Node::text("AB"), "element {name:?}");
+            assert_eq!(element(&main.children[1]).name, name, "element {name:?}");
+            assert_eq!(main.children[2], Node::text("C"), "element {name:?}");
+            assert_eq!(element(&main.children[3]).name, "table", "element {name:?}");
+            assert_eq!(main.children[4], Node::text("E"), "element {name:?}");
+            assert_eq!(element_text_content(main), expected_text, "element {name:?}");
+        }
     }
 
     #[test]
