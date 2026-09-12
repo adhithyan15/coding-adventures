@@ -5680,7 +5680,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && name == "hr"
-            && self.has_open_html_element_before_foreign_boundary("select")
+            && self.open_html_element_in_scope_index("select").is_some()
         {
             if let Some(select_index) = self.open_html_element_in_scope_index("select") {
                 self.generate_implied_end_tags_above(select_index);
@@ -6774,6 +6774,18 @@ impl HtmlParser {
         if incoming_name == "button" && self.current_element_is("span") {
             return Vec::new();
         }
+        if incoming_name == "button"
+            && self.has_authored_open_html_element("button")
+            && self.open_html_element_in_scope_index("button").is_none()
+        {
+            return Vec::new();
+        }
+        if incoming_name == "p"
+            && self.has_authored_open_html_element("p")
+            && self.open_html_element_in_button_scope_index("p").is_none()
+        {
+            return Vec::new();
+        }
         if incoming_name == "p" && self.current_font_size_seven_newline_continuation() {
             return Vec::new();
         }
@@ -7516,6 +7528,21 @@ impl HtmlParser {
         let in_foreign_content = self.current_namespace().is_some()
             && !self.current_node_is_svg_html_integration_point()
             && !self.current_node_is_mathml_integration_point();
+        if self.current_namespace().is_none()
+            && self.has_open_foreign_integration_point()
+            && is_adoption_agency_element(name)
+            && self.has_authored_open_html_element(name)
+            && self.open_html_element_in_scope_index(name).is_none()
+        {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    format!("end tag `</{name}>` did not match an open element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return;
+        }
         if !in_foreign_content && self.current_element_is("frameset") && name != "frameset" {
             self.diagnostics.push(
                 ParserDiagnostic::new(
@@ -8741,7 +8768,7 @@ impl HtmlParser {
                 return;
             }
             if is_scoped_block_end_tag(name)
-                || matches!(name, "p" | "select" | "dl" | "dt" | "dd")
+                || matches!(name, "p" | "select" | "dl" | "dt" | "dd" | "table")
             {
                 self.capture_active_formatting_above(index);
             }
@@ -9022,13 +9049,15 @@ impl HtmlParser {
 
     fn apply_simple_implied_end_tags(&mut self, incoming_name: &str) {
         if incoming_name == "p" {
-            if self.current_parent_has_open_element_in_button_scope("p") {
+            if self.open_html_element_in_button_scope_index("p").is_some() {
                 self.close_open_element_if(|name| name == "p");
             }
         } else if incoming_name == "li" {
             if !self.current_parent_has_element_ancestor("button") {
                 self.close_open_anchor_for_reconstruction_boundary();
-                self.close_open_element_if(|name| name == "p");
+                if self.open_html_element_in_button_scope_index("p").is_some() {
+                    self.close_open_element_if(|name| name == "p");
+                }
                 if !self.current_element_is("li") && self.open_list_item_in_scope_index().is_some()
                 {
                     self.diagnostics.push(
@@ -9043,14 +9072,17 @@ impl HtmlParser {
             }
         } else if incoming_name == "dt" || incoming_name == "dd" {
             if !self.current_parent_has_element_ancestor("button") {
-                self.close_open_element_if(|name| name == "p");
+                if self.open_html_element_in_button_scope_index("p").is_some() {
+                    self.close_open_element_if(|name| name == "p");
+                }
+                let has_description_item_in_scope = self
+                    .open_html_element_in_scope_index("dt")
+                    .or_else(|| self.open_html_element_in_scope_index("dd"))
+                    .is_some();
                 if !self.current_element_is("dt")
                     && !self.current_element_is("dd")
                     && !self.current_element_is("optgroup")
-                    && self.open_elements.iter().any(|path| {
-                        element_at_path(&self.document, path)
-                            .is_some_and(|name| name == "dt" || name == "dd")
-                    })
+                    && has_description_item_in_scope
                 {
                     self.diagnostics.push(
                         ParserDiagnostic::new(
@@ -9062,7 +9094,9 @@ impl HtmlParser {
                         .at_emission(self.current_token_emission_position),
                     );
                 }
-                self.close_open_element_if(|name| name == "dt" || name == "dd");
+                if has_description_item_in_scope {
+                    self.close_open_element_if(|name| name == "dt" || name == "dd");
+                }
             }
         } else if incoming_name == "option" && self.current_element_is("option") {
             if !self.current_empty_select_is_nested_in_option() {
@@ -9094,7 +9128,9 @@ impl HtmlParser {
         } else if matches!(incoming_name, "rb" | "rtc" | "rp" | "rt") {
             self.apply_ruby_implied_end_tags(incoming_name);
         } else if is_heading_element(incoming_name) {
-            if !self.current_parent_has_element_ancestor("button") {
+            if !self.current_parent_has_element_ancestor("button")
+                && self.open_html_element_in_button_scope_index("p").is_some()
+            {
                 self.close_open_element_if(|name| name == "p");
             }
             if self.current_element_name().is_some_and(is_heading_element) {
@@ -9119,7 +9155,9 @@ impl HtmlParser {
             if incoming_name == "center" {
                 self.close_open_anchor_for_reconstruction_boundary();
             }
-            self.close_open_element_if(|name| name == "p");
+            if self.open_html_element_in_button_scope_index("p").is_some() {
+                self.close_open_element_if(|name| name == "p");
+            }
         }
     }
 
@@ -9166,8 +9204,8 @@ impl HtmlParser {
                         )
                         .at_emission(self.current_token_emission_position),
                     );
+                    self.close_open_element_silently("button");
                 }
-                self.close_open_element_silently("button");
                 false
             }
             "nobr" => {
@@ -9246,7 +9284,8 @@ impl HtmlParser {
 
     fn apply_select_implied_contexts(&mut self, incoming_name: &str) -> bool {
         if !matches!(incoming_name, "input" | "select")
-            || !self.has_open_html_element_before_foreign_boundary("select")
+            || (self.open_html_element_in_scope_index("select").is_none()
+                && !self.current_element_is_marked_fragment_context("select"))
         {
             return false;
         }
@@ -9287,6 +9326,20 @@ impl HtmlParser {
     }
 
     fn close_non_paragraph_children_above_menuitem(&mut self) {
+        if self.current_namespace().is_none()
+            && self.has_open_foreign_integration_point()
+            && self.has_authored_open_html_element("menuitem")
+            && self.open_html_element_in_scope_index("menuitem").is_none()
+        {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-menuitem-end-tag",
+                    "end tag `</menuitem>` did not match the current open element",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return;
+        }
         if self.current_namespace().is_some()
             && !self.current_element_is("menuitem")
             && self.has_open_foreign_integration_point()
@@ -9342,6 +9395,20 @@ impl HtmlParser {
     }
 
     fn close_select_end_tag_at_foreign_integration_point(&mut self) {
+        if self.current_namespace().is_none()
+            && self.has_open_foreign_integration_point()
+            && self.has_authored_open_html_element("select")
+            && self.open_html_element_in_scope_index("select").is_none()
+        {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</select>` did not match an open element",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return;
+        }
         if self.current_namespace().is_some()
             && !self.current_element_is("select")
             && self.has_open_foreign_integration_point()
@@ -11032,25 +11099,6 @@ impl HtmlParser {
         })
     }
 
-    fn current_parent_has_open_element_in_button_scope(&self, target_name: &str) -> bool {
-        let current_parent_path = self.current_parent_path();
-        for path in self.open_elements.iter().rev() {
-            if !current_parent_path.starts_with(path) {
-                continue;
-            }
-            let Some(name) = element_at_path(&self.document, path) else {
-                continue;
-            };
-            if name == target_name {
-                return true;
-            }
-            if is_button_scope_boundary(name) {
-                return false;
-            }
-        }
-        false
-    }
-
     fn open_html_element_in_scope_index(&self, target_name: &str) -> Option<usize> {
         for (index, path) in self.open_elements.iter().enumerate().rev() {
             let Some(element) = element_ref_at_path(&self.document, path) else {
@@ -11221,14 +11269,6 @@ impl HtmlParser {
             }
         }
         false
-    }
-
-    fn has_open_html_element_before_foreign_boundary(&self, name: &str) -> bool {
-        self.open_elements.iter().rev().any(|path| {
-            element_ref_at_path(&self.document, path).is_some_and(|element| {
-                element.namespace.is_none() && element.name.eq_ignore_ascii_case(name)
-            })
-        })
     }
 
     fn current_empty_element_is(&self, name: &str) -> bool {
@@ -13763,7 +13803,7 @@ fn adjusted_foreign_attribute_name(name: &str, namespace: Option<&str>) -> Strin
 }
 
 fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
-    matches!(name, "button" | "menu" | "p")
+    matches!(name, "button" | "p")
 }
 
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
@@ -13905,22 +13945,6 @@ fn is_special_scope_boundary_element(name: &str) -> bool {
 
 fn special_scope_blocks_end_tag(name: &str) -> bool {
     !matches!(name, "form") && !is_special_element(name)
-}
-
-fn is_button_scope_boundary(name: &str) -> bool {
-    matches!(
-        name,
-        "applet"
-            | "caption"
-            | "html"
-            | "table"
-            | "td"
-            | "th"
-            | "marquee"
-            | "object"
-            | "template"
-            | "button"
-    )
 }
 
 fn is_implied_end_tag_element(name: &str) -> bool {
@@ -50009,6 +50033,250 @@ mod tests {
                 0,
             )]
         );
+    }
+
+    #[test]
+    fn adoption_agency_end_tags_do_not_cross_foreign_integration_scope() {
+        for name in ["a", "b", "big", "code", "em", "font", "i", "s", "strong", "u"] {
+            let inner = if name == "i" { "b" } else { "i" };
+            for boundary in [
+                "<svg><g><foreignObject>",
+                "<math><mrow><mtext>",
+            ] {
+                let source = format!(
+                    "<{name} id=outer>A{boundary}<{inner} id=inner>B</{name}>C<span>D"
+                );
+                let fragment =
+                    parse_html_fragment_for_context_with_diagnostics(&source, "div").unwrap();
+
+                assert_eq!(
+                    fragment.parser_diagnostics,
+                    vec![
+                        unmatched_formatting_end_tag(&source, name, 0),
+                        eof_with_unclosed_elements(&source),
+                    ],
+                    "source {source:?}"
+                );
+                let outer = find_element_by_id(&fragment.nodes, "outer").unwrap();
+                let inner = find_element_by_id(&outer.children, "inner").unwrap();
+                assert_eq!(
+                    element_text_content(inner),
+                    "BCD",
+                    "source {source:?}"
+                );
+                assert_eq!(
+                    element(&inner.children[1]).name,
+                    "span",
+                    "source {source:?}"
+                );
+            }
+        }
+
+        let same_scope = parse_html_fragment_for_context("<b>A<i>B</b>C", "div").unwrap();
+        assert_eq!(element(&same_scope[0]).name, "b");
+        assert_eq!(element(&same_scope[1]).name, "i");
+        assert_eq!(element_text_content(element(&same_scope[1])), "C");
+    }
+
+    #[test]
+    fn select_end_tags_do_not_cross_foreign_integration_scope() {
+        for boundary in [
+            "<svg><g><foreignObject>",
+            "<math><mrow><mtext>",
+        ] {
+            for inner in ["b", "p", "form"] {
+                let source =
+                    format!("<select id=outer>A{boundary}<{inner} id=inner>B</select>C<span>D");
+                let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+                let outer = find_element_by_id(&fragment, "outer").unwrap();
+                let inner = find_element_by_id(&outer.children, "inner").unwrap();
+                assert_eq!(element_text_content(inner), "BCD", "source {source:?}");
+                assert_eq!(element(&inner.children[1]).name, "span", "source {source:?}");
+            }
+        }
+
+        let same_scope = parse_html_fragment_for_context("<select><option>A</select>B", "div")
+            .unwrap();
+        assert_eq!(element(&same_scope[0]).name, "select");
+        assert_eq!(same_scope[1], Node::text("B"));
+    }
+
+    #[test]
+    fn select_start_recovery_does_not_cross_foreign_integration_scope() {
+        for boundary in [
+            "<svg><g><foreignObject>",
+            "<math><mrow><mtext>",
+        ] {
+            for incoming in ["select", "input"] {
+                let source = format!(
+                    "<select id=outer>A{boundary}<b id=inner>B<{incoming} id=target>C<span>D"
+                );
+                let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+                let outer = find_element_by_id(&fragment, "outer").unwrap();
+                let inner = find_element_by_id(&outer.children, "inner").unwrap();
+                assert!(find_element_by_id(&inner.children, "target").is_some());
+                assert_eq!(element_text_content(inner), "BCD", "source {source:?}");
+            }
+        }
+
+        let same_scope = parse_html_fragment_for_context(
+            "<select id=outer><option>A<select id=inner>B",
+            "div",
+        )
+        .unwrap();
+        assert!(find_element_by_id(&same_scope, "outer").is_some());
+        assert!(find_element_by_id(&same_scope, "inner").is_none());
+    }
+
+    #[test]
+    fn hr_start_recovery_does_not_cross_foreign_integration_scope() {
+        for boundary in [
+            "<svg><g><foreignObject>",
+            "<math><mrow><mtext>",
+        ] {
+            let source = format!("<select id=outer>A{boundary}<b id=inner>B<hr id=target>C");
+            let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+            let outer = find_element_by_id(&fragment, "outer").unwrap();
+            let inner = find_element_by_id(&outer.children, "inner").unwrap();
+            assert!(find_element_by_id(&inner.children, "target").is_some());
+            assert_eq!(element_text_content(inner), "BC", "source {source:?}");
+        }
+
+        let same_scope = parse_html_fragment_for_context(
+            "<select id=outer><option>A<hr id=target>B",
+            "div",
+        )
+        .unwrap();
+        let outer = find_element_by_id(&same_scope, "outer").unwrap();
+        assert!(find_element_by_id(&outer.children, "target").is_some());
+    }
+
+    #[test]
+    fn repeated_button_starts_do_not_cross_foreign_integration_scope() {
+        for boundary in [
+            "<svg><g><foreignObject>",
+            "<math><mrow><mtext>",
+        ] {
+            let source = format!(
+                "<button id=outer>A{boundary}<b id=inner>B<button id=target>C<span>D"
+            );
+            let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+            let outer = find_element_by_id(&fragment, "outer").unwrap();
+            let inner = find_element_by_id(&outer.children, "inner").unwrap();
+            assert!(find_element_by_id(&inner.children, "target").is_some());
+            assert_eq!(element_text_content(inner), "BCD", "source {source:?}");
+        }
+
+        let same_scope = parse_html_fragment_for_context(
+            "<button id=outer>A<b>B<button id=inner>C",
+            "div",
+        )
+        .unwrap();
+        assert_eq!(element_text_content(find_element_by_id(&same_scope, "outer").unwrap()), "AB");
+        assert_eq!(element_text_content(find_element_by_id(&same_scope, "inner").unwrap()), "C");
+    }
+
+    #[test]
+    fn table_end_tags_preserve_formatting_across_foreign_integration_content() {
+        for boundary in [
+            "<svg><g><foreignObject>",
+            "<math><mrow><mtext>",
+        ] {
+            let source = format!("<table>{boundary}<b>B</table>C<span>D");
+            let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+            let formatting = element(&fragment[2]);
+            assert_eq!(formatting.name, "b", "source {source:?}");
+            assert_eq!(element_text_content(formatting), "CD", "source {source:?}");
+            assert_eq!(element(&formatting.children[1]).name, "span", "source {source:?}");
+        }
+
+        let same_scope =
+            parse_html_fragment_for_context("<table><b>A</table>B", "div").unwrap();
+        assert_eq!(element(&same_scope[2]).name, "b");
+        assert_eq!(element_text_content(element(&same_scope[2])), "B");
+    }
+
+    #[test]
+    fn menuitem_end_tags_do_not_cross_foreign_integration_scope_from_html_content() {
+        for boundary in [
+            "<svg><g><foreignObject>",
+            "<math><mrow><mtext>",
+        ] {
+            let source =
+                format!("<menuitem id=outer>A{boundary}<b id=inner>B</menuitem>C<span>D");
+            let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+            let outer = find_element_by_id(&fragment, "outer").unwrap();
+            let inner = find_element_by_id(&outer.children, "inner").unwrap();
+            assert_eq!(element_text_content(inner), "BCD", "source {source:?}");
+            assert_eq!(element(&inner.children[1]).name, "span", "source {source:?}");
+        }
+
+        let same_scope =
+            parse_html_fragment_for_context("<menuitem id=outer>A</menuitem>B", "div").unwrap();
+        assert_eq!(element_text_content(find_element_by_id(&same_scope, "outer").unwrap()), "A");
+        assert_eq!(same_scope[1], Node::text("B"));
+    }
+
+    #[test]
+    fn paragraph_implying_starts_do_not_cross_foreign_integration_scope() {
+        for boundary in [
+            "<svg><g><foreignObject>",
+            "<math><mrow><mtext>",
+        ] {
+            for incoming in ["p", "div", "li", "dd", "h1"] {
+                let source = format!(
+                    "<p id=outer>A{boundary}<b id=inner>B<{incoming} id=target>C<span>D"
+                );
+                let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+                let outer = find_element_by_id(&fragment, "outer").unwrap();
+                let inner = find_element_by_id(&outer.children, "inner").unwrap();
+                assert!(find_element_by_id(&inner.children, "target").is_some());
+                assert_eq!(element_text_content(inner), "BCD", "source {source:?}");
+            }
+        }
+
+        let same_scope = parse_html_fragment_for_context("<p id=outer>A<div id=inner>B", "div")
+            .unwrap();
+        assert_eq!(element_text_content(find_element_by_id(&same_scope, "outer").unwrap()), "A");
+        assert_eq!(element_text_content(find_element_by_id(&same_scope, "inner").unwrap()), "B");
+    }
+
+    #[test]
+    fn description_item_starts_do_not_cross_foreign_integration_scope() {
+        for boundary in [
+            "<svg><g><foreignObject>",
+            "<math><mrow><mtext>",
+        ] {
+            for (outer_name, incoming) in
+                [("dt", "dt"), ("dt", "dd"), ("dd", "dt"), ("dd", "dd")]
+            {
+                let source = format!(
+                    "<{outer_name} id=outer>A{boundary}<b id=inner>B<{incoming} id=target>C<span>D"
+                );
+                let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+                let outer = find_element_by_id(&fragment, "outer").unwrap();
+                let inner = find_element_by_id(&outer.children, "inner").unwrap();
+                assert!(find_element_by_id(&inner.children, "target").is_some());
+                assert_eq!(element_text_content(inner), "BCD", "source {source:?}");
+            }
+        }
+
+        let same_scope = parse_html_fragment_for_context("<dt id=outer>A<dd id=inner>B", "div")
+            .unwrap();
+        assert_eq!(element_text_content(find_element_by_id(&same_scope, "outer").unwrap()), "A");
+        assert_eq!(element_text_content(find_element_by_id(&same_scope, "inner").unwrap()), "B");
+    }
+
+    #[test]
+    fn menu_starts_keep_current_formatting_open() {
+        for boundary in ["", "<svg><g><foreignObject>", "<math><mrow><mtext>"] {
+            let source = format!("<div id=outer>A{boundary}<b id=inner>B<menu id=target>C<span>D");
+            let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+            let outer = find_element_by_id(&fragment, "outer").unwrap();
+            let inner = find_element_by_id(&outer.children, "inner").unwrap();
+            assert!(find_element_by_id(&inner.children, "target").is_some());
+            assert_eq!(element_text_content(inner), "BCD", "source {source:?}");
+        }
     }
 
     #[test]
