@@ -2,6 +2,27 @@
 
 ## [Unreleased]
 
+### Fixed — an authored `Col (width:)` reached nothing (#14846)
+
+html was the **only web backend** dropping it. For the same declaration react
+emits `style={{ width: "48px" }}` and webcomponent `style="width: 48px"`;
+this wrote a bare `<col>` — on the very backend where `<col>` is the native
+concept.
+
+```html
+<colgroup>
+  <col style="width: 48px">
+```
+
+Literals only. A `For`-bound `Col (width: (w))` carries a runtime expression,
+and this backend emits a static template — the loop becomes an
+`<!-- mosaic-for -->` comment rather than iterating — so there is no value to
+write. react and webcomponent interpolate because their output is code;
+html's is not. That is a difference in what the format can express, not a gap.
+
+A part style still wins where both are present, since `build_style_attr`
+appends it after the builtin.
+
 ### Added — `HostInput.disabled` (#14786)
 
 `HostInput` accepted `read-only` but had no way to say *unavailable*. The
