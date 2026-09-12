@@ -1319,7 +1319,7 @@ where
         text_children.push(text_node(
             title,
             0.0,
-            8.0,
+            diagram.title_y - options.title_font.size * 0.6,
             diagram.width,
             options.title_font.size * 1.2,
             options.title_font.clone(),
@@ -1340,31 +1340,37 @@ where
             stroke_dash: None,
             stroke_dash_offset: None,
         }));
-        let mut range_font = options.label_font.clone();
-        range_font.size = 10.0;
-        let bit_range = if field.start_bit == field.end_bit {
-            field.start_bit.to_string()
-        } else {
-            format!("{}-{}", field.start_bit, field.end_bit)
-        };
-        text_children.push(text_node_no_wrap(
-            &bit_range,
-            field.x + 4.0,
-            field.y + 4.0,
-            (field.width - 8.0).max(1.0),
-            12.0,
-            range_font,
-            css_to_color(&field.style.text_color),
-        ));
         text_children.push(text_node_no_wrap(
             &field.label.text,
-            field.x + 4.0,
-            field.y + 27.0,
-            (field.width - 8.0).max(1.0),
-            options.label_font.size * 1.2,
+            field.x,
+            field.y + (field.height - options.label_font.size * 1.2) / 2.0,
+            field.width.max(1.0),
+            (options.label_font.size * 1.2).min(field.height),
             options.label_font.clone(),
             css_to_color(&field.style.text_color),
         ));
+    }
+    let mut bit_font = options.label_font.clone();
+    bit_font.size = 10.0;
+    for label in &diagram.bit_labels {
+        let align = match label.align {
+            GeoTextAlign::Left => TextAlign::Start,
+            GeoTextAlign::Center => TextAlign::Center,
+            GeoTextAlign::Right => TextAlign::End,
+        };
+        let mut text_node = text_node_no_wrap(
+            &label.text,
+            label.x,
+            label.y,
+            label.width.max(1.0),
+            label.height,
+            bit_font.clone(),
+            Color { r: 15, g: 23, b: 42, a: 255 },
+        );
+        if let Some(Content::Text(text)) = &mut text_node.content {
+            text.text_align = align;
+        }
+        text_children.push(text_node);
     }
 
     let text_root = PositionedNode {
