@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Add deterministic acceptance for shared scripted form lifecycle dispatch,
+  including `requestSubmit`, cancelable defaults, validation modes, mutable
+  form data, and navigation-after-handler ordering across every host seam.
+
 - Add deterministic acceptance for the shared form-associated custom-element
   internals contract consumed by every generated host.
 

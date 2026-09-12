@@ -834,6 +834,54 @@ fn form_associated_custom_element_fixture_uses_shared_internals() {
 }
 
 #[test]
+fn scripted_form_lifecycle_fixture_is_host_neutral() {
+    use coding_adventures_html_parser::{BrowserDocument, BrowserRenderTree};
+    use venture_browser_core::{
+        dispatch_request_submit, BrowserControlModel, FormActivation, FormDataEntry, FormDataValue,
+        FormLifecycleEvent,
+    };
+
+    let source = "<form id='search' action='/find'><input name='q' value='venture'>\
+                  <button id='go' name='intent' value='search'>Search</button></form>";
+    let parsed = coding_adventures_html_parser::parse_html(source).unwrap();
+    let tree =
+        BrowserRenderTree::from_document_with_document_url(&parsed, "http://example.test/form");
+    let document = BrowserDocument::from_document(&parsed);
+    let controls = BrowserControlModel::from_render_tree(&tree);
+    let outcome = dispatch_request_submit(
+        &document,
+        &controls,
+        0,
+        Some("control:1:id:go"),
+        "http://example.test/form",
+        |event| {
+            if let Some(entries) = event.form_data_mut() {
+                entries.push(FormDataEntry {
+                    name: "host".into(),
+                    value: FormDataValue::Text("shared".into()),
+                });
+            }
+        },
+    )
+    .unwrap();
+    assert!(matches!(
+        outcome.events[0],
+        FormLifecycleEvent::Submit { .. }
+    ));
+    assert!(matches!(
+        outcome.events[1],
+        FormLifecycleEvent::FormData { .. }
+    ));
+    let FormActivation::Navigate(navigation) = outcome.activation else {
+        panic!("expected scripted navigation");
+    };
+    assert_eq!(
+        navigation.url,
+        "http://example.test/find?q=venture&intent=search&host=shared"
+    );
+}
+
+#[test]
 fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
     let build = read_package_file("BUILD");
     let build_windows = read_package_file("BUILD_windows");

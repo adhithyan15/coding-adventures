@@ -111,6 +111,10 @@ recreating the surrounding chrome in backend-specific UI code.
   keyboard and accessibility activation serialize `(0, 0)`. Live
   text/search/textarea `dirname` fields use shared inherited or Unicode
   `dir=auto` directionality and remain adjacent in document order.
+- Native activation and scripted form calls share cancelable invalid,
+  submit, and reset dispatch plus mutable `formdata` entries. Navigation waits
+  for synchronous handlers and bounded reserialization, so every generated
+  host observes the same lifecycle order and cancellation policy.
 - Native SwiftUI and WinUI surface-size changes use matching Rust resize ABIs.
   The shared session recomposes its retained render tree for the new logical
   viewport, preserves and clamps scroll state, updates hit regions, and
@@ -280,6 +284,11 @@ callbacks, accessibility projection, and document-ordered submission. The
 generated SwiftUI, WinUI, Qt, Flutter, Compose, React, Electron, HTML, and Web
 Component hosts all consume that contract rather than introducing a toolkit
 specific ElementInternals model.
+
+The same host-neutral boundary now covers script-style form lifecycle calls.
+`requestSubmit` verifies form ownership and submitter eligibility,
+`checkValidity` and `reportValidity` share cancelable invalid events, and
+mutable `formdata` handlers complete before a transactional navigation commit.
 
 ## Releases
 

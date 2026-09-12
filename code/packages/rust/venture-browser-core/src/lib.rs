@@ -23,10 +23,16 @@ pub use browser_form_controls::{
     CustomElementSubmissionGroup, CustomElementValidity, FileAcceptFilter,
     FormAssociatedCustomElementState, HostFileSelection, TypedValue, TypedValueConstraints,
 };
-use browser_form_submission::{plan_activation_with_image_coordinates, plan_implicit_submission};
 pub use browser_form_submission::{
-    FormActivation, FormDiagnostic, FormEntry, FormFileEntry, FormMethod, FormNavigation,
-    FormPlanningError, ImageSubmitCoordinates,
+    check_form_validity, dispatch_activation_with_image_coordinates, dispatch_form_reset,
+    dispatch_implicit_submission, dispatch_request_submit, report_form_validity, FormActivation,
+    FormDataEntry, FormDataValue, FormDiagnostic, FormDispatchOutcome, FormEntry, FormFileEntry,
+    FormLifecycleEvent, FormMethod, FormNavigation, FormPlanningError, FormValidationMode,
+    FormValidationReport, ImageSubmitCoordinates,
+};
+use browser_form_submission::{
+    check_form_validity as check_planned_form_validity,
+    report_form_validity as report_planned_form_validity,
 };
 pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
 #[cfg(test)]
@@ -1225,6 +1231,7 @@ pub struct BrowserSession {
     viewport: Option<BrowserViewport>,
     controls: BrowserControlModel,
     form_diagnostics: Vec<FormDiagnostic>,
+    form_lifecycle_events: Vec<FormLifecycleEvent>,
     viewport_height: f64,
     navigation_id: u64,
 }
@@ -1238,6 +1245,7 @@ impl BrowserSession {
             viewport: None,
             controls: BrowserControlModel::default(),
             form_diagnostics: Vec::new(),
+            form_lifecycle_events: Vec::new(),
             viewport_height: finite_non_negative(viewport_height),
             navigation_id: 0,
         }
@@ -1524,6 +1532,137 @@ impl BrowserSession {
         &self.form_diagnostics
     }
 
+    pub fn take_form_lifecycle_events(&mut self) -> Vec<FormLifecycleEvent> {
+        std::mem::take(&mut self.form_lifecycle_events)
+    }
+
+    /// Execute script-style `requestSubmit()` through validation, submit,
+    /// mutable form-data dispatch, and transactional navigation.
+    pub fn request_submit<F, D, M, S, FM, R>(
+        &mut self,
+        form_index: usize,
+        submitter_key: Option<&str>,
+        dispatch: D,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<(), BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        D: FnMut(&mut FormLifecycleEvent),
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let page = self
+            .viewport
+            .as_ref()
+            .map(BrowserViewport::page)
+            .ok_or_else(|| BrowserLoadError::Form {
+                message: "requestSubmit requires a loaded page".into(),
+            })?;
+        let outcome = dispatch_request_submit(
+            &page.document,
+            &self.controls,
+            form_index,
+            submitter_key,
+            &page.final_url,
+            dispatch,
+        )
+        .map_err(form_load_error)?;
+        self.apply_form_dispatch(outcome, pipeline, fetcher)
+    }
+
+    /// Dispatch a cancelable script-style form reset before mutating controls.
+    pub fn request_form_reset<D, M, S, FM, R>(
+        &mut self,
+        form_index: usize,
+        dispatch: D,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Result<(), BrowserLoadError>
+    where
+        D: FnMut(&mut FormLifecycleEvent),
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let page = self
+            .viewport
+            .as_ref()
+            .map(BrowserViewport::page)
+            .ok_or_else(|| BrowserLoadError::Form {
+                message: "form reset requires a loaded page".into(),
+            })?;
+        let outcome =
+            dispatch_form_reset(&page.document, form_index, dispatch).map_err(form_load_error)?;
+        self.apply_form_dispatch_without_navigation(outcome, pipeline)
+    }
+
+    /// Run non-interactive `checkValidity()` and retain its invalid events.
+    pub fn check_form_validity<D>(
+        &mut self,
+        form_index: usize,
+        dispatch: D,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        D: FnMut(&mut FormLifecycleEvent),
+    {
+        let page = self
+            .viewport
+            .as_ref()
+            .map(BrowserViewport::page)
+            .ok_or_else(|| BrowserLoadError::Form {
+                message: "form validation requires a loaded page".into(),
+            })?;
+        let report =
+            check_planned_form_validity(&page.document, &self.controls, form_index, dispatch)
+                .map_err(form_load_error)?;
+        let valid = report.valid;
+        self.form_lifecycle_events.extend(report.events);
+        Ok(valid)
+    }
+
+    /// Run interactive `reportValidity()` and project only diagnostics whose
+    /// cancelable invalid events were not prevented.
+    pub fn report_form_validity<D, M, S, FM, R>(
+        &mut self,
+        form_index: usize,
+        dispatch: D,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        D: FnMut(&mut FormLifecycleEvent),
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let page = self
+            .viewport
+            .as_ref()
+            .map(BrowserViewport::page)
+            .ok_or_else(|| BrowserLoadError::Form {
+                message: "form validation requires a loaded page".into(),
+            })?;
+        let report =
+            report_planned_form_validity(&page.document, &self.controls, form_index, dispatch)
+                .map_err(form_load_error)?;
+        let valid = report.valid;
+        let diagnostics = report.reportable_diagnostics();
+        self.form_lifecycle_events.extend(report.events);
+        self.controls.clear_validation();
+        for diagnostic in &diagnostics {
+            if let Some(key) = &diagnostic.key {
+                self.controls.set_invalid(key, diagnostic.message.clone());
+            }
+        }
+        self.controls.focus_first_invalid();
+        self.form_diagnostics = diagnostics;
+        self.reflow_controls(pipeline);
+        Ok(valid)
+    }
+
     pub fn hovered_control_key(&self, viewport_x: f64, viewport_y: f64) -> Option<&str> {
         self.viewport
             .as_ref()?
@@ -1764,8 +1903,8 @@ impl BrowserSession {
     {
         let effect = self.controls.accessibility_action(action);
         if let Some(ControlEffect::Activated(key)) = &effect {
-            let activation = self.plan_form_activation(key)?;
-            self.apply_form_activation(activation, pipeline, fetcher)?;
+            let outcome = self.dispatch_form_activation(key, |_| {})?;
+            self.apply_form_dispatch(outcome, pipeline, fetcher)?;
         } else if effect.is_some() {
             self.form_diagnostics.clear();
             self.controls.clear_validation();
@@ -1844,11 +1983,12 @@ impl BrowserSession {
                 .binding(&key)
                 .is_some_and(|binding| binding.control_type == "image")
                 .then(|| ImageSubmitCoordinates::from_local_point(x, y));
-            let activation = self.plan_form_activation_with_image_coordinates(
+            let outcome = self.dispatch_form_activation_with_image_coordinates(
                 &key,
                 image_coordinates.unwrap_or(ImageSubmitCoordinates::KEYBOARD),
+                |_| {},
             )?;
-            self.apply_form_activation(activation, pipeline, fetcher)?;
+            self.apply_form_dispatch(outcome, pipeline, fetcher)?;
         } else {
             self.form_diagnostics.clear();
             self.controls.clear_validation();
@@ -1897,16 +2037,16 @@ impl BrowserSession {
         let effect = self.controls.key_down_with_shift(key, shift);
         let activation = match &effect {
             Some(ControlEffect::Activated(activated)) => {
-                Some(self.plan_form_activation(activated)?)
+                Some(self.dispatch_form_activation(activated, |_| {})?)
             }
             _ if key == ControlKey::Enter && focused_accepts_implicit => {
                 let focused = focused_key.as_deref().expect("focused key checked above");
-                Some(self.plan_implicit_form_activation(focused)?)
+                Some(self.dispatch_implicit_form_activation(focused, |_| {})?)
             }
             _ => None,
         };
-        if let Some(activation) = activation {
-            self.apply_form_activation(activation, pipeline, fetcher)?;
+        if let Some(outcome) = activation {
+            self.apply_form_dispatch(outcome, pipeline, fetcher)?;
         } else if effect.is_some() {
             self.form_diagnostics.clear();
             self.controls.clear_validation();
@@ -1915,15 +2055,30 @@ impl BrowserSession {
         Ok(effect)
     }
 
-    fn plan_form_activation(&self, key: &str) -> Result<FormActivation, BrowserLoadError> {
-        self.plan_form_activation_with_image_coordinates(key, ImageSubmitCoordinates::KEYBOARD)
+    fn dispatch_form_activation<F>(
+        &self,
+        key: &str,
+        dispatch: F,
+    ) -> Result<FormDispatchOutcome, BrowserLoadError>
+    where
+        F: FnMut(&mut FormLifecycleEvent),
+    {
+        self.dispatch_form_activation_with_image_coordinates(
+            key,
+            ImageSubmitCoordinates::KEYBOARD,
+            dispatch,
+        )
     }
 
-    fn plan_form_activation_with_image_coordinates(
+    fn dispatch_form_activation_with_image_coordinates<F>(
         &self,
         key: &str,
         image_coordinates: ImageSubmitCoordinates,
-    ) -> Result<FormActivation, BrowserLoadError> {
+        dispatch: F,
+    ) -> Result<FormDispatchOutcome, BrowserLoadError>
+    where
+        F: FnMut(&mut FormLifecycleEvent),
+    {
         let page = self
             .viewport
             .as_ref()
@@ -1931,20 +2086,25 @@ impl BrowserSession {
             .ok_or_else(|| BrowserLoadError::Form {
                 message: "form activation requires a loaded page".into(),
             })?;
-        plan_activation_with_image_coordinates(
+        dispatch_activation_with_image_coordinates(
             &page.document,
             &self.controls,
             key,
             &page.final_url,
             image_coordinates,
+            dispatch,
         )
         .map_err(form_load_error)
     }
 
-    fn plan_implicit_form_activation(
+    fn dispatch_implicit_form_activation<F>(
         &self,
         focused_key: &str,
-    ) -> Result<FormActivation, BrowserLoadError> {
+        dispatch: F,
+    ) -> Result<FormDispatchOutcome, BrowserLoadError>
+    where
+        F: FnMut(&mut FormLifecycleEvent),
+    {
         let page = self
             .viewport
             .as_ref()
@@ -1952,13 +2112,52 @@ impl BrowserSession {
             .ok_or_else(|| BrowserLoadError::Form {
                 message: "form activation requires a loaded page".into(),
             })?;
-        plan_implicit_submission(&page.document, &self.controls, focused_key, &page.final_url)
-            .map_err(form_load_error)
+        dispatch_implicit_submission(
+            &page.document,
+            &self.controls,
+            focused_key,
+            &page.final_url,
+            dispatch,
+        )
+        .map_err(form_load_error)
     }
 
-    fn apply_form_activation<F, M, S, FM, R>(
+    fn apply_form_dispatch_without_navigation<M, S, FM, R>(
         &mut self,
-        activation: FormActivation,
+        outcome: FormDispatchOutcome,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Result<(), BrowserLoadError>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        self.form_lifecycle_events.extend(outcome.events);
+        self.form_diagnostics.clear();
+        self.controls.clear_validation();
+        match outcome.activation {
+            FormActivation::None => {}
+            FormActivation::Reset {
+                form_id,
+                form_index,
+            } => {
+                self.controls
+                    .reset_form(form_id.as_deref(), Some(form_index));
+            }
+            _ => {
+                return Err(BrowserLoadError::Form {
+                    message: "non-navigation form dispatch produced navigation".into(),
+                });
+            }
+        }
+        self.reflow_controls(pipeline);
+        Ok(())
+    }
+
+    fn apply_form_dispatch<F, M, S, FM, R>(
+        &mut self,
+        outcome: FormDispatchOutcome,
         pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
         fetcher: &F,
     ) -> Result<(), BrowserLoadError>
@@ -1969,7 +2168,9 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        match activation {
+        let reportable_diagnostics = outcome.reportable_diagnostics();
+        self.form_lifecycle_events.extend(outcome.events);
+        match outcome.activation {
             FormActivation::None => {
                 self.form_diagnostics.clear();
                 self.controls.clear_validation();
@@ -1985,15 +2186,15 @@ impl BrowserSession {
                     .reset_form(form_id.as_deref(), Some(form_index));
                 self.reflow_controls(pipeline);
             }
-            FormActivation::Invalid(diagnostics) => {
+            FormActivation::Invalid(_) => {
                 self.controls.clear_validation();
-                for diagnostic in &diagnostics {
+                for diagnostic in &reportable_diagnostics {
                     if let Some(key) = &diagnostic.key {
                         self.controls.set_invalid(key, diagnostic.message.clone());
                     }
                 }
                 self.controls.focus_first_invalid();
-                self.form_diagnostics = diagnostics;
+                self.form_diagnostics = reportable_diagnostics;
                 self.reflow_controls(pipeline);
             }
             FormActivation::Navigate(navigation) => {
@@ -5887,5 +6088,124 @@ mod tests {
             fetcher.requests.borrow()[1].url,
             "http://example.test/save?before=a&score=5&after=z"
         );
+    }
+
+    #[test]
+    fn session_dispatches_scripted_form_lifecycle_before_navigation() {
+        struct LifecycleFetcher {
+            requests: RefCell<Vec<BrowserFetchRequest>>,
+        }
+
+        impl BrowserResourceFetcher for LifecycleFetcher {
+            fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String> {
+                self.fetch_request(&BrowserFetchRequest::get(url))
+            }
+
+            fn fetch_request(
+                &self,
+                request: &BrowserFetchRequest,
+            ) -> Result<BrowserFetchResponse, String> {
+                self.requests.borrow_mut().push(request.clone());
+                let body = if request.url.starts_with("http://example.test/save") {
+                    b"<title>Saved</title>".to_vec()
+                } else {
+                    b"<form id='editor' action='/save'><input id='q' name='q' required>\
+                      <button id='reset' type='reset'>Reset</button>\
+                      <button id='submit' name='intent' value='save'>Save</button></form>"
+                        .to_vec()
+                };
+                Ok(BrowserFetchResponse::new(
+                    request.url.clone(),
+                    200,
+                    Some("text/html".into()),
+                    body,
+                ))
+            }
+        }
+
+        let fetcher = LifecycleFetcher {
+            requests: RefCell::new(Vec::new()),
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(420.0, 160.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/form", 160.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        assert!(!session
+            .check_form_validity(0, |event| {
+                event.prevent_default();
+            })
+            .unwrap());
+        assert!(session.form_diagnostics().is_empty());
+        assert!(matches!(
+            session.take_form_lifecycle_events()[0],
+            FormLifecycleEvent::Invalid {
+                mode: FormValidationMode::Check,
+                default_prevented: true,
+                ..
+            }
+        ));
+
+        assert!(!session.report_form_validity(0, |_| {}, &pipeline).unwrap());
+        assert_eq!(session.form_diagnostics()[0].code, "value-missing");
+        assert_eq!(session.controls().focused_key(), Some("control:0:id:q"));
+        session.take_form_lifecycle_events();
+        session.control_text_input("venture", &pipeline).unwrap();
+
+        session
+            .request_form_reset(
+                0,
+                |event| {
+                    event.prevent_default();
+                },
+                &pipeline,
+            )
+            .unwrap();
+        assert_eq!(session.controls().controls()[0].value, "venture");
+        assert!(matches!(
+            session.take_form_lifecycle_events()[0],
+            FormLifecycleEvent::Reset {
+                default_prevented: true,
+                ..
+            }
+        ));
+
+        session
+            .request_submit(
+                0,
+                Some("control:2:id:submit"),
+                |event| {
+                    if let Some(entries) = event.form_data_mut() {
+                        for entry in entries.iter_mut() {
+                            if entry.name == "q" {
+                                entry.value = FormDataValue::Text("scripted".into());
+                            }
+                        }
+                        entries.push(FormDataEntry {
+                            name: "phase".into(),
+                            value: FormDataValue::Text("dispatch".into()),
+                        });
+                    }
+                },
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert_eq!(
+            fetcher.requests.borrow()[1].url,
+            "http://example.test/save?q=scripted&intent=save&phase=dispatch"
+        );
+        let events = session.take_form_lifecycle_events();
+        assert!(matches!(events[0], FormLifecycleEvent::Submit { .. }));
+        assert!(matches!(events[1], FormLifecycleEvent::FormData { .. }));
     }
 }

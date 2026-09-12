@@ -67,6 +67,149 @@ pub struct FormDiagnostic {
     pub message: String,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum FormValidationMode {
+    Check,
+    Report,
+    Submit,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum FormDataValue {
+    Text(String),
+    File(HostFileSelection),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct FormDataEntry {
+    pub name: String,
+    pub value: FormDataValue,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum FormLifecycleEvent {
+    Invalid {
+        form_id: Option<String>,
+        form_index: usize,
+        diagnostic: FormDiagnostic,
+        mode: FormValidationMode,
+        cancelable: bool,
+        default_prevented: bool,
+    },
+    Submit {
+        form_id: Option<String>,
+        form_index: usize,
+        submitter_key: Option<String>,
+        cancelable: bool,
+        default_prevented: bool,
+    },
+    FormData {
+        form_id: Option<String>,
+        form_index: usize,
+        submitter_key: Option<String>,
+        entries: Vec<FormDataEntry>,
+    },
+    Reset {
+        form_id: Option<String>,
+        form_index: usize,
+        cancelable: bool,
+        default_prevented: bool,
+    },
+}
+
+impl FormLifecycleEvent {
+    pub fn prevent_default(&mut self) -> bool {
+        match self {
+            Self::Invalid {
+                cancelable,
+                default_prevented,
+                ..
+            }
+            | Self::Submit {
+                cancelable,
+                default_prevented,
+                ..
+            }
+            | Self::Reset {
+                cancelable,
+                default_prevented,
+                ..
+            } if *cancelable => {
+                *default_prevented = true;
+                true
+            }
+            _ => false,
+        }
+    }
+
+    pub fn form_data_mut(&mut self) -> Option<&mut Vec<FormDataEntry>> {
+        match self {
+            Self::FormData { entries, .. } => Some(entries),
+            _ => None,
+        }
+    }
+
+    pub const fn default_prevented(&self) -> bool {
+        match self {
+            Self::Invalid {
+                default_prevented, ..
+            }
+            | Self::Submit {
+                default_prevented, ..
+            }
+            | Self::Reset {
+                default_prevented, ..
+            } => *default_prevented,
+            Self::FormData { .. } => false,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct FormValidationReport {
+    pub valid: bool,
+    pub diagnostics: Vec<FormDiagnostic>,
+    pub events: Vec<FormLifecycleEvent>,
+}
+
+impl FormValidationReport {
+    pub fn reportable_diagnostics(&self) -> Vec<FormDiagnostic> {
+        self.events
+            .iter()
+            .filter_map(|event| match event {
+                FormLifecycleEvent::Invalid {
+                    diagnostic,
+                    default_prevented: false,
+                    ..
+                } => Some(diagnostic.clone()),
+                _ => None,
+            })
+            .collect()
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct FormDispatchOutcome {
+    pub activation: FormActivation,
+    pub events: Vec<FormLifecycleEvent>,
+}
+
+impl FormDispatchOutcome {
+    pub fn reportable_diagnostics(&self) -> Vec<FormDiagnostic> {
+        self.events
+            .iter()
+            .filter_map(|event| match event {
+                FormLifecycleEvent::Invalid {
+                    diagnostic,
+                    default_prevented: false,
+                    ..
+                } => Some(diagnostic.clone()),
+                _ => None,
+            })
+            .collect()
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum FormActivation {
     None,
@@ -85,6 +228,8 @@ pub enum FormPlanningError {
     UnsupportedMethod(String),
     UnsupportedEncoding(String),
     InvalidAction(String),
+    InvalidSubmitter(String),
+    DisabledSubmitter(String),
     TooManyEntries { limit: usize },
     PayloadTooLarge { limit: usize },
 }
@@ -101,6 +246,8 @@ impl std::fmt::Display for FormPlanningError {
                 write!(formatter, "unsupported form encoding {encoding}")
             }
             Self::InvalidAction(action) => write!(formatter, "invalid form action {action}"),
+            Self::InvalidSubmitter(key) => write!(formatter, "invalid form submitter {key}"),
+            Self::DisabledSubmitter(key) => write!(formatter, "disabled form submitter {key}"),
             Self::TooManyEntries { limit } => {
                 write!(formatter, "form exceeds the {limit}-entry limit")
             }
@@ -135,26 +282,48 @@ pub fn plan_activation_with_image_coordinates(
     document_url: &str,
     image_coordinates: ImageSubmitCoordinates,
 ) -> Result<FormActivation, FormPlanningError> {
+    Ok(dispatch_activation_with_image_coordinates(
+        document,
+        controls,
+        activated_key,
+        document_url,
+        image_coordinates,
+        |_| {},
+    )?
+    .activation)
+}
+
+pub fn dispatch_activation_with_image_coordinates<F>(
+    document: &BrowserDocument,
+    controls: &BrowserControlModel,
+    activated_key: &str,
+    document_url: &str,
+    image_coordinates: ImageSubmitCoordinates,
+    mut dispatch: F,
+) -> Result<FormDispatchOutcome, FormPlanningError>
+where
+    F: FnMut(&mut FormLifecycleEvent),
+{
     let binding = controls
         .binding(activated_key)
         .ok_or_else(|| FormPlanningError::UnknownControl(activated_key.to_string()))?;
     let (form_index, form) = associated_form(document, binding)
         .ok_or_else(|| FormPlanningError::MissingForm(activated_key.to_string()))?;
     match binding.control_type.as_str() {
-        "reset" => Ok(FormActivation::Reset {
-            form_id: form.id.clone(),
-            form_index,
-        }),
-        "submit" | "image" => plan_submission(
-            document,
+        "reset" => Ok(dispatch_reset(form, form_index, &mut dispatch)),
+        "submit" | "image" => dispatch_submission(
             controls,
             form_index,
             form,
             Some(binding),
             document_url,
             image_coordinates,
+            &mut dispatch,
         ),
-        _ => Ok(FormActivation::None),
+        _ => Ok(FormDispatchOutcome {
+            activation: FormActivation::None,
+            events: Vec::new(),
+        }),
     }
 }
 
@@ -164,6 +333,22 @@ pub fn plan_implicit_submission(
     focused_key: &str,
     document_url: &str,
 ) -> Result<FormActivation, FormPlanningError> {
+    Ok(
+        dispatch_implicit_submission(document, controls, focused_key, document_url, |_| {})?
+            .activation,
+    )
+}
+
+pub fn dispatch_implicit_submission<F>(
+    document: &BrowserDocument,
+    controls: &BrowserControlModel,
+    focused_key: &str,
+    document_url: &str,
+    mut dispatch: F,
+) -> Result<FormDispatchOutcome, FormPlanningError>
+where
+    F: FnMut(&mut FormLifecycleEvent),
+{
     let focused = controls
         .binding(focused_key)
         .ok_or_else(|| FormPlanningError::UnknownControl(focused_key.to_string()))?;
@@ -176,33 +361,243 @@ pub fn plan_implicit_submission(
                 .control(&binding.key)
                 .is_some_and(|control| !control.disabled)
     });
-    plan_submission(
-        document,
+    dispatch_submission(
         controls,
         form_index,
         form,
         submitter,
         document_url,
         ImageSubmitCoordinates::KEYBOARD,
+        &mut dispatch,
     )
 }
 
-fn plan_submission(
-    _document: &BrowserDocument,
+pub fn dispatch_request_submit<F>(
+    document: &BrowserDocument,
+    controls: &BrowserControlModel,
+    form_index: usize,
+    submitter_key: Option<&str>,
+    document_url: &str,
+    mut dispatch: F,
+) -> Result<FormDispatchOutcome, FormPlanningError>
+where
+    F: FnMut(&mut FormLifecycleEvent),
+{
+    let form = document
+        .forms
+        .get(form_index)
+        .ok_or_else(|| FormPlanningError::MissingForm(format!("form:{form_index}")))?;
+    let submitter = submitter_key
+        .map(|key| request_submitter(controls, form, form_index, key))
+        .transpose()?;
+    dispatch_submission(
+        controls,
+        form_index,
+        form,
+        submitter,
+        document_url,
+        ImageSubmitCoordinates::KEYBOARD,
+        &mut dispatch,
+    )
+}
+
+pub fn check_form_validity<F>(
+    document: &BrowserDocument,
+    controls: &BrowserControlModel,
+    form_index: usize,
+    dispatch: F,
+) -> Result<FormValidationReport, FormPlanningError>
+where
+    F: FnMut(&mut FormLifecycleEvent),
+{
+    dispatch_form_validation(
+        document,
+        controls,
+        form_index,
+        FormValidationMode::Check,
+        dispatch,
+    )
+}
+
+pub fn report_form_validity<F>(
+    document: &BrowserDocument,
+    controls: &BrowserControlModel,
+    form_index: usize,
+    dispatch: F,
+) -> Result<FormValidationReport, FormPlanningError>
+where
+    F: FnMut(&mut FormLifecycleEvent),
+{
+    dispatch_form_validation(
+        document,
+        controls,
+        form_index,
+        FormValidationMode::Report,
+        dispatch,
+    )
+}
+
+pub fn dispatch_form_reset<F>(
+    document: &BrowserDocument,
+    form_index: usize,
+    mut dispatch: F,
+) -> Result<FormDispatchOutcome, FormPlanningError>
+where
+    F: FnMut(&mut FormLifecycleEvent),
+{
+    let form = document
+        .forms
+        .get(form_index)
+        .ok_or_else(|| FormPlanningError::MissingForm(format!("form:{form_index}")))?;
+    Ok(dispatch_reset(form, form_index, &mut dispatch))
+}
+
+fn dispatch_form_validation<F>(
+    document: &BrowserDocument,
+    controls: &BrowserControlModel,
+    form_index: usize,
+    mode: FormValidationMode,
+    mut dispatch: F,
+) -> Result<FormValidationReport, FormPlanningError>
+where
+    F: FnMut(&mut FormLifecycleEvent),
+{
+    let form = document
+        .forms
+        .get(form_index)
+        .ok_or_else(|| FormPlanningError::MissingForm(format!("form:{form_index}")))?;
+    Ok(dispatch_validation_for_form(
+        controls,
+        form,
+        form_index,
+        mode,
+        &mut dispatch,
+    ))
+}
+
+fn dispatch_validation_for_form<F>(
+    controls: &BrowserControlModel,
+    form: &BrowserForm,
+    form_index: usize,
+    mode: FormValidationMode,
+    dispatch: &mut F,
+) -> FormValidationReport
+where
+    F: FnMut(&mut FormLifecycleEvent),
+{
+    let diagnostics = validate_controls(controls, form.id.as_deref(), form_index);
+    let mut events = Vec::with_capacity(diagnostics.len());
+    for diagnostic in &diagnostics {
+        let mut event = FormLifecycleEvent::Invalid {
+            form_id: form.id.clone(),
+            form_index,
+            diagnostic: diagnostic.clone(),
+            mode,
+            cancelable: true,
+            default_prevented: false,
+        };
+        dispatch(&mut event);
+        events.push(event);
+    }
+    FormValidationReport {
+        valid: diagnostics.is_empty(),
+        diagnostics,
+        events,
+    }
+}
+
+fn dispatch_reset<F>(form: &BrowserForm, form_index: usize, dispatch: &mut F) -> FormDispatchOutcome
+where
+    F: FnMut(&mut FormLifecycleEvent),
+{
+    let mut event = FormLifecycleEvent::Reset {
+        form_id: form.id.clone(),
+        form_index,
+        cancelable: true,
+        default_prevented: false,
+    };
+    dispatch(&mut event);
+    let canceled = event.default_prevented();
+    FormDispatchOutcome {
+        activation: if canceled {
+            FormActivation::None
+        } else {
+            FormActivation::Reset {
+                form_id: form.id.clone(),
+                form_index,
+            }
+        },
+        events: vec![event],
+    }
+}
+
+fn request_submitter<'a>(
+    controls: &'a BrowserControlModel,
+    form: &BrowserForm,
+    form_index: usize,
+    key: &str,
+) -> Result<&'a ControlBinding, FormPlanningError> {
+    let binding = controls
+        .binding(key)
+        .ok_or_else(|| FormPlanningError::UnknownControl(key.to_string()))?;
+    if !matches!(binding.control_type.as_str(), "submit" | "image")
+        || !associated_with(binding, form.id.as_deref(), form_index)
+    {
+        return Err(FormPlanningError::InvalidSubmitter(key.to_string()));
+    }
+    if controls.control(key).is_none_or(|control| control.disabled) {
+        return Err(FormPlanningError::DisabledSubmitter(key.to_string()));
+    }
+    Ok(binding)
+}
+
+fn dispatch_submission<F>(
     controls: &BrowserControlModel,
     form_index: usize,
     form: &BrowserForm,
     submitter: Option<&ControlBinding>,
     document_url: &str,
     image_coordinates: ImageSubmitCoordinates,
-) -> Result<FormActivation, FormPlanningError> {
+    dispatch: &mut F,
+) -> Result<FormDispatchOutcome, FormPlanningError>
+where
+    F: FnMut(&mut FormLifecycleEvent),
+{
+    let mut events = Vec::new();
     let skip_validation =
         form.novalidate || submitter.is_some_and(|binding| binding.form_novalidate);
     if !skip_validation {
-        let diagnostics = validate_controls(controls, form.id.as_deref(), form_index);
-        if !diagnostics.is_empty() {
-            return Ok(FormActivation::Invalid(diagnostics));
+        let report = dispatch_validation_for_form(
+            controls,
+            form,
+            form_index,
+            FormValidationMode::Submit,
+            dispatch,
+        );
+        if !report.valid {
+            return Ok(FormDispatchOutcome {
+                activation: FormActivation::Invalid(report.diagnostics),
+                events: report.events,
+            });
         }
+    }
+
+    let submitter_key = submitter.map(|binding| binding.key.clone());
+    let mut submit_event = FormLifecycleEvent::Submit {
+        form_id: form.id.clone(),
+        form_index,
+        submitter_key: submitter_key.clone(),
+        cancelable: true,
+        default_prevented: false,
+    };
+    dispatch(&mut submit_event);
+    let submit_canceled = submit_event.default_prevented();
+    events.push(submit_event);
+    if submit_canceled {
+        return Ok(FormDispatchOutcome {
+            activation: FormActivation::None,
+            events,
+        });
     }
 
     let method_name = submitter
@@ -230,6 +625,18 @@ fn plan_submission(
 
     let data =
         collect_successful_controls(controls, form, form_index, submitter, image_coordinates)?;
+    let mut form_data_event = FormLifecycleEvent::FormData {
+        form_id: form.id.clone(),
+        form_index,
+        submitter_key,
+        entries: data.iter().map(form_data_entry).collect(),
+    };
+    dispatch(&mut form_data_event);
+    let data = match &form_data_event {
+        FormLifecycleEvent::FormData { entries, .. } => form_data(entries)?,
+        _ => data,
+    };
+    events.push(form_data_event);
     let entries = data
         .iter()
         .map(|datum| match datum {
@@ -278,14 +685,51 @@ fn plan_submission(
         }
         (FormMethod::Post, _) => unreachable!("encoding checked above"),
     };
-    Ok(FormActivation::Navigate(FormNavigation {
-        method,
-        url,
-        content_type,
-        body,
-        entries,
-        files,
-    }))
+    Ok(FormDispatchOutcome {
+        activation: FormActivation::Navigate(FormNavigation {
+            method,
+            url,
+            content_type,
+            body,
+            entries,
+            files,
+        }),
+        events,
+    })
+}
+
+fn form_data_entry(datum: &FormDatum) -> FormDataEntry {
+    match datum {
+        FormDatum::Text(entry) => FormDataEntry {
+            name: entry.name.clone(),
+            value: FormDataValue::Text(entry.value.clone()),
+        },
+        FormDatum::File(entry) => FormDataEntry {
+            name: entry.name.clone(),
+            value: FormDataValue::File(entry.file.clone()),
+        },
+    }
+}
+
+fn form_data(entries: &[FormDataEntry]) -> Result<Vec<FormDatum>, FormPlanningError> {
+    if entries.len() > MAX_FORM_ENTRIES {
+        return Err(FormPlanningError::TooManyEntries {
+            limit: MAX_FORM_ENTRIES,
+        });
+    }
+    Ok(entries
+        .iter()
+        .map(|entry| match &entry.value {
+            FormDataValue::Text(value) => FormDatum::Text(FormEntry {
+                name: entry.name.clone(),
+                value: value.clone(),
+            }),
+            FormDataValue::File(file) => FormDatum::File(FormFileEntry {
+                name: entry.name.clone(),
+                file: file.clone(),
+            }),
+        })
+        .collect())
 }
 
 fn bounded_urlencoded(entries: &[FormEntry]) -> Result<String, FormPlanningError> {
@@ -959,6 +1403,162 @@ mod tests {
         assert_eq!(diagnostics[0].code, "custom-element-invalid");
         assert_eq!(diagnostics[0].key.as_deref(), Some(key.as_str()));
         assert_eq!(diagnostics[0].message, "Choose a rating");
+    }
+
+    #[test]
+    fn request_submit_dispatches_submit_then_mutable_formdata() {
+        let url = "http://example.test/form";
+        let (mut model, document) = model_and_document(
+            "<form id='checkout' action='/save'><input name='before' value='a'>\
+             <x-code id='code' name='code'></x-code>\
+             <button id='draft' name='intent' value='draft'>Draft</button>\
+             <button id='publish' name='intent' value='publish'>Publish</button></form>",
+            url,
+        );
+        let custom_key = model.form_associated_custom_elements()[0].key.clone();
+        model
+            .attach_form_associated_custom_element(&custom_key)
+            .unwrap();
+        model
+            .set_custom_element_form_value(
+                &custom_key,
+                Some(browser_form_controls::CustomElementFormValue::Text(
+                    "ABC".into(),
+                )),
+                None,
+            )
+            .unwrap();
+
+        let outcome = dispatch_request_submit(
+            &document,
+            &model,
+            0,
+            Some("control:2:id:publish"),
+            url,
+            |event| {
+                if let Some(entries) = event.form_data_mut() {
+                    entries.retain(|entry| entry.name != "before");
+                    entries.push(FormDataEntry {
+                        name: "scripted".into(),
+                        value: FormDataValue::Text("yes".into()),
+                    });
+                }
+            },
+        )
+        .unwrap();
+        assert!(matches!(
+            outcome.events[0],
+            FormLifecycleEvent::Submit { .. }
+        ));
+        assert!(matches!(
+            outcome.events[1],
+            FormLifecycleEvent::FormData { .. }
+        ));
+        let FormActivation::Navigate(navigation) = outcome.activation else {
+            panic!("expected navigation");
+        };
+        assert_eq!(
+            navigation.url,
+            "http://example.test/save?code=ABC&intent=publish&scripted=yes"
+        );
+    }
+
+    #[test]
+    fn submit_and_reset_events_can_cancel_default_actions() {
+        let url = "http://example.test/form";
+        let (model, document) = model_and_document(
+            "<form><input name='q' value='rust'><button id='go'>Go</button>\
+             <button id='clear' type='reset'>Clear</button></form>",
+            url,
+        );
+        let submitted = dispatch_request_submit(&document, &model, 0, None, url, |event| {
+            if matches!(event, FormLifecycleEvent::Submit { .. }) {
+                assert!(event.prevent_default());
+            }
+        })
+        .unwrap();
+        assert_eq!(submitted.activation, FormActivation::None);
+        assert_eq!(submitted.events.len(), 1);
+
+        let reset = dispatch_activation_with_image_coordinates(
+            &document,
+            &model,
+            "control:2:id:clear",
+            url,
+            ImageSubmitCoordinates::KEYBOARD,
+            |event| {
+                if matches!(event, FormLifecycleEvent::Reset { .. }) {
+                    event.prevent_default();
+                }
+            },
+        )
+        .unwrap();
+        assert_eq!(reset.activation, FormActivation::None);
+        assert!(reset.events[0].default_prevented());
+    }
+
+    #[test]
+    fn check_and_report_validity_share_cancelable_invalid_events() {
+        let url = "http://example.test/form";
+        let (model, document) = model_and_document(
+            "<form><input id='required' required><button>Go</button></form>",
+            url,
+        );
+        let checked = check_form_validity(&document, &model, 0, |event| {
+            assert!(matches!(
+                event,
+                FormLifecycleEvent::Invalid {
+                    mode: FormValidationMode::Check,
+                    ..
+                }
+            ));
+            event.prevent_default();
+        })
+        .unwrap();
+        assert!(!checked.valid);
+        assert!(checked.reportable_diagnostics().is_empty());
+
+        let reported = report_form_validity(&document, &model, 0, |_| {}).unwrap();
+        assert!(!reported.valid);
+        assert_eq!(reported.reportable_diagnostics(), reported.diagnostics);
+        assert!(matches!(
+            reported.events[0],
+            FormLifecycleEvent::Invalid {
+                mode: FormValidationMode::Report,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn request_submit_rejects_non_submit_and_disabled_submitters() {
+        let url = "http://example.test/form";
+        let (model, document) = model_and_document(
+            "<form><input id='field'><button id='disabled' disabled>Go</button></form>",
+            url,
+        );
+        assert!(matches!(
+            dispatch_request_submit(
+                &document,
+                &model,
+                0,
+                Some("control:0:id:field"),
+                url,
+                |_| {}
+            ),
+            Err(FormPlanningError::InvalidSubmitter(_))
+        ));
+        assert!(matches!(
+            dispatch_request_submit(
+                &document,
+                &model,
+                0,
+                Some("control:1:id:disabled"),
+                url,
+                |_| {}
+            ),
+            Err(FormPlanningError::DisabledSubmitter(_))
+        ));
     }
 
     #[test]

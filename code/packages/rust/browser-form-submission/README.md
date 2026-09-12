@@ -30,6 +30,13 @@ Attached form-associated custom elements contribute bounded string, file, or
 entry-list values at their retained document ordinal. Their shared validity
 messages block navigation through the same diagnostic path as native controls;
 disabled or detached internals are never successful.
+Scripted and native activation now share one lifecycle transaction: validation
+emits cancelable `invalid` events, `submit` and `reset` defaults can be
+prevented, and a mutable `formdata` snapshot is revalidated and serialized only
+after handlers return. `requestSubmit` validates the optional submitter against
+the target form and preserves submitter overrides; `checkValidity` and
+`reportValidity` share diagnostics while keeping interactive presentation an
+explicit caller choice.
 
 Specs: [`UI54-form-submission`](../../../specs/UI54-form-submission.md) and
 [`UI63-typed-input-value-semantics`](../../../specs/UI63-typed-input-value-semantics.md),
@@ -38,3 +45,5 @@ Specs: [`UI54-form-submission`](../../../specs/UI54-form-submission.md) and
 [`UI66-file-values-multipart`](../../../specs/UI66-file-values-multipart.md), and
 [`UI67-image-submit-dirname`](../../../specs/UI67-image-submit-dirname.md), and
 [`UI68-form-associated-custom-elements`](../../../specs/UI68-form-associated-custom-elements.md).
+Lifecycle dispatch is specified by
+[`UI69-scripted-form-lifecycle`](../../../specs/UI69-scripted-form-lifecycle.md).
