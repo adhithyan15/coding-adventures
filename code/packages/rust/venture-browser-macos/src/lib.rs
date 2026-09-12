@@ -17,7 +17,7 @@ use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BrowserLoadError, BrowserNavigation, BrowserNavigationUpdate, BrowserPagePipeline,
     BrowserResourceFetcher, BrowserScrollCommand, BrowserSession, BrowserSubresourceCompletion,
-    BrowserSubresourceUpdate, ControlKey, HostFileSelection,
+    BrowserSubresourceUpdate, ControlKey,
 };
 use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, WindowEvent};
 
@@ -25,7 +25,7 @@ use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, Windo
 use venture_browser_core::{
     BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
     BrowserFetchRequest, BrowserHostController, BrowserHostEffect, BrowserHostEventOutcome,
-    BrowserScrollMetrics, HttpBrowserFetcher, MemoryBookmarkRepository,
+    BrowserScrollMetrics, HostFileSelection, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 pub const VERSION: &str = "0.1.0";
