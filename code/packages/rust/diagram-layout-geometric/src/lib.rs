@@ -7,11 +7,16 @@
 //! bounding box of all elements) and passes elements through unchanged.
 
 use std::collections::HashMap;
-use diagram_ir::{CynefinDiagram, GeoElement, GeometricDiagram, IshikawaDiagram, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
+use diagram_ir::{CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
 
 pub const VERSION: &str = "0.1.0";
 
 const MARGIN: f64 = 20.0;
+
+/// Match Mermaid 11.16.1's fixed Info SVG geometry.
+pub fn layout_info(diagram: &InfoDiagram) -> LayoutedInfoDiagram {
+    LayoutedInfoDiagram { width: 400.0, height: 100.0, label: format!("v{}", diagram.version), x: 0.0, y: 16.0, font_size: 32.0 }
+}
 
 /// Produce stable Venn geometry. Sizes affect radii; exact area-proportional
 /// overlap optimization is deliberately outside this partial slice.
@@ -316,5 +321,13 @@ mod tests {
         let clear = layout.domains.iter().find(|domain| domain.name == "clear").unwrap();
         assert!(complex.center.x < clear.center.x && complex.center.y < clear.center.y);
         assert!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().confusion);
+    }
+
+    #[test]
+    fn info_layout_matches_upstream_fixed_canvas_and_label() {
+        let layout = layout_info(&InfoDiagram { version: "11.16.1".into() });
+        assert_eq!((layout.width, layout.height), (400.0, 100.0));
+        assert_eq!(layout.label, "v11.16.1");
+        assert_eq!(layout.font_size, 32.0);
     }
 }

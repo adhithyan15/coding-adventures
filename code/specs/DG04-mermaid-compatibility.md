@@ -498,6 +498,14 @@ repetition constructors, upstream curve geometry, theme/config overrides, and
 exact typography remain unsupported and fail explicitly rather than being
 counted as compatible.
 
+### Info Full Compatibility
+
+Mermaid 11.16.1 Info accepts exactly `info` and `info showInfo`. Both forms
+lower to dedicated version IR carrying the pinned `11.16.1` release, then to
+the upstream fixed 400-by-100 layout and a backend-neutral glyph run reading
+`v11.16.1`. The pinned corpus covers both accepted forms and unsupported
+suffixes, and the native Metal-to-PNG path validates the complete family.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

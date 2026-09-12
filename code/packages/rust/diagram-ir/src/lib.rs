@@ -1199,6 +1199,12 @@ pub struct LayoutedRailroadRule { pub name: String, pub y: f64, pub height: f64,
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedRailroadDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub rules: Vec<LayoutedRailroadRule> }
 
+// BUILD INFORMATION FAMILY
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct InfoDiagram { pub version: String }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedInfoDiagram { pub width: f64, pub height: f64, pub label: String, pub x: f64, pub y: f64, pub font_size: f64 }
+
 // STRUCTURAL FAMILY
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralKind {
