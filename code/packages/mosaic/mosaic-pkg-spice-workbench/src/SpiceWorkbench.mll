@@ -38,13 +38,26 @@ layout SpiceWorkbench {
         For ( each: slot: schematic-analysis-controls , as: analysis , index: analysis-index ) {
           HostButton [ schematic-analysis-control ] (
             label : ( analysis ) ,
-            onClick : emit: onSelectSchematicAnalysis
+            onClick : emit: onAddSchematicAnalysis
+          )
+        }
+      }
+      Text [ schematic-analysis-card-label ] ( content : slot: schematic-analysis-card-label )
+      Row [ schematic-analysis-cards ] {
+        For ( each: slot: schematic-analysis-card-rows , as: card , index: card-index ) {
+          HostButton [ schematic-analysis-card ] (
+            label : ( card[0] ) ,
+            onClick : emit: onSelectSchematicAnalysisCard
           )
         }
       }
       Text [ selected-schematic-analysis ] ( content : slot: selected-schematic-analysis-label )
       Column [ schematic-analysis-configuration ] {
         Text [ schematic-analysis-configuration-label ] ( content : slot: schematic-analysis-configuration-label )
+        HostButton [ remove-schematic-analysis-card ] (
+          label : slot: remove-schematic-analysis-card-label ,
+          onClick : emit: onRemoveSchematicAnalysisCard
+        )
         Text [ schematic-analysis-source-label ] ( content : slot: schematic-analysis-source-label )
         Row [ schematic-analysis-source-options ] {
           For ( each: slot: schematic-analysis-source-options , as: source , index: source-index ) {
