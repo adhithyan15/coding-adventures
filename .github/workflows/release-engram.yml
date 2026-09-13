@@ -64,7 +64,9 @@ permissions:
   contents: read
 
 concurrency:
-  group: release-engram
+  # Keep publication serialized, while allowing unrelated pull requests to
+  # retain their own pending validation run.
+  group: ${{ github.event_name == 'pull_request' && format('release-engram-pr-{0}', github.event.pull_request.number) || 'release-engram-publish' }}
   cancel-in-progress: false
 
 jobs:
