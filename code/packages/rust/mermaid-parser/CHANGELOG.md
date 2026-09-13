@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.204.0
+
+- Parse Block arrow labels and cardinal or axis direction lists into typed grid IR.
+
 ## 0.203.0
 
 - Normalize quoted Block node labels to their authored display text.

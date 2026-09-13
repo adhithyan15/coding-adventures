@@ -357,7 +357,8 @@ and positive fixed column counts, flat node ordering, explicit `space` slots, no
 column spans, named `classDef` declarations, `class` assignments, inline
 `:::class` assignments, direct `style` declarations, square, rounded,
 circular, double-circle, diamond, hexagon, stadium, subroutine, cylinder,
-parallelogram, trapezoid, and asymmetric nodes, quoted multiword labels, titles, single-line and braced
+parallelogram, trapezoid, asymmetric, and cardinal or axis-direction arrow nodes,
+quoted multiword labels, titles, single-line and braced
 multiline accessibility metadata, recursive anonymous and named composite blocks
 with authored labels, local column counts, and parent-grid spans, and directed
 and undirected connections with native quoted or pipe-delimited optional

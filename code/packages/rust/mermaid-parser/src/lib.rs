@@ -12,7 +12,7 @@ pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
-    BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
+    BlockArrowDirections, BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
@@ -1475,7 +1475,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             group_stack.pop().ok_or_else(|| token_error(token, "unexpected block group end"))?;
             continue;
         }
-        if token_type != Some("STATEMENT_LINE") {
+        if token_type != Some("STATEMENT_LINE") && token_type != Some("ARROW_NODE_LINE") {
             continue;
         }
         let line = token.value.trim();
@@ -1575,6 +1575,14 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 None => (item, Vec::new()),
             };
             let (id, label, shape) = parse_block_node(item);
+            if token_type == Some("ARROW_NODE_LINE")
+                && !matches!(&shape, DiagramShape::BlockArrow(_))
+            {
+                return Err(token_error(
+                    token,
+                    "block arrow direction must be left, right, up, down, x, or y",
+                ));
+            }
             if id.is_empty() || !ids.insert(id.clone()) {
                 return Err(token_error(token, format!("duplicate or empty block id {id:?}")));
             }
@@ -1802,6 +1810,27 @@ fn split_block_items(line: &str) -> Vec<&str> {
 }
 
 fn parse_block_node(source: &str) -> (String, String, DiagramShape) {
+    if let Some(open) = source.find("<[") {
+        if let Some((label, directions)) = source[open + 2..].split_once("]>(") {
+            if let Some(directions) = directions.strip_suffix(')') {
+                let mut parsed = BlockArrowDirections::default();
+                for direction in directions.split(',').map(str::trim) {
+                    match direction.to_ascii_lowercase().as_str() {
+                        "left" => parsed.left = true,
+                        "right" => parsed.right = true,
+                        "up" => parsed.up = true,
+                        "down" => parsed.down = true,
+                        "x" => { parsed.left = true; parsed.right = true; }
+                        "y" => { parsed.up = true; parsed.down = true; }
+                        _ => return (source.to_string(), source.to_string(), DiagramShape::RoundedRect),
+                    }
+                }
+                if parsed.left || parsed.right || parsed.up || parsed.down {
+                    return (source[..open].trim().to_string(), label.trim().to_string(), DiagramShape::BlockArrow(parsed));
+                }
+            }
+        }
+    }
     for (open, close, shape) in [
         ("(((", ")))", DiagramShape::DoubleCircle),
         ("[[", "]]", DiagramShape::Subroutine),
@@ -9186,6 +9215,27 @@ mod tests_dg04 {
         assert_eq!(diagram.cells[1].label.text, "Paint output");
         assert_eq!(diagram.cells[0].shape, DiagramShape::Rect);
         assert_eq!(diagram.cells[1].shape, DiagramShape::RoundedRect);
+    }
+
+    #[test]
+    fn block_preserves_arrow_node_directions() {
+        let diagram = parse_block(
+            "block\ncolumns 2\nright<[\"Flow\"]>(right)\naxes<[\"Both axes\"]>(x, y)",
+        )
+        .unwrap();
+        assert_eq!(diagram.cells[0].label.text, "Flow");
+        assert_eq!(diagram.cells[0].shape, DiagramShape::BlockArrow(BlockArrowDirections {
+            right: true, ..BlockArrowDirections::default()
+        }));
+        assert_eq!(diagram.cells[1].shape, DiagramShape::BlockArrow(BlockArrowDirections {
+            left: true, right: true, up: true, down: true,
+        }));
+    }
+
+    #[test]
+    fn block_rejects_unknown_arrow_node_directions() {
+        assert!(parse_block("block\narrow<[Flow]>(diagonal)").is_err());
+        assert!(parse_block("block\narrow<[Flow]>()").is_err());
     }
 
     #[test]

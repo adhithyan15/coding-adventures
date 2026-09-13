@@ -975,6 +975,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 (node.x + node.width, node.y),
             ])
         }
+        DiagramShape::BlockArrow(directions) => block_arrow_instruction(node, directions),
         DiagramShape::Note => {
             let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
             PaintInstruction::Path(PaintPath {
@@ -1039,6 +1040,32 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
             stroke_dash_offset: None,
         }),
     }
+}
+
+fn block_arrow_instruction(
+    node: &LayoutedGraphNode,
+    directions: diagram_ir::BlockArrowDirections,
+) -> PaintInstruction {
+    let head = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
+    let left = if directions.left { head } else { 0.0 };
+    let right = if directions.right { head } else { 0.0 };
+    let up = if directions.up { head } else { 0.0 };
+    let down = if directions.down { head } else { 0.0 };
+    let cx = node.x + node.width / 2.0;
+    let cy = node.y + node.height / 2.0;
+    let mut points = vec![(node.x + left, node.y + up)];
+    if directions.up { points.extend([(cx - head, node.y + up), (cx, node.y), (cx + head, node.y + up)]); }
+    points.push((node.x + node.width - right, node.y + up));
+    if directions.right {
+        points.extend([(node.x + node.width - right, cy - head), (node.x + node.width, cy), (node.x + node.width - right, cy + head)]);
+    }
+    points.push((node.x + node.width - right, node.y + node.height - down));
+    if directions.down {
+        points.extend([(cx + head, node.y + node.height - down), (cx, node.y + node.height), (cx - head, node.y + node.height - down)]);
+    }
+    points.push((node.x + left, node.y + node.height - down));
+    if directions.left { points.extend([(node.x + left, cy + head), (node.x, cy), (node.x + left, cy - head)]); }
+    polygon_node_instruction(node, &points)
 }
 
 fn polygon_node_instruction(node: &LayoutedGraphNode, points: &[(f64, f64)]) -> PaintInstruction {
@@ -5372,6 +5399,18 @@ mod tests {
                 PaintInstruction::Group(group) if group.children.len() == expected_children
             ));
         }
+    }
+
+    #[test]
+    fn block_arrow_shape_lowers_to_backend_neutral_polygon() {
+        let mut layout = simple_layout();
+        layout.nodes[0].shape = DiagramShape::BlockArrow(diagram_ir::BlockArrowDirections {
+            right: true,
+            ..diagram_ir::BlockArrowDirections::default()
+        });
+        let instruction = node_shape_instruction(&layout.nodes[0]);
+        assert!(matches!(instruction, PaintInstruction::Path(path)
+            if path.commands.len() == 8));
     }
 
     #[test]

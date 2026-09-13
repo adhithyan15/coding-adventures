@@ -1,5 +1,9 @@
 # Changelog - diagram-layout-grid
 
+## 0.9.0
+
+- Preserve typed Block arrow geometry through resolved grid layout.
+
 ## 0.8.0
 
 - Resolve authored Block composite styles over backend-neutral group defaults.
