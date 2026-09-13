@@ -2,6 +2,44 @@
 
 ## Unreleased
 
+### Tested — the media budget is now proven to fire, not just to compute
+
+The budget itself was already here and already correct. What was missing is the
+half that makes it a gate: **nothing asserted the refusal**.
+
+`media_budget_is_clamped_at_both_ends` checks the arithmetic — floor, ratio,
+ceiling, and the `u64` saturation that a previous revision got wrong on wasm.
+It does not touch `read_media_files`. Deleting the `if spent > budget` guard
+there leaves it green, because a correct number nobody consults is still a
+correct number. Measured: with that guard disabled, the arithmetic test passes
+and a 20 MiB payload is returned to the caller.
+
+`media_expanding_past_the_budget_is_refused` drives a real package through the
+real reader and asserts the refusal, and it fails with the guard removed.
+
+Two details that decide whether the test proves anything:
+
+- **Built with real libzstd, not our own encoder.** Ours emits raw literals, so
+  a 20 MiB payload would produce a >20 MiB archive — the budget scales with
+  archive size, so it would rise to meet the payload and never fire. The bomb
+  exists only because libzstd crushes zeros to almost nothing, which is also
+  what an attacker would reach for.
+- **The premise is asserted, not assumed.** The test pins that the fixture's
+  budget is the 16 MiB *floor* rather than a ratio, and that the payload exceeds
+  it. Without that, a passing test could mean the archive was simply too big —
+  a different guard — rather than that this one fired.
+
+The failure path reports only the size, never the payload. `expect_err` renders
+the `Ok` value, and the mutation run that proved this test bites produced a
+60 MB log doing exactly that, one zero byte at a time.
+
+Surveyed alongside, and found already covered rather than assumed so: zstd's own
+256 MiB `MAX_OUTPUT` is checked incrementally inside the per-sequence loop and
+is adversarially tested by `literals_only_blocks_cannot_exceed_the_output_budget`;
+zip members are bounded by the declared uncompressed size and verified to match
+exactly; and the `meta` member's protobuf decode slices into that already-bounded
+buffer without allocating past it.
+
 ### Fixed -- an imported template could name a deck the file never declares (#14532)
 
 The deck-resolution added for #14559 covered cards, notes and sessions. It did
