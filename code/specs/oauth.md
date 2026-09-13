@@ -200,7 +200,10 @@ The delivery order is:
    stored refresh token and revision through that path: the complete profile is
    revalidated before credential access, and local deletion is conditional on
    exact HTTP 200 plus every signer, transport, protocol, custody, and broker
-   audit gate. All failures retain the record. Private-key-JWT authorization-code
+   audit gate. An access-token-only fallback additionally requires custody to
+   prove refresh-token absence before the access token and exact revision are
+   released; refreshable records fail before signing or transport, and every
+   later failure retains the record. Private-key-JWT authorization-code
    exchange can also route its bounded response directly into an exact opaque
    account key: key/provider mismatch fails before signer, transport, clock, or
    custody access; OAuth credential release and custody creation remain

@@ -46,7 +46,11 @@ no concrete signing or network implementation is added. A separate composition
 validates that retained profile before credential access, releases the exact
 opaque account record's refresh token and revision, and conditionally deletes
 only that revision after exact HTTP 200 crosses signer, transport, protocol,
-custody, and broker audit gates. Every failure retains the local credential.
+custody, and broker audit gates. For records without a refresh token, a
+separate fallback proves refresh absence inside custody before releasing the
+access token and exact revision, then applies the same signing, transport,
+response, and conditional-delete gates. Refreshable records and every later
+failure retain the local credential.
 Authorization-code exchange can likewise compose its bounded response directly
 into an exact provider-bound opaque account key. Key mismatch fails before
 signing, transport, clock, or custody access; the response crosses the OAuth
@@ -116,9 +120,8 @@ dependency are sibling packages in this repository.
 - concrete HTTPS, TLS, or socket authority;
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
-- account identity proof and key selection, listing, access-token-only detach
-  when no refresh token exists, device authorization UI, timing/sleep authority,
-  and full device-flow loops;
+- account identity proof and key selection, listing, device authorization UI,
+  timing/sleep authority, and full device-flow loops;
 - concrete private-key algorithms, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
