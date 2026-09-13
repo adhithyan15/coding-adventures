@@ -31,6 +31,14 @@
 //! entry the moment its issue is fixed; do not add new entries without a
 //! linked issue explaining why.
 //!
+//! "Remove an entry the moment its issue is fixed" is now **enforced**, not
+//! merely asked for. `no_allowed_degradation_has_silently_been_fixed` requires
+//! every entry to still be observed, because the gate above only ever ran one
+//! way — it catches an untracked degradation and cannot catch a tracked one
+//! that stopped happening. A fixed-but-still-listed entry is not untidy; it is
+//! a standing licence for that exact degradation to come back with this test
+//! green. Engram's copy of this pattern had 11 of 21 style pins in that state.
+//!
 //! `style_degradations` (issue #12022) gets NO allowlist: the toolkit is
 //! already clean there, so any entry is a real regression.
 
@@ -157,4 +165,76 @@ fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
              tracking issue: {unexpected_drops:#?}"
         );
     }
+}
+
+/// Every allowed degradation is still a degradation.
+///
+/// The gate above runs one way: it catches an UNTRACKED degradation, and cannot
+/// catch a tracked one that stopped happening. That gap is not cosmetic. An
+/// entry whose defect was fixed stays on the list, and from then on it is a
+/// standing licence — the same degradation can return, on the same component
+/// and backend, with the gate still green.
+///
+/// The comment on `ALLOWED_STYLE_DROPS` records that #14817, #14821 and #14818
+/// each removed their own entry by hand. That is the right instinct, and it is
+/// exactly the kind of discipline that holds until the one time nobody
+/// remembers — fixing an emitter does not otherwise bring anyone back to this
+/// file. This makes it a gate rather than a habit.
+///
+/// Found by the same check on Engram's copy of this pattern, where 11 of 21
+/// pinned style drops had silently been fixed.
+///
+/// `ALLOWED_STYLE_DROPS` deliberately gets no equivalent: it is empty, so the
+/// check would compare two empty sets and prove nothing. It is already as
+/// strict as it can be — every style drop fails.
+#[test]
+fn no_allowed_degradation_has_silently_been_fixed() {
+    let mut observed: Vec<(Backend, String, String)> = Vec::new();
+
+    for backend in [
+        Backend::Xaml,
+        Backend::SwiftUI,
+        Backend::Qt,
+        Backend::Flutter,
+        Backend::Compose,
+    ] {
+        let out = TempDir::new().expect("temp dir");
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: package_root(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .unwrap_or_else(|e| panic!("degradation analysis failed for {backend:?}: {e}"));
+
+        for entry in &report.degradations {
+            observed.push((backend, entry.component.clone(), entry.code.clone()));
+        }
+    }
+
+    let stale: Vec<String> = ALLOWED_DEGRADATIONS
+        .iter()
+        .filter(|(backend, component, code)| {
+            !observed
+                .iter()
+                .any(|(seen_backend, seen_component, seen_code)| {
+                    seen_backend == backend && seen_component == component && seen_code == code
+                })
+        })
+        .map(|(backend, component, code)| format!("  {backend:?}: {component} — {code}"))
+        .collect();
+
+    assert!(
+        stale.is_empty(),
+        "{} allowed degradation(s) no longer occur:\n{}\n\n\
+         The defect was fixed, so delete these from ALLOWED_DEGRADATIONS and \
+         close the issue each points at. Left in place they stop recording a \
+         known gap and start licensing its return.",
+        stale.len(),
+        stale.join("\n")
+    );
 }

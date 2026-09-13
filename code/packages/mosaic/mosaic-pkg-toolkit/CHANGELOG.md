@@ -2,6 +2,40 @@
 
 ## [Unreleased]
 
+### Changed — "remove an entry the moment its issue is fixed" is now enforced
+
+The gate's own instructions have always said that. Nothing checked it.
+
+`toolkit_atoms_are_native_complete_or_explicitly_tracked` runs one way: it
+catches an **untracked** degradation, and cannot catch a **tracked** one that
+stopped happening. An entry whose defect was fixed therefore stays on the list
+indefinitely — and from then on it is not untidy, it is a standing licence for
+that exact degradation to return, on that component and backend, with the gate
+still green.
+
+`no_allowed_degradation_has_silently_been_fixed` requires every entry in
+`ALLOWED_DEGRADATIONS` to still be observed.
+
+**It found nothing.** All five entries are genuinely still degraded — the four
+`Radio` ones because the toolkit's `Radio` is a 1:1 `HostRadio` wrapper with no
+sibling to group with, and XAML's `Modal` because WinUI's `ContentDialog` has no
+bindable open surface. The hand-maintenance the header asks for has held: the
+comment on `ALLOWED_STYLE_DROPS` records that #14817, #14821 and #14818 each
+removed their own entry rather than leaving it to rot.
+
+So this is hardening, not a fix. It is worth doing anyway because the discipline
+is the kind that holds until the one time nobody remembers, and fixing an
+emitter does not otherwise bring anyone back to this file. Engram's copy of the
+same pattern had **11 of 21** style pins already stale, which is where this
+check came from.
+
+Mutation-tested rather than assumed: an entry for a degradation that does not
+occur fails the test and names it.
+
+`ALLOWED_STYLE_DROPS` deliberately gets no equivalent check. It is empty, so
+comparing it against what was observed would compare two empty sets and prove
+nothing — it is already as strict as it can be, since every style drop fails.
+
 ### Changed — the style-drop allowlist is empty, and now measured (#14810)
 
 Compose reporting named **42** drops in the toolkit when it first ran:
