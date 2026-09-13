@@ -247,6 +247,9 @@ final snapshot of one simple local integer, real, or boolean recurrence. The
 analysis must prove a terminating false predicate within 4,096 evaluations and
 rejects dependency writes, compound bodies, globals, arrays, by-name targets,
 overflow, and non-finite numeric results.
+Boolean snapshot evaluation distinguishes exact bare variables from unary
+wrappers, so direct `not` recurrences preserve their negated value rather than
+being treated as identity assignments.
 
 Switch-list elements may use every supported designational expression: a
 conditional element selects its branch when `goto s[i]` runs, and a nested

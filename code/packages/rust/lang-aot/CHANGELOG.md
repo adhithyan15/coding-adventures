@@ -1,6 +1,6 @@
 # Changelog — `lang-aot`
 
-## 0.330.0 — 2026-09-13 — VM-040 COBOL BEAM INSPECT TALLYING/REPLACING probe
+## 0.331.0 — 2026-09-13 — VM-040 COBOL BEAM INSPECT TALLYING/REPLACING probe
 
 Reprioritized the post-UNSTRING/delimiter queue by re-running the backlog's
 prioritization policy against current source rather than repeating the prior
@@ -78,6 +78,11 @@ skipped, zero failures, 496.04s.
 Reprioritize the remaining 18 undeclared COBOL BEAM rows (8 pointer/overflow,
 4 more base INSPECT TALLYING/REPLACING, 5 VM-047c BEFORE/AFTER region, 1
 VM-057 self-move) against VM-041/VM-060b/VM-058 after this merges.
+
+## 0.330.0 — 2026-09-12 — ALGOL boolean-negation recurrences
+
+The seven-backend ALGOL matrix now proves formatter-free output selected by a
+bounded while-loop boolean recurrence expressed with direct unary `not`.
 
 ## 0.329.0 — 2026-09-12 — ALGOL while-loop boolean recurrences
 
