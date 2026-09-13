@@ -30,6 +30,7 @@ const SNAPSHOT_VERSION: u32 = 5;
 const SCHEMATIC_FILE_SCHEMA: &str = "spice-mosaic/schematic";
 const SCHEMATIC_FILE_VERSION: u32 = 1;
 const MAX_SCHEMATIC_FILE_BYTES: usize = 16 * 1024 * 1024;
+const MAX_SCHEMATIC_HISTORY_ENTRIES: usize = 100;
 const DEFAULT_DECK: &str = "* Berkeley SPICE Mosaic workbench\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\nC1 out 0 1u IC=0\n.options method=trap\n.op\n.dc V1 0 1 1\n.ac dec 1 1k 1k\n.tran 1m 3m\n.tf V(out) V1\n.save V(out)\n.end\n";
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -107,6 +108,15 @@ struct PendingSchematicFileEffect {
     operation: SchematicFileOperation,
 }
 
+/// One in-memory schematic checkpoint. History deliberately stays outside the
+/// persisted snapshot contract so restored sessions never resurrect stale edits.
+#[derive(Clone, Debug, Eq, PartialEq)]
+struct SchematicHistoryEntry {
+    document: Option<SchematicDocument>,
+    selected_component: Option<String>,
+    selected_analysis_card: usize,
+}
+
 /// A deliberately small host state. No parser or engine state crosses the
 /// snapshot boundary; it is reconstructed from the saved deck.
 pub struct SpiceMosaicApp {
@@ -124,6 +134,8 @@ pub struct SpiceMosaicApp {
     protocol_version: u32,
     next_schematic_file_effect_id: EffectId,
     pending_schematic_file_effect: Option<PendingSchematicFileEffect>,
+    schematic_undo: Vec<SchematicHistoryEntry>,
+    schematic_redo: Vec<SchematicHistoryEntry>,
     mode: &'static str,
     dark: bool,
 }
@@ -145,6 +157,8 @@ impl Default for SpiceMosaicApp {
             protocol_version: PROTOCOL_VERSION,
             next_schematic_file_effect_id: default_next_effect_id(),
             pending_schematic_file_effect: None,
+            schematic_undo: Vec::new(),
+            schematic_redo: Vec::new(),
             mode: "Draft",
             dark: false,
         }
@@ -363,6 +377,80 @@ impl SpiceMosaicApp {
             .find(|component| component.reference == reference)
     }
 
+    fn schematic_history_entry(&self) -> SchematicHistoryEntry {
+        SchematicHistoryEntry {
+            document: self.schematic.clone(),
+            selected_component: self.selected_schematic_component.clone(),
+            selected_analysis_card: self.selected_schematic_analysis_card,
+        }
+    }
+
+    fn record_schematic_edit(&mut self, before: SchematicHistoryEntry) {
+        if before == self.schematic_history_entry() {
+            return;
+        }
+        if self.schematic_undo.len() == MAX_SCHEMATIC_HISTORY_ENTRIES {
+            self.schematic_undo.remove(0);
+        }
+        self.schematic_undo.push(before);
+        self.schematic_redo.clear();
+    }
+
+    fn restore_schematic_history_entry(
+        &mut self,
+        entry: SchematicHistoryEntry,
+    ) -> Result<(), SpiceMosaicError> {
+        if let Some(document) = &entry.document {
+            if let Some(reference) = &entry.selected_component {
+                if !document
+                    .components
+                    .iter()
+                    .any(|component| component.reference == *reference)
+                {
+                    return Err(invalid("schematic history selection is unknown"));
+                }
+            }
+            if entry.selected_analysis_card >= document.analysis_card_count() {
+                return Err(invalid(
+                    "schematic history analysis selection is out of range",
+                ));
+            }
+        } else if entry.selected_component.is_some() || entry.selected_analysis_card != 0 {
+            return Err(invalid(
+                "schematic history without a document has a selection",
+            ));
+        }
+        self.schematic = entry.document;
+        self.selected_schematic_component = entry.selected_component;
+        self.selected_schematic_analysis_card = entry.selected_analysis_card;
+        Ok(())
+    }
+
+    fn undo_schematic_edit(&mut self) -> Result<(), SpiceMosaicError> {
+        let previous = self
+            .schematic_undo
+            .pop()
+            .ok_or_else(|| invalid("undoSchematic requires a prior schematic edit"))?;
+        let current = self.schematic_history_entry();
+        self.restore_schematic_history_entry(previous)?;
+        self.schematic_redo.push(current);
+        Ok(())
+    }
+
+    fn redo_schematic_edit(&mut self) -> Result<(), SpiceMosaicError> {
+        let next = self
+            .schematic_redo
+            .pop()
+            .ok_or_else(|| invalid("redoSchematic requires an undone schematic edit"))?;
+        let current = self.schematic_history_entry();
+        self.restore_schematic_history_entry(next)?;
+        if self.schematic_undo.len() == MAX_SCHEMATIC_HISTORY_ENTRIES {
+            self.schematic_undo.remove(0);
+        }
+        self.schematic_undo.push(current);
+        Ok(())
+    }
+
     fn schematic_grid_lines() -> Vec<[f64; 4]> {
         (0..=8)
             .flat_map(|index| {
@@ -523,6 +611,10 @@ impl SpiceMosaicApp {
             "schematic-title-disabled": self.schematic.is_none(),
             "open-schematic-label": "Open schematic",
             "save-schematic-label": "Save schematic",
+            "undo-schematic-label": "Undo",
+            "undo-schematic-disabled": self.schematic_undo.is_empty(),
+            "redo-schematic-label": "Redo",
+            "redo-schematic-disabled": self.schematic_redo.is_empty(),
             "schematic-rows": self.schematic_rows(),
             "schematic-palette": [
                 SchematicComponentKind::Resistor.palette_label(),
@@ -633,6 +725,7 @@ impl SpiceMosaicApp {
         &mut self,
         mut document: SchematicDocument,
     ) -> Result<AppUpdate, SpiceMosaicError> {
+        let history = self.schematic_history_entry();
         document.migrate_legacy_analysis_cards();
         document
             .validate()
@@ -640,6 +733,7 @@ impl SpiceMosaicApp {
         self.selected_schematic_component = None;
         self.selected_schematic_analysis_card = 0;
         self.schematic = Some(document);
+        self.record_schematic_edit(history);
         self.diagnostics = "Schematic loaded. Sync its canonical netlist when ready.".to_owned();
         self.mode = "Schematic";
         Ok(self.announced(self.diagnostics.clone()))
@@ -877,6 +971,7 @@ impl MosaicApp for SpiceMosaicApp {
                 let title = event.payload["value"]
                     .as_str()
                     .ok_or_else(|| invalid("schematicTitleChange requires text value"))?;
+                let history = self.schematic_history_entry();
                 let document = self
                     .schematic
                     .as_mut()
@@ -884,6 +979,7 @@ impl MosaicApp for SpiceMosaicApp {
                 document
                     .set_title(title)
                     .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
                 self.diagnostics = "Updated schematic title. Save or sync when ready.".to_owned();
                 Ok(self.announced(self.diagnostics.clone()))
             }
@@ -895,6 +991,7 @@ impl MosaicApp for SpiceMosaicApp {
                     .ok_or_else(|| invalid("placeSchematicComponent requires a palette kind"))?;
                 let kind = SchematicComponentKind::from_palette_label(kind)
                     .map_err(|error| invalid(error.to_string()))?;
+                let history = self.schematic_history_entry();
                 let document = self.schematic.get_or_insert_with(|| SchematicDocument {
                     title: "Untitled schematic".to_owned(),
                     components: Vec::new(),
@@ -907,6 +1004,7 @@ impl MosaicApp for SpiceMosaicApp {
                     .place_palette_component(kind)
                     .map_err(|error| invalid(error.to_string()))?;
                 self.selected_schematic_component = Some(reference.clone());
+                self.record_schematic_edit(history);
                 self.diagnostics = format!(
                     "Placed {reference} on the grid. Select a component and route it to a target."
                 );
@@ -919,6 +1017,7 @@ impl MosaicApp for SpiceMosaicApp {
                     .ok_or_else(|| invalid("addSchematicAnalysis requires an analysis"))?;
                 let analysis = SchematicAnalysis::from_palette_label(analysis)
                     .map_err(|error| invalid(error.to_string()))?;
+                let history = self.schematic_history_entry();
                 let document = self.schematic.get_or_insert_with(|| SchematicDocument {
                     title: "Untitled schematic".to_owned(),
                     components: Vec::new(),
@@ -928,6 +1027,7 @@ impl MosaicApp for SpiceMosaicApp {
                     analysis_cards: Vec::new(),
                 });
                 self.selected_schematic_analysis_card = document.add_analysis_card(analysis);
+                self.record_schematic_edit(history);
                 self.diagnostics = format!(
                     "Added {} to the canonical schematic plan.",
                     analysis.palette_label()
@@ -941,12 +1041,14 @@ impl MosaicApp for SpiceMosaicApp {
                     .ok_or_else(|| invalid("selectSchematicAnalysis requires an analysis"))?;
                 let analysis = SchematicAnalysis::from_palette_label(analysis)
                     .map_err(|error| invalid(error.to_string()))?;
+                let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
                     invalid("selectSchematicAnalysis requires a loaded schematic")
                 })?;
                 document
                     .set_analysis_card_kind(self.selected_schematic_analysis_card, analysis)
                     .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
                 self.diagnostics = format!(
                     "Selected {} for the active schematic analysis card.",
                     analysis.palette_label()
@@ -970,6 +1072,7 @@ impl MosaicApp for SpiceMosaicApp {
                 )))
             }
             "removeSchematicAnalysisCard" => {
+                let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
                     invalid("removeSchematicAnalysisCard requires a loaded schematic")
                 })?;
@@ -979,6 +1082,7 @@ impl MosaicApp for SpiceMosaicApp {
                 self.selected_schematic_analysis_card = self
                     .selected_schematic_analysis_card
                     .min(document.analysis_card_count().saturating_sub(1));
+                self.record_schematic_edit(history);
                 self.diagnostics = "Removed the selected schematic analysis card.".to_owned();
                 Ok(self.announced(self.diagnostics.clone()))
             }
@@ -986,6 +1090,7 @@ impl MosaicApp for SpiceMosaicApp {
                 let reference = event.payload["reference"].as_str().ok_or_else(|| {
                     invalid("selectSchematicAnalysisSource requires a source reference")
                 })?;
+                let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
                     invalid("selectSchematicAnalysisSource requires a loaded schematic")
                 })?;
@@ -995,6 +1100,7 @@ impl MosaicApp for SpiceMosaicApp {
                         reference,
                     )
                     .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
                 self.diagnostics = format!(
                     "Selected {reference} as the canonical DC sweep source. Sync the netlist when ready."
                 );
@@ -1012,6 +1118,7 @@ impl MosaicApp for SpiceMosaicApp {
                     "schematicAnalysisParameterThreeChange" => 2,
                     _ => unreachable!("the match arm lists every analysis parameter event"),
                 };
+                let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
                     invalid("schematic analysis parameter change requires a loaded schematic")
                 })?;
@@ -1022,6 +1129,7 @@ impl MosaicApp for SpiceMosaicApp {
                         value,
                     )
                     .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
                 self.diagnostics =
                     "Updated the canonical analysis card. Sync the netlist when ready.".to_owned();
                 Ok(self.announced(self.diagnostics.clone()))
@@ -1031,6 +1139,7 @@ impl MosaicApp for SpiceMosaicApp {
                     serde_json::from_value(event.payload["component"].clone()).map_err(
                         |error| invalid(format!("schematicPlace requires a component: {error}")),
                     )?;
+                let history = self.schematic_history_entry();
                 let document = self
                     .schematic
                     .as_mut()
@@ -1043,6 +1152,7 @@ impl MosaicApp for SpiceMosaicApp {
                     return Err(invalid("schematicPlace component reference already exists"));
                 }
                 document.components.push(component);
+                self.record_schematic_edit(history);
                 self.diagnostics =
                     "Component placed. Connect endpoints, then sync the netlist.".to_owned();
                 Ok(self.announced(self.diagnostics.clone()))
@@ -1052,6 +1162,7 @@ impl MosaicApp for SpiceMosaicApp {
                     .map_err(|error| {
                         invalid(format!("schematicConnect requires a wire: {error}"))
                     })?;
+                let history = self.schematic_history_entry();
                 let document = self
                     .schematic
                     .as_mut()
@@ -1059,6 +1170,7 @@ impl MosaicApp for SpiceMosaicApp {
                 document
                     .connect_wire(wire)
                     .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
                 self.diagnostics = "Endpoints connected. Sync the netlist when ready.".to_owned();
                 Ok(self.announced(self.diagnostics.clone()))
             }
@@ -1087,6 +1199,7 @@ impl MosaicApp for SpiceMosaicApp {
                     .selected_schematic_component
                     .clone()
                     .ok_or_else(|| invalid("schematicValueChange requires a selected component"))?;
+                let history = self.schematic_history_entry();
                 let document = self
                     .schematic
                     .as_mut()
@@ -1094,6 +1207,7 @@ impl MosaicApp for SpiceMosaicApp {
                 document
                     .set_component_value(&reference, value)
                     .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
                 self.diagnostics =
                     format!("Updated {reference} value. Sync the netlist when ready.");
                 Ok(self.announced(self.diagnostics.clone()))
@@ -1106,6 +1220,7 @@ impl MosaicApp for SpiceMosaicApp {
                     self.selected_schematic_component.clone().ok_or_else(|| {
                         invalid("schematicReferenceChange requires a selected component")
                     })?;
+                let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
                     invalid("schematicReferenceChange requires a loaded schematic")
                 })?;
@@ -1113,6 +1228,7 @@ impl MosaicApp for SpiceMosaicApp {
                     .rename_component(&current_reference, new_reference)
                     .map_err(|error| invalid(error.to_string()))?;
                 self.selected_schematic_component = Some(new_reference.to_owned());
+                self.record_schematic_edit(history);
                 self.diagnostics = format!(
                     "Renamed {current_reference} to {new_reference}; updated {updated_cards} DC sweep source binding(s)."
                 );
@@ -1122,6 +1238,7 @@ impl MosaicApp for SpiceMosaicApp {
                 let reference = self.selected_schematic_component.clone().ok_or_else(|| {
                     invalid("removeSchematicComponent requires a selected component")
                 })?;
+                let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
                     invalid("removeSchematicComponent requires a loaded schematic")
                 })?;
@@ -1129,6 +1246,7 @@ impl MosaicApp for SpiceMosaicApp {
                     .remove_component(&reference)
                     .map_err(|error| invalid(error.to_string()))?;
                 self.selected_schematic_component = None;
+                self.record_schematic_edit(history);
                 self.diagnostics = format!(
                     "Removed {reference} and {removed_wires} incident wire(s). Sync the netlist when ready."
                 );
@@ -1138,6 +1256,7 @@ impl MosaicApp for SpiceMosaicApp {
                 let index = event.payload["index"].as_u64().ok_or_else(|| {
                     invalid("removeSchematicWire requires a non-negative wire index")
                 })? as usize;
+                let history = self.schematic_history_entry();
                 let document = self
                     .schematic
                     .as_mut()
@@ -1145,6 +1264,7 @@ impl MosaicApp for SpiceMosaicApp {
                 document
                     .remove_wire(index)
                     .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
                 self.diagnostics =
                     format!("Removed wire {}. Sync the netlist when ready.", index + 1);
                 Ok(self.announced(self.diagnostics.clone()))
@@ -1156,13 +1276,25 @@ impl MosaicApp for SpiceMosaicApp {
                 let selected = self.selected_schematic_component.clone().ok_or_else(|| {
                     invalid("routeToSchematicComponent requires a selected component")
                 })?;
+                let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
                     invalid("routeToSchematicComponent requires a loaded schematic")
                 })?;
                 document
                     .route_components(&selected, target)
                     .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
                 self.diagnostics = format!("Routed {selected} to {target} on the schematic grid.");
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "undoSchematic" => {
+                self.undo_schematic_edit()?;
+                self.diagnostics = "Undid the last schematic edit.".to_owned();
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "redoSchematic" => {
+                self.redo_schematic_edit()?;
+                self.diagnostics = "Redid the schematic edit.".to_owned();
                 Ok(self.announced(self.diagnostics.clone()))
             }
             "synchronizeSchematic" => self.synchronize_schematic(),
@@ -1222,6 +1354,8 @@ impl MosaicApp for SpiceMosaicApp {
             .next_schematic_file_effect_id
             .max(saved.next_schematic_file_effect_id);
         self.pending_schematic_file_effect = None;
+        self.schematic_undo.clear();
+        self.schematic_redo.clear();
         if let Some(document) = &mut self.schematic {
             document.migrate_legacy_analysis_cards();
         }
@@ -1863,6 +1997,76 @@ mod tests {
             .as_str()
             .unwrap()
             .contains(".dc VDD 0 5 1"));
+    }
+
+    #[test]
+    fn schematic_edit_history_restores_document_state_and_stays_out_of_snapshots() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(protocol_two_context()).unwrap();
+        let document = schematic_document("History RC");
+        dispatch(&mut app, "schematicLoad", json!({"document": document}));
+        dispatch(
+            &mut app,
+            "selectSchematicComponent",
+            json!({"reference":"R1"}),
+        );
+
+        let edited = dispatch(&mut app, "schematicValueChange", json!({"value":"2k"}));
+        assert_eq!(edited.props["schematic-value"], "2k");
+        assert_eq!(edited.props["undo-schematic-disabled"], false);
+        assert_eq!(edited.props["redo-schematic-disabled"], true);
+
+        let undone = dispatch(&mut app, "undoSchematic", json!({}));
+        assert_eq!(undone.props["schematic-value"], "1k");
+        assert_eq!(undone.props["selected-schematic-label"], "R1");
+        assert_eq!(undone.props["redo-schematic-disabled"], false);
+
+        let redone = dispatch(&mut app, "redoSchematic", json!({}));
+        assert_eq!(redone.props["schematic-value"], "2k");
+        assert_eq!(redone.props["selected-schematic-label"], "R1");
+
+        dispatch(&mut app, "undoSchematic", json!({}));
+        let renamed = dispatch(
+            &mut app,
+            "schematicReferenceChange",
+            json!({"value":"RLOAD"}),
+        );
+        assert_eq!(renamed.props["schematic-reference"], "RLOAD");
+        assert_eq!(renamed.props["redo-schematic-disabled"], true);
+
+        let removed = dispatch(&mut app, "removeSchematicComponent", json!({}));
+        assert_eq!(removed.props["schematic-rows"], json!(["V1", "G1"]));
+        let restored = dispatch(&mut app, "undoSchematic", json!({}));
+        assert_eq!(
+            restored.props["schematic-rows"],
+            json!(["V1", "RLOAD", "G1"])
+        );
+        assert_eq!(restored.props["selected-schematic-label"], "RLOAD");
+
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut restored_app = SpiceMosaicApp::default();
+        let restored_update = restored_app.restore(snapshot).unwrap();
+        assert_eq!(restored_update.props["undo-schematic-disabled"], true);
+        assert_eq!(restored_update.props["redo-schematic-disabled"], true);
+    }
+
+    #[test]
+    fn schematic_edit_history_replays_incomplete_palette_drafts() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let placed = dispatch(
+            &mut app,
+            "placeSchematicComponent",
+            json!({"kind":"Resistor"}),
+        );
+        assert_eq!(placed.props["schematic-rows"], json!(["R1"]));
+
+        let undone = dispatch(&mut app, "undoSchematic", json!({}));
+        assert_eq!(undone.props["schematic-rows"], json!([]));
+        let redone = dispatch(&mut app, "redoSchematic", json!({}));
+        assert_eq!(redone.props["schematic-rows"], json!(["R1"]));
+        assert_eq!(redone.props["selected-schematic-label"], "R1");
     }
 
     #[test]

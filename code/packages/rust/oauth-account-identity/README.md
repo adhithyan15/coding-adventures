@@ -8,9 +8,12 @@ identity authority.
 The profile binds the exact provider, client audience, HTTPS issuer, allowed
 case-sensitive JOSE algorithms, and an opaque provider-bound verification
 context. The operation additionally binds the expected transaction nonce,
-caller-supplied Unix time, and OAuth trace. Durable audit intent is required
-before the authority sees token or nonce bytes, and durable success is required
-before the verified opaque key is released.
+caller-supplied Unix time, and OAuth trace. Authorization Code verification can
+consume the core OAuth package's non-cloneable `OpenIdAuthorizationNonce`, so
+the provider, client, and trace come only from the browser ceremony and are
+checked before the authority sees any evidence. Durable audit intent is
+required before the authority sees token or nonce bytes, and durable success is
+required before the verified opaque key is released.
 
 The authority contract must verify the token signature, reject algorithms not
 in the exact allowed set (including `none`), validate `iss`, `aud`, `exp`, and
