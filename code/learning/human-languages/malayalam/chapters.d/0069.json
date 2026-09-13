@@ -1,0 +1,16 @@
+{
+  "chapter": 69,
+  "title": "Reading — Words, Lines, and a First Passage",
+  "label": "ch:ml-adyathe-vaayana",
+  "canDo": "I can read a Malayalam word cold, tell a naming line from a placing one by its last word, and hold a whole passage about one doorway without translating it word by word.",
+  "payoff": {
+    "lesson": "ML-C69-adyathe-vaayana",
+    "kind": "four-skill-function-map",
+    "summary": "Fifteen lines standing at one doorway, where ആണ് names and ഉണ്ട് places, and a single എന്നാൽ turns the page against itself.",
+    "assesses": [
+      "ML-SKILL-CONNECTED-READING",
+      "ML-SKILL-READ-LINES",
+      "ML-SKILL-READ-WORDS"
+    ]
+  }
+}
