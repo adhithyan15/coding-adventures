@@ -429,6 +429,9 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
 
     assert "workflow_dispatch:" in workflow
     assert "pull_request:" in workflow
+    assert "format('release-task-app-pr-{0}'" in workflow
+    assert "'release-task-app-publish'" in workflow
+    assert "cancel-in-progress: false" in workflow
     assert "task-app-v0.0.0-ci" in workflow
     assert "version:" in workflow
     assert "tag:" in workflow
@@ -443,7 +446,7 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "--latest=false" in workflow
     assert 'RUST_VERSION: "1.97.0"' in workflow
     assert "git diff --exit-code" in workflow
-    assert workflow.count("sudo apt-get install -y libcairo2-dev") == 2
+    assert workflow.count("libcairo2-dev") == 2
     assert "cmp" in workflow
     assert "archive-linux-bundle" in workflow
     assert "createDistributable" in workflow
