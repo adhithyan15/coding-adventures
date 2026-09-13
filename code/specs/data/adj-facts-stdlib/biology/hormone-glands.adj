@@ -14,7 +14,8 @@
 %     ? hormone_gland(insulin, $Gland)      % pancreas
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `hormone_gland(hormone, gland)` carrying the table's citation, so the
+% relation `hormone_gland(hormone, gland)` carrying THAT ROW'S OWN citation
+% (RS-5e — before #14986 it was the table's single envelope), so the
 % lookup above is the ordinary SLD binding query — the engine returns the gland
 % WITH its source, on the CPU, with zero model calls, and abstains on a word
 % that is not one of these grounded hormones (it never invents a gland).
@@ -51,7 +52,9 @@
 % it answers exactly the hormone→gland pairs it can ground, and only those.
 %
 % The `gland` value of every row is a SINGLE lowercase atom naming the endocrine
-% gland the source EXPLICITLY states makes that hormone — never one the source
+% gland the row's own span states makes that hormone — sometimes in the page's
+% own adjectival or plural wording ("pancreatic islets", "the testes"), never a
+% gland the source
 % does not support. (Where several hormones share a gland, the atom is repeated:
 % `pancreas` appears for both insulin and glucagon, `ovary` for both estrogen and
 % progesterone.)
@@ -63,7 +66,7 @@
 %
 % EVERY ROW CARRIES ITS OWN SPAN AND ITS OWN LOCATOR, below, in the row's
 % `{ ... }` block (ADJ-TABLES RS-5e). This is a CROSS-PAGE conversion: the
-% twelve rows are grounded on six different pages (SEER pancreas, thyroid,
+% twelve rows are grounded on seven different pages (SEER pancreas, thyroid,
 % adrenal, pituitary and gonads, plus MedlinePlus cortisol-test and
 % growth-hormone-tests), so a row's locator is part of its warrant, not a
 % detail inherited from the table.
@@ -71,7 +74,7 @@
 % This header used to re-quote all 12 spans a second time. They now ship in the
 % rows; a second copy is a second thing to keep true, and in #15137 two of five
 % such restatements had drifted from their page while sitting under the words
-% "quoted word-for-word".
+% "quoted here word-for-word".
 %
 % WHAT #14986 CHANGED. The table had ONE envelope, and it was the INSULIN row's
 % own sentence — so recalling progesterone returned a warrant about beta cells.
@@ -88,10 +91,24 @@
 %   Each is widened back to the nearest sentence that supplies the missing
 %   name, and no further. The reason is recorded on the row itself.
 %
-% TWO ROWS THE PAGES DO NOT SPELL THE WAY THIS TABLE DOES:
+% WHERE THE PAGE'S WORDING DIFFERS FROM THIS TABLE'S ATOMS. The span is always
+% quoted as the page has it — silently correcting a quote is how a citation
+% stops being checkable — so the atom and the span can legitimately differ:
 %
-%   glucagon        the SEER page writes "glucagons"; the span is quoted as the
-%                   page has it, and the row atom stays `glucagon`
+%   glucagon        the SEER page writes "glucagons"
+%   estrogen        the span says "estrogens"
+%   testis          the span says "testes"
+%   ovary           the span says "ovaries"
+%   pancreas        insulin's and glucagon's spans say "pancreatic islets"
+%   adrenal_gland   epinephrine's span says "adrenal medulla"
+%
+% Six of the twelve rows are of that kind, so a check that the span literally
+% contains the atom would fail for half the table; what each span does state is
+% the RELATION — that this gland (or its part, in its own words) makes this
+% hormone.
+%
+% One row's LOCATOR also looks wrong and is not:
+%
 %   melatonin       cited from pituitary.html, because that SEER page covers the
 %                   pituitary AND pineal glands
 %

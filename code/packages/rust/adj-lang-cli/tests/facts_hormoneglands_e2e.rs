@@ -75,7 +75,7 @@ fn biology_hormone_glands_recall_binds_gland_with_citation() {
     //
     // THE WHOLE LOCATOR BOUND TO THE TIER, not the host and the tier as two
     // loose substrings. A host-only pin cannot tell one SEER page from another,
-    // which matters now that twelve rows cite six different pages — and #15139
+    // which matters now that twelve rows cite seven different pages — and #15139
     // found eight files whose locators had rotted underneath exactly this shape
     // of assertion without a single test noticing.
     assert!(
@@ -141,7 +141,7 @@ fn assert_hormone(tag: &str, hormone: &str, gland: &str, span: &str, locator: &s
 
 /// #14986: this table had ONE envelope and it was the INSULIN row's own
 /// sentence, so recalling progesterone came back warranted by a sentence about
-/// beta cells. Twelve rows, six pages — the locator is part of each row's
+/// beta cells. Twelve rows, seven pages — the locator is part of each row's
 /// warrant here, not a table-level detail.
 #[test]
 fn every_hormone_row_carries_its_own_span_and_locator() {
