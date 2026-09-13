@@ -4,9 +4,11 @@
 % The shape a learner (or an LLM) produces to ANSWER "what is an example of a
 % fungus?": it states no biology fact of its own — it only `import`s the
 % grounded table and asks binding queries. The engine resolves each `?` against
-% the `kingdom_example` rows and returns EVERY example + the table's source/
-% locator/trust (as of this cycle's extension, each kingdom binds MULTIPLE
-% examples — `fungi` now recalls mushrooms ; yeast ; molds, not just one). The
+% the `kingdom_example` rows and returns EVERY example + THAT ROW'S OWN
+% source, with the locator and trust tier inherited from the table envelope
+% (RS-5e per-row provenance, #14986 — before it, every kingdom's answer quoted
+% the same animalia span). Each kingdom binds MULTIPLE examples — `fungi`
+% recalls mushrooms ; yeast ; molds, not just one. The
 % reverse-bind query runs the relation BACKWARD (bind the example `mushrooms`,
 % recall its kingdom — fungi). A word that is not one of these kingdoms
 % abstains honestly — the engine never invents an example.
