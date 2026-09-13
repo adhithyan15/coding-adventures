@@ -28,7 +28,6 @@
 import java.io.File
 import java.util.Base64
 import javax.swing.JFileChooser
-import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 import javax.swing.filechooser.FileNameExtensionFilter
 
@@ -206,35 +205,7 @@ private fun runImport(payload: Any?): Map<String, Any?> {
     return okOutcome(mapOf("apkg" to Base64.getEncoder().encodeToString(bytes)))
 }
 
-// Ask before something irreversible goes.
-//
-// The application has NOT deleted anything at this point -- it holds the event
-// until this answers -- so `cancelled` costs nothing to honour and needs no
-// undo.
-private fun runConfirmDelete(payload: Any?): Map<String, Any?> {
-    @Suppress("UNCHECKED_CAST")
-    val declared = (payload as? Map<String, Any?>)?.get("subject") as? String
-    // Anything else means a newer application and an older host, so fall back
-    // to the vaguer wording rather than showing a token nobody has seen.
-    val subject = if (declared == "note" || declared == "note type") declared else "item"
-
-    val options = arrayOf<Any>("Cancel", "Delete")
-    val choice = JOptionPane.showOptionDialog(
-        null,
-        "Delete this $subject?\nThis cannot be undone.",
-        "Delete",
-        JOptionPane.DEFAULT_OPTION,
-        JOptionPane.WARNING_MESSAGE,
-        null,
-        options,
-        // Cancel is the default, so Return and Escape both decline. For an
-        // irreversible action the safe answer is the one a stray keypress gives.
-        options[0],
-    )
-    return if (choice == 1) okOutcome() else cancelledOutcome()
-}
-
-/// Answer Engram's awaited file-dialog and confirmation effects.
+/// Answer Engram's awaited file-dialog effects.
 fun installEngramEffects(host: MosaicRuntimeHost) {
     host.effectHandler = { id, kind, payload, delivery ->
         // Only the awaited kinds are answered. `openCard` arrives as a `Notify`
@@ -242,7 +213,10 @@ fun installEngramEffects(host: MosaicRuntimeHost) {
         // answering an effect the runtime is not awaiting is refused anyway.
         if (delivery.lowercase() == "await") {
             when (kind) {
-                "importAnki", "exportAnki", "confirmDelete" -> {
+                // Exactly the two kinds `effect_for_intent` mints as `Await`.
+                // `openCard` is the third intent the facade can emit and it is
+                // a `Notify`, so it never reaches the `await` guard above.
+                "importAnki", "exportAnki" -> {
                     // Ownership first, inside the settle. `deferEffect` returns
                     // false for an id the runtime is not waiting on, and then
                     // the right move is to do nothing at all rather than open a
@@ -273,7 +247,13 @@ fun installEngramEffects(host: MosaicRuntimeHost) {
                                 when (kind) {
                                     "importAnki" -> runImport(payload)
                                     "exportAnki" -> runExport(payload)
-                                    else -> runConfirmDelete(payload)
+                                    // Unreachable: the outer `when` admits only
+                                    // the two kinds above. Spelled out rather
+                                    // than folded into `else -> runExport(...)`,
+                                    // so widening the outer guard without
+                                    // widening this one fails visibly instead of
+                                    // silently running the wrong dialog.
+                                    else -> failedOutcome("this host does not answer $kind")
                                 }
                             } catch (error: Exception) {
                                 failedOutcome(error.message ?: "the dialog could not be opened")

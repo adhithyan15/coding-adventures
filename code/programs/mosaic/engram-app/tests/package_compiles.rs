@@ -2926,23 +2926,52 @@ fn source_tree_has_expected_shape() {
     // `hydrateSession`/`persistSnapshot` and `withHostStatusProps` all live in
     // the generated runtime host now, so asserting on them here would be
     // testing text this package no longer ships.
-    let compose_effects =
-        fs::read_to_string(package_root().join("host/compose/EngramEffects.kt"))
-            .expect("compose effect handler");
+    let compose_effects = fs::read_to_string(package_root().join("host/compose/EngramEffects.kt"))
+        .expect("compose effect handler");
     assert_contains(&compose_effects, "fun installEngramEffects");
     assert_contains(&compose_effects, "host.effectHandler =");
     assert_contains(&compose_effects, "JFileChooser");
     assert_contains(&compose_effects, "FileNameExtensionFilter");
     assert_contains(&compose_effects, "importAnki");
     assert_contains(&compose_effects, "exportAnki");
-    // The third kind, which Qt and SwiftUI do not answer: Compose is the first
-    // host to carry the delete confirmation.
-    assert_contains(&compose_effects, "confirmDelete");
-    // Cancel is the DEFAULT button, so Return and Escape both decline. For an
-    // irreversible delete the safe answer is the one a stray keypress gives,
-    // and `showOptionDialog`'s last argument is what decides that.
-    assert_contains(&compose_effects, "JOptionPane.showOptionDialog");
-    assert_contains(&compose_effects, "options[0],");
+    // And NOTHING else. A handler branch for a kind the application cannot
+    // mint is unreachable code that reads as shipped behaviour: an earlier
+    // version of this file answered `confirmDelete`, which
+    // `host_intent_for_event` has never emitted and `effect_for_intent` has
+    // never turned into an `Await`. It compiled, it was pinned by a test
+    // asserting the string `confirmDelete` appeared in the file, and it did
+    // nothing.
+    //
+    // So the gate is the complement -- but read off the DISPATCH, not the file
+    // text. A first cut of this asserted `openCard` appeared nowhere, and
+    // failed on the comment that explains why `openCard` is deliberately not
+    // answered: banning the word also bans documenting the decision. What is
+    // actually load-bearing is which kinds reach a `->`, so that is what this
+    // collects.
+    let answered: BTreeSet<&str> = compose_effects
+        .lines()
+        .map(str::trim)
+        // A dispatch arm, not prose: the line starts with a quoted kind and
+        // carries the arrow. Comment lines are excluded by construction --
+        // they start with `//`, never with `"`.
+        .filter(|line| line.starts_with('"') && line.contains("->"))
+        .flat_map(|line| {
+            line.split('"')
+                .skip(1)
+                .step_by(2)
+                .collect::<Vec<_>>()
+                .into_iter()
+        })
+        .collect();
+    assert_eq!(
+        answered,
+        BTreeSet::from(["importAnki", "exportAnki"]),
+        "host/compose/EngramEffects.kt dispatches on effect kinds that are not \
+         exactly the two `effect_for_intent` mints as `Await`. `openCard` is \
+         the facade's third intent and is a `Notify`, so answering it would be \
+         refused; anything else is a kind nothing sends, and an unreachable \
+         branch reads to the next person as shipped behaviour."
+    );
     // All three outcomes, because a handler that only ever answers `ok` leaves
     // a cancelled dialog looking like a hang.
     assert_contains(&compose_effects, "completeEffect");

@@ -35,9 +35,17 @@ awaited for the life of the process — which disables snapshot *and* restore, n
 just that one dialog. Caught in security review; Qt guards the same span with
 `catch (...)`.
 
-**Compose is the first host to answer `confirmDelete`**, with Cancel as the
-default button so that Return and Escape both decline — for an irreversible
-action, the safe answer should be the one a stray keypress gives.
+**The handler answers exactly the two kinds the application mints, and a test
+now pins the complement.** A draft of this file also answered `confirmDelete`
+with a Swing confirmation dialog, and this entry claimed Compose was the first
+host to carry one. Neither was true of anything that runs: `host_intent_for_event`
+emits `importAnki`, `exportAnki` and `openCard` and nothing else, and
+`effect_for_intent` turns only the first two into an `Await` — so the branch was
+unreachable, and the delete intents it imagined were deliberately retired in
+issue #13933. It compiled, and the test written for it asserted only that the
+string `confirmDelete` appeared in the file, so it passed. The gate is now the
+complement — that kind, `openCard`, and the two retired delete intents must
+*not* appear — which fails on the dead branch instead of ratifying it.
 
 **The anchors are `\A`/`\z`, and that was measured rather than carried over.**
 This is the fourth regex engine asked whether `$` concedes a trailing line
