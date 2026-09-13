@@ -109,6 +109,35 @@
 %   than byte-exact: the page writes the Capricorn figure as a minus sign
 %   followed by a SPACE before "23.5°", and the sentence beginning "At these
 %   latitudes" opens a new paragraph — the quote runs across `</p><p>`.
+%
+% ----------------------------------------------------------------------------
+% Where the two tropic spans live (#14758), measured across ALL 1,330 `.adj`
+% files under `code/specs/data`, whitespace collapsed on both sides, comment
+% text taken from lines starting `%` and machine values from `source`/`cites`.
+%
+% Counted ON THE PARENT COMMIT, i.e. BEFORE the rows below were annotated —
+% the arrow is what this change did to each count. Stating it as a single
+% present-tense number would have shipped a table that this very file
+% falsifies:
+%
+%            span                       machine values      comments
+%   +23.5°/−23.5° sentence                 2 → 3 files       3 files
+%   "... never directly overhead"          0 → 1 files       1 file
+%
+%   The +23.5° span was ALREADY a shipped machine value in two siblings —
+%   `reference-line-degree.adj` and `reference-line-hemisphere-location.adj`,
+%   both `trust authoritative`, and in BOTH the span genuinely states its row
+%   (a latitude; a hemisphere). Those rows are READ. This file's tropic rows
+%   are REASONED from that span plus the second one, which is why the same
+%   sentence correctly carries a different tier here: the tier describes the
+%   claim, not the sentence.
+%
+%   A line-based `grep` for the second span returns ZERO corpus-wide, because
+%   the comment block above WRAPS and the sentence spans two lines. The zero
+%   is the instrument (#14752 again); collapsing whitespace finds it once.
+%   Controls for that scan: a known machine value reports in both buckets, a
+%   comment-only measurement note reports in comments and zero in values, and
+%   a nonsense needle reports zero in both.
 % (See ../README.md.)
 % ============================================================================
 
@@ -117,8 +146,31 @@ table reference_line {
 
     row (equator, zero_degrees_latitude)              % NOAA "What is latitude?" (latitude.html)
     row (prime_meridian, zero_degrees_longitude)      % NOAA "What is longitude?" (longitude.html)
-    row (tropic_of_cancer, northernmost_sun_overhead)     % NOAA NESDIS "What Is a Solstice?"
-    row (tropic_of_capricorn, southernmost_sun_overhead)  % NOAA NESDIS "What Is a Solstice?"
+    % RS-5e PER-ROW PROVENANCE (#14758). These two rows assert a SUPERLATIVE,
+    % and the table envelope below states nothing of the kind — it is about the
+    % equator. Until this change a recall of `tropic_of_cancer` shipped the
+    % equator sentence as its warrant. Each row now carries the two spans that
+    % actually ground it, and `trust inferred` because the superlative is
+    % REASONED from them, not read off either one.
+    %
+    % `locator` is restated deliberately. RS-5e inherits field by field, and
+    % this table's envelope locator is the oceanservice latitude.html page —
+    % a DIFFERENT page from the NESDIS span below. Omitting it would ship a
+    % NESDIS sentence under a latitude.html address, with exit 0 and no
+    % diagnostic. (`air-quality-index.adj` can omit it because all six of its
+    % rows come from the one AirNow page.)
+    row (tropic_of_cancer, northernmost_sun_overhead) {
+        source "One in the Northern Hemisphere called the Tropic of Cancer at +23.5° latitude and one in the Southern Hemisphere called the Tropic of Capricorn at − 23.5° latitude."
+        locator "https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice"
+        trust inferred
+        cites "Between the two tropics zones, which includes the equator, the sun is directly overhead twice per year. Outside the tropic zones, whether to the south or north, the sun is never directly overhead." locator "https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice"
+    }
+    row (tropic_of_capricorn, southernmost_sun_overhead) {
+        source "One in the Northern Hemisphere called the Tropic of Cancer at +23.5° latitude and one in the Southern Hemisphere called the Tropic of Capricorn at − 23.5° latitude."
+        locator "https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice"
+        trust inferred
+        cites "Between the two tropics zones, which includes the equator, the sun is directly overhead twice per year. Outside the tropic zones, whether to the south or north, the sun is never directly overhead." locator "https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice"
+    }
     row (arctic_circle, around_north_pole)            % NOAA NESDIS "What Is a Solstice?"
     row (antarctic_circle, around_south_pole)         % NOAA NESDIS "What Is a Solstice?"
 
