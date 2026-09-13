@@ -1,6 +1,6 @@
 # LANG VM feature and backend coverage
 
-Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING, then pointer/overflow). This is an inventory of the implemented
+Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING, then pointer/overflow, then the INSPECT REPLACING tail). This is an inventory of the implemented
 frontend families and their executable proof boundaries, not a claim that the
 historical languages or every backend are complete. Follow-up IDs live in the
 [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md).
@@ -31,11 +31,11 @@ refusal also does not imply the complete driver refuses that feature.
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
 | FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
-| COBOL-60 | 58 | 454 | 48 of those cells are BEAM (VM-040 COBOL BEAM slices); much larger frontend JIT/oracle suite |
+| COBOL-60 | 58 | 458 | 52 of those cells are BEAM (VM-040 COBOL BEAM slices); much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1583
+The normal non-ALGOL capstone therefore declares 210 programs and 1587
 declared cells (sum of the non-ALGOL rows above). At VM-061 this matched a
 fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
 exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
@@ -72,8 +72,16 @@ COBOL BEAM row to reach `emit_string_pointer_overlay`, the shared `STRING`/
 two `str_concat` calls with every bound computed entirely at run time from a
 live `PIC 9` pointer item — so a fresh run on a host with `erl` now reports
 1373 exercised + 210 skipped = 1583; no `iir-to-beam` defect was found, all
-eight programs passed on the first real-`erl` probe. All thirty-five new
-cells since VM-061 are exercised, not skipped, since `erl`
+eight programs passed on the first real-`erl` probe; this slice (VM-040
+COBOL BEAM INSPECT REPLACING tail) added the last four base INSPECT
+TALLYING/REPLACING rows to COBOL-60 (454 → 458 declared) — REPLACING LEADING,
+REPLACING CHARACTERS, REPLACING with no rechaining and REPLACING first-match,
+all compiling through `emit_inspect_replacing`/`emit_inspect_replacing_multi`,
+whose op vocabulary was already fully proven by the immediately prior INSPECT
+TALLYING/REPLACING and pointer/overflow slices — so a fresh run on a host
+with `erl` now reports 1377 exercised + 210 skipped = 1587; no `iir-to-beam`
+defect was found, all four programs passed on the first real-`erl` probe.
+All thirty-nine new cells since VM-061 are exercised, not skipped, since `erl`
 was present when they were promoted. The "Declared cells" column counts every backend a
 row proves, Beam included — the convention Nib, Oct, FLOW-MATIC and
 COBOL-60's numbers already used. Twig was the one holdout at VM-061: its old

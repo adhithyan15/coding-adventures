@@ -849,3 +849,32 @@ now declare BEAM, for 454 cells. Remaining COBOL features (four more base
 INSPECT TALLYING/REPLACING rows, the VM-047c BEFORE/AFTER region forms, and
 the VM-057 STRING self-move edge case) still require individual execution
 proofs.
+
+### COBOL INSPECT REPLACING tail on BEAM (VM-040)
+
+Re-verified from source with a brace-balanced scan (matching each `Prog {`
+to its closing `}`, not bounding by the next line-leading `lang:` field,
+which under-scans once a later language's rows use a single-line literal)
+that 48 of 58 `Cobol60` rows declare `Beam` and the remaining 10 split
+exactly as documented: 4 more base `INSPECT REPLACING` rows (indices 48-51),
+1 VM-057 self-move row (52), and 5 VM-047c `BEFORE`/`AFTER` region rows
+(53-57). Read `cobol-iir-compiler`'s `emit_inspect_replacing`/
+`emit_inspect_replacing_characters`/`emit_inspect_replacing_multi` end to end
+before probing: all three compile through `str_index`/`cmp_eq`/`const`/
+`cmp_ge`/`cmp_lt`/`and`/`or`/`jmp_if_false`/`jmp`/`label`/`str_slice`/
+`str_concat`/`str_const` — a strict subset of the ops the immediately prior
+INSPECT TALLYING/REPLACING and pointer/overflow slices already proved on
+BEAM. `REPLACING LEADING`'s active-run decay mirrors `TALLYING FOR
+LEADING`'s; `REPLACING CHARACTERS`'s unconditional fill is a strict
+simplification of `REPLACING ALL`'s region-gated append; the multi-item
+first-match/no-rechaining chain always reads `S[j]` from the original source
+register, never the in-progress `result`, so no op-level novelty was found.
+
+Four more COBOL programs execute on real BEAM: `REPLACING LEADING`,
+`REPLACING CHARACTERS`, `REPLACING` with no rechaining
+(`ALL "a" BY "b" ALL "b" BY "z"`), and `REPLACING` first-match
+(`ALL "a" BY "x" ALL "a" BY "y"`) — all passed real `erl` execution on the
+first probe; no `iir-to-beam` defect was found and no production code
+changed. Fifty-two of 58 COBOL rows now declare BEAM, for 458 cells. Only
+the VM-047c BEFORE/AFTER region forms (5 rows) and the VM-057 STRING
+self-move edge case (1 row) remain undeclared.

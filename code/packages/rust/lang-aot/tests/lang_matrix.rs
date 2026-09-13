@@ -6504,7 +6504,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY S.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("**X00\n**X**\nX0000"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // INSPECT replace characters padding: observe the rebuilt source text.
@@ -6527,7 +6527,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" S \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[AB   ]\n[*****]\n[QQQQQ]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // INSPECT replace no rechaining: observe the rebuilt source text.
@@ -6545,7 +6545,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY S.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("bzQbz"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // INSPECT replace first match: observe the rebuilt source text.
@@ -6563,7 +6563,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY S.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("xQxxx"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-057: STRING with a single sending field that is also the INTO receiver
@@ -9341,6 +9341,13 @@ fn matrix_every_proven_cell_agrees() {
 /// candidate to expose a real `iir-to-beam` defect via
 /// `emit_string_pointer_overlay`'s chained `str_slice`/`str_concat` calls
 /// over fully run-time-computed bounds; all 8 passed clean on real `erl`.
+/// The base INSPECT REPLACING tail (454 → 458) promoted the last four base
+/// INSPECT TALLYING/REPLACING rows (REPLACING LEADING, REPLACING CHARACTERS,
+/// REPLACING with no rechaining, REPLACING first-match) — a clean pass, no
+/// `iir-to-beam` defect, since `emit_inspect_replacing`/
+/// `emit_inspect_replacing_multi`'s op vocabulary was already fully proven by
+/// the immediately prior INSPECT TALLYING/REPLACING and pointer/overflow
+/// slices.
 #[test]
 fn feature_coverage_doc_counts_match_programs_source() {
     fn rows_and_cells(lang: Language) -> (usize, usize) {
@@ -9359,7 +9366,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::DartmouthBasic, 51, 357),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
-        (Language::Cobol60, 58, 454),
+        (Language::Cobol60, 58, 458),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -15716,4 +15723,35 @@ fn portable_text_stdout_cobol_beam_pointer_overflow() {
     }
     assert_eq!(executed, 8);
     eprintln!("COBOL BEAM pointer/overflow: {executed} programs executed");
+}
+
+// VM-040: the last four base INSPECT REPLACING rows (indices 48-51 — the
+// remainder of the base INSPECT TALLYING/REPLACING family, following the
+// TALLYING FOR ALL/CHARACTERS/LEADING and REPLACING ALL rows already
+// promoted above). Covers REPLACING LEADING (the active-run decay flag),
+// REPLACING CHARACTERS (the unconditional-fill fast path, no `S[j]`-vs-search
+// compare), REPLACING with no rechaining (`ALL "a" BY "b" ALL "b" BY "z"`
+// reading only the original source, never a just-produced byte), and
+// REPLACING first-match (`ALL "a" BY "x" ALL "a" BY "y"`, the first eligible
+// item wins and later items never re-fire for the same position). All four
+// compile through `emit_inspect_replacing`/`emit_inspect_replacing_multi`,
+// whose op vocabulary (`str_index`/`cmp_eq`/`const`/`and`/`or`/`jmp_if_false`/
+// `jmp`/`label`/`str_slice`/`str_concat`/`str_const`) is a strict subset of
+// what the immediately prior INSPECT TALLYING/REPLACING and pointer/overflow
+// slices already proved on BEAM — no novel op combination, per this
+// backlog's own risk assessment.
+#[test]
+fn portable_text_stdout_cobol_beam_inspect_replacing_tail() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM INSPECT REPLACING tail: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(48).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM INSPECT REPLACING tail: {executed} programs executed");
 }

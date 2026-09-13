@@ -1,5 +1,63 @@
 # Changelog — `lang-aot`
 
+## 0.336.0 — 2026-09-13 — VM-040 COBOL BEAM INSPECT REPLACING tail
+
+`git fetch origin && git merge origin/main` fast-forwarded cleanly from
+`8f1c60fc1b` to `fa55e81d94` (one unrelated ALGOL commit); `gh pr list
+--state open` showed no PR touching any `lang-*`/`iir-*`/`cobol-*`/BEAM path
+or this backlog, so nothing was in flight to coordinate with.
+
+Re-derived the prior slice's premise from source with a brace-balanced scan
+(matching each `Prog {` to its closing `}` rather than bounding by the next
+`lang:` field line, which under-scans when a later language's `Prog` entries
+use a single-line literal with no line-leading `lang:` token): 58
+`Language::Cobol60` rows, 48 declaring `Beam`, 10 not — confirming the prior
+slice's own count exactly. The 10 undeclared rows split as documented: 4 more
+base `INSPECT REPLACING` rows (indices 48-51), 1 VM-057 self-move row (52),
+and 5 VM-047c `BEFORE`/`AFTER` region rows (53-57). `VM-041`/`VM-060b`/
+`VM-058` still have no scoped design progress beyond their ranked-backlog
+one-liners.
+
+Read `cobol-iir-compiler::emit_inspect_replacing`/
+`emit_inspect_replacing_characters`/`emit_inspect_replacing_multi` end to end
+before writing any test. All three compile through `str_index`/`cmp_eq`/
+`const`/`cmp_ge`/`cmp_lt`/`and`/`or`/`jmp_if_false`/`jmp`/`label`/`str_slice`/
+`str_concat`/`str_const` — a strict subset of the op vocabulary the
+immediately prior INSPECT TALLYING/REPLACING and pointer/overflow slices
+already proved on BEAM. No novel op combination: `REPLACING LEADING`'s
+active-run decay flag mirrors `TALLYING FOR LEADING`'s; `REPLACING
+CHARACTERS`'s unconditional fill is a strict simplification of `REPLACING
+ALL`'s region-gated append (no `S[j]`-vs-search compare at all); the
+multi-item first-match/no-rechaining chain always reads `S[j]` from the
+original source register, never from the in-progress `result`, so a produced
+character is never re-examined by a later item in the same chain.
+
+Added `Beam` to the four rows' `backends` arrays (`.skip(48).take(4)`) and
+`portable_text_stdout_cobol_beam_inspect_replacing_tail`. All four programs
+passed on real Erlang on the first probe — a clean-pass outcome, not a
+repair, consistent with the op-level audit. `iir-to-beam`'s own package suite
+is unaffected (still 107 tests: 22 unit, 80 integration, 5 doc, all passing)
+since no `iir-to-beam` source file changed. All 20 BEAM `lang_matrix` tests
+pass together. Focused Clippy on `lang-aot` and `iir-to-beam` with all
+targets and warnings denied is clean. Fifty-two of 58 COBOL rows now declare
+BEAM (458 total declared cells, up from 454).
+`feature_coverage_doc_counts_match_programs_source` was confirmed to actually
+exercise the check (it failed with the expected 458/454 mismatch against the
+pre-fix doc before the doc was corrected), then updated (COBOL-60 tuple
+`(58, 454)` → `(58, 458)`) and `LANG-VM-FEATURE-COVERAGE.md`'s COBOL-60 row
+and grand-total prose (1583 → 1587 declared cells) to match. The full
+`non_algol_matrix_every_proven_cell_agrees` capstone confirmed the corrected
+total against a live run.
+
+Only 6 undeclared COBOL BEAM rows remain (5 VM-047c BEFORE/AFTER region rows,
+1 VM-057 self-move); the base INSPECT TALLYING/REPLACING family is now fully
+complete. Reprioritize the remaining rows against VM-041 (Twig dynamic-string
+isolation) and VM-060b (host input design) after this merges — with the
+COBOL BEAM proof-promotion backlog down to two small, already-audited
+families, the next slice should give a real answer on whether continuing to
+slice COBOL BEAM rows still outranks scoping VM-041/VM-060b's open-ended
+design work.
+
 ## 0.335.0 — 2026-09-13 — ALGOL dependent control-exit snapshots
 
 The seven-backend ALGOL matrix now proves that an exactly-one-pass
