@@ -242,17 +242,18 @@ the same string, integer, or boolean output paths as typed procedures. Using a
 proper procedure in value position is a clean type error because it has no
 return value.
 
-Statically bounded integer- or real-controlled `while` elements can retain the
+Statically bounded integer- or real-controlled `while` and finite `step`/`until`
+elements can retain the
 final snapshot of one simple local integer, real, or boolean recurrence. The
 analysis must prove a terminating false predicate within 4,096 evaluations and
-rejects dependency writes, compound bodies, globals, arrays, by-name targets,
-overflow, and non-finite numeric results.
+rejects dependency writes, nontrivial compound bodies, globals, arrays, by-name
+targets, overflow, and non-finite numeric results.
 Boolean snapshot evaluation distinguishes exact bare variables from unary
 wrappers, so direct `not` recurrences preserve their negated value rather than
 being treated as identity assignments.
-The recurrence assignment may be wrapped in a one-statement compound body;
-labels, conditionals, declarations, and additional statements remain outside
-this bounded analysis.
+The recurrence assignment in either loop form may be wrapped in a one-statement
+compound body; labels, conditionals, declarations, and additional statements
+remain outside this bounded analysis.
 
 Switch-list elements may use every supported designational expression: a
 conditional element selects its branch when `goto s[i]` runs, and a nested

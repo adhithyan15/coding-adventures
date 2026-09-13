@@ -978,7 +978,9 @@ backend immediately) come before the enabler-dependent items.
   assignment may instead reference the control or its own prior snapshot:
   bounded analysis evaluates it once per iteration and retains its exact
   integer, finite real, or boolean result. Integer and real recurrence
-  simulation is capped at 4,096 passes. Larger loops, compound bodies, integer
+  simulation is capped at 4,096 passes. That recurrence assignment may unwrap
+  one unlabeled assignment from a single-statement compound body. Larger loops,
+  labels, conditionals, declarations, additional statements, integer
   overflow, non-finite results, zero steps, arrays, globals, by-name targets,
   tracking barriers, dynamic writes, and other control-dependent
   multi-iteration bodies remain conservative.
