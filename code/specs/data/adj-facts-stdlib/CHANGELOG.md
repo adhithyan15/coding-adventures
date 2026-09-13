@@ -54,9 +54,20 @@ landed and why, not a semver-tracked API.
 
   ### Not folded in, deliberately
 
-  `nutrition/food-groups.adj` (23 rows, and **all 23** unmentioned by its envelope — the worst
-  exemplar-span table in the stdlib) is blocked on MyPlate: its citations cannot currently be read at
-  the addresses they name, so the #14986 conversion cannot be done honestly. The two DEAD citations
+  `nutrition/food-groups.adj` (23 rows, and **all 23** unmentioned by its envelope) is blocked on
+  MyPlate: its citations cannot currently be read at the addresses they name, so the #14986
+  conversion cannot be done honestly.
+
+  A draft of this entry called it "the worst exemplar-span table in the stdlib". It is not, and
+  finding out why exposed a bug in **my own audit instrument**: it dropped subject tokens shorter
+  than four characters and then skipped any row left with no tokens, so every row whose subject is a
+  short word — `dog`, `cat`, `fox`, `owl`, `pig` — could never be counted as unmentioned. It was
+  reporting rows as grounded by spans containing no trace of them. Corrected, the census is **1186 of
+  2105 rows (56.3%)** with an unmentioned subject, not 803 (38.1%), and **69 tables** where every
+  single row is unmentioned, not 39. The largest are `language/word-families.adj` (31/31),
+  `biology/animal-babies.adj` (24/24), then `language/idiom-meaning.adj` and `food-groups` tied at
+  23/23. #15139 carries the correction; the audit numbers quoted in the table above are locator
+  verdicts and are unaffected. The two DEAD citations
   (`optics/rainbow-colors.adj`, `physics/circuit-parts.adj`) each need a replacement source, and both
   are *also* exemplar-span tables. Probing so far is recorded on #15139 — `science.nasa.gov`'s visible
   light page is live but orders colors by wavelength, which is the reverse of that table's

@@ -93,9 +93,14 @@ fn an_artesian_well_reaches_a_confined_aquifer() {
         ),
         "carries the grounding caption verbatim: {out}"
     );
+    // THE LOCATOR BOUND TO THE TIER, not two loose substrings. These two
+    // halves drifted apart once already: with `cites` corroborations
+    // carrying the same url, reverting ONLY the envelope locator left
+    // this assertion green (#15139). A corroboration serializes with
+    // `locator` as its last key, so pairing it with `trust` can only
+    // match the row's own warrant.
     assert!(
-        out.contains("usgs.gov/water-science-school/science/aquifers-and-groundwater")
-            && out.contains("\"trust\":\"authoritative\""),
+        out.contains("\"locator\":\"https://www.usgs.gov/water-science-school/science/aquifers-and-groundwater\",\"trust\":\"authoritative\""),
         "carries the USGS citation: {out}"
     );
 }
