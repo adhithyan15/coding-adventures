@@ -33,13 +33,22 @@
       <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicAnalysisLabel}}</span>
       <div style="display: flex; flex-direction: row; gap: 6px">
         <!-- mosaic-for each="schematicAnalysisControls" as="analysis" index="analysis-index" -->
-          <!-- emit "onSelectSchematicAnalysis" dropped: HTML is static -->
-          <button data-on-click="onSelectSchematicAnalysis" style="background: #f5f3ff; color: #5b21b6; border-width: 1px; border-color: #c4b5fd; border-radius: 3px; padding: 6px">{{analysis}}</button>
+          <!-- emit "onAddSchematicAnalysis" dropped: HTML is static -->
+          <button data-on-click="onAddSchematicAnalysis" style="background: #f5f3ff; color: #5b21b6; border-width: 1px; border-color: #c4b5fd; border-radius: 3px; padding: 6px">{{analysis}}</button>
+        <!-- /mosaic-for -->
+      </div>
+      <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicAnalysisCardLabel}}</span>
+      <div style="display: flex; flex-direction: row; gap: 6px">
+        <!-- mosaic-for each="schematicAnalysisCardRows" as="card" index="card-index" -->
+          <!-- emit "onSelectSchematicAnalysisCard" dropped: HTML is static -->
+          <button data-on-click="onSelectSchematicAnalysisCard" style="background: #eef2ff; color: #4338ca; border-width: 1px; border-color: #a5b4fc; border-radius: 3px; padding: 6px">{{card [ 0 ]}}</button>
         <!-- /mosaic-for -->
       </div>
       <span style="color: #6d28d9; font-weight: bold">{{selectedSchematicAnalysisLabel}}</span>
       <div style="display: flex; flex-direction: column; gap: 4px">
         <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicAnalysisConfigurationLabel}}</span>
+        <!-- emit "onRemoveSchematicAnalysisCard" dropped: HTML is static -->
+        <button data-on-click="onRemoveSchematicAnalysisCard" style="background: #fff1f2; color: #9f1239; border-width: 1px; border-color: #fda4af; border-radius: 3px; padding: 6px">{{removeSchematicAnalysisCardLabel}}</button>
         <span style="font-size: 12px; color: #475569">{{schematicAnalysisSourceLabel}}</span>
         <div style="display: flex; flex-direction: row; gap: 6px">
           <!-- mosaic-for each="schematicAnalysisSourceOptions" as="source" index="source-index" -->

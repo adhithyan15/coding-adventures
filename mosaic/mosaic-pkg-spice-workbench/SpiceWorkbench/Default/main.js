@@ -13,12 +13,15 @@ const fallbackProps = {
   "netlistPlaceholder": "Sample NetlistPlaceholder",
   "netlistText": "Sample NetlistText",
   "rawResultLabel": "Sample RawResultLabel",
+  "removeSchematicAnalysisCardLabel": "Sample RemoveSchematicAnalysisCardLabel",
   "resultColumns": [],
   "resultLabel": "Sample ResultLabel",
   "resultRows": [],
   "resultText": "Sample ResultText",
   "routeSchematicLabel": "Sample RouteSchematicLabel",
   "runLabel": "Sample RunLabel",
+  "schematicAnalysisCardLabel": "Sample SchematicAnalysisCardLabel",
+  "schematicAnalysisCardRows": [],
   "schematicAnalysisConfigurationLabel": "Sample SchematicAnalysisConfigurationLabel",
   "schematicAnalysisControls": [],
   "schematicAnalysisLabel": "Sample SchematicAnalysisLabel",
@@ -60,6 +63,12 @@ const fallbackProps = {
   "workbenchTitle": "Sample WorkbenchTitle"
 };
 const emitPayloads = {
+  "onAddSchematicAnalysis": [
+    {
+      "name": "analysis",
+      "type": "text"
+    }
+  ],
   "onInspect": [],
   "onNetlistChange": [
     {
@@ -73,6 +82,7 @@ const emitPayloads = {
       "type": "text"
     }
   ],
+  "onRemoveSchematicAnalysisCard": [],
   "onRouteToSchematicComponent": [
     {
       "name": "reference",
@@ -114,6 +124,12 @@ const emitPayloads = {
     {
       "name": "analysis",
       "type": "text"
+    }
+  ],
+  "onSelectSchematicAnalysisCard": [
+    {
+      "name": "index",
+      "type": "number"
     }
   ],
   "onSelectSchematicAnalysisSource": [
