@@ -5,6 +5,53 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — a border has edges (UI78, #14835)
+
+`border-{top,right,bottom,left}-{width,color}` now lowers. **92 declarations
+across 12 stylesheets** were being discarded; Trestle alone authors 34 of them.
+
+`Modifier.border` draws all four edges and has no per-edge form, so each edge is
+**drawn** rather than configured: `Modifier.drawBehind { drawRect(..) }`, one
+rect per authored edge, emitted after `.border` and before `.padding` so the
+line sits on the border box where CSS puts it.
+
+`drawRect` rather than `drawLine`: a stroked line is centred on its path, so a
+1px rule would straddle the edge and land half outside the box. Not a sibling
+`HorizontalDivider` either — a divider is a layout child and would join the
+parent's arrangement, moving the content. A border must not move anything.
+
+#### Measured by rendering, not by grepping the Kotlin
+
+A `drawBehind` that compiles and draws nothing is exactly the failure this repo
+keeps finding, so the four edges were rendered with four distinct colours and
+the pixels sampled:
+
+| edge | authored | measured |
+| --- | --- | --- |
+| top | 2px | `y=0..1` — h=2, spanning the width |
+| right | 3px | `x=197..199` — w=3, spanning the height |
+| bottom | 4px | `y=28..31` — h=4 |
+| left | 5px | `x=0..4` — w=5 |
+
+Each on its own edge, each exactly its authored width. The control — a part
+with no authored edge — emits no `drawBehind` at all and renders none of those
+colours.
+
+#### What is reported rather than drawn
+
+`border-<edge>-style` is deliberately left unhandled so it reaches the drop
+reporter, and its reason is now specific: the edge *is* drawn from its width
+and colour, and only the dash pattern is lost. The generic "no lowering yet"
+text would have told a reader the whole declaration vanished, which stopped
+being true here.
+
+`border-top-left-radius` is a corner, not an edge. Its name splits into
+`top-left` + `radius` — exactly the shape that fools a loose parse — and it is
+asserted to stay out of the edge matcher.
+
+Trestle's Compose `styleDegradations` no longer lists any per-edge `width` or
+`color`; only the 17 `-style` halves and the two corner radii remain.
+
 ### Added — `HostScroll` honours its axis; the crash it was designed around is not real (UI61, #14854)
 
 Compose composes both axes by plain modifier chaining, so `both` needs no

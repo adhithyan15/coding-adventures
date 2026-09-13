@@ -72,10 +72,16 @@ changing spacing. A border must not move anything.
 
 ## 5. Scope of the first change
 
-Compose only, all four edges, with Engram's deck list as the first consumer.
-The remaining four backends are follow-up work and are named as such rather
-than left looking finished — this spec is the shared definition they will
-implement against.
+Compose only, all four edges. The remaining four backends are follow-up work
+and are named as such rather than left looking finished — this spec is the
+shared definition they will implement against.
+
+**Correction on the consumer.** #14835 cites Engram's `deck-list-entry`, and
+this spec repeated it. Engram no longer authors that part; it moved into
+`mosaic-pkg-deck-stats`. The real first consumer is **Trestle**, which authors
+34 per-edge declarations, and the property is far more widely used than the
+issue suggests: **92 declarations across 12 stylesheets**, including
+`mosaic-pkg-calendar` (15) and Venture's chrome.
 
 ## 6. Acceptance
 
@@ -88,8 +94,7 @@ implement against.
 - A part with no authored border draws no line — the control, rendered in the
   same frame as the positive case.
 - An authored `border-bottom-style: dashed` is reported, not drawn solid.
-- Engram's deck list shows a divider between rows, sampled from the PNG rather
-  than looked at.
-- The three `border-bottom-*` properties disappear from Engram's Compose
-  `styleDegradations`, and the count of remaining drops is asserted rather than
-  the absence of these three alone.
+- The per-edge `width`/`color` properties disappear from the consumer's Compose
+  `styleDegradations`, with the remaining drops enumerated rather than the
+  absence of a few asserted. On Trestle: every per-edge `width` and `color` is
+  gone; the 17 `-style` halves and two corner radii remain, correctly.
