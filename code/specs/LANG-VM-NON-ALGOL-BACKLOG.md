@@ -1,12 +1,198 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-11
+Status date: 2026-09-12
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
 `LANG-FULL-IMPLEMENTATION.md`; when the two disagree about landed behavior,
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
+
+## VM-040 COBOL BEAM STRING SIZE/delimiter probe (selected after #14803 merged)
+
+`git fetch origin && git merge origin/main` reported "Already up to date" —
+this worktree already sat at `4bb9aecd21` (PR #14803, VM-040 COBOL BEAM
+reference-modification MOVE/trap probe) with zero commits behind
+`origin/main` (`git rev-list --count 4bb9aecd21..origin/main` = 15, every one
+of them an ALGOL `feat(algol): unroll ... powers` commit — the separately-
+owned campaign's own work, confirmed by path via `git log --oneline
+4bb9aecd21..origin/main -- code/packages/rust/iir-to-beam code/packages/rust/ir-to-beam
+code/packages/rust/cobol-iir-compiler code/packages/rust/cobol-runtime
+code/packages/rust/lang-aot/tests/lang_matrix.rs code/specs/LANG-VM-NON-ALGOL-BACKLOG.md
+code/specs/LANG-VM-FEATURE-COVERAGE.md` returning nothing). `gh pr list
+--state open` showed six open PRs: a Compose table-wheel feature, three
+npm/yarn dependabot bumps, one GitHub Actions dependabot bump, and one stale
+`paint-vm-canvas` dependabot bump from July — none touching this backlog or
+any `lang-*`/`iir-*`/`cobol-*`/BEAM path, so nothing was in flight to
+coordinate with.
+
+PR #14803's own trailing note asked for a real reprioritization of the ~30
+undeclared COBOL BEAM rows against VM-041 (Twig dynamic-string isolation),
+VM-060b (host input design) and VM-058 (INSPECT BEFORE/AFTER intersection) —
+the same comparison run eight times now. Re-checked against current source
+rather than repeated by habit:
+
+**Did anything change the picture since #14803 merged?** The path-scoped
+`git log` above returned nothing for any LANG-VM-relevant path; every commit
+since was ALGOL's own `unroll ... powers` work (separately owned, untouched
+here). Grepping this file for `VM-041` and `VM-060b` still shows no dedicated
+scoped design entry for either beyond the same one-liner in the "Ranked
+backlog" table — nobody picked up either design task in the meantime.
+
+**Is the "~30 undeclared rows" figure still accurate?** Re-verified directly
+against source with a brace-balanced parse restricted to `PROGRAMS: &[Prog] =
+&[..]` (found via `];` at column 0, since Brainfuck source strings contain
+literal `[`/`]` characters that break naive whole-file bracket-balancing).
+The array itself grew from 455 to 470 total entries since the last count —
+ALGOL's own `unroll ... powers` commits added 15 new ALGOL rows — but the
+non-ALGOL total held exactly at 210, confirming those additions never touched
+this backlog's scope. Of the 58 `Cobol60` rows, exactly 28 declare `Beam`
+(matching every number pinned since the reference-modification MOVE/trap
+slice) and exactly 30 do not — the "~30" estimate was, again, exactly right.
+
+**Conclusion:** nothing outranks continuing the COBOL BEAM rows. Rungs 1–2
+are clear (every trailing validation paragraph reports positive sentinels;
+VM-024/VM-032 keep the matrix and Windows execution in normal CI). Rung 3
+found nothing stale this round. Between the rung-4 COBOL BEAM rows (bounded,
+proof-promotion, an established `.skip(N).take(4)` pattern with eight
+successful prior slices) and rung-5 VM-041/VM-060b (still genuinely
+open-ended design work with no scoping progress since last checked), COBOL
+BEAM rows win again.
+
+**Sweep for other `iir-to-beam` ops with the same "relies on incidental host
+leniency" shape as VM-D032's `str_slice` gap:** the prompt driving this
+session specifically asked whether any other `str_*`/`array_*` lowering
+still relies on a host function's incidental leniency instead of its own
+explicit documented contract, the way `str_slice` relied on `lists:sublist`'s
+silent truncation before VM-D032's fix. Read every `str_*`/`array_*`/
+`*_byte` lowering arm in `iir-to-beam/src/lower.rs`:
+
+- `array_get`/`array_set`/`load_byte`/`store_byte` lower to
+  `atomics:get/3`/`atomics:put/3`. `atomics` enforces a *strict* `1..size`
+  index range and raises `badarg` outside it — stricter than, not more
+  lenient than, the documented contract (`vm-core::dispatch::handle_array_get`
+  et al.: trap on out-of-range or negative index). This is the OPPOSITE
+  direction from `str_slice`'s gap (host too permissive); here the host's own
+  enforcement already matches or exceeds the contract, so no explicit guard
+  is missing. VM-042's prior real-`erl` corpus proof (three Brainfuck rows)
+  already exercises this path without incident.
+- `add`/`sub`/`mul`/`div`/`mod` lower to `erlang:+//-///div/rem`. Erlang's
+  own `div`/`rem` raise `badarith` on division by zero — a real, documented
+  trap, not incidental leniency — matching every other backend's div-by-zero
+  contract.
+- `field_load`/`field_store` (the LispyPair cons-cell substrate) validate
+  the field index (0=head, 1=tail) at BUILD/compile time
+  (`InvalidOperand` for any other literal index) — never a data-dependent
+  runtime bounds question, so there is no host leniency to inherit at all.
+- `str_len`/`str_index` did not exist in this backend before this slice (see
+  below) — added as part of this contract, with the exact same "does the
+  host's own failure mode match the contract" scrutiny `str_slice` got.
+
+No other concrete gap of VM-D032's shape was found. This is a negative
+result, not a new discovery — logged here rather than silently, per the
+prompt's own request, so the next slice does not have to redo this sweep
+from scratch.
+
+The next four rows in file order after the twenty-eight already declared
+(lines 5652, 5671, 5690, 5712, plus the four from the reference-modification
+MOVE/trap slice) are: three `STRING ... DELIMITED BY SIZE` rows (item
+padding/truncation into differently-sized receivers; a short-receiver
+truncate paired with an exact-fill receiver in the same program; a changed
+source re-read by a second `STRING` into the same receiver) and one
+`STRING ... DELIMITED BY ","` row (cutting each sender at its first
+delimiter, keeping an absent delimiter's field whole, preserving the
+receiver's tail). The three `SIZE`-delimited rows compile entirely through
+`str_concat`/`str_slice`/`const` — already proven by earlier COBOL BEAM
+slices, including the pointer/overflow overlay helper's reuse of the same
+three ops. The fourth row is the first COBOL BEAM row to reach a
+`DELIMITED BY delim` (non-`SIZE`) sending-field scan: `cobol-iir-compiler`'s
+`emit_prefix_before_delim` (shared by `STRING ... DELIMITED BY delim` and
+`UNSTRING`) scans a field character-by-character with `str_len`/`str_index`/
+`str_slice` — and `str_len`/`str_index` had no BEAM lowering at all before
+this slice (confirmed: `grep` for either name in `iir-to-beam/src` returned
+nothing). Run this slice (`.skip(28).take(4)`) on real Erlang, matching the
+established discipline: probe before declaring, commit a bounded contract
+for any newly exposed gap, promote only executed cells. Two `UNSTRING` rows
+and one more `STRING ... DELIMITED BY delim` row immediately follow in file
+order and share the identical `str_len`/`str_index` dependency; they are left
+for the next slice rather than folded in here, keeping this one bounded to
+exactly four rows like every prior slice.
+
+### VM-040 COBOL BEAM `str_len`/`str_index` contract
+
+Probing the fourth row before declaring it found — as expected from the
+`grep` above, not as a surprise — that `iir-to-beam` has no lowering for
+`str_len` or `str_index` at all: `validate_for_beam` does not reject either
+(neither is in `UNSUPPORTED_OPS`, and neither carries the `"str"` type_hint
+the ASCII-string-subset check restricts, since both produce an `i64` result),
+so a module using them passes validation and then fails cleanly at
+`lower_iir_to_beam` with the crate's own exhaustive-match fallback
+(`UnsupportedOp`, naming the op) — never silently.
+
+Add both, reusing already-established patterns rather than inventing new
+ones:
+
+- `str_len` lowers to `erlang:length/1` via `gc_bif1` — the exact same
+  recognized-guard-BIF pattern `neg`/`not` and `str_slice`'s own bounds check
+  already use, and the same `import_length` `str_slice` already registered.
+  No bounds concern: length has no failure mode.
+- `str_index` lowers `idx` to `lists:nth(idx + 1, source)` via `call_ext`
+  (new `lists:nth/2` import, staged through scratch registers above
+  `next_reg` before the call, mirroring `load_byte`/`array_get`'s existing
+  parallel-move-hazard discipline). Checked against `str_index`'s documented
+  contract (`vm-core::dispatch::handle_str_index`: trap when `idx < 0 ||
+  idx >= length(source)`) BEFORE writing the lowering, the same way
+  `str_slice`'s gap was found: `lists:nth(N, List)`'s own two clauses
+  (`nth(1, [H|_]) -> H;` and `nth(N, [_|T]) when N > 1 -> nth(N-1, T)`) have
+  no case for `N =< 0`, and recursing past the list's end always lands on
+  `nth(K, [])` for some `K >= 1`, which matches neither clause either — both
+  out-of-range directions already raise `function_clause` on their own. So,
+  unlike `str_slice`, no separate explicit guard is needed: the 0-based →
+  1-based `+1` conversion IS what makes the host's native failure mode line
+  up exactly with the documented contract. Add both `str_len`/`str_index` to
+  the validator's `InvalidString` shape checks (dest + one/two string-typed
+  operands + integer result), matching `str_eq`/`str_cmp`'s existing pattern.
+
+Add four new real-`erl` regressions pinning this directly: `test_75` (basic
+`str_len` correctness), `test_76` (basic `str_index` correctness), and the
+same trap/boundary-control pair shape `test_73`/`test_74` established for
+`str_slice` — `test_77` (`idx == length(source)`, one past the last valid
+index, must trap) and `test_78` (`idx == length(source) - 1`, the last valid
+index, must NOT trap, proving the boundary is `idx >= len` not `idx > len`).
+
+### VM-040 COBOL BEAM STRING SIZE/delimiter validation
+
+All four selected programs passed on real Erlang on the first probe after
+adding `str_len`/`str_index`
+(`portable_text_stdout_cobol_beam_string_size_and_delimiter`). `iir-to-beam`'s
+package suite grew from 100 to 107 tests (22 unit — three new validator
+shape tests — 80 integration — four new real-`erl` regressions — 5 doc), all
+passing; focused Clippy on `lang-aot` and `iir-to-beam` with all targets and
+warnings denied is clean. All sixteen BEAM `lang_matrix` tests pass together
+(fifteen prior + the new one — Oct, Nib, Brainfuck, FLOW-MATIC and now
+thirty-two of 58 COBOL rows across eight probe batches, plus the immediate-
+arithmetic/comparison/`putchar`-state regressions and the Brainfuck
+frontend/backend refusal split), 14.30s. Thirty-two of 58 COBOL rows now
+declare BEAM (438 total declared cells, up from 434).
+`feature_coverage_doc_counts_match_programs_source` was confirmed to
+actually exercise the check by first running it against the pre-fix COBOL-60
+figure of 434, where it failed with the expected assertion message naming
+the 438/434 mismatch, before the doc was corrected to match. The full
+`non_algol_matrix_every_proven_cell_agrees` capstone passed: 210 programs,
+**1357** cells exercised (was 1353), 210 skipped (the same host-wide missing
+`ilasm` pattern every prior slice reports), zero failures, in 478.98s —
+confirming the doc's corrected grand total (1563 → 1567) against a live run
+rather than arithmetic alone.
+
+Reprioritize the remaining ~26 undeclared COBOL BEAM rows against VM-041
+(Twig dynamic-string isolation), VM-060b (host input design) and VM-058
+(INSPECT BEFORE/AFTER intersection) after this merges, following the same
+real policy comparison run above — re-verifying premises against source, not
+repeating prior conclusions by habit. The next four rows in file order (two
+`UNSTRING` rows and one more `STRING ... DELIMITED BY delim` row, all sharing
+this slice's `str_len`/`str_index` dependency, plus one more row past them)
+are the natural continuation and already have their BEAM lowering primitives
+in place.
 
 ## VM-040 COBOL BEAM reference-modification MOVE/trap probe (selected after #14784 merged)
 
