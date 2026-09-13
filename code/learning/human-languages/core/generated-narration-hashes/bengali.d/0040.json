@@ -1,0 +1,17 @@
+{
+  "language": "bengali",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:a032e684938fdf6d",
+  "lessonIds": [
+    "BN-C40-words",
+    "BN-C40-lines",
+    "BN-C40-prothom-path"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch40.txt",
+  "json": "bengali/narration/ch40.json",
+  "textHash": "fnv1a64:70506afb4d8641b2",
+  "jsonHash": "fnv1a64:ce7b650a1b63c0fc",
+  "findings": []
+}
