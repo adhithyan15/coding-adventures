@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C59-place",
+    "language": "latin",
+    "chapter": 59,
+    "sequence": 1680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0db7fc90dc4b23e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C59-m-objects",
+    "language": "latin",
+    "chapter": 59,
+    "sequence": 1670,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:854f9a6067c134ea"
+  },
+  "findings": []
+}
