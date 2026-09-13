@@ -249,14 +249,35 @@ fun installEngramEffects(host: MosaicRuntimeHost) {
                     // dialog whose answer would be refused.
                     if (host.deferEffect(id)) {
                         SwingUtilities.invokeLater {
-                            val outcome = when (kind) {
-                                "importAnki" -> runImport(payload)
-                                "exportAnki" -> runExport(payload)
-                                else -> runConfirmDelete(payload)
+                            // Nothing may escape this block. The effect left the
+                            // runtime's fail sweep the moment `deferEffect`
+                            // returned true, so an exception that unwinds to the
+                            // EDT's uncaught handler does not degrade the
+                            // outcome -- it leaves the id awaited for the life of
+                            // the process, and the runtime gates snapshot AND
+                            // restore on nothing being pending.
+                            //
+                            // The `run*` functions guard their own file I/O, but
+                            // the dialogs are outside that: `JFileChooser`'s
+                            // constructor and `showSaveDialog`/`showOpenDialog`/
+                            // `showOptionDialog` all throw `HeadlessException` on
+                            // a display-less session, which is the one
+                            // environment where every one of these fails at once.
+                            //
+                            // `Exception`, not `Throwable`: an `Error` means the
+                            // JVM is already going down, and answering an effect
+                            // on the way is neither possible to rely on nor worth
+                            // swallowing an OOM for. Qt guards the same span with
+                            // `catch (...)` for the same reason.
+                            val outcome = try {
+                                when (kind) {
+                                    "importAnki" -> runImport(payload)
+                                    "exportAnki" -> runExport(payload)
+                                    else -> runConfirmDelete(payload)
+                                }
+                            } catch (error: Exception) {
+                                failedOutcome(error.message ?: "the dialog could not be opened")
                             }
-                            // Exactly one answer, on every path. The effect is
-                            // out of the fail sweep now, so not answering is
-                            // not a degraded outcome -- it is a permanent one.
                             host.completeEffect(id, outcome)
                         }
                     }

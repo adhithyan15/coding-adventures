@@ -2954,6 +2954,18 @@ fn source_tree_has_expected_shape() {
     // thread. `SwingUtilities.invokeLater` settles both.
     assert_contains(&compose_effects, "host.deferEffect(id)");
     assert_contains(&compose_effects, "SwingUtilities.invokeLater");
+    // Nothing may escape the deferred block. Once `deferEffect` succeeds the id
+    // is out of the runtime's fail sweep, so an exception reaching the EDT's
+    // uncaught handler leaves it awaited for the life of the process -- and the
+    // runtime gates snapshot and restore on nothing being pending. The dialogs
+    // throw `HeadlessException` outside the `run*` functions' own I/O guards,
+    // which is the gap this closes. Qt guards the same span with `catch (...)`.
+    //
+    // Pinned on the guard's own message, NOT on `catch (error: Exception)`:
+    // `runImport` and `runExport` each already contain that phrase, so matching
+    // it would pass with this guard deleted -- a test that cannot fail for the
+    // reason it was written.
+    assert_contains(&compose_effects, "the dialog could not be opened");
     // Absolute anchors. Java's `$` concedes a trailing LF, CRLF, CR, NEL and
     // U+2028 -- broader than PCRE2's LF-only default, which is the bug the Qt
     // handler had. `matches()` happens to reject them all today, so these are

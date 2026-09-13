@@ -24,6 +24,17 @@ UI thread. Answering off the EDT would be a cross-thread write into the
 composition even if the monitor were free. `SwingUtilities.invokeLater` settles
 both, and is where a Swing dialog has to run anyway.
 
+**Nothing escapes the deferred block.** The first draft guarded the file I/O
+inside each `run*` function and carried a comment claiming "exactly one answer,
+on every path" — which the code did not do. The dialogs sit outside those
+guards: `JFileChooser`'s constructor and all three `show*Dialog` calls throw
+`HeadlessException` on a display-less session. An exception there unwinds to the
+EDT's uncaught handler, `completeEffect` never runs, and because `deferEffect`
+has already taken the id out of the runtime's fail sweep, the effect stays
+awaited for the life of the process — which disables snapshot *and* restore, not
+just that one dialog. Caught in security review; Qt guards the same span with
+`catch (...)`.
+
 **Compose is the first host to answer `confirmDelete`**, with Cancel as the
 default button so that Return and Escape both decline — for an irreversible
 action, the safe answer should be the one a stray keypress gives.
