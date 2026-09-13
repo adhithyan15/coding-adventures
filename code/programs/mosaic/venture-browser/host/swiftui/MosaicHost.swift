@@ -57,6 +57,7 @@ private final class VentureNativeLibrary {
   let scrollMetrics: ScrollMetrics
   let scrollTo: ScrollTo
   let activateLink: ActivateLink
+  let takeEffect: ApplyProps
   let updateHover: UpdateHover
   let resize: Resize
   let render: Render
@@ -105,6 +106,7 @@ private final class VentureNativeLibrary {
       ),
       let scrollTo = symbol("venture_browser_macos_scroll_to", as: ScrollTo.self),
       let activateLink = symbol("venture_browser_macos_activate_link", as: ActivateLink.self),
+      let takeEffect = symbol("venture_browser_macos_take_effect", as: ApplyProps.self),
       let updateHover = symbol("venture_browser_macos_update_hover", as: UpdateHover.self),
       let resize = symbol("venture_browser_macos_resize", as: Resize.self),
       let render = symbol("venture_browser_macos_render", as: Render.self),
@@ -133,6 +135,7 @@ private final class VentureNativeLibrary {
     self.scrollMetrics = scrollMetrics
     self.scrollTo = scrollTo
     self.activateLink = activateLink
+    self.takeEffect = takeEffect
     self.updateHover = updateHover
     self.resize = resize
     self.render = render
@@ -179,6 +182,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var lastSurfaceRenderSize: CGSize?
   private var chromeEventCounts: [String: Int] = [:]
   private(set) var lastAuxiliaryDocument: NSDictionary?
+  private(set) var lastBrowsingContextRequest: NSDictionary?
+  private(set) var lastDownloadRequest: NSDictionary?
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -216,14 +221,24 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 
   private func consumeEffect(_ response: NSDictionary?) {
     guard let effect = response?["effect"] as? NSDictionary,
-      effect["type"] as? String == "open-auxiliary-document",
-      let document = effect["document"] as? NSDictionary
-    else { return }
-    lastAuxiliaryDocument = document
-    NotificationCenter.default.post(
-      name: Notification.Name("VentureOpenAuxiliaryDocument"),
-      object: self,
-      userInfo: ["document": document])
+      let type = effect["type"] as? String else { return }
+    if type == "open-auxiliary-document", let document = effect["document"] as? NSDictionary {
+      lastAuxiliaryDocument = document
+      NotificationCenter.default.post(
+        name: Notification.Name("VentureOpenAuxiliaryDocument"),
+        object: self,
+        userInfo: ["document": document])
+    } else if type == "open-browsing-context" {
+      lastBrowsingContextRequest = effect
+      NotificationCenter.default.post(
+        name: Notification.Name("VentureOpenBrowsingContext"), object: self,
+        userInfo: ["request": effect])
+    } else if type == "download" {
+      lastDownloadRequest = effect
+      NotificationCenter.default.post(
+        name: Notification.Name("VentureDownloadRequested"), object: self,
+        userInfo: ["request": effect])
+    }
   }
 
   func node(named name: NSString) -> NSObject? {
@@ -1432,6 +1447,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard let native, let browser else { return false }
     let changed = key.withCString { native.controlKey(browser, $0, shift ? 1 : 0) }
     guard changed != 0 else { return false }
+    consumeEffect(native.decode(native.takeEffect(browser)))
     contentView?.renderPage()
     return true
   }
@@ -1485,6 +1501,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard let native, let browser, native.activateLink(browser, point.x, point.y) != 0 else {
       return
     }
+    consumeEffect(native.decode(native.takeEffect(browser)))
     contentView?.renderPage()
     propsChangedHandler?()
     presentFilePickerIfRequested()
@@ -1712,6 +1729,7 @@ private final class VentureContentView: NSView {
     }
     let controlKey: String?
     switch event.keyCode {
+    case 48: controlKey = "tab"
     case 51: controlKey = "backspace"
     case 117: controlKey = "delete"
     case 123: controlKey = "arrow-left"

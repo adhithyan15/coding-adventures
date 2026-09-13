@@ -536,6 +536,127 @@ fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
 }
 
 #[test]
+fn browsing_context_effects_are_available_to_every_native_host() {
+    let page = venture_browser_visual_fixtures::load_browsing_context_page("http://venture.test")
+        .expect("load deterministic browsing-context fixture");
+    assert_eq!(page.paint.links.len(), 3);
+    assert_eq!(
+        page.paint.links[0].effective_target.as_deref(),
+        Some("reports")
+    );
+    assert_eq!(
+        page.paint.links[1].effective_target.as_deref(),
+        Some("_blank")
+    );
+    assert!(page.paint.links[1].rel_noreferrer);
+    assert_eq!(page.paint.links[2].download.as_deref(), Some("report.html"));
+
+    let hosts = [
+        (
+            "host/swiftui/MosaicHost.swift",
+            "venture_browser_macos_take_effect",
+        ),
+        (
+            "host/xaml/MosaicHost.cs",
+            "venture_browser_windows_take_effect",
+        ),
+        (
+            "host/flutter/mosaic_host.dart",
+            "venture_browser_flutter_take_effect",
+        ),
+        ("host/qt/MosaicHost.cpp", "take_effect"),
+        (
+            "host/compose/MosaicHost.kt",
+            "venture_browser_compose_take_effect",
+        ),
+    ];
+    for (path, symbol) in hosts {
+        let source = read_package_file(path);
+        assert!(source.contains(symbol), "{path} must consume {symbol}");
+        assert!(
+            source.contains("open-browsing-context"),
+            "{path} must forward browsing-context effects"
+        );
+        assert!(
+            source.contains("download"),
+            "{path} must forward download effects"
+        );
+    }
+
+    assert_eq!(
+        venture_browser_core::BrowserBrowsingContextTarget::from_effective_target(Some("_parent")),
+        venture_browser_core::BrowserBrowsingContextTarget::Parent
+    );
+    assert_eq!(
+        venture_browser_core::BrowserBrowsingContextTarget::from_effective_target(Some("reports")),
+        venture_browser_core::BrowserBrowsingContextTarget::Named("reports".into())
+    );
+}
+
+#[test]
+fn image_map_regions_are_available_to_every_native_host() {
+    let page = venture_browser_visual_fixtures::load_image_map_page("http://venture.test")
+        .expect("load deterministic client-side image-map fixture");
+    let regions = page
+        .paint
+        .links
+        .iter()
+        .filter(|link| link.image_map_order.is_some())
+        .collect::<Vec<_>>();
+    assert_eq!(regions.len(), 4);
+    assert!(regions.iter().all(|region| region.key.is_some()));
+    assert!(regions.iter().all(|region| region.shape.is_some()));
+    assert!(regions.iter().any(|region| {
+        region.accessible_name.as_deref() == Some("Studio")
+            && region.effective_target.as_deref() == Some("_blank")
+    }));
+
+    for path in [
+        "host/swiftui/MosaicHost.swift",
+        "host/xaml/MosaicHost.cs",
+        "host/flutter/mosaic_host.dart",
+        "host/qt/MosaicHost.cpp",
+        "host/compose/MosaicHost.kt",
+    ] {
+        let source = read_package_file(path);
+        assert!(
+            source.contains("activate_link"),
+            "{path} must forward pointer activation to shared image-map hit testing"
+        );
+    }
+}
+
+#[test]
+fn native_hosts_forward_tab_to_shared_page_focus_navigation() {
+    for (path, marker) in [
+        (
+            "host/swiftui/MosaicHost.swift",
+            "case 48: controlKey = \"tab\"",
+        ),
+        ("host/xaml/MosaicHost.cs", "VirtualKey.Tab => \"tab\""),
+        (
+            "host/flutter/mosaic_host.dart",
+            "LogicalKeyboardKey.tab => 'tab'",
+        ),
+        ("host/qt/MosaicHost.cpp", "Qt::Key_Tab"),
+        (
+            "host/compose/MosaicHost.kt",
+            "event.key == Key.Tab -> \"tab\"",
+        ),
+    ] {
+        let source = read_package_file(path);
+        assert!(
+            source.contains(marker),
+            "{path} must forward Tab without owning page focus order"
+        );
+    }
+    assert_eq!(
+        venture_browser_core::ControlKey::from_name("tab"),
+        Some(venture_browser_core::ControlKey::Tab)
+    );
+}
+
+#[test]
 fn form_group_fixture_keeps_label_and_disabledness_policy_host_neutral() {
     let page = venture_browser_visual_fixtures::load_form_groups_page("http://venture.test")
         .expect("load Venture's deterministic form-group fixture");

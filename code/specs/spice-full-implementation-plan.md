@@ -188,7 +188,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      input surface, and synchronization regressions. Keep analysis-card source
      selection and sweep-parameter editing for the following analysis
      configuration phase.
-   - **Mosaic schematic analysis configuration** (current phase): discovery after
+   - **Mosaic schematic analysis configuration** (completed in PR #14935): discovery after
      PR #14929: choosing an analysis still emits fixed `.dc V1 0 5 1`, `.ac dec
      10 10 10k`, or `.tran 1m 10m` cards, so useful sweep setup requires raw
      document injection. Persist a canonical DC source selection across every
@@ -197,6 +197,54 @@ model-card parameter, or a UI artifact is not a completion signal.
      events and Mosaic controls, and synchronize the exact resulting card into
      the existing Berkeley parser flow. Keep multi-card plans, nested sweeps,
      and vendor-analysis controls for later product phases.
+   - **Mosaic schematic multi-analysis plans** (completed in PR #14985): discovery after
+     PR #14935: a schematic can configure only one card although the frozen
+     parser/workbench plan supports ordered `.op`, `.dc`, `.ac`, and `.tran`
+     records. Replace the single selected analysis/configuration with an
+     ordered canonical card list, migrate legacy single-card state, offer typed
+     add/select/remove events plus selected-card configuration, lower directives
+     in list order, persist the selected card, and add Mosaic contract coverage.
+     Keep nested sweeps and vendor-analysis controls for later product phases.
+   - **Mosaic schematic document I/O** (completed in PR #15002): discovery after PR #14985:
+     hosts can inject raw JSON through `schematicLoad`, but users cannot move a
+     canonical capture into or out of the workbench. Use existing protocol-2
+     awaited `file.open` / `file.save` effects for one versioned schematic JSON
+     envelope, validate and migrate imports before an atomic replacement,
+     export deterministic canonical JSON, retain no file handles in snapshots,
+     and add adapter and Mosaic host-contract coverage. Keep vendor interchange,
+     raw-format import, and arbitrary netlist-to-schematic synthesis for later
+     product phases.
+   - **Mosaic schematic edit lifecycle** (completed in PR #15011): discovery after PR
+     #15002: the property inspector already edits canonical source and passive
+     values, but a user cannot remove a mistakenly placed component or undo an
+     endpoint wire without injecting raw document JSON. Add document-owned
+     component removal that atomically drops incident wires, source-order wire
+     removal with explicit bounds diagnostics, and Mosaic controls for both.
+     Keep arbitrary wire geometry, netlist-to-schematic synthesis, and vendor
+     interchange for later product phases.
+   - **Mosaic schematic metadata editing** (completed in PR #15021): discovery after PR
+     #15011: a user can edit values and remove components, but document titles
+     and component references still require raw JSON injection. Add canonical
+     one-line title and kind-safe reference mutation, preserve DC sweep source
+     bindings when a source is renamed, and expose both through the
+     Mosaic inspector. Keep net labels, arbitrary wire geometry, and vendor
+     interchange for later product phases.
+   - **Mosaic schematic edit history** (completed in PR #15026): discovery after PR
+     #15021: every palette, wiring, metadata, and analysis-plan mutation is
+     immediately destructive within a workbench session. Add bounded,
+     session-owned undo/redo checkpoints that restore editor document state and
+     relevant inspector/card selection, clear the redo branch after a fresh
+     edit, exclude ephemeral history from persisted snapshots, and expose
+     disabled-aware Mosaic controls. Keep collaborative history, arbitrary
+     cross-session recovery, and vendor interchange for later product phases.
+   - **Mosaic schematic analysis-plan lifecycle** (current phase): discovery
+     after PR #15026: the adapter supports changing an existing card's analysis
+     kind, but the rendered workbench can only add or delete cards, and cannot
+     change their source order. Expose kind conversion and selected-card move
+     earlier/later controls while retaining per-card settings, source-order
+     deck lowering, history behavior, and disabled-state boundaries. Keep
+     nested sweeps, vendor controls, and arbitrary card templates for later
+     product phases.
 
 ### Operating rules
 
@@ -204,8 +252,9 @@ model-card parameter, or a UI artifact is not a completion signal.
   individual diagnostic column, field alias, or presentation artifact.
 - Reprioritize from corpus evidence after every merge.  Newly discovered work
   must be logged here before a next item is selected.
-- The stale MOS `TNOM` validation candidate is folded into item 2 if and only
-  if it fails a Berkeley v1 corpus case.
+- The stale MOS `TNOM` validation candidate is closed: origin/main already
+  records cross-language completion in PRs 9173 and 9631, with no Berkeley v1
+  corpus failure to group into a new phase.
 
 ## Completed Slices
 

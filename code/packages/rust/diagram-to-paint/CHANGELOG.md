@@ -1,5 +1,25 @@
 # Changelog — diagram-to-paint
 
+## 0.126.0
+
+- Lower circle and cross graph-edge endpoint markers to backend-neutral paint geometry.
+
+## 0.125.0
+
+- Lower bidirectional graph edges to backend-neutral point arrowheads at both endpoints.
+
+## 0.124.0
+
+- Preserve resolved graph-edge dash patterns in backend-neutral Paint paths.
+
+## 0.123.0
+
+- Lower resolved Block cell and composite dash patterns to backend-neutral Paint strokes.
+
+## 0.122.0
+
+- Lower Block arrows to backend-neutral directional outline paths.
+
 ## 0.121.0
 
 - Validate recursive Block composite backgrounds through shared PaintInstructions and Metal-to-PNG.

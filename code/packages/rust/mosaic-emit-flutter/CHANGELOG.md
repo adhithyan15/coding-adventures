@@ -5,6 +5,127 @@ this file.
 
 ## [Unreleased]
 
+### Security — an authored value is validated before it becomes Dart
+
+Two injection sinks of the same class, both reachable from any stylesheet.
+
+#### `opacity` passed authored text through verbatim
+
+`dart_opacity_literal`'s fallback arm was `trimmed.to_string()`, interpolated
+straight into `Opacity(opacity: {expr}, ..)`. So `opacity: "1 ), child:
+evil(/*"` emitted
+
+```dart
+Opacity(
+  opacity: 1 ), child: evil(/*,
+  child: Container(
+```
+
+escaping the argument and commenting out what followed. A non-numeric opacity
+now falls back to fully opaque — the same choice the colour path makes, and an
+authored value the emitter cannot understand should not become code.
+
+This one predates UI79 entirely and is untouched by the border work; it was
+found by re-reviewing after the colour fix and asking whether the same shape
+existed elsewhere in the file. It did.
+
+#### A hex colour is validated by its digits, not its length
+
+`css_color_to_dart` checked only that 6 or 8 characters followed the `#`, then
+interpolated them straight into a Dart expression. The `.msl` grammar's
+`HASH_COLOR` really is hex-only, but `style_value` also admits a quoted
+`STRING`, which passes through verbatim and is unquoted before it reaches here
+— and quoted colours are idiomatic in this repo.
+
+So an authored `border-top-color: "#00)+E(/*"` emitted
+
+```dart
+border: Border(top: BorderSide(color: const Color(0x00)+E(/*), width: 1), ...
+```
+
+escaping the `Color(..)` argument and opening a comment that swallowed the next
+widget property. That is code injection into generated Dart, reachable from any
+stylesheet, and it predates UI79 — `background`, `background-color`, `color`
+and `border-color` all funnel through the same function. UI79 added four more
+entry points to it, which is how it was found.
+
+Fixed at that one function so every sink is covered; a rejected colour lands on
+each caller's existing fallback. Verified by re-emitting the hostile stylesheet
+and seeing `Colors.transparent`.
+
+Checked rather than assumed: **SwiftUI, Compose and Qt already validate the
+digits** — the review that surfaced this claimed SwiftUI shared the flaw and it
+does not. **html escapes** the value (`&quot;`) and **react** preserves the
+backslash escaping, so both keep a hostile value inert inside its literal.
+Flutter was the only backend affected.
+
+A negative per-edge width is also skipped: `BorderSide` asserts `width >= 0` at
+*runtime*, so it would type-check and then throw in the app.
+
+Also hardened `parse_pixel_value`: `f64::parse` accepts `inf`, `NaN` and
+overflowing literals like `1e400`, and `{f}` printed them as bare Dart
+identifiers that do not compile. Not injection — no punctuation survives the
+parse — but it broke the "generated source still type-checks" contract the `0`
+fallback exists to keep.
+
+### Added — a border has edges (UI79, #14835)
+
+`border-{top,right,bottom,left}-{width,color}` now lowers. Flutter is the one
+backend whose toolkit expresses this directly — `Border(top: BorderSide(..),
+bottom: ..)` carries a colour *and* a width per side — so unlike Compose
+(#15009) nothing has to be hand-drawn.
+
+A part that authors no edge keeps the byte-identical `Border.all(..)` it emits
+today; the per-side form appears only when an edge is authored, and unauthored
+sides fall back to the `border-width`/`border-color` shorthand, which is the
+CSS cascade answer (UI79 §3 rule 3).
+
+#### Measured in the rendered widget tree, not in the Dart
+
+Trestle's generated app, walked with `find.byType(Container)` and each
+`BoxDecoration.border` inspected:
+
+| | before | after |
+| --- | --- | --- |
+| containers with a uniform four-edge border | 5 | 5 |
+| containers with a border on **fewer** than four edges | **0** | **2** |
+
+The two are `right=1.0` and `top=3.0`, matching Trestle's authored
+`border-right-width: 1` and `border-top-width: 3`. The uniform count is
+identical either way, so existing borders are untouched. Falsified by making
+the new path return `None` and confirming the count returns to zero.
+
+#### The writer that runs is not the one that looks like it does
+
+Worth recording, because it cost most of the work. The crate has two
+`Border.all` writers. `emit_styled_box` is the one a reader finds first, and it
+is gated behind `part_has_decoration`, which is only consulted for a `Box` node
+lowering to a `Container`. The writer that actually runs for a styled container
+is in `emit_container`. Patching the first one emitted the per-edge border
+**nowhere**, and a grep for `Border.all` had hidden the second because its
+`format!` sits on the previous line.
+
+This was settled by planting a marker in the emitted string and finding it
+absent from the output — not by reading the call graph, which had already been
+wrong twice.
+
+`border-<edge>-style` is not consulted: only `solid` is drawn. Flutter has no
+style-drop reporting at all (#12022), so unlike Compose a non-solid style is
+lost **silently** here. That is a gap in the report, not in this lowering, and
+it is recorded rather than worked around.
+
+### Added — `HostScroll` honours its axis (UI61, #14854)
+
+Flutter has no two-axis scroll view, so `both` composes the idiomatic pair: a
+vertical `SingleChildScrollView` wrapping a horizontal one. The test asserts
+that as real **nesting** — two widgets, one `scrollDirection` — rather than as
+a string, because an emitter that merely wrote `scrollDirection:
+Axis.horizontal` for `both` would scroll one way only and still satisfy any
+assertion that looked for the word.
+
+`vertical` emits a bare `SingleChildScrollView`, Flutter's own default, so all
+158 existing tests passed through the change untouched.
+
 ### Fixed — an unresolved component reference returned Ok and emitted a hole (#14892)
 
 Flutter was the only backend of the eight that accepted a component reference it

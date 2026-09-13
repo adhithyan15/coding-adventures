@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+- Added client-secret Authorization Code exchange through audited ID-token
+  identity proof into custody under the derived provider-scoped opaque account
+  key. Provider/client/trace mismatch precedes secret or transport access;
+  missing or rejected evidence precedes storage; ID-token evidence is consumed
+  rather than retained; and only the opaque revision is released.
+- Added exact access-token-only detach through retained `private_key_jwt`
+  policy: custody refuses refreshable records before signing or transport,
+  while retryable and closed failures retain access-only records and exact HTTP
+  200 permits deletion only after every signer, transport, protocol, custody,
+  and broker audit gate.
+- Added exact access-token-only detach through retained client-secret policy:
+  custody refuses the fallback when a refresh token exists, retryable and
+  closed failures retain the record, and only exact HTTP 200 permits deletion
+  of the revision released with the access token.
+- Added exact stored private-key-JWT refresh composition: the complete retained
+  profile is validated before the selected credential's refresh token is
+  released; signing and transport remain injected and audited; and the bounded
+  response is atomically retained or rotated only at the loaded revision. All
+  failures preserve the prior credential.
+- Added one composed `private_key_jwt` authorization-code exchange-to-custody
+  boundary: an exact provider-bound opaque account key is required before
+  signing, transport, clock, or credential-store access; the bounded response
+  crosses existing OAuth release and custody-create audits without credential
+  disclosure, and only the opaque revision leaves the broker.
+- Added exact stored-refresh-token detach through retained `private_key_jwt`:
+  account, client, revocation audience, and algorithm bindings are checked
+  before credential access; signing and transport remain injected and audited;
+  and only exact HTTP 200 permits revision-bound local deletion.
+- Added one broker-composed `private_key_jwt` RFC 7009 revocation boundary:
+  retained provider policy now derives a separate assertion profile only from
+  an explicitly configured revocation audience, and provider, client,
+  endpoint, method, and exact algorithm checks precede the audited abstract
+  signer. Injected transport and core exact-200 response classification are
+  separately audit-gated; no local credential is deleted and no concrete
+  algorithm or network authority is enabled.
 - Added one broker-composed `private_key_jwt` authorization-code exchange
   boundary that validates the already callback-consumed request against the
   registered provider, client ID, token endpoint, retained method, and exact

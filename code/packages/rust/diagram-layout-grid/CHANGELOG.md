@@ -1,5 +1,25 @@
 # Changelog - diagram-layout-grid
 
+## 0.13.0
+
+- Preserve authored Block endpoint markers through deterministic grid layout.
+
+## 0.12.0
+
+- Preserve bidirectional Block edge semantics through deterministic grid layout.
+
+## 0.11.0
+
+- Resolve dotted and thick Block connections into backend-neutral edge styles.
+
+## 0.10.0
+
+- Preserve authored Block stroke dash patterns through resolved cell and composite layout styles.
+
+## 0.9.0
+
+- Preserve typed Block arrow geometry through resolved grid layout.
+
 ## 0.8.0
 
 - Resolve authored Block composite styles over backend-neutral group defaults.

@@ -373,7 +373,7 @@ where
             modifiers,
             ..
         } if !modifiers.control && !modifiers.alt && !modifiers.meta => {
-            Ok(session.focus_control(modifiers.shift, &pipeline).is_some())
+            Ok(session.focus_page(modifiers.shift, &pipeline).is_some())
         }
         WindowEvent::Key {
             key: Key::Named(key),
@@ -679,6 +679,10 @@ impl MacBrowserHost {
         self.controller.activate_link(x, y, |session, navigation| {
             navigate_session(session, navigation, width, height, fetcher)
         })
+    }
+
+    pub fn take_host_effect(&mut self) -> Option<BrowserHostEffect> {
+        self.controller.take_host_effect()
     }
 
     pub fn control_key_down(
@@ -1027,6 +1031,17 @@ mod mosaic_ffi {
         out
     }
 
+    fn json_bytes(bytes: &[u8]) -> String {
+        format!(
+            "[{}]",
+            bytes
+                .iter()
+                .map(u8::to_string)
+                .collect::<Vec<_>>()
+                .join(",")
+        )
+    }
+
     fn effect_json(effect: &BrowserHostEffect) -> String {
         match effect {
             BrowserHostEffect::OpenAuxiliaryDocument(document) => format!(
@@ -1035,6 +1050,24 @@ mod mosaic_ffi {
                 json_string(&document.address),
                 json_string(&document.title),
                 json_string(&document.html),
+            ),
+            BrowserHostEffect::OpenBrowsingContext(context) => format!(
+                "{{\"type\":\"open-browsing-context\",\"target\":{},\"request\":{{\"url\":{},\"method\":{},\"contentType\":{},\"body\":{}}},\"noopener\":{},\"noreferrer\":{}}}",
+                json_string(context.target.name()),
+                json_string(&context.request.url),
+                json_string(match context.request.method {
+                    venture_browser_core::BrowserFetchMethod::Get => "GET",
+                    venture_browser_core::BrowserFetchMethod::Post => "POST",
+                }),
+                context.request.content_type.as_deref().map(json_string).unwrap_or_else(|| "null".into()),
+                json_bytes(&context.request.body),
+                context.noopener,
+                context.noreferrer,
+            ),
+            BrowserHostEffect::Download(download) => format!(
+                "{{\"type\":\"download\",\"request\":{{\"url\":{},\"method\":\"GET\",\"contentType\":null,\"body\":[]}},\"suggestedFilename\":{}}}",
+                json_string(&download.request.url),
+                download.suggested_filename.as_deref().map(json_string).unwrap_or_else(|| "null".into()),
             ),
         }
     }
@@ -1358,6 +1391,17 @@ mod mosaic_ffi {
                 .unwrap_or(false) as u8
         }))
         .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_take_effect(
+        host: *mut MacBrowserHost,
+    ) -> *mut c_char {
+        let Some(host) = host.as_mut() else {
+            return std::ptr::null_mut();
+        };
+        let effect = host.take_host_effect();
+        response(host, effect.as_ref(), None)
     }
 
     #[no_mangle]

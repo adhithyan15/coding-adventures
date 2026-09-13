@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Add a deterministic client-side image-map fixture covering scaled circle,
+  rectangle, polygon, and default regions plus overlap order, targets, and
+  accessible names through the shared pipeline.
+
+- Add a deterministic browsing-context fixture covering inherited, blank,
+  named form, `noreferrer`, and download targets.
+
+- Add a deterministic top-layer fixture covering concurrent popover/dialog
+  ordering, modal projection, transformed geometry, and focusable content.
+
 - Add a deterministic disclosure page covering closed, open, grouped,
   linked-summary, and generated-summary details.
 

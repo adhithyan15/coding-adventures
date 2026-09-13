@@ -1,5 +1,25 @@
 # Changelog — diagram-ir
 
+## 0.116.0
+
+- Preserve point, circle, cross, and absent edge endpoint markers in shared grid and layout IR.
+
+## 0.115.0
+
+- Represent bidirectional point-arrow connections explicitly in shared edge semantics.
+
+## 0.114.0
+
+- Preserve solid, dotted, and thick Block connection semantics in grid IR.
+
+## 0.113.0
+
+- Preserve optional stroke dash patterns in authored and resolved diagram styles.
+
+## 0.112.0
+
+- Represent Block arrow nodes with typed cardinal direction flags.
+
 ## 0.111.0
 
 - Preserve optional Block composite styles in grid semantic IR.

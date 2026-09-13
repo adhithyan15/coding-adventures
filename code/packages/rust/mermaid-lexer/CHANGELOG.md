@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.89.0
+
+- Tokenize Block links that declare shaped nodes directly at either endpoint.
+
+## 0.88.0
+
+- Tokenize compact Block circle and cross endpoints such as `A--oB` and `A--xB`.
+
+## 0.87.0
+
+- Tokenize Block circle and cross endpoint connections through a dedicated grammar rule.
+
+## 0.86.0
+
+- Tokenize solid, dotted, and thick bidirectional Block connections through a dedicated grammar rule.
+
+## 0.85.0
+
+- Tokenize dotted and thick Block connections through dedicated grammar productions.
+
+## 0.84.0
+
+- Tokenize Mermaid 11.16.1 Block arrow nodes through a dedicated grammar rule.
+
 ## 0.83.0
 
 - Tokenize labeled named Block composite declarations through the pinned grammar.

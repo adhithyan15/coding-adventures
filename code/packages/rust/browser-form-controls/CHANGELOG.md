@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Add explicit blur and semantic Tab key support so a document-level focus
+  controller can traverse beyond native form controls.
+
+- Retain authored submitter target overrides in shared control bindings.
+
+- Add document-ordered constrained focus traversal so modal surfaces can trap
+  focus without moving traversal policy into native hosts.
+
 - Derive effective disabledness through nested fieldsets while exempting only
   each disabled fieldset's first direct legend subtree.
 

@@ -928,10 +928,11 @@ fn parse_html_fragment_for_context_parts_with_diagnostics_and_options(
     });
 
     let lexer_diagnostics = parser.reconcile_cdata_lexer_diagnostics(lexer.diagnostics());
+    let html_fragment_tail_misc = std::mem::take(&mut parser.html_fragment_tail_misc);
     let document = parser.finish_document();
 
     Ok(FragmentOutput {
-        nodes: marked_fragment_context_nodes(document),
+        nodes: marked_fragment_context_nodes(document, html_fragment_tail_misc),
         lexer_diagnostics,
         parser_diagnostics: parser.diagnostics,
     })
@@ -2114,6 +2115,7 @@ pub struct BrowserContentNode {
     pub role: String,
     pub authored_role: Option<String>,
     pub name: Option<String>,
+    pub anchor_name: Option<String>,
     pub id: Option<String>,
     pub classes: Vec<String>,
     pub style: Option<String>,
@@ -2124,6 +2126,7 @@ pub struct BrowserContentNode {
     pub href: Option<String>,
     pub resolved_href: Option<String>,
     pub target: Option<String>,
+    pub effective_target: Option<String>,
     pub rel: Option<String>,
     pub rel_tokens: Vec<String>,
     pub download: Option<String>,
@@ -2148,6 +2151,7 @@ pub struct BrowserContentNode {
     pub image_map_name: Option<String>,
     pub image_map_shape: Option<String>,
     pub image_map_coords: Option<String>,
+    pub usemap: Option<String>,
     pub srcset: Option<String>,
     pub resolved_srcset: Option<String>,
     pub sizes: Option<String>,
@@ -2307,6 +2311,7 @@ pub struct BrowserRenderNode {
     pub role: String,
     pub authored_role: Option<String>,
     pub name: Option<String>,
+    pub anchor_name: Option<String>,
     pub id: Option<String>,
     pub classes: Vec<String>,
     pub style: Option<String>,
@@ -2317,6 +2322,7 @@ pub struct BrowserRenderNode {
     pub href: Option<String>,
     pub resolved_href: Option<String>,
     pub target: Option<String>,
+    pub effective_target: Option<String>,
     pub rel: Option<String>,
     pub rel_tokens: Vec<String>,
     pub download: Option<String>,
@@ -2341,6 +2347,7 @@ pub struct BrowserRenderNode {
     pub image_map_name: Option<String>,
     pub image_map_shape: Option<String>,
     pub image_map_coords: Option<String>,
+    pub usemap: Option<String>,
     pub srcset: Option<String>,
     pub resolved_srcset: Option<String>,
     pub sizes: Option<String>,
@@ -4215,31 +4222,48 @@ impl BrowserDocument {
 impl BrowserContentTree {
     pub fn from_document(document: &Document) -> Self {
         let base_href = browser_authored_base_href(document);
-        Self::from_document_with_base(document, base_href)
+        let base_target = browser_authored_base_target(document);
+        Self::from_document_with_base(document, base_href, base_target)
     }
 
     pub fn from_document_with_document_url(document: &Document, document_url: &str) -> Self {
         let base_href = browser_effective_base_href(document, document_url);
-        Self::from_document_with_base(document, base_href.as_deref())
+        let base_target = browser_authored_base_target(document);
+        Self::from_document_with_base(document, base_href.as_deref(), base_target)
     }
 
-    fn from_document_with_base(document: &Document, base_href: Option<&str>) -> Self {
+    fn from_document_with_base(
+        document: &Document,
+        base_href: Option<&str>,
+        base_target: Option<&str>,
+    ) -> Self {
         let body = find_first_element_in_nodes(&document.children, "body");
         let body_children = body
             .map(|element| element.children.as_slice())
             .unwrap_or(document.children.as_slice());
-        Self::from_nodes_with_base(body_children, base_href)
+        Self::from_nodes_with_base(body_children, base_href, base_target)
     }
 
     pub fn from_nodes(nodes: &[Node]) -> Self {
-        Self::from_nodes_with_base(nodes, None)
+        Self::from_nodes_with_base(nodes, None, None)
     }
 
-    fn from_nodes_with_base(nodes: &[Node], base_href: Option<&str>) -> Self {
+    fn from_nodes_with_base(
+        nodes: &[Node],
+        base_href: Option<&str>,
+        base_target: Option<&str>,
+    ) -> Self {
         let mut children = Vec::new();
         let labels = collect_label_texts_by_control_id(nodes);
         let id_texts = collect_element_texts_by_id(nodes);
-        collect_browser_content_nodes(nodes, &mut children, base_href, &labels, &id_texts);
+        collect_browser_content_nodes(
+            nodes,
+            &mut children,
+            base_href,
+            base_target,
+            &labels,
+            &id_texts,
+        );
         attach_content_datalist_options(&mut children, nodes);
         Self { children }
     }
@@ -4275,6 +4299,7 @@ impl BrowserRenderNode {
             role: content_node.role.clone(),
             authored_role: content_node.authored_role.clone(),
             name: content_node.name.clone(),
+            anchor_name: content_node.anchor_name.clone(),
             id: content_node.id.clone(),
             classes: content_node.classes.clone(),
             style: content_node.style.clone(),
@@ -4285,6 +4310,7 @@ impl BrowserRenderNode {
             href: content_node.href.clone(),
             resolved_href: content_node.resolved_href.clone(),
             target: content_node.target.clone(),
+            effective_target: content_node.effective_target.clone(),
             rel: content_node.rel.clone(),
             rel_tokens: content_node.rel_tokens.clone(),
             download: content_node.download.clone(),
@@ -4309,6 +4335,7 @@ impl BrowserRenderNode {
             image_map_name: content_node.image_map_name.clone(),
             image_map_shape: content_node.image_map_shape.clone(),
             image_map_coords: content_node.image_map_coords.clone(),
+            usemap: content_node.usemap.clone(),
             srcset: content_node.srcset.clone(),
             resolved_srcset: content_node.resolved_srcset.clone(),
             sizes: content_node.sizes.clone(),
@@ -4521,6 +4548,7 @@ pub struct HtmlParser {
     explicit_body_end_seen: bool,
     explicit_body_start_seen: bool,
     explicit_html_end_seen: bool,
+    html_fragment_tail_misc: Vec<Node>,
     document_tail_mode: DocumentTailMode,
     document_tail_reentered_in_body: bool,
     template_insertion_modes: Vec<TemplateInsertionMode>,
@@ -4555,6 +4583,7 @@ impl Default for HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
+            html_fragment_tail_misc: Vec::new(),
             document_tail_mode: DocumentTailMode::InBody,
             document_tail_reentered_in_body: false,
             template_insertion_modes: Vec::new(),
@@ -4620,6 +4649,7 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
+            html_fragment_tail_misc: Vec::new(),
             document_tail_mode: DocumentTailMode::InBody,
             document_tail_reentered_in_body: false,
             template_insertion_modes: Vec::new(),
@@ -4669,6 +4699,7 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: matches!(context_element, "body"),
             explicit_html_end_seen: false,
+            html_fragment_tail_misc: Vec::new(),
             document_tail_mode: DocumentTailMode::InBody,
             document_tail_reentered_in_body: false,
             template_insertion_modes: (context_element == "template")
@@ -5012,6 +5043,14 @@ impl HtmlParser {
             && !self.is_fragment
         {
             self.document_tail_mode = DocumentTailMode::AfterHtml;
+        } else if matches!(self.document_tail_mode, DocumentTailMode::AfterBody)
+            && self.is_fragment
+            && self.open_fragment_context_name() == Some("html")
+            && !self.document_has_body_element()
+            && matches!(token, Token::StartTag { name, .. } if name == "frameset")
+        {
+            self.document_tail_mode = DocumentTailMode::InBody;
+            self.document_tail_reentered_in_body = false;
         } else if !allowed {
             let mode = self.document_tail_mode;
             self.diagnostics.push(
@@ -5250,6 +5289,25 @@ impl HtmlParser {
             in_foreign_content = false;
             forced_html_fragment_breakout = true;
         }
+        if !in_foreign_content
+            && self.current_element_is("noscript")
+            && self.has_authored_open_html_element("head")
+            && self.options.scripting == HtmlScriptingMode::Disabled
+            && !matches!(
+                name.as_str(),
+                "basefont"
+                    | "bgsound"
+                    | "head"
+                    | "html"
+                    | "link"
+                    | "meta"
+                    | "noframes"
+                    | "noscript"
+                    | "style"
+            )
+        {
+            self.pop_current_if(|current| current == "noscript");
+        }
         if in_foreign_content
             && !self.current_node_is_svg_html_integration_point()
             && exits_foreign_content_on_start_tag(&name, &attributes)
@@ -5430,7 +5488,7 @@ impl HtmlParser {
         }
 
         if !in_foreign_content {
-            if self.has_open_html_element("head")
+            if self.has_authored_open_html_element("head")
                 && !self.current_element_is("head")
                 && !self.has_open_html_template_element()
                 && starts_body_after_head(&name)
@@ -6035,13 +6093,19 @@ impl HtmlParser {
         if !in_foreign_content
             && name == "noscript"
             && self.current_element_is("noscript")
+            && self.options.scripting == HtmlScriptingMode::Enabled
             && attributes.is_empty()
         {
             self.append_text_to_current("<noscript>".to_string());
             return;
         }
 
-        if !in_foreign_content && name == "noscript" && self.has_open_html_element("noscript") {
+        if !in_foreign_content
+            && name == "noscript"
+            && self.has_open_html_element("noscript")
+            && (self.options.scripting == HtmlScriptingMode::Enabled
+                || self.has_authored_open_html_element("head"))
+        {
             return;
         }
 
@@ -6375,7 +6439,7 @@ impl HtmlParser {
             return;
         }
 
-        if self.has_open_html_element("head")
+        if self.has_authored_open_html_element("head")
             && !self.current_element_is("head")
             && !self.has_open_html_template_element()
             && !self.current_element_is("noframes")
@@ -6562,6 +6626,13 @@ impl HtmlParser {
     }
 
     fn append_comment_or_processing_instruction(&mut self, node: Node) {
+        if self.is_fragment
+            && self.open_fragment_context_name() == Some("html")
+            && matches!(self.document_tail_mode, DocumentTailMode::AfterBody)
+        {
+            self.html_fragment_tail_misc.push(node);
+            return;
+        }
         let active_fostered_anchor = self
             .pending_formatting_reconstruction
             .first()
@@ -6695,9 +6766,19 @@ impl HtmlParser {
         if self.open_elements.is_empty()
             || (self.current_element_is("html") && !self.explicit_body_end_seen)
         {
-            if let Some(body_children) = children_at_path_mut(&mut self.document.children, &[0, 1])
-                .filter(|children| !children.is_empty())
-            {
+            let body_children = self.document.children.iter_mut().find_map(|node| {
+                let Node::Element(html) = node else {
+                    return None;
+                };
+                html.children.iter_mut().find_map(|child| {
+                    let Node::Element(body) = child else {
+                        return None;
+                    };
+                    (body.name == "body" && !body.children.is_empty())
+                        .then_some(&mut body.children)
+                })
+            });
+            if let Some(body_children) = body_children {
                 body_children.push(node);
                 return;
             }
@@ -7674,16 +7755,12 @@ impl HtmlParser {
     }
 
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
-        let current_is_authored_html_head = self
+        let current_is_html_head = self
             .open_elements
             .last()
             .and_then(|path| element_ref_at_path(&self.document, path))
-            .is_some_and(|element| {
-                element.namespace.is_none()
-                    && !has_fragment_context_marker(element)
-                    && element.name == "head"
-            });
-        if starts_body_after_head(incoming_name) && current_is_authored_html_head {
+            .is_some_and(|element| element.namespace.is_none() && element.name == "head");
+        if starts_body_after_head(incoming_name) && current_is_html_head {
             self.pop_current_if(|name| name == "head");
         }
     }
@@ -7693,8 +7770,32 @@ impl HtmlParser {
             self.append_text_to_current("</script>".to_string());
             return;
         }
+        if self.current_namespace().is_none()
+            && self.current_element_is("noscript")
+            && self.has_authored_open_html_element("head")
+            && self.options.scripting == HtmlScriptingMode::Disabled
+            && !matches!(name, "noscript" | "br")
+        {
+            return;
+        }
+        if name == "body"
+            && self.is_fragment
+            && self.open_fragment_context_name() == Some("html")
+            && !self.document_has_body_element()
+        {
+            self.document_tail_mode = DocumentTailMode::AfterBody;
+            self.document_tail_reentered_in_body = false;
+            self.explicit_body_end_seen = true;
+            return;
+        }
         let suspend_after_end_tag = name == "script"
             && self.current_script_requests_document_root_table_replacement();
+        let targets_marked_html_context =
+            name == "html" && self.open_marked_fragment_shell_element_matches(name);
+        if targets_marked_html_context {
+            self.document_tail_mode = DocumentTailMode::AfterBody;
+            self.document_tail_reentered_in_body = false;
+        }
         if (name != "html" && self.current_element_is_marked_fragment_context(name))
             || self.open_marked_fragment_shell_element_matches(name)
         {
@@ -7710,6 +7811,19 @@ impl HtmlParser {
         let mut in_foreign_content = self.current_namespace().is_some()
             && !self.current_node_is_svg_html_integration_point()
             && !self.current_node_is_mathml_integration_point();
+        if !in_foreign_content
+            && self.current_namespace().is_none()
+            && self.non_current_foreign_scope_boundary_matches(name)
+        {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-non-current-end-tag",
+                    format!("end tag `</{name}>` was blocked by its foreign scope boundary"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return;
+        }
         if self.current_namespace().is_none()
             && self.has_open_foreign_integration_point()
             && is_adoption_agency_element(name)
@@ -8516,7 +8630,10 @@ impl HtmlParser {
                     .at_emission(self.current_token_emission_position),
                 );
             }
-            "p" if self.has_open_html_element("head") && !self.has_open_element("body") => {
+            "p"
+                if self.has_authored_open_html_element("head")
+                    && !self.has_open_element("body") =>
+            {
                 self.diagnostics.push(
                     ParserDiagnostic::new(
                         "unexpected-p-end-tag-before-body",
@@ -8525,7 +8642,8 @@ impl HtmlParser {
                     .at_emission(self.current_token_emission_position),
                 );
             }
-            "p" if !self.has_open_element("p")
+            "p" if !self.is_fragment
+                && !self.has_open_element("p")
                 && !self.has_open_element("body")
                 && !self.document_has_body_element()
                 && !self.body_has_non_whitespace_child() =>
@@ -8614,7 +8732,10 @@ impl HtmlParser {
                 self.append_start_tag("p".to_string(), Vec::new(), false);
                 self.close_element("p");
             }
-            "html" if self.has_open_html_element("head") && !self.has_open_element("body") => {
+            "html"
+                if self.has_authored_open_html_element("head")
+                    && !self.has_open_element("body") =>
+            {
                 self.pop_current_if(|current| current == "head");
                 self.append_implied_element("body");
             }
@@ -11257,16 +11378,24 @@ impl HtmlParser {
         if element_at_path(&self.document, &html_path) != Some("html") {
             return;
         }
-        let Some(html) = element_ref_at_path(&self.document, &html_path) else {
+        let Some(html) = element_at_path_mut(&mut self.document, &html_path) else {
             return;
         };
-        let Some(body_index) = html
+        let body_index = html
             .children
             .iter()
             .position(|node| matches!(node, Node::Element(element) if element.name == "body"))
-        else {
-            return;
-        };
+            .unwrap_or_else(|| {
+                if !html.children.iter().any(
+                    |node| matches!(node, Node::Element(element) if element.name == "head"),
+                ) {
+                    html.children
+                        .push(Node::element("head".to_string(), Vec::new()));
+                }
+                html.children
+                    .push(Node::element("body".to_string(), Vec::new()));
+                html.children.len() - 1
+            });
         let mut body_path = html_path;
         body_path.push(body_index);
         self.open_elements.push(body_path);
@@ -11488,6 +11617,24 @@ impl HtmlParser {
             })
     }
 
+    fn non_current_foreign_scope_boundary_matches(&self, name: &str) -> bool {
+        self.open_elements
+            .iter()
+            .enumerate()
+            .rfind(|(_, path)| {
+                element_ref_at_path(&self.document, path).is_some_and(|element| {
+                    !has_fragment_context_marker(element)
+                        && element.namespace.is_some()
+                        && element.name.eq_ignore_ascii_case(name)
+                })
+            })
+            .is_some_and(|(index, path)| {
+                index + 1 < self.open_elements.len()
+                    && element_ref_at_path(&self.document, path)
+                        .is_some_and(is_ordinary_scope_boundary)
+            })
+    }
+
     fn has_active_formatting_marker_above(&self, element_index: usize) -> bool {
         self.open_elements
             .iter()
@@ -11704,10 +11851,15 @@ impl HtmlParser {
 
     fn document_has_non_frameset_compatible_body_content(&self) -> bool {
         self.document.children.iter().any(|node| {
+            let ignorable = if self.is_fragment {
+                is_fragment_frameset_compatible_node(node)
+            } else {
+                is_ignorable_before_frameset_node_with_scripting(node, self.options.scripting)
+            };
             !matches!(
                 node,
                 Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_)
-            ) && !is_ignorable_before_frameset_node(node)
+            ) && !ignorable
         })
     }
 
@@ -12644,18 +12796,14 @@ fn rfind_script_end_marker(haystack: &str) -> Option<(usize, usize)> {
                 }
             }
             Some(b'/') => {
-                let mut cursor = after_name + 1;
-                while bytes
-                    .get(cursor)
-                    .is_some_and(|byte| byte.is_ascii_whitespace())
+                if let Some(close) = find_tag_close_ignoring_quoted_text(haystack, after_name + 1) {
+                    return Some((relative_start, close + 1));
+                }
+                if haystack[after_name + 1..]
+                    .bytes()
+                    .all(|byte| byte.is_ascii_whitespace())
                 {
-                    cursor += 1;
-                }
-                if cursor == haystack.len() {
                     return Some((relative_start, haystack.len()));
-                }
-                if bytes.get(cursor) == Some(&b'>') {
-                    return Some((relative_start, cursor + 1));
                 }
             }
             _ => {}
@@ -13184,7 +13332,10 @@ fn fragment_initial_lex_context(
     Some(HtmlLexContext::new(state))
 }
 
-fn marked_fragment_context_nodes(mut document: Document) -> Vec<Node> {
+fn marked_fragment_context_nodes(
+    mut document: Document,
+    html_fragment_tail_misc: Vec<Node>,
+) -> Vec<Node> {
     let Some(marker_path) = find_fragment_context_marker_path(document.children.as_slice()) else {
         return body_fragment_nodes(document);
     };
@@ -13197,7 +13348,15 @@ fn marked_fragment_context_nodes(mut document: Document) -> Vec<Node> {
             return Vec::new();
         };
         strip_fragment_context_markers(&mut html.children);
-        move_leading_html_fragment_misc_after_body(&mut html.children);
+        if !html_fragment_tail_misc.is_empty() {
+            let insertion_index = html
+                .children
+                .iter()
+                .position(|node| matches!(node, Node::Element(element) if element.name == "body"))
+                .map_or(html.children.len(), |body_index| body_index + 1);
+            html.children
+                .splice(insertion_index..insertion_index, html_fragment_tail_misc);
+        }
         return std::mem::take(&mut html.children)
             .into_iter()
             .filter(|node| !matches!(node, Node::DocumentType(_)))
@@ -13205,11 +13364,27 @@ fn marked_fragment_context_nodes(mut document: Document) -> Vec<Node> {
     }
 
     if marker_name == "head" {
-        let Some(head) = element_at_path_mut(&mut document, &marker_path) else {
+        let Some(html) = element_at_path_mut(&mut document, &marker_path[..marker_path.len() - 1])
+        else {
             return Vec::new();
         };
-        strip_fragment_context_markers(&mut head.children);
-        return std::mem::take(&mut head.children)
+        let mut fragment = Vec::new();
+        for child in std::mem::take(&mut html.children) {
+            match child {
+                Node::Element(mut element)
+                    if (element.name == "head" && has_fragment_context_marker(&element))
+                        || element.name == "body" =>
+                {
+                    fragment.append(&mut element.children);
+                }
+                Node::Comment(_) | Node::ProcessingInstruction(_) | Node::Text(_) => {
+                    fragment.push(child);
+                }
+                _ => {}
+            }
+        }
+        strip_fragment_context_markers(&mut fragment);
+        return fragment
             .into_iter()
             .filter(|node| !matches!(node, Node::DocumentType(_)))
             .collect();
@@ -13320,32 +13495,6 @@ fn strip_fragment_context_markers(nodes: &mut [Node]) {
             .attributes
             .retain(|attribute| attribute.name != FRAGMENT_CONTEXT_MARKER);
         strip_fragment_context_markers(&mut element.children);
-    }
-}
-
-fn move_leading_html_fragment_misc_after_body(nodes: &mut Vec<Node>) {
-    let body_index = nodes
-        .iter()
-        .position(|node| matches!(node, Node::Element(element) if element.name == "body"));
-    let Some(body_index) = body_index else {
-        return;
-    };
-
-    let mut leading_misc = Vec::new();
-    while matches!(
-        nodes.first(),
-        Some(Node::Comment(_) | Node::ProcessingInstruction(_) | Node::Text(_))
-    ) {
-        leading_misc.push(nodes.remove(0));
-    }
-    if leading_misc.is_empty() {
-        return;
-    }
-
-    let body_index = body_index.saturating_sub(leading_misc.len());
-    let insert_at = body_index + 1;
-    for (offset, node) in leading_misc.into_iter().enumerate() {
-        nodes.insert(insert_at + offset, node);
     }
 }
 
@@ -13598,9 +13747,11 @@ fn frameset_nodes_from_compatible_wrapper(node: &Node) -> Option<Vec<Node>> {
 }
 
 fn is_frameset_compatible_wrapper(element: &Element) -> bool {
-    element.namespace.is_some()
-        || matches!(element.name.as_str(), "html" | "body")
-        || (matches!(element.name.as_str(), "p" | "div") && element.attributes.is_empty())
+    if has_fragment_context_marker(element) {
+        return element.namespace.is_some()
+            || matches!(element.name.as_str(), "html" | "body");
+    }
+    element.name != "frameset" && element_start_preserves_frameset_ok(element)
 }
 
 fn strip_replacement_characters_from_direct_text(nodes: &mut [Node]) {
@@ -13622,7 +13773,7 @@ fn is_hidden_input_node(node: &Node) -> bool {
     )
 }
 
-fn is_ignorable_before_frameset_node(node: &Node) -> bool {
+fn is_fragment_frameset_compatible_node(node: &Node) -> bool {
     is_hidden_input_node(node)
         || matches!(
             node,
@@ -13642,21 +13793,106 @@ fn is_ignorable_before_frameset_node(node: &Node) -> bool {
             node,
             Node::Element(element)
                 if matches!(element.name.as_str(), "html" | "body" | "p")
-                    && element.children.iter().all(is_ignorable_before_frameset_node)
+                    && element.children.iter().all(is_fragment_frameset_compatible_node)
         )
         || matches!(
             node,
             Node::Element(element)
                 if element.name == "div"
                     && element.attributes.is_empty()
-                    && element.children.iter().all(is_ignorable_before_frameset_node)
+                    && element.children.iter().all(is_fragment_frameset_compatible_node)
         )
         || matches!(
             node,
             Node::Element(element)
                 if element.namespace.is_some()
-                    && element.children.iter().all(is_ignorable_before_frameset_node)
+                    && element.children.iter().all(is_fragment_frameset_compatible_node)
         )
+}
+
+fn is_ignorable_before_frameset_node(node: &Node) -> bool {
+    is_ignorable_before_frameset_node_with_scripting(node, HtmlScriptingMode::Enabled)
+}
+
+fn is_ignorable_before_frameset_node_with_scripting(
+    node: &Node,
+    scripting: HtmlScriptingMode,
+) -> bool {
+    is_hidden_input_node(node)
+        || matches!(node, Node::Comment(_) | Node::ProcessingInstruction(_))
+        || matches!(
+            node,
+            Node::Element(element)
+                if element.namespace.is_none()
+                    && matches!(element.name.as_str(), "param" | "source" | "track")
+        )
+        || matches!(
+            node,
+            Node::Text(text)
+                if text
+                    .data
+                    .chars()
+                    .all(|character| is_html_whitespace(character) || character == '\u{FFFD}')
+        )
+        || matches!(
+            node,
+            Node::Element(element)
+                if element.name != "frameset"
+                    && element_start_preserves_frameset_ok(element)
+                    && (element_text_preserves_frameset_ok(element, scripting)
+                        || element.children.iter().all(|child| {
+                            is_ignorable_before_frameset_node_with_scripting(child, scripting)
+                        }))
+        )
+}
+
+fn element_text_preserves_frameset_ok(
+    element: &Element,
+    scripting: HtmlScriptingMode,
+) -> bool {
+    element.namespace.is_none()
+        && (matches!(
+            element.name.as_str(),
+            "noembed" | "noframes" | "script" | "style" | "title"
+        ) || (element.name == "noscript" && scripting == HtmlScriptingMode::Enabled))
+}
+
+fn element_start_preserves_frameset_ok(element: &Element) -> bool {
+    if element.namespace.is_some() {
+        return true;
+    }
+    if element.name == "input" {
+        return element
+            .attribute("type")
+            .is_some_and(|value| value.eq_ignore_ascii_case("hidden"));
+    }
+    !matches!(
+        element.name.as_str(),
+        "applet"
+            | "area"
+            | "br"
+            | "button"
+            | "dd"
+            | "dt"
+            | "embed"
+            | "hr"
+            | "iframe"
+            | "image"
+            | "img"
+            | "keygen"
+            | "li"
+            | "listing"
+            | "marquee"
+            | "object"
+            | "plaintext"
+            | "pre"
+            | "select"
+            | "table"
+            | "template"
+            | "textarea"
+            | "wbr"
+            | "xmp"
+    )
 }
 
 fn is_head_element(name: &str) -> bool {
@@ -13686,7 +13922,7 @@ fn starts_body_after_head(name: &str) -> bool {
 
 fn is_ignorable_before_body(node: &Node) -> bool {
     match node {
-        Node::Text(text) => text.data.chars().all(char::is_whitespace),
+        Node::Text(text) => text.data.chars().all(is_html_whitespace),
         Node::Comment(_) | Node::ProcessingInstruction(_) => true,
         _ => false,
     }
@@ -13695,7 +13931,7 @@ fn is_ignorable_before_body(node: &Node) -> bool {
 fn is_body_content_node(node: &Node) -> bool {
     match node {
         Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_) => false,
-        Node::Text(text) => !text.data.chars().all(char::is_whitespace),
+        Node::Text(text) => !text.data.chars().all(is_html_whitespace),
         Node::Element(_) => true,
     }
 }
@@ -13781,11 +14017,56 @@ fn doctype_triggers_quirks(
 
     if let Some(public_identifier) = public_identifier {
         let public_identifier = public_identifier.to_ascii_lowercase();
+        let legacy_quirks_prefixes = [
+            "+//silmaril//dtd html pro v0r11 19970101//",
+            "-//as//dtd html 3.0 aswedit + extensions//",
+            "-//advasoft ltd//dtd html 3.0 aswedit + extensions//",
+            "-//ietf//dtd html 2.0 level 1//",
+            "-//ietf//dtd html 2.0 level 2//",
+            "-//ietf//dtd html 2.0 strict level 1//",
+            "-//ietf//dtd html 2.0 strict level 2//",
+            "-//ietf//dtd html 2.0 strict//",
+            "-//ietf//dtd html 2.0//",
+            "-//ietf//dtd html 2.1e//",
+            "-//ietf//dtd html 3.0//",
+            "-//ietf//dtd html 3.2 final//",
+            "-//ietf//dtd html 3.2//",
+            "-//ietf//dtd html 3//",
+            "-//ietf//dtd html level 0//",
+            "-//ietf//dtd html level 1//",
+            "-//ietf//dtd html level 2//",
+            "-//ietf//dtd html level 3//",
+            "-//ietf//dtd html strict level 0//",
+            "-//ietf//dtd html strict level 1//",
+            "-//ietf//dtd html strict level 2//",
+            "-//ietf//dtd html strict level 3//",
+            "-//ietf//dtd html strict//",
+            "-//ietf//dtd html//",
+            "-//metrius//dtd metrius presentational//",
+            "-//microsoft//dtd internet explorer 2.0 html strict//",
+            "-//microsoft//dtd internet explorer 2.0 html//",
+            "-//microsoft//dtd internet explorer 2.0 tables//",
+            "-//microsoft//dtd internet explorer 3.0 html strict//",
+            "-//microsoft//dtd internet explorer 3.0 html//",
+            "-//microsoft//dtd internet explorer 3.0 tables//",
+            "-//netscape comm. corp.//dtd html//",
+            "-//netscape comm. corp.//dtd strict html//",
+            "-//o'reilly and associates//dtd html 2.0//",
+            "-//o'reilly and associates//dtd html extended 1.0//",
+            "-//o'reilly and associates//dtd html extended relaxed 1.0//",
+            "-//sq//dtd html 2.0 hotmetal + extensions//",
+            "-//softquad software//dtd hotmetal pro 6.0::19990601::extensions to html 4.0//",
+            "-//softquad//dtd hotmetal pro 4.0::19971010::extensions to html 4.0//",
+            "-//spyglass//dtd html 2.0 extended//",
+        ];
         let is_html_4_frameset_or_transitional = public_identifier
             .starts_with("-//w3c//dtd html 4.01 frameset")
             || public_identifier.starts_with("-//w3c//dtd html 4.01 transitional");
         if public_identifier == "html"
             || public_identifier.starts_with("-//w3c//dtd html 3.2")
+            || legacy_quirks_prefixes
+                .iter()
+                .any(|prefix| public_identifier.starts_with(prefix))
             || (is_html_4_frameset_or_transitional
                 && system_identifier.is_none_or(str::is_empty))
         {
@@ -17406,6 +17687,12 @@ fn browser_authored_base_href(document: &Document) -> Option<&str> {
         .and_then(|element| element.attribute("href"))
 }
 
+fn browser_authored_base_target(document: &Document) -> Option<&str> {
+    find_first_element_in_nodes(&document.children, "head")
+        .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
+        .and_then(|element| element.attribute("target"))
+}
+
 fn browser_effective_base_href(document: &Document, document_url: &str) -> Option<String> {
     let document_url = document_url.trim();
     if !is_absolute_url(document_url) {
@@ -17598,11 +17885,12 @@ fn collect_browser_content_nodes(
     nodes: &[Node],
     output: &mut Vec<BrowserContentNode>,
     base_href: Option<&str>,
+    base_target: Option<&str>,
     labels: &[(String, String)],
     id_texts: &[(String, String)],
 ) {
     collect_browser_content_nodes_with_mode(
-        nodes, output, base_href, labels, id_texts, None, false, false,
+        nodes, output, base_href, base_target, labels, id_texts, None, false, false,
     );
 }
 
@@ -17610,6 +17898,7 @@ fn collect_browser_content_nodes_with_mode(
     nodes: &[Node],
     output: &mut Vec<BrowserContentNode>,
     base_href: Option<&str>,
+    base_target: Option<&str>,
     labels: &[(String, String)],
     id_texts: &[(String, String)],
     current_label_text: Option<&str>,
@@ -17629,6 +17918,7 @@ fn collect_browser_content_nodes_with_mode(
                         role: "text".to_string(),
                         authored_role: None,
                         name: None,
+                        anchor_name: None,
                         id: None,
                         classes: Vec::new(),
                         style: None,
@@ -17639,6 +17929,7 @@ fn collect_browser_content_nodes_with_mode(
                         href: None,
                         resolved_href: None,
                         target: None,
+                        effective_target: None,
                         rel: None,
                         rel_tokens: Vec::new(),
                         download: None,
@@ -17663,6 +17954,7 @@ fn collect_browser_content_nodes_with_mode(
                         image_map_name: None,
                         image_map_shape: None,
                         image_map_coords: None,
+                        usemap: None,
                         srcset: None,
                         resolved_srcset: None,
                         sizes: None,
@@ -17820,6 +18112,7 @@ fn collect_browser_content_nodes_with_mode(
                 if let Some(content_node) = browser_content_node_for_element(
                     element,
                     base_href,
+                    base_target,
                     labels,
                     id_texts,
                     current_label_text,
@@ -17847,6 +18140,7 @@ fn attach_content_datalist_options(content: &mut [BrowserContentNode], body_root
 fn browser_content_node_for_element(
     element: &Element,
     base_href: Option<&str>,
+    base_target: Option<&str>,
     labels: &[(String, String)],
     id_texts: &[(String, String)],
     current_label_text: Option<&str>,
@@ -17885,6 +18179,7 @@ fn browser_content_node_for_element(
                 std::slice::from_ref(child),
                 &mut children,
                 base_href,
+                base_target,
                 labels,
                 id_texts,
                 child_label_text,
@@ -17904,6 +18199,11 @@ fn browser_content_node_for_element(
     }
 
     let href = element.attribute("href").map(ToOwned::to_owned);
+    let target = browser_anchor_target(element);
+    let effective_target = target
+        .clone()
+        .or_else(|| href.as_ref().and_then(|_| base_target.map(ToOwned::to_owned)));
+    let form_target = browser_control_form_target(element);
     let src = browser_content_src(element);
     let srcset = browser_content_srcset(element);
     let poster = browser_media_poster(element);
@@ -17920,6 +18220,10 @@ fn browser_content_node_for_element(
         role: role.to_string(),
         authored_role: browser_authored_role(element),
         name: Some(element.name.clone()),
+        anchor_name: element
+            .attribute("name")
+            .filter(|_| element.name == "a")
+            .map(ToOwned::to_owned),
         id: element.attribute("id").map(ToOwned::to_owned),
         classes: element
             .attribute("class")
@@ -17934,7 +18238,8 @@ fn browser_content_node_for_element(
             .as_deref()
             .and_then(|href| resolve_browser_url(href, base_href)),
         href,
-        target: browser_anchor_target(element),
+        target,
+        effective_target,
         rel: browser_anchor_rel(element),
         rel_tokens: browser_anchor_rel_tokens(element),
         download: browser_anchor_download(element),
@@ -17967,6 +18272,10 @@ fn browser_content_node_for_element(
         image_map_name: browser_image_map_name(element),
         image_map_shape: browser_image_map_shape(element),
         image_map_coords: browser_image_map_coords(element),
+        usemap: element
+            .attribute("usemap")
+            .map(collapse_html_whitespace)
+            .filter(|value| !value.is_empty()),
         resolved_srcset: srcset
             .as_deref()
             .map(|srcset| resolve_browser_srcset(srcset, base_href)),
@@ -18071,7 +18380,7 @@ fn browser_content_node_for_element(
         form_action: browser_control_form_action(element),
         form_enctype: browser_control_form_enctype(element),
         form_method: browser_control_form_method(element),
-        form_target: browser_control_form_target(element),
+        form_target,
         form_novalidate: browser_control_form_novalidate(element),
         value: browser_content_value(element),
         autofocus: browser_autofocus(element),
@@ -30553,7 +30862,8 @@ mod tests {
     fn browser_identity_metadata_tracks_language_direction_and_classes() {
         let document = parse_html(
             "<html lang=en dir=ltr><body id=main class=\"page legacy\" lang=en-US>\
-             <p id=intro class=\"lede print\" title=\"Intro\" dir=auto>Hello</p>",
+             <p id=intro class=\"lede print\" title=\"Intro\" dir=auto>Hello</p>\
+             <a name=legacy-target>Old section</a>",
         )
         .unwrap();
 
@@ -30570,6 +30880,16 @@ mod tests {
         assert_eq!(paragraph.classes, vec!["lede", "print"]);
         assert_eq!(paragraph.title.as_deref(), Some("Intro"));
         assert_eq!(paragraph.dir.as_deref(), Some("auto"));
+        assert_eq!(
+            content_tree.children[1].anchor_name.as_deref(),
+            Some("legacy-target")
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(
+            render_tree.children[1].anchor_name.as_deref(),
+            Some("legacy-target")
+        );
     }
 
     #[test]
@@ -35298,6 +35618,73 @@ mod tests {
     }
 
     #[test]
+    fn legacy_doctype_prefixes_enable_quirks_table_paragraph_recovery() {
+        let public_identifiers = [
+            "+//Silmaril//dtd html Pro v0r11 19970101//",
+            "-//AS//DTD HTML 3.0 asWedit + extensions//",
+            "-//AdvaSoft Ltd//DTD HTML 3.0 asWedit + extensions//",
+            "-//IETF//DTD HTML 2.0 Level 1//",
+            "-//IETF//DTD HTML 2.0 Level 2//",
+            "-//IETF//DTD HTML 2.0 Strict Level 1//",
+            "-//IETF//DTD HTML 2.0 Strict Level 2//",
+            "-//IETF//DTD HTML 2.0 Strict//",
+            "-//IETF//DTD HTML 2.0//",
+            "-//IETF//DTD HTML 2.1E//",
+            "-//IETF//DTD HTML 3.0//",
+            "-//IETF//DTD HTML 3.2 Final//",
+            "-//IETF//DTD HTML 3.2//",
+            "-//IETF//DTD HTML 3//",
+            "-//IETF//DTD HTML Level 0//",
+            "-//IETF//DTD HTML Level 1//",
+            "-//IETF//DTD HTML Level 2//",
+            "-//IETF//DTD HTML Level 3//",
+            "-//IETF//DTD HTML Strict Level 0//",
+            "-//IETF//DTD HTML Strict Level 1//",
+            "-//IETF//DTD HTML Strict Level 2//",
+            "-//IETF//DTD HTML Strict Level 3//",
+            "-//IETF//DTD HTML Strict//",
+            "-//IETF//DTD HTML//",
+            "-//Metrius//DTD Metrius Presentational//",
+            "-//Microsoft//DTD Internet Explorer 2.0 HTML Strict//",
+            "-//Microsoft//DTD Internet Explorer 2.0 HTML//",
+            "-//Microsoft//DTD Internet Explorer 2.0 Tables//",
+            "-//Microsoft//DTD Internet Explorer 3.0 HTML Strict//",
+            "-//Microsoft//DTD Internet Explorer 3.0 HTML//",
+            "-//Microsoft//DTD Internet Explorer 3.0 Tables//",
+            "-//Netscape Comm. Corp.//DTD HTML//",
+            "-//Netscape Comm. Corp.//DTD Strict HTML//",
+            "-//O'Reilly and Associates//DTD HTML 2.0//",
+            "-//O'Reilly and Associates//DTD HTML Extended 1.0//",
+            "-//O'Reilly and Associates//DTD HTML Extended Relaxed 1.0//",
+            "-//SQ//DTD HTML 2.0 HoTMetaL + extensions//",
+            "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//",
+            "-//SoftQuad//DTD HoTMetaL PRO 4.0::19971010::extensions to HTML 4.0//",
+            "-//Spyglass//DTD HTML 2.0 Extended//",
+        ];
+
+        for public_identifier in public_identifiers {
+            let source = format!(
+                "<!DOCTYPE html PUBLIC \"{public_identifier}\"><p><table><tr><td>X"
+            );
+            let document = parse_html(&source).unwrap();
+            let paragraph = element(&body(&document).children[0]);
+            assert_eq!(paragraph.name, "p", "{public_identifier}");
+            assert_eq!(
+                element(&paragraph.children[0]).name,
+                "table",
+                "{public_identifier}"
+            );
+        }
+
+        let no_quirks = parse_html(
+            "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\"><p><table><tr><td>X",
+        )
+        .unwrap();
+        assert_eq!(element(&body(&no_quirks).children[0]).name, "p");
+        assert_eq!(element(&body(&no_quirks).children[1]).name, "table");
+    }
+
+    #[test]
     fn reports_unmatched_end_tags_without_dropping_content() {
         let source = "<!doctype html><p>Hello</section>";
         let output = parse_html_with_diagnostics(source).unwrap();
@@ -37788,10 +38175,14 @@ mod tests {
         let direct_close = parse_html("<!doctype html><math><mtext>A</math>B").unwrap();
         assert_eq!(body(&direct_close).children.last(), Some(&Node::text("B")));
 
-        let integration_close =
+        let blocked_integration_close =
             parse_html("<!doctype html><math><mtext><span>A</mtext>B").unwrap();
-        let math = element(&body(&integration_close).children[0]);
-        assert_eq!(math.children.last(), Some(&Node::text("B")));
+        let span = find_first_element_in_nodes(
+            &body(&blocked_integration_close).children,
+            "span",
+        )
+        .unwrap();
+        assert_eq!(span.children, vec![Node::text("AB")]);
 
         let fragment_source = "<math><mtext><span>A</math>B";
         let fragment = parse_html_fragment_for_context_with_diagnostics(
@@ -45138,6 +45529,50 @@ mod tests {
     }
 
     #[test]
+    fn foreign_integration_boundaries_block_non_current_matching_end_tags() {
+        let boundaries = [
+            ("math", "mi", "mi"),
+            ("math", "mo", "mo"),
+            ("math", "mn", "mn"),
+            ("math", "ms", "ms"),
+            ("math", "mtext", "mtext"),
+            (
+                "math",
+                "annotation-xml encoding=\"text/html\"",
+                "annotation-xml",
+            ),
+            (
+                "math",
+                "annotation-xml encoding=\"application/xhtml+xml\"",
+                "annotation-xml",
+            ),
+            ("svg", "foreignObject", "foreignObject"),
+            ("svg", "desc", "desc"),
+            ("svg", "title", "title"),
+        ];
+
+        for (root, start, end) in boundaries {
+            for descendant_name in ["b", "span"] {
+                let source = format!(
+                    "<{root}><{start}><{descendant_name}>A</{end}>B</{root}>C"
+                );
+                let fragment = parse_html_fragment_for_context(&source, "div").unwrap();
+                let boundary = find_first_element_in_nodes(&fragment, end).unwrap();
+                let descendant = element(&boundary.children[0]);
+                assert_eq!(descendant.name, descendant_name, "source {source:?}");
+                assert_eq!(element_text_content(descendant), "ABC", "source {source:?}");
+            }
+
+            let control = format!("<{root}><{start}>A</{end}>B</{root}>C");
+            let fragment = parse_html_fragment_for_context(&control, "div").unwrap();
+            let foreign_root = element(&fragment[0]);
+            assert_eq!(element_text_content(element(&foreign_root.children[0])), "A");
+            assert_eq!(foreign_root.children[1], Node::text("B"));
+            assert_eq!(fragment[1], Node::text("C"));
+        }
+    }
+
+    #[test]
     fn option_group_starts_only_close_current_select_items() {
         let source = "<!doctype html><!--é-->\r\n<select><option id=outer><div>A<option id=nested>B</select>";
         let document = parse_html(source).unwrap();
@@ -46115,6 +46550,112 @@ mod tests {
     }
 
     #[test]
+    fn preserves_frameset_ok_across_empty_generic_element_families() {
+        for markup in [
+            "<div id=x></div>",
+            "<span></span>",
+            "<span id=x></span>",
+            "<b></b>",
+            "<i></i>",
+            "<a></a>",
+            "<font></font>",
+            "<nobr></nobr>",
+            "<h1></h1>",
+            "<section></section>",
+            "<article></article>",
+            "<ul></ul>",
+            "<ol></ol>",
+            "<dl></dl>",
+            "<menu></menu>",
+            "<form></form>",
+            "<option></option>",
+            "<optgroup></optgroup>",
+            "<canvas></canvas>",
+            "<audio></audio>",
+            "<video></video>",
+            "<details></details>",
+            "<ruby></ruby>",
+            "<rb></rb>",
+            "<rt></rt>",
+            "<x-widget></x-widget>",
+            "<span> </span>",
+            "<span><!--x--></span>",
+        ] {
+            let source = format!("<!doctype html>{markup}<frameset><frame></frameset>");
+            let document = parse_html(&source).unwrap();
+            let document_html = html(&document);
+            assert_eq!(element(&document_html.children[1]).name, "frameset", "{markup}");
+        }
+
+        for markup in [
+            "<li></li>",
+            "<dd></dd>",
+            "<dt></dt>",
+            "<applet></applet>",
+            "<marquee></marquee>",
+            "<img>",
+            "<br>",
+            "<hr>",
+            "<input>",
+            "<button></button>",
+            "<table></table>",
+            "<p><template></template>",
+            "<div><template><!--x--></template></div>",
+            "<select></select>",
+            "<textarea></textarea>",
+            "<pre></pre>",
+            "<listing></listing>",
+            "<iframe></iframe>",
+            "<object></object>",
+            "<span>x</span>",
+        ] {
+            let source = format!("<!doctype html>{markup}<frameset><frame></frameset>");
+            let document = parse_html(&source).unwrap();
+            let document_html = html(&document);
+            assert_eq!(element(&document_html.children[1]).name, "body", "{markup}");
+        }
+    }
+
+    #[test]
+    fn preserves_frameset_ok_across_raw_text_that_does_not_use_in_body_rules() {
+        for markup in [
+            "<noembed>x</noembed>",
+            "<noframes>x</noframes>",
+            "<script>x</script>",
+            "<style>x</style>",
+            "<title>x</title>",
+            "<noscript>x</noscript>",
+        ] {
+            let source = format!("<!doctype html>{markup}<frameset><frame></frameset>");
+            let document = parse_html(&source).unwrap();
+            assert_eq!(element(&html(&document).children[1]).name, "frameset", "{markup}");
+        }
+
+        let disabled = parse_html_with_options(
+            "<!doctype html><noscript>x</noscript><frameset><frame></frameset>",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Disabled,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(element(&html(&disabled).children[1]).name, "body");
+
+        for markup in [
+            "<svg>x</svg>",
+            "<math>x</math>",
+            "<textarea>x</textarea>",
+            "<xmp>x</xmp>",
+            "<iframe>x</iframe>",
+            "<p>x</p>",
+        ] {
+            let source = format!("<!doctype html>{markup}<frameset><frame></frameset>");
+            let document = parse_html(&source).unwrap();
+            assert_eq!(element(&html(&document).children[1]).name, "body", "{markup}");
+        }
+    }
+
+    #[test]
     fn positions_in_frameset_character_diagnostics_at_text_emission() {
         let source = "<!doctype html><frameset><!--é-->\r\n aβ <frame>γ ";
         let output = parse_html_with_diagnostics(source).unwrap();
@@ -47063,6 +47604,35 @@ mod tests {
     }
 
     #[test]
+    fn non_ascii_whitespace_keeps_late_head_content_in_the_body() {
+        let tags = [
+            ("title", "<title id=x>T</title>Z"),
+            ("style", "<style id=x>.a{color:red}</style>Z"),
+            ("meta", "<meta id=x name=a content=b>Z"),
+            ("base", "<base id=x href=/x>Z"),
+        ];
+
+        for marker in ['\u{00A0}', '\u{2003}', '\u{3000}'] {
+            for (name, tag) in tags {
+                let source = format!("{marker}{tag}");
+                let document = parse_html(&source).unwrap();
+                assert!(
+                    find_element_by_id(&head(&document).children, "x").is_none(),
+                    "source {source:?}"
+                );
+                let late_head = find_element_by_id(&body(&document).children, "x").unwrap();
+                assert_eq!(late_head.name, name, "source {source:?}");
+            }
+        }
+
+        for (name, tag) in tags {
+            let document = parse_html(&format!(" {tag}")).unwrap();
+            let head_content = find_element_by_id(&head(&document).children, "x").unwrap();
+            assert_eq!(head_content.name, name);
+        }
+    }
+
+    #[test]
     fn treats_non_ascii_whitespace_as_anchor_content_before_paragraphs() {
         for marker in ['\u{00A0}', '\u{2003}', '\u{3000}'] {
             let source = format!("<!doctype html><!--é-->\r\n<a>{marker}<p>x");
@@ -47167,6 +47737,120 @@ mod tests {
         let paragraph = element(&body(&document).children[1]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn applies_in_head_noscript_recovery_when_scripting_is_disabled() {
+        let options = HtmlParseOptions {
+            scripting: HtmlScriptingMode::Disabled,
+            ..HtmlParseOptions::default()
+        };
+
+        let nested = parse_html_with_options(
+            "<!doctype html><noscript><noscript>x</noscript></noscript><span>z",
+            options,
+        )
+        .unwrap();
+        assert!(element(&head(&nested).children[0]).children.is_empty());
+        assert_eq!(body(&nested).children[0], Node::text("x"));
+        assert_eq!(element(&body(&nested).children[1]).name, "span");
+
+        for end_tag in ["body", "html", "head", "div"] {
+            let source = format!(
+                "<!doctype html><noscript></{end_tag}></noscript><span>z"
+            );
+            let document = parse_html_with_options(&source, options).unwrap();
+            assert!(element(&head(&document).children[0]).children.is_empty(), "{end_tag}");
+            assert_eq!(element(&body(&document).children[0]).name, "span", "{end_tag}");
+        }
+
+        for (markup, expected) in [
+            ("<base>", "base"),
+            ("<title>x</title>", "title"),
+            ("<script>x</script>", "script"),
+            ("<template>x</template>", "template"),
+        ] {
+            let source = format!("<!doctype html><noscript>{markup}</noscript><span>z");
+            let document = parse_html_with_options(&source, options).unwrap();
+            let document_head = head(&document);
+            assert_eq!(document_head.children.len(), 2, "{markup}");
+            assert_eq!(element(&document_head.children[0]).name, "noscript", "{markup}");
+            assert_eq!(element(&document_head.children[1]).name, expected, "{markup}");
+        }
+
+        let noembed = parse_html_with_options(
+            "<!doctype html><noscript><noembed>x</noembed></noscript><span>z",
+            options,
+        )
+        .unwrap();
+        assert!(element(&head(&noembed).children[0]).children.is_empty());
+        assert_eq!(element(&body(&noembed).children[0]).name, "noembed");
+    }
+
+    #[test]
+    fn allows_nested_body_noscript_when_scripting_is_disabled() {
+        let document = parse_html_with_options(
+            "<!doctype html><body><noscript><noscript>x</noscript>y</noscript><span>z",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Disabled,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+
+        let outer = element(&body(&document).children[0]);
+        assert_eq!(outer.name, "noscript");
+        let inner = element(&outer.children[0]);
+        assert_eq!(inner.name, "noscript");
+        assert_eq!(inner.children, vec![Node::text("x")]);
+        assert_eq!(outer.children[1], Node::text("y"));
+        assert_eq!(element(&body(&document).children[1]).name, "span");
+    }
+
+    #[test]
+    fn disabled_head_fragment_noscript_uses_fragment_body_rules() {
+        let options = HtmlParseOptions {
+            scripting: HtmlScriptingMode::Disabled,
+            ..HtmlParseOptions::default()
+        };
+
+        let fragment = parse_html_fragment_for_context_with_options(
+            "<noscript><noscript>x</noscript>y</noscript><span>z",
+            "head",
+            options,
+        )
+        .unwrap();
+        let outer = element(&fragment[0]);
+        assert_eq!(outer.name, "noscript");
+        assert_eq!(element(&outer.children[0]).name, "noscript");
+        assert_eq!(outer.children[1], Node::text("y"));
+        assert_eq!(element(&fragment[1]).name, "span");
+
+        let fragment = parse_html_fragment_for_context_with_options(
+            "<noscript><div>x</div></noscript><link>",
+            "head",
+            options,
+        )
+        .unwrap();
+        let noscript = element(&fragment[0]);
+        assert_eq!(element(&noscript.children[0]).name, "div");
+        assert_eq!(element(&fragment[1]).name, "link");
+
+        let fragment = parse_html_fragment_for_context_with_options(
+            "<noscript></html></noscript><span>z",
+            "head",
+            options,
+        )
+        .unwrap();
+        assert!(element(&fragment[0]).children.is_empty());
+        assert_eq!(element(&fragment[1]).name, "span");
+    }
+
+    #[test]
+    fn head_fragment_p_end_tag_uses_in_body_recovery() {
+        let fragment = parse_html_fragment_for_context("</p>x", "head").unwrap();
+        assert_eq!(element(&fragment[0]).name, "p");
+        assert_eq!(fragment[1], Node::text("x"));
     }
 
     #[test]
@@ -48063,6 +48747,28 @@ mod tests {
                 "end tag `</script>` did not match an open element"
             )]
         );
+    }
+
+    #[test]
+    fn vertical_tab_does_not_delimit_a_script_end_tag_name() {
+        let vertical_tab = parse_html("<script id=x>A</script\u{000B}>B").unwrap();
+        let script = element(&head(&vertical_tab).children[0]);
+        assert_eq!(script.children, vec![Node::text("A</script\u{000B}>B")]);
+        assert!(body(&vertical_tab).children.is_empty());
+
+        for source in [
+            "<script id=x>A</script\u{000C}>B",
+            "<script id=x>A</script\t>B",
+            "<script id=x>A</script/\u{000B}>B",
+            "<script id=x>A</script/\u{000C}>B",
+            "<script id=x>A</script/x>B",
+            "<script id=x>A</script/x=\">\">B",
+        ] {
+            let document = parse_html(source).unwrap();
+            let script = element(&head(&document).children[0]);
+            assert_eq!(script.children, vec![Node::text("A")], "source {source:?}");
+            assert_eq!(body(&document).children, vec![Node::text("B")]);
+        }
     }
 
     #[test]
@@ -62030,4 +62736,141 @@ mod tests {
             None
         );
     }
+
+    #[test]
+    fn head_fragments_retain_content_parsed_after_non_ascii_whitespace() {
+        for marker in ["\u{a0}", " "] {
+            let title = parse_html_fragment_for_context(
+                &format!("{marker}<title id=x>T</title>Z"),
+                "head",
+            )
+            .unwrap();
+            assert_eq!(title.len(), 3, "marker {marker:?}");
+            assert_eq!(title[0], Node::text(marker));
+            assert_eq!(element(&title[1]).name, "title");
+            assert_eq!(element(&title[1]).attribute("id"), Some("x"));
+            assert_eq!(element_text(element(&title[1])), "T");
+            assert_eq!(title[2], Node::text("Z"));
+
+            let meta = parse_html_fragment_for_context(
+                &format!("{marker}<meta id=x name=a content=b>Z"),
+                "head",
+            )
+            .unwrap();
+            assert_eq!(meta.len(), 3, "marker {marker:?}");
+            assert_eq!(meta[0], Node::text(marker));
+            assert_eq!(element(&meta[1]).name, "meta");
+            assert_eq!(element(&meta[1]).attribute("id"), Some("x"));
+            assert_eq!(meta[2], Node::text("Z"));
+
+        }
+    }
+
+    #[test]
+    fn shell_starts_exit_a_seeded_head_fragment_context() {
+        let body = parse_html_fragment_for_context("<body class=x><p>Y</p>", "head").unwrap();
+        assert_eq!(body.len(), 1);
+        assert_eq!(element(&body[0]).name, "p");
+        assert_eq!(element_text(element(&body[0])), "Y");
+
+        let shell = parse_html_fragment_for_context("<html><body>X", "head").unwrap();
+        assert_eq!(shell, vec![Node::text("X")]);
+
+        let frameset =
+            parse_html_fragment_for_context("<frameset><frame name=x>", "head").unwrap();
+        assert!(frameset.is_empty());
+    }
+
+    #[test]
+    fn html_fragments_preserve_comments_around_the_implied_shell() {
+        let nodes = parse_html_fragment_for_context(
+            "<!--a--><title>T</title><!--h--><p>X</p><!--b-->",
+            "html",
+        )
+        .unwrap();
+
+        assert_eq!(nodes.len(), 3);
+        assert_eq!(nodes[0], Node::comment("a"));
+
+        let head = element(&nodes[1]);
+        assert_eq!(head.name, "head");
+        assert_eq!(element(&head.children[0]).name, "title");
+        assert_eq!(head.children[1], Node::comment("h"));
+
+        let body = element(&nodes[2]);
+        assert_eq!(body.name, "body");
+        assert_eq!(element(&body.children[0]).name, "p");
+        assert_eq!(body.children[1], Node::comment("b"));
+
+        let after_doctype =
+            parse_html_fragment_for_context("<!doctype html><!--a-->X", "html").unwrap();
+        assert_eq!(after_doctype[0], Node::comment("a"));
+        assert_eq!(element(&after_doctype[1]).name, "head");
+        assert_eq!(element(&after_doctype[2]).name, "body");
+
+        let after_context_end =
+            parse_html_fragment_for_context("</html><!--b-->X", "html").unwrap();
+        assert_eq!(element(&after_context_end[0]).name, "head");
+        assert_eq!(element(&after_context_end[1]).name, "body");
+        assert_eq!(after_context_end[2], Node::comment("b"));
+
+        let straddling_context_end =
+            parse_html_fragment_for_context("<!--a--></html><!--b-->X", "html").unwrap();
+        assert_eq!(straddling_context_end[0], Node::comment("a"));
+        assert_eq!(element(&straddling_context_end[1]).name, "head");
+        assert_eq!(element(&straddling_context_end[2]).name, "body");
+        assert_eq!(straddling_context_end[3], Node::comment("b"));
+
+        let after_title =
+            parse_html_fragment_for_context("<title>T</title></html><!--b-->X", "html").unwrap();
+        assert_eq!(element(&after_title[0]).name, "head");
+        assert_eq!(element(&after_title[1]).name, "body");
+        assert_eq!(after_title[2], Node::comment("b"));
+
+        let after_body = parse_html_fragment_for_context("</body><!--b-->X", "html").unwrap();
+        assert_eq!(element(&after_body[0]).name, "head");
+        assert_eq!(element(&after_body[1]).name, "body");
+        assert_eq!(after_body[2], Node::comment("b"));
+
+        let reentered =
+            parse_html_fragment_for_context("</html><meta name=x><!--b-->X", "html").unwrap();
+        assert_eq!(element(&reentered[0]).name, "head");
+        let reentered_body = element(&reentered[1]);
+        assert_eq!(reentered_body.name, "body");
+        assert_eq!(element(&reentered_body.children[0]).name, "meta");
+        assert_eq!(reentered_body.children[1], Node::comment("b"));
+        assert_eq!(reentered_body.children[2], Node::text("X"));
+
+        let frameset = parse_html_fragment_for_context(
+            "</html><frameset><frame name=x><!--b-->",
+            "html",
+        )
+        .unwrap();
+        assert_eq!(element(&frameset[0]).name, "head");
+        assert_eq!(element(&frameset[1]).name, "frameset");
+        assert_eq!(element(&frameset[1]).children[1], Node::comment("b"));
+    }
+
+    #[test]
+    fn content_and_render_trees_preserve_effective_navigation_targets() {
+        let document = parse_html(
+            "<head><base target='workspace'></head><body>\
+             <a id='inherited' href='/report'>Report</a>\
+             <a id='blank' href='/new' target='_blank' rel='noreferrer' download='new.html'>New</a>\
+             <form action='/save'><button id='save'>Save</button></form></body>",
+        )
+        .unwrap();
+        let tree = BrowserRenderTree::from_document_with_document_url(
+            &document,
+            "https://example.test/start",
+        );
+        let inherited = &tree.children[0];
+        let blank = &tree.children[1];
+
+        assert_eq!(inherited.effective_target.as_deref(), Some("workspace"));
+        assert_eq!(blank.effective_target.as_deref(), Some("_blank"));
+        assert_eq!(blank.download.as_deref(), Some("new.html"));
+        assert_eq!(blank.rel_tokens, vec!["noreferrer"]);
+    }
+
 }

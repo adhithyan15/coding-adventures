@@ -34,13 +34,32 @@ client ID, token-endpoint audience, advertised algorithm set, and a
 provider-matched opaque private-key reference into the existing assertion
 profile. The selected algorithm must appear exactly in provider data; this
 pure construction invokes no signer and enables no concrete algorithm.
-Prepared authorization-code exchange and refresh requests can then cross
-broker-level assertion boundaries: the registered provider, client ID, token
-endpoint, retained method, and exact algorithm are checked before the existing
-audited non-exporting signer is invoked; injected transports are separately
-audit-gated; and bounded response decoding completes before release. The caller
-still owns issued-at time and 256-bit replay entropy, and no concrete signing or
-network implementation is added.
+Prepared authorization-code exchange, refresh, and RFC 7009 revocation requests
+can then cross broker-level assertion boundaries: the registered provider,
+client ID, exact operation endpoint, retained method, and exact algorithm are
+checked before the existing audited non-exporting signer is invoked; injected
+transports are separately audit-gated; and bounded response decoding or
+classification completes before release. Revocation requires its explicitly
+configured endpoint as the assertion audience and never assumes token-endpoint
+acceptance. The caller still owns issued-at time and 256-bit replay entropy, and
+no concrete signing or network implementation is added. A separate composition
+validates that retained profile before credential access, releases the exact
+opaque account record's refresh token and revision, and conditionally deletes
+only that revision after exact HTTP 200 crosses signer, transport, protocol,
+custody, and broker audit gates. For records without a refresh token, a
+separate fallback proves refresh absence inside custody before releasing the
+access token and exact revision, then applies the same signing, transport,
+response, and conditional-delete gates. Refreshable records and every later
+failure retain the local credential.
+Authorization-code exchange can likewise compose its bounded response directly
+into an exact provider-bound opaque account key. Key mismatch fails before
+signing, transport, clock, or custody access; the response crosses the OAuth
+credential-release and custody-create audit gates inside the broker, and only
+the opaque revision is released. Stored refresh credentials can cross the same
+retained profile, audited abstract signer, injected transport, bounded decoder,
+caller-owned clock, OAuth credential release, and revision-bound custody
+rotation without leaving the broker. Invalid profiles fail before credential
+access, and every later failure retains the prior record.
 For client-secret profiles, prepared authorization-code exchange, refresh, and
 RFC 7009 revocation requests can now cross the complete broker boundary: the
 registered provider, client ID, exact operation endpoint, and retained
@@ -53,9 +72,12 @@ composition reads the exact opaque account record's refresh token and revision,
 revokes that token through the retained client-secret method, and conditionally
 deletes only that revision after exact HTTP 200 and every intervening audit gate.
 Provider failures, transport failures, missing refresh tokens, and binding
-failures leave the credential record intact. These boundaries add no concrete
-network implementation. Exchange can either return its audit-gated response or
-compose it directly into
+failures leave the credential record intact. For records that have no refresh
+token, a separate access-token fallback releases that token and exact revision
+only after custody proves refresh absence; it then applies the same retained
+client-secret, transport, response, and conditional-delete gates. These
+boundaries add no concrete network implementation. Exchange can either return
+its audit-gated response or compose it directly into
 an exact provider-bound opaque account key, crossing the OAuth credential
 release and custody-create audit gates without credential disclosure. A stored
 refresh token can likewise cross exact retained Basic/Post authentication,
@@ -64,6 +86,19 @@ credential release, and revision-bound custody rotation without leaving the
 broker. Authentication mismatch is rejected before credential access, and
 transport, provider, clock, release, or compare-and-swap failures retain the
 prior record.
+
+For an OpenID Connect Authorization Code exchange using retained client-secret
+authentication, the broker can instead consume the exact non-cloneable
+authorization nonce and route the bounded response through the existing
+account-identity authority before custody creation. Provider, client, and trace
+bindings are checked before secret access or transport. The response then
+crosses the OAuth credential-release audit, its zeroizing ID token is detached
+without cloning and consumed by audited verification, and only the authority's
+provider-scoped opaque account key selects storage. Missing or rejected ID-token
+evidence reaches no credential store, the consumed evidence is omitted from the
+stored record, and only the opaque revision is released. Verification, time,
+transport, and storage implementations remain injected.
+
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
@@ -98,11 +133,10 @@ dependency are sibling packages in this repository.
 - concrete HTTPS, TLS, or socket authority;
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
-- account identity proof and key selection, listing, access-token-only detach
-  when no refresh token exists, device authorization UI, timing/sleep authority,
-  and full device-flow loops;
-- private-key revocation and credential-rotation orchestration,
-  concrete private-key algorithms, OIDC validation, and DPoP.
+- concrete account-identity verification/JWKS, identity composition for other
+  authentication or grant paths, account listing, device authorization UI,
+  timing/sleep authority, and full device-flow loops;
+- concrete private-key algorithms, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
 

@@ -2738,6 +2738,42 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — bounded while analysis applies one simple scalar recurrence
+    // after every true predicate and retains its exact formatter-free result.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real r; i := 0; r := 0.25; for i := i + 1 while i <= 3 do r := r + i; print(r) end",
+        expect: Expect::Stdout("6.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — bounded while analysis also carries one local boolean
+    // recurrence to the exact final snapshot used by formatter-free output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do flag := flag eqv false; if flag then r := 42.0 else r := 0.5; print(r) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — unary boolean wrappers must reach static negation rather
+    // than being mistaken for a bare-variable identity read.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do flag := not flag; if flag then r := 42.0 else r := 0.5; print(r) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a sole recurrence assignment may retain its snapshot through
+    // an otherwise effect-free compound-statement wrapper.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do begin flag := not flag end; if flag then r := 42.0 else r := 0.5; print(r) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a statically nonempty while element may have a dynamic trip
     // count while still establishing the same control-independent body value.
     Prog {
@@ -5972,7 +6008,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY T \"|\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("HI   -OKZZ|"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL STRING SIZE: the same sources truncate at a short receiver and exactly fill another.
     Prog {
@@ -5994,7 +6030,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY EXACT \"|\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("ABCD|\nABCDE|"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL STRING SIZE: a changed source is read again; unwritten receiver bytes are never filled.
     Prog {
@@ -6015,7 +6051,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY T \"|\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("ABZZZZ|\nCDZZZZ|"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL delimiters: STRING cuts each sender, keeps absent delimiters whole, and preserves the tail.
     Prog {
@@ -6035,7 +6071,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" T \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[abefZZZZ]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL delimiters: an item delimiter stops at its first match, even when another follows.
     Prog {
@@ -6054,7 +6090,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" T \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[aZZZ]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL delimiters: UNSTRING truncates/pads fields; the last receiver does not take the remainder.
     Prog {
@@ -6076,7 +6112,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" R3 \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[AB]\n[Z  ]\n[Q]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL delimiters: leading and consecutive delimiters produce space-filled empty receivers.
     Prog {
@@ -6100,7 +6136,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" R4 \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[  ]\n[A ]\n[  ]\n[B ]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL delimiters: an item delimiter splits fields; exhausted source leaves later receivers alone.
     Prog {
@@ -6123,7 +6159,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" R3 \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[A ]\n[B ]\n[ZZ]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL pointer/overflow: in-range STRING preserves both sides and advances by bytes placed.
     Prog {
@@ -6341,7 +6377,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY C.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("009\n009\n013"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // INSPECT characters counts padding: observe counters after each operation.
@@ -6362,7 +6398,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY C.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("011\n017"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // INSPECT leading stops at first mismatch: observe counters after each operation.
@@ -6391,7 +6427,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY C.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("007\n004\n007\n012"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // INSPECT replace all items: observe the rebuilt source text.
@@ -6417,7 +6453,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY S.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("XBXBX\nXBXBX\nXYXYX"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // INSPECT replace leading gap: observe the rebuilt source text.
@@ -9289,7 +9325,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::DartmouthBasic, 51, 357),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
-        (Language::Cobol60, 58, 434),
+        (Language::Cobol60, 58, 446),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -12865,6 +12901,102 @@ fn algol_step_loop_scalar_recurrence_runs_on_every_available_standard_backend() 
 }
 
 #[test]
+fn algol_while_loop_scalar_recurrence_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := i + 1 while i <= 3 do r := r + i")
+        })
+        .expect("the ALGOL while-loop scalar recurrence must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the while-loop scalar recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_while_loop_boolean_recurrence_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("while i <= 3 do flag := flag eqv false")
+        })
+        .expect("the ALGOL while-loop boolean recurrence must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the while-loop boolean recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_while_loop_boolean_negation_recurrence_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("while i <= 3 do flag := not flag")
+        })
+        .expect("the ALGOL while-loop boolean negation recurrence must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the while-loop boolean negation recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_while_loop_single_compound_recurrence_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("do begin flag := not flag end")
+        })
+        .expect("the ALGOL single-compound recurrence must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the single-compound recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_static_while_body_snapshot_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -15388,4 +15520,60 @@ fn portable_text_stdout_cobol_beam_refmod_move_and_trap() {
     }
     assert_eq!(executed, 4);
     eprintln!("COBOL BEAM reference-modification MOVE/trap: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_cobol_beam_string_size_and_delimiter() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM STRING SIZE/delimiter: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(28).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM STRING SIZE/delimiter: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_cobol_beam_unstring_and_delimiter() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM UNSTRING/delimiter: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(32).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM UNSTRING/delimiter: {executed} programs executed");
+}
+
+// VM-040: the base INSPECT TALLYING/REPLACING family (skip the 8 pointer/
+// overflow rows that precede it in file order — see the VM-040 COBOL BEAM
+// INSPECT TALLYING/REPLACING backlog contract for why this family, not the
+// next-in-file-order pointer/overflow family, was selected first). This
+// batch covers TALLYING FOR ALL, TALLYING FOR CHARACTERS, TALLYING FOR
+// LEADING and REPLACING ALL; the remaining four base rows (REPLACING LEADING,
+// REPLACING CHARACTERS, REPLACING with no rechaining, REPLACING first-match)
+// are the natural next slice.
+#[test]
+fn portable_text_stdout_cobol_beam_inspect_tallying_replacing() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM INSPECT TALLYING/REPLACING: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(44).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM INSPECT TALLYING/REPLACING: {executed} programs executed");
 }

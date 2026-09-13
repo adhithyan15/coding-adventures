@@ -119,6 +119,8 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `io_out` | `gc_bif1 erlang:display/1` |
 | `alloc_closure` | `put_list` chain: `[fn_atom \| cap0, cap1, …]` |
 | `call_closure` | `get_list` + `erlang:'++'`/2 + `erlang:apply/3` |
+| `str_len` | `gc_bif1 erlang:length/1` |
+| `str_index` | `idx+1` (`gc_bif2 erlang:+/2`), then `call_ext lists:nth/2` |
 
 ## Closure encoding (LANG35)
 
@@ -143,9 +145,9 @@ Both `erlang:'++'`/2 and `erlang:apply/3` are registered as BIF imports.
 `box`, `unbox`, `field_load`, `field_store`, `is_null`, `safepoint`, and any
 instruction with `type_hint` of `"any"`, `"polymorphic"`, or unsupported
 `"str"`/`"ref<…>"` shapes. The supported string subset is printable-ASCII
-`str_const`, `str_concat`, `str_slice`, `str_eq`, `str_cmp`, `print_str`, and
-ordinary call/return/move transport, represented as proper Erlang character
-lists. `str_slice`'s `[start, end)` bounds lower to
+`str_const`, `str_concat`, `str_slice`, `str_len`, `str_index`, `str_eq`,
+`str_cmp`, `print_str`, and ordinary call/return/move transport, represented
+as proper Erlang character lists. `str_slice`'s `[start, end)` bounds lower to
 `lists:sublist(List, start+1, end-start)` (BEAM's `lists:sublist/3` is
 1-indexed and takes a count, not an end offset). `sublist` alone is more
 lenient than `str_slice`'s documented contract (trap when
@@ -155,9 +157,16 @@ in-range `start` with an `end` past the source length silently returns a
 SHORT result instead of raising. The lowering therefore checks all three
 predicates explicitly (`erlang:length/1` via `gc_bif1`, then `is_ge` branches
 reusing the same label-synthesis pattern as `cmp_*`) and calls
-`erlang:error(badarg)` on any violation, before `sublist` ever runs. Float
-constants are also rejected — BEAM integer arithmetic cannot hold IEEE-754
-doubles without boxing.
+`erlang:error(badarg)` on any violation, before `sublist` ever runs.
+`str_index` lowers `idx` to `lists:nth(idx+1, source)`; unlike `str_slice`'s
+`sublist` gap, `lists:nth`'s own clauses have no case for an index `<= 0` or
+past the list's end, so both out-of-range directions already raise
+`function_clause` on their own — no separate explicit guard is needed, and
+the 0-based-to-1-based `+1` conversion is exactly what makes that native
+failure line up with `str_index`'s documented `idx < 0 || idx >= len` trap
+contract (`vm-core::dispatch::handle_str_index`). Float constants are also
+rejected — BEAM integer arithmetic cannot hold IEEE-754 doubles without
+boxing.
 
 ## OTP compatibility
 

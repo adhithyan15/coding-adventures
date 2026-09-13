@@ -357,15 +357,23 @@ and positive fixed column counts, flat node ordering, explicit `space` slots, no
 column spans, named `classDef` declarations, `class` assignments, inline
 `:::class` assignments, direct `style` declarations, square, rounded,
 circular, double-circle, diamond, hexagon, stadium, subroutine, cylinder,
-parallelogram, trapezoid, and asymmetric nodes, titles, single-line and braced
+parallelogram, trapezoid, asymmetric, and cardinal or axis-direction arrow nodes,
+quoted multiword labels, titles, single-line and braced
 multiline accessibility metadata, recursive anonymous and named composite blocks
 with authored labels, local column counts, and parent-grid spans, and directed
-and undirected connections with native quoted or pipe-delimited optional
-labels. `diagram-layout-grid` resolves deterministic
+and undirected solid connections, plus directed and bidirectional point-arrow
+connections with solid, dotted, and thick lines and pipe-delimited optional
+labels, and circle or cross markers at either endpoint. Solid directed and
+undirected connections also accept native quoted labels. Link endpoints may
+declare square or rounded nodes inline, including their authored labels, rather
+than requiring a separate cell declaration. Terminal circle and
+cross markers accept Mermaid's compact `A--oB` and `A--xB` forms without
+collapsing hyphenated node IDs. `diagram-layout-grid` resolves deterministic
 cell geometry before the shared backend-neutral PaintScene lowering path. A
 native Metal-to-PNG fixture gates this slice. Named classes and direct styles
-resolve for both cells and composites; Block remains at the partial level while
-the pinned corpus is not yet complete.
+resolve for both cells and composites, including backend-neutral
+`stroke-dasharray` patterns; Block remains at the partial level while the
+pinned corpus is not yet complete.
 
 ### Packet Native Slice
 

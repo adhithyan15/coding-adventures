@@ -5,6 +5,15 @@ documented in this file.
 
 ## Unreleased
 
+- Carry local `img[usemap]` references into browser content and render nodes so
+  shared layout can associate hidden maps without reparsing HTML in a host.
+
+- Carry base-inherited effective link targets through browser content and
+  render trees.
+
+- Retain legacy `a[name]` fragment targets separately from element tag names in
+  browser content and render nodes.
+
 - Project effective disabled-fieldset state into browser render nodes, including
   the first direct legend exception and nested-fieldset inheritance.
 

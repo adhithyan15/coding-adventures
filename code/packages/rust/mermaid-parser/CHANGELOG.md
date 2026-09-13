@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.211.0
+
+- Lower shaped node declarations written directly on Block links into grid cells and connections.
+
+## 0.210.0
+
+- Parse compact Block terminal circle and cross markers into backend-neutral endpoint-marker IR.
+
+## 0.209.0
+
+- Preserve pipe-delimited labels on Block links with circle or cross endpoint markers.
+
+## 0.208.0
+
+- Parse Block circle and cross endpoint markers independently from edge direction and line style.
+
+## 0.207.0
+
+- Parse bidirectional Block point-arrow connections while preserving their line styles.
+
+## 0.206.0
+
+- Parse dotted and thick Block connections into typed grid-edge styles.
+
+## 0.205.0
+
+- Parse and validate Block `stroke-dasharray` styles into semantic dash patterns.
+
+## 0.204.0
+
+- Parse Block arrow labels and cardinal or axis direction lists into typed grid IR.
+
+## 0.203.0
+
+- Normalize quoted Block node labels to their authored display text.
+
 ## 0.202.0
 
 - Resolve named classes and direct styles for Block composites.

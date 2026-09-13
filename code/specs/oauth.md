@@ -4,7 +4,7 @@
 installed-app Authorization Code + PKCE, RFC 8628 device-flow initiation and
 caller-driven polling classification and sequencing,
 token/error codecs, refresh rotation, revocation request/response
-classification and exact refresh-token detach, RFC 8414
+classification and exact refresh- or access-token detach, RFC 8414
 metadata validation, and an audited
 literal-loopback callback host plus storage-agnostic audit-before-disclosure
 credential custody now compose through data-driven provider registration,
@@ -42,7 +42,10 @@ needs:
   provider's revocation endpoint.
 - **OpenID Connect ID tokens** — when present, retained as opaque OAuth token
   material until a later OIDC layer verifies signature, issuer, audience,
-  expiry, and transaction nonce before exposing `sub`.
+  expiry, and transaction nonce before exposing `sub`. After the decoder's
+  credential-release audit gate, ownership can be split without cloning into
+  zeroizing ID-token evidence and a remaining access/refresh credential bundle
+  for later verified-identity custody composition.
 
 We deliberately exclude:
 
@@ -122,7 +125,33 @@ The delivery order is:
    `vault-sealed-store` backend. Backend revision tokens are cryptographically
    bound to fixed-size custody revisions while the exact backend token is used
    for every atomic compare-and-swap or delete. HTTPS authority remains a
-   separate adapter.
+   separate adapter. An audit-first account-identity proof boundary is also
+   shipped as a prerequisite for selecting those opaque account keys. It
+   accepts only bounded zeroizing ID-token evidence plus exact provider,
+   client, issuer, nonce, caller-time, allowed-algorithm, and opaque
+   verification-context data; an injected trusted authority must verify the
+   signature and all bound claims before returning a provider-scoped opaque
+   account identity. Verification intent and its closed result are durably
+   provider/trace audited before the authority effect and result release. For
+   Authorization Code identity proof, the boundary consumes the core's
+   non-cloneable nonce object, validates its exact provider and client, and
+   derives the audit trace from that browser ceremony before any authority
+   effect. The boundary exposes no subject claim or token bytes and implements
+   no JWT, JOSE, JWKS, discovery, network, clock, storage, or concrete cryptographic
+   authority. The authorization core now also provides an explicit OIDC begin
+   path: exact `openid` scope is mandatory, caller-injected entropy supplies an
+   independent 256-bit `nonce` beside state and PKCE, provider extras cannot
+   override it, and a non-cloneable zeroizing provider/client/trace-bound nonce
+   is retained for the later proof. A broker composition now carries one
+   client-secret-authenticated Authorization Code response through the OAuth
+   credential-release gate, detaches its zeroizing ID-token evidence without a
+   clone, verifies that evidence with the exact retained nonce, and creates the
+   credential record only under the resulting provider-scoped opaque account
+   key. Provider, client, and trace mismatches fail before secret access or
+   transport; missing or rejected identity evidence fails before credential
+   storage; the consumed ID token is not retained in the stored credential.
+   Concrete JWT, JOSE, JWKS, discovery, clock, storage, and network authorities
+   remain injected or out of scope.
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
@@ -182,16 +211,43 @@ The delivery order is:
    composes the exact stored refresh token through retained Basic/Post policy,
    audited secret access and transport, bounded response decoding, caller-owned
    time, OAuth credential release, and revision-bound atomic retain/rotation.
-   Binding and all later failures preserve the prior record. Account identity
-   proof/key selection and access-token-only detach remain separate composition
-   steps. Prepared `private_key_jwt` authorization-code exchange and refresh
-   requests can now cross the broker through the existing abstract signer:
-   exact retained provider, client, token endpoint, method, and case-sensitive
-   algorithm checks precede signing; signer and injected transport
-   effects/results are separately audited with the same provider and trace; and
-   bounded response decoding completes before release. Issued-at time and
-   256-bit replay entropy remain caller-owned, and this enables neither a
-   concrete signing algorithm, credential persistence, nor network authority.
+   Binding and all later failures preserve the prior record. A client-secret
+   access-token-only fallback now releases the token and exact revision only
+   when custody proves that no refresh token exists, then conditionally deletes
+   after exact HTTP 200 and every audit gate. Refreshable credentials, retryable
+   provider failures, and stale revisions retain local state. Client-secret
+   Authorization Code exchange can additionally derive its opaque account key
+   through the audited ID-token identity boundary before initial custody
+   creation, eliminating caller key selection for that path. Other grant and
+   authentication paths still keep identity proof and key selection as
+   separate composition steps. Prepared
+   `private_key_jwt` authorization-code exchange, refresh, and
+   RFC 7009 revocation requests can now cross the broker through the existing
+   abstract signer: exact retained provider, client, operation endpoint,
+   method, and case-sensitive algorithm checks precede signing; signer and
+   injected transport effects/results are separately audited with the same
+   provider and trace; and bounded response decoding or classification
+   completes before release. Revocation derives a separate profile from the
+   explicitly configured revocation endpoint and never invents token-endpoint
+   audience acceptance. An exact opaque account record can now compose its
+   stored refresh token and revision through that path: the complete profile is
+   revalidated before credential access, and local deletion is conditional on
+   exact HTTP 200 plus every signer, transport, protocol, custody, and broker
+   audit gate. An access-token-only fallback additionally requires custody to
+   prove refresh-token absence before the access token and exact revision are
+   released; refreshable records fail before signing or transport, and every
+   later failure retains the record. Private-key-JWT authorization-code
+   exchange can also route its bounded response directly into an exact opaque
+   account key: key/provider mismatch fails before signer, transport, clock, or
+   custody access; OAuth credential release and custody creation remain
+   separately audited; and only the opaque revision returns. Issued-at time and
+   256-bit replay entropy remain caller-owned. Stored refresh credentials can
+   now compose through the same exact profile, audited signer and transport,
+   bounded decoding, caller-owned clock, OAuth credential release, and
+   revision-bound atomic rotation. Profile mismatch fails before credential
+   access, while signing, transport, clock, release, and compare-and-swap
+   failures preserve the prior record. This enables neither a concrete signing
+   algorithm nor network authority.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate
@@ -712,6 +768,10 @@ avoid refresh storms).
 2. Broker:
    - Generates 32-byte URL-safe random state.
    - Generates 32-byte URL-safe random code_verifier.
+   - For the explicit OpenID Connect path, requires the exact `openid` scope,
+     generates an independent 32-byte URL-safe random nonce, includes it in the
+     browser request, and returns a provider/client/trace-bound zeroizing nonce
+     that the caller retains for the later ID-token proof.
    - Computes code_challenge = base64url(sha256(code_verifier)).
    - Constructs authorization URL with:
        client_id, redirect_uri, response_type=code,

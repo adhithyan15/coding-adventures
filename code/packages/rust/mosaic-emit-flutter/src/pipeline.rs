@@ -67,7 +67,7 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt::Write as _;
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
@@ -2336,7 +2336,22 @@ fn dart_opacity_literal(value: &str) -> String {
     let trimmed = value.trim();
     match trimmed.parse::<f64>() {
         Ok(number) if number.is_finite() => dart_double_literal(number),
-        _ => trimmed.to_string(),
+        // SECURITY -- this arm used to be `trimmed.to_string()`, passing
+        // authored text verbatim into `Opacity(opacity: {expr}, ..)`.
+        // Exactly the hole just closed in `css_color_to_dart`, on a
+        // different helper and reachable the same way: a quoted STRING
+        // style value is unquoted before it arrives, so
+        // `opacity: "1 ), child: evil(/*"` emitted
+        //
+        //     Opacity(opacity: 1 ), child: evil(/*, child: ..)
+        //
+        // escaping the argument and commenting out what followed.
+        //
+        // A non-numeric opacity now falls back to fully opaque rather
+        // than being emitted. Dropping the declaration is the same
+        // choice the colour path makes, and an authored value the
+        // emitter cannot understand should not become code.
+        _ => "1.0".to_string(),
     }
 }
 
@@ -2785,7 +2800,10 @@ fn emit_container(
     let has_border = base_border_width.is_some()
         || state_layers
             .iter()
-            .any(|layer| layer.border_width.is_some());
+            .any(|layer| layer.border_width.is_some())
+        // UI79 -- a part whose ONLY border is per-edge must still take
+        // the decoration path, or the edge reaches nothing.
+        || per_edge_border_expr(&props).is_some();
     let has_padding =
         base_padding.is_some() || state_layers.iter().any(|layer| layer.padding.is_some());
 
@@ -2847,9 +2865,16 @@ fn emit_container(
                     |layer| layer.border_width.as_ref(),
                     base_border_width.as_deref().unwrap_or("0"),
                 );
-                decoration.push(format!(
-                    "border: Border.all(color: {border_color}, width: {border_width})"
-                ));
+                decoration.push(
+                    // UI79 -- a per-edge declaration replaces the
+                    // all-four form, filling unauthored sides from the
+                    // shorthand. This is the writer that actually runs
+                    // for a styled container; `emit_styled_box` has a
+                    // second one that does not.
+                    per_edge_border_expr(&props).unwrap_or_else(|| {
+                        format!("border: Border.all(color: {border_color}, width: {border_width})")
+                    }),
+                );
             }
             if let Some(tier) = elevation {
                 decoration.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
@@ -3463,9 +3488,17 @@ fn style_prop_to_container_arg(prop: &str) -> Option<String> {
 /// than panicking — generated source still type-checks.
 fn parse_pixel_value(s: &str) -> String {
     let s = s.trim().trim_end_matches("px");
+    // Non-finite values must not survive: `f64::parse` accepts `inf`,
+    // `NaN` and overflowing literals like `1e400`, and `{f}` then prints
+    // them as bare Dart identifiers (`inf`, `NaN`) that do not compile.
+    // Not an injection -- no punctuation survives `parse::<f64>` -- but
+    // it breaks the "generated source still type-checks" contract this
+    // function's `0` fallback exists to keep.
     s.parse::<f64>()
+        .ok()
+        .filter(|f| f.is_finite())
         .map(|f| format!("{f}"))
-        .unwrap_or_else(|_| "0".to_string())
+        .unwrap_or_else(|| "0".to_string())
 }
 
 /// A fixed pixel length, or `None` for anything relative (a `%` value, most
@@ -3492,6 +3525,26 @@ fn fixed_pixel_length(s: &str) -> Option<String> {
 fn css_color_to_dart(s: &str) -> Option<String> {
     let s = s.trim();
     if let Some(hex) = s.strip_prefix('#') {
+        // SECURITY -- validate the DIGITS, not just the length.
+        //
+        // This checked only `hex.len()` and then interpolated the text
+        // straight into a Dart expression. The `.msl` grammar's
+        // `HASH_COLOR` really is hex-only, but `style_value` also admits
+        // a quoted STRING, which mosstyle passes through verbatim and
+        // `parse_style_props` unquotes -- and quoted colours are
+        // idiomatic in this repo. So `border-top-color: "#00)+E(/*"`
+        // emitted `const Color(0x00)+E(/*)`, escaping the argument and
+        // opening a comment that swallowed the next widget property.
+        // That is code injection into generated Dart, reachable from any
+        // authored stylesheet.
+        //
+        // Rejecting here rather than at each call site covers every
+        // sink: background, color, border-color and UI79's four
+        // per-edge colours all funnel through this one function, and a
+        // `None` lands on each caller's existing fallback.
+        if !hex.bytes().all(|b| b.is_ascii_hexdigit()) {
+            return None;
+        }
         let hex = hex.to_ascii_uppercase();
         if hex.len() == 6 {
             return Some(format!("const Color(0xFF{hex})"));
@@ -3515,6 +3568,60 @@ fn css_color_to_dart(s: &str) -> Option<String> {
 /// Split a joined `"key: value; key: value"` part-style string into a
 /// `key → value` map. Both halves are trimmed; values keep their CSS
 /// units (`22px`, `#3f3f46`) for downstream parsing.
+/// UI79 -- per-edge borders.
+///
+/// Flutter is the one backend whose toolkit expresses this directly:
+/// `Border(top: BorderSide(..), bottom: ..)` carries a colour AND a width
+/// per side, so nothing has to be hand-drawn the way Compose's
+/// `drawBehind` does.
+///
+/// Returns `None` when no edge is authored, which is what keeps every
+/// existing part emitting the byte-identical `Border.all(..)` it does
+/// today. When an edge IS authored, unauthored sides fall back to the
+/// `border-width`/`border-color` shorthand -- the CSS cascade answer, and
+/// UI79 §3 rule 3.
+///
+/// `border-<edge>-style` is not consulted: only `solid` is drawn, and
+/// Flutter has no style-drop reporting at all (#12022), so a `dashed`
+/// here is lost silently. That is a gap in the REPORT, not in this
+/// lowering, and it is recorded rather than worked around.
+fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
+    let edges = ["top", "right", "bottom", "left"];
+    if !edges
+        .iter()
+        .any(|e| m.contains_key(&format!("border-{e}-width")))
+    {
+        return None;
+    }
+    let fallback_w = m.get("border-width").map(|v| parse_pixel_value(v));
+    let fallback_c = m.get("border-color").and_then(|v| css_color_to_dart(v));
+    let mut sides = Vec::new();
+    for e in edges {
+        let w = m
+            .get(&format!("border-{e}-width"))
+            .map(|v| parse_pixel_value(v))
+            .or_else(|| fallback_w.clone());
+        let Some(w) = w else { continue };
+        // `BorderSide` asserts `width >= 0` at RUNTIME, so a negative
+        // authored width type-checks and then throws in the app. Skip
+        // the edge instead: the same "generated source still works"
+        // contract `parse_pixel_value`'s `0` fallback exists to keep.
+        if w.starts_with('-') {
+            continue;
+        }
+        let c = m
+            .get(&format!("border-{e}-color"))
+            .and_then(|v| css_color_to_dart(v))
+            .or_else(|| fallback_c.clone())
+            .unwrap_or_else(|| "Colors.transparent".to_string());
+        sides.push(format!("{e}: BorderSide(color: {c}, width: {w})"));
+    }
+    if sides.is_empty() {
+        return None;
+    }
+    Some(format!("border: Border({})", sides.join(", ")))
+}
+
 fn parse_style_props(style_props: &str) -> HashMap<String, String> {
     let mut map = HashMap::new();
     for prop in style_props.split(';') {
@@ -3541,6 +3648,10 @@ fn part_has_decoration(style_props: &str) -> bool {
     let m = parse_style_props(style_props);
     m.contains_key("border-width")
         || m.contains_key("border-color")
+        // UI79 -- without this a part whose ONLY border is per-edge takes
+        // the lightweight inline path, which cannot express a decoration
+        // at all, and the edge reaches nothing.
+        || per_edge_border_expr(&m).is_some()
         || m.contains_key("background")
         || m.contains_key("background-color")
         || m.contains_key("height")
@@ -3858,7 +3969,10 @@ fn emit_styled_box(
     let mut deco_parts: Vec<String> = vec![format!("color: {bg_expr}")];
     let base_border_color = base.get("border-color").and_then(|v| css_color_to_dart(v));
     let base_border_width = base.get("border-width").map(|v| parse_pixel_value(v));
-    if base_border_width.is_some() || layers.iter().any(|layer| layer.border_width.is_some()) {
+    if base_border_width.is_some()
+        || layers.iter().any(|layer| layer.border_width.is_some())
+        || per_edge_border_expr(&base).is_some()
+    {
         let border_color = state_color_expr(
             &layers,
             |layer| layer.border_color.as_ref(),
@@ -3869,9 +3983,14 @@ fn emit_styled_box(
             |layer| layer.border_width.as_ref(),
             base_border_width.as_deref().unwrap_or("0"),
         );
-        deco_parts.push(format!(
-            "border: Border.all(color: {border_color}, width: {border_width})"
-        ));
+        deco_parts.push(
+            // UI79 -- a per-edge declaration replaces the all-four form
+            // for the whole border, filling unauthored sides from the
+            // shorthand it just read.
+            per_edge_border_expr(&base).unwrap_or_else(|| {
+                format!("border: Border.all(color: {border_color}, width: {border_width})")
+            }),
+        );
     }
     // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
     // comment).
@@ -4957,37 +5076,70 @@ fn emit_host_scroll(
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    if node.children.is_empty() {
-        return Ok(format!("{pad}const SingleChildScrollView()\n"));
-    }
-    if node.children.len() == 1 {
+
+    // UI61 -- the axis.
+    //
+    // Flutter has no two-axis scroll view, so `both` is the idiomatic
+    // composition: a vertical `SingleChildScrollView` wrapping a
+    // horizontal one. That makes the INNER view the horizontal one
+    // whenever the axis scrolls horizontally at all, and adds an outer
+    // vertical wrapper only for `both`.
+    //
+    // `vertical` emits a bare `SingleChildScrollView` -- Flutter's own
+    // default -- so every layout that never names an axis produces
+    // byte-identical Dart to what it did before UI61.
+    let axis = ScrollAxis::of(node);
+    let nest = axis == ScrollAxis::Both;
+    let base = indent + if nest { 2 } else { 0 };
+    let bpad = " ".repeat(base);
+    let dir = if axis.scrolls_horizontally() {
+        format!("{bpad}  scrollDirection: Axis.horizontal,\n")
+    } else {
+        String::new()
+    };
+
+    let core = if node.children.is_empty() {
+        if axis.scrolls_horizontally() {
+            format!("{bpad}const SingleChildScrollView(scrollDirection: Axis.horizontal)\n")
+        } else {
+            format!("{bpad}const SingleChildScrollView()\n")
+        }
+    } else if node.children.len() == 1 {
         let child = emit_widget_tree(
             &node.children[0],
-            indent + 2,
+            base + 2,
             part_styles,
             component,
             emits,
             ctx,
         )?;
         let child = child.trim_end_matches('\n');
-        return Ok(format!(
-            "{pad}SingleChildScrollView(\n{pad}  child: {child},\n{pad})\n"
-        ));
+        format!("{bpad}SingleChildScrollView(\n{dir}{bpad}  child: {child},\n{bpad})\n")
+    } else {
+        // Multi-child path. Use the paired walker so an `If`/`Else`
+        // sibling pair (Cell-style conditionals inside a scroll viewport)
+        // is consumed correctly.
+        let children = emit_paired_children(
+            &node.children,
+            base + 6,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?;
+        format!(
+            "{bpad}SingleChildScrollView(\n{dir}{bpad}  child: Column(\n{bpad}    children: [\n{children}{bpad}    ],\n{bpad}  ),\n{bpad})\n"
+        )
+    };
+
+    if nest {
+        let inner = core.trim_start().trim_end_matches('\n');
+        Ok(format!(
+            "{pad}SingleChildScrollView(\n{pad}  child: {inner},\n{pad})\n"
+        ))
+    } else {
+        Ok(core)
     }
-    // Multi-child path. Use the paired walker so an `If`/`Else`
-    // sibling pair (Cell-style conditionals inside a scroll viewport)
-    // is consumed correctly.
-    let children = emit_paired_children(
-        &node.children,
-        indent + 6,
-        part_styles,
-        component,
-        emits,
-        ctx,
-    )?;
-    Ok(format!(
-        "{pad}SingleChildScrollView(\n{pad}  child: Column(\n{pad}    children: [\n{children}{pad}    ],\n{pad}  ),\n{pad})\n"
-    ))
 }
 
 /// #13010: does this `HostDialog` node lower to a real native dialog on
@@ -9194,7 +9346,222 @@ mod tests {
         assert!(out.contains("constraints: const BoxConstraints(minHeight: 60)"));
     }
 
+    /// SECURITY — a non-numeric opacity must not become Dart code.
+    ///
+    /// Same class as the colour hole below, on a different helper: the
+    /// fallback arm interpolated authored text straight into
+    /// `Opacity(opacity: {expr}, ..)`.
+    #[test]
+    fn a_non_numeric_opacity_is_refused() {
+        for hostile in ["1 ), child: evil(/*", "0.5)+f(", "inf", "NaN", "abc"] {
+            let out = dart_opacity_literal(hostile);
+            assert_eq!(out, "1.0", "`{hostile}` must not reach generated Dart");
+        }
+        // The legitimate side, so a fix that always returned "1.0" fails.
+        assert_eq!(dart_opacity_literal("0.5"), dart_double_literal(0.5));
+        assert_eq!(dart_opacity_literal(" 1 "), dart_double_literal(1.0));
+    }
+
+    /// SECURITY — a colour is validated by its DIGITS, not its length.
+    ///
+    /// `css_color_to_dart` checked only that 6 or 8 characters followed
+    /// the `#`, then interpolated them into a Dart expression. Quoted
+    /// stylesheet values reach it verbatim, so `"#00)+E(/*"` escaped the
+    /// `Color(..)` argument and opened a comment that swallowed the next
+    /// widget property — code injection into generated Dart.
+    ///
+    /// Both directions: the hostile forms are refused and the legitimate
+    /// ones still parse, so a fix that simply returned `None` always
+    /// would fail here.
+    #[test]
+    fn a_colour_that_is_not_hex_is_refused() {
+        for hostile in [
+            "#00)+E(/*",
+            "#*/0000",
+            "#AA)AAA",
+            "#",
+            "#00000000)+",
+            "#zzzzzz",
+        ] {
+            assert_eq!(
+                css_color_to_dart(hostile),
+                None,
+                "`{hostile}` must not reach generated Dart"
+            );
+        }
+        assert_eq!(
+            css_color_to_dart("#243146"),
+            Some("const Color(0xFF243146)".to_string())
+        );
+        assert_eq!(
+            css_color_to_dart("#80243146"),
+            Some("const Color(0x80243146)".to_string())
+        );
+        assert_eq!(css_color_to_dart("#abcdef"), css_color_to_dart("#ABCDEF"));
+    }
+
+    /// A non-finite width must not become a bare Dart identifier.
+    #[test]
+    fn a_non_finite_width_falls_back_to_zero() {
+        for bad in ["inf", "-inf", "NaN", "1e400", "infinity"] {
+            assert_eq!(parse_pixel_value(bad), "0", "`{bad}` must not survive");
+        }
+        assert_eq!(parse_pixel_value("4px"), "4");
+        assert_eq!(parse_pixel_value("1.5"), "1.5");
+    }
+
+    // ----- UI79: per-edge borders ---------------------------------------
+
+    /// Each authored edge becomes its own `BorderSide`, and a part that
+    /// authors none keeps the byte-identical `Border.all` it emits today.
+    ///
+    /// The `Border.all` half is the one with teeth: switching every
+    /// bordered part to the per-side form would look like a success here
+    /// while changing output for every part in every product.
+    #[test]
+    fn ui79_per_edge_borders_become_border_sides() {
+        let m = |pairs: &[(&str, &str)]| {
+            pairs
+                .iter()
+                .map(|(k, v)| (k.to_string(), v.to_string()))
+                .collect::<HashMap<String, String>>()
+        };
+
+        // No edge authored -> None, which is what leaves `Border.all` in
+        // place at the call site.
+        assert_eq!(
+            per_edge_border_expr(&m(&[("border-width", "1px"), ("border-color", "#112233")])),
+            None,
+            "the shorthand alone must not switch to the per-side form"
+        );
+        assert_eq!(per_edge_border_expr(&m(&[("padding", "8px")])), None);
+
+        // One edge -> exactly one side.
+        let one = per_edge_border_expr(&m(&[
+            ("border-bottom-width", "4px"),
+            ("border-bottom-color", "#243146"),
+        ]))
+        .expect("bottom edge");
+        assert!(
+            one.contains("bottom: BorderSide(color: const Color(0xFF243146), width: 4)"),
+            "got: {one}"
+        );
+        for other in ["top:", "right:", "left:"] {
+            assert!(
+                !one.contains(other),
+                "one authored edge must not emit {other} — got: {one}"
+            );
+        }
+
+        // Four edges -> four sides, each carrying its own colour.
+        let all = per_edge_border_expr(&m(&[
+            ("border-top-width", "2px"),
+            ("border-top-color", "#110022"),
+            ("border-right-width", "3px"),
+            ("border-right-color", "#003311"),
+            ("border-bottom-width", "4px"),
+            ("border-bottom-color", "#243146"),
+            ("border-left-width", "5px"),
+            ("border-left-color", "#445566"),
+        ]))
+        .expect("four edges");
+        assert_eq!(all.matches("BorderSide(").count(), 4, "got: {all}");
+        assert!(all.contains("width: 2") && all.contains("width: 5"), "got: {all}");
+
+        // An unauthored half falls back to the shorthand — the CSS
+        // cascade answer (UI79 §3 rule 3).
+        let mixed = per_edge_border_expr(&m(&[
+            ("border-color", "#ABCDEF"),
+            ("border-bottom-width", "2px"),
+        ]))
+        .expect("bottom edge with inherited colour");
+        assert!(
+            mixed.contains("bottom: BorderSide(color: const Color(0xFFABCDEF), width: 2)"),
+            "got: {mixed}"
+        );
+        assert_eq!(mixed.matches("BorderSide(").count(), 1, "got: {mixed}");
+
+        // A negative width would type-check and then trip `BorderSide`'s
+        // runtime assert, so the edge is skipped rather than emitted.
+        assert_eq!(
+            per_edge_border_expr(&m(&[("border-bottom-width", "-1px")])),
+            None,
+            "a negative width must not reach BorderSide"
+        );
+    }
+
     // ----- HostScroll ---------------------------------------------------
+
+    /// UI61 — the axis reaches the Dart. `both` is asserted as real
+    /// NESTING rather than as a `scrollDirection` string, because
+    /// Flutter has no two-axis scroll view: an emitter that merely wrote
+    /// `scrollDirection: Axis.horizontal` for `both` would scroll
+    /// sideways only, and would pass any assertion that just looked for
+    /// the word "horizontal".
+    #[test]
+    fn ui61_each_axis_selects_its_scroll_view_shape() {
+        let render = |axis: Option<&str>| {
+            let props = axis
+                .map(|a| {
+                    vec![LayoutProp {
+                        name: "axis".into(),
+                        value: LayoutPropValue::Keyword(a.into()),
+                    }]
+                })
+                .unwrap_or_default();
+            let root = node_with(
+                "HostScroll",
+                props,
+                vec![node_with(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("row".into()),
+                    }],
+                    vec![],
+                )],
+            );
+            from_pipeline(&component("X", vec![], vec![]), &layout("X", root), &empty_style("X"))
+                .expect("emit scroll")
+                .output
+        };
+
+        // The default names no axis at all — Flutter's own default is
+        // vertical, and this is what keeps existing output still.
+        let vertical = render(None);
+        assert_eq!(
+            vertical,
+            render(Some("vertical")),
+            "an explicit `axis: vertical` must emit exactly the default"
+        );
+        assert!(
+            !vertical.contains("scrollDirection"),
+            "the vertical default must not name a direction, got:\n{vertical}"
+        );
+
+        let horizontal = render(Some("horizontal"));
+        assert_eq!(
+            horizontal.matches("SingleChildScrollView").count(),
+            1,
+            "horizontal is ONE scroll view, got:\n{horizontal}"
+        );
+        assert!(
+            horizontal.contains("scrollDirection: Axis.horizontal"),
+            "got:\n{horizontal}"
+        );
+
+        let both = render(Some("both"));
+        assert_eq!(
+            both.matches("SingleChildScrollView").count(),
+            2,
+            "`both` must nest a horizontal view inside a vertical one, got:\n{both}"
+        );
+        assert_eq!(
+            both.matches("scrollDirection: Axis.horizontal").count(),
+            1,
+            "only the INNER view names an axis, got:\n{both}"
+        );
+    }
 
     #[test]
     fn host_scroll_with_one_child_wraps_in_single_child_scroll_view() {

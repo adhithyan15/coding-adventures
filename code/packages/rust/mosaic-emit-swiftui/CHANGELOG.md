@@ -4,6 +4,43 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — a border has edges (UI79, #14835)
+
+`border-{top,right,bottom,left}-{width,color}` now lowers. SwiftUI's `.border`
+strokes all four sides and has no per-edge form, so each authored edge is
+**drawn**: a `Rectangle` constrained on one axis and pinned to that side by
+`.overlay(alignment:)`. The overlay sits on the view's own bounds — the border
+box, outside padding, where CSS puts it.
+
+A part authoring no edge keeps the byte-identical `.border(..)` it emits today.
+Unauthored edge colours fall back to the `border-color` shorthand, the CSS
+cascade answer.
+
+Trestle emits **17** of these — 3 top, 6 trailing, 3 bottom, 5 leading — and the
+repo's own compile gate, `complete_task_app_generated_swift_typechecks`, builds
+the real generated Trestle SwiftUI through SwiftPM with them in place. That is a
+`swift build`, not a grep.
+
+#### A known divergence, recorded rather than worked around
+
+`.leading`/`.trailing` are SwiftUI's only horizontal alignments and they **flip
+under right-to-left layout**, whereas CSS `border-left` is physically left. UI79
+puts RTL out of scope, so `border-left` maps to `.leading` and that is wrong in
+an RTL locale. Naming it here because it is invisible in every LTR test.
+
+#### A test this change had silently disabled
+
+Inserting the new tests above `part_style_border_width_and_color_emit_border_modifier`
+took its `#[test]` attribute, leaving that function dead and unrun while the
+suite still reported green. Caught by clippy's `dead_code` and
+`duplicate_macro_attributes`, not by the test count. Restored, and it runs
+again.
+
+### Added — `HostScroll` honours its axis (UI61, #14854)
+
+`vertical` stays a bare `ScrollView` — SwiftUI's own default and byte-identical
+to what every existing layout emits. `horizontal` and `both` name their axes.
+
 ### Fixed — `min-height` reached nothing (#14837)
 
 The same gap Compose had, found because Engram is gated on **both**. Authoring

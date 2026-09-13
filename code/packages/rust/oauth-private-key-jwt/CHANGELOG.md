@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed read-only client and audience bindings so orchestration can reject a
+  stale or cross-endpoint profile before accessing a stored refresh token.
 - Added bounded RFC 7523 `private_key_jwt` assertion construction with exact
   provider capability checks and caller-supplied replay entropy.
 - Kept JWS input, signatures, and complete assertions in wipe-on-drop storage

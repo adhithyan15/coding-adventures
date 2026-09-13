@@ -2,6 +2,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.semantics.SemanticsNode
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.runSkikoComposeUiTest
 import java.io.File
 import javax.imageio.ImageIO
@@ -55,6 +59,74 @@ class VisiCalcScreenshots {
                 "rendered ${image.width}px wide, expected ${SHOT_VIEWPORT.width.toInt()}"
             }
             println("SHOT ${file.absolutePath} ${image.width}x${image.height}")
+        }
+    }
+
+    // #14842 — the sheet must be able to REACH the columns past the
+    // viewport. Not skipped when MOSAIC_SHOT_DIR is unset: this one is a
+    // gate, not a screenshot.
+    //
+    // The original issue reported columns Q-Z as "zero width", measured
+    // with `boundsInRoot`. That was a measurement artifact:
+    // `boundsInRoot` is Rect.Zero for a node clipped outside the
+    // viewport, so a correctly laid-out off-screen column and a
+    // collapsed one are indistinguishable through it. The columns were
+    // always laid out at the right size and the right 80px pitch --
+    // `size` and `positionInRoot` say so. What was missing was any way
+    // to scroll to them, because UI61's axis did not exist yet and
+    // `HostScroll` defaulted to vertical.
+    //
+    // So this asserts the two things that were actually wrong, and would
+    // both have passed on the old "does the column exist" reading:
+    //   1. the viewport offers a HORIZONTAL scroll range at all
+    //   2. the tail columns have real layout size beyond the viewport
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun theSheetCanScrollToTheTailColumns() {
+        runSkikoComposeUiTest(size = SHOT_VIEWPORT) {
+            val host = checkNotNull(MosaicRuntimeHost.load()) {
+                "standard Compose binding did not load the VisiCalc Rust runtime"
+            }
+            setContent { MosaicApp(host) }
+            waitForIdle()
+
+            var horizontalMax = 0f
+            var horizontalRanges = 0
+            val offscreen = mutableListOf<String>()
+            fun walk(n: SemanticsNode) {
+                n.config.getOrNull(SemanticsProperties.HorizontalScrollAxisRange)?.let {
+                    horizontalRanges++
+                    horizontalMax = maxOf(horizontalMax, it.maxValue())
+                }
+                val label = n.config.getOrNull(SemanticsProperties.Text)
+                    ?.joinToString("") { it.text }
+                if (label != null && label.length == 1 && label[0] in 'A'..'Z') {
+                    // Laid out past the right edge of the viewport.
+                    if (n.positionInRoot.x >= SHOT_VIEWPORT.width) {
+                        check(n.size.width > 0 && n.size.height > 0) {
+                            "column $label is off-screen AND has no layout size " +
+                                "(${n.size.width}x${n.size.height}) — that would be the " +
+                                "collapse #14842 originally claimed"
+                        }
+                        offscreen += label
+                    }
+                }
+                n.children.forEach { walk(it) }
+            }
+            walk(onRoot().fetchSemanticsNode())
+
+            check(horizontalRanges > 0 && horizontalMax > 0f) {
+                "the sheet offers no horizontal scroll range (max=$horizontalMax), so the " +
+                    "columns past the viewport cannot be reached — this is what #14842 was"
+            }
+            // If nothing is off-screen the assertion above proves nothing,
+            // so require that this viewport is genuinely in the overflow
+            // regime the issue describes.
+            check(offscreen.isNotEmpty()) {
+                "expected some columns beyond ${SHOT_VIEWPORT.width}px at this viewport; " +
+                    "if the sheet got narrower this gate is no longer measuring anything"
+            }
+            println("SCROLLGATE horizontalMax=$horizontalMax offscreen=${offscreen.joinToString("")}")
         }
     }
 }

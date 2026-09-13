@@ -177,11 +177,74 @@ pub struct LinkRegion {
     pub y: f64,
     pub width: f64,
     pub height: f64,
+    pub key: Option<String>,
+    pub accessible_name: Option<String>,
+    pub focus_order: Option<usize>,
+    pub tab_index: i32,
+    pub top_layer_index: Option<usize>,
+    pub image_map_order: Option<ImageMapRegionOrder>,
     pub url: String,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub download: Option<String>,
+    pub rel_opener: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
+    /// Optional non-rectangular geometry for a client-side image-map area.
+    pub shape: Option<LinkRegionShape>,
     /// Fixed regions stay in viewport coordinates and ignore document scroll.
     pub fixed: bool,
     /// Ancestor overflow clips, including transformed elliptical corners.
     pub clips: Vec<LinkClip>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub struct ImageMapRegionOrder {
+    pub image_index: usize,
+    pub area_index: usize,
+}
+
+/// Image-map geometry retained in pre-transform document coordinates.
+#[derive(Clone, Debug, PartialEq)]
+pub enum LinkRegionShape {
+    Polygon {
+        points: Vec<(f64, f64)>,
+        inverse_transform: Transform2D,
+    },
+    Ellipse {
+        center_x: f64,
+        center_y: f64,
+        radius_x: f64,
+        radius_y: f64,
+        inverse_transform: Transform2D,
+    },
+}
+
+impl LinkRegionShape {
+    fn contains(&self, x: f64, y: f64) -> bool {
+        match self {
+            Self::Polygon {
+                points,
+                inverse_transform,
+            } => {
+                let point = transform_point(*inverse_transform, x, y);
+                polygon_contains(points, point)
+            }
+            Self::Ellipse {
+                center_x,
+                center_y,
+                radius_x,
+                radius_y,
+                inverse_transform,
+            } => {
+                let (x, y) = transform_point(*inverse_transform, x, y);
+                *radius_x > 0.0
+                    && *radius_y > 0.0
+                    && ((x - center_x) / radius_x).powi(2) + ((y - center_y) / radius_y).powi(2)
+                        <= 1.0
+            }
+        }
+    }
 }
 
 impl LinkRegion {
@@ -196,8 +259,28 @@ impl LinkRegion {
             && x < self.x + self.width
             && y >= self.y
             && y < self.y + self.height
+            && self.shape.as_ref().is_none_or(|shape| shape.contains(x, y))
             && self.clips.iter().all(|clip| clip.contains(x, y))
     }
+}
+
+fn polygon_contains(points: &[(f64, f64)], point: (f64, f64)) -> bool {
+    if points.len() < 3 {
+        return false;
+    }
+    let mut inside = false;
+    let mut previous = points[points.len() - 1];
+    for &current in points {
+        let crosses = (current.1 > point.1) != (previous.1 > point.1)
+            && point.0
+                < (previous.0 - current.0) * (point.1 - current.1) / (previous.1 - current.1)
+                    + current.0;
+        if crosses {
+            inside = !inside;
+        }
+        previous = current;
+    }
+    inside
 }
 
 /// A host-neutral form-control hit region in logical document coordinates.
@@ -208,6 +291,10 @@ pub struct ControlRegion {
     pub width: f64,
     pub height: f64,
     pub key: String,
+    pub accessible_name: Option<String>,
+    pub focus_order: Option<usize>,
+    pub tab_index: i32,
+    pub top_layer_index: Option<usize>,
     pub kind: ControlKind,
     pub disabled: bool,
     /// Label regions focus or activate their associated control rather than
@@ -225,10 +312,40 @@ pub struct DisclosureRegion {
     pub width: f64,
     pub height: f64,
     pub key: String,
+    pub focus_order: Option<usize>,
+    pub tab_index: i32,
+    pub top_layer_index: Option<usize>,
     pub disclosure_index: usize,
     pub open: bool,
     pub fixed: bool,
     pub clips: Vec<LinkClip>,
+}
+
+/// Geometry for one open dialog or popover surface in shared top-layer order.
+#[derive(Clone, Debug, PartialEq)]
+pub struct TopLayerRegion {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub key: String,
+    pub top_layer_index: usize,
+    pub kind: String,
+    pub modal: bool,
+    pub fixed: bool,
+    pub clips: Vec<LinkClip>,
+}
+
+impl TopLayerRegion {
+    pub fn contains(&self, x: f64, y: f64) -> bool {
+        x.is_finite()
+            && y.is_finite()
+            && x >= self.x
+            && x < self.x + self.width
+            && y >= self.y
+            && y < self.y + self.height
+            && self.clips.iter().all(|clip| clip.contains(x, y))
+    }
 }
 
 impl DisclosureRegion {
@@ -262,6 +379,7 @@ pub struct HtmlPaintOutput {
     pub links: Vec<LinkRegion>,
     pub controls: Vec<ControlRegion>,
     pub disclosures: Vec<DisclosureRegion>,
+    pub top_layers: Vec<TopLayerRegion>,
     pub scene: PaintScene,
 }
 
@@ -498,13 +616,14 @@ where
     };
     let mut scene = layout_to_paint(&positioned, &options);
     annotate_html_image_metadata(&positioned, &mut scene);
-    let (links, controls, disclosures) = extract_interactive_regions(&positioned);
+    let (links, controls, disclosures, top_layers) = extract_interactive_regions(&positioned);
 
     HtmlPaintOutput {
         positioned,
         links,
         controls,
         disclosures,
+        top_layers,
         scene,
     }
 }
@@ -529,12 +648,23 @@ pub fn extract_disclosure_regions(root: &PositionedNode) -> Vec<DisclosureRegion
     extract_interactive_regions(root).2
 }
 
+/// Extract open dialog and popover surfaces in shared paint order.
+pub fn extract_top_layer_regions(root: &PositionedNode) -> Vec<TopLayerRegion> {
+    extract_interactive_regions(root).3
+}
+
 fn extract_interactive_regions(
     root: &PositionedNode,
-) -> (Vec<LinkRegion>, Vec<ControlRegion>, Vec<DisclosureRegion>) {
+) -> (
+    Vec<LinkRegion>,
+    Vec<ControlRegion>,
+    Vec<DisclosureRegion>,
+    Vec<TopLayerRegion>,
+) {
     let mut links = Vec::new();
     let mut controls = Vec::new();
     let mut disclosures = Vec::new();
+    let mut top_layers = Vec::new();
     let mut control_targets = Vec::new();
     let mut labels = Vec::new();
     let mut stack = vec![(
@@ -546,6 +676,7 @@ fn extract_interactive_regions(
         false,
         IDENTITY,
         None::<(usize, String, bool)>,
+        None::<usize>,
     )];
 
     while let Some((
@@ -557,6 +688,7 @@ fn extract_interactive_regions(
         inherited_fixed,
         inherited_transform,
         parent_disclosure,
+        inherited_top_layer,
     )) = stack.pop()
     {
         let absolute_x = parent_x + node.x;
@@ -568,6 +700,37 @@ fn extract_interactive_regions(
             .map(|local| multiply(inherited_transform, local))
             .unwrap_or(inherited_transform);
         let fixed = inherited_fixed || style.position == layout_positioned::Position::Fixed;
+        let node_top_layer = positioned_html_int(node, "topLayerIndex")
+            .and_then(|value| usize::try_from(value).ok());
+        let current_top_layer = node_top_layer.or(inherited_top_layer);
+        if let (Some(kind), Some(index)) =
+            (positioned_html_string(node, "topLayerKind"), node_top_layer)
+        {
+            let region = clipped_box(
+                transformed_box((absolute_x, absolute_y, node.width, node.height), transform),
+                inherited_clip,
+            );
+            if let Some((x, y, width, height)) =
+                region.filter(|(x, y, width, height)| valid_link_box(*x, *y, *width, *height))
+            {
+                let key = positioned_html_string(node, "id")
+                    .filter(|id| !id.is_empty())
+                    .map(|id| format!("top-layer:id:{id}"))
+                    .unwrap_or_else(|| format!("top-layer:{index}"));
+                top_layers.push(TopLayerRegion {
+                    x,
+                    y,
+                    width,
+                    height,
+                    key,
+                    top_layer_index: index,
+                    kind: kind.to_string(),
+                    modal: positioned_html_bool(node, "topLayerModal").unwrap_or(false),
+                    fixed,
+                    clips: inherited_clips.clone(),
+                });
+            }
+        }
         let current_disclosure =
             (positioned_html_string(node, "disclosureKind") == Some("details")).then(|| {
                 let index = positioned_html_int(node, "disclosureIndex")
@@ -598,6 +761,12 @@ fn extract_interactive_regions(
                         width,
                         height,
                         key: key.clone(),
+                        focus_order: positioned_html_int(node, "focusOrder")
+                            .and_then(|value| usize::try_from(value).ok()),
+                        tab_index: positioned_html_int(node, "tabIndex")
+                            .and_then(|value| i32::try_from(value).ok())
+                            .unwrap_or_default(),
+                        top_layer_index: current_top_layer,
                         disclosure_index: *disclosure_index,
                         open: *open,
                         fixed,
@@ -620,12 +789,51 @@ fn extract_interactive_regions(
                         y,
                         width,
                         height,
+                        key: positioned_html_string(node, "id")
+                            .filter(|id| !id.is_empty())
+                            .map(|id| format!("link:id:{id}"))
+                            .or_else(|| {
+                                positioned_html_int(node, "focusOrder")
+                                    .map(|order| format!("link:{order}"))
+                            }),
+                        accessible_name: positioned_accessible_name(node),
+                        focus_order: positioned_html_int(node, "focusOrder")
+                            .and_then(|value| usize::try_from(value).ok()),
+                        tab_index: positioned_html_int(node, "tabIndex")
+                            .and_then(|value| i32::try_from(value).ok())
+                            .unwrap_or_default(),
+                        top_layer_index: current_top_layer,
+                        image_map_order: None,
                         url: url.to_string(),
+                        target: positioned_html_string(node, "target").map(ToOwned::to_owned),
+                        effective_target: positioned_html_string(node, "effectiveTarget")
+                            .map(ToOwned::to_owned),
+                        download: positioned_html_string(node, "download").map(ToOwned::to_owned),
+                        rel_opener: positioned_html_bool(node, "relOpener").unwrap_or(false),
+                        rel_noopener: positioned_html_bool(node, "relNoopener").unwrap_or(false),
+                        rel_noreferrer: positioned_html_bool(node, "relNoreferrer")
+                            .unwrap_or(false),
+                        shape: None,
                         fixed,
                         clips: inherited_clips.clone(),
                     });
                 }
             }
+        }
+        if positioned_html_string(node, "role") == Some("image") {
+            let mut mapped = image_map_link_regions(
+                node,
+                absolute_x,
+                absolute_y,
+                transform,
+                inherited_clip,
+                &inherited_clips,
+                fixed,
+            );
+            // Link hit testing is topmost-first. Reversing here preserves the
+            // HTML rule that the first matching area wins when shapes overlap.
+            mapped.reverse();
+            links.extend(mapped);
         }
         if let Some(control) = positioned_control_state(node) {
             let region = clipped_box(
@@ -641,6 +849,14 @@ fn extract_interactive_regions(
                     width,
                     height,
                     key: control.key,
+                    accessible_name: positioned_html_string(node, "accessibleName")
+                        .map(ToOwned::to_owned),
+                    focus_order: positioned_html_int(node, "focusOrder")
+                        .and_then(|value| usize::try_from(value).ok()),
+                    tab_index: positioned_html_int(node, "tabIndex")
+                        .and_then(|value| i32::try_from(value).ok())
+                        .unwrap_or_default(),
+                    top_layer_index: current_top_layer,
                     kind: control.kind,
                     disabled: control.disabled,
                     label_activation: false,
@@ -719,6 +935,7 @@ fn extract_interactive_regions(
                 fixed,
                 transform,
                 current_disclosure.clone(),
+                current_top_layer,
             ));
         }
     }
@@ -739,6 +956,10 @@ fn extract_interactive_regions(
                 width: label.width,
                 height: label.height,
                 key: target.key,
+                accessible_name: target.accessible_name,
+                focus_order: target.focus_order,
+                tab_index: target.tab_index,
+                top_layer_index: target.top_layer_index,
                 kind: target.kind,
                 disabled: target.disabled,
                 label_activation: true,
@@ -749,7 +970,298 @@ fn extract_interactive_regions(
         .collect::<Vec<_>>();
     // Direct controls remain topmost when a wrapping label contains its target.
     label_controls.extend(controls);
-    (links, label_controls, disclosures)
+    (links, label_controls, disclosures, top_layers)
+}
+
+#[derive(Clone, Debug)]
+struct ImageMapAreaMetadata {
+    key: String,
+    accessible_name: Option<String>,
+    shape: String,
+    coords: Option<String>,
+    url: String,
+    target: Option<String>,
+    effective_target: Option<String>,
+    download: Option<String>,
+    rel_opener: bool,
+    rel_noopener: bool,
+    rel_noreferrer: bool,
+    area_index: usize,
+}
+
+#[derive(Clone, Debug)]
+struct ImageMapMetadata {
+    image_index: usize,
+    coordinate_width: Option<f64>,
+    coordinate_height: Option<f64>,
+    areas: Vec<ImageMapAreaMetadata>,
+}
+
+#[allow(clippy::too_many_arguments)]
+fn image_map_link_regions(
+    node: &PositionedNode,
+    absolute_x: f64,
+    absolute_y: f64,
+    transform: Transform2D,
+    inherited_clip: Option<(f64, f64, f64, f64)>,
+    inherited_clips: &[LinkClip],
+    fixed: bool,
+) -> Vec<LinkRegion> {
+    let Some(image_map) = positioned_image_map(node) else {
+        return Vec::new();
+    };
+    if node.width <= 0.0 || node.height <= 0.0 {
+        return Vec::new();
+    }
+    let coordinate_width = image_map.coordinate_width.unwrap_or(node.width).max(1.0);
+    let coordinate_height = image_map.coordinate_height.unwrap_or(node.height).max(1.0);
+    let scale_x = node.width / coordinate_width;
+    let scale_y = node.height / coordinate_height;
+    let Some(inverse_transform) = invert_transform(transform) else {
+        return Vec::new();
+    };
+    let image_bounds =
+        transformed_box((absolute_x, absolute_y, node.width, node.height), transform);
+    let mut image_clips = inherited_clips.to_vec();
+    image_clips.push(LinkClip {
+        x: absolute_x,
+        y: absolute_y,
+        width: node.width,
+        height: node.height,
+        corners: [(0.0, 0.0); 4],
+        inverse_transform,
+    });
+
+    image_map
+        .areas
+        .into_iter()
+        .filter_map(|area| {
+            let shape = image_map_shape(
+                &area,
+                absolute_x,
+                absolute_y,
+                coordinate_width,
+                coordinate_height,
+                scale_x,
+                scale_y,
+                inverse_transform,
+            )?;
+            let bounds = image_map_shape_bounds(&shape, transform)?;
+            let bounds = clipped_box(bounds, Some(image_bounds))?;
+            let (x, y, width, height) = clipped_box(bounds, inherited_clip)?;
+            if !valid_link_box(x, y, width, height) {
+                return None;
+            }
+            Some(LinkRegion {
+                x,
+                y,
+                width,
+                height,
+                key: Some(area.key),
+                accessible_name: area.accessible_name,
+                focus_order: None,
+                tab_index: 0,
+                top_layer_index: None,
+                image_map_order: Some(ImageMapRegionOrder {
+                    image_index: image_map.image_index,
+                    area_index: area.area_index,
+                }),
+                url: area.url,
+                target: area.target,
+                effective_target: area.effective_target,
+                download: area.download,
+                rel_opener: area.rel_opener,
+                rel_noopener: area.rel_noopener,
+                rel_noreferrer: area.rel_noreferrer,
+                shape: Some(shape),
+                fixed,
+                clips: image_clips.clone(),
+            })
+        })
+        .collect()
+}
+
+#[allow(clippy::too_many_arguments)]
+fn image_map_shape(
+    area: &ImageMapAreaMetadata,
+    image_x: f64,
+    image_y: f64,
+    coordinate_width: f64,
+    coordinate_height: f64,
+    scale_x: f64,
+    scale_y: f64,
+    inverse_transform: Transform2D,
+) -> Option<LinkRegionShape> {
+    let coords = area
+        .coords
+        .as_deref()
+        .map(parse_image_map_coords)
+        .unwrap_or_default();
+    let point = |x: f64, y: f64| (image_x + x * scale_x, image_y + y * scale_y);
+    match area.shape.as_str() {
+        "default" => Some(LinkRegionShape::Polygon {
+            points: vec![
+                point(0.0, 0.0),
+                point(coordinate_width, 0.0),
+                point(coordinate_width, coordinate_height),
+                point(0.0, coordinate_height),
+            ],
+            inverse_transform,
+        }),
+        "circle" | "circ" if coords.len() >= 3 && coords[2] > 0.0 => {
+            Some(LinkRegionShape::Ellipse {
+                center_x: image_x + coords[0] * scale_x,
+                center_y: image_y + coords[1] * scale_y,
+                radius_x: coords[2] * scale_x.abs(),
+                radius_y: coords[2] * scale_y.abs(),
+                inverse_transform,
+            })
+        }
+        "poly" | "polygon" if coords.len() >= 6 => {
+            let points = coords
+                .as_chunks::<2>()
+                .0
+                .iter()
+                .map(|pair| point(pair[0], pair[1]))
+                .collect();
+            Some(LinkRegionShape::Polygon {
+                points,
+                inverse_transform,
+            })
+        }
+        "rect" | "rectangle" | "" if coords.len() >= 4 => {
+            let left = coords[0].min(coords[2]);
+            let right = coords[0].max(coords[2]);
+            let top = coords[1].min(coords[3]);
+            let bottom = coords[1].max(coords[3]);
+            (right > left && bottom > top).then(|| LinkRegionShape::Polygon {
+                points: vec![
+                    point(left, top),
+                    point(right, top),
+                    point(right, bottom),
+                    point(left, bottom),
+                ],
+                inverse_transform,
+            })
+        }
+        _ => None,
+    }
+}
+
+fn parse_image_map_coords(value: &str) -> Vec<f64> {
+    value
+        .split(|character: char| character == ',' || character.is_ascii_whitespace())
+        .filter(|part| !part.is_empty())
+        .filter_map(|part| part.parse::<f64>().ok().filter(|value| value.is_finite()))
+        .collect()
+}
+
+fn image_map_shape_bounds(
+    shape: &LinkRegionShape,
+    transform: Transform2D,
+) -> Option<(f64, f64, f64, f64)> {
+    match shape {
+        LinkRegionShape::Polygon { points, .. } => {
+            let transformed = points
+                .iter()
+                .map(|&(x, y)| transform_point(transform, x, y))
+                .collect::<Vec<_>>();
+            point_bounds(&transformed)
+        }
+        LinkRegionShape::Ellipse {
+            center_x,
+            center_y,
+            radius_x,
+            radius_y,
+            ..
+        } => Some(transformed_box(
+            (
+                center_x - radius_x,
+                center_y - radius_y,
+                radius_x * 2.0,
+                radius_y * 2.0,
+            ),
+            transform,
+        )),
+    }
+}
+
+fn point_bounds(points: &[(f64, f64)]) -> Option<(f64, f64, f64, f64)> {
+    let first = *points.first()?;
+    let (mut min_x, mut max_x, mut min_y, mut max_y) = (first.0, first.0, first.1, first.1);
+    for &(x, y) in &points[1..] {
+        min_x = min_x.min(x);
+        max_x = max_x.max(x);
+        min_y = min_y.min(y);
+        max_y = max_y.max(y);
+    }
+    Some((min_x, min_y, max_x - min_x, max_y - min_y))
+}
+
+fn positioned_image_map(node: &PositionedNode) -> Option<ImageMapMetadata> {
+    let ExtValue::Map(map) = node.ext.get("imageMap")? else {
+        return None;
+    };
+    let coordinate_width = ext_float(map.get("coordinateWidth"));
+    let coordinate_height = ext_float(map.get("coordinateHeight"));
+    let image_index = ext_usize(map.get("imageIndex"))?;
+    let ExtValue::List(areas) = map.get("areas")? else {
+        return None;
+    };
+    let areas = areas
+        .iter()
+        .filter_map(|area| {
+            let ExtValue::Map(values) = area else {
+                return None;
+            };
+            Some(ImageMapAreaMetadata {
+                key: ext_string(values.get("key"))?.to_string(),
+                accessible_name: ext_string(values.get("name")).map(ToOwned::to_owned),
+                shape: ext_string(values.get("shape"))?.to_string(),
+                coords: ext_string(values.get("coords")).map(ToOwned::to_owned),
+                url: ext_string(values.get("href"))?.to_string(),
+                target: ext_string(values.get("target")).map(ToOwned::to_owned),
+                effective_target: ext_string(values.get("effectiveTarget")).map(ToOwned::to_owned),
+                download: ext_string(values.get("download")).map(ToOwned::to_owned),
+                rel_opener: ext_bool(values.get("relOpener")),
+                rel_noopener: ext_bool(values.get("relNoopener")),
+                rel_noreferrer: ext_bool(values.get("relNoreferrer")),
+                area_index: ext_usize(values.get("areaIndex"))?,
+            })
+        })
+        .collect();
+    Some(ImageMapMetadata {
+        image_index,
+        coordinate_width,
+        coordinate_height,
+        areas,
+    })
+}
+
+fn ext_string(value: Option<&ExtValue>) -> Option<&str> {
+    match value? {
+        ExtValue::Str(value) => Some(value),
+        _ => None,
+    }
+}
+
+fn ext_float(value: Option<&ExtValue>) -> Option<f64> {
+    match value? {
+        ExtValue::Float(value) if value.is_finite() => Some(*value),
+        ExtValue::Int(value) => Some(*value as f64),
+        _ => None,
+    }
+}
+
+fn ext_bool(value: Option<&ExtValue>) -> bool {
+    matches!(value, Some(ExtValue::Bool(true)))
+}
+
+fn ext_usize(value: Option<&ExtValue>) -> Option<usize> {
+    match value? {
+        ExtValue::Int(value) => usize::try_from(*value).ok(),
+        _ => None,
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -778,6 +1290,11 @@ fn first_descendant_control_region(node: &PositionedNode) -> Option<ControlRegio
                 width: 0.0,
                 height: 0.0,
                 key: control.key,
+                accessible_name: positioned_html_string(node, "accessibleName")
+                    .map(ToOwned::to_owned),
+                focus_order: None,
+                tab_index: 0,
+                top_layer_index: None,
                 kind: control.kind,
                 disabled: control.disabled,
                 label_activation: false,
@@ -943,6 +1460,24 @@ pub fn hit_test_disclosure(
     })
 }
 
+/// Hit-test a viewport-space point against open top-layer surfaces.
+pub fn hit_test_top_layer(
+    regions: &[TopLayerRegion],
+    viewport_x: f64,
+    viewport_y: f64,
+    scroll_y: f64,
+) -> Option<&TopLayerRegion> {
+    let scroll_y = finite_non_negative(scroll_y);
+    regions.iter().rev().find(|region| {
+        let y = if region.fixed {
+            viewport_y
+        } else {
+            viewport_y + scroll_y
+        };
+        region.contains(viewport_x, y)
+    })
+}
+
 fn clipped_box(
     rect: (f64, f64, f64, f64),
     clip: Option<(f64, f64, f64, f64)>,
@@ -982,6 +1517,31 @@ fn positioned_html_string<'a>(node: &'a PositionedNode, key: &str) -> Option<&'a
         return None;
     };
     Some(value)
+}
+
+fn positioned_accessible_name(node: &PositionedNode) -> Option<String> {
+    fn collect(node: &PositionedNode, parts: &mut Vec<String>) {
+        if let Some(name) = positioned_html_string(node, "accessibleName") {
+            let name = name.split_whitespace().collect::<Vec<_>>().join(" ");
+            if !name.is_empty() {
+                parts.push(name);
+                return;
+            }
+        }
+        if let Some(Content::Text(text)) = &node.content {
+            let text = text.value.split_whitespace().collect::<Vec<_>>().join(" ");
+            if !text.is_empty() {
+                parts.push(text);
+            }
+        }
+        for child in &node.children {
+            collect(child, parts);
+        }
+    }
+
+    let mut parts = Vec::new();
+    collect(node, &mut parts);
+    (!parts.is_empty()).then(|| parts.join(" "))
 }
 
 fn positioned_html_bool(node: &PositionedNode, key: &str) -> Option<bool> {
@@ -1511,8 +2071,8 @@ mod tests {
     #[test]
     fn canned_html_reaches_a_drawable_paint_scene() {
         let render = parse_browser_render_tree(
-            "<base href='https://example.test/assets/'><h1>Mosaic lives</h1>\
-             <p>The browser pipeline is <a href='../status'>connected</a>.</p>\
+            "<base href='https://example.test/assets/' target='reports'><h1>Mosaic lives</h1>\
+             <p>The browser pipeline is <a href='../status' rel='noopener' download='status.html'>connected</a>.</p>\
              <img src='logo.gif' width='32' height='24'>",
         )
         .unwrap();
@@ -1559,6 +2119,9 @@ mod tests {
         );
         assert_eq!(output.links.len(), 1);
         assert_eq!(output.links[0].url, "https://example.test/status");
+        assert_eq!(output.links[0].effective_target.as_deref(), Some("reports"));
+        assert_eq!(output.links[0].download.as_deref(), Some("status.html"));
+        assert!(output.links[0].rel_noopener);
         assert_eq!(
             hit_test_link(
                 &output.links,
@@ -1690,7 +2253,20 @@ mod tests {
                 y: 27.0,
                 width: 20.0,
                 height: 10.0,
+                key: None,
+                accessible_name: None,
+                focus_order: None,
+                tab_index: 0,
+                top_layer_index: None,
+                image_map_order: None,
                 url: "https://example.test/visible".into(),
+                target: None,
+                effective_target: None,
+                download: None,
+                rel_opener: false,
+                rel_noopener: false,
+                rel_noreferrer: false,
+                shape: None,
                 fixed: false,
                 clips: Vec::new(),
             }]
@@ -1717,7 +2293,20 @@ mod tests {
                 y: 11.0,
                 width: 20.0,
                 height: 10.0,
+                key: None,
+                accessible_name: None,
+                focus_order: None,
+                tab_index: 0,
+                top_layer_index: None,
+                image_map_order: None,
                 url: "https://example.test/moved".into(),
+                target: None,
+                effective_target: None,
+                download: None,
+                rel_opener: false,
+                rel_noopener: false,
+                rel_noreferrer: false,
+                shape: None,
                 fixed: false,
                 clips: Vec::new(),
             }]
@@ -1731,7 +2320,20 @@ mod tests {
             y: 80.0,
             width: 30.0,
             height: 12.0,
+            key: None,
+            accessible_name: None,
+            focus_order: None,
+            tab_index: 0,
+            top_layer_index: None,
+            image_map_order: None,
             url: "https://example.test/next".into(),
+            target: None,
+            effective_target: None,
+            download: None,
+            rel_opener: false,
+            rel_noopener: false,
+            rel_noreferrer: false,
+            shape: None,
             fixed: false,
             clips: Vec::new(),
         };
@@ -2079,6 +2681,35 @@ mod tests {
     }
 
     #[test]
+    fn top_layer_surfaces_emit_transformed_hit_regions() {
+        let render = parse_browser_render_tree(
+            "<dialog id='confirm' open aria-modal='true' style='transform:translate(8px, 6px)'>Confirm</dialog>\
+             <div id='menu' popover='manual'>Menu</div>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(320.0, 180.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        assert_eq!(output.top_layers.len(), 1);
+        let dialog = &output.top_layers[0];
+        assert_eq!(dialog.key, "top-layer:id:confirm");
+        assert_eq!(dialog.kind, "dialog");
+        assert!(dialog.modal && dialog.fixed);
+        assert_eq!(
+            hit_test_top_layer(&output.top_layers, dialog.x + 1.0, dialog.y + 1.0, 0.0)
+                .map(|region| region.key.as_str()),
+            Some("top-layer:id:confirm")
+        );
+    }
+
+    #[test]
     fn explicit_and_implicit_labels_share_control_hit_regions() {
         let render = parse_browser_render_tree(
             "<label for='query'>Search</label><input id='query' value='hello'>\
@@ -2206,5 +2837,72 @@ mod tests {
             PaintInstruction::Clip(clip) => contains_text(&clip.children, expected),
             _ => false,
         })
+    }
+
+    #[test]
+    fn image_map_shapes_scale_transform_and_keep_first_match_precedence() {
+        let render = parse_browser_render_tree(
+            "<img src='plan.gif' width='200' height='100' usemap='#zones' \
+             style='width:400px;height:200px;transform:translate(10px, 5px)'>\
+             <map name='zones'>\
+               <area id='circle' shape='circle' coords='50,50,25' href='circle.html' alt='Circle'>\
+               <area id='overlap' shape='rect' coords='0,0,100,100' href='rect.html' alt='Rectangle'>\
+               <area id='triangle' shape='poly' coords='120,10,190,50,120,90' href='poly.html' alt='Triangle'>\
+               <area id='fallback' shape='default' href='fallback.html' alt='Fallback'>\
+             </map>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(500.0, 260.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let circle = output
+            .links
+            .iter()
+            .find(|link| link.key.as_deref() == Some("image-map:index:0:map:zones:id:circle"))
+            .unwrap();
+        assert_eq!(circle.accessible_name.as_deref(), Some("Circle"));
+        assert!(circle.contains(
+            circle.x + circle.width / 2.0,
+            circle.y + circle.height / 2.0
+        ));
+        assert!(!circle.contains(circle.x, circle.y));
+
+        let hit = hit_test_link(
+            &output.links,
+            circle.x + circle.width / 2.0,
+            circle.y + circle.height / 2.0,
+            0.0,
+        )
+        .unwrap();
+        assert_eq!(hit.url, "circle.html", "the first overlapping area wins");
+        let triangle = output
+            .links
+            .iter()
+            .find(|link| link.key.as_deref() == Some("image-map:index:0:map:zones:id:triangle"))
+            .unwrap();
+        assert!(triangle.contains(
+            triangle.x + triangle.width / 2.0,
+            triangle.y + triangle.height / 2.0
+        ));
+        assert!(!triangle.contains(triangle.x, triangle.y));
+        let fallback = output
+            .links
+            .iter()
+            .find(|link| link.key.as_deref() == Some("image-map:index:0:map:zones:id:fallback"))
+            .unwrap();
+        let fallback_hit = hit_test_link(
+            &output.links,
+            fallback.x + fallback.width * 0.55,
+            fallback.y + fallback.height * 0.5,
+            0.0,
+        )
+        .unwrap();
+        assert_eq!(fallback_hit.url, "fallback.html");
     }
 }

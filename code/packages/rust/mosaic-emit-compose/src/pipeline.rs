@@ -3,7 +3,7 @@
 use std::collections::{BTreeSet, HashMap, HashSet};
 use std::fmt::Write;
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
@@ -219,6 +219,17 @@ pub fn from_pipeline(
     // `RoundedCornerShape`/`clip` without their imports is Kotlin that does
     // not compile, which is exactly how the XAML `Not()` helper went wrong in
     // #14793. An unused Kotlin import is a warning; a missing one is an error.
+    // UI79 -- only when a per-edge border is authored. `Offset` is already
+    // imported by the drag-and-drop block above, so it is added here only
+    // when that block did not run; a duplicate import is legal Kotlin but
+    // reads like a mistake.
+    if style_has_per_edge_border(style) {
+        writeln!(out, "import androidx.compose.ui.draw.drawBehind").unwrap();
+        writeln!(out, "import androidx.compose.ui.geometry.Size").unwrap();
+        if !uses_drag {
+            writeln!(out, "import androidx.compose.ui.geometry.Offset").unwrap();
+        }
+    }
     writeln!(out, "import androidx.compose.foundation.shape.RoundedCornerShape").unwrap();
     writeln!(out, "import androidx.compose.ui.draw.clip").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Arrangement").unwrap();
@@ -258,6 +269,15 @@ pub fn from_pipeline(
     if uses_scroll {
         writeln!(out, "import androidx.compose.foundation.rememberScrollState").unwrap();
         writeln!(out, "import androidx.compose.foundation.verticalScroll").unwrap();
+        // UI61 -- only when some `HostScroll` actually scrolls sideways.
+        // A missing Kotlin import is an error and an unused one is a
+        // warning, so the asymmetric-looking treatment here is
+        // deliberate: `verticalScroll` stays unconditional under
+        // `uses_scroll` (the same posture as #14810), while the
+        // horizontal one is added only where it is used.
+        if layout_scrolls_horizontally(&layout.root) {
+            writeln!(out, "import androidx.compose.foundation.horizontalScroll").unwrap();
+        }
     }
     writeln!(
         out,
@@ -1790,6 +1810,13 @@ fn compose_drop_reason(name: &str) -> &'static str {
         "border-style" | "border-collapse" | "outline" => {
             "no Compose equivalent; Modifier.border takes a width, colour and shape only"
         }
+        // UI79 -- be exact about what was and was not honoured. The edge IS
+        // drawn (from its width and colour); only the dash pattern is lost.
+        // The generic "no lowering yet" reason would tell a reader the whole
+        // declaration vanished, which stopped being true when UI79 landed.
+        n if per_edge_border_style(n) => {
+            "the edge is drawn solid from its width and colour; Compose's drawRect has              no dash pattern, so only the style is lost (UI79 §3 rule 2)"
+        }
         _ => "no Compose lowering in this emitter yet",
     }
 }
@@ -1847,8 +1874,92 @@ fn host_scroll_modifier_prefix(node: &LayoutNode, chain_indent: usize) -> Option
         // A scroll region fills the space it is given. That is what makes it a
         // viewport rather than a tall column that happens to have a scroll
         // modifier attached.
-        format!("\n{cpad}.fillMaxSize()\n{cpad}.verticalScroll(rememberScrollState())")
+        // UI61 -- the axis. `.fillMaxSize()` above bounds the viewport on
+        // BOTH axes regardless, because the reasoning above is about
+        // being a viewport at all, not about which way it scrolls.
+        //
+        // Compose is the one backend where both axes compose as plain
+        // modifier chaining, so `both` needs no nesting and no second
+        // widget -- just two scroll modifiers and two scroll states.
+        let axis = ScrollAxis::of(node);
+        let mut chain = format!("\n{cpad}.fillMaxSize()");
+        if axis.scrolls_vertically() {
+            chain.push_str(&format!("\n{cpad}.verticalScroll(rememberScrollState())"));
+        }
+        if axis.scrolls_horizontally() {
+            chain.push_str(&format!("\n{cpad}.horizontalScroll(rememberScrollState())"));
+        }
+        chain
     })
+}
+
+/// UI61 -- does any `HostScroll` in this tree scroll horizontally?
+///
+/// Drives the `horizontalScroll` import. Walks the whole tree rather
+/// than looking at the root, because a scroll viewport is usually nested
+/// somewhere inside the layout, not at the top of it.
+fn layout_scrolls_horizontally(node: &LayoutNode) -> bool {
+    (node.tag == "HostScroll" && ScrollAxis::of(node).scrolls_horizontally())
+        || node.children.iter().any(layout_scrolls_horizontally)
+}
+
+/// UI79 -- is this `border-<edge>-style`? Kept separate from
+/// [`per_edge_border`], which deliberately does not match `-style` so it
+/// falls through to the drop reporter.
+fn per_edge_border_style(name: &str) -> bool {
+    name.strip_prefix("border-")
+        .and_then(|rest| rest.rsplit_once('-'))
+        .map(|(edge, which)| {
+            which == "style" && matches!(edge, "top" | "right" | "bottom" | "left")
+        })
+        .unwrap_or(false)
+}
+
+/// UI79 -- does any part in this stylesheet author a per-edge border?
+///
+/// Drives the `drawBehind` / geometry imports. Asked of the STYLE rather
+/// than the layout, because this is a style-driven lowering: no tag makes
+/// an edge appear, only an authored declaration does.
+fn style_has_per_edge_border(style: &StyleDef) -> bool {
+    style.parts.iter().any(|part| {
+        let authored = part
+            .base
+            .iter()
+            .map(|p| p.name.as_str())
+            .chain(
+                part.states
+                    .iter()
+                    .flat_map(|st| st.props.iter().map(|p| p.name.as_str())),
+            );
+        authored.into_iter().any(|n| {
+            per_edge_border(n)
+                .map(|(_, which)| which == "width")
+                .unwrap_or(false)
+        })
+    })
+}
+
+/// UI79 -- splits `border-<edge>-<width|color>` into an edge index and which
+/// half it sets. `None` for anything else, including `-style`, which stays
+/// unhandled on purpose so a non-`solid` style is reported rather than drawn
+/// solid.
+///
+/// The index order is CSS's own: top, right, bottom, left.
+fn per_edge_border(name: &str) -> Option<(usize, &'static str)> {
+    let rest = name.strip_prefix("border-")?;
+    let (edge, which) = rest.rsplit_once('-')?;
+    let idx = match edge {
+        "top" => 0,
+        "right" => 1,
+        "bottom" => 2,
+        "left" => 3,
+        _ => return None,
+    };
+    match which {
+        "width" => Some((idx, "width")),
+        "color" => Some((idx, "color")),
+        _ => None,
+    }
 }
 
 fn is_splittable_container(node: &LayoutNode) -> bool {
@@ -3652,6 +3763,11 @@ fn compose_box_style(
     let mut font_family_mono = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
+    // UI79 -- per-edge borders. `Modifier.border` draws all four edges and
+    // has no per-edge form, so each authored edge is DRAWN, not configured.
+    // Indexed [top, right, bottom, left], the CSS order.
+    let mut edge_width: Vec<PropBucket> = (0..4).map(|_| PropBucket::new(layer_count)).collect();
+    let mut edge_color: Vec<PropBucket> = (0..4).map(|_| PropBucket::new(layer_count)).collect();
     let mut opacity = PropBucket::new(layer_count);
 
     // `text-align` is a static layout concern — base-only (a per-state
@@ -3784,6 +3900,23 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
+            // UI79 -- `border-{top,right,bottom,left}-{width,color}`.
+            //
+            // `-style` is deliberately NOT handled here: `solid` is the only
+            // style this draws, so letting a `dashed` fall through to the
+            // catch-all keeps it REPORTED rather than silently drawn solid
+            // (UI79 §3 rule 2).
+            name if per_edge_border(name).is_some() => {
+                let (edge, which) = per_edge_border(name).unwrap();
+                match which {
+                    "width" => {
+                        if let Some(v) = px_or_none(&p.value) {
+                            set(&mut edge_width[edge], v);
+                        }
+                    }
+                    _ => set(&mut edge_color[edge], compose_color_value(&p.value)),
+                }
+            }
             // #14810 — 318 occurrences in TaskApp alone, every one discarded,
             // so every rounded surface rendered square while the strict
             // native-complete profile reported zero degradations.
@@ -3993,6 +4126,48 @@ fn compose_box_style(
             layer_value(&border_color, state_layers, "Color.Gray")
         };
         modifier.push_str(&format!("\n{cpad}.border({w_expr}.dp, {c_expr}{shape_arg})"));
+    }
+
+    // UI79 -- per-edge borders, drawn on the BORDER BOX.
+    //
+    // Emitted after `.border` and before `.padding`, which is what puts the
+    // line outside the padding where CSS puts it. `drawRect` rather than
+    // `drawLine`: a stroked line is centred on its path, so a 1px rule would
+    // straddle the edge and land half outside the box. A rect states the strip
+    // exactly.
+    //
+    // Not a sibling `HorizontalDivider`: a divider is a layout child and would
+    // join the parent's arrangement, moving the content. A border must not
+    // move anything.
+    if edge_width.iter().any(|b| !b.empty()) {
+        let mut body = String::new();
+        for (idx, name) in ["top", "right", "bottom", "left"].iter().enumerate() {
+            if edge_width[idx].empty() {
+                continue;
+            }
+            let w = numeric_layer_value(&edge_width[idx], state_layers, "0");
+            let c = if edge_color[idx].empty() {
+                "Color.Gray".to_string()
+            } else {
+                layer_value(&edge_color[idx], state_layers, "Color.Gray")
+            };
+            let (top_left, rect_size) = match *name {
+                "top" => ("Offset(0f, 0f)", "Size(size.width, mosaicEdge)"),
+                "bottom" => (
+                    "Offset(0f, size.height - mosaicEdge)",
+                    "Size(size.width, mosaicEdge)",
+                ),
+                "left" => ("Offset(0f, 0f)", "Size(mosaicEdge, size.height)"),
+                _ => (
+                    "Offset(size.width - mosaicEdge, 0f)",
+                    "Size(mosaicEdge, size.height)",
+                ),
+            };
+            body.push_str(&format!(
+                "\n{cpad}    run {{ val mosaicEdge = {w}.dp.toPx(); drawRect(color = {c}, topLeft = {top_left}, size = {rect_size}) }}"
+            ));
+        }
+        modifier.push_str(&format!("\n{cpad}.drawBehind {{{body}\n{cpad}}}"));
     }
 
     // .padding — LAST so content insets inside the bordered box.
@@ -11609,6 +11784,183 @@ mod tests {
 
 
     // ---- HostScroll (#14732) -----------------------------------------
+
+    /// UI79 — each authored edge draws on its own edge and nowhere else.
+    ///
+    /// Asserted as a SET. An emitter that drew all four edges for any
+    /// single authored one — which is exactly what `Modifier.border`
+    /// does, and why this had to be drawn rather than configured —
+    /// passes every positive assertion on its own.
+    #[test]
+    fn ui79_each_authored_edge_draws_only_itself() {
+        let render = |props: &[(&str, &str)]| {
+            let style = StyleDef {
+                component_name: "S".to_string(),
+                parts: vec![PartStyle {
+                    name: "row".to_string(),
+                    base: props
+                        .iter()
+                        .map(|(n, v)| StyleProp {
+                            name: n.to_string(),
+                            value: v.to_string(),
+                        })
+                        .collect(),
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+            let mut root = node("Column", vec![], vec![]);
+            root.part_name = Some("row".to_string());
+            from_pipeline(
+                &component("S", vec![], vec![]),
+                &layout("S", root),
+                &style,
+            )
+            .unwrap()
+            .output
+        };
+
+        // The control, rendered through the same path: no authored edge
+        // means no drawBehind at all, not an empty one.
+        let none = render(&[("padding", "8px")]);
+        assert!(
+            !none.contains("drawBehind"),
+            "a part with no authored edge must draw nothing, got:\n{none}"
+        );
+
+        let cases = [
+            ("border-top-width", "Offset(0f, 0f)", "Size(size.width, mosaicEdge)"),
+            (
+                "border-bottom-width",
+                "Offset(0f, size.height - mosaicEdge)",
+                "Size(size.width, mosaicEdge)",
+            ),
+            ("border-left-width", "Offset(0f, 0f)", "Size(mosaicEdge, size.height)"),
+            (
+                "border-right-width",
+                "Offset(size.width - mosaicEdge, 0f)",
+                "Size(mosaicEdge, size.height)",
+            ),
+        ];
+        for (prop, offset, size_expr) in cases {
+            let out = render(&[(prop, "1px")]);
+            assert!(out.contains("drawBehind"), "{prop}: got\n{out}");
+            assert!(out.contains(offset), "{prop} offset — got:\n{out}");
+            assert!(out.contains(size_expr), "{prop} size — got:\n{out}");
+            // Exactly ONE strip: the negative half.
+            assert_eq!(
+                out.matches("drawRect(color =").count(),
+                1,
+                "{prop} must draw one edge, not four — got:\n{out}"
+            );
+        }
+
+        // All four together draw four strips, so the single-strip
+        // assertion above is not passing merely because the emitter can
+        // only ever produce one.
+        let all = render(&[
+            ("border-top-width", "1px"),
+            ("border-right-width", "2px"),
+            ("border-bottom-width", "3px"),
+            ("border-left-width", "4px"),
+        ]);
+        assert_eq!(all.matches("drawRect(color =").count(), 4, "got:\n{all}");
+    }
+
+    /// UI79 — `border-top-left-radius` is a CORNER, not an edge, and must
+    /// not be swallowed by the edge matcher. Its name splits into
+    /// `top-left` + `radius`, which is exactly the shape that would fool
+    /// a looser parse.
+    #[test]
+    fn ui79_a_corner_radius_is_not_an_edge() {
+        assert!(per_edge_border("border-top-left-radius").is_none());
+        assert!(per_edge_border("border-radius").is_none());
+        assert!(per_edge_border("border-width").is_none());
+        assert!(per_edge_border("border-bottom-style").is_none());
+        assert_eq!(per_edge_border("border-bottom-width"), Some((2, "width")));
+        assert_eq!(per_edge_border("border-left-color"), Some((3, "color")));
+        // The style half is reported rather than drawn, so it must be
+        // recognised by the reporter and NOT by the lowering.
+        assert!(per_edge_border_style("border-bottom-style"));
+        assert!(!per_edge_border_style("border-top-left-radius"));
+    }
+
+    /// UI61 — the axis reaches the modifier chain, and the
+    /// `horizontalScroll` import appears only where it is used.
+    ///
+    /// The negative halves matter more than the positives here: Compose
+    /// composes both axes by plain modifier chaining, so an emitter that
+    /// simply appended `.horizontalScroll(..)` to the existing vertical
+    /// chain would satisfy every positive assertion while turning
+    /// `axis: horizontal` into `axis: both`.
+    #[test]
+    fn ui61_each_axis_chains_only_the_scroll_modifiers_it_names() {
+        let render = |axis: Option<&str>| {
+            let m = component("S", vec![slot("label", SlotType::Text, true)], vec![]);
+            let props = axis
+                .map(|a| {
+                    vec![LayoutProp {
+                        name: "axis".to_string(),
+                        value: LayoutPropValue::Keyword(a.to_string()),
+                    }]
+                })
+                .unwrap_or_default();
+            let l = LayoutDef {
+                component_name: "S".to_string(),
+                root: LayoutNode {
+                    tag: "HostScroll".to_string(),
+                    part_name: None,
+                    props,
+                    children: vec![LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::SlotRef("label".to_string()),
+                        }],
+                        children: Vec::new(),
+                    }],
+                },
+            };
+            from_pipeline(&m, &l, &empty_style("S")).unwrap().output
+        };
+
+        // Default and explicit `vertical` are the same file.
+        let vertical = render(None);
+        assert_eq!(
+            vertical,
+            render(Some("vertical")),
+            "an explicit `axis: vertical` must emit exactly the default"
+        );
+        assert!(vertical.contains(".verticalScroll(rememberScrollState())"));
+        assert!(
+            !vertical.contains("horizontalScroll"),
+            "the vertical default must not scroll sideways, and must not import it, got:\n{vertical}"
+        );
+
+        let horizontal = render(Some("horizontal"));
+        assert!(horizontal.contains(".horizontalScroll(rememberScrollState())"));
+        assert!(
+            horizontal.contains("import androidx.compose.foundation.horizontalScroll"),
+            "a missing Kotlin import is a compile error, got:\n{horizontal}"
+        );
+        assert!(
+            !horizontal.contains(".verticalScroll("),
+            "`horizontal` means horizontal ONLY, got:\n{horizontal}"
+        );
+
+        let both = render(Some("both"));
+        assert!(
+            both.contains(".verticalScroll(rememberScrollState())")
+                && both.contains(".horizontalScroll(rememberScrollState())"),
+            "got:\n{both}"
+        );
+        // Every axis is a bounded viewport; that reasoning is about being
+        // a viewport at all, not about which way it scrolls (#14798).
+        for out in [&vertical, &horizontal, &both] {
+            assert!(out.contains(".fillMaxSize()"), "got:\n{out}");
+        }
+    }
 
     fn scroll_kt(part_props: Vec<(&str, &str)>) -> String {
         let m = component("S", vec![slot("label", SlotType::Text, true)], vec![]);

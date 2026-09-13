@@ -97,6 +97,8 @@ struct ExpectedRenderNode {
     #[serde(default)]
     image_map_coords: Option<String>,
     #[serde(default)]
+    usemap: Option<String>,
+    #[serde(default)]
     srcset: Option<String>,
     #[serde(default)]
     resolved_srcset: Option<String>,
@@ -467,11 +469,13 @@ impl ExpectedRenderTree {
 
 impl ExpectedRenderNode {
     fn into_browser_render_node(self) -> BrowserRenderNode {
+        let effective_target = self.target.clone();
         BrowserRenderNode {
             display: self.display,
             role: self.role,
             authored_role: self.authored_role,
             name: self.name,
+            anchor_name: None,
             id: self.id,
             classes: self.classes,
             style: self.style,
@@ -482,6 +486,7 @@ impl ExpectedRenderNode {
             href: self.href,
             resolved_href: self.resolved_href,
             target: self.target,
+            effective_target,
             rel: self.rel,
             rel_tokens: self.rel_tokens,
             download: self.download,
@@ -506,6 +511,7 @@ impl ExpectedRenderNode {
             image_map_name: self.image_map_name,
             image_map_shape: self.image_map_shape,
             image_map_coords: self.image_map_coords,
+            usemap: self.usemap,
             srcset: self.srcset,
             resolved_srcset: self.resolved_srcset,
             sizes: self.sizes,

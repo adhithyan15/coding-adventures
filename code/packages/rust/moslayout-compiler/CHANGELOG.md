@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### Added — `HostScroll` declares the axis it scrolls (UI61, #14854)
+
+`ScrollAxis` — `Vertical` (default), `Horizontal`, `Both` — plus
+`ScrollAxis::of(node)` and the `axis` prop it reads.
+
+`HostScroll` had no axis, so each of the eight backends resolved the silence
+its own way: three scrolled both directions, four scrolled vertically, and Qt
+inherited QML's default. No emitter was wrong, because the kernel had never
+said anything for them to be wrong about.
+
+An unknown spelling is rejected here, once, in `validate_node`, rather than in
+each emitter. That is what lets `ScrollAxis::of` be infallible: the eight
+backends need neither their own notion of validity nor eight copies of the same
+error message. Rounding `axis: verticle` down to the default would render a
+plausible layout that quietly ignores what the author wrote.
+
 ### Added - `HostProgressRing` kernel-contract registration (#13176)
 
 - Registered `HostProgressRing` in `PRIMITIVES` — a leaf primitive (no

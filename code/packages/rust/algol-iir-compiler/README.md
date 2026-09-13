@@ -206,6 +206,10 @@ For a `while` element, a bounded static numeric comparison may likewise prove
 the initial body execution after abstractly assigning the controlled value;
 such known comparisons compose through ALGOL's boolean operators, while bare
 boolean literals, unsupported shapes, and dynamic operands remain conservative.
+A bounded control evolution may also simulate one simple local numeric
+assignment after every true predicate and retain its exact integer or finite
+real result. Predicate-dependency writes, compound bodies, nonnumeric targets,
+and loops that do not reach false within 4,096 evaluations fail closed.
 A conditional predicate is also evaluated when its selector is statically
 known; only the selected branch participates in the proof.
 Local string slots carry an empty verifier seed, but this is not a source-level
@@ -237,6 +241,18 @@ in statement position. They can write enclosing scalar or array globals and use
 the same string, integer, or boolean output paths as typed procedures. Using a
 proper procedure in value position is a clean type error because it has no
 return value.
+
+Statically bounded integer- or real-controlled `while` elements can retain the
+final snapshot of one simple local integer, real, or boolean recurrence. The
+analysis must prove a terminating false predicate within 4,096 evaluations and
+rejects dependency writes, compound bodies, globals, arrays, by-name targets,
+overflow, and non-finite numeric results.
+Boolean snapshot evaluation distinguishes exact bare variables from unary
+wrappers, so direct `not` recurrences preserve their negated value rather than
+being treated as identity assignments.
+The recurrence assignment may be wrapped in a one-statement compound body;
+labels, conditionals, declarations, and additional statements remain outside
+this bounded analysis.
 
 Switch-list elements may use every supported designational expression: a
 conditional element selects its branch when `goto s[i]` runs, and a nested

@@ -83,6 +83,10 @@ Disabled-fieldset inheritance and explicit/implicit label activation also stay
 inside this boundary; host adapters forward page coordinates without deriving
 form ownership, effective disabledness, or activation behavior.
 Form values now survive Back/Forward through bounded session-owned snapshots.
+Those snapshots are keyed by stable history-entry identity rather than URL, so
+repeated visits restore independent public form and custom-element state. The
+same bounded entry snapshot restores the shared logical scroll offset before
+native/web hosts repaint, including fetch-free fragment traversal.
 The session exposes dirty/default state, grouped autofill descriptors, explicit
 public-versus-credential transactions, and ordered mutation events. Passwords
 are excluded from public snapshots and autofill, file payloads are never
@@ -94,6 +98,13 @@ Forward, Home, Reload, and redirect replacement. The same package owns
 `VisitedLinks`, whose canonical document identity normalizes schemes, hosts,
 default ports, percent escapes, dot segments, and fragments independently of
 the page pipeline.
+
+`BrowserSession` also owns same-document fragment traversal. It strips
+fragments before transport, percent-decodes target identifiers, resolves both
+`id` and legacy anchor `name` metadata in document order, clamps target
+geometry through the shared viewport, and publishes `FragmentNavigationState`
+for diagnostics. Navigate, Back, and Forward update history and scrolling
+without refetching or replacing retained controls and document state.
 
 Bookmarks are re-exported from the storage-neutral `browser-bookmarks`
 package. `BrowserSession` owns the active catalog and applies add/remove
@@ -111,6 +122,18 @@ negative scroll offset and sizes the returned scene to the visible viewport.
 content-area hosts can resize or scroll it, hit-test links in viewport
 coordinates, and request the exact viewport scene for each paint event. Page
 replacement resets scroll while preserving the current viewport height.
+
+Client-side image maps enter that same link path. The session exposes stable
+area accessibility keys and names, while pointer or semantic activation reuses
+the shared current/auxiliary/download planner. Native hosts never parse
+coordinates or choose overlap and target policy.
+
+Sequential focus is also session-owned. Rendered links, enabled controls, and
+details summaries form one ordered list: positive `tabindex` values lead,
+ordinary targets follow document order, negative and blocked targets are
+excluded, and modal top layers contain traversal. The session exposes reusable
+accessibility geometry, scrolls focused content into view, paints link/summary
+focus rings, and routes Enter/Space through existing activation transactions.
 
 `BrowserSession` is the reducer a native shell keeps for browser behavior. It
 dispatches Navigate, Back, Forward, Home, and Reload through the page pipeline,

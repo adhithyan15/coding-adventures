@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+- Add one sequential-focus reducer across links, controls, and details
+  summaries with `tabindex` ordering, modal containment, keyboard activation,
+  visibility scrolling, accessibility projection, and shared focus rings.
+
+- Project rendered image-map areas for accessibility and activate their stable
+  keys through the existing transactional link and browsing-context planner.
+
+- Mediate link and form browsing-context targets in shared session policy,
+  preserving transactional current navigation while emitting bounded
+  auxiliary-context and download host effects.
+
+- Restore bounded form/custom-element state and clamped scroll offsets by
+  stable history-entry identity across Back/Forward, including repeated URLs
+  and same-document fragment entries.
+
+- Keep same-document fragment navigation in retained session state, strip
+  fragments from network requests, decode `id` and legacy named-anchor targets,
+  and scroll through shared viewport geometry without refetching.
+
+- Own dialog and popover invoker commands, top-layer ordering, modal focus,
+  light-dismiss, Escape, accessibility actions, and reusable diagnostics in
+  the shared browser session.
+
 - Route details disclosure pointer, Enter/Space, accessibility, generated
   summary, and named-group behavior through retained shared page state.
 

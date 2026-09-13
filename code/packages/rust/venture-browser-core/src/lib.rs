@@ -42,24 +42,25 @@ use browser_form_submission::{
     check_form_validity as check_planned_form_validity,
     report_form_validity as report_planned_form_validity,
 };
-pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
+pub use browser_navigation::{NavigationEntryId, NavigationHistory, VisitedLinks, VisitedUrl};
 use coding_adventures_html_parser::BrowserRenderNode;
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
 use html_to_layout::{html_media_query_applies, HtmlAuthorStylesheet, HtmlStyleContext, HtmlTheme};
 use html_to_paint::{
     decode_image_resource, hit_test_control, hit_test_disclosure, hit_test_link,
-    html_render_tree_to_paint_with_style_context, resolve_scene_image_resources_incrementally,
-    scene_image_resource_uris, ControlRegion, DisclosureRegion, FetchedImage, HtmlImageResolver,
-    HtmlImageResource, HtmlImageResourceError, HtmlPaintOutput, HtmlPaintViewport, LinkRegion,
+    hit_test_top_layer, html_render_tree_to_paint_with_style_context,
+    resolve_scene_image_resources_incrementally, scene_image_resource_uris, ControlRegion,
+    DisclosureRegion, FetchedImage, HtmlImageResolver, HtmlImageResource, HtmlImageResourceError,
+    HtmlPaintOutput, HtmlPaintViewport, LinkRegion, TopLayerRegion,
 };
 use http1_client::HttpClient;
-use layout_ir::TextMeasurer;
+use layout_ir::{ExtValue, PositionedNode, TextMeasurer};
 use paint_instructions::{
     PaintBase, PaintGroup, PaintInstruction, PaintRect, PaintScene, PixelContainer,
 };
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
-use url_parser::Url;
+use url_parser::{percent_decode, Url};
 
 pub const VERSION: &str = "0.8.0";
 
@@ -71,7 +72,8 @@ const CONTROL_TEXT_METRICS: ControlTextMetrics = ControlTextMetrics {
     caret_width: 1.5,
 };
 const EDITOR_OVERLAY_PREFIX: &str = "venture-editor:";
-const FORM_HISTORY_STATE_LIMIT: usize = 64;
+const PAGE_FOCUS_OVERLAY_PREFIX: &str = "venture-page-focus:";
+const SESSION_HISTORY_STATE_LIMIT: usize = 64;
 
 fn apply_details_open_states(
     nodes: &mut [BrowserRenderNode],
@@ -87,6 +89,228 @@ fn apply_details_open_states(
         }
         apply_details_open_states(&mut node.children, states, details_index);
     }
+}
+
+#[derive(Clone, Debug)]
+struct TopLayerSnapshot {
+    key: String,
+    id: Option<String>,
+    name: String,
+    kind: String,
+    mode: String,
+    open: bool,
+    modal: bool,
+    light_dismiss: bool,
+    escape_dismiss: bool,
+}
+
+fn top_layer_snapshots(tree: &BrowserRenderTree) -> Vec<TopLayerSnapshot> {
+    fn collect(nodes: &[BrowserRenderNode], index: &mut usize, out: &mut Vec<TopLayerSnapshot>) {
+        for node in nodes {
+            let kind = if node.disclosure_kind.as_deref() == Some("dialog") {
+                Some("dialog")
+            } else if node.popover.is_some() {
+                Some("popover")
+            } else {
+                None
+            };
+            if let Some(kind) = kind {
+                let current = *index;
+                *index += 1;
+                let key = node
+                    .id
+                    .as_deref()
+                    .filter(|id| !id.is_empty())
+                    .map(|id| format!("top-layer:id:{id}"))
+                    .unwrap_or_else(|| format!("top-layer:{current}"));
+                let mode = if kind == "popover" {
+                    node.popover
+                        .clone()
+                        .filter(|mode| !mode.is_empty())
+                        .unwrap_or_else(|| "auto".into())
+                } else if node.aria_modal.as_deref() == Some("true") {
+                    "modal".into()
+                } else {
+                    "nonmodal".into()
+                };
+                let default_closedby = if mode == "modal" {
+                    "closerequest"
+                } else {
+                    "none"
+                };
+                out.push(TopLayerSnapshot {
+                    key,
+                    id: node.id.clone(),
+                    name: node
+                        .accessible_name
+                        .clone()
+                        .or_else(|| node.text.clone())
+                        .or_else(|| node.id.clone())
+                        .unwrap_or_else(|| {
+                            if kind == "dialog" {
+                                "Dialog"
+                            } else {
+                                "Popover"
+                            }
+                            .into()
+                        }),
+                    kind: kind.into(),
+                    mode: mode.clone(),
+                    open: node.open,
+                    modal: mode == "modal",
+                    light_dismiss: kind == "popover" && mode != "manual"
+                        || kind == "dialog" && default_closedby == "any",
+                    escape_dismiss: kind == "popover"
+                        || kind == "dialog" && default_closedby != "none",
+                });
+            }
+            collect(&node.children, index, out);
+        }
+    }
+    let mut result = Vec::new();
+    collect(&tree.children, &mut 0, &mut result);
+    result
+}
+
+fn set_top_layer_node_state(
+    nodes: &mut [BrowserRenderNode],
+    target_id: &str,
+    open: bool,
+    modal: bool,
+) -> bool {
+    for node in nodes {
+        let is_surface =
+            node.disclosure_kind.as_deref() == Some("dialog") || node.popover.is_some();
+        if is_surface && node.id.as_deref() == Some(target_id) {
+            node.open = open;
+            if node.disclosure_kind.as_deref() == Some("dialog") {
+                node.aria_modal = modal.then(|| "true".into());
+            }
+            return true;
+        }
+        if set_top_layer_node_state(&mut node.children, target_id, open, modal) {
+            return true;
+        }
+    }
+    false
+}
+
+fn control_top_layer_command(tree: &BrowserRenderTree, key: &str) -> Option<(String, String)> {
+    fn find(
+        nodes: &[BrowserRenderNode],
+        key: &str,
+        control_index: &mut usize,
+    ) -> Option<(String, String)> {
+        for node in nodes {
+            if node.role == "control"
+                && node.control_type.as_deref() != Some("hidden")
+                && !node.hidden
+            {
+                let candidate = browser_form_controls::control_key(node, *control_index);
+                *control_index += 1;
+                if candidate == key {
+                    let target = node
+                        .command_for
+                        .clone()
+                        .or_else(|| node.popover_target.clone())?;
+                    let action = node.command.clone().unwrap_or_else(|| {
+                        format!(
+                            "popover-{}",
+                            node.popover_target_action.as_deref().unwrap_or("toggle")
+                        )
+                    });
+                    return Some((action, target));
+                }
+            }
+            if let Some(command) = find(&node.children, key, control_index) {
+                return Some(command);
+            }
+        }
+        None
+    }
+    find(&tree.children, key, &mut 0)
+}
+
+fn top_layer_action_from_command(command: &str) -> Option<TopLayerAccessibilityAction> {
+    Some(match command {
+        "show" => TopLayerAccessibilityAction::Show,
+        "show-modal" => TopLayerAccessibilityAction::ShowModal,
+        "close" | "request-close" => TopLayerAccessibilityAction::Close,
+        "toggle-popover" | "popover-toggle" => TopLayerAccessibilityAction::TogglePopover,
+        "show-popover" | "popover-show" => TopLayerAccessibilityAction::ShowPopover,
+        "hide-popover" | "popover-hide" => TopLayerAccessibilityAction::HidePopover,
+        _ => return None,
+    })
+}
+
+fn controls_inside_top_layer(tree: &BrowserRenderTree, target_id: &str) -> Vec<String> {
+    fn collect(
+        nodes: &[BrowserRenderNode],
+        target_id: &str,
+        inside: bool,
+        control_index: &mut usize,
+        out: &mut Vec<String>,
+    ) {
+        for node in nodes {
+            let inside = inside || node.id.as_deref() == Some(target_id);
+            if node.role == "control"
+                && node.control_type.as_deref() != Some("hidden")
+                && !node.hidden
+            {
+                let key = browser_form_controls::control_key(node, *control_index);
+                *control_index += 1;
+                if inside && !node.disabled {
+                    out.push(key);
+                }
+            }
+            collect(&node.children, target_id, inside, control_index, out);
+        }
+    }
+    let mut result = Vec::new();
+    collect(&tree.children, target_id, false, &mut 0, &mut result);
+    result
+}
+
+fn same_document_fragment(current: &str, requested: &str) -> Option<Option<String>> {
+    let mut current = Url::parse(current).ok()?.canonicalize().ok()?;
+    let mut requested = Url::parse(requested).ok()?.canonicalize().ok()?;
+    let has_fragment_transition = current.fragment.is_some() || requested.fragment.is_some();
+    let fragment = requested.fragment.take();
+    current.fragment = None;
+    (has_fragment_transition && current.to_url_string() == requested.to_url_string())
+        .then_some(fragment)
+}
+
+fn fragmentless_request(url: &str) -> (String, Option<String>) {
+    let Ok(mut parsed) = Url::parse(url) else {
+        return (url.to_string(), None);
+    };
+    let fragment = parsed.fragment.take();
+    (parsed.to_url_string(), fragment)
+}
+
+fn navigation_target_offset(node: &PositionedNode, target: &str) -> Option<f64> {
+    fn html_string<'a>(node: &'a PositionedNode, key: &str) -> Option<&'a str> {
+        let ExtValue::Map(values) = node.ext.get("html")? else {
+            return None;
+        };
+        let ExtValue::Str(value) = values.get(key)? else {
+            return None;
+        };
+        Some(value)
+    }
+
+    fn find(node: &PositionedNode, parent_y: f64, target: &str) -> Option<f64> {
+        let y = parent_y + node.y;
+        if node.id.as_deref() == Some(target) || html_string(node, "name") == Some(target) {
+            return Some(y);
+        }
+        node.children
+            .iter()
+            .find_map(|child| find(child, y, target))
+    }
+
+    find(node, 0.0, target)
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
@@ -490,6 +714,14 @@ pub struct BrowserPage {
     pub stylesheet_resources: Vec<BrowserStylesheetResource>,
 }
 
+/// A keyboard/accessibility target projected from a rendered image-map area.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ImageMapAccessibilityState {
+    pub key: String,
+    pub name: String,
+    pub url: String,
+}
+
 /// Host-neutral accessibility projection for one visible details summary.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct DisclosureAccessibilityState {
@@ -497,6 +729,67 @@ pub struct DisclosureAccessibilityState {
     pub name: String,
     pub open: bool,
     pub group_name: Option<String>,
+}
+
+/// One target in the document's shared sequential-focus navigation order.
+#[derive(Clone, Debug, PartialEq)]
+pub struct PageFocusAccessibilityState {
+    pub key: String,
+    pub role: String,
+    pub name: String,
+    pub tab_index: i32,
+    pub focused: bool,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum PageFocusTarget {
+    Link(String),
+    Control(String),
+    Disclosure(String),
+}
+
+#[derive(Clone, Debug)]
+struct PageFocusItem {
+    target: PageFocusTarget,
+    state: PageFocusAccessibilityState,
+    order: usize,
+    fixed: bool,
+}
+
+/// Shared accessibility and host projection for an open dialog or popover.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TopLayerAccessibilityState {
+    pub key: String,
+    pub id: Option<String>,
+    pub name: String,
+    pub kind: String,
+    pub mode: String,
+    pub open: bool,
+    pub modal: bool,
+    pub light_dismiss: bool,
+    pub escape_dismiss: bool,
+    pub topmost: bool,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TopLayerAccessibilityAction {
+    Show,
+    ShowModal,
+    Close,
+    TogglePopover,
+    ShowPopover,
+    HidePopover,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TopLayerDiagnostic {
+    pub code: &'static str,
+    pub target: Option<String>,
+    pub message: &'static str,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -679,6 +972,30 @@ pub struct BrowserNavigationUpdate {
     pub cancelled: Vec<BrowserSubresourceRequest>,
 }
 
+/// Result of resolving one URL fragment against the retained shared layout.
+#[derive(Clone, Debug, PartialEq)]
+pub struct FragmentNavigationState {
+    pub url: String,
+    pub fragment: Option<String>,
+    pub target_found: bool,
+    pub scroll_offset_y: f64,
+}
+
+/// Diagnostic projection of the latest Back/Forward state restoration.
+#[derive(Clone, Debug, PartialEq)]
+pub struct BrowserHistoryRestorationState {
+    pub entry_id: NavigationEntryId,
+    pub restored_form_state: bool,
+    pub restored_scroll: bool,
+    pub scroll_offset_y: f64,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+struct BrowserHistoryEntryState {
+    controls: ControlStateSnapshot,
+    scroll_offset_y: f64,
+}
+
 /// Reusable host scheduling seam for navigation-owned subresource work.
 ///
 /// Implementations may use threads, an async runtime, browser fetch, or a
@@ -752,6 +1069,91 @@ impl BrowserAuxiliaryDocument {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum BrowserHostEffect {
     OpenAuxiliaryDocument(BrowserAuxiliaryDocument),
+    OpenBrowsingContext(BrowserBrowsingContextRequest),
+    Download(BrowserDownloadRequest),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum BrowserBrowsingContextTarget {
+    Self_,
+    Blank,
+    Parent,
+    Top,
+    Named(String),
+}
+
+impl BrowserBrowsingContextTarget {
+    pub fn from_effective_target(target: Option<&str>) -> Self {
+        let target = target.unwrap_or_default().trim();
+        match target.to_ascii_lowercase().as_str() {
+            "" | "_self" => Self::Self_,
+            "_blank" => Self::Blank,
+            "_parent" => Self::Parent,
+            "_top" => Self::Top,
+            _ => Self::Named(target.to_string()),
+        }
+    }
+
+    pub const fn routes_current_context(&self) -> bool {
+        matches!(self, Self::Self_ | Self::Parent | Self::Top)
+    }
+
+    pub fn name(&self) -> &str {
+        match self {
+            Self::Self_ => "_self",
+            Self::Blank => "_blank",
+            Self::Parent => "_parent",
+            Self::Top => "_top",
+            Self::Named(name) => name,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserBrowsingContextRequest {
+    pub target: BrowserBrowsingContextTarget,
+    pub request: BrowserFetchRequest,
+    pub noopener: bool,
+    pub noreferrer: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserDownloadRequest {
+    pub request: BrowserFetchRequest,
+    pub suggested_filename: Option<String>,
+}
+
+enum BrowserLinkActivation {
+    Navigate(String),
+    HostEffect(BrowserHostEffect),
+}
+
+fn plan_link_activation(link: LinkRegion) -> BrowserLinkActivation {
+    if let Some(suggested_filename) = link.download {
+        return BrowserLinkActivation::HostEffect(BrowserHostEffect::Download(
+            BrowserDownloadRequest {
+                request: BrowserFetchRequest::get(link.url),
+                suggested_filename: (!suggested_filename.is_empty()).then_some(suggested_filename),
+            },
+        ));
+    }
+    let target = BrowserBrowsingContextTarget::from_effective_target(
+        link.effective_target.as_deref().or(link.target.as_deref()),
+    );
+    if target.routes_current_context() {
+        BrowserLinkActivation::Navigate(link.url)
+    } else {
+        BrowserLinkActivation::HostEffect(BrowserHostEffect::OpenBrowsingContext(
+            BrowserBrowsingContextRequest {
+                noopener: link.rel_noopener
+                    || link.rel_noreferrer
+                    || (target == BrowserBrowsingContextTarget::Blank && !link.rel_opener),
+                noreferrer: link.rel_noreferrer,
+                target,
+                request: BrowserFetchRequest::get(link.url),
+            },
+        ))
+    }
 }
 
 /// Complete result of dispatching one shared chrome event.
@@ -824,6 +1226,34 @@ impl BrowserViewport {
         self.page = page;
     }
 
+    fn navigate_to_fragment(
+        &mut self,
+        url: String,
+        fragment: Option<String>,
+    ) -> FragmentNavigationState {
+        self.page.requested_url = url.clone();
+        self.page.final_url = url.clone();
+        let decoded = fragment
+            .as_deref()
+            .and_then(|value| percent_decode(value).ok())
+            .or_else(|| fragment.clone());
+        let target = decoded.as_deref().filter(|value| !value.is_empty());
+        let target_offset =
+            target.and_then(|target| navigation_target_offset(&self.page.paint.positioned, target));
+        let target_found = target.is_none() || target_offset.is_some();
+        let scroll_offset_y = match (target, target_offset) {
+            (None, _) => self.scroll.set_offset_y(0.0),
+            (Some(_), Some(offset)) => self.scroll.set_offset_y(offset),
+            (Some(_), None) => self.scroll.offset_y(),
+        };
+        FragmentNavigationState {
+            url,
+            fragment: decoded,
+            target_found,
+            scroll_offset_y,
+        }
+    }
+
     /// Replace the current page after viewport reflow while preserving the
     /// current logical scroll position, clamped to the new document geometry.
     pub fn reflow_page(&mut self, page: BrowserPage, viewport_height: f64) -> f64 {
@@ -853,6 +1283,15 @@ impl BrowserViewport {
     ) -> Option<&DisclosureRegion> {
         hit_test_disclosure(
             &self.page.paint.disclosures,
+            viewport_x,
+            viewport_y,
+            self.scroll.offset_y(),
+        )
+    }
+
+    pub fn hit_test_top_layer(&self, viewport_x: f64, viewport_y: f64) -> Option<&TopLayerRegion> {
+        hit_test_top_layer(
+            &self.page.paint.top_layers,
             viewport_x,
             viewport_y,
             self.scroll.offset_y(),
@@ -1098,6 +1537,10 @@ impl BrowserHostController {
         self.status_text = "Ready".to_string();
     }
 
+    pub fn take_host_effect(&mut self) -> Option<BrowserHostEffect> {
+        self.session.take_host_effect()
+    }
+
     pub fn props(&self) -> BrowserChromeProps {
         self.chrome.props(
             &self.session,
@@ -1136,6 +1579,7 @@ impl BrowserHostController {
         F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
     {
         self.hovered_link_url = None;
+        self.session.pending_host_effect = None;
         let Some(action) = self.chrome.handle_event(event, &self.session, false) else {
             return Ok(BrowserHostEventOutcome::default());
         };
@@ -1220,14 +1664,61 @@ impl BrowserHostController {
         F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
     {
         self.hovered_link_url = None;
-        let Some(url) = self
+        self.session.pending_host_effect = None;
+        let Some(link) = self
             .session
-            .hovered_link_url(viewport_x, viewport_y)
-            .map(str::to_owned)
+            .viewport()
+            .and_then(|viewport| viewport.hit_test_link(viewport_x, viewport_y))
+            .cloned()
         else {
             return Ok(false);
         };
-        self.execute_navigation(BrowserNavigation::Navigate(url), execute)
+        match plan_link_activation(link) {
+            BrowserLinkActivation::Navigate(url) => {
+                self.execute_navigation(BrowserNavigation::Navigate(url), execute)
+            }
+            BrowserLinkActivation::HostEffect(effect) => {
+                self.session.pending_host_effect = Some(effect);
+                Ok(true)
+            }
+        }
+    }
+
+    /// Activate an image-map area by its stable shared accessibility key.
+    pub fn activate_image_map_area<F>(
+        &mut self,
+        key: &str,
+        execute: F,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
+    {
+        self.hovered_link_url = None;
+        self.session.pending_host_effect = None;
+        let Some(link) = self
+            .session
+            .viewport()
+            .and_then(|viewport| {
+                viewport
+                    .page()
+                    .paint
+                    .links
+                    .iter()
+                    .find(|link| link.key.as_deref() == Some(key))
+            })
+            .cloned()
+        else {
+            return Ok(false);
+        };
+        match plan_link_activation(link) {
+            BrowserLinkActivation::Navigate(url) => {
+                self.execute_navigation(BrowserNavigation::Navigate(url), execute)
+            }
+            BrowserLinkActivation::HostEffect(effect) => {
+                self.session.pending_host_effect = Some(effect);
+                Ok(true)
+            }
+        }
     }
 
     pub fn update_hover(&mut self, viewport_x: f64, viewport_y: f64) -> bool {
@@ -1283,13 +1774,20 @@ pub struct BrowserSession {
     bookmarks: BookmarkCatalog,
     viewport: Option<BrowserViewport>,
     controls: BrowserControlModel,
+    focused_link: Option<String>,
     focused_disclosure: Option<String>,
+    top_layer_stack: Vec<String>,
+    top_layer_invokers: Vec<(String, String)>,
+    top_layer_diagnostics: Vec<TopLayerDiagnostic>,
     form_diagnostics: Vec<FormDiagnostic>,
     form_lifecycle_events: Vec<FormLifecycleEvent>,
     control_mutation_events: Vec<ControlMutationEvent>,
-    form_history_states: Vec<(String, ControlStateSnapshot)>,
+    history_states: Vec<(NavigationEntryId, BrowserHistoryEntryState)>,
+    history_restoration: Option<BrowserHistoryRestorationState>,
+    fragment_navigation: Option<FragmentNavigationState>,
     viewport_height: f64,
     navigation_id: u64,
+    pending_host_effect: Option<BrowserHostEffect>,
 }
 
 impl BrowserSession {
@@ -1300,14 +1798,25 @@ impl BrowserSession {
             bookmarks: BookmarkCatalog::new(),
             viewport: None,
             controls: BrowserControlModel::default(),
+            focused_link: None,
             focused_disclosure: None,
+            top_layer_stack: Vec::new(),
+            top_layer_invokers: Vec::new(),
+            top_layer_diagnostics: Vec::new(),
             form_diagnostics: Vec::new(),
             form_lifecycle_events: Vec::new(),
             control_mutation_events: Vec::new(),
-            form_history_states: Vec::new(),
+            history_states: Vec::new(),
+            history_restoration: None,
+            fragment_navigation: None,
             viewport_height: finite_non_negative(viewport_height),
             navigation_id: 0,
+            pending_host_effect: None,
         }
+    }
+
+    pub fn take_host_effect(&mut self) -> Option<BrowserHostEffect> {
+        self.pending_host_effect.take()
     }
 
     pub fn history(&self) -> &NavigationHistory {
@@ -1426,6 +1935,31 @@ impl BrowserSession {
             .as_ref()?
             .hit_test_link(viewport_x, viewport_y)
             .map(|link| link.url.as_str())
+    }
+
+    pub fn image_map_accessibility_states(&self) -> Vec<ImageMapAccessibilityState> {
+        let mut states = self
+            .viewport
+            .as_ref()
+            .into_iter()
+            .flat_map(|viewport| &viewport.page().paint.links)
+            .filter_map(|link| {
+                Some((
+                    link.image_map_order?,
+                    ImageMapAccessibilityState {
+                        key: link.key.clone()?,
+                        name: link
+                            .accessible_name
+                            .clone()
+                            .filter(|name| !name.trim().is_empty())
+                            .unwrap_or_else(|| link.url.clone()),
+                        url: link.url.clone(),
+                    },
+                ))
+            })
+            .collect::<Vec<_>>();
+        states.sort_by_key(|(order, _)| *order);
+        states.into_iter().map(|(_, state)| state).collect()
     }
 
     pub fn controls(&self) -> &BrowserControlModel {
@@ -1881,7 +2415,10 @@ impl BrowserSession {
                 self.controls.set_invalid(key, diagnostic.message.clone());
             }
         }
-        self.controls.focus_first_invalid();
+        if self.controls.focus_first_invalid().is_some() {
+            self.focused_link = None;
+            self.focused_disclosure = None;
+        }
         self.form_diagnostics = diagnostics;
         self.reflow_controls(pipeline);
         Ok(valid)
@@ -1892,6 +2429,227 @@ impl BrowserSession {
             .as_ref()?
             .hit_test_control(viewport_x, viewport_y)
             .map(|control| control.key.as_str())
+    }
+
+    /// Return rendered, enabled targets in HTML sequential-focus order.
+    pub fn page_focus_accessibility_states(&self) -> Vec<PageFocusAccessibilityState> {
+        self.page_focus_items()
+            .into_iter()
+            .map(|item| item.state)
+            .collect()
+    }
+
+    fn page_focus_items(&self) -> Vec<PageFocusItem> {
+        let Some(viewport) = &self.viewport else {
+            return Vec::new();
+        };
+        let page = viewport.page();
+        let mut items = Vec::new();
+        for region in &page.paint.links {
+            let (Some(order), Some(key)) = (region.focus_order, region.key.as_ref()) else {
+                continue;
+            };
+            if items
+                .iter()
+                .any(|item: &PageFocusItem| item.state.key == *key)
+            {
+                continue;
+            }
+            items.push(PageFocusItem {
+                target: PageFocusTarget::Link(key.clone()),
+                state: PageFocusAccessibilityState {
+                    key: key.clone(),
+                    role: "link".into(),
+                    name: region
+                        .accessible_name
+                        .clone()
+                        .unwrap_or_else(|| region.url.clone()),
+                    tab_index: region.tab_index,
+                    focused: self.focused_link.as_deref() == Some(key),
+                    x: region.x,
+                    y: region.y,
+                    width: region.width,
+                    height: region.height,
+                },
+                order,
+                fixed: region.fixed,
+            });
+        }
+        for region in &page.paint.controls {
+            let Some(order) = region.focus_order else {
+                continue;
+            };
+            if region.disabled
+                || region.label_activation
+                || items
+                    .iter()
+                    .any(|item: &PageFocusItem| item.state.key == region.key)
+            {
+                continue;
+            }
+            let control = self.controls.control(&region.key);
+            items.push(PageFocusItem {
+                target: PageFocusTarget::Control(region.key.clone()),
+                state: PageFocusAccessibilityState {
+                    key: region.key.clone(),
+                    role: region.kind.name().into(),
+                    name: region
+                        .accessible_name
+                        .clone()
+                        .filter(|name| !name.is_empty())
+                        .or_else(|| control.map(|control| control.display_value()))
+                        .filter(|name| !name.is_empty())
+                        .unwrap_or_else(|| region.kind.name().into()),
+                    tab_index: region.tab_index,
+                    focused: self.controls.focused_key() == Some(region.key.as_str()),
+                    x: region.x,
+                    y: region.y,
+                    width: region.width,
+                    height: region.height,
+                },
+                order,
+                fixed: region.fixed,
+            });
+        }
+        let disclosure_states = self.disclosure_accessibility_states();
+        for region in &page.paint.disclosures {
+            let Some(order) = region.focus_order else {
+                continue;
+            };
+            if items
+                .iter()
+                .any(|item: &PageFocusItem| item.state.key == region.key)
+            {
+                continue;
+            }
+            let name = disclosure_states
+                .iter()
+                .find(|state| state.key == region.key)
+                .map(|state| state.name.clone())
+                .unwrap_or_else(|| "Details".into());
+            items.push(PageFocusItem {
+                target: PageFocusTarget::Disclosure(region.key.clone()),
+                state: PageFocusAccessibilityState {
+                    key: region.key.clone(),
+                    role: "disclosure".into(),
+                    name,
+                    tab_index: region.tab_index,
+                    focused: self.focused_disclosure.as_deref() == Some(&region.key),
+                    x: region.x,
+                    y: region.y,
+                    width: region.width,
+                    height: region.height,
+                },
+                order,
+                fixed: region.fixed,
+            });
+        }
+        if let Some(modal) = page
+            .paint
+            .top_layers
+            .iter()
+            .filter(|region| region.modal)
+            .max_by_key(|region| region.top_layer_index)
+        {
+            items.retain(|item| match &item.target {
+                PageFocusTarget::Link(key) => page.paint.links.iter().any(|region| {
+                    region.key.as_deref() == Some(key)
+                        && region.top_layer_index == Some(modal.top_layer_index)
+                }),
+                PageFocusTarget::Control(key) => page.paint.controls.iter().any(|region| {
+                    region.key == *key
+                        && !region.label_activation
+                        && region.top_layer_index == Some(modal.top_layer_index)
+                }),
+                PageFocusTarget::Disclosure(key) => page.paint.disclosures.iter().any(|region| {
+                    region.key == *key && region.top_layer_index == Some(modal.top_layer_index)
+                }),
+            });
+        }
+        items.sort_by_key(|item| {
+            if item.state.tab_index > 0 {
+                (0, item.state.tab_index, item.order)
+            } else {
+                (1, 0, item.order)
+            }
+        });
+        items
+    }
+
+    fn current_page_focus_target(&self) -> Option<PageFocusTarget> {
+        if let Some(key) = &self.focused_link {
+            return Some(PageFocusTarget::Link(key.clone()));
+        }
+        if let Some(key) = self.controls.focused_key() {
+            return Some(PageFocusTarget::Control(key.into()));
+        }
+        self.focused_disclosure
+            .as_ref()
+            .map(|key| PageFocusTarget::Disclosure(key.clone()))
+    }
+
+    /// Move focus across links, controls, and disclosures without host policy.
+    pub fn focus_page<M, S, FM, R>(
+        &mut self,
+        reverse: bool,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<PageFocusAccessibilityState>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let items = self.page_focus_items();
+        if items.is_empty() {
+            return None;
+        }
+        let current = self.current_page_focus_target();
+        let current_index = current
+            .as_ref()
+            .and_then(|target| items.iter().position(|item| &item.target == target));
+        let index = match (current_index, reverse) {
+            (Some(0), true) | (None, true) => items.len() - 1,
+            (Some(index), true) => index - 1,
+            (Some(index), false) => (index + 1) % items.len(),
+            (None, false) => 0,
+        };
+        let item = items[index].clone();
+        match &item.target {
+            PageFocusTarget::Link(key) => {
+                self.controls.blur();
+                self.focused_link = Some(key.clone());
+                self.focused_disclosure = None;
+            }
+            PageFocusTarget::Control(key) => {
+                self.controls.focus(key)?;
+                self.focused_link = None;
+                self.focused_disclosure = None;
+            }
+            PageFocusTarget::Disclosure(key) => {
+                self.controls.blur();
+                self.focused_link = None;
+                self.focused_disclosure = Some(key.clone());
+            }
+        }
+        self.reflow_controls(pipeline)?;
+        if !item.fixed {
+            if let Some(viewport) = self.viewport.as_mut() {
+                let top = viewport.scroll_state().offset_y();
+                let bottom = top + self.viewport_height;
+                if item.state.y < top {
+                    viewport.set_scroll_offset_y(item.state.y);
+                } else if item.state.y + item.state.height > bottom {
+                    viewport.set_scroll_offset_y(
+                        item.state.y + item.state.height - self.viewport_height,
+                    );
+                }
+            }
+        }
+        self.refresh_page_focus_presentation();
+        self.page_focus_accessibility_states()
+            .into_iter()
+            .find(|state| state.focused)
     }
 
     pub fn disclosure_accessibility_states(&self) -> Vec<DisclosureAccessibilityState> {
@@ -1924,6 +2682,225 @@ impl BrowserSession {
                 })
             })
             .collect()
+    }
+
+    pub fn top_layer_accessibility_states(&self) -> Vec<TopLayerAccessibilityState> {
+        let Some(page) = self.viewport.as_ref().map(BrowserViewport::page) else {
+            return Vec::new();
+        };
+        let snapshots = top_layer_snapshots(&page.render_tree);
+        snapshots
+            .into_iter()
+            .map(|snapshot| {
+                let closedby = (snapshot.kind == "dialog")
+                    .then(|| {
+                        page.document.disclosures.iter().find(|disclosure| {
+                            disclosure.element == "dialog" && disclosure.id == snapshot.id
+                        })
+                    })
+                    .flatten()
+                    .and_then(|disclosure| disclosure.closedby.as_deref());
+                let light_dismiss = if snapshot.kind == "dialog" {
+                    closedby == Some("any")
+                } else {
+                    snapshot.light_dismiss
+                };
+                let escape_dismiss = if snapshot.kind == "dialog" {
+                    closedby
+                        .map(|policy| policy != "none")
+                        .unwrap_or(snapshot.modal)
+                } else {
+                    snapshot.escape_dismiss
+                };
+                let topmost = self.top_layer_stack.last() == Some(&snapshot.key);
+                TopLayerAccessibilityState {
+                    key: snapshot.key,
+                    id: snapshot.id,
+                    name: snapshot.name,
+                    kind: snapshot.kind,
+                    mode: snapshot.mode,
+                    open: snapshot.open,
+                    modal: snapshot.modal,
+                    light_dismiss,
+                    escape_dismiss,
+                    topmost,
+                }
+            })
+            .collect()
+    }
+
+    pub fn top_layer_diagnostics(&self) -> &[TopLayerDiagnostic] {
+        &self.top_layer_diagnostics
+    }
+
+    pub fn fragment_navigation_state(&self) -> Option<&FragmentNavigationState> {
+        self.fragment_navigation.as_ref()
+    }
+
+    pub fn history_restoration_state(&self) -> Option<&BrowserHistoryRestorationState> {
+        self.history_restoration.as_ref()
+    }
+
+    pub fn take_top_layer_diagnostics(&mut self) -> Vec<TopLayerDiagnostic> {
+        std::mem::take(&mut self.top_layer_diagnostics)
+    }
+
+    pub fn top_layer_accessibility_action<M, S, FM, R>(
+        &mut self,
+        key: &str,
+        action: TopLayerAccessibilityAction,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> bool
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let target = self
+            .top_layer_accessibility_states()
+            .into_iter()
+            .find(|state| state.key == key)
+            .and_then(|state| state.id);
+        let Some(target) = target else {
+            self.top_layer_diagnostics.push(TopLayerDiagnostic {
+                code: "top-layer-target-missing",
+                target: Some(key.into()),
+                message: "top-layer action requires an ID-addressable target",
+            });
+            return false;
+        };
+        self.apply_top_layer_action(&target, action, None, pipeline)
+    }
+
+    fn apply_top_layer_action<M, S, FM, R>(
+        &mut self,
+        target_id: &str,
+        action: TopLayerAccessibilityAction,
+        invoker: Option<&str>,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> bool
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let Some(mut current) = self
+            .viewport
+            .as_ref()
+            .map(|viewport| viewport.page().clone())
+        else {
+            return false;
+        };
+        let snapshots = top_layer_snapshots(&current.render_tree);
+        let Some(target) = snapshots
+            .iter()
+            .find(|surface| surface.id.as_deref() == Some(target_id))
+            .cloned()
+        else {
+            self.top_layer_diagnostics.push(TopLayerDiagnostic {
+                code: "top-layer-target-missing",
+                target: Some(target_id.into()),
+                message: "invoker target does not identify a dialog or popover",
+            });
+            return false;
+        };
+        let valid = matches!(
+            (&*target.kind, action),
+            ("dialog", TopLayerAccessibilityAction::Show)
+                | ("dialog", TopLayerAccessibilityAction::ShowModal)
+                | ("dialog", TopLayerAccessibilityAction::Close)
+                | ("popover", TopLayerAccessibilityAction::TogglePopover)
+                | ("popover", TopLayerAccessibilityAction::ShowPopover)
+                | ("popover", TopLayerAccessibilityAction::HidePopover)
+        );
+        if !valid {
+            self.top_layer_diagnostics.push(TopLayerDiagnostic {
+                code: "top-layer-command-mismatch",
+                target: Some(target_id.into()),
+                message: "invoker command is not valid for its target surface",
+            });
+            return false;
+        }
+        let open = match action {
+            TopLayerAccessibilityAction::Show | TopLayerAccessibilityAction::ShowModal => true,
+            TopLayerAccessibilityAction::Close | TopLayerAccessibilityAction::HidePopover => false,
+            TopLayerAccessibilityAction::TogglePopover => !target.open,
+            TopLayerAccessibilityAction::ShowPopover => true,
+        };
+        let modal = action == TopLayerAccessibilityAction::ShowModal;
+
+        if open && target.kind == "popover" && target.mode != "manual" {
+            for surface in &snapshots {
+                if surface.open
+                    && surface.kind == "popover"
+                    && surface.mode != "manual"
+                    && surface.id.as_deref() != Some(target_id)
+                {
+                    if let Some(id) = surface.id.as_deref() {
+                        set_top_layer_node_state(
+                            &mut current.render_tree.children,
+                            id,
+                            false,
+                            false,
+                        );
+                    }
+                    self.top_layer_stack.retain(|key| key != &surface.key);
+                }
+            }
+        }
+        if !set_top_layer_node_state(&mut current.render_tree.children, target_id, open, modal) {
+            return false;
+        }
+        for disclosure in &mut current.document.disclosures {
+            if disclosure.element == "dialog" && disclosure.id.as_deref() == Some(target_id) {
+                disclosure.open = open;
+                disclosure.aria_modal = modal.then(|| "true".into());
+            }
+        }
+        for descriptor in &mut current.document.disclosure_state_descriptors {
+            if descriptor.element == "dialog" && descriptor.id.as_deref() == Some(target_id) {
+                descriptor.open = open;
+                descriptor.modal = modal;
+                descriptor.aria_modal = modal.then(|| "true".into());
+            }
+        }
+
+        self.top_layer_stack.retain(|key| key != &target.key);
+        if open {
+            self.top_layer_stack.push(target.key.clone());
+            if let Some(invoker) = invoker {
+                self.top_layer_invokers
+                    .retain(|(surface, _)| surface != &target.key);
+                self.top_layer_invokers
+                    .push((target.key.clone(), invoker.into()));
+            }
+        }
+        let updated = pipeline.reflow_retained_with_visited(&current, &self.visited_links);
+        if let Some(viewport) = self.viewport.as_mut() {
+            viewport.reflow_page(updated, self.viewport_height);
+        }
+        if open {
+            if let Some(key) = controls_inside_top_layer(&current.render_tree, target_id).first() {
+                if self.controls.focus(key).is_some() {
+                    self.focused_link = None;
+                    self.focused_disclosure = None;
+                }
+            }
+        } else if let Some(position) = self
+            .top_layer_invokers
+            .iter()
+            .rposition(|(surface, _)| surface == &target.key)
+        {
+            let (_, key) = self.top_layer_invokers.remove(position);
+            if self.controls.focus(&key).is_some() {
+                self.focused_link = None;
+                self.focused_disclosure = None;
+            }
+        }
+        self.refresh_control_editor_presentation();
+        true
     }
 
     /// Apply an accessibility disclosure action and reflow the retained page.
@@ -1970,6 +2947,8 @@ impl BrowserSession {
             .as_ref()?
             .hit_test_disclosure(viewport_x, viewport_y)?
             .clone();
+        self.controls.blur();
+        self.focused_link = None;
         self.focused_disclosure = Some(region.key.clone());
         self.set_disclosure_open(&region.key, !region.open, pipeline)
     }
@@ -2084,6 +3063,8 @@ impl BrowserSession {
         } else {
             self.controls.pointer_activate(&region.key)?
         };
+        self.focused_link = None;
+        self.focused_disclosure = None;
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -2115,6 +3096,8 @@ impl BrowserSession {
             y - CONTROL_TEXT_METRICS.inset_y,
             CONTROL_TEXT_METRICS,
         )?;
+        self.focused_link = None;
+        self.focused_disclosure = None;
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -2295,8 +3278,21 @@ impl BrowserSession {
             self.record_control_effect_events(effect);
         }
         if let Some(ControlEffect::Activated(key)) = &effect {
-            let outcome = self.dispatch_form_activation(key, |_| {})?;
-            self.apply_form_dispatch(outcome, pipeline, fetcher)?;
+            let command = self
+                .viewport
+                .as_ref()
+                .and_then(|viewport| control_top_layer_command(&viewport.page().render_tree, key));
+            let handled = command
+                .and_then(|(command, target)| {
+                    top_layer_action_from_command(&command).map(|action| {
+                        self.apply_top_layer_action(&target, action, Some(key), pipeline)
+                    })
+                })
+                .unwrap_or(false);
+            if !handled {
+                let outcome = self.dispatch_form_activation(key, |_| {})?;
+                self.apply_form_dispatch(outcome, pipeline, fetcher)?;
+            }
         } else if effect.is_some() {
             self.form_diagnostics.clear();
             self.controls.clear_validation();
@@ -2356,6 +3352,10 @@ impl BrowserSession {
             return Ok(None);
         };
         let key = region.key.clone();
+        let top_layer_command = self
+            .viewport
+            .as_ref()
+            .and_then(|viewport| control_top_layer_command(&viewport.page().render_tree, &key));
         let effect = if region.label_activation {
             self.controls.pointer_activate(&key)
         } else if region.kind.accepts_text() {
@@ -2371,7 +3371,16 @@ impl BrowserSession {
         let Some(effect) = effect else {
             return Ok(None);
         };
+        self.focused_link = None;
+        self.focused_disclosure = None;
         if matches!(effect, ControlEffect::Activated(_)) {
+            if let Some((command, target)) = top_layer_command {
+                if let Some(action) = top_layer_action_from_command(&command) {
+                    if self.apply_top_layer_action(&target, action, Some(&key), pipeline) {
+                        return Ok(Some(effect));
+                    }
+                }
+            }
             let image_coordinates = self
                 .controls
                 .binding(&key)
@@ -2415,24 +3424,56 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        if let Some(topmost) = self
+            .top_layer_accessibility_states()
+            .into_iter()
+            .find(|state| state.open && state.topmost)
+        {
+            let inside = self
+                .viewport
+                .as_ref()
+                .and_then(|viewport| viewport.hit_test_top_layer(viewport_x, viewport_y))
+                .is_some_and(|region| region.key == topmost.key);
+            if !inside && topmost.light_dismiss {
+                if let Some(id) = topmost.id {
+                    return Ok(self.apply_top_layer_action(
+                        &id,
+                        if topmost.kind == "dialog" {
+                            TopLayerAccessibilityAction::Close
+                        } else {
+                            TopLayerAccessibilityAction::HidePopover
+                        },
+                        None,
+                        pipeline,
+                    ));
+                }
+            }
+            if !inside && topmost.modal {
+                return Ok(true);
+            }
+        }
         if self
             .viewport
             .as_ref()
             .and_then(|viewport| viewport.hit_test_control(viewport_x, viewport_y))
             .is_some()
         {
+            self.focused_link = None;
             self.focused_disclosure = None;
             return Ok(self
                 .activate_control_and_submit(viewport_x, viewport_y, pipeline, fetcher)?
                 .is_some());
         }
-        if self
+        if let Some(link) = self
             .viewport
             .as_ref()
             .and_then(|viewport| viewport.hit_test_link(viewport_x, viewport_y))
-            .is_some()
+            .cloned()
         {
+            self.controls.blur();
+            self.focused_link = link.key;
             self.focused_disclosure = None;
+            self.reflow_controls(pipeline);
             return Ok(false);
         }
         Ok(self
@@ -2483,6 +3524,16 @@ impl BrowserSession {
         }
         let activation = match &effect {
             Some(ControlEffect::Activated(activated)) => {
+                let command = self.viewport.as_ref().and_then(|viewport| {
+                    control_top_layer_command(&viewport.page().render_tree, activated)
+                });
+                if let Some((command, target)) = command {
+                    if let Some(action) = top_layer_action_from_command(&command) {
+                        if self.apply_top_layer_action(&target, action, Some(activated), pipeline) {
+                            return Ok(effect);
+                        }
+                    }
+                }
                 Some(self.dispatch_form_activation(activated, |_| {})?)
             }
             Some(
@@ -2520,7 +3571,55 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        if key == ControlKey::Tab {
+            return Ok(self.focus_page(shift, pipeline).is_some());
+        }
+        if key == ControlKey::Escape {
+            if let Some(topmost) = self
+                .top_layer_accessibility_states()
+                .into_iter()
+                .find(|state| state.open && state.topmost && state.escape_dismiss)
+            {
+                if let Some(id) = topmost.id {
+                    return Ok(self.apply_top_layer_action(
+                        &id,
+                        if topmost.kind == "dialog" {
+                            TopLayerAccessibilityAction::Close
+                        } else {
+                            TopLayerAccessibilityAction::HidePopover
+                        },
+                        None,
+                        pipeline,
+                    ));
+                }
+            }
+        }
         if matches!(key, ControlKey::Enter | ControlKey::Space) {
+            if key == ControlKey::Enter {
+                if let Some(focused) = self.focused_link.clone() {
+                    let link = self.viewport.as_ref().and_then(|viewport| {
+                        viewport
+                            .page()
+                            .paint
+                            .links
+                            .iter()
+                            .find(|region| region.key.as_deref() == Some(&focused))
+                            .cloned()
+                    });
+                    if let Some(link) = link {
+                        self.pending_host_effect = None;
+                        return match plan_link_activation(link) {
+                            BrowserLinkActivation::Navigate(url) => self
+                                .execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+                                .map(|viewport| viewport.is_some()),
+                            BrowserLinkActivation::HostEffect(effect) => {
+                                self.pending_host_effect = Some(effect);
+                                Ok(true)
+                            }
+                        };
+                    }
+                }
+            }
             if let Some(disclosure) = self.focused_disclosure.clone() {
                 return Ok(self
                     .disclosure_accessibility_action(
@@ -2532,6 +3631,7 @@ impl BrowserSession {
             }
         }
         if self.controls.focused_key().is_some() {
+            self.focused_link = None;
             self.focused_disclosure = None;
             return Ok(self
                 .control_key_down_with_shift_and_submit(key, shift, pipeline, fetcher)?
@@ -2653,6 +3753,7 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        self.pending_host_effect = None;
         let reportable_diagnostics = outcome.reportable_diagnostics();
         self.form_lifecycle_events.extend(outcome.events);
         match outcome.activation {
@@ -2678,7 +3779,10 @@ impl BrowserSession {
                         self.controls.set_invalid(key, diagnostic.message.clone());
                     }
                 }
-                self.controls.focus_first_invalid();
+                if self.controls.focus_first_invalid().is_some() {
+                    self.focused_link = None;
+                    self.focused_disclosure = None;
+                }
                 self.form_diagnostics = reportable_diagnostics;
                 self.reflow_controls(pipeline);
             }
@@ -2704,7 +3808,12 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let departing_state = self.current_form_history_state();
+        let target =
+            BrowserBrowsingContextTarget::from_effective_target(navigation.target.as_deref());
+        let noopener = navigation.rel_noopener
+            || navigation.rel_noreferrer
+            || (target == BrowserBrowsingContextTarget::Blank && !navigation.rel_opener);
+        let noreferrer = navigation.rel_noreferrer;
         let request = BrowserFetchRequest {
             method: match navigation.method {
                 FormMethod::Get => BrowserFetchMethod::Get,
@@ -2714,6 +3823,18 @@ impl BrowserSession {
             content_type: navigation.content_type,
             body: navigation.body,
         };
+        if !target.routes_current_context() {
+            self.pending_host_effect = Some(BrowserHostEffect::OpenBrowsingContext(
+                BrowserBrowsingContextRequest {
+                    noopener,
+                    noreferrer,
+                    target,
+                    request,
+                },
+            ));
+            return Ok(());
+        }
+        let departing_state = self.current_history_entry_state();
         let mut history = self.history.clone();
         history.navigate(request.url.clone());
         let page =
@@ -2721,15 +3842,25 @@ impl BrowserSession {
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
         let controls = BrowserControlModel::from_render_tree(&page.render_tree);
+        let top_layer_stack = top_layer_snapshots(&page.render_tree)
+            .into_iter()
+            .filter(|surface| surface.open)
+            .map(|surface| surface.key)
+            .collect();
         history.replace_current(page.final_url.clone());
         self.viewport = Some(BrowserViewport::new(page, self.viewport_height));
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        self.focused_link = None;
         self.focused_disclosure = None;
-        if let Some((url, snapshot)) = departing_state {
-            self.remember_form_history_state(url, snapshot);
+        self.top_layer_stack = top_layer_stack;
+        self.top_layer_invokers.clear();
+        self.top_layer_diagnostics.clear();
+        if let Some((entry_id, state)) = departing_state {
+            self.remember_history_entry_state(entry_id, state);
         }
+        self.history_restoration = None;
         self.form_diagnostics.clear();
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
         self.refresh_control_editor_presentation();
@@ -2751,7 +3882,28 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.focus_next(reverse)?;
+        let mut keys = self
+            .viewport
+            .as_ref()?
+            .page()
+            .paint
+            .controls
+            .iter()
+            .map(|region| region.key.clone())
+            .collect::<Vec<_>>();
+        if let Some(modal) = self
+            .top_layer_accessibility_states()
+            .into_iter()
+            .find(|state| state.open && state.topmost && state.modal)
+        {
+            if let Some(id) = modal.id {
+                let inside =
+                    controls_inside_top_layer(&self.viewport.as_ref()?.page().render_tree, &id);
+                keys.retain(|key| inside.contains(key));
+            }
+        }
+        let effect = self.controls.focus_next_in(&keys, reverse)?;
+        self.focused_link = None;
         self.focused_disclosure = None;
         self.reflow_controls(pipeline)?;
         Some(effect)
@@ -2972,7 +4124,81 @@ impl BrowserSession {
             });
             viewport.page.paint.scene.instructions.extend(overlays);
         }
+        self.refresh_page_focus_presentation();
         presentations
+    }
+
+    fn refresh_page_focus_presentation(&mut self) {
+        let focused_link = self.focused_link.as_deref();
+        let focused_disclosure = self.focused_disclosure.as_deref();
+        let regions = self
+            .viewport
+            .as_ref()
+            .map(|viewport| {
+                let page = viewport.page();
+                page.paint
+                    .links
+                    .iter()
+                    .filter_map(|region| {
+                        (region.key.as_deref() == focused_link).then_some((
+                            region.x,
+                            region.y,
+                            region.width,
+                            region.height,
+                            region.fixed,
+                        ))
+                    })
+                    .chain(page.paint.disclosures.iter().filter_map(|region| {
+                        (Some(region.key.as_str()) == focused_disclosure).then_some((
+                            region.x,
+                            region.y,
+                            region.width,
+                            region.height,
+                            region.fixed,
+                        ))
+                    }))
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_default();
+        let overlays = regions
+            .into_iter()
+            .enumerate()
+            .map(|(index, (x, y, width, height, fixed))| {
+                let mut metadata = std::collections::HashMap::new();
+                if fixed {
+                    metadata.insert("layout.position".into(), "fixed".into());
+                }
+                PaintInstruction::Group(PaintGroup {
+                    base: PaintBase {
+                        id: Some(format!("{PAGE_FOCUS_OVERLAY_PREFIX}{index}")),
+                        metadata: (!metadata.is_empty()).then_some(metadata),
+                    },
+                    children: vec![PaintInstruction::Rect(PaintRect {
+                        base: PaintBase::default(),
+                        x: x - 2.0,
+                        y: y - 2.0,
+                        width: width + 4.0,
+                        height: height + 4.0,
+                        fill: None,
+                        stroke: Some("#005fcc".into()),
+                        stroke_width: Some(2.0),
+                        corner_radius: Some(2.0),
+                        stroke_dash: Some(vec![2.0, 2.0]),
+                        stroke_dash_offset: None,
+                    })],
+                    transform: None,
+                    opacity: None,
+                })
+            })
+            .collect::<Vec<_>>();
+        if let Some(viewport) = self.viewport.as_mut() {
+            viewport.page.paint.scene.instructions.retain(|instruction| {
+                !matches!(instruction,
+                    PaintInstruction::Group(group)
+                        if group.base.id.as_deref().is_some_and(|id| id.starts_with(PAGE_FOCUS_OVERLAY_PREFIX)))
+            });
+            viewport.page.paint.scene.instructions.extend(overlays);
+        }
     }
 
     fn reflow_controls<M, S, FM, R>(
@@ -2995,24 +4221,34 @@ impl BrowserSession {
         Some(())
     }
 
-    fn current_form_history_state(&self) -> Option<(String, ControlStateSnapshot)> {
+    fn current_history_entry_state(&self) -> Option<(NavigationEntryId, BrowserHistoryEntryState)> {
         Some((
-            self.history.current_url()?.to_string(),
-            self.controls.capture_state(ControlStatePrivacy::Public),
+            self.history.current_entry_id()?,
+            BrowserHistoryEntryState {
+                controls: self.controls.capture_state(ControlStatePrivacy::Public),
+                scroll_offset_y: self
+                    .viewport
+                    .as_ref()
+                    .map_or(0.0, |viewport| viewport.scroll_state().offset_y()),
+            },
         ))
     }
 
-    fn remember_form_history_state(&mut self, url: String, snapshot: ControlStateSnapshot) {
+    fn remember_history_entry_state(
+        &mut self,
+        entry_id: NavigationEntryId,
+        state: BrowserHistoryEntryState,
+    ) {
         if let Some(position) = self
-            .form_history_states
+            .history_states
             .iter()
-            .position(|(candidate, _)| candidate == &url)
+            .position(|(candidate, _)| *candidate == entry_id)
         {
-            self.form_history_states.remove(position);
+            self.history_states.remove(position);
         }
-        self.form_history_states.push((url, snapshot));
-        if self.form_history_states.len() > FORM_HISTORY_STATE_LIMIT {
-            self.form_history_states.remove(0);
+        self.history_states.push((entry_id, state));
+        if self.history_states.len() > SESSION_HISTORY_STATE_LIMIT {
+            self.history_states.remove(0);
         }
     }
 
@@ -3081,12 +4317,13 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let restores_form_state = matches!(
+        let reloads_document = matches!(&navigation, BrowserNavigation::Reload);
+        let traverses_history = matches!(
             &navigation,
             BrowserNavigation::Back | BrowserNavigation::Forward
         );
         let departing_state = (!matches!(&navigation, BrowserNavigation::Reload))
-            .then(|| self.current_form_history_state())
+            .then(|| self.current_history_entry_state())
             .flatten();
         let mut history = self.history.clone();
         let requested_url = match navigation {
@@ -3099,25 +4336,116 @@ impl BrowserSession {
         let Some(requested_url) = requested_url else {
             return Ok(BrowserNavigationUpdate::default());
         };
+        let target_entry_id = history
+            .current_entry_id()
+            .expect("a navigable history URL must have an entry identifier");
+        let restored_state = traverses_history
+            .then(|| {
+                self.history_states
+                    .iter()
+                    .rev()
+                    .find(|(entry_id, _)| *entry_id == target_entry_id)
+                    .map(|(_, state)| state.clone())
+            })
+            .flatten();
 
-        let page = pipeline.load_pending_with_visited(
-            &requested_url,
+        if !reloads_document {
+            let same_document = self.viewport.as_ref().and_then(|viewport| {
+                same_document_fragment(&viewport.page().final_url, &requested_url)
+            });
+            if let Some(fragment) = same_document {
+                let _ = self.visited_links.record(&requested_url);
+                if let Some(state) = &restored_state {
+                    self.controls.restore_state(&state.controls);
+                    self.reflow_controls(pipeline);
+                } else {
+                    let page = pipeline.reflow_retained_with_visited(
+                        self.viewport
+                            .as_ref()
+                            .expect("same-document navigation requires a viewport")
+                            .page(),
+                        &self.visited_links,
+                    );
+                    self.viewport
+                        .as_mut()
+                        .expect("same-document navigation requires a viewport")
+                        .reflow_page(page, self.viewport_height);
+                }
+                let viewport = self
+                    .viewport
+                    .as_mut()
+                    .expect("same-document navigation requires a viewport");
+                let fragment_state = if let Some(restored) = &restored_state {
+                    let scroll_offset_y = viewport.set_scroll_offset_y(restored.scroll_offset_y);
+                    let decoded = fragment
+                        .as_deref()
+                        .filter(|value| !value.is_empty())
+                        .map(|value| percent_decode(value).unwrap_or_else(|_| value.to_string()));
+                    let target_found = decoded.as_deref().is_none_or(|target| {
+                        navigation_target_offset(&viewport.page().paint.positioned, target)
+                            .is_some()
+                    });
+                    FragmentNavigationState {
+                        url: requested_url,
+                        fragment: decoded,
+                        target_found,
+                        scroll_offset_y,
+                    }
+                } else {
+                    viewport.navigate_to_fragment(requested_url, fragment)
+                };
+                if let Some((entry_id, state)) = departing_state {
+                    self.remember_history_entry_state(entry_id, state);
+                }
+                self.history = history;
+                self.fragment_navigation = Some(fragment_state);
+                self.history_restoration =
+                    restored_state
+                        .as_ref()
+                        .map(|_| BrowserHistoryRestorationState {
+                            entry_id: target_entry_id,
+                            restored_form_state: true,
+                            restored_scroll: true,
+                            scroll_offset_y: self
+                                .fragment_navigation
+                                .as_ref()
+                                .expect("fragment state was just committed")
+                                .scroll_offset_y,
+                        });
+                self.form_diagnostics.clear();
+                return Ok(BrowserNavigationUpdate {
+                    viewport_changed: true,
+                    requests: Vec::new(),
+                    cancelled: Vec::new(),
+                });
+            }
+        }
+
+        let (fetch_url, requested_fragment) = fragmentless_request(&requested_url);
+        let mut page = pipeline.load_pending_with_visited(
+            &fetch_url,
             document_fetcher,
             &self.visited_links,
         )?;
+        if let Some(fragment) = requested_fragment.clone() {
+            let mut final_url = Url::parse(&page.final_url).ok();
+            if let Some(final_url) = final_url.as_mut() {
+                final_url.fragment = Some(fragment);
+                page.final_url = final_url.to_url_string();
+            }
+            page.requested_url = requested_url.clone();
+        }
         let cancelled = self.pending_subresource_requests();
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
         let mut controls = BrowserControlModel::from_render_tree(&page.render_tree);
-        if restores_form_state {
-            if let Some((_, snapshot)) = self
-                .form_history_states
-                .iter()
-                .rev()
-                .find(|(url, _)| url == &page.final_url || url == &requested_url)
-            {
-                controls.restore_state(snapshot);
-            }
+        let top_layer_stack = top_layer_snapshots(&page.render_tree)
+            .into_iter()
+            .filter(|surface| surface.open)
+            .map(|surface| surface.key)
+            .collect();
+        if let Some(state) = &restored_state {
+            controls.restore_state(&state.controls);
         }
         history.replace_current(page.final_url.clone());
         if let Some(viewport) = self.viewport.as_mut() {
@@ -3128,10 +4456,76 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        self.focused_link = None;
         self.focused_disclosure = None;
-        if let Some((url, snapshot)) = departing_state {
-            self.remember_form_history_state(url, snapshot);
+        self.top_layer_stack = top_layer_stack;
+        self.top_layer_invokers.clear();
+        self.top_layer_diagnostics.clear();
+        if restored_state.is_some() {
+            self.reflow_controls(pipeline);
         }
+        self.fragment_navigation = if let Some(state) = &restored_state {
+            let scroll_offset_y = self
+                .viewport
+                .as_mut()
+                .expect("committed navigation must retain a viewport")
+                .set_scroll_offset_y(state.scroll_offset_y);
+            requested_fragment.as_deref().map(|fragment| {
+                let decoded = percent_decode(fragment).unwrap_or_else(|_| fragment.to_string());
+                let target_found = navigation_target_offset(
+                    &self
+                        .viewport
+                        .as_ref()
+                        .expect("committed navigation must retain a viewport")
+                        .page()
+                        .paint
+                        .positioned,
+                    &decoded,
+                )
+                .is_some();
+                FragmentNavigationState {
+                    url: self
+                        .history
+                        .current_url()
+                        .expect("committed navigation must retain history")
+                        .to_string(),
+                    fragment: Some(decoded),
+                    target_found,
+                    scroll_offset_y,
+                }
+            })
+        } else if let Some(fragment) = requested_fragment {
+            let url = self
+                .history
+                .current_url()
+                .expect("committed navigation must retain history")
+                .to_string();
+            Some(
+                self.viewport
+                    .as_mut()
+                    .expect("committed navigation must retain a viewport")
+                    .navigate_to_fragment(url, Some(fragment)),
+            )
+        } else {
+            None
+        };
+        if let Some((entry_id, state)) = departing_state {
+            self.remember_history_entry_state(entry_id, state);
+        }
+        self.history_restoration =
+            restored_state
+                .as_ref()
+                .map(|_| BrowserHistoryRestorationState {
+                    entry_id: target_entry_id,
+                    restored_form_state: true,
+                    restored_scroll: true,
+                    scroll_offset_y: self
+                        .viewport
+                        .as_ref()
+                        .expect("committed navigation must retain a viewport")
+                        .scroll_state()
+                        .offset_y(),
+                });
         self.form_diagnostics.clear();
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
         self.refresh_control_editor_presentation();
@@ -3271,13 +4665,62 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let Some(url) = self
-            .hovered_link_url(viewport_x, viewport_y)
-            .map(str::to_owned)
+        self.pending_host_effect = None;
+        let Some(link) = self
+            .viewport()
+            .and_then(|viewport| viewport.hit_test_link(viewport_x, viewport_y))
+            .cloned()
         else {
             return Ok(None);
         };
-        self.execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+        match plan_link_activation(link) {
+            BrowserLinkActivation::Navigate(url) => {
+                self.execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+            }
+            BrowserLinkActivation::HostEffect(effect) => {
+                self.pending_host_effect = Some(effect);
+                Ok(self.viewport.as_ref())
+            }
+        }
+    }
+
+    pub fn activate_image_map_area<'session, F, M, S, FM, R>(
+        &'session mut self,
+        key: &str,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<Option<&'session BrowserViewport>, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        self.pending_host_effect = None;
+        let Some(link) = self
+            .viewport()
+            .and_then(|viewport| {
+                viewport
+                    .page()
+                    .paint
+                    .links
+                    .iter()
+                    .find(|link| link.key.as_deref() == Some(key))
+            })
+            .cloned()
+        else {
+            return Ok(None);
+        };
+        match plan_link_activation(link) {
+            BrowserLinkActivation::Navigate(url) => {
+                self.execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+            }
+            BrowserLinkActivation::HostEffect(effect) => {
+                self.pending_host_effect = Some(effect);
+                Ok(self.viewport.as_ref())
+            }
+        }
     }
 }
 
@@ -4434,7 +5877,9 @@ mod tests {
             })
             .unwrap();
         assert!(!outcome.changed);
-        let BrowserHostEffect::OpenAuxiliaryDocument(auxiliary) = outcome.effect.unwrap();
+        let BrowserHostEffect::OpenAuxiliaryDocument(auxiliary) = outcome.effect.unwrap() else {
+            panic!("view source must produce an auxiliary document");
+        };
         assert_eq!(auxiliary.kind, BrowserAuxiliaryDocumentKind::ViewSource);
         assert_eq!(
             auxiliary.address,
@@ -4635,7 +6080,7 @@ mod tests {
             session
                 .viewport()
                 .map(|viewport| viewport.scroll_state().offset_y()),
-            Some(0.0)
+            Some(offset)
         );
         session
             .execute(BrowserNavigation::Forward, &pipeline, &fetcher)
@@ -4685,7 +6130,7 @@ mod tests {
                     <a href='/next'>Next</a></p>"
                     .to_vec(),
             )),
-            "http://example.test:80/guide/../index.html#intro" => Ok(BrowserFetchResponse::new(
+            "http://example.test:80/guide/../index.html" => Ok(BrowserFetchResponse::new(
                 first,
                 200,
                 Some("text/html".into()),
@@ -4856,7 +6301,20 @@ mod tests {
             y: 80.0,
             width: 30.0,
             height: 12.0,
+            key: None,
+            accessible_name: None,
+            focus_order: None,
+            tab_index: 0,
+            top_layer_index: None,
+            image_map_order: None,
             url: "http://example.test/next".into(),
+            target: None,
+            effective_target: None,
+            download: None,
+            rel_opener: false,
+            rel_noopener: false,
+            rel_noreferrer: false,
+            shape: None,
             fixed: false,
             clips: Vec::new(),
         };
@@ -4882,6 +6340,112 @@ mod tests {
         };
         assert_eq!(group.transform, Some([1.0, 0.0, 0.0, 1.0, 0.0, -60.0]));
         assert_eq!(group.children, document.instructions);
+    }
+
+    #[test]
+    fn link_targets_and_downloads_become_bounded_host_effects() {
+        let url = "http://example.test/";
+        let fetcher = |requested: &str| {
+            if requested != url {
+                return Err(format!("unexpected auxiliary fetch {requested}"));
+            }
+            Ok(BrowserFetchResponse::new(
+                requested,
+                200,
+                Some("text/html".into()),
+                b"<a href='/report' target='_blank' rel='noreferrer'>Report</a>\
+                  <a href='/archive' download='report.html'>Archive</a>\
+                  <a href='/trusted' target='_blank' rel='opener'>Trusted</a>\
+                  <form action='/submit' method='post' target='reports' rel='noreferrer'>\
+                    <button id='go' name='mode' value='preview'>Go</button></form>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(260.0, 100.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(url, 100.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let links = session.viewport().unwrap().page().paint.links.clone();
+        let history = session.history().clone();
+
+        session
+            .activate_link(links[0].x + 1.0, links[0].y + 1.0, &pipeline, &fetcher)
+            .unwrap();
+        let Some(BrowserHostEffect::OpenBrowsingContext(context)) = session.take_host_effect()
+        else {
+            panic!("blank target must become a browsing-context effect");
+        };
+        assert_eq!(context.target, BrowserBrowsingContextTarget::Blank);
+        assert_eq!(context.request.url, "http://example.test/report");
+        assert!(context.noopener);
+        assert!(context.noreferrer);
+        assert_eq!(session.history(), &history);
+
+        session
+            .activate_link(links[1].x + 1.0, links[1].y + 1.0, &pipeline, &fetcher)
+            .unwrap();
+        let Some(BrowserHostEffect::Download(download)) = session.take_host_effect() else {
+            panic!("download link must become a host download effect");
+        };
+        assert_eq!(download.request.url, "http://example.test/archive");
+        assert_eq!(download.suggested_filename.as_deref(), Some("report.html"));
+        assert_eq!(session.history(), &history);
+
+        session
+            .activate_link(links[2].x + 1.0, links[2].y + 1.0, &pipeline, &fetcher)
+            .unwrap();
+        let Some(BrowserHostEffect::OpenBrowsingContext(context)) = session.take_host_effect()
+        else {
+            panic!("explicit opener must remain part of the shared blank-target policy");
+        };
+        assert_eq!(context.target, BrowserBrowsingContextTarget::Blank);
+        assert!(!context.noopener);
+        assert!(!context.noreferrer);
+        assert_eq!(session.history(), &history);
+
+        session
+            .request_submit(0, Some("control:0:id:go"), |_| {}, &pipeline, &fetcher)
+            .unwrap();
+        let Some(BrowserHostEffect::OpenBrowsingContext(context)) = session.take_host_effect()
+        else {
+            panic!("named form target must become a browsing-context effect");
+        };
+        assert_eq!(
+            context.target,
+            BrowserBrowsingContextTarget::Named("reports".into())
+        );
+        assert_eq!(context.request.url, "http://example.test/submit");
+        assert_eq!(context.request.method, BrowserFetchMethod::Post);
+        assert_eq!(
+            context.request.content_type.as_deref(),
+            Some("application/x-www-form-urlencoded")
+        );
+        assert_eq!(context.request.body, b"mode=preview");
+        assert!(context.noopener);
+        assert!(context.noreferrer);
+        assert_eq!(session.history(), &history);
+    }
+
+    #[test]
+    fn browsing_context_target_keywords_are_case_insensitive() {
+        assert_eq!(
+            BrowserBrowsingContextTarget::from_effective_target(Some(" _TOP ")),
+            BrowserBrowsingContextTarget::Top
+        );
+        assert!(BrowserBrowsingContextTarget::Parent.routes_current_context());
+        assert_eq!(
+            BrowserBrowsingContextTarget::from_effective_target(Some("reports")),
+            BrowserBrowsingContextTarget::Named("reports".into())
+        );
     }
 
     #[test]
@@ -6953,6 +8517,83 @@ mod tests {
     }
 
     #[test]
+    fn history_restores_duplicate_url_entries_by_identity_with_scroll() {
+        let url = "http://example.test/repeated";
+        let fetcher = |requested: &str| {
+            Ok(BrowserFetchResponse::new(
+                requested,
+                200,
+                Some("text/html".into()),
+                b"<input id='draft' value=''><div style='height:600px'></div>".to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(320.0, 100.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(url, 100.0);
+
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let first_id = session.history().current_entry_id().unwrap();
+        session.focus_control(false, &pipeline).unwrap();
+        session.control_text_input("first", &pipeline).unwrap();
+        session.set_scroll_offset_y(120.0);
+
+        session
+            .execute(BrowserNavigation::Navigate(url.into()), &pipeline, &fetcher)
+            .unwrap();
+        let second_id = session.history().current_entry_id().unwrap();
+        assert_ne!(first_id, second_id);
+        session.focus_control(false, &pipeline).unwrap();
+        session.control_text_input("second", &pipeline).unwrap();
+        session.set_scroll_offset_y(240.0);
+
+        session
+            .execute(BrowserNavigation::Back, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(session.history().current_entry_id(), Some(first_id));
+        assert_eq!(
+            session
+                .controls()
+                .control("control:0:id:draft")
+                .unwrap()
+                .value,
+            "first"
+        );
+        assert_eq!(session.scroll_metrics().unwrap().offset_y, 120.0);
+        assert_eq!(
+            session.history_restoration_state(),
+            Some(&BrowserHistoryRestorationState {
+                entry_id: first_id,
+                restored_form_state: true,
+                restored_scroll: true,
+                scroll_offset_y: 120.0,
+            })
+        );
+
+        session
+            .execute(BrowserNavigation::Forward, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(session.history().current_entry_id(), Some(second_id));
+        assert_eq!(
+            session
+                .controls()
+                .control("control:0:id:draft")
+                .unwrap()
+                .value,
+            "second"
+        );
+        assert_eq!(session.scroll_metrics().unwrap().offset_y, 240.0);
+    }
+
+    #[test]
     fn session_commits_datalist_choices_without_triggering_implicit_submission() {
         struct SuggestionFetcher {
             requests: RefCell<Vec<String>>,
@@ -7139,6 +8780,366 @@ mod tests {
                 )
                 .unwrap()
                 .open
+        );
+    }
+
+    #[test]
+    fn session_owns_dialog_and_popover_top_layer_transactions() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<button id='open' commandfor='confirm' command='show-modal'>Open</button>\
+                  <button id='menu-button' popovertarget='menu'>Menu</button>\
+                  <dialog id='confirm' closedby='any' aria-label='Confirm choice'>\
+                    <input id='inside'><button commandfor='confirm' command='close'>Close</button>\
+                  </dialog><div id='menu' popover='auto' aria-label='Actions'>Actions</div>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(480.0, 240.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/layers", 240.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        assert!(session
+            .top_layer_accessibility_states()
+            .iter()
+            .all(|surface| !surface.open));
+        let open = session
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .controls
+            .iter()
+            .find(|control| control.key == "control:0:id:open")
+            .unwrap()
+            .clone();
+        assert!(session
+            .activate_page_interaction(open.x + 1.0, open.y + 1.0, &pipeline, &fetcher)
+            .unwrap());
+        let dialog = session
+            .top_layer_accessibility_states()
+            .into_iter()
+            .find(|surface| surface.kind == "dialog")
+            .unwrap();
+        assert!(dialog.open && dialog.modal && dialog.topmost);
+        assert_eq!(
+            session.controls().focused_key(),
+            Some("control:2:id:inside")
+        );
+        let modal_focus = session.page_focus_accessibility_states();
+        assert_eq!(modal_focus.len(), 2);
+        assert!(modal_focus.iter().all(
+            |state| state.key != "control:0:id:open" && state.key != "control:1:id:menu-button"
+        ));
+
+        assert!(session
+            .activate_page_interaction(470.0, 230.0, &pipeline, &fetcher)
+            .unwrap());
+        assert!(
+            !session
+                .top_layer_accessibility_states()
+                .into_iter()
+                .find(|surface| surface.kind == "dialog")
+                .unwrap()
+                .open
+        );
+        assert_eq!(session.controls().focused_key(), Some("control:0:id:open"));
+
+        assert!(session.top_layer_accessibility_action(
+            "top-layer:id:menu",
+            TopLayerAccessibilityAction::ShowPopover,
+            &pipeline,
+        ));
+        assert!(session
+            .page_key_down_with_shift_and_submit(ControlKey::Escape, false, &pipeline, &fetcher,)
+            .unwrap());
+        assert!(
+            !session
+                .top_layer_accessibility_states()
+                .into_iter()
+                .find(|surface| surface.kind == "popover")
+                .unwrap()
+                .open
+        );
+        assert!(session.top_layer_diagnostics().is_empty());
+    }
+
+    #[test]
+    fn fragment_navigation_stays_in_document_and_uses_decoded_id_and_name_targets() {
+        let requests = RefCell::new(Vec::new());
+        let fetcher = |url: &str| {
+            requests.borrow_mut().push(url.to_string());
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<p>Top</p><div style='height:260px'></div>\
+                  <p id='section two'>Decoded target</p><div style='height:180px'></div>\
+                  <a name='legacy'>Legacy target</a>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(320.0, 100.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/page#section%20two", 100.0);
+
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(requests.borrow().as_slice(), ["http://example.test/page"]);
+        let state = session.fragment_navigation_state().unwrap();
+        assert_eq!(state.fragment.as_deref(), Some("section two"));
+        assert!(state.target_found && state.scroll_offset_y > 0.0);
+
+        session
+            .execute(
+                BrowserNavigation::Navigate("http://example.test/page#legacy".into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert_eq!(
+            requests.borrow().len(),
+            1,
+            "same-document links must not fetch"
+        );
+        assert!(session
+            .visited_links()
+            .contains("http://example.test/page#legacy"));
+        assert!(session.fragment_navigation_state().unwrap().target_found);
+        let legacy_offset = session.scroll_metrics().unwrap().offset_y;
+
+        session
+            .execute(
+                BrowserNavigation::Navigate("http://example.test/page#missing".into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert!(!session.fragment_navigation_state().unwrap().target_found);
+        assert_eq!(session.scroll_metrics().unwrap().offset_y, legacy_offset);
+
+        session
+            .execute(
+                BrowserNavigation::Navigate("http://example.test/page#".into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert_eq!(session.scroll_metrics().unwrap().offset_y, 0.0);
+
+        session
+            .execute(BrowserNavigation::Back, &pipeline, &fetcher)
+            .unwrap();
+        assert!(!session.fragment_navigation_state().unwrap().target_found);
+        session
+            .execute(BrowserNavigation::Back, &pipeline, &fetcher)
+            .unwrap();
+        assert!(session.fragment_navigation_state().unwrap().target_found);
+        assert_eq!(session.scroll_metrics().unwrap().offset_y, legacy_offset);
+        session
+            .execute(BrowserNavigation::Forward, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(
+            requests.borrow().len(),
+            1,
+            "history traversal must not fetch"
+        );
+    }
+
+    #[test]
+    fn image_map_accessibility_activation_shares_navigation_target_policy() {
+        let start = "http://example.test/map";
+        let fetcher = |url: &str| {
+            let body = if url == start {
+                "<img src='plan.gif' width='200' height='100' usemap='#zones'>\
+                 <map name='zones'>\
+                   <area id='details' shape='rect' coords='0,0,80,100' href='/details' alt='Details'>\
+                   <area id='preview' shape='circle' coords='150,50,30' href='/preview' alt='Preview' target='_blank'>\
+                 </map>"
+            } else {
+                "<p>Destination</p>"
+            };
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                body.as_bytes().to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(260.0, 160.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(start, 160.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(
+            session.image_map_accessibility_states(),
+            vec![
+                ImageMapAccessibilityState {
+                    key: "image-map:index:0:map:zones:id:details".into(),
+                    name: "Details".into(),
+                    url: "http://example.test/details".into(),
+                },
+                ImageMapAccessibilityState {
+                    key: "image-map:index:0:map:zones:id:preview".into(),
+                    name: "Preview".into(),
+                    url: "http://example.test/preview".into(),
+                },
+            ]
+        );
+        session
+            .activate_image_map_area(
+                "image-map:index:0:map:zones:id:preview",
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        let Some(BrowserHostEffect::OpenBrowsingContext(request)) = session.take_host_effect()
+        else {
+            panic!("blank image-map target should become a bounded host effect");
+        };
+        assert_eq!(request.request.url, "http://example.test/preview");
+        assert_eq!(request.target, BrowserBrowsingContextTarget::Blank);
+
+        session
+            .activate_image_map_area(
+                "image-map:index:0:map:zones:id:details",
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert_eq!(
+            session.history().current_url(),
+            Some("http://example.test/details")
+        );
+    }
+
+    #[test]
+    fn sequential_focus_orders_mixed_page_targets_and_keyboard_activates_links() {
+        let start = "http://example.test/focus";
+        let fetcher = |url: &str| {
+            let body = if url == start {
+                "<a id='natural' href='/next'>Natural link</a>\
+                 <button id='later' tabindex='2'>Later button</button>\
+                 <details id='info'><summary tabindex='1'>More info</summary><p>Body</p></details>\
+                 <input id='skipped' tabindex='-1' value='Skipped'>\
+                 <button id='disabled' disabled>Disabled</button>"
+            } else {
+                "<p>Destination</p>"
+            };
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                body.as_bytes().to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(260.0, 120.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(start, 120.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        let states = session.page_focus_accessibility_states();
+        assert_eq!(
+            states
+                .iter()
+                .map(|state| (state.role.as_str(), state.tab_index))
+                .collect::<Vec<_>>(),
+            vec![("disclosure", 1), ("button", 2), ("link", 0)]
+        );
+        assert_eq!(
+            states
+                .iter()
+                .map(|state| state.name.as_str())
+                .collect::<Vec<_>>(),
+            vec!["More info", "Later button", "Natural link"]
+        );
+
+        for expected in ["disclosure", "button", "link"] {
+            assert!(session
+                .page_key_down_with_shift_and_submit(ControlKey::Tab, false, &pipeline, &fetcher,)
+                .unwrap());
+            assert_eq!(
+                session
+                    .page_focus_accessibility_states()
+                    .into_iter()
+                    .find(|state| state.focused)
+                    .unwrap()
+                    .role,
+                expected
+            );
+        }
+        assert!(session
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Group(group)
+                    if group.base.id.as_deref().is_some_and(|id| id.starts_with(PAGE_FOCUS_OVERLAY_PREFIX))
+            )));
+        assert!(session
+            .page_key_down_with_shift_and_submit(ControlKey::Tab, true, &pipeline, &fetcher,)
+            .unwrap());
+        assert_eq!(
+            session
+                .page_focus_accessibility_states()
+                .into_iter()
+                .find(|state| state.focused)
+                .unwrap()
+                .role,
+            "button"
+        );
+        assert!(session
+            .page_key_down_with_shift_and_submit(ControlKey::Tab, false, &pipeline, &fetcher,)
+            .unwrap());
+        assert!(session
+            .page_key_down_with_shift_and_submit(ControlKey::Enter, false, &pipeline, &fetcher,)
+            .unwrap());
+        assert_eq!(
+            session.history().current_url(),
+            Some("http://example.test/next")
         );
     }
 }

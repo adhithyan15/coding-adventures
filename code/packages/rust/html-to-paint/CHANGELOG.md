@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Preserve focus keys, document order, `tabindex`, accessible names, and shared
+  geometry on link, control, and disclosure hit regions.
+
+- Emit shape-aware, scaled client-side image-map link regions with shared
+  transforms, clipping, first-match precedence, and accessibility metadata.
+
+- Preserve effective link targets, download filenames, and opener/referrer
+  restrictions in transformed, clipped hit regions.
+
+- Emit transformed, clipped top-layer regions for shared dialog/popover hit
+  testing and modal host projection.
+
 - Emit transformed, clipped, scroll-aware details-summary hit regions with
   stable disclosure keys and open state.
 

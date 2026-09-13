@@ -12,9 +12,9 @@ pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
-    BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
+    BlockArrowDirections, BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape, EdgeMarker,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
-    GridConnection, GridDiagram, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
+    GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
 };
@@ -1475,7 +1475,17 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             group_stack.pop().ok_or_else(|| token_error(token, "unexpected block group end"))?;
             continue;
         }
-        if token_type != Some("STATEMENT_LINE") {
+        if !matches!(
+            token_type,
+            Some("STATEMENT_LINE")
+                | Some("ARROW_NODE_LINE")
+                | Some("INLINE_NODE_CONNECTION_LINE")
+                | Some("COMPACT_MARKED_CONNECTION_LINE")
+                | Some("MARKED_CONNECTION_LINE")
+                | Some("BIDIRECTIONAL_CONNECTION_LINE")
+                | Some("DOTTED_CONNECTION_LINE")
+                | Some("THICK_CONNECTION_LINE")
+        ) {
             continue;
         }
         let line = token.value.trim();
@@ -1532,8 +1542,51 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             direct_styles.push((split_block_names(ids), parse_block_style(token, declarations)?));
             continue;
         }
-        if let Some((from, rest, kind)) = line.split_once("-->").map(|(from, rest)| (from, rest, EdgeKind::Directed))
-            .or_else(|| line.split_once("---").map(|(from, rest)| (from, rest, EdgeKind::Undirected))) {
+        if matches!(token_type, Some("COMPACT_MARKED_CONNECTION_LINE") | Some("MARKED_CONNECTION_LINE")) {
+            let marked = if token_type == Some("COMPACT_MARKED_CONNECTION_LINE") {
+                parse_block_compact_marked_connection(token, line)?
+            } else {
+                parse_block_marked_connection(token, line)?
+            };
+            connections.push(GridConnection {
+                from: marked.from,
+                to: marked.to,
+                kind: marked.kind,
+                start_marker: marked.start_marker,
+                end_marker: marked.end_marker,
+                line_style: marked.line_style,
+                label: marked.label,
+            });
+            continue;
+        }
+        if let Some((from, rest, kind, line_style)) = line
+            .split_once("<-.->")
+            .map(|(from, rest)| (from, rest, EdgeKind::Bidirectional, GridEdgeStyle::Dotted))
+            .or_else(|| {
+                line.split_once("<==>")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Bidirectional, GridEdgeStyle::Thick))
+            })
+            .or_else(|| {
+                line.split_once("<-->")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Bidirectional, GridEdgeStyle::Solid))
+            })
+            .or_else(|| {
+                line.split_once("-.->")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Dotted))
+            })
+            .or_else(|| {
+                line.split_once("==>")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Thick))
+            })
+            .or_else(|| {
+                line.split_once("-->")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Solid))
+            })
+            .or_else(|| {
+                line.split_once("---")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Undirected, GridEdgeStyle::Solid))
+            })
+        {
             let (from, quoted_label) = parse_block_quoted_connection_label(token, from)?;
             let (to, label) = if let Some(rest) = rest.trim().strip_prefix('|') {
                 let (label, to) = rest
@@ -1543,10 +1596,32 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             } else {
                 (rest.trim(), quoted_label.map(DiagramLabel::new))
             };
+            let (from, to) = if token_type == Some("INLINE_NODE_CONNECTION_LINE") {
+                let parent_id = group_stack.last().cloned();
+                (
+                    register_inline_block_node(
+                        token, &from, &parent_id, &mut next_order, &mut ids, &mut cells,
+                        &mut class_assignments,
+                    )?,
+                    register_inline_block_node(
+                        token, to, &parent_id, &mut next_order, &mut ids, &mut cells,
+                        &mut class_assignments,
+                    )?,
+                )
+            } else {
+                (from, to.to_string())
+            };
             connections.push(GridConnection {
                 from,
-                to: to.to_string(),
+                to,
                 kind,
+                start_marker: if kind == EdgeKind::Bidirectional { EdgeMarker::Point } else { EdgeMarker::None },
+                end_marker: if matches!(kind, EdgeKind::Directed | EdgeKind::Bidirectional) {
+                    EdgeMarker::Point
+                } else {
+                    EdgeMarker::None
+                },
+                line_style,
                 label,
             });
             continue;
@@ -1575,12 +1650,20 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 None => (item, Vec::new()),
             };
             let (id, label, shape) = parse_block_node(item);
+            if token_type == Some("ARROW_NODE_LINE")
+                && !matches!(&shape, DiagramShape::BlockArrow(_))
+            {
+                return Err(token_error(
+                    token,
+                    "block arrow direction must be left, right, up, down, x, or y",
+                ));
+            }
             if id.is_empty() || !ids.insert(id.clone()) {
                 return Err(token_error(token, format!("duplicate or empty block id {id:?}")));
             }
             cells.push(GridCell {
                 id: id.clone(),
-                label: DiagramLabel::new(normalize_mermaid_line_breaks(&label)),
+                label: DiagramLabel::new(normalize_mermaid_line_breaks(&unquote_block_label(&label))),
                 shape,
                 column_span,
                 parent_id,
@@ -1627,6 +1710,169 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         cells,
         groups,
         connections,
+    })
+}
+
+struct ParsedBlockConnection {
+    from: String,
+    to: String,
+    kind: EdgeKind,
+    line_style: GridEdgeStyle,
+    start_marker: EdgeMarker,
+    end_marker: EdgeMarker,
+    label: Option<DiagramLabel>,
+}
+
+fn register_inline_block_node(
+    token: &Token,
+    source: &str,
+    parent_id: &Option<String>,
+    next_order: &mut HashMap<Option<String>, usize>,
+    ids: &mut HashSet<String>,
+    cells: &mut Vec<GridCell>,
+    class_assignments: &mut Vec<(Vec<String>, Vec<String>)>,
+) -> Result<String, ParseError> {
+    let (source, inline_classes) = match source.split_once(":::") {
+        Some((source, classes)) => (source, split_block_names(classes)),
+        None => (source, Vec::new()),
+    };
+    let (id, label, shape) = parse_block_node(source.trim());
+    if !is_block_id(&id) {
+        return Err(token_error(token, "invalid inline block node id"));
+    }
+    if ids.contains(&id) {
+        if label != id || !inline_classes.is_empty() {
+            return Err(token_error(token, format!("duplicate inline block id {id:?}")));
+        }
+        return Ok(id);
+    }
+    ids.insert(id.clone());
+    let order = take_grid_order(next_order, parent_id);
+    cells.push(GridCell {
+        id: id.clone(),
+        label: DiagramLabel::new(normalize_mermaid_line_breaks(&unquote_block_label(&label))),
+        shape,
+        column_span: 1,
+        parent_id: parent_id.clone(),
+        order,
+        visible: true,
+        style: None,
+    });
+    if !inline_classes.is_empty() {
+        class_assignments.push((vec![id.clone()], inline_classes));
+    }
+    Ok(id)
+}
+
+fn parse_block_compact_marked_connection(
+    token: &Token,
+    line: &str,
+) -> Result<ParsedBlockConnection, ParseError> {
+    for (marker_index, marker) in line.char_indices() {
+        let end_marker = match marker {
+            'o' => EdgeMarker::Circle,
+            'x' => EdgeMarker::Cross,
+            _ => continue,
+        };
+        let target = &line[marker_index + marker.len_utf8()..];
+        if !is_block_id(target) {
+            continue;
+        }
+
+        let prefix = &line[..marker_index];
+        let (link_start, line_style) = if prefix.ends_with("==") {
+            let start = prefix.trim_end_matches('=').len();
+            (start, GridEdgeStyle::Thick)
+        } else if prefix.ends_with('-') {
+            let trailing_dash = prefix.len() - 1;
+            let dot_start = prefix[..trailing_dash].trim_end_matches('.').len();
+            if dot_start < trailing_dash {
+                let start = if prefix[..dot_start].ends_with('-') { dot_start - 1 } else { dot_start };
+                (start, GridEdgeStyle::Dotted)
+            } else if prefix.ends_with("--") {
+                (prefix.len() - 2, GridEdgeStyle::Solid)
+            } else {
+                continue;
+            }
+        } else {
+            continue;
+        };
+        let from = &prefix[..link_start];
+        if !is_block_id(from) {
+            continue;
+        }
+        return Ok(ParsedBlockConnection {
+            from: from.to_string(),
+            to: target.to_string(),
+            kind: EdgeKind::Undirected,
+            line_style,
+            start_marker: EdgeMarker::None,
+            end_marker,
+            label: None,
+        });
+    }
+    Err(token_error(token, "invalid compact marked block connection"))
+}
+
+fn is_block_id(value: &str) -> bool {
+    value.starts_with(|character: char| character.is_ascii_alphabetic() || character == '_')
+        && value.chars().all(|character| character.is_ascii_alphanumeric() || matches!(character, '_' | '-'))
+}
+
+fn parse_block_marked_connection(token: &Token, line: &str) -> Result<ParsedBlockConnection, ParseError> {
+    let mut parts = line.split_whitespace();
+    let from = parts.next().unwrap_or_default();
+    let mut link = parts.next().unwrap_or_default();
+    let remainder = parts.collect::<Vec<_>>().join(" ");
+    if from.is_empty() || link.is_empty() || remainder.is_empty() {
+        return Err(token_error(token, "marked block connection requires source, link, and target"));
+    }
+    let (to, label) = if let Some(labelled) = remainder.strip_prefix('|') {
+        let (label, to) = labelled
+            .split_once('|')
+            .ok_or_else(|| token_error(token, "unterminated marked block connection label"))?;
+        (to.trim(), Some(DiagramLabel::new(label.trim())))
+    } else {
+        (remainder.trim(), None)
+    };
+    if to.is_empty() || to.chars().any(char::is_whitespace) {
+        return Err(token_error(token, "marked block connection requires one target id"));
+    }
+
+    let start_marker = match link.as_bytes().first().copied() {
+        Some(b'o') => { link = &link[1..]; EdgeMarker::Circle }
+        Some(b'x') => { link = &link[1..]; EdgeMarker::Cross }
+        Some(b'<') => { link = &link[1..]; EdgeMarker::Point }
+        _ => EdgeMarker::None,
+    };
+    let end_marker = match link.as_bytes().last().copied() {
+        Some(b'o') => { link = &link[..link.len() - 1]; EdgeMarker::Circle }
+        Some(b'x') => { link = &link[..link.len() - 1]; EdgeMarker::Cross }
+        Some(b'>') => { link = &link[..link.len() - 1]; EdgeMarker::Point }
+        _ => EdgeMarker::None,
+    };
+    let line_style = if link.contains("==") {
+        GridEdgeStyle::Thick
+    } else if link.contains('.') {
+        GridEdgeStyle::Dotted
+    } else {
+        GridEdgeStyle::Solid
+    };
+    let kind = if start_marker == EdgeMarker::Point && end_marker == EdgeMarker::Point {
+        EdgeKind::Bidirectional
+    } else if start_marker == EdgeMarker::Point || end_marker == EdgeMarker::Point {
+        EdgeKind::Directed
+    } else {
+        EdgeKind::Undirected
+    };
+    Ok(ParsedBlockConnection {
+        from: from.to_string(),
+        to: to.to_string(),
+        kind,
+        line_style,
+        start_marker,
+        end_marker,
+        label,
     })
 }
 
@@ -1721,6 +1967,7 @@ fn parse_block_style(token: &Token, source: &str) -> Result<DiagramStyle, ParseE
             "stroke" => style.stroke = Some(value.into()),
             "color" => style.text_color = Some(value.into()),
             "stroke-width" => style.stroke_width = Some(parse_block_style_number(token, value)?),
+            "stroke-dasharray" => style.stroke_dash = Some(parse_block_dash_pattern(token, value)?),
             "font-size" => style.font_size = Some(parse_block_style_number(token, value)?),
             "font-weight" => style.font_weight = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => 400,
@@ -1737,6 +1984,20 @@ fn parse_block_style(token: &Token, source: &str) -> Result<DiagramStyle, ParseE
         }
     }
     Ok(style)
+}
+
+fn parse_block_dash_pattern(token: &Token, source: &str) -> Result<Vec<f64>, ParseError> {
+    let values = source
+        .split_whitespace()
+        .map(|value| parse_block_style_number(token, value))
+        .collect::<Result<Vec<_>, _>>()?;
+    if values.is_empty() || values.iter().any(|value| *value <= 0.0) {
+        return Err(token_error(
+            token,
+            "block stroke dasharray requires positive lengths",
+        ));
+    }
+    Ok(values)
 }
 
 fn parse_block_style_number(token: &Token, source: &str) -> Result<f64, ParseError> {
@@ -1802,6 +2063,27 @@ fn split_block_items(line: &str) -> Vec<&str> {
 }
 
 fn parse_block_node(source: &str) -> (String, String, DiagramShape) {
+    if let Some(open) = source.find("<[") {
+        if let Some((label, directions)) = source[open + 2..].split_once("]>(") {
+            if let Some(directions) = directions.strip_suffix(')') {
+                let mut parsed = BlockArrowDirections::default();
+                for direction in directions.split(',').map(str::trim) {
+                    match direction.to_ascii_lowercase().as_str() {
+                        "left" => parsed.left = true,
+                        "right" => parsed.right = true,
+                        "up" => parsed.up = true,
+                        "down" => parsed.down = true,
+                        "x" => { parsed.left = true; parsed.right = true; }
+                        "y" => { parsed.up = true; parsed.down = true; }
+                        _ => return (source.to_string(), source.to_string(), DiagramShape::RoundedRect),
+                    }
+                }
+                if parsed.left || parsed.right || parsed.up || parsed.down {
+                    return (source[..open].trim().to_string(), label.trim().to_string(), DiagramShape::BlockArrow(parsed));
+                }
+            }
+        }
+    }
     for (open, close, shape) in [
         ("(((", ")))", DiagramShape::DoubleCircle),
         ("[[", "]]", DiagramShape::Subroutine),
@@ -5937,6 +6219,9 @@ fn merge_state_style(target: &mut DiagramStyle, source: &DiagramStyle) {
     if source.stroke_width.is_some() {
         target.stroke_width = source.stroke_width;
     }
+    if source.stroke_dash.is_some() {
+        target.stroke_dash.clone_from(&source.stroke_dash);
+    }
     if source.text_color.is_some() {
         target.text_color.clone_from(&source.text_color);
     }
@@ -9177,6 +9462,115 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn block_preserves_dotted_and_thick_connection_styles() {
+        let diagram = parse_block("block\nA B C\nA -.-> B\nB ==> C").unwrap();
+        assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
+        assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Dotted);
+        assert_eq!(diagram.connections[1].kind, EdgeKind::Directed);
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+    }
+
+    #[test]
+    fn block_preserves_bidirectional_connection_styles() {
+        let diagram = parse_block("block\nA B C D\nA <--> B\nB <-.-> C\nC <==> D").unwrap();
+        assert!(diagram.connections.iter().all(|connection| connection.kind == EdgeKind::Bidirectional));
+        assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Solid);
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Dotted);
+        assert_eq!(diagram.connections[2].line_style, GridEdgeStyle::Thick);
+    }
+
+    #[test]
+    fn block_preserves_circle_and_cross_endpoint_markers() {
+        let diagram = parse_block("block\nA B C D\nA o--x |handoff| B\nB x==o C\nC o-.-o D\nD --x A").unwrap();
+        assert_eq!((diagram.connections[0].start_marker, diagram.connections[0].end_marker),
+            (EdgeMarker::Circle, EdgeMarker::Cross));
+        assert_eq!(diagram.connections[0].label.as_ref().unwrap().text, "handoff");
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+        assert_eq!((diagram.connections[1].start_marker, diagram.connections[1].end_marker),
+            (EdgeMarker::Cross, EdgeMarker::Circle));
+        assert_eq!(diagram.connections[2].line_style, GridEdgeStyle::Dotted);
+        assert_eq!((diagram.connections[3].start_marker, diagram.connections[3].end_marker),
+            (EdgeMarker::None, EdgeMarker::Cross));
+    }
+
+    #[test]
+    fn block_parses_compact_terminal_markers_with_hyphenated_ids() {
+        let diagram = parse_block(
+            "block\nsource-node target-one target-two target-three\nsource-node--otarget-one\ntarget-one==xtarget-two\ntarget-two-.-otarget-three",
+        )
+        .unwrap();
+        assert_eq!(diagram.connections[0].from, "source-node");
+        assert_eq!(diagram.connections[0].to, "target-one");
+        assert_eq!(diagram.connections[0].end_marker, EdgeMarker::Circle);
+        assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Solid);
+        assert_eq!(diagram.connections[1].end_marker, EdgeMarker::Cross);
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+        assert_eq!(diagram.connections[2].end_marker, EdgeMarker::Circle);
+        assert_eq!(diagram.connections[2].line_style, GridEdgeStyle::Dotted);
+    }
+
+    #[test]
+    fn block_parses_shaped_nodes_declared_directly_on_connections() {
+        let diagram = parse_block(
+            "block\nid1[\"first\"] --> id2[\"second\"]\nstart(\"Start\")==>stop(\"Stop\")",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram
+                .cells
+                .iter()
+                .map(|cell| cell.id.as_str())
+                .collect::<Vec<_>>(),
+            ["id1", "id2", "start", "stop"]
+        );
+        assert_eq!(
+            diagram
+                .cells
+                .iter()
+                .map(|cell| cell.label.text.as_str())
+                .collect::<Vec<_>>(),
+            ["first", "second", "Start", "Stop"]
+        );
+        assert_eq!(diagram.cells[0].shape, DiagramShape::Rect);
+        assert_eq!(diagram.cells[2].shape, DiagramShape::RoundedRect);
+        assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+    }
+
+    #[test]
+    fn block_strips_delimiting_quotes_from_node_labels() {
+        let diagram = parse_block(
+            "block\ncolumns 2\nparser[\"Grammar front end\"] renderer(\"Paint output\")",
+        )
+        .unwrap();
+        assert_eq!(diagram.cells[0].label.text, "Grammar front end");
+        assert_eq!(diagram.cells[1].label.text, "Paint output");
+        assert_eq!(diagram.cells[0].shape, DiagramShape::Rect);
+        assert_eq!(diagram.cells[1].shape, DiagramShape::RoundedRect);
+    }
+
+    #[test]
+    fn block_preserves_arrow_node_directions() {
+        let diagram = parse_block(
+            "block\ncolumns 2\nright<[\"Flow\"]>(right)\naxes<[\"Both axes\"]>(x, y)",
+        )
+        .unwrap();
+        assert_eq!(diagram.cells[0].label.text, "Flow");
+        assert_eq!(diagram.cells[0].shape, DiagramShape::BlockArrow(BlockArrowDirections {
+            right: true, ..BlockArrowDirections::default()
+        }));
+        assert_eq!(diagram.cells[1].shape, DiagramShape::BlockArrow(BlockArrowDirections {
+            left: true, right: true, up: true, down: true,
+        }));
+    }
+
+    #[test]
+    fn block_rejects_unknown_arrow_node_directions() {
+        assert!(parse_block("block\narrow<[Flow]>(diagonal)").is_err());
+        assert!(parse_block("block\narrow<[Flow]>()").is_err());
+    }
+
+    #[test]
     fn block_parses_node_and_space_column_spans() {
         let diagram = parse_block(
             "block\ncolumns 4\none[One] two[Two]:2\nspace:3 three[Three]",
@@ -9196,19 +9590,22 @@ mod tests_dg04 {
     #[test]
     fn block_resolves_classes_inline_classes_and_direct_styles() {
         let diagram = parse_block(
-            "block\ncolumns 2\nA[Grammar]:::pipeline B[Paint]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass B pipeline\nstyle B fill:#dcfce7,font-size:18px,font-weight:bold,font-style:italic,font-family:Avenir",
+            "block\ncolumns 2\nA[Grammar]:::pipeline B[Paint]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px,stroke-dasharray:5 3\nclass B pipeline\nstyle B fill:#dcfce7,stroke-dasharray:2 4,font-size:18px,font-weight:bold,font-style:italic,font-family:Avenir",
         ).unwrap();
         let grammar = diagram.cells[0].style.as_ref().unwrap();
         assert_eq!(grammar.fill.as_deref(), Some("#dbeafe"));
         assert_eq!(grammar.stroke_width, Some(3.0));
+        assert_eq!(grammar.stroke_dash.as_deref(), Some(&[5.0, 3.0][..]));
         let paint = diagram.cells[1].style.as_ref().unwrap();
         assert_eq!(paint.fill.as_deref(), Some("#dcfce7"));
         assert_eq!(paint.stroke.as_deref(), Some("#1d4ed8"));
+        assert_eq!(paint.stroke_dash.as_deref(), Some(&[2.0, 4.0][..]));
         assert_eq!(paint.font_size, Some(18.0));
         assert_eq!(paint.font_weight, Some(700));
         assert_eq!(paint.font_italic, Some(true));
         assert_eq!(paint.font_family.as_deref(), Some("Avenir"));
         assert!(parse_block("block\nA:::missing\n").is_err());
+        assert!(parse_block("block\nA\nstyle A stroke-dasharray:5 0").is_err());
         assert!(parse_block("block\nA\nstyle missing fill:red\n").is_err());
     }
 

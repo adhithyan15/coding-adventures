@@ -39,7 +39,7 @@
 use std::collections::HashMap;
 use std::fmt::Write as _;
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
@@ -10551,12 +10551,18 @@ fn emit_host_scroll(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
 
-    // direction: vertical (default) / horizontal / both
-    let (v_vis, h_vis) = match find_prop_keyword(node, "direction") {
-        Some("horizontal") => ("Disabled", "Auto"),
-        Some("both") => ("Auto", "Auto"),
-        _ => ("Auto", "Disabled"), // default: vertical
-    };
+    // UI61 -- the axis, read from the KERNEL's `axis` prop.
+    //
+    // This emitter had already invented the whole three-way axis under a
+    // backend-private prop name, `direction`, which no `.mll` in the repo
+    // ever wrote and which the other seven backends could not see. That
+    // is the defect UI61 exists to fix, so the private spelling is gone
+    // rather than kept as an alias: one vocabulary, in the kernel.
+    let axis = ScrollAxis::of(node);
+    let (v_vis, h_vis) = (
+        if axis.scrolls_vertically() { "Auto" } else { "Disabled" },
+        if axis.scrolls_horizontally() { "Auto" } else { "Disabled" },
+    );
 
     let mut out = format!(
         "{pad}<ScrollViewer VerticalScrollBarVisibility=\"{v_vis}\" HorizontalScrollBarVisibility=\"{h_vis}\"{style}>\n"
@@ -14680,10 +14686,12 @@ mod tests {
         }
     }
 
-    fn host_scroll_node(direction: Option<&str>, children: Vec<LayoutNode>) -> LayoutNode {
-        let props = match direction {
+    fn host_scroll_node(axis: Option<&str>, children: Vec<LayoutNode>) -> LayoutNode {
+        // UI61 — the kernel's `axis`. This emitter used to read a
+        // backend-private `direction` that nothing else understood.
+        let props = match axis {
             Some(d) => vec![LayoutProp {
-                name: "direction".to_string(),
+                name: "axis".to_string(),
                 value: LayoutPropValue::Keyword(d.to_string()),
             }],
             None => Vec::new(),
@@ -15321,7 +15329,7 @@ mod tests {
     }
 
     #[test]
-    fn host_scroll_default_direction_is_vertical() {
+    fn host_scroll_default_axis_is_vertical() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root("Foo", host_scroll_node(None, Vec::new()));
         let r = compile(&c, &l, &empty_style("Foo"));
@@ -15350,7 +15358,7 @@ mod tests {
     }
 
     #[test]
-    fn host_scroll_both_directions_both_auto() {
+    fn host_scroll_both_axes_both_auto() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root("Foo", host_scroll_node(Some("both"), Vec::new()));
         let r = compile(&c, &l, &empty_style("Foo"));

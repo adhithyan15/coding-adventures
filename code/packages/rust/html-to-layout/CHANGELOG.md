@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- Project stable document focus order and normalized `tabindex` for rendered
+  links, controls, and details summaries into shared Layout IR metadata.
+
+- Resolve client-side image maps onto their referencing replaced images as
+  ordered, typed Layout IR area metadata with stable accessibility keys.
+
+- Project effective targets, download names, and opener/referrer restrictions
+  into shared link layout metadata.
+
+- Project legacy named-anchor targets into shared Layout IR metadata for
+  host-neutral fragment navigation.
+
+- Promote open dialogs and popovers into a shared root top layer, hide closed
+  surfaces, synthesize modal backdrops, and retain stable semantics in Layout IR.
+
 - Hide non-summary children of closed `details` nodes and synthesize the
   interoperable `Details` summary fallback in shared layout.
 

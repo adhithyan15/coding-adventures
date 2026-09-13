@@ -32,7 +32,7 @@ use std::collections::HashMap;
 
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
-    EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
+    EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
     LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
@@ -805,7 +805,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
             fill: Some(node.style.fill.clone()),
             stroke: Some(node.style.stroke.clone()),
             stroke_width: Some(node.style.stroke_width),
-            stroke_dash: None,
+            stroke_dash: node.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }),
         DiagramShape::Diamond => {
@@ -832,7 +832,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 stroke_width: Some(node.style.stroke_width),
                 stroke_cap: None,
                 stroke_join: Some(StrokeJoin::Round),
-                stroke_dash: None,
+                stroke_dash: node.style.stroke_dash.clone(),
                 stroke_dash_offset: None,
             })
         }
@@ -900,7 +900,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 fill: Some(node.style.fill.clone()), fill_rule: None,
                 stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
                 stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
-                stroke_dash: None, stroke_dash_offset: None,
+                stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
             })
         }
         DiagramShape::Subroutine => {
@@ -939,14 +939,14 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                         fill: Some(node.style.fill.clone()), fill_rule: None,
                         stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
                         stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
-                        stroke_dash: None, stroke_dash_offset: None,
+                        stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
                     }),
                     PaintInstruction::Ellipse(PaintEllipse {
                         base: PaintBase::default(),
                         cx: node.x + node.width / 2.0, cy: node.y + cap,
                         rx: node.width / 2.0, ry: cap,
                         fill: Some(node.style.fill.clone()), stroke: Some(node.style.stroke.clone()),
-                        stroke_width: Some(node.style.stroke_width), stroke_dash: None, stroke_dash_offset: None,
+                        stroke_width: Some(node.style.stroke_width), stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
                     }),
                 ],
                 transform: None,
@@ -975,6 +975,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 (node.x + node.width, node.y),
             ])
         }
+        DiagramShape::BlockArrow(directions) => block_arrow_instruction(node, directions),
         DiagramShape::Note => {
             let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
             PaintInstruction::Path(PaintPath {
@@ -1008,7 +1009,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 stroke_width: Some(node.style.stroke_width),
                 stroke_cap: None,
                 stroke_join: Some(StrokeJoin::Round),
-                stroke_dash: None,
+                stroke_dash: node.style.stroke_dash.clone(),
                 stroke_dash_offset: None,
             })
         }
@@ -1022,7 +1023,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
             stroke: Some(node.style.stroke.clone()),
             stroke_width: Some(node.style.stroke_width),
             corner_radius: Some(0.0),
-            stroke_dash: None,
+            stroke_dash: node.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }),
         DiagramShape::RoundedRect => PaintInstruction::Rect(PaintRect {
@@ -1035,10 +1036,36 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
             stroke: Some(node.style.stroke.clone()),
             stroke_width: Some(node.style.stroke_width),
             corner_radius: Some(node.style.corner_radius),
-            stroke_dash: None,
+            stroke_dash: node.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }),
     }
+}
+
+fn block_arrow_instruction(
+    node: &LayoutedGraphNode,
+    directions: diagram_ir::BlockArrowDirections,
+) -> PaintInstruction {
+    let head = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
+    let left = if directions.left { head } else { 0.0 };
+    let right = if directions.right { head } else { 0.0 };
+    let up = if directions.up { head } else { 0.0 };
+    let down = if directions.down { head } else { 0.0 };
+    let cx = node.x + node.width / 2.0;
+    let cy = node.y + node.height / 2.0;
+    let mut points = vec![(node.x + left, node.y + up)];
+    if directions.up { points.extend([(cx - head, node.y + up), (cx, node.y), (cx + head, node.y + up)]); }
+    points.push((node.x + node.width - right, node.y + up));
+    if directions.right {
+        points.extend([(node.x + node.width - right, cy - head), (node.x + node.width, cy), (node.x + node.width - right, cy + head)]);
+    }
+    points.push((node.x + node.width - right, node.y + node.height - down));
+    if directions.down {
+        points.extend([(cx + head, node.y + node.height - down), (cx, node.y + node.height), (cx - head, node.y + node.height - down)]);
+    }
+    points.push((node.x + left, node.y + node.height - down));
+    if directions.left { points.extend([(node.x + left, cy + head), (node.x, cy), (node.x + left, cy - head)]); }
+    polygon_node_instruction(node, &points)
 }
 
 fn polygon_node_instruction(node: &LayoutedGraphNode, points: &[(f64, f64)]) -> PaintInstruction {
@@ -1056,7 +1083,7 @@ fn polygon_node_instruction(node: &LayoutedGraphNode, points: &[(f64, f64)]) -> 
         stroke_width: Some(node.style.stroke_width),
         stroke_cap: None,
         stroke_join: Some(StrokeJoin::Round),
-        stroke_dash: None,
+        stroke_dash: node.style.stroke_dash.clone(),
         stroke_dash_offset: None,
     })
 }
@@ -1066,7 +1093,7 @@ fn node_rect_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
         base: PaintBase::default(), x: node.x, y: node.y, width: node.width, height: node.height,
         fill: Some(node.style.fill.clone()), stroke: Some(node.style.stroke.clone()),
         stroke_width: Some(node.style.stroke_width), corner_radius: Some(0.0),
-        stroke_dash: None, stroke_dash_offset: None,
+        stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
     })
 }
 
@@ -1075,7 +1102,7 @@ fn node_open_path_instruction(node: &LayoutedGraphNode, commands: Vec<PathComman
         base: PaintBase::default(), commands, fill: None, fill_rule: None,
         stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
         stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
-        stroke_dash: None, stroke_dash_offset: None,
+        stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
     })
 }
 
@@ -1085,7 +1112,7 @@ fn node_ellipse_instruction(node: &LayoutedGraphNode, inset: f64, fill: Option<S
         cx: node.x + node.width / 2.0, cy: node.y + node.height / 2.0,
         rx: node.width / 2.0 - inset, ry: node.height / 2.0 - inset,
         fill, stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
-        stroke_dash: None, stroke_dash_offset: None,
+        stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
     })
 }
 
@@ -1126,13 +1153,17 @@ fn line_path(points: &[Point], stroke: &str, stroke_width: f64) -> PaintPath {
 ///  left    |   right
 ///       base_mid
 /// ```
-fn arrowhead(edge: &LayoutedGraphEdge) -> Option<PaintPath> {
-    if edge.kind != EdgeKind::Directed || edge.points.len() < 2 {
+fn arrowhead(edge: &LayoutedGraphEdge, at_start: bool) -> Option<PaintPath> {
+    let marker = if at_start { edge.start_marker } else { edge.end_marker };
+    if marker != EdgeMarker::Point || edge.points.len() < 2 {
         return None;
     }
 
-    let end = &edge.points[edge.points.len() - 1];
-    let prev = &edge.points[edge.points.len() - 2];
+    let (end, prev) = if at_start {
+        (&edge.points[0], &edge.points[1])
+    } else {
+        (&edge.points[edge.points.len() - 1], &edge.points[edge.points.len() - 2])
+    };
 
     let dx = end.x - prev.x;
     let dy = end.y - prev.y;
@@ -1174,6 +1205,47 @@ fn arrowhead(edge: &LayoutedGraphEdge) -> Option<PaintPath> {
         stroke_dash: None,
         stroke_dash_offset: None,
     })
+}
+
+fn endpoint_marker(edge: &LayoutedGraphEdge, at_start: bool) -> Vec<PaintInstruction> {
+    let marker = if at_start { edge.start_marker } else { edge.end_marker };
+    if marker == EdgeMarker::Point {
+        return arrowhead(edge, at_start).map(PaintInstruction::Path).into_iter().collect();
+    }
+    if marker == EdgeMarker::None || edge.points.len() < 2 {
+        return Vec::new();
+    }
+    let tip = if at_start { &edge.points[0] } else { &edge.points[edge.points.len() - 1] };
+    match marker {
+        EdgeMarker::Circle => vec![PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx: tip.x,
+            cy: tip.y,
+            rx: 5.0,
+            ry: 5.0,
+            fill: Some("#ffffff".into()),
+            stroke: Some(edge.style.stroke.clone()),
+            stroke_width: Some(edge.style.stroke_width),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        })],
+        EdgeMarker::Cross => {
+            let radius = 5.0;
+            vec![
+                PaintInstruction::Path(line_path(
+                    &[Point { x: tip.x - radius, y: tip.y - radius }, Point { x: tip.x + radius, y: tip.y + radius }],
+                    &edge.style.stroke,
+                    edge.style.stroke_width,
+                )),
+                PaintInstruction::Path(line_path(
+                    &[Point { x: tip.x - radius, y: tip.y + radius }, Point { x: tip.x + radius, y: tip.y - radius }],
+                    &edge.style.stroke,
+                    edge.style.stroke_width,
+                )),
+            ]
+        }
+        EdgeMarker::None | EdgeMarker::Point => Vec::new(),
+    }
 }
 
 // ============================================================================
@@ -1279,7 +1351,7 @@ where
             stroke: Some(group.style.stroke.clone()),
             stroke_width: Some(group.style.stroke_width),
             corner_radius: Some(group.style.corner_radius),
-            stroke_dash: None,
+            stroke_dash: group.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }));
         for divider_y in &group.divider_y {
@@ -1303,13 +1375,13 @@ where
     // ── 2. Edges (lines + arrowheads) — drawn behind nodes ───────────────────
     for edge in &diagram.edges {
         let mut path = line_path(&edge.points, &edge.style.stroke, edge.style.stroke_width);
+        path.stroke_dash.clone_from(&edge.style.stroke_dash);
         if edge.kind == EdgeKind::NoteAssociation {
             path.stroke_dash = Some(vec![4.0, 4.0]);
         }
         instructions.push(PaintInstruction::Path(path));
-        if let Some(tip) = arrowhead(edge) {
-            instructions.push(PaintInstruction::Path(tip));
-        }
+        instructions.extend(endpoint_marker(edge, true));
+        instructions.extend(endpoint_marker(edge, false));
     }
 
     // ── 3. Node shapes — drawn over edges so endpoints are hidden ─────────────
@@ -4803,6 +4875,7 @@ mod tests {
             fill: "none".to_string(),
             stroke: "#4b5563".to_string(),
             stroke_width: 2.0,
+            stroke_dash: None,
             text_color: "#374151".to_string(),
             font_size: 12.0,
             font_weight: 400,
@@ -4851,6 +4924,8 @@ mod tests {
                 from_node_id: "A".to_string(),
                 to_node_id: "B".to_string(),
                 kind: EdgeKind::Directed,
+                start_marker: EdgeMarker::None,
+                end_marker: EdgeMarker::Point,
                 points: vec![Point { x: 120.0, y: 50.0 }, Point { x: 216.0, y: 50.0 }],
                 label: None,
                 label_position: None,
@@ -5266,9 +5341,45 @@ mod tests {
     }
 
     #[test]
+    fn bidirectional_edge_produces_two_arrowhead_paths() {
+        let mut layout = simple_layout();
+        layout.edges[0].kind = EdgeKind::Bidirectional;
+        layout.edges[0].start_marker = EdgeMarker::Point;
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+        let paths = scene.instructions.iter().filter(|instruction| {
+            matches!(instruction, PaintInstruction::Path(_))
+        }).count();
+        assert_eq!(paths, 3, "bidirectional edge: polyline plus two arrowheads");
+    }
+
+    #[test]
+    fn circle_and_cross_edge_markers_lower_to_backend_neutral_geometry() {
+        let mut layout = simple_layout();
+        layout.edges[0].kind = EdgeKind::Undirected;
+        layout.edges[0].start_marker = EdgeMarker::Circle;
+        layout.edges[0].end_marker = EdgeMarker::Cross;
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+        assert_eq!(scene.instructions.iter().filter(|instruction| {
+            matches!(instruction, PaintInstruction::Ellipse(_))
+        }).count(), 1);
+        assert_eq!(scene.instructions.iter().filter(|instruction| {
+            matches!(instruction, PaintInstruction::Path(_))
+        }).count(), 3);
+    }
+
+    #[test]
     fn undirected_edge_has_no_arrowhead() {
         let mut layout = simple_layout();
         layout.edges[0].kind = EdgeKind::Undirected;
+        layout.edges[0].end_marker = EdgeMarker::None;
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
         let resolver = FakeResolver;
@@ -5375,6 +5486,30 @@ mod tests {
     }
 
     #[test]
+    fn block_arrow_shape_lowers_to_backend_neutral_polygon() {
+        let mut layout = simple_layout();
+        layout.nodes[0].shape = DiagramShape::BlockArrow(diagram_ir::BlockArrowDirections {
+            right: true,
+            ..diagram_ir::BlockArrowDirections::default()
+        });
+        let instruction = node_shape_instruction(&layout.nodes[0]);
+        assert!(matches!(instruction, PaintInstruction::Path(path)
+            if path.commands.len() == 8));
+    }
+
+    #[test]
+    fn authored_node_dash_pattern_reaches_backend_neutral_paint() {
+        let mut layout = simple_layout();
+        layout.nodes[0].style.stroke_dash = Some(vec![5.0, 3.0]);
+        let instruction = node_shape_instruction(&layout.nodes[0]);
+        assert!(matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.stroke_dash.as_deref() == Some(&[5.0, 3.0][..])
+        ));
+    }
+
+    #[test]
     fn block_asymmetric_shape_lowers_to_five_point_path() {
         let mut layout = simple_layout();
         layout.nodes[0].shape = DiagramShape::Asymmetric;
@@ -5400,6 +5535,21 @@ mod tests {
         }));
         assert!(scene.instructions.iter().any(|instruction| {
             matches!(instruction, PaintInstruction::Path(path) if path.stroke_dash.is_some())
+        }));
+    }
+
+    #[test]
+    fn styled_graph_edge_dash_reaches_backend_neutral_path() {
+        let mut layout = simple_layout();
+        layout.edges[0].style.stroke_dash = Some(vec![5.0, 4.0]);
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path)
+                if path.stroke_dash.as_deref() == Some(&[5.0, 4.0][..]))
         }));
     }
 
@@ -5468,6 +5618,7 @@ mod tests {
                 font_italic: false,
                 font_family: "Helvetica".into(),
                 corner_radius: 8.0,
+                stroke_dash: Some(vec![7.0, 2.0]),
             },
         });
         let shaper = FakeShaper;
@@ -5481,7 +5632,8 @@ mod tests {
                 if rect.width == 340.0
                     && rect.fill.as_deref() == Some("#fef3c7")
                     && rect.stroke.as_deref() == Some("#b45309")
-                    && rect.stroke_width == Some(3.0))
+                    && rect.stroke_width == Some(3.0)
+                    && rect.stroke_dash.as_deref() == Some(&[7.0, 2.0][..]))
         }));
         assert!(scene.instructions.iter().any(|instruction| {
             matches!(instruction, PaintInstruction::Path(path)

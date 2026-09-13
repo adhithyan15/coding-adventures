@@ -40,10 +40,13 @@ resolved-URL visited callback. Link color and underline decoration flow through
 Layout IR into backend-neutral glyph and rectangle paint instructions.
 
 The returned positioned tree retains preserved `html` metadata, while `links`
-contains resolved link rectangles in logical document-content coordinates.
+contains resolved link regions in logical document-content coordinates.
 Link extraction composes the same affine transform contract used by paint,
 returns conservative axis-aligned bounds for transformed boxes, and retains
 ancestor overflow shapes so elliptical clipped corners cannot receive hits.
+Client-side image maps add exact rectangle/polygon or elliptical containment
+inside those bounds, scale authored coordinates with the replaced image, and
+preserve first-area precedence plus navigation metadata.
 `hit_test_link` converts viewport coordinates using the current vertical scroll
 offset. The scene height is at least the viewport height and expands to the
 laid-out document height for scrolling.
@@ -87,6 +90,7 @@ pixels, and failed/decode states reuse the normal recoverable fallback.
 Tests cover viewport normalization, end-to-end canned HTML paint output,
 absolute link-region extraction, empty-box filtering, scroll-aware hit testing,
 half-open boundary behavior, visited/unvisited glyph and underline paint,
-transformed and rounded-clip-aware link-region geometry,
+transformed and rounded-clip-aware link-region geometry, scaled client-side
+image-map shapes and overlap ordering,
 atomic image resolution, GIF/JPEG decoding, and real Cairo rasterization of
 decoded and broken-image fallback pixels.

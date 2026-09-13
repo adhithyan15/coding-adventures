@@ -5,7 +5,8 @@ pub const VERSION: &str = "0.6.0";
 use std::collections::HashMap;
 
 use diagram_ir::{
-    resolve_style, resolve_style_with_base, DiagramDirection, DiagramStyle, GridCell, GridColumns, GridDiagram, GridGroup,
+    resolve_style, resolve_style_with_base, DiagramDirection, DiagramStyle, GridCell, GridColumns, GridDiagram,
+    GridEdgeStyle, GridGroup,
     LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphGroup, LayoutedGraphNode, Point, ResolvedDiagramStyle,
 };
 
@@ -67,17 +68,25 @@ pub fn layout_grid_diagram(diagram: &GridDiagram) -> LayoutedGraphDiagram {
             let (from, from_width, from_height) = positions.get(&connection.from)?;
             let (to, to_width, to_height) = positions.get(&connection.to)?;
             let (start, end) = connection_endpoints(from, *from_width, *from_height, to, *to_width, *to_height);
+            let mut style = edge_style.clone();
+            match connection.line_style {
+                GridEdgeStyle::Solid => {}
+                GridEdgeStyle::Dotted => style.stroke_dash = Some(vec![5.0, 4.0]),
+                GridEdgeStyle::Thick => style.stroke_width = 3.5,
+            }
             Some(LayoutedGraphEdge {
                 id: None,
                 from_node_id: connection.from.clone(),
                 to_node_id: connection.to.clone(),
-                kind: connection.kind.clone(),
+                kind: connection.kind,
+                start_marker: connection.start_marker,
+                end_marker: connection.end_marker,
                 points: vec![start, end],
                 label: connection.label.clone(),
                 label_position: connection.label.as_ref().map(|_| {
                     edge_label_position(from, *from_width, *from_height, to, *to_width, *to_height)
                 }),
-                style: edge_style.clone(),
+                style,
             })
         })
         .collect();
@@ -275,11 +284,11 @@ fn group_style() -> DiagramStyle {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use diagram_ir::{DiagramLabel, DiagramShape, EdgeKind, GridCell, GridColumns, GridConnection, GridGroup};
+    use diagram_ir::{BlockArrowDirections, DiagramLabel, DiagramShape, EdgeKind, GridCell, GridColumns, GridConnection, GridGroup};
 
     #[test]
     fn places_cells_in_authored_grid_slots() {
-        let diagram = GridDiagram {
+        let mut diagram = GridDiagram {
             columns: GridColumns::Fixed(2),
             title: None,
             accessibility_title: None,
@@ -301,8 +310,13 @@ mod tests {
             groups: Vec::new(),
             connections: Vec::new(),
         };
+        diagram.cells[0].shape = DiagramShape::BlockArrow(BlockArrowDirections {
+            right: true,
+            ..BlockArrowDirections::default()
+        });
         let layout = layout_grid_diagram(&diagram);
         assert_eq!(layout.nodes.len(), 3);
+        assert_eq!(layout.nodes[0].shape, diagram.cells[0].shape);
         assert!(layout.nodes[0].x < layout.nodes[1].x);
         assert!(layout.nodes[2].y > layout.nodes[0].y);
     }
@@ -346,17 +360,35 @@ mod tests {
                 })
                 .collect(),
             groups: Vec::new(),
-            connections: vec![GridConnection {
-                from: "a".into(),
-                to: "b".into(),
-                kind: EdgeKind::Directed,
-                label: None,
-            }],
+            connections: [
+                (GridEdgeStyle::Solid, EdgeKind::Directed, diagram_ir::EdgeMarker::None, diagram_ir::EdgeMarker::Point),
+                (GridEdgeStyle::Dotted, EdgeKind::Directed, diagram_ir::EdgeMarker::None, diagram_ir::EdgeMarker::Point),
+                (GridEdgeStyle::Thick, EdgeKind::Directed, diagram_ir::EdgeMarker::None, diagram_ir::EdgeMarker::Point),
+                (GridEdgeStyle::Solid, EdgeKind::Bidirectional, diagram_ir::EdgeMarker::Point, diagram_ir::EdgeMarker::Point),
+                (GridEdgeStyle::Solid, EdgeKind::Undirected, diagram_ir::EdgeMarker::Circle, diagram_ir::EdgeMarker::Cross),
+            ]
+                .into_iter()
+                .map(|(line_style, kind, start_marker, end_marker)| GridConnection {
+                    from: "a".into(),
+                    to: "b".into(),
+                    kind,
+                    start_marker,
+                    end_marker,
+                    line_style,
+                    label: None,
+                })
+                .collect(),
         };
         let layout = layout_grid_diagram(&diagram);
-        assert_eq!(layout.edges.len(), 1);
+        assert_eq!(layout.edges.len(), 5);
         assert_eq!(layout.edges[0].points[0].x, layout.nodes[0].x + CELL_WIDTH);
         assert_eq!(layout.edges[0].points[1].x, layout.nodes[1].x);
+        assert!(layout.edges[0].style.stroke_dash.is_none());
+        assert_eq!(layout.edges[1].style.stroke_dash.as_deref(), Some(&[5.0, 4.0][..]));
+        assert_eq!(layout.edges[2].style.stroke_width, 3.5);
+        assert_eq!(layout.edges[3].kind, EdgeKind::Bidirectional);
+        assert_eq!(layout.edges[4].start_marker, diagram_ir::EdgeMarker::Circle);
+        assert_eq!(layout.edges[4].end_marker, diagram_ir::EdgeMarker::Cross);
     }
 
     #[test]
@@ -403,6 +435,9 @@ mod tests {
                 from: "wide".into(),
                 to: "tail".into(),
                 kind: EdgeKind::Directed,
+                start_marker: diagram_ir::EdgeMarker::None,
+                end_marker: diagram_ir::EdgeMarker::Point,
+                line_style: GridEdgeStyle::Solid,
                 label: None,
             }],
         };
@@ -424,13 +459,15 @@ mod tests {
             cells: vec![GridCell {
                 id: "styled".into(), label: DiagramLabel::new("Styled"), shape: DiagramShape::Rect,
                 column_span: 1, parent_id: None, order: 0, visible: true,
-                style: Some(DiagramStyle { fill: Some("#123456".into()), stroke_width: Some(5.0), ..DiagramStyle::default() }),
+                style: Some(DiagramStyle { fill: Some("#123456".into()), stroke_width: Some(5.0),
+                    stroke_dash: Some(vec![5.0, 3.0]), ..DiagramStyle::default() }),
             }], groups: Vec::new(), connections: Vec::new(),
         };
         let style = &layout_grid_diagram(&diagram).nodes[0].style;
         assert_eq!(style.fill, "#123456");
         assert_eq!(style.stroke, "#0284c7");
         assert_eq!(style.stroke_width, 5.0);
+        assert_eq!(style.stroke_dash.as_deref(), Some(&[5.0, 3.0][..]));
     }
 
     #[test]
@@ -442,7 +479,8 @@ mod tests {
             groups: vec![
                 GridGroup { id: "pipeline".into(), label: DiagramLabel::new("pipeline"), parent_id: None,
                     columns: GridColumns::Fixed(1), column_span: 2, order: 0, style: Some(DiagramStyle {
-                        fill: Some("#fef3c7".into()), stroke_width: Some(4.0), ..DiagramStyle::default()
+                        fill: Some("#fef3c7".into()), stroke_width: Some(4.0),
+                        stroke_dash: Some(vec![7.0, 2.0]), ..DiagramStyle::default()
                     }) },
                 GridGroup { id: "nested".into(), label: DiagramLabel::new(""), parent_id: Some("pipeline".into()),
                     columns: GridColumns::Fixed(1), column_span: 1, order: 0, style: None },
@@ -452,6 +490,7 @@ mod tests {
         assert_eq!(layout.groups.len(), 2);
         assert_eq!(layout.groups[0].style.fill, "#fef3c7");
         assert_eq!(layout.groups[0].style.stroke_width, 4.0);
+        assert_eq!(layout.groups[0].style.stroke_dash.as_deref(), Some(&[7.0, 2.0][..]));
         assert!(layout.groups[1].x > layout.groups[0].x);
         assert!(layout.groups[1].y > layout.groups[0].y);
         assert!(layout.nodes[0].x > layout.groups[1].x);

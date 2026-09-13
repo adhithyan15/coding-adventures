@@ -5,6 +5,46 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 browser convergence - shared sequential focus navigation.** Promote
+  Tab and Shift+Tab from control-only traversal to one document-ordered model
+  spanning links, controls, and details summaries; honor positive and negative
+  `tabindex`, disabled/hidden/inert exclusions, modal containment, keyboard
+  activation, focus visibility scrolling, reusable accessibility geometry,
+  and backend-neutral focus presentation. Completed with shared Layout IR and
+  paint metadata plus semantic key forwarding from every native host, without
+  toolkit-owned focus order.
+
+- [x] **P1 browser convergence - client-side image-map interaction.** Connect
+  parser-retained `usemap`, `map`, and `area` metadata to shared replaced-image
+  geometry; scale rectangle, circle, polygon, and default regions; preserve
+  first-match ordering, transforms, clips, targets, and downloads; and expose
+  stable accessibility activation without toolkit-owned coordinate policy.
+  Completed with typed Layout IR metadata, shape-aware link hit regions,
+  shared browsing-context transactions, deterministic core acceptance, and
+  automatic reuse by every native/web host pointer seam.
+
+- [x] **P1 browser convergence - browsing-context and download mediation.**
+  Preserve effective link/form targets through shared render, hit-test, and
+  submission plans; normalize `_self`, `_blank`, `_parent`, `_top`, and named
+  contexts; and emit bounded auxiliary-context/download effects without
+  mutating current history. Completed with submitter precedence,
+  opener/referrer policy, deterministic coverage, and one effect bridge across
+  every available native host.
+
+- [x] **P1 browser convergence - per-entry history state restoration.** Give
+  reusable navigation entries stable identities and key bounded public form,
+  custom-element, and logical scroll snapshots by entry rather than URL.
+  Completed with independent repeated-URL state, redirect-stable identities,
+  fetch-free fragment traversal restoration, clamped viewport offsets, and a
+  diagnostic projection consumed uniformly by every native/web host seam.
+
+- [x] **P1 browser convergence - same-document fragment navigation.** Strip
+  URL fragments before transport, retain same-document history traversal,
+  percent-decode `id` and legacy `a[name]` targets in document order, and route
+  clamped scrolling plus diagnostics through the shared session. Completed
+  without refetching, replacing retained controls, or moving target policy into
+  native/web hosts.
+
 - [x] **P0 browser convergence — shared details disclosure semantics.** Hide
   closed details content before layout, emit reusable summary hit regions, and
   route pointer, Enter/Space, accessibility, generated-summary, and named-group

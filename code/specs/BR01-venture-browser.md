@@ -182,8 +182,19 @@ autocomplete grouping, ordered mutation effects, Back/Forward snapshots, and
 deferred custom-element callbacks. Datalist convergence now resolves authored
 option metadata into the retained tree, bounds and normalizes shared queries,
 tracks one keyboard/accessibility active option, and emits ordered mutation
-events when semantic native picker actions commit. The next P1 phase is live
-output, meter, and progress semantics.
+events when semantic native picker actions commit. Shared live output,
+meter, and progress semantics now recalculate and reset through one retained
+model. Dialog and popover convergence promotes open surfaces into a shared top
+layer, routes invoker/accessibility commands, owns modal focus, light-dismiss,
+and Escape policy, and publishes transformed hit regions without toolkit-owned
+visibility state. Same-document fragment convergence now strips anchors before
+transport, resolves decoded `id` and legacy named targets from shared layout,
+and performs history scrolling without replacing retained page state. Stable
+navigation-entry identities now key bounded public form/custom-element state
+and logical scroll offsets, preserving independent repeated URLs and fragment
+traversals without host-owned restoration policy. The
+tracked acceptance backlog is complete; each next phase starts from a fresh
+cross-host audit.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
@@ -649,6 +660,23 @@ image-codec-jpeg       = { path = "../../../packages/rust/image-codec-jpeg" }
 
 10. **Full navigation flow** — Open Venture, navigate to info.cern.ch, click
     links, use Back/Forward, add a bookmark, view source.
+
+11. **Browsing-context mediation** — Verify `_self`, `_parent`, and `_top`
+    retain transactional current navigation while `_blank`, named targets, and
+    downloads produce the bounded host effects defined by
+    [UI79](./UI79-browsing-context-mediation.md) without changing current
+    history.
+
+12. **Client-side image maps** — Verify scaled rectangle, circle, polygon, and
+    default `area` regions, first-match overlap ordering, transformed/clipped
+    hit testing, accessibility-key activation, and the shared target/download
+    behavior defined by [UI80](./UI80-client-side-image-maps.md).
+
+13. **Sequential page focus** — Verify Tab and Shift+Tab traverse positive
+    `tabindex` targets before ordinary document order, exclude negative and
+    disabled targets, stay within a modal top layer, scroll focused geometry
+    into view, and activate focused links/details through the shared policy in
+    [UI81](./UI81-sequential-focus-navigation.md).
 
 ## Scope
 

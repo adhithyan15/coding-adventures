@@ -100,7 +100,7 @@ use std::rc::Rc;
 
 use std::collections::{HashMap, HashSet};
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
@@ -1393,6 +1393,15 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
 /// Allocate the next `mosaicElevation<N>` id — the unique `id:` a
 /// `MultiEffect`'s `source`/`anchors.fill` need to reference back to the
 /// element they shadow.
+/// UI79 -- a unique id for the content layout inside a styled wrapper
+/// that also draws edge strips. Mirrors [`next_elevation_id`]; reuses its
+/// counter so the two id spaces cannot collide.
+fn next_content_id(ctx: &EmitCtx<'_>) -> String {
+    let value = ctx.next_elevation_id.get();
+    ctx.next_elevation_id.set(value + 1);
+    format!("mosaicContent{value}")
+}
+
 fn next_elevation_id(ctx: &EmitCtx<'_>) -> String {
     let value = ctx.next_elevation_id.get();
     ctx.next_elevation_id.set(value + 1);
@@ -1720,6 +1729,98 @@ fn qml_padding(props: &[StyleProp]) -> Option<String> {
         .and_then(qml_px_or_none)
 }
 
+/// UI79 -- splits `border-<edge>-<width|color>` into an edge index and
+/// which half it sets. `None` for anything else, including `-style` (only
+/// `solid` is drawn) and `border-top-left-radius`, which is a CORNER: it
+/// splits into `top-left` + `radius` and fails the edge match.
+///
+/// Index order is CSS's own: top, right, bottom, left.
+fn per_edge_border(name: &str) -> Option<(usize, &'static str)> {
+    let rest = name.strip_prefix("border-")?;
+    let (edge, which) = rest.rsplit_once('-')?;
+    let idx = match edge {
+        "top" => 0,
+        "right" => 1,
+        "bottom" => 2,
+        "left" => 3,
+        _ => return None,
+    };
+    match which {
+        "width" => Some((idx, "width")),
+        "color" => Some((idx, "color")),
+        _ => None,
+    }
+}
+
+/// UI79 -- does this part author any per-edge border WIDTH?
+///
+/// A colour alone draws nothing, so the width is what decides.
+fn has_per_edge_border(props: &[StyleProp]) -> bool {
+    props.iter().any(|p| {
+        per_edge_border(&p.name)
+            .map(|(_, which)| which == "width")
+            .unwrap_or(false)
+            && qml_px_or_none(&p.value).is_some()
+    })
+}
+
+/// UI79 -- the child `Rectangle`s that draw a part's authored edges.
+///
+/// QML's `Rectangle.border` is all-four-edges, exactly like Compose's
+/// `Modifier.border` and SwiftUI's `.border`, so each edge is DRAWN. On
+/// Qt that means a child element rather than a property: a `Rectangle`
+/// stretched along the edge by two opposing anchors and given a fixed
+/// extent on the third.
+///
+/// The strips anchor to `parent`, which is the styled wrapper, so they
+/// sit on the border box -- outside the inner layout's `x`/`y` inset,
+/// where CSS puts them. They are siblings of that layout rather than
+/// children of it, so they take no part in its spacing: a border must
+/// not move anything.
+fn qml_per_edge_border_lines(props: &[StyleProp], pad: &str) -> Vec<String> {
+    let fallback_c = style_prop(props, "border-color").and_then(qml_hex_color_or_none);
+    let mut out = Vec::new();
+    for (idx, edge) in ["top", "right", "bottom", "left"].iter().enumerate() {
+        let Some(w) = props
+            .iter()
+            .find(|p| per_edge_border(&p.name) == Some((idx, "width")))
+            .and_then(|p| qml_px_or_none(&p.value))
+        else {
+            continue;
+        };
+        // A negative extent is not a border; QML would silently paint
+        // nothing, which is worse than refusing it here.
+        if w.starts_with('-') {
+            continue;
+        }
+        let c = props
+            .iter()
+            .find(|p| per_edge_border(&p.name) == Some((idx, "color")))
+            .and_then(|p| qml_hex_color_or_none(&p.value))
+            .or_else(|| fallback_c.clone())
+            .unwrap_or_else(|| "#808080".to_string());
+        let (span, extent) = match *edge {
+            "top" | "bottom" => (
+                ["anchors.left: parent.left", "anchors.right: parent.right"],
+                format!("height: {w}"),
+            ),
+            _ => (
+                ["anchors.top: parent.top", "anchors.bottom: parent.bottom"],
+                format!("width: {w}"),
+            ),
+        };
+        out.push(format!("{pad}Rectangle {{"));
+        out.push(format!("{pad}    color: \"{c}\""));
+        out.push(format!("{pad}    {extent}"));
+        for a in span {
+            out.push(format!("{pad}    {a}"));
+        }
+        out.push(format!("{pad}    anchors.{edge}: parent.{edge}"));
+        out.push(format!("{pad}}}"));
+    }
+    out
+}
+
 fn needs_container_wrapper(props: &[StyleProp]) -> bool {
     qml_padding(props).is_some()
         || style_prop(props, "background")
@@ -1735,6 +1836,10 @@ fn needs_container_wrapper(props: &[StyleProp]) -> bool {
         || style_prop(props, "border-width")
             .and_then(qml_px_or_none)
             .is_some()
+        // UI79 -- a part whose ONLY border is per-edge still needs the
+        // Rectangle wrapper: the strips anchor to it, so without one
+        // there is nothing to anchor to and the edge reaches nothing.
+        || has_per_edge_border(props)
         // UI41, #12028 item 1 — `MultiEffect` needs a real paintable
         // element with an `id` to shadow; a `Row`/`Column`/`Stack` with
         // ONLY `elevation` set (no background/border/padding) would
@@ -1839,6 +1944,19 @@ fn emit_styled_layout_container_qml(
     // doc comment).
     let elevation = part_elevation_tier(props);
     let elevation_id = elevation.is_some().then(|| next_elevation_id(ctx));
+    // UI79 -- when edge strips are present the wrapper's implicit size
+    // must come from the CONTENT, not from `childrenRect`.
+    //
+    // A strip anchors to `parent`, so with `childrenRect` the wrapper's
+    // height depends on the strip, whose position depends on the
+    // wrapper's height. QML calls that out: "Binding loop detected for
+    // property implicitHeight". Measured with the real `qml` runtime
+    // offscreen -- the loop is invisible in the emitted text and the
+    // control (same part, no strips) is clean.
+    //
+    // Naming the content layout and sizing from it breaks the cycle:
+    // content -> strip -> childrenRect, with nothing feeding back.
+    let content_id = has_per_edge_border(props).then(|| next_content_id(ctx));
     let mut out = String::new();
     writeln!(out, "{pad}Rectangle {{").unwrap();
     if let Some(id) = &elevation_id {
@@ -1847,19 +1965,18 @@ fn emit_styled_layout_container_qml(
     for line in qml_layout_size_lines(props) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
+    let (w_src, h_src) = match &content_id {
+        Some(id) => (format!("{id}.x + {id}.width"), format!("{id}.y + {id}.height")),
+        None => (
+            "childrenRect.x + childrenRect.width".to_string(),
+            "childrenRect.y + childrenRect.height".to_string(),
+        ),
+    };
     if !has_fixed_width {
-        writeln!(
-            out,
-            "{inner_pad}implicitWidth: childrenRect.x + childrenRect.width + {inset}"
-        )
-        .unwrap();
+        writeln!(out, "{inner_pad}implicitWidth: {w_src} + {inset}").unwrap();
     }
     if !has_fixed_height {
-        writeln!(
-            out,
-            "{inner_pad}implicitHeight: childrenRect.y + childrenRect.height + {inset}"
-        )
-        .unwrap();
+        writeln!(out, "{inner_pad}implicitHeight: {h_src} + {inset}").unwrap();
     }
     if paint_lines.iter().all(|line| !line.starts_with("color:")) {
         writeln!(out, "{inner_pad}color: \"transparent\"").unwrap();
@@ -1867,7 +1984,13 @@ fn emit_styled_layout_container_qml(
     for line in &paint_lines {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
+    for line in qml_per_edge_border_lines(props, &inner_pad) {
+        writeln!(out, "{line}").unwrap();
+    }
     writeln!(out, "{inner_pad}{element_name} {{").unwrap();
+    if let Some(id) = &content_id {
+        writeln!(out, "{inner_pad}    id: {id}").unwrap();
+    }
     writeln!(out, "{inner_pad}    x: {inset}").unwrap();
     writeln!(out, "{inner_pad}    y: {inset}").unwrap();
     for line in qml_layout_container_lines(props)
@@ -2553,7 +2676,7 @@ fn emit_qml_tree(
         builtin_lines,
         is_text,
         is_image,
-    } = primitive_to_qml(&node.tag)?;
+    } = primitive_to_qml(node)?;
     if let Some(styled_container) =
         emit_styled_layout_container_qml(node, depth, ctx, element_name)?
     {
@@ -2791,7 +2914,8 @@ struct QmlElement {
 /// See the primitive lowering table at the top of this module for the
 /// full mapping. Unknown primitives are rejected — letting them through
 /// as a default `Item { }` would silently lose layout semantics.
-fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
+fn primitive_to_qml(node: &LayoutNode) -> Result<QmlElement, PipelineEmitError> {
+    let tag = node.tag.as_str();
     Ok(match tag {
         "Box" => QmlElement {
             element_name: "Item",
@@ -2874,7 +2998,23 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
         // the top of the file (see `tree_needs_controls_import`).
         "HostScroll" => QmlElement {
             element_name: "ScrollView",
-            builtin_lines: vec![],
+            // UI61 -- the axis. Hiding a scrollbar is not the same as not
+            // scrolling: `ScrollBar.policy: AlwaysOff` only removes the
+            // BAR, and the content stays flickable on that axis. Pinning
+            // the cross-axis content extent to the viewport's own
+            // available extent is what actually leaves nothing to scroll,
+            // so both lines are emitted together.
+            builtin_lines: match ScrollAxis::of(node) {
+                ScrollAxis::Vertical => vec![
+                    "contentWidth: availableWidth",
+                    "ScrollBar.horizontal.policy: ScrollBar.AlwaysOff",
+                ],
+                ScrollAxis::Horizontal => vec![
+                    "contentHeight: availableHeight",
+                    "ScrollBar.vertical.policy: ScrollBar.AlwaysOff",
+                ],
+                ScrollAxis::Both => vec![],
+            },
             is_text: false,
             is_image: false,
         },
@@ -9104,6 +9244,69 @@ mod tests {
         );
     }
 
+    /// UI61 — the axis reaches the QML. Both directions of the pair,
+    /// and the cross-axis content pin asserted alongside the scrollbar
+    /// policy: hiding a `ScrollBar` does NOT stop the content flicking
+    /// on that axis, so the policy line alone would be a viewport that
+    /// still scrolls sideways with no bar to show for it.
+    #[test]
+    fn ui61_each_axis_pins_the_cross_axis_and_hides_its_bar() {
+        let scroll = |axis: Option<&str>| {
+            let m = component("X", vec![], vec![]);
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "HostScroll".to_string(),
+                    part_name: None,
+                    props: axis
+                        .map(|a| {
+                            vec![LayoutProp {
+                                name: "axis".to_string(),
+                                value: LayoutPropValue::Keyword(a.to_string()),
+                            }]
+                        })
+                        .unwrap_or_default(),
+                    children: Vec::new(),
+                },
+            };
+            from_pipeline(&m, &l, &empty_style("X")).unwrap().output
+        };
+
+        // Default and explicit `vertical` are the same viewport.
+        for axis in [None, Some("vertical")] {
+            let out = scroll(axis);
+            assert!(
+                out.contains("contentWidth: availableWidth"),
+                "vertical must pin the horizontal extent, got:\n{out}"
+            );
+            assert!(
+                out.contains("ScrollBar.horizontal.policy: ScrollBar.AlwaysOff"),
+                "vertical must hide the horizontal bar, got:\n{out}"
+            );
+            assert!(
+                !out.contains("ScrollBar.vertical.policy"),
+                "vertical must not disable itself, got:\n{out}"
+            );
+        }
+
+        let out = scroll(Some("horizontal"));
+        assert!(
+            out.contains("contentHeight: availableHeight")
+                && out.contains("ScrollBar.vertical.policy: ScrollBar.AlwaysOff"),
+            "horizontal must pin and hide the vertical axis, got:\n{out}"
+        );
+        assert!(
+            !out.contains("ScrollBar.horizontal.policy"),
+            "horizontal must not disable itself, got:\n{out}"
+        );
+
+        let out = scroll(Some("both"));
+        assert!(
+            !out.contains("AlwaysOff") && !out.contains("contentWidth: availableWidth"),
+            "`both` must not disable either axis, got:\n{out}"
+        );
+    }
+
     // -------- Test 24: HostScroll emits ScrollView --------
 
     /// `HostScroll` wraps its children in a `ScrollView { ... }`. The
@@ -12839,6 +13042,86 @@ mod tests {
     // =================================================================
 
     use mosstyle_compiler::{PartStyle, StateStyle, StyleProp};
+
+    /// UI79 — each authored edge draws on its own side and nowhere else.
+    ///
+    /// QML's `Rectangle.border` is all-four-edges, so an emitter that fell
+    /// back to it for one authored edge would satisfy every positive
+    /// assertion. The per-edge count is the half with teeth.
+    #[test]
+    fn ui79_each_authored_edge_becomes_one_anchored_strip() {
+        let strips = |props: Vec<(&str, &str)>| {
+            let owned: Vec<StyleProp> = props
+                .iter()
+                .map(|(n, v)| sp(n, v))
+                .collect();
+            qml_per_edge_border_lines(&owned, "")
+        };
+
+        // The control: no authored edge draws no strip at all.
+        assert!(
+            strips(vec![("border-width", "1px"), ("border-color", "#243146")]).is_empty(),
+            "the all-four shorthand must not become strips"
+        );
+        assert!(strips(vec![("padding", "8px")]).is_empty());
+        // A colour with no width draws nothing — there is no extent.
+        assert!(strips(vec![("border-bottom-color", "#243146")]).is_empty());
+
+        let cases = [
+            ("top", "height: 2", "anchors.top: parent.top", "anchors.left: parent.left"),
+            ("bottom", "height: 2", "anchors.bottom: parent.bottom", "anchors.right: parent.right"),
+            ("left", "width: 2", "anchors.left: parent.left", "anchors.top: parent.top"),
+            ("right", "width: 2", "anchors.right: parent.right", "anchors.bottom: parent.bottom"),
+        ];
+        for (edge, extent, pin, span) in cases {
+            let out = strips(vec![(&format!("border-{edge}-width"), "2px")]).join("\n");
+            assert!(out.contains(extent), "{edge} extent — got:\n{out}");
+            assert!(out.contains(pin), "{edge} pin — got:\n{out}");
+            assert!(out.contains(span), "{edge} span — got:\n{out}");
+            assert_eq!(
+                out.matches("Rectangle {").count(),
+                1,
+                "{edge} must draw ONE strip, not four — got:\n{out}"
+            );
+        }
+
+        // All four together, so the single-strip assertion above is not
+        // passing merely because the emitter can only produce one.
+        let all = strips(vec![
+            ("border-top-width", "1px"),
+            ("border-right-width", "2px"),
+            ("border-bottom-width", "3px"),
+            ("border-left-width", "4px"),
+        ])
+        .join("\n");
+        assert_eq!(all.matches("Rectangle {").count(), 4, "got:\n{all}");
+
+        // An unauthored edge colour falls back to the shorthand (CSS cascade).
+        let inherited = strips(vec![
+            ("border-color", "#243146"),
+            ("border-bottom-width", "1px"),
+        ])
+        .join("\n");
+        assert!(inherited.contains("#243146"), "got:\n{inherited}");
+
+        // A negative extent is not a border; QML would paint nothing.
+        assert!(strips(vec![("border-bottom-width", "-1px")]).is_empty());
+    }
+
+    /// UI79 — `border-top-left-radius` is a CORNER, not an edge.
+    #[test]
+    fn ui79_a_corner_radius_is_not_an_edge() {
+        assert!(per_edge_border("border-top-left-radius").is_none());
+        assert!(per_edge_border("border-radius").is_none());
+        assert!(per_edge_border("border-width").is_none());
+        assert!(per_edge_border("border-bottom-style").is_none());
+        assert_eq!(per_edge_border("border-bottom-width"), Some((2, "width")));
+        assert_eq!(per_edge_border("border-left-color"), Some((3, "color")));
+        // The wrapper predicate must fire on a width, not a colour.
+        assert!(has_per_edge_border(&[sp("border-bottom-width", "1px")]));
+        assert!(!has_per_edge_border(&[sp("border-bottom-color", "#243146")]));
+        assert!(!has_per_edge_border(&[sp("border-width", "1px")]));
+    }
 
     fn sp(name: &str, value: &str) -> StyleProp {
         StyleProp {

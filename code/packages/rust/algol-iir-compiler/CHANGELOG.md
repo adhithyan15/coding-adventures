@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.269.0 — 2026-09-12 — single-compound recurrence snapshots
+
+Bounded while-loop recurrence analysis now unwraps an exact one-statement
+`begin`/`end` body, allowing a scalar assignment to retain its terminal static
+snapshot. Labels, conditionals, declarations, and multiple statements continue
+to fail closed.
+
+## 0.268.0 — 2026-09-12 — static boolean negation snapshots
+
+Static boolean evaluation now recognizes only exact bare variables before
+examining operators, so unary `not` wrappers are evaluated instead of being
+mistaken for identity reads. Bounded while-loop boolean recurrences can
+therefore retain exact negated snapshots.
+
+## 0.267.0 — 2026-09-12 — bounded while-loop boolean recurrences
+
+Statically bounded `while` elements now simulate one simple local boolean
+assignment after each true predicate, retaining the exact final snapshot under
+the existing locality, dependency, termination, and 4,096-evaluation guards.
+
+## 0.266.0 — 2026-09-12 — bounded while-loop scalar recurrences
+
+Statically bounded `while` elements now simulate one simple local numeric
+assignment after each true predicate, so exact integer and finite real
+recurrences retain their final snapshot. The existing 4,096-pass cap and
+control-dependency checks reject nontermination, overflow, non-finite values,
+dynamic predicates, dependency writes, compound bodies, and nonnumeric targets.
+
 ## 0.265.0 — 2026-09-12 — bounded step-loop scalar recurrences
 
 Statically bounded `step` loops now simulate one simple local scalar assignment

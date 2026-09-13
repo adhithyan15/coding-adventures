@@ -454,6 +454,7 @@ fn route_edge(
         fill:          "none".to_string(),
         stroke:        "#4b5563".to_string(),
         stroke_width:  2.0,
+        stroke_dash:   None,
         text_color:    "#374151".to_string(),
         font_size:     12.0,
         font_weight:   400,
@@ -467,7 +468,17 @@ fn route_edge(
         id:           edge.id.clone(),
         from_node_id: from_node.id.clone(),
         to_node_id:   to_node.id.clone(),
-        kind:         edge.kind.clone(),
+        kind:         edge.kind,
+        start_marker: if edge.kind == diagram_ir::EdgeKind::Bidirectional {
+            diagram_ir::EdgeMarker::Point
+        } else {
+            diagram_ir::EdgeMarker::None
+        },
+        end_marker: if matches!(edge.kind, diagram_ir::EdgeKind::Directed | diagram_ir::EdgeKind::Bidirectional) {
+            diagram_ir::EdgeMarker::Point
+        } else {
+            diagram_ir::EdgeMarker::None
+        },
         points,
         label:        edge.label.clone(),
         label_position,
@@ -623,6 +634,7 @@ fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<Lay
                         fill: "#f8fafc".into(),
                         stroke: "#64748b".into(),
                         stroke_width: 1.5,
+                        stroke_dash: None,
                         text_color: "#334155".into(),
                         font_size: 14.0,
                         font_weight: 400,

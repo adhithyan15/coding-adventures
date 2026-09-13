@@ -230,11 +230,36 @@ mod apple {
     #[test]
     fn render_mermaid_block_to_png() {
         let grid = parse_block(
-            "block-beta\ntitle Native block grid\naccTitle: Native block pipeline\naccDescr {\nGrammar through semantic IR\ninto backend-neutral paint\n}\ncolumns 3\nblock:pipeline[\"Processing Pipeline\"]:2\ncolumns 2\nA{{Grammar}} B([IR])\nend\nC(((Paint)))\nD[[Metal]] E[(PNG)] F>Backend flag]\nclassDef pipelineNode fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass A,C pipelineNode\nstyle pipeline fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,font-weight:bold\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E\nE --> F",
+            "block-beta\ntitle Native block grid\naccTitle: Native block pipeline\naccDescr {\nGrammar through semantic IR\ninto backend-neutral paint\n}\ncolumns 3\nblock:pipeline[\"Processing Pipeline\"]:2\ncolumns 2\nA{{\"Grammar UI\"}} B([\"Semantic IR\"])\nend\nC(((Paint)))\nD[[Metal]] E[(PNG)] F>Backend flag]\nG<[\"Flow\"]>(right)\nH(\"Inline source\")-->I[\"Inline target\"]\nclassDef pipelineNode fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px,stroke-dasharray:5 3\nclass A,C pipelineNode\nstyle pipeline fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:7 2,font-weight:bold\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E\nE --> F\nA -.-> E\nB ==> F\nC <--> G\nG o--x |returns| D\nF--oA",
         )
         .expect("block parse failed");
         let layout = layout_grid_diagram(&grid);
+        assert_eq!(grid.cells[0].label.text, "Grammar UI");
+        assert_eq!(grid.cells[1].label.text, "Semantic IR");
+        assert!(grid
+            .cells
+            .iter()
+            .any(|cell| cell.id == "H" && cell.label.text == "Inline source"));
+        assert!(grid
+            .cells
+            .iter()
+            .any(|cell| cell.id == "I" && cell.label.text == "Inline target"));
         assert_eq!(layout.groups.len(), 1);
+        assert!(layout.edges.iter().any(|edge| edge.kind == EdgeKind::Bidirectional));
+        assert!(layout.edges.iter().any(|edge| {
+            edge.from_node_id == "H"
+                && edge.to_node_id == "I"
+                && edge.kind == EdgeKind::Directed
+        }));
+        assert!(layout.edges.iter().any(|edge| {
+            edge.start_marker == diagram_ir::EdgeMarker::Circle
+                && edge.end_marker == diagram_ir::EdgeMarker::Cross
+                && edge.label.as_ref().is_some_and(|label| label.text == "returns")
+        }));
+        assert!(layout.edges.iter().any(|edge| {
+            edge.start_marker == diagram_ir::EdgeMarker::None
+                && edge.end_marker == diagram_ir::EdgeMarker::Circle
+        }));
         assert_eq!(layout.groups[0].label.text, "Processing Pipeline");
         assert!(layout.groups[0].width > layout.nodes[0].width);
         let shaper = CoreTextShaper;
@@ -254,7 +279,14 @@ mod apple {
             if rect.x == layout.groups[0].x && rect.y == layout.groups[0].y
                 && rect.fill.as_deref() == Some("#fef3c7")
                 && rect.stroke.as_deref() == Some("#b45309")
-                && rect.stroke_width == Some(4.0))));
+                && rect.stroke_width == Some(4.0)
+                && rect.stroke_dash.as_deref() == Some(&[7.0, 2.0][..]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 4.0][..]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_width == Some(3.5))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.rx == 5.0 && ellipse.ry == 5.0)));
         let metadata = scene.metadata.as_ref().expect("block accessibility metadata missing");
         assert_eq!(metadata["accessibility.title"], "Native block pipeline");
         assert_eq!(

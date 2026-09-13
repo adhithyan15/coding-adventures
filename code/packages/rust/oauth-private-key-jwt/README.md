@@ -23,6 +23,8 @@ the signing effect. The result carries a zeroizing form body with exact
 refresh results preserve their response-decoder context. Revocation requires a
 profile whose audience exactly matches the revocation endpoint rather than
 assuming that a provider accepts its token endpoint as that audience.
+Read-only profile accessors let an outer custody composition revalidate the
+exact client and audience before it requests any stored credential material.
 
 Transport remains injected and must independently audit its external effect
 with the retained provider and trace. The request-binding layer adds no network

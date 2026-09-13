@@ -97,7 +97,7 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt::Write as _;
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
@@ -1556,6 +1556,30 @@ fn strip_css_px(v: &str) -> &str {
 /// well below the precision SwiftUI ultimately renders at (its color
 /// pipeline quantises to 8-bit per channel before display), so the
 /// rounding is lossless in practice.
+/// UI79 -- splits `border-<edge>-<width|color>` into an edge index and
+/// which half it sets. `None` for anything else, including `-style` (only
+/// `solid` is drawn, so it must reach the drop reporter) and
+/// `border-top-left-radius`, which is a CORNER: it splits into
+/// `top-left` + `radius` and fails the edge match.
+///
+/// Index order is CSS's own: top, right, bottom, left.
+fn per_edge_border(name: &str) -> Option<(usize, &'static str)> {
+    let rest = name.strip_prefix("border-")?;
+    let (edge, which) = rest.rsplit_once('-')?;
+    let idx = match edge {
+        "top" => 0,
+        "right" => 1,
+        "bottom" => 2,
+        "left" => 3,
+        _ => return None,
+    };
+    match which {
+        "width" => Some((idx, "width")),
+        "color" => Some((idx, "color")),
+        _ => None,
+    }
+}
+
 fn swiftui_color_value(v: &str) -> String {
     let trimmed = v.trim();
 
@@ -1887,6 +1911,11 @@ fn swiftui_modifier_chain_with_drops(
     let mut font_weight = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
+    // UI79 -- per-edge borders. SwiftUI's `.border` strokes all four
+    // edges and has no per-edge form, so each authored edge is DRAWN as
+    // an aligned overlay. Indexed [top, right, bottom, left], CSS order.
+    let mut edge_width: Vec<PropBucket> = (0..4).map(|_| PropBucket::new(layer_count)).collect();
+    let mut edge_color: Vec<PropBucket> = (0..4).map(|_| PropBucket::new(layer_count)).collect();
     let mut border_radius = PropBucket::new(layer_count);
     let mut max_width = PropBucket::new(layer_count);
     let mut min_height = PropBucket::new(layer_count);
@@ -2017,6 +2046,18 @@ fn swiftui_modifier_chain_with_drops(
                 }
             }
             "border-color" => set(&mut border_color, swiftui_color_value(&p.value)),
+            // UI79 -- `border-{edge}-{width,color}`. `-style` is left to
+            // the drop reporter on purpose: only `solid` is drawn.
+            name if per_edge_border(name).is_some() => {
+                let (edge, which) = per_edge_border(name).unwrap();
+                if which == "width" {
+                    if let Some(v) = px_or_none(&p.value) {
+                        set(&mut edge_width[edge], v);
+                    }
+                } else {
+                    set(&mut edge_color[edge], swiftui_color_value(&p.value));
+                }
+            }
             "opacity" => {
                 if let Some(v) = px_or_none(&p.value) {
                     set(&mut opacity, v);
@@ -2341,6 +2382,44 @@ fn swiftui_modifier_chain_with_drops(
             base_transitions,
             state_layers,
         );
+    }
+
+    // UI79 -- per-edge borders, drawn as aligned overlays.
+    //
+    // SwiftUI's `.border` strokes all four sides, so a single edge has to
+    // be drawn: a `Rectangle` constrained on one axis and pinned to that
+    // side by the overlay's alignment. The overlay sits on the view's own
+    // bounds, which is the border box -- outside padding, like CSS.
+    //
+    // `.leading`/`.trailing` are SwiftUI's only horizontal alignments and
+    // they FLIP under right-to-left layout, whereas CSS `border-left` is
+    // physically left. UI79 puts RTL out of scope, so this is recorded as
+    // a known divergence rather than worked around.
+    for (idx, (align, axis)) in [
+        (".top", "height"),
+        (".trailing", "width"),
+        (".bottom", "height"),
+        (".leading", "width"),
+    ]
+    .iter()
+    .enumerate()
+    {
+        if edge_width[idx].empty() {
+            continue;
+        }
+        let w = layer_value(&edge_width[idx], state_layers, "0");
+        let c = if edge_color[idx].empty() {
+            if border_color.empty() {
+                "Color.gray".to_string()
+            } else {
+                layer_value(&border_color, state_layers, "Color.gray")
+            }
+        } else {
+            layer_value(&edge_color[idx], state_layers, "Color.gray")
+        };
+        out.push_str(&format!(
+            "\n{pad}.overlay(alignment: {align}) {{ Rectangle().fill({c}).frame({axis}: {w}) }}"
+        ));
     }
 
     if !border_width.empty() {
@@ -3547,8 +3626,15 @@ fn emit_view_tree(
         // scrollable region. SwiftUI's `ScrollView` is the direct analog;
         // it implicitly handles its own scroll-state and viewport, so we
         // do not need to thread offset/extent slots through here.
+        // UI61 -- the axis. A bare `ScrollView` is SwiftUI's vertical
+        // default, so the vertical case stays byte-identical to what
+        // every existing layout already emits.
         "HostScroll" => container(
-            "ScrollView",
+            match ScrollAxis::of(node) {
+                ScrollAxis::Vertical => "ScrollView",
+                ScrollAxis::Horizontal => "ScrollView(.horizontal)",
+                ScrollAxis::Both => "ScrollView([.horizontal, .vertical])",
+            },
             node,
             indent,
             part_styles,
@@ -8964,6 +9050,55 @@ mod tests {
         );
     }
 
+    /// UI61 — the axis reaches the SwiftUI view. The vertical case must
+    /// stay a BARE `ScrollView`: that is SwiftUI's own default and what
+    /// every existing layout already emits, so a byte-identical vertical
+    /// output is the promise that keeps shipped apps still.
+    #[test]
+    fn ui61_each_axis_selects_its_scroll_view_form() {
+        let render = |axis: Option<&str>| {
+            let mut root = container_node(
+                "HostScroll",
+                vec![leaf("Text", vec![prop_string("content", "row")])],
+            );
+            if let Some(a) = axis {
+                root.props = vec![LayoutProp {
+                    name: "axis".to_string(),
+                    value: LayoutPropValue::Keyword(a.to_string()),
+                }];
+            }
+            from_pipeline(
+                &component("S", vec![], vec![]),
+                &layout_with("S", root),
+                &empty_style("S"),
+            )
+            .unwrap()
+            .output
+        };
+
+        // Default and explicit `vertical` are the same text.
+        assert_eq!(
+            render(None),
+            render(Some("vertical")),
+            "an explicit `axis: vertical` must emit exactly the default"
+        );
+        let out = render(None);
+        assert!(out.contains("ScrollView {"), "got:\n{out}");
+        assert!(
+            !out.contains("ScrollView(.horizontal)") && !out.contains("[.horizontal"),
+            "the default must not name an axis, got:\n{out}"
+        );
+
+        let out = render(Some("horizontal"));
+        assert!(out.contains("ScrollView(.horizontal) {"), "got:\n{out}");
+
+        let out = render(Some("both"));
+        assert!(
+            out.contains("ScrollView([.horizontal, .vertical]) {"),
+            "got:\n{out}"
+        );
+    }
+
     #[test]
     fn host_scroll_lowers_to_scroll_view() {
         let layout = layout_with(
@@ -12276,6 +12411,94 @@ mod tests {
     // ---------------------------------------------------------------------
     // T6 — border-width + border-color → `.border(Color(...), width: N)`.
     // ---------------------------------------------------------------------
+
+    /// UI79 — each authored edge draws on its own side and nowhere else.
+    ///
+    /// Asserted as a set: SwiftUI's `.border` strokes all four, so an
+    /// emitter that fell back to it for a single authored edge would
+    /// satisfy every positive assertion here.
+    #[test]
+    fn ui79_each_authored_edge_draws_only_itself() {
+        // The control: no authored edge means no overlay at all, and the
+        // all-four shorthand keeps emitting `.border` unchanged.
+        let shorthand = swiftui_modifier_chain(
+            &[sp("border-width", "1px"), sp("border-color", "#3f3f46")],
+            &[],
+            0,
+            None,
+        );
+        assert!(
+            !shorthand.contains("overlay(alignment:"),
+            "the shorthand must not become per-edge overlays: {shorthand}"
+        );
+
+        let cases = [
+            ("border-top-width", ".top", "height"),
+            ("border-bottom-width", ".bottom", "height"),
+            ("border-left-width", ".leading", "width"),
+            ("border-right-width", ".trailing", "width"),
+        ];
+        for (prop, align, axis) in cases {
+            let chain = swiftui_modifier_chain(&[sp(prop, "3px")], &[], 0, None);
+            assert!(
+                chain.contains(&format!(".overlay(alignment: {align})")),
+                "{prop} — got: {chain}"
+            );
+            assert!(
+                chain.contains(&format!(".frame({axis}: 3)")),
+                "{prop} constrains the {axis} — got: {chain}"
+            );
+            assert_eq!(
+                chain.matches("overlay(alignment:").count(),
+                1,
+                "{prop} must draw ONE edge, not four — got: {chain}"
+            );
+            assert!(
+                !chain.contains(".border("),
+                "{prop} must not also stroke all four — got: {chain}"
+            );
+        }
+
+        // All four together, so the single-overlay assertion above is not
+        // passing merely because the emitter can only produce one.
+        let all = swiftui_modifier_chain(
+            &[
+                sp("border-top-width", "1px"),
+                sp("border-right-width", "2px"),
+                sp("border-bottom-width", "3px"),
+                sp("border-left-width", "4px"),
+            ],
+            &[],
+            0,
+            None,
+        );
+        assert_eq!(all.matches("overlay(alignment:").count(), 4, "got: {all}");
+
+        // An unauthored edge colour falls back to the shorthand — the CSS
+        // cascade answer (UI79 §3 rule 3).
+        let inherited = swiftui_modifier_chain(
+            &[sp("border-color", "#3f3f46"), sp("border-bottom-width", "1px")],
+            &[],
+            0,
+            None,
+        );
+        assert!(
+            inherited.contains("Color(red: 0.247, green: 0.247, blue: 0.275)"),
+            "got: {inherited}"
+        );
+    }
+
+    /// UI79 — `border-top-left-radius` is a CORNER. Its name splits into
+    /// `top-left` + `radius`, exactly the shape that fools a loose parse.
+    #[test]
+    fn ui79_a_corner_radius_is_not_an_edge() {
+        assert!(per_edge_border("border-top-left-radius").is_none());
+        assert!(per_edge_border("border-radius").is_none());
+        assert!(per_edge_border("border-width").is_none());
+        assert!(per_edge_border("border-bottom-style").is_none());
+        assert_eq!(per_edge_border("border-bottom-width"), Some((2, "width")));
+        assert_eq!(per_edge_border("border-left-color"), Some((3, "color")));
+    }
 
     #[test]
     fn part_style_border_width_and_color_emit_border_modifier() {

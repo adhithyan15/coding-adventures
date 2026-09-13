@@ -75,12 +75,20 @@ recreating the surrounding chrome in backend-specific UI code.
   that loads the same Rust/Cairo session through JNA and mounts its RGBA frame
   as a native Compose `Image`. Generated address/history controls and native
   scroll, hover, and pointer input all update that one shared session.
+- Client-side image maps are resolved and scaled in shared Rust layout/paint.
+  Rectangle, circle, polygon, and default areas reuse each host's existing
+  pointer surface, while stable area accessibility keys enter the same shared
+  browsing-context and download transaction as ordinary links.
 - The native content surfaces are keyboard focus targets. Arrow, Page,
   Space/Shift-Space, Home, and End keys use the exact semantic scroll-command
   contract owned by `venture-browser-core`; Command-Left/Right on macOS and
   Alt-Left/Right on Windows reuse the Mosaic `onBack`/`onForward` reducer
   events and reproject chrome props after navigation. The direct generated-app
   gates require both native history shortcuts to traverse a real linked page.
+- Tab and Shift+Tab enter one shared page-focus reducer spanning links, form
+  controls, and details summaries. Positive `tabindex`, exclusions, modal
+  containment, visibility scrolling, activation, accessibility geometry, and
+  focus rings remain identical across SwiftUI, WinUI, Qt, Flutter, and Compose.
 - Editable page controls keep Unicode grapheme/word movement, selection,
   click-count policy, bounded undo/redo, drag autoscroll, clipboard flavor
   negotiation, and accessibility actions in `browser-form-controls`.
@@ -119,6 +127,8 @@ recreating the surrounding chrome in backend-specific UI code.
   descriptors. Bounded autofill blocks credentials unless explicitly allowed,
   emits `input` before `change`, and Back/Forward restores public values plus
   custom-element state without placing file payloads in session history.
+  Stable entry identifiers keep repeated URLs independent and restore each
+  entry's clamped logical scroll offset through the same shared session.
 - Disabled fieldsets, including the first-legend exception, are resolved in
   shared render/control state. Explicit and implicit labels use shared hit
   regions and semantic activation, so generated hosts only forward pointers.

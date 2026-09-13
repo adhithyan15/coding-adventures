@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+- Forward Tab and Shift+Tab from every native surface into shared sequential
+  page focus, including link/disclosure activation and focus presentation.
+
+- Add client-side image-map interaction through shared scaled shape geometry,
+  accessibility keys, and existing link target/download mediation; all native
+  and web content surfaces inherit the behavior from their pointer seam.
+
+- Add shared link/form browsing-context and download mediation, preserving
+  current-session transactions while forwarding bounded effects through every
+  native generated-host bridge.
+
+- Add cross-host Back/Forward acceptance for entry-identity-based form and
+  scroll restoration across repeated URLs and same-document fragments.
+
 - Add cross-host form-group acceptance for disabled-fieldset inheritance, the
   first-legend exception, and explicit/implicit label pointer activation.
 

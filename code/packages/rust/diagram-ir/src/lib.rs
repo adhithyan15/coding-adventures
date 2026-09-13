@@ -11,6 +11,14 @@ pub enum DiagramDirection {
     Bt,
 }
 
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct BlockArrowDirections {
+    pub left: bool,
+    pub right: bool,
+    pub up: bool,
+    pub down: bool,
+}
+
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramShape {
     Rect,
@@ -29,6 +37,7 @@ pub enum DiagramShape {
     Cylinder,
     DoubleCircle,
     Asymmetric,
+    BlockArrow(BlockArrowDirections),
     Note,
 }
 
@@ -47,6 +56,7 @@ pub struct DiagramStyle {
     pub fill: Option<String>,
     pub stroke: Option<String>,
     pub stroke_width: Option<f64>,
+    pub stroke_dash: Option<Vec<f64>>,
     pub text_color: Option<String>,
     pub font_size: Option<f64>,
     pub font_weight: Option<u16>,
@@ -60,6 +70,7 @@ pub struct ResolvedDiagramStyle {
     pub fill: String,
     pub stroke: String,
     pub stroke_width: f64,
+    pub stroke_dash: Option<Vec<f64>>,
     pub text_color: String,
     pub font_size: f64,
     pub font_weight: u16,
@@ -73,6 +84,7 @@ impl Default for ResolvedDiagramStyle {
             fill: "#eff6ff".into(),
             stroke: "#2563eb".into(),
             stroke_width: 2.0,
+            stroke_dash: None,
             text_color: "#1e40af".into(),
             font_size: 14.0,
             font_weight: 400,
@@ -95,6 +107,7 @@ pub fn resolve_style_with_base(
             fill: s.fill.clone().unwrap_or(base.fill),
             stroke: s.stroke.clone().unwrap_or(base.stroke),
             stroke_width: s.stroke_width.unwrap_or(base.stroke_width),
+            stroke_dash: s.stroke_dash.clone().or(base.stroke_dash),
             text_color: s.text_color.clone().unwrap_or(base.text_color),
             font_size: s.font_size.unwrap_or(base.font_size),
             font_weight: s.font_weight.unwrap_or(base.font_weight),
@@ -105,11 +118,21 @@ pub fn resolve_style_with_base(
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum EdgeKind {
     Directed,
+    Bidirectional,
     Undirected,
     NoteAssociation,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub enum EdgeMarker {
+    #[default]
+    None,
+    Point,
+    Circle,
+    Cross,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -191,7 +214,18 @@ pub struct GridConnection {
     pub from: String,
     pub to: String,
     pub kind: EdgeKind,
+    pub start_marker: EdgeMarker,
+    pub end_marker: EdgeMarker,
+    pub line_style: GridEdgeStyle,
     pub label: Option<DiagramLabel>,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub enum GridEdgeStyle {
+    #[default]
+    Solid,
+    Dotted,
+    Thick,
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]
@@ -398,6 +432,8 @@ pub struct LayoutedGraphEdge {
     pub from_node_id: String,
     pub to_node_id: String,
     pub kind: EdgeKind,
+    pub start_marker: EdgeMarker,
+    pub end_marker: EdgeMarker,
     pub points: Vec<Point>,
     pub label: Option<DiagramLabel>,
     pub label_position: Option<Point>,
@@ -2100,11 +2136,13 @@ mod tests {
     fn resolve_style_partial_override() {
         let style = DiagramStyle {
             fill: Some("#ff0000".to_string()),
+            stroke_dash: Some(vec![5.0, 3.0]),
             ..Default::default()
         };
         let s = resolve_style(Some(&style));
         assert_eq!(s.fill, "#ff0000");
         assert_eq!(s.stroke, "#2563eb");
+        assert_eq!(s.stroke_dash.as_deref(), Some(&[5.0, 3.0][..]));
     }
     #[test]
     fn resolve_style_with_base_overrides_base() {
@@ -2112,6 +2150,7 @@ mod tests {
             fill: "none".into(),
             stroke: "#4b5563".into(),
             stroke_width: 2.0,
+            stroke_dash: None,
             text_color: "#374151".into(),
             font_size: 12.0,
             font_weight: 400,

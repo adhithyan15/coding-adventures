@@ -24,7 +24,32 @@ layout SpiceWorkbench {
     }
     Column [ schematic ] {
       Text [ schematic-label ] ( content : slot: schematic-label )
-      Text [ schematic-title ] ( content : slot: schematic-title )
+      Text [ schematic-title-label ] ( content : slot: schematic-title-label )
+      HostInput [ schematic-title-input ] (
+        value : slot: schematic-title ,
+        disabled : slot: schematic-title-disabled ,
+        onChange : emit: onSchematicTitleChange
+      )
+      Row [ schematic-document-actions ] {
+        HostButton [ open-schematic ] (
+          label : slot: open-schematic-label ,
+          onClick : emit: onOpenSchematic
+        )
+        HostButton [ save-schematic ] (
+          label : slot: save-schematic-label ,
+          onClick : emit: onSaveSchematic
+        )
+        HostButton [ undo-schematic ] (
+          label : slot: undo-schematic-label ,
+          disabled : slot: undo-schematic-disabled ,
+          onClick : emit: onUndoSchematic
+        )
+        HostButton [ redo-schematic ] (
+          label : slot: redo-schematic-label ,
+          disabled : slot: redo-schematic-disabled ,
+          onClick : emit: onRedoSchematic
+        )
+      }
       Row [ schematic-palette ] {
         For ( each: slot: schematic-palette , as: kind , index: kind-index ) {
           HostButton [ schematic-palette-item ] (
@@ -38,13 +63,48 @@ layout SpiceWorkbench {
         For ( each: slot: schematic-analysis-controls , as: analysis , index: analysis-index ) {
           HostButton [ schematic-analysis-control ] (
             label : ( analysis ) ,
-            onClick : emit: onSelectSchematicAnalysis
+            onClick : emit: onAddSchematicAnalysis
+          )
+        }
+      }
+      Text [ schematic-analysis-card-label ] ( content : slot: schematic-analysis-card-label )
+      Row [ schematic-analysis-cards ] {
+        For ( each: slot: schematic-analysis-card-rows , as: card , index: card-index ) {
+          HostButton [ schematic-analysis-card ] (
+            label : ( card[0] ) ,
+            onClick : emit: onSelectSchematicAnalysisCard
           )
         }
       }
       Text [ selected-schematic-analysis ] ( content : slot: selected-schematic-analysis-label )
       Column [ schematic-analysis-configuration ] {
+        Text [ schematic-analysis-kind-label ] ( content : slot: schematic-analysis-kind-label )
+        Row [ schematic-analysis-kind-controls ] {
+          For ( each: slot: schematic-analysis-kind-controls , as: analysis , index: analysis-index ) {
+            HostButton [ schematic-analysis-kind-control ] (
+              label : ( analysis ) ,
+              disabled : slot: schematic-analysis-kind-disabled ,
+              onClick : emit: onSelectSchematicAnalysis
+            )
+          }
+        }
+        Row [ schematic-analysis-card-move-actions ] {
+          HostButton [ move-schematic-analysis-card-earlier ] (
+            label : slot: move-schematic-analysis-card-earlier-label ,
+            disabled : slot: move-schematic-analysis-card-earlier-disabled ,
+            onClick : emit: onMoveSchematicAnalysisCardEarlier
+          )
+          HostButton [ move-schematic-analysis-card-later ] (
+            label : slot: move-schematic-analysis-card-later-label ,
+            disabled : slot: move-schematic-analysis-card-later-disabled ,
+            onClick : emit: onMoveSchematicAnalysisCardLater
+          )
+        }
         Text [ schematic-analysis-configuration-label ] ( content : slot: schematic-analysis-configuration-label )
+        HostButton [ remove-schematic-analysis-card ] (
+          label : slot: remove-schematic-analysis-card-label ,
+          onClick : emit: onRemoveSchematicAnalysisCard
+        )
         Text [ schematic-analysis-source-label ] ( content : slot: schematic-analysis-source-label )
         Row [ schematic-analysis-source-options ] {
           For ( each: slot: schematic-analysis-source-options , as: source , index: source-index ) {
@@ -111,16 +171,37 @@ layout SpiceWorkbench {
           )
         }
       }
+      Text [ schematic-wire-label ] ( content : slot: schematic-wire-label )
+      Row [ schematic-wire-actions ] {
+        For ( each: slot: schematic-wire-rows , as: wire , index: wire-index ) {
+          HostButton [ schematic-wire-remove ] (
+            label : ( wire ) ,
+            onClick : emit: onRemoveSchematicWire
+          )
+        }
+      }
       Text [ selected-schematic ] ( content : slot: selected-schematic-label )
       Column [ schematic-properties ] {
         Text [ schematic-properties-label ] ( content : slot: schematic-properties-label )
         Text [ selected-schematic-kind ] ( content : slot: selected-schematic-kind-label )
+        Text [ schematic-reference-label ] ( content : slot: schematic-reference-label )
+        HostInput [ schematic-reference-input ] (
+          value : slot: schematic-reference ,
+          placeholder : slot: schematic-reference-placeholder ,
+          disabled : slot: schematic-reference-disabled ,
+          onChange : emit: onSchematicReferenceChange
+        )
         Text [ schematic-value-label ] ( content : slot: schematic-value-label )
         HostInput [ schematic-value-input ] (
           value : slot: schematic-value ,
           placeholder : slot: schematic-value-placeholder ,
           disabled : slot: schematic-value-disabled ,
           onChange : emit: onSchematicValueChange
+        )
+        HostButton [ remove-schematic-component ] (
+          label : slot: remove-schematic-component-label ,
+          disabled : slot: remove-schematic-component-disabled ,
+          onClick : emit: onRemoveSchematicComponent
         )
       }
       Text [ route-schematic ] ( content : slot: route-schematic-label )

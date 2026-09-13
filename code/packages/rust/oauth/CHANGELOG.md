@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Added a consuming no-clone ID-token evidence split that leaves the remaining
+  access/refresh credential bundle intact for custody after a separate audited
+  identity proof.
+- Added an explicit OpenID Connect authorization begin boundary that requires
+  the exact `openid` scope, derives an independent 256-bit nonce beside state
+  and PKCE from caller-injected entropy, emits it in the authorization request,
+  and returns a non-cloneable zeroizing provider/client/trace-bound nonce for
+  later ID-token verification. Provider extras can no longer override `nonce`.
 - Exposed the validated optional revocation endpoint from `ProviderConfig` so
   broker composition can require an exact registered endpoint before any
   client-secret access or transport effect.

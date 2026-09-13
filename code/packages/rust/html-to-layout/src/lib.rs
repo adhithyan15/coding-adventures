@@ -308,12 +308,15 @@ where
     let theme = &context.theme;
     let style = root_computed_style(context);
     let ancestors = Vec::new();
-    let mut state = ConversionState::default();
+    let mut state = ConversionState {
+        image_maps: collect_image_maps(&render_tree.children),
+        ..ConversionState::default()
+    };
     let _root_counter_scope = state
         .counters
         .enter(&style.counter_reset, &style.counter_set);
     state.counters.increment(&style.counter_increment);
-    let children = convert_children(
+    let mut children = convert_children(
         &render_tree.children,
         context,
         &style,
@@ -321,6 +324,7 @@ where
         &mut state,
         is_visited,
     );
+    children.append(&mut state.top_layers);
 
     let mut root = LayoutNode::container(children)
         .with_padding(
@@ -355,7 +359,48 @@ where
 struct ConversionState {
     counters: CounterContext,
     control_index: usize,
+    image_index: usize,
     disclosure_index: usize,
+    top_layer_index: usize,
+    focus_index: usize,
+    top_layers: Vec<LayoutNode>,
+    image_maps: Vec<ImageMapDefinition>,
+}
+
+#[derive(Clone, Debug)]
+struct ImageMapDefinition {
+    name: String,
+    areas: Vec<BrowserRenderNode>,
+}
+
+fn collect_image_maps(nodes: &[BrowserRenderNode]) -> Vec<ImageMapDefinition> {
+    fn visit(nodes: &[BrowserRenderNode], maps: &mut Vec<ImageMapDefinition>) {
+        for node in nodes {
+            if node.role == "image_map" {
+                if let Some(name) = node
+                    .image_map_name
+                    .as_deref()
+                    .map(str::trim)
+                    .filter(|name| !name.is_empty())
+                {
+                    maps.push(ImageMapDefinition {
+                        name: name.to_string(),
+                        areas: node
+                            .children
+                            .iter()
+                            .filter(|child| child.role == "image_map_area")
+                            .cloned()
+                            .collect(),
+                    });
+                }
+            }
+            visit(&node.children, maps);
+        }
+    }
+
+    let mut maps = Vec::new();
+    visit(nodes, &mut maps);
+    maps
 }
 
 fn convert_node<F>(
@@ -377,13 +422,38 @@ where
         state.disclosure_index += 1;
         index
     });
+    let top_layer_kind = if node.disclosure_kind.as_deref() == Some("dialog") {
+        Some("dialog")
+    } else if node.popover.is_some() {
+        Some("popover")
+    } else {
+        None
+    };
+    let top_layer_index = top_layer_kind.map(|_| {
+        let index = state.top_layer_index;
+        state.top_layer_index += 1;
+        index
+    });
+    let image_index = (node.role == "image").then(|| {
+        let index = state.image_index;
+        state.image_index += 1;
+        index
+    });
     if display == "none"
         || node.hidden
+        || (top_layer_kind.is_some() && !node.open)
         || (node.role == "control" && node.control_type.as_deref() == Some("hidden"))
     {
         state.disclosure_index += count_details_nodes(&node.children);
+        state.top_layer_index += count_top_layer_nodes(&node.children);
         return None;
     }
+
+    let focus_order = sequential_focus_order(node).map(|_| {
+        let index = state.focus_index;
+        state.focus_index += 1;
+        index
+    });
 
     let counter_scope = state
         .counters
@@ -501,9 +571,19 @@ where
             .ext
             .insert("backgrounds".into(), backgrounds.to_ext());
     }
-    layout
-        .ext
-        .insert("html".into(), html_ext(node, disclosure_index));
+    layout.ext.insert(
+        "html".into(),
+        html_ext(
+            node,
+            disclosure_index,
+            top_layer_index,
+            top_layer_kind,
+            focus_order,
+        ),
+    );
+    if let Some(image_map) = image_map_ext(node, &state.image_maps, image_index) {
+        layout.ext.insert("imageMap".into(), image_map);
+    }
     layout
         .ext
         .insert("block".into(), block_ext(node, display, &style));
@@ -527,6 +607,26 @@ where
     layout
         .ext
         .insert("positioned".into(), positioned_ext(style.positioned));
+    if let (Some(index), Some(kind)) = (top_layer_index, top_layer_kind) {
+        let mut positioned = style.positioned;
+        positioned.position = Position::Fixed;
+        positioned.z_index = Some(1_000_000 + index as i64);
+        if positioned.insets.top.is_none() && positioned.insets.bottom.is_none() {
+            positioned.insets.top = Some(24.0 + index as f64 * 12.0);
+        }
+        if positioned.insets.left.is_none() && positioned.insets.right.is_none() {
+            positioned.insets.left = Some(24.0 + index as f64 * 12.0);
+        }
+        layout
+            .ext
+            .insert("positioned".into(), positioned_ext(positioned));
+        if kind == "dialog" && node.aria_modal.as_deref() == Some("true") {
+            state.top_layers.push(top_layer_backdrop(index));
+        }
+        state.top_layers.push(layout);
+        state.counters.exit(counter_scope);
+        return None;
+    }
     state.counters.exit(counter_scope);
     Some(layout)
 }
@@ -539,6 +639,55 @@ fn count_details_nodes(nodes: &[BrowserRenderNode]) -> usize {
                 + count_details_nodes(&node.children)
         })
         .sum()
+}
+
+fn count_top_layer_nodes(nodes: &[BrowserRenderNode]) -> usize {
+    nodes
+        .iter()
+        .map(|node| {
+            usize::from(node.disclosure_kind.as_deref() == Some("dialog") || node.popover.is_some())
+                + count_top_layer_nodes(&node.children)
+        })
+        .sum()
+}
+
+fn top_layer_backdrop(index: usize) -> LayoutNode {
+    let mut backdrop = LayoutNode::container(Vec::new())
+        .with_width(SizeValue::Fill)
+        .with_height(SizeValue::Fill)
+        .with_ext(
+            "positioned",
+            positioned_ext(PositionedStyle {
+                position: Position::Fixed,
+                insets: layout_positioned::Insets {
+                    top: Some(0.0),
+                    right: Some(0.0),
+                    bottom: Some(0.0),
+                    left: Some(0.0),
+                },
+                z_index: Some(999_999 + index as i64),
+                ..PositionedStyle::default()
+            }),
+        )
+        .with_ext("block", display_ext("block"));
+    backdrop.ext.insert(
+        "paint".into(),
+        background_ext(Color {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 72,
+        }),
+    );
+    backdrop.ext.insert(
+        "html".into(),
+        ExtValue::Map(HashMap::from([
+            ("role".into(), ExtValue::Str("presentation".into())),
+            ("topLayerBackdrop".into(), ExtValue::Bool(true)),
+            ("topLayerIndex".into(), ExtValue::Int(index as i64)),
+        ])),
+    );
+    backdrop
 }
 
 fn convert_children<F>(
@@ -606,6 +755,8 @@ where
             .iter()
             .any(|child| child.disclosure_kind.as_deref() == Some("summary"))
     {
+        let focus_order = state.focus_index;
+        state.focus_index += 1;
         let mut summary = text_leaf("Details", style);
         summary.ext.insert(
             "html".into(),
@@ -613,6 +764,8 @@ where
                 ("role".into(), ExtValue::Str("disclosure_summary".into())),
                 ("tag".into(), ExtValue::Str("summary".into())),
                 ("disclosureKind".into(), ExtValue::Str("summary".into())),
+                ("focusOrder".into(), ExtValue::Int(focus_order as i64)),
+                ("tabIndex".into(), ExtValue::Int(0)),
             ])),
         );
         children.insert(0, summary);
@@ -972,6 +1125,14 @@ where
         Some("b" | "strong") => style.font = font_bold(style.font),
         Some("em" | "i") => style.font = font_italic(style.font),
         _ => {}
+    }
+    if node.disclosure_kind.as_deref() == Some("dialog") || node.popover.is_some() {
+        style.background = Some(rgb(255, 255, 255));
+        style.border_width = edges_all(1.0);
+        style.border_color = [Some(rgb(72, 72, 72)); 4];
+        style.border_style = std::array::from_fn(|_| "solid".into());
+        style.padding = Some(edges_all(theme.page_padding.max(12.0)));
+        style.width = Some(320.0);
     }
     if node.role == "link" {
         let href = node.resolved_href.as_deref().or(node.href.as_deref());
@@ -3991,7 +4152,13 @@ fn positive_attribute(value: Option<&str>) -> Option<usize> {
         .filter(|value| *value > 0)
 }
 
-fn html_ext(node: &BrowserRenderNode, disclosure_index: Option<usize>) -> ExtValue {
+fn html_ext(
+    node: &BrowserRenderNode,
+    disclosure_index: Option<usize>,
+    top_layer_index: Option<usize>,
+    top_layer_kind: Option<&str>,
+    focus_order: Option<usize>,
+) -> ExtValue {
     let mut values = HashMap::new();
     values.insert("role".into(), ExtValue::Str(node.role.clone()));
     values.insert("display".into(), ExtValue::Str(node.display.clone()));
@@ -3999,12 +4166,35 @@ fn html_ext(node: &BrowserRenderNode, disclosure_index: Option<usize>) -> ExtVal
     insert_optional(&mut values, "id", node.id.as_deref());
     insert_optional(
         &mut values,
+        "accessibleName",
+        node.accessible_name.as_deref(),
+    );
+    insert_optional(&mut values, "name", node.anchor_name.as_deref());
+    insert_optional(
+        &mut values,
         "disclosureKind",
         node.disclosure_kind.as_deref(),
     );
     values.insert("open".into(), ExtValue::Bool(node.open));
+    if let Some(order) = focus_order {
+        values.insert("focusOrder".into(), ExtValue::Int(order as i64));
+        values.insert(
+            "tabIndex".into(),
+            ExtValue::Int(sequential_focus_order(node).unwrap_or_default() as i64),
+        );
+    }
     if let Some(index) = disclosure_index {
         values.insert("disclosureIndex".into(), ExtValue::Int(index as i64));
+    }
+    if let (Some(index), Some(kind)) = (top_layer_index, top_layer_kind) {
+        values.insert("topLayerIndex".into(), ExtValue::Int(index as i64));
+        values.insert("topLayerKind".into(), ExtValue::Str(kind.into()));
+        values.insert("topLayer".into(), ExtValue::Bool(true));
+        values.insert(
+            "topLayerModal".into(),
+            ExtValue::Bool(kind == "dialog" && node.aria_modal.as_deref() == Some("true")),
+        );
+        insert_optional(&mut values, "popover", node.popover.as_deref());
     }
     insert_optional(
         &mut values,
@@ -4012,6 +4202,24 @@ fn html_ext(node: &BrowserRenderNode, disclosure_index: Option<usize>) -> ExtVal
         node.resolved_href.as_deref().or(node.href.as_deref()),
     );
     insert_optional(&mut values, "target", node.target.as_deref());
+    insert_optional(
+        &mut values,
+        "effectiveTarget",
+        node.effective_target.as_deref(),
+    );
+    insert_optional(&mut values, "download", node.download.as_deref());
+    values.insert(
+        "relOpener".into(),
+        ExtValue::Bool(node.rel_tokens.iter().any(|token| token == "opener")),
+    );
+    values.insert(
+        "relNoopener".into(),
+        ExtValue::Bool(node.rel_tokens.iter().any(|token| token == "noopener")),
+    );
+    values.insert(
+        "relNoreferrer".into(),
+        ExtValue::Bool(node.rel_tokens.iter().any(|token| token == "noreferrer")),
+    );
     insert_optional(&mut values, "labelFor", node.label_for.as_deref());
     insert_optional(&mut values, "lang", node.lang.as_deref());
     insert_optional(&mut values, "dir", node.dir.as_deref());
@@ -4024,6 +4232,122 @@ fn html_ext(node: &BrowserRenderNode, disclosure_index: Option<usize>) -> ExtVal
         node.table_section_kind.as_deref(),
     );
     ExtValue::Map(values)
+}
+
+fn sequential_focus_order(node: &BrowserRenderNode) -> Option<i32> {
+    if node.disabled
+        || node.hidden
+        || node.inert
+        || node.aria_hidden
+        || node.aria_disabled.as_deref() == Some("true")
+    {
+        return None;
+    }
+    let naturally_focusable = (node.role == "link"
+        && node
+            .resolved_href
+            .as_deref()
+            .or(node.href.as_deref())
+            .is_some_and(|href| !href.is_empty()))
+        || node.role == "control"
+        || node.disclosure_kind.as_deref() == Some("summary");
+    let tab_index = node
+        .tabindex
+        .as_deref()
+        .and_then(|value| value.trim().parse::<i32>().ok())
+        .unwrap_or_default();
+    (naturally_focusable && tab_index >= 0).then_some(tab_index)
+}
+
+fn image_map_ext(
+    node: &BrowserRenderNode,
+    maps: &[ImageMapDefinition],
+    image_index: Option<usize>,
+) -> Option<ExtValue> {
+    if node.role != "image" {
+        return None;
+    }
+    let name = node.usemap.as_deref()?.trim().strip_prefix('#')?.trim();
+    if name.is_empty() {
+        return None;
+    }
+    let map = maps.iter().find(|map| map.name == name)?;
+    let image_index = image_index?;
+    let image_key = node
+        .id
+        .as_deref()
+        .filter(|id| !id.is_empty())
+        .map(|id| format!("id:{id}"))
+        .unwrap_or_else(|| format!("index:{image_index}"));
+    let areas = map
+        .areas
+        .iter()
+        .enumerate()
+        .filter_map(|(index, area)| {
+            let href = area.resolved_href.as_deref().or(area.href.as_deref())?;
+            if href.is_empty() {
+                return None;
+            }
+            let mut values = HashMap::new();
+            values.insert(
+                "shape".into(),
+                ExtValue::Str(
+                    area.image_map_shape
+                        .as_deref()
+                        .unwrap_or("rect")
+                        .to_ascii_lowercase(),
+                ),
+            );
+            insert_optional(&mut values, "coords", area.image_map_coords.as_deref());
+            values.insert("href".into(), ExtValue::Str(href.to_string()));
+            values.insert(
+                "key".into(),
+                ExtValue::Str(
+                    area.id
+                        .as_deref()
+                        .filter(|id| !id.is_empty())
+                        .map(|id| format!("image-map:{image_key}:map:{name}:id:{id}"))
+                        .unwrap_or_else(|| {
+                            format!("image-map:{image_key}:map:{name}:area:{index}")
+                        }),
+                ),
+            );
+            values.insert("areaIndex".into(), ExtValue::Int(index as i64));
+            insert_optional(&mut values, "name", area.alt.as_deref());
+            insert_optional(&mut values, "target", area.target.as_deref());
+            insert_optional(
+                &mut values,
+                "effectiveTarget",
+                area.effective_target.as_deref(),
+            );
+            insert_optional(&mut values, "download", area.download.as_deref());
+            values.insert(
+                "relOpener".into(),
+                ExtValue::Bool(area.rel_tokens.iter().any(|token| token == "opener")),
+            );
+            values.insert(
+                "relNoopener".into(),
+                ExtValue::Bool(area.rel_tokens.iter().any(|token| token == "noopener")),
+            );
+            values.insert(
+                "relNoreferrer".into(),
+                ExtValue::Bool(area.rel_tokens.iter().any(|token| token == "noreferrer")),
+            );
+            Some(ExtValue::Map(values))
+        })
+        .collect();
+    let mut values = HashMap::from([
+        ("name".into(), ExtValue::Str(map.name.clone())),
+        ("imageIndex".into(), ExtValue::Int(image_index as i64)),
+        ("areas".into(), ExtValue::List(areas)),
+    ]);
+    if let Some(width) = parse_dimension(node.width.as_deref()).filter(|width| *width > 0.0) {
+        values.insert("coordinateWidth".into(), ExtValue::Float(width));
+    }
+    if let Some(height) = parse_dimension(node.height.as_deref()).filter(|height| *height > 0.0) {
+        values.insert("coordinateHeight".into(), ExtValue::Float(height));
+    }
+    Some(ExtValue::Map(values))
 }
 
 fn root_html_ext() -> ExtValue {
@@ -4175,6 +4499,16 @@ mod tests {
                 .color,
             rgb(0, 0, 238)
         );
+    }
+
+    #[test]
+    fn legacy_anchor_names_survive_as_navigation_metadata() {
+        let render = parse_browser_render_tree("<a name='legacy-target'>Old section</a>").unwrap();
+        let layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
+        let anchor = find_by_html_role(&layout, "link").unwrap();
+
+        assert_eq!(html_string(anchor, "tag"), Some("a"));
+        assert_eq!(html_string(anchor, "name"), Some("legacy-target"));
     }
 
     #[test]
@@ -4860,6 +5194,38 @@ mod tests {
     }
 
     #[test]
+    fn closed_surfaces_are_hidden_and_open_surfaces_join_the_root_top_layer() {
+        let render = parse_browser_render_tree(
+            "<main><dialog id='closed'>Closed</dialog><div><dialog id='modal' open aria-modal='true'>Modal</dialog></div><div id='menu' popover>Menu</div></main>",
+        )
+        .unwrap();
+        let layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
+
+        assert!(find_by_id(&layout, "closed").is_none());
+        assert!(find_by_id(&layout, "menu").is_none());
+        let modal = find_by_id(&layout, "modal").expect("open dialog should be visible");
+        assert!(matches!(
+            modal.ext.get("html"),
+            Some(ExtValue::Map(values))
+                if values.get("topLayer") == Some(&ExtValue::Bool(true))
+                    && values.get("topLayerModal") == Some(&ExtValue::Bool(true))
+        ));
+        assert_eq!(
+            PositionedStyle::from_layout(modal).position,
+            Position::Fixed
+        );
+        assert!(layout.children.iter().any(|child| matches!(
+            child.ext.get("html"),
+            Some(ExtValue::Map(values))
+                if values.get("topLayerBackdrop") == Some(&ExtValue::Bool(true))
+        )));
+        assert_eq!(
+            layout.children.last().and_then(|node| node.id.as_deref()),
+            Some("modal")
+        );
+    }
+
+    #[test]
     fn preformatted_content_projects_shared_white_space_policy() {
         let render = parse_browser_render_tree("<pre>one  two\nthree</pre>").unwrap();
         let layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
@@ -5062,5 +5428,35 @@ mod tests {
             return None;
         };
         Some(value)
+    }
+
+    #[test]
+    fn client_side_image_maps_follow_usemap_into_layout_metadata() {
+        let render = parse_browser_render_tree(
+            "<img id='plan' src='plan.gif' width='200' height='100' usemap='#zones'>\
+             <map name='zones'><area id='north' shape='rect' coords='0,0,80,50' \
+             href='north.html' alt='North' target='preview'></map>",
+        )
+        .unwrap();
+        let layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
+        let image = find_by_id(&layout, "plan").expect("mapped image should remain visible");
+        let ExtValue::Map(map) = image.ext.get("imageMap").expect("image-map metadata") else {
+            panic!("image-map metadata should be a map");
+        };
+        assert_eq!(map.get("name"), Some(&ExtValue::Str("zones".into())));
+        assert_eq!(map.get("coordinateWidth"), Some(&ExtValue::Float(200.0)));
+        let Some(ExtValue::List(areas)) = map.get("areas") else {
+            panic!("mapped areas should be ordered");
+        };
+        let ExtValue::Map(area) = &areas[0] else {
+            panic!("area metadata should be a map");
+        };
+        assert_eq!(
+            area.get("key"),
+            Some(&ExtValue::Str(
+                "image-map:id:plan:map:zones:id:north".into()
+            ))
+        );
+        assert_eq!(area.get("href"), Some(&ExtValue::Str("north.html".into())));
     }
 }

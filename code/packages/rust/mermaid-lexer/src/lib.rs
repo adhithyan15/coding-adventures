@@ -529,6 +529,73 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_block_arrow_nodes_through_the_pinned_grammar() {
+        let tokens = try_tokenize_mermaid_block(
+            "block\nflow<[\"Flow\"]>(up, down)\n",
+        )
+        .unwrap();
+        assert!(tokens.iter().any(|token| {
+            token.type_name.as_deref() == Some("ARROW_NODE_LINE")
+                && token.value.trim() == "flow<[\"Flow\"]>(up, down)"
+        }));
+    }
+
+    #[test]
+    fn tokenizes_block_styled_connections_through_the_pinned_grammar() {
+        let tokens = try_tokenize_mermaid_block("block\nA -.-> B\nB ==> C\n").unwrap();
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("DOTTED_CONNECTION_LINE")));
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("THICK_CONNECTION_LINE")));
+    }
+
+    #[test]
+    fn tokenizes_block_bidirectional_connections_through_the_pinned_grammar() {
+        let tokens = try_tokenize_mermaid_block("block\nA <--> B\nB <-.-> C\nC <==> D\n").unwrap();
+        assert_eq!(tokens.iter().filter(|token| {
+            token.type_name.as_deref() == Some("BIDIRECTIONAL_CONNECTION_LINE")
+        }).count(), 3);
+    }
+
+    #[test]
+    fn tokenizes_block_circle_and_cross_connections_through_the_pinned_grammar() {
+        let tokens = try_tokenize_mermaid_block("block\nA o--x |handoff| B\nB x==o C\nC o-.-o D\nD --x A\n").unwrap();
+        assert_eq!(tokens.iter().filter(|token| {
+            token.type_name.as_deref() == Some("MARKED_CONNECTION_LINE")
+        }).count(), 4);
+    }
+
+    #[test]
+    fn tokenizes_compact_block_terminal_markers_through_the_pinned_grammar() {
+        let tokens = try_tokenize_mermaid_block(
+            "block\nsource-node--otarget-one\ntarget-one==xtarget-two\ntarget-two-.-otarget-three\n",
+        )
+        .unwrap();
+        assert_eq!(tokens.iter().filter(|token| {
+            token.type_name.as_deref() == Some("COMPACT_MARKED_CONNECTION_LINE")
+        }).count(), 3);
+    }
+
+    #[test]
+    fn tokenizes_inline_block_node_connections_through_the_pinned_grammar() {
+        let tokens = try_tokenize_mermaid_block(
+            "block\nid1[\"first\"] --> id2[\"second\"]\nstart(\"Start\")==>stop(\"Stop\")\n",
+        )
+        .unwrap();
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| {
+                    token.type_name.as_deref() == Some("INLINE_NODE_CONNECTION_LINE")
+                })
+                .count(),
+            2
+        );
+    }
+
+    #[test]
     fn tokenizes_packet_fields_as_complete_lines() {
         let tokens = try_tokenize_mermaid_packet(
             "packet-beta\n0-7: \"Header\"\n8-31: \"Payload\"\n",
