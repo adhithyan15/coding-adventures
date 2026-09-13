@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.329.0 — 2026-09-12 — ALGOL while-loop boolean recurrences
+
+The seven-backend ALGOL matrix now proves formatter-free output selected by
+the final boolean snapshot of a statically bounded integer-controlled `while`
+recurrence.
+
 ## 0.328.0 — 2026-09-13 — VM-040 COBOL BEAM UNSTRING/delimiter probe
 
 Reprioritized the post-STRING-SIZE/delimiter queue (remaining COBOL BEAM
