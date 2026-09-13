@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C84-words",
+    "language": "tamil",
+    "chapter": 84,
+    "sequence": 3480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3bc75c077a4dfc3"
+  },
+  "findings": []
+}
