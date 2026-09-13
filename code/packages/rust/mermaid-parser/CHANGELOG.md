@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.207.0
+
+- Parse bidirectional Block point-arrow connections while preserving their line styles.
+
 ## 0.206.0
 
 - Parse dotted and thick Block connections into typed grid-edge styles.

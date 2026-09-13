@@ -1,5 +1,9 @@
 # Changelog - diagram-layout-grid
 
+## 0.12.0
+
+- Preserve bidirectional Block edge semantics through deterministic grid layout.
+
 ## 0.11.0
 
 - Resolve dotted and thick Block connections into backend-neutral edge styles.

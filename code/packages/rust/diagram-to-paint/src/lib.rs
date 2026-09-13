@@ -1153,13 +1153,21 @@ fn line_path(points: &[Point], stroke: &str, stroke_width: f64) -> PaintPath {
 ///  left    |   right
 ///       base_mid
 /// ```
-fn arrowhead(edge: &LayoutedGraphEdge) -> Option<PaintPath> {
-    if edge.kind != EdgeKind::Directed || edge.points.len() < 2 {
+fn arrowhead(edge: &LayoutedGraphEdge, at_start: bool) -> Option<PaintPath> {
+    let marker_enabled = if at_start {
+        edge.kind == EdgeKind::Bidirectional
+    } else {
+        matches!(edge.kind, EdgeKind::Directed | EdgeKind::Bidirectional)
+    };
+    if !marker_enabled || edge.points.len() < 2 {
         return None;
     }
 
-    let end = &edge.points[edge.points.len() - 1];
-    let prev = &edge.points[edge.points.len() - 2];
+    let (end, prev) = if at_start {
+        (&edge.points[0], &edge.points[1])
+    } else {
+        (&edge.points[edge.points.len() - 1], &edge.points[edge.points.len() - 2])
+    };
 
     let dx = end.x - prev.x;
     let dy = end.y - prev.y;
@@ -1335,7 +1343,10 @@ where
             path.stroke_dash = Some(vec![4.0, 4.0]);
         }
         instructions.push(PaintInstruction::Path(path));
-        if let Some(tip) = arrowhead(edge) {
+        if let Some(tip) = arrowhead(edge, true) {
+            instructions.push(PaintInstruction::Path(tip));
+        }
+        if let Some(tip) = arrowhead(edge, false) {
             instructions.push(PaintInstruction::Path(tip));
         }
     }
@@ -5292,6 +5303,21 @@ mod tests {
             .count();
         // 1 edge polyline + 1 arrowhead
         assert_eq!(paths, 2);
+    }
+
+    #[test]
+    fn bidirectional_edge_produces_two_arrowhead_paths() {
+        let mut layout = simple_layout();
+        layout.edges[0].kind = EdgeKind::Bidirectional;
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+        let paths = scene.instructions.iter().filter(|instruction| {
+            matches!(instruction, PaintInstruction::Path(_))
+        }).count();
+        assert_eq!(paths, 3, "bidirectional edge: polyline plus two arrowheads");
     }
 
     #[test]
