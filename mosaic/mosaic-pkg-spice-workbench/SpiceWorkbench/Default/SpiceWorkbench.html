@@ -23,7 +23,9 @@
     </div>
     <div style="display: flex; flex-direction: column; gap: 6px">
       <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicLabel}}</span>
-      <span style="color: #0f172a; font-weight: bold">{{schematicTitle}}</span>
+      <span>{{schematicTitleLabel}}</span>
+      <!-- emit "onSchematicTitleChange" dropped: HTML is static -->
+      <input type="text" value="{{schematicTitle}}" data-disabled="{{schematicTitleDisabled}}" data-on-change="onSchematicTitleChange" style="color: #0f172a; font-weight: bold">
       <div style="display: flex; flex-direction: row; gap: 6px">
         <!-- emit "onOpenSchematic" dropped: HTML is static -->
         <button data-on-click="onOpenSchematic" style="background: #e0f2fe; color: #075985; border-width: 1px; border-color: #7dd3fc; border-radius: 3px; padding: 6px">{{openSchematicLabel}}</button>
@@ -102,6 +104,9 @@
       <div style="display: flex; flex-direction: column; gap: 4px">
         <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicPropertiesLabel}}</span>
         <span style="color: #0f172a">{{selectedSchematicKindLabel}}</span>
+        <span>{{schematicReferenceLabel}}</span>
+        <!-- emit "onSchematicReferenceChange" dropped: HTML is static -->
+        <input type="text" value="{{schematicReference}}" placeholder="{{schematicReferencePlaceholder}}" data-disabled="{{schematicReferenceDisabled}}" data-on-change="onSchematicReferenceChange">
         <span style="font-size: 12px; color: #475569">{{schematicValueLabel}}</span>
         <!-- emit "onSchematicValueChange" dropped: HTML is static -->
         <input type="text" value="{{schematicValue}}" placeholder="{{schematicValuePlaceholder}}" data-disabled="{{schematicValueDisabled}}" data-on-change="onSchematicValueChange" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px; font-family: monospace">

@@ -45,9 +45,15 @@ const fallbackProps = {
   "schematicLabel": "Sample SchematicLabel",
   "schematicPalette": [],
   "schematicPropertiesLabel": "Sample SchematicPropertiesLabel",
+  "schematicReference": "Sample SchematicReference",
+  "schematicReferenceDisabled": false,
+  "schematicReferenceLabel": "Sample SchematicReferenceLabel",
+  "schematicReferencePlaceholder": "Sample SchematicReferencePlaceholder",
   "schematicRows": [],
   "schematicTerminalPoints": [],
   "schematicTitle": "Sample SchematicTitle",
+  "schematicTitleDisabled": false,
+  "schematicTitleLabel": "Sample SchematicTitleLabel",
   "schematicValue": "Sample SchematicValue",
   "schematicValueDisabled": false,
   "schematicValueLabel": "Sample SchematicValueLabel",
@@ -118,6 +124,18 @@ const emitPayloads = {
     }
   ],
   "onSchematicAnalysisParameterTwoChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
+  "onSchematicReferenceChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
+  "onSchematicTitleChange": [
     {
       "name": "value",
       "type": "text"
