@@ -8,6 +8,26 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 COBOL BEAM regions and self-move (selected after #15099)
+
+Refreshed main to `e8b737045b` after #15099 merged. External PR #15103
+independently repeats the four base replacements already on main; it does
+not cover the six rows selected here. Preserve that owner's branch.
+Prioritize the remaining existing COBOL corpus gaps over new Twig/CLR host
+ABI design and full Oct/Nib machine semantics: five INSPECT region cases
+and the STRING self-move regression complete this declared corpus's BEAM
+column. No observed failing cell currently takes precedence.
+
+Contract: execute COBOL filtered indices 52–57 on real Erlang before
+promotion. Pin source identities and exact stdout for STRING self-move,
+BEFORE/AFTER tallying and replacing (including absent-delimiter asymmetry),
+and combined tally-then-replace with independent regions. This does not
+implement a single-phrase BEFORE/AFTER intersection (VM-058), nor establish
+full COBOL language support. Missing Erlang may skip; detected-runtime
+failure must fail. Promote only proven cells, run focused COBOL regression,
+fresh individual matrix cells, coverage consistency and Clippy. Specify any
+new backend defect before production edits.
+
 ## VM-040 remaining base INSPECT replacements (selected after #15033)
 
 PR #15033 merged as `8f1c60fc1b` with 16 successful and 31 skipped checks.
