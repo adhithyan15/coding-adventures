@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Own dialog and popover invoker commands, top-layer ordering, modal focus,
+  light-dismiss, Escape, accessibility actions, and reusable diagnostics in
+  the shared browser session.
+
 - Route details disclosure pointer, Enter/Space, accessibility, generated
   summary, and named-group behavior through retained shared page state.
 

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add document-ordered constrained focus traversal so modal surfaces can trap
+  focus without moving traversal policy into native hosts.
+
 - Derive effective disabledness through nested fieldsets while exempting only
   each disabled fieldset's first direct legend subtree.
 
