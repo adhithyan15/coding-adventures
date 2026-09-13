@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed — `HostScroll` honours its axis, and no longer scrolls both ways (UI61, #14854)
+
+`HostScroll` lowered to a bare `overflow: auto`, which scrolls **both** axes.
+Against UI61's default of vertical that is one scrollbar more than anybody
+asked for, so this is a deliberate behaviour change, not a refactor: vertical
+emits `overflow-y: auto; overflow-x: hidden`, horizontal the mirror, and only
+`axis: both` keeps the old shorthand.
+
 ### Fixed — an authored `Col (width:)` reached nothing (#14846)
 
 html was the **only web backend** dropping it. For the same declaration react

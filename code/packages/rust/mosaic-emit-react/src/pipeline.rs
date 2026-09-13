@@ -90,7 +90,7 @@
 use std::collections::HashMap;
 use std::fmt::Write as _;
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
@@ -1233,7 +1233,7 @@ fn emit_jsx_tree(
 
     // Decompose the primitive into its element name, built-in style (e.g.
     // flexbox for Row/Column), close tag, and self-closing flag.
-    let mut primitive = primitive_to_jsx_tag(&node.tag)?;
+    let mut primitive = primitive_to_jsx_tag(node)?;
     if node.tag == "Text" {
         primitive.extra_attrs = text_accessibility_attrs(node)?;
         if find_keyword_prop(node, "a11y-role") == Some("heading") {
@@ -5291,7 +5291,8 @@ fn container_layout_style(node: &LayoutNode) -> &'static str {
     }
 }
 
-fn primitive_to_jsx_tag(tag: &str) -> Result<JsxTag, PipelineEmitError> {
+fn primitive_to_jsx_tag(node: &LayoutNode) -> Result<JsxTag, PipelineEmitError> {
+    let tag = node.tag.as_str();
     let (tag_name, builtin_style, extra_attrs, close, self_close) = match tag {
         "Box" => ("<div", "", "", "</div>", false),
         "Row" => (
@@ -5318,7 +5319,21 @@ fn primitive_to_jsx_tag(tag: &str) -> Result<JsxTag, PipelineEmitError> {
         // kernel names lands, the `Scroll` arm becomes a deprecation alias
         // (tracked under U29-X1; do not delete in this PR — existing demos
         // and tests still author `Scroll`).
-        "HostScroll" => ("<div", "overflow: \"auto\"", "", "</div>", false),
+        // UI61 -- the axis decides which overflow shorthand is honest.
+        // `overflow: auto` scrolls BOTH axes, which is what this arm used
+        // to emit unconditionally; on a default-vertical HostScroll that
+        // is one scrollbar more than the author asked for.
+        "HostScroll" => (
+            "<div",
+            match ScrollAxis::of(node) {
+                ScrollAxis::Vertical => "overflowY: \"auto\", overflowX: \"hidden\"",
+                ScrollAxis::Horizontal => "overflowX: \"auto\", overflowY: \"hidden\"",
+                ScrollAxis::Both => "overflow: \"auto\"",
+            },
+            "",
+            "</div>",
+            false,
+        ),
         "Divider" => ("<hr", "", "", "", true),
         "Stack" => ("<div", "position: \"relative\"", "", "</div>", false),
         "Icon" => ("<span", "", " className=\"icon\"", "</span>", false),
@@ -6846,6 +6861,48 @@ mod tests {
         );
     }
 
+    /// UI61 — each axis scrolls exactly what it names, asserted as a
+    /// set so that an emitter which merely ADDED a horizontal scrollbar
+    /// to the existing vertical one would fail on the negative half.
+    #[test]
+    fn ui61_each_axis_emits_only_the_overflow_it_names() {
+        for (keyword, expected, forbidden) in [
+            (
+                "vertical",
+                "overflowY: \"auto\", overflowX: \"hidden\"",
+                "overflowX: \"auto\"",
+            ),
+            (
+                "horizontal",
+                "overflowX: \"auto\", overflowY: \"hidden\"",
+                "overflowY: \"auto\"",
+            ),
+            ("both", "overflow: \"auto\"", "hidden"),
+        ] {
+            let model = component("X", vec![], vec![]);
+            let layout = LayoutDef {
+                component_name: "X".into(),
+                root: LayoutNode {
+                    tag: "HostScroll".into(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "axis".into(),
+                        value: LayoutPropValue::Keyword(keyword.into()),
+                    }],
+                    children: vec![],
+                },
+            };
+            let out = from_pipeline(&model, &layout, &empty_style("X"))
+                .unwrap()
+                .output;
+            assert!(out.contains(expected), "axis: {keyword} — got:\n{out}");
+            assert!(
+                !out.contains(forbidden),
+                "axis: {keyword} must not also emit `{forbidden}` — got:\n{out}"
+            );
+        }
+    }
+
     #[test]
     fn authored_overflow_uses_a_type_safe_override() {
         for overflow in ["auto", "hidden"] {
@@ -6856,7 +6913,15 @@ mod tests {
             };
             let style = style_with_part("X", "frame", &[("overflow", overflow)]);
             let out = from_pipeline(&model, &layout, &style).unwrap().output;
-            assert!(out.contains(&format!("...{{ overflow: \"auto\" }}, ...{{ overflow: \"{overflow}\" }}")), "{out}");
+            // The built-in fragment is UI61's axis pair now, but the point
+            // of this test is unchanged: the authored `overflow` follows
+            // the built-in one, so it wins the spread merge.
+            assert!(
+                out.contains(&format!(
+                    "...{{ overflowY: \"auto\", overflowX: \"hidden\" }}, ...{{ overflow: \"{overflow}\" }}"
+                )),
+                "{out}"
+            );
         }
     }
 
@@ -8347,10 +8412,15 @@ mod tests {
         };
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &result.output;
-        // The wrapper carries the overflow: "auto" style.
+        // UI61 — the wrapper carries the DEFAULT vertical axis. It used to
+        // carry a bare `overflow: "auto"`, which also scrolled sideways.
         assert!(
-            out.contains("overflow: \"auto\""),
-            "expected overflow: \"auto\" on HostScroll wrapper, got:\n{out}"
+            out.contains("overflowY: \"auto\", overflowX: \"hidden\""),
+            "expected the default vertical axis on the HostScroll wrapper, got:\n{out}"
+        );
+        assert!(
+            !out.contains("overflow: \"auto\""),
+            "a default HostScroll must not scroll both axes, got:\n{out}"
         );
         // The child Text node renders inside the wrapper.
         assert!(

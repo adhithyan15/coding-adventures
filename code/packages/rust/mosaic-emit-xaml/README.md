@@ -35,7 +35,7 @@ mosstyle base styling:
 | `HostSlider` | component-scoped native `<Slider>` with change and pointer/key/blur commit events |
 | `HostLink` | `<HyperlinkButton>` or routed `<Button>` |
 | `HostNumberInput` | `<NumberBox>` |
-| `HostScroll` | `<ScrollViewer>` |
+| `HostScroll` | `<ScrollViewer>`, scrollbar visibilities from the kernel `axis` prop (UI61) |
 | `HostTable` | component-scoped WinUI table controls with native UIA Table/Grid peers for the canonical dynamic shape; structural `<Grid>` fallback otherwise |
 | `HostDraggable` | component-scoped `<ContentControl>` using WinUI `CanDrag`, pointer/touch drag events, keyboard operation, and UIA announcements |
 | `HostDropTarget` | component-scoped `<ContentControl>` using WinUI drop events, authored acceptance filtering, keyboard traversal, and UIA announcements |

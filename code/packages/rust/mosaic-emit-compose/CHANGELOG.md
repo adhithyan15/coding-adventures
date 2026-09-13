@@ -5,6 +5,26 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — `HostScroll` honours its axis; the crash it was designed around is not real (UI61, #14854)
+
+Compose composes both axes by plain modifier chaining, so `both` needs no
+nesting — two modifiers and two scroll states. `horizontalScroll` is imported
+only where it is used; a missing Kotlin import is an error and an unused one
+only a warning, so `verticalScroll` stays unconditional (the #14810 posture).
+`vertical` keeps the unchanged chain, so all 179 existing tests passed through
+untouched.
+
+**UI61 §5 hazard 1 was wrong, and this is measured rather than argued.** The
+spec claimed `fillMaxWidth` inside a `horizontalScroll` throws — a horizontal
+scroll measures against an infinite max width — and inferred a subtree-wide
+suppression of the emitter's default `fillMaxWidth` across its eight emission
+sites. Rendered on the pinned `org.jetbrains.compose` 1.6.11 it does not throw;
+Compose falls back to the minimum width when the constraint is unbounded. The
+probe was falsified before being believed: a deliberate `error(..)` planted in
+the same composable made the harness report `failures="1"`, so the clean run is
+a real absence of a throw and not a swallowed exception. No suppression was
+written and none is needed.
+
 ### Added — Compose routes the table wheel; VisiCalc is native-complete (UI73, #14843)
 
 VisiCalc's **last** Compose degradation. `--profile native-complete` now builds

@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Changed — `HostScroll` honours its axis, and no longer scrolls both ways (UI61, #14854)
+
+Same deliberate narrowing as the html backend: the bare `overflow: "auto"`
+became `overflowY`/`overflowX`, with `axis: both` retaining the shorthand.
+
+`authored_overflow_uses_a_type_safe_override` keeps its subject — an authored
+`overflow` follows the built-in fragment and so wins the spread merge — and
+only the built-in fragment it quotes has moved.
+
 ### Added — `HostInput.disabled` (#14786)
 
 `HostInput` had `read-only` but no way to say *unavailable*, so a control the

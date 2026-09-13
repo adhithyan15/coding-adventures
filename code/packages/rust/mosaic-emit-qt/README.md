@@ -345,7 +345,10 @@ Each deferred item is intentionally a focused, additive PR.
   `Keys.onEscapePressed`.
 - `HostButton` lowers to `Button` with `text` / `enabled: !disabled` /
   `onClicked`.
-- `HostScroll` lowers to `ScrollView { ... children ... }`.
+- `HostScroll` lowers to `ScrollView { ... children ... }`. UI61's `axis`
+  pins the cross-axis content extent as well as hiding that scrollbar --
+  `ScrollBar.policy: AlwaysOff` removes only the bar, and leaves the content
+  flickable on the axis it was meant to disable.
 - The versionless `QtQuick.Controls` import is added only when needed.
 - `If` and `For` lower to conditional `Loader`s and model-backed delegates.
 - Canonical dynamic `HostTable` lowers to `HorizontalHeaderView` + `TableView`

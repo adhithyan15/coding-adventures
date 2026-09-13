@@ -399,6 +399,114 @@ impl LayoutNode {
     }
 }
 
+/// UI61 -- the axis a `HostScroll` viewport scrolls.
+///
+/// `HostScroll` shipped with no axis at all, and the eight backends
+/// resolved that silence differently: html/react/webcomponent scrolled
+/// both axes; Compose, SwiftUI, Flutter and XAML scrolled only
+/// vertically; Qt inherited whatever QML's `ScrollView` default is.
+/// None of them was wrong, because the kernel had not said anything for
+/// them to be wrong about.
+///
+/// The default is [`ScrollAxis::Vertical`]. Four backends already behave
+/// that way, and XAML does it by writing
+/// `HorizontalScrollBarVisibility="Disabled"` outright rather than by
+/// inheriting a toolkit default -- a decision someone already took, in
+/// one emitter, and nowhere else. A default of `Both` would add a
+/// horizontal scrollbar to every `HostScroll` already shipped on those
+/// four, for no reason the author wrote down.
+///
+/// ```
+/// use moslayout_compiler::{LayoutNode, LayoutProp, LayoutPropValue, ScrollAxis};
+///
+/// let plain = LayoutNode {
+///     tag: "HostScroll".to_string(),
+///     part_name: None,
+///     props: vec![],
+///     children: vec![],
+/// };
+/// // Silence still means vertical, so existing layouts do not move.
+/// assert_eq!(ScrollAxis::of(&plain), ScrollAxis::Vertical);
+/// assert!(plain_scrolls_down(&plain));
+/// # fn plain_scrolls_down(n: &LayoutNode) -> bool {
+/// #     ScrollAxis::of(n).scrolls_vertically()
+/// # }
+///
+/// let sideways = LayoutNode {
+///     tag: "HostScroll".to_string(),
+///     part_name: None,
+///     props: vec![LayoutProp {
+///         name: "axis".to_string(),
+///         value: LayoutPropValue::Keyword("horizontal".to_string()),
+///     }],
+///     children: vec![],
+/// };
+/// assert_eq!(ScrollAxis::of(&sideways), ScrollAxis::Horizontal);
+/// // "horizontal" means horizontal ONLY -- not "horizontal as well".
+/// assert!(!ScrollAxis::of(&sideways).scrolls_vertically());
+/// ```
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ScrollAxis {
+    /// Scrolls up and down only. The default.
+    Vertical,
+    /// Scrolls left and right only -- **not** both. A viewport that
+    /// scrolls an axis the author did not ask for is as much a defect as
+    /// one that refuses the axis they did.
+    Horizontal,
+    /// Scrolls both axes.
+    Both,
+}
+
+impl ScrollAxis {
+    /// The `.mll` property name carrying the axis.
+    pub const PROP: &'static str = "axis";
+
+    /// Every spelling the kernel accepts, in the order they are
+    /// suggested back to the author on a typo.
+    pub const KEYWORDS: [&'static str; 3] = ["vertical", "horizontal", "both"];
+
+    /// Parses one authored keyword. `None` is an unknown spelling, which
+    /// the layout compiler rejects rather than rounding to a default --
+    /// silently treating `axis: verticle` as vertical would produce a
+    /// layout that looks correct and ignores what was written.
+    pub fn parse(raw: &str) -> Option<Self> {
+        match raw {
+            "vertical" => Some(Self::Vertical),
+            "horizontal" => Some(Self::Horizontal),
+            "both" => Some(Self::Both),
+            _ => None,
+        }
+    }
+
+    /// Reads the axis off a node, defaulting to [`ScrollAxis::Vertical`].
+    ///
+    /// Infallible on purpose. An unknown keyword is rejected once, in
+    /// [`validate`](crate::validate), before any emitter runs -- so the
+    /// eight backends can read the axis without each re-deriving what
+    /// counts as valid, and without eight copies of the same error.
+    pub fn of(node: &LayoutNode) -> Self {
+        node.props
+            .iter()
+            .find(|p| p.name == Self::PROP)
+            .and_then(|p| match &p.value {
+                LayoutPropValue::Keyword(k) => Self::parse(k),
+                LayoutPropValue::String(k) => Self::parse(k),
+                _ => None,
+            })
+            .unwrap_or(Self::Vertical)
+    }
+
+    /// Whether this axis scrolls up and down.
+    pub fn scrolls_vertically(self) -> bool {
+        matches!(self, Self::Vertical | Self::Both)
+    }
+
+    /// Whether this axis scrolls left and right.
+    pub fn scrolls_horizontally(self) -> bool {
+        matches!(self, Self::Horizontal | Self::Both)
+    }
+}
+
 /// A structural property on a layout node.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LayoutProp {
@@ -680,6 +788,30 @@ fn validate_node(
     part_names: &mut HashSet<String>,
     errors: &mut Vec<CompileError>,
 ) {
+    // UI61 -- reject an unknown `axis` here, once, rather than in each of
+    // the eight emitters. `ScrollAxis::of` is infallible precisely
+    // because this ran first; rounding `axis: verticle` down to the
+    // default instead would emit a plausible layout that ignores what
+    // the author wrote.
+    if node.tag == "HostScroll" {
+        for prop in node.props.iter().filter(|p| p.name == ScrollAxis::PROP) {
+            let raw = match &prop.value {
+                LayoutPropValue::Keyword(k) | LayoutPropValue::String(k) => Some(k.as_str()),
+                _ => None,
+            };
+            let ok = raw.map(|r| ScrollAxis::parse(r).is_some()).unwrap_or(false);
+            if !ok {
+                errors.push(CompileError {
+                    kind: ErrorKind::InvalidPrimitiveUsage,
+                    message: format!(
+                        "HostScroll `axis` must be one of {} — got `{}`",
+                        ScrollAxis::KEYWORDS.join(", "),
+                        raw.unwrap_or("a non-keyword value"),
+                    ),
+                });
+            }
+        }
+    }
     if let Some(slot_name) = node.child_slot_name() {
         *child_mount_count += 1;
         if *child_mount_count > 1 {
@@ -1885,6 +2017,163 @@ fn parse_interface_sets(
 
 #[cfg(test)]
 mod tests {
+
+    // ---- UI61: a scroll viewport has an axis -------------------------
+
+    fn scroll_node(axis: Option<LayoutPropValue>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostScroll".to_string(),
+            part_name: None,
+            props: axis
+                .map(|value| {
+                    vec![LayoutProp {
+                        name: "axis".to_string(),
+                        value,
+                    }]
+                })
+                .unwrap_or_default(),
+            children: Vec::new(),
+        }
+    }
+
+    /// The default must stay `vertical`. Asserted directly rather than
+    /// through an emitter, because this is the promise that keeps every
+    /// already-shipped `HostScroll` rendering the way it does today.
+    #[test]
+    fn ui61_an_unannotated_scroll_is_vertical() {
+        let axis = ScrollAxis::of(&scroll_node(None));
+        assert_eq!(axis, ScrollAxis::Vertical);
+        assert!(axis.scrolls_vertically());
+        assert!(
+            !axis.scrolls_horizontally(),
+            "defaulting to `both` would add a horizontal scrollbar to every shipped HostScroll"
+        );
+    }
+
+    /// Both directions of the axis pair. `horizontal` means horizontal
+    /// ONLY -- the negative half is the point, since an emitter that
+    /// simply added a horizontal scroll on top of its existing vertical
+    /// one would satisfy the positive half alone.
+    #[test]
+    fn ui61_each_axis_scrolls_exactly_what_it_names() {
+        let cases = [
+            ("vertical", true, false),
+            ("horizontal", false, true),
+            ("both", true, true),
+        ];
+        for (keyword, vertical, horizontal) in cases {
+            let axis = ScrollAxis::of(&scroll_node(Some(LayoutPropValue::Keyword(
+                keyword.to_string(),
+            ))));
+            assert_eq!(
+                axis.scrolls_vertically(),
+                vertical,
+                "`axis: {keyword}` vertical"
+            );
+            assert_eq!(
+                axis.scrolls_horizontally(),
+                horizontal,
+                "`axis: {keyword}` horizontal"
+            );
+        }
+    }
+
+    /// An unknown spelling is rejected, not rounded to the default.
+    /// Paired with the accepting case below so a validator that never
+    /// fires -- or one that rejects everything -- fails here.
+    #[test]
+    fn ui61_an_unknown_axis_is_rejected_and_a_known_one_is_not() {
+        let mut parts: Vec<PartEntry> = Vec::new();
+        let mut part_names: HashSet<String> = HashSet::new();
+        let mut mounts = 0;
+        let bindings: HashSet<String> = HashSet::new();
+
+        let mut check = |node: &LayoutNode| {
+            let mut errs = Vec::new();
+            validate_node(
+                node,
+                &HashSet::new(),
+                &HashSet::new(),
+                &HashMap::new(),
+                false,
+                &bindings,
+                &mut mounts,
+                &mut parts,
+                &mut part_names,
+                &mut errs,
+            );
+            errs
+        };
+
+        let bad = check(&scroll_node(Some(LayoutPropValue::Keyword(
+            "verticle".to_string(),
+        ))));
+        assert_eq!(bad.len(), 1, "a typo'd axis must be rejected: {bad:?}");
+        assert_eq!(bad[0].kind, ErrorKind::InvalidPrimitiveUsage);
+        assert!(
+            bad[0].message.contains("verticle"),
+            "the error must quote what was written, got: {}",
+            bad[0].message
+        );
+
+        for good in ScrollAxis::KEYWORDS {
+            let ok = check(&scroll_node(Some(LayoutPropValue::Keyword(
+                good.to_string(),
+            ))));
+            assert!(ok.is_empty(), "`axis: {good}` must be accepted, got {ok:?}");
+        }
+        assert!(check(&scroll_node(None)).is_empty(), "silence is legal");
+    }
+
+    /// A non-keyword value (a number, a slot reference) is a bad axis
+    /// too -- it must not slip through the `Keyword`-shaped match into
+    /// the silent default.
+    #[test]
+    fn ui61_a_non_keyword_axis_is_rejected() {
+        let mut parts: Vec<PartEntry> = Vec::new();
+        let mut part_names: HashSet<String> = HashSet::new();
+        let mut mounts = 0;
+        let mut errs = Vec::new();
+        validate_node(
+            &scroll_node(Some(LayoutPropValue::Number(2.0))),
+            &HashSet::new(),
+            &HashSet::new(),
+            &HashMap::new(),
+            false,
+            &HashSet::new(),
+            &mut mounts,
+            &mut parts,
+            &mut part_names,
+            &mut errs,
+        );
+        assert_eq!(errs.len(), 1, "a numeric axis must be rejected: {errs:?}");
+    }
+
+    /// The axis prop is only meaningful on `HostScroll`; the validator
+    /// must not start rejecting an unrelated `axis` elsewhere.
+    #[test]
+    fn ui61_axis_on_another_tag_is_not_the_scroll_axis() {
+        let mut parts: Vec<PartEntry> = Vec::new();
+        let mut part_names: HashSet<String> = HashSet::new();
+        let mut mounts = 0;
+        let mut errs = Vec::new();
+        let mut node = scroll_node(Some(LayoutPropValue::Keyword("sideways".to_string())));
+        node.tag = "Column".to_string();
+        validate_node(
+            &node,
+            &HashSet::new(),
+            &HashSet::new(),
+            &HashMap::new(),
+            false,
+            &HashSet::new(),
+            &mut mounts,
+            &mut parts,
+            &mut part_names,
+            &mut errs,
+        );
+        assert!(errs.is_empty(), "UI61 must not police a Column's props: {errs:?}");
+    }
+
     use super::*;
 
     // ── Tokenizer ────────────────────────────────────────────────────────────

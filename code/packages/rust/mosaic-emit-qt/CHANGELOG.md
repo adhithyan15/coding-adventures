@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostScroll` honours its axis (UI61, #14854)
+
+The cross-axis content extent is pinned **alongside** the scrollbar policy,
+because hiding a bar is not the same as not scrolling: `ScrollBar.policy:
+AlwaysOff` removes only the bar and leaves the content flickable on that axis.
+`contentWidth: availableWidth` is what actually leaves nothing to scroll.
+
+Worth recording: all 194 existing Qt tests passed straight through this change,
+because none of them asserted the `ScrollView` body at all. The new test
+confirms the lines genuinely reach the QML rather than assuming they do.
+
 ### Fixed - offscreen system-font resolution
 
 Generated shells now replace Qt's unresolved offscreen `Sans Serif` placeholder

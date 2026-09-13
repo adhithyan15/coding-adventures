@@ -108,7 +108,7 @@ use std::cell::Cell;
 use std::collections::HashMap;
 use std::fmt::Write as _;
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
@@ -1427,7 +1427,8 @@ struct HtmlTag {
 ///
 /// Unknown tags return `PipelineEmitError::UnknownPrimitive` — silently
 /// rendering `<div>` for an unknown tag would be worse than a clear error.
-fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
+fn primitive_to_html_tag(node: &LayoutNode) -> Result<HtmlTag, PipelineEmitError> {
+    let tag = node.tag.as_str();
     Ok(match tag {
         "Box" => HtmlTag {
             tag_name: "div",
@@ -1492,7 +1493,15 @@ fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
         // scrollbars; the React backend ships the same default.
         "HostScroll" => HtmlTag {
             tag_name: "div",
-            builtin_style: "overflow: auto",
+        // UI61 -- the axis decides which overflow shorthand is honest.
+        // `overflow: auto` scrolls BOTH axes, which is what this arm used
+        // to emit unconditionally; on a default-vertical HostScroll that
+        // is one scrollbar more than the author asked for.
+            builtin_style: match ScrollAxis::of(node) {
+                ScrollAxis::Vertical => "overflow-y: auto; overflow-x: hidden",
+                ScrollAxis::Horizontal => "overflow-x: auto; overflow-y: hidden",
+                ScrollAxis::Both => "overflow: auto",
+            },
             extra_attrs: "",
             void: false,
         },
@@ -1707,7 +1716,7 @@ fn emit_html_tree(
         builtin_style,
         extra_attrs,
         void,
-    } = primitive_to_html_tag(&node.tag)?;
+    } = primitive_to_html_tag(node)?;
 
     // Merge the built-in style with the author-declared part style. The
     // author's declarations come second so they override on collision.
@@ -5136,16 +5145,47 @@ mod tests {
 
     #[test]
     fn host_scroll_lowers_to_overflow_auto_div() {
-        let out = from_pipeline(
-            &component("S", vec![]),
-            &layout("S", node("HostScroll")),
-            &empty_style("S"),
-        )
-        .unwrap()
-        .output;
+        // UI61 — a `HostScroll` with no `axis` scrolls vertically, so the
+        // bare `overflow: auto` this once emitted is now wrong: it also
+        // scrolled sideways, which no author had asked for.
+        let mut scroll = node("HostScroll");
+        let render = |root: LayoutNode| {
+            from_pipeline(&component("S", vec![]), &layout("S", root), &empty_style("S"))
+                .unwrap()
+                .output
+        };
+
+        let out = render(scroll.clone());
+        assert!(
+            out.contains("style=\"overflow-y: auto; overflow-x: hidden\""),
+            "the default axis is vertical, got:\n{out}"
+        );
+        assert!(
+            !out.contains("style=\"overflow: auto\""),
+            "a default HostScroll must not scroll both axes, got:\n{out}"
+        );
+
+        // Both directions of the pair. `horizontal` means horizontal
+        // ONLY — asserting the positive alone would pass on an emitter
+        // that simply added a second scrollbar.
+        scroll.props = vec![LayoutProp {
+            name: "axis".to_string(),
+            value: LayoutPropValue::Keyword("horizontal".to_string()),
+        }];
+        let out = render(scroll.clone());
+        assert!(
+            out.contains("style=\"overflow-x: auto; overflow-y: hidden\""),
+            "axis: horizontal, got:\n{out}"
+        );
+
+        scroll.props = vec![LayoutProp {
+            name: "axis".to_string(),
+            value: LayoutPropValue::Keyword("both".to_string()),
+        }];
+        let out = render(scroll);
         assert!(
             out.contains("style=\"overflow: auto\""),
-            "expected scroll overflow:auto, got:\n{out}"
+            "axis: both is the only one that scrolls both ways, got:\n{out}"
         );
     }
 

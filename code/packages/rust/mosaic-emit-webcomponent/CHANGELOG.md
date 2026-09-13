@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Changed — `HostScroll` honours its axis, and no longer scrolls both ways (UI61, #14854)
+
+Same deliberate narrowing as the html backend.
+
 ### Fixed — a doubled separator in merged inline styles (#14826)
 
 Every styled `Row` and `Column` emitted `flex-direction: row;; gap: 8px`.

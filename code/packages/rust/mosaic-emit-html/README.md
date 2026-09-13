@@ -134,7 +134,7 @@ static snapshot.
 | HostInput (UI29)     | `<input type="text" value="{{value}}">`               |
 | HostButton (UI29)    | `<button>{{label}}</button>`                          |
 | HostSlider (UI29)    | `<input type="range" value="{{value}}">`            |
-| HostScroll (UI29)    | `<div style="overflow:auto">`                         |
+| HostScroll (UI29)    | `<div style="overflow-y:auto; overflow-x:hidden">` — the axis (UI61) |
 | HostTable (UI29)     | `<table>` with `<colgroup>`/`<thead>`/`<tbody>`/`<tfoot>` |
 | If / Else (UI29)     | `<!-- mosaic-if when="..." -->` comment markers       |
 | For (UI29)           | `<!-- mosaic-for each="..." as="..." -->` comment markers |

@@ -3,7 +3,7 @@
 use std::collections::{BTreeSet, HashMap, HashSet};
 use std::fmt::Write;
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
@@ -258,6 +258,15 @@ pub fn from_pipeline(
     if uses_scroll {
         writeln!(out, "import androidx.compose.foundation.rememberScrollState").unwrap();
         writeln!(out, "import androidx.compose.foundation.verticalScroll").unwrap();
+        // UI61 -- only when some `HostScroll` actually scrolls sideways.
+        // A missing Kotlin import is an error and an unused one is a
+        // warning, so the asymmetric-looking treatment here is
+        // deliberate: `verticalScroll` stays unconditional under
+        // `uses_scroll` (the same posture as #14810), while the
+        // horizontal one is added only where it is used.
+        if layout_scrolls_horizontally(&layout.root) {
+            writeln!(out, "import androidx.compose.foundation.horizontalScroll").unwrap();
+        }
     }
     writeln!(
         out,
@@ -1847,8 +1856,33 @@ fn host_scroll_modifier_prefix(node: &LayoutNode, chain_indent: usize) -> Option
         // A scroll region fills the space it is given. That is what makes it a
         // viewport rather than a tall column that happens to have a scroll
         // modifier attached.
-        format!("\n{cpad}.fillMaxSize()\n{cpad}.verticalScroll(rememberScrollState())")
+        // UI61 -- the axis. `.fillMaxSize()` above bounds the viewport on
+        // BOTH axes regardless, because the reasoning above is about
+        // being a viewport at all, not about which way it scrolls.
+        //
+        // Compose is the one backend where both axes compose as plain
+        // modifier chaining, so `both` needs no nesting and no second
+        // widget -- just two scroll modifiers and two scroll states.
+        let axis = ScrollAxis::of(node);
+        let mut chain = format!("\n{cpad}.fillMaxSize()");
+        if axis.scrolls_vertically() {
+            chain.push_str(&format!("\n{cpad}.verticalScroll(rememberScrollState())"));
+        }
+        if axis.scrolls_horizontally() {
+            chain.push_str(&format!("\n{cpad}.horizontalScroll(rememberScrollState())"));
+        }
+        chain
     })
+}
+
+/// UI61 -- does any `HostScroll` in this tree scroll horizontally?
+///
+/// Drives the `horizontalScroll` import. Walks the whole tree rather
+/// than looking at the root, because a scroll viewport is usually nested
+/// somewhere inside the layout, not at the top of it.
+fn layout_scrolls_horizontally(node: &LayoutNode) -> bool {
+    (node.tag == "HostScroll" && ScrollAxis::of(node).scrolls_horizontally())
+        || node.children.iter().any(layout_scrolls_horizontally)
 }
 
 fn is_splittable_container(node: &LayoutNode) -> bool {
@@ -11609,6 +11643,83 @@ mod tests {
 
 
     // ---- HostScroll (#14732) -----------------------------------------
+
+    /// UI61 — the axis reaches the modifier chain, and the
+    /// `horizontalScroll` import appears only where it is used.
+    ///
+    /// The negative halves matter more than the positives here: Compose
+    /// composes both axes by plain modifier chaining, so an emitter that
+    /// simply appended `.horizontalScroll(..)` to the existing vertical
+    /// chain would satisfy every positive assertion while turning
+    /// `axis: horizontal` into `axis: both`.
+    #[test]
+    fn ui61_each_axis_chains_only_the_scroll_modifiers_it_names() {
+        let render = |axis: Option<&str>| {
+            let m = component("S", vec![slot("label", SlotType::Text, true)], vec![]);
+            let props = axis
+                .map(|a| {
+                    vec![LayoutProp {
+                        name: "axis".to_string(),
+                        value: LayoutPropValue::Keyword(a.to_string()),
+                    }]
+                })
+                .unwrap_or_default();
+            let l = LayoutDef {
+                component_name: "S".to_string(),
+                root: LayoutNode {
+                    tag: "HostScroll".to_string(),
+                    part_name: None,
+                    props,
+                    children: vec![LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::SlotRef("label".to_string()),
+                        }],
+                        children: Vec::new(),
+                    }],
+                },
+            };
+            from_pipeline(&m, &l, &empty_style("S")).unwrap().output
+        };
+
+        // Default and explicit `vertical` are the same file.
+        let vertical = render(None);
+        assert_eq!(
+            vertical,
+            render(Some("vertical")),
+            "an explicit `axis: vertical` must emit exactly the default"
+        );
+        assert!(vertical.contains(".verticalScroll(rememberScrollState())"));
+        assert!(
+            !vertical.contains("horizontalScroll"),
+            "the vertical default must not scroll sideways, and must not import it, got:\n{vertical}"
+        );
+
+        let horizontal = render(Some("horizontal"));
+        assert!(horizontal.contains(".horizontalScroll(rememberScrollState())"));
+        assert!(
+            horizontal.contains("import androidx.compose.foundation.horizontalScroll"),
+            "a missing Kotlin import is a compile error, got:\n{horizontal}"
+        );
+        assert!(
+            !horizontal.contains(".verticalScroll("),
+            "`horizontal` means horizontal ONLY, got:\n{horizontal}"
+        );
+
+        let both = render(Some("both"));
+        assert!(
+            both.contains(".verticalScroll(rememberScrollState())")
+                && both.contains(".horizontalScroll(rememberScrollState())"),
+            "got:\n{both}"
+        );
+        // Every axis is a bounded viewport; that reasoning is about being
+        // a viewport at all, not about which way it scrolls (#14798).
+        for out in [&vertical, &horizontal, &both] {
+            assert!(out.contains(".fillMaxSize()"), "got:\n{out}");
+        }
+    }
 
     fn scroll_kt(part_props: Vec<(&str, &str)>) -> String {
         let m = component("S", vec![slot("label", SlotType::Text, true)], vec![]);

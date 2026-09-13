@@ -100,7 +100,7 @@ use std::rc::Rc;
 
 use std::collections::{HashMap, HashSet};
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
@@ -2553,7 +2553,7 @@ fn emit_qml_tree(
         builtin_lines,
         is_text,
         is_image,
-    } = primitive_to_qml(&node.tag)?;
+    } = primitive_to_qml(node)?;
     if let Some(styled_container) =
         emit_styled_layout_container_qml(node, depth, ctx, element_name)?
     {
@@ -2791,7 +2791,8 @@ struct QmlElement {
 /// See the primitive lowering table at the top of this module for the
 /// full mapping. Unknown primitives are rejected — letting them through
 /// as a default `Item { }` would silently lose layout semantics.
-fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
+fn primitive_to_qml(node: &LayoutNode) -> Result<QmlElement, PipelineEmitError> {
+    let tag = node.tag.as_str();
     Ok(match tag {
         "Box" => QmlElement {
             element_name: "Item",
@@ -2874,7 +2875,23 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
         // the top of the file (see `tree_needs_controls_import`).
         "HostScroll" => QmlElement {
             element_name: "ScrollView",
-            builtin_lines: vec![],
+            // UI61 -- the axis. Hiding a scrollbar is not the same as not
+            // scrolling: `ScrollBar.policy: AlwaysOff` only removes the
+            // BAR, and the content stays flickable on that axis. Pinning
+            // the cross-axis content extent to the viewport's own
+            // available extent is what actually leaves nothing to scroll,
+            // so both lines are emitted together.
+            builtin_lines: match ScrollAxis::of(node) {
+                ScrollAxis::Vertical => vec![
+                    "contentWidth: availableWidth",
+                    "ScrollBar.horizontal.policy: ScrollBar.AlwaysOff",
+                ],
+                ScrollAxis::Horizontal => vec![
+                    "contentHeight: availableHeight",
+                    "ScrollBar.vertical.policy: ScrollBar.AlwaysOff",
+                ],
+                ScrollAxis::Both => vec![],
+            },
             is_text: false,
             is_image: false,
         },
@@ -9101,6 +9118,69 @@ mod tests {
             result.output.contains("enabled: !isSaving"),
             "missing 'enabled: !isSaving' in:\n{}",
             result.output
+        );
+    }
+
+    /// UI61 — the axis reaches the QML. Both directions of the pair,
+    /// and the cross-axis content pin asserted alongside the scrollbar
+    /// policy: hiding a `ScrollBar` does NOT stop the content flicking
+    /// on that axis, so the policy line alone would be a viewport that
+    /// still scrolls sideways with no bar to show for it.
+    #[test]
+    fn ui61_each_axis_pins_the_cross_axis_and_hides_its_bar() {
+        let scroll = |axis: Option<&str>| {
+            let m = component("X", vec![], vec![]);
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "HostScroll".to_string(),
+                    part_name: None,
+                    props: axis
+                        .map(|a| {
+                            vec![LayoutProp {
+                                name: "axis".to_string(),
+                                value: LayoutPropValue::Keyword(a.to_string()),
+                            }]
+                        })
+                        .unwrap_or_default(),
+                    children: Vec::new(),
+                },
+            };
+            from_pipeline(&m, &l, &empty_style("X")).unwrap().output
+        };
+
+        // Default and explicit `vertical` are the same viewport.
+        for axis in [None, Some("vertical")] {
+            let out = scroll(axis);
+            assert!(
+                out.contains("contentWidth: availableWidth"),
+                "vertical must pin the horizontal extent, got:\n{out}"
+            );
+            assert!(
+                out.contains("ScrollBar.horizontal.policy: ScrollBar.AlwaysOff"),
+                "vertical must hide the horizontal bar, got:\n{out}"
+            );
+            assert!(
+                !out.contains("ScrollBar.vertical.policy"),
+                "vertical must not disable itself, got:\n{out}"
+            );
+        }
+
+        let out = scroll(Some("horizontal"));
+        assert!(
+            out.contains("contentHeight: availableHeight")
+                && out.contains("ScrollBar.vertical.policy: ScrollBar.AlwaysOff"),
+            "horizontal must pin and hide the vertical axis, got:\n{out}"
+        );
+        assert!(
+            !out.contains("ScrollBar.horizontal.policy"),
+            "horizontal must not disable itself, got:\n{out}"
+        );
+
+        let out = scroll(Some("both"));
+        assert!(
+            !out.contains("AlwaysOff") && !out.contains("contentWidth: availableWidth"),
+            "`both` must not disable either axis, got:\n{out}"
         );
     }
 
