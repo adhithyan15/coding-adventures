@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added an audited static ID-token identity-policy source boundary. Existing
+  provider registration, deployment client ID, requested provider, opaque
+  verification context, and trace are exactly bound before the source read;
+  zeroizing bytes are decoded through the closed identity schema and the
+  profile is withheld unless its result audit is durable. No concrete source,
+  verifier, key, clock, storage, or network authority is added.
 - Added exact `private_key_jwt` usable-access composition: the complete retained
   provider/client/endpoint/method/algorithm/key profile is validated before
   credential or clock access, still-fresh tokens invoke no signer or transport,
