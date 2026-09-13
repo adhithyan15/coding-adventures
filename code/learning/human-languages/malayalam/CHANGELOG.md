@@ -6,7 +6,10 @@ Malayalam's pre-A1 four-skill task inventory is checked in, together with the
 assessment specification it cites. The track is now measurable by
 `reading-reach`, which could not see it at all before: with no
 `task-shapes/pre-a1.json` there was no row in the table, so a reading passage
-could be written or deleted and the report read identically.
+could be written or deleted and the report read identically. Chapter 69's
+passage landed while this was in review, so the measurement is now a real one:
+**53 words against a 1-word ceiling, 3/3 parts in reach**, with a floor
+committed so the number cannot quietly fall.
 
 **No `assessment.json` yet, on purpose.** The machine-readable contract names
 its artifacts by path and the artifact gate treats a path that leads nowhere as
