@@ -1072,7 +1072,9 @@ fn image_map_shape(
         }
         "poly" | "polygon" if coords.len() >= 6 => {
             let points = coords
-                .chunks_exact(2)
+                .as_chunks::<2>()
+                .0
+                .iter()
                 .map(|pair| point(pair[0], pair[1]))
                 .collect();
             Some(LinkRegionShape::Polygon {
