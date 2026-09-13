@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.89.0
+
+- Tokenize Block links that declare shaped nodes directly at either endpoint.
+
 ## 0.88.0
 
 - Tokenize compact Block circle and cross endpoints such as `A--oB` and `A--xB`.

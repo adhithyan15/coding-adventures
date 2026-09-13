@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.211.0
+
+- Lower shaped node declarations written directly on Block links into grid cells and connections.
+
 ## 0.210.0
 
 - Parse compact Block terminal circle and cross markers into backend-neutral endpoint-marker IR.
