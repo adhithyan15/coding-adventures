@@ -2,6 +2,89 @@
 
 ## Unreleased
 
+### Fixed — a name typed after saving from the collection was silently dropped
+
+`SaveNoteType` — the collection actions bar's save — did not reset the note-type
+editor, where `NoteTypeEditorSaveNoteType` did. So the draft survived the save
+holding a `draft_note_type_id` the selection no longer resolved to. The next
+edit went through `note_type_editor_selected_id`, got a different id, and
+`ensure_selected_draft` responded by clearing the draft: name gone, editor
+snapped to the last saved model.
+
+Reproduced before fixing, through the props the person is actually looking at
+rather than the editor's internals — type "Typed After Saving" and
+`note-type-editor-name-value` reads `Saved Model`.
+
+This was **known and deferred**: #15093 found it while closing the draft-id
+collision, recorded it as "strictly an improvement, and still wrong", and filed
+it as an editor-behaviour decision rather than part of that fix. This is the
+deferral being paid off. The entry below is left as written, because it is the
+record of what was known at the time.
+
+`SaveNoteType` resets now — **but only when the save names what the editor is
+holding**, and that condition is the whole of the fix.
+
+The first version reset unconditionally, on the reasoning that it should "match
+the other event". That reasoning is wrong, and review caught it by measuring
+rather than arguing. `NoteTypeEditorSaveNoteType` builds its note type from
+`note_type_from_editor_selection`, so by construction it saves what the editor
+holds. `SaveNoteType` resolves its target from the **payload** and never
+consults the editor, so the two can name different note types — and an
+unconditional reset discarded a draft of A because something saved B. For a
+brand-new model that is the name, the stylesheet, every field rename and every
+template body, gone at once with no confirmation: `reset()` is
+`*self = Self::default()`.
+
+Not reachable from any shell today — the editor's own button emits the
+editor-level event — but `onSaveNoteType` is documented for host model editors
+and aliased to `upsertNoteType`, which is exactly what a sync or an import would
+call. A data-loss regression worse than the bug being fixed, latent and armed
+for the first host to use the documented API.
+
+**An unrelated save still disarms a pending delete confirmation**, which is a
+separate claim and gets its own branch and its own test. Measured on the
+pre-change behaviour: a confirmation armed on a note type survived an unrelated
+collection mutation and the next click deleted. An armed confirmation is a claim
+about a collection the person has just watched change, so it should not outlive
+the change — the cost of disarming is a second click, the cost of not is a note
+type.
+
+**What replaces the old test is the equivalence, not either event's landing
+spot.** The two are one operation reached from two places. Where they land is
+deliberately not pinned: selecting the model just saved might well be better,
+and that is a product choice neither event makes today.
+
+The old test's `after != draft_id` was kept at first as "the property that
+matters" and review showed it was not measuring that property. After the reset
+there is no draft at all, so the id prop is just the selected saved model's —
+always an id the collection holds. It passed only because the demo fixture's
+index 0 is some *other* model; on a collection whose only note type is the one
+just saved it would fail while nothing was wrong, which is precisely the
+tripwire the paragraph above set out to avoid. The assertion is now the absence
+of a draft, read off the delete label.
+
+**The deleted assertion was load-bearing and is restored.** It was the only one
+in the crate pinning that a collection-level save actually *creates* a note
+type; with it gone, making creation a silent no-op left all tests green. `ok:
+true` and a props read cannot tell a save from a no-op, because after the reset
+the props show the same model either way.
+
+Five mutations, each failing a specific test rather than reddening the suite:
+
+| mutation | catches |
+| --- | --- |
+| `SaveNoteType` never resets | symptom, equivalence |
+| `NoteTypeEditorSaveNoteType` never resets | equivalence **only** |
+| `SaveNoteType` resets unconditionally | unrelated-draft |
+| creating a new model becomes a no-op | equivalence, disarm |
+| `confirm_delete` not cleared | disarm |
+
+Row two is why the first two tests are not redundant: the symptom is about the
+collection path, so a regression in the editor path must not fail it. Row four
+took two attempts — the first "mutation" tested for the id *after* the upsert
+had added it, so it changed nothing and reported that no test caught it. A
+mutation that does not mutate is a false exoneration.
+
 ### Added — the import path's card-key invariant is now checked, not merely true
 
 `reject_card_id_separator` guards the command channel and the Mosaic event
@@ -172,6 +255,10 @@ test that fails against the pre-fix behaviour. The fix is for `SaveNoteType` to
 reset the editor the way its editor-level twin does, which is an
 editor-behaviour decision rather than part of closing the collision, so it is
 filed rather than folded in.
+
+**Now fixed — see the entry below.** This paragraph is left as written because
+it is the record of what was known and deliberately deferred; the deferral is
+what was paid off, not what was wrong.
 
 ### Fixed — `onDeleteNoteType` reported success having deleted nothing
 

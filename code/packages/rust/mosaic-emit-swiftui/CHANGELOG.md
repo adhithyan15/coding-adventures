@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-13
+
+- Project numeric typography through a stable font modifier on Text, HostInput, HostButton and HostTable. Invalid live values keep the inherited/authored font; monospaced design flows through resolved descendants. Add a macOS test that type-checks two generated components together.
+
 All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
