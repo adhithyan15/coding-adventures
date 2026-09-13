@@ -214,13 +214,20 @@ model-card parameter, or a UI artifact is not a completion signal.
      and add adapter and Mosaic host-contract coverage. Keep vendor interchange,
      raw-format import, and arbitrary netlist-to-schematic synthesis for later
      product phases.
-   - **Mosaic schematic edit lifecycle** (current phase): discovery after PR
+   - **Mosaic schematic edit lifecycle** (completed in PR #15011): discovery after PR
      #15002: the property inspector already edits canonical source and passive
      values, but a user cannot remove a mistakenly placed component or undo an
      endpoint wire without injecting raw document JSON. Add document-owned
      component removal that atomically drops incident wires, source-order wire
      removal with explicit bounds diagnostics, and Mosaic controls for both.
      Keep arbitrary wire geometry, netlist-to-schematic synthesis, and vendor
+     interchange for later product phases.
+   - **Mosaic schematic metadata editing** (current phase): discovery after PR
+     #15011: a user can edit values and remove components, but document titles
+     and component references still require raw JSON injection. Add canonical
+     one-line title and kind-safe reference mutation, preserve DC sweep source
+     bindings when a source is renamed, and expose both through the
+     Mosaic inspector. Keep net labels, arbitrary wire geometry, and vendor
      interchange for later product phases.
 
 ### Operating rules
