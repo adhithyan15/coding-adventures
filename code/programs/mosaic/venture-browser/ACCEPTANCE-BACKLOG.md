@@ -21,10 +21,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
   presentation primitives, history restoration, deterministic acceptance, and
   automatic reuse of every existing native/web input bridge.
 
-- [ ] **P2 browser convergence - accesskey mediation.** Normalize retained
+- [x] **P2 browser convergence - accesskey mediation.** Normalize retained
   accesskey candidates, conflicts, disabledness, and activation targets in
   shared core, then expose one semantic modifier/character command that native
   and web hosts can translate without choosing winners or activation policy.
+  Completed with independent document ordering, modal containment, reusable
+  candidate/diagnostic projections, shared activation transactions, and thin
+  modifier-chord forwarding from every native surface.
 
 - [x] **P0 browser convergence - shared sequential focus navigation.** Promote
   Tab and Shift+Tab from control-only traversal to one document-ordered model

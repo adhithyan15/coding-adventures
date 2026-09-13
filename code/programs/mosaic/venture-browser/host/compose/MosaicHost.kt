@@ -20,6 +20,7 @@ import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.input.key.utf16CodePoint
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.platform.testTag
@@ -54,6 +55,7 @@ private interface VentureNative : Library {
     fun venture_browser_compose_handle_event(host: Pointer, name: String, value: String): Pointer?
     fun venture_browser_compose_scroll(host: Pointer, deltaY: Double): Byte
     fun venture_browser_compose_control_key(host: Pointer, key: String, shift: Byte): Byte
+    fun venture_browser_compose_access_key(host: Pointer, character: String): Byte
     fun venture_browser_compose_control_text(host: Pointer, text: String): Byte
     fun venture_browser_compose_control_copy(host: Pointer): Pointer?
     fun venture_browser_compose_control_cut(host: Pointer): Pointer?
@@ -185,6 +187,15 @@ class MosaicHost private constructor(
             key,
             (if (shift) 1 else 0).toByte(),
         ).toInt() != 0
+        if (changed) {
+            decodeOptional(native.venture_browser_compose_take_effect(handle))?.let(::consumeEffect)
+            surfaceChanged()
+        }
+        return changed
+    }
+
+    fun accessKey(character: String): Boolean {
+        val changed = native.venture_browser_compose_access_key(handle, character).toInt() != 0
         if (changed) {
             decodeOptional(native.venture_browser_compose_take_effect(handle))?.let(::consumeEffect)
             surfaceChanged()
@@ -359,6 +370,14 @@ class MosaicHost private constructor(
                 .focusable()
                 .onPreviewKeyEvent { event ->
                     if (event.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+                    val character = event.utf16CodePoint
+                        .takeIf { it > 0 }
+                        ?.let { String(Character.toChars(it)) }
+                    if (event.isAltPressed && !event.isCtrlPressed && !event.isMetaPressed &&
+                        character != null && host.accessKey(character)
+                    ) {
+                        return@onPreviewKeyEvent true
+                    }
                     val command = event.isCtrlPressed || event.isMetaPressed
                     val key = when {
                         command && event.key == Key.A -> "select-all"

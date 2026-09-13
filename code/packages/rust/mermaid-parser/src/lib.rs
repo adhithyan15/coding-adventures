@@ -1956,14 +1956,18 @@ fn prepare_block_source(source: &str) -> Result<String, ParseError> {
 
 fn parse_block_quoted_connection_label(token: &Token, source: &str) -> Result<(String, Option<String>), ParseError> {
     let source = source.trim();
-    let Some((from, label)) = source.split_once("--") else {
+    let Some(label_body) = source.strip_suffix('"') else {
         return Ok((source.to_string(), None));
     };
-    let label = label.trim();
-    if label.len() < 2 || !label.starts_with('"') || !label.ends_with('"') {
-        return Err(token_error(token, "invalid quoted block connection label"));
-    }
-    Ok((from.trim().to_string(), Some(normalize_mermaid_line_breaks(&label[1..label.len() - 1]))))
+    let label_start = label_body.rfind('"')
+        .ok_or_else(|| token_error(token, "invalid quoted block connection label"))?;
+    let from_and_start_link = source[..label_start].trim_end();
+    let from = ["--", "==", "-."].iter().find_map(|start_link| {
+        from_and_start_link.strip_suffix(start_link).map(str::trim)
+    }).filter(|from| !from.is_empty())
+        .ok_or_else(|| token_error(token, "invalid quoted block connection start"))?;
+    let label = &source[label_start + 1..source.len() - 1];
+    Ok((from.to_string(), Some(normalize_mermaid_line_breaks(label))))
 }
 
 fn split_block_names(source: &str) -> Vec<String> {
@@ -9577,20 +9581,26 @@ mod tests_dg04 {
     #[test]
     fn block_preserves_quoted_labels_between_inline_node_declarations() {
         let diagram = parse_block(
-            "block\nid1[\"first\"] -- \"a label\" --> id2[\"second\"]",
+            "block\nid1[\"first\"] -- \"solid label\" --> id2[\"second\"]\nid2 == \"thick label\" ==> id3(\"third\")\nid3 -. \"dotted label\" -.-> id1",
         )
         .unwrap();
-        assert_eq!(diagram.cells.len(), 2);
+        assert_eq!(diagram.cells.len(), 3);
         assert_eq!(diagram.cells[0].label.text, "first");
         assert_eq!(diagram.cells[1].label.text, "second");
-        assert_eq!(diagram.connections.len(), 1);
+        assert_eq!(diagram.cells[2].label.text, "third");
+        assert_eq!(diagram.connections.len(), 3);
         assert_eq!(diagram.connections[0].from, "id1");
         assert_eq!(diagram.connections[0].to, "id2");
         assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
         assert_eq!(
             diagram.connections[0].label.as_ref().unwrap().text,
-            "a label"
+            "solid label"
         );
+        assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Solid);
+        assert_eq!(diagram.connections[1].label.as_ref().unwrap().text, "thick label");
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+        assert_eq!(diagram.connections[2].label.as_ref().unwrap().text, "dotted label");
+        assert_eq!(diagram.connections[2].line_style, GridEdgeStyle::Dotted);
     }
 
     #[test]

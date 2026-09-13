@@ -137,7 +137,11 @@ The delivery order is:
    provider, HTTPS issuer, and case-sensitive non-`none` ID-token signing
    algorithms while deployment client identity and the opaque verification
    context remain injected. It performs no source read and enables no
-   verification algorithm. For
+   verification algorithm. A broker boundary can read that policy through an
+   injected source only after exact registered-provider and opaque-context
+   binding, auditing the provider and trace before the read and its closed
+   decode result before profile release; concrete source and verification
+   authority remain absent. For
    Authorization Code identity proof, the boundary consumes the core's
    non-cloneable nonce object, validates its exact provider and client, and
    derives the audit trace from that browser ceremony before any authority

@@ -849,3 +849,11 @@ now declare BEAM, for 454 cells. Remaining COBOL features (four more base
 INSPECT TALLYING/REPLACING rows, the VM-047c BEFORE/AFTER region forms, and
 the VM-057 STRING self-move edge case) still require individual execution
 proofs.
+
+### Remaining base INSPECT on BEAM
+
+`portable_text_stdout_cobol_beam_inspect_remaining` executes four COBOL
+programs on real Erlang: LEADING, CHARACTERS (including field padding),
+no replacement rechaining and first matching replacement clause. These
+raise COBOL BEAM coverage to 52 of 58 rows, or 458 declared backend cells.
+The six remaining rows cover region boundaries and STRING self-move.

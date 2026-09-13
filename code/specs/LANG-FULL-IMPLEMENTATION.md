@@ -972,8 +972,10 @@ backend immediately) come before the enabler-dependent items.
   optionally wrapped in a one-statement compound body, is retained only when
   its post-increment value exits after exactly one pass. That exact assignment
   may reference the known entry value of the controlled scalar; unknown
-  dependencies and assignments whose checked increment remains in range still
-  fail closed.
+  dependencies still fail closed. Exact integer control assignments may be
+  followed across multiple passes until their checked increment exits, with
+  overflow, cycles, and loops exceeding 4,096 evaluations remaining
+  conservative. Real control recurrences remain a follow-up.
   Finite static real loops whose bodies avoid the control also retain their
   first post-limit value by simulating at most 4,096 emitted binary64 additions;
   non-finite and rounded-away progress fails closed. Finite static loops also

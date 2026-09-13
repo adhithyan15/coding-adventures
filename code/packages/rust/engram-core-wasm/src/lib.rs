@@ -943,6 +943,7 @@ impl EngramSession {
             // `catch_json`, so a `Err` becomes `{"ok": false, "error": ...}`
             // rather than a silently dropped note.
             validate_command_deck_reference(&self.state, &command)?;
+            validate_command_id_separator(&command)?;
             if let FacadeCommand::UpsertNote { note, .. } = &command {
                 validate_note_target(
                     &self.state,
@@ -4589,6 +4590,110 @@ fn note_editor_selected_field<'a>(
 /// family patched the routes someone had already found, and each time there was
 /// another; enumerating the surface is what stops that. A new variant carrying
 /// a deck id will not compile past this without a decision being made about it.
+/// The id separator `::` may not appear inside a note or template id.
+///
+/// A generated card's id is `{note_id}::{template_id}`, and the cloze form
+/// appends `::c{ordinal}` — an unescaped composite key. If either component may
+/// itself contain the separator, the key is ambiguous. Measured with the real
+/// generator rather than argued:
+///
+/// ```text
+/// note "a"    + template "b::c"  ->  card id "a::b::c"
+/// note "a::b" + template "c"     ->  card id "a::b::c"
+/// ```
+///
+/// Two different (note, template) pairs, one card id. Cards are keyed by id in
+/// `AppState`, so one silently displaces the other.
+///
+/// **Why a guard rather than an escape.** Length-prefixing the key would fix it
+/// at the root, but every existing card id has this shape — in saved
+/// collections, in snapshots, and in imported packages — so changing the
+/// encoding rewrites data that is already on disk. Refusing the input that
+/// makes the key ambiguous costs nothing real: Engram mints `note-{timestamp}`
+/// and `note-type-{timestamp}`, and Anki's ids are integers, so nothing that
+/// exists today contains `::`.
+///
+/// **Deck NAMES are untouched, and that distinction is the point.** Anki's deck
+/// hierarchy is literally `Parent::Child`, and `subdeck_name` splits on it. This
+/// guards ids, which are opaque keys, not names.
+///
+/// Reachable through `dispatch`, which is a documented public surface: the
+/// crate README describes it, the web host declares it, and `eg_dispatch`
+/// exports it to every native shell. That is the same surface the deck-id
+/// family was hardened on.
+/// The card-id separator, and the one place that spells it.
+const CARD_ID_SEPARATOR: &str = "::";
+
+/// Refuse a single id that would make a card id ambiguous.
+///
+/// Shared by every surface that accepts a caller-supplied note or template id,
+/// because there is more than one and guarding only the obvious one leaves the
+/// bug reachable. `dispatch` is the documented command channel; `onSaveNote`
+/// and `onSaveNoteType` are the Mosaic event channel, exported just as widely
+/// through `eg_handle_engram_app_event`. The first version of this guard
+/// covered only `dispatch`, and security review reproduced the collision
+/// through the event surface — two cards with id `a::b::c` coexisting in one
+/// collection.
+fn reject_card_id_separator(what: &str, id: &str) -> Result<(), String> {
+    if id.contains(CARD_ID_SEPARATOR) {
+        return Err(format!(
+            "{what} {id:?} contains {CARD_ID_SEPARATOR:?}, which separates a \
+             card id's note and template halves; two different notes could then \
+             generate the same card"
+        ));
+    }
+    Ok(())
+}
+
+fn validate_command_id_separator(command: &FacadeCommand) -> Result<(), String> {
+    // `(what it is, the id)`, so the refusal can say which field was wrong
+    // rather than making the caller guess which of several ids it meant.
+    let ids: Vec<(&str, &str)> = match command {
+        // The note carries the id that becomes the card key's left half, and
+        // `materialize_cards_at` is what turns it into card ids.
+        FacadeCommand::UpsertNote { note, .. } => vec![("note id", note.id.as_str())],
+        // And the note type carries every template id that becomes the right
+        // half. Checked per template, because one bad template poisons only its
+        // own cards and naming it is what makes the error actionable.
+        FacadeCommand::UpsertNoteType { note_type, .. } => {
+            let mut ids = vec![("note type id", note_type.id.as_str())];
+            ids.extend(
+                note_type
+                    .templates
+                    .iter()
+                    .map(|template| ("template id", template.id.as_str())),
+            );
+            ids
+        }
+        // `LoadState` is DELIBERATELY exempt, and the reason is worth stating
+        // because it is the one variant that carries whole `notes` and
+        // `note_types` vectors through here.
+        //
+        // It replaces the collection wholesale rather than editing it, and the
+        // same is true of `load_snapshot` and `import_backup`, which do not
+        // pass through this function at all. Refusing a restore because one
+        // note in it carries an odd id would cost someone their whole
+        // collection to avoid a misplaced card — the opposite of the trade this
+        // crate makes everywhere else, where a cursor that will not parse costs
+        // a scroll position rather than the collection.
+        //
+        // `validate_command_deck_reference` exempts it for the same reason.
+        // Constraining what a restore may contain is a separate question about
+        // snapshot trust, not about this key.
+        //
+        // Everything else either names an existing record or carries no id that
+        // reaches card generation. A DELETE naming an id nothing holds is
+        // already refused elsewhere, and refusing it here as well would report
+        // the wrong reason.
+        _ => Vec::new(),
+    };
+
+    for (what, id) in ids {
+        reject_card_id_separator(what, id)?;
+    }
+    Ok(())
+}
+
 fn validate_command_deck_reference(
     state: &AppState,
     command: &FacadeCommand,
@@ -5679,6 +5784,10 @@ fn note_from_app_event(
     let note_payload = payload.get("note").unwrap_or(payload);
     let note_id = explicit_note_id_from_app_event(parsed, state)
         .ok_or_else(|| "onSaveNote is missing a noteId".to_string())?;
+    // The id comes straight from the payload, so this surface needs the same
+    // guard `dispatch` has. It is not a lesser door: `eg_handle_engram_app_event`
+    // is exported to every native shell exactly as `eg_dispatch` is.
+    reject_card_id_separator("note id", &note_id)?;
     let existing_note = state.notes.iter().find(|note| note.id == note_id);
     let note_type_id = string_field(note_payload, &["noteTypeId", "note_type_id"])
         .or_else(|| existing_note.map(|note| note.note_type_id.clone()))
@@ -5758,6 +5867,7 @@ fn note_type_from_app_event(
         updated_at: now,
     });
 
+    reject_card_id_separator("note type id", &note_type_id)?;
     note_type.id = note_type_id;
     if let Some(name) = string_field(note_type_payload, &["name"]) {
         note_type.name = name;
@@ -5773,6 +5883,12 @@ fn note_type_from_app_event(
         note_type.templates =
             serde_json::from_value::<Vec<engram_core::CardTemplate>>(templates.clone())
                 .map_err(|error| format!("invalid note type templates: {error}"))?;
+        // Checked AFTER deserialising, because the ids only exist once the
+        // payload has parsed -- and checked per template, so the refusal names
+        // the one that is wrong rather than the note type as a whole.
+        for template in &note_type.templates {
+            reject_card_id_separator("template id", &template.id)?;
+        }
     }
     if let Some(stylesheet) = note_type_payload.get("stylesheet") {
         note_type.stylesheet = match stylesheet {
@@ -6867,6 +6983,214 @@ mod tests {
     use serde_json::Value;
 
     const NOW: u64 = 1_700_000_000_000;
+
+    /// A note id may not contain the card-id separator.
+    ///
+    /// `generated_card_id` is `{note_id}::{template_id}`, an unescaped
+    /// composite key, so a note id carrying `::` makes two different
+    /// (note, template) pairs collide on one card id. Measured with the real
+    /// generator before writing this guard:
+    ///
+    /// ```text
+    /// note "a"    + template "b::c"  ->  "a::b::c"
+    /// note "a::b" + template "c"     ->  "a::b::c"
+    /// ```
+    ///
+    /// Cards are keyed by id in `AppState`, so one silently displaces the
+    /// other. Driven through `dispatch` because that is the reachable surface:
+    /// the README documents it, the web host declares it, and `eg_dispatch`
+    /// exports it to every native shell.
+    #[test]
+    fn dispatch_refuses_a_note_id_containing_the_card_id_separator() {
+        let mut session = EngramSession::new_demo();
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertNote",
+                "note": {
+                    "id": "note-1::forward",
+                    "noteTypeId": "basic-story",
+                    "deckId": "tamil-script",
+                    "fields": [],
+                    "tags": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], false, "{value}");
+        let error = value["error"].as_str().unwrap_or_default();
+        assert!(
+            error.contains("note id") && error.contains("::"),
+            "the refusal must name the field and the separator, got: {error}"
+        );
+    }
+
+    /// A template id may not contain it either — the other half of the key.
+    #[test]
+    fn dispatch_refuses_a_template_id_containing_the_card_id_separator() {
+        let mut session = EngramSession::new_demo();
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertNoteType",
+                "noteType": {
+                    "id": "basic-2",
+                    "name": "Basic 2",
+                    "fields": [
+                        {"id": "front", "name": "Front", "required": true, "ordinal": 0}
+                    ],
+                    "templates": [{
+                        "id": "forward::c1",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "",
+                        "requiredFieldNames": ["Front"],
+                        "ordinal": 0
+                    }],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], false, "{value}");
+        let error = value["error"].as_str().unwrap_or_default();
+        assert!(
+            error.contains("template id"),
+            "the refusal must name the template, got: {error}"
+        );
+    }
+
+    /// And the guard is not simply refusing everything.
+    ///
+    /// The half that makes the two tests above mean something: an ordinary id
+    /// still saves. A guard that rejected every `upsertNote` would satisfy them
+    /// both and break the application completely.
+    #[test]
+    fn dispatch_still_accepts_an_ordinary_note_id() {
+        let mut session = EngramSession::new_demo();
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertNote",
+                "note": {
+                    "id": "note-without-a-separator",
+                    "noteTypeId": "basic-story",
+                    "deckId": "tamil-script",
+                    "fields": [],
+                    "tags": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], true, "{value}");
+        assert!(
+            value["state"]["notes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|note| note["id"] == "note-without-a-separator"),
+            "the note must actually have been stored"
+        );
+    }
+
+    /// The EVENT surface is guarded too, not only `dispatch`.
+    ///
+    /// This is the gap the first version of the guard left, and security review
+    /// found it by reproducing the collision rather than reading the code:
+    /// `onSaveNote` reads its id straight from the payload and calls `reduce`
+    /// directly, never passing through `validate_command_id_separator`. Both
+    /// events returned `ok: true` and two cards with id `a::b::c` coexisted in
+    /// one collection.
+    ///
+    /// `eg_handle_engram_app_event` is exported to every native shell exactly
+    /// as `eg_dispatch` is, so this was not a lesser door.
+    #[test]
+    fn the_event_surface_refuses_a_note_id_containing_the_separator() {
+        let mut session = EngramSession::new_demo();
+        let value: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{
+                "event": "onSaveNote",
+                "note": {
+                    "noteId": "note-1::forward",
+                    "noteTypeId": "basic-story",
+                    "deckId": "tamil-script",
+                    "fields": []
+                }
+            }"#,
+            "tamil-script",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], false, "{value}");
+        assert!(
+            value["error"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("note id"),
+            "the refusal must name the field, got {value}"
+        );
+    }
+
+    /// And the same for a template id arriving through `onSaveNoteType`.
+    #[test]
+    fn the_event_surface_refuses_a_template_id_containing_the_separator() {
+        let mut session = EngramSession::new_demo();
+        let value: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{
+                "event": "onSaveNoteType",
+                "noteType": {
+                    "noteTypeId": "basic-2",
+                    "name": "Basic 2",
+                    "fields": [
+                        {"id": "front", "name": "Front", "required": true, "ordinal": 0}
+                    ],
+                    "templates": [{
+                        "id": "forward::c1",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "",
+                        "requiredFieldNames": ["Front"],
+                        "ordinal": 0
+                    }]
+                }
+            }"#,
+            "tamil-script",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], false, "{value}");
+        assert!(
+            value["error"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("template id"),
+            "the refusal must name the template, got {value}"
+        );
+    }
+
+    /// Deck NAMES keep their `::`, and that distinction is the whole point.
+    ///
+    /// Anki's deck hierarchy is literally `Parent::Child` and `subdeck_name`
+    /// splits on it, so a guard that swept names in with ids would break the
+    /// feature it was meant to protect. This guards opaque keys only.
+    #[test]
+    fn a_deck_name_may_still_contain_the_separator() {
+        let mut session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "createDeck",
+                "id": "parent-child",
+                "name": "Parent::Child",
+                "description": "",
+                "createdAt": 1700000000000
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], true, "{value}");
+        assert_eq!(value["state"]["decks"][0]["name"], "Parent::Child");
+    }
 
     #[test]
     fn dispatch_create_deck_returns_camel_case_state_json() {
@@ -13135,6 +13459,128 @@ mod tests {
             .unwrap()
             .iter()
             .any(|source| source["source"] == "anki-v11"));
+    }
+
+    /// An imported Anki package cannot smuggle `::` into a card key half.
+    ///
+    /// `reject_card_id_separator` guards the command channel and the Mosaic
+    /// event channel, and `validate_command_id_separator` documents why restore
+    /// is exempt. Import is neither: it is a THIRD-PARTY file, so the "refusing
+    /// a restore would cost someone their collection" argument does not apply
+    /// to it, and no guard sits on `merge_anki_apkg`.
+    ///
+    /// It needs none, because the reader builds every one of these ids from an
+    /// Anki `i64`: a note is `note.id.to_string()`, a note type the same, and a
+    /// template is `format!("{note_type_id}:template:{ordinal}")`. A `::`
+    /// cannot appear in any of them.
+    ///
+    /// Safe BY CONSTRUCTION is exactly the kind of safety that stops being true
+    /// without anyone noticing, though — `template_id`'s format string is one
+    /// edit from `{note_type_id}::template::{ordinal}`, and nothing anywhere
+    /// said so. This is that check: the invariant the whole card-key fix rests
+    /// on, asserted at the one ingestion point that was never guarded because
+    /// it did not need to be.
+    /// Assert the invariant over one merged state, and report what it saw.
+    ///
+    /// Returns `(notes, note_types, templates, cards)` so the caller can anchor
+    /// each loop separately. One shared counter would have been satisfied by
+    /// the notes alone — it could not prove the note-type and template loops
+    /// ran at all, which are the ids the mutation actually breaks.
+    fn assert_no_card_id_separator(merged: &Value) -> (usize, usize, usize, usize) {
+        let mut notes = 0;
+        let mut note_types = 0;
+        let mut templates = 0;
+        for note in merged["state"]["notes"].as_array().unwrap() {
+            let id = note["id"].as_str().unwrap();
+            assert!(!id.contains(CARD_ID_SEPARATOR), "note id {id:?}");
+            notes += 1;
+        }
+        for note_type in merged["state"]["noteTypes"].as_array().unwrap() {
+            let id = note_type["id"].as_str().unwrap();
+            assert!(!id.contains(CARD_ID_SEPARATOR), "note type id {id:?}");
+            note_types += 1;
+            for template in note_type["templates"].as_array().unwrap() {
+                let id = template["id"].as_str().unwrap();
+                assert!(!id.contains(CARD_ID_SEPARATOR), "template id {id:?}");
+                templates += 1;
+            }
+        }
+
+        // The property those halves exist to guarantee, asserted directly
+        // rather than inferred from them: no two cards share a key. Checking it
+        // here means the test survives a change to how the halves are joined.
+        let cards = merged["state"]["cards"].as_array().unwrap();
+        let ids: std::collections::BTreeSet<&str> = cards
+            .iter()
+            .map(|card| card["id"].as_str().unwrap())
+            .collect();
+        assert_eq!(
+            ids.len(),
+            cards.len(),
+            "two imported cards share an id; {} card(s), {} distinct",
+            cards.len(),
+            ids.len()
+        );
+
+        (notes, note_types, templates, cards.len())
+    }
+
+    #[test]
+    fn an_imported_package_cannot_carry_the_card_id_separator() {
+        let source = EngramSession::new_demo();
+        let exported: Value = serde_json::from_str(&source.export_anki_apkg()).unwrap();
+        let apkg = coding_adventures_base64::decode(
+            exported["apkg"].as_str().unwrap(),
+            &coding_adventures_base64::STANDARD,
+        )
+        .unwrap();
+
+        let mut target = EngramSession::new();
+        let merged: Value = serde_json::from_str(&target.merge_anki_apkg(&apkg)).unwrap();
+        assert_eq!(merged["ok"], true);
+
+        // Every count anchored on its own. An import that produced nothing
+        // would satisfy every assertion inside, and a zero that reads as a
+        // pass is the failure this crate keeps finding.
+        let (notes, note_types, templates, cards) = assert_no_card_id_separator(&merged);
+        assert!(notes > 0, "no notes to check");
+        assert!(note_types > 0, "no note types to check");
+        assert!(templates > 0, "no templates to check");
+        assert!(cards > 0, "no cards to check");
+    }
+
+    /// The same, through the OTHER reader.
+    ///
+    /// `read_v11_collection` dispatches on `col.ver` and hands anything at
+    /// schema 18 or above to `parse_schema18_collection`, a separate reader
+    /// with its own id derivation. The test above imports a package this crate
+    /// exported, which is v11 — so on its own it says nothing about the path a
+    /// package from a modern Anki actually takes.
+    ///
+    /// Found by a reviewer walking the claim independently rather than by the
+    /// original survey, which is the whole argument for doing that: "safe by
+    /// construction" was established over one of two readers and read as
+    /// covering both.
+    ///
+    /// Schema 18 is safe on the same grounds — the notetype id is the rowid,
+    /// and fields and templates carry integer ordinals — but it is a different
+    /// body of code and gets its own check. The fixture is a real Anki export.
+    #[test]
+    fn a_modern_package_cannot_carry_the_card_id_separator_either() {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../engram-anki-package/tests/fixtures/anki/anki-modern.apkg");
+        let bytes = std::fs::read(&path)
+            .unwrap_or_else(|error| panic!("schema-18 fixture at {}: {error}", path.display()));
+
+        let mut target = EngramSession::new();
+        let merged: Value = serde_json::from_str(&target.merge_anki_apkg(&bytes)).unwrap();
+        assert_eq!(merged["ok"], true, "schema-18 import: {merged}");
+
+        let (notes, note_types, templates, cards) = assert_no_card_id_separator(&merged);
+        assert!(notes > 0, "no notes to check");
+        assert!(note_types > 0, "no note types to check");
+        assert!(templates > 0, "no templates to check");
+        assert!(cards > 0, "no cards to check");
     }
 
     #[test]

@@ -745,6 +745,7 @@ pub struct PageFocusAccessibilityState {
     pub key: String,
     pub role: String,
     pub name: String,
+    pub access_keys: Vec<String>,
     pub tab_index: i32,
     pub focused: bool,
     pub x: f64,
@@ -752,6 +753,44 @@ pub struct PageFocusAccessibilityState {
     pub width: f64,
     pub height: f64,
 }
+
+/// One normalized access-key candidate in retained document order.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AccessKeyCandidateState {
+    pub access_key: String,
+    pub key: String,
+    pub role: String,
+    pub name: String,
+    pub access_order: usize,
+    pub conflict: bool,
+    pub focused: bool,
+}
+
+/// A deterministic diagnostic produced while normalizing access-key tokens.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AccessKeyDiagnostic {
+    pub code: String,
+    pub access_key: String,
+    pub winner: Option<String>,
+    pub ignored: Option<String>,
+}
+
+/// Platform chord already recognized by a thin host event adapter.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum AccessKeyModifier {
+    Alt,
+    ControlOption,
+}
+
+/// One host-neutral access-key command delivered to shared browser policy.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AccessKeyCommand {
+    pub modifier: AccessKeyModifier,
+    pub character: String,
+}
+
+pub const MAX_ACCESS_KEY_TARGETS: usize = 1_024;
+pub const MAX_ACCESS_KEYS_PER_TARGET: usize = 16;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 enum PageFocusTarget {
@@ -767,6 +806,27 @@ struct PageFocusItem {
     state: PageFocusAccessibilityState,
     order: usize,
     fixed: bool,
+}
+
+#[derive(Clone, Debug)]
+struct AccessKeyItem {
+    target: PageFocusTarget,
+    key: String,
+    role: String,
+    name: String,
+    access_keys: Vec<String>,
+    access_order: usize,
+    top_layer_index: Option<usize>,
+}
+
+fn normalize_access_key(value: &str) -> Option<String> {
+    let value = value.trim();
+    let mut characters = value.chars();
+    let character = characters.next()?;
+    if character.is_control() || characters.next().is_some() {
+        return None;
+    }
+    Some(character.to_lowercase().collect())
 }
 
 /// Shared accessibility and host projection for an open dialog or popover.
@@ -2510,6 +2570,7 @@ impl BrowserSession {
                         .accessible_name
                         .clone()
                         .unwrap_or_else(|| region.url.clone()),
+                    access_keys: region.access_keys.clone(),
                     tab_index: region.tab_index,
                     focused: self.focused_link.as_deref() == Some(key),
                     x: region.x,
@@ -2546,6 +2607,7 @@ impl BrowserSession {
                         .or_else(|| control.map(|control| control.display_value()))
                         .filter(|name| !name.is_empty())
                         .unwrap_or_else(|| region.kind.name().into()),
+                    access_keys: region.access_keys.clone(),
                     tab_index: region.tab_index,
                     focused: self.controls.focused_key() == Some(region.key.as_str()),
                     x: region.x,
@@ -2579,6 +2641,7 @@ impl BrowserSession {
                     key: region.key.clone(),
                     role: "disclosure".into(),
                     name,
+                    access_keys: region.access_keys.clone(),
                     tab_index: region.tab_index,
                     focused: self.focused_disclosure.as_deref() == Some(&region.key),
                     x: region.x,
@@ -2591,6 +2654,9 @@ impl BrowserSession {
             });
         }
         for region in &page.paint.focus_regions {
+            let Some(order) = region.focus_order else {
+                continue;
+            };
             if items
                 .iter()
                 .any(|item: &PageFocusItem| item.state.key == region.key)
@@ -2607,6 +2673,7 @@ impl BrowserSession {
                         .clone()
                         .filter(|name| !name.trim().is_empty())
                         .unwrap_or_else(|| region.role.clone()),
+                    access_keys: region.access_keys.clone(),
                     tab_index: region.tab_index,
                     focused: self.focused_generic.as_deref() == Some(&region.key),
                     x: region.x,
@@ -2614,7 +2681,7 @@ impl BrowserSession {
                     width: region.width,
                     height: region.height,
                 },
-                order: region.focus_order,
+                order,
                 fixed: region.fixed,
             });
         }
@@ -2651,6 +2718,362 @@ impl BrowserSession {
             }
         });
         items
+    }
+
+    fn access_key_items(&self) -> Vec<AccessKeyItem> {
+        let Some(viewport) = &self.viewport else {
+            return Vec::new();
+        };
+        let page = viewport.page();
+        let mut items = Vec::new();
+        for region in &page.paint.links {
+            let (Some(access_order), Some(key)) = (region.access_order, region.key.as_ref()) else {
+                continue;
+            };
+            if items
+                .iter()
+                .any(|item: &AccessKeyItem| item.access_order == access_order)
+            {
+                continue;
+            }
+            items.push(AccessKeyItem {
+                target: PageFocusTarget::Link(key.clone()),
+                key: key.clone(),
+                role: "link".into(),
+                name: region
+                    .accessible_name
+                    .clone()
+                    .unwrap_or_else(|| region.url.clone()),
+                access_keys: region.access_keys.clone(),
+                access_order,
+                top_layer_index: region.top_layer_index,
+            });
+        }
+        for region in &page.paint.controls {
+            let Some(access_order) = region.access_order else {
+                continue;
+            };
+            if region.disabled
+                || items
+                    .iter()
+                    .any(|item: &AccessKeyItem| item.access_order == access_order)
+            {
+                continue;
+            }
+            let control = self.controls.control(&region.key);
+            items.push(AccessKeyItem {
+                target: PageFocusTarget::Control(region.key.clone()),
+                key: region.key.clone(),
+                role: region.kind.name().into(),
+                name: region
+                    .accessible_name
+                    .clone()
+                    .filter(|name| !name.is_empty())
+                    .or_else(|| control.map(|control| control.display_value()))
+                    .filter(|name| !name.is_empty())
+                    .unwrap_or_else(|| region.kind.name().into()),
+                access_keys: region.access_keys.clone(),
+                access_order,
+                top_layer_index: region.top_layer_index,
+            });
+        }
+        let disclosures = self.disclosure_accessibility_states();
+        for region in &page.paint.disclosures {
+            let Some(access_order) = region.access_order else {
+                continue;
+            };
+            if items
+                .iter()
+                .any(|item: &AccessKeyItem| item.access_order == access_order)
+            {
+                continue;
+            }
+            items.push(AccessKeyItem {
+                target: PageFocusTarget::Disclosure(region.key.clone()),
+                key: region.key.clone(),
+                role: "disclosure".into(),
+                name: disclosures
+                    .iter()
+                    .find(|state| state.key == region.key)
+                    .map(|state| state.name.clone())
+                    .unwrap_or_else(|| "Details".into()),
+                access_keys: region.access_keys.clone(),
+                access_order,
+                top_layer_index: region.top_layer_index,
+            });
+        }
+        for region in &page.paint.focus_regions {
+            let Some(access_order) = region.access_order else {
+                continue;
+            };
+            if items
+                .iter()
+                .any(|item: &AccessKeyItem| item.access_order == access_order)
+            {
+                continue;
+            }
+            items.push(AccessKeyItem {
+                target: PageFocusTarget::Generic(region.key.clone()),
+                key: region.key.clone(),
+                role: region.role.clone(),
+                name: region
+                    .accessible_name
+                    .clone()
+                    .filter(|name| !name.trim().is_empty())
+                    .unwrap_or_else(|| region.role.clone()),
+                access_keys: region.access_keys.clone(),
+                access_order,
+                top_layer_index: region.top_layer_index,
+            });
+        }
+        if let Some(modal) = page
+            .paint
+            .top_layers
+            .iter()
+            .filter(|region| region.modal)
+            .max_by_key(|region| region.top_layer_index)
+        {
+            items.retain(|item| item.top_layer_index == Some(modal.top_layer_index));
+        }
+        items.sort_by_key(|item| item.access_order);
+        items.truncate(MAX_ACCESS_KEY_TARGETS);
+        items
+    }
+
+    /// Project normalized candidates, including deterministic duplicate status.
+    pub fn access_key_candidates(&self) -> Vec<AccessKeyCandidateState> {
+        let mut winners = Vec::<String>::new();
+        let current = self.current_page_focus_target();
+        self.access_key_items()
+            .into_iter()
+            .flat_map(|item| {
+                item.access_keys
+                    .iter()
+                    .take(MAX_ACCESS_KEYS_PER_TARGET)
+                    .filter_map(|token| normalize_access_key(token))
+                    .map(|access_key| {
+                        let conflict = winners.iter().any(|winner| winner == &access_key);
+                        if !conflict {
+                            winners.push(access_key.clone());
+                        }
+                        AccessKeyCandidateState {
+                            access_key,
+                            key: item.key.clone(),
+                            role: item.role.clone(),
+                            name: item.name.clone(),
+                            access_order: item.access_order,
+                            conflict,
+                            focused: current.as_ref() == Some(&item.target),
+                        }
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .collect()
+    }
+
+    /// Return invalid-token and duplicate diagnostics in retained document order.
+    pub fn access_key_diagnostics(&self) -> Vec<AccessKeyDiagnostic> {
+        let items = self.access_key_items();
+        let mut diagnostics = Vec::new();
+        let mut winners = Vec::<(String, String)>::new();
+        for item in items {
+            for token in item.access_keys.iter().take(MAX_ACCESS_KEYS_PER_TARGET) {
+                let Some(access_key) = normalize_access_key(token) else {
+                    diagnostics.push(AccessKeyDiagnostic {
+                        code: "invalid-access-key".into(),
+                        access_key: token.clone(),
+                        winner: None,
+                        ignored: Some(item.key.clone()),
+                    });
+                    continue;
+                };
+                if let Some((_, winner)) = winners.iter().find(|(key, _)| key == &access_key) {
+                    diagnostics.push(AccessKeyDiagnostic {
+                        code: "duplicate-access-key".into(),
+                        access_key,
+                        winner: Some(winner.clone()),
+                        ignored: Some(item.key.clone()),
+                    });
+                } else {
+                    winners.push((access_key, item.key.clone()));
+                }
+            }
+        }
+        diagnostics
+    }
+
+    fn focus_access_key_item<M, S, FM, R>(
+        &mut self,
+        item: &AccessKeyItem,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<()>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        match &item.target {
+            PageFocusTarget::Link(key) => {
+                self.controls.blur();
+                self.contenteditables.blur();
+                self.focused_link = Some(key.clone());
+                self.focused_disclosure = None;
+                self.focused_generic = None;
+            }
+            PageFocusTarget::Control(key) => {
+                self.controls.focus(key)?;
+                self.contenteditables.blur();
+                self.focused_link = None;
+                self.focused_disclosure = None;
+                self.focused_generic = None;
+            }
+            PageFocusTarget::Disclosure(key) => {
+                self.controls.blur();
+                self.contenteditables.blur();
+                self.focused_link = None;
+                self.focused_disclosure = Some(key.clone());
+                self.focused_generic = None;
+            }
+            PageFocusTarget::Generic(key) => {
+                self.controls.blur();
+                if self.contenteditables.contains(key) {
+                    self.contenteditables.focus(key)?;
+                } else {
+                    self.contenteditables.blur();
+                }
+                self.focused_link = None;
+                self.focused_disclosure = None;
+                self.focused_generic = Some(key.clone());
+            }
+        }
+        self.reflow_controls(pipeline)?;
+        self.refresh_page_focus_presentation();
+        Some(())
+    }
+
+    /// Resolve a semantic modifier/character command through shared policy.
+    pub fn access_key_command_and_submit<F, M, S, FM, R>(
+        &mut self,
+        command: AccessKeyCommand,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let Some(character) = normalize_access_key(&command.character) else {
+            return Ok(false);
+        };
+        let Some(item) = self.access_key_items().into_iter().find(|item| {
+            item.access_keys
+                .iter()
+                .take(MAX_ACCESS_KEYS_PER_TARGET)
+                .filter_map(|token| normalize_access_key(token))
+                .any(|token| token == character)
+        }) else {
+            return Ok(false);
+        };
+        let target = item.target.clone();
+        if self.focus_access_key_item(&item, pipeline).is_none() {
+            return Ok(false);
+        }
+        match target {
+            PageFocusTarget::Link(key) => {
+                let link = self.viewport.as_ref().and_then(|viewport| {
+                    viewport
+                        .page()
+                        .paint
+                        .links
+                        .iter()
+                        .find(|region| region.key.as_deref() == Some(&key))
+                        .cloned()
+                });
+                let Some(link) = link else {
+                    return Ok(true);
+                };
+                self.pending_host_effect = None;
+                match plan_link_activation(link) {
+                    BrowserLinkActivation::Navigate(url) => self
+                        .execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+                        .map(|viewport| viewport.is_some()),
+                    BrowserLinkActivation::HostEffect(effect) => {
+                        self.pending_host_effect = Some(effect);
+                        Ok(true)
+                    }
+                }
+            }
+            PageFocusTarget::Control(_) => {
+                self.control_accessibility_action_and_submit(
+                    ControlAccessibilityAction::Activate,
+                    pipeline,
+                    fetcher,
+                )?;
+                Ok(true)
+            }
+            PageFocusTarget::Disclosure(key) => Ok(self
+                .disclosure_accessibility_action(
+                    &key,
+                    DisclosureAccessibilityAction::Toggle,
+                    pipeline,
+                )
+                .is_some()),
+            PageFocusTarget::Generic(key) => {
+                let command = self.viewport.as_ref().and_then(|viewport| {
+                    viewport
+                        .page()
+                        .paint
+                        .focus_regions
+                        .iter()
+                        .find(|region| region.key == key)
+                        .and_then(|region| {
+                            Some((
+                                region.activation_command.clone()?,
+                                region.activation_target.clone()?,
+                            ))
+                        })
+                });
+                if let Some((command, target)) = command {
+                    if let Some(action) = top_layer_action_from_command(&command) {
+                        return Ok(self.apply_top_layer_action(
+                            &target,
+                            action,
+                            Some(&key),
+                            pipeline,
+                        ));
+                    }
+                }
+                Ok(true)
+            }
+        }
+    }
+
+    /// Convenience entry point for Alt-based hosts and direct core callers.
+    pub fn access_key_and_submit<F, M, S, FM, R>(
+        &mut self,
+        character: &str,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        self.access_key_command_and_submit(
+            AccessKeyCommand {
+                modifier: AccessKeyModifier::Alt,
+                character: character.into(),
+            },
+            pipeline,
+            fetcher,
+        )
     }
 
     fn current_page_focus_target(&self) -> Option<PageFocusTarget> {
@@ -6703,6 +7126,8 @@ mod tests {
             height: 12.0,
             key: None,
             accessible_name: None,
+            access_keys: Vec::new(),
+            access_order: None,
             focus_order: None,
             tab_index: 0,
             top_layer_index: None,
@@ -9283,6 +9708,91 @@ mod tests {
                 .open
         );
         assert!(session.top_layer_diagnostics().is_empty());
+    }
+
+    #[test]
+    fn session_resolves_access_keys_in_document_order_through_shared_activation() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<a id='first' accesskey='g' href='/first'>First</a>\
+                  <a id='duplicate' accesskey='G' href='/duplicate'>Duplicate</a>\
+                  <button id='disabled' accesskey='x' disabled>Disabled</button>\
+                  <div tabindex='0' accesskey='bad'>Invalid</div>\
+                  <div id='focus-only' tabindex='-1' accesskey='f'>Focus only</div>\
+                  <label accesskey='l' for='named'>Name</label><input id='named'>\
+                  <details id='details'><summary accesskey='d'>Details</summary><p>Body</p></details>\
+                  <button id='menu-button' accesskey='m' popovertarget='menu'>Menu</button>\
+                  <div id='menu' popover='auto'><button accesskey='i'>Inside</button></div>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(480.0, 240.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/access", 240.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        let candidates = session.access_key_candidates();
+        assert_eq!(
+            candidates
+                .iter()
+                .map(|candidate| (candidate.access_key.as_str(), candidate.conflict))
+                .collect::<Vec<_>>(),
+            vec![
+                ("g", false),
+                ("g", true),
+                ("f", false),
+                ("l", false),
+                ("d", false),
+                ("m", false)
+            ]
+        );
+        assert_eq!(
+            session
+                .access_key_diagnostics()
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec!["duplicate-access-key", "invalid-access-key"]
+        );
+        assert!(session
+            .access_key_and_submit("F", &pipeline, &fetcher)
+            .unwrap());
+        assert!(session
+            .access_key_candidates()
+            .iter()
+            .any(|candidate| candidate.key == "focus:id:focus-only" && candidate.focused));
+        assert!(session
+            .access_key_and_submit("l", &pipeline, &fetcher)
+            .unwrap());
+        assert_eq!(session.controls().focused_key(), Some("control:1:id:named"));
+
+        assert!(session
+            .access_key_and_submit("d", &pipeline, &fetcher)
+            .unwrap());
+        assert!(session.disclosure_accessibility_states()[0].open);
+        assert!(session
+            .access_key_and_submit("m", &pipeline, &fetcher)
+            .unwrap());
+        assert!(session
+            .top_layer_accessibility_states()
+            .iter()
+            .any(|surface| surface.kind == "popover" && surface.open));
+        assert!(session
+            .access_key_candidates()
+            .iter()
+            .any(|candidate| candidate.access_key == "i"));
     }
 
     #[test]

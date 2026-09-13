@@ -75,6 +75,10 @@ component SpiceWorkbench {
   slot remove-schematic-component-label : text ;
   slot remove-schematic-component-disabled : bool ;
   slot route-schematic-label : text ;
+  slot schematic-route-targets : list<text> ;
+  slot selected-schematic-route-target-label : text ;
+  slot schematic-route-terminal-controls : list<text> ;
+  slot schematic-route-terminal-disabled : bool ;
   slot synchronize-schematic-label : text ;
   slot analysis-label : text ;
   slot analysis-rows : list<list<text>> ;
@@ -116,7 +120,8 @@ component SpiceWorkbench {
   emit onSchematicValueChange ( value : text ) ;
   emit onRemoveSchematicComponent ;
   emit onRemoveSchematicWire ( index : number ) ;
-  emit onRouteToSchematicComponent ( reference : text ) ;
+  emit onSelectSchematicRouteTarget ( reference : text ) ;
+  emit onRouteToSchematicTerminal ( index : number ) ;
   emit onSynchronizeSchematic ;
   emit onSelectAnalysis ( index : number ) ;
   emit onSelectWaveform ( index : number ) ;

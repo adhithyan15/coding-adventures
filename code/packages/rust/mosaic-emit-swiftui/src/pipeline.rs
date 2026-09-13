@@ -2497,11 +2497,33 @@ pub struct DroppedStyleProperty {
 /// State-layer props are not walked separately: a state block can only set a
 /// property the base lowering also understands, so a drop there is the same
 /// drop, reported once against the part.
-pub fn dropped_style_properties(style: &StyleDef) -> Vec<DroppedStyleProperty> {
+///
+/// `layout` is needed because not every property is lowered by a modifier.
+/// `gap` is lowered at view-CONSTRUCTION time — `HStack(spacing:)` — which the
+/// modifier chain cannot see, so scanning the chain alone reports every `gap`
+/// as dropped whether or not the container applied it. Measured on Engram:
+/// 22 of the 40 reported SwiftUI style drops were `gap`, and `$style.app-shell`
+/// was reported to drop `gap: 18` while the emitted Swift opened
+/// `VStack(spacing: 18)` on that very part.
+///
+/// A false drop is not a harmless extra line. It is carried in the
+/// `ALLOWED_STYLE_DROPS` allowlist, where it reads as a standing licence for a
+/// gap that genuinely stops being applied — the report is the evidence the
+/// release gate consults, so a report that overstates is one that cannot be
+/// acted on.
+pub fn dropped_style_properties(
+    style: &StyleDef,
+    layout: &LayoutNode,
+) -> Vec<DroppedStyleProperty> {
+    let part_styles = build_part_style_map(style);
+    let consumed = gap_consuming_parts(layout, &part_styles);
     let mut out = Vec::new();
     for part in &style.parts {
         let (_, drops) = swiftui_modifier_chain_with_drops(&part.base, &[], &[], 0, None);
         for drop in drops {
+            if drop.name == "gap" && consumed.contains(part.name.as_str()) {
+                continue;
+            }
             out.push(DroppedStyleProperty {
                 part: part.name.clone(),
                 reason: swiftui_drop_reason(&drop.name).to_string(),
@@ -2511,6 +2533,80 @@ pub fn dropped_style_properties(style: &StyleDef) -> Vec<DroppedStyleProperty> {
         }
     }
     out
+}
+
+/// The parts whose `gap` a container actually applies.
+///
+/// Mirrors the tag-to-view mapping in [`emit_view_tree`] rather than
+/// restating it loosely, because the answer is per-tag and the wrong answer is
+/// silent in both directions: too wide and a real drop goes unreported, too
+/// narrow and the report keeps the false positive it exists to remove.
+///
+/// - `Column` opens a `VStack` and `Row` an `HStack`, and both consult
+///   [`container_spacing`]. These are the parts whose `gap` lands.
+/// - `Box` (`Group`), `Stack` (`ZStack`) and `HostScroll` (`ScrollView`) do
+///   not. `container_spacing` refuses them by name, and deliberately: a
+///   `ZStack` overlays along the depth axis and a `ScrollView` delegates layout
+///   to its content, so a gap there is meaningless rather than unsupported.
+///   Those drops stay reported.
+/// - A `Row` INSIDE a `HostTable` is the exception that makes the table walk
+///   necessary. It lowers through `container_table_row` to
+///   `HStack(spacing: 0)`, pinning the gap to zero to match
+///   `border-collapse: collapse`, so its authored `gap` really is discarded.
+///
+/// [`container_spacing`] decides the last question rather than this function
+/// re-deriving it, so a value it rejects as unparseable is still a real drop.
+///
+/// EVERY occurrence has to consume it, not merely one. A part name can appear
+/// on more than one node — package resolution substitutes a `pkg::` reference
+/// with the resolved sub-tree, so a composed layout can carry a part from an
+/// inlined package beside a same-named part on a different tag. If one of them
+/// is a `Column` and the other a `Box`, the gap IS lost on the `Box`, and
+/// suppressing the report because some other node applied it hides a real loss.
+///
+/// This is the `all` the Compose reporter uses for the same reason — its
+/// `container_argument_covers` ends `on.iter().all(|c| carried_by(c))`, and its
+/// comment makes the same argument about a part shared between a `Row` and a
+/// `Text`. The first version of this function used `any`, which was the
+/// too-wide direction the doc above warns about; no current layout triggers it,
+/// which is exactly why it would have gone unnoticed.
+fn gap_consuming_parts<'a>(root: &'a LayoutNode, part_styles: &PartStyleMap) -> HashSet<&'a str> {
+    fn walk<'a>(
+        node: &'a LayoutNode,
+        in_table: bool,
+        part_styles: &PartStyleMap,
+        // Per part: does every occurrence seen so far apply the gap? One that
+        // does not sets this false, and nothing sets it back.
+        out: &mut HashMap<&'a str, bool>,
+    ) {
+        // `HostTable` opens the context and it applies to the whole subtree,
+        // the way `table_ctx` is threaded through `emit_children`. Stated as
+        // the tag rather than read from a `TableContext`, because the tag is
+        // where that context originates -- `extract_table_context` is only ever
+        // called on a `HostTable` node.
+        let in_table = in_table || node.tag == "HostTable";
+        let view = match node.tag.as_str() {
+            "Column" => Some("VStack"),
+            "Row" if !in_table => Some("HStack"),
+            _ => None,
+        };
+        if let Some(part) = node.part_name.as_deref() {
+            let consumes =
+                view.is_some_and(|view| container_spacing(view, node, part_styles).is_some());
+            let entry = out.entry(part).or_insert(true);
+            *entry &= consumes;
+        }
+        for child in &node.children {
+            walk(child, in_table, part_styles, out);
+        }
+    }
+
+    let mut seen = HashMap::new();
+    walk(root, false, part_styles, &mut seen);
+    seen.into_iter()
+        .filter(|(_, every)| *every)
+        .map(|(part, _)| part)
+        .collect()
 }
 
 /// Why a property has no SwiftUI lowering, in terms a reader can act on.
@@ -14735,7 +14831,23 @@ mod tests {
                 states: vec![],
             }],
         };
-        dropped_style_properties(&style)
+        dropped_style_properties(&style, &no_gap_layout())
+    }
+
+    /// A layout in which no part's `gap` is consumed.
+    ///
+    /// A bare `Box` lowers to `Group`, which `container_spacing` refuses by
+    /// name, so every `gap` this layout could carry is a real drop. That makes
+    /// it the right stand-in for the tests around it, which are about the
+    /// modifier chain and pass no `gap` at all -- and it keeps them honest: a
+    /// layout that suppressed drops would let a chain regression pass.
+    fn no_gap_layout() -> LayoutNode {
+        LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: Vec::new(),
+        }
     }
 
     #[test]
@@ -14796,7 +14908,7 @@ mod tests {
                 states: vec![],
             }],
         };
-        assert!(dropped_style_properties(&style).is_empty());
+        assert!(dropped_style_properties(&style, &no_gap_layout()).is_empty());
     }
 
     #[test]
@@ -14824,10 +14936,161 @@ mod tests {
                 },
             ],
         };
-        let drops = dropped_style_properties(&style);
+        let drops = dropped_style_properties(&style, &no_gap_layout());
         assert_eq!(drops.len(), 2, "got: {drops:?}");
         assert_eq!(drops[0].part, "a");
         assert_eq!(drops[1].part, "b");
+    }
+
+    // ---- `gap` is lowered at construction, not by a modifier -------------
+
+    /// One node of `tag` carrying `part`, with an optional wrapper tag above.
+    fn gap_layout(wrapper: Option<&str>, tag: &str, part: &str) -> LayoutNode {
+        let inner = LayoutNode {
+            tag: tag.to_string(),
+            part_name: Some(part.to_string()),
+            props: Vec::new(),
+            children: Vec::new(),
+        };
+        match wrapper {
+            Some(wrapper) => LayoutNode {
+                tag: wrapper.to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![inner],
+            },
+            None => inner,
+        }
+    }
+
+    fn gap_drops(layout: &LayoutNode) -> Vec<DroppedStyleProperty> {
+        let style = style_with_part("X", "c", vec![sp("gap", "8px")]);
+        dropped_style_properties(&style, layout)
+            .into_iter()
+            .filter(|d| d.name == "gap")
+            .collect()
+    }
+
+    #[test]
+    fn a_gap_a_container_applies_is_not_reported_as_dropped() {
+        // `Column` opens `VStack(spacing: 8)` and `Row` opens
+        // `HStack(spacing: 8)`. The modifier chain never sees either, which is
+        // why scanning it alone called every `gap` in Engram dropped -- 22 of
+        // 40 reported drops, including `$style.app-shell`, whose emitted Swift
+        // opens `VStack(spacing: 18)` on that very part.
+        for tag in ["Column", "Row"] {
+            let drops = gap_drops(&gap_layout(None, tag, "c"));
+            assert!(drops.is_empty(), "{tag} applies the gap; got: {drops:?}");
+        }
+    }
+
+    #[test]
+    fn a_gap_a_container_really_drops_is_still_reported() {
+        // The other direction, which is the half that makes the fix safe to
+        // land. `Box` lowers to `Group`, `Stack` to `ZStack` and `HostScroll`
+        // to `ScrollView`; `container_spacing` refuses all three by name,
+        // deliberately -- a ZStack overlays along the depth axis and a
+        // ScrollView delegates layout to its content, so the gap is discarded
+        // and the report has to say so.
+        for tag in ["Box", "Stack", "HostScroll"] {
+            let drops = gap_drops(&gap_layout(None, tag, "c"));
+            assert_eq!(drops.len(), 1, "{tag} drops the gap; got: {drops:?}");
+        }
+    }
+
+    #[test]
+    fn a_table_row_pins_spacing_to_zero_so_its_gap_is_still_a_drop() {
+        // The exception that makes the table walk necessary rather than
+        // decorative. A `Row` OUTSIDE a table applies its gap; the same `Row`
+        // inside a `HostTable` lowers through `container_table_row` to
+        // `HStack(spacing: 0)`, pinning it to zero to match
+        // `border-collapse: collapse`. Its authored gap really is discarded.
+        let outside = gap_drops(&gap_layout(None, "Row", "c"));
+        assert!(outside.is_empty(), "got: {outside:?}");
+
+        let inside = gap_drops(&gap_layout(Some("HostTable"), "Row", "c"));
+        assert_eq!(inside.len(), 1, "got: {inside:?}");
+    }
+
+    #[test]
+    fn a_part_on_two_nodes_needs_every_one_of_them_to_apply_the_gap() {
+        // The case the first version of `gap_consuming_parts` got wrong. It
+        // used `any`, so one `Column` bearing the part suppressed the report
+        // for a `Box` bearing the same part -- where the gap really is lost.
+        //
+        // Not reachable in any layout in the repo today, which is precisely why
+        // it would have gone unnoticed: a part name can be bound to two tags
+        // once package resolution substitutes a `pkg::` reference with the
+        // resolved sub-tree.
+        //
+        // Caught in security review, below its reporting bar, by comparison
+        // with the Compose reporter -- whose `container_argument_covers` ends
+        // `on.iter().all(...)` and argues the same point about a part shared
+        // between a `Row` and a `Text`.
+        let both = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![
+                LayoutNode {
+                    tag: "Column".to_string(),
+                    part_name: Some("c".to_string()),
+                    props: Vec::new(),
+                    children: Vec::new(),
+                },
+                LayoutNode {
+                    tag: "Box".to_string(),
+                    part_name: Some("c".to_string()),
+                    props: Vec::new(),
+                    children: Vec::new(),
+                },
+            ],
+        };
+        let drops = gap_drops(&both);
+        assert_eq!(
+            drops.len(),
+            1,
+            "the Box occurrence loses the gap, so it stays reported; got: {drops:?}"
+        );
+
+        // And the control, so the assertion above is not passing because
+        // suppression stopped working altogether: two Columns, both applying
+        // it, report nothing.
+        let neither_loses = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![
+                LayoutNode {
+                    tag: "Column".to_string(),
+                    part_name: Some("c".to_string()),
+                    props: Vec::new(),
+                    children: Vec::new(),
+                },
+                LayoutNode {
+                    tag: "Row".to_string(),
+                    part_name: Some("c".to_string()),
+                    props: Vec::new(),
+                    children: Vec::new(),
+                },
+            ],
+        };
+        let none = gap_drops(&neither_loses);
+        assert!(none.is_empty(), "got: {none:?}");
+    }
+
+    #[test]
+    fn a_gap_value_the_container_cannot_parse_is_still_a_drop() {
+        // `container_spacing` decides, rather than this reporter re-deriving
+        // the rule. It refuses a value that is not numeric, so the container
+        // opens without a `spacing:` argument and the gap is genuinely lost --
+        // a reporter that assumed "Column means applied" would hide it.
+        let style = style_with_part("X", "c", vec![sp("gap", "1rem")]);
+        let drops: Vec<_> = dropped_style_properties(&style, &gap_layout(None, "Column", "c"))
+            .into_iter()
+            .filter(|d| d.name == "gap")
+            .collect();
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
     }
 
 

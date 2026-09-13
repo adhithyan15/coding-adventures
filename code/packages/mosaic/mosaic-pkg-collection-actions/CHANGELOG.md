@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+### Fixed — the SwiftUI `gap` pin was licensing a drop that never happened
+
+`ALLOWED_STYLE_DROPS` is now empty; `(SwiftUI, "gap")` was its only entry and it
+was never a real drop. `Column` and `Row` open `VStack(spacing:)` /
+`HStack(spacing:)` read from the part's own style. The **report** was wrong — it
+scanned only the modifier chain, and `gap` is lowered at view-construction time,
+where no modifier scan reaches it.
+
+**An empty allowlist made both existing gates one-sided**, so a third test
+anchors them. The unexpected-drop check iterates the *observed* drops, so a
+package with no drops passes it; the stale-pin check iterates the empty list.
+Neither could tell "SwiftUI applies every gap this package authors" from "this
+package authors no gap" or from "the analyzer stopped reporting".
+
+`the_package_authors_a_gap_for_the_gate_above_to_be_about` reads the two `.msl`
+sheets and requires a `gap` to be declared in each. It reads the **source**
+rather than the report on purpose: a gate that asked the analyzer whether the
+analyzer had work to do would be answered by the component that might have
+stopped working.
+
 ### Added — a native-complete gate for this package
 
 `package_compiles.rs` proves the sources round-trip through the three IR

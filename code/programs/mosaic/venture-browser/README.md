@@ -28,6 +28,11 @@ recreating the surrounding chrome in backend-specific UI code.
   scrolling, native scrollbar offsets, link activation, and hover projection
   are shared by the macOS and Windows bridges. Platform crates supply only
   their text/page composition and final paint backends.
+- Access keys retain an independent document order through layout and paint so
+  targets with negative `tabindex` remain available without entering Tab
+  traversal. Core resolves normalized duplicates, disabledness, modal scope,
+  focus, and activation; native adapters only translate the platform modifier
+  chord and forward one character through their matching `access_key` ABI.
 - View Source never refetches the page. The core escapes the exact retained
   response text into a synthetic `<pre>` HTML document and emits one typed
   `open-auxiliary-document` effect. SwiftUI, WinUI, Qt, Flutter, and Compose

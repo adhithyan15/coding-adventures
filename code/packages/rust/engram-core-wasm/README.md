@@ -53,6 +53,19 @@ and keep generated bindings idiomatic.
 `dispatch` accepts note-first `upsertNoteType`, `deleteNoteType`, `upsertNote`,
 and `deleteNote` commands; pass `materializeCardsAt` with `upsertNoteType` or
 `upsertNote` to sync generated cards from the note type through the shared core.
+
+**Note and template ids may not contain `::`.** A generated card's id is
+`{note_id}::{template_id}`, so an id carrying the separator makes two different
+(note, template) pairs collide on one card id — and cards are keyed by id, so
+one silently displaces the other. Such a command is refused, naming the field.
+This applies to both caller-facing surfaces: `dispatch`'s `upsertNote` /
+`upsertNoteType`, and `handle_engram_app_event`'s `onSaveNote` /
+`onSaveNoteType`.
+
+Deck *names* are unaffected: Anki's hierarchy is `Parent::Child`, and this
+constrains opaque ids, not names. Whole-collection loading — `loadState`,
+`load_snapshot`, `import_backup` — is also unaffected, since refusing a restore
+over one odd id would cost the collection to save a card.
 It also accepts `setDeckOptions` to insert or replace the durable scheduler
 options for a deck, using the same camelCase `DeckOptions` shape accepted by
 `rateCard`.

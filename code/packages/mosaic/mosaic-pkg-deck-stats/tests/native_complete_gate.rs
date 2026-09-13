@@ -68,7 +68,12 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::SwiftUI, "align"),
     (Backend::SwiftUI, "border-bottom-style"),
     (Backend::SwiftUI, "flex-grow"),
-    (Backend::SwiftUI, "gap"),
+    // `gap` was here and is gone. It was never dropped: `Column` and `Row`
+    // open `VStack(spacing:)` / `HStack(spacing:)` from the part's own style.
+    // What was wrong was the REPORT, which scanned only the modifier chain --
+    // and `gap` is lowered at view-construction time, where no modifier scan
+    // can see it. A gap a `Box`, `Stack` or `HostScroll` genuinely discards is
+    // still reported, so this entry would come back if one appeared here.
     (Backend::Compose, "border-bottom-style"),
     (Backend::Xaml, "border-bottom-style"),
 ];

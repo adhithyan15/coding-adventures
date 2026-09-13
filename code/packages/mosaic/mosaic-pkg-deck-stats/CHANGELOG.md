@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+### Fixed — the SwiftUI `gap` pin was licensing a drop that never happened
+
+`(SwiftUI, "gap")` is off `ALLOWED_STYLE_DROPS`. It was never a real drop:
+`Column` and `Row` open `VStack(spacing:)` / `HStack(spacing:)` read from the
+part's own style. The **report** was wrong — it scanned only the modifier chain,
+and `gap` is lowered at view-construction time, where no modifier scan reaches
+it.
+
+Left in place the entry was not untidy but load-bearing in the wrong direction:
+a standing licence for this package's gaps to genuinely stop being applied with
+the gate still green. `no_pinned_style_drop_has_silently_been_fixed` is what
+surfaced it, which is the job it was added for.
+
+A gap a `Box`, `Stack` or `HostScroll` really does discard is still reported, so
+the entry comes back if one appears here.
+
 ### Added — a native-complete gate for this package
 
 `package_compiles.rs` proves the sources round-trip through the three IR

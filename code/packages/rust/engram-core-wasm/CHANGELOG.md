@@ -2,6 +2,123 @@
 
 ## Unreleased
 
+### Added — the import path's card-key invariant is now checked, not merely true
+
+`reject_card_id_separator` guards the command channel and the Mosaic event
+channel, and `validate_command_id_separator` states why restore is exempt: it
+replaces the collection wholesale, and refusing one because a single note has an
+odd id would cost someone everything to avoid a misplaced card.
+
+**Anki import is neither.** No guard sits on `merge_anki_apkg`, and the
+exemption's argument does not extend to it — an `.apkg` is a third-party file,
+not the user's own snapshot.
+
+It turns out to need no guard. Every id the reader produces that becomes half of
+a card key is built from an Anki `i64`: a note is `note.id.to_string()`, a note
+type the same, and a template is
+`format!("{note_type_id}:template:{ordinal}")`. A `::` cannot appear in any of
+them. **So this adds a test rather than a check** — writing a guard here would
+have been a redundant one, and the survey is the deliverable.
+
+Safe *by construction* is the kind of safety that stops being true without
+anyone noticing, though. `template_id`'s format string is one edit from
+`{note_type_id}::template::{ordinal}`, and nothing anywhere said so.
+`an_imported_package_cannot_carry_the_card_id_separator` imports a real exported
+package and asserts no note, note-type or template id carries the separator —
+mutation-tested by making exactly that edit, which fails it with
+`template id "2000000::template::0"`.
+
+It also asserts, directly rather than by inference from the halves, that no two
+imported cards share an id — so the test survives a change to how the halves are
+joined — and that the import produced ids and cards at all, since every
+assertion above would pass on an empty import. Notes, note types, templates and
+cards are counted **separately**: one shared counter is satisfied by the notes
+loop alone and could not prove the template loop ran, which is the id the
+mutation actually breaks.
+
+**Two readers, not one.** `read_v11_collection` dispatches on `col.ver` and
+hands anything at schema 18 or above to `parse_schema18_collection`, a separate
+reader with its own id derivation. The first version of this test imported a
+package *this crate exported*, which is v11, and so said nothing about the path
+a package from a modern Anki actually takes — the survey established "safe by
+construction" over one of two readers and read as covering both. Found by a
+reviewer walking the claim independently, which is the argument for doing that.
+
+Schema 18 is safe on the same grounds (the notetype id is the rowid; fields and
+templates carry integer ordinals) and now has its own test against a real Anki
+fixture. The mutation fails both, with **different** ids —
+`1788376852072::template::0` from the real export and `2000000::template::0`
+from this crate's — which is what shows the two tests exercise two readers
+rather than one path twice.
+
+### Fixed — two notes could generate the same card id
+
+A generated card's id is `{note_id}::{template_id}`, and the cloze form appends
+`::c{ordinal}`. Neither component was checked for the separator, so the
+composite key is ambiguous. Measured with the real generator rather than
+argued:
+
+```text
+note "a"    + template "b::c"  ->  card id "a::b::c"
+note "a::b" + template "c"     ->  card id "a::b::c"
+```
+
+Two different (note, template) pairs, one card id. Cards are keyed by id in
+`AppState`, so one silently displaces the other.
+
+**Reachable through `dispatch`**, which is documented: the crate README
+describes it, the web host declares it, and `eg_dispatch` exports it to every
+native shell. A caller supplies the whole `Note` — id included — and nothing
+validated it. That is the same surface the deck-id family was hardened on
+(#14533, #14559, #14532), so `validate_command_id_separator` is written as that
+guard's sibling: a match over the command variants carrying an id that reaches
+card generation, with the others exempt and said to be so.
+
+Engram-minted ids are `note-{timestamp}` and `note-type-{timestamp}`, and
+Anki's are integers, so nothing that exists today contains `::`.
+
+**A guard, not a re-encoding.** Length-prefixing the key would fix it at the
+root, but every existing card id has this shape — in saved collections, in
+snapshots, in imported packages — so changing the encoding rewrites data already
+on disk. Refusing the input that makes the key ambiguous costs nothing real.
+
+**Deck names keep their `::`, and that distinction is the point.** Anki's deck
+hierarchy is literally `Parent::Child` and `subdeck_name` splits on it; a guard
+that swept names in with ids would break the feature it was meant to protect. A
+test pins that a deck named `Parent::Child` still saves.
+
+**Two surfaces, not one — and the first version of this fix only closed one.**
+`dispatch` is the command channel; `onSaveNote` and `onSaveNoteType` are the
+Mosaic event channel, and they read their ids straight from the payload and call
+`reduce` directly. `eg_handle_engram_app_event` is exported to every native
+shell exactly as `eg_dispatch` is, so it was not a lesser door.
+
+Security review found that by *reproducing* the collision through the event
+surface rather than reading the code: both events returned `ok: true` and two
+cards with id `a::b::c` coexisted in one collection. The guard now runs on both,
+through one shared `reject_card_id_separator`.
+
+Six tests, mutation-checked twice. Removing the guard fails the refusals while
+the two acceptance tests keep passing — an ordinary note id still stores, so it
+is not simply rejecting everything. And removing *only* the event-surface guards
+fails exactly the two event tests while the `dispatch` tests stay green, which
+is why the first version looked complete when it was not.
+
+**`LoadState` is deliberately exempt**, along with `load_snapshot` and
+`import_backup`, which do not pass through the command guard at all. They
+replace the collection wholesale rather than editing it, and refusing a restore
+because one note in it carries an odd id would cost someone their whole
+collection to avoid a misplaced card — the opposite of the trade this crate
+makes elsewhere. `validate_command_deck_reference` exempts it for the same
+reason. Constraining what a restore may contain is a separate question about
+snapshot trust.
+
+Two things that look like the same bug and are not, both checked against the
+emitted behaviour rather than assumed: `subdeck_name`'s `rsplit_once("::")`
+operates on deck names, where the separator is intended; and
+`card_template_matches` parses `card.id` only as a fallback when `card.lineage`
+is absent, which generated and imported cards both carry.
+
 ### Fixed — a new note-type draft could carry a saved model's id
 
 The guard against this existed, was documented, and did nothing.

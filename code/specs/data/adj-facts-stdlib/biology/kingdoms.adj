@@ -1,6 +1,8 @@
 % ============================================================================
-% kingdoms — each biological kingdom of life mapped to every example organism
-% the source lists for it (adj-facts-stdlib, BIOLOGY).
+% kingdoms — each biological kingdom of life mapped to the example organisms
+% this table carries from the source's "Examples:" lines (adj-facts-stdlib,
+% BIOLOGY). NOT every example the source lists: see the under-coverage note
+% below (`rusts`, and the sixth kingdom Archaea).
 % ============================================================================
 % One of the very first ideas a biology learner meets: every living thing on
 % Earth is sorted into a small number of top-level KINGDOMS, and each kingdom
@@ -22,8 +24,9 @@
 % `red` (strontium ; lithium) already established the reverse shape in this
 % same stdlib.
 %
-% Each kingdom below and EVERY example the source lists for it, as a truth
-% table:
+% Each kingdom below and every example THIS TABLE CARRIES for it, as a truth
+% table (the source lists one more example, `rusts`, and a whole sixth kingdom,
+% neither of which this table carries — see below):
 %
 %     kingdom     example                a beginner's cue
 %     ---------   --------------------   ----------------------------------
@@ -34,7 +37,6 @@
 %     plantae     flowers                the plant kingdom
 %     plantae     grasses
 %     plantae     conifers
-%     plantae     multicellular_algae
 %     plantae     ferns
 %     plantae     mosses
 %     fungi       mushrooms              the fungus kingdom
@@ -65,87 +67,159 @@
 % The `example` value of every row is a SINGLE lowercase snake_case atom, chosen
 % to be an organism the source EXPLICITLY lists for that kingdom — never one the
 % source does not support. (Where the source's own phrase is two or more words
-% — "multicellular algae", "slime molds", "single-celled algae", "Gram-positive
-% ... bacteria" — the atom joins them with underscores, so every value stays
-% literally checkable against the quoted "Examples:" span.)
+% — "slime molds", "single-celled algae", "Gram-positive
+% ... bacteria" — the atom joins them with underscores.)
+%
+% NOT every value is a contiguous substring of its span, and the ellipsis
+% above is where that breaks. "Gram-positive and Gram-negative bacteria"
+% states two examples by DISTRIBUTING one head noun; neither
+% `gram_positive_bacteria` nor the phrase "Gram-positive bacteria" occurs
+% contiguously on the page. Those two rows rest on reading the conjunction
+% as distributive — a reading, not a quotation. The removed
+% `multicellular_algae` row failed a weaker test than that: its phrase is
+% absent under ANY reading, occurring zero times on the page.
 %
 % ---------------------------------------------------------------------------
-% Provenance (nothing here is asserted from memory — every kingdom→example pair
-% below was read out of a single fetched Science Notes "Kingdoms of Life in
-% Biology" page, and any pair whose example could not be verified there would
-% have been dropped). Each pair, with the verbatim "Examples:" span that states
-% it (all from the one source below):
+% Provenance (every kingdom→example pair below was read out of a single
+% fetched Science Notes "Kingdoms of Life in Biology" page). This paragraph
+% used to end "and any pair whose example could not be verified there would
+% have been dropped" — which this file disproves: one such pair shipped for a
+% full cycle and is removed below. The guarantee was never enforced by
+% anything; the per-row spans and their pins are the enforcement.
 %
-%   animalia → humans, birds, crustaceans, sponges
-%     "Examples: Humans, birds, crustaceans, sponges"
-%   plantae → flowers, grasses, conifers, multicellular_algae, ferns, mosses
-%     "Examples: Flowers, grasses, conifers, multicellular algae, ferns, mosses"
-%   fungi → mushrooms, yeast, molds
-%     "Examples: Mushrooms, yeast, molds"
-%   protista → amoebas, diatoms, dinoflagellates, ciliates, slime_molds,
-%   single_celled_algae
-%     "Examples: Amoebas, diatoms, dinoflagellates, ciliates, slime molds,
-%      single-celled algae"
-%   bacteria → cyanobacteria, gram_positive_bacteria, gram_negative_bacteria,
-%   actinobacteria
-%     "Examples: Gram-positive and Gram-negative bacteria, cyanobacteria,
-%      actinobacteria" (the "and"-joined pair names two distinct, literal
-%      examples in the same list -- not an "or"-joined alternative
-%      categorization -- so each is its own row)
+% Each pair now carries the verbatim "Examples:" span that
+% states it AS ITS OWN `source` (RS-5e per-row provenance, #14986), rather than
+% being listed here where no answer could reach it:
 %
-% All five spans are from the same page,
+%   animalia  "Examples: Humans, birds, crustaceans, sponges"
+%   plantae   "Examples: Flowers, grasses, conifers, ferns, mosses"
+%   fungi     "Examples: Mushrooms, yeast, molds, rusts"
+%   protista  "Examples: Amoebas, diatoms, dinoflagellates, ciliates, slime
+%              molds, single-celled algae"
+%   bacteria  "Examples: Gram-positive and Gram-negative bacteria,
+%              cyanobacteria, actinobacteria"  (the "and"-joined pair names two
+%              distinct, literal examples in the same list -- not an "or"-joined
+%              alternative categorization -- so each is its own row)
+%
+% ONE ROW WAS REMOVED: `plantae -> multicellular_algae`. Re-measured 2026-09-13
+% UTC with a raw fetch, the page's plantae line reads "Examples: Flowers,
+% grasses, conifers, ferns, mosses" -- it does NOT contain "multicellular
+% algae", and that phrase occurs ZERO times anywhere on the page — in the
+% rendered text AND in the raw HTML, which no choice of extractor can move
+% ("algae" occurs twice, both Protista, where the page actively places algae).
+% A row the cited page does not state is exactly what this library exists not
+% to ship, so it is gone and the recall abstains rather than asserting it.
+%
+% WHICH OF THREE CAUSES IS NOT DETERMINED HERE, and the note below is why it
+% matters. The previous header recorded the plantae span WITH "multicellular
+% algae" and said the lines were "WebFetch-verified (re-fetched the live page
+% and confirmed every 'Examples:' line word-for-word AGAINST THE HEADER'S
+% ORIGINAL TRANSCRIPTION)" [emphasis added] — quoted in full, because that
+% trailing qualifier is load-bearing and an earlier draft dropped it. It says
+% the old
+% check compared the page against THIS FILE'S OWN prior transcription, which
+% admits a third cause beside the obvious two: the page changed after the
+% check; the summarizing fetcher misreported the line; or the line was never
+% independently read, and the check confirmed the header against itself. The
+% evidence to hand cannot separate them, so none is asserted. What IS
+% settled: a raw fetch today does not contain the phrase, and a summarizing
+% fetcher is not an instrument for a verbatim span.
+%
+% The fungi line also reads "Mushrooms, yeast, molds, rusts" today; the three
+% shipped fungi rows are each stated by it, and `rusts` is simply a fourth
+% example this table does not carry. The page also now describes a SIXTH
+% kingdom, Archaea ("Examples: Methanogens, extreme halophiles, thermophiles,
+% ammonia-oxidizing archaea"), which this table does not cover either. Both are
+% under-coverage, not defects, and neither is expanded here.
+%
+% CENSUS, 2026-09-13 UTC, over the one page, rendered text (inline tags removed
+% with no separator -- the page writes "<strong>Examples</strong>:", so a naive
+% every-tag-becomes-a-space extractor yields "Examples : " and scores ZERO on
+% its own positive control, which is how the first run of this harness failed):
+% TWO counts, because they answer different questions and only one of them
+% justifies deleting a row:
+%
+%   21 of the 23 rows shipped BEFORE this change are a CONTIGUOUS SUBSTRING
+%      of their kingdom's line (hyphens and underscores normalised to spaces
+%      on both sides). Of the 22 shipped after it: still 21.
+%   22 of those 23 have every TOKEN of the atom present in that line.
+%      Of the 22 shipped after it: 22.
+%
+% The two rows that differ are `plantae -> multicellular_algae` and
+% `bacteria -> gram_positive_bacteria`. They are NOT the same case, and
+% saying only "22 of 23" hid that:
+%
+%   gram_positive_bacteria — every token is on the line; the page writes
+%     "Gram-positive and Gram-negative bacteria", distributing one head
+%     noun across two examples. KEPT, on that distributive reading, which
+%     the note above now states rather than implies.
+%   multicellular_algae    — zero tokens-in-phrase, zero substring, and the
+%     phrase occurs zero times anywhere on the page under any reading.
+%     REMOVED.
+%
+% Hyphen normalisation cleared TWO of the first run's four apparent misses
+% ("single-celled algae", "gram_negative_bacteria"), not three; the third,
+% `gram_positive_bacteria`, is not a hyphen artifact and is the case above.
+% Controls: a fabricated atom fails for every kingdom; a known-good atom passes.
+%
+% All spans are from the same page,
 % https://sciencenotes.org/kingdoms-of-life-in-biology/ — a secondary science
 % teaching resource, so `trust consensus` (not a primary .gov/.edu source).
+% No row restates `locator` or `trust`: one page, one tier, and a row inherits
+% every field it does not write.
 %
-% EXTENDED this cycle from 5 to 23 rows: the SAME already-cited Science Notes
-% page's own "Examples:" lines name eighteen MORE organisms beyond the five
-% originally shipped (one per kingdom) — zero new source page needed,
-% WebFetch-verified (re-fetched the live page and confirmed every "Examples:"
-% line word-for-word against the header's original transcription) before
-% writing. This is the fifth successful extend-pattern win in this loop's
-% recent run (after animal-classes.adj, idiom-meaning.adj, plant-tropisms.adj,
-% simile-meaning.adj), and the first to extend a table from single-valued to
-% many-valued per key rather than adding new keys — the same reverse-lookup
-% shape `flame_color.adj` already established (many values recalled for one
-% bound argument), just applied in the OTHER direction (many `example` values
+% EXTENDED from 5 to 23 rows in an earlier cycle, now 22: the SAME already-cited
+% page's own "Examples:" lines name the additional organisms — zero new source
+% page needed. This was the fifth extend-pattern win in this loop's run (after
+% animal-classes.adj, idiom-meaning.adj, plant-tropisms.adj, simile-meaning.adj),
+% and the first to extend a table from single-valued to many-valued per key
+% rather than adding new keys — the same reverse-lookup shape `flame_color.adj`
+% already established, applied in the OTHER direction (many `example` values
 % recalled for one bound `kingdom`).
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the "Examples:" line that fixes
-% the first row (animalia → humans). Every OTHER row's verbatim "Examples:" span
-% is listed above, so each example remains independently checkable.
-% (See ../README.md; feedback_nothing_human_authored,
+% The envelope is now a FRAMING span — "The traditional five kingdoms are
+% Animalia, Plantae, Fungi, Protista, and Monera." — what defends the table as
+% a whole, plus a `cites` for the six-kingdom split, which is what makes
+% `bacteria` a kingdom key at all. Until #14986 the envelope held the animalia
+% "Examples:" line, so every answer in every kingdom quoted the same cell:
+% ask for a fungus and the citation was a sentence about humans and sponges.
+% (See ../README.md; ADJ-TABLES.md RS-5e; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table kingdom_example {
     columns kingdom, example
 
-    row (animalia, humans)
-    row (animalia, birds)
-    row (animalia, crustaceans)
-    row (animalia, sponges)
-    row (plantae, flowers)
-    row (plantae, grasses)
-    row (plantae, conifers)
-    row (plantae, multicellular_algae)
-    row (plantae, ferns)
-    row (plantae, mosses)
-    row (fungi, mushrooms)
-    row (fungi, yeast)
-    row (fungi, molds)
-    row (protista, amoebas)
-    row (protista, diatoms)
-    row (protista, dinoflagellates)
-    row (protista, ciliates)
-    row (protista, slime_molds)
-    row (protista, single_celled_algae)
-    row (bacteria, cyanobacteria)
-    row (bacteria, gram_positive_bacteria)
-    row (bacteria, gram_negative_bacteria)
-    row (bacteria, actinobacteria)
+    row (animalia, humans) { source "Examples: Humans, birds, crustaceans, sponges" }
+    row (animalia, birds) { source "Examples: Humans, birds, crustaceans, sponges" }
+    row (animalia, crustaceans) { source "Examples: Humans, birds, crustaceans, sponges" }
+    row (animalia, sponges) { source "Examples: Humans, birds, crustaceans, sponges" }
+    row (plantae, flowers) { source "Examples: Flowers, grasses, conifers, ferns, mosses" }
+    row (plantae, grasses) { source "Examples: Flowers, grasses, conifers, ferns, mosses" }
+    row (plantae, conifers) { source "Examples: Flowers, grasses, conifers, ferns, mosses" }
+    row (plantae, ferns) { source "Examples: Flowers, grasses, conifers, ferns, mosses" }
+    row (plantae, mosses) { source "Examples: Flowers, grasses, conifers, ferns, mosses" }
+    row (fungi, mushrooms) { source "Examples: Mushrooms, yeast, molds, rusts" }
+    row (fungi, yeast) { source "Examples: Mushrooms, yeast, molds, rusts" }
+    row (fungi, molds) { source "Examples: Mushrooms, yeast, molds, rusts" }
+    row (protista, amoebas) { source "Examples: Amoebas, diatoms, dinoflagellates, ciliates, slime molds, single-celled algae" }
+    row (protista, diatoms) { source "Examples: Amoebas, diatoms, dinoflagellates, ciliates, slime molds, single-celled algae" }
+    row (protista, dinoflagellates) { source "Examples: Amoebas, diatoms, dinoflagellates, ciliates, slime molds, single-celled algae" }
+    row (protista, ciliates) { source "Examples: Amoebas, diatoms, dinoflagellates, ciliates, slime molds, single-celled algae" }
+    row (protista, slime_molds) { source "Examples: Amoebas, diatoms, dinoflagellates, ciliates, slime molds, single-celled algae" }
+    row (protista, single_celled_algae) { source "Examples: Amoebas, diatoms, dinoflagellates, ciliates, slime molds, single-celled algae" }
+    row (bacteria, cyanobacteria) { source "Examples: Gram-positive and Gram-negative bacteria, cyanobacteria, actinobacteria" }
+    row (bacteria, gram_positive_bacteria) { source "Examples: Gram-positive and Gram-negative bacteria, cyanobacteria, actinobacteria" }
+    row (bacteria, gram_negative_bacteria) { source "Examples: Gram-positive and Gram-negative bacteria, cyanobacteria, actinobacteria" }
+    row (bacteria, actinobacteria) { source "Examples: Gram-positive and Gram-negative bacteria, cyanobacteria, actinobacteria" }
 
-    source "Examples: Humans, birds, crustaceans, sponges"
+    source "The traditional five kingdoms are Animalia, Plantae, Fungi, Protista, and Monera."
     locator "https://sciencenotes.org/kingdoms-of-life-in-biology/"
     trust consensus
+
+    % `bacteria` is a kingdom only in the SIX-kingdom system, which this
+    % second span is what states. Without it the envelope would name five
+    % kingdoms, one of which (Monera) is not a key in this table, while
+    % the key that IS here (bacteria) went unnamed.
+    cites "The six-kingdom system separates Monera into Bacteria and Archaea." locator "https://sciencenotes.org/kingdoms-of-life-in-biology/"
 }

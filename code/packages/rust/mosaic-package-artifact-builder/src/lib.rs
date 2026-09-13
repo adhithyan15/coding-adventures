@@ -1281,9 +1281,16 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                     }
                 }
                 Backend::SwiftUI => {
-                    for d in
-                        mosaic_emit_swiftui::pipeline::dropped_style_properties(&composed.style)
-                    {
+                    // With the layout the reporter can tell a container that
+                    // applies `gap` through `HStack(spacing:)` from one that
+                    // drops it, the same way the Compose reporter below tells a
+                    // Row from a Text. `gap` is lowered at view-construction
+                    // time, so the modifier-chain scan alone called every one
+                    // of them dropped.
+                    for d in mosaic_emit_swiftui::pipeline::dropped_style_properties(
+                        &composed.style,
+                        &composed.layout.def.root,
+                    ) {
                         push_drop(d.part, d.name, d.value, d.reason);
                     }
                 }
@@ -1518,7 +1525,8 @@ fn ignored_native_property(
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
         (_, "font-size") if !matches!(backend, Backend::React | Backend::Electron)
-            && !(backend == Backend::Compose && mosaic_emit_compose::pipeline::has_native_font_size(node)) => Some((
+            && !(backend == Backend::Compose && mosaic_emit_compose::pipeline::has_native_font_size(node))
+            && !(backend == Backend::Qt && mosaic_emit_qt::pipeline::has_native_font_size(node)) => Some((
             "typography.font-size-binding-unimplemented",
             "layout font-size binding has no projection for this backend or primitive; static mosstyle typography is unaffected",
         )),
@@ -7865,7 +7873,7 @@ layout AccessibleText {
                     .iter()
                     .filter(|entry| entry.code == "typography.font-size-binding-unimplemented")
                     .count(),
-                if matches!(backend, Backend::React | Backend::Electron | Backend::Compose) {
+                if matches!(backend, Backend::React | Backend::Electron | Backend::Compose | Backend::Qt) {
                     0
                 } else {
                     4
@@ -9481,6 +9489,7 @@ files = [
     /// passed a different directory as the package root, so the path never
     /// resolved and the containment branch never ran — the test failed on a
     /// missing file while appearing to exercise the guard.
+    #[cfg(unix)]
     #[test]
     fn a_host_asset_symlink_escaping_the_package_is_refused() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
