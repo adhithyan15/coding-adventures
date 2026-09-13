@@ -468,7 +468,17 @@ fn route_edge(
         id:           edge.id.clone(),
         from_node_id: from_node.id.clone(),
         to_node_id:   to_node.id.clone(),
-        kind:         edge.kind.clone(),
+        kind:         edge.kind,
+        start_marker: if edge.kind == diagram_ir::EdgeKind::Bidirectional {
+            diagram_ir::EdgeMarker::Point
+        } else {
+            diagram_ir::EdgeMarker::None
+        },
+        end_marker: if matches!(edge.kind, diagram_ir::EdgeKind::Directed | diagram_ir::EdgeKind::Bidirectional) {
+            diagram_ir::EdgeMarker::Point
+        } else {
+            diagram_ir::EdgeMarker::None
+        },
         points,
         label:        edge.label.clone(),
         label_position,

@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.116.0
+
+- Preserve point, circle, cross, and absent edge endpoint markers in shared grid and layout IR.
+
 ## 0.115.0
 
 - Represent bidirectional point-arrow connections explicitly in shared edge semantics.

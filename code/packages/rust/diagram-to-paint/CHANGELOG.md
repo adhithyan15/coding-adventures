@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.126.0
+
+- Lower circle and cross graph-edge endpoint markers to backend-neutral paint geometry.
+
 ## 0.125.0
 
 - Lower bidirectional graph edges to backend-neutral point arrowheads at both endpoints.
