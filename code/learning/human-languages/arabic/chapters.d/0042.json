@@ -1,0 +1,19 @@
+{
+  "chapter": 42,
+  "title": "Reading — Words, Lines, and a First Encounter",
+  "label": "ch:ar-first-reading",
+  "canDo": "I can read familiar Arabic words without romanization, follow complete lines in right-to-left script, and understand a connected encounter from greeting through a choice to farewell.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "AR-C42-first-passage",
+    "kind": "four-skill-function-map",
+    "summary": "One complete Arabic encounter made only from previously taught forms and glyphs, with the script carrying greeting, names, a choice and farewell without a romanized line underneath.",
+    "assesses": [
+      "AR-SKILL-CONNECTED-READING",
+      "AR-SKILL-READ-LINES",
+      "AR-SKILL-READ-WORDS"
+    ]
+  }
+}
