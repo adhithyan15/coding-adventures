@@ -4383,6 +4383,36 @@ fn emit_host_input(
     Ok(out)
 }
 
+/// A length that is safe to format directly into generated Dart, or `None`.
+///
+/// Deliberately stricter than [`parse_pixel_value`], whose "0 on anything
+/// unreadable" fallback is right where it is used and wrong here. Three
+/// separate ways an authored length breaks the generated app:
+///
+///  - **Unreadable.** `inherit`, `90%`, `0.9rem`, `large`. Falling back to
+///    `0` would compile and then render a zero-width border or zero-size
+///    text -- silently invisible. Dropping instead leaves the framework
+///    default, which is the honest answer.
+///  - **Negative.** `BorderSide`'s constructor is `assert(width >= 0.0)`,
+///    so a negative width type-checks and then THROWS when the widget
+///    builds, taking out its whole subtree. `per_edge_border_expr` guards
+///    this the same way.
+///  - **Absurd.** Rust's `Display` for f64 never uses exponent notation, so
+///    a finite `1e300` expands to a 301-digit bare literal that Dart
+///    rejects outright (`integer_literal_imprecise_as_double`) -- one
+///    authored value stopping the whole app from compiling.
+///
+/// `-0px` still reads as zero (IEEE `-0.0 >= 0.0`), so a part zeroing a
+/// border that way keeps mapping to `InputBorder.none`.
+fn strict_pixel_length(s: &str) -> Option<f64> {
+    const MAX_EXACT_INT: f64 = 9_007_199_254_740_992.0; // 2^53
+    let t = s.trim();
+    let t = t.strip_suffix("px").unwrap_or(t);
+    t.parse::<f64>()
+        .ok()
+        .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= MAX_EXACT_INT)
+}
+
 /// #15142 -- lower a `HostInput`'s part style into its `InputDecoration`.
 ///
 /// Until this existed `emit_host_input` took `_part_styles` and never read
@@ -4481,24 +4511,9 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
     // silently DELETING the border from every input that authors one.
     // VisiCalc's formula bar caught this; it lost its outline the first
     // time this function was written.
-    fn strict_px(s: &str) -> Option<f64> {
-        let t = s.trim();
-        let t = t.strip_suffix("px").unwrap_or(t);
-        // NEGATIVE widths are rejected, not clamped. `BorderSide`'s
-        // constructor is `assert(width >= 0.0)`, so a negative authored
-        // width type-checks and then THROWS when the widget builds,
-        // taking out the input and everything above it in the tree.
-        // `per_edge_border_expr` already skips such an edge for exactly
-        // this reason; this parse must not reintroduce the hazard.
-        // Falling through to `None` leaves Material's default border,
-        // which is the same correct-by-omission answer used elsewhere.
-        t.parse::<f64>()
-            .ok()
-            .filter(|f| f.is_finite() && *f >= 0.0)
-    }
     fn is_zero(v: &str) -> bool {
         let t = v.trim();
-        t == "none" || strict_px(t) == Some(0.0)
+        t == "none" || strict_pixel_length(t) == Some(0.0)
     }
 
     let shorthand = props.get("border").map(|s| s.trim().to_string());
@@ -4522,12 +4537,12 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
             if !text.split_whitespace().any(|t| t == "solid") {
                 return None;
             }
-            let w = text.split_whitespace().find_map(strict_px);
+            let w = text.split_whitespace().find_map(strict_pixel_length);
             let c = text.split_whitespace().find_map(css_color_to_dart);
             (w, c)
         }
         None => (
-            width.as_deref().and_then(strict_px),
+            width.as_deref().and_then(strict_pixel_length),
             props.get("border-color").and_then(|v| css_color_to_dart(v)),
         ),
     };
@@ -4582,7 +4597,14 @@ fn host_input_text_style_arg(
     if let Some(color) = props.get("color").and_then(|v| css_color_to_dart(v)) {
         fields.push(format!("color: {color}"));
     }
-    if let Some(size) = props.get("font-size").map(|v| parse_pixel_value(v)) {
+    // `and_then`, NOT `map`. Routing this through `parse_pixel_value`'s
+    // "0 on anything unreadable" fallback turns `font-size: inherit`,
+    // `90%` or `0.9rem` into `fontSize: 0` -- Dart that compiles and then
+    // renders the input's text at zero size, invisible. That is the same
+    // loud-to-silent trade as #15141's transparent brush, and the wrong
+    // direction: dropping leaves the theme's size, which is visible and
+    // merely unstyled.
+    if let Some(size) = props.get("font-size").and_then(|v| strict_pixel_length(v)) {
         fields.push(format!("fontSize: {size}"));
     }
     // Only the generic families Flutter resolves without a bundled asset.
@@ -14181,6 +14203,20 @@ mod host_input_style_tests {
             parse_pixel_value("1e300px").len() < 8,
             "the fallback must be short, not a giant literal"
         );
+        // ...and the same must hold on the BORDER width path, which does
+        // NOT go through `parse_pixel_value`. The first fix capped only
+        // the shared helper and left this one emitting the 301-digit
+        // literal.
+        assert_eq!(
+            host_input_border_expr(&props(&[("border", "1e300px solid #ff0000")])),
+            None,
+            "an absurd border width must fall back, not emit a giant literal"
+        );
+        assert_eq!(
+            host_input_border_expr(&props(&[("border-width", "1e300px")])),
+            None
+        );
+
         // the ordinary values every part authors are untouched
         assert_eq!(parse_pixel_value("10px"), "10");
         assert_eq!(parse_pixel_value("0px"), "0");
@@ -14199,6 +14235,27 @@ mod host_input_style_tests {
             None,
             "`inherit` must not become a colour"
         );
+        // A `font-size` this emitter cannot read must be DROPPED, not
+        // turned into `fontSize: 0`. Zero-size text compiles and renders
+        // nothing -- the same silent-invisibility failure as a
+        // transparent brush, reached by a different route.
+        for bad in ["inherit", "90%", "0.9rem", "large", "1e300px", "-4px"] {
+            assert_eq!(
+                host_input_text_style_arg(
+                    &input_with_part("f"),
+                    &styles("f", &format!("font-size: {bad}"))
+                ),
+                None,
+                "font-size: {bad} must be dropped, never become fontSize: 0"
+            );
+        }
+        // a readable one still lowers
+        assert_eq!(
+            host_input_text_style_arg(&input_with_part("f"), &styles("f", "font-size: 13px"))
+                .as_deref(),
+            Some("TextStyle(fontSize: 13)")
+        );
+
         let deco = host_input_decoration_arg(
             &input_with_part("f"),
             &styles("f", "background: transparent; font: inherit"),

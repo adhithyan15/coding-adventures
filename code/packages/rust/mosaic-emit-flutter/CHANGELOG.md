@@ -67,6 +67,14 @@ found in security review:
   integer range now fall back to `0` like any other unreadable input. This
   helper is shared, so the fix reaches container padding and sizing too.
 
+A third, subtler one: `font-size` was read through `parse_pixel_value`,
+whose "0 on anything unreadable" fallback turned `font-size: inherit`,
+`90%` or `0.9rem` into `fontSize: 0` -- Dart that compiles and then renders
+the input's text at zero size, invisible. Unreadable lengths on this path
+are now dropped so the theme's size survives. Both new length sinks share
+one `strict_pixel_length`, which rejects unreadable, negative and absurd
+values alike.
+
 The CSS-wide keywords are dropped rather than guessed at: `css_color_to_dart`
 returns `None` for `inherit` and `transparent`, so neither invents a brush.
 That is deliberate -- inventing one is exactly how Compose and SwiftUI paint
