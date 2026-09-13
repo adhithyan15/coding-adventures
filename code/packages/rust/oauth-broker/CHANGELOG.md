@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added exact stored private-key-JWT refresh composition: the complete retained
+  profile is validated before the selected credential's refresh token is
+  released; signing and transport remain injected and audited; and the bounded
+  response is atomically retained or rotated only at the loaded revision. All
+  failures preserve the prior credential.
 - Added one composed `private_key_jwt` authorization-code exchange-to-custody
   boundary: an exact provider-bound opaque account key is required before
   signing, transport, clock, or credential-store access; the bounded response

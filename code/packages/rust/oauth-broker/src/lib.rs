@@ -747,6 +747,8 @@ pub enum BrokerAuditAction {
     PrivateKeyJwtRevocation,
     /// Refresh and atomically rotate one client-secret-authenticated credential.
     ClientSecretRefreshCredentialRotate,
+    /// Refresh and atomically rotate one private-key-JWT-authenticated credential.
+    PrivateKeyJwtRefreshCredentialRotate,
     /// Authenticate and send one client-secret authorization-code exchange.
     ClientSecretExchange,
     /// Authenticate, send, and classify one client-secret RFC 7009 revocation.
@@ -931,6 +933,34 @@ pub struct PrivateKeyJwtRefreshExecution<'a, S: SigningAuthority, T> {
     issued_at: u64,
     replay_entropy: Zeroizing<[u8; 32]>,
     transport: &'a mut T,
+}
+
+/// Injected authorities and one-use assertion inputs for refresh-to-custody.
+pub struct PrivateKeyJwtRefreshCredentialExecution<'a, S: SigningAuthority, C, T> {
+    signer: &'a AuditedPrivateKeySigner<S>,
+    issued_at: u64,
+    replay_entropy: Zeroizing<[u8; 32]>,
+    clock: &'a mut C,
+    transport: &'a mut T,
+}
+
+impl<'a, S: SigningAuthority, C, T> PrivateKeyJwtRefreshCredentialExecution<'a, S, C, T> {
+    /// Bind caller-owned signing, time, replay entropy, clock, and transport.
+    pub fn new(
+        signer: &'a AuditedPrivateKeySigner<S>,
+        issued_at: u64,
+        replay_entropy: [u8; 32],
+        clock: &'a mut C,
+        transport: &'a mut T,
+    ) -> Self {
+        Self {
+            signer,
+            issued_at,
+            replay_entropy: Zeroizing::new(replay_entropy),
+            clock,
+            transport,
+        }
+    }
 }
 
 impl<'a, S: SigningAuthority, T> PrivateKeyJwtRefreshExecution<'a, S, T> {
@@ -1631,6 +1661,96 @@ impl<S: CredentialStore> OAuthBroker<S> {
             &provider_id,
             trace,
             BrokerAuditAction::ClientSecretRefreshCredentialRotate,
+            result,
+        )
+    }
+
+    /// Refresh one stored credential through exact retained private-key-JWT policy.
+    ///
+    /// The opaque account key selects the registered provider and credential
+    /// record. The complete retained profile is validated before custody
+    /// releases the exact refresh token and revision. The decoded response
+    /// crosses the OAuth credential-release gate into revision-bound rotation,
+    /// so failures and stale revisions retain the prior record. Issued-at time,
+    /// replay entropy, signing, clock, transport, and storage remain injected.
+    pub fn refresh_private_key_jwt_and_rotate_credentials<SA, C, T, A>(
+        &self,
+        key: &CredentialKey,
+        profile: &PrivateKeyJwtProfile,
+        trace: OAuthTraceId,
+        execution: PrivateKeyJwtRefreshCredentialExecution<'_, SA, C, T>,
+        audit: &mut A,
+    ) -> Result<CredentialRevision, BrokerError>
+    where
+        SA: SigningAuthority,
+        C: BrokerClock,
+        T: OAuthPrivateKeyJwtTokenTransport,
+        A: OAuthPrivateKeyJwtCredentialBrokerAuditSink,
+    {
+        let PrivateKeyJwtRefreshCredentialExecution {
+            signer,
+            issued_at,
+            replay_entropy,
+            clock,
+            transport,
+        } = execution;
+        let provider_id = key.provider().clone();
+        publish_broker(
+            audit,
+            &provider_id,
+            trace,
+            BrokerAuditAction::PrivateKeyJwtRefreshCredentialRotate,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            let provider = self.registered_provider(&provider_id)?.clone();
+            validate_private_key_jwt_profile(
+                &provider,
+                profile,
+                provider.config().token_endpoint(),
+            )?;
+            let material = self
+                .custody
+                .with_refresh_material(key, trace, audit, |token, revision, metadata| {
+                    RefreshMaterial {
+                        token: Zeroizing::new(token.to_owned()),
+                        revision,
+                        scopes: metadata.scopes().to_vec(),
+                    }
+                })
+                .map_err(map_custody_error)?;
+            let requested_scopes: Vec<&str> = material.scopes.iter().map(String::as_str).collect();
+            let request =
+                prepare_token_refresh(provider.config(), material.token, &requested_scopes, trace)
+                    .publish_then_release(audit)
+                    .map_err(map_oauth_error)?;
+            let response = self.send_private_key_jwt_refresh(
+                profile,
+                request,
+                PrivateKeyJwtRefreshExecution {
+                    signer,
+                    issued_at,
+                    replay_entropy,
+                    transport,
+                },
+                audit,
+            )?;
+            validate_response_binding(key, &response, trace)?;
+            let now = clock.now_unix_seconds().map_err(|_| BrokerError::Clock)?;
+            let metadata = response_metadata(&response, now, &material.scopes)?;
+            let credentials = response
+                .release_credentials()
+                .publish_then_release(audit)
+                .map_err(map_oauth_error)?;
+            self.custody
+                .rotate(key, material.revision, credentials, metadata, trace, audit)
+                .map_err(map_custody_error)
+        })();
+        finish_broker(
+            audit,
+            &provider_id,
+            trace,
+            BrokerAuditAction::PrivateKeyJwtRefreshCredentialRotate,
             result,
         )
     }
@@ -3066,6 +3186,18 @@ mod tests {
                         BrokerAuditAction::ClientSecretRefreshCredentialRotate,
                         BrokerAuditOutcome::Failed(_),
                     ) => "refresh-rotate-failed",
+                    (
+                        BrokerAuditAction::PrivateKeyJwtRefreshCredentialRotate,
+                        BrokerAuditOutcome::Attempted,
+                    ) => "private-key-refresh-rotate-attempted",
+                    (
+                        BrokerAuditAction::PrivateKeyJwtRefreshCredentialRotate,
+                        BrokerAuditOutcome::Succeeded,
+                    ) => "private-key-refresh-rotate-succeeded",
+                    (
+                        BrokerAuditAction::PrivateKeyJwtRefreshCredentialRotate,
+                        BrokerAuditOutcome::Failed(_),
+                    ) => "private-key-refresh-rotate-failed",
                     (BrokerAuditAction::ClientSecretExchange, BrokerAuditOutcome::Attempted) => {
                         "exchange-attempted"
                     }
@@ -3388,6 +3520,7 @@ mod tests {
 
     struct MockPrivateKeyJwtRefreshTransport {
         response: Option<TokenEndpointResponse>,
+        expected_refresh: &'static str,
         calls: usize,
         order: Rc<RefCell<Vec<&'static str>>>,
     }
@@ -3404,7 +3537,9 @@ mod tests {
                 request.endpoint(),
                 "https://token.fixture-confidential.example/token"
             );
-            assert!(request.form_body().contains("refresh_token=refresh-secret"));
+            assert!(request
+                .form_body()
+                .contains(&format!("refresh_token={}", self.expected_refresh)));
             assert!(request.form_body().contains(concat!(
                 "&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3A",
                 "client-assertion-type%3Ajwt-bearer&client_assertion="
@@ -4385,6 +4520,7 @@ mod tests {
                 )
                 .unwrap(),
             ),
+            expected_refresh: "refresh-secret",
             calls: 0,
             order: order.clone(),
         };
@@ -4478,6 +4614,7 @@ mod tests {
         let signer = AuditedPrivateKeySigner::from_audited_authority(authority);
         let mut transport = MockPrivateKeyJwtRefreshTransport {
             response: None,
+            expected_refresh: "refresh-secret",
             calls: 0,
             order: order.clone(),
         };
@@ -6428,6 +6565,289 @@ mod tests {
             broker
                 .custody
                 .with_metadata(&credential_key, trace(65), &mut audit, |metadata| {
+                    (
+                        metadata.expires_at_unix_seconds(),
+                        metadata.scopes().to_vec(),
+                    )
+                })
+                .unwrap(),
+            (
+                Some(4_600),
+                vec!["mail.read".to_owned(), "profile".to_owned()],
+            )
+        );
+    }
+
+    #[test]
+    fn stored_private_key_jwt_refresh_rotates_exact_revision_after_all_audit_gates() {
+        let provider_config = config("fixture-confidential");
+        let provider = BrokerProvider::new_confidential(
+            provider_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::PrivateKeyJwt,
+            vec!["EdDSA".to_owned()],
+        )
+        .unwrap();
+        let signing_key = PrivateKeyId::new(
+            provider_config.provider().clone(),
+            PrivateKeyReference::new([0x7f; 32]),
+        );
+        let profile = provider
+            .bind_private_key_jwt_profile(
+                signing_key.clone(),
+                PrivateKeyJwtAlgorithm::new("EdDSA").unwrap(),
+                Some("key-1".to_owned()),
+                60,
+            )
+            .unwrap();
+        let rejected_profile = PrivateKeyJwtProfile::new(
+            provider_config.provider().clone(),
+            provider_config.client_id(),
+            provider_config.token_endpoint(),
+            &["private_key_jwt".to_owned()],
+            &["RS256".to_owned()],
+            signing_key,
+            PrivateKeyJwtAlgorithm::new("RS256").unwrap(),
+            None,
+            60,
+        )
+        .unwrap();
+        let credential_key = key("fixture-confidential");
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        let response = decoded_refresh_response(
+            &provider_config,
+            trace(79),
+            r#"{"access_token":"access-one","refresh_token":"refresh-one","token_type":"Bearer","scope":"mail.read profile"}"#,
+            &mut audit,
+        );
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut audit)
+            .unwrap();
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let initial_revision = custody
+            .create(
+                &credential_key,
+                credentials,
+                CredentialMetadata::new(
+                    "Bearer",
+                    Some(2_000),
+                    vec!["mail.read".to_owned(), "profile".to_owned()],
+                )
+                .unwrap(),
+                trace(79),
+                &mut audit,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(provider, trace(79), &mut audit)
+            .unwrap();
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let private_key_events_before = audit.private_key.len();
+        let rejected_authority = RecordingSigningAuthority::default();
+        let rejected_inspection = rejected_authority.clone();
+        let rejected_signer = AuditedPrivateKeySigner::from_audited_authority(rejected_authority);
+        let mut rejected_transport = MockPrivateKeyJwtRefreshTransport {
+            response: None,
+            expected_refresh: "refresh-one",
+            calls: 0,
+            order: order.clone(),
+        };
+        let mut rejected_clock = CountingClock { now: 0, calls: 0 };
+        assert_eq!(
+            broker.refresh_private_key_jwt_and_rotate_credentials(
+                &credential_key,
+                &rejected_profile,
+                trace(80),
+                PrivateKeyJwtRefreshCredentialExecution::new(
+                    &rejected_signer,
+                    1_700_000_000,
+                    [0x41; 32],
+                    &mut rejected_clock,
+                    &mut rejected_transport,
+                ),
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        );
+        assert_eq!(rejected_inspection.calls.load(Ordering::SeqCst), 0);
+        assert_eq!(rejected_transport.calls, 0);
+        assert_eq!(rejected_clock.calls, 0);
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(audit.private_key.len(), private_key_events_before);
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "private-key-refresh-rotate-attempted",
+                "private-key-refresh-rotate-failed"
+            ]
+        );
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let failed_authority = RecordingSigningAuthority::default();
+        let failed_inspection = failed_authority.clone();
+        let failed_signer = AuditedPrivateKeySigner::from_audited_authority(failed_authority);
+        let mut failed_transport = MockPrivateKeyJwtRefreshTransport {
+            response: None,
+            expected_refresh: "refresh-one",
+            calls: 0,
+            order: order.clone(),
+        };
+        let mut unused_clock = CountingClock { now: 0, calls: 0 };
+        assert_eq!(
+            broker.refresh_private_key_jwt_and_rotate_credentials(
+                &credential_key,
+                &profile,
+                trace(81),
+                PrivateKeyJwtRefreshCredentialExecution::new(
+                    &failed_signer,
+                    1_700_000_001,
+                    [0x42; 32],
+                    &mut unused_clock,
+                    &mut failed_transport,
+                ),
+                &mut audit,
+            ),
+            Err(BrokerError::Transport)
+        );
+        assert_eq!(failed_inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(failed_transport.calls, 1);
+        assert_eq!(unused_clock.calls, 0);
+        assert!(audit.custody[custody_events_before..]
+            .iter()
+            .all(|event| event.action() != CredentialAuditAction::Rotate));
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(81), &mut audit, str::to_owned)
+                .unwrap(),
+            "access-one"
+        );
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let authority = RecordingSigningAuthority::default();
+        let inspection = authority.clone();
+        let signer = AuditedPrivateKeySigner::from_audited_authority(authority);
+        let mut transport = MockPrivateKeyJwtRefreshTransport {
+            response: Some(
+                TokenEndpointResponse::new(
+                    200,
+                    Zeroizing::new(
+                        br#"{"access_token":"access-two","refresh_token":"refresh-two","token_type":"Bearer","expires_in":3600}"#.to_vec(),
+                    ),
+                )
+                .unwrap(),
+            ),
+            expected_refresh: "refresh-one",
+            calls: 0,
+            order: order.clone(),
+        };
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let revision = broker
+            .refresh_private_key_jwt_and_rotate_credentials(
+                &credential_key,
+                &profile,
+                trace(82),
+                PrivateKeyJwtRefreshCredentialExecution::new(
+                    &signer,
+                    1_700_000_002,
+                    [0x43; 32],
+                    &mut clock,
+                    &mut transport,
+                ),
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_ne!(revision, initial_revision);
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(transport.calls, 1);
+        assert_eq!(clock.calls, 1);
+        assert_eq!(
+            audit.custody[custody_events_before..]
+                .iter()
+                .map(|event| (event.action(), event.outcome()))
+                .collect::<Vec<_>>(),
+            vec![
+                (
+                    CredentialAuditAction::RefreshToken,
+                    CredentialAuditOutcome::Attempted,
+                ),
+                (
+                    CredentialAuditAction::RefreshToken,
+                    CredentialAuditOutcome::Succeeded,
+                ),
+                (
+                    CredentialAuditAction::Rotate,
+                    CredentialAuditOutcome::Attempted,
+                ),
+                (
+                    CredentialAuditAction::Rotate,
+                    CredentialAuditOutcome::Succeeded,
+                ),
+            ]
+        );
+        let successful_sign_events = audit
+            .private_key
+            .iter()
+            .filter(|event| event.trace() == trace(82))
+            .collect::<Vec<_>>();
+        assert_eq!(successful_sign_events.len(), 2);
+        assert!(successful_sign_events.into_iter().all(|event| {
+            event.key().provider() == provider_config.provider()
+                && event.algorithm().as_str() == "EdDSA"
+        }));
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "private-key-refresh-rotate-attempted",
+                "refresh-token-access-attempted",
+                "refresh-token-access-succeeded",
+                "private-key-refresh-attempted",
+                "sign-attempted",
+                "sign-succeeded",
+                "transport-attempted",
+                "transport-effect",
+                "transport-succeeded",
+                "private-key-refresh-succeeded",
+                "credential-rotate-attempted",
+                "credential-rotate-succeeded",
+                "private-key-refresh-rotate-succeeded",
+            ]
+        );
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(82), &mut audit, str::to_owned)
+                .unwrap(),
+            "access-two"
+        );
+        assert_eq!(
+            broker
+                .custody
+                .with_refresh_token(&credential_key, trace(82), &mut audit, |token, _| {
+                    token.to_owned()
+                })
+                .unwrap(),
+            "refresh-two"
+        );
+        assert_eq!(
+            broker
+                .custody
+                .with_metadata(&credential_key, trace(82), &mut audit, |metadata| {
                     (
                         metadata.expires_at_unix_seconds(),
                         metadata.scopes().to_vec(),

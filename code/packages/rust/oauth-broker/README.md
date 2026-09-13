@@ -51,7 +51,11 @@ Authorization-code exchange can likewise compose its bounded response directly
 into an exact provider-bound opaque account key. Key mismatch fails before
 signing, transport, clock, or custody access; the response crosses the OAuth
 credential-release and custody-create audit gates inside the broker, and only
-the opaque revision is released.
+the opaque revision is released. Stored refresh credentials can cross the same
+retained profile, audited abstract signer, injected transport, bounded decoder,
+caller-owned clock, OAuth credential release, and revision-bound custody
+rotation without leaving the broker. Invalid profiles fail before credential
+access, and every later failure retains the prior record.
 For client-secret profiles, prepared authorization-code exchange, refresh, and
 RFC 7009 revocation requests can now cross the complete broker boundary: the
 registered provider, client ID, exact operation endpoint, and retained
@@ -112,8 +116,7 @@ dependency are sibling packages in this repository.
 - account identity proof and key selection, listing, access-token-only detach
   when no refresh token exists, device authorization UI, timing/sleep authority,
   and full device-flow loops;
-- private-key credential-rotation orchestration,
-  concrete private-key algorithms, OIDC validation, and DPoP.
+- concrete private-key algorithms, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.
 
