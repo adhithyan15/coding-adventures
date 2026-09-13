@@ -594,6 +594,39 @@ fn browsing_context_effects_are_available_to_every_native_host() {
 }
 
 #[test]
+fn image_map_regions_are_available_to_every_native_host() {
+    let page = venture_browser_visual_fixtures::load_image_map_page("http://venture.test")
+        .expect("load deterministic client-side image-map fixture");
+    let regions = page
+        .paint
+        .links
+        .iter()
+        .filter(|link| link.image_map_order.is_some())
+        .collect::<Vec<_>>();
+    assert_eq!(regions.len(), 4);
+    assert!(regions.iter().all(|region| region.key.is_some()));
+    assert!(regions.iter().all(|region| region.shape.is_some()));
+    assert!(regions.iter().any(|region| {
+        region.accessible_name.as_deref() == Some("Studio")
+            && region.effective_target.as_deref() == Some("_blank")
+    }));
+
+    for path in [
+        "host/swiftui/MosaicHost.swift",
+        "host/xaml/MosaicHost.cs",
+        "host/flutter/mosaic_host.dart",
+        "host/qt/MosaicHost.cpp",
+        "host/compose/MosaicHost.kt",
+    ] {
+        let source = read_package_file(path);
+        assert!(
+            source.contains("activate_link"),
+            "{path} must forward pointer activation to shared image-map hit testing"
+        );
+    }
+}
+
+#[test]
 fn form_group_fixture_keeps_label_and_disabledness_policy_host_neutral() {
     let page = venture_browser_visual_fixtures::load_form_groups_page("http://venture.test")
         .expect("load Venture's deterministic form-group fixture");

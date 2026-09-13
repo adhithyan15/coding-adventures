@@ -15,6 +15,10 @@ disabled, checked, select, appearance, and canonical
 date/month/week/time/datetime-local/color and file accept/multiple cases. It preserves stable retained
 control regions for shared interaction and host paint gates.
 
+`load_image_map_page` keeps client-side image-map association, shape geometry,
+first-match overlap order, navigation targets, and accessible names in shared
+layout, paint, and browser-session policy for every host.
+
 `load_backgrounds_page` ratchets multiple gradient layers, painting boxes,
 repeat metadata, normalized elliptical clips, overflow descendants, and
 solid/dashed/dotted/double border sides through the shared scene.

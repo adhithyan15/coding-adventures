@@ -667,6 +667,11 @@ image-codec-jpeg       = { path = "../../../packages/rust/image-codec-jpeg" }
     [UI79](./UI79-browsing-context-mediation.md) without changing current
     history.
 
+12. **Client-side image maps** — Verify scaled rectangle, circle, polygon, and
+    default `area` regions, first-match overlap ordering, transformed/clipped
+    hit testing, accessibility-key activation, and the shared target/download
+    behavior defined by [UI80](./UI80-client-side-image-maps.md).
+
 ## Scope
 
 ### In Scope (Venture v0.1)

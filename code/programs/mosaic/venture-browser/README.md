@@ -75,6 +75,10 @@ recreating the surrounding chrome in backend-specific UI code.
   that loads the same Rust/Cairo session through JNA and mounts its RGBA frame
   as a native Compose `Image`. Generated address/history controls and native
   scroll, hover, and pointer input all update that one shared session.
+- Client-side image maps are resolved and scaled in shared Rust layout/paint.
+  Rectangle, circle, polygon, and default areas reuse each host's existing
+  pointer surface, while stable area accessibility keys enter the same shared
+  browsing-context and download transaction as ordinary links.
 - The native content surfaces are keyboard focus targets. Arrow, Page,
   Space/Shift-Space, Home, and End keys use the exact semantic scroll-command
   contract owned by `venture-browser-core`; Command-Left/Right on macOS and

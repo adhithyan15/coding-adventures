@@ -5,6 +5,15 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - client-side image-map interaction.** Connect
+  parser-retained `usemap`, `map`, and `area` metadata to shared replaced-image
+  geometry; scale rectangle, circle, polygon, and default regions; preserve
+  first-match ordering, transforms, clips, targets, and downloads; and expose
+  stable accessibility activation without toolkit-owned coordinate policy.
+  Completed with typed Layout IR metadata, shape-aware link hit regions,
+  shared browsing-context transactions, deterministic core acceptance, and
+  automatic reuse by every native/web host pointer seam.
+
 - [x] **P1 browser convergence - browsing-context and download mediation.**
   Preserve effective link/form targets through shared render, hit-test, and
   submission plans; normalize `_self`, `_blank`, `_parent`, `_top`, and named
