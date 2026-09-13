@@ -1403,6 +1403,87 @@ def _write_flutter_bundle(
     return bundle
 
 
+class UniversalMacosRuntimeTests(unittest.TestCase):
+    """A macOS Flutter artifact must ship a universal runtime.
+
+    Tested against the helper directly rather than only through
+    `archive_flutter`, because the check is gated on the MIGRATED engine stem
+    and Flutter still binds `engram-capi` on this branch — so every archive
+    test passes with the check dormant, which proves nothing about it.
+
+    That gap is the whole reason these exist: the universality was previously
+    established by running `lipo -archs` once by hand and writing the result in
+    a changelog, and `LIBRARY_MAGIC["macos"]` accepts the fat magic without
+    requiring it.
+    """
+
+    @staticmethod
+    def _macho(magic: bytes, architectures: int) -> bytes:
+        """A Mach-O header: 4-byte magic, then big-endian `nfat_arch`."""
+        return magic + architectures.to_bytes(4, "big") + b"\x00" * 24
+
+    def _engine(self, payload: bytes) -> Path:
+        directory = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, directory, True)
+        path = directory / "libmosaic_app.dylib"
+        path.write_bytes(payload)
+        return path
+
+    def test_a_universal_runtime_is_accepted(self) -> None:
+        for magic in (b"\xca\xfe\xba\xbe", b"\xca\xfe\xba\xbf"):
+            with self.subTest(magic=magic):
+                engine = self._engine(self._macho(magic, 2))
+                engram_release._reject_thin_macos_flutter_engine(
+                    "macos", "mosaic_app", engine
+                )
+
+    def test_a_thin_runtime_is_refused(self) -> None:
+        # `\xcf\xfa\xed\xfe` is a 64-bit little-endian Mach-O: a perfectly
+        # valid dylib, and exactly what a plain `cargo build` produces.
+        engine = self._engine(self._macho(b"\xcf\xfa\xed\xfe", 0))
+        with self.assertRaises(ValueError) as caught:
+            engram_release._reject_thin_macos_flutter_engine(
+                "macos", "mosaic_app", engine
+            )
+        self.assertIn("not universal", str(caught.exception))
+
+    def test_a_fat_container_holding_one_architecture_is_refused(self) -> None:
+        # Legal, and exactly the artifact a magic-only check would wave
+        # through while it serves half the Macs it is offered to.
+        engine = self._engine(self._macho(b"\xca\xfe\xba\xbe", 1))
+        with self.assertRaises(ValueError) as caught:
+            engram_release._reject_thin_macos_flutter_engine(
+                "macos", "mosaic_app", engine
+            )
+        self.assertIn("1 architecture", str(caught.exception))
+
+    def test_it_does_not_fire_where_it_does_not_apply(self) -> None:
+        """Three exemptions, each for its own reason.
+
+        Without these the check would refuse artifacts that are correct: a
+        Linux `.so` has no fat format, and a backend still binding
+        `engram-capi` is built host-only by a path this says nothing about.
+        """
+
+        thin = self._engine(self._macho(b"\xcf\xfa\xed\xfe", 0))
+        for platform, stem in [
+            ("linux", "mosaic_app"),
+            ("windows", "mosaic_app"),
+            ("macos", "engram_capi"),
+        ]:
+            with self.subTest(platform=platform, stem=stem):
+                engram_release._reject_thin_macos_flutter_engine(
+                    platform, stem, thin
+                )
+
+    def test_a_truncated_file_is_refused_rather_than_read_past(self) -> None:
+        engine = self._engine(b"\xca\xfe\xba\xbe")
+        with self.assertRaises(ValueError):
+            engram_release._reject_thin_macos_flutter_engine(
+                "macos", "mosaic_app", engine
+            )
+
+
 class ArchiveFlutterTests(unittest.TestCase):
     def test_archives_each_platform(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -4498,6 +4498,103 @@ mod tests {
     use coding_adventures_sql_codegen::{AggFn, BinaryOp, CompiledSortKey, Instruction, Program, UnaryOp};
     use std::collections::BTreeMap;
 
+    /// `DISTINCT`'s row key cannot be forged by a column alias or a value.
+    ///
+    /// The key is `format!("{col}={val:?}")` joined by `,`, with the column
+    /// name interpolated RAW — which looks like the composite-key separator
+    /// injection this repo has fixed twice (card ids in `engram-core-wasm`, the
+    /// provenance merge key in `engram-core`), and `lessons.md` has flagged it
+    /// as "same shape, worth revisiting" for some time.
+    ///
+    /// **Revisited, and it is not that bug.** Two things have to be true at
+    /// once for a key to be forgeable, and only one is:
+    ///
+    /// - the column names are RAW, but they are also FIXED across every row of
+    ///   one `DISTINCT` — `apply_distinct` only ever compares rows within a
+    ///   single result set, so a hostile alias contributes the same constant
+    ///   prefix to every key and cannot shift one row's boundary relative to
+    ///   another's;
+    /// - the values vary between rows, but `SqlValue`'s derived `Debug` quotes
+    ///   and escapes `Text` and brackets `Blob`, so it is injective.
+    ///
+    /// A constant prefix plus an injective rendering is injective. Measured
+    /// rather than argued: 864 rows over hostile aliases (`x=Int(1),y`, `a,b`,
+    /// `a=Int(1)`, duplicate names, empty names) and values whose rendered form
+    /// carries `,`, `=` and quotes, with zero collisions.
+    ///
+    /// So this test does not fix anything — it PINS the property the safety
+    /// rests on, because the load-bearing half is `Debug`'s escaping and that
+    /// is one `impl` away from being hand-written. A `Debug` that printed text
+    /// raw would make the key forgeable immediately, and nothing else in the
+    /// file would notice.
+    #[test]
+    fn a_distinct_row_key_cannot_be_forged_by_an_alias_or_a_value() {
+        // The property the key's injectivity actually depends on.
+        assert_eq!(
+            format!("{:?}", SqlValue::Text("a,b=Int(1)".to_string())),
+            "Text(\"a,b=Int(1)\")",
+            "SqlValue's Debug must quote and escape Text; the DISTINCT row key \
+             is only unforgeable because it does"
+        );
+        assert_eq!(
+            format!("{:?}", SqlValue::Text("\"".to_string())),
+            "Text(\"\\\"\")",
+            "a quote inside Text must be escaped, or a value could close the \
+             rendering early"
+        );
+
+        // And the whole key, over hostile aliases and values, within the fixed
+        // column set that one DISTINCT actually sees.
+        let values = [
+            SqlValue::Null,
+            SqlValue::Int(1),
+            SqlValue::Int(12),
+            SqlValue::Text(String::new()),
+            SqlValue::Text("a".to_string()),
+            SqlValue::Text("a,b=Int(1)".to_string()),
+            SqlValue::Text("\"".to_string()),
+            SqlValue::Blob(vec![]),
+            SqlValue::Blob(vec![1, 2]),
+        ];
+        for names in [
+            ["a", "b"],
+            // The alias reported as an exploit. It contributes a constant
+            // prefix, so it cannot make two rows of this query collide.
+            ["x=Int(1),y", "b"],
+            ["a", "a"],
+            ["a,b", "c"],
+            ["", ""],
+        ] {
+            let mut seen: std::collections::HashMap<String, Vec<SqlValue>> =
+                std::collections::HashMap::new();
+            for left in &values {
+                for right in &values {
+                    let row = [
+                        (names[0].to_string(), left.clone()),
+                        (names[1].to_string(), right.clone()),
+                    ];
+                    let key = row
+                        .iter()
+                        .map(|(col, val)| format!("{col}={val:?}"))
+                        .collect::<Vec<_>>()
+                        .join(",");
+                    let pair = vec![left.clone(), right.clone()];
+                    if let Some(previous) = seen.insert(key.clone(), pair.clone()) {
+                        assert_eq!(
+                            previous, pair,
+                            "columns {names:?}: {previous:?} and {pair:?} share the key {key:?}"
+                        );
+                    }
+                }
+            }
+            assert_eq!(
+                seen.len(),
+                values.len() * values.len(),
+                "columns {names:?}: some rows shared a key"
+            );
+        }
+    }
+
     // ── Test helpers ──────────────────────────────────────────────────────────
 
     fn make_backend_with_table(

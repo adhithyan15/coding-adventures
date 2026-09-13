@@ -5,6 +5,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 browser convergence - shared find-in-page transactions.** Add one
+  retained query, bounded visible-text matching, active-result wrap and reveal,
+  backend-neutral highlight overlays, result diagnostics, and semantic
+  query/next/previous/close events across every generated host. Completed with
+  a 256-result shared limit, deterministic core and package acceptance, and a
+  Mosaic-authored find bar that leaves matching and scroll policy in Rust.
+
 - [x] **P0 browser convergence - authored focus targets.** Extend the shared
   sequential-focus model to client-side image-map areas, generic authored
   `tabindex`, and contenteditable surfaces while preserving positive ordering,

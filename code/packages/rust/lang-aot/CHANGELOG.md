@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.337.0 — 2026-09-13 — ALGOL real control recurrences
+
+The seven-backend ALGOL matrix now proves that a finite real `step`/`until`
+loop may repeatedly derive its controlled scalar from the prior value and
+retain the finite post-body exit snapshot.
+
 ## 0.336.0 — 2026-09-13 — ALGOL integer control recurrences
 
 The seven-backend ALGOL matrix now proves that a finite integer
@@ -6474,3 +6480,12 @@ Four existing COBOL replacement programs now declare BEAM after successful
 real Erlang execution. A focused runtime test checks padding, LEADING,
 no rechaining and first-clause precedence. Coverage rises to 52/58 COBOL
 BEAM rows (458 total declared cells); no backend production code changed.
+
+## COBOL BEAM region and self-move coverage
+
+Six existing programs now declare BEAM after real Erlang execution: STRING
+self-move, BEFORE/AFTER tallying and replacement with absent delimiters,
+and independent tally/replace regions in one statement. A focused probe
+pins program identities and exact stdout. All 58 COBOL corpus rows now
+declare eight backends (464 cells); full language support and single-phrase
+BEFORE/AFTER intersection remain outside this coverage claim.

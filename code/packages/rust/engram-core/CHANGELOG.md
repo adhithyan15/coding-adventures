@@ -2,6 +2,104 @@
 
 ## Unreleased
 
+### Fixed — an imported archive name could make two provenance records collide
+
+`external_source_merge_key` joined its four parts with `\u{1f}`, and two of them
+are attacker-influenced when the collection came from an `.apkg`: a media
+record's `target_id` is `format!("anki-media:{archive_name}")`, where the archive
+name is a zip entry, and `original_id` carries the Anki `notes.guid`.
+
+Moving a `\u{1f}` across the boundary between two parts produced the same key
+from genuinely different records. Measured, not argued — both of these render as
+`Media\u{1f}anki-media:art\u{1f}anki-v11\u{1f}later\u{1f}`:
+
+| `target_id` | `source` |
+| --- | --- |
+| `anki-media:art\u{1f}anki-v11` | `later` |
+| `anki-media:art` | `anki-v11\u{1f}later` |
+
+`upsert_by` **replaces** on a key match, so one record silently displaced the
+other.
+
+The key is length-prefixed now — `{len}:{value}` per part — which makes it a
+netstring, and therefore injective **over the four rendered parts**: a decoder
+reads to the first `:`, takes exactly that many bytes, and never infers a part's
+extent from its content. A guard on the separator would have closed this
+instance; the prefix closes the class, and needs nothing at the producers.
+
+*Over the four parts, not over the record.* `original_id: None` and `Some("")`
+both render as the empty part and still share a key — unchanged behaviour rather
+than a regression, but an earlier draft of this entry claimed "injective for any
+content at all", which overstates it. Review caught that. The distinction is
+reachable: an `.apkg` with an empty `notes.guid` produces the `Some("")` form,
+and it merges onto a locally-created record with `None`.
+
+The trailing `\u{1f}` is a visual marker, not a delimiter — the lengths alone
+suffice, confirmed by a reviewer brute-forcing the encoding without it. Recorded
+so nobody removing it believes they broke the injectivity.
+
+**Fixed at the encoding, which is the opposite of the choice made for the same
+shape in card ids.** `engram-core-wasm` guards `{note_id}::{template_id}` rather
+than re-encoding it, because a card id is written into saved collections,
+snapshots and exported packages, so changing its shape rewrites data already on
+disk. This key is derived per merge, is private to `merge.rs`, and is persisted
+nowhere — so re-encoding costs nothing.
+
+The target is length-prefixed too, and the first version of this entry justified
+that with a claim that is simply **false**: "no one of the variant names is a
+prefix of another". `Note` is a prefix of `NoteType`. Leaving the target bare
+would still have been safe, but for a different reason — the next byte emitted
+is always a decimal digit, so `Note` followed by `9:` can never be read as
+`NoteType`.
+
+Which is the argument for prefixing it rather than reasoning about it: a case
+analysis a reader has to redo every time a variant is added, *and get right*, is
+worse than three characters. The all-pairs test now varies the target across
+`Media`, `Note` and `NoteType` — it had held it fixed at `Media` while its own
+doc said every part was varied, so it could not have caught the claim being
+wrong.
+
+### Fixed — the deletion tombstone's id was the same shape, and nothing pinned it
+
+`deleted_external_source_record` composes
+`format!("deleted:{source}:{target}:{original_id}")`, over a `source` that is
+free text from a loaded state file and an `original_id` that is the Anki guid
+from an imported package. With `source = "anki-v11:note:x"` it renders the same
+string as `source = "anki-v11"` with `original_id = "x:deck:…"`.
+
+**Not a live defect**, and fixed anyway. Nothing parses this string back apart —
+one producer, zero consumers — and the merge key above now carries `source` and
+`original_id` as separately prefixed parts, so two records cannot displace each
+other through it. But it is the same class in the same crate, found in the review
+of the fix above, and "you closed one and left two" is the shape this repo keeps
+meeting.
+
+Nothing asserted the composed string at all: the existing tests read
+`original_id` and `deletedTarget` off the record and never touched `target_id`,
+so the format was free to drift in either direction. It is pinned now, and the
+pin is mutation-checked — reverting to the separator-joined form fails it.
+
+Three tests, and the third is the one that makes the other two mean something.
+Mutation-tested:
+
+| mutation | fails |
+| --- | --- |
+| the old separator-joined key | collision, all-pairs |
+| a key unique per record | **self-merge** |
+
+A fix that made every key distinct would satisfy everything the first row checks
+while silently turning de-duplication off, so re-importing a package would
+accumulate duplicate provenance rows forever. The all-pairs test runs 10³
+field-triples — separators at each end and in the middle, a `:` that could pass
+for the length delimiter, digits that could pass for a length — and asserts the
+count, so the loop is known to have covered what it claims.
+
+**Scope, stated because the reviewer who found this was careful to:** this is
+provenance metadata. No `Card`, `Note`, `NoteType` or `CardTemplate` id is ever
+derived from a media asset id or an archive name, so a collision cost a row of
+"where this came from", never a card. `merge_media_assets` nearby already renames
+on an id clash rather than displacing, and is untouched.
+
 ### Fixed -- `rebuild_filtered_deck` moved cards into decks that do not exist
 
 Rebuilding a filtered deck moves cards *out of the decks they are in*, and

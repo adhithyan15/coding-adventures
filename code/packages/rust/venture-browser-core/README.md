@@ -67,6 +67,12 @@ first eligible duplicate inside the active modal scope, focuses it, and reuses
 the existing navigation, form, disclosure, or top-layer transaction. Hosts
 only recognize their platform modifier chord and forward the character.
 
+Find-in-page is likewise session-owned. `BrowserFindState` retains the bounded
+query, active ordinal, wrap state, and truncation signal; core searches visible
+positioned text, reveals the active result through shared scroll state, and
+adds stable highlight groups to the backend-neutral paint scene. Hosts receive
+only semantic query, next, previous, and close events.
+
 Typed inputs retain that single-owner design. The session exposes
 `ControlValueState` for live validity and accessibility projection, routes
 Arrow Up/Down and SetValue/Increment/Decrement through shared numeric

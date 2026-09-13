@@ -248,18 +248,95 @@ EMIT_ARGS=(--backend "$BACKEND" --output "$OUTPUT" --emit-project)
 # rewrites the host into the standard binding shape while the package replaces
 # that very file, and the combination does not compile.
 if [[ "$STANDARD_RUNTIME_BACKENDS" == *" $BACKEND "* ]]; then
-  ( cd "$RUST" && cargo build -q -p engram-mosaic-app --release )
   case "$(uname -s)" in
     Darwin) MOSAIC_LIB_NAME="libengram_mosaic_app.dylib" ;;
     Linux)  MOSAIC_LIB_NAME="libengram_mosaic_app.so" ;;
     *)      MOSAIC_LIB_NAME="engram_mosaic_app.dll" ;;
   esac
-  MOSAIC_LIB="$RUST/target/release/$MOSAIC_LIB_NAME"
-  if [[ ! -f "$MOSAIC_LIB" ]]; then
-    echo "error: expected the standard runtime at $MOSAIC_LIB" >&2
-    exit 1
+
+  # Does the emitted build ask for MORE THAN ONE architecture?
+  #
+  # Only Flutter on macOS does. `flutter build macos --release` has no
+  # `--target-platform`, so it always builds arm64 AND x86_64: it runs the
+  # native-assets hook once per architecture and `lipo`s the results into a
+  # universal binary. A single-architecture library cannot serve that, and the
+  # hook refuses it by name.
+  #
+  # Keyed on the BUILD's behaviour rather than on the backend being Flutter,
+  # because that is the actual reason -- and stated so that whoever adds the
+  # next multi-architecture target knows what to look for.
+  #
+  # Qt and SwiftUI on macOS are deliberately NOT included. `swift build -c
+  # release` and the generated CMake both build for the host only, so a fat
+  # library there is bytes in the bundle that nothing loads. Their macOS
+  # artifacts are host-architecture, which is a separate question about what
+  # Engram ships and not one to answer by accident here.
+  MOSAIC_UNIVERSAL=0
+  if [[ "$(uname -s)" == "Darwin" && "$BACKEND" == "flutter" ]]; then
+    MOSAIC_UNIVERSAL=1
   fi
-  echo "  standard runtime at $MOSAIC_LIB"
+
+  if [[ "$MOSAIC_UNIVERSAL" -eq 1 ]]; then
+    APPLE_TARGETS=(aarch64-apple-darwin x86_64-apple-darwin)
+    for target in "${APPLE_TARGETS[@]}"; do
+      # Asked INSIDE `$RUST`, which is where the build runs.
+      #
+      # `rustup target list` answers for the toolchain active in the current
+      # directory, and the build below runs in a `cd "$RUST"` subshell. There is
+      # no `rust-toolchain.toml` under it today, so the two agree -- but a
+      # check that answers for a different toolchain than the one that builds
+      # is a check that can pass while the build cannot.
+      if ! ( cd "$RUST" && rustup target list --installed 2>/dev/null ) | grep -qx "$target"; then
+        echo "error: the $BACKEND macOS release needs both Apple targets" >&2
+        echo "       run: rustup target add $target" >&2
+        exit 1
+      fi
+    done
+    SLICES=()
+    for target in "${APPLE_TARGETS[@]}"; do
+      ( cd "$RUST" && cargo build -q -p engram-mosaic-app --release --target "$target" )
+      slice="$RUST/target/$target/release/$MOSAIC_LIB_NAME"
+      if [[ ! -f "$slice" ]]; then
+        echo "error: expected the $target runtime at $slice" >&2
+        exit 1
+      fi
+      SLICES+=("$slice")
+    done
+    # Written beside the slices rather than over either of them, so a re-run
+    # cannot lipo a fat file into itself. The inputs are always the per-target
+    # `release/` paths, which cargo only ever writes thin, so fat-into-fat is
+    # structurally impossible rather than merely unlikely.
+    #
+    # A failed `lipo -create` aborts here rather than falling through to check
+    # the PREVIOUS run's output, and that depends on `set -e` at the top of this
+    # file. Worth knowing if this block is ever moved into a function called
+    # from a conditional context, where `set -e` stops applying.
+    MOSAIC_LIB="$RUST/target/$MOSAIC_LIB_NAME"
+    lipo -create "${SLICES[@]}" -output "$MOSAIC_LIB"
+    ARCHS="$(lipo -archs "$MOSAIC_LIB")"
+    # Asserted, not assumed. `lipo -create` over two copies of one
+    # architecture fails loudly, but over a fat file and a thin one it
+    # succeeds and yields something the hook would then have to slice from --
+    # so the check is on what came OUT.
+    for want in arm64 x86_64; do
+      case " $ARCHS " in
+        *" $want "*) ;;
+        *)
+          echo "error: the universal runtime is '$ARCHS', missing $want" >&2
+          exit 1
+          ;;
+      esac
+    done
+    echo "  universal standard runtime at $MOSAIC_LIB ($ARCHS)"
+  else
+    ( cd "$RUST" && cargo build -q -p engram-mosaic-app --release )
+    MOSAIC_LIB="$RUST/target/release/$MOSAIC_LIB_NAME"
+    if [[ ! -f "$MOSAIC_LIB" ]]; then
+      echo "error: expected the standard runtime at $MOSAIC_LIB" >&2
+      exit 1
+    fi
+    echo "  standard runtime at $MOSAIC_LIB"
+  fi
   EMIT_ARGS+=(--profile native-complete --runtime-library "$MOSAIC_LIB")
 fi
 

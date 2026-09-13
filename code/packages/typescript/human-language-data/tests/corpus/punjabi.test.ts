@@ -54,7 +54,7 @@ it("pins Punjabi lesson-content budgets", () =>
     // cites are etymology, which has its own strand.
     //
     // 267 -> 270: chapter 45, the reading rung -- six labels, a filled form, and
-    // the same six facts as a 44-word paragraph. No new word: every Gurmukhi
+    // the same six facts as a 72-word paragraph. No new word: every Gurmukhi
     // token was checked to occur in a lesson with a lower sequence number.
     lessons: 270,
     idioms: 6,
