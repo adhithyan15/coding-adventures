@@ -52,6 +52,10 @@ const fallbackProps = {
   "schematicGridLabel": "Sample SchematicGridLabel",
   "schematicGridLines": [],
   "schematicLabel": "Sample SchematicLabel",
+  "schematicNetLabel": "Sample SchematicNetLabel",
+  "schematicNetLabelDisabled": false,
+  "schematicNetLabelLabel": "Sample SchematicNetLabelLabel",
+  "schematicNetLabelPlaceholder": "Sample SchematicNetLabelPlaceholder",
   "schematicPalette": [],
   "schematicPropertiesLabel": "Sample SchematicPropertiesLabel",
   "schematicReference": "Sample SchematicReference",
@@ -59,6 +63,9 @@ const fallbackProps = {
   "schematicReferenceLabel": "Sample SchematicReferenceLabel",
   "schematicReferencePlaceholder": "Sample SchematicReferencePlaceholder",
   "schematicRows": [],
+  "schematicTerminalControls": [],
+  "schematicTerminalDisabled": false,
+  "schematicTerminalLabel": "Sample SchematicTerminalLabel",
   "schematicTerminalPoints": [],
   "schematicTitle": "Sample SchematicTitle",
   "schematicTitleDisabled": false,
@@ -75,6 +82,7 @@ const fallbackProps = {
   "selectedSchematicAnalysisSourceLabel": "Sample SelectedSchematicAnalysisSourceLabel",
   "selectedSchematicKindLabel": "Sample SelectedSchematicKindLabel",
   "selectedSchematicLabel": "Sample SelectedSchematicLabel",
+  "selectedSchematicTerminalLabel": "Sample SelectedSchematicTerminalLabel",
   "selectedWaveformLabel": "Sample SelectedWaveformLabel",
   "synchronizeSchematicLabel": "Sample SynchronizeSchematicLabel",
   "undoSchematicDisabled": false,
@@ -143,6 +151,12 @@ const emitPayloads = {
       "type": "text"
     }
   ],
+  "onSchematicNetLabelChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
   "onSchematicReferenceChange": [
     {
       "name": "value",
@@ -189,6 +203,12 @@ const emitPayloads = {
     {
       "name": "reference",
       "type": "text"
+    }
+  ],
+  "onSelectSchematicTerminal": [
+    {
+      "name": "index",
+      "type": "number"
     }
   ],
   "onSelectWaveform": [
