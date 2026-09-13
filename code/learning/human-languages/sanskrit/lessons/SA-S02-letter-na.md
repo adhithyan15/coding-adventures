@@ -75,6 +75,7 @@ You already say these words, and न is one of the shapes inside them — the re
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-02] -->
+<!-- hl-writing-stage: observe-trace -->
 
 [PAUSE 1s]
 - [YOU LOOK: at this, and find न in it]

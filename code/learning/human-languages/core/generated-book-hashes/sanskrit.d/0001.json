@@ -1,11 +1,14 @@
 {
   "language": "sanskrit",
   "chapter": 1,
-  "sourceHash": "fnv1a64:e7dd49a17642cd8c",
+  "sourceHash": "fnv1a64:9a60d5c1efb50d0b",
   "lessonIds": [
     "SA-C01-namaste",
     "SA-C01-namaskara",
     "SA-S02-letter-na",
+    "SA-S02-copy-the-three-strokes",
+    "SA-S02-delayed-copy",
+    "SA-S02-dictation",
     "SA-C01-dhanyavada",
     "SA-C01-svagatam",
     "SA-S200-letter-da",

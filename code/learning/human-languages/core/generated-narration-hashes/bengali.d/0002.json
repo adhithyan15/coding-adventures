@@ -1,9 +1,13 @@
 {
   "language": "bengali",
   "chapter": 2,
-  "sourceHash": "fnv1a64:8dc723b0a144f0f3",
+  "sourceHash": "fnv1a64:060acaf00231dd89",
   "lessonIds": [
     "BN-W01-na",
+    "BN-W01-na-trace",
+    "BN-W01-na-guided-copy",
+    "BN-W01-na-delayed-copy",
+    "BN-W01-na-dictation",
     "BN-W01-aa-matra",
     "BN-W01-aa",
     "BN-W01-ha",
@@ -18,7 +22,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch02.txt",
   "json": "bengali/narration/ch02.json",
-  "textHash": "fnv1a64:3f6828fb89181dfd",
-  "jsonHash": "fnv1a64:6f9806e63ec945d4",
+  "textHash": "fnv1a64:0e7002b03a0a94cb",
+  "jsonHash": "fnv1a64:7781c02847cf2bf1",
   "findings": []
 }

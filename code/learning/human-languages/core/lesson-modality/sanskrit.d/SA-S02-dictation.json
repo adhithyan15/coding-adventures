@@ -1,26 +1,24 @@
 {
   "lesson": {
-    "id": "SA-S02-letter-na",
+    "id": "SA-S02-dictation",
     "language": "sanskrit",
     "chapter": 1,
-    "sequence": 21,
+    "sequence": 24,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
-      "writing-block",
-      "script-block"
+      "writing-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:61cec457891583af",
+    "sourceHash": "fnv1a64:39b7cd0576ed1ce7",
     "detachableSegments": [
-      "Script you'll notice: न",
-      "Writing: न"
+      "Writing — dictation"
     ],
     "delivery": "script"
   },

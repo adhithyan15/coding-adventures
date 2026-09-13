@@ -5,6 +5,7 @@ import {
   expectLanguageContinuity,
   expectLanguageLessonBudgets,
   expectLanguageModality,
+  languageWritingStages,
 } from "./assert-language-corpus.js";
 it("pins Sanskrit continuity", () => expectLanguageContinuity("sanskrit"));
 it("pins Sanskrit modality", () => expectLanguageModality("sanskrit"));
@@ -60,7 +61,14 @@ it("pins Sanskrit lesson-content budgets", () =>
     // passage's closing note about शान्तिः is prose about where the word is
     // used, not a culture claim the track asserts and drills, so none is
     // declared. Re-measured against the tree.
-    lessons: 350,
+    //
+    // 350 -> 353: the pre-A1 writing ladder. Sanskrit had no writing-stage
+    // evidence at all, so three lessons were added on न -- a guided copy that
+    // follows the three sourced strokes and counts pen lifts, a delayed copy,
+    // and a dictation -- while the existing letter lesson's trace block gained
+    // the observe-trace marker it had always earned. No new atoms: all three
+    // practise SA-SCRIPT-RECOG-02, which the letter lesson already introduced.
+    lessons: 353,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,
@@ -151,3 +159,27 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
     );
   }
 }, 120_000);
+
+it("pins Sanskrit's pre-A1 writing ladder", () => {
+  const track = languageWritingStages("sanskrit");
+
+  // The track had NO stage evidence at all, so every writing-stage debt read as
+  // outstanding while the lessons that could discharge them sat unmarked.
+  //
+  // The ORDER is asserted rather than the set: `missing-stage-prerequisite`
+  // makes a delayed copy invalid unless the tracing and the guided copy come
+  // earlier IN SEQUENCE, so a set-equality assertion would pass on a ladder
+  // whose rungs are in the wrong order and therefore prove nothing.
+  expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
+    ["SA-S02-letter-na", "observe-trace"],
+    ["SA-S02-copy-the-three-strokes", "guided-copy"],
+    ["SA-S02-delayed-copy", "delayed-copy"],
+    ["SA-S02-dictation", "dictation-transcription"],
+  ]);
+  expect(track.defects).toEqual([]);
+  expect(track.levels[0]).toMatchObject({
+    level: "pre-A1",
+    missingStages: [],
+    complete: true,
+  });
+});
