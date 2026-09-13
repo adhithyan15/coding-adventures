@@ -29,6 +29,14 @@ coverage consistency test and focused Clippy. Any backend defect discovered
 must be logged and specified before its implementation. No full machine
 fidelity or rerun of the other seven backend columns is claimed.
 
+Validation: all four probes passed before promotion. All twelve focused
+COBOL BEAM tests then passed together, including pointer/overflow regressions.
+Fresh matrix cells 463–466 each emitted their positive execution sentinel;
+coverage consistency and all-target lang-aot/iir-to-beam Clippy passed.
+No backend defect was found. COBOL now declares 52 BEAM rows and 458 cells;
+the non-ALGOL total is 1587 declared cells. No full-capstone rerun is claimed.
+Reprioritize the remaining five region rows and one self-move after merge.
+
 ## VM-040 COBOL BEAM pointer/overflow probe (selected after #15012 merged)
 
 `git fetch origin && git merge origin/main` fast-forwarded cleanly from
