@@ -2416,106 +2416,15 @@ impl BrowserControlModel {
         if !self.controls[index].kind.accepts_text() {
             return None;
         }
-        let metrics = sanitize_metrics(metrics);
-        let viewport = ControlRect {
-            x: bounds.x + metrics.inset_x,
-            y: bounds.y + metrics.inset_y,
-            width: (bounds.width - metrics.inset_x * 2.0).max(metrics.caret_width),
-            height: (bounds.height - metrics.inset_y * 2.0).max(metrics.line_height),
-        };
         let value = self.controls[index].display_value();
-        let selection = self.editors[index].selection;
-        let caret_point = rect_for_offset(
+        Some(text_editor_presentation(
             &value,
-            selection.focus,
-            ControlRect::default(),
-            0.0,
-            0.0,
+            &mut self.editors[index],
+            bounds,
             metrics,
-        );
-        let editor = &mut self.editors[index];
-        if self.controls[index].focused {
-            editor.scroll_x = reveal_axis(
-                editor.scroll_x,
-                caret_point.x,
-                metrics.caret_width,
-                viewport.width,
-            );
-            editor.scroll_y = if self.controls[index].kind == ControlKind::TextArea {
-                reveal_axis(
-                    editor.scroll_y,
-                    caret_point.y,
-                    metrics.line_height,
-                    viewport.height,
-                )
-            } else {
-                0.0
-            };
-        } else {
-            editor.scroll_x = 0.0;
-            editor.scroll_y = 0.0;
-        }
-        let selection_rects = selection_rects(
-            &value,
-            selection,
-            viewport,
-            editor.scroll_x,
-            editor.scroll_y,
-            metrics,
-        );
-        let caret = (self.controls[index].focused && editor.caret_phase_ms < 500).then_some(
-            rect_for_offset(
-                &value,
-                selection.focus,
-                viewport,
-                editor.scroll_x,
-                editor.scroll_y,
-                metrics,
-            ),
-        );
-        let composition_underlines = editor
-            .composition
-            .as_deref()
-            .map(|composition| {
-                let range = editor.composition_range.unwrap_or(selection);
-                composition_rects(
-                    &value,
-                    composition,
-                    range.ordered().0,
-                    viewport,
-                    editor.scroll_x,
-                    editor.scroll_y,
-                    metrics,
-                )
-            })
-            .unwrap_or_default();
-        let candidate_rect = editor.composition.as_deref().map(|composition| {
-            let start = editor.composition_range.unwrap_or(selection).ordered().0;
-            let mut composed = value.clone();
-            replace_char_range(&mut composed, start, start, composition);
-            let mut rect = rect_for_offset(
-                &composed,
-                start + composition.chars().count(),
-                viewport,
-                editor.scroll_x,
-                editor.scroll_y,
-                metrics,
-            );
-            rect.y += metrics.line_height;
-            rect
-        });
-        Some(ControlEditorPresentation {
-            key: key.to_string(),
-            viewport,
-            scroll_x: editor.scroll_x,
-            scroll_y: editor.scroll_y,
-            selection: selection_rects,
-            caret,
-            composition_underlines,
-            candidate_rect,
-            invalid_message: editor.invalid_message.clone(),
-            accessible_description: editor.accessible_description.clone(),
-        })
+            self.controls[index].focused,
+            self.controls[index].kind == ControlKind::TextArea,
+        ))
     }
 
     fn focused_index(&self) -> Option<usize> {
@@ -5044,6 +4953,117 @@ fn line_column(value: &str, offset: usize) -> (usize, usize) {
         }
     }
     (line, column)
+}
+
+/// Resolve shared editor overlays for any retained browser text surface.
+///
+/// Form controls and contenteditable hosts deliberately use this same geometry
+/// reducer so native shells never need to invent caret, selection, scrolling,
+/// or IME candidate placement policy.
+pub fn text_editor_presentation(
+    value: &str,
+    editor: &mut ControlEditorState,
+    bounds: ControlRect,
+    metrics: ControlTextMetrics,
+    focused: bool,
+    multiline: bool,
+) -> ControlEditorPresentation {
+    let metrics = sanitize_metrics(metrics);
+    let viewport = ControlRect {
+        x: bounds.x + metrics.inset_x,
+        y: bounds.y + metrics.inset_y,
+        width: (bounds.width - metrics.inset_x * 2.0).max(metrics.caret_width),
+        height: (bounds.height - metrics.inset_y * 2.0).max(metrics.line_height),
+    };
+    let selection = editor.selection;
+    let caret_point = rect_for_offset(
+        value,
+        selection.focus,
+        ControlRect::default(),
+        0.0,
+        0.0,
+        metrics,
+    );
+    if focused {
+        editor.scroll_x = reveal_axis(
+            editor.scroll_x,
+            caret_point.x,
+            metrics.caret_width,
+            viewport.width,
+        );
+        editor.scroll_y = if multiline {
+            reveal_axis(
+                editor.scroll_y,
+                caret_point.y,
+                metrics.line_height,
+                viewport.height,
+            )
+        } else {
+            0.0
+        };
+    } else {
+        editor.scroll_x = 0.0;
+        editor.scroll_y = 0.0;
+    }
+    let selection_rects = selection_rects(
+        value,
+        selection,
+        viewport,
+        editor.scroll_x,
+        editor.scroll_y,
+        metrics,
+    );
+    let caret = (focused && editor.caret_phase_ms < 500).then_some(rect_for_offset(
+        value,
+        selection.focus,
+        viewport,
+        editor.scroll_x,
+        editor.scroll_y,
+        metrics,
+    ));
+    let composition_underlines = editor
+        .composition
+        .as_deref()
+        .map(|composition| {
+            let range = editor.composition_range.unwrap_or(selection);
+            composition_rects(
+                value,
+                composition,
+                range.ordered().0,
+                viewport,
+                editor.scroll_x,
+                editor.scroll_y,
+                metrics,
+            )
+        })
+        .unwrap_or_default();
+    let candidate_rect = editor.composition.as_deref().map(|composition| {
+        let start = editor.composition_range.unwrap_or(selection).ordered().0;
+        let mut composed = value.to_string();
+        replace_char_range(&mut composed, start, start, composition);
+        let mut rect = rect_for_offset(
+            &composed,
+            start + composition.chars().count(),
+            viewport,
+            editor.scroll_x,
+            editor.scroll_y,
+            metrics,
+        );
+        rect.y += metrics.line_height;
+        rect
+    });
+    ControlEditorPresentation {
+        key: editor.key.clone(),
+        viewport,
+        scroll_x: editor.scroll_x,
+        scroll_y: editor.scroll_y,
+        selection: selection_rects,
+        caret,
+        composition_underlines,
+        candidate_rect,
+        invalid_message: editor.invalid_message.clone(),
+        accessible_description: editor.accessible_description.clone(),
+    }
 }
 
 fn line_start_offsets(value: &str) -> Vec<usize> {

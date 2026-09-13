@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add bounded contenteditable value, selection, composition, clipboard,
+  undo/redo, history restoration, accessibility, reflow, and shared overlay
+  transactions through the existing cross-host input seam.
+
 - Extend shared sequential focus to image-map areas, authored generic
   `tabindex` targets, and contenteditable surfaces with reusable accessibility
   roles, modal containment, scrolling, activation, and focus rings.

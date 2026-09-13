@@ -4,6 +4,14 @@
 //! final paint backend. This crate composes the shared network, HTML, layout,
 //! paint, and asynchronous image-resource lifecycle.
 
+mod contenteditable;
+
+pub use contenteditable::{
+    ContentEditableAccessibilityState, ContentEditableDiagnostic, ContentEditableEffect,
+    ContentEditableMode, ContentEditableModel, ContentEditableSnapshot,
+    ContentEditableSnapshotEntry,
+};
+
 use browser_bookmarks::transact as transact_bookmarks;
 pub use browser_bookmarks::{
     Bookmark, BookmarkCatalog, BookmarkChange, BookmarkRepository, BookmarkRepositoryError,
@@ -11,16 +19,16 @@ pub use browser_bookmarks::{
 };
 pub use browser_form_controls::{
     format_typed_value, normalize_color, parse_typed_step, parse_typed_value, step_typed_value,
-    typed_constraints, BrowserControlModel, ControlAccessibilityAction, ControlAutofillDescriptor,
-    ControlAutofillOutcome, ControlAutofillTransaction, ControlAutofillValue,
-    ControlChoiceOptionState, ControlChoiceState, ControlClipboardPayload, ControlDefaultState,
-    ControlEditorPresentation, ControlEditorState, ControlEffect, ControlFileItemState,
-    ControlFilePickerRequest, ControlFileState, ControlKey, ControlMutationEvent,
-    ControlMutationEventKind, ControlMutationSource, ControlNavigationUnit, ControlRect,
-    ControlRestorationEntry, ControlSelection, ControlStateDiagnostic, ControlStatePrivacy,
-    ControlStateSnapshot, ControlSuggestionDiagnostic, ControlSuggestionOption,
-    ControlSuggestionPickerAction, ControlSuggestionState, ControlTextDirection,
-    ControlTextMetrics, ControlValueDiagnostic, ControlValueState,
+    text_editor_presentation, typed_constraints, BrowserControlModel, ControlAccessibilityAction,
+    ControlAutofillDescriptor, ControlAutofillOutcome, ControlAutofillTransaction,
+    ControlAutofillValue, ControlChoiceOptionState, ControlChoiceState, ControlClipboardPayload,
+    ControlDefaultState, ControlEditorPresentation, ControlEditorState, ControlEffect,
+    ControlFileItemState, ControlFilePickerRequest, ControlFileState, ControlKey,
+    ControlMutationEvent, ControlMutationEventKind, ControlMutationSource, ControlNavigationUnit,
+    ControlRect, ControlRestorationEntry, ControlSelection, ControlStateDiagnostic,
+    ControlStatePrivacy, ControlStateSnapshot, ControlSuggestionDiagnostic,
+    ControlSuggestionOption, ControlSuggestionPickerAction, ControlSuggestionState,
+    ControlTextDirection, ControlTextMetrics, ControlValueDiagnostic, ControlValueState,
     CustomElementAccessibilityAction, CustomElementAccessibilityProjection,
     CustomElementAccessibilityState, CustomElementAccessibilityValue, CustomElementDiagnostic,
     CustomElementFormAssociation, CustomElementFormEntry, CustomElementFormEntryValue,
@@ -987,6 +995,7 @@ pub struct FragmentNavigationState {
 pub struct BrowserHistoryRestorationState {
     pub entry_id: NavigationEntryId,
     pub restored_form_state: bool,
+    pub restored_editing_state: bool,
     pub restored_scroll: bool,
     pub scroll_offset_y: f64,
 }
@@ -994,6 +1003,7 @@ pub struct BrowserHistoryRestorationState {
 #[derive(Clone, Debug, PartialEq)]
 struct BrowserHistoryEntryState {
     controls: ControlStateSnapshot,
+    contenteditables: ContentEditableSnapshot,
     scroll_offset_y: f64,
 }
 
@@ -1311,6 +1321,28 @@ impl BrowserViewport {
             viewport_y + self.scroll.offset_y()
         };
         Some((region.clone(), viewport_x - region.x, content_y - region.y))
+    }
+
+    fn focus_local_point(
+        &self,
+        viewport_x: f64,
+        viewport_y: f64,
+    ) -> Option<(html_to_paint::FocusRegion, f64, f64)> {
+        self.page
+            .paint
+            .focus_regions
+            .iter()
+            .rev()
+            .find_map(|region| {
+                let content_y = if region.fixed {
+                    viewport_y
+                } else {
+                    viewport_y + self.scroll.offset_y()
+                };
+                region
+                    .contains(viewport_x, content_y)
+                    .then(|| (region.clone(), viewport_x - region.x, content_y - region.y))
+            })
     }
 
     pub fn viewport_scene(&self) -> PaintScene {
@@ -1775,6 +1807,7 @@ pub struct BrowserSession {
     bookmarks: BookmarkCatalog,
     viewport: Option<BrowserViewport>,
     controls: BrowserControlModel,
+    contenteditables: ContentEditableModel,
     focused_link: Option<String>,
     focused_disclosure: Option<String>,
     focused_generic: Option<String>,
@@ -1800,6 +1833,7 @@ impl BrowserSession {
             bookmarks: BookmarkCatalog::new(),
             viewport: None,
             controls: BrowserControlModel::default(),
+            contenteditables: ContentEditableModel::default(),
             focused_link: None,
             focused_disclosure: None,
             focused_generic: None,
@@ -1967,6 +2001,14 @@ impl BrowserSession {
 
     pub fn controls(&self) -> &BrowserControlModel {
         &self.controls
+    }
+
+    pub fn contenteditable_states(&self) -> Vec<ContentEditableAccessibilityState> {
+        self.contenteditables.accessibility_states()
+    }
+
+    pub fn contenteditable_diagnostics(&self) -> &[ContentEditableDiagnostic] {
+        self.contenteditables.diagnostics()
     }
 
     pub fn live_value_states(&self) -> Vec<LiveValueState> {
@@ -2656,24 +2698,32 @@ impl BrowserSession {
         match &item.target {
             PageFocusTarget::Link(key) => {
                 self.controls.blur();
+                self.contenteditables.blur();
                 self.focused_link = Some(key.clone());
                 self.focused_disclosure = None;
                 self.focused_generic = None;
             }
             PageFocusTarget::Control(key) => {
                 self.controls.focus(key)?;
+                self.contenteditables.blur();
                 self.focused_link = None;
                 self.focused_disclosure = None;
                 self.focused_generic = None;
             }
             PageFocusTarget::Disclosure(key) => {
                 self.controls.blur();
+                self.contenteditables.blur();
                 self.focused_link = None;
                 self.focused_disclosure = Some(key.clone());
                 self.focused_generic = None;
             }
             PageFocusTarget::Generic(key) => {
                 self.controls.blur();
+                if self.contenteditables.contains(key) {
+                    self.contenteditables.focus(key)?;
+                } else {
+                    self.contenteditables.blur();
+                }
                 self.focused_link = None;
                 self.focused_disclosure = None;
                 self.focused_generic = Some(key.clone());
@@ -3097,10 +3147,32 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let (region, x, y) = self
+        let point = self
             .viewport
             .as_ref()?
-            .control_local_point(viewport_x, viewport_y)?;
+            .control_local_point(viewport_x, viewport_y);
+        let Some((region, x, y)) = point else {
+            let (region, x, y) = self
+                .viewport
+                .as_ref()?
+                .focus_local_point(viewport_x, viewport_y)?;
+            if !self.contenteditables.contains(&region.key) {
+                return None;
+            }
+            let effect = self.contenteditables.pointer_down(
+                &region.key,
+                x - CONTROL_TEXT_METRICS.inset_x,
+                y - CONTROL_TEXT_METRICS.inset_y,
+                CONTROL_TEXT_METRICS,
+                1,
+            )?;
+            self.controls.blur();
+            self.focused_link = None;
+            self.focused_disclosure = None;
+            self.focused_generic = Some(region.key);
+            self.reflow_controls(pipeline)?;
+            return Some(effect.into());
+        };
         let effect = if region.label_activation {
             self.controls.pointer_activate(&region.key)?
         } else if region.kind.accepts_text() {
@@ -3134,10 +3206,32 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let (region, x, y) = self
+        let point = self
             .viewport
             .as_ref()?
-            .control_local_point(viewport_x, viewport_y)?;
+            .control_local_point(viewport_x, viewport_y);
+        let Some((region, x, y)) = point else {
+            let (region, x, y) = self
+                .viewport
+                .as_ref()?
+                .focus_local_point(viewport_x, viewport_y)?;
+            if !self.contenteditables.contains(&region.key) {
+                return None;
+            }
+            let effect = self.contenteditables.pointer_down(
+                &region.key,
+                x - CONTROL_TEXT_METRICS.inset_x,
+                y - CONTROL_TEXT_METRICS.inset_y,
+                CONTROL_TEXT_METRICS,
+                1,
+            )?;
+            self.controls.blur();
+            self.focused_link = None;
+            self.focused_disclosure = None;
+            self.focused_generic = Some(region.key);
+            self.reflow_controls(pipeline)?;
+            return Some(effect.into());
+        };
         if region.label_activation || !region.kind.accepts_text() {
             return self.activate_control(viewport_x, viewport_y, pipeline);
         }
@@ -3150,6 +3244,7 @@ impl BrowserSession {
         self.focused_link = None;
         self.focused_disclosure = None;
         self.focused_generic = None;
+        self.contenteditables.blur();
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -3167,10 +3262,32 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let (region, x, y) = self
+        let point = self
             .viewport
             .as_ref()?
-            .control_local_point(viewport_x, viewport_y)?;
+            .control_local_point(viewport_x, viewport_y);
+        let Some((region, x, y)) = point else {
+            let (region, x, y) = self
+                .viewport
+                .as_ref()?
+                .focus_local_point(viewport_x, viewport_y)?;
+            if !self.contenteditables.contains(&region.key) {
+                return None;
+            }
+            let effect = self.contenteditables.pointer_down(
+                &region.key,
+                x - CONTROL_TEXT_METRICS.inset_x,
+                y - CONTROL_TEXT_METRICS.inset_y,
+                CONTROL_TEXT_METRICS,
+                click_count,
+            )?;
+            self.controls.blur();
+            self.focused_link = None;
+            self.focused_disclosure = None;
+            self.focused_generic = Some(region.key);
+            self.reflow_controls(pipeline)?;
+            return Some(effect.into());
+        };
         if region.label_activation || !region.kind.accepts_text() {
             return self.activate_control(viewport_x, viewport_y, pipeline);
         }
@@ -3181,6 +3298,7 @@ impl BrowserSession {
             CONTROL_TEXT_METRICS,
             click_count,
         )?;
+        self.contenteditables.blur();
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -3199,7 +3317,32 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let key = self.controls.focused_key()?.to_string();
+        let Some(key) = self.controls.focused_key().map(str::to_string) else {
+            let key = self.focused_generic.clone()?;
+            if !self.contenteditables.contains(&key) {
+                return None;
+            }
+            let viewport = self.viewport.as_ref()?;
+            let region = viewport
+                .page()
+                .paint
+                .focus_regions
+                .iter()
+                .find(|region| region.key == key)?
+                .clone();
+            let content_y = if region.fixed {
+                viewport_y
+            } else {
+                viewport_y + viewport.scroll_state().offset_y()
+            };
+            let effect = self.contenteditables.pointer_drag(
+                viewport_x - region.x - CONTROL_TEXT_METRICS.inset_x,
+                content_y - region.y - CONTROL_TEXT_METRICS.inset_y,
+                CONTROL_TEXT_METRICS,
+            )?;
+            self.reflow_controls(pipeline)?;
+            return Some(effect.into());
+        };
         let viewport = self.viewport.as_ref()?;
         let region = viewport
             .page()
@@ -3226,16 +3369,27 @@ impl BrowserSession {
 
     pub fn control_pointer_up(&mut self) {
         self.controls.pointer_release();
+        self.contenteditables.pointer_up();
     }
 
     /// Read selected text for a host clipboard. Password values are rejected
     /// by the shared model before they can cross the host boundary.
     pub fn control_copy(&self) -> Option<String> {
-        self.controls.copy_selection()
+        self.controls.copy_selection().or_else(|| {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.copy_payload()?.plain_text
+        })
     }
 
     pub fn control_copy_payload(&self) -> Option<ControlClipboardPayload> {
-        self.controls.copy_selection_payload()
+        self.controls.copy_selection_payload().or_else(|| {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.copy_payload()
+        })
     }
 
     pub fn control_cut<M, S, FM, R>(
@@ -3248,11 +3402,18 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let cut = self.controls.cut_selection()?;
+        let text = if let Some(cut) = self.controls.cut_selection() {
+            cut.text
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.cut()?.0
+        };
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
-        Some(cut.text)
+        Some(text)
     }
 
     pub fn control_paste<M, S, FM, R>(
@@ -3266,7 +3427,16 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.paste_text(text)?;
+        let effect = if let Some(effect) = self.controls.paste_text(text) {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables
+                .paste(&ControlClipboardPayload::from_plain_text(text))?
+                .into()
+        };
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -3284,7 +3454,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.paste_payload(payload)?;
+        let effect = if let Some(effect) = self.controls.paste_payload(payload) {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.paste(payload)?.into()
+        };
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -3302,8 +3479,20 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.accessibility_action(action)?;
-        self.record_control_effect_events(&effect);
+        let (effect, is_form_control) = if self.controls.focused_key().is_some() {
+            (self.controls.accessibility_action(action)?, true)
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            (
+                self.contenteditables.accessibility_action(action)?.into(),
+                false,
+            )
+        };
+        if is_form_control {
+            self.record_control_effect_events(&effect);
+        }
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -3355,7 +3544,8 @@ impl BrowserSession {
 
     /// Advance caret animation from a host-provided monotonic duration.
     pub fn control_advance_caret_blink(&mut self, elapsed_ms: u64) -> bool {
-        let changed = self.controls.advance_caret_blink(elapsed_ms);
+        let changed = self.controls.advance_caret_blink(elapsed_ms)
+            | self.contenteditables.advance_caret_blink(elapsed_ms);
         if changed {
             self.refresh_control_editor_presentation();
         }
@@ -3363,20 +3553,34 @@ impl BrowserSession {
     }
 
     pub fn focused_ime_candidate_rect(&mut self) -> Option<ControlRect> {
-        let key = self.controls.focused_key()?.to_string();
+        let key = self
+            .controls
+            .focused_key()
+            .map(str::to_string)
+            .or_else(|| self.contenteditables.focused_key().map(str::to_string))?;
         let mut rect = self
             .refresh_control_editor_presentation()
             .into_iter()
             .find(|presentation| presentation.key == key)?
             .candidate_rect?;
         let viewport = self.viewport.as_ref()?;
-        let region = viewport
+        let fixed = viewport
             .page()
             .paint
             .controls
             .iter()
-            .find(|region| region.key == key)?;
-        if !region.fixed {
+            .find(|region| region.key == key)
+            .map(|region| region.fixed)
+            .or_else(|| {
+                viewport
+                    .page()
+                    .paint
+                    .focus_regions
+                    .iter()
+                    .find(|region| region.key == key)
+                    .map(|region| region.fixed)
+            })?;
+        if !fixed {
             rect.y -= viewport.scroll_state().offset_y();
         }
         Some(rect)
@@ -3899,6 +4103,8 @@ impl BrowserSession {
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
         let controls = BrowserControlModel::from_render_tree(&page.render_tree);
+        let contenteditables =
+            ContentEditableModel::from_page(&page.render_tree, &page.paint.focus_regions);
         let top_layer_stack = top_layer_snapshots(&page.render_tree)
             .into_iter()
             .filter(|surface| surface.open)
@@ -3909,6 +4115,7 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        self.contenteditables = contenteditables;
         self.focused_link = None;
         self.focused_disclosure = None;
         self.focused_generic = None;
@@ -3994,7 +4201,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.key_down_with_shift(key, shift)?;
+        let effect = if let Some(effect) = self.controls.key_down_with_shift(key, shift) {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.key_down(key, shift)?.into()
+        };
         self.record_control_effect_events(&effect);
         self.form_diagnostics.clear();
         self.controls.clear_validation();
@@ -4013,7 +4227,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.text_input(text)?;
+        let effect = if let Some(effect) = self.controls.text_input(text) {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.text_input(text)?.into()
+        };
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -4033,7 +4254,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.set_selection(key, anchor, focus)?;
+        let effect = self
+            .controls
+            .set_selection(key, anchor, focus)
+            .or_else(|| {
+                self.contenteditables
+                    .set_selection(key, anchor, focus)
+                    .map(Into::into)
+            })?;
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -4049,7 +4277,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.update_composition(text)?;
+        let effect = if let Some(effect) = self.controls.update_composition(text) {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.update_composition(text)?.into()
+        };
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -4064,7 +4299,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.commit_composition()?;
+        let effect = if let Some(effect) = self.controls.commit_composition() {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.commit_composition()?.into()
+        };
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -4081,7 +4323,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.cancel_composition()?;
+        let effect = if let Some(effect) = self.controls.cancel_composition() {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.cancel_composition()?.into()
+        };
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -4094,6 +4343,11 @@ impl BrowserSession {
             .viewport
             .as_ref()
             .map(|viewport| viewport.page.paint.controls.clone())
+            .unwrap_or_default();
+        let editable_regions = self
+            .viewport
+            .as_ref()
+            .map(|viewport| viewport.page.paint.focus_regions.clone())
             .unwrap_or_default();
         let mut presentations = Vec::new();
         let mut overlays = Vec::new();
@@ -4159,6 +4413,72 @@ impl BrowserSession {
                     stroke_dash: None,
                     stroke_dash_offset: None,
                 }));
+            }
+            let mut metadata = std::collections::HashMap::new();
+            if region.fixed {
+                metadata.insert("layout.position".into(), "fixed".into());
+            }
+            overlays.push(PaintInstruction::Group(PaintGroup {
+                base: PaintBase {
+                    id: Some(format!("{EDITOR_OVERLAY_PREFIX}{}", region.key)),
+                    metadata: (!metadata.is_empty()).then_some(metadata),
+                },
+                children,
+                transform: None,
+                opacity: None,
+            }));
+            presentations.push(presentation);
+        }
+        for region in editable_regions {
+            if !self.contenteditables.contains(&region.key) {
+                continue;
+            }
+            let bounds = ControlRect {
+                x: region.x,
+                y: region.y,
+                width: region.width,
+                height: region.height,
+            };
+            let Some(presentation) =
+                self.contenteditables
+                    .presentation(&region.key, bounds, CONTROL_TEXT_METRICS)
+            else {
+                continue;
+            };
+            let mut children = Vec::new();
+            for rect in &presentation.selection {
+                if let Some(rect) = clipped_editor_rect(*rect, presentation.viewport) {
+                    children.push(PaintInstruction::Rect(PaintRect::filled(
+                        rect.x,
+                        rect.y,
+                        rect.width,
+                        rect.height,
+                        "rgba(37, 99, 235, 0.32)",
+                    )));
+                }
+            }
+            for rect in &presentation.composition_underlines {
+                if let Some(rect) = clipped_editor_rect(*rect, presentation.viewport) {
+                    children.push(PaintInstruction::Rect(PaintRect::filled(
+                        rect.x,
+                        rect.y,
+                        rect.width,
+                        rect.height,
+                        "#2563eb",
+                    )));
+                }
+            }
+            if let Some(rect) = presentation
+                .caret
+                .and_then(|rect| clipped_editor_rect(rect, presentation.viewport))
+            {
+                children.push(PaintInstruction::Rect(PaintRect::filled(
+                    rect.x,
+                    rect.y,
+                    rect.width,
+                    rect.height,
+                    "#111827",
+                )));
             }
             let mut metadata = std::collections::HashMap::new();
             if region.fixed {
@@ -4282,6 +4602,8 @@ impl BrowserSession {
     {
         let mut current = self.viewport.as_ref()?.page().clone();
         self.controls.sync_render_tree(&mut current.render_tree);
+        self.contenteditables
+            .sync_render_tree(&mut current.render_tree);
         let updated = pipeline.reflow_retained_with_visited(&current, &self.visited_links);
         self.viewport
             .as_mut()?
@@ -4295,6 +4617,7 @@ impl BrowserSession {
             self.history.current_entry_id()?,
             BrowserHistoryEntryState {
                 controls: self.controls.capture_state(ControlStatePrivacy::Public),
+                contenteditables: self.contenteditables.capture_state(),
                 scroll_offset_y: self
                     .viewport
                     .as_ref()
@@ -4344,6 +4667,7 @@ impl BrowserSession {
         self.viewport
             .as_mut()?
             .reflow_page(page, self.viewport_height);
+        self.refresh_control_editor_presentation();
         self.viewport.as_ref()
     }
 
@@ -4474,6 +4798,7 @@ impl BrowserSession {
                         .map(|_| BrowserHistoryRestorationState {
                             entry_id: target_entry_id,
                             restored_form_state: true,
+                            restored_editing_state: true,
                             restored_scroll: true,
                             scroll_offset_y: self
                                 .fragment_navigation
@@ -4508,6 +4833,8 @@ impl BrowserSession {
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
         let mut controls = BrowserControlModel::from_render_tree(&page.render_tree);
+        let mut contenteditables =
+            ContentEditableModel::from_page(&page.render_tree, &page.paint.focus_regions);
         let top_layer_stack = top_layer_snapshots(&page.render_tree)
             .into_iter()
             .filter(|surface| surface.open)
@@ -4515,6 +4842,7 @@ impl BrowserSession {
             .collect();
         if let Some(state) = &restored_state {
             controls.restore_state(&state.controls);
+            contenteditables.restore_state(&state.contenteditables);
         }
         history.replace_current(page.final_url.clone());
         if let Some(viewport) = self.viewport.as_mut() {
@@ -4525,6 +4853,7 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        self.contenteditables = contenteditables;
         self.focused_link = None;
         self.focused_disclosure = None;
         self.focused_generic = None;
@@ -4588,6 +4917,7 @@ impl BrowserSession {
                 .map(|_| BrowserHistoryRestorationState {
                     entry_id: target_entry_id,
                     restored_form_state: true,
+                    restored_editing_state: true,
                     restored_scroll: true,
                     scroll_offset_y: self
                         .viewport
@@ -8643,6 +8973,7 @@ mod tests {
             Some(&BrowserHistoryRestorationState {
                 entry_id: first_id,
                 restored_form_state: true,
+                restored_editing_state: true,
                 restored_scroll: true,
                 scroll_offset_y: 120.0,
             })
@@ -9299,5 +9630,121 @@ mod tests {
             session.history().current_url(),
             Some("http://example.test/second")
         );
+    }
+
+    #[test]
+    fn contenteditable_transactions_share_host_input_without_form_ownership() {
+        let start = "http://example.test/editing";
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<input id='form-value' value='untouched'>\
+                  <section id='notes' contenteditable='plaintext-only' aria-label='Notes'>Draft</section>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(320.0, 180.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(start, 180.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        assert_eq!(session.contenteditable_states().len(), 1);
+        session.focus_page(false, &pipeline).unwrap();
+        session.focus_page(false, &pipeline).unwrap();
+        assert!(
+            session.contenteditable_states()[0].focused,
+            "Tab should transfer the common input seam to the editing host"
+        );
+
+        session
+            .control_key_down(ControlKey::SelectAll, &pipeline)
+            .unwrap();
+        session.control_text_input("Shared", &pipeline).unwrap();
+        assert_eq!(session.contenteditable_states()[0].value, "Shared");
+        assert_eq!(
+            session
+                .controls()
+                .control("control:0:id:form-value")
+                .unwrap()
+                .value,
+            "untouched",
+            "arbitrary editable DOM must not enter form-control state"
+        );
+
+        session
+            .control_set_selection("focus:id:notes", 0, 6, &pipeline)
+            .unwrap();
+        assert_eq!(session.control_copy().as_deref(), Some("Shared"));
+        assert_eq!(session.control_cut(&pipeline).as_deref(), Some("Shared"));
+        session
+            .control_paste_payload(
+                &ControlClipboardPayload {
+                    plain_text: None,
+                    html: Some("<b>Restored</b>".into()),
+                },
+                &pipeline,
+            )
+            .unwrap();
+        assert_eq!(session.contenteditable_states()[0].value, "Restored");
+
+        session.control_update_composition("界", &pipeline).unwrap();
+        assert!(session.focused_ime_candidate_rect().is_some());
+        session.control_commit_composition(&pipeline).unwrap();
+        assert_eq!(session.contenteditable_states()[0].value, "Restored界");
+        session
+            .control_key_down(ControlKey::Undo, &pipeline)
+            .unwrap();
+        assert_eq!(session.contenteditable_states()[0].value, "Restored");
+        session
+            .control_accessibility_action(
+                ControlAccessibilityAction::SetValue("Accessible".into()),
+                &pipeline,
+            )
+            .unwrap();
+        assert_eq!(session.contenteditable_states()[0].value, "Accessible");
+        assert!(session
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Group(group)
+                    if group.base.id.as_deref() == Some("venture-editor:focus:id:notes")
+            )));
+        assert!(session.contenteditable_diagnostics().is_empty());
+
+        session
+            .execute(
+                BrowserNavigation::Navigate("http://example.test/other".into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        session
+            .execute(BrowserNavigation::Back, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(
+            session.contenteditable_states()[0].value,
+            "Accessible",
+            "editing state should restore by history-entry identity"
+        );
+        assert!(session
+            .history_restoration_state()
+            .is_some_and(|state| state.restored_editing_state));
     }
 }

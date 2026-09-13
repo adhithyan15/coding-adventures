@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Preserve editing mode on generic focus regions and expose their shared
+  transformed/clipped containment test for contenteditable pointer routing.
+
 - Emit transformed, clipped generic focus regions and carry sequential-focus
   metadata plus top-layer ancestry on client-side image-map areas.
 
