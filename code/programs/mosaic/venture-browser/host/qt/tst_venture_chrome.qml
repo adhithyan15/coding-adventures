@@ -51,6 +51,9 @@ TestCase {
                 "backDisabled": disabled,
                 "forwardDisabled": disabled,
                 "viewSourceDisabled": disabled,
+                "findQuery": "",
+                "findResultLabel": "",
+                "findDisabled": disabled,
                 "navigationDisabled": disabled
             }
         })
@@ -127,5 +130,22 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onViewSource")
+    }
+
+    function test_find_actions_cross_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        const input = nativeControl("find-input")
+        input.forceActiveFocus()
+        input.text = "venture"
+        wait(0)
+        compare(recordingHost.events[0].event, "onFindChange")
+        compare(recordingHost.events[0].value, "venture")
+        mouseClick(nativeControl("find-next-button"))
+        mouseClick(nativeControl("find-previous-button"))
+        mouseClick(nativeControl("find-close-button"))
+        compare(recordingHost.events[1].event, "onFindNext")
+        compare(recordingHost.events[2].event, "onFindPrevious")
+        compare(recordingHost.events[3].event, "onFindClose")
     }
 }
