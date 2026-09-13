@@ -62,12 +62,23 @@ landed and why, not a semver-tracked API.
   finding out why exposed a bug in **my own audit instrument**: it dropped subject tokens shorter
   than four characters and then skipped any row left with no tokens, so every row whose subject is a
   short word — `dog`, `cat`, `fox`, `owl`, `pig` — could never be counted as unmentioned. It was
-  reporting rows as grounded by spans containing no trace of them. Corrected, the census is **1186 of
-  2105 rows (56.3%)** with an unmentioned subject, not 803 (38.1%), and **69 tables** where every
-  single row is unmentioned, not 39. The largest are `language/word-families.adj` (31/31),
-  `biology/animal-babies.adj` (24/24), then `language/idiom-meaning.adj` and `food-groups` tied at
-  23/23. #15139 carries the correction; the audit numbers quoted in the table above are locator
-  verdicts and are unaffected. The two DEAD citations
+  reporting rows as grounded by spans containing no trace of them.
+
+  Two more defects turned up in the same instrument once I started checking numbers instead of
+  reading them: it **could not see single-line row blocks** at all (a converted row written
+  `row (length, meter, "m") { source "…" }` puts the value mid-line, and the pattern was `^`-anchored),
+  so `metrology/si-base-units.adj` — converted in #15073 — counted as 7/7 unmentioned; and one figure
+  I published had been measured before a later conversion moved another 10 rows.
+
+  Measured on today's tree: **1169 of 2105 rows (55.5%)** have an unmentioned subject, not 803
+  (38.1%), and **68 tables** have every row unmentioned, not 39. **That is a lower bound** — the
+  matcher counts a shared four-character stem as a mention (`pancreas` is "named" by *"pancreatic
+  islets"*), leniency that exists to avoid false accusations and can only push the true number up.
+  The largest are `language/word-families.adj` (31/31) and `biology/animal-babies.adj` (24/24), then
+  `language/idiom-meaning.adj` and `food-groups` tied at 23/23. #15139 carries the full correction and
+  a triage of the remaining 68 — 43 ordinary prose conversions, 21 blocked on the held weld question,
+  4 on sources that cannot be read. The audit numbers in the table above are locator verdicts, from a
+  different instrument, and are unaffected. The two DEAD citations
   (`optics/rainbow-colors.adj`, `physics/circuit-parts.adj`) each need a replacement source, and both
   are *also* exemplar-span tables. Probing so far is recorded on #15139 — `science.nasa.gov`'s visible
   light page is live but orders colors by wavelength, which is the reverse of that table's
