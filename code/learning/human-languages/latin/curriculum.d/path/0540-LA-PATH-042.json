@@ -1,0 +1,14 @@
+{
+  "id": "LA-PATH-042",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "LA-C58-labels",
+    "LA-C58-phrases",
+    "LA-C58-prima-lectio"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-058-READING"
+  ],
+  "after": []
+}
