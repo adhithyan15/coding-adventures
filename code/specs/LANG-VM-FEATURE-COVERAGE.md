@@ -31,11 +31,11 @@ refusal also does not imply the complete driver refuses that feature.
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
 | FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
-| COBOL-60 | 58 | 454 | 48 of those cells are BEAM (VM-040 COBOL BEAM slices); much larger frontend JIT/oracle suite |
+| COBOL-60 | 58 | 458 | 52 of those cells are BEAM (VM-040 COBOL BEAM slices); much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1583
+The normal non-ALGOL capstone therefore declares 210 programs and 1587
 declared cells (sum of the non-ALGOL rows above). At VM-061 this matched a
 fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
 exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
@@ -293,3 +293,7 @@ source entry runs compiled. Encoded CIL input remains VM-059.
 VM-040 Oct: all twelve BEAM cells executed in fresh processes with positive
 single-cell sentinels and no skips. The dedicated real-BEAM corpus separately
 checks stdout and zero return values. Intel-8008 semantics remain VM-013.
+
+The remaining base INSPECT BEAM probe adds four declared COBOL cells
+(454 to 458). All four ran on real Erlang; this slice does not report a
+new full-capstone run. Six COBOL rows still lack BEAM declarations.

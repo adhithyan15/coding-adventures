@@ -24,6 +24,13 @@ before proceeding to separately audited registration. Confidential source
 loading reads only provider policy and never acquires client-secret or
 signing-key access. No file path, backend diagnostic, or profile byte enters
 broker audit data.
+The broker can also load the separate exact-schema ID-token identity policy
+through an injected source. It requires an existing provider registration and
+an opaque verification context naming that exact provider before the source
+effect, derives the deployment client ID only from the registration, keeps
+returned bytes zeroizing, and durably records the provider/trace-bound source
+intent and closed decode result before releasing the validated identity
+profile. No concrete source or verifier is added.
 For retained `client_secret_basic` and `client_secret_post` profiles, the
 validated provider data can bind an exact provider-matched opaque secret key
 into the existing client-secret adapter without letting the caller choose or

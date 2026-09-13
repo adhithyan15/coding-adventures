@@ -130,6 +130,9 @@ class _VentureBindings {
       controlKey = library.lookupFunction<_ControlKeyNative, _ControlKeyDart>(
         'venture_browser_flutter_control_key',
       ),
+      accessKey = library.lookupFunction<_ControlTextNative, _ControlTextDart>(
+        'venture_browser_flutter_access_key',
+      ),
       controlText = library.lookupFunction<_ControlTextNative, _ControlTextDart>(
         'venture_browser_flutter_control_text',
       ),
@@ -182,6 +185,7 @@ class _VentureBindings {
   final _EventDart event;
   final _ScalarDart scroll;
   final _ControlKeyDart controlKey;
+  final _ControlTextDart accessKey;
   final _ControlTextDart controlText;
   final _ControlClipboardDart controlCopy;
   final _ControlClipboardDart controlCut;
@@ -350,6 +354,20 @@ class MosaicHost {
     try {
       final changed =
           _bindings.controlKey(_host, value.pointer, shift ? 1 : 0) != 0;
+      if (changed) {
+        _consumeEffect(_decodeResponse(_bindings.takeEffect(_host)));
+        _surfaceChanged();
+      }
+      return changed;
+    } finally {
+      value.dispose();
+    }
+  }
+
+  bool accessKey(String character) {
+    final value = _NativeString(character);
+    try {
+      final changed = _bindings.accessKey(_host, value.pointer) != 0;
       if (changed) {
         _consumeEffect(_decodeResponse(_bindings.takeEffect(_host)));
         _surfaceChanged();
@@ -601,6 +619,15 @@ class _VentureContentSurfaceState extends State<VentureContentSurface> {
   KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
     final keyboard = HardwareKeyboard.instance;
+    final character = event.character;
+    if (keyboard.isAltPressed &&
+        !keyboard.isControlPressed &&
+        !keyboard.isMetaPressed &&
+        character != null &&
+        character.isNotEmpty &&
+        widget.host.accessKey(character)) {
+      return KeyEventResult.handled;
+    }
     final command = keyboard.isControlPressed || keyboard.isMetaPressed;
     final key = command
         ? switch (event.logicalKey) {
@@ -633,7 +660,6 @@ class _VentureContentSurfaceState extends State<VentureContentSurface> {
         )) {
       return KeyEventResult.handled;
     }
-    final character = event.character;
     if (character != null &&
         character.isNotEmpty &&
         widget.host.controlText(character)) {

@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Reading — Objects, Places, and a Day",
+  "label": "ch:la-dies-meus",
+  "canDo": "I can track direct objects and place phrases through a social exchange and a short first-person account without translating sentence by sentence.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "LA-C59-dies-meus",
+    "kind": "four-skill-function-map",
+    "summary": "A 140-word adapted account whose time anchors, place phrases and visible object endings let a beginning reader follow one full day.",
+    "assesses": [
+      "LA-SKILL-C59-ACCOUNT-READING-05",
+      "LA-SKILL-C59-SOCIAL-READING-04",
+      "LA-GRAMMAR-C59-PLACE-03"
+    ]
+  }
+}

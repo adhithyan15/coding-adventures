@@ -38,6 +38,7 @@ from taskapp_release import (
     build_manifest,
     materialize_upgrade_fixture,
     render_notes,
+    validate_changelog,
     validate_identifiers,
     verify_upgrade_state,
     write_windows_icon,
@@ -77,6 +78,70 @@ def test_rejects_mismatched_tag_and_short_commit() -> None:
         validate_identifiers("0.1.0", "task-app-v0.1.1", COMMIT)
     with pytest.raises(ValueError, match="40-character"):
         validate_identifiers("0.1.0", "task-app-v0.1.0", "abc123")
+
+
+def test_changelog_accepts_one_unreleased_section_and_the_next_release(
+    tmp_path: Path,
+) -> None:
+    changelog = tmp_path / "CHANGELOG.md"
+    changelog.write_text(
+        "# Changelog\n\n## [Unreleased]\n\n## [0.2.0] - 2026-09-13\n",
+        encoding="utf-8",
+    )
+
+    validate_changelog(changelog)
+    validate_changelog(changelog, "0.2.0")
+
+
+@pytest.mark.parametrize(
+    ("contents", "message"),
+    (
+        ("# Changelog\n\n## Unreleased\n", "unbracketed"),
+        (
+            "# Changelog\n\n## [Unreleased]\n\n## [Unreleased]\n",
+            "exactly one",
+        ),
+        ("# Changelog\n\n## [0.2.0] - 2026-09-13\n", "must begin"),
+        (
+            "# Changelog\n\n## [Unreleased]\n\n## [next] - 2026-09-13\n",
+            "strict SemVer",
+        ),
+        (
+            "# Changelog\n\n## [Unreleased]\n\n## [0.2.0]\n",
+            "no release date",
+        ),
+        (
+            "# Changelog\n\n## [Unreleased]\n\n## [0.2.0] - someday\n",
+            "unsupported changelog section",
+        ),
+    ),
+)
+def test_changelog_rejects_ambiguous_release_sections(
+    tmp_path: Path, contents: str, message: str
+) -> None:
+    changelog = tmp_path / "CHANGELOG.md"
+    changelog.write_text(contents, encoding="utf-8")
+
+    with pytest.raises(ValueError, match=message):
+        validate_changelog(changelog)
+
+
+def test_changelog_rejects_dispatching_an_older_or_unlisted_version(
+    tmp_path: Path,
+) -> None:
+    changelog = tmp_path / "CHANGELOG.md"
+    changelog.write_text(
+        "# Changelog\n\n"
+        "## [Unreleased]\n\n"
+        "## [0.2.0] - 2026-09-13\n\n"
+        "## [0.1.0] - 2026-08-31\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="newest release must be '0.1.0'"):
+        validate_changelog(changelog, "0.1.0")
+    with pytest.raises(ValueError, match="newest release must be '0.3.0'"):
+        validate_changelog(changelog, "0.3.0")
 
 
 def test_archives_verified_web_and_native_payloads(tmp_path: Path) -> None:

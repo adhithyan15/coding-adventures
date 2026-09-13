@@ -363,6 +363,7 @@ struct ConversionState {
     disclosure_index: usize,
     top_layer_index: usize,
     focus_index: usize,
+    access_index: usize,
     top_layers: Vec<LayoutNode>,
     image_maps: Vec<ImageMapDefinition>,
 }
@@ -452,6 +453,11 @@ where
     let focus_order = sequential_focus_order(node).map(|_| {
         let index = state.focus_index;
         state.focus_index += 1;
+        index
+    });
+    let access_order = access_key_eligible(node).then(|| {
+        let index = state.access_index;
+        state.access_index += 1;
         index
     });
 
@@ -579,6 +585,7 @@ where
             top_layer_index,
             top_layer_kind,
             focus_order,
+            access_order,
         ),
     );
     if let Some(image_map) = image_map_ext(node, state, image_index) {
@@ -4158,6 +4165,7 @@ fn html_ext(
     top_layer_index: Option<usize>,
     top_layer_kind: Option<&str>,
     focus_order: Option<usize>,
+    access_order: Option<usize>,
 ) -> ExtValue {
     let mut values = HashMap::new();
     values.insert("role".into(), ExtValue::Str(node.role.clone()));
@@ -4170,6 +4178,28 @@ fn html_ext(
         node.accessible_name.as_deref(),
     );
     insert_optional(&mut values, "authoredRole", node.authored_role.as_deref());
+    if let Some(target) = node
+        .command_for
+        .as_deref()
+        .or(node.popover_target.as_deref())
+    {
+        values.insert("activationTarget".into(), ExtValue::Str(target.into()));
+        values.insert(
+            "activationCommand".into(),
+            ExtValue::Str(node.command.clone().unwrap_or_else(|| {
+                format!(
+                    "popover-{}",
+                    node.popover_target_action.as_deref().unwrap_or("toggle")
+                )
+            })),
+        );
+    }
+    if !node.accesskey.is_empty() {
+        values.insert(
+            "accessKeys".into(),
+            ExtValue::List(node.accesskey.iter().cloned().map(ExtValue::Str).collect()),
+        );
+    }
     insert_optional(&mut values, "editingMode", node.editing_mode.as_deref());
     insert_optional(&mut values, "name", node.anchor_name.as_deref());
     insert_optional(
@@ -4184,6 +4214,9 @@ fn html_ext(
             "tabIndex".into(),
             ExtValue::Int(sequential_focus_order(node).unwrap_or_default() as i64),
         );
+    }
+    if let Some(order) = access_order {
+        values.insert("accessOrder".into(), ExtValue::Int(order as i64));
     }
     if let Some(index) = disclosure_index {
         values.insert("disclosureIndex".into(), ExtValue::Int(index as i64));
@@ -4263,6 +4296,15 @@ fn sequential_focus_order(node: &BrowserRenderNode) -> Option<i32> {
     (naturally_focusable && tab_index >= 0).then_some(tab_index)
 }
 
+fn access_key_eligible(node: &BrowserRenderNode) -> bool {
+    !node.accesskey.is_empty()
+        && !node.disabled
+        && !node.hidden
+        && !node.inert
+        && !node.aria_hidden
+        && node.aria_disabled.as_deref() != Some("true")
+}
+
 fn image_map_ext(
     node: &BrowserRenderNode,
     state: &mut ConversionState,
@@ -4321,6 +4363,19 @@ fn image_map_ext(
                 ),
             );
             values.insert("areaIndex".into(), ExtValue::Int(index as i64));
+            if !area.accesskey.is_empty() {
+                values.insert(
+                    "accessKeys".into(),
+                    ExtValue::List(area.accesskey.iter().cloned().map(ExtValue::Str).collect()),
+                );
+                if access_key_eligible(area) {
+                    values.insert(
+                        "accessOrder".into(),
+                        ExtValue::Int(state.access_index as i64),
+                    );
+                    state.access_index += 1;
+                }
+            }
             if let Some(tab_index) = sequential_focus_order(area) {
                 let order = state.focus_index;
                 state.focus_index += 1;

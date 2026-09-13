@@ -64,7 +64,18 @@ const NATIVE_BACKENDS: &[Backend] = &[
 ///
 /// Measured against the real analyzer, not copied from a sibling. Every entry
 /// is also asserted to STILL be dropped, below.
-const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[(Backend::SwiftUI, "gap")];
+///
+/// Empty, and it is the `(SwiftUI, "gap")` entry that left. That gap was never
+/// dropped: `Column` and `Row` open `VStack(spacing:)` / `HStack(spacing:)`
+/// read from the part's own style. The REPORT was wrong, because it scanned
+/// only the modifier chain and `gap` is lowered at view-construction time,
+/// where no modifier scan reaches it.
+///
+/// Empty is the right state rather than a sign the gate stopped working: the
+/// suite also asserts no UNLISTED drop appears, so an entry is still required
+/// the moment one does -- including a `gap` on a `Box`, `Stack` or
+/// `HostScroll`, which really is discarded and really is still reported.
+const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[];
 
 fn package_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -212,4 +223,38 @@ fn no_pinned_style_drop_has_silently_been_fixed() {
         stale.len(),
         stale.join("\n")
     );
+}
+
+/// The package authors a `gap`, so "no gap is reported dropped" means something.
+///
+/// `ALLOWED_STYLE_DROPS` is empty here, and both tests above are then one-sided:
+/// the unexpected-drop check iterates the OBSERVED drops, so a package with no
+/// drops at all passes it, and the stale-pin check iterates the empty list.
+/// Neither can tell "SwiftUI applies every gap this package authors" from "this
+/// package authors no gap" or from "the analyzer stopped reporting".
+///
+/// So anchor it. Parts here declare `gap : 8` in both themes, and the SwiftUI
+/// emitter lowers each to `VStack(spacing:)` / `HStack(spacing:)` at
+/// view-construction time — which is why the drop report, scanning only the
+/// modifier chain, used to call all of them dropped.
+///
+/// Reading the SOURCE rather than the report, on purpose: a gate that asked the
+/// analyzer whether the analyzer had work to do would be answered by the same
+/// component that might have stopped working.
+#[test]
+fn the_package_authors_a_gap_for_the_gate_above_to_be_about() {
+    for theme in ["dark", "light"] {
+        let sheet = package_root()
+            .join("src")
+            .join(format!("CollectionActions.{theme}.msl"));
+        let text = std::fs::read_to_string(&sheet)
+            .unwrap_or_else(|error| panic!("{}: {error}", sheet.display()));
+        let gaps = text.lines().filter(|line| line.contains("gap")).count();
+        assert!(
+            gaps > 0,
+            "{} declares no `gap`, so the empty ALLOWED_STYLE_DROPS above \
+             proves nothing about whether SwiftUI applies one",
+            sheet.display()
+        );
+    }
 }

@@ -185,6 +185,12 @@ void VentureContentSurface::wheelEvent(QWheelEvent *event)
 
 void VentureContentSurface::keyPressEvent(QKeyEvent *event)
 {
+  if (host_ && event->modifiers() == Qt::AltModifier && !event->text().isEmpty()
+      && host_->accessKey(event->text().toUtf8())) {
+    update();
+    event->accept();
+    return;
+  }
   if (host_ && event->key() == Qt::Key_U
       && event->modifiers() == Qt::ControlModifier
       && host_->requestViewSource()) {
@@ -329,6 +335,15 @@ bool MosaicHost::controlKey(const QByteArray &key, bool shift)
   return true;
 }
 
+bool MosaicHost::accessKey(const QByteArray &character)
+{
+  if (!browser_ || !accessKey_ || accessKey_(browser_, character.constData()) == 0) {
+    return false;
+  }
+  consumeEffect(response(takeEffect_(browser_)));
+  return true;
+}
+
 bool MosaicHost::controlText(const QByteArray &text)
 {
   return browser_ && controlText_ && controlText_(browser_, text.constData()) != 0;
@@ -421,6 +436,7 @@ bool MosaicHost::loadBridge()
   RESOLVE(scroll_, "scroll");
   RESOLVE(scrollCommand_, "scroll_command");
   RESOLVE(controlKey_, "control_key");
+  RESOLVE(accessKey_, "access_key");
   RESOLVE(controlText_, "control_text");
   RESOLVE(controlCopy_, "control_copy");
   RESOLVE(controlCut_, "control_cut");
@@ -439,7 +455,7 @@ bool MosaicHost::loadBridge()
 #undef RESOLVE
 
   if (!new_ || !free_ || !applyProps_ || !handleEvent_ || !scroll_
-      || !scrollCommand_ || !controlKey_ || !controlText_ || !controlCopy_
+      || !scrollCommand_ || !controlKey_ || !accessKey_ || !controlText_ || !controlCopy_
       || !controlCut_ || !controlPaste_ || !caretTick_ || !imeCandidateRect_
       || !filePickerRequest_ || !controlFile_ || !scrollMetrics_
       || !activateLink_ || !takeEffect_ || !updateHover_

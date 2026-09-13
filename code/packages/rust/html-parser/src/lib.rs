@@ -14533,13 +14533,23 @@ fn is_special_scope_boundary_element(name: &str) -> bool {
             | "details"
             | "dir"
             | "div"
+            | "dd"
             | "dl"
+            | "dt"
             | "fieldset"
             | "figcaption"
             | "figure"
             | "footer"
+            | "form"
+            | "h1"
+            | "h2"
+            | "h3"
+            | "h4"
+            | "h5"
+            | "h6"
             | "header"
             | "hgroup"
+            | "li"
             | "main"
             | "menu"
             | "nav"
@@ -38091,13 +38101,23 @@ mod tests {
             "center",
             "details",
             "dir",
+            "dd",
             "dl",
+            "dt",
             "fieldset",
             "figcaption",
             "figure",
             "footer",
+            "form",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
             "header",
             "hgroup",
+            "li",
             "main",
             "menu",
             "nav",

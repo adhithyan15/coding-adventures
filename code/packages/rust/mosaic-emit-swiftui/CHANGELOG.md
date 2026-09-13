@@ -4,6 +4,63 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — `gap` was reported as dropped while the container applied it
+
+`dropped_style_properties` derived its answer by running the modifier chain and
+collecting what no match arm handled. That is the right method for almost every
+property, and wrong for `gap`: SwiftUI takes spacing at view-**construction**
+time — `HStack(spacing:)`, `VStack(spacing:)` — and `container_spacing` has been
+reading it from the part's own style for some time. The modifier scan cannot see
+that, so it called every applied gap a drop.
+
+**22 of the 40 SwiftUI style drops reported for Engram were this**, and all 22
+were false. `$style.app-shell` was reported to drop `gap: 18` while the emitted
+Swift opened `VStack(spacing: 18)` on that very part. After the fix Engram
+reports 18 drops and no `gap` at all.
+
+`dropped_style_properties` now takes the layout, the same way the Compose
+reporter does for `justify-content`/`align-items` (#14834), and asks
+`container_spacing` rather than re-deriving the rule. `gap_consuming_parts`
+mirrors the emitter's tag-to-view mapping:
+
+- `Column` → `VStack` and `Row` → `HStack` consult `container_spacing`, so their
+  gap lands and is no longer reported.
+- `Box` → `Group`, `Stack` → `ZStack` and `HostScroll` → `ScrollView` do not.
+  `container_spacing` refuses them by name, deliberately: a `ZStack` overlays
+  along the depth axis and a `ScrollView` delegates layout to its content. Those
+  drops are still reported.
+- A `Row` **inside** a `HostTable` lowers through `container_table_row` to
+  `HStack(spacing: 0)`, pinning spacing to zero to match
+  `border-collapse: collapse`, so its authored gap really is discarded and stays
+  reported. That exception is what makes the table walk necessary rather than
+  decorative.
+- A value `container_spacing` cannot parse is still a drop, because
+  `container_spacing` decides rather than this reporter assuming
+  "`Column` means applied".
+
+**EVERY occurrence of a part has to consume the gap, not merely one.** The first
+version of `gap_consuming_parts` used `any`, which is the too-wide direction its
+own doc warns about: a part name can be bound to more than one node — package
+resolution substitutes a `pkg::` reference with the resolved sub-tree — and if
+one is a `Column` and the other a `Box`, the gap really is lost on the `Box`.
+Suppressing the report because some *other* node applied it hides a real loss.
+
+That is the `all` the Compose reporter already uses, for the same reason its
+`container_argument_covers` gives: a part shared between a `Row` and a `Text` is
+genuinely dropped on the `Text`. No layout in the repo triggers it today, which
+is precisely why it would have gone unnoticed; caught in security review, below
+its reporting bar, by comparison with that sibling.
+
+Five tests cover the five cases; four of them are the ones that would catch a
+fix widened too far. The multi-node test is mutation-tested against a faithful
+`any` — exactly that one test fails, and the other 216 stay green, so the test
+isolates the distinction rather than merely reacting to suppression breaking.
+
+A false drop is not a harmless extra line. It gets carried in
+`ALLOWED_STYLE_DROPS`, where it reads as a standing licence for a gap that
+genuinely stops being applied — the report is the evidence the release gate
+consults, so one that overstates cannot be acted on.
+
 ### Added — a border has edges (UI79, #14835)
 
 `border-{top,right,bottom,left}-{width,color}` now lowers. SwiftUI's `.border`

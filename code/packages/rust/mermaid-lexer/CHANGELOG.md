@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.93.0
+
+- Tokenize quoted labels on solid, dotted, and thick Block links.
+
 ## 0.92.0
 
 - Tokenize Block links written with three or more tildes.

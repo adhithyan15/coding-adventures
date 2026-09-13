@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Add shared access-key candidate normalization, conflict diagnostics, modal
+  containment, focus/activation policy, and semantic native host forwarding.
+
 - Extend existing host-neutral Tab forwarding to image-map areas, authored
   generic `tabindex`, and contenteditable surfaces without adding generated
   host focus policy.

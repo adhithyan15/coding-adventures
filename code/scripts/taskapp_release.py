@@ -13,6 +13,7 @@ import sys
 import tarfile
 import zipfile
 import zlib
+from datetime import date as calendar_date
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -185,6 +186,47 @@ def validate_identifiers(version: str, tag: str, commit: str | None = None) -> N
         raise ValueError(f"tag must be {expected_tag!r}, got {tag!r}")
     if commit is not None and COMMIT.fullmatch(commit) is None:
         raise ValueError("commit must be a full 40-character Git SHA")
+
+
+def validate_changelog(changelog: Path, release_version: str | None = None) -> None:
+    """Require one roll-forward section and a current section for publication."""
+
+    text = changelog.read_text(encoding="utf-8")
+    if re.search(r"^## Unreleased\s*$", text, re.MULTILINE):
+        raise ValueError("changelog has an unbracketed Unreleased heading")
+
+    section_headings = re.findall(r"^## (.+?)\s*$", text, re.MULTILINE)
+    if not section_headings or section_headings[0] != "[Unreleased]":
+        raise ValueError("changelog must begin with exactly one ## [Unreleased] section")
+    if section_headings.count("[Unreleased]") != 1:
+        raise ValueError("changelog must contain exactly one ## [Unreleased] section")
+
+    headings: list[tuple[str, str]] = []
+    released_versions: set[str] = set()
+    for heading in section_headings[1:]:
+        match = re.fullmatch(
+            r"\[([^\]]+)\](?: - (\d{4}-\d{2}-\d{2}))?",
+            heading,
+        )
+        if match is None:
+            raise ValueError(f"unsupported changelog section heading: {heading!r}")
+        label, date = match.groups(default="")
+        headings.append((label, date))
+        if SEMVER.fullmatch(label) is None:
+            raise ValueError(f"changelog release heading is not strict SemVer: {label!r}")
+        if label in released_versions:
+            raise ValueError(f"changelog contains duplicate release {label!r}")
+        released_versions.add(label)
+        if not date:
+            raise ValueError(f"changelog release {label!r} has no release date")
+        calendar_date.fromisoformat(date)
+
+    if release_version is not None:
+        validate_identifiers(release_version, f"{TAG_PREFIX}{release_version}")
+        if not headings or headings[0][0] != release_version:
+            raise ValueError(
+                f"changelog newest release must be {release_version!r} before publication"
+            )
 
 
 def artifact_names(version: str) -> list[str]:
@@ -1002,6 +1044,10 @@ def _parser() -> argparse.ArgumentParser:
     validate_parser.add_argument("--tag", required=True)
     validate_parser.add_argument("--commit", required=True)
 
+    changelog_parser = subparsers.add_parser("validate-changelog")
+    changelog_parser.add_argument("--changelog", type=Path, required=True)
+    changelog_parser.add_argument("--release-version")
+
     web_parser = subparsers.add_parser("archive-web")
     web_parser.add_argument("--version", required=True)
     web_parser.add_argument("--commit", required=True)
@@ -1078,6 +1124,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "validate":
             validate_identifiers(args.version, args.tag, args.commit)
+        elif args.command == "validate-changelog":
+            validate_changelog(args.changelog, args.release_version)
         elif args.command == "archive-web":
             archive_web(args.version, args.commit, args.source, args.output_dir)
         elif args.command == "archive-native":

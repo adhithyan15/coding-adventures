@@ -1,0 +1,17 @@
+{
+  "id": "LA-EXT-059-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read object endings and place phrases through a 73-word exchange and a 140-word first-person account.",
+  "prerequisites": [
+    "LA-EXT-058-READING"
+  ],
+  "lessons": [
+    "LA-C59-a-objects",
+    "LA-C59-m-objects",
+    "LA-C59-place",
+    "LA-C59-social-exchange",
+    "LA-C59-dies-meus"
+  ]
+}
