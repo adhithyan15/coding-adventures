@@ -12,6 +12,7 @@ and source palette, ordered analysis-plan cards, DC-source selection, and
 selected-card sweep inputs; their Rust document remains the only lowering
 source. The same adapter owns versioned `spice-mosaic/schematic` JSON import
 and export through protocol-2 awaited file effects; malformed imports leave the
-current document untouched. Data-bound
+current document untouched. Schematic edits expose disabled-aware Undo and Redo
+controls for the active workbench session. Data-bound
 Path geometry remains a native XAML follow-up; vendor-dialect controls are
 later phases.

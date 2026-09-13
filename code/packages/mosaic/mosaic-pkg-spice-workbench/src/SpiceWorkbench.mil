@@ -15,6 +15,10 @@ component SpiceWorkbench {
   slot schematic-title-disabled : bool ;
   slot open-schematic-label : text ;
   slot save-schematic-label : text ;
+  slot undo-schematic-label : text ;
+  slot undo-schematic-disabled : bool ;
+  slot redo-schematic-label : text ;
+  slot redo-schematic-disabled : bool ;
   slot schematic-rows : list<text> ;
   slot schematic-palette : list<text> ;
   slot schematic-analysis-label : text ;
@@ -77,6 +81,8 @@ component SpiceWorkbench {
   emit onSchematicTitleChange ( value : text ) ;
   emit onOpenSchematic ;
   emit onSaveSchematic ;
+  emit onUndoSchematic ;
+  emit onRedoSchematic ;
   emit onPlaceSchematicComponent ( kind : text ) ;
   emit onAddSchematicAnalysis ( analysis : text ) ;
   emit onSelectSchematicAnalysis ( analysis : text ) ;

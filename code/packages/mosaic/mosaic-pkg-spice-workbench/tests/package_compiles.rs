@@ -62,6 +62,14 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .slots
         .iter()
+        .any(|slot| slot.name == "undo-schematic-disabled"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "redo-schematic-disabled"));
+    assert!(component
+        .slots
+        .iter()
         .any(|slot| slot.name == "schematic-analysis-controls"));
     assert!(component
         .slots
@@ -100,6 +108,14 @@ fn manifest_and_component_contract_are_complete() {
         .emits
         .iter()
         .any(|emit| emit.name == "onSaveSchematic"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onUndoSchematic"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onRedoSchematic"));
     assert!(component
         .emits
         .iter()
@@ -168,6 +184,8 @@ fn multiline_workbench_compiles_in_both_themes() {
     assert!(source("SpiceWorkbench.mll").contains("Path [ schematic-terminal ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ open-schematic ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ save-schematic ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ undo-schematic ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ redo-schematic ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-title-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-control ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-card ]"));
@@ -218,6 +236,8 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("data-on-click=\"onRun\""));
                 assert!(output.contains("data-on-click=\"onOpenSchematic\""));
                 assert!(output.contains("data-on-click=\"onSaveSchematic\""));
+                assert!(output.contains("data-on-click=\"onUndoSchematic\""));
+                assert!(output.contains("data-on-click=\"onRedoSchematic\""));
                 assert!(output.contains("data-on-change=\"onSchematicTitleChange\""));
                 assert!(output.contains("data-on-click=\"onPlaceSchematicComponent\""));
                 assert!(output.contains("data-on-click=\"onAddSchematicAnalysis\""));
@@ -237,6 +257,8 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("type: \"run\""));
                 assert!(output.contains("type: \"openSchematic\""));
                 assert!(output.contains("type: \"saveSchematic\""));
+                assert!(output.contains("type: \"undoSchematic\""));
+                assert!(output.contains("type: \"redoSchematic\""));
                 assert!(output.contains("type: \"schematicTitleChange\""));
                 assert!(output.contains("type: \"placeSchematicComponent\""));
                 assert!(output.contains("type: \"selectSchematicAnalysis\""));
