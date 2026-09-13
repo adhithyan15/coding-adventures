@@ -65,15 +65,197 @@ fn anatomy_joint_types_recall_binds_example_with_citation() {
         "elbow → hinge (reverse recall): {out}"
     );
     // The answer carries the StatPearls (NIH/NLM) citation as its proof.
+    //
+    // THE WHOLE LOCATOR BOUND TO THE TIER, not two loose substrings. #15139
+    // found eight files whose locators had rotted underneath exactly that
+    // shape without a test noticing, because a bare host survives a site
+    // reorganization untouched.
     assert!(
-        out.contains("ncbi.nlm.nih.gov/books/NBK507893")
-            && out.contains("\"trust\":\"authoritative\""),
-        "carries the source citation: {out}"
+        out.contains("\"locator\":\"https://www.ncbi.nlm.nih.gov/books/NBK507893/\",\"trust\":\"authoritative\""),
+        "carries the whole source citation: {out}"
     );
     // A skull suture is an immovable joint, not a synovial type — honest
     // abstention, never a fabricated example.
     assert!(
         out.contains("\"abstained\":true"),
         "unknown joint type abstains: {out}"
+    );
+}
+
+const JOINTS_LOCATOR: &str = "https://www.ncbi.nlm.nih.gov/books/NBK507893/";
+
+/// Assert one row carries its own span, in a program returning only that row.
+///
+/// The example is pinned in the same call, because a span assertion that never
+/// reads the binding leaves the binding free — the gap review found on
+/// `mesosphere -> meteors`, and the reason every row in this cascade now moves
+/// span and value together.
+///
+/// `joint_type` takes an atom, so the query below is by TYPE; several types
+/// have one row, and `ball_and_socket` has two, which is why the caller says
+/// how many answers to expect.
+fn assert_joint(tag: &str, jtype: &str, example: &str, span: &str, answers: usize) -> String {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("anatomy/joint-types.adj"),
+        dir.join("joint-types.adj"),
+    )
+    .expect("copy shipped joint-types.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"joint-types.adj\"\n? joint_example({jtype}, $Ex)\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        answers,
+        "{jtype} has {answers} row(s): {out}"
+    );
+    assert!(
+        out.contains(&format!("\"Ex\":\"{example}\"")),
+        "{jtype} binds {example}: {out}"
+    );
+    assert!(
+        out.contains(&format!(
+            "\"source\":\"{span}\",\"locator\":\"{JOINTS_LOCATOR}\",\"trust\":\"authoritative\""
+        )),
+        "{jtype} carries the span naming its own type: {out}"
+    );
+    out
+}
+
+/// #14986: the envelope was the HINGE row's own examples sentence, so recalling
+/// the hip came back proved by *"Examples include the elbow, knee, ankle, and
+/// interphalangeal joints."*
+#[test]
+fn every_joint_row_carries_a_span_naming_its_own_type() {
+    assert_joint(
+        "jtpivot", "pivot", "atlantoaxial",
+        "The atlantoaxial joint, formed by the 1st (atlas) and 2nd (axis) cervical vertebrae, is a pivot joint.",
+        1,
+    );
+    assert_joint(
+        "jtcondyloid", "condyloid", "knuckles",
+        "Examples of condyloid joints are the knuckles, formed by the distal metacarpals and proximal phalanges of the medial 4 fingers.",
+        1,
+    );
+    assert_joint(
+        "jthinge", "hinge", "elbow",
+        "Flexion and extension are typically the only movements allowed by hinge joints. Examples include the elbow, knee, ankle, and interphalangeal joints.",
+        1,
+    );
+    assert_joint(
+        "jtplanar", "planar", "intercarpal",
+        "Planar joints are multiaxial but restricted by the surrounding ligaments. Examples include the acromioclavicular, intercarpal, and intertarsal joints.",
+        1,
+    );
+}
+
+/// The page never puts "saddle" and "thumb" in one sentence. It defines the
+/// saddle joint, names the trapezium/metacarpal joint as its example, and only
+/// then says that joint moves the thumb — so the span is all four sentences.
+/// Widening across that chain is what the README rule asks for; quoting only
+/// the last sentence (as this file's own header used to) leaves "This joint"
+/// pointing at nothing.
+#[test]
+fn the_saddle_row_carries_the_whole_chain_from_type_to_thumb() {
+    let out = assert_joint(
+        "jtsaddle", "saddle", "thumb",
+        "A saddle joint is an articulation between 2 saddle-shaped bones, which are concave in one direction and convex in another. This joint type is biaxial. One example is the joint formed by the trapezium and 1st metacarpal bone. This joint allows the thumb to flex and extend parallel to the palm and abduct and adduct perpendicular to the palm, making the digit opposable.",
+        1,
+    );
+    // Both ends of the chain reach the answer: the type at one end, the thumb
+    // at the other. Twice each — provenance is emitted under `citations` and
+    // again under `steps`.
+    assert_eq!(
+        out.matches("A saddle joint is an articulation").count(),
+        2,
+        "the span opens on the sentence naming the type: {out}"
+    );
+    assert_eq!(
+        out.matches("allows the thumb to flex").count(),
+        2,
+        "and closes on the one naming the thumb: {out}"
+    );
+}
+
+/// Two rows, one sentence. Each carries its own copy, so either can be
+/// re-checked or changed alone — and each is pinned SEPARATELY here.
+///
+/// A first version queried by type, which returns BOTH rows, so
+/// `out.contains(span)` was satisfied by whichever copy was still intact.
+/// Mutation caught it: breaking only the shoulder row survived, and so did
+/// removing the page's hyphenation from one copy. Binding the EXAMPLE instead
+/// returns exactly one answer, which is what makes the needle belong to the
+/// row under test.
+fn assert_joint_by_example(tag: &str, example: &str, jtype: &str, span: &str) {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("anatomy/joint-types.adj"),
+        dir.join("joint-types.adj"),
+    )
+    .expect("copy shipped joint-types.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"joint-types.adj\"\n? joint_example($T, {example})\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one row has {example}, so the needles below are its own: {out}"
+    );
+    assert!(
+        out.contains(&format!("\"T\":\"{jtype}\"")),
+        "{example} binds {jtype}: {out}"
+    );
+    assert!(
+        out.contains(&format!(
+            "\"source\":\"{span}\",\"locator\":\"{JOINTS_LOCATOR}\",\"trust\":\"authoritative\""
+        )),
+        "{example}'s own row carries the span: {out}"
+    );
+}
+
+#[test]
+fn each_ball_and_socket_row_carries_its_own_copy_of_the_shared_sentence() {
+    // The page hyphenates what the atom spells with underscores; pinned in
+    // both rows so nobody "tidies" either quote into matching the atom.
+    let span = "The body's only ball-and-socket joints are the hip and shoulder (glenohumeral) joints.";
+    assert_joint_by_example("jtbship", "hip", "ball_and_socket", span);
+    assert_joint_by_example("jtbsshoulder", "shoulder", "ball_and_socket", span);
+}
+
+/// The envelope is the framing sentence — the page's own list of the six
+/// movement classes. It defends the table, warrants no row, and a leak back
+/// into an answer is what would redden. Its wording cannot be pinned from
+/// output once every row overrides `source`; that is disclosed, not implied.
+#[test]
+fn the_framing_envelope_never_reaches_an_answer() {
+    let dir = scratch("jtenvelope");
+    std::fs::copy(
+        facts_stdlib().join("anatomy/joint-types.adj"),
+        dir.join("joint-types.adj"),
+    )
+    .expect("copy shipped joint-types.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"joint-types.adj\"\n? joint_example($T, $Ex)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        7,
+        "all seven rows answer: {out}"
+    );
+    assert!(
+        !out.contains("synovial joints are often classified by the movement types"),
+        "the framing span warrants no row: {out}"
     );
 }
