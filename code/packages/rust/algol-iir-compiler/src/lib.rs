@@ -6483,7 +6483,10 @@ impl Compiler {
                     .static_assigned_real_value(expression)
                     .filter(|value| value.is_finite())
                     .map(|value| StaticScalarSnapshot::Real(value.to_string())),
-                ScalarType::Boolean | ScalarType::String => None,
+                ScalarType::Boolean => self
+                    .static_boolean_value(expression)
+                    .map(StaticScalarSnapshot::Boolean),
+                ScalarType::String => None,
             };
             let Some(value) = snapshot.as_ref() else {
                 break;
@@ -14427,6 +14430,40 @@ mod tests {
                 main.instructions
             );
         }
+    }
+
+    #[test]
+    fn al4_bounded_while_loop_tracks_boolean_recurrence_snapshot() {
+        let module = compile_source(
+            "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do flag := flag eqv false; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect("a bounded boolean recurrence has an exact final snapshot");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
+        }));
+    }
+
+    #[test]
+    fn al4_long_while_boolean_recurrence_remains_conservative() {
+        let err = compile_source(
+            "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 5000 do flag := flag eqv false; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect_err("while-loop boolean recurrence simulation is bounded");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_compound_while_boolean_recurrence_remains_conservative() {
+        let err = compile_source(
+            "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do begin flag := flag eqv false; r := r end; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect_err("compound bodies remain outside boolean recurrence analysis");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
