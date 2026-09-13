@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-69-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Malayalam word cold, tell a naming line from a placing one, and read a short passage without translating word by word.",
+  "prerequisites": [
+    "ML-EXT-68-ORDINAL"
+  ],
+  "lessons": [
+    "ML-C69-words",
+    "ML-C69-lines",
+    "ML-C69-adyathe-vaayana"
+  ]
+}

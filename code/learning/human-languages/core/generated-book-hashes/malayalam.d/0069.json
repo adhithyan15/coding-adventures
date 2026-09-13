@@ -1,0 +1,11 @@
+{
+  "language": "malayalam",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:26a3e8a10b2322ad",
+  "lessonIds": [
+    "ML-C69-words",
+    "ML-C69-lines",
+    "ML-C69-adyathe-vaayana"
+  ],
+  "tex": "malayalam/book/chapters/ch69-reading-first-passage.tex"
+}

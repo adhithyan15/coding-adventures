@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "CONNECTED-READING"
+  "segments": [
+    "ML-PATH-69-READING"
   ],
+  "omits": [],
   "relocates": {}
 }
