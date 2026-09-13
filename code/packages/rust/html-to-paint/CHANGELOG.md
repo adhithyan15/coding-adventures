@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Preserve effective link targets, download filenames, and opener/referrer
+  restrictions in transformed, clipped hit regions.
+
 - Emit transformed, clipped top-layer regions for shared dialog/popover hit
   testing and modal host projection.
 

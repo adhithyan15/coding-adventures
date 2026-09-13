@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a deterministic browsing-context fixture covering inherited, blank,
+  named form, `noreferrer`, and download targets.
+
 - Add a deterministic top-layer fixture covering concurrent popover/dialog
   ordering, modal projection, transformed geometry, and focusable content.
 

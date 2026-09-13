@@ -33,7 +33,11 @@ public static class MosaicHost
     private static int acceptanceReported;
     private static int interactionAcceptanceStarted;
     public static JsonElement? LastAuxiliaryDocument { get; private set; }
+    public static JsonElement? LastBrowsingContextRequest { get; private set; }
+    public static JsonElement? LastDownloadRequest { get; private set; }
     public static event Action<JsonElement>? AuxiliaryDocumentRequested;
+    public static event Action<JsonElement>? BrowsingContextRequested;
+    public static event Action<JsonElement>? DownloadRequested;
     public static JsonElement? LastFilePickerRequest { get; private set; }
     public static event Action<JsonElement>? FilePickerRequested;
 
@@ -113,15 +117,29 @@ public static class MosaicHost
     {
         if (response is null
             || !response.RootElement.TryGetProperty("effect", out var effect)
-            || !effect.TryGetProperty("type", out var type)
-            || type.GetString() != "open-auxiliary-document"
-            || !effect.TryGetProperty("document", out var document))
+            || !effect.TryGetProperty("type", out var type))
         {
             return;
         }
-        var retained = document.Clone();
-        LastAuxiliaryDocument = retained;
-        AuxiliaryDocumentRequested?.Invoke(retained);
+        if (type.GetString() == "open-auxiliary-document"
+            && effect.TryGetProperty("document", out var document))
+        {
+            var retained = document.Clone();
+            LastAuxiliaryDocument = retained;
+            AuxiliaryDocumentRequested?.Invoke(retained);
+        }
+        else if (type.GetString() == "open-browsing-context")
+        {
+            var retained = effect.Clone();
+            LastBrowsingContextRequest = retained;
+            BrowsingContextRequested?.Invoke(retained);
+        }
+        else if (type.GetString() == "download")
+        {
+            var retained = effect.Clone();
+            LastDownloadRequest = retained;
+            DownloadRequested?.Invoke(retained);
+        }
     }
 
     public static void RunInteractionAcceptance(Window window, VentureChrome component)
@@ -1188,6 +1206,7 @@ public static class MosaicHost
                 if (editCommand is not null
                     && Native.ControlKey(browser, editCommand, shift ? (byte)1 : (byte)0) != 0)
                 {
+                    ConsumeEffect(Native.Decode(Native.TakeEffect(browser)));
                     changed = true;
                     Refresh();
                     return true;
@@ -1229,6 +1248,7 @@ public static class MosaicHost
             if (!controlKeyDown && !menuKeyDown && controlKey is not null
                 && Native.ControlKey(browser, controlKey, shift ? (byte)1 : (byte)0) != 0)
             {
+                ConsumeEffect(Native.Decode(Native.TakeEffect(browser)));
                 changed = true;
                 Refresh();
                 return true;
@@ -1275,6 +1295,7 @@ public static class MosaicHost
             {
                 return false;
             }
+            ConsumeEffect(Native.Decode(Native.TakeEffect(browser)));
             _ = ApplyProps(component);
             var picker = Native.Decode(Native.FilePickerRequest(browser));
             if (picker is not null)
@@ -1415,6 +1436,10 @@ public static class MosaicHost
         [DllImport(Library, EntryPoint = "venture_browser_windows_activate_link",
             CallingConvention = CallingConvention.Cdecl)]
         internal static extern byte ActivateLink(IntPtr browser, double x, double y);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_take_effect",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr TakeEffect(IntPtr browser);
 
         [DllImport(Library, EntryPoint = "venture_browser_windows_update_hover",
             CallingConvention = CallingConvention.Cdecl)]
