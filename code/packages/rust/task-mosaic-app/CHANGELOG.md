@@ -1,5 +1,33 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — the sheet's column widths were ratios, not pixels (#15131)
+
+Three cells in Trestle's Sheet view measured **zero width** — the task name, the
+completion toggle and the due date — at 1280, 900 and 700 alike.
+
+`sheet-column-widths` was `[3, 1, 2, 2, 2]`, plainly intended as relative
+proportions. But `Grid.mil` declares the slot as **"per-column pixel widths"**,
+and every backend threads the number straight into a width, so those were 3px
+and 1px columns. A 1px column has no room for its text.
+
+Now `[240, 80, 160, 160, 160]` — the same proportions at an 80px unit, matching
+the grid's own 72px minimum cell. Measured after: **0 zero-width nodes in the
+Sheet view at all three viewports**, and every other Trestle view stays clean.
+
+#### Why nothing caught it
+
+A ratio and a pixel width are both `number`, so the slot type cannot tell them
+apart and no backend can either. The viewport-independence was the tell: this
+was zero at 1280 as much as at 700, whereas a starvation bug is
+viewport-dependent by definition — that is what separated it from UI59.
+
+It was also invisible to every existing gate, because presence and
+accessibility assertions all pass on a `0 x h` node.
+
+The new test asserts the **magnitude** rather than the layout: every sheet
+column must be at least 40px. It is deliberately loose — it exists to catch
+single digits, not to pin a design.
+
 ## [Unreleased] — the Flutter harness measured the test font, not the app (#14857)
 
 `flutter test` ships a default font that measures **one em per glyph**, so every
