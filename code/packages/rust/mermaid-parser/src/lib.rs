@@ -1479,6 +1479,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             token_type,
             Some("STATEMENT_LINE")
                 | Some("ARROW_NODE_LINE")
+                | Some("INLINE_NODE_CONNECTION_LINE")
                 | Some("COMPACT_MARKED_CONNECTION_LINE")
                 | Some("MARKED_CONNECTION_LINE")
                 | Some("BIDIRECTIONAL_CONNECTION_LINE")
@@ -1595,9 +1596,24 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             } else {
                 (rest.trim(), quoted_label.map(DiagramLabel::new))
             };
+            let (from, to) = if token_type == Some("INLINE_NODE_CONNECTION_LINE") {
+                let parent_id = group_stack.last().cloned();
+                (
+                    register_inline_block_node(
+                        token, &from, &parent_id, &mut next_order, &mut ids, &mut cells,
+                        &mut class_assignments,
+                    )?,
+                    register_inline_block_node(
+                        token, to, &parent_id, &mut next_order, &mut ids, &mut cells,
+                        &mut class_assignments,
+                    )?,
+                )
+            } else {
+                (from, to.to_string())
+            };
             connections.push(GridConnection {
                 from,
-                to: to.to_string(),
+                to,
                 kind,
                 start_marker: if kind == EdgeKind::Bidirectional { EdgeMarker::Point } else { EdgeMarker::None },
                 end_marker: if matches!(kind, EdgeKind::Directed | EdgeKind::Bidirectional) {
@@ -1705,6 +1721,47 @@ struct ParsedBlockConnection {
     start_marker: EdgeMarker,
     end_marker: EdgeMarker,
     label: Option<DiagramLabel>,
+}
+
+fn register_inline_block_node(
+    token: &Token,
+    source: &str,
+    parent_id: &Option<String>,
+    next_order: &mut HashMap<Option<String>, usize>,
+    ids: &mut HashSet<String>,
+    cells: &mut Vec<GridCell>,
+    class_assignments: &mut Vec<(Vec<String>, Vec<String>)>,
+) -> Result<String, ParseError> {
+    let (source, inline_classes) = match source.split_once(":::") {
+        Some((source, classes)) => (source, split_block_names(classes)),
+        None => (source, Vec::new()),
+    };
+    let (id, label, shape) = parse_block_node(source.trim());
+    if !is_block_id(&id) {
+        return Err(token_error(token, "invalid inline block node id"));
+    }
+    if ids.contains(&id) {
+        if label != id || !inline_classes.is_empty() {
+            return Err(token_error(token, format!("duplicate inline block id {id:?}")));
+        }
+        return Ok(id);
+    }
+    ids.insert(id.clone());
+    let order = take_grid_order(next_order, parent_id);
+    cells.push(GridCell {
+        id: id.clone(),
+        label: DiagramLabel::new(normalize_mermaid_line_breaks(&unquote_block_label(&label))),
+        shape,
+        column_span: 1,
+        parent_id: parent_id.clone(),
+        order,
+        visible: true,
+        style: None,
+    });
+    if !inline_classes.is_empty() {
+        class_assignments.push((vec![id.clone()], inline_classes));
+    }
+    Ok(id)
 }
 
 fn parse_block_compact_marked_connection(
@@ -9450,6 +9507,34 @@ mod tests_dg04 {
         assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
         assert_eq!(diagram.connections[2].end_marker, EdgeMarker::Circle);
         assert_eq!(diagram.connections[2].line_style, GridEdgeStyle::Dotted);
+    }
+
+    #[test]
+    fn block_parses_shaped_nodes_declared_directly_on_connections() {
+        let diagram = parse_block(
+            "block\nid1[\"first\"] --> id2[\"second\"]\nstart(\"Start\")==>stop(\"Stop\")",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram
+                .cells
+                .iter()
+                .map(|cell| cell.id.as_str())
+                .collect::<Vec<_>>(),
+            ["id1", "id2", "start", "stop"]
+        );
+        assert_eq!(
+            diagram
+                .cells
+                .iter()
+                .map(|cell| cell.label.text.as_str())
+                .collect::<Vec<_>>(),
+            ["first", "second", "Start", "Stop"]
+        );
+        assert_eq!(diagram.cells[0].shape, DiagramShape::Rect);
+        assert_eq!(diagram.cells[2].shape, DiagramShape::RoundedRect);
+        assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
     }
 
     #[test]
