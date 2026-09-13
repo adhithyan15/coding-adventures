@@ -332,6 +332,8 @@ pub struct FocusRegion {
     pub key: String,
     pub role: String,
     pub accessible_name: Option<String>,
+    pub editing_mode: Option<String>,
+    pub editing_host: bool,
     pub focus_order: usize,
     pub tab_index: i32,
     pub top_layer_index: Option<usize>,
@@ -379,6 +381,18 @@ impl DisclosureRegion {
 }
 
 impl ControlRegion {
+    pub fn contains(&self, x: f64, y: f64) -> bool {
+        x.is_finite()
+            && y.is_finite()
+            && x >= self.x
+            && x < self.x + self.width
+            && y >= self.y
+            && y < self.y + self.height
+            && self.clips.iter().all(|clip| clip.contains(x, y))
+    }
+}
+
+impl FocusRegion {
     pub fn contains(&self, x: f64, y: f64) -> bool {
         x.is_finite()
             && y.is_finite()
@@ -704,6 +718,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
         IDENTITY,
         None::<(usize, String, bool)>,
         None::<usize>,
+        false,
     )];
 
     while let Some((
@@ -716,6 +731,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
         inherited_transform,
         parent_disclosure,
         inherited_top_layer,
+        inherited_editable,
     )) = stack.pop()
     {
         let absolute_x = parent_x + node.x;
@@ -727,6 +743,14 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
             .map(|local| multiply(inherited_transform, local))
             .unwrap_or(inherited_transform);
         let fixed = inherited_fixed || style.position == layout_positioned::Position::Fixed;
+        let editing_mode = positioned_html_string(node, "editingMode");
+        let explicitly_editable = matches!(editing_mode, Some("plaintext" | "richtext"));
+        let editing_host = explicitly_editable && !inherited_editable;
+        let current_editable = match editing_mode {
+            Some("plaintext" | "richtext") => true,
+            Some("false") => false,
+            _ => inherited_editable,
+        };
         let node_top_layer = positioned_html_int(node, "topLayerIndex")
             .and_then(|value| usize::try_from(value).ok());
         let current_top_layer = node_top_layer.or(inherited_top_layer);
@@ -819,7 +843,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
             if let Some((x, y, width, height)) =
                 region.filter(|(x, y, width, height)| valid_link_box(*x, *y, *width, *height))
             {
-                let role = if positioned_html_string(node, "editingMode").is_some() {
+                let role = if explicitly_editable {
                     "textbox"
                 } else {
                     positioned_html_string(node, "authoredRole").unwrap_or(semantic_role)
@@ -836,6 +860,8 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
                     key,
                     role: role.to_string(),
                     accessible_name: positioned_accessible_name(node),
+                    editing_mode: editing_mode.map(str::to_string),
+                    editing_host,
                     focus_order,
                     tab_index: positioned_html_int(node, "tabIndex")
                         .and_then(|value| i32::try_from(value).ok())
@@ -1008,6 +1034,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
                 transform,
                 current_disclosure.clone(),
                 current_top_layer,
+                current_editable,
             ));
         }
     }

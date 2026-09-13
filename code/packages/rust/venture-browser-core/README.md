@@ -51,6 +51,15 @@ drag autoscroll, bounded undo/redo, plain/HTML clipboard negotiation, and typed
 accessibility actions through the same retained reflow. Password selection
 never crosses the clipboard boundary.
 
+Contenteditable hosts now reuse that semantic input and presentation seam while
+remaining outside form-control ownership. `ContentEditableModel` retains a
+bounded value, selection, composition, undo/redo history, accessibility state,
+and per-navigation-entry snapshot; accepted mutations synchronize the retained
+render tree before shared reflow. Plaintext and rich-text modes stay explicit,
+HTML-only clipboard input is reduced to bounded text, and every host continues
+to forward the same keys, pointer coordinates, clipboard flavors, ticks, and
+IME updates without owning DOM mutation or range policy.
+
 Typed inputs retain that single-owner design. The session exposes
 `ControlValueState` for live validity and accessibility projection, routes
 Arrow Up/Down and SetValue/Increment/Decrement through shared numeric

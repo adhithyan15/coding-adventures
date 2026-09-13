@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Expose the reusable text-editor presentation reducer so contenteditable and
+  form surfaces share caret, selection, scrolling, composition, and IME
+  geometry without sharing form ownership.
+
 - Add explicit blur and semantic Tab key support so a document-level focus
   controller can traverse beyond native form controls.
 
