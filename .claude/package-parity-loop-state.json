@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 15080,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/15080",
+    "branch": "codex/build-tool-site-authored-resources-20260912",
+    "implementation_revision": "c9e752986c06df056dabc8a6e42e28fd7b6f1735",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-08T19:36:22Z",
-    "pr_number": 14659,
-    "status": "merged",
-    "notes": "All final-head checks completed acceptably on 5116540c204f6062acb4b357c54a5bfc6eea7f9d. GitHub reported the branch mergeable, guarded squash auto-merge was armed, and GitHub merged PR #14659 as 248eedfb1604a40f155a19536f39738e559d812d without a manual merge command."
+    "observed_at": "2026-09-13T07:25:28Z",
+    "pr_number": 15080,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #15080 is open at exact implementation head c9e752986c06df056dabc8a6e42e28fd7b6f1735. GitHub reports the branch mergeable, while initial CI, CodeQL, site-deploy, human-language, and Swift-app checks are queued or running. Auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists."
   },
   "last_inventory": {
     "revision": "5e48b5f83db4b1112aea3dfa5e63d42480be808c",
@@ -985,10 +991,12 @@
     {
       "id": "build-tool-site-authored-resource-source-input-extension",
       "title": "Extend the neutral source-input registry for authored site resources",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-go-language-source-input-registry-adoption"],
       "branch": "codex/build-tool-site-authored-resources-20260912",
-      "pr_number": null,
+      "pr_number": 15080,
+      "implementation_revision": "c9e752986c06df056dabc8a6e42e28fd7b6f1735",
+      "publication_notes": "Opened ready-for-review PR #15080 after two clean rebases onto disjoint origin/main advances and a normal first push. GitHub reports the branch mergeable with initial checks queued or running. Auto-merge remains disabled while checks are nonterminal.",
       "selected_at": "2026-09-13T05:26:04Z",
       "selection_revision": "5e48b5f83db4b1112aea3dfa5e63d42480be808c",
       "selection_notes": "Selected after PR #14659 completed all final-head checks and merged through guarded squash auto-merge. The exact-main collision-checked schema-3 inventory reports 15 established lanes, 1,440 implementation identities, 4,665 slots, 1,480 all-reported identities, bands 175/265, 123/934, 181/2,282, and 961/13,454, 781 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Eighteen newly discovered owners are registered before selection. A parallel build-tool audit ranks this extension first because it closes 13 known omitted site inputs before Python, Ruby, TypeScript, JVM, Dart, and OCaml adopt the registry, avoiding repeated generated-projection churn. The fresh clean branch and worktree start from exact live main with no active parity PR.",
