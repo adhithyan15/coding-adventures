@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.124.0
+
+- Preserve resolved graph-edge dash patterns in backend-neutral Paint paths.
+
 ## 0.123.0
 
 - Lower resolved Block cell and composite dash patterns to backend-neutral Paint strokes.

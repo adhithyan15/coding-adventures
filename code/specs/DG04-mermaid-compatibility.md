@@ -361,8 +361,8 @@ parallelogram, trapezoid, asymmetric, and cardinal or axis-direction arrow nodes
 quoted multiword labels, titles, single-line and braced
 multiline accessibility metadata, recursive anonymous and named composite blocks
 with authored labels, local column counts, and parent-grid spans, and directed
-and undirected connections with native quoted or pipe-delimited optional
-labels. `diagram-layout-grid` resolves deterministic
+and undirected solid connections, plus directed dotted and thick connections,
+with native quoted or pipe-delimited optional labels. `diagram-layout-grid` resolves deterministic
 cell geometry before the shared backend-neutral PaintScene lowering path. A
 native Metal-to-PNG fixture gates this slice. Named classes and direct styles
 resolve for both cells and composites, including backend-neutral

@@ -5,7 +5,8 @@ pub const VERSION: &str = "0.6.0";
 use std::collections::HashMap;
 
 use diagram_ir::{
-    resolve_style, resolve_style_with_base, DiagramDirection, DiagramStyle, GridCell, GridColumns, GridDiagram, GridGroup,
+    resolve_style, resolve_style_with_base, DiagramDirection, DiagramStyle, GridCell, GridColumns, GridDiagram,
+    GridEdgeStyle, GridGroup,
     LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphGroup, LayoutedGraphNode, Point, ResolvedDiagramStyle,
 };
 
@@ -67,6 +68,12 @@ pub fn layout_grid_diagram(diagram: &GridDiagram) -> LayoutedGraphDiagram {
             let (from, from_width, from_height) = positions.get(&connection.from)?;
             let (to, to_width, to_height) = positions.get(&connection.to)?;
             let (start, end) = connection_endpoints(from, *from_width, *from_height, to, *to_width, *to_height);
+            let mut style = edge_style.clone();
+            match connection.line_style {
+                GridEdgeStyle::Solid => {}
+                GridEdgeStyle::Dotted => style.stroke_dash = Some(vec![5.0, 4.0]),
+                GridEdgeStyle::Thick => style.stroke_width = 3.5,
+            }
             Some(LayoutedGraphEdge {
                 id: None,
                 from_node_id: connection.from.clone(),
@@ -77,7 +84,7 @@ pub fn layout_grid_diagram(diagram: &GridDiagram) -> LayoutedGraphDiagram {
                 label_position: connection.label.as_ref().map(|_| {
                     edge_label_position(from, *from_width, *from_height, to, *to_width, *to_height)
                 }),
-                style: edge_style.clone(),
+                style,
             })
         })
         .collect();
@@ -351,17 +358,24 @@ mod tests {
                 })
                 .collect(),
             groups: Vec::new(),
-            connections: vec![GridConnection {
-                from: "a".into(),
-                to: "b".into(),
-                kind: EdgeKind::Directed,
-                label: None,
-            }],
+            connections: [GridEdgeStyle::Solid, GridEdgeStyle::Dotted, GridEdgeStyle::Thick]
+                .into_iter()
+                .map(|line_style| GridConnection {
+                    from: "a".into(),
+                    to: "b".into(),
+                    kind: EdgeKind::Directed,
+                    line_style,
+                    label: None,
+                })
+                .collect(),
         };
         let layout = layout_grid_diagram(&diagram);
-        assert_eq!(layout.edges.len(), 1);
+        assert_eq!(layout.edges.len(), 3);
         assert_eq!(layout.edges[0].points[0].x, layout.nodes[0].x + CELL_WIDTH);
         assert_eq!(layout.edges[0].points[1].x, layout.nodes[1].x);
+        assert!(layout.edges[0].style.stroke_dash.is_none());
+        assert_eq!(layout.edges[1].style.stroke_dash.as_deref(), Some(&[5.0, 4.0][..]));
+        assert_eq!(layout.edges[2].style.stroke_width, 3.5);
     }
 
     #[test]
@@ -408,6 +422,7 @@ mod tests {
                 from: "wide".into(),
                 to: "tail".into(),
                 kind: EdgeKind::Directed,
+                line_style: GridEdgeStyle::Solid,
                 label: None,
             }],
         };

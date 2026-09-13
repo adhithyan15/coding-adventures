@@ -14,7 +14,7 @@ use std::collections::{HashMap, HashSet};
 use diagram_ir::{
     BlockArrowDirections, BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
-    GridConnection, GridDiagram, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
+    GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
 };
@@ -1475,7 +1475,13 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             group_stack.pop().ok_or_else(|| token_error(token, "unexpected block group end"))?;
             continue;
         }
-        if token_type != Some("STATEMENT_LINE") && token_type != Some("ARROW_NODE_LINE") {
+        if !matches!(
+            token_type,
+            Some("STATEMENT_LINE")
+                | Some("ARROW_NODE_LINE")
+                | Some("DOTTED_CONNECTION_LINE")
+                | Some("THICK_CONNECTION_LINE")
+        ) {
             continue;
         }
         let line = token.value.trim();
@@ -1532,8 +1538,22 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             direct_styles.push((split_block_names(ids), parse_block_style(token, declarations)?));
             continue;
         }
-        if let Some((from, rest, kind)) = line.split_once("-->").map(|(from, rest)| (from, rest, EdgeKind::Directed))
-            .or_else(|| line.split_once("---").map(|(from, rest)| (from, rest, EdgeKind::Undirected))) {
+        if let Some((from, rest, kind, line_style)) = line
+            .split_once("-.->")
+            .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Dotted))
+            .or_else(|| {
+                line.split_once("==>")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Thick))
+            })
+            .or_else(|| {
+                line.split_once("-->")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Solid))
+            })
+            .or_else(|| {
+                line.split_once("---")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Undirected, GridEdgeStyle::Solid))
+            })
+        {
             let (from, quoted_label) = parse_block_quoted_connection_label(token, from)?;
             let (to, label) = if let Some(rest) = rest.trim().strip_prefix('|') {
                 let (label, to) = rest
@@ -1547,6 +1567,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 from,
                 to: to.to_string(),
                 kind,
+                line_style,
                 label,
             });
             continue;
@@ -9221,6 +9242,15 @@ mod tests_dg04 {
         assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
         assert_eq!(diagram.connections[1].kind, EdgeKind::Undirected);
         assert_eq!(diagram.connections[1].label.as_ref().unwrap().text, "observe");
+    }
+
+    #[test]
+    fn block_preserves_dotted_and_thick_connection_styles() {
+        let diagram = parse_block("block\nA B C\nA -.-> B\nB ==> C").unwrap();
+        assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
+        assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Dotted);
+        assert_eq!(diagram.connections[1].kind, EdgeKind::Directed);
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
     }
 
     #[test]

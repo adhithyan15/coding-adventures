@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.206.0
+
+- Parse dotted and thick Block connections into typed grid-edge styles.
+
 ## 0.205.0
 
 - Parse and validate Block `stroke-dasharray` styles into semantic dash patterns.
