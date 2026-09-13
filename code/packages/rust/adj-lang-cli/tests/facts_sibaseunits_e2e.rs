@@ -96,50 +96,104 @@ fn a_non_base_quantity_abstains_rather_than_inventing_a_unit() {
     );
 }
 
-const SI_BASE_UNITS_PIN: &str = r#""source":"The SI is made up of 7 base units that define the 22 derived units with special names and symbols, which are illustrated in NIST SP 1247, SI Base Units Relationship Poster.","locator":"https://www.nist.gov/pml/owm/metric-si/si-units","trust":"authoritative""#;
+/// The envelope span — what defends the TABLE, not any one row. It states that
+/// the SI has seven base units and names none of them, so it must no longer be
+/// the warrant on a row answer.
+const SI_ENVELOPE_SPAN: &str = r#""source":"The SI is made up of 7 base units that define the 22 derived units with special names and symbols, which are illustrated in NIST SP 1247, SI Base Units Relationship Poster.""#;
 
-#[test]
-fn si_base_units_citation_is_the_pages_whole_sentence() {
-    let dir = scratch("reground");
+/// #14986: every row of this table used to answer with the envelope sentence,
+/// which names none of the seven units. A recall of `mass` shipped NIST, an
+/// `authoritative` tier, and a sentence that does not contain "kilogram".
+///
+/// The previous version of this test pinned that envelope on a row query and
+/// said so in its own comment: *"a row-binding pin today would freeze the
+/// #14124 defect into a test"*, and it recorded all seven per-row spans as
+/// present on the page, *"Deferred to #14124 with the text recorded, NOT
+/// unavailable."* Those spans are now shipped as RS-5e per-row `source`s, so
+/// the sound row-binding pin that comment was waiting for is available, and
+/// this is it.
+fn assert_row_carries_its_own_span(tag: &str, query: &str, binding: &str, span: &str) {
+    let dir = scratch(tag);
     std::fs::copy(
         facts_stdlib().join("metrology/si-base-units.adj"),
         dir.join("si-base-units.adj"),
     )
     .expect("copy shipped si-base-units.adj");
-    std::fs::write(
-        dir.join("case.adj"),
-        "import \"si-base-units.adj\"
-? si_base_unit(mass, $Unit, $Symbol)
-",
-    )
-    .unwrap();
-
-    let (ok, out) = run(&dir.join("case.adj"));
+    let case = with_case(&dir, query);
+    let (ok, out) = run(&case);
     assert!(ok, "cli should succeed: {out}");
-    // The shipped value was a FRAGMENT PUNCTUATED INTO A SENTENCE: the page's
-    // wording, with one character changed so it would read as standalone. It
-    // therefore appeared on no page. Every quote-keyed screen passed it,
-    // because the quotes were all correct.
-    //
-    // THIS PIN BINDS NO ROW, DELIBERATELY -- BUT NOT BECAUSE GROUNDING WAS
-    // UNAVAILABLE. An earlier version of this comment said "the grounding claim
-    // is not mine to make", and that overstated it.
-    //
-    // The envelope states a fact about the SI and about none of this table's
-    // rows (length->meter, mass->kilogram, ...), and the LIBRARY has zero
-    // per-row `cites`. So a row-binding pin today would freeze the #14124
-    // defect into a test, exactly as installment 3d froze a bone-deformity
-    // answer beside a citation about night blindness.
-    //
-    // The PAGE, however, ships the row-level claims verbatim further down:
-    // "Length - meter (m)", "Mass - kilogram (kg)", "Time - second (s)",
-    // "Electric current - ampere (A)", "Temperature - kelvin (K)",
-    // "Amount of substance - mole (mol)", "Luminous intensity - candela (cd)"
-    // -- all seven confirmed present. Per-row `cites` from that list would
-    // ground every row and make a sound row-binding pin available. Deferred to
-    // #14124 with the text recorded, NOT unavailable.
+
+    // The row resolves. A provenance assertion over a row the engine never
+    // reaches proves nothing.
+    assert!(out.contains(binding), "query binds {binding}: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one answer, so every needle below belongs to THIS row: {out}"
+    );
+
+    // The row's own span, key-anchored to `source` so a loose substring
+    // elsewhere in the output cannot satisfy it. Each of these occurs EXACTLY
+    // ONCE on the NIST page — in the raw HTML, under a block-only extractor,
+    // and under a crude every-tag-is-a-break one. The separator is SPACE,
+    // U+002D HYPHEN-MINUS, SPACE, read out of the page rather than assumed;
+    // an en-dash variant and a no-spaces variant each occur zero times.
     assert!(
-        out.contains(SI_BASE_UNITS_PIN),
-        "the SI citation is the page's own sentence: {out}"
+        out.contains(&format!("\"source\":\"{span}\"")),
+        "row is warranted by the page's own line for it ({span}): {out}"
+    );
+
+    // `locator` and `trust` are NOT restated per row — all seven rows come
+    // from the one NIST page at one tier, and a row inherits every field it
+    // does not write.
+    //
+    // The `locator` pin is load-bearing: deleting the envelope's `locator`
+    // reddens this.
+    assert!(
+        out.contains("\"locator\":\"https://www.nist.gov/pml/owm/metric-si/si-units\""),
+        "row inherits the envelope locator: {out}"
+    );
+    // The `trust` pin is WEAKER THAN IT LOOKS, and saying so is the honest
+    // version. `annotations_to_provenance` (adj-lang/src/lower.rs:2622)
+    // defaults a tier to Authoritative whenever a `source` is present, so this
+    // cannot distinguish "inherited from the envelope's declared tier" from
+    // "silently defaulted because the row has a source" — deleting the
+    // envelope's `trust authoritative` leaves this GREEN. What it does
+    // discriminate is the other four tiers: setting the envelope to
+    // `trust inferred` propagates and reddens it.
+    //
+    // It is kept because `authoritative` is the correct tier here for a reason
+    // worth pinning: the span STATES the row, so the claim is read, not
+    // reasoned.
+    assert!(
+        out.contains("\"trust\":\"authoritative\""),
+        "tier is authoritative — the span STATES the row, read not reasoned: {out}"
+    );
+
+    // NAMED NEGATIVE, and the whole point of #14986: the framing sentence is
+    // no longer any row's warrant.
+    assert!(
+        !out.contains(SI_ENVELOPE_SPAN),
+        "the framing sentence does not warrant a row: {out}"
+    );
+}
+
+#[test]
+fn si_base_unit_mass_row_carries_the_pages_own_line() {
+    assert_row_carries_its_own_span(
+        "sibaseunitsmass",
+        "? si_base_unit(mass, $Unit, $Symbol)",
+        "\"Unit\":\"kilogram\"",
+        "Mass - kilogram (kg)",
+    );
+}
+
+#[test]
+fn si_base_unit_candela_row_carries_the_pages_own_line_in_reverse() {
+    assert_row_carries_its_own_span(
+        "sibaseunitscandela",
+        "? si_base_unit($Quantity, candela, $Symbol)",
+        "\"Quantity\":\"luminous_intensity\"",
+        "Luminous intensity - candela (cd)",
     );
 }
