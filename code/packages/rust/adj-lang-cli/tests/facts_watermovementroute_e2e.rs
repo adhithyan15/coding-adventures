@@ -90,7 +90,7 @@ fn runoff_moves_water_across_the_surface() {
         "the envelope carries this sentence verbatim. NOTE: provenance is TABLE-level, so this          proves the sentence reached stdout, NOT that runoff is attributed to it specifically --          every row carries all three sentences (issue #13898): {out}"
     );
     assert!(
-        out.contains("usgs.gov/special-topics/water-science-school/science/water-cycle")
+        out.contains("usgs.gov/water-science-school/water-cycle")
             && out.contains("\"trust\":\"authoritative\""),
         "carries the USGS citation: {out}"
     );

@@ -108,6 +108,6 @@ table eye_part_function {
     row (optic_nerve, carries_signals_to_brain)
 
     source "The cornea is shaped like a dome and bends light to help the eye focus."
-    locator "https://www.nei.nih.gov/learn-about-eye-health/healthy-vision/how-eyes-work"
+    locator "https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work"
     trust authoritative
 }

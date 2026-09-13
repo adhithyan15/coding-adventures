@@ -95,7 +95,7 @@ fn a_share_always_arrives_with_its_denominator() {
         "carries the grounding sentence verbatim: {out}"
     );
     assert!(
-        out.contains("usgs.gov/special-topics/water-science-school/science/where-earths-water")
+        out.contains("usgs.gov/water-science-school/science/where-earths-water")
             && out.contains("\"trust\":\"authoritative\""),
         "carries the USGS citation: {out}"
     );

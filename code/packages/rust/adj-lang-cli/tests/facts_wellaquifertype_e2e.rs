@@ -94,7 +94,7 @@ fn an_artesian_well_reaches_a_confined_aquifer() {
         "carries the grounding caption verbatim: {out}"
     );
     assert!(
-        out.contains("usgs.gov/special-topics/water-science-school/science/aquifers-and-groundwater")
+        out.contains("usgs.gov/water-science-school/science/aquifers-and-groundwater")
             && out.contains("\"trust\":\"authoritative\""),
         "carries the USGS citation: {out}"
     );
