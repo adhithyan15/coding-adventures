@@ -102,6 +102,6 @@ table well_aquifer_type {
     row (water_table_well, unconfined_aquifer)
 
     source "The illustration shows an artesian well and a flowing artesian well, which are drilled into a confined aquifer, and a water table well, which is drilled into an unconfined aquifer."
-    locator "https://www.usgs.gov/special-topics/water-science-school/science/aquifers-and-groundwater"
+    locator "https://www.usgs.gov/water-science-school/science/aquifers-and-groundwater"
     trust authoritative
 }

@@ -65,6 +65,6 @@ table ocean_zone_depth {
     row (midnight_zone, 4000)
 
     source "Because water strongly absorbs light, sunlight penetrates only to depths of about 200 meters (656 feet)."
-    locator "https://www.whoi.edu/know-your-ocean/ocean-topics/how-the-ocean-works/ocean-zones/"
+    locator "https://www.whoi.edu/ocean-learning-hub/ocean-topics/how-the-ocean-works/ocean-zones/"
     trust consensus
 }

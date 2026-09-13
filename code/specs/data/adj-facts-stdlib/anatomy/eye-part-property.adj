@@ -74,6 +74,6 @@ table eye_part_property {
     row (retina, light_sensitive_layer)
 
     source "The iris (the colored part of the eye) controls how much light the pupil lets in."
-    locator "https://www.nei.nih.gov/learn-about-eye-health/healthy-vision/how-eyes-work"
+    locator "https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work"
     trust authoritative
 }
