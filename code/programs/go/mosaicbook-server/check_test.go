@@ -118,10 +118,23 @@ func TestCheckDiscoveredStoriesRejectsInvalidWorkerCount(t *testing.T) {
 	}
 }
 
-func TestStoryCheckBackendsCoversEveryBrowserEmitter(t *testing.T) {
-	want := []string{"html", "webcomponent", "react"}
+func TestStoryCheckBackendsCoversEveryPreviewEmitter(t *testing.T) {
+	want := []string{"html", "webcomponent", "react", "paint"}
 	if strings.Join(storyCheckBackends, ",") != strings.Join(want, ",") {
 		t.Fatalf("story check backends = %v, want %v", storyCheckBackends, want)
+	}
+}
+
+func TestHasPNGSignature(t *testing.T) {
+	png := []byte{0x89, 'P', 'N', 'G', '\r', '\n', 0x1a, '\n', 0, 0, 0, 0}
+	if !hasPNGSignature(png) {
+		t.Fatal("valid PNG signature was rejected")
+	}
+	if hasPNGSignature([]byte("not a png")) {
+		t.Fatal("non-PNG bytes were accepted")
+	}
+	if hasPNGSignature(png[:7]) {
+		t.Fatal("truncated PNG signature was accepted")
 	}
 }
 

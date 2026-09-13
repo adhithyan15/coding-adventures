@@ -12,7 +12,7 @@ import (
 	"sync"
 )
 
-var storyCheckBackends = []string{"html", "webcomponent", "react"}
+var storyCheckBackends = []string{"html", "webcomponent", "react", "paint"}
 
 type storyCheckSummary struct {
 	Components           int
@@ -77,7 +77,7 @@ func (d recordedDegradation) label() string {
 }
 
 // checkStories discovers the real catalogue, rejects missing or invalid story
-// files, then compiles every explicit story through every browser backend.
+// files, then compiles every explicit story through every preview backend.
 // Known isolation gaps may be recorded against tracking issues; stale records
 // fail so a fixed emitter cannot leave its exception behind indefinitely.
 func (s *Server) checkStories(ctx context.Context, workers int, degradationsPath string) (storyCheckSummary, error) {
@@ -217,5 +217,22 @@ func (s *Server) compileStoryForCheck(ctx context.Context, component Component, 
 		return fmt.Errorf("close output file: %w", err)
 	}
 	defer os.Remove(outputPath) //nolint:errcheck
-	return s.compileContext(ctx, component, backend, outputPath, story)
+	if err := s.compileContext(ctx, component, backend, outputPath, story); err != nil {
+		return err
+	}
+	if backend == "paint" {
+		data, err := os.ReadFile(outputPath)
+		if err != nil {
+			return fmt.Errorf("read paint output: %w", err)
+		}
+		if !hasPNGSignature(data) {
+			return fmt.Errorf("paint output is not a PNG")
+		}
+	}
+	return nil
+}
+
+func hasPNGSignature(data []byte) bool {
+	pngSignature := []byte{0x89, 'P', 'N', 'G', '\r', '\n', 0x1a, '\n'}
+	return len(data) >= len(pngSignature) && string(data[:len(pngSignature)]) == string(pngSignature)
 }

@@ -289,6 +289,7 @@ body {
       <button class="backend-tab active" data-backend="html">HTML</button>
       <button class="backend-tab" data-backend="webcomponent">Web Component</button>
       <button class="backend-tab" data-backend="react">React</button>
+      <button class="backend-tab" data-backend="paint">Paint PNG</button>
       <button class="backend-tab" data-backend="xaml" data-native="true">XAML</button>
       <button class="backend-tab" data-backend="swiftui" data-native="true">SwiftUI</button>
       <button class="backend-tab" data-backend="qt" data-native="true">Qt</button>
@@ -327,7 +328,7 @@ body {
  * State machine:
  *   currentComponent  — the selected Component object from /api/stories
  *   currentStory      — the selected Story object
- *   currentBackend    — string: "html" | "webcomponent" | "react"
+ *   currentBackend    — selected preview or native degradation backend
  */
 
 let currentComponent = null;
@@ -598,8 +599,8 @@ document.addEventListener('keydown', e => {
   if (document.activeElement && document.activeElement.tagName === 'IFRAME') return;
 
   // 1-9: switch backend by index (bounded by however many tabs actually
-  // exist — see backend-tabs above; currently 8: html/webcomponent/react
-  // plus xaml/swiftui/qt/flutter/compose).
+  // exist — see backend-tabs above; currently 9: four directly previewable
+  // backends plus xaml/swiftui/qt/flutter/compose).
   if (e.key >= '1' && e.key <= '9') {
     const tabs = document.querySelectorAll('.backend-tab:not(:disabled)');
     const idx = parseInt(e.key, 10) - 1;

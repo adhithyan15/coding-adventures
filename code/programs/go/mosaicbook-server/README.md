@@ -3,9 +3,9 @@
 A local development server — the "Storybook" for Mosaic components.
 
 MosaicBook discovers Mosaic components in your project, compiles them on demand
-to browser-native backends (HTML, Web Component, React), and serves an
-interactive preview UI in your browser.  File changes are detected
-automatically and the preview reloads within one second.
+to browser-native backends (HTML, Web Component, React) or a toolchain-free
+Paint PNG snapshot, and serves an interactive preview UI in your browser. File
+changes are detected automatically and the preview reloads within one second.
 
 For three-file components, populated story fixtures are checked against the
 actual `.mil` contract through `mosaic-compile --describe`. An undeclared slot,
@@ -46,8 +46,10 @@ Phase 1 supports three **Tier 1 browser-native** backends:
 | `webcomponent` | JavaScript Custom Element  | `<script type="module">` + usage tag |
 | `react`        | JSX/TSX                    | Babel in-browser transform (unpkg) |
 
-Phase 2 (planned) adds Cairo and Skia paint backends.  Phase 3 adds a Qt
-daemon for native rendering.
+Tier 2 adds `paint`, a fixed-size 400x300 PNG rendered through the repository's
+Paint VM. It is a portable visual snapshot, not evidence that any of the five
+platform-native backends rendered successfully. Phase 3 native render daemons
+remain planned.
 
 ## Building
 
@@ -68,7 +70,7 @@ go build -o mosaicbook-server .
 Then open `http://localhost:7331` in your browser.
 
 For the non-interactive CI gate, compile every explicit story through the three
-browser emitters and exit:
+browser emitters and Paint, verify Paint emitted a PNG, and exit:
 
 ```bash
 ./mosaicbook-server \
@@ -84,8 +86,8 @@ Check mode rejects an empty catalogue, a renderable component without a
 `.stories.json` file, an invalid story file or fixture, and any unexpected
 emitter compile failure. Known isolation gaps live in the issue-linked
 degradation file; a stale exception also fails. The timeout and worker limit
-bound the per-PR cost. Native previews and snapshot diffs remain tracked by
-#14013 and are not claimed by this browser-source gate.
+bound the per-PR cost. Pixel-baseline diffs and the five platform-native render
+daemons remain tracked by #14013; a Paint PNG does not claim their coverage.
 
 ### Flags
 
@@ -154,6 +156,7 @@ any of them yet.
     { "id": "html",         "tier": 1, "rendered": true,  "analysis": false },
     { "id": "webcomponent", "tier": 1, "rendered": true,  "analysis": false },
     { "id": "react",        "tier": 1, "rendered": true,  "analysis": false },
+    { "id": "paint",        "tier": 2, "rendered": true,  "analysis": false },
     { "id": "xaml",         "tier": 3, "rendered": false, "analysis": true, "reason": "no render daemon yet..." },
     { "id": "swiftui",      "tier": 3, "rendered": false, "analysis": true, "reason": "no render daemon yet..." },
     { "id": "qt",           "tier": 3, "rendered": false, "analysis": true, "reason": "no render daemon yet..." },
