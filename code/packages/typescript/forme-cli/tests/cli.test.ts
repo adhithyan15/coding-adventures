@@ -1,6 +1,6 @@
 import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { mkdtemp } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -31,6 +31,8 @@ interface MockIO extends CliIO {
 
 const roots: string[] = [];
 const execFileAsync = promisify(execFile);
+const PROJECT_ROOT = resolve("/project");
+const PROJECT_CONFIG = join(PROJECT_ROOT, "forme.config.ts");
 
 afterEach(async () => {
   for (const root of roots.splice(0)) await rm(root, { recursive: true, force: true });
@@ -53,7 +55,7 @@ function config(overrides: Partial<PipelineConfig> = {}): PipelineConfig {
   };
 }
 
-function makeIO(cwd = "/project", existing = new Set(["/project/forme.config.ts"])): MockIO {
+function makeIO(cwd = PROJECT_ROOT, existing = new Set([PROJECT_CONFIG])): MockIO {
   let current = cwd;
   const io: MockIO = {
     stdoutText: "",
@@ -257,8 +259,8 @@ describe("watch preview", () => {
     expect(await running).toBe(130);
     expect(publishedBuild).toBe("blake2b:fixture");
     expect(observedDebounce).toBe(10);
-    expect(ignoredPaths).toContain("/project/.git");
-    expect(ignoredPaths).toContain("/project/node_modules");
+    expect(ignoredPaths).toContain(join(PROJECT_ROOT, ".git"));
+    expect(ignoredPaths).toContain(join(PROJECT_ROOT, "node_modules"));
     expect(serverClosed).toBe(true);
     expect(sessionStopped).toBe(true);
     expect(io.stdoutText).toContain("forme watch: http://127.0.0.1:4321");
@@ -411,7 +413,7 @@ describe("build and check", () => {
       {},
       services(config(), reported),
     )).toBe(EXIT_OK);
-    const report = io.written.get("/project/dist/report.json");
+    const report = io.written.get(join(PROJECT_ROOT, "dist", "report.json"));
     expect(report).toContain('"schemaVersion": 1');
     expect(report).toContain('"cacheHits": 1');
     expect(report).toContain('"inputRevision": "blake2b:input"');
@@ -435,7 +437,7 @@ describe("build and check", () => {
       undefined,
       value => roots.push(value),
     ))).toBe(EXIT_OK);
-    expect(roots).toEqual(["/project/.forme/cache", null]);
+    expect(roots).toEqual([join(PROJECT_ROOT, ".forme", "cache"), null]);
   });
 
   it("refuses an outside-project cache before constructing the orchestrator", async () => {
@@ -508,7 +510,10 @@ describe("clean", () => {
       ],
     });
     expect(await run(["clean"], io, {}, services(loaded))).toBe(EXIT_OK);
-    expect(io.removed).toEqual(["/project/.forme/cache", "/project/dist"]);
+    expect(io.removed).toEqual([
+      join(PROJECT_ROOT, ".forme", "cache"),
+      join(PROJECT_ROOT, "dist"),
+    ]);
     expect(io.stdoutText).toBe("forme clean: removed 2 configured paths\n");
   });
 

@@ -1,0 +1,15 @@
+{
+  "id": "PT-EXT-033-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Portuguese word without its article, follow a line whose subject lives inside the verb, and read a short passage without translating word by word.",
+  "prerequisites": [
+    "PT-EXT-032-ORDINAIS-ATE-DECIMO"
+  ],
+  "lessons": [
+    "PT-C29-palavras",
+    "PT-C29-linhas",
+    "PT-C29-primeira-leitura"
+  ]
+}

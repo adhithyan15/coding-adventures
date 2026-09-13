@@ -1,0 +1,17 @@
+{
+  "language": "tamil",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:113d3f6e4d78e269",
+  "lessonIds": [
+    "TA-C84-words",
+    "TA-C84-lines",
+    "TA-C84-mudhal-vaasippu"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "tamil/narration/ch84.txt",
+  "json": "tamil/narration/ch84.json",
+  "textHash": "fnv1a64:5e562f3d81b8363e",
+  "jsonHash": "fnv1a64:294ce4c55f99f8ec",
+  "findings": []
+}

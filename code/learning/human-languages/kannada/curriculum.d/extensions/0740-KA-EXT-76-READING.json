@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-76-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Kannada word cold, tell a naming sentence from a locating one, and read a short passage without translating word by word.",
+  "prerequisites": [
+    "KA-EXT-75-ORDINAL"
+  ],
+  "lessons": [
+    "KA-C76-words",
+    "KA-C76-lines",
+    "KA-C76-modala-oduvike"
+  ]
+}

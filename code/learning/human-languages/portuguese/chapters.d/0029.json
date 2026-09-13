@@ -1,0 +1,16 @@
+{
+  "chapter": 29,
+  "title": "Reading — Words, Lines, and a First Passage",
+  "label": "ch:pt-primeira-leitura",
+  "canDo": "I can read a Portuguese word without its article, follow a line whose subject lives inside the verb, and hold a whole passage without translating it word by word.",
+  "payoff": {
+    "lesson": "PT-C29-primeira-leitura",
+    "kind": "four-skill-function-map",
+    "summary": "Forty-two words of Portuguese held together by one joining word and the order of its sentences, because the track has not yet taught but or because.",
+    "assesses": [
+      "PT-SKILL-CONNECTED-READING",
+      "PT-SKILL-READ-LINES",
+      "PT-SKILL-READ-WORDS"
+    ]
+  }
+}

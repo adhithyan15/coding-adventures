@@ -1,0 +1,14 @@
+{
+  "id": "ML-PATH-69-READING",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "ML-C69-words",
+    "ML-C69-lines",
+    "ML-C69-adyathe-vaayana"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-69-READING"
+  ],
+  "after": []
+}

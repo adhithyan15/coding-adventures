@@ -71,7 +71,11 @@ export async function bootstrap(projectDirectory, options = {}) {
       await readFile(path.join(directory, "package.json"), "utf8"),
     );
     log(`[bootstrap] ${manifest.name ?? directory}`);
-    await install(npm, ["install", "--silent", "--package-lock=false"], directory);
+    await install(
+      npm,
+      ["install", "--silent", "--package-lock=false", "--legacy-peer-deps"],
+      directory,
+    );
   }
 }
 

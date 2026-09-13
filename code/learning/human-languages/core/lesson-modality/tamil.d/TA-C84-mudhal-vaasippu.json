@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C84-mudhal-vaasippu",
+    "language": "tamil",
+    "chapter": 84,
+    "sequence": 3500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:314fe6a3147510c5"
+  },
+  "findings": []
+}

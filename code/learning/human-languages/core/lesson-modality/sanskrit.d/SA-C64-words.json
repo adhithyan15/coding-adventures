@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C64-words",
+    "language": "sanskrit",
+    "chapter": 64,
+    "sequence": 2960,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3739f82d3be35eb6"
+  },
+  "findings": []
+}

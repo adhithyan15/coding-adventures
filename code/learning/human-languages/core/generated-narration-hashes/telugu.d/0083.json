@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:c542cce9f408ebac",
+  "lessonIds": [
+    "TE-C83-words",
+    "TE-C83-lines",
+    "TE-C83-modati-chadavu"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "telugu/narration/ch83.txt",
+  "json": "telugu/narration/ch83.json",
+  "textHash": "fnv1a64:3316c88083fedbea",
+  "jsonHash": "fnv1a64:be91af2b82f33f76",
+  "findings": []
+}

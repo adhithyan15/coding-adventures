@@ -39,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 146-case bootstrap corpus covers every process-free v1 domain:
+The 149-case bootstrap corpus covers every process-free v1 domain:
 
 - validated CI gate selection with exact package intersection, path and
   globstar matching, explicit false verdicts, deterministic output names, and
@@ -82,7 +82,9 @@ The 146-case bootstrap corpus covers every process-free v1 domain:
   representative tracked-repository projection, the exact Rust Engram WASM
   smoke script, imported host module, and checked-in module bytes for that
   package root only without widening other Rust packages or JavaScript and
-  WebAssembly suffix authority, extension and declared-
+  WebAssembly suffix authority; plus the eight exact blog and five exact
+  landing-page authored inputs without widening TypeScript resource suffixes
+  or admitting unregistered site roots, extension and declared-
   source selection modes, exact near-name
   retention, inert symlink/reparse boundaries, Android signing/SDK-property
   exclusion, and per-file SHA-256 digests. Shared ancestors, tracked generated-

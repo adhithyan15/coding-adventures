@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-83-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Telugu word downwards as well as along, read a sentence with no word for is, and read a short passage without translating word by word.",
+  "prerequisites": [
+    "TE-EXT-82-ORDINAL"
+  ],
+  "lessons": [
+    "TE-C83-words",
+    "TE-C83-lines",
+    "TE-C83-modati-chadavu"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "TA-PATH-84-READING",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "TA-C84-words",
+    "TA-C84-lines",
+    "TA-C84-mudhal-vaasippu"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-84-READING"
+  ],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "PT-PATH-033",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "PT-C29-palavras",
+    "PT-C29-linhas",
+    "PT-C29-primeira-leitura"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-033-READING"
+  ],
+  "after": []
+}

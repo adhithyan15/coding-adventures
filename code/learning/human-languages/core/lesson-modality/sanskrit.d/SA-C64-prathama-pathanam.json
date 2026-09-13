@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C64-prathama-pathanam",
+    "language": "sanskrit",
+    "chapter": 64,
+    "sequence": 2980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:076154f8d4f2d8fc"
+  },
+  "findings": []
+}

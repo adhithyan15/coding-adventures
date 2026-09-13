@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 146)
+        self.assertEqual(summary["case_count"], 149)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -452,7 +452,7 @@ class CorpusTests(unittest.TestCase):
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f",
+            "cb396d048211f3ec20f1e4d5a438746e5b19642b6d2b039e33c93876a841cd6d",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -1293,6 +1293,63 @@ class CorpusTests(unittest.TestCase):
                     actual,
                     [{"path": package_path, "digest": expected_digest}],
                 )
+
+        expected_site_inputs = {
+            "code/sites/blog": [
+                "data/.2026-05-08-capability-typed-stages.md.id.json",
+                "data/.2026-05-12-why-forme.md.id.json",
+                "data/.2026-05-15-hello-forme.md.id.json",
+                "data/2026-05-08-capability-typed-stages.md",
+                "data/2026-05-12-why-forme.md",
+                "data/2026-05-15-hello-forme.md",
+                "data/assets/.forme-pipeline.svg.id.json",
+                "data/assets/forme-pipeline.svg",
+            ],
+            "code/sites/landing-page": [
+                "data/.index.landing.id.json",
+                "data/assets/.og.jpg.id.json",
+                "data/assets/og.jpg",
+                "data/index.landing",
+                "landing.css",
+            ],
+        }
+        typescript = next(
+            entry
+            for entry in registry["languages"]
+            if entry["language"] == "typescript"
+        )
+        actual_site_inputs = {
+            rule["package_root"]: rule["paths"]
+            for rule in typescript["package_exact_inputs"]
+            if rule["package_root"].startswith("code/sites/")
+        }
+        self.assertEqual(actual_site_inputs, expected_site_inputs)
+
+        def tracked_blob(repository_path: str) -> bytes:
+            stage_record = subprocess.check_output(
+                ["git", "ls-files", "--stage", "-z", "--", repository_path],
+                cwd=runner.REPO_ROOT,
+            )
+            entries = [entry for entry in stage_record.split(b"\0") if entry]
+            self.assertEqual(len(entries), 1)
+            metadata, staged_path = entries[0].split(b"\t", 1)
+            mode, object_id, stage = metadata.decode("ascii").split()
+            self.assertEqual(mode, "100644")
+            self.assertEqual(stage, "0")
+            self.assertEqual(staged_path.decode("utf-8"), repository_path)
+            return subprocess.check_output(
+                ["git", "cat-file", "blob", object_id],
+                cwd=runner.REPO_ROOT,
+            )
+
+        for package_root, relative_paths in expected_site_inputs.items():
+            for relative_path in relative_paths:
+                repository_path = f"{package_root}/{relative_path}"
+                with self.subTest(site_input=repository_path):
+                    self.assertEqual(
+                        (runner.REPO_ROOT / repository_path).read_bytes(),
+                        tracked_blob(repository_path),
+                    )
 
     def test_engram_wasm_registry_projects_exact_tracked_bytes(self) -> None:
         registry = runner.load_document(
@@ -3054,6 +3111,47 @@ class PureDomainValidationTests(unittest.TestCase):
             runner._expected_source_collection(case_variants, registry),
             [],
         )
+
+        for case_name in (
+            "source-collection-typescript-blog-exact-inputs.json",
+            "source-collection-typescript-landing-page-exact-inputs.json",
+            "source-collection-typescript-site-foreign-package.json",
+        ):
+            site_case = load_case(case_name)
+            site_options = site_case["input"]["options"]
+            self.assertEqual(site_options["registry_sha256"], registry_digest)
+            self.assertEqual(
+                runner._expected_source_collection(site_options, registry),
+                site_case["expected"]["result"]["files"],
+            )
+
+        for invalid_root in (
+            "code/sites/unreviewed",
+            "code/sites/blog/nested",
+        ):
+            invalid_site = copy.deepcopy(
+                load_case("source-collection-typescript-blog-exact-inputs.json")[
+                    "input"
+                ]["options"]
+            )
+            invalid_site["package_root"] = invalid_root
+            with self.subTest(package_root=invalid_root), self.assertRaises(
+                runner.ConformanceError
+            ):
+                runner._expected_source_collection(invalid_site, registry)
+
+        landing_case = load_case(
+            "source-collection-typescript-landing-page-exact-inputs.json"
+        )
+        wrong_case = copy.deepcopy(landing_case["input"]["options"])
+        wrong_case["candidates"] = [
+            {
+                "path": "Landing.css",
+                "kind": "file",
+                "content_hex": "736f757263650a",
+            }
+        ]
+        self.assertEqual(runner._expected_source_collection(wrong_case, registry), [])
         other_rust_package = copy.deepcopy(engram_options)
         other_rust_package["package_root"] = "code/packages/rust/task-wasm"
         other_rust_package["candidates"] = [
@@ -3606,7 +3704,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 146)
+        self.assertEqual(summary["case_count"], 149)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

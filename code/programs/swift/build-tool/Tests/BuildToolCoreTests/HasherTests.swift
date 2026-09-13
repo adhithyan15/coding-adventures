@@ -211,6 +211,9 @@ struct HasherTests {
         "source-collection-declared.json",
         "source-collection-registry-roles.json",
         "source-collection-engram-wasm-exact-inputs.json",
+        "source-collection-typescript-blog-exact-inputs.json",
+        "source-collection-typescript-landing-page-exact-inputs.json",
+        "source-collection-typescript-site-foreign-package.json",
     ])
     func consumesNeutralSourceCollectionFixture(_ name: String) throws {
         let fixture = try JSONDecoder().decode(
@@ -289,7 +292,7 @@ struct HasherTests {
         #expect(Set(checked.languages.map(\.language)).count == 23)
         #expect(
             Hasher.languageSourceInputRegistryDigest
-                == "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70"
+                == "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530"
         )
         #expect(
             try Hasher.canonicalLanguageSourceInputRegistryDigest(from: checkedData)
@@ -319,7 +322,7 @@ struct HasherTests {
         #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 19)
         #expect(
             Hasher.repositorySourceInputBoundaryDigest
-                == "963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f"
+                == "cb396d048211f3ec20f1e4d5a438746e5b19642b6d2b039e33c93876a841cd6d"
         )
         #expect(
             try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: checkedData)
@@ -643,6 +646,55 @@ struct HasherTests {
     }
 
     @Test
+    func registeredLegacySiteIdentityUsesTypeScriptInputs() throws {
+        let root = try makeTempDirectory(label: "hasher_site_profile")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let packageRoot = (root as NSString).appendingPathComponent("code/sites/blog")
+        try writeFile(
+            (packageRoot as NSString).appendingPathComponent("BUILD"),
+            "echo build\n"
+        )
+        try writeFile(
+            (packageRoot as NSString).appendingPathComponent(
+                "data/2026-05-08-capability-typed-stages.md"
+            ),
+            "# post\n"
+        )
+        try writeFile(
+            (packageRoot as NSString).appendingPathComponent("data/ignored.txt"),
+            "ignored\n"
+        )
+        let package = BuildPackage(
+            name: "unknown/blog",
+            path: packageRoot,
+            language: "unknown"
+        )
+
+        #expect(
+            relativePaths(
+                try Hasher.collectSourceFiles(package, repositoryRoot: root),
+                root: packageRoot
+            ) == [
+                "BUILD",
+                "data/2026-05-08-capability-typed-stages.md",
+            ]
+        )
+        let initialHash = try Hasher.hashPackage(package, repositoryRoot: root)
+        try writeFile(
+            (packageRoot as NSString).appendingPathComponent("data/ignored.txt"),
+            "changed decoy\n"
+        )
+        #expect(try Hasher.hashPackage(package, repositoryRoot: root) == initialHash)
+        try writeFile(
+            (packageRoot as NSString).appendingPathComponent(
+                "data/2026-05-08-capability-typed-stages.md"
+            ),
+            "# changed post\n"
+        )
+        #expect(try Hasher.hashPackage(package, repositoryRoot: root) != initialHash)
+    }
+
+    @Test
     func repositoryPackageRootMustMatchLanguageAndContainAName() throws {
         let root = try makeTempDirectory(label: "hasher_package_root_authority")
         defer { try? FileManager.default.removeItem(atPath: root) }
@@ -676,6 +728,22 @@ struct HasherTests {
         )
         #expect(throws: (any Error).self) {
             _ = try Hasher.collectSourceFiles(wholeLane, repositoryRoot: root)
+        }
+
+        let unreviewedSiteRoot = (root as NSString).appendingPathComponent(
+            "code/sites/unreviewed"
+        )
+        try writeFile(
+            (unreviewedSiteRoot as NSString).appendingPathComponent("BUILD"),
+            "echo inert\n"
+        )
+        let unreviewedSite = BuildPackage(
+            name: "unknown/unreviewed",
+            path: unreviewedSiteRoot,
+            language: "unknown"
+        )
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.collectSourceFiles(unreviewedSite, repositoryRoot: root)
         }
     }
 

@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-84-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Tamil word as shapes, recognise a question by its last word, and read a short passage without translating word by word.",
+  "prerequisites": [
+    "TA-EXT-83-ORDINAL"
+  ],
+  "lessons": [
+    "TA-C84-words",
+    "TA-C84-lines",
+    "TA-C84-mudhal-vaasippu"
+  ]
+}

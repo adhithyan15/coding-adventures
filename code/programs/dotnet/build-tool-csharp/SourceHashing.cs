@@ -224,9 +224,9 @@ public static partial class Hasher
     private const ulong MaximumGlobMatchWork = 50_000_000;
 
     public const string LanguageSourceInputRegistryDigest =
-        "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70";
+        "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530";
     public const string RepositorySourceInputBoundaryDigest =
-        "963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f";
+        "cb396d048211f3ec20f1e4d5a438746e5b19642b6d2b039e33c93876a841cd6d";
 
     private static readonly JsonSerializerOptions RegistryJsonOptions = new()
     {
@@ -407,8 +407,8 @@ public static partial class Hasher
             var limits = SourceHashLimits.Default;
             using var secureScope = SecureSourceFileReader.RetainRepositoryRoot(repositoryRoot);
             var localCollection = CollectPackageLocalFiles(package, repositoryRoot, limits, secureScope);
-            var packageRoot = PortableRelativePath(repositoryRoot, package.Path);
-            ValidatePackageRoot(packageRoot, package.Language);
+            var profile = ResolveSourceInputProfile(package, repositoryRoot);
+            var packageRoot = profile.PackageRoot;
             var allFiles = new Dictionary<string, string>(StringComparer.Ordinal);
             foreach (var file in localCollection.Files)
             {
@@ -891,12 +891,12 @@ public static partial class Hasher
         SourceHashLimits limits,
         SecureSourceFileReader.Scope secureScope)
     {
-        if (!LanguageInputs.ContainsKey(package.Language))
+        var profile = ResolveSourceInputProfile(package, repositoryRoot);
+        if (!LanguageInputs.ContainsKey(profile.Language))
         {
             throw new SourceHashException("SOURCE_HASH_LANGUAGE_UNKNOWN");
         }
-        var packageRoot = PortableRelativePath(repositoryRoot, package.Path);
-        ValidatePackageRoot(packageRoot, package.Language);
+        var packageRoot = profile.PackageRoot;
         var candidates = new List<SourceCollectionCandidate>();
         var candidateCount = 0;
         CollectDirectory(
@@ -909,7 +909,7 @@ public static partial class Hasher
         var declaredSources = package.DeclaredSources ?? [];
         var mode = package.IsStarlark ? "declared_sources" : "extension";
         var selected = SelectSourceCandidates(new SourceCollectionRequest(
-            package.Language,
+            profile.Language,
             packageRoot,
             mode,
             LanguageSourceInputRegistryDigest,
@@ -1283,13 +1283,45 @@ public static partial class Hasher
     {
         ValidatePortablePath(packageRoot);
         var components = packageRoot.Split('/');
-        if (components.Length < 4 ||
-            components[0] != "code" ||
-            components[1] is not ("packages" or "programs") ||
-            components[2] != expectedLanguage)
+        var conventionalRoot = components.Length >= 4 &&
+            components[0] == "code" &&
+            (components[1] is "packages" or "programs") &&
+            components[2] == expectedLanguage;
+        var registeredSiteRoot = expectedLanguage == "typescript" &&
+            components.Length == 3 &&
+            components[0] == "code" &&
+            components[1] == "sites" &&
+            LanguageRegistry.Languages
+                .FirstOrDefault(entry => entry.Language == expectedLanguage)?
+                .PackageExactInputs.Any(entry => entry.PackageRoot == packageRoot) == true;
+        if (!conventionalRoot && !registeredSiteRoot)
         {
             throw new SourceHashException("SOURCE_HASH_PACKAGE_ROOT_INVALID");
         }
+    }
+
+    internal static bool IsRegisteredLegacySiteRoot(string packageRoot)
+    {
+        var components = packageRoot.Split('/');
+        return components.Length == 3 &&
+            components[0] == "code" &&
+            components[1] == "sites" &&
+            LanguageRegistry.Languages
+                .FirstOrDefault(entry => entry.Language == "typescript")?
+                .PackageExactInputs.Any(entry => entry.PackageRoot == packageRoot) == true;
+    }
+
+    private static (string PackageRoot, string Language) ResolveSourceInputProfile(
+        PackageSpec package,
+        string repositoryRoot)
+    {
+        var packageRoot = PortableRelativePath(repositoryRoot, package.Path);
+        if (package.Language == "unknown" && IsRegisteredLegacySiteRoot(packageRoot))
+        {
+            return (packageRoot, "typescript");
+        }
+        ValidatePackageRoot(packageRoot, package.Language);
+        return (packageRoot, package.Language);
     }
 
     private static bool IsUnsafePathRune(Rune rune)
