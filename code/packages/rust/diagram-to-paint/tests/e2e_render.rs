@@ -333,6 +333,36 @@ mod apple {
     }
 
     #[test]
+    fn render_mermaid_block_entity_labels_to_png() {
+        let grid = parse_block(
+            "block\ntitle Grammar &amp; Paint\nA[Parse&nbsp;input] -- \"lower&amp;shape\" --> B[Paint]",
+        )
+        .expect("block entity parse failed");
+        assert_eq!(grid.title.as_deref(), Some("Grammar & Paint"));
+        assert_eq!(grid.cells[0].label.text, "Parse\u{a0}input");
+        assert_eq!(grid.connections[0].label.as_ref().unwrap().text, "lower&shape");
+        let layout = layout_grid_diagram(&grid);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let opts = DiagramToPaintOptions {
+            background: layout_ir::Color { r: 248, g: 250, b: 252, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 14.0),
+            title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        };
+        let scene = diagram_to_paint(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(_))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_block_entities_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
     fn render_mermaid_packet_to_png() {
         let packet = parse_packet(
             "---\nconfig:\n  packet:\n    rowHeight: 40\n    bitWidth: 20\n    bitsPerRow: 16\n    paddingX: 4\n    paddingY: 6\nthemeVariables:\n  packet:\n    byteFontSize: 11px\n    startByteColor: '#aa0000'\n    endByteColor: '#0000aa'\n    labelColor: '#006600'\n    labelFontSize: 13px\n    titleColor: '#663300'\n    titleFontSize: 17px\n    blockStrokeColor: '#123456'\n    blockStrokeWidth: 2.5\n    blockFillColor: '#abcdef'\n---\npacket-beta\ntitle Configured packet fields\n0-7: \"Version\"\n8-15: \"Flags\"\n16-31: \"Payload length\"",

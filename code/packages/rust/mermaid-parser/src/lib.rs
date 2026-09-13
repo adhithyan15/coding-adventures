@@ -1449,7 +1449,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 let label = if label == id {
                     id.clone()
                 } else {
-                    normalize_mermaid_line_breaks(&unquote_block_label(&label))
+                    normalize_block_text(&unquote_block_label(&label))
                 };
                 (id, column_span, label)
             } else {
@@ -1513,15 +1513,15 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("title ") {
-            title = Some(normalize_mermaid_line_breaks(value.trim()));
+            title = Some(normalize_block_text(value.trim()));
             continue;
         }
         if let Some((_, value)) = line.strip_prefix("accTitle").and_then(|line| line.split_once(':')) {
-            accessibility_title = Some(value.trim().to_string());
+            accessibility_title = Some(normalize_block_text(value.trim()));
             continue;
         }
         if let Some((_, value)) = line.strip_prefix("accDescr").and_then(|line| line.split_once(':')) {
-            accessibility_description = Some(normalize_mermaid_line_breaks(value.trim()));
+            accessibility_description = Some(normalize_block_text(value.trim()));
             continue;
         }
         if let Some(value) = line.strip_prefix("classDef ") {
@@ -1599,7 +1599,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 let (label, to) = rest
                     .split_once('|')
                     .ok_or_else(|| token_error(token, "unterminated block connection label"))?;
-                (to.trim(), Some(DiagramLabel::new(label.trim())))
+                (to.trim(), Some(DiagramLabel::new(normalize_block_text(label.trim()))))
             } else {
                 (rest.trim(), quoted_label.map(DiagramLabel::new))
             };
@@ -1675,7 +1675,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             }
             cells.push(GridCell {
                 id: id.clone(),
-                label: DiagramLabel::new(normalize_mermaid_line_breaks(&unquote_block_label(&label))),
+                label: DiagramLabel::new(normalize_block_text(&unquote_block_label(&label))),
                 shape,
                 column_span,
                 parent_id,
@@ -1787,7 +1787,7 @@ fn register_inline_block_node(
     let order = take_grid_order(next_order, parent_id);
     cells.push(GridCell {
         id: id.clone(),
-        label: DiagramLabel::new(normalize_mermaid_line_breaks(&unquote_block_label(&label))),
+        label: DiagramLabel::new(normalize_block_text(&unquote_block_label(&label))),
         shape,
         column_span: 1,
         parent_id: parent_id.clone(),
@@ -1868,7 +1868,7 @@ fn parse_block_marked_connection(token: &Token, line: &str) -> Result<ParsedBloc
         let (label, to) = labelled
             .split_once('|')
             .ok_or_else(|| token_error(token, "unterminated marked block connection label"))?;
-        (to.trim(), Some(DiagramLabel::new(label.trim())))
+        (to.trim(), Some(DiagramLabel::new(normalize_block_text(label.trim()))))
     } else {
         (remainder.trim(), None)
     };
@@ -1967,7 +1967,7 @@ fn parse_block_quoted_connection_label(token: &Token, source: &str) -> Result<(S
     }).filter(|from| !from.is_empty())
         .ok_or_else(|| token_error(token, "invalid quoted block connection start"))?;
     let label = &source[label_start + 1..source.len() - 1];
-    Ok((from.to_string(), Some(normalize_mermaid_line_breaks(label))))
+    Ok((from.to_string(), Some(normalize_block_text(label))))
 }
 
 fn split_block_names(source: &str) -> Vec<String> {
@@ -2069,6 +2069,10 @@ fn unquote_block_label(source: &str) -> String {
     } else {
         source.to_string()
     }
+}
+
+fn normalize_block_text(source: &str) -> String {
+    commonmark_parser::entities::decode_entities(&normalize_mermaid_line_breaks(source))
 }
 
 fn prepare_line_grammar_source(source: &str) -> Result<String, ParseError> {
@@ -9660,6 +9664,21 @@ mod tests_dg04 {
         assert_eq!(diagram.cells[1].label.text, "Paint output");
         assert_eq!(diagram.cells[0].shape, DiagramShape::Rect);
         assert_eq!(diagram.cells[1].shape, DiagramShape::RoundedRect);
+    }
+
+    #[test]
+    fn block_decodes_entities_before_lowering_authored_text() {
+        let diagram = parse_block(
+            "block\ntitle Grammar &amp; Paint\naccTitle: Parser &lt;Pipeline&gt;\naccDescr: Semantic&#32;IR\nblock:group[\"Decode &quot;labels&quot;\"]\nA[Grammar&nbsp;Parser] B[Paint]\nA -- \"lower&amp;shape\" --> B\nA o--x |return&#32;path| B\nend",
+        )
+        .unwrap();
+        assert_eq!(diagram.title.as_deref(), Some("Grammar & Paint"));
+        assert_eq!(diagram.accessibility_title.as_deref(), Some("Parser <Pipeline>"));
+        assert_eq!(diagram.accessibility_description.as_deref(), Some("Semantic IR"));
+        assert_eq!(diagram.groups[0].label.text, "Decode \"labels\"");
+        assert_eq!(diagram.cells[0].label.text, "Grammar\u{a0}Parser");
+        assert_eq!(diagram.connections[0].label.as_ref().unwrap().text, "lower&shape");
+        assert_eq!(diagram.connections[1].label.as_ref().unwrap().text, "return path");
     }
 
     #[test]
