@@ -20,7 +20,7 @@ use coding_adventures_oauth::{
 };
 use coding_adventures_oauth_account_identity::{
     AccountIdentityAuditSink, AccountIdentityAuthority, AccountIdentityError,
-    AuditedAccountIdentityAuthority, IdTokenIdentityProfile,
+    AuditedAccountIdentityAuthority, IdTokenIdentityProfile, IdentityVerificationId,
 };
 use coding_adventures_oauth_client_secret_custody::{
     ClientSecretAuditSink, ClientSecretAuthenticatedRequest, ClientSecretAuthentication,
@@ -329,6 +329,21 @@ pub trait PublicProviderDataSource {
 pub trait ConfidentialProviderDataSource {
     /// Read the profile selected by the exact requested provider identity.
     fn load_confidential_provider_data(
+        &mut self,
+        provider: &ProviderId,
+    ) -> Result<Zeroizing<Vec<u8>>, ProviderDataSourceError>;
+}
+
+/// Caller-injected authority for reading one static ID-token identity profile.
+///
+/// Implementations may read a file, vault object, embedded resource, or other
+/// host-owned source. The broker first binds the requested provider to an
+/// existing registration and provider-matched opaque verification context,
+/// then durably audits provider and trace before invoking this method. Returned
+/// bytes remain wipe-on-drop through exact-schema decoding.
+pub trait IdentityProviderDataSource {
+    /// Read the identity profile selected by the exact requested provider.
+    fn load_identity_provider_data(
         &mut self,
         provider: &ProviderId,
     ) -> Result<Zeroizing<Vec<u8>>, ProviderDataSourceError>;
@@ -736,6 +751,8 @@ pub struct TokenTransportError;
 pub enum BrokerAuditAction {
     /// Read and decode one provider-bound static provider profile.
     ProviderDataLoad,
+    /// Read and decode one registered provider's static ID-token identity policy.
+    IdentityProviderDataLoad,
     /// Register or idempotently confirm one provider definition.
     ProviderRegister,
     /// Store an initial credential response under an opaque account key.
@@ -1331,6 +1348,61 @@ impl<S: CredentialStore> OAuthBroker<S> {
     /// Return the number of registered provider configurations.
     pub fn provider_count(&self) -> usize {
         self.providers.len()
+    }
+
+    /// Audit, load, and bind one static ID-token identity profile.
+    ///
+    /// The exact requested provider must already be registered, and the opaque
+    /// verification context must name that same provider, before the source can
+    /// be read. The deployment client ID comes only from the registration. The
+    /// source read and its closed decode result are durably provider/trace
+    /// audited, and the validated profile is withheld if result publication
+    /// fails. This adds no concrete source, verifier, key, clock, storage, or
+    /// network authority.
+    pub fn load_id_token_identity_profile<D, A>(
+        &self,
+        requested_provider: &ProviderId,
+        context: IdentityVerificationId,
+        trace: OAuthTraceId,
+        source: &mut D,
+        audit: &mut A,
+    ) -> Result<IdTokenIdentityProfile, BrokerError>
+    where
+        D: IdentityProviderDataSource,
+        A: BrokerAuditSink,
+    {
+        publish_broker(
+            audit,
+            requested_provider,
+            trace,
+            BrokerAuditAction::IdentityProviderDataLoad,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = self
+            .registered_provider(requested_provider)
+            .and_then(|registered| {
+                if context.provider() != requested_provider {
+                    return Err(BrokerError::BindingMismatch);
+                }
+                source
+                    .load_identity_provider_data(requested_provider)
+                    .map_err(|_| BrokerError::ProviderDataSource)
+                    .and_then(|body| {
+                        IdTokenIdentityProfile::from_static_provider_data(
+                            body,
+                            registered.config().client_id(),
+                            context,
+                        )
+                        .map_err(map_account_identity_error)
+                    })
+            });
+        finish_broker(
+            audit,
+            requested_provider,
+            trace,
+            BrokerAuditAction::IdentityProviderDataLoad,
+            result,
+        )
     }
 
     /// Audit, load, exactly bind, decode, and register one public-provider profile.
@@ -3781,6 +3853,18 @@ mod tests {
                     (BrokerAuditAction::ProviderDataLoad, BrokerAuditOutcome::Failed(_)) => {
                         "load-failed"
                     }
+                    (
+                        BrokerAuditAction::IdentityProviderDataLoad,
+                        BrokerAuditOutcome::Attempted,
+                    ) => "identity-load-attempted",
+                    (
+                        BrokerAuditAction::IdentityProviderDataLoad,
+                        BrokerAuditOutcome::Succeeded,
+                    ) => "identity-load-succeeded",
+                    (
+                        BrokerAuditAction::IdentityProviderDataLoad,
+                        BrokerAuditOutcome::Failed(_),
+                    ) => "identity-load-failed",
                     (BrokerAuditAction::ProviderRegister, BrokerAuditOutcome::Attempted) => {
                         "register-attempted"
                     }
@@ -4580,6 +4664,20 @@ mod tests {
         }
     }
 
+    impl IdentityProviderDataSource for MockProviderDataSource {
+        fn load_identity_provider_data(
+            &mut self,
+            provider: &ProviderId,
+        ) -> Result<Zeroizing<Vec<u8>>, ProviderDataSourceError> {
+            self.calls += 1;
+            self.requested.push(provider.clone());
+            if let Some(order) = &self.order {
+                order.borrow_mut().push("identity-source-read");
+            }
+            self.response.take().unwrap_or(Err(ProviderDataSourceError))
+        }
+    }
+
     fn trace(byte: u8) -> OAuthTraceId {
         OAuthTraceId::new([byte; 16])
     }
@@ -4717,6 +4815,20 @@ mod tests {
                     "token_endpoint_auth_method":"private_key_jwt",
                     "token_endpoint_auth_signing_alg_values_supported":["EdDSA","RS256"],
                     "refresh_lead_seconds":300
+                }}"#
+            )
+            .into_bytes(),
+        )
+    }
+
+    fn identity_provider_data(name: &str) -> Zeroizing<Vec<u8>> {
+        Zeroizing::new(
+            format!(
+                r#"{{
+                    "schema_version":1,
+                    "provider":"{name}",
+                    "issuer":"https://issuer.{name}.example/tenant",
+                    "id_token_signing_alg_values_supported":["EdDSA","RS256"]
                 }}"#
             )
             .into_bytes(),
@@ -5004,6 +5116,194 @@ mod tests {
             .broker
             .iter()
             .all(|event| { event.provider() == &requested && event.trace() == trace(32) }));
+    }
+
+    #[test]
+    fn identity_provider_data_load_uses_registered_client_and_audits_source() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let requested = ProviderId::new("fixture").unwrap();
+        broker
+            .register_provider(
+                policy("fixture", 300),
+                trace(37),
+                &mut RecordingAudit::default(),
+            )
+            .unwrap();
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut source = MockProviderDataSource::successful(identity_provider_data("fixture"));
+        source.order = Some(Rc::clone(&order));
+        let mut audit = RecordingAudit {
+            order: Some(Rc::clone(&order)),
+            ..RecordingAudit::default()
+        };
+        let context = IdentityVerificationId::new(
+            requested.clone(),
+            IdentityVerificationReference::new([0x67; 32]),
+        );
+
+        let profile = broker
+            .load_id_token_identity_profile(
+                &requested,
+                context.clone(),
+                trace(38),
+                &mut source,
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(source.calls, 1);
+        assert_eq!(
+            source.requested.as_slice(),
+            std::slice::from_ref(&requested)
+        );
+        assert_eq!(profile.provider(), &requested);
+        assert_eq!(profile.client_id(), "fixture-public-client");
+        assert_eq!(profile.issuer(), "https://issuer.fixture.example/tenant");
+        assert_eq!(profile.context(), &context);
+        assert_eq!(
+            profile
+                .allowed_algorithms()
+                .iter()
+                .map(IdTokenSigningAlgorithm::as_str)
+                .collect::<Vec<_>>(),
+            ["EdDSA", "RS256"]
+        );
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "identity-load-attempted",
+                "identity-source-read",
+                "identity-load-succeeded",
+            ]
+        );
+        assert!(audit.broker.iter().all(|event| {
+            event.provider() == &requested
+                && event.trace() == trace(38)
+                && event.action() == BrokerAuditAction::IdentityProviderDataLoad
+        }));
+    }
+
+    #[test]
+    fn identity_provider_load_bindings_and_audit_fail_before_unsafe_release() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let requested = ProviderId::new("fixture").unwrap();
+        let context = || {
+            IdentityVerificationId::new(
+                requested.clone(),
+                IdentityVerificationReference::new([0x68; 32]),
+            )
+        };
+
+        let mut source = MockProviderDataSource::successful(identity_provider_data("fixture"));
+        assert!(matches!(
+            broker.load_id_token_identity_profile(
+                &requested,
+                context(),
+                trace(39),
+                &mut source,
+                &mut RecordingAudit::default(),
+            ),
+            Err(BrokerError::ProviderNotRegistered)
+        ));
+        assert_eq!(source.calls, 0);
+
+        broker
+            .register_provider(
+                policy("fixture", 300),
+                trace(40),
+                &mut RecordingAudit::default(),
+            )
+            .unwrap();
+        let wrong_context = IdentityVerificationId::new(
+            ProviderId::new("other").unwrap(),
+            IdentityVerificationReference::new([0x68; 32]),
+        );
+        let mut source = MockProviderDataSource::successful(identity_provider_data("fixture"));
+        assert!(matches!(
+            broker.load_id_token_identity_profile(
+                &requested,
+                wrong_context,
+                trace(41),
+                &mut source,
+                &mut RecordingAudit::default(),
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(source.calls, 0);
+
+        let mut source = MockProviderDataSource::failed();
+        let mut audit = RecordingAudit::default();
+        assert!(matches!(
+            broker.load_id_token_identity_profile(
+                &requested,
+                context(),
+                trace(42),
+                &mut source,
+                &mut audit,
+            ),
+            Err(BrokerError::ProviderDataSource)
+        ));
+        assert_eq!(source.calls, 1);
+        assert_eq!(
+            audit.broker.last().unwrap().outcome(),
+            BrokerAuditOutcome::Failed(BrokerFailureClass::ProviderData)
+        );
+
+        let mut source = MockProviderDataSource::successful(identity_provider_data("other"));
+        let mut audit = RecordingAudit::default();
+        assert!(matches!(
+            broker.load_id_token_identity_profile(
+                &requested,
+                context(),
+                trace(43),
+                &mut source,
+                &mut audit,
+            ),
+            Err(BrokerError::AccountIdentity(
+                AccountIdentityError::InvalidInput
+            ))
+        ));
+        assert_eq!(source.calls, 1);
+        assert_eq!(
+            audit.broker.last().unwrap().outcome(),
+            BrokerAuditOutcome::Failed(BrokerFailureClass::AccountIdentity)
+        );
+
+        let mut source = MockProviderDataSource::successful(identity_provider_data("fixture"));
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(1),
+            ..RecordingAudit::default()
+        };
+        assert!(matches!(
+            broker.load_id_token_identity_profile(
+                &requested,
+                context(),
+                trace(44),
+                &mut source,
+                &mut audit,
+            ),
+            Err(BrokerError::Audit)
+        ));
+        assert_eq!(source.calls, 0);
+
+        let mut source = MockProviderDataSource::successful(identity_provider_data("fixture"));
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(2),
+            ..RecordingAudit::default()
+        };
+        assert!(matches!(
+            broker.load_id_token_identity_profile(
+                &requested,
+                context(),
+                trace(45),
+                &mut source,
+                &mut audit,
+            ),
+            Err(BrokerError::Audit)
+        ));
+        assert_eq!(source.calls, 1);
     }
 
     #[test]
