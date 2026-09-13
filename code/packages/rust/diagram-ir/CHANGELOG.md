@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.113.0
+
+- Preserve optional stroke dash patterns in authored and resolved diagram styles.
+
 ## 0.112.0
 
 - Represent Block arrow nodes with typed cardinal direction flags.

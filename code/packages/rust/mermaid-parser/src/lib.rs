@@ -1729,6 +1729,7 @@ fn parse_block_style(token: &Token, source: &str) -> Result<DiagramStyle, ParseE
             "stroke" => style.stroke = Some(value.into()),
             "color" => style.text_color = Some(value.into()),
             "stroke-width" => style.stroke_width = Some(parse_block_style_number(token, value)?),
+            "stroke-dasharray" => style.stroke_dash = Some(parse_block_dash_pattern(token, value)?),
             "font-size" => style.font_size = Some(parse_block_style_number(token, value)?),
             "font-weight" => style.font_weight = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => 400,
@@ -1745,6 +1746,20 @@ fn parse_block_style(token: &Token, source: &str) -> Result<DiagramStyle, ParseE
         }
     }
     Ok(style)
+}
+
+fn parse_block_dash_pattern(token: &Token, source: &str) -> Result<Vec<f64>, ParseError> {
+    let values = source
+        .split_whitespace()
+        .map(|value| parse_block_style_number(token, value))
+        .collect::<Result<Vec<_>, _>>()?;
+    if values.is_empty() || values.iter().any(|value| *value <= 0.0) {
+        return Err(token_error(
+            token,
+            "block stroke dasharray requires positive lengths",
+        ));
+    }
+    Ok(values)
 }
 
 fn parse_block_style_number(token: &Token, source: &str) -> Result<f64, ParseError> {
@@ -5966,6 +5981,9 @@ fn merge_state_style(target: &mut DiagramStyle, source: &DiagramStyle) {
     if source.stroke_width.is_some() {
         target.stroke_width = source.stroke_width;
     }
+    if source.stroke_dash.is_some() {
+        target.stroke_dash.clone_from(&source.stroke_dash);
+    }
     if source.text_color.is_some() {
         target.text_color.clone_from(&source.text_color);
     }
@@ -9258,19 +9276,22 @@ mod tests_dg04 {
     #[test]
     fn block_resolves_classes_inline_classes_and_direct_styles() {
         let diagram = parse_block(
-            "block\ncolumns 2\nA[Grammar]:::pipeline B[Paint]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass B pipeline\nstyle B fill:#dcfce7,font-size:18px,font-weight:bold,font-style:italic,font-family:Avenir",
+            "block\ncolumns 2\nA[Grammar]:::pipeline B[Paint]\nclassDef pipeline fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px,stroke-dasharray:5 3\nclass B pipeline\nstyle B fill:#dcfce7,stroke-dasharray:2 4,font-size:18px,font-weight:bold,font-style:italic,font-family:Avenir",
         ).unwrap();
         let grammar = diagram.cells[0].style.as_ref().unwrap();
         assert_eq!(grammar.fill.as_deref(), Some("#dbeafe"));
         assert_eq!(grammar.stroke_width, Some(3.0));
+        assert_eq!(grammar.stroke_dash.as_deref(), Some(&[5.0, 3.0][..]));
         let paint = diagram.cells[1].style.as_ref().unwrap();
         assert_eq!(paint.fill.as_deref(), Some("#dcfce7"));
         assert_eq!(paint.stroke.as_deref(), Some("#1d4ed8"));
+        assert_eq!(paint.stroke_dash.as_deref(), Some(&[2.0, 4.0][..]));
         assert_eq!(paint.font_size, Some(18.0));
         assert_eq!(paint.font_weight, Some(700));
         assert_eq!(paint.font_italic, Some(true));
         assert_eq!(paint.font_family.as_deref(), Some("Avenir"));
         assert!(parse_block("block\nA:::missing\n").is_err());
+        assert!(parse_block("block\nA\nstyle A stroke-dasharray:5 0").is_err());
         assert!(parse_block("block\nA\nstyle missing fill:red\n").is_err());
     }
 
