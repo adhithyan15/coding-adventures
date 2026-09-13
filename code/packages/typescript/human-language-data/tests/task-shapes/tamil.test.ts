@@ -59,13 +59,14 @@ it("declares a published stimulus length, so reading reach can measure it rather
   //
   // This target is project-defined, so there is no external body to be silent:
   // the number is ours to state, and stating it is what makes the reading rung
-  // checkable. The floor guarding the VALUE lives in
-  // core/reading-reach-floor.json and is set once a passage lands -- an absent
-  // floor reads as zero, so pinning zero here would assert nothing.
+  // checkable. Chapter 84's passage landed while this branch was open, so the
+  // value is guarded too: core/reading-reach-floor.json pins tamil/pre-A1 at 3,
+  // re-derived from the merged tree rather than composed from two branches.
   const inventories = listTaskShapeInventories().map(({ language, level }) =>
     loadTaskShapeInventory(language, level));
   const report = measureReadingReach(loadLessons(), inventories);
   const row = report.rows.find((r) => r.language === "tamil" && r.level === "pre-A1");
   expect(row?.status).toBe("measurable");
   expect(row?.partsMeasurable).toBe(3);
+  expect(row?.partsWithinReach).toBe(3);
 });
