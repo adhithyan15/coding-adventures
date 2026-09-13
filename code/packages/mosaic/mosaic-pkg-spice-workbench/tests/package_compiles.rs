@@ -115,6 +115,14 @@ fn manifest_and_component_contract_are_complete() {
         .slots
         .iter()
         .any(|slot| slot.name == "schematic-net-label"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "schematic-route-targets"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "schematic-route-terminal-controls"));
     assert!(component.emits.iter().any(|emit| emit.name == "onRun"));
     assert!(component
         .emits
@@ -147,7 +155,11 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .emits
         .iter()
-        .any(|emit| emit.name == "onRouteToSchematicComponent"));
+        .any(|emit| emit.name == "onSelectSchematicRouteTarget"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onRouteToSchematicTerminal"));
     assert!(component
         .emits
         .iter()

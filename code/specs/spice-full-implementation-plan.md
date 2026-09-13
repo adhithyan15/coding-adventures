@@ -252,15 +252,20 @@ model-card parameter, or a UI artifact is not a completion signal.
      validate safe tokens, reject conflicts on joined endpoint-wire nets,
      lower deterministically, restore through history, and are editable from a
      selected component terminal in Mosaic.
-   - **Mosaic schematic named-net links** (current phase): discovery after PR
+   - **Mosaic schematic named-net links** (completed in PR #15069): discovery after PR
      #15052: labels name individual endpoint-wire nets but reject the same
-     label on disconnected terminals, so a user cannot author the ordinary
-     SPICE remote-node connection without a physical wire. Permit an identical
-     safe label to join disconnected terminal nets at deck lowering, retain a
-     transactional error for distinct labels on one physical net, preserve
-     deterministic anonymous names and history, and lock the existing Mosaic
-     terminal inspector flow to the resulting shared node. Keep arbitrary wire
-     geometry, bus notation, and vendor interchange for later product phases.
+     label on disconnected terminals, so a user could not author the ordinary
+     SPICE remote-node connection without a physical wire. Identical safe
+     labels now join disconnected terminal nets at deck lowering while distinct
+     labels on one physical net remain transactional errors.
+   - **Mosaic schematic terminal routing** (current phase): discovery after PR
+     #15069: the workbench routes a selected component to the nearest terminal
+     of another component, so users cannot choose a non-nearest valid endpoint
+     without raw document injection. Add an explicit selected-start-terminal /
+     selected-target-terminal flow, document-owned terminal-index validation,
+     transactional wire creation, selection cleanup, and Mosaic host-contract
+     coverage. Keep arbitrary wire geometry, bus notation, and vendor
+     interchange for later product phases.
 
 ### Operating rules
 

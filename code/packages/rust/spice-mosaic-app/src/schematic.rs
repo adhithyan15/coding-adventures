@@ -501,6 +501,40 @@ impl SchematicDocument {
         Ok(wire)
     }
 
+    /// Connect two explicitly selected terminals on different components.
+    pub fn route_terminals(
+        &mut self,
+        start_reference: &str,
+        start_terminal: usize,
+        end_reference: &str,
+        end_terminal: usize,
+    ) -> Result<SchematicWire, SchematicError> {
+        if start_reference == end_reference {
+            return Err(invalid("schematic route requires two different components"));
+        }
+        let start = self
+            .components
+            .iter()
+            .find(|component| component.reference == start_reference)
+            .ok_or_else(|| invalid("schematic route start reference is unknown"))?
+            .terminals
+            .get(start_terminal)
+            .copied()
+            .ok_or_else(|| invalid("schematic route start terminal is unavailable"))?;
+        let end = self
+            .components
+            .iter()
+            .find(|component| component.reference == end_reference)
+            .ok_or_else(|| invalid("schematic route target reference is unknown"))?
+            .terminals
+            .get(end_terminal)
+            .copied()
+            .ok_or_else(|| invalid("schematic route target terminal is unavailable"))?;
+        let wire = SchematicWire { start, end };
+        self.connect_wire(wire)?;
+        Ok(wire)
+    }
+
     /// Add one endpoint-only wire between terminals that belong to this document.
     ///
     /// This is the common admission boundary for raw host wiring and routed
@@ -1237,6 +1271,29 @@ mod tests {
             .unwrap();
         assert_eq!(document.net_label_at(point(0, 20)), Some("SENSE"));
         assert_eq!(document.net_label_at(point(10, 20)), Some("SENSE"));
+    }
+
+    #[test]
+    fn routes_explicit_component_terminals_without_using_nearest_geometry() {
+        let mut document = rc_document();
+        let wire = document.route_terminals("V1", 0, "C1", 0).unwrap();
+        assert_eq!(wire.start, point(0, 20));
+        assert_eq!(wire.end, point(50, 20));
+        assert!(document.wires.contains(&wire));
+        assert_eq!(
+            document
+                .route_terminals("V1", 2, "C1", 0)
+                .unwrap_err()
+                .to_string(),
+            "schematic route start terminal is unavailable"
+        );
+        assert_eq!(
+            document
+                .route_terminals("V1", 0, "C1", 2)
+                .unwrap_err()
+                .to_string(),
+            "schematic route target terminal is unavailable"
+        );
     }
 
     #[test]
