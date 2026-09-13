@@ -82,9 +82,18 @@ changing spacing. A border must not move anything.
 
 ## 5. Scope
 
-**Done:** Compose (#15009, drawn with `drawBehind`) and Flutter (`Border` with
-per-side `BorderSide`). **Remaining:** SwiftUI and Qt, which must draw like
-Compose, and XAML, which needs the single-brush decision above settled first.
+**Done:** Compose (#15009, drawn with `drawBehind`), Flutter (`Border` with
+per-side `BorderSide`) and SwiftUI (drawn with `.overlay(alignment:)`).
+
+**Remaining:** Qt and XAML, and neither is a port of the above.
+
+*Qt* is a different **shape** of change, not a harder version of the same one.
+Its border is a property on a QML `Rectangle` (`border.width`, `border.color`),
+and the emitter's styling functions return **lists of property lines**. A
+per-edge rule needs a *child* `Rectangle` anchored to one edge, so it has to be
+emitted where children are, not where properties are.
+
+*XAML* needs the single-brush decision above settled first.
 
 Compose only, all four edges. The remaining four backends are follow-up work
 and are named as such rather than left looking finished — this spec is the
