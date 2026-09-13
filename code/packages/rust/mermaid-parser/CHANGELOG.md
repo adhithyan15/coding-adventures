@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.210.0
+
+- Parse compact Block terminal circle and cross markers into backend-neutral endpoint-marker IR.
+
 ## 0.209.0
 
 - Preserve pipe-delimited labels on Block links with circle or cross endpoint markers.

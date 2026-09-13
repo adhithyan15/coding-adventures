@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.88.0
+
+- Tokenize compact Block circle and cross endpoints such as `A--oB` and `A--xB`.
+
 ## 0.87.0
 
 - Tokenize Block circle and cross endpoint connections through a dedicated grammar rule.
