@@ -26,7 +26,7 @@ it("pins Hindi lesson-content budgets", () =>
     // (82-84), one new item each, closing HI-A1-NUM-04.
     //
     // 355 -> 358: chapter 85, the reading rung — six signs, six notices, and a
-    // 78-word paragraph. It adds NO new word: every token in all three was
+    // 91-word paragraph. It adds NO new word: every token in all three was
     // checked to occur in a lesson with a lower sequence number, which is what
     // lets the lessons claim nothing in them is new. The count moves because
     // reading is its own skill, not because the track learned more Hindi.
