@@ -16,13 +16,13 @@
     "url": "https://github.com/adhithyan15/coding-adventures/pull/15080",
     "branch": "codex/build-tool-site-authored-resources-20260912",
     "implementation_revision": "c9e752986c06df056dabc8a6e42e28fd7b6f1735",
-    "status": "checks-pending"
+    "status": "ci-repair-validated"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-13T07:25:28Z",
+    "observed_at": "2026-09-13T07:49:33Z",
     "pr_number": 15080,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #15080 is open at exact implementation head c9e752986c06df056dabc8a6e42e28fd7b6f1735. GitHub reports the branch mergeable, while initial CI, CodeQL, site-deploy, human-language, and Swift-app checks are queued or running. Auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists."
+    "status": "repair-validated",
+    "notes": "The landing-page clean-checkout deploy failed in Forme bootstrap at the first local TypeScript dependency under CI's npm 10.9.8. Direct local reproduction exposed npm Arborist crashing with Cannot read properties of null (reading 'edgesOut') while resolving unrelated Vitest development peers. Revision 5a56f11279725ccf73e073bd715363c3ba21e062 adds bootstrap-only --legacy-peer-deps; the exact npm 10.9.8 install then succeeds with zero vulnerabilities, the focused bootstrap contract passes 5 tests, and the Forme CLI TypeScript build passes after leaf-first dependency installation. Auto-merge remains disabled until the repaired head completes every required check without failure or conflict."
   },
   "last_inventory": {
     "revision": "5e48b5f83db4b1112aea3dfa5e63d42480be808c",
@@ -996,6 +996,8 @@
       "branch": "codex/build-tool-site-authored-resources-20260912",
       "pr_number": 15080,
       "implementation_revision": "c9e752986c06df056dabc8a6e42e28fd7b6f1735",
+      "ci_repair_revision": "5a56f11279725ccf73e073bd715363c3ba21e062",
+      "ci_repair_notes": "The root landing-page deploy reproduced an npm 10.9.8 Arborist peer-graph crash on the first local TypeScript dependency. The focused Forme bootstrap repair passes --legacy-peer-deps only for repository-local installs, with an exact invocation test, package documentation, and changelog entry. Direct npm 10.9.8 installation succeeds, the five focused bootstrap tests pass, and the Forme CLI TypeScript build passes after leaf-first dependency installation.",
       "publication_notes": "Opened ready-for-review PR #15080 after two clean rebases onto disjoint origin/main advances and a normal first push. GitHub reports the branch mergeable with initial checks queued or running. Auto-merge remains disabled while checks are nonterminal.",
       "selected_at": "2026-09-13T05:26:04Z",
       "selection_revision": "5e48b5f83db4b1112aea3dfa5e63d42480be808c",
