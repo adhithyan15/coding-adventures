@@ -78,7 +78,9 @@ pub fn layout_grid_diagram(diagram: &GridDiagram) -> LayoutedGraphDiagram {
                 id: None,
                 from_node_id: connection.from.clone(),
                 to_node_id: connection.to.clone(),
-                kind: connection.kind.clone(),
+                kind: connection.kind,
+                start_marker: connection.start_marker,
+                end_marker: connection.end_marker,
                 points: vec![start, end],
                 label: connection.label.clone(),
                 label_position: connection.label.as_ref().map(|_| {
@@ -359,29 +361,34 @@ mod tests {
                 .collect(),
             groups: Vec::new(),
             connections: [
-                (GridEdgeStyle::Solid, EdgeKind::Directed),
-                (GridEdgeStyle::Dotted, EdgeKind::Directed),
-                (GridEdgeStyle::Thick, EdgeKind::Directed),
-                (GridEdgeStyle::Solid, EdgeKind::Bidirectional),
+                (GridEdgeStyle::Solid, EdgeKind::Directed, diagram_ir::EdgeMarker::None, diagram_ir::EdgeMarker::Point),
+                (GridEdgeStyle::Dotted, EdgeKind::Directed, diagram_ir::EdgeMarker::None, diagram_ir::EdgeMarker::Point),
+                (GridEdgeStyle::Thick, EdgeKind::Directed, diagram_ir::EdgeMarker::None, diagram_ir::EdgeMarker::Point),
+                (GridEdgeStyle::Solid, EdgeKind::Bidirectional, diagram_ir::EdgeMarker::Point, diagram_ir::EdgeMarker::Point),
+                (GridEdgeStyle::Solid, EdgeKind::Undirected, diagram_ir::EdgeMarker::Circle, diagram_ir::EdgeMarker::Cross),
             ]
                 .into_iter()
-                .map(|(line_style, kind)| GridConnection {
+                .map(|(line_style, kind, start_marker, end_marker)| GridConnection {
                     from: "a".into(),
                     to: "b".into(),
                     kind,
+                    start_marker,
+                    end_marker,
                     line_style,
                     label: None,
                 })
                 .collect(),
         };
         let layout = layout_grid_diagram(&diagram);
-        assert_eq!(layout.edges.len(), 4);
+        assert_eq!(layout.edges.len(), 5);
         assert_eq!(layout.edges[0].points[0].x, layout.nodes[0].x + CELL_WIDTH);
         assert_eq!(layout.edges[0].points[1].x, layout.nodes[1].x);
         assert!(layout.edges[0].style.stroke_dash.is_none());
         assert_eq!(layout.edges[1].style.stroke_dash.as_deref(), Some(&[5.0, 4.0][..]));
         assert_eq!(layout.edges[2].style.stroke_width, 3.5);
         assert_eq!(layout.edges[3].kind, EdgeKind::Bidirectional);
+        assert_eq!(layout.edges[4].start_marker, diagram_ir::EdgeMarker::Circle);
+        assert_eq!(layout.edges[4].end_marker, diagram_ir::EdgeMarker::Cross);
     }
 
     #[test]
@@ -428,6 +435,8 @@ mod tests {
                 from: "wide".into(),
                 to: "tail".into(),
                 kind: EdgeKind::Directed,
+                start_marker: diagram_ir::EdgeMarker::None,
+                end_marker: diagram_ir::EdgeMarker::Point,
                 line_style: GridEdgeStyle::Solid,
                 label: None,
             }],

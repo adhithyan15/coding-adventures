@@ -1,5 +1,9 @@
 # Changelog - diagram-layout-grid
 
+## 0.13.0
+
+- Preserve authored Block endpoint markers through deterministic grid layout.
+
 ## 0.12.0
 
 - Preserve bidirectional Block edge semantics through deterministic grid layout.
