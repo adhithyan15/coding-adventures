@@ -29,6 +29,8 @@ the Mosaic app event contract. They can also select a DC sweep source and edit
 the selected analysis card. Hosts can add, select, and remove cards while one
 card remains required. Synchronization replaces the text deck with the
 canonical emitted deck and refreshes its runnable Berkeley analysis plan.
+Selected cards can also change their Berkeley analysis kind or move earlier
+and later without discarding their per-card settings.
 
 Schematic document mutations are undoable and redoable within a running
 workbench session, including metadata, component and wire edits, and analysis

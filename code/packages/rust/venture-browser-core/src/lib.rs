@@ -72,6 +72,7 @@ const CONTROL_TEXT_METRICS: ControlTextMetrics = ControlTextMetrics {
     caret_width: 1.5,
 };
 const EDITOR_OVERLAY_PREFIX: &str = "venture-editor:";
+const PAGE_FOCUS_OVERLAY_PREFIX: &str = "venture-page-focus:";
 const SESSION_HISTORY_STATE_LIMIT: usize = 64;
 
 fn apply_details_open_states(
@@ -728,6 +729,35 @@ pub struct DisclosureAccessibilityState {
     pub name: String,
     pub open: bool,
     pub group_name: Option<String>,
+}
+
+/// One target in the document's shared sequential-focus navigation order.
+#[derive(Clone, Debug, PartialEq)]
+pub struct PageFocusAccessibilityState {
+    pub key: String,
+    pub role: String,
+    pub name: String,
+    pub tab_index: i32,
+    pub focused: bool,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum PageFocusTarget {
+    Link(String),
+    Control(String),
+    Disclosure(String),
+}
+
+#[derive(Clone, Debug)]
+struct PageFocusItem {
+    target: PageFocusTarget,
+    state: PageFocusAccessibilityState,
+    order: usize,
+    fixed: bool,
 }
 
 /// Shared accessibility and host projection for an open dialog or popover.
@@ -1744,6 +1774,7 @@ pub struct BrowserSession {
     bookmarks: BookmarkCatalog,
     viewport: Option<BrowserViewport>,
     controls: BrowserControlModel,
+    focused_link: Option<String>,
     focused_disclosure: Option<String>,
     top_layer_stack: Vec<String>,
     top_layer_invokers: Vec<(String, String)>,
@@ -1767,6 +1798,7 @@ impl BrowserSession {
             bookmarks: BookmarkCatalog::new(),
             viewport: None,
             controls: BrowserControlModel::default(),
+            focused_link: None,
             focused_disclosure: None,
             top_layer_stack: Vec::new(),
             top_layer_invokers: Vec::new(),
@@ -2383,7 +2415,10 @@ impl BrowserSession {
                 self.controls.set_invalid(key, diagnostic.message.clone());
             }
         }
-        self.controls.focus_first_invalid();
+        if self.controls.focus_first_invalid().is_some() {
+            self.focused_link = None;
+            self.focused_disclosure = None;
+        }
         self.form_diagnostics = diagnostics;
         self.reflow_controls(pipeline);
         Ok(valid)
@@ -2394,6 +2429,227 @@ impl BrowserSession {
             .as_ref()?
             .hit_test_control(viewport_x, viewport_y)
             .map(|control| control.key.as_str())
+    }
+
+    /// Return rendered, enabled targets in HTML sequential-focus order.
+    pub fn page_focus_accessibility_states(&self) -> Vec<PageFocusAccessibilityState> {
+        self.page_focus_items()
+            .into_iter()
+            .map(|item| item.state)
+            .collect()
+    }
+
+    fn page_focus_items(&self) -> Vec<PageFocusItem> {
+        let Some(viewport) = &self.viewport else {
+            return Vec::new();
+        };
+        let page = viewport.page();
+        let mut items = Vec::new();
+        for region in &page.paint.links {
+            let (Some(order), Some(key)) = (region.focus_order, region.key.as_ref()) else {
+                continue;
+            };
+            if items
+                .iter()
+                .any(|item: &PageFocusItem| item.state.key == *key)
+            {
+                continue;
+            }
+            items.push(PageFocusItem {
+                target: PageFocusTarget::Link(key.clone()),
+                state: PageFocusAccessibilityState {
+                    key: key.clone(),
+                    role: "link".into(),
+                    name: region
+                        .accessible_name
+                        .clone()
+                        .unwrap_or_else(|| region.url.clone()),
+                    tab_index: region.tab_index,
+                    focused: self.focused_link.as_deref() == Some(key),
+                    x: region.x,
+                    y: region.y,
+                    width: region.width,
+                    height: region.height,
+                },
+                order,
+                fixed: region.fixed,
+            });
+        }
+        for region in &page.paint.controls {
+            let Some(order) = region.focus_order else {
+                continue;
+            };
+            if region.disabled
+                || region.label_activation
+                || items
+                    .iter()
+                    .any(|item: &PageFocusItem| item.state.key == region.key)
+            {
+                continue;
+            }
+            let control = self.controls.control(&region.key);
+            items.push(PageFocusItem {
+                target: PageFocusTarget::Control(region.key.clone()),
+                state: PageFocusAccessibilityState {
+                    key: region.key.clone(),
+                    role: region.kind.name().into(),
+                    name: region
+                        .accessible_name
+                        .clone()
+                        .filter(|name| !name.is_empty())
+                        .or_else(|| control.map(|control| control.display_value()))
+                        .filter(|name| !name.is_empty())
+                        .unwrap_or_else(|| region.kind.name().into()),
+                    tab_index: region.tab_index,
+                    focused: self.controls.focused_key() == Some(region.key.as_str()),
+                    x: region.x,
+                    y: region.y,
+                    width: region.width,
+                    height: region.height,
+                },
+                order,
+                fixed: region.fixed,
+            });
+        }
+        let disclosure_states = self.disclosure_accessibility_states();
+        for region in &page.paint.disclosures {
+            let Some(order) = region.focus_order else {
+                continue;
+            };
+            if items
+                .iter()
+                .any(|item: &PageFocusItem| item.state.key == region.key)
+            {
+                continue;
+            }
+            let name = disclosure_states
+                .iter()
+                .find(|state| state.key == region.key)
+                .map(|state| state.name.clone())
+                .unwrap_or_else(|| "Details".into());
+            items.push(PageFocusItem {
+                target: PageFocusTarget::Disclosure(region.key.clone()),
+                state: PageFocusAccessibilityState {
+                    key: region.key.clone(),
+                    role: "disclosure".into(),
+                    name,
+                    tab_index: region.tab_index,
+                    focused: self.focused_disclosure.as_deref() == Some(&region.key),
+                    x: region.x,
+                    y: region.y,
+                    width: region.width,
+                    height: region.height,
+                },
+                order,
+                fixed: region.fixed,
+            });
+        }
+        if let Some(modal) = page
+            .paint
+            .top_layers
+            .iter()
+            .filter(|region| region.modal)
+            .max_by_key(|region| region.top_layer_index)
+        {
+            items.retain(|item| match &item.target {
+                PageFocusTarget::Link(key) => page.paint.links.iter().any(|region| {
+                    region.key.as_deref() == Some(key)
+                        && region.top_layer_index == Some(modal.top_layer_index)
+                }),
+                PageFocusTarget::Control(key) => page.paint.controls.iter().any(|region| {
+                    region.key == *key
+                        && !region.label_activation
+                        && region.top_layer_index == Some(modal.top_layer_index)
+                }),
+                PageFocusTarget::Disclosure(key) => page.paint.disclosures.iter().any(|region| {
+                    region.key == *key && region.top_layer_index == Some(modal.top_layer_index)
+                }),
+            });
+        }
+        items.sort_by_key(|item| {
+            if item.state.tab_index > 0 {
+                (0, item.state.tab_index, item.order)
+            } else {
+                (1, 0, item.order)
+            }
+        });
+        items
+    }
+
+    fn current_page_focus_target(&self) -> Option<PageFocusTarget> {
+        if let Some(key) = &self.focused_link {
+            return Some(PageFocusTarget::Link(key.clone()));
+        }
+        if let Some(key) = self.controls.focused_key() {
+            return Some(PageFocusTarget::Control(key.into()));
+        }
+        self.focused_disclosure
+            .as_ref()
+            .map(|key| PageFocusTarget::Disclosure(key.clone()))
+    }
+
+    /// Move focus across links, controls, and disclosures without host policy.
+    pub fn focus_page<M, S, FM, R>(
+        &mut self,
+        reverse: bool,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<PageFocusAccessibilityState>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let items = self.page_focus_items();
+        if items.is_empty() {
+            return None;
+        }
+        let current = self.current_page_focus_target();
+        let current_index = current
+            .as_ref()
+            .and_then(|target| items.iter().position(|item| &item.target == target));
+        let index = match (current_index, reverse) {
+            (Some(0), true) | (None, true) => items.len() - 1,
+            (Some(index), true) => index - 1,
+            (Some(index), false) => (index + 1) % items.len(),
+            (None, false) => 0,
+        };
+        let item = items[index].clone();
+        match &item.target {
+            PageFocusTarget::Link(key) => {
+                self.controls.blur();
+                self.focused_link = Some(key.clone());
+                self.focused_disclosure = None;
+            }
+            PageFocusTarget::Control(key) => {
+                self.controls.focus(key)?;
+                self.focused_link = None;
+                self.focused_disclosure = None;
+            }
+            PageFocusTarget::Disclosure(key) => {
+                self.controls.blur();
+                self.focused_link = None;
+                self.focused_disclosure = Some(key.clone());
+            }
+        }
+        self.reflow_controls(pipeline)?;
+        if !item.fixed {
+            if let Some(viewport) = self.viewport.as_mut() {
+                let top = viewport.scroll_state().offset_y();
+                let bottom = top + self.viewport_height;
+                if item.state.y < top {
+                    viewport.set_scroll_offset_y(item.state.y);
+                } else if item.state.y + item.state.height > bottom {
+                    viewport.set_scroll_offset_y(
+                        item.state.y + item.state.height - self.viewport_height,
+                    );
+                }
+            }
+        }
+        self.refresh_page_focus_presentation();
+        self.page_focus_accessibility_states()
+            .into_iter()
+            .find(|state| state.focused)
     }
 
     pub fn disclosure_accessibility_states(&self) -> Vec<DisclosureAccessibilityState> {
@@ -2627,7 +2883,10 @@ impl BrowserSession {
         }
         if open {
             if let Some(key) = controls_inside_top_layer(&current.render_tree, target_id).first() {
-                self.controls.focus(key);
+                if self.controls.focus(key).is_some() {
+                    self.focused_link = None;
+                    self.focused_disclosure = None;
+                }
             }
         } else if let Some(position) = self
             .top_layer_invokers
@@ -2635,7 +2894,10 @@ impl BrowserSession {
             .rposition(|(surface, _)| surface == &target.key)
         {
             let (_, key) = self.top_layer_invokers.remove(position);
-            self.controls.focus(&key);
+            if self.controls.focus(&key).is_some() {
+                self.focused_link = None;
+                self.focused_disclosure = None;
+            }
         }
         self.refresh_control_editor_presentation();
         true
@@ -2685,6 +2947,8 @@ impl BrowserSession {
             .as_ref()?
             .hit_test_disclosure(viewport_x, viewport_y)?
             .clone();
+        self.controls.blur();
+        self.focused_link = None;
         self.focused_disclosure = Some(region.key.clone());
         self.set_disclosure_open(&region.key, !region.open, pipeline)
     }
@@ -2799,6 +3063,8 @@ impl BrowserSession {
         } else {
             self.controls.pointer_activate(&region.key)?
         };
+        self.focused_link = None;
+        self.focused_disclosure = None;
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -2830,6 +3096,8 @@ impl BrowserSession {
             y - CONTROL_TEXT_METRICS.inset_y,
             CONTROL_TEXT_METRICS,
         )?;
+        self.focused_link = None;
+        self.focused_disclosure = None;
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -3103,6 +3371,8 @@ impl BrowserSession {
         let Some(effect) = effect else {
             return Ok(None);
         };
+        self.focused_link = None;
+        self.focused_disclosure = None;
         if matches!(effect, ControlEffect::Activated(_)) {
             if let Some((command, target)) = top_layer_command {
                 if let Some(action) = top_layer_action_from_command(&command) {
@@ -3188,18 +3458,22 @@ impl BrowserSession {
             .and_then(|viewport| viewport.hit_test_control(viewport_x, viewport_y))
             .is_some()
         {
+            self.focused_link = None;
             self.focused_disclosure = None;
             return Ok(self
                 .activate_control_and_submit(viewport_x, viewport_y, pipeline, fetcher)?
                 .is_some());
         }
-        if self
+        if let Some(link) = self
             .viewport
             .as_ref()
             .and_then(|viewport| viewport.hit_test_link(viewport_x, viewport_y))
-            .is_some()
+            .cloned()
         {
+            self.controls.blur();
+            self.focused_link = link.key;
             self.focused_disclosure = None;
+            self.reflow_controls(pipeline);
             return Ok(false);
         }
         Ok(self
@@ -3297,6 +3571,9 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        if key == ControlKey::Tab {
+            return Ok(self.focus_page(shift, pipeline).is_some());
+        }
         if key == ControlKey::Escape {
             if let Some(topmost) = self
                 .top_layer_accessibility_states()
@@ -3318,6 +3595,31 @@ impl BrowserSession {
             }
         }
         if matches!(key, ControlKey::Enter | ControlKey::Space) {
+            if key == ControlKey::Enter {
+                if let Some(focused) = self.focused_link.clone() {
+                    let link = self.viewport.as_ref().and_then(|viewport| {
+                        viewport
+                            .page()
+                            .paint
+                            .links
+                            .iter()
+                            .find(|region| region.key.as_deref() == Some(&focused))
+                            .cloned()
+                    });
+                    if let Some(link) = link {
+                        self.pending_host_effect = None;
+                        return match plan_link_activation(link) {
+                            BrowserLinkActivation::Navigate(url) => self
+                                .execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+                                .map(|viewport| viewport.is_some()),
+                            BrowserLinkActivation::HostEffect(effect) => {
+                                self.pending_host_effect = Some(effect);
+                                Ok(true)
+                            }
+                        };
+                    }
+                }
+            }
             if let Some(disclosure) = self.focused_disclosure.clone() {
                 return Ok(self
                     .disclosure_accessibility_action(
@@ -3329,6 +3631,7 @@ impl BrowserSession {
             }
         }
         if self.controls.focused_key().is_some() {
+            self.focused_link = None;
             self.focused_disclosure = None;
             return Ok(self
                 .control_key_down_with_shift_and_submit(key, shift, pipeline, fetcher)?
@@ -3476,7 +3779,10 @@ impl BrowserSession {
                         self.controls.set_invalid(key, diagnostic.message.clone());
                     }
                 }
-                self.controls.focus_first_invalid();
+                if self.controls.focus_first_invalid().is_some() {
+                    self.focused_link = None;
+                    self.focused_disclosure = None;
+                }
                 self.form_diagnostics = reportable_diagnostics;
                 self.reflow_controls(pipeline);
             }
@@ -3546,6 +3852,7 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        self.focused_link = None;
         self.focused_disclosure = None;
         self.top_layer_stack = top_layer_stack;
         self.top_layer_invokers.clear();
@@ -3596,6 +3903,7 @@ impl BrowserSession {
             }
         }
         let effect = self.controls.focus_next_in(&keys, reverse)?;
+        self.focused_link = None;
         self.focused_disclosure = None;
         self.reflow_controls(pipeline)?;
         Some(effect)
@@ -3816,7 +4124,81 @@ impl BrowserSession {
             });
             viewport.page.paint.scene.instructions.extend(overlays);
         }
+        self.refresh_page_focus_presentation();
         presentations
+    }
+
+    fn refresh_page_focus_presentation(&mut self) {
+        let focused_link = self.focused_link.as_deref();
+        let focused_disclosure = self.focused_disclosure.as_deref();
+        let regions = self
+            .viewport
+            .as_ref()
+            .map(|viewport| {
+                let page = viewport.page();
+                page.paint
+                    .links
+                    .iter()
+                    .filter_map(|region| {
+                        (region.key.as_deref() == focused_link).then_some((
+                            region.x,
+                            region.y,
+                            region.width,
+                            region.height,
+                            region.fixed,
+                        ))
+                    })
+                    .chain(page.paint.disclosures.iter().filter_map(|region| {
+                        (Some(region.key.as_str()) == focused_disclosure).then_some((
+                            region.x,
+                            region.y,
+                            region.width,
+                            region.height,
+                            region.fixed,
+                        ))
+                    }))
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_default();
+        let overlays = regions
+            .into_iter()
+            .enumerate()
+            .map(|(index, (x, y, width, height, fixed))| {
+                let mut metadata = std::collections::HashMap::new();
+                if fixed {
+                    metadata.insert("layout.position".into(), "fixed".into());
+                }
+                PaintInstruction::Group(PaintGroup {
+                    base: PaintBase {
+                        id: Some(format!("{PAGE_FOCUS_OVERLAY_PREFIX}{index}")),
+                        metadata: (!metadata.is_empty()).then_some(metadata),
+                    },
+                    children: vec![PaintInstruction::Rect(PaintRect {
+                        base: PaintBase::default(),
+                        x: x - 2.0,
+                        y: y - 2.0,
+                        width: width + 4.0,
+                        height: height + 4.0,
+                        fill: None,
+                        stroke: Some("#005fcc".into()),
+                        stroke_width: Some(2.0),
+                        corner_radius: Some(2.0),
+                        stroke_dash: Some(vec![2.0, 2.0]),
+                        stroke_dash_offset: None,
+                    })],
+                    transform: None,
+                    opacity: None,
+                })
+            })
+            .collect::<Vec<_>>();
+        if let Some(viewport) = self.viewport.as_mut() {
+            viewport.page.paint.scene.instructions.retain(|instruction| {
+                !matches!(instruction,
+                    PaintInstruction::Group(group)
+                        if group.base.id.as_deref().is_some_and(|id| id.starts_with(PAGE_FOCUS_OVERLAY_PREFIX)))
+            });
+            viewport.page.paint.scene.instructions.extend(overlays);
+        }
     }
 
     fn reflow_controls<M, S, FM, R>(
@@ -4074,6 +4456,7 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        self.focused_link = None;
         self.focused_disclosure = None;
         self.top_layer_stack = top_layer_stack;
         self.top_layer_invokers.clear();
@@ -5920,6 +6303,9 @@ mod tests {
             height: 12.0,
             key: None,
             accessible_name: None,
+            focus_order: None,
+            tab_index: 0,
+            top_layer_index: None,
             image_map_order: None,
             url: "http://example.test/next".into(),
             target: None,
@@ -8453,6 +8839,11 @@ mod tests {
             session.controls().focused_key(),
             Some("control:2:id:inside")
         );
+        let modal_focus = session.page_focus_accessibility_states();
+        assert_eq!(modal_focus.len(), 2);
+        assert!(modal_focus.iter().all(
+            |state| state.key != "control:0:id:open" && state.key != "control:1:id:menu-button"
+        ));
 
         assert!(session
             .activate_page_interaction(470.0, 230.0, &pipeline, &fetcher)
@@ -8648,6 +9039,107 @@ mod tests {
         assert_eq!(
             session.history().current_url(),
             Some("http://example.test/details")
+        );
+    }
+
+    #[test]
+    fn sequential_focus_orders_mixed_page_targets_and_keyboard_activates_links() {
+        let start = "http://example.test/focus";
+        let fetcher = |url: &str| {
+            let body = if url == start {
+                "<a id='natural' href='/next'>Natural link</a>\
+                 <button id='later' tabindex='2'>Later button</button>\
+                 <details id='info'><summary tabindex='1'>More info</summary><p>Body</p></details>\
+                 <input id='skipped' tabindex='-1' value='Skipped'>\
+                 <button id='disabled' disabled>Disabled</button>"
+            } else {
+                "<p>Destination</p>"
+            };
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                body.as_bytes().to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(260.0, 120.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(start, 120.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        let states = session.page_focus_accessibility_states();
+        assert_eq!(
+            states
+                .iter()
+                .map(|state| (state.role.as_str(), state.tab_index))
+                .collect::<Vec<_>>(),
+            vec![("disclosure", 1), ("button", 2), ("link", 0)]
+        );
+        assert_eq!(
+            states
+                .iter()
+                .map(|state| state.name.as_str())
+                .collect::<Vec<_>>(),
+            vec!["More info", "Later button", "Natural link"]
+        );
+
+        for expected in ["disclosure", "button", "link"] {
+            assert!(session
+                .page_key_down_with_shift_and_submit(ControlKey::Tab, false, &pipeline, &fetcher,)
+                .unwrap());
+            assert_eq!(
+                session
+                    .page_focus_accessibility_states()
+                    .into_iter()
+                    .find(|state| state.focused)
+                    .unwrap()
+                    .role,
+                expected
+            );
+        }
+        assert!(session
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Group(group)
+                    if group.base.id.as_deref().is_some_and(|id| id.starts_with(PAGE_FOCUS_OVERLAY_PREFIX))
+            )));
+        assert!(session
+            .page_key_down_with_shift_and_submit(ControlKey::Tab, true, &pipeline, &fetcher,)
+            .unwrap());
+        assert_eq!(
+            session
+                .page_focus_accessibility_states()
+                .into_iter()
+                .find(|state| state.focused)
+                .unwrap()
+                .role,
+            "button"
+        );
+        assert!(session
+            .page_key_down_with_shift_and_submit(ControlKey::Tab, false, &pipeline, &fetcher,)
+            .unwrap());
+        assert!(session
+            .page_key_down_with_shift_and_submit(ControlKey::Enter, false, &pipeline, &fetcher,)
+            .unwrap());
+        assert_eq!(
+            session.history().current_url(),
+            Some("http://example.test/next")
         );
     }
 }

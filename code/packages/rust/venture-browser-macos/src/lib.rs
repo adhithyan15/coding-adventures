@@ -373,7 +373,7 @@ where
             modifiers,
             ..
         } if !modifiers.control && !modifiers.alt && !modifiers.meta => {
-            Ok(session.focus_control(modifiers.shift, &pipeline).is_some())
+            Ok(session.focus_page(modifiers.shift, &pipeline).is_some())
         }
         WindowEvent::Key {
             key: Key::Named(key),

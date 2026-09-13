@@ -367,6 +367,7 @@ class MosaicHost private constructor(
                         command && event.key == Key.Y -> "redo"
                         event.isAltPressed && event.key == Key.DirectionLeft -> "word-left"
                         event.isAltPressed && event.key == Key.DirectionRight -> "word-right"
+                        event.key == Key.Tab -> "tab"
                         event.key == Key.Backspace -> "backspace"
                         event.key == Key.Delete -> "delete"
                         event.key == Key.DirectionLeft -> "arrow-left"

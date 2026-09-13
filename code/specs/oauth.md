@@ -142,9 +142,16 @@ The delivery order is:
    path: exact `openid` scope is mandatory, caller-injected entropy supplies an
    independent 256-bit `nonce` beside state and PKCE, provider extras cannot
    override it, and a non-cloneable zeroizing provider/client/trace-bound nonce
-   is retained for the later proof. Broker composition that persists the
-   resulting verified opaque key without caller key selection remains a later
-   step.
+   is retained for the later proof. A broker composition now carries one
+   client-secret-authenticated Authorization Code response through the OAuth
+   credential-release gate, detaches its zeroizing ID-token evidence without a
+   clone, verifies that evidence with the exact retained nonce, and creates the
+   credential record only under the resulting provider-scoped opaque account
+   key. Provider, client, and trace mismatches fail before secret access or
+   transport; missing or rejected identity evidence fails before credential
+   storage; the consumed ID token is not retained in the stored credential.
+   Concrete JWT, JOSE, JWKS, discovery, clock, storage, and network authorities
+   remain injected or out of scope.
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
@@ -208,8 +215,12 @@ The delivery order is:
    access-token-only fallback now releases the token and exact revision only
    when custody proves that no refresh token exists, then conditionally deletes
    after exact HTTP 200 and every audit gate. Refreshable credentials, retryable
-   provider failures, and stale revisions retain local state. Account identity
-   proof and key selection remain separate composition steps. Prepared
+   provider failures, and stale revisions retain local state. Client-secret
+   Authorization Code exchange can additionally derive its opaque account key
+   through the audited ID-token identity boundary before initial custody
+   creation, eliminating caller key selection for that path. Other grant and
+   authentication paths still keep identity proof and key selection as
+   separate composition steps. Prepared
    `private_key_jwt` authorization-code exchange, refresh, and
    RFC 7009 revocation requests can now cross the broker through the existing
    abstract signer: exact retained provider, client, operation endpoint,

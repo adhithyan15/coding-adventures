@@ -8,8 +8,8 @@ waveform traces with axes on HTML and React hosts, and a raw result pane. The ma
 
 The trace surface consumes parser-derived waveform artifacts rather than a
 second result schema. The schematic host controls expose the canonical passive
-and source palette, ordered analysis-plan cards, DC-source selection, and
-selected-card sweep inputs; their Rust document remains the only lowering
+and source palette, ordered analysis-plan cards, DC-source selection, selected-card
+sweep inputs, kind conversion, and source-order controls; their Rust document remains the only lowering
 source. The same adapter owns versioned `spice-mosaic/schematic` JSON import
 and export through protocol-2 awaited file effects; malformed imports leave the
 current document untouched. Schematic edits expose disabled-aware Undo and Redo

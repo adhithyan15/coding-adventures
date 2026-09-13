@@ -5,6 +5,15 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 browser convergence - shared sequential focus navigation.** Promote
+  Tab and Shift+Tab from control-only traversal to one document-ordered model
+  spanning links, controls, and details summaries; honor positive and negative
+  `tabindex`, disabled/hidden/inert exclusions, modal containment, keyboard
+  activation, focus visibility scrolling, reusable accessibility geometry,
+  and backend-neutral focus presentation. Completed with shared Layout IR and
+  paint metadata plus semantic key forwarding from every native host, without
+  toolkit-owned focus order.
+
 - [x] **P1 browser convergence - client-side image-map interaction.** Connect
   parser-retained `usemap`, `map`, and `area` metadata to shared replaced-image
   geometry; scale rectangle, circle, polygon, and default regions; preserve

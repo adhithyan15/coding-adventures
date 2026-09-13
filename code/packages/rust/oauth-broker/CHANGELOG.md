@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added client-secret Authorization Code exchange through audited ID-token
+  identity proof into custody under the derived provider-scoped opaque account
+  key. Provider/client/trace mismatch precedes secret or transport access;
+  missing or rejected evidence precedes storage; ID-token evidence is consumed
+  rather than retained; and only the opaque revision is released.
 - Added exact access-token-only detach through retained `private_key_jwt`
   policy: custody refuses refreshable records before signing or transport,
   while retryable and closed failures retain access-only records and exact HTTP

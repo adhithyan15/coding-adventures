@@ -229,7 +229,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      bindings when a source is renamed, and expose both through the
      Mosaic inspector. Keep net labels, arbitrary wire geometry, and vendor
      interchange for later product phases.
-   - **Mosaic schematic edit history** (current phase): discovery after PR
+   - **Mosaic schematic edit history** (completed in PR #15026): discovery after PR
      #15021: every palette, wiring, metadata, and analysis-plan mutation is
      immediately destructive within a workbench session. Add bounded,
      session-owned undo/redo checkpoints that restore editor document state and
@@ -237,6 +237,14 @@ model-card parameter, or a UI artifact is not a completion signal.
      edit, exclude ephemeral history from persisted snapshots, and expose
      disabled-aware Mosaic controls. Keep collaborative history, arbitrary
      cross-session recovery, and vendor interchange for later product phases.
+   - **Mosaic schematic analysis-plan lifecycle** (current phase): discovery
+     after PR #15026: the adapter supports changing an existing card's analysis
+     kind, but the rendered workbench can only add or delete cards, and cannot
+     change their source order. Expose kind conversion and selected-card move
+     earlier/later controls while retaining per-card settings, source-order
+     deck lowering, history behavior, and disabled-state boundaries. Keep
+     nested sweeps, vendor controls, and arbitrary card templates for later
+     product phases.
 
 ### Operating rules
 
