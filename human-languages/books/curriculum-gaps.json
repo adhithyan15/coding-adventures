@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 6648,
+    "totalLessons": 6654,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 488,
+    "atomsNeverRevisited": 489,
     "forwardReferences": 756,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 87,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 4,
     "missingWritingStagePairs": 519,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 5343,
+    "drivableLessons": 5348,
     "drivablePercent": 80,
     "chaptersWithoutDrivablePrefix": 189,
     "unexplainedModalityOverrides": 0
@@ -1542,7 +1542,8 @@
           54,
           55,
           56,
-          57
+          57,
+          58
         ],
         "bookChapters": [
           1,
@@ -1601,7 +1602,8 @@
           54,
           55,
           56,
-          57
+          57,
+          58
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -2795,7 +2797,8 @@
           32,
           33,
           34,
-          35
+          35,
+          36
         ],
         "bookChapters": [
           1,
@@ -2832,7 +2835,8 @@
           32,
           33,
           34,
-          35
+          35,
+          36
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3885,9 +3889,9 @@
       {
         "language": "latin",
         "status": "version-2",
-        "lessonCount": 160,
+        "lessonCount": 163,
         "versions": {
-          "2": 160
+          "2": 163
         }
       },
       {
@@ -3957,9 +3961,9 @@
       {
         "language": "italian",
         "status": "version-2",
-        "lessonCount": 142,
+        "lessonCount": 145,
         "versions": {
-          "2": 142
+          "2": 145
         }
       },
       {
@@ -4731,8 +4735,8 @@
       },
       {
         "language": "italian",
-        "bookChapters": 35,
-        "declaredChapters": 35,
+        "bookChapters": 36,
+        "declaredChapters": 36,
         "missingCapability": 0,
         "findings": 1,
         "clean": false
@@ -4755,8 +4759,8 @@
       },
       {
         "language": "latin",
-        "bookChapters": 57,
-        "declaredChapters": 57,
+        "bookChapters": 58,
+        "declaredChapters": 58,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4859,8 +4863,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1490,
-      "declaredChapters": 1490,
+      "bookChapters": 1492,
+      "declaredChapters": 1492,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 87,
@@ -4872,10 +4876,10 @@
     }
   },
   "levels": {
-    "totalLessons": 6648,
+    "totalLessons": 6654,
     "byLevel": {
       "pre-A1": 3836,
-      "A1": 2106,
+      "A1": 2112,
       "A2": 622,
       "B1": 39,
       "B2": 17,
@@ -4992,10 +4996,10 @@
       },
       {
         "language": "italian",
-        "lessonCount": 142,
+        "lessonCount": 145,
         "byLevel": {
           "pre-A1": 70,
-          "A1": 51,
+          "A1": 54,
           "A2": 21,
           "B1": 0,
           "B2": 0,
@@ -5037,10 +5041,10 @@
       },
       {
         "language": "latin",
-        "lessonCount": 160,
+        "lessonCount": 163,
         "byLevel": {
           "pre-A1": 88,
-          "A1": 50,
+          "A1": 53,
           "A2": 22,
           "B1": 0,
           "B2": 0,
@@ -6007,8 +6011,8 @@
       },
       {
         "language": "italian",
-        "lessonCount": 142,
-        "measurable": 142,
+        "lessonCount": 145,
+        "measurable": 145,
         "unmeasurable": 0,
         "lessonViolations": 3,
         "chapterViolations": 3
@@ -6031,8 +6035,8 @@
       },
       {
         "language": "latin",
-        "lessonCount": 160,
-        "measurable": 160,
+        "lessonCount": 163,
+        "measurable": 163,
         "unmeasurable": 0,
         "lessonViolations": 1,
         "chapterViolations": 2
@@ -6558,7 +6562,7 @@
           "language": "italian",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 142,
+          "lessonCount": 145,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -6588,7 +6592,7 @@
           "language": "latin",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 160,
+          "lessonCount": 163,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -31539,6 +31543,18 @@
         "revisits": 1
       },
       {
+        "atom": "LA-LEX-AMBULO-01",
+        "language": "latin",
+        "introducedBy": "LA-C41-ambulo",
+        "introducedAt": 81,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "LA-LEX-AMO-01",
         "language": "latin",
         "introducedBy": "LA-C39-amo",
@@ -31627,6 +31643,18 @@
         "language": "latin",
         "introducedBy": "LA-C40-sedeo",
         "introducedAt": 79,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "LA-LEX-STO-01",
+        "language": "latin",
+        "introducedBy": "LA-C40-sto",
+        "introducedAt": 80,
         "missed": [
           "R2",
           "R3",
@@ -48980,6 +49008,17 @@
         "revisits": 2
       },
       {
+        "atom": "IT-ETYMON-MANO-04",
+        "language": "italian",
+        "introducedBy": "IT-C17-mano",
+        "introducedAt": 62,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "IT-ETYMON-MEZZOGIORNO-MEZZANOTTE-03",
         "language": "italian",
         "introducedBy": "IT-C08-mezzogiorno-mezzanotte",
@@ -49123,6 +49162,17 @@
         "revisits": 2
       },
       {
+        "atom": "IT-GRAMMAR-MANO-03",
+        "language": "italian",
+        "introducedBy": "IT-C17-mano",
+        "introducedAt": 62,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "IT-GRAMMAR-PRACTICE-02",
         "language": "italian",
         "introducedBy": "IT-C05-practice",
@@ -49165,6 +49215,17 @@
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-MANO-02",
+        "language": "italian",
+        "introducedBy": "IT-C17-mano",
+        "introducedAt": 62,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "IT-LEX-NON-CE-MALE-02",
@@ -50289,6 +50350,17 @@
         "revisits": 2
       },
       {
+        "atom": "LA-ETYMON-AMBULO-02",
+        "language": "latin",
+        "introducedBy": "LA-C41-ambulo",
+        "introducedAt": 81,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "LA-ETYMON-AMO-02",
         "language": "latin",
         "introducedBy": "LA-C39-amo",
@@ -50663,6 +50735,17 @@
         "revisits": 2
       },
       {
+        "atom": "LA-ETYMON-STO-02",
+        "language": "latin",
+        "introducedBy": "LA-C40-sto",
+        "introducedAt": 80,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "LA-ETYMON-VESPER-01",
         "language": "latin",
         "introducedBy": "LA-C33-vesper",
@@ -50795,17 +50878,6 @@
         "revisits": 2
       },
       {
-        "atom": "LA-LEX-AMBULO-01",
-        "language": "latin",
-        "introducedBy": "LA-C41-ambulo",
-        "introducedAt": 81,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "LA-LEX-ANNI-TEMPORA-01",
         "language": "latin",
         "introducedBy": "LA-C09-anni-tempora",
@@ -50933,6 +51005,17 @@
         "introducedAt": 69,
         "missed": [
           "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-CURRO-01",
+        "language": "latin",
+        "introducedBy": "LA-C41-curro",
+        "introducedAt": 82,
+        "missed": [
+          "R3",
           "R4"
         ],
         "revisits": 3
@@ -51110,17 +51193,6 @@
         "missed": [
           "R3",
           "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "LA-LEX-STO-01",
-        "language": "latin",
-        "introducedBy": "LA-C40-sto",
-        "introducedAt": 80,
-        "missed": [
-          "R2",
-          "R3"
         ],
         "revisits": 2
       },
@@ -69167,6 +69239,16 @@
         "revisits": 0
       },
       {
+        "atom": "IT-ETYMON-ABBASTANZA-03",
+        "language": "italian",
+        "introducedBy": "IT-C35-abbastanza",
+        "introducedAt": 141,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "IT-ETYMON-ABITARE-03",
         "language": "italian",
         "introducedBy": "IT-C05-abitare",
@@ -69225,6 +69307,16 @@
           "R2"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "IT-ETYMON-CAPIRE-03",
+        "language": "italian",
+        "introducedBy": "IT-C18-capire",
+        "introducedAt": 64,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "IT-ETYMON-CIAO-02",
@@ -69357,14 +69449,14 @@
         "revisits": 3
       },
       {
-        "atom": "IT-ETYMON-MANO-04",
+        "atom": "IT-ETYMON-MA-03",
         "language": "italian",
-        "introducedBy": "IT-C17-mano",
-        "introducedAt": 62,
+        "introducedBy": "IT-C32-ma",
+        "introducedAt": 122,
         "missed": [
-          "R1"
+          "R3"
         ],
-        "revisits": 4
+        "revisits": 3
       },
       {
         "atom": "IT-ETYMON-MESI-02",
@@ -69417,6 +69509,26 @@
         "revisits": 4
       },
       {
+        "atom": "IT-ETYMON-O-03",
+        "language": "italian",
+        "introducedBy": "IT-C32-o",
+        "introducedAt": 123,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-ETYMON-OGGI-IERI-03",
+        "language": "italian",
+        "introducedBy": "IT-C35-oggi-ieri",
+        "introducedAt": 139,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "IT-ETYMON-ORA-03",
         "language": "italian",
         "introducedBy": "IT-C08-ora",
@@ -69465,6 +69577,26 @@
           "R2"
         ],
         "revisits": 8
+      },
+      {
+        "atom": "IT-ETYMON-PENSARE-03",
+        "language": "italian",
+        "introducedBy": "IT-C18-pensare",
+        "introducedAt": 63,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-ETYMON-PERCHE-03",
+        "language": "italian",
+        "introducedBy": "IT-C32-perche",
+        "introducedAt": 124,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "IT-ETYMON-PERSONA-03",
@@ -69617,6 +69749,16 @@
         "revisits": 5
       },
       {
+        "atom": "IT-GRAMMAR-CAPIRE-04",
+        "language": "italian",
+        "introducedBy": "IT-C18-capire",
+        "introducedAt": 64,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "IT-GRAMMAR-COME-VA-02",
         "language": "italian",
         "introducedBy": "IT-C02-come-va",
@@ -69685,16 +69827,6 @@
           "R2"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "IT-GRAMMAR-MANO-03",
-        "language": "italian",
-        "introducedBy": "IT-C17-mano",
-        "introducedAt": 62,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 2
       },
       {
         "atom": "IT-GRAMMAR-MI-CHIAMO-04",
@@ -69777,6 +69909,16 @@
         "revisits": 3
       },
       {
+        "atom": "IT-GRAMMAR-PENSARE-04",
+        "language": "italian",
+        "introducedBy": "IT-C18-pensare",
+        "introducedAt": 63,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "IT-GRAMMAR-PIACERE-04",
         "language": "italian",
         "introducedBy": "IT-C03-piacere",
@@ -69785,6 +69927,16 @@
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "IT-GRAMMAR-SAPERE-03",
+        "language": "italian",
+        "introducedBy": "IT-C35-sapere",
+        "introducedAt": 137,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "IT-LEX-ASPETTARE-02",
@@ -69805,6 +69957,16 @@
           "R2"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "IT-LEX-CAPIRE-02",
+        "language": "italian",
+        "introducedBy": "IT-C18-capire",
+        "introducedAt": 64,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "IT-LEX-COMPRARE-02",
@@ -69847,14 +70009,14 @@
         "revisits": 2
       },
       {
-        "atom": "IT-LEX-MANO-02",
+        "atom": "IT-LEX-O-02",
         "language": "italian",
-        "introducedBy": "IT-C17-mano",
-        "introducedAt": 62,
+        "introducedBy": "IT-C32-o",
+        "introducedAt": 123,
         "missed": [
-          "R1"
+          "R3"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "IT-LEX-OTTENERE-02",
@@ -69895,6 +70057,16 @@
           "R1"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-SAPERE-02",
+        "language": "italian",
+        "introducedBy": "IT-C35-sapere",
+        "introducedAt": 137,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "IT-LEX-TESTA-02",
@@ -70085,6 +70257,16 @@
           "R2"
         ],
         "revisits": 7
+      },
+      {
+        "atom": "IT-SOUND-PENSARE-02",
+        "language": "italian",
+        "introducedBy": "IT-C18-pensare",
+        "introducedAt": 63,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "IT-SOUND-PIACERE-02",
@@ -71887,16 +72069,6 @@
         "revisits": 3
       },
       {
-        "atom": "LA-ETYMON-AMBULO-02",
-        "language": "latin",
-        "introducedBy": "LA-C41-ambulo",
-        "introducedAt": 81,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "LA-ETYMON-APERIO-02",
         "language": "latin",
         "introducedBy": "LA-C41-aperio",
@@ -71917,6 +72089,16 @@
         "revisits": 3
       },
       {
+        "atom": "LA-ETYMON-C56-NONA-HORA-01",
+        "language": "latin",
+        "introducedBy": "LA-C56-nonus",
+        "introducedAt": 155,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "LA-ETYMON-CONVENIO-OCCURRO-03",
         "language": "latin",
         "introducedBy": "LA-C43-convenio",
@@ -71925,6 +72107,16 @@
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "LA-ETYMON-CURRO-02",
+        "language": "latin",
+        "introducedBy": "LA-C41-curro",
+        "introducedAt": 82,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "LA-ETYMON-EXSPECTO-02",
@@ -71985,16 +72177,6 @@
           "R2"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "LA-ETYMON-STO-02",
-        "language": "latin",
-        "introducedBy": "LA-C40-sto",
-        "introducedAt": 80,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
       },
       {
         "atom": "LA-ETYMON-VALE-02",
@@ -72177,6 +72359,56 @@
         "revisits": 2
       },
       {
+        "atom": "LA-LEX-C53-SCHOOL-05",
+        "language": "latin",
+        "introducedBy": "LA-C53-liber",
+        "introducedAt": 141,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C54-BODY-01",
+        "language": "latin",
+        "introducedBy": "LA-C54-edo",
+        "introducedAt": 142,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "LA-LEX-C56-ORDINAL-09",
+        "language": "latin",
+        "introducedBy": "LA-C56-nonus",
+        "introducedAt": 155,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "LA-LEX-C56-ORDINAL-10",
+        "language": "latin",
+        "introducedBy": "LA-C56-decimus",
+        "introducedAt": 156,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "LA-LEX-C57-ORDER-01",
+        "language": "latin",
+        "introducedBy": "LA-C57-ante",
+        "introducedAt": 157,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "LA-LEX-CLAUDO-01",
         "language": "latin",
         "introducedBy": "LA-C41-claudo",
@@ -72203,16 +72435,6 @@
         "introducedAt": 45,
         "missed": [
           "R1"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-CURRO-01",
-        "language": "latin",
-        "introducedBy": "LA-C41-curro",
-        "introducedAt": 82,
-        "missed": [
-          "R3"
         ],
         "revisits": 3
       },
@@ -72445,6 +72667,16 @@
           "R2"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "LA-TASK-C57-ORDER-03",
+        "language": "latin",
+        "introducedBy": "LA-C57-practice",
+        "introducedAt": 159,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 0
       },
       {
         "atom": "ML-CONCEPT-C07-NUMBERS-1-5-01",
@@ -86440,11 +86672,11 @@
       },
       {
         "language": "italian",
-        "lessonCount": 142,
+        "lessonCount": 145,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 308,
+        "atomsTaught": 311,
         "atomsNeverRevisited": 2,
         "forwardReferences": 34
       },
@@ -86470,12 +86702,12 @@
       },
       {
         "language": "latin",
-        "lessonCount": 160,
+        "lessonCount": 163,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 263,
-        "atomsNeverRevisited": 1,
+        "atomsTaught": 266,
+        "atomsNeverRevisited": 2,
         "forwardReferences": 37
       },
       {
@@ -86604,14 +86836,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 8426,
-      "atomsNeverRevisited": 488,
+      "atomsTaught": 8432,
+      "atomsNeverRevisited": 489,
       "neverRevisitedPercent": 6,
       "missedByWindow": {
-        "R1": 1682,
-        "R2": 3732,
-        "R3": 5302,
-        "R4": 3874
+        "R1": 1684,
+        "R2": 3739,
+        "R3": 5308,
+        "R4": 3889
       },
       "forwardReferences": 756
     }
@@ -106195,8 +106427,8 @@
       },
       {
         "language": "italian",
-        "lessonCount": 142,
-        "atomMeasurableLessons": 142,
+        "lessonCount": 145,
+        "atomMeasurableLessons": 145,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 3,
@@ -106211,14 +106443,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 34,
-        "atomsTaught": 308,
+        "atomsTaught": 311,
         "atomsNeverRevisited": 2,
-        "reinforcementWindowMisses": 219,
+        "reinforcementWindowMisses": 236,
         "reinforcementMissesByWindow": {
-          "R1": 43,
-          "R2": 124,
-          "R3": 52,
-          "R4": 0
+          "R1": 44,
+          "R2": 127,
+          "R3": 56,
+          "R4": 9
         },
         "payoffSurprises": 1,
         "writingPracticeLessons": 2,
@@ -106242,7 +106474,7 @@
           {
             "language": "italian",
             "kind": "reinforcement",
-            "count": 219,
+            "count": 236,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -106388,8 +106620,8 @@
       },
       {
         "language": "latin",
-        "lessonCount": 160,
-        "atomMeasurableLessons": 160,
+        "lessonCount": 163,
+        "atomMeasurableLessons": 163,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
@@ -106404,14 +106636,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 37,
-        "atomsTaught": 263,
-        "atomsNeverRevisited": 1,
-        "reinforcementWindowMisses": 371,
+        "atomsTaught": 266,
+        "atomsNeverRevisited": 2,
+        "reinforcementWindowMisses": 384,
         "reinforcementMissesByWindow": {
-          "R1": 50,
-          "R2": 164,
-          "R3": 111,
-          "R4": 46
+          "R1": 51,
+          "R2": 168,
+          "R3": 113,
+          "R4": 52
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 4,
@@ -106435,7 +106667,7 @@
           {
             "language": "latin",
             "kind": "reinforcement",
-            "count": 371,
+            "count": 384,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           }
@@ -107904,7 +108136,7 @@
       {
         "language": "latin",
         "kind": "reinforcement",
-        "count": 371,
+        "count": 384,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -107960,7 +108192,7 @@
       {
         "language": "italian",
         "kind": "reinforcement",
-        "count": 219,
+        "count": 236,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -108800,11 +109032,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 6648,
-    "voice": 4810,
-    "sight": 707,
+    "totalLessons": 6654,
+    "voice": 4815,
+    "sight": 708,
     "pen": 1131,
-    "coreVoice": 5343,
+    "coreVoice": 5348,
     "lessonsWithWritingSegments": 648,
     "drivablePercent": 80,
     "tracks": [
@@ -113807,13 +114039,13 @@
       },
       {
         "language": "italian",
-        "lessonCount": 142,
-        "voice": 124,
-        "sight": 16,
+        "lessonCount": 145,
+        "voice": 126,
+        "sight": 17,
         "pen": 2,
-        "coreVoice": 125,
+        "coreVoice": 127,
         "drivablePercent": 88,
-        "drivablePrefixTotal": 97,
+        "drivablePrefixTotal": 99,
         "chapters": [
           {
             "language": "italian",
@@ -114315,6 +114547,21 @@
             ],
             "drivablePrefix": 5,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 36,
+            "lessonCount": 3,
+            "voice": 2,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "IT-C36-prima-lettura"
           }
         ]
       },
@@ -115750,13 +115997,13 @@
       },
       {
         "language": "latin",
-        "lessonCount": 160,
-        "voice": 150,
+        "lessonCount": 163,
+        "voice": 153,
         "sight": 6,
         "pen": 4,
-        "coreVoice": 151,
+        "coreVoice": 154,
         "drivablePercent": 94,
-        "drivablePrefixTotal": 140,
+        "drivablePrefixTotal": 143,
         "chapters": [
           {
             "language": "latin",
@@ -116551,6 +116798,20 @@
           {
             "language": "latin",
             "chapter": 57,
+            "lessonCount": 3,
+            "voice": 3,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 3,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 58,
             "lessonCount": 3,
             "voice": 3,
             "sight": 0,
@@ -131265,7 +131526,7 @@
     "underspentPercent": 90
   },
   "infoDump": {
-    "lessons": 6648,
+    "lessons": 6654,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -131273,11 +131534,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 6648,
-    "measuredLessons": 3559,
-    "idiomMeasuredLessons": 3559,
-    "senseMeasuredLessons": 3559,
-    "cultureClaimMeasuredLessons": 3559,
+    "lessons": 6654,
+    "measuredLessons": 3565,
+    "idiomMeasuredLessons": 3565,
+    "senseMeasuredLessons": 3565,
+    "cultureClaimMeasuredLessons": 3565,
     "idioms": 101,
     "senses": 101,
     "cultureClaims": 207,
@@ -131286,22 +131547,22 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 6201,
-    "usesBeforeIntroduction": 20402,
-    "technicalUsesBeforeIntroduction": 5074,
-    "technicalLessons": 2825,
+    "lessonsUsingTerms": 6207,
+    "usesBeforeIntroduction": 20423,
+    "technicalUsesBeforeIntroduction": 5084,
+    "technicalLessons": 2831,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1604
+        "lessons": 1607
       },
       {
         "term": "noun",
-        "lessons": 934
+        "lessons": 936
       },
       {
         "term": "adjective",
-        "lessons": 276
+        "lessons": 277
       },
       {
         "term": "pronoun",
@@ -131318,12 +131579,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 6648,
+    "lessonsScanned": 6654,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1559,
+    "filesScanned": 1561,
     "mainCharacters": 132,
     "scriptCharacters": 799,
     "gaps": 0
