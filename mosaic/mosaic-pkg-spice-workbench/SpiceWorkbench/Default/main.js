@@ -12,6 +12,7 @@ const fallbackProps = {
   "netlistLabel": "Sample NetlistLabel",
   "netlistPlaceholder": "Sample NetlistPlaceholder",
   "netlistText": "Sample NetlistText",
+  "openSchematicLabel": "Sample OpenSchematicLabel",
   "rawResultLabel": "Sample RawResultLabel",
   "removeSchematicAnalysisCardLabel": "Sample RemoveSchematicAnalysisCardLabel",
   "resultColumns": [],
@@ -20,6 +21,7 @@ const fallbackProps = {
   "resultText": "Sample ResultText",
   "routeSchematicLabel": "Sample RouteSchematicLabel",
   "runLabel": "Sample RunLabel",
+  "saveSchematicLabel": "Sample SaveSchematicLabel",
   "schematicAnalysisCardLabel": "Sample SchematicAnalysisCardLabel",
   "schematicAnalysisCardRows": [],
   "schematicAnalysisConfigurationLabel": "Sample SchematicAnalysisConfigurationLabel",
@@ -76,6 +78,7 @@ const emitPayloads = {
       "type": "text"
     }
   ],
+  "onOpenSchematic": [],
   "onPlaceSchematicComponent": [
     {
       "name": "kind",
@@ -90,6 +93,7 @@ const emitPayloads = {
     }
   ],
   "onRun": [],
+  "onSaveSchematic": [],
   "onSchematicAnalysisParameterOneChange": [
     {
       "name": "value",
