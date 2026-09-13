@@ -11,6 +11,8 @@ component SpiceWorkbench {
   slot diagnostic-rows : list<text> ;
   slot schematic-label : text ;
   slot schematic-title : text ;
+  slot open-schematic-label : text ;
+  slot save-schematic-label : text ;
   slot schematic-rows : list<text> ;
   slot schematic-palette : list<text> ;
   slot schematic-analysis-label : text ;
@@ -62,6 +64,8 @@ component SpiceWorkbench {
   emit onNetlistChange ( value : text ) ;
   emit onInspect ;
   emit onRun ;
+  emit onOpenSchematic ;
+  emit onSaveSchematic ;
   emit onPlaceSchematicComponent ( kind : text ) ;
   emit onAddSchematicAnalysis ( analysis : text ) ;
   emit onSelectSchematicAnalysis ( analysis : text ) ;

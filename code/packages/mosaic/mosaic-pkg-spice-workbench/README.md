@@ -10,6 +10,8 @@ The trace surface consumes parser-derived waveform artifacts rather than a
 second result schema. The schematic host controls expose the canonical passive
 and source palette, ordered analysis-plan cards, DC-source selection, and
 selected-card sweep inputs; their Rust document remains the only lowering
-source. Data-bound
+source. The same adapter owns versioned `spice-mosaic/schematic` JSON import
+and export through protocol-2 awaited file effects; malformed imports leave the
+current document untouched. Data-bound
 Path geometry remains a native XAML follow-up; vendor-dialect controls are
 later phases.

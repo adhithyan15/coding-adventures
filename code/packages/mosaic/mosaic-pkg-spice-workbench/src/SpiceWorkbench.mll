@@ -25,6 +25,16 @@ layout SpiceWorkbench {
     Column [ schematic ] {
       Text [ schematic-label ] ( content : slot: schematic-label )
       Text [ schematic-title ] ( content : slot: schematic-title )
+      Row [ schematic-document-actions ] {
+        HostButton [ open-schematic ] (
+          label : slot: open-schematic-label ,
+          onClick : emit: onOpenSchematic
+        )
+        HostButton [ save-schematic ] (
+          label : slot: save-schematic-label ,
+          onClick : emit: onSaveSchematic
+        )
+      }
       Row [ schematic-palette ] {
         For ( each: slot: schematic-palette , as: kind , index: kind-index ) {
           HostButton [ schematic-palette-item ] (
