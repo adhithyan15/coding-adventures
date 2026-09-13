@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-13
+
+- Project numeric font-size bindings on Text, HostInput, HostButton and HostTable as native TextUnit values. Preserve authored/inherited fallbacks for invalid live values, propagate table typography through split sections and scale input placeholders.
+
 All notable changes to `mosaic-emit-compose` are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
