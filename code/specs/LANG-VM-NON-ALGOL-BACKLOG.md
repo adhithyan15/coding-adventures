@@ -101,8 +101,8 @@ mismatch, before the doc was corrected to match. The full
 `non_algol_matrix_every_proven_cell_agrees` capstone confirmed the corrected
 total against a live run: 210 programs, **1361** cells exercised (was 1357),
 210 skipped (the same host-wide missing `ilasm` pattern every prior slice
-reports), zero failures — confirming the doc's corrected grand total
-(1567 → 1571) against a live run rather than arithmetic alone.
+reports), zero failures, in 482.89s — confirming the doc's corrected grand
+total (1567 → 1571) against a live run rather than arithmetic alone.
 
 Reprioritize the remaining ~22 undeclared COBOL BEAM rows against VM-041
 (Twig dynamic-string isolation), VM-060b (host input design) and VM-058

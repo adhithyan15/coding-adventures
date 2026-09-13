@@ -42,7 +42,10 @@ targets and warnings denied is clean. Updated
 `feature_coverage_doc_counts_match_programs_source`'s expected COBOL-60
 tuple (58, 438) → (58, 442) and confirmed it fails against the pre-fix figure
 before fixing it, and updated `LANG-VM-FEATURE-COVERAGE.md`'s COBOL-60 row
-and grand-total prose (1567 → 1571 declared cells) to match.
+and grand-total prose (1567 → 1571 declared cells) to match. The full
+`non_algol_matrix_every_proven_cell_agrees` capstone confirmed the corrected
+total against a live run: 210 programs, 1361 cells exercised (was 1357), 210
+skipped, zero failures, 482.89s.
 
 ## 0.327.0 — 2026-09-12 — VM-040 COBOL BEAM STRING SIZE/delimiter probe
 
