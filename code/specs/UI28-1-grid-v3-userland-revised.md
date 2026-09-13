@@ -147,6 +147,58 @@ Two notes on the `If` predicate:
   has the `cell` part wired; v0.2.0 adds `cell:selected`, `cell:editing`,
   `cell:read-only` matching UI28 §2.1.
 
+#### 3.1.1 `cell-editor` -- the editing branch needs its own part (#15048)
+
+`Cell` swaps a `Text` for a `HostInput` when `is-editing` is set. Those
+two are not interchangeable boxes: a native text input carries user-agent
+padding, a border and a font of its own that a text run does not. Through
+v0.2.3 the `HostInput` had no part name, so no theme could reach it and
+every backend emitted it with UA defaults intact.
+
+A grid row is as tall as its tallest cell, so the editor's extra box made
+the *row* grow. Measured in headless Chrome against this package's own
+dark theme (`part cell`: `padding: 4px`, no pinned height):
+
+| text scale | display row | editing row (no part) | delta |
+| --- | --- | --- | --- |
+| 100% | 26px | 32px | +6 |
+| 150% | 36px | 42px | +6 |
+| 200% | 45px | 51px | +6 |
+
+The React runtime's `table_capacity.ts` refuses uniform viewport capacity
+when any row's height differs from the first by more than 0.5px, so
+focusing a cell silently downgraded the grid's scrolling to its initial
+window. The delta is constant across scales, which rules out a rounding
+artifact at one zoom level.
+
+The unreleased revision gives the `HostInput` the `cell-editor` part and authors geometry
+that reduces the input to its line box -- zero padding, zero border,
+transparent background, inherited font, `width: 100%` under
+`box-sizing: border-box`. Re-measured with the part applied: delta 0 at
+all three scales, guard clean.
+
+Note that part styles do **not** merge across the package boundary: a
+consumer that declares `part cell-editor` replaces this one entirely, the
+same way its `part cell` replaces the package's. An override that sets only
+one property therefore restores the bare input and silently reintroduces
+the defect. No consumer in this repo overrides it: VisiCalc, task-app (via
+`mosaic-pkg-sheet`) and engram-app (via `mosaic-pkg-card`) all take the
+package geometry unchanged.
+
+The part deliberately sets no colour. Every backend already colours the
+editor, and authoring one broke two of them -- `inherit` lowers to a
+transparent brush on Compose and SwiftUI, and an explicit literal makes Qt
+emit `color` twice on one `TextInput`, a hard QML compile error. Filed as
+emitter defects.
+
+A consumer that pins its own cell height is immune to this defect either
+way, because a fixed-height box cannot grow. VisiCalc is such a consumer
+(`part cell { ... height: 32px; box-sizing: border-box }`, authored
+2026-09-05), and measurement confirms it never tripped the guard. The
+part is still the right home for the geometry: it makes the editor
+addressable for every consumer that does not pin a height, which includes
+this package's own default theme.
+
 ### 3.2 `Column` — column metadata
 
 Unchanged from v0.1.0 (already correct):

@@ -65,8 +65,12 @@ fn anatomy_eye_parts_recall_binds_function_with_citation() {
     // The relation runs backward: the function focuses_light recalls the lens.
     assert!(out.contains("\"P\":\"lens\""), "focuses_light → lens (reverse recall): {out}");
     // The answer carries the NEI citation as its proof.
+    // THE WHOLE LOCATOR, not just the host. #15139 found five stdlib
+    // locators addressing pages that had moved; a host-only pin stays
+    // green straight through that rot, because the host is the half a
+    // site reorganization leaves alone.
     assert!(
-        out.contains("nei.nih.gov") && out.contains("\"trust\":\"authoritative\""),
+        out.contains("\"locator\":\"https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work\",\"trust\":\"authoritative\""),
         "carries the source citation: {out}"
     );
     // The eardrum is not an eye part — honest abstention, never a fabricated

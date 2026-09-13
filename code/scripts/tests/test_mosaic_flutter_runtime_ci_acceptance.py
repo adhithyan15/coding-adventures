@@ -61,6 +61,22 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
             )
         )
 
+    def test_engram_app_requires_acceptance(self) -> None:
+        """A change touching only Engram's Flutter host must fire this lane.
+
+        It did not until the `[host_effects]` migration, and the consequence
+        was not theoretical: nothing had ever emitted Engram on Flutter with
+        `--profile native-complete`, and when something finally did, the
+        project failed to compile because the hand-written host overrode the
+        generated one without defining `loadRequired`.
+        """
+
+        self.assertTrue(
+            MODULE.requires_mosaic_flutter_runtime(
+                {"affected_packages": ["mosaic/programs/engram-app"]}
+            )
+        )
+
     def test_standard_mosaic_package_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_flutter_runtime(

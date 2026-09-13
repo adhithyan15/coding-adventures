@@ -525,32 +525,82 @@ PLIST
 
     # Flutter's bundle layout differs per platform -- Frameworks/ on macOS,
     # lib/ on Linux, beside the exe on Windows -- so the engine's destination is
-    # three problems rather than one. Locate the built bundle and place it where
-    # that platform's loader looks.
+    # three problems rather than one. Locate the built bundle first; what
+    # happens next depends on whether this backend still binds `engram-capi`.
     case "$FLUTTER_TARGET" in
       macos)
         BUNDLE="$(find "$APP/build/macos" -maxdepth 6 -name "*.app" -print -quit)"
         [[ -n "$BUNDLE" ]] || { echo "error: no .app in $APP/build/macos" >&2; exit 1; }
-        mkdir -p "$BUNDLE/Contents/Frameworks"
-        cp "$LIB_PATH" "$BUNDLE/Contents/Frameworks/$LIB_NAME"
-        PLACED="$BUNDLE/Contents/Frameworks/$LIB_NAME"
         ;;
       linux)
         BUNDLE="$APP/build/linux/x64/release/bundle"
         [[ -d "$BUNDLE" ]] || { echo "error: no bundle at $BUNDLE" >&2; exit 1; }
-        mkdir -p "$BUNDLE/lib"
-        cp "$LIB_PATH" "$BUNDLE/lib/$LIB_NAME"
-        PLACED="$BUNDLE/lib/$LIB_NAME"
         ;;
       *)
         BUNDLE="$APP/build/windows/x64/runner/Release"
         [[ -d "$BUNDLE" ]] || { echo "error: no bundle at $BUNDLE" >&2; exit 1; }
-        cp "$LIB_PATH" "$BUNDLE/$LIB_NAME"
-        PLACED="$BUNDLE/$LIB_NAME"
         ;;
     esac
-    [[ -f "$PLACED" ]] || { echo "error: engine not placed at $PLACED" >&2; exit 1; }
-    echo "  engine placed at $PLACED"
+
+    # A migrated Flutter needs no placement, and doing it anyway is the bug
+    # #15089 fixed for Qt: the generated host opens `libmosaic_app` and
+    # resolves `mosaic_app_*`, so copying `engram-capi` into the bundle ships a
+    # library nothing loads while the engine the app actually wants is
+    # elsewhere -- or missing.
+    #
+    # `--runtime-library` hands the runtime to the native-assets hook at emit
+    # time, and Flutter installs it into the bundle itself.
+    #
+    # The verification is NOT skipped with the placement -- dropping both would
+    # trade a loud failure for a silent one.
+    #
+    # Searched by TWO names, because Flutter does not install it under one.
+    # Measured on a real macOS build rather than assumed: it lands as
+    # `Contents/Frameworks/mosaic_app.framework/mosaic_app` -- a framework whose
+    # binary has no `lib` prefix and no extension, so a search for
+    # `$ENGINE_NAME` alone finds nothing on a perfectly good build. The bare
+    # name is kept for the platforms that use it.
+    if [[ "$STANDARD_RUNTIME_BACKENDS" == *" $BACKEND "* ]]; then
+      ENGINE_STEM="${ENGINE_NAME%.*}"      # libmosaic_app.dylib -> libmosaic_app
+      ENGINE_STEM="${ENGINE_STEM#lib}"     # -> mosaic_app
+      PLACED="$(find "$BUNDLE" \( -name "$ENGINE_NAME" -o -name "$ENGINE_STEM" \) -type f -print -quit || true)"
+      if [[ -z "$PLACED" ]]; then
+        echo "error: no $ENGINE_NAME (or $ENGINE_STEM) in the Flutter bundle at $BUNDLE" >&2
+        echo "       the app would launch with every deck operation unavailable" >&2
+        exit 1
+      fi
+      # Present is not the same as usable. Six: create, dispatch, snapshot,
+      # restore, destroy, complete_effect.
+      case "$(uname -s)" in
+        Darwin) SHIPPED="$(nm -gU "$PLACED" 2>/dev/null | grep -c ' _mosaic_app_' || true)" ;;
+        Linux)  SHIPPED="$(nm -D --defined-only "$PLACED" 2>/dev/null | grep -c ' mosaic_app_' || true)" ;;
+        *)      SHIPPED="unknown" ;;
+      esac
+      if [[ "$SHIPPED" != "unknown" && "$SHIPPED" -lt 6 ]]; then
+        echo "error: the shipped runtime exports only $SHIPPED mosaic_app_* symbols" >&2
+        exit 1
+      fi
+      echo "  runtime shipped in the bundle at $PLACED"
+    else
+      case "$FLUTTER_TARGET" in
+        macos)
+          mkdir -p "$BUNDLE/Contents/Frameworks"
+          cp "$LIB_PATH" "$BUNDLE/Contents/Frameworks/$LIB_NAME"
+          PLACED="$BUNDLE/Contents/Frameworks/$LIB_NAME"
+          ;;
+        linux)
+          mkdir -p "$BUNDLE/lib"
+          cp "$LIB_PATH" "$BUNDLE/lib/$LIB_NAME"
+          PLACED="$BUNDLE/lib/$LIB_NAME"
+          ;;
+        *)
+          cp "$LIB_PATH" "$BUNDLE/$LIB_NAME"
+          PLACED="$BUNDLE/$LIB_NAME"
+          ;;
+      esac
+      [[ -f "$PLACED" ]] || { echo "error: engine not placed at $PLACED" >&2; exit 1; }
+      echo "  engine placed at $PLACED"
+    fi
     echo ""
     echo "Built: $BUNDLE"
     ;;

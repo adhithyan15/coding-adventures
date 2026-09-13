@@ -2548,6 +2548,59 @@ jobs:
             flutter test test/widget_test.dart
           )
 
+          # Engram on Flutter, the mirror of the Qt, SwiftUI and Compose Engram
+          # lanes.
+          #
+          # This block is what was missing. `engram-app` was not in the Flutter
+          # acceptance set, so nothing ever emitted Engram on this backend with
+          # `--profile native-complete` -- and when something finally did, it
+          # did not compile: the hand-written `mosaic_host.dart` overrode the
+          # generated host without defining `loadRequired`, which the
+          # native-complete `main.dart` calls. The lane was green throughout,
+          # because it built task-app.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
+          engram_runtime_library="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.so"
+          test -f "$engram_runtime_library"
+          engram_output="$RUNNER_TEMP/mosaic-flutter-engram"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend flutter --output "$engram_output" --emit-project --profile native-complete --runtime-library "$engram_runtime_library"
+
+          # Pinned empty, exactly as the Qt, SwiftUI and Compose Engram lanes
+          # pin it: the `mosaic_host.dart` override is retired, and a package
+          # that starts overriding the generated host again has undone that and
+          # must fail here rather than pass quietly.
+          jq -e '.replacedGeneratedFiles == []' "$engram_output/flutter/mosaic-degradations.json"
+          # `type == "array"` first: `null | length` is 0 in jq, so a report
+          # that lost the key entirely would satisfy a bare length check.
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_output/flutter/mosaic-degradations.json"
+
+          # The handler is wired into the generated app, and wired in the one
+          # place that works.
+          #
+          # A grep for `installEngramEffects(` is not enough on its own: Dart
+          # compiles everything under `lib/`, so the handler file ships and
+          # compiles whether or not anything calls it, and an install that
+          # landed in the wrong scope would still satisfy the grep while the
+          # first symptom at runtime is an `Await` going unanswered. So the
+          # import and the call site are both checked, and the call is required
+          # to come after the host assignment it takes as an argument.
+          python3 - "$engram_output/flutter/lib/main.dart" <<'PY'
+          import sys
+
+          text = open(sys.argv[1], encoding="utf-8").read()
+          assert "import 'engram_effects.dart';" in text, "handler is never imported"
+          assign = text.index("_mosaicHost = widget.mosaicHost")
+          install = text.index("installEngramEffects(")
+          assert install > assign, "handler is installed before the host exists"
+          PY
+
+          (
+            cd "$engram_output/flutter"
+            flutter create --platforms=linux --project-name mosaic_engram_app .
+            flutter pub get
+            flutter analyze
+            flutter build linux --debug
+          )
+
       - name: Round-trip Rust engine through standard Compose binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
         shell: bash
