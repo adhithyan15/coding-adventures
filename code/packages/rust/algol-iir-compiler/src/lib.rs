@@ -7445,7 +7445,7 @@ impl Compiler {
     }
 
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
-        if let Some(name) = expr_variable_name(node) {
+        if let Some(name) = exact_bare_variable_expression_name(node) {
             let binding = self.require_var(&name).ok()?;
             if binding.ty == ScalarType::Boolean && !binding.is_global {
                 return self.static_boolean_slots.get(&binding.slot).copied();
@@ -14439,6 +14439,20 @@ mod tests {
             "test",
         )
         .expect("a bounded boolean recurrence has an exact final snapshot");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
+        }));
+    }
+
+    #[test]
+    fn al4_bounded_while_loop_tracks_boolean_negation_recurrence_snapshot() {
+        let module = compile_source(
+            "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do flag := not flag; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect("a bounded boolean negation recurrence has an exact final snapshot");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "str_const"
