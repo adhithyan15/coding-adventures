@@ -627,6 +627,36 @@ fn image_map_regions_are_available_to_every_native_host() {
 }
 
 #[test]
+fn native_hosts_forward_tab_to_shared_page_focus_navigation() {
+    for (path, marker) in [
+        (
+            "host/swiftui/MosaicHost.swift",
+            "case 48: controlKey = \"tab\"",
+        ),
+        ("host/xaml/MosaicHost.cs", "VirtualKey.Tab => \"tab\""),
+        (
+            "host/flutter/mosaic_host.dart",
+            "LogicalKeyboardKey.tab => 'tab'",
+        ),
+        ("host/qt/MosaicHost.cpp", "Qt::Key_Tab"),
+        (
+            "host/compose/MosaicHost.kt",
+            "event.key == Key.Tab -> \"tab\"",
+        ),
+    ] {
+        let source = read_package_file(path);
+        assert!(
+            source.contains(marker),
+            "{path} must forward Tab without owning page focus order"
+        );
+    }
+    assert_eq!(
+        venture_browser_core::ControlKey::from_name("tab"),
+        Some(venture_browser_core::ControlKey::Tab)
+    );
+}
+
+#[test]
 fn form_group_fixture_keeps_label_and_disabledness_policy_host_neutral() {
     let page = venture_browser_visual_fixtures::load_form_groups_page("http://venture.test")
         .expect("load Venture's deterministic form-group fixture");

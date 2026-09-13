@@ -179,6 +179,9 @@ pub struct LinkRegion {
     pub height: f64,
     pub key: Option<String>,
     pub accessible_name: Option<String>,
+    pub focus_order: Option<usize>,
+    pub tab_index: i32,
+    pub top_layer_index: Option<usize>,
     pub image_map_order: Option<ImageMapRegionOrder>,
     pub url: String,
     pub target: Option<String>,
@@ -288,6 +291,10 @@ pub struct ControlRegion {
     pub width: f64,
     pub height: f64,
     pub key: String,
+    pub accessible_name: Option<String>,
+    pub focus_order: Option<usize>,
+    pub tab_index: i32,
+    pub top_layer_index: Option<usize>,
     pub kind: ControlKind,
     pub disabled: bool,
     /// Label regions focus or activate their associated control rather than
@@ -305,6 +312,9 @@ pub struct DisclosureRegion {
     pub width: f64,
     pub height: f64,
     pub key: String,
+    pub focus_order: Option<usize>,
+    pub tab_index: i32,
+    pub top_layer_index: Option<usize>,
     pub disclosure_index: usize,
     pub open: bool,
     pub fixed: bool,
@@ -666,6 +676,7 @@ fn extract_interactive_regions(
         false,
         IDENTITY,
         None::<(usize, String, bool)>,
+        None::<usize>,
     )];
 
     while let Some((
@@ -677,6 +688,7 @@ fn extract_interactive_regions(
         inherited_fixed,
         inherited_transform,
         parent_disclosure,
+        inherited_top_layer,
     )) = stack.pop()
     {
         let absolute_x = parent_x + node.x;
@@ -688,11 +700,12 @@ fn extract_interactive_regions(
             .map(|local| multiply(inherited_transform, local))
             .unwrap_or(inherited_transform);
         let fixed = inherited_fixed || style.position == layout_positioned::Position::Fixed;
-        if let (Some(kind), Some(index)) = (
-            positioned_html_string(node, "topLayerKind"),
-            positioned_html_int(node, "topLayerIndex")
-                .and_then(|value| usize::try_from(value).ok()),
-        ) {
+        let node_top_layer = positioned_html_int(node, "topLayerIndex")
+            .and_then(|value| usize::try_from(value).ok());
+        let current_top_layer = node_top_layer.or(inherited_top_layer);
+        if let (Some(kind), Some(index)) =
+            (positioned_html_string(node, "topLayerKind"), node_top_layer)
+        {
             let region = clipped_box(
                 transformed_box((absolute_x, absolute_y, node.width, node.height), transform),
                 inherited_clip,
@@ -748,6 +761,12 @@ fn extract_interactive_regions(
                         width,
                         height,
                         key: key.clone(),
+                        focus_order: positioned_html_int(node, "focusOrder")
+                            .and_then(|value| usize::try_from(value).ok()),
+                        tab_index: positioned_html_int(node, "tabIndex")
+                            .and_then(|value| i32::try_from(value).ok())
+                            .unwrap_or_default(),
+                        top_layer_index: current_top_layer,
                         disclosure_index: *disclosure_index,
                         open: *open,
                         fixed,
@@ -770,8 +789,20 @@ fn extract_interactive_regions(
                         y,
                         width,
                         height,
-                        key: None,
-                        accessible_name: None,
+                        key: positioned_html_string(node, "id")
+                            .filter(|id| !id.is_empty())
+                            .map(|id| format!("link:id:{id}"))
+                            .or_else(|| {
+                                positioned_html_int(node, "focusOrder")
+                                    .map(|order| format!("link:{order}"))
+                            }),
+                        accessible_name: positioned_accessible_name(node),
+                        focus_order: positioned_html_int(node, "focusOrder")
+                            .and_then(|value| usize::try_from(value).ok()),
+                        tab_index: positioned_html_int(node, "tabIndex")
+                            .and_then(|value| i32::try_from(value).ok())
+                            .unwrap_or_default(),
+                        top_layer_index: current_top_layer,
                         image_map_order: None,
                         url: url.to_string(),
                         target: positioned_html_string(node, "target").map(ToOwned::to_owned),
@@ -818,6 +849,14 @@ fn extract_interactive_regions(
                     width,
                     height,
                     key: control.key,
+                    accessible_name: positioned_html_string(node, "accessibleName")
+                        .map(ToOwned::to_owned),
+                    focus_order: positioned_html_int(node, "focusOrder")
+                        .and_then(|value| usize::try_from(value).ok()),
+                    tab_index: positioned_html_int(node, "tabIndex")
+                        .and_then(|value| i32::try_from(value).ok())
+                        .unwrap_or_default(),
+                    top_layer_index: current_top_layer,
                     kind: control.kind,
                     disabled: control.disabled,
                     label_activation: false,
@@ -896,6 +935,7 @@ fn extract_interactive_regions(
                 fixed,
                 transform,
                 current_disclosure.clone(),
+                current_top_layer,
             ));
         }
     }
@@ -916,6 +956,10 @@ fn extract_interactive_regions(
                 width: label.width,
                 height: label.height,
                 key: target.key,
+                accessible_name: target.accessible_name,
+                focus_order: target.focus_order,
+                tab_index: target.tab_index,
+                top_layer_index: target.top_layer_index,
                 kind: target.kind,
                 disabled: target.disabled,
                 label_activation: true,
@@ -1015,6 +1059,9 @@ fn image_map_link_regions(
                 height,
                 key: Some(area.key),
                 accessible_name: area.accessible_name,
+                focus_order: None,
+                tab_index: 0,
+                top_layer_index: None,
                 image_map_order: Some(ImageMapRegionOrder {
                     image_index: image_map.image_index,
                     area_index: area.area_index,
@@ -1243,6 +1290,11 @@ fn first_descendant_control_region(node: &PositionedNode) -> Option<ControlRegio
                 width: 0.0,
                 height: 0.0,
                 key: control.key,
+                accessible_name: positioned_html_string(node, "accessibleName")
+                    .map(ToOwned::to_owned),
+                focus_order: None,
+                tab_index: 0,
+                top_layer_index: None,
                 kind: control.kind,
                 disabled: control.disabled,
                 label_activation: false,
@@ -1465,6 +1517,31 @@ fn positioned_html_string<'a>(node: &'a PositionedNode, key: &str) -> Option<&'a
         return None;
     };
     Some(value)
+}
+
+fn positioned_accessible_name(node: &PositionedNode) -> Option<String> {
+    fn collect(node: &PositionedNode, parts: &mut Vec<String>) {
+        if let Some(name) = positioned_html_string(node, "accessibleName") {
+            let name = name.split_whitespace().collect::<Vec<_>>().join(" ");
+            if !name.is_empty() {
+                parts.push(name);
+                return;
+            }
+        }
+        if let Some(Content::Text(text)) = &node.content {
+            let text = text.value.split_whitespace().collect::<Vec<_>>().join(" ");
+            if !text.is_empty() {
+                parts.push(text);
+            }
+        }
+        for child in &node.children {
+            collect(child, parts);
+        }
+    }
+
+    let mut parts = Vec::new();
+    collect(node, &mut parts);
+    (!parts.is_empty()).then(|| parts.join(" "))
 }
 
 fn positioned_html_bool(node: &PositionedNode, key: &str) -> Option<bool> {
@@ -2178,6 +2255,9 @@ mod tests {
                 height: 10.0,
                 key: None,
                 accessible_name: None,
+                focus_order: None,
+                tab_index: 0,
+                top_layer_index: None,
                 image_map_order: None,
                 url: "https://example.test/visible".into(),
                 target: None,
@@ -2215,6 +2295,9 @@ mod tests {
                 height: 10.0,
                 key: None,
                 accessible_name: None,
+                focus_order: None,
+                tab_index: 0,
+                top_layer_index: None,
                 image_map_order: None,
                 url: "https://example.test/moved".into(),
                 target: None,
@@ -2239,6 +2322,9 @@ mod tests {
             height: 12.0,
             key: None,
             accessible_name: None,
+            focus_order: None,
+            tab_index: 0,
+            top_layer_index: None,
             image_map_order: None,
             url: "https://example.test/next".into(),
             target: None,

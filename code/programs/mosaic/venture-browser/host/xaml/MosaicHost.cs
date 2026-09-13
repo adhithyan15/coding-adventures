@@ -1233,6 +1233,7 @@ public static class MosaicHost
 
             var controlKey = key switch
             {
+                VirtualKey.Tab => "tab",
                 VirtualKey.Back => "backspace",
                 VirtualKey.Delete => "delete",
                 VirtualKey.Left => "arrow-left",

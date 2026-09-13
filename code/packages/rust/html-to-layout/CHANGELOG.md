@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Project stable document focus order and normalized `tabindex` for rendered
+  links, controls, and details summaries into shared Layout IR metadata.
+
 - Resolve client-side image maps onto their referencing replaced images as
   ordered, typed Layout IR area metadata with stable accessibility keys.
 
