@@ -713,6 +713,37 @@ impl MacBrowserHost {
         Ok(changed)
     }
 
+    pub fn access_key(&mut self, character: &str) -> Result<bool, BrowserLoadError> {
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        let changed = self
+            .controller
+            .session_mut()
+            .access_key_command_and_submit(
+                venture_browser_core::AccessKeyCommand {
+                    modifier: venture_browser_core::AccessKeyModifier::ControlOption,
+                    character: character.into(),
+                },
+                &pipeline,
+                &self.fetcher,
+            )?;
+        if changed {
+            self.controller.synchronize_session_state();
+        }
+        Ok(changed)
+    }
+
     pub fn control_text_input(&mut self, text: &str) -> bool {
         let theme = mosaic_html_theme();
         let measurer = NativeMeasurer::new();
@@ -1205,6 +1236,22 @@ mod mosaic_ffi {
         catch_unwind(AssertUnwindSafe(|| {
             host.as_mut()
                 .and_then(|host| host.control_key_down(key, shift != 0).ok())
+                .unwrap_or(false) as u8
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_access_key(
+        host: *mut MacBrowserHost,
+        character: *const c_char,
+    ) -> u8 {
+        let Some(character) = string_arg(character) else {
+            return 0;
+        };
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .and_then(|host| host.access_key(&character).ok())
                 .unwrap_or(false) as u8
         }))
         .unwrap_or(0)

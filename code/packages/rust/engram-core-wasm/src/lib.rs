@@ -13747,6 +13747,128 @@ mod tests {
             .any(|source| source["source"] == "anki-v11"));
     }
 
+    /// An imported Anki package cannot smuggle `::` into a card key half.
+    ///
+    /// `reject_card_id_separator` guards the command channel and the Mosaic
+    /// event channel, and `validate_command_id_separator` documents why restore
+    /// is exempt. Import is neither: it is a THIRD-PARTY file, so the "refusing
+    /// a restore would cost someone their collection" argument does not apply
+    /// to it, and no guard sits on `merge_anki_apkg`.
+    ///
+    /// It needs none, because the reader builds every one of these ids from an
+    /// Anki `i64`: a note is `note.id.to_string()`, a note type the same, and a
+    /// template is `format!("{note_type_id}:template:{ordinal}")`. A `::`
+    /// cannot appear in any of them.
+    ///
+    /// Safe BY CONSTRUCTION is exactly the kind of safety that stops being true
+    /// without anyone noticing, though — `template_id`'s format string is one
+    /// edit from `{note_type_id}::template::{ordinal}`, and nothing anywhere
+    /// said so. This is that check: the invariant the whole card-key fix rests
+    /// on, asserted at the one ingestion point that was never guarded because
+    /// it did not need to be.
+    /// Assert the invariant over one merged state, and report what it saw.
+    ///
+    /// Returns `(notes, note_types, templates, cards)` so the caller can anchor
+    /// each loop separately. One shared counter would have been satisfied by
+    /// the notes alone — it could not prove the note-type and template loops
+    /// ran at all, which are the ids the mutation actually breaks.
+    fn assert_no_card_id_separator(merged: &Value) -> (usize, usize, usize, usize) {
+        let mut notes = 0;
+        let mut note_types = 0;
+        let mut templates = 0;
+        for note in merged["state"]["notes"].as_array().unwrap() {
+            let id = note["id"].as_str().unwrap();
+            assert!(!id.contains(CARD_ID_SEPARATOR), "note id {id:?}");
+            notes += 1;
+        }
+        for note_type in merged["state"]["noteTypes"].as_array().unwrap() {
+            let id = note_type["id"].as_str().unwrap();
+            assert!(!id.contains(CARD_ID_SEPARATOR), "note type id {id:?}");
+            note_types += 1;
+            for template in note_type["templates"].as_array().unwrap() {
+                let id = template["id"].as_str().unwrap();
+                assert!(!id.contains(CARD_ID_SEPARATOR), "template id {id:?}");
+                templates += 1;
+            }
+        }
+
+        // The property those halves exist to guarantee, asserted directly
+        // rather than inferred from them: no two cards share a key. Checking it
+        // here means the test survives a change to how the halves are joined.
+        let cards = merged["state"]["cards"].as_array().unwrap();
+        let ids: std::collections::BTreeSet<&str> = cards
+            .iter()
+            .map(|card| card["id"].as_str().unwrap())
+            .collect();
+        assert_eq!(
+            ids.len(),
+            cards.len(),
+            "two imported cards share an id; {} card(s), {} distinct",
+            cards.len(),
+            ids.len()
+        );
+
+        (notes, note_types, templates, cards.len())
+    }
+
+    #[test]
+    fn an_imported_package_cannot_carry_the_card_id_separator() {
+        let source = EngramSession::new_demo();
+        let exported: Value = serde_json::from_str(&source.export_anki_apkg()).unwrap();
+        let apkg = coding_adventures_base64::decode(
+            exported["apkg"].as_str().unwrap(),
+            &coding_adventures_base64::STANDARD,
+        )
+        .unwrap();
+
+        let mut target = EngramSession::new();
+        let merged: Value = serde_json::from_str(&target.merge_anki_apkg(&apkg)).unwrap();
+        assert_eq!(merged["ok"], true);
+
+        // Every count anchored on its own. An import that produced nothing
+        // would satisfy every assertion inside, and a zero that reads as a
+        // pass is the failure this crate keeps finding.
+        let (notes, note_types, templates, cards) = assert_no_card_id_separator(&merged);
+        assert!(notes > 0, "no notes to check");
+        assert!(note_types > 0, "no note types to check");
+        assert!(templates > 0, "no templates to check");
+        assert!(cards > 0, "no cards to check");
+    }
+
+    /// The same, through the OTHER reader.
+    ///
+    /// `read_v11_collection` dispatches on `col.ver` and hands anything at
+    /// schema 18 or above to `parse_schema18_collection`, a separate reader
+    /// with its own id derivation. The test above imports a package this crate
+    /// exported, which is v11 — so on its own it says nothing about the path a
+    /// package from a modern Anki actually takes.
+    ///
+    /// Found by a reviewer walking the claim independently rather than by the
+    /// original survey, which is the whole argument for doing that: "safe by
+    /// construction" was established over one of two readers and read as
+    /// covering both.
+    ///
+    /// Schema 18 is safe on the same grounds — the notetype id is the rowid,
+    /// and fields and templates carry integer ordinals — but it is a different
+    /// body of code and gets its own check. The fixture is a real Anki export.
+    #[test]
+    fn a_modern_package_cannot_carry_the_card_id_separator_either() {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../engram-anki-package/tests/fixtures/anki/anki-modern.apkg");
+        let bytes = std::fs::read(&path)
+            .unwrap_or_else(|error| panic!("schema-18 fixture at {}: {error}", path.display()));
+
+        let mut target = EngramSession::new();
+        let merged: Value = serde_json::from_str(&target.merge_anki_apkg(&bytes)).unwrap();
+        assert_eq!(merged["ok"], true, "schema-18 import: {merged}");
+
+        let (notes, note_types, templates, cards) = assert_no_card_id_separator(&merged);
+        assert!(notes > 0, "no notes to check");
+        assert!(note_types > 0, "no note types to check");
+        assert!(templates > 0, "no templates to check");
+        assert!(cards > 0, "no cards to check");
+    }
+
     #[test]
     fn parse_anki_notes_tsv_honors_html_header() {
         let session = EngramSession::new();

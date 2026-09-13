@@ -85,6 +85,55 @@ took two attempts — the first "mutation" tested for the id *after* the upsert
 had added it, so it changed nothing and reported that no test caught it. A
 mutation that does not mutate is a false exoneration.
 
+### Added — the import path's card-key invariant is now checked, not merely true
+
+`reject_card_id_separator` guards the command channel and the Mosaic event
+channel, and `validate_command_id_separator` states why restore is exempt: it
+replaces the collection wholesale, and refusing one because a single note has an
+odd id would cost someone everything to avoid a misplaced card.
+
+**Anki import is neither.** No guard sits on `merge_anki_apkg`, and the
+exemption's argument does not extend to it — an `.apkg` is a third-party file,
+not the user's own snapshot.
+
+It turns out to need no guard. Every id the reader produces that becomes half of
+a card key is built from an Anki `i64`: a note is `note.id.to_string()`, a note
+type the same, and a template is
+`format!("{note_type_id}:template:{ordinal}")`. A `::` cannot appear in any of
+them. **So this adds a test rather than a check** — writing a guard here would
+have been a redundant one, and the survey is the deliverable.
+
+Safe *by construction* is the kind of safety that stops being true without
+anyone noticing, though. `template_id`'s format string is one edit from
+`{note_type_id}::template::{ordinal}`, and nothing anywhere said so.
+`an_imported_package_cannot_carry_the_card_id_separator` imports a real exported
+package and asserts no note, note-type or template id carries the separator —
+mutation-tested by making exactly that edit, which fails it with
+`template id "2000000::template::0"`.
+
+It also asserts, directly rather than by inference from the halves, that no two
+imported cards share an id — so the test survives a change to how the halves are
+joined — and that the import produced ids and cards at all, since every
+assertion above would pass on an empty import. Notes, note types, templates and
+cards are counted **separately**: one shared counter is satisfied by the notes
+loop alone and could not prove the template loop ran, which is the id the
+mutation actually breaks.
+
+**Two readers, not one.** `read_v11_collection` dispatches on `col.ver` and
+hands anything at schema 18 or above to `parse_schema18_collection`, a separate
+reader with its own id derivation. The first version of this test imported a
+package *this crate exported*, which is v11, and so said nothing about the path
+a package from a modern Anki actually takes — the survey established "safe by
+construction" over one of two readers and read as covering both. Found by a
+reviewer walking the claim independently, which is the argument for doing that.
+
+Schema 18 is safe on the same grounds (the notetype id is the rowid; fields and
+templates carry integer ordinals) and now has its own test against a real Anki
+fixture. The mutation fails both, with **different** ids —
+`1788376852072::template::0` from the real export and `2000000::template::0`
+from this crate's — which is what shows the two tests exercise two readers
+rather than one path twice.
+
 ### Fixed — two notes could generate the same card id
 
 A generated card's id is `{note_id}::{template_id}`, and the cloze form appends

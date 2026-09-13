@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.336.0 — 2026-09-13 — ALGOL integer control recurrences
+
+The seven-backend ALGOL matrix now proves that a finite integer
+`step`/`until` loop may repeatedly derive its controlled scalar from the prior
+value and retain the checked post-body exit snapshot.
+
 ## 0.335.0 — 2026-09-13 — ALGOL dependent control-exit snapshots
 
 The seven-backend ALGOL matrix now proves that an exactly-one-pass
@@ -6461,3 +6467,10 @@ regression exercises all six comparisons with less/equal/greater values and
 three literal/register combinations, including positive and negative literal
 moves (54 executions). Eight of 58 COBOL rows now declare BEAM, for 414 cells.
 Remaining COBOL features still require individual execution proofs.
+
+## Unreleased — remaining base INSPECT BEAM coverage
+
+Four existing COBOL replacement programs now declare BEAM after successful
+real Erlang execution. A focused runtime test checks padding, LEADING,
+no rechaining and first-clause precedence. Coverage rises to 52/58 COBOL
+BEAM rows (458 total declared cells); no backend production code changed.

@@ -46,6 +46,7 @@ private final class VentureNativeLibrary {
   let scroll: Scroll
   let scrollCommand: ScrollCommand
   let controlKey: ControlKey
+  let accessKey: ControlText
   let controlText: ControlText
   let controlCopy: ControlClipboard
   let controlCut: ControlClipboard
@@ -89,6 +90,7 @@ private final class VentureNativeLibrary {
         "venture_browser_macos_scroll_command", as: ScrollCommand.self
       ),
       let controlKey = symbol("venture_browser_macos_control_key", as: ControlKey.self),
+      let accessKey = symbol("venture_browser_macos_access_key", as: ControlText.self),
       let controlText = symbol("venture_browser_macos_control_text", as: ControlText.self),
       let controlCopy = symbol("venture_browser_macos_control_copy", as: ControlClipboard.self),
       let controlCut = symbol("venture_browser_macos_control_cut", as: ControlClipboard.self),
@@ -124,6 +126,7 @@ private final class VentureNativeLibrary {
     self.scroll = scroll
     self.scrollCommand = scrollCommand
     self.controlKey = controlKey
+    self.accessKey = accessKey
     self.controlText = controlText
     self.controlCopy = controlCopy
     self.controlCut = controlCut
@@ -1452,6 +1455,15 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     return true
   }
 
+  fileprivate func accessKey(_ character: String) -> Bool {
+    guard let native, let browser else { return false }
+    let changed = character.withCString { native.accessKey(browser, $0) }
+    guard changed != 0 else { return false }
+    consumeEffect(native.decode(native.takeEffect(browser)))
+    contentView?.renderPage()
+    return true
+  }
+
   fileprivate func controlText(_ text: String) -> Bool {
     guard let native, let browser else { return false }
     let changed = text.withCString { native.controlText(browser, $0) }
@@ -1692,6 +1704,12 @@ private final class VentureContentView: NSView {
 
   override func keyDown(with event: NSEvent) {
     let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+    if modifiers.contains([.control, .option]), !modifiers.contains(.command),
+      let character = event.charactersIgnoringModifiers, !character.isEmpty,
+      host?.accessKey(character) == true
+    {
+      return
+    }
     if modifiers.contains(.command) && modifiers.intersection([.control, .option]).isEmpty {
       switch event.keyCode {
       case 0 where !modifiers.contains(.shift):

@@ -194,6 +194,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_macos_scroll",
         "venture_browser_macos_scroll_command",
         "venture_browser_macos_control_key",
+        "venture_browser_macos_access_key",
         "venture_browser_macos_control_text",
         "venture_browser_macos_control_copy",
         "venture_browser_macos_control_cut",
@@ -210,6 +211,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "host?.resize(width: bounds.width, height: bounds.height)",
         "override func keyDown",
         "host?.controlKey",
+        "host?.accessKey",
         "host?.controlText",
         "performNativeSurfaceWheel",
         "performNativeAddressCommit",
@@ -251,6 +253,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_windows_scroll",
         "venture_browser_windows_scroll_command",
         "venture_browser_windows_control_key",
+        "venture_browser_windows_access_key",
         "venture_browser_windows_control_text",
         "venture_browser_windows_control_copy",
         "venture_browser_windows_control_cut",
@@ -269,6 +272,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "private void OnKeyDown",
         "CharacterReceived += OnCharacterReceived",
         "Native.ControlKey",
+        "Native.AccessKey",
         "Native.ControlText",
         "RunFocusAcceptance",
         "CommitAddressWithEnter",
@@ -360,6 +364,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_flutter_new",
         "venture_browser_flutter_handle_event",
         "venture_browser_flutter_control_key",
+        "venture_browser_flutter_access_key",
         "venture_browser_flutter_control_text",
         "venture_browser_flutter_control_copy",
         "venture_browser_flutter_control_cut",
@@ -423,6 +428,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "MosaicHost::activateLink",
         "MosaicHost::scrollCommand",
         "MosaicHost::controlKey",
+        "MosaicHost::accessKey",
         "MosaicHost::controlText",
         "controlCopy_",
         "controlCut_",
@@ -452,6 +458,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_compose_new",
         "venture_browser_compose_handle_event",
         "venture_browser_compose_control_key",
+        "venture_browser_compose_access_key",
         "venture_browser_compose_control_text",
         "venture_browser_compose_control_copy",
         "venture_browser_compose_control_cut",
@@ -516,6 +523,67 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         assert!(
             web_acceptance.contains(symbol),
             "HTML/Web Component interaction acceptance omits {symbol}"
+        );
+    }
+}
+
+#[test]
+fn native_hosts_forward_access_key_chords_to_shared_policy() {
+    let hosts = [
+        (
+            "SwiftUI",
+            read_package_file("host/swiftui/MosaicHost.swift"),
+            [
+                "venture_browser_macos_access_key",
+                "host?.accessKey",
+                ".control, .option",
+            ],
+        ),
+        (
+            "XAML",
+            read_package_file("host/xaml/MosaicHost.cs"),
+            [
+                "venture_browser_windows_access_key",
+                "Native.AccessKey",
+                "menuKeyDown",
+            ],
+        ),
+        (
+            "Qt",
+            read_package_file("host/qt/MosaicHost.cpp"),
+            ["access_key", "MosaicHost::accessKey", "Qt::AltModifier"],
+        ),
+        (
+            "Flutter",
+            read_package_file("host/flutter/mosaic_host.dart"),
+            [
+                "venture_browser_flutter_access_key",
+                "widget.host.accessKey",
+                "isAltPressed",
+            ],
+        ),
+        (
+            "Compose",
+            read_package_file("host/compose/MosaicHost.kt"),
+            [
+                "venture_browser_compose_access_key",
+                "host.accessKey",
+                "event.isAltPressed",
+            ],
+        ),
+    ];
+    for (name, source, required) in hosts {
+        for token in required {
+            assert!(
+                source.contains(token),
+                "{name} access-key seam omits {token}"
+            );
+        }
+        assert!(
+            !source.contains("duplicate-access-key")
+                && !source.contains("access_key_candidates")
+                && !source.contains("access_key_diagnostics"),
+            "{name} must not own access-key selection or diagnostics"
         );
     }
 }
