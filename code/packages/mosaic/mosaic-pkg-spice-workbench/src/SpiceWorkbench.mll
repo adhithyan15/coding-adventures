@@ -224,10 +224,20 @@ layout SpiceWorkbench {
       }
       Text [ route-schematic ] ( content : slot: route-schematic-label )
       Row [ schematic-route-targets ] {
-        For ( each: slot: schematic-rows , as: component , index: component-index ) {
+        For ( each: slot: schematic-route-targets , as: component , index: component-index ) {
           HostButton [ schematic-route-target ] (
             label : ( component ) ,
-            onClick : emit: onRouteToSchematicComponent
+            onClick : emit: onSelectSchematicRouteTarget
+          )
+        }
+      }
+      Text [ selected-schematic-route-target ] ( content : slot: selected-schematic-route-target-label )
+      Row [ schematic-route-terminal-controls ] {
+        For ( each: slot: schematic-route-terminal-controls , as: terminal , index: terminal-index ) {
+          HostButton [ schematic-route-terminal-control ] (
+            label : ( terminal ) ,
+            disabled : slot: schematic-route-terminal-disabled ,
+            onClick : emit: onRouteToSchematicTerminal
           )
         }
       }

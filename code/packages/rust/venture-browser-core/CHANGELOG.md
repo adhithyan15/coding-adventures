@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add retained access-key candidates and diagnostics with deterministic
+  duplicate resolution, modal containment, accessibility discoverability, and
+  transactional link, control, disclosure, and top-layer activation.
+
 - Add bounded contenteditable value, selection, composition, clipboard,
   undo/redo, history restoration, accessibility, reflow, and shared overlay
   transactions through the existing cross-host input seam.

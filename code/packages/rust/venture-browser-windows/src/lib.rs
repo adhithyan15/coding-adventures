@@ -106,6 +106,39 @@ where
     session.page_key_down_with_shift_and_submit(key, shift, &pipeline, fetcher)
 }
 
+fn route_access_key<F>(
+    session: &mut BrowserSession,
+    character: &str,
+    width: f64,
+    height: f64,
+    fetcher: &F,
+) -> Result<bool, BrowserLoadError>
+where
+    F: BrowserResourceFetcher,
+{
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    session.access_key_command_and_submit(
+        venture_browser_core::AccessKeyCommand {
+            modifier: venture_browser_core::AccessKeyModifier::Alt,
+            character: character.into(),
+        },
+        &pipeline,
+        fetcher,
+    )
+}
+
 fn route_control_text(session: &mut BrowserSession, text: &str, width: f64, height: f64) -> bool {
     let theme = mosaic_html_theme();
     let measurer = NativeMeasurer::new();
@@ -271,6 +304,20 @@ impl WindowsBrowserHost {
             self.controller.session_mut(),
             key,
             shift,
+            self.width,
+            self.height,
+            &self.fetcher,
+        )?;
+        if changed {
+            self.controller.synchronize_session_state();
+        }
+        Ok(changed)
+    }
+
+    pub fn access_key(&mut self, character: &str) -> Result<bool, BrowserLoadError> {
+        let changed = route_access_key(
+            self.controller.session_mut(),
+            character,
             self.width,
             self.height,
             &self.fetcher,
@@ -775,6 +822,22 @@ mod ffi {
         catch_unwind(AssertUnwindSafe(|| {
             host.as_mut()
                 .and_then(|host| host.control_key_down(key, shift != 0).ok())
+                .unwrap_or(false) as u8
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_access_key(
+        host: *mut WindowsBrowserHost,
+        character: *const c_char,
+    ) -> u8 {
+        let Some(character) = string_arg(character) else {
+            return 0;
+        };
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .and_then(|host| host.access_key(&character).ok())
                 .unwrap_or(false) as u8
         }))
         .unwrap_or(0)

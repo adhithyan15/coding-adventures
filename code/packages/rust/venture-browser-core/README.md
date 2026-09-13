@@ -60,6 +60,13 @@ HTML-only clipboard input is reduced to bounded text, and every host continues
 to forward the same keys, pointer coordinates, clipboard flavors, ticks, and
 IME updates without owning DOM mutation or range policy.
 
+Access-key mediation follows the same boundary. Layout and paint preserve each
+rendered candidate's authored tokens and independent document order; the
+session exposes normalized candidate and diagnostic projections, selects the
+first eligible duplicate inside the active modal scope, focuses it, and reuses
+the existing navigation, form, disclosure, or top-layer transaction. Hosts
+only recognize their platform modifier chord and forward the character.
+
 Typed inputs retain that single-owner design. The session exposes
 `ControlValueState` for live validity and accessibility projection, routes
 Arrow Up/Down and SetValue/Increment/Decrement through shared numeric
