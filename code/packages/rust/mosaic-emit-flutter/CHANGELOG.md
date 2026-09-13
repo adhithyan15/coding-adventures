@@ -5,6 +5,42 @@ this file.
 
 ## [Unreleased]
 
+### Security — a hex colour is validated by its digits, not its length
+
+`css_color_to_dart` checked only that 6 or 8 characters followed the `#`, then
+interpolated them straight into a Dart expression. The `.msl` grammar's
+`HASH_COLOR` really is hex-only, but `style_value` also admits a quoted
+`STRING`, which passes through verbatim and is unquoted before it reaches here
+— and quoted colours are idiomatic in this repo.
+
+So an authored `border-top-color: "#00)+E(/*"` emitted
+
+```dart
+border: Border(top: BorderSide(color: const Color(0x00)+E(/*), width: 1), ...
+```
+
+escaping the `Color(..)` argument and opening a comment that swallowed the next
+widget property. That is code injection into generated Dart, reachable from any
+stylesheet, and it predates UI79 — `background`, `background-color`, `color`
+and `border-color` all funnel through the same function. UI79 added four more
+entry points to it, which is how it was found.
+
+Fixed at that one function so every sink is covered; a rejected colour lands on
+each caller's existing fallback. Verified by re-emitting the hostile stylesheet
+and seeing `Colors.transparent`.
+
+Checked rather than assumed: **SwiftUI, Compose and Qt already validate the
+digits** — the review that surfaced this claimed SwiftUI shared the flaw and it
+does not. **html escapes** the value (`&quot;`) and **react** preserves the
+backslash escaping, so both keep a hostile value inert inside its literal.
+Flutter was the only backend affected.
+
+Also hardened `parse_pixel_value`: `f64::parse` accepts `inf`, `NaN` and
+overflowing literals like `1e400`, and `{f}` printed them as bare Dart
+identifiers that do not compile. Not injection — no punctuation survives the
+parse — but it broke the "generated source still type-checks" contract the `0`
+fallback exists to keep.
+
 ### Added — a border has edges (UI79, #14835)
 
 `border-{top,right,bottom,left}-{width,color}` now lowers. Flutter is the one

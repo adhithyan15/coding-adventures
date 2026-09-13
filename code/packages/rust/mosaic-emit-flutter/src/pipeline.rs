@@ -3473,9 +3473,17 @@ fn style_prop_to_container_arg(prop: &str) -> Option<String> {
 /// than panicking — generated source still type-checks.
 fn parse_pixel_value(s: &str) -> String {
     let s = s.trim().trim_end_matches("px");
+    // Non-finite values must not survive: `f64::parse` accepts `inf`,
+    // `NaN` and overflowing literals like `1e400`, and `{f}` then prints
+    // them as bare Dart identifiers (`inf`, `NaN`) that do not compile.
+    // Not an injection -- no punctuation survives `parse::<f64>` -- but
+    // it breaks the "generated source still type-checks" contract this
+    // function's `0` fallback exists to keep.
     s.parse::<f64>()
+        .ok()
+        .filter(|f| f.is_finite())
         .map(|f| format!("{f}"))
-        .unwrap_or_else(|_| "0".to_string())
+        .unwrap_or_else(|| "0".to_string())
 }
 
 /// A fixed pixel length, or `None` for anything relative (a `%` value, most
@@ -3502,6 +3510,26 @@ fn fixed_pixel_length(s: &str) -> Option<String> {
 fn css_color_to_dart(s: &str) -> Option<String> {
     let s = s.trim();
     if let Some(hex) = s.strip_prefix('#') {
+        // SECURITY -- validate the DIGITS, not just the length.
+        //
+        // This checked only `hex.len()` and then interpolated the text
+        // straight into a Dart expression. The `.msl` grammar's
+        // `HASH_COLOR` really is hex-only, but `style_value` also admits
+        // a quoted STRING, which mosstyle passes through verbatim and
+        // `parse_style_props` unquotes -- and quoted colours are
+        // idiomatic in this repo. So `border-top-color: "#00)+E(/*"`
+        // emitted `const Color(0x00)+E(/*)`, escaping the argument and
+        // opening a comment that swallowed the next widget property.
+        // That is code injection into generated Dart, reachable from any
+        // authored stylesheet.
+        //
+        // Rejecting here rather than at each call site covers every
+        // sink: background, color, border-color and UI79's four
+        // per-edge colours all funnel through this one function, and a
+        // `None` lands on each caller's existing fallback.
+        if !hex.bytes().all(|b| b.is_ascii_hexdigit()) {
+            return None;
+        }
         let hex = hex.to_ascii_uppercase();
         if hex.len() == 6 {
             return Some(format!("const Color(0xFF{hex})"));
@@ -9294,6 +9322,54 @@ mod tests {
         .expect("emit styled empty drop target")
         .output;
         assert!(out.contains("constraints: const BoxConstraints(minHeight: 60)"));
+    }
+
+    /// SECURITY — a colour is validated by its DIGITS, not its length.
+    ///
+    /// `css_color_to_dart` checked only that 6 or 8 characters followed
+    /// the `#`, then interpolated them into a Dart expression. Quoted
+    /// stylesheet values reach it verbatim, so `"#00)+E(/*"` escaped the
+    /// `Color(..)` argument and opened a comment that swallowed the next
+    /// widget property — code injection into generated Dart.
+    ///
+    /// Both directions: the hostile forms are refused and the legitimate
+    /// ones still parse, so a fix that simply returned `None` always
+    /// would fail here.
+    #[test]
+    fn a_colour_that_is_not_hex_is_refused() {
+        for hostile in [
+            "#00)+E(/*",
+            "#*/0000",
+            "#AA)AAA",
+            "#",
+            "#00000000)+",
+            "#zzzzzz",
+        ] {
+            assert_eq!(
+                css_color_to_dart(hostile),
+                None,
+                "`{hostile}` must not reach generated Dart"
+            );
+        }
+        assert_eq!(
+            css_color_to_dart("#243146"),
+            Some("const Color(0xFF243146)".to_string())
+        );
+        assert_eq!(
+            css_color_to_dart("#80243146"),
+            Some("const Color(0x80243146)".to_string())
+        );
+        assert_eq!(css_color_to_dart("#abcdef"), css_color_to_dart("#ABCDEF"));
+    }
+
+    /// A non-finite width must not become a bare Dart identifier.
+    #[test]
+    fn a_non_finite_width_falls_back_to_zero() {
+        for bad in ["inf", "-inf", "NaN", "1e400", "infinity"] {
+            assert_eq!(parse_pixel_value(bad), "0", "`{bad}` must not survive");
+        }
+        assert_eq!(parse_pixel_value("4px"), "4");
+        assert_eq!(parse_pixel_value("1.5"), "1.5");
     }
 
     // ----- UI79: per-edge borders ---------------------------------------
