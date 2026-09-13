@@ -230,7 +230,7 @@ mod apple {
     #[test]
     fn render_mermaid_block_to_png() {
         let grid = parse_block(
-            "block-beta\ntitle Native block grid\naccTitle: Native block pipeline\naccDescr {\nGrammar through semantic IR\ninto backend-neutral paint\n}\ncolumns 3\nblock:pipeline[\"Processing Pipeline\"]:2\ncolumns 2\nA{{\"Grammar UI\"}} B([\"Semantic IR\"])\nend\nC(((Paint)))\nD[[Metal]] E[(PNG)] F>Backend flag]\nG<[\"Flow\"]>(right)\nH(\"Inline source\") -- \"routes\" --> I[\"Inline target\"]\nclassDef default fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e\nclassDef pipelineNode fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px,stroke-dasharray:5 3\nclass A,C pipelineNode\nstyle pipeline fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:7 2,font-weight:bold\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E\nE --> F\nA -.-> E\nB ==> F\nC <--> G\nG o--x |returns| D\nF--oA",
+            "block-beta\ntitle Native block grid\naccTitle: Native block pipeline\naccDescr {\nGrammar through semantic IR\ninto backend-neutral paint\n}\ncolumns 3\nblock:pipeline[\"Processing Pipeline\"]:2\ncolumns 2\nA{{\"Grammar UI\"}} B([\"Semantic IR\"])\nend\nC(((Paint)))\nD[[Metal]] E[(PNG)] F>Backend flag]\nG<[\"Flow\"]>(right)\nH(\"Inline source\") -- \"routes\" --> I[\"Inline target\"]\nJ[\"Tilde source\"] ~~~ K(\"Tilde target\")\nclassDef default fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e\nclassDef pipelineNode fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px,stroke-dasharray:5 3\nclass A,C pipelineNode\nstyle pipeline fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:7 2,font-weight:bold\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E\nE --> F\nA -.-> E\nB ==> F\nC <--> G\nG o--x |returns| D\nF--oA",
         )
         .expect("block parse failed");
         let layout = layout_grid_diagram(&grid);
@@ -251,6 +251,13 @@ mod apple {
                 && edge.to_node_id == "I"
                 && edge.kind == EdgeKind::Directed
                 && edge.label.as_ref().is_some_and(|label| label.text == "routes")
+        }));
+        assert!(layout.edges.iter().any(|edge| {
+            edge.from_node_id == "J"
+                && edge.to_node_id == "K"
+                && edge.kind == EdgeKind::Undirected
+                && edge.start_marker == diagram_ir::EdgeMarker::None
+                && edge.end_marker == diagram_ir::EdgeMarker::None
         }));
         let inline_source = layout
             .nodes

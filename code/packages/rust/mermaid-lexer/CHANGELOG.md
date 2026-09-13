@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.92.0
+
+- Tokenize Block links written with three or more tildes.
+
 ## 0.91.0
 
 - Tokenize quoted labels on Block links that declare nodes inline.
