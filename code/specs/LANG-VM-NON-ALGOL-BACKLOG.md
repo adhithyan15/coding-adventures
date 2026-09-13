@@ -109,8 +109,11 @@ the 454/446 mismatch, before the doc was corrected to match
 (`(Cobol60, 58, 446)` → `(Cobol60, 58, 454)`). `LANG-VM-FEATURE-COVERAGE.md`'s
 COBOL-60 row and grand-total prose were updated to match (1575 → 1583
 declared cells). The full `non_algol_matrix_every_proven_cell_agrees`
-capstone confirmed the corrected total against a live run (see this PR's
-validation evidence for the exact executed/skipped counts and wall time).
+capstone confirmed the corrected total against a live run: 210 programs,
+**1373** cells exercised (was 1365), 210 skipped (the same host-wide missing
+`ilasm` pattern every prior slice reports), zero failures, in 490.62s —
+matching the source-level audit's prediction exactly (eight newly exercised
+cells, zero newly skipped, zero failures).
 
 Reprioritize the remaining 10 undeclared COBOL BEAM rows (4 more base
 INSPECT TALLYING/REPLACING, 5 VM-047c BEFORE/AFTER region, 1 VM-057

@@ -48,7 +48,10 @@ from 446). `feature_coverage_doc_counts_match_programs_source` was confirmed
 to actually exercise the check (it failed with the expected 454/446
 mismatch against the pre-fix doc before the doc was corrected), then updated
 (COBOL-60 tuple `(58, 446)` → `(58, 454)`) and `LANG-VM-FEATURE-COVERAGE.md`'s
-COBOL-60 row and grand-total prose (1575 → 1583 declared cells) to match.
+COBOL-60 row and grand-total prose (1575 → 1583 declared cells) to match. The
+full `non_algol_matrix_every_proven_cell_agrees` capstone confirmed the
+corrected total against a live run: 210 programs, 1373 cells exercised (was
+1365), 210 skipped, zero failures, in 490.62s.
 
 Reprioritize the remaining 10 undeclared COBOL BEAM rows (4 more base
 INSPECT TALLYING/REPLACING, 5 VM-047c BEFORE/AFTER region, 1 VM-057
