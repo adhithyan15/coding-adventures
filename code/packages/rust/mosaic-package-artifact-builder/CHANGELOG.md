@@ -55,6 +55,20 @@ turns the test red rather than leaving a refusal nobody revisits. That check
 exists because the Flutter work shipped a `require_runtime` regression twice by
 asserting only the shape it happened to emit.
 
+**One thing this reclassification changes that is easy to misread, now pinned.**
+Without `emit_project` there is no generated entry point, so a declared handler
+is copied and *not* installed — the output is component artifacts for embedding
+in a hand-written application, where the consumer writes the install. Refusing
+there would break that legitimate use.
+
+XAML previously refused such a build outright, so the diff reads as a loud error
+becoming a silence. It is not: that refusal fired because XAML could not install
+*at all*, not because of the profile, and Qt has behaved this way since it was
+wired. `a_handler_is_copied_without_a_shell_and_that_is_uniform` asserts it
+across every installing backend, so the behaviour is a recorded decision rather
+than something a future reader has to re-derive. Raised in security review and
+verified against Qt before concluding it was not a regression.
+
 ### Added — Flutter wires a package's `[host_effects]` handler
 
 The fourth backend, after Qt, SwiftUI and Compose. XAML was the last one left,

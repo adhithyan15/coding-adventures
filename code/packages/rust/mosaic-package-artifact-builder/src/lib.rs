@@ -3836,9 +3836,10 @@ fn xaml_main_with_host_effects(
             "`[host_effects]` declares a XAML handler `{}`, but the generated \
              window has no `{ANCHOR}` to install it after. The stub WinUI shell \
              finds its host by reflection and never loads the standard runtime, \
-             so there is nothing to install onto; emit with \
-             `--profile native-complete --runtime-library <target cdylib>`, \
-             which is the only XAML shell that can answer effects.",
+             so there is nothing to install onto. Emit with \
+             `--profile native-complete` or `--runtime-library <target cdylib>` \
+             -- either selects the runtime-backed window, which is the only \
+             XAML shell that can answer effects.",
             handler.install
         )));
     };
@@ -12750,6 +12751,81 @@ version = "1"
             "{error:?}"
         );
         let _ = fs::remove_dir_all(&root);
+    }
+
+    /// Without a project shell, a declared handler is COPIED AND NOT INSTALLED.
+    ///
+    /// Pinned as a decision rather than left as a silence, because it looks
+    /// exactly like the bug the refusal above exists to prevent and is not one.
+    ///
+    /// The install is spliced into a generated entry point, and without
+    /// `emit_project` there is no entry point -- the output is component
+    /// artifacts for embedding in a hand-written application, where the consumer
+    /// writes the install themselves. Copying the handler is the whole point
+    /// there, so refusing would break the legitimate use.
+    ///
+    /// This is uniform across every installing backend, which is the half worth
+    /// asserting: XAML gaining an install emission moved it from "refused
+    /// outright" into this shared behaviour, and a reviewer comparing the two
+    /// commits could reasonably read that as a regression. It is not -- the old
+    /// refusal fired because XAML could not install AT ALL, not because of the
+    /// profile. Qt has behaved this way since it was wired.
+    #[test]
+    fn a_handler_is_copied_without_a_shell_and_that_is_uniform() {
+        for backend in Backend::ALL
+            .into_iter()
+            .filter(|backend| backend.installs_host_effects())
+        {
+            let name = backend.dir_name();
+            let root = scratch();
+            fs::create_dir_all(root.join("host")).expect("create the source directory");
+            fs::write(root.join("host/effects.txt"), b"// handler\n").expect("write the source");
+
+            let manifest = mosaic_package_manifest::parse(&format!(
+                r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+[host_effects]
+files = [
+  {{ backend = "{name}", source = "host/effects.txt", target = "probe_effects.txt" }},
+]
+handlers = [
+  {{ backend = "{name}", install = "installProbeEffects" }},
+]
+
+[kernel]
+version = "1"
+"#
+            ))
+            .expect("probe manifest must parse");
+
+            // `install_host_effects` is the whole of what runs when no shell is
+            // emitted -- the splice lives inside `emit_project_shell`.
+            let written = install_host_effects(
+                &manifest,
+                backend,
+                &root,
+                &root.join("out"),
+                &HashMap::new(),
+                &HashSet::new(),
+            )
+            .unwrap_or_else(|error| panic!("{name} must copy the handler: {error:?}"));
+            assert_eq!(
+                written,
+                vec![root.join("out/probe_effects.txt")],
+                "{name} must copy exactly the declared handler"
+            );
+            let _ = fs::remove_dir_all(&root);
+        }
     }
 
     /// Every backend is classified, and the two that claim to install really do.
