@@ -9,7 +9,11 @@ it("pins Italian continuity", () => expectLanguageContinuity("italian"));
 it("pins Italian modality", () => expectLanguageModality("italian"));
 it("pins Italian lesson-content budgets", () =>
   expectLanguageLessonBudgets("italian", {
-    lessons: 142,
+    //
+    // 142 -> 145: chapter 36, the reading rung -- six words, six lines and a
+    // 47-word passage. No new word: every token was checked to occur in a
+    // lesson with a lower sequence number.
+    lessons: 145,
     idioms: 4,
     senses: 9,
     cultureClaims: 11,

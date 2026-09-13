@@ -1,0 +1,17 @@
+{
+  "language": "italian",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:b0893f4f68f8b0ca",
+  "lessonIds": [
+    "IT-C36-parole",
+    "IT-C36-frasi",
+    "IT-C36-prima-lettura"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "italian/narration/ch36.txt",
+  "json": "italian/narration/ch36.json",
+  "textHash": "fnv1a64:ef6b9ede91a9c31b",
+  "jsonHash": "fnv1a64:651891bb663fd692",
+  "findings": []
+}
