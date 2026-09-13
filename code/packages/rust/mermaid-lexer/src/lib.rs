@@ -561,7 +561,7 @@ mod tests {
 
     #[test]
     fn tokenizes_block_circle_and_cross_connections_through_the_pinned_grammar() {
-        let tokens = try_tokenize_mermaid_block("block\nA o--x B\nB x==o C\nC o-.-o D\nD --x A\n").unwrap();
+        let tokens = try_tokenize_mermaid_block("block\nA o--x |handoff| B\nB x==o C\nC o-.-o D\nD --x A\n").unwrap();
         assert_eq!(tokens.iter().filter(|token| {
             token.type_name.as_deref() == Some("MARKED_CONNECTION_LINE")
         }).count(), 4);
