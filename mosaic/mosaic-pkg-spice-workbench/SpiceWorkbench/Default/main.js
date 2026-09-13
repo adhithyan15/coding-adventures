@@ -15,6 +15,8 @@ const fallbackProps = {
   "openSchematicLabel": "Sample OpenSchematicLabel",
   "rawResultLabel": "Sample RawResultLabel",
   "removeSchematicAnalysisCardLabel": "Sample RemoveSchematicAnalysisCardLabel",
+  "removeSchematicComponentDisabled": false,
+  "removeSchematicComponentLabel": "Sample RemoveSchematicComponentLabel",
   "resultColumns": [],
   "resultLabel": "Sample ResultLabel",
   "resultRows": [],
@@ -50,6 +52,8 @@ const fallbackProps = {
   "schematicValueDisabled": false,
   "schematicValueLabel": "Sample SchematicValueLabel",
   "schematicValuePlaceholder": "Sample SchematicValuePlaceholder",
+  "schematicWireLabel": "Sample SchematicWireLabel",
+  "schematicWireRows": [],
   "schematicWireSegments": [],
   "selectedAnalysisLabel": "Sample SelectedAnalysisLabel",
   "selectedSchematicAnalysisLabel": "Sample SelectedSchematicAnalysisLabel",
@@ -86,6 +90,13 @@ const emitPayloads = {
     }
   ],
   "onRemoveSchematicAnalysisCard": [],
+  "onRemoveSchematicComponent": [],
+  "onRemoveSchematicWire": [
+    {
+      "name": "index",
+      "type": "number"
+    }
+  ],
   "onRouteToSchematicComponent": [
     {
       "name": "reference",

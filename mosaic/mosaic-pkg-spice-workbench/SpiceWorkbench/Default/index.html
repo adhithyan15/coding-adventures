@@ -102,6 +102,13 @@
               <button data-on-click="onSelectSchematicComponent" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px">{{component}}</button>
             <!-- /mosaic-for -->
           </div>
+          <span>{{schematicWireLabel}}</span>
+          <div style="display: flex; flex-direction: row">
+            <!-- mosaic-for each="schematicWireRows" as="wire" index="wire-index" -->
+              <!-- emit "onRemoveSchematicWire" dropped: HTML is static -->
+              <button data-on-click="onRemoveSchematicWire">{{wire}}</button>
+            <!-- /mosaic-for -->
+          </div>
           <span style="color: #0369a1; font-weight: bold">{{selectedSchematicLabel}}</span>
           <div style="display: flex; flex-direction: column; gap: 4px">
             <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicPropertiesLabel}}</span>
@@ -109,6 +116,8 @@
             <span style="font-size: 12px; color: #475569">{{schematicValueLabel}}</span>
             <!-- emit "onSchematicValueChange" dropped: HTML is static -->
             <input type="text" value="{{schematicValue}}" placeholder="{{schematicValuePlaceholder}}" data-disabled="{{schematicValueDisabled}}" data-on-change="onSchematicValueChange" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px; font-family: monospace">
+            <!-- emit "onRemoveSchematicComponent" dropped: HTML is static -->
+            <button data-disabled="{{removeSchematicComponentDisabled}}" data-on-click="onRemoveSchematicComponent">{{removeSchematicComponentLabel}}</button>
           </div>
           <span style="font-size: 12px; font-weight: bold; color: #475569">{{routeSchematicLabel}}</span>
           <div style="display: flex; flex-direction: row; gap: 6px">
