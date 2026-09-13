@@ -164,6 +164,26 @@ class ValidateTests(unittest.TestCase):
             self.assertEqual(code, 1)
             self.assertIn("slugs to", err)
 
+    def test_unbalanced_code_fence_fails(self):
+        """A fence running off the end means a split code block -- text that is
+        present but unreadable. Zero of the 502 migrated shards had one."""
+        with tempfile.TemporaryDirectory() as tmp:
+            d = write_dir(
+                Path(tmp),
+                {"a-claim.md": "# A claim\n\n```\nrm -rf /\n"},
+            )
+            code, _, err = run(lessons.cmd_validate, d)
+            self.assertEqual(code, 1)
+            self.assertIn("code fence", err)
+
+    def test_balanced_code_fence_passes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = write_dir(
+                Path(tmp),
+                {"a-claim.md": "# A claim\n\n```\nsafe\n```\n"},
+            )
+            self.assertEqual(run(lessons.cmd_validate, d)[0], 0)
+
     def test_title_with_no_body_fails(self):
         with tempfile.TemporaryDirectory() as tmp:
             d = write_dir(Path(tmp), {"a-claim.md": "# A claim\n\n"})

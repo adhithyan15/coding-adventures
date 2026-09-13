@@ -190,6 +190,14 @@ def cmd_validate(lessons_dir: Path) -> int:
                 f"{path.name}: title slugs to {expected!r}; rename the file or "
                 f"retitle the lesson so the name stays derivable"
             )
+        # An odd number of fences means a code block runs off the end of the
+        # shard. During the migration that would have meant a block split
+        # across two files -- text present but unreadable in both. Checked
+        # across all 502 migrated shards (zero unbalanced) and pinned here so a
+        # later hand-edit cannot reintroduce it quietly.
+        if sum(1 for line in lesson.body.splitlines()
+               if line.startswith("```")) % 2:
+            problems.append(f"{path.name}: unbalanced ``` code fence")
         if lesson.title in seen:
             problems.append(
                 f"{path.name}: duplicate title, already used by {seen[lesson.title]}"
