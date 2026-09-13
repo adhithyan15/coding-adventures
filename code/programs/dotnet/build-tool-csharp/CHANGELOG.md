@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Extended the generated source-input projection and xUnit coverage with the
+  two exact TypeScript site roots and their 13 authored inputs. Discovery keeps
+  legacy `unknown/*` graph identities while live hashing resolves those exact
+  TypeScript profiles and rejects unregistered or same-shaped foreign roots.
+
 - Adopted the complete typed language and repository-boundary source-input
   registries, including deterministic generation, canonical digest checks,
   direct Starlark declared sources, exact pruning, and reverse boundary-diff

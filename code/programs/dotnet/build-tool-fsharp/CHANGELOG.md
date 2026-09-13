@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Expanded the F# facade evidence from 13 to 16 neutral source-collection cases,
+  including the two exact TypeScript site roots and the foreign-package
+  exclusion case shared with the C# engine, plus live discovery evidence for
+  exact legacy `unknown/*` site identities and unregistered-site exclusion.
+
 - Added no-inline F# facades for source selection, complete typed registry
   projections and canonical digests, and Hashing-v1 package digests. The F#
   suite independently consumes all 13 neutral source-collection cases and all

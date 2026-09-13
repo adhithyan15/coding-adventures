@@ -25,6 +25,36 @@ public sealed class BuildToolTests : IDisposable
     }
 
     [Fact]
+    public void DiscoveryAndHashingReachOnlyRegisteredLegacySiteRoots()
+    {
+        WriteFile("code/sites/blog/BUILD", "echo build\n");
+        WriteFile(
+            "code/sites/blog/data/2026-05-08-capability-typed-stages.md",
+            "# post\n");
+        WriteFile("code/sites/blog/data/ignored.txt", "ignored\n");
+        WriteFile("code/sites/unreviewed/BUILD", "echo ignored\n");
+        WriteFile("code/sites/blog/nested/BUILD", "echo nested\n");
+
+        var packages = Discovery.DiscoverPackages(Path.Combine(_tempRoot, "code"));
+        var package = Assert.Single(packages);
+        Assert.Equal("unknown/blog", package.Name);
+        Assert.Equal("unknown", package.Language);
+        Assert.Equal(
+            ["BUILD", "data/2026-05-08-capability-typed-stages.md", "nested/BUILD"],
+            Hasher.CollectSourceFiles(package)
+                .Select(path => Path.GetRelativePath(package.Path, path).Replace('\\', '/'))
+                .OrderBy(path => path, StringComparer.Ordinal));
+
+        var initialHash = Hasher.HashPackage(package);
+        WriteFile("code/sites/blog/data/ignored.txt", "changed decoy\n");
+        Assert.Equal(initialHash, Hasher.HashPackage(package));
+        WriteFile(
+            "code/sites/blog/data/2026-05-08-capability-typed-stages.md",
+            "# changed post\n");
+        Assert.NotEqual(initialHash, Hasher.HashPackage(package));
+    }
+
+    [Fact]
     public void DiscoveryConsumesTheSharedCanonicalLanguageRegistry()
     {
         using var fixture = JsonDocument.Parse(File.ReadAllText(Path.Combine(

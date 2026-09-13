@@ -77,5 +77,7 @@ Forme milestone.
 The `forme-local-bootstrap` companion is repository plumbing for local
 `file:` dependencies. It discovers those dependencies across npm manifest
 fields, rejects cycles, sorts siblings by package name, and installs them
-leaf-first. Published consumers use normal package-manager installation and do
-not need this helper.
+leaf-first. Bootstrap installs use npm's legacy peer-dependency mode so npm 10
+does not fail while resolving unrelated development-tool peers in the local
+package graph. Published consumers use normal package-manager installation and
+do not need this helper.

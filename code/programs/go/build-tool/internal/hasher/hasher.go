@@ -95,7 +95,8 @@ func collectSourceInputsChecked(pkg discovery.Package, declaredMode bool) ([]str
 		parts := strings.Split(packageRoot, "/")
 		languageRoot := len(parts) >= 4 && parts[0] == "code" &&
 			(parts[1] == "packages" || parts[1] == "programs") && parts[2] == sourceLanguage
-		siteRoot := len(parts) == 3 && parts[0] == "code" && parts[1] == "sites" && sourceLanguage == "typescript"
+		siteRoot := len(parts) == 3 && parts[0] == "code" && parts[1] == "sites" && sourceLanguage == "typescript" &&
+			matchesPackageExactRoot(language.PackageExactInputs, packageRoot)
 		if !languageRoot && !siteRoot {
 			return nil, fmt.Errorf("repository package identity is invalid")
 		}
@@ -133,21 +134,92 @@ func collectSourceInputsChecked(pkg discovery.Package, declaredMode bool) ([]str
 // source-input contract without changing their legacy unknown/* graph identity.
 // Arbitrary unknown packages remain unsupported and fail before traversal.
 func sourceInputProfile(pkg discovery.Package) (string, string, error) {
-	packageRoot, found, err := canonicalRepositoryPackagePath(pkg.Path)
-	if err != nil {
-		return "", "", err
-	}
-	if found {
-		parts := strings.Split(packageRoot, "/")
-		if len(parts) == 3 && parts[0] == "code" && parts[1] == "sites" {
-			if pkg.Language != "unknown" {
-				return "", "", fmt.Errorf("site package language is invalid")
+	if pkg.Language == "unknown" {
+		packageRoot, found, err := repositoryRelativeSiteRoot(pkg.Path)
+		if err != nil {
+			return "", "", err
+		}
+		if found {
+			typescript := languageSourceInputRegistryByName["typescript"]
+			if !matchesPackageExactRoot(typescript.PackageExactInputs, packageRoot) {
+				return "", "", fmt.Errorf("site package is not registered")
 			}
 			return "typescript", packageRoot, nil
 		}
 	}
-	packageRoot, err = exactPackageSourceRoot(pkg)
+	packageRoot, err := exactPackageSourceRoot(pkg)
 	return pkg.Language, packageRoot, err
+}
+
+// repositoryRelativeSiteRoot grants the legacy site bridge only to an exact
+// code/sites/<name> path below the nearest real Git repository root. A matching
+// filesystem suffix, including one outside or nested inside a repository, has
+// no source-selector authority.
+func repositoryRelativeSiteRoot(packagePath string) (string, bool, error) {
+	absolute, err := filepath.Abs(packagePath)
+	if err != nil {
+		return "", false, fmt.Errorf("cannot resolve site package path")
+	}
+	repositoryRoot, found, err := findRepositoryRoot(absolute)
+	if err != nil || !found {
+		return "", false, err
+	}
+	canonicalPackage, err := filepath.EvalSymlinks(absolute)
+	if err != nil {
+		return "", false, fmt.Errorf("cannot resolve site package path")
+	}
+	canonicalRepository, err := filepath.EvalSymlinks(repositoryRoot)
+	if err != nil {
+		return "", false, fmt.Errorf("cannot resolve repository root")
+	}
+	canonicalRelative, err := filepath.Rel(canonicalRepository, canonicalPackage)
+	if err != nil || canonicalRelative == ".." || strings.HasPrefix(canonicalRelative, ".."+string(filepath.Separator)) {
+		return "", false, fmt.Errorf("site package is not relative to repository root")
+	}
+	relative, err := filepath.Rel(repositoryRoot, absolute)
+	if err != nil {
+		return "", false, fmt.Errorf("site package is not relative to repository root")
+	}
+	candidate := filepath.ToSlash(relative)
+	if err := validateRepositoryPath(candidate); err != nil {
+		return "", false, err
+	}
+	parts := strings.Split(candidate, "/")
+	if len(parts) != 3 || parts[0] != "code" || parts[1] != "sites" {
+		return "", false, nil
+	}
+	return candidate, true, nil
+}
+
+func findRepositoryRoot(start string) (string, bool, error) {
+	current := filepath.Clean(start)
+	for {
+		gitPath := filepath.Join(current, ".git")
+		info, err := os.Lstat(gitPath)
+		if err == nil {
+			if info.Mode()&os.ModeSymlink != 0 || (!info.IsDir() && !info.Mode().IsRegular()) {
+				return "", false, fmt.Errorf("repository marker is not stable")
+			}
+			return current, true, nil
+		}
+		if !os.IsNotExist(err) {
+			return "", false, fmt.Errorf("cannot inspect repository marker")
+		}
+		parent := filepath.Dir(current)
+		if parent == current {
+			return "", false, nil
+		}
+		current = parent
+	}
+}
+
+func matchesPackageExactRoot(rules []packageExactSourceInput, packageRoot string) bool {
+	for _, rule := range rules {
+		if rule.PackageRoot == packageRoot {
+			return true
+		}
+	}
+	return false
 }
 
 // walkSourceFiles enumerates only regular lexical descendants of root. It

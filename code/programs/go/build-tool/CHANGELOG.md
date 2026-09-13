@@ -18,6 +18,12 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Registered only the reviewed blog and landing-page roots as TypeScript
+  source-input profiles, including their 13 exact authored resources. Unknown
+  sibling, nested, or outside site roots now fail before traversal because the
+  bridge is anchored to the nearest real Git repository root, and ordinary
+  TypeScript packages cannot inherit same-shaped files.
+
 - Site packages under `code/sites` now use the canonical TypeScript source-input
   profile for hashing while retaining their legacy `unknown/*` build-graph
   identities.

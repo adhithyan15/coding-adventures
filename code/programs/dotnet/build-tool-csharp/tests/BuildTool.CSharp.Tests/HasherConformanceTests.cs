@@ -34,10 +34,10 @@ public sealed class HasherConformanceTests
         Assert.Equal(23, checkedLanguage.RootElement.GetProperty("languages").GetArrayLength());
         Assert.Equal(18, checkedBoundary.RootElement.GetProperty("boundaries").GetArrayLength());
         Assert.Equal(
-            "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70",
+            "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530",
             Hasher.LanguageSourceInputRegistryDigest);
         Assert.Equal(
-            "963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f",
+            "cb396d048211f3ec20f1e4d5a438746e5b19642b6d2b039e33c93876a841cd6d",
             Hasher.RepositorySourceInputBoundaryDigest);
         Assert.Equal(
             Hasher.LanguageSourceInputRegistryDigest,
@@ -57,7 +57,7 @@ public sealed class HasherConformanceTests
             .GetFiles(Path.Combine(FixtureDirectory, "cases"), "source-collection-*.json")
             .OrderBy(path => path, StringComparer.Ordinal)
             .ToArray();
-        Assert.Equal(13, fixturePaths.Length);
+        Assert.Equal(16, fixturePaths.Length);
 
         foreach (var fixturePath in fixturePaths)
         {
@@ -95,6 +95,21 @@ public sealed class HasherConformanceTests
 
             Assert.Equal(expected, actual);
         }
+    }
+
+    [Fact]
+    public void UnregisteredTypeScriptSiteRootFailsClosed()
+    {
+        var request = new SourceCollectionRequest(
+            "typescript",
+            "code/sites/unreviewed",
+            "extension",
+            Hasher.LanguageSourceInputRegistryDigest,
+            [],
+            []);
+
+        var error = Assert.Throws<SourceHashException>(() => Hasher.SelectSourceCandidates(request));
+        Assert.Equal("SOURCE_HASH_PACKAGE_ROOT_INVALID", error.Code);
     }
 
     [Fact]

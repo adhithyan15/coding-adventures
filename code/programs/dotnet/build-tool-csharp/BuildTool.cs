@@ -720,7 +720,13 @@ public static class Discovery
             ?? throw new InvalidDataException("code root has no repository parent");
         using var secureScope = SecureSourceFileReader.RetainRepositoryRoot(repositoryRoot);
         var discoveryEntries = 0;
-        Walk(fullCodeRoot, packages, platformOverride, secureScope, ref discoveryEntries);
+        Walk(
+            fullCodeRoot,
+            repositoryRoot,
+            packages,
+            platformOverride,
+            secureScope,
+            ref discoveryEntries);
         secureScope.Validate();
         packages.Sort((left, right) => StringComparer.Ordinal.Compare(left.Name, right.Name));
         return packages;
@@ -728,6 +734,7 @@ public static class Discovery
 
     private static void Walk(
         string directory,
+        string repositoryRoot,
         List<PackageSpec> packages,
         string? platformOverride,
         SecureSourceFileReader.Scope secureScope,
@@ -743,9 +750,12 @@ public static class Discovery
         var entries = secureScope.EnumerateDirectory(directory, remainingEntries);
         discoveryEntries = checked(discoveryEntries + entries.Count);
         var buildFileName = GetBuildFileName(entries, platformOverride);
-        if (buildFileName is not null && TryGetDiscoveryBucket(directory, out _, out _))
+        var packageRoot = Path.GetRelativePath(repositoryRoot, directory).Replace('\\', '/');
+        var conventionalRoot = TryGetDiscoveryBucket(directory, out _, out _);
+        var registeredSiteRoot = Hasher.IsRegisteredLegacySiteRoot(packageRoot);
+        if (buildFileName is not null && (conventionalRoot || registeredSiteRoot))
         {
-            var language = InferLanguage(directory);
+            var language = registeredSiteRoot ? "unknown" : InferLanguage(directory);
             var buildFile = Path.Combine(directory, buildFileName);
             var rawBytes = secureScope.ReadFile(
                 buildFile,
@@ -772,6 +782,7 @@ public static class Discovery
         {
             Walk(
                 Path.Combine(directory, child.Name),
+                repositoryRoot,
                 packages,
                 platformOverride,
                 secureScope,

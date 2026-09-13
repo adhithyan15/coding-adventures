@@ -683,6 +683,22 @@ fixed-path roles apply in extension and declared-source modes because an
 explicit declared-source glob cannot safely erase an independently consumed
 BUILD input.
 
+The two repository site packages are TypeScript build surfaces even though
+their legacy build-graph identities remain `unknown/blog` and
+`unknown/landing-page`. Their authored inputs are therefore admitted only by
+two TypeScript `package_exact_inputs` rules bound to the canonical roots
+`code/sites/blog` and `code/sites/landing-page`. The blog rule contains exactly
+the three checked Markdown posts, their three persisted-identity JSON
+sidecars, the checked SVG asset, and its sidecar. The landing-page rule contains
+exactly `data/index.landing`, its persisted-identity sidecar, the checked JPEG
+asset and sidecar, and root `landing.css`. The sidecars are inputs because both
+pipelines enable persisted identities; the stylesheet is an input because the
+landing renderer reads it directly. No language-wide `.md`, `.landing`, image,
+sidecar, `data`-directory, or root-CSS selector is implied. A new or renamed
+authored site file must receive an explicit tracked registration before it can
+affect the package digest, and the neutral corpus must prove that same-shaped
+files in ordinary TypeScript packages remain excluded.
+
 Every scoped rule is inclusion-only. A registry rule MUST NOT mask a primary
 source or metadata input. Exact generated-component pruning is the only v1
 exclusion mechanism and always runs before selector matching.
@@ -759,10 +775,14 @@ not runtime authority: the Swift executable does not locate or decode a
 repository fixture when it hashes a package.
 
 The adoption evidence also recomputes the domain-separated canonical JSON
-digest, checks every consumed case pin, binds `code/packages|programs/<lane>`
-to the selected language, requires a package-name component, and applies the
-candidate ceiling during incremental immediate-child enumeration before
-bounded sorting.
+digest, checks every consumed case pin, binds conventional
+`code/packages|programs/<lane>` roots to the selected language, requires a
+package-name component, and applies the candidate ceiling during incremental
+immediate-child enumeration before bounded sorting. A TypeScript root below
+`code/sites` is valid only when it is an exact three-component
+`code/sites/<site>` root named by that TypeScript registry entry's
+`package_exact_inputs`; unregistered, nested, differently cased, or non-
+TypeScript site roots fail closed.
 
 The Go build tool keeps its own generated, typed, immutable projection beside
 the production hasher. The generator consumes the checked neutral JSON and
@@ -778,9 +798,11 @@ The Go collector resolves all seven roles from that projection. Universal
 BUILD names remain recursive; universal and language root basenames plus
 variable manifest suffixes remain root-only; fixed relative and exact-package
 paths apply in both modes; recursive and scoped selectors apply only in
-extension mode. Exact-package selection derives and validates a canonical
-`code/packages|programs/<lane>/<name...>` root from the discovered package path
-and requires the encoded lane to equal the requested language. Unknown
+extension mode. Exact-package selection derives and validates either a
+canonical `code/packages|programs/<lane>/<name...>` root whose encoded lane
+equals the requested language, or one of the exact TypeScript
+`code/sites/<site>` roots registered by a TypeScript package-exact rule. It
+must not infer that arbitrary `code/sites` packages are TypeScript. Unknown
 languages fail before the package root is inspected or walked. Generated-tree
 pruning remains exact and case-sensitive, and neither a declared glob nor a
 package-specific selector can reopen a pruned directory or inert link boundary.
